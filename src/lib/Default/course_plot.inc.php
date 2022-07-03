@@ -3,7 +3,7 @@
 /**
  * This function is called by "Conventional" and "Plot To Nearest" pages.
  */
-function course_plot_forward(SmrPlayer $player, Smr\Path $path): never {
+function course_plot_forward(AbstractSmrPlayer $player, Smr\Path $path): never {
 
 	if ($player->getSectorID() == $path->getStartSectorID()) {
 		$player->setPlottedCourse($path);

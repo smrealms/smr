@@ -953,7 +953,7 @@ class AbstractSmrPort {
 		$this->setArmour($this->getArmour() - $number);
 	}
 
-	public function getTradeRestriction(SmrPlayer $player): string|false {
+	public function getTradeRestriction(AbstractSmrPlayer $player): string|false {
 		if (!$this->exists()) {
 			return 'There is no port in this sector!';
 		}

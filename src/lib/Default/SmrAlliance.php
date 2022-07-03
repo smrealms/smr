@@ -413,7 +413,7 @@ class SmrAlliance {
 		$this->flagshipID = $accountID;
 	}
 
-	public function getJoinRestriction(SmrPlayer $player, bool $doAllianceCheck = true): string|false {
+	public function getJoinRestriction(AbstractSmrPlayer $player, bool $doAllianceCheck = true): string|false {
 		if (!$player->getAccount()->isValidated()) {
 			return 'You cannot join an alliance until you validate your account.';
 		}

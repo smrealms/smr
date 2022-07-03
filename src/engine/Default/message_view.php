@@ -94,7 +94,7 @@ if (!USING_AJAX) {
 $template->assign('MessageBox', $messageBox);
 
 
-function displayScouts(array &$messageBox, SmrPlayer $player): void {
+function displayScouts(array &$messageBox, AbstractSmrPlayer $player): void {
 	// Generate the group messages
 	$db = Smr\Database::getInstance();
 	$dbResult = $db->read('SELECT player.*, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, sum(msg_read=\'FALSE\') as total_unread
@@ -136,7 +136,7 @@ function displayScouts(array &$messageBox, SmrPlayer $player): void {
 	$messageBox['NumberMessages'] = $dbResult->getNumRecords();
 }
 
-function displayGrouped(SmrPlayer $sender, string $message_text, int $first, int $last, bool $star, SmrAccount $displayAccount): array {
+function displayGrouped(AbstractSmrPlayer $sender, string $message_text, int $first, int $last, bool $star, SmrAccount $displayAccount): array {
 	// Define a unique array so we can delete grouped messages
 	$array = [
 		$sender->getAccountID(),
@@ -164,7 +164,7 @@ function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $
 	// Display the sender (except for scout messages)
 	if ($type != MSG_SCOUT) {
 		$sender = Smr\Messages::getMessagePlayer($sender_id, $game_id, $type);
-		if ($sender instanceof SmrPlayer) {
+		if ($sender instanceof AbstractSmrPlayer) {
 			$message['Sender'] = $sender;
 			$container = Page::create('trader_search_result.php');
 			$container['player_id'] = $sender->getPlayerID();
