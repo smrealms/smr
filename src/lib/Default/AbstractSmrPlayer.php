@@ -107,6 +107,9 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
+	/**
+	 * @return array<int, SmrPlayer>
+	 */
 	public static function getSectorPlayersByAlliances(int $gameID, int $sectorID, array $allianceIDs, bool $forceUpdate = false): array {
 		$players = self::getSectorPlayers($gameID, $sectorID, $forceUpdate); // Don't use & as we do an unset
 		foreach ($players as $accountID => $player) {
@@ -121,6 +124,8 @@ abstract class AbstractSmrPlayer {
 	 * Returns the same players as getSectorPlayers (e.g. not on planets),
 	 * but for an entire galaxy rather than a single sector. This is useful
 	 * for reducing the number of queries in galaxy-wide processing.
+	 *
+	 * @return array<int, array<int, SmrPlayer>>
 	 */
 	public static function getGalaxyPlayers(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		$db = Smr\Database::getInstance();
@@ -136,6 +141,9 @@ abstract class AbstractSmrPlayer {
 		return $galaxyPlayers;
 	}
 
+	/**
+	 * @return array<int, SmrPlayer>
+	 */
 	public static function getSectorPlayers(int $gameID, int $sectorID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID])) {
 			$db = Smr\Database::getInstance();
@@ -150,6 +158,9 @@ abstract class AbstractSmrPlayer {
 		return self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID];
 	}
 
+	/**
+	 * @return array<int, SmrPlayer>
+	 */
 	public static function getPlanetPlayers(int $gameID, int $sectorID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID])) {
 			$db = Smr\Database::getInstance();
@@ -164,6 +175,9 @@ abstract class AbstractSmrPlayer {
 		return self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID];
 	}
 
+	/**
+	 * @return array<int, SmrPlayer>
+	 */
 	public static function getAlliancePlayers(int $gameID, int $allianceID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID])) {
 			$db = Smr\Database::getInstance();
@@ -178,14 +192,14 @@ abstract class AbstractSmrPlayer {
 		return self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID];
 	}
 
-	public static function getPlayer(int $accountID, int $gameID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): self {
+	public static function getPlayer(int $accountID, int $gameID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): SmrPlayer {
 		if ($forceUpdate || !isset(self::$CACHE_PLAYERS[$gameID][$accountID])) {
 			self::$CACHE_PLAYERS[$gameID][$accountID] = new SmrPlayer($gameID, $accountID, $dbRecord);
 		}
 		return self::$CACHE_PLAYERS[$gameID][$accountID];
 	}
 
-	public static function getPlayerByPlayerID(int $playerID, int $gameID, bool $forceUpdate = false): self {
+	public static function getPlayerByPlayerID(int $playerID, int $gameID, bool $forceUpdate = false): SmrPlayer {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_id = ' . $db->escapeNumber($playerID));
 		if ($dbResult->hasRecord()) {
@@ -195,7 +209,7 @@ abstract class AbstractSmrPlayer {
 		throw new Smr\Exceptions\PlayerNotFound('Player ID not found.');
 	}
 
-	public static function getPlayerByPlayerName(string $playerName, int $gameID, bool $forceUpdate = false): self {
+	public static function getPlayerByPlayerName(string $playerName, int $gameID, bool $forceUpdate = false): SmrPlayer {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_name = ' . $db->escapeString($playerName));
 		if ($dbResult->hasRecord()) {
