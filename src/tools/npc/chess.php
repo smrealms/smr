@@ -43,7 +43,7 @@ try {
 		stream_set_blocking($fromEngine, $block);
 		while (($s = fgets($fromEngine)) !== false) {
 			debug('<-- ' . trim($s));
-			stream_set_blocking($fromEngine, 0);
+			stream_set_blocking($fromEngine, false);
 		}
 	}
 	function writeToEngine(string $s, bool $block = true, bool $read = true): void {
@@ -69,7 +69,7 @@ try {
 			debug('Looking at game: ' . $chessGame->getChessGameID());
 			writeToEngine('position fen ' . $chessGame->getFENString(), false);
 			writeToEngine('go ' . ($chessGame->getCurrentTurnColour() == Colour::White ? 'w' : 'b') . 'time ' . UCI_TIME_PER_MOVE_MS, true, false);
-			stream_set_blocking($fromEngine, 1);
+			stream_set_blocking($fromEngine, true);
 			$move = '';
 			while (!str_starts_with($move, 'bestmove')) {
 				$move = trim(fgets($fromEngine));
