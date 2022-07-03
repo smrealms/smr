@@ -300,7 +300,7 @@ abstract class AbstractSmrPlayer {
 		]);
 		$db->unlock();
 
-		$player = SmrPlayer::getPlayer($accountID, $gameID);
+		$player = self::getPlayer($accountID, $gameID);
 		$player->setSectorID($player->getHome());
 		return $player;
 	}
@@ -322,7 +322,7 @@ abstract class AbstractSmrPlayer {
 		$dbResult = $this->db->read('SELECT from_account_id FROM account_shares_info WHERE to_account_id=' . $this->db->escapeNumber($this->getAccountID()) . ' AND (game_id=0 OR game_id=' . $this->db->escapeNumber($this->getGameID()) . ')');
 		foreach ($dbResult->records() as $dbRecord) {
 			try {
-				$otherPlayer = SmrPlayer::getPlayer($dbRecord->getInt('from_account_id'), $this->getGameID(), $forceUpdate);
+				$otherPlayer = self::getPlayer($dbRecord->getInt('from_account_id'), $this->getGameID(), $forceUpdate);
 			} catch (Smr\Exceptions\PlayerNotFound) {
 				// Skip players that have not joined this game
 				continue;
@@ -667,7 +667,7 @@ abstract class AbstractSmrPlayer {
 				$receiverAccount = SmrAccount::getAccount($receiverID);
 				if ($receiverAccount->isValidated() && $receiverAccount->isReceivingMessageNotifications($messageTypeID) && !$receiverAccount->isLoggedIn()) {
 					$sender = Smr\Messages::getMessagePlayer($senderID, $gameID, $messageTypeID);
-					if ($sender instanceof SmrPlayer) {
+					if ($sender instanceof self) {
 						$sender = $sender->getDisplayName();
 					}
 					$mail = setupMailer();
@@ -1308,7 +1308,7 @@ abstract class AbstractSmrPlayer {
 		return !$this->isRaceChanged() && (Smr\Epoch::time() - $this->getGame()->getStartTime() < TIME_FOR_RACE_CHANGE);
 	}
 
-	public static function getColouredRaceNameOrDefault(int $otherRaceID, AbstractSmrPlayer $player = null, bool $linked = false): string {
+	public static function getColouredRaceNameOrDefault(int $otherRaceID, self $player = null, bool $linked = false): string {
 		$relations = 0;
 		if ($player !== null) {
 			$relations = $player->getRelation($otherRaceID);
@@ -1385,7 +1385,7 @@ abstract class AbstractSmrPlayer {
 		return $this->allianceRoles[$allianceID];
 	}
 
-	public function leaveAlliance(AbstractSmrPlayer $kickedBy = null): void {
+	public function leaveAlliance(self $kickedBy = null): void {
 		$alliance = $this->getAlliance();
 		if ($kickedBy !== null) {
 			$kickedBy->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were kicked out of the alliance!', false);
@@ -1904,7 +1904,7 @@ abstract class AbstractSmrPlayer {
 		$dbResult = $this->db->read($query);
 		foreach ($dbResult->records() as $dbRecord) {
 			$bounties[] = [
-				'player' => SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $this->getGameID()),
+				'player' => self::getPlayer($dbRecord->getInt('account_id'), $this->getGameID()),
 				'bounty_id' => $dbRecord->getInt('bounty_id'),
 				'credits' => $dbRecord->getInt('amount'),
 				'smr_credits' => $dbRecord->getInt('smr_credits'),
@@ -2036,7 +2036,7 @@ abstract class AbstractSmrPlayer {
 		$this->setCurrentBountySmrCredits($type, $this->getCurrentBountySmrCredits($type) - $credits);
 	}
 
-	public function setBountiesClaimable(AbstractSmrPlayer $claimer): void {
+	public function setBountiesClaimable(self $claimer): void {
 		foreach ($this->getBounties() as $bounty) {
 			if ($bounty['Claimer'] == 0) {
 				$bounty['Claimer'] = $claimer->getAccountID();
@@ -2191,7 +2191,7 @@ abstract class AbstractSmrPlayer {
 		$this->setUnderAttack(false);
 	}
 
-	public function killPlayerByPlayer(AbstractSmrPlayer $killer): array {
+	public function killPlayerByPlayer(self $killer): array {
 		$return = [];
 		$msg = $this->getBBLink();
 
@@ -2926,7 +2926,7 @@ abstract class AbstractSmrPlayer {
 		return false;
 	}
 
-	public function canSee(AbstractSmrPlayer $otherPlayer): bool {
+	public function canSee(self $otherPlayer): bool {
 		if (!$otherPlayer->getShip()->isCloaked()) {
 			return true;
 		}
@@ -2939,51 +2939,51 @@ abstract class AbstractSmrPlayer {
 		return false;
 	}
 
-	public function equals(AbstractSmrPlayer $otherPlayer = null): bool {
+	public function equals(self $otherPlayer = null): bool {
 		return $otherPlayer !== null && $this->getAccountID() == $otherPlayer->getAccountID() && $this->getGameID() == $otherPlayer->getGameID();
 	}
 
-	public function sameAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
+	public function sameAlliance(self $otherPlayer = null): bool {
 		return $this->equals($otherPlayer) || ($otherPlayer !== null && $this->getGameID() == $otherPlayer->getGameID() && $this->hasAlliance() && $this->getAllianceID() == $otherPlayer->getAllianceID());
 	}
 
-	public function sharedForceAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
+	public function sharedForceAlliance(self $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function forceNAPAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
+	public function forceNAPAlliance(self $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function planetNAPAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
+	public function planetNAPAlliance(self $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderNAPAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
+	public function traderNAPAlliance(self $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderMAPAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
+	public function traderMAPAlliance(self $otherPlayer = null): bool {
 		return $this->traderAttackTraderAlliance($otherPlayer) && $this->traderDefendTraderAlliance($otherPlayer);
 	}
 
-	public function traderAttackTraderAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
+	public function traderAttackTraderAlliance(self $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderDefendTraderAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
+	public function traderDefendTraderAlliance(self $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderAttackForceAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
+	public function traderAttackForceAlliance(self $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderAttackPortAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
+	public function traderAttackPortAlliance(self $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderAttackPlanetAlliance(AbstractSmrPlayer $otherPlayer = null): bool {
+	public function traderAttackPlanetAlliance(self $otherPlayer = null): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
