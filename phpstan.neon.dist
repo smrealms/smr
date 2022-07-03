@@ -72,3 +72,8 @@ parameters:
             paths:
                 - src/bootstrap.php
                 - src/engine/Default/bug_report_processing.php
+        -
+            # https://github.com/thephpleague/oauth2-client/issues/897
+            message: '#Parameter \#1 \$token of method .*::getResourceOwner\(\) expects .*AccessToken, .*AccessTokenInterface given.#'
+            path: src/lib/Smr/SocialLogin
+            count: 2
