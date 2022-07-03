@@ -17,6 +17,12 @@ if ($playerIsWhite) {
 }
 $template->assign('Board', $board);
 
+// Check if there is a winner
+if ($chessGame->hasEnded()) {
+	$winningPlayer = SmrPlayer::getPlayer($chessGame->getWinner(), $player->getGameID());
+	$template->assign('Winner', $winningPlayer->getLinkedDisplayName(false));
+}
+
 // File coordinates depend on the player's color.
 // (So do row coordinates, but these are reversed automatically.)
 $fileCoords = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];

@@ -23,7 +23,7 @@ if ($action == 'Deposit' || $action == 'Withdraw') {
 
 		$amount = $planet->increaseCredits($amount); // handles overflow
 		$player->decreaseCredits($amount);
-	} elseif ($action == 'Withdraw') {
+	} else { // $action == 'Withdraw'
 		if ($planet->getCredits() < $amount) {
 			create_error('There are not enough credits in the planetary account!');
 		}

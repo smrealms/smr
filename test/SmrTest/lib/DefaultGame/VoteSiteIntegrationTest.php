@@ -31,27 +31,38 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 		$link->getTimeUntilFreeTurns();
 	}
 
-	public function test_vote_callback_workflow(): void {
+	public function test_vote_callback_happy_path(): void {
 		// Get a vote site that is configured to award free turns
-		$link = new VoteLink(VoteSite::TWG, 1, 0);
+		$link = new VoteLink(VoteSite::TWG, 1, 2);
 
 		// Test that the site is eligible to award free turns by default
-		self::assertTrue($link->getTimeUntilFreeTurns() < 0);
-		// Test that the site is in the "not clicked" state by default
-		self::assertFalse($link->isClicked());
+		self::assertTrue($link->freeTurnsReady());
 
-		// Test again after setting the "clicked" link state
+		// Simulate clicking a vote link
 		$link->setClicked();
-		self::assertTrue($link->isClicked());
 
-		// Now pretend that we have awarded free turns
+		// Simulate awarding free turns
+		self::assertTrue($link->setFreeTurnsAwarded());
+
+		// Test that we're not ready to award free turns anymore
+		self::assertFalse($link->freeTurnsReady(true));
+	}
+
+	public function test_vote_callback_abuse_detection(): void {
+		// Get a vote site that is configured to award free turns
+		$link = new VoteLink(VoteSite::TWG, 1, 2);
+
+		// Award free turns normally
+		$link->setClicked();
 		$link->setFreeTurnsAwarded();
 
-		// Test that we're back to the "not clicked" link state
-		self::assertFalse($link->isClicked());
-		// Test that we're not ready to award free turns anymore
-		VoteLink::clearCache();
-		self::assertSame(VoteLink::TIME_BETWEEN_VOTING, $link->getTimeUntilFreeTurns());
+		// Test that we do not award free turns again
+		self::assertFalse($link->setFreeTurnsAwarded());
+
+		// Test that circumventing the timeout throws an exception
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Account ID 1 attempted vote link abuse');
+		$link->setClicked();
 	}
 
 	public function test_vote_button_properties(): void {
@@ -105,14 +116,9 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 			],
 		];
 
-		// Now claim free turns for each site
-		foreach (VoteSite::cases() as $site) {
-			(new VoteLink($site, $accountID, $gameID))->setFreeTurnsAwarded();
-		}
-		VoteLink::clearCache();
-
 		foreach ($expected as $siteID => $data) {
-			$link = new VoteLink(VoteSite::from($siteID), $accountID, $gameID);
+			// game ID 0 suppresses free turn links
+			$link = new VoteLink(VoteSite::from($siteID), $accountID, 0);
 			self::assertSame($data['img'], $link->getImg());
 			self::assertSame($data['url'], $link->getUrl());
 			self::assertSame($data['sn'], $link->getSN());
@@ -128,13 +134,19 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 		self::assertTrue(VoteLink::getMinTimeUntilFreeTurns($accountID, $gameID) < 0);
 
 		// Test that min time is still negative if we claim turns on one site
-		(new VoteLink(VoteSite::DOG, $accountID, $gameID))->setFreeTurnsAwarded();
+		$link = new VoteLink(VoteSite::DOG, $accountID, $gameID);
+		$link->setClicked();
+		$link->setFreeTurnsAwarded();
 		VoteLink::clearCache();
 		self::assertTrue(VoteLink::getMinTimeUntilFreeTurns($accountID, $gameID) < 0);
 
 		// Test that the min time is positive if we claim turns on all sites
 		foreach (VoteSite::cases() as $site) {
-			(new VoteLink($site, $accountID, $gameID))->setFreeTurnsAwarded();
+			$link = new VoteLink($site, $accountID, $gameID);
+			if ($link->freeTurnsReady()) {
+				$link->setClicked();
+				$link->setFreeTurnsAwarded();
+			}
 		}
 		VoteLink::clearCache();
 		self::assertSame(VoteLink::TIME_BETWEEN_VOTING, VoteLink::getMinTimeUntilFreeTurns($accountID, $gameID));

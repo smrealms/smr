@@ -2,6 +2,7 @@
 
 namespace Smr;
 
+use Exception;
 use SmrPlayer;
 
 /**
@@ -34,6 +35,7 @@ class Messages {
 			MSG_GLOBAL => 'images/global_msg.png',
 			MSG_ADMIN => 'images/admin_msg.png',
 			MSG_CASINO => 'images/casino_msg.png',
+			default => throw new Exception('No image for message type ID: ' . $typeID),
 		};
 	}
 

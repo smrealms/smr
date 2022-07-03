@@ -1,5 +1,64 @@
 <?php declare(strict_types=1);
 
+function php_link_check(string $url): string|false {
+	/*	Purpose: Check HTTP Links
+	*	Usage:	$var = phpLinkCheck(absoluteURI)
+	*					$var['Status-Code'] will return the HTTP status code
+	*					(e.g. 200 or 404). In case of a 3xx code (redirection)
+	*					$var['Location-Status-Code'] will contain the status
+	*					code of the new loaction.
+	*					See echo_r($var) for the complete result
+	*
+	*	Author:	Johannes Froemter <j-f@gmx.net>
+	*	Date:		2001-04-14
+	*	Version: 0.1 (currently requires PHP4)
+	*/
+	$url = trim($url);
+	if (!preg_match('=://=', $url)) {
+		$url = 'http://' . $url;
+	}
+	$url = parse_url($url);
+	if (!in_array(strtolower($url['scheme']), ['http', 'https'])) {
+		return false;
+	}
+
+	if (!isset($url['port'])) {
+		$url['port'] = 80;
+	}
+	if (!isset($url['path'])) {
+		$url['path'] = '/';
+	}
+
+	if (!checkdnsrr($url['host'], 'A')) {
+		return false;
+	}
+
+	$fp = fsockopen($url['host'], $url['port'], $errno, $errstr, 30);
+	if ($fp === false) {
+		return false;
+	}
+
+	$head = '';
+	$httpRequest = 'HEAD ' . $url['path'] . ' HTTP/1.1' . EOL
+							. 'Host: ' . $url['host'] . EOL
+							. 'Connection: close' . EOL . EOL;
+	fwrite($fp, $httpRequest);
+	while (!feof($fp)) {
+		$head .= fgets($fp, 1024);
+	}
+	fclose($fp);
+
+	preg_match('=^(HTTP/\d+\.\d+) (\d{3}) ([^\r\n]*)=', $head, $matches);
+	$http = [
+		'Status-Line' => $matches[0],
+		'HTTP-Version' => $matches[1],
+		'Status-Code' => $matches[2],
+		'Reason-Phrase' => $matches[3],
+	];
+
+	return $http['Status-Code'];
+}
+
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
@@ -125,62 +184,3 @@ if (!empty($comment)) {
 $container = Page::create('album_edit.php');
 $container['SuccessMsg'] = 'SUCCESS: Your information has been updated!';
 $container->go();
-
-function php_link_check(string $url): string|false {
-	/*	Purpose: Check HTTP Links
-	*	Usage:	$var = phpLinkCheck(absoluteURI)
-	*					$var['Status-Code'] will return the HTTP status code
-	*					(e.g. 200 or 404). In case of a 3xx code (redirection)
-	*					$var['Location-Status-Code'] will contain the status
-	*					code of the new loaction.
-	*					See echo_r($var) for the complete result
-	*
-	*	Author:	Johannes Froemter <j-f@gmx.net>
-	*	Date:		2001-04-14
-	*	Version: 0.1 (currently requires PHP4)
-	*/
-	$url = trim($url);
-	if (!preg_match('=://=', $url)) {
-		$url = 'http://' . $url;
-	}
-	$url = parse_url($url);
-	if (!in_array(strtolower($url['scheme']), ['http', 'https'])) {
-		return false;
-	}
-
-	if (!isset($url['port'])) {
-		$url['port'] = 80;
-	}
-	if (!isset($url['path'])) {
-		$url['path'] = '/';
-	}
-
-	if (!checkdnsrr($url['host'], 'A')) {
-		return false;
-	}
-
-	$fp = fsockopen($url['host'], $url['port'], $errno, $errstr, 30);
-	if ($fp === false) {
-		return false;
-	}
-
-	$head = '';
-	$httpRequest = 'HEAD ' . $url['path'] . ' HTTP/1.1' . EOL
-							. 'Host: ' . $url['host'] . EOL
-							. 'Connection: close' . EOL . EOL;
-	fwrite($fp, $httpRequest);
-	while (!feof($fp)) {
-		$head .= fgets($fp, 1024);
-	}
-	fclose($fp);
-
-	preg_match('=^(HTTP/\d+\.\d+) (\d{3}) ([^\r\n]*)=', $head, $matches);
-	$http = [
-		'Status-Line' => $matches[0],
-		'HTTP-Version' => $matches[1],
-		'Status-Code' => $matches[2],
-		'Reason-Phrase' => $matches[3],
-	];
-
-	return $http['Status-Code'];
-}

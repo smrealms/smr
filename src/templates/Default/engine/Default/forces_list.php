@@ -32,5 +32,5 @@ if (empty($Forces)) { ?>
 		</tbody>
 	</table>
 
-	<?php $this->setListjsInclude('forces_list');
+	<?php $this->listjsInclude = 'forces_list';
 }

@@ -5,6 +5,7 @@ namespace SmrTest\lib\DefaultGame;
 use AbstractSmrShip;
 use PHPUnit\Framework\TestCase;
 use SmrForce;
+use SmrGalaxy;
 use SmrTest\TestUtils;
 
 /**
@@ -290,6 +291,45 @@ class SmrForceTest extends TestCase {
 				],
 				0, 0, 0,
 			],
+		];
+	}
+
+	/**
+	 * @dataProvider dataProvider_getMaxExpireTime
+	 */
+	public function test_getMaxExpireTime(int $sds, int $cds, int $mines, int $galMaxForceTime, int $expected): void {
+		// Stub the galaxy that this force is inside
+		$galaxy = $this->createStub(SmrGalaxy::class);
+		$galaxy->method('getMaxForceTime')->willReturn($galMaxForceTime);
+
+		// Partially mock the force so we can use the galaxy stub
+		$force = $this->createPartialMock($this->force::class, ['getGalaxy']);
+		$force->method('getGalaxy')->willReturn($galaxy);
+
+		// Set the number of forces, and check result
+		$force->setSDs($sds);
+		$force->setCDs($cds);
+		$force->setMines($mines);
+		self::assertSame($expected, $force->getMaxExpireTime());
+	}
+
+	/**
+	 * @return array<array<int>>
+	 */
+	public function dataProvider_getMaxExpireTime(): array {
+		$above = SmrForce::LOWEST_MAX_EXPIRE_SCOUTS_ONLY + 1;
+		$below = SmrForce::LOWEST_MAX_EXPIRE_SCOUTS_ONLY - 1;
+		return [
+			// sds, cds, mines, galaxy max expire time, expected max expire time
+			[1, 0, 0, $above, $above],
+			[1, 0, 0, $below, SmrForce::LOWEST_MAX_EXPIRE_SCOUTS_ONLY],
+			[1, 1, 0, $below, $below],
+			[1, 0, 1, $below, $below],
+			[1, 1, 1, $below, $below],
+			[0, 1, 0, $below, $below],
+			[0, 0, 1, $below, $below],
+			[0, 1, 1, $below, $below],
+			[0, 0, 0, $below, 0],
 		];
 	}
 

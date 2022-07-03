@@ -34,6 +34,6 @@
 			</tbody>
 		</table>
 
-		<?php $this->setListjsInclude('current_players');
+		<?php $this->listjsInclude = 'current_players';
 	} ?>
 </div>

@@ -17,6 +17,7 @@ $location = SmrLocation::getLocation($var['LocationID']);
 [$type, $body] = match (true) {
 	$location->isHQ() => [BountyType::HQ, 'government.php'],
 	$location->isUG() => [BountyType::UG, 'underground.php'],
+	default => throw new Exception('Location is not HQ or UG'),
 };
 $container = Page::create($body);
 $container->addVar('LocationID');

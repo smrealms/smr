@@ -113,9 +113,7 @@ class NpcActor {
 				debug('We are protected, time to switch to another NPC.');
 				throw new FinalAction();
 			}
-			if ($player->getTurns() < NPC_LOW_TURNS) {
-				debug('Low Turns:' . $player->getTurns());
-			}
+			debug('Low Turns:' . $player->getTurns());
 			return plotToFed($player);
 		}
 		if ($player->hasPlottedCourse()) {

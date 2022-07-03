@@ -20,4 +20,4 @@
 		} ?>
 	</tbody>
 </table>
-<?php $this->setListjsInclude('message_box'); ?>
+<?php $this->listjsInclude = 'message_box'; ?>

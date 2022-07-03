@@ -2,6 +2,8 @@
 
 namespace Smr\Chess;
 
+use Exception;
+
 class ChessPiece {
 
 	public const KING = 1;
@@ -207,6 +209,10 @@ class ChessPiece {
 		return '&#' . (9811 + $pieceID + ($colour == ChessGame::PLAYER_WHITE ? 0 : 6)) . ';';
 	}
 
+	/**
+	 * @param self::* $pieceID
+	 * @param ChessGame::PLAYER_* $colour
+	 */
 	public static function getLetterForPiece(int $pieceID, string $colour): string {
 		$letter = match ($pieceID) {
 			self::KING => 'k',
@@ -222,6 +228,10 @@ class ChessPiece {
 		return $letter;
 	}
 
+	/**
+	 * @param 'K'|'k'|'Q'|'q'|'R'|'r'|'B'|'b'|'N'|'n'|'P'|'p' $letter
+	 * @return self::*
+	 */
 	public static function getPieceForLetter(string $letter): int {
 		return match (strtolower($letter)) {
 			'k' => self::KING,
@@ -230,6 +240,7 @@ class ChessPiece {
 			'b' => self::BISHOP,
 			'n' => self::KNIGHT,
 			'p' => self::PAWN,
+			default => throw new Exception('Invalid chess piece letter: ' . $letter),
 		};
 	}
 

@@ -8,6 +8,7 @@ use Page;
 use Smr;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Exceptions\UserError;
 use SmrAccount;
 use SmrPlayer;
 
@@ -15,6 +16,10 @@ class ChessGame {
 
 	public const PLAYER_BLACK = 'Black';
 	public const PLAYER_WHITE = 'White';
+
+	public const END_RESIGN = 0;
+	public const END_CANCEL = 1;
+
 	protected static array $CACHE_CHESS_GAMES = [];
 
 	private Smr\Database $db;
@@ -277,20 +282,14 @@ class ChessGame {
 
 		// Castling
 		$castling = '';
-		if ($this->hasMoved[self::PLAYER_WHITE][ChessPiece::KING] !== true) {
-			if ($this->hasMoved[self::PLAYER_WHITE][ChessPiece::ROOK]['King'] !== true) {
-				$castling .= 'K';
-			}
-			if ($this->hasMoved[self::PLAYER_WHITE][ChessPiece::ROOK]['Queen'] !== true) {
-				$castling .= 'Q';
-			}
-		}
-		if ($this->hasMoved[self::PLAYER_BLACK][ChessPiece::KING] !== true) {
-			if ($this->hasMoved[self::PLAYER_BLACK][ChessPiece::ROOK]['King'] !== true) {
-				$castling .= 'k';
-			}
-			if ($this->hasMoved[self::PLAYER_BLACK][ChessPiece::ROOK]['Queen'] !== true) {
-				$castling .= 'q';
+		foreach ([self::PLAYER_WHITE, self::PLAYER_BLACK] as $colour) {
+			if ($this->hasMoved[$colour][ChessPiece::KING] !== true) {
+				if ($this->hasMoved[$colour][ChessPiece::ROOK]['King'] !== true) {
+					$castling .= ChessPiece::getLetterForPiece(ChessPiece::KING, $colour);
+				}
+				if ($this->hasMoved[$colour][ChessPiece::ROOK]['Queen'] !== true) {
+					$castling .= ChessPiece::getLetterForPiece(ChessPiece::QUEEN, $colour);
+				}
 			}
 		}
 		if ($castling == '') {
@@ -298,11 +297,14 @@ class ChessGame {
 		}
 		$fen .= $castling . ' ';
 
-		if ($this->hasMoved[ChessPiece::PAWN][0] != -1) {
-			$fen .= chr(ord('a') + $this->hasMoved[ChessPiece::PAWN][0]);
-			$fen .= match ($this->hasMoved[ChessPiece::PAWN][1]) {
+		// En passant
+		[$pawnX, $pawnY] = $this->hasMoved[ChessPiece::PAWN];
+		if ($pawnX != -1) {
+			$fen .= chr(ord('a') + $pawnX);
+			$fen .= match ($pawnY) {
 				3 => '6',
 				4 => '3',
+				default => throw new Exception('Invalid en passant rank: ' . $pawnY),
 			};
 		} else {
 			$fen .= '-';
@@ -603,7 +605,7 @@ class ChessGame {
 	/**
 	 * @param string $move Algebraic notation like "b2b4"
 	 */
-	public function tryAlgebraicMove(string $move): int {
+	public function tryAlgebraicMove(string $move): void {
 		if (strlen($move) != 4 && strlen($move) != 5) {
 			throw new Exception('Move of length "' . strlen($move) . '" is not valid, full move: ' . $move);
 		}
@@ -619,32 +621,26 @@ class ChessGame {
 		$toX = ord($toFile) - $aVal;
 		$y = $rank - 1;
 		$toY = $toRank - 1;
-		if ($x < 0 || $x > 7
-			|| $y < 0 || $y > 7
-			|| $toX < 0 || $toX > 7
-			|| $toY < 0 || $toY > 7
-		) {
-			throw new Exception('Invalid move: ' . $move);
-		}
+
 		$pawnPromotionPiece = ChessPiece::QUEEN;
 		if (isset($move[4])) {
 			$pawnPromotionPiece = ChessPiece::getPieceForLetter($move[4]);
 		}
-		return $this->tryMove($x, $y, $toX, $toY, $this->getCurrentTurnColour(), $pawnPromotionPiece);
+		$this->tryMove($x, $y, $toX, $toY, $this->getCurrentTurnColour(), $pawnPromotionPiece);
 	}
 
-	public function tryMove(int $x, int $y, int $toX, int $toY, string $forColour, int $pawnPromotionPiece): int {
+	public function tryMove(int $x, int $y, int $toX, int $toY, string $forColour, int $pawnPromotionPiece): string {
 		if ($this->hasEnded()) {
-			return 5;
+			throw new UserError('This game is already over');
 		}
 		if ($this->getCurrentTurnColour() != $forColour) {
-			return 4;
+			throw new UserError('It is not your turn to move');
 		}
 		$lastTurnPlayer = $this->getCurrentTurnPlayer();
 		$this->getBoard();
 		$p = $this->board[$y][$x];
 		if ($p === null || $p->colour != $forColour) {
-			return 2;
+			throw new UserError('There is no piece on that square');
 		}
 
 		$moves = $p->getPossibleMoves($this->board, $this->getHasMoved(), $forColour);
@@ -656,8 +652,7 @@ class ChessGame {
 			}
 		}
 		if (!$moveIsLegal) {
-			// Invalid move was attempted
-			return 6;
+			throw new UserError('That move is not legal');
 		}
 
 		$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
@@ -698,7 +693,7 @@ class ChessGame {
 		$this->getMoves(); // make sure $this->moves is initialized
 		$this->moves[] = $this->createMove($pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking, $this->getCurrentTurnColour(), $castlingType, $moveInfo['EnPassant'], $promotionPieceID);
 		if (self::isPlayerChecked($this->board, $this->getHasMoved(), $p->colour)) {
-			return 3;
+			throw new UserError('You cannot end your turn in check');
 		}
 
 		$otherPlayer = $this->getCurrentTurnPlayer();
@@ -746,12 +741,13 @@ class ChessGame {
 						SET x=' . $this->db->escapeNumber($moveInfo['Castling']['ToX']) . '
 						WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($p->colour) . ' AND x = ' . $this->db->escapeNumber($moveInfo['Castling']['X']) . ' AND y = ' . $this->db->escapeNumber($y) . ';');
 		}
-		$return = 0;
+
 		if ($checking == 'MATE') {
+			$message = 'You have checkmated your opponent, congratulations!';
 			$this->setWinner($this->getColourID($forColour));
-			$return = 1;
 			SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'You have just lost [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
 		} else {
+			$message = ''; // non-mating valid move, no message
 			SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'It is now your turn in [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
 			if ($checking == 'CHECK') {
 				$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Check Given'], HOF_PUBLIC);
@@ -760,7 +756,7 @@ class ChessGame {
 		}
 		$currentPlayer->saveHOF();
 		$otherPlayer->saveHOF();
-		return $return;
+		return $message;
 	}
 
 	public function getChessGameID(): int {
@@ -791,6 +787,9 @@ class ChessGame {
 		return $this->blackID;
 	}
 
+	/**
+	 * @param self::PLAYER_* $colour
+	 */
 	public function getColourID(string $colour): int {
 		return match ($colour) {
 			self::PLAYER_WHITE => $this->getWhiteID(),
@@ -798,6 +797,9 @@ class ChessGame {
 		};
 	}
 
+	/**
+	 * @param self::PLAYER_* $colour
+	 */
 	public function getColourPlayer(string $colour): AbstractSmrPlayer {
 		return SmrPlayer::getPlayer($this->getColourID($colour), $this->getGameID());
 	}
@@ -806,6 +808,7 @@ class ChessGame {
 		return match ($accountID) {
 			$this->getWhiteID() => self::PLAYER_WHITE,
 			$this->getBlackID() => self::PLAYER_BLACK,
+			default => throw new Exception('Account ID is not in this chess game: ' . $accountID),
 		};
 	}
 
@@ -843,6 +846,9 @@ class ChessGame {
 		return $this->hasMoved;
 	}
 
+	/**
+	 * @return self::PLAYER_*
+	 */
 	public function getCurrentTurnColour(): string {
 		return count($this->getMoves()) % 2 == 0 ? self::PLAYER_WHITE : self::PLAYER_BLACK;
 	}
@@ -875,6 +881,9 @@ class ChessGame {
 		return $this->getWhiteAccount()->isNPC() || $this->getBlackAccount()->isNPC();
 	}
 
+	/**
+	 * @param self::PLAYER_* $colour
+	 */
 	public static function getOtherColour(string $colour): string {
 		return match ($colour) {
 			self::PLAYER_WHITE => self::PLAYER_BLACK,
@@ -882,6 +891,9 @@ class ChessGame {
 		};
 	}
 
+	/**
+	 * @return self::END_*
+	 */
 	public function resign(int $accountID): int {
 		if ($this->hasEnded() || !$this->isPlayer($accountID)) {
 			throw new Exception('Invalid resign conditions');
@@ -893,7 +905,7 @@ class ChessGame {
 			$this->db->write('UPDATE chess_game
 							SET end_time=' . $this->db->escapeNumber(Epoch::time()) . '
 							WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
-			return 1;
+			return self::END_CANCEL;
 		}
 
 		$loserColour = $this->getColourForAccountID($accountID);
@@ -902,7 +914,7 @@ class ChessGame {
 		$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
 		$results['Loser']->increaseHOF(1, [$chessType, 'Games', 'Resigned'], HOF_PUBLIC);
 		SmrPlayer::sendMessageFromCasino($results['Winner']->getGameID(), $results['Winner']->getPlayerID(), '[player=' . $results['Loser']->getPlayerID() . '] just resigned against you in [chess=' . $this->getChessGameID() . '].');
-		return 0;
+		return self::END_RESIGN;
 	}
 
 	public function getPlayGameHREF(): string {

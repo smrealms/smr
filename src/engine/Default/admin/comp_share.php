@@ -6,10 +6,7 @@ $account = $session->getAccount();
 
 $template->assign('PageTopic', 'Computer Sharing');
 
-//future features
-$skipUnusedAccs = true;
-$skipClosedAccs = false;
-$skipExceptions = false;
+$unusedAfter = 86400 * 365; // 1 year
 
 $used = [];
 
@@ -38,29 +35,16 @@ foreach ($dbResult->records() as $dbRecord) {
 	}
 
 	if ($rows > 1) {
-		$dbResult2 = $db->read('SELECT login FROM account WHERE account_id =' . $db->escapeNumber($currTabAccId) . ($skipUnusedAccs ? ' AND last_login > ' . $db->escapeNumber(Smr\Epoch::time() - 86400 * 30) : ''));
+		$dbResult2 = $db->read('SELECT login FROM account WHERE account_id =' . $db->escapeNumber($currTabAccId) . ' AND last_login > ' . $db->escapeNumber(Smr\Epoch::time() - $unusedAfter));
 		if (!$dbResult2->hasRecord()) {
 			continue;
 		}
 		$currTabAccLogin = $dbResult2->record()->getString('login');
 
-		if ($skipClosedAccs) {
-			$dbResult2 = $db->read('SELECT 1 FROM account_is_closed WHERE account_id = ' . $db->escapeNumber($currTabAccId));
-			if ($dbResult2->hasRecord()) {
-				continue;
-			}
-		}
-
-		if ($skipExceptions) {
-			$dbResult2 = $db->read('SELECT 1 FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($currTabAccId));
-			if ($dbResult2->hasRecord()) {
-				continue;
-			}
-		}
-
 		$rows = [];
 		foreach ($accountIDs as $currLinkAccId) {
-			$dbResult2 = $db->read('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = ' . $db->escapeNumber($currLinkAccId) . ($skipUnusedAccs ? ' AND last_login > ' . $db->escapeNumber(Smr\Epoch::time() - 86400 * 30) : ''));
+			$currLinkAccId = (int)$currLinkAccId;
+			$dbResult2 = $db->read('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = ' . $db->escapeNumber($currLinkAccId) . ' AND last_login > ' . $db->escapeNumber(Smr\Epoch::time() - $unusedAfter));
 			if (!$dbResult2->hasRecord()) {
 				continue;
 			}

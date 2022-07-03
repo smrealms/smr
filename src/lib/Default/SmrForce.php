@@ -6,7 +6,7 @@ class SmrForce {
 	protected static array $CACHE_SECTOR_FORCES = [];
 	protected static array $TIDIED_UP = [];
 
-	protected const LOWEST_MAX_EXPIRE_SCOUTS_ONLY = 432000; // 5 days
+	public const LOWEST_MAX_EXPIRE_SCOUTS_ONLY = 432000; // 5 days
 	protected const TIME_PER_SCOUT_ONLY = 86400; // 1 = 1 day
 	protected const TIME_PERCENT_PER_SCOUT = 0.02; // 1/50th
 	protected const TIME_PERCENT_PER_COMBAT = 0.02; // 1/50th
@@ -281,7 +281,7 @@ class SmrForce {
 		if ($this->hasCDs() || $this->hasMines()) {
 			return $this->getMaxGalaxyExpireTime();
 		}
-		if (!$this->hasCDs() && !$this->hasMines() && $this->hasSDs()) {
+		if ($this->hasSDs()) {
 			return max(self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY, $this->getMaxGalaxyExpireTime());
 		}
 		return 0;
@@ -389,7 +389,7 @@ class SmrForce {
 
 	public function getAttackForcesHREF(): string {
 		$container = Page::create('forces_attack_processing.php');
-		$container['action'] = 'attack';
+		$container['bump'] = false;
 		$container['owner_id'] = $this->getOwnerID();
 		return $container->href();
 	}
@@ -458,6 +458,7 @@ class SmrForce {
 		if ($this->hasMines()) {
 			$thisMines = new SmrMines($this->getMines());
 			$results['Results']['Mines'] = $thisMines->shootPlayerAsForce($this, array_rand_value($targetPlayers), $minesAreAttacker);
+			$this->setMines($thisMines->getAmount()); // kamikaze
 			$results['TotalDamage'] += $results['Results']['Mines']['ActualDamage']['TotalDamage'];
 		}
 
@@ -471,6 +472,7 @@ class SmrForce {
 			if ($this->hasSDs()) {
 				$thisSDs = new SmrScoutDrones($this->getSDs());
 				$results['Results']['Scouts'] = $thisSDs->shootPlayerAsForce($this, array_rand_value($targetPlayers));
+				$this->setSDs($thisSDs->getAmount()); // kamikaze
 				$results['TotalDamage'] += $results['Results']['Scouts']['ActualDamage']['TotalDamage'];
 			}
 		}

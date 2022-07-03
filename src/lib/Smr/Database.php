@@ -2,6 +2,7 @@
 
 namespace Smr;
 
+use Exception;
 use mysqli;
 use RuntimeException;
 use Smr\Container\DiContainer;
@@ -189,6 +190,7 @@ class Database {
 			is_string($escape) => $this->escapeString($escape),
 			is_array($escape) => $this->escapeArray($escape),
 			is_object($escape) => $this->escapeObject($escape),
+			default => throw new Exception('Unhandled value: ' . $escape)
 		};
 	}
 

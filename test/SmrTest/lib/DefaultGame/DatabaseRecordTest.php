@@ -7,7 +7,6 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use Smr\DatabaseRecord;
 use TypeError;
-use UnhandledMatchError;
 
 /**
  * @covers \Smr\DatabaseRecord
@@ -54,7 +53,8 @@ class DatabaseRecordTest extends TestCase {
 
 	public function test_getBoolean_with_non_boolean_field(): void {
 		$record = new DatabaseRecord(['name' => 'NONBOOLEAN']);
-		$this->expectException(UnhandledMatchError::class);
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Unexpected boolean record: NONBOOLEAN');
 		$record->getBoolean('name');
 	}
 

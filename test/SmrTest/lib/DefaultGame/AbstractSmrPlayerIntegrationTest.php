@@ -123,4 +123,35 @@ class AbstractSmrPlayerIntegrationTest extends BaseIntegrationSpec {
 		self::assertTrue($player->isNameChanged());
 	}
 
+	/**
+	 * @dataProvider dataProvider_alignment
+	 */
+	public function test_alignment(int $alignment, bool $isGood, bool $isEvil, bool $isNeutral): void {
+		// Create a player with a specific alignment
+		$player = AbstractSmrPlayer::createPlayer(1, 1, 'test', RACE_HUMAN, false);
+		$player->setAlignment($alignment);
+
+		// Test the alignment querying methods
+		self::assertSame($alignment, $player->getAlignment());
+		self::assertSame($isGood, $player->hasGoodAlignment());
+		self::assertSame($isEvil, $player->hasEvilAlignment());
+		self::assertSame($isNeutral, $player->hasNeutralAlignment());
+	}
+
+	/**
+	 * @return array<array{int, bool, bool, bool}>
+	 */
+	public function dataProvider_alignment(): array {
+		// Test at, above, and below alignment thresholds
+		return [
+			[0, false, false, true],
+			[ALIGNMENT_GOOD, true, false, false],
+			[ALIGNMENT_GOOD + 1, true, false, false],
+			[ALIGNMENT_GOOD - 1, false, false, true],
+			[ALIGNMENT_EVIL, false, true, false],
+			[ALIGNMENT_EVIL + 1, false, false, true],
+			[ALIGNMENT_EVIL - 1, false, true, false],
+		];
+	}
+
 }

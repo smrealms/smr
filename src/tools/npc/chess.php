@@ -1,6 +1,25 @@
 <?php declare(strict_types=1);
+
+function debug($message, $debugObject = null) {
+	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ? EOL . var_export($debugObject, true) : '') . EOL;
+	$db = Smr\Database::getInstance();
+	$logID = $db->insert('npc_logs', [
+		'script_id' => defined('SCRIPT_ID') ? SCRIPT_ID : 0,
+		'npc_id' => 0,
+		'time' => 'NOW()',
+		'message' => $db->escapeString($message),
+		'debug_info' => $db->escapeString(var_export($debugObject, true)),
+		'var' => $db->escapeString(''),
+	]);
+
+	// On the first call to debug, we need to update the script_id retroactively
+	if (!defined('SCRIPT_ID')) {
+		define('SCRIPT_ID', $logID);
+		$db->write('UPDATE npc_logs SET script_id=' . SCRIPT_ID . ' WHERE log_id=' . SCRIPT_ID);
+	}
+}
+
 try {
-	echo '<pre>';
 	// global config
 	require_once(realpath(dirname(__FILE__)) . '/../../bootstrap.php');
 
@@ -63,36 +82,13 @@ try {
 			$move = explode(' ', $move);
 
 			debug('Taking move: ', $move[1]);
-			debug('Tried move: ' . $chessGame->tryAlgebraicMove($move[1]));
+			$chessGame->tryAlgebraicMove($move[1]);
 			writeToEngine('ucinewgame', false);
 		}
 		// Always sleep for a while to make sure that PHP can't run at 100%.
 		usleep(UCI_SLEEP_BETWEEN_CYCLES_US);
 	}
 
-	fclose($toEngine);
-	fclose($fromEngine);
-	proc_close($engine);
 } catch (Throwable $e) {
 	logException($e);
-	exit;
-}
-
-function debug($message, $debugObject = null) {
-	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ? EOL . var_export($debugObject, true) : '') . EOL;
-	$db = Smr\Database::getInstance();
-	$logID = $db->insert('npc_logs', [
-		'script_id' => defined('SCRIPT_ID') ? SCRIPT_ID : 0,
-		'npc_id' => 0,
-		'time' => 'NOW()',
-		'message' => $db->escapeString($message),
-		'debug_info' => $db->escapeString(var_export($debugObject, true)),
-		'var' => $db->escapeString(''),
-	]);
-
-	// On the first call to debug, we need to update the script_id retroactively
-	if (!defined('SCRIPT_ID')) {
-		define('SCRIPT_ID', $logID);
-		$db->write('UPDATE npc_logs SET script_id=' . SCRIPT_ID . ' WHERE log_id=' . SCRIPT_ID);
-	}
 }

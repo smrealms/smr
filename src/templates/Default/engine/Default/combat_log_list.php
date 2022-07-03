@@ -57,7 +57,7 @@ if (isset($Message)) {?>
 				</tbody>
 			</table>
 		</form>
-		<?php $this->setListjsInclude('combat_log_list');
+		<?php $this->listjsInclude = 'combat_log_list';
 	} else { ?>
 		No <?php echo $LogType; ?> combat logs found<?php
 	} ?>

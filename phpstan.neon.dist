@@ -1,6 +1,6 @@
 # Distributed PHPStan config
 parameters:
-    level: 3
+    level: 4
     paths:
         - src
         - test
@@ -14,14 +14,61 @@ parameters:
     checkInternalClassCaseSensitivity: true
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
 
+    dynamicConstantNames:
+        - BUG_REPORT_TO_ADDRESSES
+        - ENABLE_BETA
+        - ENABLE_DEBUG
+        - ENABLE_NPCS_CHESS
+        - FACEBOOK_APP_ID
+        - GOOGLE_ANALYTICS_ID
+        - GOOGLE_CLIENT_ID
+        - IRC_BOT_VERBOSE_PING
+        - NPC_LOG_TO_DATABASE
+        - RECAPTCHA_PRIVATE
+        - SMTP_HOSTNAME
+        - TWITTER_CONSUMER_KEY
+        - USING_AJAX
+        # We code in protection against a value of 0
+        - SmrMines::TOTAL_ENEMY_MINES_MODIFIER
+
     #----------------------------------------------
     # Warning suppression (to be fixed eventually!)
     #----------------------------------------------
 
     ignoreErrors:
-        # Template files currently emit many undefined variable errors because
-        # we source them inside Template::includeTemplate. This will require a
-        # full redesign of the Template class to fix. (Level 1)
         -
+            # Template files currently emit many undefined variable errors
+            # because we source them inside Template::includeTemplate. This
+            # will require a redesign of the Template class to fix. (Level 1)
             message: '#Variable .* might not be defined#'
             path: src/template
+        -
+            # This while loop is needed to reconnect the IRC bot after server
+            # timeouts. It could be replaced with Docker daemonization if we
+            # modify the delayed callback actions. (Level 4)
+            message: '#While loop condition is always true.#'
+            path: src/tools/irc/irc.php
+            count: 1
+        -
+            # The `$targetPlayer` has impure functions called on it, which
+            # should reset its method return value cache, but PHPStan cannot
+            # detect that this is happening. (Level 4)
+            message: '#Right side of || is always false.#'
+            path: src/engine/Default/trader_attack_processing.php
+            count: 1
+        -
+            # Caused by temporary use of `markTestSkipped`. (Level 4)
+            message: '#Unreachable statement - code above always terminates.#'
+            path: test/SmrTest/lib/DefaultGame/Discord/CommandTest.php
+            count: 1
+        -
+            # This Admin Tool is temporarily(?) disabled. (Level 4)
+            message: '#Unreachable statement - code above always terminates.#'
+            path: src/engine/Default/admin/game_delete_processing.php
+            count: 1
+        -
+            # https://github.com/phpstan/phpstan/issues/7520
+            message: '#Expression in empty\(\) is always falsy.#'
+            paths:
+                - src/bootstrap.php
+                - src/engine/Default/bug_report_processing.php

@@ -15,8 +15,12 @@ class Template {
 	private array $ajaxJS = [];
 	protected array $jsAlerts = [];
 	private bool $displayCalled = false;
-	private ?string $listjsInclude = null;
 	private array $jsSources = [];
+
+	/**
+	 * Defines a listjs_include.js function to call at the end of the HTML body.
+	 */
+	public ?string $listjsInclude = null;
 
 	/**
 	 * Return the Smr\Template in the DI container.
@@ -156,13 +160,6 @@ class Template {
 	protected function doAn(string $wordAfter): string {
 		$char = strtoupper($wordAfter[0]);
 		return str_contains('AEIOU', $char) ? 'an' : 'a';
-	}
-
-	/**
-	 * Sets a listjs_include.js function to call at the end of the HTML body.
-	 */
-	public function setListjsInclude(string $func): void {
-		$this->listjsInclude = $func;
 	}
 
 	/*

@@ -76,7 +76,7 @@ class SmrScoutDrones extends AbstractSmrCombatWeapon {
 	public function shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer): array {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => true];
 		$return = $this->doForceDamageToPlayer($return, $forces, $targetPlayer);
-		$forces->takeSDs($return['WeaponDamage']['Launched']);
+		$this->amount -= $return['WeaponDamage']['Launched']; // kamikaze
 		return $return;
 	}
 

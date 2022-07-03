@@ -22,7 +22,7 @@ if (!empty($action)) {
 	$rankings = [];
 	$db = Smr\Database::getInstance();
 	$db->switchDatabases($var['HistoryDatabase']);
-	if (in_array($action, ['Top Mined Sectors', 'Most Dangerous Sectors'])) {
+	if (in_array($action, ['Top Mined Sectors', 'Most Dangerous Sectors'], true)) {
 		[$sql, $header] = match ($action) {
 			'Top Mined Sectors' => ['mines', 'Mines'],
 			'Most Dangerous Sectors' => ['kills', 'Kills'],
@@ -38,7 +38,7 @@ if (!empty($action)) {
 			];
 		}
 		$headers = ['Sector', $header];
-	} elseif (in_array($action, ['Top Alliance Kills', 'Top Alliance Deaths'])) {
+	} elseif (in_array($action, ['Top Alliance Kills', 'Top Alliance Deaths'], true)) {
 		[$sql, $header] = match ($action) {
 			'Top Alliance Kills' => ['kills', 'Kills'],
 			'Top Alliance Deaths' => ['deaths', 'Deaths'],

@@ -1,6 +1,10 @@
-<p>It is currently <span id="turn"><?php
-	echo $ChessGame->getCurrentTurnPlayer()->getLinkedDisplayName(false);
-?></span>'s turn.</p>
+<p><span id="chess_status">
+	<?php if (isset($Winner)) { ?>
+		The game has ended. <?php echo $Winner; ?> has won!<?php
+	} else { ?>
+		It is currently <?php echo $ChessGame->getCurrentTurnPlayer()->getLinkedDisplayName(false); ?>'s turn.<?php
+	} ?>
+</span></p>
 <table>
 	<tr>
 		<td>

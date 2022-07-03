@@ -87,14 +87,9 @@ $query = 'SELECT time, transaction_id, transaction, amount, exempt, reason, paye
 	WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
 	AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID());
 
-
-if ($maxValue > 0 && $minValue > 0) {
-	$query .= ' AND transaction_id>=' . $db->escapeNumber($minValue) . '
-				AND transaction_id<=' . $db->escapeNumber($maxValue) . '
-				ORDER BY time LIMIT ' . (1 + $maxValue - $minValue);
-} else {
-	$query .= ' ORDER BY time LIMIT 10';
-}
+$query .= ' AND transaction_id>=' . $db->escapeNumber($minValue) . '
+			AND transaction_id<=' . $db->escapeNumber($maxValue) . '
+			ORDER BY time LIMIT ' . (1 + $maxValue - $minValue);
 
 $dbResult = $db->read($query);
 

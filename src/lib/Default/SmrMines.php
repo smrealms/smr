@@ -100,7 +100,7 @@ class SmrMines extends AbstractSmrCombatWeapon {
 	public function shootPlayerAsForce(SmrForce $forces, AbstractSmrPlayer $targetPlayer, bool $minesAreAttacker = false): array {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => true];
 		$return = $this->doForceDamageToPlayer($return, $forces, $targetPlayer, $minesAreAttacker);
-		$forces->takeMines($return['ActualDamage']['Launched']);
+		$this->amount -= $return['ActualDamage']['Launched']; // kamikaze
 		return $return;
 	}
 

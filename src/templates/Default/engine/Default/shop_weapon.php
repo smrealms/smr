@@ -31,7 +31,7 @@ if ($ThisLocation->isWeaponSold()) { ?>
 		</tbody>
 	</table>
 
-	<?php $this->setListjsInclude('shop_weapon');
+	<?php $this->listjsInclude = 'shop_weapon';
 }
 
 if ($ThisShip->hasWeapons()) { ?>

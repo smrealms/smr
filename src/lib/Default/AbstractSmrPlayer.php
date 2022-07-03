@@ -942,6 +942,18 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
+	public function hasGoodAlignment(): bool {
+		return $this->alignment >= ALIGNMENT_GOOD;
+	}
+
+	public function hasEvilAlignment(): bool {
+		return $this->alignment <= ALIGNMENT_EVIL;
+	}
+
+	public function hasNeutralAlignment(): bool {
+		return !$this->hasGoodAlignment() && !$this->hasEvilAlignment();
+	}
+
 	public function getAlignment(): int {
 		return $this->alignment;
 	}
@@ -2263,9 +2275,9 @@ abstract class AbstractSmrPlayer {
 		];
 		if ($alignmentDiff >= 200) {
 			// If the podded players alignment makes them deputy or member then set bounty
-			if ($this->getAlignment() >= 100) {
+			if ($this->hasGoodAlignment()) {
 				$return['BountyGained']['Type'] = BountyType::HQ;
-			} elseif ($this->getAlignment() <= -100) {
+			} elseif ($this->hasEvilAlignment()) {
 				$return['BountyGained']['Type'] = BountyType::UG;
 			}
 

@@ -69,7 +69,7 @@ if (count($PickPlayers) > 0) { ?>
 			} ?>
 		</tbody>
 	</table><?php
-	$this->setListjsInclude('alliance_pick');
+	$this->listjsInclude = 'alliance_pick';
 } else {
 	?>No one left to pick.<?php
 } ?>

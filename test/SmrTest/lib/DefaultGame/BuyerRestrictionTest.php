@@ -36,15 +36,13 @@ class BuyerRestrictionTest extends TestCase {
 
 		// Test Good/Evil restriction only passes with good/evil alignment
 		$player
-			->method('getAlignment')
-			->willReturnOnConsecutiveCalls(
-				ALIGNMENT_GOOD,
-				ALIGNMENT_GOOD - 1,
-				ALIGNMENT_EVIL,
-				ALIGNMENT_EVIL + 1
-			);
+			->method('hasGoodAlignment')
+			->willReturnOnConsecutiveCalls(true, false);
 		self::assertTrue(BuyerRestriction::Good->passes($player));
 		self::assertFalse(BuyerRestriction::Good->passes($player));
+		$player
+			->method('hasEvilAlignment')
+			->willReturnOnConsecutiveCalls(true, false);
 		self::assertTrue(BuyerRestriction::Evil->passes($player));
 		self::assertFalse(BuyerRestriction::Evil->passes($player));
 

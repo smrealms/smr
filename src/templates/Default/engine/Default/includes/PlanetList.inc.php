@@ -71,5 +71,5 @@ if (count($Planets) > 0) { ?>
 			} ?>
 		</tbody>
 	</table><br />
-	<?php $this->setListjsInclude('PlanetList');
+	<?php $this->listjsInclude = 'PlanetList';
 } ?>

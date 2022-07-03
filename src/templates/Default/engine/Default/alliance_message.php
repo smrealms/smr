@@ -33,7 +33,7 @@ if (count($Threads) > 0) { ?>
 			} ?>
 		</tbody>
 	</table><br /><?php
-	$this->setListjsInclude('alliance_message');
+	$this->listjsInclude = 'alliance_message';
 }
 
 if (isset($CreateNewThreadFormHref)) { ?>
