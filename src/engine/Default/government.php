@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\BountyType;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -39,8 +41,8 @@ if ($raceID != RACE_NEUTRAL) {
 }
 $template->assign('WarRaces', $warRaces);
 
-$template->assign('AllBounties', Smr\Bounties::getMostWanted('HQ'));
-$template->assign('MyBounties', $player->getClaimableBounties('HQ'));
+$template->assign('AllBounties', Smr\Bounties::getMostWanted(BountyType::HQ));
+$template->assign('MyBounties', $player->getClaimableBounties(BountyType::HQ));
 
 if ($player->getAlignment() > ALIGNMENT_EVIL && $player->getAlignment() <= ALIGNMENT_GOOD) {
 	$container = Page::create('government_processing.php');

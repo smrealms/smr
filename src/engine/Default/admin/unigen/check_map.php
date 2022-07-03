@@ -67,7 +67,7 @@ $maxSellMultipliers = [];
 foreach ($galaxies as $galaxy) {
 	$max = [];
 	foreach ($galaxy->getPorts() as $port) {
-		foreach ($port->getSoldGoodIDs() as $goodID) {
+		foreach ($port->getSellGoodIDs() as $goodID) {
 			$distance = $port->getGoodDistance($goodID);
 			if (empty($max) || $distance > $max['Distance']) {
 				$max = [

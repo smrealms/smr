@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\BountyType;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -13,8 +15,8 @@ if (!$player->getSector()->hasLocation($var['LocationID'])) {
 $location = SmrLocation::getLocation($var['LocationID']);
 
 [$type, $body] = match (true) {
-	$location->isHQ() => ['HQ', 'government.php'],
-	$location->isUG() => ['UG', 'underground.php'],
+	$location->isHQ() => [BountyType::HQ, 'government.php'],
+	$location->isUG() => [BountyType::UG, 'underground.php'],
 };
 $container = Page::create($body);
 $container->addVar('LocationID');

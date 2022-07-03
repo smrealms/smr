@@ -1,11 +1,14 @@
 <?php declare(strict_types=1);
 
+use Smr\PlotGroup;
+use Smr\TransactionType;
+
 class Plotter {
 
-	public static function getX(string $xType, int|string $X, int $gameID, SmrPlayer $player = null): mixed {
+	public static function getX(PlotGroup $xType, int|string $X, int $gameID, SmrPlayer $player = null): mixed {
 		// Special case for Location categories (i.e. Bar, HQ, SafeFed)
 		if (!is_numeric($X)) {
-			if ($xType != 'Locations') {
+			if ($xType != PlotGroup::Locations) {
 				throw new Exception('Non-numeric X only exists for Locations');
 			}
 			return $X;
@@ -20,17 +23,17 @@ class Plotter {
 			if (isset($player) && !$player->meetsAlignmentRestriction($good['AlignRestriction'])) {
 				throw new Exception('Player trying to access alignment-restricted good!');
 			}
-			$good['TransactionType'] = explode(' ', $xType)[0]; // use 'Buy' or 'Sell'
+			$good['TransactionType'] = TransactionType::from(explode(' ', $xType->value)[0]);
 			return $good;
 		};
 
 		return match ($xType) {
-			'Technology' => Globals::getHardwareTypes($X),
-			'Ships' => SmrShipType::get($X),
-			'Weapons' => SmrWeaponType::getWeaponType($X),
-			'Locations' => SmrLocation::getLocation($X),
-			'Sell Goods', 'Buy Goods' => $getGoodWithTransaction($X),
-			'Galaxies' => SmrGalaxy::getGalaxy($gameID, $X), // $X is the galaxyID
+			PlotGroup::Technology => Globals::getHardwareTypes($X),
+			PlotGroup::Ships => SmrShipType::get($X),
+			PlotGroup::Weapons => SmrWeaponType::getWeaponType($X),
+			PlotGroup::Locations => SmrLocation::getLocation($X),
+			PlotGroup::SellGoods, PlotGroup::BuyGoods => $getGoodWithTransaction($X),
+			PlotGroup::Galaxies => SmrGalaxy::getGalaxy($gameID, $X), // $X is the galaxyID
 		};
 	}
 

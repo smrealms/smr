@@ -20,14 +20,7 @@ try {
 	// Get all the properties to display for each weapon
 	$weapons = [];
 	foreach (SmrWeaponType::getAllWeaponTypes() as $weapon) {
-		$restrictions = match ($weapon->getBuyerRestriction()) {
-			BUYER_RESTRICTION_NONE => [],
-			BUYER_RESTRICTION_GOOD => ['<div class="dgreen">Good</div>'],
-			BUYER_RESTRICTION_EVIL => ['<div class="red">Evil</div>'],
-			BUYER_RESTRICTION_NEWBIE => ['<div style="color: #06F;">Newbie</div>'],
-			BUYER_RESTRICTION_PORT => ['<div class="yellow">Port</div>'],
-			BUYER_RESTRICTION_PLANET => ['<div class="yellow">Planet</div>'],
-		};
+		$restrictions = [$weapon->getBuyerRestriction()->display()];
 		if (SmrWeapon::getWeapon($weapon->getWeaponTypeID())->isUniqueType()) {
 			$restrictions[] = '<div style="color: #64B9B9">Unique</div>';
 		}

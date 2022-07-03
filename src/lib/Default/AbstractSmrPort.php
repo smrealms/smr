@@ -1,4 +1,9 @@
 <?php declare(strict_types=1);
+
+use Smr\BountyType;
+use Smr\PortPayoutType;
+use Smr\TransactionType;
+
 class AbstractSmrPort {
 
 	use Traits\RaceID;
@@ -42,10 +47,11 @@ class AbstractSmrPort {
 	protected int $upgrade;
 	protected int $experience;
 
-	protected array $goodIDs = ['All' => [], TRADER_SELLS => [], TRADER_BUYS => []];
 	protected array $goodAmounts;
 	protected array $goodAmountsChanged = [];
-	protected array $goodExistenceChanged = [];
+	/** @var array<int, TransactionType> */
+	protected array $goodTransactions;
+	protected array $goodTransactionsChanged = [];
 	protected array $goodDistances;
 
 	protected bool $cachedVersion = false;
@@ -216,14 +222,12 @@ class AbstractSmrPort {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot call getGoods on cached port');
 		}
-		if (empty($this->goodIDs['All'])) {
+		if (!isset($this->goodAmounts)) {
 			$dbResult = $this->db->read('SELECT * FROM port_has_goods WHERE ' . $this->SQL . ' ORDER BY good_id ASC');
 			foreach ($dbResult->records() as $dbRecord) {
 				$goodID = $dbRecord->getInt('good_id');
-				$transactionType = $dbRecord->getString('transaction_type');
+				$this->goodTransactions[$goodID] = TransactionType::from($dbRecord->getString('transaction_type'));
 				$this->goodAmounts[$goodID] = $dbRecord->getInt('amount');
-				$this->goodIDs[$transactionType][] = $goodID;
-				$this->goodIDs['All'][] = $goodID;
 
 				$secondsSinceLastUpdate = Smr\Epoch::time() - $dbRecord->getInt('last_update');
 				$this->restockGood($goodID, $secondsSinceLastUpdate);
@@ -231,8 +235,7 @@ class AbstractSmrPort {
 		}
 	}
 
-	private function getVisibleGoods(string $transaction, AbstractSmrPlayer $player = null): array {
-		$goodIDs = $this->goodIDs[$transaction];
+	private function getVisibleGoods(array $goodIDs, AbstractSmrPlayer $player = null): array {
 		if ($player == null) {
 			return $goodIDs;
 		}
@@ -248,42 +251,41 @@ class AbstractSmrPort {
 	 * @return array<int>
 	 */
 	public function getVisibleGoodsSold(AbstractSmrPlayer $player = null): array {
-		return $this->getVisibleGoods(TRADER_SELLS, $player);
+		return $this->getVisibleGoods($this->getSellGoodIDs(), $player);
 	}
 
 	/**
 	 * Get IDs of goods that can be bought by $player from the port
+	 *
+	 * @return array<int>
 	 */
 	public function getVisibleGoodsBought(AbstractSmrPlayer $player = null): array {
-		return $this->getVisibleGoods(TRADER_BUYS, $player);
+		return $this->getVisibleGoods($this->getBuyGoodIDs(), $player);
 	}
 
 	public function getAllGoodIDs(): array {
-		return $this->goodIDs['All'];
+		return array_keys($this->goodTransactions);
 	}
 
 	/**
-	 * Get IDs of goods that can be sold to the port
+	 * Get IDs of goods that can be sold to the port by the trader
 	 */
-	public function getSoldGoodIDs(): array {
-		return $this->goodIDs[TRADER_SELLS];
+	public function getSellGoodIDs(): array {
+		return array_keys($this->goodTransactions, TransactionType::Sell, true);
 	}
 
 	/**
-	 * Get IDs of goods that can be bought from the port
+	 * Get IDs of goods that can be bought from the port by the trader
 	 */
-	public function getBoughtGoodIDs(): array {
-		return $this->goodIDs[TRADER_BUYS];
+	public function getBuyGoodIDs(): array {
+		return array_keys($this->goodTransactions, TransactionType::Buy, true);
 	}
 
 	public function getGoodDistance(int $goodID): int {
 		if (!isset($this->goodDistances[$goodID])) {
 			$x = Globals::getGood($goodID);
 			// Calculate distance to the opposite of the offered transaction
-			$x['TransactionType'] = match ($this->getGoodTransaction($goodID)) {
-				TRADER_BUYS => TRADER_SELLS,
-				TRADER_SELLS => TRADER_BUYS,
-			};
+			$x['TransactionType'] = $this->getGoodTransaction($goodID)->opposite();
 			$di = Plotter::findDistanceToX($x, $this->getSector(), true);
 			if (is_object($di)) {
 				$di = $di->getDistance();
@@ -297,8 +299,8 @@ class AbstractSmrPort {
 	 * Returns the transaction type for this good (Buy or Sell).
 	 * Note: this is the player's transaction, not the port's.
 	 */
-	public function getGoodTransaction(int $goodID): string {
-		foreach ([TRADER_BUYS, TRADER_SELLS] as $transaction) {
+	public function getGoodTransaction(int $goodID): TransactionType {
+		foreach (TransactionType::cases() as $transaction) {
 			if ($this->hasGood($goodID, $transaction)) {
 				return $transaction;
 			}
@@ -306,11 +308,12 @@ class AbstractSmrPort {
 		throw new Exception('Port does not trade goodID ' . $goodID);
 	}
 
-	public function hasGood(int $goodID, ?string $type = null): bool {
-		if ($type === null) {
-			$type = 'All';
+	public function hasGood(int $goodID, ?TransactionType $type = null): bool {
+		$hasGood = isset($this->goodTransactions[$goodID]);
+		if ($type === null || $hasGood === false) {
+			return $hasGood;
 		}
-		return in_array($goodID, $this->goodIDs[$type]);
+		return $this->goodTransactions[$goodID] === $type;
 	}
 
 	private function setGoodAmount(int $goodID, int $amount, bool $doUpdate = true): void {
@@ -440,7 +443,7 @@ class AbstractSmrPort {
 		shuffle($GOODS);
 		foreach ($GOODS as $good) {
 			if (!$this->hasGood($good['ID']) && $good['Class'] == $goodClass) {
-				$transactionType = array_rand_value([TRADER_BUYS, TRADER_SELLS]);
+				$transactionType = array_rand_value(TransactionType::cases());
 				$this->addPortGood($good['ID'], $transactionType);
 				return $good;
 			}
@@ -511,7 +514,7 @@ class AbstractSmrPort {
 	 * NOTE: make sure to adjust the port level appropriately if
 	 * calling this function directly.
 	 */
-	public function addPortGood(int $goodID, string $type): void {
+	public function addPortGood(int $goodID, TransactionType $type): void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}
@@ -519,17 +522,15 @@ class AbstractSmrPort {
 			return;
 		}
 
-		$this->goodIDs['All'][] = $goodID;
-		$this->goodIDs[$type][] = $goodID;
+		$this->goodTransactions[$goodID] = $type;
 		// sort ID arrays, since the good ID might not be the largest
-		sort($this->goodIDs['All']);
-		sort($this->goodIDs[$type]);
+		ksort($this->goodTransactions);
 
 		$this->goodAmounts[$goodID] = Globals::getGood($goodID)['Max'];
 
 		// Flag for update
 		$this->cacheIsValid = false;
-		$this->goodExistenceChanged[$goodID] = true; // true => added
+		$this->goodTransactionsChanged[$goodID] = true; // true => added
 	}
 
 	/**
@@ -547,22 +548,12 @@ class AbstractSmrPort {
 			return;
 		}
 
-		$removeGoodID = function(string $transaction) use ($goodID): bool {
-			$key = array_search($goodID, $this->goodIDs[$transaction]);
-			if ($key !== false) {
-				array_splice($this->goodIDs[$transaction], $key, 1);
-				return true;
-			}
-			return false;
-		};
-		$removeGoodID('All');
-		if (!$removeGoodID(TRADER_BUYS)) {
-			$removeGoodID(TRADER_SELLS);
-		}
+		unset($this->goodAmounts[$goodID]);
+		unset($this->goodTransactions[$goodID]);
 
 		// Flag for update
 		$this->cacheIsValid = false;
-		$this->goodExistenceChanged[$goodID] = false; // false => removed
+		$this->goodTransactionsChanged[$goodID] = false; // false => removed
 	}
 
 	/**
@@ -977,7 +968,7 @@ class AbstractSmrPort {
 		return false;
 	}
 
-	public function getIdealPrice(int $goodID, string $transactionType, int $numGoods, int $relations): int {
+	public function getIdealPrice(int $goodID, TransactionType $transactionType, int $numGoods, int $relations): int {
 		$supply = $this->getGoodAmount($goodID);
 		$dist = $this->getGoodDistance($goodID);
 		return self::idealPrice($goodID, $transactionType, $numGoods, $relations, $supply, $dist);
@@ -986,44 +977,40 @@ class AbstractSmrPort {
 	/**
 	 * Generic ideal price calculation, given all parameters as input.
 	 */
-	public static function idealPrice(int $goodID, string $transactionType, int $numGoods, int $relations, int $supply, int $dist): int {
+	public static function idealPrice(int $goodID, TransactionType $transactionType, int $numGoods, int $relations, int $supply, int $dist): int {
 		$relations = min(1000, $relations); // no effect for higher relations
 		$good = Globals::getGood($goodID);
 		$base = $good['BasePrice'] * $numGoods;
 		$maxSupply = $good['Max'];
 
 		$distFactor = pow($dist, 1.3);
-		if ($transactionType === TRADER_SELLS) {
+		if ($transactionType === TransactionType::Sell) {
 			$supplyFactor = 1 + ($supply / $maxSupply);
 			$relationsFactor = 1.2 + 1.8 * ($relations / 1000); // [0.75-3]
 			$scale = 0.088;
-		} elseif ($transactionType === TRADER_BUYS) {
+		} else { // $transactionType === TransactionType::Buy
 			$supplyFactor = 2 - ($supply / $maxSupply);
 			$relationsFactor = 3 - 2 * ($relations / 1000);
 			$scale = 0.03;
-		} else {
-			throw new Exception('Unknown transaction type');
 		}
 		return IRound($base * $scale * $distFactor * $supplyFactor * $relationsFactor);
 	}
 
-	public function getOfferPrice(int $idealPrice, int $relations, string $transactionType): int {
+	public function getOfferPrice(int $idealPrice, int $relations, TransactionType $transactionType): int {
 		$relations = min(1000, $relations); // no effect for higher relations
 		$relationsEffect = (2 * $relations + 8000) / 10000; // [0.75-1]
 
 		return match ($transactionType) {
-			TRADER_BUYS => max($idealPrice, IFloor($idealPrice * (2 - $relationsEffect))),
-			TRADER_SELLS => min($idealPrice, ICeil($idealPrice * $relationsEffect)),
-			default => throw new Exception('Unknown transaction type'),
+			TransactionType::Buy => max($idealPrice, IFloor($idealPrice * (2 - $relationsEffect))),
+			TransactionType::Sell => min($idealPrice, ICeil($idealPrice * $relationsEffect)),
 		};
 	}
 
 	/**
 	 * Return the fraction of max exp earned.
 	 */
-	public function calculateExperiencePercent(int $idealPrice, int $bargainPrice, string $transactionType): float {
-		if ($bargainPrice == $idealPrice || $transactionType === TRADER_STEALS) {
-			// Stealing always gives full exp
+	public function calculateExperiencePercent(int $idealPrice, int $bargainPrice, TransactionType $transactionType): float {
+		if ($bargainPrice == $idealPrice) {
 			return 1;
 		}
 
@@ -1055,14 +1042,14 @@ class AbstractSmrPort {
 
 	public function getRazeHREF(bool $justContainer = false): string|Page {
 		$container = Page::create('port_payout_processing.php');
-		$container['PayoutType'] = 'Raze';
+		$container['PayoutType'] = PortPayoutType::Raze;
 		return $justContainer === false ? $container->href() : $container;
 	}
 
 	public function getLootHREF(bool $justContainer = false): string|Page {
 		if ($this->getCredits() > 0) {
 			$container = Page::create('port_payout_processing.php');
-			$container['PayoutType'] = 'Loot';
+			$container['PayoutType'] = PortPayoutType::Loot;
 		} else {
 			$container = Page::create('current_sector.php');
 			$container['msg'] = 'This port has already been looted.';
@@ -1155,7 +1142,7 @@ class AbstractSmrPort {
 		// We omit `goodAmounts` and `goodDistances` so that the hash of the
 		// serialized object is the same for all players. This greatly improves
 		// cache efficiency.
-		return ['gameID', 'sectorID', 'raceID', 'level', 'goodIDs'];
+		return ['gameID', 'sectorID', 'raceID', 'level', 'goodTransactions'];
 	}
 
 	public function __wakeup() {
@@ -1224,14 +1211,14 @@ class AbstractSmrPort {
 		}
 
 		// Handle any goods that were added or removed
-		foreach ($this->goodExistenceChanged as $goodID => $status) {
+		foreach ($this->goodTransactionsChanged as $goodID => $status) {
 			if ($status === true) {
 				// add the good
 				$this->db->replace('port_has_goods', [
 					'game_id' => $this->db->escapeNumber($this->getGameID()),
 					'sector_id' => $this->db->escapeNumber($this->getSectorID()),
 					'good_id' => $this->db->escapeNumber($goodID),
-					'transaction_type' => $this->db->escapeString($this->getGoodTransaction($goodID)),
+					'transaction_type' => $this->db->escapeString($this->getGoodTransaction($goodID)->value),
 					'amount' => $this->db->escapeNumber($this->getGoodAmount($goodID)),
 					'last_update' => $this->db->escapeNumber(Smr\Epoch::time()),
 				]);
@@ -1239,7 +1226,7 @@ class AbstractSmrPort {
 				// remove the good
 				$this->db->write('DELETE FROM port_has_goods WHERE ' . $this->SQL . ' AND good_id=' . $this->db->escapeNumber($goodID) . ';');
 			}
-			unset($this->goodExistenceChanged[$goodID]);
+			unset($this->goodTransactionsChanged[$goodID]);
 		}
 
 	}
@@ -1410,7 +1397,7 @@ class AbstractSmrPort {
 
 		// Killer gets a relations change and a bounty if port is taken
 		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();
-		$killer->increaseCurrentBountyAmount('HQ', $return['KillerBounty']);
+		$killer->increaseCurrentBountyAmount(BountyType::HQ, $return['KillerBounty']);
 		$killer->increaseHOF($return['KillerBounty'], ['Combat', 'Port', 'Bounties', 'Gained'], HOF_PUBLIC);
 
 		$return['KillerRelations'] = 45;

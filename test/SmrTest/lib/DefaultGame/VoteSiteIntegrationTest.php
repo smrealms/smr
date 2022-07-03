@@ -3,10 +3,12 @@
 namespace SmrTest\lib\DefaultGame;
 
 use Exception;
+use Smr\VoteLink;
 use Smr\VoteSite;
 use SmrTest\BaseIntegrationSpec;
 
 /**
+ * @covers Smr\VoteLink
  * @covers Smr\VoteSite
  */
 class VoteSiteIntegrationTest extends BaseIntegrationSpec {
@@ -16,40 +18,40 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 	}
 
 	protected function tearDown(): void {
-		VoteSite::clearCache();
+		VoteLink::clearCache();
 	}
 
 	public function test_getTimeUntilFreeTurns_invalid(): void {
 		// Get a vote site that is not configured to award free turns
-		$site = VoteSite::getSite(VoteSite::LINK_ID_PBBG, 1);
+		$link = new VoteLink(VoteSite::PBBG, 1, 1);
 
 		// Make sure it raises an exception if we call getTimeUntilFreeTurns
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('This vote site cannot award free turns!');
-		$site->getTimeUntilFreeTurns();
+		$link->getTimeUntilFreeTurns();
 	}
 
 	public function test_vote_callback_workflow(): void {
 		// Get a vote site that is configured to award free turns
-		$site = VoteSite::getSite(VoteSite::LINK_ID_TWG, 1);
+		$link = new VoteLink(VoteSite::TWG, 1, 0);
 
 		// Test that the site is eligible to award free turns by default
-		self::assertTrue($site->getTimeUntilFreeTurns() < 0);
+		self::assertTrue($link->getTimeUntilFreeTurns() < 0);
 		// Test that the site is in the "not clicked" state by default
-		self::assertFalse($site->isLinkClicked());
+		self::assertFalse($link->isClicked());
 
 		// Test again after setting the "clicked" link state
-		$site->setLinkClicked();
-		self::assertTrue($site->isLinkClicked());
+		$link->setClicked();
+		self::assertTrue($link->isClicked());
 
 		// Now pretend that we have awarded free turns
-		$site->setFreeTurnsAwarded();
+		$link->setFreeTurnsAwarded();
 
 		// Test that we're back to the "not clicked" link state
-		self::assertFalse($site->isLinkClicked());
+		self::assertFalse($link->isClicked());
 		// Test that we're not ready to award free turns anymore
-		VoteSite::clearCache();
-		self::assertSame(TIME_BETWEEN_VOTING, $site->getTimeUntilFreeTurns());
+		VoteLink::clearCache();
+		self::assertSame(VoteLink::TIME_BETWEEN_VOTING, $link->getTimeUntilFreeTurns());
 	}
 
 	public function test_vote_button_properties(): void {
@@ -59,17 +61,17 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 
 		// Set expected results when free turns are available
 		$expected = [
-			VoteSite::LINK_ID_TWG => [
+			VoteSite::TWG->value => [
 				'img' => 'twg_vote.png',
 				'url' => 'http://topwebgames.com/in.aspx?ID=136&account=7&game=42&link=3&alwaysreward=1',
 				'sn' => LOADER_URI . '?sn=gbuyay',
 			],
-			VoteSite::LINK_ID_DOG => [
+			VoteSite::DOG->value => [
 				'img' => 'dog_vote.png',
 				'url' => 'http://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315&votedef=7,42,4',
 				'sn' => LOADER_URI . '?sn=wnpclr',
 			],
-			VoteSite::LINK_ID_PBBG => [
+			VoteSite::PBBG->value => [
 				'img' => 'pbbg.png',
 				'url' => 'https://pbbg.com/games/space-merchant-realms',
 				'sn' => false,
@@ -77,26 +79,26 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 		];
 
 		srand(123); // set rand seed for session href generation
-		foreach ($expected as $linkID => $data) {
-			$site = VoteSite::getSite($linkID, $accountID);
-			self::assertSame($data['img'], $site->getLinkImg($gameID));
-			self::assertSame($data['url'], $site->getLinkUrl($gameID));
-			self::assertSame($data['sn'], $site->getSN($gameID));
+		foreach ($expected as $siteID => $data) {
+			$link = new VoteLink(VoteSite::from($siteID), $accountID, $gameID);
+			self::assertSame($data['img'], $link->getImg());
+			self::assertSame($data['url'], $link->getUrl());
+			self::assertSame($data['sn'], $link->getSN());
 		}
 
 		// Set expected results when free turns are NOT available
 		$expected = [
-			VoteSite::LINK_ID_TWG => [
+			VoteSite::TWG->value => [
 				'img' => 'twg.png',
 				'url' => 'http://topwebgames.com/in.aspx?ID=136',
 				'sn' => false,
 			],
-			VoteSite::LINK_ID_DOG => [
+			VoteSite::DOG->value => [
 				'img' => 'dog.png',
 				'url' => 'http://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315',
 				'sn' => false,
 			],
-			VoteSite::LINK_ID_PBBG => [
+			VoteSite::PBBG->value => [
 				'img' => 'pbbg.png',
 				'url' => 'https://pbbg.com/games/space-merchant-realms',
 				'sn' => false,
@@ -104,38 +106,38 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 		];
 
 		// Now claim free turns for each site
-		foreach (array_keys($expected) as $linkID) {
-			$site = VoteSite::getSite($linkID, $accountID);
-			$site->setFreeTurnsAwarded();
+		foreach (VoteSite::cases() as $site) {
+			(new VoteLink($site, $accountID, $gameID))->setFreeTurnsAwarded();
 		}
-		VoteSite::clearCache();
+		VoteLink::clearCache();
 
-		foreach ($expected as $linkID => $data) {
-			$site = VoteSite::getSite($linkID, $accountID);
-			self::assertSame($data['img'], $site->getLinkImg($gameID));
-			self::assertSame($data['url'], $site->getLinkUrl($gameID));
-			self::assertSame($data['sn'], $site->getSN($gameID));
+		foreach ($expected as $siteID => $data) {
+			$link = new VoteLink(VoteSite::from($siteID), $accountID, $gameID);
+			self::assertSame($data['img'], $link->getImg());
+			self::assertSame($data['url'], $link->getUrl());
+			self::assertSame($data['sn'], $link->getSN());
 		}
 	}
 
 	public function test_getMinTimeUntilFreeTurns(): void {
 		// Set arbitrary test data
 		$accountID = 9;
+		$gameID = 17;
 
 		// Test that by default that the min time is negative
-		self::assertTrue(VoteSite::getMinTimeUntilFreeTurns($accountID) < 0);
+		self::assertTrue(VoteLink::getMinTimeUntilFreeTurns($accountID, $gameID) < 0);
 
 		// Test that min time is still negative if we claim turns on one site
-		VoteSite::getSite(VoteSite::LINK_ID_DOG, $accountID)->setFreeTurnsAwarded();
-		VoteSite::clearCache();
-		self::assertTrue(VoteSite::getMinTimeUntilFreeTurns($accountID) < 0);
+		(new VoteLink(VoteSite::DOG, $accountID, $gameID))->setFreeTurnsAwarded();
+		VoteLink::clearCache();
+		self::assertTrue(VoteLink::getMinTimeUntilFreeTurns($accountID, $gameID) < 0);
 
 		// Test that the min time is positive if we claim turns on all sites
-		foreach (VoteSite::getAllSites($accountID) as $site) {
-			$site->setFreeTurnsAwarded();
+		foreach (VoteSite::cases() as $site) {
+			(new VoteLink($site, $accountID, $gameID))->setFreeTurnsAwarded();
 		}
-		VoteSite::clearCache();
-		self::assertSame(TIME_BETWEEN_VOTING, VoteSite::getMinTimeUntilFreeTurns($accountID));
+		VoteLink::clearCache();
+		self::assertSame(VoteLink::TIME_BETWEEN_VOTING, VoteLink::getMinTimeUntilFreeTurns($accountID, $gameID));
 	}
 
 }

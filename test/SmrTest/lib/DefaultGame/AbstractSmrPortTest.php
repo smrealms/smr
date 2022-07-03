@@ -5,6 +5,7 @@ namespace SmrTest\lib\DefaultGame;
 use AbstractSmrPort;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Smr\TransactionType;
 
 /**
  * @covers AbstractSmrPort
@@ -41,11 +42,12 @@ class AbstractSmrPortTest extends TestCase {
 	public function test_addPortGood(): void {
 		// When we add the good
 		$port = AbstractSmrPort::createPort(1, 1);
-		$port->addPortGood(GOODS_WOOD, TRADER_SELLS);
-		$port->addPortGood(GOODS_ORE, TRADER_BUYS);
+		$port->addPortGood(GOODS_ORE, TransactionType::Buy);
+		// Insert smaller ID port good second to test sorting
+		$port->addPortGood(GOODS_WOOD, TransactionType::Sell);
 		self::assertSame([GOODS_WOOD, GOODS_ORE], $port->getAllGoodIDs());
-		self::assertSame([GOODS_WOOD], $port->getSoldGoodIDs());
-		self::assertSame([GOODS_ORE], $port->getBoughtGoodIDs());
+		self::assertSame([GOODS_WOOD], $port->getSellGoodIDs());
+		self::assertSame([GOODS_ORE], $port->getBuyGoodIDs());
 	}
 
 	/**
@@ -54,13 +56,13 @@ class AbstractSmrPortTest extends TestCase {
 	public function test_removePortGood(array $removeGoodIDs, array $sellRemain, array $buyRemain): void {
 		// Set up a port with a couple goods
 		$port = AbstractSmrPort::createPort(1, 1);
-		$port->addPortGood(GOODS_WOOD, TRADER_SELLS);
-		$port->addPortGood(GOODS_ORE, TRADER_BUYS);
+		$port->addPortGood(GOODS_WOOD, TransactionType::Sell);
+		$port->addPortGood(GOODS_ORE, TransactionType::Buy);
 		foreach ($removeGoodIDs as $goodID) {
 			$port->removePortGood($goodID);
 		}
-		self::assertSame($sellRemain, $port->getSoldGoodIDs());
-		self::assertSame($buyRemain, $port->getBoughtGoodIDs());
+		self::assertSame($sellRemain, $port->getSellGoodIDs());
+		self::assertSame($buyRemain, $port->getBuyGoodIDs());
 		self::assertSame(array_merge($sellRemain, $buyRemain), $port->getAllGoodIDs());
 	}
 
@@ -83,17 +85,17 @@ class AbstractSmrPortTest extends TestCase {
 	/**
 	 * @dataProvider provider_getGoodTransaction
 	 */
-	public function test_getGoodTransaction(string $transaction): void {
+	public function test_getGoodTransaction(TransactionType $transaction): void {
 		$port = AbstractSmrPort::createPort(1, 1);
 		$port->addPortGood(GOODS_ORE, $transaction);
 		self::assertSame($transaction, $port->getGoodTransaction(GOODS_ORE));
 	}
 
 	/**
-	 * @return array<array<string>>
+	 * @return array<array<TransactionType>>
 	 */
 	public function provider_getGoodTransaction(): array {
-		return [[TRADER_BUYS], [TRADER_SELLS]];
+		return [[TransactionType::Buy], [TransactionType::Sell]];
 	}
 
 	public function test_getGoodTransaction_throws_if_port_does_not_have_good(): void {

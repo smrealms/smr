@@ -8,7 +8,8 @@ $container = Page::create('current_sector.php');
 $player = $session->getPlayer();
 if ($player->getGame()->hasStarted()) {
 	// Allow vote
-	Smr\VoteSite::getSite($var['link_id'], $player->getAccountID())->setLinkClicked();
+	$voteLink = new Smr\VoteLink($var['vote_site'], $player->getAccountID(), $player->getGameID());
+	$voteLink->setClicked();
 	$voting = '<b><span class="red">v</span>o<span class="blue">t</span><span class="red">i</span>n<span class="blue">g</span></b>';
 	$container['msg'] = "Thank you for $voting! You will receive bonus turns once your vote is processed.";
 } else {

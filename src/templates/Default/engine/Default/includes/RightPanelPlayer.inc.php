@@ -10,7 +10,7 @@ if (isset($GameID)) { ?>
 	<br />
 	Race : <?php echo $ThisPlayer->getColouredRaceName($ThisPlayer->getRaceID(), true); ?><br />
 	Turns : <span id="turns">
-		<span class="<?php echo $ThisPlayer->getTurnsColor(); ?>"><?php
+		<span class="<?php echo $ThisPlayer->getTurnsLevel()->color(); ?>"><?php
 				echo $ThisPlayer->getTurns() . '/' . $ThisPlayer->getMaxTurns();
 			?></span>
 		</span><br />

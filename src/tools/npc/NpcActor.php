@@ -9,6 +9,7 @@ use Smr\Npc\Exceptions\FinalAction;
 use Smr\Npc\Exceptions\ForwardAction;
 use Smr\Npc\Exceptions\TradeRouteDrained;
 use Smr\Routes\RouteIterator;
+use Smr\TransactionType;
 use SmrSector;
 
 class NpcActor {
@@ -131,7 +132,7 @@ class NpcActor {
 
 			if ($targetSectorID != $player->getSectorID()) {
 				// We're not at the right port yet, let's plot to it.
-				debug('Plot To ' . $transaction . ': ' . $targetSectorID);
+				debug('Plot To ' . $transaction->value . ': ' . $targetSectorID);
 				return plotToSector($player, $targetSectorID);
 			}
 
@@ -143,7 +144,7 @@ class NpcActor {
 				throw new ForwardAction();
 			}
 
-			if ($transaction == TRADER_BUYS && $player->getShip()->hasCargo()) {
+			if ($transaction == TransactionType::Buy && $player->getShip()->hasCargo()) {
 				// We're here to buy, but we have cargo already
 				debug('Dump Goods');
 				return dumpCargo($player);

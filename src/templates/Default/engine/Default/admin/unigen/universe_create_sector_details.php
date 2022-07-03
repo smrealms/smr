@@ -45,8 +45,8 @@
 									<img class="bottom" src="<?php echo $good['ImageLink']; ?>" width="13" height="16" />&nbsp;
 									<select name="good<?php echo $good['ID']; ?>">
 										<option value="None">--</option><?php
-										foreach ([TRADER_BUYS, TRADER_SELLS] as $trans) { ?>
-											<option <?php if ($Port->hasGood($good['ID'], $trans)) { ?> selected <?php } ?> value="<?php echo $trans; ?>"><?php echo $trans; ?></option><?php
+										foreach (Smr\TransactionType::cases() as $trans) { ?>
+											<option <?php if ($Port->hasGood($good['ID'], $trans)) { ?> selected <?php } ?> value="<?php echo $trans->value; ?>"><?php echo $trans->value; ?></option><?php
 										} ?>
 									</select>
 								</td>

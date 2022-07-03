@@ -46,7 +46,6 @@ const ACCOUNT_ID_NHL = 36;
  */
 const TIME_FOR_RAIDER_UNLOCK = 1209600; // 2 weeks
 const TIME_FOR_RACE_CHANGE = 259200; // 3 days
-const TIME_BETWEEN_VOTING = 84600; //23 1/2 hours
 const TIME_BEFORE_INACTIVE = 259200; // 3 days
 const TIME_BEFORE_NEWBIE_TIME = 3600; //1 hour
 const TIME_FOR_COUNCIL_VOTE = 172800; //2 days
@@ -84,16 +83,6 @@ const DEFAULT_DATE_FORMAT = 'Y-m-d';
 const DEFAULT_TIME_FORMAT = 'g:i:s A';
 const DEFAULT_DATE_TIME_FORMAT = DEFAULT_DATE_FORMAT . ' ' . DEFAULT_TIME_FORMAT;
 const DEFAULT_DATE_TIME_FORMAT_SPLIT = DEFAULT_DATE_FORMAT . '\<b\r /\>' . DEFAULT_TIME_FORMAT;
-
-/*
- * Buyer restrictions for ships and weapons
- */
-const BUYER_RESTRICTION_NONE = 0;
-const BUYER_RESTRICTION_GOOD = 1;
-const BUYER_RESTRICTION_EVIL = 2;
-const BUYER_RESTRICTION_NEWBIE = 3;
-const BUYER_RESTRICTION_PORT = 4;
-const BUYER_RESTRICTION_PLANET = 5;
 
 /*
  * Alignment
@@ -148,13 +137,6 @@ const GOODS_WEAPONS = 9;
 const GOODS_COMPUTERS = 10;
 const GOODS_LUXURY_ITEMS = 11;
 const GOODS_NARCOTICS = 12;
-
-/*
- * Trade transaction types
- */
-const TRADER_BUYS = 'Buy';
-const TRADER_SELLS = 'Sell';
-const TRADER_STEALS = 'Steal';
 
 /*
  * Port searchs
@@ -229,16 +211,6 @@ const WEAPON_TYPE_LASER = 46;
 const WEAPON_TYPE_PLANETARY_PULSE_LASER = 55;
 const WEAPON_PORT_TURRET = 10000;
 const WEAPON_PLANET_TURRET = 10001;
-
-/*
- * Combat log pages
- */
-const COMBAT_LOG_PERSONAL = 0;
-const COMBAT_LOG_ALLIANCE = 1;
-const COMBAT_LOG_FORCE = 2;
-const COMBAT_LOG_PORT = 3;
-const COMBAT_LOG_PLANET = 4;
-const COMBAT_LOG_SAVED = 5;
 
 /*
  * Combat system
@@ -345,10 +317,6 @@ const CREDITS_PER_DOLLAR = 10;
  */
 const DEFAULT_MAX_TURNS = 450;
 const DEFAULT_START_TURN_HOURS = 15;
-
-const MOVEMENT_WALK = 1;
-const MOVEMENT_JUMP = 2;
-const MOVEMENT_WARP = 3;
 
 const EXPLORATION_EXPERIENCE = 2;
 

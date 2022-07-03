@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\PlotGroup;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
@@ -23,9 +25,9 @@ if ($player->getShip()->hasJump()) {
 $container = Page::create('course_plot.php');
 $template->assign('PlotToNearestHREF', $container->href());
 
-$xtype = $session->getRequestVar('xtype', 'Technology');
-$template->assign('XType', $xtype);
-$template->assign('AllXTypes', ['Technology', 'Ships', 'Weapons', 'Locations', 'Sell Goods', 'Buy Goods', 'Galaxies']);
+$xtype = $session->getRequestVar('xtype', PlotGroup::Technology->value);
+$template->assign('XType', PlotGroup::from($xtype));
+$template->assign('AllXTypes', PlotGroup::cases());
 
 
 // get saved destinations

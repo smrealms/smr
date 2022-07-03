@@ -42,15 +42,8 @@ try {
 }
 
 function buildShipStats(SmrShipType $ship, array $shipLocs): array {
-	//we want to put them all in an array so we dont have to have 15 td rows
-	$restriction = match ($ship->getRestriction()) {
-		BUYER_RESTRICTION_NONE => '',
-		BUYER_RESTRICTION_GOOD => '<span class="dgreen">Good</span>',
-		BUYER_RESTRICTION_EVIL => '<span class="red">Evil</span>',
-		BUYER_RESTRICTION_NEWBIE => '<span style="color: #06F;">Newbie</span>',
-	};
-
-	// Array key is the td class (sort key), and array value is the data value
+	// Array key is the td class (sort key), and array value is the data value.
+	// We want to put them all in an array so we dont have to have 15 td rows.
 	$stat = [
 		'name' => $ship->getName(),
 		'race race' . $ship->getRaceID() => Smr\Race::getName($ship->getRaceID()),
@@ -58,7 +51,7 @@ function buildShipStats(SmrShipType $ship, array $shipLocs): array {
 		'cost' => number_format($ship->getCost()),
 		'speed' => $ship->getSpeed(),
 		'hardpoint' => $ship->getHardpoints(),
-		'restriction' => $restriction,
+		'restriction' => $ship->getRestriction()->display(),
 		'shields' => $ship->getMaxHardware(HARDWARE_SHIELDS),
 		'armour' => $ship->getMaxHardware(HARDWARE_ARMOUR),
 		'cargo' => $ship->getMaxHardware(HARDWARE_CARGO),

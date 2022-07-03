@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\BountyType;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -14,9 +16,9 @@ if (!isset($var['ClaimText'])) {
 	// Determine if we're claiming Fed or UG bounties
 	$location = SmrLocation::getLocation($var['LocationID']);
 	if ($location->isHQ()) {
-		$bounties = $player->getClaimableBounties('HQ');
+		$bounties = $player->getClaimableBounties(BountyType::HQ);
 	} elseif ($location->isUG()) {
-		$bounties = $player->getClaimableBounties('UG');
+		$bounties = $player->getClaimableBounties(BountyType::UG);
 	}
 
 	$claimText = '';

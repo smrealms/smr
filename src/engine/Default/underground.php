@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\BountyType;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -21,8 +23,8 @@ $template->assign('PageTopic', $location->getName());
 
 Menu::headquarters($var['LocationID']);
 
-$template->assign('AllBounties', Smr\Bounties::getMostWanted('UG'));
-$template->assign('MyBounties', $player->getClaimableBounties('UG'));
+$template->assign('AllBounties', Smr\Bounties::getMostWanted(BountyType::UG));
+$template->assign('MyBounties', $player->getClaimableBounties(BountyType::UG));
 
 if ($player->getAlignment() < ALIGNMENT_GOOD && $player->getAlignment() >= ALIGNMENT_EVIL) {
 	$container = Page::create('government_processing.php');

@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\BuyerRestriction;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -9,12 +11,14 @@ $shipTypeID = $var['ship_type_id'];
 $newShipType = SmrShipType::get($shipTypeID);
 $cost = $ship->getCostToUpgrade($shipTypeID);
 
-if ($newShipType->getRestriction() == BUYER_RESTRICTION_EVIL && $player->getAlignment() > ALIGNMENT_EVIL) {
-	create_error('You can\'t buy smuggler ships!');
-}
-
-if ($newShipType->getRestriction() == BUYER_RESTRICTION_GOOD && $player->getAlignment() < ALIGNMENT_GOOD) {
-	create_error('You can\'t buy federal ships!');
+$restriction = $newShipType->getRestriction();
+if (!$restriction->passes($player)) {
+	$message = match ($restriction) {
+		BuyerRestriction::Evil => 'Only members of the Underground can purchase this ship!',
+		BuyerRestriction::Good => 'Only Federal deputies can purchase this ship!',
+		default => 'You are not allowed to purchase this ship!',
+	};
+	create_error($message);
 }
 
 if ($newShipType->getRaceID() != RACE_NEUTRAL && $player->getRaceID() != $newShipType->getRaceID()) {

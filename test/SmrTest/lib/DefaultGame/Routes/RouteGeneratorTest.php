@@ -7,6 +7,7 @@ use Smr\Path;
 use Smr\Routes\MultiplePortRoute;
 use Smr\Routes\OneWayRoute;
 use Smr\Routes\RouteGenerator;
+use Smr\TransactionType;
 use SmrPort;
 
 /**
@@ -21,7 +22,7 @@ class RouteGeneratorTest extends TestCase {
 
 	/**
 	 * @param int $raceID
-	 * @param array<int, array{string, int}> $goods
+	 * @param array<int, array{TransactionType, int}> $goods
 	 */
 	private function createPortStub(int $raceID, array $goods): SmrPort {
 		// Create a partial mock, only mocking the methods we will use
@@ -55,8 +56,8 @@ class RouteGeneratorTest extends TestCase {
 		$path2->reversePath();
 		$paths = [1 => [2 => $path1], 2 => [1 => $path2]];
 
-		$port1 = $this->createPortStub(RACE_HUMAN, [GOODS_ORE => [TRADER_SELLS, 1]]);
-		$port2 = $this->createPortStub(RACE_NEUTRAL, [GOODS_ORE => [TRADER_BUYS, 1]]);
+		$port1 = $this->createPortStub(RACE_HUMAN, [GOODS_ORE => [TransactionType::Sell, 1]]);
+		$port2 = $this->createPortStub(RACE_NEUTRAL, [GOODS_ORE => [TransactionType::Buy, 1]]);
 		$ports = [1 => $port1, 2 => $port2];
 
 		$goods = [GOODS_NOTHING => true, GOODS_ORE => true];
@@ -111,16 +112,16 @@ class RouteGeneratorTest extends TestCase {
 		];
 
 		$port1 = $this->createPortStub(RACE_HUMAN, [
-			GOODS_ORE => [TRADER_SELLS, 2],
-			GOODS_WOOD => [TRADER_BUYS, 1],
+			GOODS_ORE => [TransactionType::Sell, 2],
+			GOODS_WOOD => [TransactionType::Buy, 1],
 		]);
 		$port2 = $this->createPortStub(RACE_HUMAN, [
-			GOODS_WOOD => [TRADER_SELLS, 1],
-			GOODS_FOOD => [TRADER_BUYS, 1],
+			GOODS_WOOD => [TransactionType::Sell, 1],
+			GOODS_FOOD => [TransactionType::Buy, 1],
 		]);
 		$port3 = $this->createPortStub(RACE_THEVIAN, [
-			GOODS_FOOD => [TRADER_SELLS, 1],
-			GOODS_ORE => [TRADER_BUYS, 2],
+			GOODS_FOOD => [TransactionType::Sell, 1],
+			GOODS_ORE => [TransactionType::Buy, 2],
 		]);
 		$ports = [1 => $port1, 2 => $port2, 3 => $port3];
 

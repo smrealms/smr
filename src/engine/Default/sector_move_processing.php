@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\MovementType;
+
 require_once(LIB . 'Default/sector_mines.inc.php');
 
 $session = Smr\Session::getInstance();
@@ -16,10 +18,10 @@ if ($var['target_sector'] == $player->getSectorID()) {
 }
 
 if ($sector->getWarp() == $var['target_sector']) {
-	$movement = MOVEMENT_WARP;
+	$movement = MovementType::Warp;
 	$turns = TURNS_PER_WARP;
 } else {
-	$movement = MOVEMENT_WALK;
+	$movement = MovementType::Walk;
 	$turns = TURNS_PER_SECTOR;
 }
 

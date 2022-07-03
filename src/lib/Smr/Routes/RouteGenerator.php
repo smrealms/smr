@@ -2,6 +2,8 @@
 
 namespace Smr\Routes;
 
+use Smr\TransactionType;
+
 class RouteGenerator {
 
 	public const EXP_ROUTE = 0;
@@ -119,7 +121,7 @@ class RouteGenerator {
 					if ($useGood === true) {
 						if ($goodId === GOODS_NOTHING) {
 							$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $raceID, $targetPort->getRaceID(), 0, 0, $distance, GOODS_NOTHING);
-						} elseif ($currentPort->hasGood($goodId, TRADER_BUYS) && $targetPort->hasGood($goodId, TRADER_SELLS)) {
+						} elseif ($currentPort->hasGood($goodId, TransactionType::Buy) && $targetPort->hasGood($goodId, TransactionType::Sell)) {
 							$rl[] = new OneWayRoute($currentSectorId, $targetSectorId, $raceID, $targetPort->getRaceID(), $currentPort->getGoodDistance($goodId), $targetPort->getGoodDistance($goodId), $distance, $goodId);
 						}
 					}

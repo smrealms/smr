@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\MovementType;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -65,7 +67,7 @@ if ($player->getTurns() < $turnsToJump) {
 }
 
 // send scout msg
-$sector->leavingSector($player, MOVEMENT_JUMP);
+$sector->leavingSector($player, MovementType::Jump);
 
 // Move the user around
 // TODO: (Must be done while holding both sector locks)
@@ -103,7 +105,7 @@ $sector = $player->getSector();
 $sector->markVisited($player);
 
 // send scout msg
-$sector->enteringSector($player, MOVEMENT_JUMP);
+$sector->enteringSector($player, MovementType::Jump);
 
 // If the new sector has mines...
 require_once(LIB . 'Default/sector_mines.inc.php');

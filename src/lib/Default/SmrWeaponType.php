@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\BuyerRestriction;
+
 /**
  * Defines the base weapon types for ships/planets.
  */
@@ -15,7 +17,7 @@ class SmrWeaponType {
 	protected readonly int $armourDamage;
 	protected readonly int $accuracy;
 	protected readonly int $powerLevel;
-	protected readonly int $buyerRestriction;
+	protected readonly BuyerRestriction $buyerRestriction;
 
 	public static function getWeaponType(int $weaponTypeID, Smr\DatabaseRecord $dbRecord = null): self {
 		if (!isset(self::$CACHE_WEAPON_TYPES[$weaponTypeID])) {
@@ -66,7 +68,7 @@ class SmrWeaponType {
 		$this->armourDamage = $dbRecord->getInt('armour_damage');
 		$this->accuracy = $dbRecord->getInt('accuracy');
 		$this->powerLevel = $dbRecord->getInt('power_level');
-		$this->buyerRestriction = $dbRecord->getInt('buyer_restriction');
+		$this->buyerRestriction = BuyerRestriction::from($dbRecord->getInt('buyer_restriction'));
 	}
 
 	public function getWeaponTypeID(): int {
@@ -97,7 +99,7 @@ class SmrWeaponType {
 		return $this->powerLevel;
 	}
 
-	public function getBuyerRestriction(): int {
+	public function getBuyerRestriction(): BuyerRestriction {
 		return $this->buyerRestriction;
 	}
 

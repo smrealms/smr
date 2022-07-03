@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\BountyType;
+
 $template = Smr\Template::getInstance();
 $db = Smr\Database::getInstance();
 $session = Smr\Session::getInstance();
@@ -29,7 +31,7 @@ foreach ($alliance->getMembers() as $player) {
 		'race' => $player->getRaceName(),
 		'kills' => $player->getKills(),
 		'deaths' => $player->getDeaths(),
-		'bounty' => $player->getCurrentBountyAmount('UG') + $player->getCurrentBountyAmount('HQ'),
+		'bounty' => $player->getCurrentBountyAmount(BountyType::UG) + $player->getCurrentBountyAmount(BountyType::HQ),
 	];
 }
 $template->assign('Players', $players);

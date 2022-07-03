@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\MovementType;
+
 class SmrSector {
 
 	protected static array $CACHE_SECTORS = [];
@@ -194,13 +196,13 @@ class SmrSector {
 		return $raceIDs;
 	}
 
-	public function enteringSector(AbstractSmrPlayer $player, int $movementType): void {
+	public function enteringSector(AbstractSmrPlayer $player, MovementType $movementType): void {
 		// send scout messages to user
 		$message = 'Your forces have spotted ' . $player->getBBLink() . ' ';
 		$message .= match ($movementType) {
-			MOVEMENT_JUMP => 'jumping into',
-			MOVEMENT_WARP => 'warping into',
-			MOVEMENT_WALK => 'entering',
+			MovementType::Jump => 'jumping into',
+			MovementType::Warp => 'warping into',
+			MovementType::Walk => 'entering',
 		};
 		$message .= ' sector ' . Globals::getSectorBBLink($this->getSectorID());
 
@@ -210,13 +212,13 @@ class SmrSector {
 		}
 	}
 
-	public function leavingSector(AbstractSmrPlayer $player, int $movementType): void {
+	public function leavingSector(AbstractSmrPlayer $player, MovementType $movementType): void {
 		// send scout messages to user
 		$message = 'Your forces have spotted ' . $player->getBBLink() . ' ';
 		$message .= match ($movementType) {
-			MOVEMENT_JUMP => 'jumping from',
-			MOVEMENT_WARP => 'warping from',
-			MOVEMENT_WALK => 'leaving',
+			MovementType::Jump => 'jumping from',
+			MovementType::Warp => 'warping from',
+			MovementType::Walk => 'leaving',
 		};
 		$message .= ' sector ' . Globals::getSectorBBLink($this->getSectorID());
 
