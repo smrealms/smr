@@ -2410,7 +2410,7 @@ abstract class AbstractSmrPlayer {
 		return $return;
 	}
 
-	public function killPlayerByPort(SmrPort $port): array {
+	public function killPlayerByPort(AbstractSmrPort $port): array {
 		$return = [];
 		// send a message to the person who died
 		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by the defenses of ' . $port->getDisplayName());

@@ -60,7 +60,7 @@ class SmrMines extends AbstractSmrCombatWeapon {
 		throw new Exception('This weapon should not be used in this context');
 	}
 
-	public function getModifiedPortDamageAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer): never {
+	public function getModifiedPortDamageAgainstPlayer(AbstractSmrPort $port, AbstractSmrPlayer $targetPlayer): never {
 		throw new Exception('This weapon should not be used in this context');
 	}
 
