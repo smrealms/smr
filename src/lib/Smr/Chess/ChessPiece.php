@@ -14,7 +14,7 @@ class ChessPiece {
 	public const PAWN = 6;
 
 	public function __construct(
-		public readonly string $colour,
+		public readonly Colour $colour,
 		public int $pieceID,
 		public int $x,
 		public int $y,
@@ -51,11 +51,11 @@ class ChessPiece {
 		return false;
 	}
 
-	public function getPossibleMoves(array $board, array $hasMoved, string $forColour = null, bool $attackingCheck = false): array {
+	public function getPossibleMoves(array $board, array $hasMoved, Colour $forColour = null, bool $attackingCheck = false): array {
 		$moves = [];
 		if ($forColour === null || $this->colour === $forColour) {
 			if ($this->pieceID == self::PAWN) {
-				$dirY = $this->colour == ChessGame::PLAYER_BLACK ? 1 : -1;
+				$dirY = $this->colour == Colour::Black ? 1 : -1;
 				$moveY = $this->y + $dirY;
 				//Pawn forward movement is not attacking - so don't check it if doing an attacking check.
 				if (!$attackingCheck) {
@@ -89,14 +89,14 @@ class ChessPiece {
 					}
 				}
 				//Castling is not attacking - so don't check it if doing an attacking check.
-				if (!$attackingCheck && !$hasMoved[$this->colour][self::KING] && !ChessGame::isPlayerChecked($board, $hasMoved, $this->colour)) {
-					if (!$hasMoved[$this->colour][self::ROOK]['Queen'] &&
+				if (!$attackingCheck && !$hasMoved[$this->colour->value][self::KING] && !ChessGame::isPlayerChecked($board, $hasMoved, $this->colour)) {
+					if (!$hasMoved[$this->colour->value][self::ROOK]['Queen'] &&
 							ChessGame::isValidCoord($this->x - 1, $this->y, $board) && $board[$this->y][$this->x - 1] === null &&
 							ChessGame::isValidCoord($this->x - 3, $this->y, $board) && $board[$this->y][$this->x - 3] === null &&
 							$this->isSafeMove($board, $hasMoved, $this->x - 1, $this->y)) {
 						$this->addMove($this->x - 2, $this->y, $board, $moves, $hasMoved, $attackingCheck);
 					}
-					if (!$hasMoved[$this->colour][self::ROOK]['King'] &&
+					if (!$hasMoved[$this->colour->value][self::ROOK]['King'] &&
 							ChessGame::isValidCoord($this->x + 1, $this->y, $board) && $board[$this->y][$this->x + 1] === null &&
 							$this->isSafeMove($board, $hasMoved, $this->x + 1, $this->y)) {
 						$this->addMove($this->x + 2, $this->y, $board, $moves, $hasMoved, $attackingCheck);
@@ -215,15 +215,14 @@ class ChessPiece {
 		return self::getSymbolForPiece($this->pieceID, $this->colour);
 	}
 
-	public static function getSymbolForPiece(int $pieceID, string $colour): string {
-		return '&#' . (9811 + $pieceID + ($colour == ChessGame::PLAYER_WHITE ? 0 : 6)) . ';';
+	public static function getSymbolForPiece(int $pieceID, Colour $colour): string {
+		return '&#' . (9811 + $pieceID + ($colour == Colour::White ? 0 : 6)) . ';';
 	}
 
 	/**
 	 * @param self::* $pieceID
-	 * @param ChessGame::PLAYER_* $colour
 	 */
-	public static function getLetterForPiece(int $pieceID, string $colour): string {
+	public static function getLetterForPiece(int $pieceID, Colour $colour): string {
 		$letter = match ($pieceID) {
 			self::KING => 'k',
 			self::QUEEN => 'q',
@@ -232,7 +231,7 @@ class ChessPiece {
 			self::KNIGHT => 'n',
 			self::PAWN => 'p',
 		};
-		if ($colour == ChessGame::PLAYER_WHITE) {
+		if ($colour == Colour::White) {
 			$letter = strtoupper($letter);
 		}
 		return $letter;

@@ -14,9 +14,6 @@ use SmrPlayer;
 
 class ChessGame {
 
-	public const PLAYER_BLACK = 'Black';
-	public const PLAYER_WHITE = 'White';
-
 	public const END_RESIGN = 0;
 	public const END_CANCEL = 1;
 
@@ -103,7 +100,7 @@ class ChessGame {
 		return $y < count($board) && $y >= 0 && $x < count($board[$y]) && $x >= 0;
 	}
 
-	public static function isPlayerChecked(array $board, array $hasMoved, string $colour): bool {
+	public static function isPlayerChecked(array $board, array $hasMoved, Colour $colour): bool {
 		foreach ($board as $row) {
 			foreach ($row as $p) {
 				if ($p != null && $p->colour != $colour && $p->isAttacking($board, $hasMoved, true)) {
@@ -116,14 +113,14 @@ class ChessGame {
 
 	private function resetHasMoved(): void {
 		$this->hasMoved = [
-			self::PLAYER_WHITE => [
+			Colour::White->value => [
 				ChessPiece::KING => false,
 				ChessPiece::ROOK => [
 					'Queen' => false,
 					'King' => false,
 				],
 			],
-			self::PLAYER_BLACK => [
+			Colour::Black->value => [
 				ChessPiece::KING => false,
 				ChessPiece::ROOK => [
 					'Queen' => false,
@@ -157,10 +154,10 @@ class ChessGame {
 				$start_y = $dbRecord->getInt('start_y');
 				$end_x = $dbRecord->getInt('end_x');
 				$end_y = $dbRecord->getInt('end_y');
-				$colour = $dbRecord->getInt('move_id') % 2 == 1 ? self::PLAYER_WHITE : self::PLAYER_BLACK;
+				$colour = $dbRecord->getInt('move_id') % 2 == 1 ? Colour::White : Colour::Black;
 				$promotePieceID = $dbRecord->getInt('promote_piece_id');
 				if ($debugInfo === true) {
-					echo 'x=', $start_x, ', y=', $start_y, ', endX=', $end_x, ', endY=', $end_y, ', colour=', $colour, EOL;
+					echo 'x=', $start_x, ', y=', $start_y, ', endX=', $end_x, ', endY=', $end_y, ', colour=', $colour->name, EOL;
 				}
 				if ($this->tryMove($start_x, $start_y, $end_x, $end_y, $colour, $promotePieceID) != 0) {
 					break;
@@ -179,7 +176,7 @@ class ChessGame {
 			$dbResult = $this->db->read('SELECT * FROM chess_game_pieces WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
 			$pieces = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$pieces[] = new ChessPiece($dbRecord->getString('colour'), $dbRecord->getInt('piece_id'), $dbRecord->getInt('x'), $dbRecord->getInt('y'), $dbRecord->getInt('piece_no'));
+				$pieces[] = new ChessPiece(Colour::from($dbRecord->getString('colour')), $dbRecord->getInt('piece_id'), $dbRecord->getInt('x'), $dbRecord->getInt('y'), $dbRecord->getInt('piece_no'));
 			}
 			$this->board = $this->parsePieces($pieces);
 		}
@@ -231,7 +228,7 @@ class ChessGame {
 					$dbRecord->getInt('end_y'),
 					$pieceTakenID,
 					$dbRecord->getNullableString('checked'),
-					$dbRecord->getInt('move_id') % 2 == 1 ? self::PLAYER_WHITE : self::PLAYER_BLACK,
+					$dbRecord->getInt('move_id') % 2 == 1 ? Colour::White : Colour::Black,
 					$dbRecord->getNullableString('castling'),
 					$dbRecord->getBoolean('en_passant'),
 					$promotionPieceID
@@ -276,18 +273,18 @@ class ChessGame {
 			}
 		}
 		$fen .= match ($this->getCurrentTurnColour()) {
-			self::PLAYER_WHITE => ' w ',
-			self::PLAYER_BLACK => ' b ',
+			Colour::White => ' w ',
+			Colour::Black => ' b ',
 		};
 
 		// Castling
 		$castling = '';
-		foreach ([self::PLAYER_WHITE, self::PLAYER_BLACK] as $colour) {
-			if ($this->hasMoved[$colour][ChessPiece::KING] !== true) {
-				if ($this->hasMoved[$colour][ChessPiece::ROOK]['King'] !== true) {
+		foreach (Colour::cases() as $colour) {
+			if ($this->hasMoved[$colour->value][ChessPiece::KING] !== true) {
+				if ($this->hasMoved[$colour->value][ChessPiece::ROOK]['King'] !== true) {
 					$castling .= ChessPiece::getLetterForPiece(ChessPiece::KING, $colour);
 				}
-				if ($this->hasMoved[$colour][ChessPiece::ROOK]['Queen'] !== true) {
+				if ($this->hasMoved[$colour->value][ChessPiece::ROOK]['Queen'] !== true) {
 					$castling .= ChessPiece::getLetterForPiece(ChessPiece::QUEEN, $colour);
 				}
 			}
@@ -328,41 +325,41 @@ class ChessGame {
 
 	public static function getStandardGame(): array {
 		return [
-				new ChessPiece(self::PLAYER_BLACK, ChessPiece::ROOK, 0, 0),
-				new ChessPiece(self::PLAYER_BLACK, ChessPiece::KNIGHT, 1, 0),
-				new ChessPiece(self::PLAYER_BLACK, ChessPiece::BISHOP, 2, 0),
-				new ChessPiece(self::PLAYER_BLACK, ChessPiece::QUEEN, 3, 0),
-				new ChessPiece(self::PLAYER_BLACK, ChessPiece::KING, 4, 0),
-				new ChessPiece(self::PLAYER_BLACK, ChessPiece::BISHOP, 5, 0),
-				new ChessPiece(self::PLAYER_BLACK, ChessPiece::KNIGHT, 6, 0),
-				new ChessPiece(self::PLAYER_BLACK, ChessPiece::ROOK, 7, 0),
+				new ChessPiece(Colour::Black, ChessPiece::ROOK, 0, 0),
+				new ChessPiece(Colour::Black, ChessPiece::KNIGHT, 1, 0),
+				new ChessPiece(Colour::Black, ChessPiece::BISHOP, 2, 0),
+				new ChessPiece(Colour::Black, ChessPiece::QUEEN, 3, 0),
+				new ChessPiece(Colour::Black, ChessPiece::KING, 4, 0),
+				new ChessPiece(Colour::Black, ChessPiece::BISHOP, 5, 0),
+				new ChessPiece(Colour::Black, ChessPiece::KNIGHT, 6, 0),
+				new ChessPiece(Colour::Black, ChessPiece::ROOK, 7, 0),
 
-				new ChessPiece(self::PLAYER_BLACK, ChessPiece::PAWN, 0, 1),
-				new ChessPiece(self::PLAYER_BLACK, ChessPiece::PAWN, 1, 1),
-				new ChessPiece(self::PLAYER_BLACK, ChessPiece::PAWN, 2, 1),
-				new ChessPiece(self::PLAYER_BLACK, ChessPiece::PAWN, 3, 1),
-				new ChessPiece(self::PLAYER_BLACK, ChessPiece::PAWN, 4, 1),
-				new ChessPiece(self::PLAYER_BLACK, ChessPiece::PAWN, 5, 1),
-				new ChessPiece(self::PLAYER_BLACK, ChessPiece::PAWN, 6, 1),
-				new ChessPiece(self::PLAYER_BLACK, ChessPiece::PAWN, 7, 1),
+				new ChessPiece(Colour::Black, ChessPiece::PAWN, 0, 1),
+				new ChessPiece(Colour::Black, ChessPiece::PAWN, 1, 1),
+				new ChessPiece(Colour::Black, ChessPiece::PAWN, 2, 1),
+				new ChessPiece(Colour::Black, ChessPiece::PAWN, 3, 1),
+				new ChessPiece(Colour::Black, ChessPiece::PAWN, 4, 1),
+				new ChessPiece(Colour::Black, ChessPiece::PAWN, 5, 1),
+				new ChessPiece(Colour::Black, ChessPiece::PAWN, 6, 1),
+				new ChessPiece(Colour::Black, ChessPiece::PAWN, 7, 1),
 
-				new ChessPiece(self::PLAYER_WHITE, ChessPiece::PAWN, 0, 6),
-				new ChessPiece(self::PLAYER_WHITE, ChessPiece::PAWN, 1, 6),
-				new ChessPiece(self::PLAYER_WHITE, ChessPiece::PAWN, 2, 6),
-				new ChessPiece(self::PLAYER_WHITE, ChessPiece::PAWN, 3, 6),
-				new ChessPiece(self::PLAYER_WHITE, ChessPiece::PAWN, 4, 6),
-				new ChessPiece(self::PLAYER_WHITE, ChessPiece::PAWN, 5, 6),
-				new ChessPiece(self::PLAYER_WHITE, ChessPiece::PAWN, 6, 6),
-				new ChessPiece(self::PLAYER_WHITE, ChessPiece::PAWN, 7, 6),
+				new ChessPiece(Colour::White, ChessPiece::PAWN, 0, 6),
+				new ChessPiece(Colour::White, ChessPiece::PAWN, 1, 6),
+				new ChessPiece(Colour::White, ChessPiece::PAWN, 2, 6),
+				new ChessPiece(Colour::White, ChessPiece::PAWN, 3, 6),
+				new ChessPiece(Colour::White, ChessPiece::PAWN, 4, 6),
+				new ChessPiece(Colour::White, ChessPiece::PAWN, 5, 6),
+				new ChessPiece(Colour::White, ChessPiece::PAWN, 6, 6),
+				new ChessPiece(Colour::White, ChessPiece::PAWN, 7, 6),
 
-				new ChessPiece(self::PLAYER_WHITE, ChessPiece::ROOK, 0, 7),
-				new ChessPiece(self::PLAYER_WHITE, ChessPiece::KNIGHT, 1, 7),
-				new ChessPiece(self::PLAYER_WHITE, ChessPiece::BISHOP, 2, 7),
-				new ChessPiece(self::PLAYER_WHITE, ChessPiece::QUEEN, 3, 7),
-				new ChessPiece(self::PLAYER_WHITE, ChessPiece::KING, 4, 7),
-				new ChessPiece(self::PLAYER_WHITE, ChessPiece::BISHOP, 5, 7),
-				new ChessPiece(self::PLAYER_WHITE, ChessPiece::KNIGHT, 6, 7),
-				new ChessPiece(self::PLAYER_WHITE, ChessPiece::ROOK, 7, 7),
+				new ChessPiece(Colour::White, ChessPiece::ROOK, 0, 7),
+				new ChessPiece(Colour::White, ChessPiece::KNIGHT, 1, 7),
+				new ChessPiece(Colour::White, ChessPiece::BISHOP, 2, 7),
+				new ChessPiece(Colour::White, ChessPiece::QUEEN, 3, 7),
+				new ChessPiece(Colour::White, ChessPiece::KING, 4, 7),
+				new ChessPiece(Colour::White, ChessPiece::BISHOP, 5, 7),
+				new ChessPiece(Colour::White, ChessPiece::KNIGHT, 6, 7),
+				new ChessPiece(Colour::White, ChessPiece::ROOK, 7, 7),
 			];
 	}
 
@@ -386,7 +383,7 @@ class ChessGame {
 		foreach ($pieces as $p) {
 			$db->insert('chess_game_pieces', [
 				'chess_game_id' => $db->escapeNumber($chessGameID),
-				'colour' => $db->escapeString($p->colour),
+				'colour' => $db->escapeString($p->colour->value),
 				'piece_id' => $db->escapeNumber($p->pieceID),
 				'x' => $db->escapeNumber($p->x),
 				'y' => $db->escapeNumber($p->y),
@@ -394,24 +391,24 @@ class ChessGame {
 		}
 	}
 
-	private function createMove(int $pieceID, int $startX, int $startY, int $endX, int $endY, ?int $pieceTaken, ?string $checking, string $playerColour, ?string $castling, bool $enPassant, ?int $promotionPieceID): string {
+	private function createMove(int $pieceID, int $startX, int $startY, int $endX, int $endY, ?int $pieceTaken, ?string $checking, Colour $playerColour, ?string $castling, bool $enPassant, ?int $promotionPieceID): string {
 		// This move will be set as the most recent move
 		$this->lastMove = [
 			'From' => ['X' => $startX, 'Y' => $startY],
 			'To' => ['X' => $endX, 'Y' => $endY],
 		];
 
-		$otherPlayerColour = self::getOtherColour($playerColour);
+		$otherPlayerColour = $playerColour->opposite();
 		if ($pieceID == ChessPiece::KING) {
-			$this->hasMoved[$playerColour][ChessPiece::KING] = true;
+			$this->hasMoved[$playerColour->value][ChessPiece::KING] = true;
 		}
 		// Check if the piece moving is a rook and mark it as moved to stop castling.
-		if ($pieceID == ChessPiece::ROOK && ($startX == 0 || $startX == 7) && ($startY == ($playerColour == self::PLAYER_WHITE ? 7 : 0))) {
-			$this->hasMoved[$playerColour][ChessPiece::ROOK][$startX == 0 ? 'Queen' : 'King'] = true;
+		if ($pieceID == ChessPiece::ROOK && ($startX == 0 || $startX == 7) && ($startY == ($playerColour == Colour::White ? 7 : 0))) {
+			$this->hasMoved[$playerColour->value][ChessPiece::ROOK][$startX == 0 ? 'Queen' : 'King'] = true;
 		}
 		// Check if we've taken a rook and marked them as moved, if they've already moved this does nothing, but if they were taken before moving this stops an issue with trying to castle with a non-existent castle.
-		if ($pieceTaken == ChessPiece::ROOK && ($endX == 0 || $endX == 7) && $endY == ($otherPlayerColour == self::PLAYER_WHITE ? 7 : 0)) {
-			$this->hasMoved[$otherPlayerColour][ChessPiece::ROOK][$endX == 0 ? 'Queen' : 'King'] = true;
+		if ($pieceTaken == ChessPiece::ROOK && ($endX == 0 || $endX == 7) && $endY == ($otherPlayerColour == Colour::White ? 7 : 0)) {
+			$this->hasMoved[$otherPlayerColour->value][ChessPiece::ROOK][$endX == 0 ? 'Queen' : 'King'] = true;
 		}
 		if ($pieceID == ChessPiece::PAWN && ($startY == 1 || $startY == 6) && ($endY == 3 || $endY == 4)) {
 			$this->hasMoved[ChessPiece::PAWN] = [$endX, $endY];
@@ -432,7 +429,7 @@ class ChessGame {
 			. ($enPassant ? ' e.p.' : '');
 	}
 
-	public function isCheckmated(string $colour): bool {
+	public function isCheckmated(Colour $colour): bool {
 		$king = null;
 		foreach ($this->board as $row) {
 			foreach ($row as $piece) {
@@ -499,8 +496,8 @@ class ChessGame {
 			//Castling?
 			$castling = self::isCastling($x, $toX);
 			if ($castling !== false) {
-				$hasMoved[$p->colour][ChessPiece::KING] = true;
-				$hasMoved[$p->colour][ChessPiece::ROOK][$castling['Type']] = true;
+				$hasMoved[$p->colour->value][ChessPiece::KING] = true;
+				$hasMoved[$p->colour->value][ChessPiece::ROOK][$castling['Type']] = true;
 				if ($board[$y][$castling['X']] === null) {
 					throw new Exception('Cannot castle with non-existent rook.');
 				}
@@ -524,19 +521,19 @@ class ChessGame {
 				}
 				$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = null;
 			}
-		} elseif ($p->pieceID == ChessPiece::ROOK && ($x == 0 || $x == 7) && $y == ($p->colour == self::PLAYER_WHITE ? 7 : 0)) {
+		} elseif ($p->pieceID == ChessPiece::ROOK && ($x == 0 || $x == 7) && $y == ($p->colour == Colour::White ? 7 : 0)) {
 			//Rook moved?
-			if ($hasMoved[$p->colour][ChessPiece::ROOK][$x == 0 ? 'Queen' : 'King'] === false) {
+			if ($hasMoved[$p->colour->value][ChessPiece::ROOK][$x == 0 ? 'Queen' : 'King'] === false) {
 				// We set rook moved in here as it's used for move info.
 				$rookMoved = $x == 0 ? 'Queen' : 'King';
-				$hasMoved[$p->colour][ChessPiece::ROOK][$rookMoved] = true;
+				$hasMoved[$p->colour->value][ChessPiece::ROOK][$rookMoved] = true;
 			}
 		}
 		// Check if we've taken a rook and marked them as moved, if they've already moved this does nothing, but if they were taken before moving this stops an issue with trying to castle with a non-existent castle.
-		if ($pieceTaken != null && $pieceTaken->pieceID == ChessPiece::ROOK && ($toX == 0 || $toX == 7) && $toY == ($pieceTaken->colour == self::PLAYER_WHITE ? 7 : 0)) {
-			if ($hasMoved[$pieceTaken->colour][ChessPiece::ROOK][$toX == 0 ? 'Queen' : 'King'] === false) {
+		if ($pieceTaken != null && $pieceTaken->pieceID == ChessPiece::ROOK && ($toX == 0 || $toX == 7) && $toY == ($pieceTaken->colour == Colour::White ? 7 : 0)) {
+			if ($hasMoved[$pieceTaken->colour->value][ChessPiece::ROOK][$toX == 0 ? 'Queen' : 'King'] === false) {
 				$rookTaken = $toX == 0 ? 'Queen' : 'King';
-				$hasMoved[$pieceTaken->colour][ChessPiece::ROOK][$rookTaken] = true;
+				$hasMoved[$pieceTaken->colour->value][ChessPiece::ROOK][$rookTaken] = true;
 			}
 		}
 
@@ -579,7 +576,7 @@ class ChessGame {
 		$this->tryMove($x, $y, $toX, $toY, $this->getCurrentTurnColour(), $pawnPromotionPiece);
 	}
 
-	public function tryMove(int $x, int $y, int $toX, int $toY, string $forColour, int $pawnPromotionPiece): string {
+	public function tryMove(int $x, int $y, int $toX, int $toY, Colour $forColour, int $pawnPromotionPiece): string {
 		if ($this->hasEnded()) {
 			throw new UserError('This game is already over');
 		}
@@ -634,7 +631,7 @@ class ChessGame {
 		if ($p->isAttacking($this->board, $this->hasMoved, true)) {
 			$checking = 'CHECK';
 		}
-		if ($this->isCheckmated(self::getOtherColour($p->colour))) {
+		if ($this->isCheckmated($p->colour->opposite())) {
 			$checking = 'MATE';
 		}
 
@@ -673,7 +670,7 @@ class ChessGame {
 		if ($moveInfo['PieceTaken'] != null) {
 			// Get the owner of the taken piece
 			$this->db->write('DELETE FROM chess_game_pieces
-							WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($moveInfo['PieceTaken']->colour) . ' AND piece_id=' . $this->db->escapeNumber($moveInfo['PieceTaken']->pieceID) . ' AND piece_no=' . $this->db->escapeNumber($moveInfo['PieceTaken']->pieceNo) . ';');
+							WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($moveInfo['PieceTaken']->colour->value) . ' AND piece_id=' . $this->db->escapeNumber($moveInfo['PieceTaken']->pieceID) . ' AND piece_no=' . $this->db->escapeNumber($moveInfo['PieceTaken']->pieceNo) . ';');
 
 			$pieceTakenSymbol = $moveInfo['PieceTaken']->getPieceSymbol();
 			$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Opponent Pieces Taken', 'Total'], HOF_PUBLIC);
@@ -685,11 +682,11 @@ class ChessGame {
 		$this->db->write('UPDATE chess_game_pieces
 					SET x=' . $this->db->escapeNumber($toX) . ', y=' . $this->db->escapeNumber($toY) .
 						($moveInfo['PawnPromotion'] !== false ? ', piece_id=' . $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceID']) . ', piece_no=' . $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceNo']) : '') . '
-					WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($p->colour) . ' AND piece_id=' . $this->db->escapeNumber($pieceID) . ' AND piece_no=' . $this->db->escapeNumber($pieceNo) . ';');
+					WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($p->colour->value) . ' AND piece_id=' . $this->db->escapeNumber($pieceID) . ' AND piece_no=' . $this->db->escapeNumber($pieceNo) . ';');
 		if ($moveInfo['Castling'] !== false) {
 			$this->db->write('UPDATE chess_game_pieces
 						SET x=' . $this->db->escapeNumber($moveInfo['Castling']['ToX']) . '
-						WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($p->colour) . ' AND x = ' . $this->db->escapeNumber($moveInfo['Castling']['X']) . ' AND y = ' . $this->db->escapeNumber($y) . ';');
+						WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND colour=' . $this->db->escapeString($p->colour->value) . ' AND x = ' . $this->db->escapeNumber($moveInfo['Castling']['X']) . ' AND y = ' . $this->db->escapeNumber($y) . ';');
 		}
 
 		if ($checking == 'MATE') {
@@ -737,27 +734,21 @@ class ChessGame {
 		return $this->blackID;
 	}
 
-	/**
-	 * @param self::PLAYER_* $colour
-	 */
-	public function getColourID(string $colour): int {
+	public function getColourID(Colour $colour): int {
 		return match ($colour) {
-			self::PLAYER_WHITE => $this->getWhiteID(),
-			self::PLAYER_BLACK => $this->getBlackID(),
+			Colour::White => $this->getWhiteID(),
+			Colour::Black => $this->getBlackID(),
 		};
 	}
 
-	/**
-	 * @param self::PLAYER_* $colour
-	 */
-	public function getColourPlayer(string $colour): AbstractSmrPlayer {
+	public function getColourPlayer(Colour $colour): AbstractSmrPlayer {
 		return SmrPlayer::getPlayer($this->getColourID($colour), $this->getGameID());
 	}
 
-	public function getColourForAccountID(int $accountID): string {
+	public function getColourForAccountID(int $accountID): Colour {
 		return match ($accountID) {
-			$this->getWhiteID() => self::PLAYER_WHITE,
-			$this->getBlackID() => self::PLAYER_BLACK,
+			$this->getWhiteID() => Colour::White,
+			$this->getBlackID() => Colour::Black,
 			default => throw new Exception('Account ID is not in this chess game: ' . $accountID),
 		};
 	}
@@ -785,7 +776,7 @@ class ChessGame {
 						WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
 		$winnerColour = $this->getColourForAccountID($accountID);
 		$winningPlayer = $this->getColourPlayer($winnerColour);
-		$losingPlayer = $this->getColourPlayer(self::getOtherColour($winnerColour));
+		$losingPlayer = $this->getColourPlayer($winnerColour->opposite());
 		$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
 		$winningPlayer->increaseHOF(1, [$chessType, 'Games', 'Won'], HOF_PUBLIC);
 		$losingPlayer->increaseHOF(1, [$chessType, 'Games', 'Lost'], HOF_PUBLIC);
@@ -796,11 +787,8 @@ class ChessGame {
 		return $this->hasMoved;
 	}
 
-	/**
-	 * @return self::PLAYER_*
-	 */
-	public function getCurrentTurnColour(): string {
-		return count($this->getMoves()) % 2 == 0 ? self::PLAYER_WHITE : self::PLAYER_BLACK;
+	public function getCurrentTurnColour(): Colour {
+		return count($this->getMoves()) % 2 == 0 ? Colour::White : Colour::Black;
 	}
 
 	public function getCurrentTurnAccountID(): int {
@@ -832,16 +820,6 @@ class ChessGame {
 	}
 
 	/**
-	 * @param self::PLAYER_* $colour
-	 */
-	public static function getOtherColour(string $colour): string {
-		return match ($colour) {
-			self::PLAYER_WHITE => self::PLAYER_BLACK,
-			self::PLAYER_BLACK => self::PLAYER_WHITE,
-		};
-	}
-
-	/**
 	 * @return self::END_*
 	 */
 	public function resign(int $accountID): int {
@@ -859,7 +837,7 @@ class ChessGame {
 		}
 
 		$loserColour = $this->getColourForAccountID($accountID);
-		$winnerAccountID = $this->getColourID(self::getOtherColour($loserColour));
+		$winnerAccountID = $this->getColourID($loserColour->opposite());
 		$results = $this->setWinner($winnerAccountID);
 		$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
 		$results['Loser']->increaseHOF(1, [$chessType, 'Games', 'Resigned'], HOF_PUBLIC);
