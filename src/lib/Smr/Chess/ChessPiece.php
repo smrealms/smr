@@ -21,7 +21,7 @@ class ChessPiece {
 		public int $pieceNo = -1) {
 	}
 
-	public function isSafeMove(array $board, array $hasMoved, int $toX = -1, int $toY = -1): bool {
+	public function isSafeMove(array $board, array $hasMoved, int $toX, int $toY): bool {
 		// Make a deep copy of the board so that we can inspect possible future
 		// positions without actually changing the state of the real board.
 		// (Note $hasMoved is safe to shallow copy since it has no objects.)
