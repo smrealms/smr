@@ -219,9 +219,6 @@ class ChessPiece {
 		return '&#' . (9811 + $pieceID + ($colour == Colour::White ? 0 : 6)) . ';';
 	}
 
-	/**
-	 * @param self::* $pieceID
-	 */
 	public static function getLetterForPiece(int $pieceID, Colour $colour): string {
 		$letter = match ($pieceID) {
 			self::KING => 'k',
@@ -230,6 +227,7 @@ class ChessPiece {
 			self::BISHOP => 'b',
 			self::KNIGHT => 'n',
 			self::PAWN => 'p',
+			default => throw new Exception('Invalid chess piece ID: ' . $pieceID),
 		};
 		if ($colour == Colour::White) {
 			$letter = strtoupper($letter);
@@ -238,7 +236,6 @@ class ChessPiece {
 	}
 
 	/**
-	 * @param 'K'|'k'|'Q'|'q'|'R'|'r'|'B'|'b'|'N'|'n'|'P'|'p' $letter
 	 * @return self::*
 	 */
 	public static function getPieceForLetter(string $letter): int {
