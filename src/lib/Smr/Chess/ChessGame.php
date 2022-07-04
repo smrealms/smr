@@ -99,13 +99,13 @@ class ChessGame {
 		$this->resetHasMoved();
 	}
 
-	public static function isValidCoord(int $x, int $y, array &$board): bool {
+	public static function isValidCoord(int $x, int $y, array $board): bool {
 		return $y < count($board) && $y >= 0 && $x < count($board[$y]) && $x >= 0;
 	}
 
-	public static function isPlayerChecked(array &$board, array &$hasMoved, string $colour): bool {
-		foreach ($board as &$row) {
-			foreach ($row as &$p) {
+	public static function isPlayerChecked(array $board, array $hasMoved, string $colour): bool {
+		foreach ($board as $row) {
+			foreach ($row as $p) {
 				if ($p != null && $p->colour != $colour && $p->isAttacking($board, $hasMoved, true)) {
 					return true;
 				}
@@ -550,50 +550,6 @@ class ChessGame {
 			'OldPawnMovement' => $oldPawnMovement,
 			'PawnPromotion' => $pawnPromotion,
 		];
-	}
-
-	public static function undoMovePiece(array &$board, array &$hasMoved, int $x, int $y, int $toX, int $toY, array $moveInfo): void {
-		if (!self::isValidCoord($x, $y, $board)) {
-			throw new Exception('Invalid from coordinates, x=' . $x . ', y=' . $y);
-		}
-		if (!self::isValidCoord($toX, $toY, $board)) {
-			throw new Exception('Invalid to coordinates, x=' . $toX . ', y=' . $toY);
-		}
-		if ($board[$y][$x] != null) {
-			throw new Exception('Undoing move onto another piece? x=' . $x . ', y=' . $y);
-		}
-		$board[$y][$x] = $board[$toY][$toX];
-		$p = $board[$y][$x];
-		if ($p === null) {
-			throw new Exception('Trying to undo move of a non-existent piece: ' . var_export($board, true));
-		}
-		$board[$toY][$toX] = $moveInfo['PieceTaken'];
-		$p->x = $x;
-		$p->y = $y;
-
-		$hasMoved[ChessPiece::PAWN] = $moveInfo['OldPawnMovement'];
-		//Castling
-		if ($p->pieceID == ChessPiece::KING) {
-			$castling = self::isCastling($x, $toX);
-			if ($castling !== false) {
-				$hasMoved[$p->colour][ChessPiece::KING] = false;
-				$hasMoved[$p->colour][ChessPiece::ROOK][$castling['Type']] = false;
-				if ($board[$toY][$castling['ToX']] === null) {
-					throw new Exception('Cannot undo castle with non-existent castle.');
-				}
-				$board[$y][$castling['X']] = $board[$toY][$castling['ToX']];
-				$board[$y][$castling['X']]->x = $castling['X'];
-				$board[$toY][$castling['ToX']] = null;
-			}
-		} elseif ($moveInfo['EnPassant'] === true) {
-			$board[$toY][$toX] = null;
-			$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = $moveInfo['PieceTaken'];
-		} elseif ($moveInfo['RookMoved'] !== false) {
-			$hasMoved[$p->colour][ChessPiece::ROOK][$moveInfo['RookMoved']] = false;
-		}
-		if ($moveInfo['RookTaken'] !== false) {
-			$hasMoved[$moveInfo['PieceTaken']->colour][ChessPiece::ROOK][$moveInfo['RookTaken']] = false;
-		}
 	}
 
 	/**
