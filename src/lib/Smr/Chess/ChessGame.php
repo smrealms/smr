@@ -451,13 +451,13 @@ class ChessGame {
 		if ($king === null) {
 			throw new Exception('Could not find the king: game id = ' . $this->chessGameID);
 		}
-		if (!self::isPlayerChecked($this->board, $this->getHasMoved(), $colour)) {
+		if (!self::isPlayerChecked($this->board, $this->hasMoved, $colour)) {
 			return false;
 		}
 		foreach ($this->board as $row) {
 			foreach ($row as $piece) {
 				if ($piece != null && $piece->colour == $colour) {
-					$moves = $piece->getPossibleMoves($this->board, $this->getHasMoved());
+					$moves = $piece->getPossibleMoves($this->board, $this->hasMoved);
 					//There are moves we can make, we are clearly not checkmated.
 					if (count($moves) > 0) {
 						return false;
@@ -643,7 +643,7 @@ class ChessGame {
 			throw new UserError('There is no piece on that square');
 		}
 
-		$moves = $p->getPossibleMoves($this->board, $this->getHasMoved(), $forColour);
+		$moves = $p->getPossibleMoves($this->board, $this->hasMoved, $forColour);
 		$moveIsLegal = false;
 		foreach ($moves as $move) {
 			if ($move[0] == $toX && $move[1] == $toY) {
@@ -658,7 +658,7 @@ class ChessGame {
 		$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
 		$currentPlayer = $this->getCurrentTurnPlayer();
 
-		$moveInfo = self::movePiece($this->board, $this->getHasMoved(), $x, $y, $toX, $toY, $pawnPromotionPiece);
+		$moveInfo = self::movePiece($this->board, $this->hasMoved, $x, $y, $toX, $toY, $pawnPromotionPiece);
 
 		//We have taken the move, we should refresh $p
 		$p = $this->board[$toY][$toX];
@@ -681,7 +681,7 @@ class ChessGame {
 		}
 
 		$checking = null;
-		if ($p->isAttacking($this->board, $this->getHasMoved(), true)) {
+		if ($p->isAttacking($this->board, $this->hasMoved, true)) {
 			$checking = 'CHECK';
 		}
 		if ($this->isCheckmated(self::getOtherColour($p->colour))) {
@@ -692,7 +692,7 @@ class ChessGame {
 
 		$this->getMoves(); // make sure $this->moves is initialized
 		$this->moves[] = $this->createMove($pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking, $this->getCurrentTurnColour(), $castlingType, $moveInfo['EnPassant'], $promotionPieceID);
-		if (self::isPlayerChecked($this->board, $this->getHasMoved(), $p->colour)) {
+		if (self::isPlayerChecked($this->board, $this->hasMoved, $p->colour)) {
 			throw new UserError('You cannot end your turn in check');
 		}
 
