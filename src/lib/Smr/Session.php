@@ -2,7 +2,6 @@
 
 namespace Smr;
 
-use AbstractSmrAccount;
 use AbstractSmrPlayer;
 use Page;
 use Smr\Container\DiContainer;
@@ -197,7 +196,7 @@ class Session {
 		return $this->accountID;
 	}
 
-	public function getAccount(): AbstractSmrAccount {
+	public function getAccount(): SmrAccount {
 		return SmrAccount::getAccount($this->accountID);
 	}
 
@@ -208,7 +207,7 @@ class Session {
 	/**
 	 * Sets the `accountID` attribute of this session.
 	 */
-	public function setAccount(AbstractSmrAccount $account): void {
+	public function setAccount(SmrAccount $account): void {
 		$this->accountID = $account->getAccountID();
 	}
 

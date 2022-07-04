@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-abstract class AbstractSmrAccount {
+class SmrAccount {
 
 	protected const USER_RANKINGS_EACH_STAT_POW = .9;
 	protected const USER_RANKINGS_SCORE = [
@@ -88,14 +88,14 @@ abstract class AbstractSmrAccount {
 		self::$CACHE_ACCOUNTS = [];
 	}
 
-	public static function getAccount(int $accountID, bool $forceUpdate = false): SmrAccount {
+	public static function getAccount(int $accountID, bool $forceUpdate = false): self {
 		if ($forceUpdate || !isset(self::$CACHE_ACCOUNTS[$accountID])) {
-			self::$CACHE_ACCOUNTS[$accountID] = new SmrAccount($accountID);
+			self::$CACHE_ACCOUNTS[$accountID] = new self($accountID);
 		}
 		return self::$CACHE_ACCOUNTS[$accountID];
 	}
 
-	public static function getAccountByLogin(string $login, bool $forceUpdate = false): SmrAccount {
+	public static function getAccountByLogin(string $login, bool $forceUpdate = false): self {
 		if (!empty($login)) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account WHERE login = ' . $db->escapeString($login));
@@ -107,7 +107,7 @@ abstract class AbstractSmrAccount {
 		throw new Smr\Exceptions\AccountNotFound('Account login not found.');
 	}
 
-	public static function getAccountByHofName(string $hofName, bool $forceUpdate = false): SmrAccount {
+	public static function getAccountByHofName(string $hofName, bool $forceUpdate = false): self {
 		if (!empty($hofName)) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account WHERE hof_name = ' . $db->escapeString($hofName));
@@ -119,7 +119,7 @@ abstract class AbstractSmrAccount {
 		throw new Smr\Exceptions\AccountNotFound('Account HoF name not found.');
 	}
 
-	public static function getAccountByEmail(?string $email, bool $forceUpdate = false): SmrAccount {
+	public static function getAccountByEmail(?string $email, bool $forceUpdate = false): self {
 		if (!empty($email)) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account WHERE email = ' . $db->escapeString($email));
@@ -131,7 +131,7 @@ abstract class AbstractSmrAccount {
 		throw new Smr\Exceptions\AccountNotFound('Account email not found.');
 	}
 
-	public static function getAccountByDiscordId(?string $id, bool $forceUpdate = false): SmrAccount {
+	public static function getAccountByDiscordId(?string $id, bool $forceUpdate = false): self {
 		if (!empty($id)) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account where discord_id = ' . $db->escapeString($id));
@@ -143,7 +143,7 @@ abstract class AbstractSmrAccount {
 		throw new Smr\Exceptions\AccountNotFound('Account discord ID not found.');
 	}
 
-	public static function getAccountByIrcNick(?string $nick, bool $forceUpdate = false): SmrAccount {
+	public static function getAccountByIrcNick(?string $nick, bool $forceUpdate = false): self {
 		if (!empty($nick)) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account WHERE irc_nick = ' . $db->escapeString($nick));
@@ -155,7 +155,7 @@ abstract class AbstractSmrAccount {
 		throw new Smr\Exceptions\AccountNotFound('Account IRC nick not found.');
 	}
 
-	public static function getAccountBySocialLogin(Smr\SocialLogin\SocialLogin $social, bool $forceUpdate = false): SmrAccount {
+	public static function getAccountBySocialLogin(Smr\SocialLogin\SocialLogin $social, bool $forceUpdate = false): self {
 		if ($social->isValid()) {
 			$db = Smr\Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account JOIN account_auth USING(account_id)
@@ -169,10 +169,10 @@ abstract class AbstractSmrAccount {
 		throw new Smr\Exceptions\AccountNotFound('Account social login not found.');
 	}
 
-	public static function createAccount(string $login, string $password, string $email, int $timez, int $referral): SmrAccount {
+	public static function createAccount(string $login, string $password, string $email, int $timez, int $referral): self {
 		if ($referral != 0) {
 			// Will throw if referral account doesn't exist
-			SmrAccount::getAccount($referral);
+			self::getAccount($referral);
 		}
 		$db = Smr\Database::getInstance();
 		$passwordHash = password_hash($password, PASSWORD_DEFAULT);
@@ -196,7 +196,7 @@ abstract class AbstractSmrAccount {
 		foreach (self::USER_RANKINGS_SCORE as $userRankingScore) {
 			$userRankingType = $db->escapeString(implode(':', $userRankingScore[0]));
 			$userRankingTypes[] = $userRankingType;
-			$case .= ' WHEN ' . $userRankingType . ' THEN POW(amount*' . $userRankingScore[1] . ',' . SmrAccount::USER_RANKINGS_EACH_STAT_POW . ')*' . $userRankingScore[2];
+			$case .= ' WHEN ' . $userRankingType . ' THEN POW(amount*' . $userRankingScore[1] . ',' . self::USER_RANKINGS_EACH_STAT_POW . ')*' . $userRankingScore[2];
 		}
 		$case .= ' END)), 0)';
 		return ['CASE' => $case, 'IN' => implode(',', $userRankingTypes)];
@@ -481,8 +481,8 @@ abstract class AbstractSmrAccount {
 		return $this->referrerID > 0;
 	}
 
-	public function getReferrer(): SmrAccount {
-		return SmrAccount::getAccount($this->getReferrerID());
+	public function getReferrer(): self {
+		return self::getAccount($this->getReferrerID());
 	}
 
 	public function log(int $log_type_id, string $msg, int $sector_id = 0): void {
@@ -1183,7 +1183,7 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public function addPoints(int $numPoints, SmrAccount $admin, int $reasonID, string $suspicion): int|false {
+	public function addPoints(int $numPoints, self $admin, int $reasonID, string $suspicion): int|false {
 		//do we have points
 		$this->setPoints($this->getPoints() + $numPoints, Smr\Epoch::time());
 		$totalPoints = $this->getPoints();
@@ -1243,7 +1243,7 @@ abstract class AbstractSmrAccount {
 		$this->hasChanged = true;
 	}
 
-	public function banAccount(int $expireTime, SmrAccount $admin, int $reasonID, string $suspicion, bool $removeExceptions = false): void {
+	public function banAccount(int $expireTime, self $admin, int $reasonID, string $suspicion, bool $removeExceptions = false): void {
 		$this->db->replace('account_is_closed', [
 			'account_id' => $this->db->escapeNumber($this->getAccountID()),
 			'reason_id' => $this->db->escapeNumber($reasonID),
@@ -1277,7 +1277,7 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public function unbanAccount(SmrAccount $admin = null, string $currException = null): void {
+	public function unbanAccount(self $admin = null, string $currException = null): void {
 		$adminID = 0;
 		if ($admin !== null) {
 			$adminID = $admin->getAccountID();
