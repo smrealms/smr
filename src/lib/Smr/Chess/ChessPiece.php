@@ -14,38 +14,48 @@ class ChessPiece {
 	public const PAWN = 6;
 
 	public function __construct(
-		public readonly string $colour,
+		public readonly Colour $colour,
 		public int $pieceID,
 		public int $x,
 		public int $y,
 		public int $pieceNo = -1) {
 	}
 
-	public function isSafeMove(array &$board, array &$hasMoved, int $toX = -1, int $toY = -1): bool {
-		$x = $this->x;
-		$y = $this->y;
-		$moveInfo = ChessGame::movePiece($board, $hasMoved, $x, $y, $toX, $toY);
-		$safe = !ChessGame::isPlayerChecked($board, $hasMoved, $this->colour);
-		ChessGame::undoMovePiece($board, $hasMoved, $x, $y, $toX, $toY, $moveInfo);
-		return $safe;
+	public function isSafeMove(array $board, array $hasMoved, int $toX, int $toY): bool {
+		// Make a deep copy of the board so that we can inspect possible future
+		// positions without actually changing the state of the real board.
+		// (Note $hasMoved is safe to shallow copy since it has no objects.)
+		$boardCopy = [];
+		foreach ($board as $y => $row) {
+			foreach ($row as $x => $piece) {
+				if ($piece === null) {
+					$boardCopy[$y][$x] = null;
+				} else {
+					$boardCopy[$y][$x] = clone $piece;
+				}
+			}
+		}
+
+		ChessGame::movePiece($boardCopy, $hasMoved, $this->x, $this->y, $toX, $toY);
+		return !ChessGame::isPlayerChecked($boardCopy, $hasMoved, $this->colour);
 	}
 
-	public function isAttacking(array &$board, array &$hasMoved, bool $king, int $x = -1, int $y = -1): bool {
+	public function isAttacking(array $board, array $hasMoved, bool $king, int $x = -1, int $y = -1): bool {
 		$moves = $this->getPossibleMoves($board, $hasMoved, null, true);
-		foreach ($moves as $move) {
-			$p = $board[$move[1]][$move[0]];
-			if (($move[0] == $x && $move[1] == $y) || ($king === true && $p != null && $p->pieceID == self::KING && $this->colour != $p->colour)) {
+		foreach ($moves as [$toX, $toY]) {
+			$p = $board[$toY][$toX];
+			if (($toX == $x && $toY == $y) || ($king === true && $p != null && $p->pieceID == self::KING && $this->colour != $p->colour)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public function getPossibleMoves(array &$board, array &$hasMoved, string $forColour = null, bool $attackingCheck = false): array {
+	public function getPossibleMoves(array $board, array $hasMoved, Colour $forColour = null, bool $attackingCheck = false): array {
 		$moves = [];
 		if ($forColour === null || $this->colour === $forColour) {
 			if ($this->pieceID == self::PAWN) {
-				$dirY = $this->colour == ChessGame::PLAYER_BLACK ? 1 : -1;
+				$dirY = $this->colour == Colour::Black ? 1 : -1;
 				$moveY = $this->y + $dirY;
 				//Pawn forward movement is not attacking - so don't check it if doing an attacking check.
 				if (!$attackingCheck) {
@@ -79,14 +89,14 @@ class ChessPiece {
 					}
 				}
 				//Castling is not attacking - so don't check it if doing an attacking check.
-				if (!$attackingCheck && !$hasMoved[$this->colour][self::KING] && !ChessGame::isPlayerChecked($board, $hasMoved, $this->colour)) {
-					if (!$hasMoved[$this->colour][self::ROOK]['Queen'] &&
+				if (!$attackingCheck && !$hasMoved[$this->colour->value][self::KING] && !ChessGame::isPlayerChecked($board, $hasMoved, $this->colour)) {
+					if (!$hasMoved[$this->colour->value][self::ROOK]['Queen'] &&
 							ChessGame::isValidCoord($this->x - 1, $this->y, $board) && $board[$this->y][$this->x - 1] === null &&
 							ChessGame::isValidCoord($this->x - 3, $this->y, $board) && $board[$this->y][$this->x - 3] === null &&
 							$this->isSafeMove($board, $hasMoved, $this->x - 1, $this->y)) {
 						$this->addMove($this->x - 2, $this->y, $board, $moves, $hasMoved, $attackingCheck);
 					}
-					if (!$hasMoved[$this->colour][self::ROOK]['King'] &&
+					if (!$hasMoved[$this->colour->value][self::ROOK]['King'] &&
 							ChessGame::isValidCoord($this->x + 1, $this->y, $board) && $board[$this->y][$this->x + 1] === null &&
 							$this->isSafeMove($board, $hasMoved, $this->x + 1, $this->y)) {
 						$this->addMove($this->x + 2, $this->y, $board, $moves, $hasMoved, $attackingCheck);
@@ -168,7 +178,7 @@ class ChessPiece {
 		return $moves;
 	}
 
-	private function addMove(int $toX, int $toY, array &$board, array &$moves, array &$hasMoved, bool $attackingCheck = true): bool {
+	private function addMove(int $toX, int $toY, array $board, array &$moves, array $hasMoved, bool $attackingCheck = true): bool {
 		if (ChessGame::isValidCoord($toX, $toY, $board)) {
 			if (($board[$toY][$toX] === null || $board[$toY][$toX]->colour != $this->colour)) {
 				//We can only actually move to this position if it is safe to do so, however we can pass through it looking for a safe move so we still want to return true.
@@ -181,7 +191,7 @@ class ChessPiece {
 		return false;
 	}
 
-	public function promote(int $pawnPromotionPieceID, array &$board): array {
+	public function promote(int $pawnPromotionPieceID, array $board): array {
 		$takenNos = [];
 		foreach ($board as $row) {
 			foreach ($row as $piece) {
@@ -205,15 +215,14 @@ class ChessPiece {
 		return self::getSymbolForPiece($this->pieceID, $this->colour);
 	}
 
-	public static function getSymbolForPiece(int $pieceID, string $colour): string {
-		return '&#' . (9811 + $pieceID + ($colour == ChessGame::PLAYER_WHITE ? 0 : 6)) . ';';
+	public static function getSymbolForPiece(int $pieceID, Colour $colour): string {
+		return '&#' . (9811 + $pieceID + ($colour == Colour::White ? 0 : 6)) . ';';
 	}
 
 	/**
 	 * @param self::* $pieceID
-	 * @param ChessGame::PLAYER_* $colour
 	 */
-	public static function getLetterForPiece(int $pieceID, string $colour): string {
+	public static function getLetterForPiece(int $pieceID, Colour $colour): string {
 		$letter = match ($pieceID) {
 			self::KING => 'k',
 			self::QUEEN => 'q',
@@ -222,7 +231,7 @@ class ChessPiece {
 			self::KNIGHT => 'n',
 			self::PAWN => 'p',
 		};
-		if ($colour == ChessGame::PLAYER_WHITE) {
+		if ($colour == Colour::White) {
 			$letter = strtoupper($letter);
 		}
 		return $letter;
