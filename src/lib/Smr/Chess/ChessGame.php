@@ -315,14 +315,8 @@ class ChessGame {
 	}
 
 	private static function parsePieces(array $pieces): array {
-		$board = [];
-		$row = [];
-		for ($i = 0; $i < 8; $i++) {
-			$row[] = null;
-		}
-		for ($i = 0; $i < 8; $i++) {
-			$board[] = $row;
-		}
+		$row = array_fill(0, 8, null);
+		$board = array_fill(0, 8, $row);
 		foreach ($pieces as $piece) {
 			if ($board[$piece->y][$piece->x] != null) {
 				throw new Exception('Two pieces found in the same tile.');
