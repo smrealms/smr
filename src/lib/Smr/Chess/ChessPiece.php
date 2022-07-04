@@ -32,9 +32,9 @@ class ChessPiece {
 
 	public function isAttacking(array &$board, array &$hasMoved, bool $king, int $x = -1, int $y = -1): bool {
 		$moves = $this->getPossibleMoves($board, $hasMoved, null, true);
-		foreach ($moves as $move) {
-			$p = $board[$move[1]][$move[0]];
-			if (($move[0] == $x && $move[1] == $y) || ($king === true && $p != null && $p->pieceID == self::KING && $this->colour != $p->colour)) {
+		foreach ($moves as [$toX, $toY]) {
+			$p = $board[$toY][$toX];
+			if (($toX == $x && $toY == $y) || ($king === true && $p != null && $p->pieceID == self::KING && $this->colour != $p->colour)) {
 				return true;
 			}
 		}
