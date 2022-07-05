@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\ShipClass;
+
 function hit_sector_mines(AbstractSmrPlayer $player): void {
 
 	$sectorForces = $player->getSector()->getForces();
@@ -17,7 +19,7 @@ function hit_sector_mines(AbstractSmrPlayer $player): void {
 	}
 
 	$ship = $player->getShip();
-	if ($player->hasNewbieTurns() || $ship->getClassID() === Smr\ShipClass::SCOUT) {
+	if ($player->hasNewbieTurns() || $ship->getClass() === ShipClass::Scout) {
 		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost($ship);
 		$player->takeTurns($turns, $turns);
 		$container = Page::create('current_sector.php');

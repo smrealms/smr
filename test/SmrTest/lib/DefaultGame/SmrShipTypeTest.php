@@ -22,7 +22,7 @@ class SmrShipTypeTest extends TestCase {
 		$shipType = SmrShipType::get(SHIP_TYPE_FEDERAL_ULTIMATUM);
 
 		$this->assertSame(SHIP_TYPE_FEDERAL_ULTIMATUM, $shipType->getTypeID());
-		$this->assertSame(ShipClass::RAIDER, $shipType->getClassID());
+		$this->assertSame(ShipClass::Raider, $shipType->getClass());
 		$this->assertSame('Federal Ultimatum', $shipType->getName());
 		$this->assertSame(38675738, $shipType->getCost());
 		$this->assertSame(BuyerRestriction::Good, $shipType->getRestriction());

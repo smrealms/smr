@@ -37,7 +37,7 @@ class AbstractSmrShipTest extends TestCase {
 		$ship = new AbstractSmrShip($this->player);
 		self::assertSame('Demonica', $ship->getName());
 		self::assertSame(SHIP_TYPE_DEMONICA, $ship->getTypeID());
-		self::assertSame(ShipClass::HUNTER, $ship->getClassID());
+		self::assertSame(ShipClass::Hunter, $ship->getClass());
 		self::assertSame(6, $ship->getHardpoints());
 		self::assertSame(10, $ship->getType()->getSpeed());
 		self::assertSame(0, $ship->getCost());

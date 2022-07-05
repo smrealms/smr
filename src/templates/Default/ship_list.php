@@ -42,8 +42,8 @@
 							<span class="sort" data-sort="class_">Class</span><br />
 							<select onchange="filterSelect(this)">
 								<option value="All">All</option><?php
-								foreach (Smr\ShipClass::getAllNames() as $shipClass) { ?>
-									<option><?php echo $shipClass; ?></option><?php
+								foreach (Smr\ShipClass::cases() as $shipClass) { ?>
+									<option><?php echo $shipClass->name; ?></option><?php
 								} ?>
 							</select>
 						</th>

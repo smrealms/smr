@@ -47,7 +47,7 @@ function buildShipStats(SmrShipType $ship, array $shipLocs): array {
 	$stat = [
 		'name' => $ship->getName(),
 		'race race' . $ship->getRaceID() => Smr\Race::getName($ship->getRaceID()),
-		'class_' => Smr\ShipClass::getName($ship->getClassID()),
+		'class_' => $ship->getClass()->name,
 		'cost' => number_format($ship->getCost()),
 		'speed' => $ship->getSpeed(),
 		'hardpoint' => $ship->getHardpoints(),
