@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+/**
+ * @param resource $fp
+ */
 function notice_nickserv_registered_user($fp, string $rdata): bool {
 
 	// :NickServ!services@coldfront.net NOTICE Caretaker
@@ -39,6 +42,9 @@ function notice_nickserv_registered_user($fp, string $rdata): bool {
 	return false;
 }
 
+/**
+ * @param resource $fp
+ */
 function notice_nickserv_unknown_user($fp, string $rdata): bool {
 
 	// :NickServ!services@coldfront.net NOTICE Caretaker :Nickname Slevin isn't registered.
