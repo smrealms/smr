@@ -2,7 +2,7 @@
 
 use Smr\Chess\Colour;
 
-function debug($message, $debugObject = null) {
+function debug(string $message, mixed $debugObject = null): void {
 	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ? EOL . var_export($debugObject, true) : '') . EOL;
 	$db = Smr\Database::getInstance();
 	$logID = $db->insert('npc_logs', [

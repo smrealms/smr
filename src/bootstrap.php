@@ -120,7 +120,7 @@ function handleException(Throwable $e): void {
 /**
  * Can be used to convert any type of notice into an exception.
  */
-function exception_error_handler($errno, $errstr, $errfile, $errline): bool {
+function exception_error_handler(int $errno, string $errstr, string $errfile, int $errline): bool {
 	if (!(error_reporting() & $errno)) {
 		return false; // error is suppressed
 	}

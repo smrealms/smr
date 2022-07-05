@@ -20,7 +20,7 @@ function linkCombatLog(int $logID): string {
  * returned value must be a boolean) and second, if the first check passes,
  * with action BBCODE_OUTPUT.
  */
-function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent) {
+function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string $default, array $tagParams, string $tagContent): bool|string {
 	global $overrideGameID, $disableBBLinks;
 	$session = Smr\Session::getInstance();
 	try {
@@ -387,7 +387,7 @@ function do_voodoo(): never {
 	exit;
 }
 
-function saveAllAndReleaseLock($updateSession = true): void {
+function saveAllAndReleaseLock(bool $updateSession = true): void {
 	// Only save if we have a lock.
 	$lock = Smr\SectorLock::getInstance();
 	if ($lock->isActive()) {

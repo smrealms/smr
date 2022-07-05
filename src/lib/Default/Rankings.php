@@ -53,7 +53,7 @@ class Rankings {
 	/**
 	 * @param array<int, Smr\DatabaseRecord> $rankedStats
 	 */
-	public static function collectAllianceRankings(array $rankedStats, AbstractSmrPlayer $player, int $minRank = 1, $maxRank = 10): array {
+	public static function collectAllianceRankings(array $rankedStats, AbstractSmrPlayer $player, int $minRank = 1, int $maxRank = 10): array {
 		$rankedStats = self::filterRanks($rankedStats, $minRank, $maxRank);
 		$currRank = $minRank;
 
@@ -80,7 +80,7 @@ class Rankings {
 	/**
 	 * @param array<int, Smr\DatabaseRecord> $rankedStats
 	 */
-	public static function collectRankings(array $rankedStats, AbstractSmrPlayer $player, int $minRank = 1, $maxRank = 10): array {
+	public static function collectRankings(array $rankedStats, AbstractSmrPlayer $player, int $minRank = 1, int $maxRank = 10): array {
 		$rankedStats = self::filterRanks($rankedStats, $minRank, $maxRank);
 		$currRank = $minRank;
 
