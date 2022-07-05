@@ -13,6 +13,7 @@ class SmrAccount {
 		[['Killing', 'Kills'], 1000, 1],
 	];
 
+	/** @var array<int, self> */
 	protected static array $CACHE_ACCOUNTS = [];
 	protected const DEFAULT_HOTKEYS = [
 		'MoveUp' => ['w', 'up'],
@@ -57,12 +58,15 @@ class SmrAccount {
 	protected int $mailBanned;
 	/** @var array<string, float> */
 	protected array $HOF;
+	/** @var array<int, array<array<string, mixed>>> */
 	protected array $individualScores;
 	protected int $score;
 	protected ?string $cssLink;
 	protected bool $defaultCSSEnabled;
+	/** @var ?array<int, int> */
 	protected ?array $messageNotifications;
 	protected bool $centerGalaxyMapOnPlayer;
+	/** @var array<string, int> */
 	protected array $oldAccountIDs = [];
 	protected int $maxRankAchieved;
 	protected int $referrerID;
@@ -72,7 +76,9 @@ class SmrAccount {
 	protected string $timeFormat;
 	protected string $template;
 	protected string $colourScheme;
+	/** @var array<string, array<string>> */
 	protected array $hotkeys;
+	/** @var array<int, bool> */
 	protected array $permissions;
 	protected string $friendlyColour;
 	protected string $neutralColour;
@@ -82,6 +88,9 @@ class SmrAccount {
 
 	protected bool $hasChanged;
 
+	/**
+	 * @return array<string, array<string>>
+	 */
 	public static function getDefaultHotkeys(): array {
 		return self::DEFAULT_HOTKEYS;
 	}
@@ -192,6 +201,9 @@ class SmrAccount {
 		return self::getAccountByLogin($login);
 	}
 
+	/**
+	 * @return array<string, string>
+	 */
 	public static function getUserScoreCaseStatement(Smr\Database $db): array {
 		$userRankingTypes = [];
 		$case = 'IFNULL(FLOOR(SUM(CASE type ';
@@ -272,6 +284,8 @@ class SmrAccount {
 
 	/**
 	 * Check if the account is disabled.
+	 *
+	 * @return array<string, mixed>|false
 	 */
 	public function isDisabled(): array|false {
 		$dbResult = $this->db->read('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE ' . $this->SQL);
@@ -415,6 +429,9 @@ class SmrAccount {
 		}
 	}
 
+	/**
+	 * @param array<string> $typeList
+	 */
 	public function getHOF(array $typeList): float {
 		$this->getHOFData();
 		return $this->HOF[implode(':', $typeList)] ?? 0;
@@ -431,6 +448,9 @@ class SmrAccount {
 		return $this->score;
 	}
 
+	/**
+	 * @return array<int, array<array<string, mixed>>>
+	 */
 	public function getIndividualScores(SmrPlayer $player = null): array {
 		$gameID = 0;
 		if ($player != null) {
@@ -1032,6 +1052,9 @@ class SmrAccount {
 		$this->hasChanged = true;
 	}
 
+	/**
+	 * @return array<string>|array<string, array<string>>
+	 */
 	public function getHotkeys(string $hotkeyType = null): array {
 		if ($hotkeyType !== null) {
 			return $this->hotkeys[$hotkeyType] ?? [];
@@ -1039,6 +1062,9 @@ class SmrAccount {
 		return $this->hotkeys;
 	}
 
+	/**
+	 * @param array<string> $bindings
+	 */
 	public function setHotkey(string $hotkeyType, array $bindings): void {
 		if ($this->getHotkeys($hotkeyType) === $bindings) {
 			return;
@@ -1116,6 +1142,9 @@ class SmrAccount {
 		$this->setMailBanned($time + $increaseTime);
 	}
 
+	/**
+	 * @return array<int, bool>
+	 */
 	public function getPermissions(): array {
 		if (!isset($this->permissions)) {
 			$this->permissions = [];

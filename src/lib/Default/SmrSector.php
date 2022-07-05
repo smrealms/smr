@@ -4,8 +4,11 @@ use Smr\MovementType;
 
 class SmrSector {
 
+	/** @var array<int, array<int, self>> */
 	protected static array $CACHE_SECTORS = [];
+	/** @var array<int, array<int, array<int, self>>> */
 	protected static array $CACHE_GALAXY_SECTORS = [];
+	/** @var array<int, array<int, array<int, self>>> */
 	protected static array $CACHE_LOCATION_SECTORS = [];
 
 	protected Smr\Database $db;
@@ -13,7 +16,9 @@ class SmrSector {
 
 	protected int $battles;
 	protected int $galaxyID;
+	/** @var array<int, bool> */
 	protected array $visited = [];
+	/** @var array<string, int> */
 	protected array $links = [];
 	protected int $warp;
 
@@ -43,6 +48,9 @@ class SmrSector {
 		}
 	}
 
+	/**
+	 * @return array<int, self>
+	 */
 	public static function getGalaxySectors(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID])) {
 			$db = Smr\Database::getInstance();
@@ -57,6 +65,9 @@ class SmrSector {
 		return self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID];
 	}
 
+	/**
+	 * @return array<int, self>
+	 */
 	public static function getLocationSectors(int $gameID, int $locationTypeID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID])) {
 			$db = Smr\Database::getInstance();
@@ -186,6 +197,9 @@ class SmrSector {
 		return false;
 	}
 
+	/**
+	 * @return array<int, int>
+	 */
 	public function getFedRaceIDs(): array {
 		$raceIDs = [];
 		foreach ($this->getLocations() as $location) {
@@ -340,6 +354,9 @@ class SmrSector {
 		return self::getSector($this->getGameID(), $this->getNeighbourID($dir));
 	}
 
+	/**
+	 * @return array<string, int>
+	 */
 	public function getLinks(): array {
 		return $this->links;
 	}
@@ -598,6 +615,9 @@ class SmrSector {
 		return false;
 	}
 
+	/**
+	 * @return array<int, SmrLocation>
+	 */
 	public function getLocations(): array {
 		return SmrLocation::getSectorLocations($this->getGameID(), $this->getSectorID());
 	}
@@ -661,6 +681,9 @@ class SmrSector {
 		return false;
 	}
 
+	/**
+	 * @return array<SmrForce>
+	 */
 	public function getEnemyForces(AbstractSmrPlayer $player): array {
 		$enemyForces = [];
 		foreach ($this->getForces() as $force) {
@@ -695,6 +718,9 @@ class SmrSector {
 		return false;
 	}
 
+	/**
+	 * @return array<SmrForce>
+	 */
 	public function getFriendlyForces(AbstractSmrPlayer $player): array {
 		$friendlyForces = [];
 		foreach ($this->getForces() as $force) {
@@ -705,10 +731,16 @@ class SmrSector {
 		return $friendlyForces;
 	}
 
+	/**
+	 * @return array<int, SmrForce>
+	 */
 	public function getForces(): array {
 		return SmrForce::getSectorForces($this->getGameID(), $this->getSectorID());
 	}
 
+	/**
+	 * @return array<int, SmrPlayer>
+	 */
 	public function getPlayers(): array {
 		return SmrPlayer::getSectorPlayers($this->getGameID(), $this->getSectorID());
 	}
@@ -717,6 +749,9 @@ class SmrSector {
 		return count($this->getPlayers()) > 0;
 	}
 
+	/**
+	 * @return array<int, SmrPlayer>
+	 */
 	public function getOtherTraders(AbstractSmrPlayer $player): array {
 		$players = SmrPlayer::getSectorPlayers($this->getGameID(), $this->getSectorID()); //Do not use & because we unset something and only want that in what we return
 		unset($players[$player->getAccountID()]);
@@ -785,11 +820,17 @@ class SmrSector {
 		return false;
 	}
 
+	/**
+	 * @return array<AbstractSmrPlayer>
+	 */
 	public function getFightingTradersAgainstForces(AbstractSmrPlayer $attackingPlayer, bool $bump): array {
 		// Whether bumping or attacking, only the current player fires at forces
 		return [$attackingPlayer];
 	}
 
+	/**
+	 * @return array<int, AbstractSmrPlayer>
+	 */
 	public function getFightingTradersAgainstPort(AbstractSmrPlayer $attackingPlayer, SmrPort $defendingPort, bool $allEligible = false): array {
 		$fightingPlayers = [];
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
@@ -806,6 +847,9 @@ class SmrSector {
 		return self::limitFightingTraders($fightingPlayers, $attackingPlayer, MAXIMUM_PORT_FLEET_SIZE);
 	}
 
+	/**
+	 * @return array<int, AbstractSmrPlayer>
+	 */
 	public function getFightingTradersAgainstPlanet(AbstractSmrPlayer $attackingPlayer, SmrPlanet $defendingPlanet, bool $allEligible = false): array {
 		$fightingPlayers = [];
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
@@ -825,6 +869,9 @@ class SmrSector {
 		return self::limitFightingTraders($fightingPlayers, $attackingPlayer, min($defendingPlanet->getMaxAttackers(), MAXIMUM_PLANET_FLEET_SIZE));
 	}
 
+	/**
+	 * @return array<string, array<int, AbstractSmrPlayer>>
+	 */
 	public function getFightingTraders(AbstractSmrPlayer $attackingPlayer, AbstractSmrPlayer $defendingPlayer, bool $checkForCloak = false, bool $allEligible = false): array {
 		if ($attackingPlayer->traderNAPAlliance($defendingPlayer)) {
 			throw new Exception('These traders are NAPed.');
@@ -848,6 +895,10 @@ class SmrSector {
 		return $fightingPlayers;
 	}
 
+	/**
+	 * @param array<int, AbstractSmrPlayer> $fightingPlayers
+	 * @return array<int, AbstractSmrPlayer>
+	 */
 	public static function limitFightingTraders(array $fightingPlayers, AbstractSmrPlayer $keepPlayer, int $maximumFleetSize): array {
 		// Cap fleets to the required size
 		$fleet_size = count($fightingPlayers);
@@ -863,6 +914,9 @@ class SmrSector {
 		return $fightingPlayers;
 	}
 
+	/**
+	 * @return array<string, array<int, AbstractSmrPlayer>>
+	 */
 	public function getPotentialFightingTraders(AbstractSmrPlayer $attackingPlayer): array {
 		$fightingPlayers = ['Attackers' => [], 'Defenders' => []];
 		$alliancePlayers = SmrPlayer::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);

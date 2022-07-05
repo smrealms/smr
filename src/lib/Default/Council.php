@@ -2,11 +2,15 @@
 
 class Council {
 
+	/** @var array<int, array<int, array<int, int>>> */
 	protected static array $COUNCILS = [];
+	/** @var array<int, array<int, int>> */
 	protected static array $PRESIDENTS = [];
 
 	/**
 	 * Returns an array of Account ID's of the Council for this race.
+	 *
+	 * @return array<int, int>
 	 */
 	public static function getRaceCouncil(int $gameID, int $raceID): array {
 		if (!isset(self::$COUNCILS[$gameID][$raceID])) {

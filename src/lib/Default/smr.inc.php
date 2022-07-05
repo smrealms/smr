@@ -19,6 +19,8 @@ function linkCombatLog(int $logID): string {
  * This is called in two stages: first with action BBCODE_CHECK (where the
  * returned value must be a boolean) and second, if the first check passes,
  * with action BBCODE_OUTPUT.
+ *
+ * @param array<string, string> $tagParams
  */
 function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string $default, array $tagParams, string $tagContent): bool|string {
 	global $overrideGameID, $disableBBLinks;
@@ -723,6 +725,8 @@ function number_colour_format(float $number, bool $justSign = false): string {
  *    'B' => 3, // 30% chance
  *    'C' => 6, // 60% chance
  * );
+ *
+ * @param array<string|int, float> $choices
  */
 function getWeightedRandom(array $choices): string|int {
 	// Normalize the weights so that their sum is much larger than 1.

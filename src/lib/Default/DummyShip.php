@@ -2,6 +2,7 @@
 
 class DummyShip extends AbstractSmrShip {
 
+	/** @var array<string, self> */
 	protected static array $CACHED_DUMMY_SHIPS;
 
 	public static function saveDummyShips(): void {
@@ -41,6 +42,9 @@ class DummyShip extends AbstractSmrShip {
 		return self::$CACHED_DUMMY_SHIPS[$dummyName];
 	}
 
+	/**
+	 * @return array<string>
+	 */
 	public static function getDummyNames(): array {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT id FROM cached_dummys');

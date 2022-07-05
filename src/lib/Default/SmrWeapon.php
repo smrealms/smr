@@ -293,6 +293,9 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return $return;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function shootPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port): array {
 		$return = ['Weapon' => $this, 'TargetPort' => $port, 'Hit' => false];
 		$modifiedAccuracy = $this->getModifiedAccuracyAgainstPort($weaponPlayer, $port);
@@ -303,6 +306,9 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return $return;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function shootPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet): array {
 		$return = ['Weapon' => $this, 'TargetPlanet' => $planet, 'Hit' => false];
 		$modifiedAccuracy = $this->getModifiedAccuracyAgainstPlanet($weaponPlayer, $planet);
@@ -327,6 +333,9 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		throw new Exception('This weapon should not be used in this context');
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function shootPlayerAsPort(SmrPort $port, AbstractSmrPlayer $targetPlayer): array {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => false];
 		$modifiedAccuracy = $this->getModifiedPortAccuracyAgainstPlayer($port, $targetPlayer);
@@ -337,6 +346,9 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return $return;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function shootPlayerAsPlanet(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer): array {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => false];
 		$modifiedAccuracy = $this->getModifiedPlanetAccuracyAgainstPlayer($planet, $targetPlayer);

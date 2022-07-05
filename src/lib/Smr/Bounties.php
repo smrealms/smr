@@ -11,6 +11,8 @@ class Bounties {
 
 	/**
 	 * Returns a list of all active (not claimable) bounties for given location $type.
+	 *
+	 * @return array<array<string, mixed>>
 	 */
 	public static function getMostWanted(BountyType $type): array {
 		$db = Database::getInstance();

@@ -47,6 +47,9 @@ class Request {
 
 	/**
 	 * Returns index value as an array of strings.
+	 *
+	 * @param ?array<mixed> $default
+	 * @return array<mixed>
 	 */
 	public static function getArray(string $index, array $default = null): array {
 		if (self::has($index)) {
@@ -60,6 +63,9 @@ class Request {
 
 	/**
 	 * Returns index value as an array of integers.
+	 *
+	 * @param ?array<int> $default
+	 * @return array<int>
 	 */
 	public static function getIntArray(string $index, array $default = null): array {
 		if (self::has($index)) {
@@ -108,6 +114,9 @@ class Request {
 
 	/**
 	 * Like getVar, but returns an array of ints instead of a string.
+	 *
+	 * @param ?array<int> $default
+	 * @return array<int>
 	 */
 	public static function getVarIntArray(string $index, array $default = null): array {
 		return self::getVarX($index, $default, [self::class, 'getIntArray']);

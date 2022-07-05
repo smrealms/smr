@@ -10,8 +10,10 @@ use Exception;
  */
 class Path {
 
+	/** @var array<int, int> */
 	private array $path;
 	private int $numWarps = 0;
+	/** @var array<int, int> */
 	private array $warpMap = [];
 
 	public function __construct(int $startSectorID) {
@@ -42,6 +44,9 @@ class Path {
 		return $this->path[count($this->path) - 1];
 	}
 
+	/**
+	 * @return array<int, int>
+	 */
 	public function getPath(): array {
 		return $this->path;
 	}

@@ -45,6 +45,9 @@ class CardTest extends TestCase {
 		self::assertSame($value, $card->getValue());
 	}
 
+	/**
+	 * @return array<array{int, string, string, int}>
+	 */
 	public function card_details_provider(): array {
 		// spot check a handful of cards
 		return [

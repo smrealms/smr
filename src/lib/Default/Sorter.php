@@ -27,24 +27,36 @@ class Sorter {
 		return (self::$reverseOrder ? -1 : 1) * ($a < $b ? -1 : 1);
 	}
 
+	/**
+	 * @param array<mixed> $array
+	 */
 	public static function sortByStrProp(array &$array, string $property, bool $reverseOrder = false): void {
 		self::$sortKey = $property;
 		self::$reverseOrder = $reverseOrder;
 		usort($array, [self::class, 'cmpStrProp']);
 	}
 
+	/**
+	 * @param array<mixed> $array
+	 */
 	public static function sortByNumElement(array &$array, string $property, bool $reverseOrder = false): void {
 		self::$sortKey = $property;
 		self::$reverseOrder = $reverseOrder;
 		uasort($array, [self::class, 'cmpNumElement']);
 	}
 
+	/**
+	 * @param array<mixed> $array
+	 */
 	public static function sortByNumProp(array &$array, string $property, bool $reverseOrder = false): void {
 		self::$sortKey = $property;
 		self::$reverseOrder = $reverseOrder;
 		uasort($array, [self::class, 'cmpNumProp']);
 	}
 
+	/**
+	 * @param array<mixed> $array
+	 */
 	public static function sortByNumMethod(array &$array, string $method, bool $reverseOrder = false): void {
 		self::$sortKey = $method;
 		self::$reverseOrder = $reverseOrder;

@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+/**
+ * @return array<string>
+ */
 function shared_channel_msg_money(AbstractSmrPlayer $player): array {
 	// Insist the player is in an alliance, otherwise this reports data
 	// for ALL allianceless (i.e. alliance=0) players.

@@ -222,11 +222,17 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		return $return;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function shootPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port): array {
 		$return = ['Weapon' => $this, 'TargetPort' => $port, 'Hit' => true];
 		return $this->doPlayerDamageToPort($return, $weaponPlayer, $port);
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function shootPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet): array {
 		$return = ['Weapon' => $this, 'TargetPlanet' => $planet, 'Hit' => true];
 		return $this->doPlayerDamageToPlanet($return, $weaponPlayer, $planet);
@@ -242,11 +248,17 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		return $this->doForceDamageToPlayer($return, $forces, $targetPlayer);
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function shootPlayerAsPort(AbstractSmrPort $forces, AbstractSmrPlayer $targetPlayer): array {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => true];
 		return $this->doPortDamageToPlayer($return, $forces, $targetPlayer);
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function shootPlayerAsPlanet(SmrPlanet $forces, AbstractSmrPlayer $targetPlayer): array {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => true];
 		return $this->doPlanetDamageToPlayer($return, $forces, $targetPlayer);

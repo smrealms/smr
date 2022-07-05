@@ -44,6 +44,9 @@ if ($dbResult->hasRecord()) {
 	$template->assign('KillRankings', $killRankings);
 }
 
+/**
+ * @return array<int, array<string, mixed>>
+ */
 function allianceTopTen(SmrGame $game, string $field): array {
 	$gameID = $game->getGameID();
 	$db = Smr\Database::getInstance();

@@ -2,6 +2,7 @@
 
 class SmrAlliance {
 
+	/** @var array<int, array<int, self>> */
 	protected static array $CACHE_ALLIANCES = [];
 
 	protected Smr\Database $db;
@@ -22,7 +23,9 @@ class SmrAlliance {
 	protected string $ircChannel;
 	protected int $flagshipID;
 
+	/** @var array<int> */
 	protected array $memberList;
+	/** @var array<int> */
 	protected array $seedlist;
 
 	// Recruit type constants
@@ -351,6 +354,8 @@ class SmrAlliance {
 	/**
 	 * List of all recruitment types and their descriptions.
 	 * Do not change the order of elements in the list!
+	 *
+	 * @return array<string, string>
 	 */
 	public static function allRecruitTypes(): array {
 		// The first type is the default option when creating new alliances
@@ -487,11 +492,16 @@ class SmrAlliance {
 
 	/**
 	 * Returns the members of this alliance as an array of SmrPlayer objects.
+	 *
+	 * @return array<int, SmrPlayer>
 	 */
 	public function getMembers(): array {
 		return SmrPlayer::getAlliancePlayers($this->getGameID(), $this->getAllianceID());
 	}
 
+	/**
+	 * @return array<int>
+	 */
 	public function getMemberIDs(): array {
 		if (!isset($this->memberList)) {
 			$dbResult = $this->db->read('SELECT account_id FROM player WHERE ' . $this->SQL);
@@ -505,6 +515,9 @@ class SmrAlliance {
 		return $this->memberList;
 	}
 
+	/**
+	 * @return array<int>
+	 */
 	public function getActiveIDs(): array {
 		$activeIDs = [];
 
@@ -522,6 +535,8 @@ class SmrAlliance {
 
 	/**
 	 * Return all planets owned by members of this alliance.
+	 *
+	 * @return array<SmrPlanet>
 	 */
 	public function getPlanets(): array {
 		$dbResult = $this->db->read('SELECT planet.*
@@ -540,6 +555,8 @@ class SmrAlliance {
 
 	/**
 	 * Return array of sector_id for sectors in the alliance seedlist.
+	 *
+	 * @return array<int>
 	 */
 	public function getSeedlist(): array {
 		if (!isset($this->seedlist)) {

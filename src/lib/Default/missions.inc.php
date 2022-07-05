@@ -120,6 +120,8 @@ const MISSIONS = [
  * Callback for array_walk_recursive in SmrPlayer::rebuildMission.
  * Searches for placeholders in template and replaces them with values
  * derived from the supplied data.
+ *
+ * @param array<string, mixed> $data
  */
 function replaceMissionTemplate(string|int|PlotGroup &$template, string $key, array $data): void {
 	if (!is_string($template)) {
@@ -130,6 +132,10 @@ function replaceMissionTemplate(string|int|PlotGroup &$template, string $key, ar
 	$template = str_replace($search, $replace, $template);
 }
 
+/**
+ * @param array<string, mixed> $values
+ * @param array<string, mixed> $requirements
+ */
 function checkMissionRequirements(array $values, array $requirements): bool {
 	foreach ($requirements as $reqName => $reqValue) {
 		if ($values[$reqName] != $reqValue) {

@@ -118,6 +118,9 @@ class Page extends ArrayObject {
 
 	public int $remainingPageLoads;
 
+	/**
+	 * @param array<string, mixed> $data
+	 */
 	protected function __construct(
 		public readonly string $file,
 		array $data,
@@ -131,6 +134,8 @@ class Page extends ArrayObject {
 	 * Create a new Page object.
 	 * This is the standard method to package linked pages and the data to
 	 * accompany them.
+	 *
+	 * @param array<string, mixed>|self $data
 	 */
 	public static function create(string $file, array|self $data = [], bool $skipRedirect = false): self {
 		if ($data instanceof self) {

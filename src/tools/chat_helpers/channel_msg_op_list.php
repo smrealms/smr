@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+/**
+ * @return array<string>
+ */
 function shared_channel_msg_op_list(AbstractSmrPlayer $player): array {
 	// get the op info from db
 	$db = Smr\Database::getInstance();

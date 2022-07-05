@@ -63,6 +63,9 @@ class Lotto {
 		]);
 	}
 
+	/**
+	 * @return array<string, int>
+	 */
 	public static function getLottoInfo(int $gameID): array {
 		$amount = 1000000;
 		$firstBuy = Epoch::time();

@@ -24,6 +24,8 @@ class PageIntegrationTest extends TestCase {
 	/**
 	 * Insert a mock Session into the DI container to return the input $var
 	 * when getCurrentVar is called on it.
+	 *
+	 * @param array<string, mixed> $var
 	 */
 	private function setVar(array $var): void {
 		$page = Page::create('test', $var);

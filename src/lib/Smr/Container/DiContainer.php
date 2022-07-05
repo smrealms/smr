@@ -27,6 +27,9 @@ class DiContainer {
 		$this->container = $this->buildContainer($enableCompilation);
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	private function getDefinitions(): array {
 		return [
 			/*

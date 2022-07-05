@@ -17,6 +17,9 @@ enum VoteSite: int {
 	// OMGN no longer do voting - the link actually just redirects to archive site.
 	//2 => array('default_img' => 'omgn.png', 'star_img' => 'omgn_vote.png', 'base_url' => 'http://www.omgn.com/topgames/vote.php?Game_ID=30'),
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function getData(): array {
 		// This can't be a static/constant attribute due to `url_func` closures.
 		return match ($this) {

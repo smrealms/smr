@@ -13,8 +13,10 @@ class VoteLink {
 
 	public const TIME_BETWEEN_VOTING = 84600; // 23.5 hours
 
+	/** @var ?array<int, int> */
 	private static ?array $CACHE_TIMEOUTS = null;
 
+	/** @var array<string, mixed> */
 	public readonly array $data;
 
 	public function __construct(

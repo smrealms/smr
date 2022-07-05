@@ -37,6 +37,9 @@ if (!empty($player_id)) {
 	}
 }
 
+/**
+ * @return array<string, SmrPlayer|string>
+ */
 function playerLinks(SmrPlayer $linkPlayer): array {
 	$result = ['Player' => $linkPlayer];
 

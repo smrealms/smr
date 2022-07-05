@@ -5,6 +5,9 @@
  */
 class SmrPlanetStructureType {
 
+	/**
+	 * @param array<string, int> $planetTypeInfo
+	 */
 	public function __construct(
 		private readonly int $ID,
 		private readonly array $planetTypeInfo,
@@ -108,9 +111,15 @@ class SmrPlanetStructureType {
 	public function summary(): string {
 		return self::INFO[$this->ID]['summary'];
 	}
+	/**
+	 * @return array<int, int>
+	 */
 	public function goods(): array {
 		return self::GOODS[$this->ID];
 	}
+	/**
+	 * @return array<int>
+	 */
 	public function hardwareCost(): array {
 		return self::INFO[$this->ID]['hardware_cost'] ?? [];
 	}

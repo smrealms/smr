@@ -10,6 +10,9 @@ use SmrPlayer;
  */
 class Messages {
 
+	/**
+	 * @return array<int, string>|string
+	 */
 	public static function getMessageTypeNames(int $typeID = null): array|string {
 		$typeNames = [
 			MSG_PLAYER => 'Player Messages',
@@ -39,6 +42,9 @@ class Messages {
 		};
 	}
 
+	/**
+	 * @return array<int, string>
+	 */
 	public static function getAdminBoxNames(): array {
 		return [
 			BOX_BUGS_AUTO => 'Automatic Bug Reports',

@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 class SmrGalaxy {
 
+	/** @var array<int, array<int, self>> */
 	protected static array $CACHE_GALAXIES = [];
+	/** @var array<int, array<int, self>> */
 	protected static array $CACHE_GAME_GALAXIES = [];
 
 	public const TYPE_RACIAL = 'Racial';
@@ -28,6 +30,9 @@ class SmrGalaxy {
 		self::$CACHE_GAME_GALAXIES = [];
 	}
 
+	/**
+	 * @return array<int, self>
+	 */
 	public static function getGameGalaxies(int $gameID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_GAME_GALAXIES[$gameID])) {
 			$db = Smr\Database::getInstance();
@@ -198,26 +203,44 @@ class SmrGalaxy {
 		return $this->getHeight() * $this->getWidth();
 	}
 
+	/**
+	 * @return array<int, SmrSector>
+	 */
 	public function getSectors(): array {
 		return SmrSector::getGalaxySectors($this->getGameID(), $this->getGalaxyID());
 	}
 
+	/**
+	 * @return array<int, SmrPort>
+	 */
 	public function getPorts(): array {
 		return SmrPort::getGalaxyPorts($this->getGameID(), $this->getGalaxyID());
 	}
 
+	/**
+	 * @return array<int, array<int, SmrLocation>>
+	 */
 	public function getLocations(): array {
 		return SmrLocation::getGalaxyLocations($this->getGameID(), $this->getGalaxyID());
 	}
 
+	/**
+	 * @return array<int, SmrPlanet>
+	 */
 	public function getPlanets(): array {
 		return SmrPlanet::getGalaxyPlanets($this->getGameID(), $this->getGalaxyID());
 	}
 
+	/**
+	 * @return array<int, array<int, SmrForce>>
+	 */
 	public function getForces(): array {
 		return SmrForce::getGalaxyForces($this->getGameID(), $this->getGalaxyID());
 	}
 
+	/**
+	 * @return array<int, array<int, SmrPlayer>>
+	 */
 	public function getPlayers(): array {
 		return SmrPlayer::getGalaxyPlayers($this->getGameID(), $this->getGalaxyID());
 	}
@@ -229,6 +252,8 @@ class SmrGalaxy {
 	 *
 	 * NOTE: This routine queries sectors inefficiently. You may want to
 	 * construct the cache efficiently before calling this.
+	 *
+	 * @return array<int, array<int, SmrSector>>
 	 */
 	public function getMapSectors(int $centerSectorID = null, int $dist = null): array {
 		if ($centerSectorID === null) {

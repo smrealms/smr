@@ -25,6 +25,9 @@ function get_seed_message(AbstractSmrPlayer $player): string {
 	return $player->getPlayerName() . ' (' . count($missingSeeds) . ' missing) : ' . implode(' ', $missingSeeds);
 }
 
+/**
+ * @return array<string>
+ */
 function shared_channel_msg_seed(AbstractSmrPlayer $player): array {
 	// Check to see how many sectors are in the seedlist
 	$db = Smr\Database::getInstance();

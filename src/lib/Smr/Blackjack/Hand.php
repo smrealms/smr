@@ -7,6 +7,7 @@ namespace Smr\Blackjack;
  */
 class Hand {
 
+	/** @var array<Card> */
 	private array $cards = [];
 	private int $value = 0;
 
@@ -24,6 +25,9 @@ class Hand {
 		return count($this->cards);
 	}
 
+	/**
+	 * @return array<Card>
+	 */
 	public function getCards(): array {
 		return $this->cards;
 	}

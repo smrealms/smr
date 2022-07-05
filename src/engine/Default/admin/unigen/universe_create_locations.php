@@ -37,7 +37,9 @@ $template->assign('TotalLocs', $totalLocs);
 // If multi-category locations becomes common, this code should be modified.
 class Categories {
 
+	/** @var array<string, array<int>> */
 	public array $locTypes = [];
+	/** @var array<int> */
 	private array $locAdded = []; // list of locs added to a category
 	public function addLoc(int $locID, string $category): string {
 		if ($this->added($locID)) {

@@ -21,6 +21,10 @@ class ChessPiece {
 		public int $pieceNo = -1) {
 	}
 
+	/**
+	 * @param array<int, array<int, ?ChessPiece>> $board
+	 * @param array<mixed> $hasMoved
+	 */
 	public function isSafeMove(array $board, array $hasMoved, int $toX, int $toY): bool {
 		// Make a deep copy of the board so that we can inspect possible future
 		// positions without actually changing the state of the real board.
@@ -40,6 +44,10 @@ class ChessPiece {
 		return !ChessGame::isPlayerChecked($boardCopy, $hasMoved, $this->colour);
 	}
 
+	/**
+	 * @param array<int, array<int, ?ChessPiece>> $board
+	 * @param array<mixed> $hasMoved
+	 */
 	public function isAttacking(array $board, array $hasMoved, bool $king, int $x = -1, int $y = -1): bool {
 		$moves = $this->getPossibleMoves($board, $hasMoved, null, true);
 		foreach ($moves as [$toX, $toY]) {
@@ -51,6 +59,11 @@ class ChessPiece {
 		return false;
 	}
 
+	/**
+	 * @param array<int, array<int, ?ChessPiece>> $board
+	 * @param array<mixed> $hasMoved
+	 * @return array<array{int, int}>>
+	 */
 	public function getPossibleMoves(array $board, array $hasMoved, Colour $forColour = null, bool $attackingCheck = false): array {
 		$moves = [];
 		if ($forColour === null || $this->colour === $forColour) {
@@ -178,6 +191,11 @@ class ChessPiece {
 		return $moves;
 	}
 
+	/**
+	 * @param array<int, array<int, ?ChessPiece>> $board
+	 * @param array{int, int} $moves
+	 * @param array<mixed> $hasMoved
+	 */
 	private function addMove(int $toX, int $toY, array $board, array &$moves, array $hasMoved, bool $attackingCheck = true): bool {
 		if (ChessGame::isValidCoord($toX, $toY, $board)) {
 			if (($board[$toY][$toX] === null || $board[$toY][$toX]->colour != $this->colour)) {
@@ -191,6 +209,10 @@ class ChessPiece {
 		return false;
 	}
 
+	/**
+	 * @param array<int, array<int, ?ChessPiece>> $board
+	 * @return array<string, int>
+	 */
 	public function promote(int $pawnPromotionPieceID, array $board): array {
 		$takenNos = [];
 		foreach ($board as $row) {

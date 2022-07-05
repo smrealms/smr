@@ -13,6 +13,7 @@ class Deck {
 	public const NUM_DECKS = 1;
 	public const MAX_CARDS = 52 * self::NUM_DECKS;
 
+	/** @var array<int> */
 	private array $cardIDs;
 
 	public function __construct() {

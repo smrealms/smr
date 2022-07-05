@@ -17,6 +17,7 @@ class ChessGame {
 	public const END_RESIGN = 0;
 	public const END_CANCEL = 1;
 
+	/** @var array<int, self> */
 	protected static array $CACHE_CHESS_GAMES = [];
 
 	private Smr\Database $db;
@@ -28,12 +29,19 @@ class ChessGame {
 	private ?int $endDate;
 	private int $winner;
 
+	/** @var array<mixed> */
 	private array $hasMoved;
+	/** @var array<int, array<int, ?ChessPiece>> */
 	private array $board;
+	/** @var array<string> */
 	private array $moves;
 
+	/** @var ?array<string, array<string, int>> */
 	private ?array $lastMove = null;
 
+	/**
+	 * @return array<self>
+	 */
 	public static function getNPCMoveGames(bool $forceUpdate = false): array {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT chess_game_id
@@ -51,6 +59,9 @@ class ChessGame {
 		return $games;
 	}
 
+	/**
+	 * @return array<self>
+	 */
 	public static function getOngoingPlayerGames(AbstractSmrPlayer $player): array {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT chess_game_id FROM chess_game WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (black_id = ' . $db->escapeNumber($player->getAccountID()) . ' OR white_id = ' . $db->escapeNumber($player->getAccountID()) . ') AND (end_time > ' . Epoch::time() . ' OR end_time IS NULL);');
@@ -86,10 +97,17 @@ class ChessGame {
 		$this->resetHasMoved();
 	}
 
+	/**
+	 * @param array<int, array<int, ?ChessPiece>> $board
+	 */
 	public static function isValidCoord(int $x, int $y, array $board): bool {
 		return $y < count($board) && $y >= 0 && $x < count($board[$y]) && $x >= 0;
 	}
 
+	/**
+	 * @param array<int, array<int, ?ChessPiece>> $board
+	 * @param array<mixed> $hasMoved
+	 */
 	public static function isPlayerChecked(array $board, array $hasMoved, Colour $colour): bool {
 		foreach ($board as $row) {
 			foreach ($row as $p) {
@@ -161,6 +179,9 @@ class ChessGame {
 		}
 	}
 
+	/**
+	 * @return array<int, array<int, ?ChessPiece>>
+	 */
 	public function getBoard(): array {
 		if (!isset($this->board)) {
 			$dbResult = $this->db->read('SELECT * FROM chess_game_pieces WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
@@ -175,6 +196,8 @@ class ChessGame {
 
 	/**
 	 * Get the board from black's perspective
+	 *
+	 * @return array<int, array<int, ?ChessPiece>>
 	 */
 	public function getBoardReversed(): array {
 		// Need to reverse both the rows and the files to rotate the board
@@ -185,6 +208,9 @@ class ChessGame {
 		return $board;
 	}
 
+	/**
+	 * @return ?array<string, array<string, int>>
+	 */
 	public function getLastMove(): ?array {
 		$this->getMoves();
 		return $this->lastMove;
@@ -202,6 +228,9 @@ class ChessGame {
 		return ($x == $lastMove['From']['X'] && $y == $lastMove['From']['Y']) || ($x == $lastMove['To']['X'] && $y == $lastMove['To']['Y']);
 	}
 
+	/**
+	 * @return array<string>
+	 */
 	public function getMoves(): array {
 		if (!isset($this->moves)) {
 			$dbResult = $this->db->read('SELECT * FROM chess_game_moves WHERE chess_game_id = ' . $this->db->escapeNumber($this->chessGameID) . ' ORDER BY move_id;');
@@ -301,6 +330,10 @@ class ChessGame {
 		return $fen;
 	}
 
+	/**
+	 * @param array<ChessPiece> $pieces
+	 * @return array<int, array<int, ?ChessPiece>>
+	 */
 	private static function parsePieces(array $pieces): array {
 		$row = array_fill(0, 8, null);
 		$board = array_fill(0, 8, $row);
@@ -313,6 +346,9 @@ class ChessGame {
 		return $board;
 	}
 
+	/**
+	 * @return array<ChessPiece>
+	 */
 	public static function getStandardGame(): array {
 		return [
 				new ChessPiece(Colour::Black, ChessPiece::ROOK, 0, 0),
@@ -449,6 +485,9 @@ class ChessGame {
 		return true;
 	}
 
+	/**
+	 * @return array<string, int>|false
+	 */
 	public static function isCastling(int $x, int $toX): array|false {
 		$movement = $toX - $x;
 		return match ($movement) {
@@ -458,6 +497,11 @@ class ChessGame {
 		};
 	}
 
+	/**
+	 * @param array<int, array<int, ?ChessPiece>> $board
+	 * @param array<mixed> $hasMoved
+	 * @return array<string, mixed>
+	 */
 	public static function movePiece(array &$board, array &$hasMoved, int $x, int $y, int $toX, int $toY, int $pawnPromotionPiece = ChessPiece::QUEEN): array {
 		if (!self::isValidCoord($x, $y, $board)) {
 			throw new Exception('Invalid from coordinates, x=' . $x . ', y=' . $y);
@@ -758,6 +802,9 @@ class ChessGame {
 		return $this->winner;
 	}
 
+	/**
+	 * @return array<string, AbstractSmrPlayer>
+	 */
 	public function setWinner(int $accountID): array {
 		$this->winner = $accountID;
 		$this->endDate = Epoch::time();
@@ -773,6 +820,9 @@ class ChessGame {
 		return ['Winner' => $winningPlayer, 'Loser' => $losingPlayer];
 	}
 
+	/**
+	 * @return array<mixed>
+	 */
 	public function &getHasMoved(): array {
 		return $this->hasMoved;
 	}

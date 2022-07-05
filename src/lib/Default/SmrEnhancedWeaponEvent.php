@@ -12,6 +12,8 @@ class SmrEnhancedWeaponEvent {
 
 	/**
 	 * Return all the valid events for the given location in a sector.
+	 *
+	 * @return array<self>
 	 */
 	public static function getShopEvents(int $gameID, int $sectorID, int $locationID): array {
 		$events = [];

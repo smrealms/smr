@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+/**
+ * @return array<string>
+ */
 function shared_channel_msg_op_turns(AbstractSmrPlayer $player): array {
 	// get the op from db
 	$db = Smr\Database::getInstance();

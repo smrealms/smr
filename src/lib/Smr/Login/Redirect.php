@@ -11,6 +11,9 @@ use SmrAccount;
  */
 class Redirect {
 
+	/**
+	 * @return array<string, mixed>|false
+	 */
 	public static function redirectIfDisabled(SmrAccount $account): array|false {
 		// We skip the redirect for specific disabled reasons, because they are
 		// handled elsewhere.
