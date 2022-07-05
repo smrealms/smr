@@ -2,10 +2,10 @@
 
 namespace Smr;
 
+use AbstractSmrPlayer;
 use Exception;
 use Smr\Container\DiContainer;
 use Smr\Exceptions\UserError;
-use SmrPlayer;
 
 /**
  * This class is responsible for ensuring that page processing occurs
@@ -45,7 +45,7 @@ class SectorLock {
 	/**
 	 * Convenience wrapper to acquire a lock for the player in their current sector.
 	 */
-	public function acquireForPlayer(SmrPlayer $player): bool {
+	public function acquireForPlayer(AbstractSmrPlayer $player): bool {
 		return $this->acquire($player->getGameID(), $player->getAccountID(), $player->getSectorID());
 	}
 

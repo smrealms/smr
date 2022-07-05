@@ -183,7 +183,7 @@ function debug(string $message, mixed $debugObject = null): void {
 /**
  * Determines if a player has enough turns to start taking actions
  */
-function checkStartConditions(SmrPlayer $player): void {
+function checkStartConditions(AbstractSmrPlayer $player): void {
 	$minTurnsThreshold = rand($player->getMaxTurns() / 2, $player->getMaxTurns());
 	if ($player->getTurns() < $minTurnsThreshold && !$player->canFight()) {
 		debug('We don\'t have enough turns to bother starting trading, and we are protected: ' . $player->getTurns());
@@ -323,7 +323,7 @@ function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port): Page
 	]);
 }
 
-function dumpCargo(SmrPlayer $player): Page {
+function dumpCargo(AbstractSmrPlayer $player): Page {
 	$ship = $player->getShip();
 	$cargo = $ship->getCargo();
 	debug('Ship Cargo', $cargo);
@@ -335,11 +335,11 @@ function dumpCargo(SmrPlayer $player): Page {
 	throw new Exception('Called dumpCargo without any cargo!');
 }
 
-function plotToSector(SmrPlayer $player, int $sectorID): Page {
+function plotToSector(AbstractSmrPlayer $player, int $sectorID): Page {
 	return Page::create('course_plot_processing.php', ['from' => $player->getSectorID(), 'to' => $sectorID]);
 }
 
-function plotToFed(SmrPlayer $player): Page {
+function plotToFed(AbstractSmrPlayer $player): Page {
 	debug('Plotting To Fed');
 
 	// Always drop illegal goods before heading to fed space
@@ -368,7 +368,7 @@ function plotToNearest(AbstractSmrPlayer $player, mixed $realX): Page|false {
 	return Page::create('course_plot_nearest_processing.php', ['RealX' => $realX]);
 }
 
-function moveToSector(SmrPlayer $player, int $targetSector): Page {
+function moveToSector(AbstractSmrPlayer $player, int $targetSector): Page {
 	debug('Moving from #' . $player->getSectorID() . ' to #' . $targetSector);
 	return Page::create('sector_move_processing.php', ['target_sector' => $targetSector, 'target_page' => '']);
 }
@@ -428,7 +428,7 @@ function setupShip(AbstractSmrPlayer $player): void {
 	$ship->update();
 }
 
-function findRoutes(SmrPlayer $player): array {
+function findRoutes(AbstractSmrPlayer $player): array {
 	debug('Finding Routes');
 
 	$tradeGoods = [GOODS_NOTHING => false];

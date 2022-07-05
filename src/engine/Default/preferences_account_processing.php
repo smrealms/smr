@@ -168,7 +168,7 @@ if ($action == 'Save and resend validation code') {
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your CSS options.';
 
 } elseif ($action == 'Save Hotkeys') {
-	foreach (AbstractSmrAccount::getDefaultHotkeys() as $hotkey => $binding) {
+	foreach (SmrAccount::getDefaultHotkeys() as $hotkey => $binding) {
 		$account->setHotkey($hotkey, explode(' ', Smr\Request::get($hotkey)));
 	}
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have saved your hotkeys.';

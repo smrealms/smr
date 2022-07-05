@@ -88,7 +88,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	protected function getModifiedPortAccuracyAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer): float {
+	protected function getModifiedPortAccuracyAgainstPlayer(AbstractSmrPort $port, AbstractSmrPlayer $targetPlayer): float {
 		return 100;
 	}
 
@@ -179,7 +179,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		return $damage;
 	}
 
-	public function getModifiedPortDamageAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer): array {
+	public function getModifiedPortDamageAgainstPlayer(AbstractSmrPort $port, AbstractSmrPlayer $targetPlayer): array {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
 			$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 			return $return;
@@ -242,7 +242,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 		return $this->doForceDamageToPlayer($return, $forces, $targetPlayer);
 	}
 
-	public function shootPlayerAsPort(SmrPort $forces, AbstractSmrPlayer $targetPlayer): array {
+	public function shootPlayerAsPort(AbstractSmrPort $forces, AbstractSmrPlayer $targetPlayer): array {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => true];
 		return $this->doPortDamageToPlayer($return, $forces, $targetPlayer);
 	}

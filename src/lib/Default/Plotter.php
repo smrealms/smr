@@ -5,7 +5,7 @@ use Smr\TransactionType;
 
 class Plotter {
 
-	public static function getX(PlotGroup $xType, int|string $X, int $gameID, SmrPlayer $player = null): mixed {
+	public static function getX(PlotGroup $xType, int|string $X, int $gameID, AbstractSmrPlayer $player = null): mixed {
 		// Special case for Location categories (i.e. Bar, HQ, SafeFed)
 		if (!is_numeric($X)) {
 			if ($xType != PlotGroup::Locations) {

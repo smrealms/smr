@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function check_bargain_number(int $amount, int $ideal_price, int $offered_price, int $bargain_price, Page $container, SmrPlayer $player): void {
+function check_bargain_number(int $amount, int $ideal_price, int $offered_price, int $bargain_price, Page $container, AbstractSmrPlayer $player): void {
 	$var = Smr\Session::getInstance()->getCurrentVar();
 
 	$port = $player->getSectorPort();

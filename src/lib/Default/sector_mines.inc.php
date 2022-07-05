@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function hit_sector_mines(SmrPlayer $player): void {
+function hit_sector_mines(AbstractSmrPlayer $player): void {
 
 	$sectorForces = $player->getSector()->getForces();
 	Sorter::sortByNumMethod($sectorForces, 'getMines', true);

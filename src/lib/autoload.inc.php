@@ -31,7 +31,7 @@ function get_game_dir(): string {
  * Includes the correct game-specific version of a class file.
  * Try to avoid calling this before `$overrideGameID` is set!
  */
-function get_class_loc(string $className): bool {
+function get_class_loc(string $className): void {
 	$className = str_replace('\\', DIRECTORY_SEPARATOR, $className);
 	// Fallback to Default directory
 	$dirs = array_unique([get_game_dir(), 'Default/']);
@@ -39,10 +39,9 @@ function get_class_loc(string $className): bool {
 		$classFile = LIB . $dir . $className . '.php';
 		if (is_file($classFile)) {
 			require($classFile);
-			return true;
+			return;
 		}
 	}
-	return false;
 }
 
 /**

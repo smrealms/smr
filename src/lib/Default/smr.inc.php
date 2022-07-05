@@ -415,7 +415,7 @@ function saveAllAndReleaseLock($updateSession = true): void {
 	}
 }
 
-function doTickerAssigns(Smr\Template $template, SmrPlayer $player, Smr\Database $db): void {
+function doTickerAssigns(Smr\Template $template, AbstractSmrPlayer $player, Smr\Database $db): void {
 	//any ticker news?
 	if ($player->hasTickers()) {
 		$ticker = [];
