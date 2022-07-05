@@ -24,7 +24,7 @@ class RouteGenerator {
 	 * @param array<int, bool> $goods
 	 * @param array<int, bool> $races
 	 * @param array<int, array<int, \Smr\Path>> $distances
-	 * @return array<int, array<string, array<Route>>>
+	 * @return array<int, array<string, array<MultiplePortRoute>>>
 	 */
 	public static function generateMultiPortRoutes(int $maxNumPorts, array $ports, array $goods, array $races, array $distances, int $routesForPort, int $numberOfRoutes): array {
 		self::initialize();
@@ -132,14 +132,14 @@ class RouteGenerator {
 		return $routes;
 	}
 
-	private static function addExpRoute(Route $r): void {
+	private static function addExpRoute(MultiplePortRoute $r): void {
 		$overallMultiplier = (string)$r->getOverallExpMultiplier(); // array keys must be string or int
 		if ($overallMultiplier > self::$dontAddWorseThan[self::EXP_ROUTE]) {
 			self::$expRoutes[$overallMultiplier][] = $r;
 		}
 	}
 
-	private static function addMoneyRoute(Route $r): void {
+	private static function addMoneyRoute(MultiplePortRoute $r): void {
 		$overallMultiplier = (string)$r->getOverallMoneyMultiplier(); // array keys must be string or int
 		if ($overallMultiplier > self::$dontAddWorseThan[self::MONEY_ROUTE]) {
 			self::$moneyRoutes[$overallMultiplier][] = $r;

@@ -428,6 +428,9 @@ function setupShip(AbstractSmrPlayer $player): void {
 	$ship->update();
 }
 
+/**
+ * @return array<Smr\Routes\MultiplePortRoute>
+ */
 function findRoutes(AbstractSmrPlayer $player): array {
 	debug('Finding Routes');
 
