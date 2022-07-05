@@ -6,6 +6,8 @@
  * This class acts like an array, whose keys define the page properties.
  * Then we can either create an HREF so that it can be accessed by a future
  * http request (via the Smr\Session), or forwarded to within the same request.
+ *
+ * @extends ArrayObject<string, mixed>
  */
 class Page extends ArrayObject {
 
