@@ -15,7 +15,7 @@ if (isset($var['msg'])) {
 }
 
 $template->assign('UserRankingLink', $account->getUserRankingHREF());
-$template->assign('UserRankName', $account->getRankName());
+$template->assign('UserRankName', $account->getRank()->name);
 
 // ***************************************
 // ** Play Games

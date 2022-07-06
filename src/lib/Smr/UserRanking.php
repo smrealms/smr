@@ -5,19 +5,18 @@ namespace Smr;
 /**
  * User ranking titles
  */
-class UserRanking {
+enum UserRanking: int {
 
-	public const NAMES = [
-		1 => 'Newbie',
-		2 => 'Beginner',
-		3 => 'Fledgling',
-		4 => 'Average',
-		5 => 'Adept',
-		6 => 'Expert',
-		7 => 'Elite',
-		8 => 'Master',
-		9 => 'Grandmaster',
-	];
+	// Backing values map to database values and must not be changed
+	case Newbie = 1;
+	case Beginner = 2;
+	case Fledgling = 3;
+	case Average = 4;
+	case Adept = 5;
+	case Expert = 6;
+	case Elite = 7;
+	case Master = 8;
+	case Grandmaster = 9;
 
 	public const MIN_RANK = 1;
 	public const MAX_RANK = 9;
@@ -28,29 +27,18 @@ class UserRanking {
 	/**
 	 * Given a score, return the associated rank
 	 */
-	public static function getRankFromScore(int $score): int {
+	public static function getRankFromScore(int $score): self {
 		$rank = ICeil(pow($score, self::SCORE_POW) / self::SCORE_POW_RANK_INCREMENT);
 		$rank = min(max($rank, self::MIN_RANK), self::MAX_RANK);
-		return $rank;
+		return self::from($rank);
 	}
 
 	/**
 	 * Given a rank, return the minimum score needed to achieve it
 	 * (this is an inversion of getRankFromScore)
 	 */
-	public static function getMinScoreForRank(int $rank): int {
-		return ICeil(pow(($rank - 1) * self::SCORE_POW_RANK_INCREMENT, 1 / self::SCORE_POW));
-	}
-
-	/**
-	 * Return the title associated with the given rank
-	 */
-	public static function getName(int $rank): string {
-		return self::NAMES[$rank];
-	}
-
-	public static function getAllNames(): array {
-		return self::NAMES;
+	public function getMinScore(): int {
+		return ICeil(pow(($this->value - 1) * self::SCORE_POW_RANK_INCREMENT, 1 / self::SCORE_POW));
 	}
 
 }

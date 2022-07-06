@@ -10,16 +10,9 @@ use Smr\UserRanking;
  */
 class UserRankingTest extends TestCase {
 
-	public function test_getName(): void {
-		$this->assertSame('Expert', UserRanking::getName(6));
-	}
-
-	public function test_getAllNames(): void {
-		$this->assertSame('Expert', UserRanking::getAllNames()[6]);
-	}
-
 	public function test_rank_limits(): void {
-		$ranks = array_keys(UserRanking::getAllNames());
+		// test that the min/max rank are up to date
+		$ranks = array_column(UserRanking::cases(), 'value');
 		$this->assertSame(UserRanking::MIN_RANK, min($ranks));
 		$this->assertSame(UserRanking::MAX_RANK, max($ranks));
 	}
@@ -27,16 +20,16 @@ class UserRankingTest extends TestCase {
 	public function test_score_limits(): void {
 		// test the lowest possible score
 		$rank = UserRanking::getRankFromScore(0);
-		$this->assertSame(UserRanking::MIN_RANK, $rank);
+		$this->assertSame(UserRanking::MIN_RANK, $rank->value);
 		// test an absurdly high score
 		$rank = UserRanking::getRankFromScore(PHP_INT_MAX);
-		$this->assertSame(UserRanking::MAX_RANK, $rank);
+		$this->assertSame(UserRanking::MAX_RANK, $rank->value);
 	}
 
-	public function test_getMinScoreForRank(): void {
+	public function test_score_and_rank_consistency(): void {
 		// test all ranks
-		foreach (UserRanking::getAllNames() as $rank => $name) {
-			$minScore = UserRanking::getMinScoreForRank($rank);
+		foreach (UserRanking::cases() as $rank) {
+			$minScore = $rank->getMinScore();
 			// make sure the given min score is still the same rank
 			$rankFromScore = UserRanking::getRankFromScore($minScore);
 			$this->assertSame($rank, $rankFromScore);

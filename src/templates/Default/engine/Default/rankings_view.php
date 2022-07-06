@@ -1,4 +1,4 @@
-You are ranked as a <span style="font-size: 125%; color: greenyellow;"><?php echo $ThisAccount->getRankName(); ?></span> player with a score of <span class="green"><?php echo number_format($ThisAccount->getScore()); ?></span>.<br /><br />
+You are ranked as a <span style="font-size: 125%; color: greenyellow;"><?php echo $ThisAccount->getRank()->name; ?></span> player with a score of <span class="green"><?php echo number_format($ThisAccount->getScore()); ?></span>.<br /><br />
 
 <table class="standard">
 	<tr>
@@ -6,10 +6,10 @@ You are ranked as a <span style="font-size: 125%; color: greenyellow;"><?php ech
 		<th>Points Required</th>
 	</tr>
 	<?php
-	foreach (Smr\UserRanking::getAllNames() as $rank => $rankName) { ?>
+	foreach (Smr\UserRanking::cases() as $rank) { ?>
 		<tr>
-			<td><?php echo $rankName; ?></td>
-			<td class="center"><?php echo Smr\UserRanking::getMinScoreForRank($rank); ?></td>
+			<td><?php echo $rank->name; ?></td>
+			<td class="center"><?php echo $rank->getMinScore(); ?></td>
 		</tr><?php
 	} ?>
 </table>

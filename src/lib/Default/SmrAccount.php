@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\UserRanking;
+
 class SmrAccount {
 
 	protected const USER_RANKINGS_EACH_STAT_POW = .9;
@@ -418,10 +420,6 @@ class SmrAccount {
 		return $this->HOF[implode(':', $typeList)] ?? 0;
 	}
 
-	public function getRankName(): string {
-		return Smr\UserRanking::getName($this->getRank());
-	}
-
 	public function getScore(): int {
 		if (!isset($this->score)) {
 			$score = 0;
@@ -452,10 +450,10 @@ class SmrAccount {
 		return $this->individualScores[$gameID];
 	}
 
-	public function getRank(): int {
+	public function getRank(): UserRanking {
 		$rank = Smr\UserRanking::getRankFromScore($this->getScore());
-		if ($rank > $this->maxRankAchieved) {
-			$this->updateMaxRankAchieved($rank);
+		if ($rank->value > $this->maxRankAchieved) {
+			$this->updateMaxRankAchieved($rank->value);
 		}
 		return $rank;
 	}
