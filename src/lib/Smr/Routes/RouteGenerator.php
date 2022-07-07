@@ -8,14 +8,17 @@ class RouteGenerator {
 
 	public const EXP_ROUTE = 0;
 	public const MONEY_ROUTE = 1;
+	/** @var array<numeric-string, array<MultiplePortRoute>> */
 	private static array $expRoutes;
+	/** @var array<numeric-string, array<MultiplePortRoute>> */
 	private static array $moneyRoutes;
+	/** @var array<int, numeric-string|int> */
 	private static array $dontAddWorseThan;
 
 	private static function initialize(): void {
 		self::$expRoutes = [];
 		self::$moneyRoutes = [];
-		self::$dontAddWorseThan = [0, 0];
+		self::$dontAddWorseThan = ['0', '0'];
 	}
 
 	/**
@@ -24,7 +27,7 @@ class RouteGenerator {
 	 * @param array<int, bool> $goods
 	 * @param array<int, bool> $races
 	 * @param array<int, array<int, \Smr\Path>> $distances
-	 * @return array<int, array<string, array<MultiplePortRoute>>>
+	 * @return array<int, array<numeric-string, array<MultiplePortRoute>>>
 	 */
 	public static function generateMultiPortRoutes(int $maxNumPorts, array $ports, array $goods, array $races, array $distances, int $routesForPort, int $numberOfRoutes): array {
 		self::initialize();
