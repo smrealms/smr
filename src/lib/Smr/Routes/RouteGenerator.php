@@ -135,22 +135,14 @@ class RouteGenerator {
 	private static function addExpRoute(Route $r): void {
 		$overallMultiplier = (string)$r->getOverallExpMultiplier(); // array keys must be string or int
 		if ($overallMultiplier > self::$dontAddWorseThan[self::EXP_ROUTE]) {
-			if (isset(self::$expRoutes[$overallMultiplier])) {
-				self::$expRoutes[$overallMultiplier][] = $r;
-			} else {
-				self::$expRoutes[$overallMultiplier] = [$r];
-			}
+			self::$expRoutes[$overallMultiplier][] = $r;
 		}
 	}
 
 	private static function addMoneyRoute(Route $r): void {
 		$overallMultiplier = (string)$r->getOverallMoneyMultiplier(); // array keys must be string or int
 		if ($overallMultiplier > self::$dontAddWorseThan[self::MONEY_ROUTE]) {
-			if (isset(self::$moneyRoutes[$overallMultiplier])) {
-				self::$moneyRoutes[$overallMultiplier][] = $r;
-			} else {
-				self::$moneyRoutes[$overallMultiplier] = [$r];
-			}
+			self::$moneyRoutes[$overallMultiplier][] = $r;
 		}
 	}
 
