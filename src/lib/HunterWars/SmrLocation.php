@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\ShipClass;
+
 class SmrLocation extends AbstractSmrLocation {
 
 	public function getShipsSold(): array {
@@ -9,7 +11,7 @@ class SmrLocation extends AbstractSmrLocation {
 			// Remove ships that are not allowed in Hunter Wars
 			unset($this->shipsSold[SHIP_TYPE_PLANETARY_SUPER_FREIGHTER]);
 			foreach ($this->shipsSold as $shipID => $ship) {
-				if ($ship->getClassID() === Smr\ShipClass::RAIDER) {
+				if ($ship->getClass() === ShipClass::Raider) {
 					unset($this->shipsSold[$shipID]);
 				}
 			}

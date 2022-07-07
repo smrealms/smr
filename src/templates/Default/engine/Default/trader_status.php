@@ -127,7 +127,7 @@
 				<span class="yellow bold">User Ranking</span>
 			</a>
 
-			<br />You are ranked as a <span class="green"><?php echo $ThisAccount->getRankName(); ?></span> player.<br /><br />
+			<br />You are ranked as a <span class="green"><?php echo $ThisAccount->getRank()->name; ?></span> player.<br /><br />
 		</td>
 	</tr>
 </table>

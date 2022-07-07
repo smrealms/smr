@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\ShipClass;
+
 /**
  * Properties and methods for a ship instance.
  * Does not include the database layer (see SmrShip).
@@ -407,8 +409,8 @@ class AbstractSmrShip {
 		return $this->shipType->getTypeID();
 	}
 
-	public function getClassID(): int {
-		return $this->shipType->getClassID();
+	public function getClass(): ShipClass {
+		return $this->shipType->getClass();
 	}
 
 	public function getName(): string {

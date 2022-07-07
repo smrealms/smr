@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\BuyerRestriction;
+use Smr\ShipClass;
 
 /**
  * Defines the base ship types
@@ -13,7 +14,7 @@ class SmrShipType {
 
 	private readonly string $name;
 	private readonly int $typeID;
-	private readonly int $classID;
+	private readonly ShipClass $class;
 	private readonly int $hardpoints;
 	private readonly int $speed;
 	private readonly int $cost;
@@ -54,7 +55,7 @@ class SmrShipType {
 	protected function __construct(Smr\DatabaseRecord $dbRecord) {
 		$this->name = $dbRecord->getString('ship_name');
 		$this->typeID = $dbRecord->getInt('ship_type_id');
-		$this->classID = $dbRecord->getInt('ship_class_id');
+		$this->class = ShipClass::from($dbRecord->getInt('ship_class_id'));
 		$this->raceID = $dbRecord->getInt('race_id');
 		$this->hardpoints = $dbRecord->getInt('hardpoint');
 		$this->speed = $dbRecord->getInt('speed');
@@ -111,8 +112,8 @@ class SmrShipType {
 		return $this->typeID;
 	}
 
-	public function getClassID(): int {
-		return $this->classID;
+	public function getClass(): ShipClass {
+		return $this->class;
 	}
 
 	public function getName(): string {

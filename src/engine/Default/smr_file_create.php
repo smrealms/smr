@@ -46,7 +46,7 @@ $file .= '[Ships]
 ; Name = Race,Cost,TPH,Hardpoints,Power,Class,+Equipment (Optional),+Restrictions(Optional)
 ; Restrictions:Align(Integer)' . EOL;
 foreach (SmrShipType::getAll() as $ship) {
-	$file .= inify($ship->getName()) . '=' . inify($ship->getRaceName()) . ',' . $ship->getCost() . ',' . $ship->getSpeed() . ',' . $ship->getHardpoints() . ',' . $ship->getMaxPower() . ',' . Smr\ShipClass::getName($ship->getClassID());
+	$file .= inify($ship->getName()) . '=' . inify($ship->getRaceName()) . ',' . $ship->getCost() . ',' . $ship->getSpeed() . ',' . $ship->getHardpoints() . ',' . $ship->getMaxPower() . ',' . $ship->getClass()->name;
 	$shipEquip = [];
 	foreach ($ship->getAllMaxHardware() as $hardwareID => $maxHardware) {
 		$shipEquip[] = $hardwares[$hardwareID]['Name'] . '=' . $maxHardware;
