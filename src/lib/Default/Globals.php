@@ -4,7 +4,6 @@ class Globals {
 
 	protected static array $HIDDEN_PLAYERS;
 	protected static array $LEVEL_REQUIREMENTS;
-	protected static array $RACES;
 	protected static array $GOODS;
 	protected static array $HARDWARE_TYPES;
 	protected static bool $FEATURE_REQUEST_OPEN;
