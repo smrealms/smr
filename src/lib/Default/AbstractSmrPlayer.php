@@ -97,6 +97,8 @@ abstract class AbstractSmrPlayer {
 	public static function clearCache(): void {
 		self::$CACHE_PLAYERS = [];
 		self::$CACHE_SECTOR_PLAYERS = [];
+		self::$CACHE_PLANET_PLAYERS = [];
+		self::$CACHE_ALLIANCE_PLAYERS = [];
 	}
 
 	public static function savePlayers(): void {
