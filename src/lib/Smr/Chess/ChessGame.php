@@ -61,16 +61,6 @@ class ChessGame {
 		return $games;
 	}
 
-	public static function getAccountGames(int $accountID): array {
-		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT chess_game_id FROM chess_game WHERE black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ';');
-		$games = [];
-		foreach ($dbResult->records() as $dbRecord) {
-			$games[] = self::getChessGame($dbRecord->getInt('chess_game_id'));
-		}
-		return $games;
-	}
-
 	public static function getChessGame(int $chessGameID, bool $forceUpdate = false): self {
 		if ($forceUpdate || !isset(self::$CACHE_CHESS_GAMES[$chessGameID])) {
 			self::$CACHE_CHESS_GAMES[$chessGameID] = new self($chessGameID);
