@@ -62,6 +62,9 @@
 		]
 	},
 	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": false
+		},
 		"process-timeout": 0
 	},
 	"autoload-dev": {
