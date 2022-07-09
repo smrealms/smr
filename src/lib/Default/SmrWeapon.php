@@ -230,8 +230,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		}
-		$damage = $this->getDamage();
-		return $damage;
+		return $this->getDamage();
 	}
 
 	public function getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port): array {
@@ -239,8 +238,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		}
-		$damage = $this->getDamage();
-		return $damage;
+		return $this->getDamage();
 	}
 
 	public function getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet): array {
@@ -266,8 +264,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 			$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 			return $return;
 		}
-		$damage = $this->getDamage();
-		return $damage;
+		return $this->getDamage();
 	}
 
 	public function getModifiedPortDamageAgainstPlayer(AbstractSmrPort $port, AbstractSmrPlayer $targetPlayer): array {
@@ -275,8 +272,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 			$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 			return $return;
 		}
-		$damage = $this->getDamage();
-		return $damage;
+		return $this->getDamage();
 	}
 
 	public function getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer): array {
@@ -284,8 +280,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 			$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 			return $return;
 		}
-		$damage = $this->getDamage();
-		return $damage;
+		return $this->getDamage();
 	}
 
 	public function shootForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces): array {

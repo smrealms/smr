@@ -533,8 +533,7 @@ class SmrForce {
 	}
 
 	public function killForcesByPlayer(AbstractSmrPlayer $killer): array {
-		$return = [];
-		return $return;
+		return [];
 	}
 
 }

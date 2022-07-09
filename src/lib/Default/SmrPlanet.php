@@ -1279,14 +1279,13 @@ class SmrPlanet {
 	}
 
 	public function killPlanetByPlayer(AbstractSmrPlayer $killer): array {
-		$return = [];
 		$this->creditCurrentAttackersForKill();
 
 		//kick everyone from planet
 		$this->db->write('UPDATE player SET land_on_planet = \'FALSE\' WHERE ' . $this->SQL);
 		$this->removeOwner();
 		$this->removePassword();
-		return $return;
+		return [];
 	}
 
 }
