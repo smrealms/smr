@@ -195,10 +195,10 @@ class SmrAccount {
 	public static function getUserScoreCaseStatement(Smr\Database $db): array {
 		$userRankingTypes = [];
 		$case = 'IFNULL(FLOOR(SUM(CASE type ';
-		foreach (self::USER_RANKINGS_SCORE as $userRankingScore) {
-			$userRankingType = $db->escapeString(implode(':', $userRankingScore[0]));
+		foreach (self::USER_RANKINGS_SCORE as [$stat, $a, $b]) {
+			$userRankingType = $db->escapeString(implode(':', $stat));
 			$userRankingTypes[] = $userRankingType;
-			$case .= ' WHEN ' . $userRankingType . ' THEN POW(amount*' . $userRankingScore[1] . ',' . self::USER_RANKINGS_EACH_STAT_POW . ')*' . $userRankingScore[2];
+			$case .= ' WHEN ' . $userRankingType . ' THEN POW(amount*' . $a . ',' . self::USER_RANKINGS_EACH_STAT_POW . ')*' . $b;
 		}
 		$case .= ' END)), 0)';
 		return ['CASE' => $case, 'IN' => implode(',', $userRankingTypes)];
@@ -438,13 +438,16 @@ class SmrAccount {
 		}
 		if (!isset($this->individualScores[$gameID])) {
 			$this->individualScores[$gameID] = [];
-			foreach (self::USER_RANKINGS_SCORE as $statScore) {
+			foreach (self::USER_RANKINGS_SCORE as [$stat, $a, $b]) {
 				if ($player == null) {
-					$stat = $this->getHOF($statScore[0]);
+					$amount = $this->getHOF($stat);
 				} else {
-					$stat = $player->getHOF($statScore[0]);
+					$amount = $player->getHOF($stat);
 				}
-				$this->individualScores[$gameID][] = ['Stat' => $statScore[0], 'Score' => pow($stat * $statScore[1], self::USER_RANKINGS_EACH_STAT_POW) * $statScore[2]];
+				$this->individualScores[$gameID][] = [
+					'Stat' => $stat,
+					'Score' => pow($amount * $a, self::USER_RANKINGS_EACH_STAT_POW) * $b,
+				];
 			}
 		}
 		return $this->individualScores[$gameID];
