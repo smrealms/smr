@@ -71,14 +71,18 @@ if ($transaction === TransactionType::Buy && $player->getCredits() < $bargain_pr
 $relations = $player->getRelation($port->getRaceID());
 
 if (!isset($var['ideal_price'])) {
-	$var['ideal_price'] = $port->getIdealPrice($good_id, $transaction, $amount, $relations);
+	$ideal_price = $port->getIdealPrice($good_id, $transaction, $amount, $relations);
+} else {
+	/** @var int $ideal_price */
+	$ideal_price = $var['ideal_price'];
 }
-$ideal_price = $var['ideal_price'];
 
 if (!isset($var['offered_price'])) {
-	$var['offered_price'] = $port->getOfferPrice($ideal_price, $relations, $transaction);
+	$offered_price = $port->getOfferPrice($ideal_price, $relations, $transaction);
+} else {
+	/** @var int $offered_price */
+	$offered_price = $var['offered_price'];
 }
-$offered_price = $var['offered_price'];
 
 // nothing should happen here but just to avoid / by 0
 if ($ideal_price == 0 || $offered_price == 0) {

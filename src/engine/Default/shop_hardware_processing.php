@@ -8,6 +8,7 @@ $ship = $player->getShip();
 $action = Smr\Request::get('action');
 $amount = Smr\Request::getInt('amount');
 
+/** @var int $hardware_id */
 $hardware_id = $var['hardware_id'];
 $hardware_name = Globals::getHardwareName($hardware_id);
 $cost = Globals::getHardwareCost($hardware_id);
