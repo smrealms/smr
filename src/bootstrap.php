@@ -206,6 +206,10 @@ function random_alphabetic_string(int $length): string {
 
 /**
  * Return the value of a random key from an array.
+ *
+ * @template T
+ * @param array<T> $arr
+ * @return T
  */
 function array_rand_value(array $arr): mixed {
 	if (empty($arr)) {
