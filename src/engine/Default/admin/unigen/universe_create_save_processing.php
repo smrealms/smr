@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\Exceptions\UserError;
+use Smr\TransactionType;
 
 /**
  * @param array<int, SmrSector> $sectors
@@ -271,7 +272,7 @@ if ($submit == 'Create Galaxies') {
 			foreach (array_keys(Globals::getGoods()) as $goodID) {
 				$trans = Smr\Request::get('good' . $goodID);
 				if ($trans != 'None') {
-					$goods[$goodID] = $trans;
+					$goods[$goodID] = TransactionType::from($trans);
 				}
 			}
 			if (!$port->setPortGoods($goods)) {
