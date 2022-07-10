@@ -13,7 +13,7 @@ $container = Page::create('message_send_processing.php');
 
 if (isset($var['receiver'])) {
 	$container->addVar('receiver');
-	$template->assign('Receiver', SmrPlayer::getPlayer($var['receiver'], $player->getGameID()));
+	$template->assign('Receiver', SmrPlayer::getPlayer($var['receiver'], $player->getGameID())->getDisplayName());
 } else {
 	$template->assign('Receiver', 'All Online');
 }

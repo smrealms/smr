@@ -2,7 +2,7 @@
 <form name="MessageSendForm" method="POST" action="<?php echo $MessageSendFormHref; ?>">
 	<p>
 		<b>From: </b><?php echo $ThisPlayer->getDisplayName(); ?><br />
-		<b>To: </b><?php if (isset($Receiver) && is_object($Receiver)) { echo $Receiver->getDisplayName(); } else { echo $Receiver; } ?>
+		<b>To: </b><?php echo $Receiver; ?>
 	</p>
 	<textarea spellcheck="true" name="message" required><?php if (isset($Preview)) { echo $Preview; } ?></textarea><br />
 	<br />
