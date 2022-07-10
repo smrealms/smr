@@ -377,7 +377,7 @@ class SmrForce {
 	/**
 	 * Update the table fields associated with using Refresh All
 	 */
-	public function updateRefreshAll(SmrPlayer $player, int $refreshTime): void {
+	public function updateRefreshAll(AbstractSmrPlayer $player, int $refreshTime): void {
 		$this->db->write('UPDATE sector_has_forces SET refresh_at=' . $this->db->escapeNumber($refreshTime) . ', refresher=' . $this->db->escapeNumber($player->getAccountID()) . ' WHERE ' . $this->SQL);
 	}
 
