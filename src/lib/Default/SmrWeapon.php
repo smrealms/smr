@@ -198,12 +198,12 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return $modifiedAccuracy;
 	}
 
-	public function getModifiedPortAccuracy(SmrPort $port): float {
+	public function getModifiedPortAccuracy(AbstractSmrPort $port): float {
 		$modifiedAccuracy = $this->getBaseAccuracy();
 		return $modifiedAccuracy;
 	}
 
-	public function getModifiedPortAccuracyAgainstPlayer(SmrPort $port, AbstractSmrPlayer $targetPlayer): float {
+	public function getModifiedPortAccuracyAgainstPlayer(AbstractSmrPort $port, AbstractSmrPlayer $targetPlayer): float {
 		$modifiedAccuracy = $this->getModifiedPortAccuracy($port);
 		$modifiedAccuracy -= $this->getBaseAccuracy() * self::getPlayerLevelAccuracyMod($targetPlayer);
 		return $modifiedAccuracy;
@@ -336,7 +336,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	/**
 	 * @return array<string, mixed>
 	 */
-	public function shootPlayerAsPort(SmrPort $port, AbstractSmrPlayer $targetPlayer): array {
+	public function shootPlayerAsPort(AbstractSmrPort $port, AbstractSmrPlayer $targetPlayer): array {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => false];
 		$modifiedAccuracy = $this->getModifiedPortAccuracyAgainstPlayer($port, $targetPlayer);
 		if ($this->checkHit($targetPlayer, $modifiedAccuracy)) {
