@@ -2945,11 +2945,10 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function claimMissionReward(int $missionID): string {
-		$this->getMissions();
-		$mission =& $this->missions[$missionID];
-		if ($mission === false) {
+		if (!$this->hasMission($missionID)) {
 			throw new Exception('Unknown mission: ' . $missionID);
 		}
+		$mission =& $this->missions[$missionID];
 		if ($mission['Task'] === false || $mission['Task']['Step'] != 'Claim') {
 			throw new Exception('Cannot claim mission: ' . $missionID . ', for step: ' . $mission['On Step']);
 		}
