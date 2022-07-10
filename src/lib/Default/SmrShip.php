@@ -6,6 +6,7 @@
  */
 class SmrShip extends AbstractSmrShip {
 
+	/** @var array<int, array<int, self>> */
 	protected static array $CACHE_SHIPS = [];
 
 	protected readonly string $SQL;

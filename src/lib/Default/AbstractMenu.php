@@ -388,6 +388,9 @@ class AbstractMenu {
 
 }
 
+/**
+ * @param array<array<string, mixed>> $menu
+ */
 function create_sub_menu(array $menu, int $active_level1, int $active_level2): void {
 	$return = ('<table class="fullwidth center">');
 	$return .= ('<tr>');

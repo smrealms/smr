@@ -26,6 +26,8 @@ class SmrInvitation {
 
 	/**
 	 * Get all unexpired invitations for the given alliance
+	 *
+	 * @return array<self>
 	 */
 	public static function getAll(int $allianceID, int $gameID): array {
 		// Remove any expired invitations

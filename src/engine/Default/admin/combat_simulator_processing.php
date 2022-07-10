@@ -65,6 +65,11 @@ if (Smr\Request::has('run') || Smr\Request::has('death_run')) {
 	}
 }
 
+/**
+ * @param array<int, AbstractSmrPlayer> $realAttackers
+ * @param array<int, AbstractSmrPlayer> $realDefenders
+ * @return array<string, mixed>
+ */
 function runAnAttack(array $realAttackers, array $realDefenders): array {
 	$results = [
 		'Attackers' => ['Traders' => [], 'TotalDamage' => 0],

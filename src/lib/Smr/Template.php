@@ -10,11 +10,15 @@ use Smr\Container\DiContainer;
 
 class Template {
 
+	/** @var array<string, mixed> */
 	private array $data = [];
 	private int $nestedIncludes = 0;
+	/** @var array<string, mixed> */
 	private array $ajaxJS = [];
+	/** @var array<string> */
 	protected array $jsAlerts = [];
 	private bool $displayCalled = false;
+	/** @var array<string> */
 	private array $jsSources = [];
 
 	/**
@@ -122,6 +126,9 @@ class Template {
 		throw new Exception('No template found for ' . $templateName);
 	}
 
+	/**
+	 * @param array<string, mixed> $assignVars
+	 */
 	protected function includeTemplate(string $templateName, array $assignVars = null): void {
 		if ($this->nestedIncludes > 15) {
 			throw new Exception('Nested more than 15 template includes, is something wrong?');

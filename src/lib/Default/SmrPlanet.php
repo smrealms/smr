@@ -4,7 +4,8 @@ use Smr\PlanetTypes\PlanetType;
 
 class SmrPlanet {
 
-	protected static $CACHE_PLANETS = [];
+	/** @var array<int, array<int, self>> */
+	protected static array $CACHE_PLANETS = [];
 
 	public const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 100;
 	protected const CHANCE_TO_DOWNGRADE = 15; // percent
@@ -25,10 +26,14 @@ class SmrPlanet {
 	protected int $credits;
 	protected int $bonds;
 	protected int $maturity;
+	/** @var array<int, int> */
 	protected array $stockpile;
+	/** @var array<int, int> */
 	protected array $buildings;
 	protected int $inhabitableTime;
+	/** @var array<int, array<string, int>> */
 	protected array $currentlyBuilding;
+	/** @var array<int, SmrWeapon> */
 	protected array $mountedWeapons;
 	protected int $typeID;
 	protected PlanetType $typeInfo;
@@ -36,8 +41,11 @@ class SmrPlanet {
 	protected bool $hasChanged = false;
 	protected bool $hasChangedFinancial = false; // for credits, bond, maturity
 	protected bool $hasChangedStockpile = false;
+	/** @var array<int, bool> */
 	protected array $hasChangedWeapons = [];
+	/** @var array<int, bool> */
 	protected array $hasChangedBuildings = [];
+	/** @var array<int> */
 	protected array $hasStoppedBuilding = [];
 	protected bool $isNew = false;
 
@@ -57,6 +65,9 @@ class SmrPlanet {
 		}
 	}
 
+	/**
+	 * @return array<int, self>
+	 */
 	public static function getGalaxyPlanets(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT planet.* FROM planet LEFT JOIN sector USING (game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
@@ -468,6 +479,9 @@ class SmrPlanet {
 		return $this->getBuilding(PLANET_WEAPON_MOUNT);
 	}
 
+	/**
+	 * @return array<int, SmrWeapon>
+	 */
 	public function getMountedWeapons(): array {
 		if (!isset($this->mountedWeapons)) {
 			$this->mountedWeapons = [];
@@ -601,6 +615,9 @@ class SmrPlanet {
 		$this->setStockpile($goodID, $this->getStockpile($goodID) + $amount);
 	}
 
+	/**
+	 * @return array<int, int>
+	 */
 	public function getBuildings(): array {
 		if (!isset($this->buildings)) {
 			$this->buildings = [];
@@ -650,6 +667,9 @@ class SmrPlanet {
 		$this->setBuilding($buildingTypeID, $this->getBuilding($buildingTypeID) - $number);
 	}
 
+	/**
+	 * @return array<int, array<string, int>>
+	 */
 	public function getCurrentlyBuilding(): array {
 		if (!isset($this->currentlyBuilding)) {
 			$this->currentlyBuilding = [];
@@ -750,6 +770,9 @@ class SmrPlanet {
 		return $this->typeInfo->maxLanded();
 	}
 
+	/**
+	 * @return SmrPlanetStructureType|array<int, SmrPlanetStructureType>
+	 */
 	public function getStructureTypes(int $structureID = null): SmrPlanetStructureType|array {
 		return $this->typeInfo->structureTypes($structureID);
 	}
@@ -1059,6 +1082,9 @@ class SmrPlanet {
 		return Page::create('planet_bond_confirmation.php')->href();
 	}
 
+	/**
+	 * @param array<AbstractSmrPlayer> $attackers
+	 */
 	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers): void {
 		$trigger->increaseHOF(1, ['Combat', 'Planet', 'Number Of Triggers'], HOF_PUBLIC);
 		foreach ($attackers as $attacker) {
@@ -1099,6 +1125,9 @@ class SmrPlanet {
 	}
 
 
+	/**
+	 * @return array<int, SmrPlayer>
+	 */
 	public function getPlayers(): array {
 		return SmrPlayer::getPlanetPlayers($this->getGameID(), $this->getSectorID());
 	}
@@ -1111,6 +1140,9 @@ class SmrPlanet {
 		return $this->countPlayers() > 0;
 	}
 
+	/**
+	 * @return array<int, SmrPlayer>
+	 */
 	public function getOtherTraders(AbstractSmrPlayer $player): array {
 		$players = SmrPlayer::getPlanetPlayers($this->getGameID(), $this->getSectorID()); //Do not use & because we unset something and only want that in what we return
 		unset($players[$player->getAccountID()]);
@@ -1147,6 +1179,9 @@ class SmrPlanet {
 		return false;
 	}
 
+	/**
+	 * @return array<SmrWeapon>
+	 */
 	public function getWeapons(): array {
 		$weapons = $this->getMountedWeapons();
 		return array_pad(
@@ -1156,6 +1191,10 @@ class SmrPlanet {
 		);
 	}
 
+	/**
+	 * @param array<AbstractSmrPlayer> $targetPlayers
+	 * @return array<string, mixed>
+	 */
 	public function shootPlayers(array $targetPlayers): array {
 		$results = ['Planet' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => []];
 		foreach ($targetPlayers as $targetPlayer) {
@@ -1185,6 +1224,8 @@ class SmrPlanet {
 
 	/**
 	 * Returns an array of structure losses due to damage taken.
+	 *
+	 * @return array<int, int>
 	 */
 	public function checkForDowngrade(int $damage): array {
 		$results = [];
@@ -1216,6 +1257,10 @@ class SmrPlanet {
 		return $results;
 	}
 
+	/**
+	 * @param array<string, int|bool> $damage
+	 * @return array<string, int|bool>
+	 */
 	public function takeDamage(array $damage): array {
 		$alreadyDead = $this->isDestroyed();
 		$shieldDamage = 0;
@@ -1278,6 +1323,9 @@ class SmrPlanet {
 		$this->db->write('DELETE FROM player_attacks_planet WHERE ' . $this->SQL);
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function killPlanetByPlayer(AbstractSmrPlayer $killer): array {
 		$this->creditCurrentAttackersForKill();
 

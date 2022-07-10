@@ -2,6 +2,9 @@
 
 require_once(TOOLS . 'chat_helpers/channel_msg_seedlist.php');
 
+/**
+ * @return array<string>
+ */
 function shared_channel_msg_forces(AbstractSmrPlayer $player, ?string $option = null): array {
 	$db = Smr\Database::getInstance();
 	if (empty($option)) {

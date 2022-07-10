@@ -94,6 +94,9 @@ if (!USING_AJAX) {
 $template->assign('MessageBox', $messageBox);
 
 
+/**
+ * @param array<string, mixed> $messageBox
+ */
 function displayScouts(array &$messageBox, AbstractSmrPlayer $player): void {
 	// Generate the group messages
 	$db = Smr\Database::getInstance();
@@ -136,6 +139,9 @@ function displayScouts(array &$messageBox, AbstractSmrPlayer $player): void {
 	$messageBox['NumberMessages'] = $dbResult->getNumRecords();
 }
 
+/**
+ * @return array<string, mixed>
+ */
 function displayGrouped(AbstractSmrPlayer $sender, string $message_text, int $first, int $last, bool $star, SmrAccount $displayAccount): array {
 	// Define a unique array so we can delete grouped messages
 	$array = [
@@ -154,6 +160,9 @@ function displayGrouped(AbstractSmrPlayer $sender, string $message_text, int $fi
 	return $message;
 }
 
+/**
+ * @return array<string, mixed>
+ */
 function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $game_id, string $message_text, int $send_time, bool $msg_read, int $type, SmrAccount $displayAccount): array {
 	$message = [];
 	$message['ID'] = $message_id;

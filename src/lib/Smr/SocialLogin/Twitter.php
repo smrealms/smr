@@ -12,6 +12,9 @@ class Twitter extends SocialLogin {
 		return 'Twitter';
 	}
 
+	/**
+	 * @param ?array<string, string> $token
+	 */
 	private static function getTwitterObj(?array $token = null): TwitterOAuth {
 		return new TwitterOAuth(
 			TWITTER_CONSUMER_KEY,

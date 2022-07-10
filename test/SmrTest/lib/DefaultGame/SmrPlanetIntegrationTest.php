@@ -359,6 +359,9 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 
 	/**
 	 * @dataProvider dataProvider_takeDamage
+	 *
+	 * @param array<string, int|bool> $damage
+	 * @param array<string, int|bool> $expected
 	 */
 	public function test_takeDamage(string $case, array $damage, array $expected, int $shields, int $cds, int $armour): void {
 		// Set up a port with a fixed amount of defenses
@@ -374,6 +377,9 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame($expected, $result, $case);
 	}
 
+	/**
+	 * @return array<array<mixed>>
+	 */
 	public function dataProvider_takeDamage(): array {
 		return [
 			[

@@ -19,6 +19,8 @@ abstract class PlanetType {
 	 * We could access static::STRUCTURES directly (late static binding), but
 	 * that confuses static analyzers, since there is no STRUCTURES const in
 	 * the base class (nor should there be).
+	 *
+	 * @return array<int, array<string, int>>
 	 */
 	abstract protected function getStructureData(): array;
 
@@ -27,8 +29,13 @@ abstract class PlanetType {
 	abstract public function description(): string;
 	abstract public function maxAttackers(): int;
 	abstract public function maxLanded(): int;
+
+	/**
+	 * @return array<string>
+	 */
 	abstract public function menuOptions(): array;
 
+	/** @var array<int, SmrPlanetStructureType> */
 	private array $structures;
 
 	/**
@@ -57,6 +64,8 @@ abstract class PlanetType {
 
 	/**
 	 * Access properties of structures that this planet type can build.
+	 *
+	 * @return SmrPlanetStructureType|array<int, SmrPlanetStructureType>
 	 */
 	public function structureTypes(int $structureID = null): SmrPlanetStructureType|array {
 		if (!isset($this->structures)) {

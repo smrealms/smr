@@ -2,8 +2,11 @@
 
 class SmrForce {
 
+	/** @var array<int, array<int, array<int, self>>> */
 	protected static array $CACHE_FORCES = [];
+	/** @var array<int, array<int, array<int, self>>> */
 	protected static array $CACHE_SECTOR_FORCES = [];
+	/** @var array<int, array<int, bool>> */
 	protected static array $TIDIED_UP = [];
 
 	public const LOWEST_MAX_EXPIRE_SCOUTS_ONLY = 432000; // 5 days
@@ -47,6 +50,9 @@ class SmrForce {
 		}
 	}
 
+	/**
+	 * @return array<int, array<int, self>>
+	 */
 	public static function getGalaxyForces(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT sector_has_forces.* FROM sector_has_forces LEFT JOIN sector USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
@@ -61,6 +67,9 @@ class SmrForce {
 		return $galaxyForces;
 	}
 
+	/**
+	 * @return array<int, self>
+	 */
 	public static function getSectorForces(int $gameID, int $sectorID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_FORCES[$gameID][$sectorID])) {
 			self::tidyUpForces(SmrGalaxy::getGalaxyContaining($gameID, $sectorID));
@@ -447,6 +456,10 @@ class SmrForce {
 		return $container->href();
 	}
 
+	/**
+	 * @param array<AbstractSmrPlayer> $targetPlayers
+	 * @return array<string, mixed>
+	 */
 	public function shootPlayers(array $targetPlayers, bool $minesAreAttacker): array {
 		$results = ['TotalDamage' => 0];
 		if (!$this->exists()) {
@@ -481,6 +494,10 @@ class SmrForce {
 		return $results;
 	}
 
+	/**
+	 * @param array<string, int|bool> $damage
+	 * @return array<string, int|bool>
+	 */
 	public function takeDamage(array $damage): array {
 		$alreadyDead = !$this->exists();
 		$minesDamage = 0;
@@ -532,6 +549,9 @@ class SmrForce {
 		return $actualDamage * SD_ARMOUR;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function killForcesByPlayer(AbstractSmrPlayer $killer): array {
 		return [];
 	}

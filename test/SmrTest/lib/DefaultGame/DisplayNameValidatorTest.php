@@ -20,6 +20,9 @@ class DisplayNameValidatorTest extends TestCase {
 		DisplayNameValidator::validate($name);
 	}
 
+	/**
+	 * @return array<array{string, string}>
+	 */
 	public function invalid_name_provider(): array {
 		return [
 			// empty string
@@ -49,6 +52,9 @@ class DisplayNameValidatorTest extends TestCase {
 		$this->addToAssertionCount(1);
 	}
 
+	/**
+	 * @return array<array<string>>
+	 */
 	public function valid_name_provider(): array {
 		return [
 			// normal alphanumeric

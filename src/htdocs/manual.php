@@ -3,8 +3,8 @@ try {
 	require_once('../bootstrap.php');
 	require_once(LIB . 'Default/help.inc.php');
 
-	$topic_id = $_SERVER['QUERY_STRING'];
-	if (empty($topic_id) || !is_numeric($topic_id)) {
+	$topic_id = filter_var($_SERVER['QUERY_STRING'], FILTER_VALIDATE_INT);
+	if ($topic_id === false) {
 		$topic_id = 1;
 	}
 	?>

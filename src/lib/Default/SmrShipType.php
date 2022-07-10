@@ -10,6 +10,7 @@ class SmrShipType {
 
 	use Traits\RaceID;
 
+	/** @var array<int, self> */
 	private static array $CACHE_SHIP_TYPES = [];
 
 	private readonly string $name;
@@ -21,6 +22,7 @@ class SmrShipType {
 	private readonly BuyerRestriction $restriction;
 
 	private readonly int $maxPower;
+	/** @var array<int, int> */
 	private readonly array $maxHardware;
 	private readonly int $baseManeuverability;
 
@@ -42,6 +44,9 @@ class SmrShipType {
 		return self::$CACHE_SHIP_TYPES[$shipTypeID];
 	}
 
+	/**
+	 * @return array<int, self>
+	 */
 	public static function getAll(): array {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM ship_type ORDER BY ship_type_id ASC');
@@ -154,6 +159,9 @@ class SmrShipType {
 		return $this->maxHardware[$hardwareTypeID];
 	}
 
+	/**
+	 * @return array<int, int>
+	 */
 	public function getAllMaxHardware(): array {
 		return $this->maxHardware;
 	}

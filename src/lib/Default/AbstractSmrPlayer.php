@@ -17,9 +17,13 @@ abstract class AbstractSmrPlayer {
 	protected const HOF_CHANGED = 1;
 	protected const HOF_NEW = 2;
 
+	/** @var array<int, array<int, array<int, SmrPlayer>>> */
 	protected static array $CACHE_SECTOR_PLAYERS = [];
+	/** @var array<int, array<int, array<int, SmrPlayer>>> */
 	protected static array $CACHE_PLANET_PLAYERS = [];
+	/** @var array<int, array<int, array<int, SmrPlayer>>> */
 	protected static array $CACHE_ALLIANCE_PLAYERS = [];
+	/** @var array<int, array<int, SmrPlayer>> */
 	protected static array $CACHE_PLAYERS = [];
 
 	protected Smr\Database $db;
@@ -45,14 +49,19 @@ abstract class AbstractSmrPlayer {
 	protected int $kills;
 	protected int $deaths;
 	protected int $assists;
+	/** @var array<int, int> */
 	protected array $personalRelations;
+	/** @var array<int, int> */
 	protected array $relations;
 	protected int $militaryPayment;
+	/** @var array<int, array<string, mixed>> */
 	protected array $bounties;
 	protected int $turns;
 	protected int $lastCPLAction;
+	/** @var array<int, array<string, mixed>> */
 	protected array $missions;
 
+	/** @var array<string, array<string, mixed>> */
 	protected array $tickers;
 	protected int $lastTurnUpdate;
 	protected int $lastNewsUpdate;
@@ -71,11 +80,15 @@ abstract class AbstractSmrPlayer {
 	protected bool $raceChanged;
 	protected bool $combatDronesKamikazeOnMines;
 	protected string|false $customShipName;
+	/** @var array<array<string, mixed>> */
 	protected array $storedDestinations;
+	/** @var array<int, bool> */
 	protected array $canFed;
 	protected bool $underAttack;
 
+	/** @var array<int> */
 	protected array $unvisitedSectors;
+	/** @var array<int, int> */
 	protected array $allianceRoles = [
 		0 => 0,
 	];
@@ -92,6 +105,7 @@ abstract class AbstractSmrPlayer {
 	protected array $hasHOFChanged = [];
 	/** @var array<string, int> */
 	protected static array $hasHOFVisChanged = [];
+	/** @var array<int, bool> */
 	protected array $hasBountyChanged = [];
 
 	public static function clearCache(): void {
@@ -110,6 +124,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	/**
+	 * @param array<int> $allianceIDs
 	 * @return array<int, SmrPlayer>
 	 */
 	public static function getSectorPlayersByAlliances(int $gameID, int $sectorID, array $allianceIDs, bool $forceUpdate = false): array {
@@ -324,6 +339,8 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Get array of players whose info can be accessed by this player.
 	 * Skips players who are not in the same alliance as this player.
+	 *
+	 * @return array<AbstractSmrPlayer>
 	 */
 	public function getSharingPlayers(bool $forceUpdate = false): array {
 		$results = [$this];
@@ -1073,6 +1090,9 @@ abstract class AbstractSmrPlayer {
 		return 100 - $this->getNextLevelPercentAcquired();
 	}
 
+	/**
+	 * @return array<string, string|int>
+	 */
 	public function getNextLevel(): array {
 		$LEVELS = Globals::getLevelRequirements();
 		if (!isset($LEVELS[$this->getLevelID() + 1])) {
@@ -1510,6 +1530,9 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
+	/**
+	 * @return array<int, int>
+	 */
 	public function getPersonalRelations(): array {
 		$this->getPersonalRelationsData();
 		return $this->personalRelations;
@@ -1525,6 +1548,8 @@ abstract class AbstractSmrPlayer {
 
 	/**
 	 * Get total relations with all races (personal + political)
+	 *
+	 * @return array<int, int>
 	 */
 	public function getRelations(): array {
 		if (!isset($this->relations)) {
@@ -1712,7 +1737,11 @@ abstract class AbstractSmrPlayer {
 		$this->db->write('DELETE FROM player_plotted_course WHERE ' . $this->SQL);
 	}
 
-	// Computes the turn cost and max misjump between current and target sector
+	/**
+	 * Computes the turn cost and max misjump between current and target sector
+	 *
+	 * @return array<string, int>
+	 */
 	public function getJumpInfo(SmrSector $targetSector): array {
 		$path = Plotter::findDistanceToX($targetSector, $this->getSector(), true);
 		if ($path === false) {
@@ -1729,6 +1758,9 @@ abstract class AbstractSmrPlayer {
 		return ['accountID', 'gameID', 'sectorID', 'alignment', 'playerID', 'playerName', 'npc'];
 	}
 
+	/**
+	 * @return array<array<string, mixed>>
+	 */
 	public function &getStoredDestinations(): array {
 		if (!isset($this->storedDestinations)) {
 			$this->storedDestinations = [];
@@ -1811,6 +1843,9 @@ abstract class AbstractSmrPlayer {
 		throw new Exception('Could not find stored destination');
 	}
 
+	/**
+	 * @return array<string, array<string, mixed>>
+	 */
 	public function getTickers(): array {
 		if (!isset($this->tickers)) {
 			$this->tickers = [];
@@ -1832,6 +1867,9 @@ abstract class AbstractSmrPlayer {
 		return count($this->getTickers()) > 0;
 	}
 
+	/**
+	 * @return array<string, mixed>|false
+	 */
 	public function getTicker(string $tickerType): array|false {
 		$tickers = $this->getTickers();
 		if (isset($tickers[$tickerType])) {
@@ -1844,18 +1882,31 @@ abstract class AbstractSmrPlayer {
 		return $this->getTicker($tickerType) !== false;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function shootForces(SmrForce $forces): array {
 		return $this->getShip()->shootForces($forces);
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function shootPort(SmrPort $port): array {
 		return $this->getShip()->shootPort($port);
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function shootPlanet(SmrPlanet $planet): array {
 		return $this->getShip()->shootPlanet($planet);
 	}
 
+	/**
+	 * @param array<AbstractSmrPlayer> $targetPlayers
+	 * @return array<string, mixed>
+	 */
 	public function shootPlayers(array $targetPlayers): array {
 		return $this->getShip()->shootPlayers($targetPlayers);
 	}
@@ -1909,6 +1960,8 @@ abstract class AbstractSmrPlayer {
 
 	/**
 	 * Get bounties that can be claimed by this player.
+	 *
+	 * @return array<array<string, mixed>>
 	 */
 	public function getClaimableBounties(?BountyType $type = null): array {
 		$bounties = [];
@@ -1929,6 +1982,9 @@ abstract class AbstractSmrPlayer {
 		return $bounties;
 	}
 
+	/**
+	 * @return array<int, array<string, mixed>>
+	 */
 	public function getBounties(): array {
 		$this->getBountiesData();
 		return $this->bounties;
@@ -1938,6 +1994,9 @@ abstract class AbstractSmrPlayer {
 		return count($this->getBounties()) > 0;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	protected function getBounty(int $bountyID): array {
 		if (!$this->hasBounty($bountyID)) {
 			throw new Exception('BountyID does not exist: ' . $bountyID);
@@ -1950,6 +2009,9 @@ abstract class AbstractSmrPlayer {
 		return isset($bounties[$bountyID]);
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	protected function createBounty(BountyType $type): array {
 		$bounty = [
 			'Amount' => 0,
@@ -1971,11 +2033,17 @@ abstract class AbstractSmrPlayer {
 		return max(array_keys($this->getBounties())) + 1;
 	}
 
+	/**
+	 * @param array<string, mixed> $bounty
+	 */
 	protected function setBounty(array $bounty): void {
 		$this->bounties[$bounty['ID']] = $bounty;
 		$this->hasBountyChanged[$bounty['ID']] = true;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function getCurrentBounty(BountyType $type): array {
 		$bounties = $this->getBounties();
 		foreach ($bounties as $bounty) {
@@ -2092,11 +2160,17 @@ abstract class AbstractSmrPlayer {
 		return self::$HOFVis;
 	}
 
+	/**
+	 * @param array<string> $typeList
+	 */
 	public function getHOF(array $typeList): float {
 		$this->getHOFData();
 		return $this->HOF[implode(':', $typeList)] ?? 0;
 	}
 
+	/**
+	 * @param array<string> $typeList
+	 */
 	public function increaseHOF(float $amount, array $typeList, string $visibility): void {
 		if ($amount < 0) {
 			throw new Exception('Trying to increase negative HOF: ' . implode(':', $typeList));
@@ -2107,6 +2181,9 @@ abstract class AbstractSmrPlayer {
 		$this->setHOF($this->getHOF($typeList) + $amount, $typeList, $visibility);
 	}
 
+	/**
+	 * @param array<string> $typeList
+	 */
 	public function decreaseHOF(float $amount, array $typeList, string $visibility): void {
 		if ($amount < 0) {
 			throw new Exception('Trying to decrease negative HOF: ' . implode(':', $typeList));
@@ -2117,6 +2194,9 @@ abstract class AbstractSmrPlayer {
 		$this->setHOF($this->getHOF($typeList) - $amount, $typeList, $visibility);
 	}
 
+	/**
+	 * @param array<string> $typeList
+	 */
 	public function setHOF(float $amount, array $typeList, string $visibility): void {
 		if ($this->isNPC()) {
 			// Don't store HOF for NPCs.
@@ -2207,6 +2287,9 @@ abstract class AbstractSmrPlayer {
 		$this->setUnderAttack(false);
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function killPlayerByPlayer(self $killer): array {
 		$return = [];
 		$msg = $this->getBBLink();
@@ -2367,6 +2450,9 @@ abstract class AbstractSmrPlayer {
 		return $return;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function killPlayerByForces(SmrForce $forces): array {
 		$return = [];
 		$owner = $forces->getOwner();
@@ -2412,6 +2498,9 @@ abstract class AbstractSmrPlayer {
 		return $return;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function killPlayerByPort(AbstractSmrPort $port): array {
 		$return = [];
 		// send a message to the person who died
@@ -2453,6 +2542,9 @@ abstract class AbstractSmrPlayer {
 		return $return;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function killPlayerByPlanet(SmrPlanet $planet): array {
 		$return = [];
 		// send a message to the person who died
@@ -2678,6 +2770,9 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
+	/**
+	 * @return array<int, array<string, mixed>>
+	 */
 	public function getMissions(): array {
 		if (!isset($this->missions)) {
 			$dbResult = $this->db->read('SELECT * FROM player_has_mission WHERE ' . $this->SQL);
@@ -2698,6 +2793,9 @@ abstract class AbstractSmrPlayer {
 		return $this->missions;
 	}
 
+	/**
+	 * @return array<int, array<string, mixed>>
+	 */
 	public function getActiveMissions(): array {
 		$missions = $this->getMissions();
 		foreach ($missions as $missionID => $mission) {
@@ -2708,6 +2806,9 @@ abstract class AbstractSmrPlayer {
 		return $missions;
 	}
 
+	/**
+	 * @return array<string, mixed>|false
+	 */
 	protected function getMission(int $missionID): array|false {
 		$missions = $this->getMissions();
 		if (isset($missions[$missionID])) {
@@ -2827,6 +2928,9 @@ abstract class AbstractSmrPlayer {
 		throw new Exception('Mission with ID not found: ' . $missionID);
 	}
 
+	/**
+	 * @return array<int>
+	 */
 	public function markMissionsRead(): array {
 		$this->getMissions();
 		$unreadMissions = [];
@@ -2841,11 +2945,10 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function claimMissionReward(int $missionID): string {
-		$this->getMissions();
-		$mission =& $this->missions[$missionID];
-		if ($mission === false) {
+		if (!$this->hasMission($missionID)) {
 			throw new Exception('Unknown mission: ' . $missionID);
 		}
+		$mission =& $this->missions[$missionID];
 		if ($mission['Task'] === false || $mission['Task']['Step'] != 'Claim') {
 			throw new Exception('Cannot claim mission: ' . $missionID . ', for step: ' . $mission['On Step']);
 		}
@@ -2871,6 +2974,9 @@ abstract class AbstractSmrPlayer {
 		return $rewardText;
 	}
 
+	/**
+	 * @return array<int, array<string, mixed>>
+	 */
 	public function getAvailableMissions(): array {
 		$availableMissions = [];
 		foreach (MISSIONS as $missionID => $mission) {
@@ -2892,6 +2998,9 @@ abstract class AbstractSmrPlayer {
 		$this->getAccount()->log($log_type_id, $msg, $this->getSectorID());
 	}
 
+	/**
+	 * @param array<string, mixed> $values
+	 */
 	public function actionTaken(string $actionID, array $values): void {
 		if (!in_array($actionID, MISSION_ACTIONS)) {
 			throw new Exception('Unknown action: ' . $actionID);
@@ -2933,6 +3042,9 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
+	/**
+	 * @param array<SmrPlayer> $otherPlayerArray
+	 */
 	public function canSeeAny(array $otherPlayerArray): bool {
 		foreach ($otherPlayerArray as $otherPlayer) {
 			if ($this->canSee($otherPlayer)) {
@@ -3013,7 +3125,11 @@ abstract class AbstractSmrPlayer {
 		return true;
 	}
 
-	// Get an array of goods that are visible to the player
+	/**
+	 * Get an array of goods that are visible to the player
+	 *
+	 * @return array<int, array<string, string|int>>
+	 */
 	public function getVisibleGoods(): array {
 		$goods = Globals::getGoods();
 		$visibleGoods = [];
@@ -3027,6 +3143,8 @@ abstract class AbstractSmrPlayer {
 
 	/**
 	 * Returns an array of all unvisited sectors.
+	 *
+	 * @return array<int>
 	 */
 	public function getUnvisitedSectors(): array {
 		if (!isset($this->unvisitedSectors)) {

@@ -60,6 +60,9 @@ class TemplateTest extends TestCase {
 		$this->assertSame($expected, $method->invoke($template, $html));
 	}
 
+	/**
+	 * @return array<array{string, bool}>
+	 */
 	public function checkDisableAJAX_provider(): array {
 		return [
 			// Special input types that do not disable ajax
@@ -83,6 +86,9 @@ class TemplateTest extends TestCase {
 		$this->assertSame($expected, $method->invoke($template, $html, true));
 	}
 
+	/**
+	 * @return array<array{string, string}>
+	 */
 	public function convertHtmlToAjaxXml_provider(): array {
 		return [
 			// Span with an id

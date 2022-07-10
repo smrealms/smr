@@ -6,6 +6,8 @@
  * This class acts like an array, whose keys define the page properties.
  * Then we can either create an HREF so that it can be accessed by a future
  * http request (via the Smr\Session), or forwarded to within the same request.
+ *
+ * @extends ArrayObject<string, mixed>
  */
 class Page extends ArrayObject {
 
@@ -116,6 +118,9 @@ class Page extends ArrayObject {
 
 	public int $remainingPageLoads;
 
+	/**
+	 * @param array<string, mixed> $data
+	 */
 	protected function __construct(
 		public readonly string $file,
 		array $data,
@@ -129,8 +134,10 @@ class Page extends ArrayObject {
 	 * Create a new Page object.
 	 * This is the standard method to package linked pages and the data to
 	 * accompany them.
+	 *
+	 * @param self|array<string, mixed> $data
 	 */
-	public static function create(string $file, array|self $data = [], bool $skipRedirect = false): self {
+	public static function create(string $file, self|array $data = [], bool $skipRedirect = false): self {
 		if ($data instanceof self) {
 			// Extract the data from the input Page
 			$data = $data->getArrayCopy();

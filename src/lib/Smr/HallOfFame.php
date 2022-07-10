@@ -101,6 +101,9 @@ class HallOfFame {
 		return $amount;
 	}
 
+	/**
+	 * @return array<string, float|int>
+	 */
 	public static function getHofRank(string $viewType, int $accountID, ?int $gameID): array {
 		$db = Database::getInstance();
 		// If no game specified, show total amount from completed games only

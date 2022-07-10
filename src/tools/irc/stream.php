@@ -22,6 +22,9 @@ require_once(TOOLS . 'chat_helpers/channel_msg_seedlist.php');
 require_once(TOOLS . 'chat_helpers/channel_msg_forces.php');
 require_once(TOOLS . 'chat_helpers/channel_msg_8ball.php');
 
+/**
+ * @param resource $fp
+ */
 function safefputs($fp, string $text): void {
 	stream_set_blocking($fp, false);
 	while (readFromStream($fp));
@@ -29,6 +32,9 @@ function safefputs($fp, string $text): void {
 	stream_set_blocking($fp, true);
 }
 
+/**
+ * @param resource $fp
+ */
 function readFromStream($fp): bool {
 	global $last_ping;
 

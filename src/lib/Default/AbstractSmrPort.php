@@ -8,7 +8,9 @@ class AbstractSmrPort {
 
 	use Traits\RaceID;
 
+	/** @var array<int, array<int, SmrPort>> */
 	protected static array $CACHE_PORTS = [];
+	/** @var array<int, array<int, array<int, SmrPort>>> */
 	protected static array $CACHE_CACHED_PORTS = [];
 
 	public const DAMAGE_NEEDED_FOR_ALIGNMENT_CHANGE = 300; // single player
@@ -47,11 +49,15 @@ class AbstractSmrPort {
 	protected int $upgrade;
 	protected int $experience;
 
+	/** @var array<int, int> */
 	protected array $goodAmounts;
+	/** @var array<int, bool> */
 	protected array $goodAmountsChanged = [];
 	/** @var array<int, TransactionType> */
 	protected array $goodTransactions;
+	/** @var array<int, bool> */
 	protected array $goodTransactionsChanged = [];
+	/** @var array<int, int> */
 	protected array $goodDistances;
 
 	protected bool $cachedVersion = false;
@@ -238,6 +244,10 @@ class AbstractSmrPort {
 		}
 	}
 
+	/**
+	 * @param array<int> $goodIDs
+	 * @return array<int>
+	 */
 	private function getVisibleGoods(array $goodIDs, AbstractSmrPlayer $player = null): array {
 		if ($player == null) {
 			return $goodIDs;
@@ -266,12 +276,17 @@ class AbstractSmrPort {
 		return $this->getVisibleGoods($this->getBuyGoodIDs(), $player);
 	}
 
+	/**
+	 * @return array<int>
+	 */
 	public function getAllGoodIDs(): array {
 		return array_keys($this->goodTransactions);
 	}
 
 	/**
 	 * Get IDs of goods that can be sold to the port by the trader
+	 *
+	 * @return array<int>
 	 */
 	public function getSellGoodIDs(): array {
 		return array_keys($this->goodTransactions, TransactionType::Sell, true);
@@ -279,6 +294,8 @@ class AbstractSmrPort {
 
 	/**
 	 * Get IDs of goods that can be bought from the port by the trader
+	 *
+	 * @return array<int>
 	 */
 	public function getBuyGoodIDs(): array {
 		return array_keys($this->goodTransactions, TransactionType::Buy, true);
@@ -340,6 +357,9 @@ class AbstractSmrPort {
 		return $this->goodAmounts[$goodID];
 	}
 
+	/**
+	 * @param array<string, string|int> $good
+	 */
 	public function decreaseGood(array $good, int $amount, bool $doRefresh): void {
 		$this->setGoodAmount($good['ID'], $this->getGoodAmount($good['ID']) - $amount);
 		if ($doRefresh === true) {
@@ -371,6 +391,9 @@ class AbstractSmrPort {
 		}
 	}
 
+	/**
+	 * @param array<string, string|int> $good
+	 */
 	protected function tradeGoods(array $good, int $goodsTraded, int $exp): void {
 		$goodsTradedMoney = $goodsTraded * self::GOODS_TRADED_MONEY_MULTIPLIER;
 		$this->increaseUpgrade($goodsTradedMoney);
@@ -379,6 +402,9 @@ class AbstractSmrPort {
 		$this->decreaseGood($good, $goodsTraded, true);
 	}
 
+	/**
+	 * @param array<string, string|int> $good
+	 */
 	public function buyGoods(array $good, int $goodsTraded, int $idealPrice, int $bargainPrice, int $exp): void {
 		$this->tradeGoods($good, $goodsTraded, $exp);
 		// Limit upgrade/credits to prevent massive increases in a single trade
@@ -387,10 +413,16 @@ class AbstractSmrPort {
 		$this->increaseCredits($cappedBargainPrice);
 	}
 
+	/**
+	 * @param array<string, string|int> $good
+	 */
 	public function sellGoods(array $good, int $goodsTraded, int $exp): void {
 		$this->tradeGoods($good, $goodsTraded, $exp);
 	}
 
+	/**
+	 * @param array<string, string|int> $good
+	 */
 	public function stealGoods(array $good, int $goodsTraded): void {
 		$this->decreaseGood($good, $goodsTraded, false);
 	}
@@ -442,6 +474,9 @@ class AbstractSmrPort {
 		};
 	}
 
+	/**
+	 * @return array<string, string|int>
+	 */
 	protected function selectAndAddGood(int $goodClass): array {
 		$GOODS = Globals::getGoods();
 		shuffle($GOODS);
@@ -478,9 +513,10 @@ class AbstractSmrPort {
 
 	/**
 	 * Manually set port goods.
-	 * Input must be an array of good_id => transaction.
 	 * Only modifies goods that need to change.
 	 * Returns false on invalid input.
+	 *
+	 * @param array<int, TransactionType> $goods
 	 */
 	public function setPortGoods(array $goods): bool {
 		// Validate the input list of goods to make sure we have the correct
@@ -611,6 +647,9 @@ class AbstractSmrPort {
 		$this->setUpgrade(0);
 	}
 
+	/**
+	 * @param array<AbstractSmrPlayer> $attackers
+	 */
 	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers): void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot attack a cached port!');
@@ -884,6 +923,9 @@ class AbstractSmrPort {
 		return $this->getLevel() + 3;
 	}
 
+	/**
+	 * @return array<SmrWeapon>
+	 */
 	public function getWeapons(): array {
 		$portTurret = SmrWeapon::getWeapon(WEAPON_PORT_TURRET);
 		return array_fill(0, $this->getNumWeapons(), $portTurret);
@@ -1092,6 +1134,9 @@ class AbstractSmrPort {
 		$this->addCachePorts([$accountID]);
 	}
 
+	/**
+	 * @param array<int> $accountIDs
+	 */
 	public function addCachePorts(array $accountIDs): bool {
 		if (count($accountIDs) > 0 && $this->exists()) {
 			$cache = $this->db->escapeObject($this, true);
@@ -1235,6 +1280,10 @@ class AbstractSmrPort {
 
 	}
 
+	/**
+	 * @param array<AbstractSmrPlayer> $targetPlayers
+	 * @return array<string, mixed>
+	 */
 	public function shootPlayers(array $targetPlayers): array {
 		$results = ['Port' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => []];
 		foreach ($targetPlayers as $targetPlayer) {
@@ -1267,6 +1316,10 @@ class AbstractSmrPort {
 		return $results;
 	}
 
+	/**
+	 * @param array<string, int|bool> $damage
+	 * @return array<string, int|bool>
+	 */
 	public function takeDamage(array $damage): array {
 		$alreadyDead = $this->isDestroyed();
 		$shieldDamage = 0;
@@ -1318,6 +1371,9 @@ class AbstractSmrPort {
 		return $actualDamage;
 	}
 
+	/**
+	 * @return array<SmrPlayer>
+	 */
 	public function getAttackersToCredit(): array {
 		//get all players involved for HoF
 		$attackers = [];
@@ -1373,6 +1429,9 @@ class AbstractSmrPort {
 		return $credits;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function killPortByPlayer(AbstractSmrPlayer $killer): array {
 		$return = [];
 

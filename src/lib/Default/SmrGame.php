@@ -2,6 +2,7 @@
 
 class SmrGame {
 
+	/** @var array<int, self> */
 	protected static array $CACHE_GAMES = [];
 
 	protected Smr\Database $db;
@@ -24,6 +25,7 @@ class SmrGame {
 	protected int $startingCredits;
 
 	protected int $totalPlayers;
+	/** @var array<int> */
 	protected array $playableRaceIDs;
 
 	protected bool $hasChanged = false;
@@ -428,6 +430,8 @@ class SmrGame {
 	/**
 	 * Get the list of playable Race IDs based on which Racial HQ's
 	 * are locations in this game.
+	 *
+	 * @return array<int>
 	 */
 	public function getPlayableRaceIDs(): array {
 		if (!isset($this->playableRaceIDs)) {

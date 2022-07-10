@@ -2,8 +2,11 @@
 
 class AbstractSmrLocation {
 
+	/** @var array<int, SmrLocation> */
 	protected static array $CACHE_ALL_LOCATIONS;
+	/** @var array<int, SmrLocation> */
 	protected static array $CACHE_LOCATIONS = [];
+	/** @var array<int, array<int, array<int, SmrLocation>>> */
 	protected static array $CACHE_SECTOR_LOCATIONS = [];
 
 	protected Smr\Database $db;
@@ -19,8 +22,11 @@ class AbstractSmrLocation {
 	protected bool $HQ;
 	protected bool $UG;
 
+	/** @var array<int, array<string, string|int>> */
 	protected array $hardwareSold;
+	/** @var array<int, SmrShipType> */
 	protected array $shipsSold;
+	/** @var array<int, SmrWeapon> */
 	protected array $weaponsSold;
 
 	public static function clearCache(): void {
@@ -29,6 +35,9 @@ class AbstractSmrLocation {
 		self::$CACHE_SECTOR_LOCATIONS = [];
 	}
 
+	/**
+	 * @return array<int, SmrLocation>
+	 */
 	public static function getAllLocations(bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_ALL_LOCATIONS)) {
 			$db = Smr\Database::getInstance();
@@ -43,6 +52,9 @@ class AbstractSmrLocation {
 		return self::$CACHE_ALL_LOCATIONS;
 	}
 
+	/**
+	 * @return array<int, array<int, SmrLocation>>
+	 */
 	public static function getGalaxyLocations(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT location_type.*, sector_id FROM location LEFT JOIN sector USING(game_id, sector_id) LEFT JOIN location_type USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
@@ -57,6 +69,9 @@ class AbstractSmrLocation {
 		return $galaxyLocations;
 	}
 
+	/**
+	 * @return array<int, SmrLocation>
+	 */
 	public static function getSectorLocations(int $gameID, int $sectorID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID])) {
 			$db = Smr\Database::getInstance();
@@ -280,6 +295,9 @@ class AbstractSmrLocation {
 		$this->UG = $bool;
 	}
 
+	/**
+	 * @return array<int, array<string, string|int>>
+	 */
 	public function getHardwareSold(): array {
 		if (!isset($this->hardwareSold)) {
 			$this->hardwareSold = [];
@@ -322,6 +340,9 @@ class AbstractSmrLocation {
 		unset($this->hardwareSold[$hardwareTypeID]);
 	}
 
+	/**
+	 * @return array<int, SmrShipType>
+	 */
 	public function getShipsSold(): array {
 		if (!isset($this->shipsSold)) {
 			$this->shipsSold = [];
@@ -362,6 +383,9 @@ class AbstractSmrLocation {
 		unset($this->shipsSold[$shipTypeID]);
 	}
 
+	/**
+	 * @return array<int, SmrWeapon>
+	 */
 	public function getWeaponsSold(): array {
 		if (!isset($this->weaponsSold)) {
 			$this->weaponsSold = [];
@@ -402,6 +426,9 @@ class AbstractSmrLocation {
 		unset($this->weaponsSold[$weaponTypeID]);
 	}
 
+	/**
+	 * @return array<SmrLocation>
+	 */
 	public function getLinkedLocations(): array {
 		$linkedLocations = [];
 		if ($this->isHQ()) {

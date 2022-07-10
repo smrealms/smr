@@ -115,6 +115,9 @@ class SmrForceTest extends TestCase {
 
 	/**
 	 * @dataProvider dataProvider_takeDamage
+	 *
+	 * @param array<string, int|bool> $damage
+	 * @param array<string, int|bool> $expected
 	 */
 	public function test_takeDamage(string $case, array $damage, array $expected, int $mines, int $cds, int $sds): void {
 		// Set up an unexpired stack with a specific number of forces
@@ -128,6 +131,9 @@ class SmrForceTest extends TestCase {
 		self::assertSame($expected, $result, $case);
 	}
 
+	/**
+	 * @return array<array<mixed>>
+	 */
 	public function dataProvider_takeDamage(): array {
 		return [
 			[

@@ -2,12 +2,18 @@
 
 class Globals {
 
+	/** @var array<int> */
 	protected static array $HIDDEN_PLAYERS;
+	/** @var array<int, array<string, string|int>> */
 	protected static array $LEVEL_REQUIREMENTS;
+	/** @var array<int, array<string, string|int>> */
 	protected static array $GOODS;
+	/** @var array<int, array<string, string|int>> */
 	protected static array $HARDWARE_TYPES;
 	protected static bool $FEATURE_REQUEST_OPEN;
+	/** @var array<int, array<int, array<int, int>>> */
 	protected static array $RACE_RELATIONS;
+	/** @var array<string, string> */
 	protected static array $AVAILABLE_LINKS = [];
 	protected static Smr\Database $db;
 
@@ -17,10 +23,16 @@ class Globals {
 		}
 	}
 
+	/**
+	 * @return array<string, string>
+	 */
 	public static function getAvailableLinks(): array {
 		return self::$AVAILABLE_LINKS;
 	}
 
+	/**
+	 * @param array<string, int> $extraInfo
+	 */
 	public static function canAccessPage(string $pageName, AbstractSmrPlayer $player, array $extraInfo): void {
 		switch ($pageName) {
 			case 'AllianceMOTD':
@@ -32,6 +44,9 @@ class Globals {
 		}
 	}
 
+	/**
+	 * @return array<int>
+	 */
 	public static function getHiddenPlayers(): array {
 		if (!isset(self::$HIDDEN_PLAYERS)) {
 			self::initialiseDatabase();
@@ -44,6 +59,9 @@ class Globals {
 		return self::$HIDDEN_PLAYERS;
 	}
 
+	/**
+	 * @return array<int>
+	 */
 	public static function getGalacticPostEditorIDs(int $gameID): array {
 		self::initialiseDatabase();
 		$editorIDs = [];
@@ -54,6 +72,9 @@ class Globals {
 		return $editorIDs;
 	}
 
+	/**
+	 * @return array<int, array<string, string|int>>
+	 */
 	public static function getLevelRequirements(): array {
 		if (!isset(self::$LEVEL_REQUIREMENTS)) {
 			self::initialiseDatabase();
@@ -85,6 +106,9 @@ class Globals {
 		return $raceName;
 	}
 
+	/**
+	 * @return array<int, array<string, string|int>>
+	 */
 	public static function getGoods(): array {
 		if (!isset(self::$GOODS)) {
 			self::initialiseDatabase();
@@ -108,6 +132,9 @@ class Globals {
 		return self::$GOODS;
 	}
 
+	/**
+	 * @return array<string, string|int>
+	 */
 	public static function getGood(int $goodID): array {
 		return self::getGoods()[$goodID];
 	}
@@ -119,6 +146,9 @@ class Globals {
 		return self::getGoods()[$goodID]['Name'];
 	}
 
+	/**
+	 * @return array<int, array<string, string|int>>|array<string, string|int>
+	 */
 	public static function getHardwareTypes(int $hardwareTypeID = null): array {
 		if (!isset(self::$HARDWARE_TYPES)) {
 			self::initialiseDatabase();
@@ -159,6 +189,9 @@ class Globals {
 		return self::$FEATURE_REQUEST_OPEN;
 	}
 
+	/**
+	 * @return array<int, int>
+	 */
 	public static function getRaceRelations(int $gameID, int $raceID): array {
 		if (!isset(self::$RACE_RELATIONS[$gameID][$raceID])) {
 			self::initialiseDatabase();
@@ -403,6 +436,9 @@ class Globals {
 		return Page::create('buy_ship_name.php')->href();
 	}
 
+	/**
+	 * @return array<string, int>
+	 */
 	public static function getBuyShipNameCosts(): array {
 		return [
 			'text' => CREDITS_PER_TEXT_SHIP_NAME,
@@ -415,10 +451,16 @@ class Globals {
 		return '[sector=' . $sectorID . ']';
 	}
 
+	/**
+	 * @return array<string>
+	 */
 	public static function getAvailableTemplates(): array {
 		return array_keys(CSS_URLS);
 	}
 
+	/**
+	 * @return array<string>
+	 */
 	public static function getAvailableColourSchemes(string $templateName): array {
 		return array_keys(CSS_COLOUR_URLS[$templateName]);
 	}
@@ -427,6 +469,8 @@ class Globals {
 	 * Returns an array of history databases for which we have ancient saved
 	 * game data. Array keys are database names and values are the columns in
 	 * the `account` table with the linked historical account ID's.
+	 *
+	 * @return array<string, string>
 	 */
 	public static function getHistoryDatabases(): array {
 		if (!defined('HISTORY_DATABASES')) {

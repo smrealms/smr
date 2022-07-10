@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-function echo_nav($topic_id) {
+function echo_nav(int $topic_id): void {
 	// database object
 	$db = Smr\Database::getInstance();
 
@@ -111,7 +111,7 @@ function echo_nav($topic_id) {
 	echo ('</table>');
 }
 
-function echo_content($topic_id) {
+function echo_content(int $topic_id): void {
 	// database object
 	$db = Smr\Database::getInstance();
 
@@ -133,10 +133,10 @@ function echo_content($topic_id) {
 	}
 }
 
-function echo_subsection($topic_id) {
+function echo_subsection(int $topic_id): void {
 	// database object
 	$db = Smr\Database::getInstance();
-	$return = '';
+
 	// check if there are subsections
 	$dbResult = $db->read('SELECT 1 FROM manual WHERE parent_topic_id = ' . $db->escapeNumber($topic_id) . ' ORDER BY order_id');
 	if ($dbResult->hasRecord()) {
@@ -148,11 +148,9 @@ function echo_subsection($topic_id) {
 
 		echo ('</div>');
 	}
-	return $return;
 }
 
-function echo_menu($topic_id) {
-	$return = '';
+function echo_menu(int $topic_id): void {
 	// database object
 	$db = Smr\Database::getInstance();
 
@@ -169,18 +167,19 @@ function echo_menu($topic_id) {
 		}
 		echo ('</ul>');
 	}
-	return $return;
 }
 
-function get_numbering($topic_id) {
+function get_numbering(int $topic_id): string {
 	$db = Smr\Database::getInstance();
 
 	$dbResult = $db->read('SELECT * FROM manual WHERE topic_id = ' . $db->escapeNumber($topic_id));
-	if ($dbResult->hasRecord()) {
-		$dbRecord = $dbResult->record();
-		$up_topic_id = $dbRecord->getInt('parent_topic_id');
-		$order_id = $dbRecord->getInt('order_id');
-
-		return get_numbering($up_topic_id) . $order_id . '. ';
+	if (!$dbResult->hasRecord()) {
+		return '';
 	}
+
+	$dbRecord = $dbResult->record();
+	$up_topic_id = $dbRecord->getInt('parent_topic_id');
+	$order_id = $dbRecord->getInt('order_id');
+
+	return get_numbering($up_topic_id) . $order_id . '. ';
 }

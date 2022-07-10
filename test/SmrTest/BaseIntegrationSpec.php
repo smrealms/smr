@@ -18,6 +18,7 @@ abstract class BaseIntegrationSpec extends TestCase {
 	abstract protected function tablesToTruncate(): array;
 
 	private static mysqli $conn;
+	/** @var array<string, int> */
 	private static array $checksums;
 
 	/**
@@ -71,6 +72,9 @@ abstract class BaseIntegrationSpec extends TestCase {
 		self::assertEquals(self::$checksums, $checksums, implode("\n", $errors));
 	}
 
+	/**
+	 * @return array<string>
+	 */
 	private static function getTableNames(): array {
 		$query = 'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=\'smr_live_test\'';
 		$result = self::$conn->query($query);
@@ -81,6 +85,9 @@ abstract class BaseIntegrationSpec extends TestCase {
 		return $tables;
 	}
 
+	/**
+	 * @return array<string, int>
+	 */
 	private static function getChecksums(): array {
 		$tableNames = self::getTableNames();
 		$result = self::$conn->query('CHECKSUM TABLE ' . implode(', ', $tableNames));

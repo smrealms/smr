@@ -29,7 +29,9 @@ class Session {
 
 	private string $sessionID;
 	private int $gameID;
+	/** @var array<string, Page> */
 	private array $var;
+	/** @var array<string, string> */
 	private array $commonIDs = [];
 	private bool $generate;
 	private string $SN;
@@ -37,7 +39,9 @@ class Session {
 	private int $accountID;
 	private float $lastAccessed;
 
+	/** @var ?array<string, string> */
 	protected ?array $previousAjaxReturns;
+	/** @var array<string, string> */
 	protected array $ajaxReturns = [];
 
 	/**
@@ -283,6 +287,10 @@ class Session {
 		return $result;
 	}
 
+	/**
+	 * @param ?array<int> $default
+	 * @return array<int>
+	 */
 	public function getRequestVarIntArray(string $varName, array $default = null): array {
 		$result = Request::getVarIntArray($varName, $default);
 		$var = $this->getCurrentVar();

@@ -41,6 +41,10 @@ try {
 	handleException($e);
 }
 
+/**
+ * @param array<string> $shipLocs
+ * @return array<string, string|int>
+ */
 function buildShipStats(SmrShipType $ship, array $shipLocs): array {
 	// Array key is the td class (sort key), and array value is the data value.
 	// We want to put them all in an array so we dont have to have 15 td rows.

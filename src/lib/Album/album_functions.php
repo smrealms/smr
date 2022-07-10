@@ -235,6 +235,9 @@ function album_entry(int $album_id): void {
 
 }
 
+/**
+ * @param array<int> $album_ids
+ */
 function search_result(array $album_ids): void {
 
 	// list of all first letter nicks

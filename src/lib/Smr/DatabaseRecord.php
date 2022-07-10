@@ -7,7 +7,7 @@ use Exception;
 class DatabaseRecord {
 
 	/**
-	 * @param array $dbRecord A record from a DatabaseResult.
+	 * @param array<string, mixed> $dbRecord A record from a DatabaseResult.
 	 */
 	public function __construct(
 		private readonly array $dbRecord
@@ -63,6 +63,9 @@ class DatabaseRecord {
 		return unserialize($object);
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function getRow(): array {
 		return $this->dbRecord;
 	}

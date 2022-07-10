@@ -4,6 +4,7 @@ class Rankings {
 
 	/**
 	 * @param array<int, Smr\DatabaseRecord> $rankedStats
+	 * @return array<int, array<string, mixed>>
 	 */
 	public static function collectSectorRankings(array $rankedStats, AbstractSmrPlayer $player, int $minRank = 1, int $maxRank = 10): array {
 		$rankedStats = self::filterRanks($rankedStats, $minRank, $maxRank);
@@ -28,6 +29,7 @@ class Rankings {
 
 	/**
 	 * @param array<int, Smr\DatabaseRecord> $rankedStats
+	 * @return array<int, array<string, mixed>>
 	 */
 	public static function collectRaceRankings(array $rankedStats, AbstractSmrPlayer $player): array {
 		$currRank = 1;
@@ -52,8 +54,9 @@ class Rankings {
 
 	/**
 	 * @param array<int, Smr\DatabaseRecord> $rankedStats
+	 * @return array<int, array<string, mixed>>
 	 */
-	public static function collectAllianceRankings(array $rankedStats, AbstractSmrPlayer $player, int $minRank = 1, $maxRank = 10): array {
+	public static function collectAllianceRankings(array $rankedStats, AbstractSmrPlayer $player, int $minRank = 1, int $maxRank = 10): array {
 		$rankedStats = self::filterRanks($rankedStats, $minRank, $maxRank);
 		$currRank = $minRank;
 
@@ -79,8 +82,9 @@ class Rankings {
 
 	/**
 	 * @param array<int, Smr\DatabaseRecord> $rankedStats
+	 * @return array<int, array<string, mixed>>
 	 */
-	public static function collectRankings(array $rankedStats, AbstractSmrPlayer $player, int $minRank = 1, $maxRank = 10): array {
+	public static function collectRankings(array $rankedStats, AbstractSmrPlayer $player, int $minRank = 1, int $maxRank = 10): array {
 		$rankedStats = self::filterRanks($rankedStats, $minRank, $maxRank);
 		$currRank = $minRank;
 
@@ -108,6 +112,10 @@ class Rankings {
 		return $rankings;
 	}
 
+	/**
+	 * @param array<int, Smr\DatabaseRecord> $rankedStats
+	 * @return array<int, Smr\DatabaseRecord>
+	 */
 	private static function filterRanks(array $rankedStats, int $minRank, int $maxRank): array {
 		$offset = $minRank - 1;
 		$length = $maxRank - $offset;
@@ -147,6 +155,7 @@ class Rankings {
 	/**
 	 * Gets player stats from the hof table sorted by $category (high to low).
 	 *
+	 * @param array<string> $category
 	 * @return array<int, Smr\DatabaseRecord>
 	 */
 	public static function playerStatsFromHOF(array $category, int $gameID): array {
@@ -177,11 +186,16 @@ class Rankings {
 	/**
 	 * Given a $rankedStats array returned by one of the stats functions,
 	 * find the rank associated with a specific ID.
+	 *
+	 * @param array<int, Smr\DatabaseRecord> $rankedStats
 	 */
 	public static function ourRank(array $rankedStats, int $ourID): int {
 		return array_search($ourID, array_keys($rankedStats)) + 1;
 	}
 
+	/**
+	 * @return array{int, int}
+	 */
 	public static function calculateMinMaxRanks(int $ourRank, int $totalRanks): array {
 		$session = Smr\Session::getInstance();
 		$minRank = $session->getRequestVarInt('min_rank', $ourRank - 5);

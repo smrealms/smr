@@ -120,7 +120,7 @@ function handleException(Throwable $e): void {
 /**
  * Can be used to convert any type of notice into an exception.
  */
-function exception_error_handler($errno, $errstr, $errfile, $errline): bool {
+function exception_error_handler(int $errno, string $errstr, string $errfile, int $errline): bool {
 	if (!(error_reporting() & $errno)) {
 		return false; // error is suppressed
 	}
@@ -206,6 +206,10 @@ function random_alphabetic_string(int $length): string {
 
 /**
  * Return the value of a random key from an array.
+ *
+ * @template T
+ * @param array<T> $arr
+ * @return T
  */
 function array_rand_value(array $arr): mixed {
 	if (empty($arr)) {

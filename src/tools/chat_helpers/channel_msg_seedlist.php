@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+/**
+ * @return array<int>
+ */
 function get_seedlist(AbstractSmrPlayer $player): array {
 	// Return the seedlist
 	$db = Smr\Database::getInstance();
@@ -13,7 +16,9 @@ function get_seedlist(AbstractSmrPlayer $player): array {
 	return $seedlist;
 }
 
-
+/**
+ * @return array<string>
+ */
 function shared_channel_msg_seedlist(AbstractSmrPlayer $player): array {
 	// get the seedlist
 	$seedlist = get_seedlist($player);
@@ -26,6 +31,10 @@ function shared_channel_msg_seedlist(AbstractSmrPlayer $player): array {
 	return $result;
 }
 
+/**
+ * @param ?array<string> $sectors
+ * @return array<string>
+ */
 function shared_channel_msg_seedlist_add(AbstractSmrPlayer $player, ?array $sectors): array {
 	// check if $nick is leader
 	if (!$player->isAllianceLeader(true)) {
@@ -84,7 +93,10 @@ function shared_channel_msg_seedlist_add(AbstractSmrPlayer $player, ?array $sect
 	return $result;
 }
 
-
+/**
+ * @param ?array<string> $sectors
+ * @return array<string>
+ */
 function shared_channel_msg_seedlist_del(AbstractSmrPlayer $player, ?array $sectors): array {
 	// check if $nick is leader
 	if (!$player->isAllianceLeader(true)) {

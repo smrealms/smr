@@ -44,6 +44,9 @@ class OneWayRouteTest extends TestCase {
 		self::assertSame($expected, $route->getMoneyMultiplierSum());
 	}
 
+	/**
+	 * @return array<array{int, int}>
+	 */
 	public function dataProvider_getMoneyMultiplierSum(): array {
 		return [
 			[GOODS_NOTHING, 0],
@@ -59,6 +62,9 @@ class OneWayRouteTest extends TestCase {
 		self::assertSame($this->path->getTurns() + $expected, $route->getTurnsForRoute());
 	}
 
+	/**
+	 * @return array<array{int, int}>
+	 */
 	public function dataProvider_getTurnsForRoute(): array {
 		return [
 			[GOODS_NOTHING, 0],

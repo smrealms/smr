@@ -9,6 +9,7 @@ class SmrWeaponType {
 
 	use Traits\RaceID;
 
+	/** @var array<int, self> */
 	protected static array $CACHE_WEAPON_TYPES = [];
 
 	protected readonly string $name;
@@ -32,6 +33,9 @@ class SmrWeaponType {
 		return self::$CACHE_WEAPON_TYPES[$weaponTypeID];
 	}
 
+	/**
+	 * @return array<int, self>
+	 */
 	public static function getAllWeaponTypes(): array {
 		$db = Smr\Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM weapon_type');
@@ -45,6 +49,8 @@ class SmrWeaponType {
 
 	/**
 	 * Returns all weapon types that are purchasable in the given game.
+	 *
+	 * @return array<int, self>
 	 */
 	public static function getAllSoldWeaponTypes(int $gameID): array {
 		$db = Smr\Database::getInstance();

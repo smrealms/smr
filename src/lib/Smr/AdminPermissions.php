@@ -51,6 +51,8 @@ class AdminPermissions {
 
 	/**
 	 * Returns the info for the admin permission with the given ID.
+	 *
+	 * @return array{string, string, int}
 	 */
 	public static function getPermissionInfo(int $permissionID): array {
 		return self::PERMISSION_TABLE[$permissionID];
@@ -59,6 +61,8 @@ class AdminPermissions {
 	/**
 	 * Returns a list of all permissions with ID keys and name values,
 	 * grouped by the category ID of the permission.
+	 *
+	 * @return array<int, array<int, string>>
 	 */
 	public static function getPermissionsByCategory(): array {
 		$result = [];

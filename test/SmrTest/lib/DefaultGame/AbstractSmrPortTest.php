@@ -52,6 +52,10 @@ class AbstractSmrPortTest extends TestCase {
 
 	/**
 	 * @dataProvider provider_removePortGood
+	 *
+	 * @param array<int> $removeGoodIDs
+	 * @param array<int> $sellRemain
+	 * @param array<int> $buyRemain
 	 */
 	public function test_removePortGood(array $removeGoodIDs, array $sellRemain, array $buyRemain): void {
 		// Set up a port with a couple goods
@@ -156,6 +160,9 @@ class AbstractSmrPortTest extends TestCase {
 
 	/**
 	 * @dataProvider dataProvider_takeDamage
+	 *
+	 * @param array<string, int|bool> $damage
+	 * @param array<string, int|bool> $expected
 	 */
 	public function test_takeDamage(string $case, array $damage, array $expected, int $shields, int $cds, int $armour): void {
 		// Set up a port with a fixed amount of defenses
@@ -168,6 +175,9 @@ class AbstractSmrPortTest extends TestCase {
 		self::assertSame($expected, $result, $case);
 	}
 
+	/**
+	 * @return array<array<mixed>>
+	 */
 	public function dataProvider_takeDamage(): array {
 		return [
 			[

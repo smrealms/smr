@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @param array<array<string, mixed>> $Links
+ */
 function DisplayResult(array $Links, SmrPlayer $Player): void { ?>
 	<table class="standard" width="88%">
 		<tr>

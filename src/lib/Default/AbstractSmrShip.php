@@ -31,14 +31,19 @@ class AbstractSmrShip {
 	protected int $gameID;
 	protected SmrShipType $shipType;
 
+	/** @var array<int, SmrWeapon> */
 	protected array $weapons = [];
+	/** @var array<int, int> */
 	protected array $cargo = [];
+	/** @var array<int, int> */
 	protected array $hardware = [];
 	protected bool $isCloaked = false;
+	/** @var array<string, int>|false */
 	protected array|false $illusionShip = false;
 
 	protected bool $hasChangedWeapons = false;
 	protected bool $hasChangedCargo = false;
+	/** @var array<int, bool> */
 	protected array $hasChangedHardware = [];
 	protected bool $hasChangedCloak = false;
 	protected bool $hasChangedIllusion = false;
@@ -205,6 +210,9 @@ class AbstractSmrShip {
 		$this->hasChangedWeapons = true;
 	}
 
+	/**
+	 * @param array<int, int> $orderArray
+	 */
 	public function setWeaponLocations(array $orderArray): void {
 		$weapons = $this->weapons;
 		foreach ($orderArray as $newOrder => $oldOrder) {
@@ -322,6 +330,9 @@ class AbstractSmrShip {
 		return $this->getHardware(HARDWARE_ILLUSION) > 0;
 	}
 
+	/**
+	 * @return array<string, int>|false
+	 */
 	public function getIllusionShip(): array|false {
 		return $this->illusionShip;
 	}
@@ -702,6 +713,9 @@ class AbstractSmrShip {
 		return $this->getNumWeapons() > 0;
 	}
 
+	/**
+	 * @return array<int, SmrWeapon>
+	 */
 	public function getWeapons(): array {
 		return $this->weapons;
 	}
@@ -750,6 +764,10 @@ class AbstractSmrShip {
 		       $this->getTypeID() === SHIP_TYPE_DEATH_CRUISER;
 	}
 
+	/**
+	 * @param array<AbstractSmrPlayer> $targetPlayers
+	 * @return array<string, mixed>
+	 */
 	public function shootPlayers(array $targetPlayers): array {
 		$thisPlayer = $this->getPlayer();
 		$results = ['Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []];
@@ -775,6 +793,9 @@ class AbstractSmrShip {
 		return $results;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function shootForces(SmrForce $forces): array {
 		$thisPlayer = $this->getPlayer();
 		$results = ['Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []];
@@ -814,6 +835,9 @@ class AbstractSmrShip {
 		return $results;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function shootPort(SmrPort $port): array {
 		$thisPlayer = $this->getPlayer();
 		$results = ['Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []];
@@ -852,6 +876,9 @@ class AbstractSmrShip {
 		return $results;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public function shootPlanet(SmrPlanet $planet): array {
 		$thisPlayer = $this->getPlayer();
 		$results = ['Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []];
@@ -877,6 +904,10 @@ class AbstractSmrShip {
 		return $results;
 	}
 
+	/**
+	 * @param array<string, int|bool> $damage
+	 * @return array<string, int|bool>
+	 */
 	public function takeDamage(array $damage): array {
 		$alreadyDead = $this->getPlayer()->isDead();
 		$armourDamage = 0;
@@ -909,6 +940,10 @@ class AbstractSmrShip {
 		];
 	}
 
+	/**
+	 * @param array<string, int|bool> $damage
+	 * @return array<string, int|bool>
+	 */
 	public function takeDamageFromMines(array $damage): array {
 		$alreadyDead = $this->getPlayer()->isDead();
 		$armourDamage = 0;

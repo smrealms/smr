@@ -55,6 +55,10 @@ foreach ($fightingPlayers as $teamPlayers) {
 $player->takeTurns(TURNS_TO_SHOOT_SHIP);
 $player->update();
 
+/**
+ * @param array<string, array<int, AbstractSmrPlayer>> $fightingPlayers
+ * @return array<string, mixed>
+ */
 function teamAttack(array $fightingPlayers, string $attack, string $defend): array {
 	$results = ['Traders' => [], 'TotalDamage' => 0];
 	foreach ($fightingPlayers[$attack] as $accountID => $teamPlayer) {

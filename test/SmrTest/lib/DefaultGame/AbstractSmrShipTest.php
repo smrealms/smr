@@ -189,6 +189,9 @@ class AbstractSmrShipTest extends TestCase {
 
 	/**
 	 * @dataProvider dataProvider_takeDamage
+	 *
+	 * @param array<string, int|bool> $damage
+	 * @param array<string, int|bool> $expected
 	 */
 	public function test_takeDamage(string $case, array $damage, array $expected, int $shields, int $cds, int $armour): void {
 		// Set up a ship with a fixed amount of defenses
@@ -204,6 +207,9 @@ class AbstractSmrShipTest extends TestCase {
 		self::assertSame($expected, $result, $case);
 	}
 
+	/**
+	 * @return array<array<mixed>>
+	 */
 	public function dataProvider_takeDamage(): array {
 		return [
 			[
@@ -363,6 +369,8 @@ class AbstractSmrShipTest extends TestCase {
 
 	/**
 	 * @dataProvider dataProvider_takeDamageFromMines
+	 *
+	 * @param array<string, int|bool> $expected
 	 */
 	public function test_takeDamageFromMines(string $case, int $damage, array $expected, int $shields, int $cds, int $armour): void {
 		// Set up a ship with a fixed amount of defenses
@@ -383,6 +391,9 @@ class AbstractSmrShipTest extends TestCase {
 		self::assertSame($expected, $result, $case);
 	}
 
+	/**
+	 * @return array<array<mixed>>
+	 */
 	public function dataProvider_takeDamageFromMines(): array {
 		return [
 			[

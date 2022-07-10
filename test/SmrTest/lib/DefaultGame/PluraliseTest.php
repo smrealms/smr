@@ -17,6 +17,9 @@ class PluraliseTest extends TestCase {
 		$this->assertSame($expect, $result);
 	}
 
+	/**
+	 * @return array<array{float|int, bool, string}>
+	 */
 	public function pluralise_provider(): array {
 		return [
 			[3, true, '3 tests'],
