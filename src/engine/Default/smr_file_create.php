@@ -32,7 +32,7 @@ $file .= '[Weapons]
 ; Weapon = Race,Cost,Shield,Armour,Accuracy,Power level,Restriction
 ; Restriction: 0=none, 1=good, 2=evil, 3=newbie, 4=port, 5=planet' . EOL;
 foreach (SmrWeaponType::getAllWeaponTypes() as $weapon) {
-	$file .= inify($weapon->getName()) . '=' . inify($weapon->getRaceName()) . ',' . $weapon->getCost() . ',' . $weapon->getShieldDamage() . ',' . $weapon->getArmourDamage() . ',' . $weapon->getAccuracy() . ',' . $weapon->getPowerLevel() . ',' . $weapon->getBuyerRestriction() . EOL;
+	$file .= inify($weapon->getName()) . '=' . inify($weapon->getRaceName()) . ',' . $weapon->getCost() . ',' . $weapon->getShieldDamage() . ',' . $weapon->getArmourDamage() . ',' . $weapon->getAccuracy() . ',' . $weapon->getPowerLevel() . ',' . $weapon->getBuyerRestriction()->value . EOL;
 }
 
 $file .= '[ShipEquipment]
@@ -54,7 +54,7 @@ foreach (SmrShipType::getAll() as $ship) {
 	if (!empty($shipEquip)) {
 		$file .= ',ShipEquipment=' . implode(';', $shipEquip);
 	}
-	$file .= ',Restrictions=' . $ship->getRestriction();
+	$file .= ',Restrictions=' . $ship->getRestriction()->value;
 	$file .= EOL;
 }
 
