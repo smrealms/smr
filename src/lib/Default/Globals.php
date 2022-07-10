@@ -147,7 +147,7 @@ class Globals {
 	}
 
 	/**
-	 * @return array<int, array<string, string|int>>|array<string, string|int>
+	 * @return ($hardwareTypeID is null ? array<int, array<string, string|int>> : array<string, string|int>)
 	 */
 	public static function getHardwareTypes(int $hardwareTypeID = null): array {
 		if (!isset(self::$HARDWARE_TYPES)) {

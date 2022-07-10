@@ -750,7 +750,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	/**
-	 * @return int|false Message ID (false if not sent due to ignores)
+	 * @return ($canBeIgnored is true ? int|false : int) Message ID
 	 */
 	public function sendMessage(int $receiverID, int $messageTypeID, string $message, bool $canBeIgnored = true, bool $unread = true, int $expires = null, bool $senderDelete = false): int|false {
 		//get expire time

@@ -771,7 +771,7 @@ class SmrPlanet {
 	}
 
 	/**
-	 * @return SmrPlanetStructureType|array<int, SmrPlanetStructureType>
+	 * @return ($structureID is null ? array<int, SmrPlanetStructureType> : SmrPlanetStructureType)
 	 */
 	public function getStructureTypes(int $structureID = null): SmrPlanetStructureType|array {
 		return $this->typeInfo->structureTypes($structureID);
