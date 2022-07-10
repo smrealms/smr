@@ -135,9 +135,9 @@ class Page extends ArrayObject {
 	 * This is the standard method to package linked pages and the data to
 	 * accompany them.
 	 *
-	 * @param array<string, mixed>|self $data
+	 * @param self|array<string, mixed> $data
 	 */
-	public static function create(string $file, array|self $data = [], bool $skipRedirect = false): self {
+	public static function create(string $file, self|array $data = [], bool $skipRedirect = false): self {
 		if ($data instanceof self) {
 			// Extract the data from the input Page
 			$data = $data->getArrayCopy();
