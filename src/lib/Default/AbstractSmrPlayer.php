@@ -2870,19 +2870,16 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function addMission(int $missionID, int $step = 0): void {
-		$this->getMissions();
-
-		if (isset($this->missions[$missionID])) {
-			return;
+		if ($this->hasMission($missionID)) {
+			throw new Exception('Mission ID already added: ' . $missionID);
 		}
-		$sector = 0;
 
 		$mission = [
 			'On Step' => $step,
 			'Progress' => 0,
 			'Unread' => true,
 			'Expires' => (Smr\Epoch::time() + 86400),
-			'Sector' => $sector,
+			'Sector' => 0,
 			'Starting Sector' => $this->getSectorID(),
 		];
 
