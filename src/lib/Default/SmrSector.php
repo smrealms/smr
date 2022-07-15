@@ -373,11 +373,8 @@ class SmrSector {
 		return $this->getLink($name) != 0;
 	}
 
-	public function getLinkSector(string $name): self|false {
-		if ($this->hasLink($name)) {
-			return self::getSector($this->getGameID(), $this->getLink($name));
-		}
-		return false;
+	public function getLinkSector(string $name): self {
+		return self::getSector($this->getGameID(), $this->getLink($name));
 	}
 
 	/**

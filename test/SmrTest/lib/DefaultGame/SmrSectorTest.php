@@ -53,8 +53,8 @@ class SmrSectorTest extends TestCase {
 		// Test that there is no link to start
 		$dir = 'Left';
 		$oppositeDir = SmrSector::oppositeDir($dir);
-		self::assertFalse($sector1->getLinkSector($dir));
-		self::assertFalse($sector2->getLinkSector($oppositeDir));
+		self::assertFalse($sector1->hasLink($dir));
+		self::assertFalse($sector2->hasLink($oppositeDir));
 
 		// When we link the two sectors
 		$sector1->setLinkSector($dir, $sector2);
