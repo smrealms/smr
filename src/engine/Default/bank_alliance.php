@@ -97,13 +97,14 @@ $dbResult = $db->read($query);
 if ($dbResult->hasRecord()) {
 	$bankTransactions = [];
 	foreach ($dbResult->records() as $dbRecord) {
+		$trans = $dbRecord->getString('transaction');
 		$bankTransactions[$dbRecord->getInt('transaction_id')] = [
 			'Time' => $dbRecord->getInt('time'),
 			'Player' => SmrPlayer::getPlayer($dbRecord->getInt('payee_id'), $player->getGameID()),
 			'Reason' => $dbRecord->getString('reason'),
-			'TransactionType' => $dbRecord->getString('transaction'),
-			'Withdrawal' => $dbRecord->getString('transaction') == 'Payment' ? $dbRecord->getInt('amount') : '',
-			'Deposit' => $dbRecord->getString('transaction') == 'Deposit' ? $dbRecord->getInt('amount') : '',
+			'TransactionType' => $trans,
+			'Withdrawal' => $trans == 'Payment' ? number_format($dbRecord->getInt('amount')) : '',
+			'Deposit' => $trans == 'Deposit' ? number_format($dbRecord->getInt('amount')) : '',
 			'Exempt' => $dbRecord->getInt('exempt') == 1,
 		];
 	}
