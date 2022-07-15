@@ -729,14 +729,14 @@ function number_colour_format(float $number, bool $justSign = false): string {
  * @param array<string|int, float> $choices
  */
 function getWeightedRandom(array $choices): string|int {
-	// Normalize the weights so that their sum is much larger than 1.
-	$maxWeight = max($choices);
+	// Normalize the weights so that their sum is 1
+	$sumWeight = array_sum($choices);
 	foreach ($choices as $key => $weight) {
-		$choices[$key] = IRound($weight * 1000 / $maxWeight);
+		$choices[$key] = $weight / $sumWeight;
 	}
 
-	// Generate a random number that is lower than the sum of the weights.
-	$rand = rand(1, array_sum($choices));
+	// Generate a random number between 0 and 1
+	$rand = rand() / getrandmax();
 
 	// Subtract weights from the random number until it is negative,
 	// then return the key associated with that weight.
