@@ -75,6 +75,9 @@ class Template {
 		ob_start();
 		$this->includeTemplate($templateName);
 		$output = ob_get_clean();
+		if ($output === false) {
+			throw new Exception('Output buffering is not active!');
+		}
 
 		$ajaxEnabled = ($this->data['AJAX_ENABLE_REFRESH'] ?? false) !== false;
 		if ($ajaxEnabled) {
