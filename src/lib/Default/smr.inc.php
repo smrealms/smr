@@ -726,7 +726,9 @@ function number_colour_format(float $number, bool $justSign = false): string {
  *    'C' => 6, // 60% chance
  * );
  *
- * @param array<string|int, float> $choices
+ * @template T of array-key
+ * @param array<T, float> $choices
+ * @return T
  */
 function getWeightedRandom(array $choices): string|int {
 	// Normalize the weights so that their sum is 1
