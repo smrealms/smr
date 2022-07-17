@@ -24,9 +24,7 @@ foreach ($dbResult->records() as $dbRecord) {
 
 	$getName = function(SmrPlayer|string $messagePlayer) use ($container, $account): string {
 		if ($messagePlayer instanceof SmrPlayer) {
-			$name = $messagePlayer->getAccount()->getLogin();
-			$name .= ' (' . $messagePlayer->getAccountID() . ')';
-			$name .= ' a.k.a ' . $messagePlayer->getDisplayName();
+			$name = $messagePlayer->getDisplayName() . ' (Login: ' . $messagePlayer->getAccount()->getLogin() . ')';
 		} else {
 			$name = $messagePlayer;
 		}
