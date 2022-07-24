@@ -146,7 +146,7 @@ abstract class AbstractSmrPlayer {
 	 */
 	public static function getGalaxyPlayers(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT player.* FROM player LEFT JOIN sector USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$dbResult = $db->read('SELECT player.* FROM player LEFT JOIN sector USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_HIDDEN) . ' OR newbie_turns = 0) AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPlayers = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$sectorID = $dbRecord->getInt('sector_id');
@@ -164,7 +164,7 @@ abstract class AbstractSmrPlayer {
 	public static function getSectorPlayers(int $gameID, int $sectorID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID])) {
 			$db = Smr\Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
+			$dbResult = $db->read('SELECT * FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_HIDDEN) . ' OR newbie_turns = 0) AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
 			$players = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$accountID = $dbRecord->getInt('account_id');
@@ -698,7 +698,7 @@ abstract class AbstractSmrPlayer {
 		switch ($messageTypeID) {
 			case MSG_PLAYER:
 				$receiverAccount = SmrAccount::getAccount($receiverID);
-				if ($receiverAccount->isValidated() && $receiverAccount->isReceivingMessageNotifications($messageTypeID) && !$receiverAccount->isLoggedIn()) {
+				if ($receiverAccount->isValidated() && $receiverAccount->isReceivingMessageNotifications($messageTypeID) && !$receiverAccount->isActive()) {
 					$sender = Smr\Messages::getMessagePlayer($senderID, $gameID, $messageTypeID);
 					if ($sender instanceof self) {
 						$sender = $sender->getDisplayName();
@@ -738,7 +738,7 @@ abstract class AbstractSmrPlayer {
 		$dbResult = $db->read('SELECT account_id
 					FROM active_session
 					JOIN player USING (game_id, account_id)
-					WHERE active_session.last_accessed >= ' . $db->escapeNumber(Smr\Epoch::time() - Smr\Session::TIME_BEFORE_EXPIRY) . '
+					WHERE active_session.last_accessed >= ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE) . '
 						AND game_id = ' . $db->escapeNumber($this->getGameID()) . '
 						AND ignore_globals = \'FALSE\'
 						AND account_id != ' . $db->escapeNumber($this->getAccountID()));

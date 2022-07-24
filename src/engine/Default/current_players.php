@@ -4,7 +4,7 @@ $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$inactiveTime = Smr\Epoch::time() - 600; // 10 minutes
+$inactiveTime = Smr\Epoch::time() - TIME_BEFORE_INACTIVE;
 
 $template->assign('PageTopic', 'Current Players');
 $db = Smr\Database::getInstance();
@@ -39,7 +39,7 @@ if ($count_real_last_active != 1) {
 } else {
 	$summary .= 'is 1 player who has ';
 }
-$summary .= 'accessed the server in the last 10 minutes.<br />';
+$summary .= 'accessed the server in the last ' . format_time(TIME_BEFORE_INACTIVE) . '.<br />';
 
 if ($count_last_active == 0) {
 	$summary .= 'No one was moving so your ship computer can\'t intercept any transmissions.';

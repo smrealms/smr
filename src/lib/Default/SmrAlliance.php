@@ -524,7 +524,7 @@ class SmrAlliance {
 		$dbResult = $this->db->read('SELECT account_id
 						FROM active_session
 						JOIN player USING(account_id, game_id)
-						WHERE ' . $this->SQL . ' AND last_accessed >= ' . $this->db->escapeNumber(Smr\Epoch::time() - 600));
+						WHERE ' . $this->SQL . ' AND last_accessed >= ' . $this->db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE));
 
 		foreach ($dbResult->records() as $dbRecord) {
 			$activeIDs[] = $dbRecord->getInt('account_id');

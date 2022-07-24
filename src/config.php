@@ -46,7 +46,8 @@ const ACCOUNT_ID_NHL = 36;
  */
 const TIME_FOR_RAIDER_UNLOCK = 1209600; // 2 weeks
 const TIME_FOR_RACE_CHANGE = 259200; // 3 days
-const TIME_BEFORE_INACTIVE = 259200; // 3 days
+const TIME_BEFORE_HIDDEN = 259200; // 3 days
+const TIME_BEFORE_INACTIVE = 600; // 10 minutes
 const TIME_BEFORE_NEWBIE_TIME = 3600; //1 hour
 const TIME_FOR_COUNCIL_VOTE = 172800; //2 days
 const TIME_FOR_WAR_VOTE_FED_SAFETY = 259200; //3 days

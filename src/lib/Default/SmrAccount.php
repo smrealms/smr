@@ -943,8 +943,8 @@ class SmrAccount {
 		return $this->validated;
 	}
 
-	public function isLoggedIn(): bool {
-		$dbResult = $this->db->read('SELECT 1 FROM active_session WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
+	public function isActive(): bool {
+		$dbResult = $this->db->read('SELECT 1 FROM active_session WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND last_accessed >= ' . $this->db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE) . ' LIMIT 1');
 		return $dbResult->hasRecord();
 	}
 
