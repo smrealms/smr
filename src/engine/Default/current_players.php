@@ -4,23 +4,25 @@ $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
+$inactiveTime = Smr\Epoch::time() - 600; // 10 minutes
+
 $template->assign('PageTopic', 'Current Players');
 $db = Smr\Database::getInstance();
 $db->write('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . $db->escapeNumber(Smr\Epoch::time()));
 $dbResult = $db->read('SELECT count(*) count FROM active_session
-			WHERE last_accessed >= ' . $db->escapeNumber(Smr\Epoch::time() - 600) . ' AND
+			WHERE last_accessed >= ' . $db->escapeNumber($inactiveTime) . ' AND
 				game_id = ' . $db->escapeNumber($player->getGameID()));
 $count_real_last_active = 0;
 if ($dbResult->hasRecord()) {
 	$count_real_last_active = $dbResult->record()->getInt('count');
 }
-if ($session->getLastAccessed() < Smr\Epoch::time() - 600) {
+if ($session->getLastAccessed() < $inactiveTime) {
 	++$count_real_last_active;
 }
 
 
 $dbResult = $db->read('SELECT * FROM player
-		WHERE last_cpl_action >= ' . $db->escapeNumber(Smr\Epoch::time() - 600) . '
+		WHERE last_cpl_action >= ' . $db->escapeNumber($inactiveTime) . '
 			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 		ORDER BY experience DESC, player_name DESC');
 $count_last_active = $dbResult->getNumRecords();
