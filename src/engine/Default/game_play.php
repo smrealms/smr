@@ -54,7 +54,7 @@ foreach ($dbResult->records() as $dbRecord) {
 
 	$result2 = $db->read('SELECT count(*) as num_playing
 					FROM player
-					WHERE last_cpl_action >= ' . $db->escapeNumber(Smr\Epoch::time() - 600) . '
+					WHERE last_cpl_action >= ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE) . '
 						AND game_id = ' . $db->escapeNumber($game_id));
 	$games['Play'][$game_id]['NumberPlaying'] = $result2->record()->getInt('num_playing');
 

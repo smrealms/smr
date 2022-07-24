@@ -108,7 +108,6 @@ try {
 	// ******************************************
 
 	$db->write('DELETE FROM player_has_ticker WHERE expires <= ' . $db->escapeNumber(Smr\Epoch::time()));
-	$db->write('DELETE FROM cpl_tag WHERE expires <= ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND expires > 0');
 
 	// save ip
 	$account->updateIP();

@@ -22,7 +22,7 @@
 		<td><?php echo $Galaxy->getGalaxyID(); ?> / <?php echo count($Galaxies); ?></td>
 		<td><?php echo $Galaxy->getGalaxyType(); ?></td>
 		<td><?php echo $Galaxy->getWidth(); ?> x <?php echo $Galaxy->getHeight(); ?></td>
-		<td><?php echo $Galaxy->getMaxForceTime() / 3600; ?> hours</td>
+		<td><?php echo format_time($Galaxy->getMaxForceTime()); ?></td>
 		<td id="conn" class="ajax"><?php echo $ActualConnectivity; ?>%</td>
 	</tr>
 </table>
