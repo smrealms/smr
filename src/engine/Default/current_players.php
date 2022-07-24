@@ -16,10 +16,6 @@ $count_real_last_active = 0;
 if ($dbResult->hasRecord()) {
 	$count_real_last_active = $dbResult->record()->getInt('count');
 }
-if ($session->getLastAccessed() < $inactiveTime) {
-	++$count_real_last_active;
-}
-
 
 $dbResult = $db->read('SELECT * FROM player
 		WHERE last_cpl_action >= ' . $db->escapeNumber($inactiveTime) . '
