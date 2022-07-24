@@ -71,7 +71,7 @@ if (isset($GameID)) { ?>
 							} ?>
 						</select>
 						<br />
-						(This will mostly reset your trader! You may only change your race once per game, and only during the first <?php echo TIME_FOR_RACE_CHANGE / 3600; ?> hours of the game.)
+						(This will mostly reset your trader! You may only change your race once per game, and only during the first <?php echo format_time(TIME_FOR_RACE_CHANGE); ?> of the game.)
 			</tr>
 
 				<tr>
