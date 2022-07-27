@@ -69,7 +69,8 @@ foreach ($galaxies as $galaxy) {
 	foreach ($galaxy->getPorts() as $port) {
 		foreach ($port->getSellGoodIDs() as $goodID) {
 			$distance = $port->getGoodDistance($goodID);
-			if (empty($max) || $distance > $max['Distance']) {
+			// For distance ties, prefer higher good IDs
+			if (empty($max) || $distance >= $max['Distance']) {
 				$max = [
 					'Port' => $port,
 					'GoodID' => $goodID,
