@@ -111,7 +111,7 @@ services:
             - POSTFIX_myhostname=hostname.local
             - OPENDKIM_DOMAINS=smrealms.de=key1
         volumes:
-            - ./opendkim:/etc/opendkim/keys/smrealms.de:ro
+            - ./opendkim:/etc/opendkim/keys/smrealms.de:rw
 
     flyway: &flyway-common
         image: flyway/flyway:latest-alpine
