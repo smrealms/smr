@@ -314,7 +314,7 @@ function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port): Page
 	$offeredPrice = $port->getOfferPrice($idealPrice, $relations, $transaction);
 
 	return Page::create('shop_goods_processing.php', [
-		'action' => $transaction,
+		'action' => $transaction->value,
 		'offered_price' => $offeredPrice,
 		'ideal_price' => $idealPrice,
 		'amount' => $amount,
