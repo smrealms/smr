@@ -169,7 +169,7 @@ function checkForForceRefreshMessage(string &$msg): void {
 			$player = Smr\Session::getInstance()->getPlayer();
 
 			$forceRefreshMessage = '';
-			$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()));
+			$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
 			if ($dbResult->hasRecord()) {
 				$remainingTime = $dbResult->record()->getInt('refresh_at') - Smr\Epoch::time();
 				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in ' . $remainingTime . ' seconds.';
