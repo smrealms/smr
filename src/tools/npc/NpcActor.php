@@ -30,6 +30,7 @@ class NpcActor {
 			throw new Exception('Player is not an NPC!');
 		}
 
+		$player->updateTurns();
 		checkStartConditions($player);
 
 		// Ensure the NPC doesn't think it's under attack at startup,
