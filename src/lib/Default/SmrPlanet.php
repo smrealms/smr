@@ -1317,7 +1317,7 @@ class SmrPlanet {
 		$dbResult = $this->db->read('SELECT account_id,level FROM player_attacks_planet WHERE ' . $this->SQL . ' AND time > ' . $this->db->escapeNumber(Smr\Epoch::time() - self::TIME_TO_CREDIT_BUST));
 		foreach ($dbResult->records() as $dbRecord) {
 			$currPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $this->getGameID());
-			$currPlayer->increaseHOF($dbRecord->getInt('level'), ['Combat', 'Planet', 'Levels'], HOF_PUBLIC);
+			$currPlayer->increaseHOF($dbRecord->getFloat('level'), ['Combat', 'Planet', 'Levels'], HOF_PUBLIC);
 			$currPlayer->increaseHOF(1, ['Combat', 'Planet', 'Completed'], HOF_PUBLIC);
 		}
 		$this->db->write('DELETE FROM player_attacks_planet WHERE ' . $this->SQL);
