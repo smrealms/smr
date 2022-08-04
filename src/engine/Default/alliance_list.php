@@ -35,6 +35,7 @@ foreach ($dbResult->records() as $dbRecord) {
 		'TotalExperience' => $dbRecord->getInt('alliance_xp'),
 		'AverageExperience' => $dbRecord->getInt('alliance_avg'),
 		'Members' => $dbRecord->getInt('alliance_member_count'),
+		'OpenRecruitment' => $alliance->getRecruitType() === SmrAlliance::RECRUIT_OPEN,
 	];
 }
 $template->assign('Alliances', $alliances);
