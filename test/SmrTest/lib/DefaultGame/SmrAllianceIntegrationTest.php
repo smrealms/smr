@@ -21,6 +21,12 @@ class SmrAllianceIntegrationTest extends BaseIntegrationSpec {
 		SmrAlliance::clearCache();
 	}
 
+	public function test_getAlliance_throws_when_no_record_found(): void {
+		$this->expectException(AllianceNotFound::class);
+		$this->expectExceptionMessage('Invalid allianceID: 2 OR gameID: 3');
+		SmrAlliance::getAlliance(2, 3);
+	}
+
 	public function test_getAllianceByIrcChannel(): void {
 		// Create an Alliance and set its IRC channel
 		$gameID = 1;
@@ -62,9 +68,9 @@ class SmrAllianceIntegrationTest extends BaseIntegrationSpec {
 
 		$alliance = SmrAlliance::createAlliance($gameID, $name);
 
-		$this->assertSame($gameID, $alliance->getGameID());
-		$this->assertSame($name, $alliance->getAllianceName());
-		$this->assertSame(1, $alliance->getAllianceID());
+		self::assertSame($gameID, $alliance->getGameID());
+		self::assertSame($name, $alliance->getAllianceName());
+		self::assertSame(1, $alliance->getAllianceID());
 	}
 
 	public function test_createAlliance_duplicate_name(): void {
@@ -84,7 +90,7 @@ class SmrAllianceIntegrationTest extends BaseIntegrationSpec {
 	public function test_createAlliance_increment_allianceID(): void {
 		SmrAlliance::createAlliance(1, 'test1');
 		$alliance = SmrAlliance::createAlliance(1, 'test2');
-		$this->assertSame(2, $alliance->getAllianceID());
+		self::assertSame(2, $alliance->getAllianceID());
 	}
 
 	public function test_isNHA(): void {
@@ -95,6 +101,16 @@ class SmrAllianceIntegrationTest extends BaseIntegrationSpec {
 		// Create an alliance that is the NHA
 		$alliance = SmrAlliance::createAlliance(1, NHA_ALLIANCE_NAME, true);
 		self::assertTrue($alliance->isNHA());
+	}
+
+	public function test_isNone(): void {
+		// Create an alliance that is not "none"
+		$alliance = SmrAlliance::createAlliance(1, 'Some alliance');
+		self::assertFalse($alliance->isNone());
+
+		// Create an alliance that is "none"
+		$alliance = SmrAlliance::getAlliance(0, 1);
+		self::assertTrue($alliance->isNone());
 	}
 
 }

@@ -50,7 +50,7 @@ if ($dbResult->hasRecord()) {
 function allianceTopTen(SmrGame $game, string $field): array {
 	$gameID = $game->getGameID();
 	$db = Smr\Database::getInstance();
-	$dbResult = $db->read('SELECT alliance_id, SUM(' . $field . ') amount
+	$dbResult = $db->read('SELECT alliance.*, SUM(' . $field . ') amount
 				FROM alliance
 				LEFT JOIN player USING (game_id, alliance_id)
 				WHERE game_id = ' . $db->escapeNumber($gameID) . '
@@ -59,7 +59,7 @@ function allianceTopTen(SmrGame $game, string $field): array {
 				LIMIT 10');
 	$rankings = [];
 	foreach ($dbResult->records() as $index => $dbRecord) {
-		$alliance = SmrAlliance::getAlliance($dbRecord->getInt('alliance_id'), $gameID);
+		$alliance = SmrAlliance::getAlliance($dbRecord->getInt('alliance_id'), $gameID, false, $dbRecord);
 		$rankings[$index + 1]['Amount'] = $dbRecord->getInt('amount');
 		if ($game->hasEnded()) {
 			// If game has ended, offer a link to alliance roster details

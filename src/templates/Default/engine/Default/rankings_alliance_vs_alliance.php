@@ -24,8 +24,7 @@
 			<tr>
 				<td <?php echo $data['Style']; ?>>
 					<select name="alliancer[]" style="width:155px"><?php
-						foreach ($ActiveAlliances as $activeID) {
-							$curr_alliance = SmrAlliance::getAlliance($activeID, $ThisPlayer->getGameID());
+						foreach ($ActiveAlliances as $activeID => $curr_alliance) {
 							$attr = ($data['ID'] == $activeID) ? 'selected' : ''; ?>
 							<option value="<?php echo $activeID; ?>" <?php echo $attr; ?>><?php echo $curr_alliance->getAllianceDisplayName(); ?></option><?php
 						} ?>

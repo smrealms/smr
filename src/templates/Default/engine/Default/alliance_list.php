@@ -22,9 +22,7 @@ if (count($Alliances) > 0) { ?>
 		<tbody class="list"><?php
 			foreach ($Alliances as $AllianceID => $Alliance) { ?>
 				<tr id="alliance-<?php echo $AllianceID; ?>" class="ajax">
-					<td class="sort_name">
-						<a href="<?php echo $Alliance['ViewHREF']; ?>"><?php echo $Alliance['Name']; ?></a>
-					</td>
+					<td class="sort_name"><?php echo $Alliance['Name']; ?></td>
 					<td class="sort_totExp right"><?php echo number_format($Alliance['TotalExperience']); ?></td>
 					<td class="sort_avgExp right"><?php echo number_format($Alliance['AverageExperience']); ?></td>
 					<td class="sort_members right"><?php echo number_format($Alliance['Members']); ?></td>
