@@ -8,7 +8,6 @@ $template->assign('PageTopic', 'Alliance Kill Rankings');
 Menu::rankings(1, 2);
 
 $rankedStats = Rankings::allianceStats('kills', $player->getGameID());
-
 $ourRank = 0;
 if ($player->hasAlliance()) {
 	$ourRank = Rankings::ourRank($rankedStats, $player->getAllianceID());
