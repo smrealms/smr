@@ -19,7 +19,7 @@ class Template {
 	protected array $jsAlerts = [];
 	private bool $displayCalled = false;
 	/** @var array<string> */
-	private array $jsSources = [];
+	protected array $jsSources = [];
 
 	/**
 	 * Defines a listjs_include.js function to call at the end of the HTML body.
@@ -197,7 +197,7 @@ class Template {
 	 * Registers a JS target for inclusion at the end of the HTML body.
 	 */
 	protected function addJavascriptSource(string $src): void {
-		array_push($this->jsSources, $src);
+		$this->jsSources[] = $src;
 	}
 
 	protected function convertHtmlToAjaxXml(string $str, bool $returnXml): string {

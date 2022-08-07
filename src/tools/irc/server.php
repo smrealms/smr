@@ -99,7 +99,7 @@ function server_msg_318($fp, string $rdata): bool {
 					//Forward to a NICKSERV INFO call.
 					$action[0] = 'NICKSERV_INFO';
 					$action[4] = time();
-					array_push($actions, $action);
+					$actions[] = $action;
 					fwrite($fp, 'NICKSERV INFO ' . $nick . EOL);
 				} elseif ($action[5] === true) {
 					fwrite($fp, 'PRIVMSG ' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
