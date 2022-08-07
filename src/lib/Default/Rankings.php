@@ -56,16 +56,16 @@ class Rankings {
 	 * @param array<int, Smr\DatabaseRecord> $rankedStats
 	 * @return array<int, array<string, mixed>>
 	 */
-	public static function collectAllianceRankings(array $rankedStats, AbstractSmrPlayer $player, int $minRank = 1, int $maxRank = 10): array {
+	public static function collectAllianceRankings(array $rankedStats, ?AbstractSmrPlayer $player, int $minRank = 1, int $maxRank = 10): array {
 		$rankedStats = self::filterRanks($rankedStats, $minRank, $maxRank);
 		$currRank = $minRank;
 
 		$rankings = [];
 		foreach ($rankedStats as $allianceID => $dbRecord) {
-			$currentAlliance = SmrAlliance::getAlliance($allianceID, $player->getGameID(), false, $dbRecord);
+			$currentAlliance = SmrAlliance::getAlliance($allianceID, $dbRecord->getInt('game_id'), false, $dbRecord);
 
 			$class = '';
-			if ($player->getAllianceID() == $currentAlliance->getAllianceID()) {
+			if ($player !== null && $player->getAllianceID() == $currentAlliance->getAllianceID()) {
 				$class = ' class="bold"';
 			} elseif ($currentAlliance->hasDisbanded()) {
 				$class = ' class="red"';
@@ -84,16 +84,16 @@ class Rankings {
 	 * @param array<int, Smr\DatabaseRecord> $rankedStats
 	 * @return array<int, array<string, mixed>>
 	 */
-	public static function collectRankings(array $rankedStats, AbstractSmrPlayer $player, int $minRank = 1, int $maxRank = 10): array {
+	public static function collectRankings(array $rankedStats, ?AbstractSmrPlayer $player, int $minRank = 1, int $maxRank = 10): array {
 		$rankedStats = self::filterRanks($rankedStats, $minRank, $maxRank);
 		$currRank = $minRank;
 
 		$rankings = [];
 		foreach ($rankedStats as $dbRecord) {
-			$currentPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
+			$currentPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $dbRecord->getInt('game_id'), false, $dbRecord);
 
 			$class = '';
-			if ($player->equals($currentPlayer)) {
+			if ($player !== null && $player->equals($currentPlayer)) {
 				$class .= 'bold';
 			}
 			if ($currentPlayer->hasNewbieStatus()) {
@@ -142,10 +142,14 @@ class Rankings {
 	 *
 	 * @return array<int, Smr\DatabaseRecord>
 	 */
-	public static function playerStats(string $stat, int $gameID): array {
+	public static function playerStats(string $stat, int $gameID, ?int $limit = null): array {
 		$db = Smr\Database::getInstance();
 		$playerStats = [];
-		$dbResult = $db->read('SELECT player.*, ' . $stat . ' AS amount FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY amount DESC, player_name');
+		$query = 'SELECT player.*, ' . $stat . ' AS amount FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY amount DESC, player_name';
+		if ($limit !== null) {
+			$query .= ' LIMIT ' . $limit;
+		}
+		$dbResult = $db->read($query);
 		foreach ($dbResult->records() as $dbRecord) {
 			$playerStats[$dbRecord->getInt('player_id')] = $dbRecord;
 		}
@@ -169,14 +173,50 @@ class Rankings {
 	}
 
 	/**
+	 * Gets alliance stats from the hof table sorted by $category (high to low).
+	 *
+	 * @param array<string> $category
+	 * @return array<int, Smr\DatabaseRecord>
+	 */
+	public static function allianceStatsFromHOF(array $category, int $gameID): array {
+		$db = Smr\Database::getInstance();
+		$allianceStats = [];
+		$dbResult = $db->read('SELECT alliance.*, COALESCE(SUM(amount), 0) amount
+			FROM alliance
+			LEFT JOIN player p USING (game_id, alliance_id)
+			LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = ' . $db->escapeString(implode(':', $category)) . '
+			WHERE p.game_id = ' . $db->escapeNumber($gameID) . '
+			GROUP BY alliance_id
+			ORDER BY amount DESC, alliance_name');
+		foreach ($dbResult->records() as $dbRecord) {
+			$allianceStats[$dbRecord->getInt('alliance_id')] = $dbRecord;
+		}
+		return $allianceStats;
+	}
+
+	/**
 	 * Get stats from the alliance table sorted by $stat (high to low).
 	 *
 	 * @return array<int, Smr\DatabaseRecord>
 	 */
-	public static function allianceStats(string $stat, int $gameID): array {
+	public static function allianceStats(string $stat, int $gameID, ?int $limit = null): array {
 		$db = Smr\Database::getInstance();
 		$allianceStats = [];
-		$dbResult = $db->read('SELECT alliance.*, alliance_' . $stat . ' AS amount FROM alliance WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY amount DESC, alliance_name');
+		if ($stat === 'experience') {
+			$query = 'SELECT alliance.*, COALESCE(SUM(experience), 0) amount
+				FROM alliance
+				LEFT JOIN player USING (game_id, alliance_id)
+				WHERE game_id = ' . $db->escapeNumber($gameID) . '
+				GROUP BY alliance_id
+				ORDER BY amount DESC, alliance_name ASC';
+		} else {
+			$query = 'SELECT alliance.*, alliance_' . $stat . ' AS amount
+				FROM alliance WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY amount DESC, alliance_name';
+		}
+		if ($limit !== null) {
+			$query .= ' LIMIT ' . $limit;
+		}
+		$dbResult = $db->read($query);
 		foreach ($dbResult->records() as $dbRecord) {
 			$allianceStats[$dbRecord->getInt('alliance_id')] = $dbRecord;
 		}

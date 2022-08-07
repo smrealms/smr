@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 
+use Smr\Exceptions\PlayerNotFound;
+
 $template = Smr\Template::getInstance();
-$var = Smr\Session::getInstance()->getCurrentVar();
+$session = Smr\Session::getInstance();
+$var = $session->getCurrentVar();
 
 //get game id
 $gameID = $var['game_id'];
@@ -25,53 +28,37 @@ if ($dbResult->hasRecord()) {
 $dbResult = $db->read('SELECT count(*) num_alliance FROM alliance WHERE game_id = ' . $gameID);
 $template->assign('TotalAlliances', $dbResult->record()->getInt('num_alliance'));
 
-$dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $gameID . ' ORDER BY experience DESC LIMIT 10');
-if ($dbResult->hasRecord()) {
-	$expRankings = [];
-	foreach ($dbResult->records() as $index => $dbRecord) {
-		$expRankings[$index + 1] = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $gameID, false, $dbRecord);
-	}
-	$template->assign('ExperienceRankings', $expRankings);
+// Get current account's player for this game (if any)
+try {
+	$player = SmrPlayer::getPlayer($session->getAccountID(), $gameID);
+} catch (PlayerNotFound) {
+	$player = null;
 }
 
+$playerExpRecords = Rankings::playerStats('experience', $gameID, 10);
+$playerExpRanks = Rankings::collectRankings($playerExpRecords, $player);
+$template->assign('ExperienceRankings', $playerExpRanks);
 
-$dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $gameID . ' ORDER BY kills DESC LIMIT 10');
-if ($dbResult->hasRecord()) {
-	$killRankings = [];
-	foreach ($dbResult->records() as $index => $dbRecord) {
-		$killRankings[$index + 1] = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $gameID, false, $dbRecord);
-	}
-	$template->assign('KillRankings', $killRankings);
-}
+$playerKillRecords = Rankings::playerStats('kills', $gameID, 10);
+$playerKillRanks = Rankings::collectRankings($playerKillRecords, $player);
+$template->assign('KillRankings', $playerKillRanks);
 
-/**
- * @return array<int, array<string, mixed>>
- */
-function allianceTopTen(SmrGame $game, string $field): array {
-	$gameID = $game->getGameID();
-	$db = Smr\Database::getInstance();
-	$dbResult = $db->read('SELECT alliance.*, SUM(' . $field . ') amount
-				FROM alliance
-				LEFT JOIN player USING (game_id, alliance_id)
-				WHERE game_id = ' . $db->escapeNumber($gameID) . '
-				GROUP BY alliance_id, alliance_name
-				ORDER BY amount DESC, alliance_name
-				LIMIT 10');
-	$rankings = [];
-	foreach ($dbResult->records() as $index => $dbRecord) {
-		$alliance = SmrAlliance::getAlliance($dbRecord->getInt('alliance_id'), $gameID, false, $dbRecord);
-		$rankings[$index + 1]['Amount'] = $dbRecord->getInt('amount');
-		if ($game->hasEnded()) {
+$allianceTopTen = function(string $stat) use ($statsGame, $gameID, $player): array {
+	$allianceRecords = Rankings::allianceStats($stat, $gameID, 10);
+	$allianceRanks = Rankings::collectAllianceRankings($allianceRecords, $player);
+	foreach ($allianceRanks as $rank => $info) {
+		$alliance = $info['Alliance'];
+		if ($statsGame->hasEnded()) {
 			// If game has ended, offer a link to alliance roster details
 			$data = ['game_id' => $gameID, 'alliance_id' => $alliance->getAllianceID()];
 			$href = Page::create('previous_game_alliance_detail.php', $data)->href();
-			$rankings[$index + 1]['AllianceName'] = create_link($href, $alliance->getAllianceDisplayName());
+			$allianceName = create_link($href, $alliance->getAllianceDisplayName());
 		} else {
-			$rankings[$index + 1]['AllianceName'] = $alliance->getAllianceDisplayName();
+			$allianceName = $alliance->getAllianceDisplayName();
 		}
+		$allianceRanks[$rank]['AllianceName'] = $allianceName;
 	}
-	return $rankings;
-}
-
-$template->assign('AllianceExpRankings', allianceTopTen($statsGame, 'experience'));
-$template->assign('AllianceKillRankings', allianceTopTen($statsGame, 'kills'));
+	return $allianceRanks;
+};
+$template->assign('AllianceExpRankings', $allianceTopTen('experience'));
+$template->assign('AllianceKillRankings', $allianceTopTen('kills'));
