@@ -60,7 +60,7 @@ function user_nick(string $rdata): bool {
 			$seen_id = $dbRecord->getInt('seen_id');
 
 			// remember channels where this nick was active
-			array_push($channel_list, $dbRecord->getString('channel'));
+			$channel_list[] = $dbRecord->getString('channel');
 
 			$db->write('UPDATE irc_seen SET signed_off = ' . time() . ' WHERE seen_id = ' . $seen_id);
 

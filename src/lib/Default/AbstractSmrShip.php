@@ -175,7 +175,7 @@ class AbstractSmrShip {
 
 	public function addWeapon(SmrWeapon $weapon): SmrWeapon|false {
 		if ($this->hasOpenWeaponSlots() && $this->checkPowerAvailable($weapon->getPowerLevel())) {
-			array_push($this->weapons, $weapon);
+			$this->weapons[] = $weapon;
 			$this->hasChangedWeapons = true;
 			return $weapon;
 		}
@@ -186,7 +186,7 @@ class AbstractSmrShip {
 		$replacement = $orderID - 1;
 		if ($replacement < 0) {
 			// Shift everything up by one and put the selected weapon at the bottom
-			array_push($this->weapons, array_shift($this->weapons));
+			$this->weapons[] = array_shift($this->weapons);
 		} else {
 			// Swap the selected weapon with the one above it
 			$temp = $this->weapons[$replacement];

@@ -17,7 +17,7 @@ function check_for_registration($fp, string $nick, string $channel, callable $ca
 
 		// execute a whois and continue here on whois
 		fwrite($fp, 'WHOIS ' . $nick . EOL);
-		array_push($actions, ['MSG_318', $channel, $nick, $callback, time(), $validationMessages]);
+		$actions[] = ['MSG_318', $channel, $nick, $callback, time(), $validationMessages];
 
 		return false;
 	}
@@ -283,7 +283,7 @@ function channel_msg_timer($fp, string $rdata): bool {
 
 		echo_r('[TIMER] ' . $nick . ' started a timer with ' . $countdown . ' minute(s) (' . $message . ') in ' . $channel);
 
-		array_push($events, [time() + $countdown * 60, $message, $channel]);
+		$events[] = [time() + $countdown * 60, $message, $channel];
 
 		fwrite($fp, 'PRIVMSG ' . $channel . ' :The timer has been started and will go off in ' . $countdown . ' minute(s).' . EOL);
 

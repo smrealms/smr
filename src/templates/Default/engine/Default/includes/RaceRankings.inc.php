@@ -13,8 +13,8 @@
 		<tr>
 			<td <?php echo $data['style']; ?>><?php echo $rank; ?></td>
 			<td <?php echo $data['style']; ?>><?php echo $ThisPlayer->getColouredRaceName($data['race_id'], true); ?></td>
-			<td <?php echo $data['style']; ?>><?php echo $data['amount']; ?></td>
-			<td <?php echo $data['style']; ?>><?php echo $data['amount_avg']; ?></td>
+			<td <?php echo $data['style']; ?>><?php echo number_format($data['amount']); ?></td>
+			<td <?php echo $data['style']; ?>><?php echo number_format($data['amount_avg']); ?></td>
 			<td <?php echo $data['style']; ?>><?php echo $data['num_players']; ?></td>
 		</tr><?php
 	} ?>

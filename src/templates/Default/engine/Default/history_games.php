@@ -35,23 +35,23 @@
 				</tr>
 				<tr>
 					<td>Players</td>
-					<td><?php echo $NumPlayers; ?></td>
+					<td><?php echo number_format($NumPlayers); ?></td>
 				</tr>
 				<tr>
 					<td>Alliances</td>
-					<td><?php echo $NumAlliances; ?></td>
+					<td><?php echo number_format($NumAlliances); ?></td>
 				</tr>
 				<tr>
 					<td>Highest Experience</td>
-					<td><?php echo $MaxExp; ?></td>
+					<td><?php echo number_format($MaxExp); ?></td>
 				</tr>
 				<tr>
 					<td>Highest Alignment</td>
-					<td><?php echo $MaxAlign; ?></td>
+					<td><?php echo number_format($MaxAlign); ?></td>
 				</tr>
 				<tr>
 					<td>Lowest Alignment</td>
-					<td><?php echo $MinAlign; ?></td>
+					<td><?php echo number_format($MinAlign); ?></td>
 				</tr>
 			</table>
 		</td>
@@ -76,7 +76,7 @@
 					<tr <?php echo $player['bold']; ?>>
 						<td><?php echo $index + 1; ?></td>
 						<td><?php echo htmlentities($player['name']); ?></td>
-						<td><?php echo $player['exp']; ?></td>
+						<td><?php echo number_format($player['exp']); ?></td>
 					</tr><?php
 				} ?>
 			</table>
@@ -93,7 +93,7 @@
 					<tr <?php echo $player['bold']; ?>>
 						<td><?php echo $index + 1; ?></td>
 						<td><?php echo htmlentities($player['name']); ?></td>
-						<td><?php echo $player['kills']; ?></td>
+						<td><?php echo number_format($player['kills']); ?></td>
 					</tr><?php
 				} ?>
 			</table>
@@ -119,7 +119,7 @@
 					<tr <?php echo $alliance['bold']; ?>>
 						<td><?php echo $index + 1; ?></td>
 						<td><?php echo $alliance['link']; ?></td>
-						<td><?php echo $alliance['exp']; ?></td>
+						<td><?php echo number_format($alliance['exp']); ?></td>
 					</tr><?php
 				} ?>
 			</table>
@@ -136,7 +136,7 @@
 					<tr <?php echo $alliance['bold']; ?>>
 						<td><?php echo $index + 1; ?></td>
 						<td><?php echo $alliance['link']; ?></td>
-						<td><?php echo $alliance['kills']; ?></td>
+						<td><?php echo number_format($alliance['kills']); ?></td>
 					</tr><?php
 				} ?>
 			</table>
