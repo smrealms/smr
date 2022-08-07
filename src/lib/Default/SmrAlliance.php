@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\DatabaseRecord;
+use Smr\Exceptions\AllianceNotFound;
+
 class SmrAlliance {
 
 	/** @var array<int, array<int, self>> */
@@ -37,21 +40,21 @@ class SmrAlliance {
 		self::$CACHE_ALLIANCES = [];
 	}
 
-	public static function getAlliance(int $allianceID, int $gameID, bool $forceUpdate = false): self {
+	public static function getAlliance(int $allianceID, int $gameID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): self {
 		if ($forceUpdate || !isset(self::$CACHE_ALLIANCES[$gameID][$allianceID])) {
-			self::$CACHE_ALLIANCES[$gameID][$allianceID] = new self($allianceID, $gameID);
+			self::$CACHE_ALLIANCES[$gameID][$allianceID] = new self($allianceID, $gameID, $dbRecord);
 		}
 		return self::$CACHE_ALLIANCES[$gameID][$allianceID];
 	}
 
 	public static function getAllianceByDiscordChannel(string $channel, bool $forceUpdate = false): self {
 		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT alliance_id, game_id FROM alliance JOIN game USING(game_id) WHERE discord_channel = ' . $db->escapeString($channel) . ' AND game.end_time > ' . $db->escapeNumber(time()) . ' ORDER BY game_id DESC LIMIT 1');
+		$dbResult = $db->read('SELECT alliance.* FROM alliance JOIN game USING(game_id) WHERE discord_channel = ' . $db->escapeString($channel) . ' AND game.end_time > ' . $db->escapeNumber(time()) . ' ORDER BY game_id DESC LIMIT 1');
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
-			return self::getAlliance($dbRecord->getInt('alliance_id'), $dbRecord->getInt('game_id'), $forceUpdate);
+			return self::getAlliance($dbRecord->getInt('alliance_id'), $dbRecord->getInt('game_id'), $forceUpdate, $dbRecord);
 		}
-		throw new Smr\Exceptions\AllianceNotFound('Alliance Discord Channel not found');
+		throw new AllianceNotFound('Alliance Discord Channel not found');
 	}
 
 	public static function getAllianceByIrcChannel(string $channel, bool $forceUpdate = false): self {
@@ -61,29 +64,38 @@ class SmrAlliance {
 			$dbRecord = $dbResult->record();
 			return self::getAlliance($dbRecord->getInt('alliance_id'), $dbRecord->getInt('game_id'), $forceUpdate);
 		}
-		throw new Smr\Exceptions\AllianceNotFound('Alliance IRC Channel not found');
+		throw new AllianceNotFound('Alliance IRC Channel not found');
 	}
 
 	public static function getAllianceByName(string $name, int $gameID, bool $forceUpdate = false): self {
 		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT alliance_id FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID));
+		$dbResult = $db->read('SELECT * FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID));
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
-			return self::getAlliance($dbRecord->getInt('alliance_id'), $gameID, $forceUpdate);
+			return self::getAlliance($dbRecord->getInt('alliance_id'), $gameID, $forceUpdate, $dbRecord);
 		}
-		throw new Smr\Exceptions\AllianceNotFound('Alliance name not found');
+		throw new AllianceNotFound('Alliance name not found');
 	}
 
 	protected function __construct(
 		protected readonly int $allianceID,
-		protected readonly int $gameID
+		protected readonly int $gameID,
+		DatabaseRecord $dbRecord = null
 	) {
-		$this->db = Smr\Database::getInstance();
-		$this->SQL = 'alliance_id=' . $this->db->escapeNumber($allianceID) . ' AND game_id=' . $this->db->escapeNumber($gameID);
-
 		if ($allianceID != 0) {
-			$dbResult = $this->db->read('SELECT * FROM alliance WHERE ' . $this->SQL);
-			$dbRecord = $dbResult->record();
+			$this->db = Smr\Database::getInstance();
+			$this->SQL = 'alliance_id=' . $this->db->escapeNumber($allianceID) . ' AND game_id=' . $this->db->escapeNumber($gameID);
+
+			if ($dbRecord === null) {
+				$dbResult = $this->db->read('SELECT * FROM alliance WHERE ' . $this->SQL);
+				if ($dbResult->hasRecord()) {
+					$dbRecord = $dbResult->record();
+				}
+			}
+			if ($dbRecord === null) {
+				throw new AllianceNotFound('Invalid allianceID: ' . $allianceID . ' OR gameID: ' . $gameID);
+			}
+
 			$this->allianceName = $dbRecord->getString('alliance_name');
 			$this->password = $dbRecord->getString('alliance_password');
 			$this->recruiting = $dbRecord->getBoolean('recruiting');

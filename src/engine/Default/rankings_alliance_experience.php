@@ -9,7 +9,7 @@ Menu::rankings(1, 0);
 
 $db = Smr\Database::getInstance();
 $rankedStats = [];
-$dbResult = $db->read('SELECT alliance_id, COALESCE(SUM(experience), 0) amount
+$dbResult = $db->read('SELECT alliance.*, COALESCE(SUM(experience), 0) amount
 		FROM alliance
 		LEFT JOIN player USING (game_id, alliance_id)
 		WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '

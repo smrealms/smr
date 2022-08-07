@@ -13,7 +13,9 @@ $alliances = [];
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($player->getAllianceID()) . ' ORDER BY alliance_name');
 foreach ($dbResult->records() as $dbRecord) {
-	$alliances[$dbRecord->getInt('alliance_id')] = htmlentities($dbRecord->getString('alliance_name'));
+	$allianceID = $dbRecord->getInt('alliance_id');
+	$alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID(), false, $dbRecord);
+	$alliances[$allianceID] = $alliance->getAllianceDisplayName();
 }
 $template->assign('Alliances', $alliances);
 

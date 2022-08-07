@@ -62,7 +62,7 @@ class Rankings {
 
 		$rankings = [];
 		foreach ($rankedStats as $allianceID => $dbRecord) {
-			$currentAlliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
+			$currentAlliance = SmrAlliance::getAlliance($allianceID, $player->getGameID(), false, $dbRecord);
 
 			$class = '';
 			if ($player->getAllianceID() == $currentAlliance->getAllianceID()) {
@@ -176,7 +176,7 @@ class Rankings {
 	public static function allianceStats(string $stat, int $gameID): array {
 		$db = Smr\Database::getInstance();
 		$allianceStats = [];
-		$dbResult = $db->read('SELECT alliance_id, alliance_' . $stat . ' AS amount FROM alliance WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY amount DESC, alliance_name');
+		$dbResult = $db->read('SELECT alliance.*, alliance_' . $stat . ' AS amount FROM alliance WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY amount DESC, alliance_name');
 		foreach ($dbResult->records() as $dbRecord) {
 			$allianceStats[$dbRecord->getInt('alliance_id')] = $dbRecord;
 		}

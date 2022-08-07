@@ -27,7 +27,7 @@ var listjs = (function() {
 	};
 
 	listjs.alliance_list = function() {
-		defaultList('alliance-list', ['sort_name', 'sort_totExp', 'sort_avgExp', 'sort_members']);
+		defaultList('alliance-list', ['sort_recruit', 'sort_name', 'sort_totExp', 'sort_avgExp', 'sort_members']);
 	};
 
 	listjs.alliance_message = function() {

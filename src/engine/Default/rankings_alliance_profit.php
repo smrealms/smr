@@ -11,7 +11,7 @@ $profitType = implode(':', ['Trade', 'Money', 'Profit']);
 
 $db = Smr\Database::getInstance();
 $rankedStats = [];
-$dbResult = $db->read('SELECT alliance_id, COALESCE(SUM(amount), 0) amount
+$dbResult = $db->read('SELECT alliance.*, COALESCE(SUM(amount), 0) amount
 	FROM alliance
 	LEFT JOIN player p USING (game_id, alliance_id)
 	LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = ' . $db->escapeString($profitType) . '

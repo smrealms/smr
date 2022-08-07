@@ -17,16 +17,17 @@ $detailsAllianceID = $session->getRequestVarInt('alliance_id', $player->getAllia
 
 // Get list of alliances that have kills or deaths
 $activeAlliances = [];
-$dbResult = $db->read('SELECT alliance_id FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (alliance_deaths > 0 OR alliance_kills > 0) ORDER BY alliance_kills DESC, alliance_name');
+$dbResult = $db->read('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (alliance_deaths > 0 OR alliance_kills > 0) ORDER BY alliance_kills DESC, alliance_name');
 foreach ($dbResult->records() as $dbRecord) {
-	$activeAlliances[] = $dbRecord->getInt('alliance_id');
+	$allianceID = $dbRecord->getInt('alliance_id');
+	$activeAlliances[$allianceID] = SmrAlliance::getAlliance($allianceID, $player->getGameID(), false, $dbRecord);
 }
 $template->assign('ActiveAlliances', $activeAlliances);
 
 // Get list of alliances to display (max of 5)
 // These must be a subset of the active alliances
 if (empty($alliancer)) {
-	$alliance_vs_ids = array_slice($activeAlliances, 0, 4);
+	$alliance_vs_ids = array_slice(array_keys($activeAlliances), 0, 4);
 	$alliance_vs_ids[] = 0;
 } else {
 	$alliance_vs_ids = $alliancer;
