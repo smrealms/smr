@@ -11,7 +11,7 @@ use SmrPlayer;
 class Messages {
 
 	/**
-	 * @return array<int, string>|string
+	 * @return ($typeID is null ? array<int, string> : string)
 	 */
 	public static function getMessageTypeNames(int $typeID = null): array|string {
 		$typeNames = [

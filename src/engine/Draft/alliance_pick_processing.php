@@ -4,16 +4,15 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-if (!is_numeric($var['PickedAccountID'])) {
-	create_error('You have to pick a player.');
-}
+/** @var int $pickedAccountID */
+$pickedAccountID = $var['PickedAccountID'];
 
 require_once(LIB . 'Draft/alliance_pick.inc.php');
 $teams = get_draft_teams($player->getGameID());
 if (!$teams[$player->getAccountID()]['CanPick']) {
 	create_error('You have to wait for others to pick first.');
 }
-$pickedPlayer = SmrPlayer::getPlayer($var['PickedAccountID'], $player->getGameID());
+$pickedPlayer = SmrPlayer::getPlayer($pickedAccountID, $player->getGameID());
 
 if ($pickedPlayer->isDraftLeader()) {
 	create_error('You cannot pick another leader.');

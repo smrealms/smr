@@ -7,20 +7,23 @@ $player = $session->getPlayer();
 
 Menu::messages();
 
+/** @var int $folderID */
+$folderID = $var['folder_id'];
+
 $db = Smr\Database::getInstance();
 $whereClause = 'WHERE game_id = ' . $db->escapeNumber($player->getGameID());
-if ($var['folder_id'] == MSG_SENT) {
+if ($folderID == MSG_SENT) {
 	$whereClause .= ' AND sender_id = ' . $db->escapeNumber($player->getAccountID()) . '
 					AND message_type_id = ' . $db->escapeNumber(MSG_PLAYER) . '
 					AND sender_delete = ' . $db->escapeBoolean(false);
 } else {
 	$whereClause .= ' AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
-					AND message_type_id = ' . $db->escapeNumber($var['folder_id']) . '
+					AND message_type_id = ' . $db->escapeNumber($folderID) . '
 					AND receiver_delete = ' . $db->escapeBoolean(false);
 }
 
 $messageBox = [];
-if ($var['folder_id'] == MSG_SENT) {
+if ($folderID == MSG_SENT) {
 	$messageBox['UnreadMessages'] = 0;
 } else {
 	$dbResult = $db->read('SELECT count(*) as count
@@ -30,7 +33,7 @@ if ($var['folder_id'] == MSG_SENT) {
 }
 $dbResult = $db->read('SELECT count(*) as count FROM message ' . $whereClause);
 $messageBox['TotalMessages'] = $dbResult->record()->getInt('count');
-$messageBox['Type'] = $var['folder_id'];
+$messageBox['Type'] = $folderID;
 
 $page = $var['page'] ?? 0;
 
@@ -49,7 +52,7 @@ if ($page == 0 && !USING_AJAX) {
 	$player->setMessagesRead($messageBox['Type']);
 }
 
-$messageBox['Name'] = Smr\Messages::getMessageTypeNames($var['folder_id']);
+$messageBox['Name'] = Smr\Messages::getMessageTypeNames($folderID);
 $template->assign('PageTopic', 'Viewing ' . $messageBox['Name']);
 
 if ($messageBox['Type'] == MSG_GLOBAL || $messageBox['Type'] == MSG_SCOUT) {
@@ -71,7 +74,7 @@ $messageBox['NumberMessages'] = $dbResult->getNumRecords();
 $messageBox['Messages'] = [];
 
 // Group scout messages if they wouldn't fit on a single page
-if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']) && $messageBox['TotalMessages'] > $player->getScoutMessageGroupLimit()) {
+if ($folderID == MSG_SCOUT && !isset($var['show_all']) && $messageBox['TotalMessages'] > $player->getScoutMessageGroupLimit()) {
 	// get rid of all old scout messages (>48h)
 	$db->write('DELETE FROM message WHERE expire_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT));
 
@@ -84,12 +87,12 @@ if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']) && $messageBox['T
 	$template->unassign('NextPageHREF'); // always displaying all scout messages?
 } else {
 	foreach ($dbResult->records() as $dbRecord) {
-		$messageBox['Messages'][] = displayMessage($dbRecord->getInt('message_id'), $dbRecord->getInt('account_id'), $dbRecord->getInt('sender_id'), $player->getGameID(), $dbRecord->getString('message_text'), $dbRecord->getInt('send_time'), $dbRecord->getBoolean('msg_read'), $var['folder_id'], $player->getAccount());
+		$messageBox['Messages'][] = displayMessage($dbRecord->getInt('message_id'), $dbRecord->getInt('account_id'), $dbRecord->getInt('sender_id'), $player->getGameID(), $dbRecord->getString('message_text'), $dbRecord->getInt('send_time'), $dbRecord->getBoolean('msg_read'), $folderID, $player->getAccount());
 	}
 }
 if (!USING_AJAX) {
 	$db->write('UPDATE message SET msg_read = \'TRUE\'
-				WHERE message_type_id = ' . $db->escapeNumber($var['folder_id']) . ' AND ' . $player->getSQL());
+				WHERE message_type_id = ' . $db->escapeNumber($folderID) . ' AND ' . $player->getSQL());
 }
 $template->assign('MessageBox', $messageBox);
 

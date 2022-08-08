@@ -1086,12 +1086,18 @@ class AbstractSmrPort {
 		return $container->href();
 	}
 
+	/**
+	 * @return ($justContainer is false ? string : Page)
+	 */
 	public function getRazeHREF(bool $justContainer = false): string|Page {
 		$container = Page::create('port_payout_processing.php');
 		$container['PayoutType'] = PortPayoutType::Raze;
 		return $justContainer === false ? $container->href() : $container;
 	}
 
+	/**
+	 * @return ($justContainer is false ? string : Page)
+	 */
 	public function getLootHREF(bool $justContainer = false): string|Page {
 		if ($this->getCredits() > 0) {
 			$container = Page::create('port_payout_processing.php');

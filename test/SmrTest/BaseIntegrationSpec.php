@@ -2,6 +2,7 @@
 
 namespace SmrTest;
 
+use Exception;
 use mysqli;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
@@ -77,7 +78,10 @@ abstract class BaseIntegrationSpec extends TestCase {
 	 */
 	private static function getTableNames(): array {
 		$query = 'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=\'smr_live_test\'';
-		$result = self::$conn->query($query);
+		$result = self::$conn->query($query); // expect a mysqli_result
+		if (is_bool($result)) {
+			throw new Exception('Failed to get table names with query: ' . $query);
+		}
 		$tables = [];
 		foreach ($result as $record) {
 			$tables[] = $record['TABLE_NAME'];
@@ -89,8 +93,11 @@ abstract class BaseIntegrationSpec extends TestCase {
 	 * @return array<string, int>
 	 */
 	private static function getChecksums(): array {
-		$tableNames = self::getTableNames();
-		$result = self::$conn->query('CHECKSUM TABLE ' . implode(', ', $tableNames));
+		$query = 'CHECKSUM TABLE ' . implode(', ', self::getTableNames());
+		$result = self::$conn->query($query); // expect a mysqli_result
+		if (is_bool($result)) {
+			throw new Exception('Failed to get table checksums with query: ' . $query);
+		}
 		$checksums = [];
 		foreach ($result as $record) {
 			$checksums[$record['Table']] = (int)$record['Checksum'];

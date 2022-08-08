@@ -4,11 +4,11 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $ship = $session->getPlayer()->getShip();
 
-if (isset($var['Up']) && is_numeric($var['Up'])) {
+if (isset($var['Up'])) {
 	$ship->moveWeaponUp($var['Up']);
 }
 
-if (isset($var['Down']) && is_numeric($var['Down'])) {
+if (isset($var['Down'])) {
 	$ship->moveWeaponDown($var['Down']);
 }
 

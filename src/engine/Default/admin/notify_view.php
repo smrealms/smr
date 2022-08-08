@@ -23,11 +23,10 @@ foreach ($dbResult->records() as $dbRecord) {
 	$container['game_id'] = $gameID;
 
 	$getName = function(SmrPlayer|string $messagePlayer) use ($container, $account): string {
-		$name = $messagePlayer;
 		if ($messagePlayer instanceof SmrPlayer) {
-			$name = $messagePlayer->getAccount()->getLogin();
-			$name .= ' (' . $messagePlayer->getAccountID() . ')';
-			$name .= ' a.k.a ' . $messagePlayer->getDisplayName();
+			$name = $messagePlayer->getDisplayName() . ' (Login: ' . $messagePlayer->getAccount()->getLogin() . ')';
+		} else {
+			$name = $messagePlayer;
 		}
 		// If we can send admin messages, make the names reply links
 		if ($account->hasPermission(PERMISSION_SEND_ADMIN_MESSAGE)) {

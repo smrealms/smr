@@ -10,15 +10,17 @@ $container->addVar('game_id');
 $container->addVar('offended');
 $container->addVar('offender');
 $template->assign('NotifyReplyFormHref', $container->href());
+
 $offender = Smr\Messages::getMessagePlayer($var['offender'], $var['game_id']);
-$offended = Smr\Messages::getMessagePlayer($var['offended'], $var['game_id']);
 if (is_object($offender)) {
-	$template->assign('OffenderAccount', $offender->getAccount());
-}
-if (is_object($offended)) {
-	$template->assign('OffendedAccount', $offended->getAccount());
+	$offender = $offender->getDisplayName() . ' (Login: ' . $offender->getAccount()->getLogin() . ')';
 }
 $template->assign('Offender', $offender);
+
+$offended = Smr\Messages::getMessagePlayer($var['offended'], $var['game_id']);
+if (is_object($offended)) {
+	$offended = $offended->getDisplayName() . ' (Login: ' . $offended->getAccount()->getLogin() . ')';
+}
 $template->assign('Offended', $offended);
 
 if (isset($var['PreviewOffender'])) {
