@@ -14,9 +14,6 @@ $display_id = $var['log_ids'][$var['current_log']];
 $db = Smr\Database::getInstance();
 $dbResult = $db->read('SELECT timestamp,sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($display_id) . ' LIMIT 1');
 
-if (!$dbResult->hasRecord()) {
-	create_error('Combat log not found');
-}
 $dbRecord = $dbResult->record();
 $template->assign('CombatLogSector', $dbRecord->getInt('sector_id'));
 $template->assign('CombatLogTimestamp', date($account->getDateTimeFormat(), $dbRecord->getInt('timestamp')));
