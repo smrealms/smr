@@ -1,15 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class AllianceRoles extends PlayerPage {
 
-		$allianceID = $var['alliance_id'] ?? $player->getAllianceID();
+	public string $file = 'alliance_roles.php';
 
-		$alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
+	public function __construct(
+		private readonly ?int $roleID = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$alliance = $player->getAlliance();
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 		Menu::alliance($alliance->getAllianceID());
 
@@ -25,10 +33,10 @@ use Smr\Database;
 			$roleID = $dbRecord->getInt('role_id');
 			$allianceRoles[$roleID]['RoleID'] = $roleID;
 			$allianceRoles[$roleID]['Name'] = $dbRecord->getString('role');
-			$allianceRoles[$roleID]['EditingRole'] = isset($var['role_id']) && $var['role_id'] == $roleID;
+			$allianceRoles[$roleID]['EditingRole'] = $this->roleID === $roleID;
 			$allianceRoles[$roleID]['CreatingRole'] = false;
 			if ($allianceRoles[$roleID]['EditingRole']) {
-				$container = Page::create('alliance_roles_processing.php');
+				$container = new AllianceRolesProcessor($roleID);
 				$allianceRoles[$roleID]['WithdrawalLimit'] = $dbRecord->getInt('with_per_day');
 				$allianceRoles[$roleID]['PositiveBalance'] = $dbRecord->getBoolean('positive_balance');
 				$allianceRoles[$roleID]['TreatyCreated'] = $dbRecord->getBoolean('treaty_created');
@@ -43,18 +51,14 @@ use Smr\Database;
 				$allianceRoles[$roleID]['OpLeader'] = $dbRecord->getBoolean('op_leader');
 				$allianceRoles[$roleID]['ViewBondsInPlanetList'] = $dbRecord->getBoolean('view_bonds');
 			} else {
-				$container = Page::create('alliance_roles.php');
+				$container = new self($roleID);
 			}
-			$container['role_id'] = $roleID;
-			$container['alliance_id'] = $alliance->getAllianceID();
 			$allianceRoles[$roleID]['HREF'] = $container->href();
 		}
 		$template->assign('AllianceRoles', $allianceRoles);
-		$container = Page::create('alliance_roles_processing.php');
-		$container['alliance_id'] = $alliance->getAllianceID();
 
 		$template->assign('CreateRole', [
-			'HREF' => $container->href(),
+			'HREF' => (new AllianceRolesProcessor())->href(),
 			'RoleID' => '',
 			'Name' => '',
 			'CreatingRole' => true,
@@ -72,3 +76,6 @@ use Smr\Database;
 			'SendAllianceMessage' => false,
 			'OpLeader' => false,
 			'ViewBondsInPlanetList' => false]);
+	}
+
+}

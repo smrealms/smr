@@ -1,12 +1,21 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
 
+class FeatureRequestVoteProcessor extends AccountPageProcessor {
+
+	public function __construct(
+		private readonly FeatureRequest|FeatureRequestComments $previousPage
+	) {}
+
+	public function build(SmrAccount $account): never {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
 
 		$action = Request::get('action');
 		if ($action == 'Vote') {
@@ -28,7 +37,6 @@ use Smr\Request;
 				]);
 			}
 
-			Page::create('feature_request.php')->go();
 		} elseif ($action == 'Set Status') {
 			if (!$account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST)) {
 				create_error('You do not have permission to do that');
@@ -71,6 +79,9 @@ use Smr\Request;
 					'text' => $db->escapeString($status),
 				]);
 			}
-
-			Page::create('feature_request.php')->go();
 		}
+
+		$this->previousPage->go();
+	}
+
+}

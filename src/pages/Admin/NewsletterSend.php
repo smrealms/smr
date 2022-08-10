@@ -1,16 +1,20 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+class NewsletterSend extends AccountPage {
 
+	public string $file = 'admin/newsletter_send.php';
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Newsletter');
 
 		$template->assign('CurrentEmail', $account->getEmail());
-
-		$processingContainer = Page::create('admin/newsletter_send_processing.php');
 
 		// Get the most recent newsletter text for preview
 		$db = Database::getInstance();
@@ -22,11 +26,16 @@ use Smr\Database;
 			$template->assign('DefaultSubject', 'Space Merchant Realms Newsletter #' . $id);
 
 			// Give both the template and processing container access to the message
-			$processingContainer['newsletter_html'] = $dbRecord->getString('newsletter_html');
-			$processingContainer['newsletter_text'] = $dbRecord->getString('newsletter_text');
+			$processingContainer = new NewsletterSendProcessor(
+				newsletterHtml: $dbRecord->getString('newsletter_html'),
+				newsletterText: $dbRecord->getString('newsletter_text'),
+			);
 			$template->assign('NewsletterHtml', $dbRecord->getString('newsletter_html'));
 			$template->assign('NewsletterText', $dbRecord->getString('newsletter_text'));
-		}
 
-		// Create the form for the populated processing container
-		$template->assign('ProcessingHREF', $processingContainer->href());
+			// Create the form for the populated processing container
+			$template->assign('ProcessingHREF', $processingContainer->href());
+		}
+	}
+
+}

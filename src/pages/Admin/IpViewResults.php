@@ -1,28 +1,39 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+use Exception;
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Session;
+use Smr\Template;
+use SmrAccount;
+use SmrAlliance;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+class IpViewResults extends AccountPage {
 
+	use ReusableTrait;
+
+	public string $file = 'admin/ip_view_results.php';
+
+	public function build(SmrAccount $account, Template $template): void {
+		$session = Session::getInstance();
 		$variable = $session->getRequestVar('variable');
 		$type = $session->getRequestVar('type');
 
 		$db = Database::getInstance();
 
-		$container = Page::create('admin/ip_view.php');
+		$container = new IpView();
 		$template->assign('BackHREF', $container->href());
 
-		$container = Page::create('admin/account_close.php');
+		$container = new AccountCloseProcessor();
 		$template->assign('CloseHREF', $container->href());
 
 		$template->assign('type', $type);
 
 		if ($type == 'comp_share') {
-			//another script for comp share
-			require('comp_share.php');
-			return;
+			(new ComputerSharing())->go();
 		}
 
 		if ($type == 'list') {
@@ -126,7 +137,6 @@ use Smr\Database;
 				];
 			}
 			$template->assign('Rows', $rows);
-
 
 		} elseif (in_array($type, ['search', 'alliance_ips', 'wild_log', 'wild_in', 'compare', 'compare_log', 'wild_ip', 'wild_host'])) {
 			if ($type == 'search') {
@@ -250,3 +260,6 @@ use Smr\Database;
 		}
 
 		$template->assign('PageTopic', 'IP Search Results');
+	}
+
+}

@@ -1,21 +1,41 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Rankings;
+
+use AbstractSmrPlayer;
+use Exception;
+use Menu;
 use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Request;
+use Smr\Template;
+use SmrAlliance;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class AllianceVsAlliance extends PlayerPage {
 
+	use ReusableTrait;
+
+	public string $file = 'rankings_alliance_vs_alliance.php';
+
+	/**
+	 * @param array<int> $versusAllianceIDs
+	 */
+	public function __construct(
+		private ?int $detailsAllianceID = null,
+		private ?array $versusAllianceIDs = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Alliance VS Alliance Rankings');
 
 		Menu::rankings(1, 4);
 		$db = Database::getInstance();
-		$container = Page::create('rankings_alliance_vs_alliance.php');
+		$container = new self($this->detailsAllianceID);
 		$template->assign('SubmitHREF', $container->href());
 
-		$alliancer = $session->getRequestVarIntArray('alliancer', []);
-		$detailsAllianceID = $session->getRequestVarInt('alliance_id', $player->getAllianceID());
+		$this->versusAllianceIDs ??= Request::getIntArray('alliancer', []);
+		$this->detailsAllianceID ??= Request::getInt('alliance_id', $player->getAllianceID());
 
 		// Get list of alliances that have kills or deaths
 		$activeAlliances = [];
@@ -28,17 +48,17 @@ use Smr\Database;
 
 		// Get list of alliances to display (max of 5)
 		// These must be a subset of the active alliances
-		if (empty($alliancer)) {
+		if (count($this->versusAllianceIDs) === 0) {
 			$alliance_vs_ids = array_slice(array_keys($activeAlliances), 0, 4);
 			$alliance_vs_ids[] = 0;
 		} else {
-			$alliance_vs_ids = $alliancer;
+			$alliance_vs_ids = $this->versusAllianceIDs;
 		}
 
 		$alliance_vs = [];
 		foreach ($alliance_vs_ids as $curr_id) {
 			$curr_alliance = SmrAlliance::getAlliance($curr_id, $player->getGameID());
-			$container['alliance_id'] = $curr_id;
+			$container = new self($curr_id, $this->versusAllianceIDs);
 			$style = '';
 			if (!$curr_alliance->isNone() && $curr_alliance->hasDisbanded()) {
 				$style = 'class="red"';
@@ -93,15 +113,14 @@ use Smr\Database;
 		}
 		$template->assign('AllianceVsTable', $alliance_vs_table);
 
-
 		// Show details for a specific alliance
-		$main_alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
+		$main_alliance = SmrAlliance::getAlliance($this->detailsAllianceID, $player->getGameID());
 		$mainName = $main_alliance->isNone() ? 'No Alliance' : $main_alliance->getAllianceDisplayName();
 		$template->assign('DetailsName', $mainName);
 
 		$kills = [];
 		$dbResult = $db->read('SELECT * FROM alliance_vs_alliance
-					WHERE alliance_id_1 = ' . $db->escapeNumber($var['alliance_id']) . '
+					WHERE alliance_id_1 = ' . $db->escapeNumber($this->detailsAllianceID) . '
 						AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY kills DESC');
 		foreach ($dbResult->records() as $dbRecord) {
 			$id = $dbRecord->getInt('alliance_id_2');
@@ -123,7 +142,7 @@ use Smr\Database;
 
 		$deaths = [];
 		$dbResult = $db->read('SELECT * FROM alliance_vs_alliance
-					WHERE alliance_id_2 = ' . $db->escapeNumber($var['alliance_id']) . '
+					WHERE alliance_id_2 = ' . $db->escapeNumber($this->detailsAllianceID) . '
 						AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY kills DESC');
 		foreach ($dbResult->records() as $dbRecord) {
 			$id = $dbRecord->getInt('alliance_id_1');
@@ -142,3 +161,6 @@ use Smr\Database;
 			];
 		}
 		$template->assign('Deaths', $deaths);
+	}
+
+}

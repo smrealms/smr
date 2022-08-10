@@ -1,12 +1,24 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
+class AlbumEdit extends AccountPage {
 
+	use ReusableTrait;
+
+	public string $file = 'album_edit.php';
+
+	public function __construct(
+		private readonly ?string $successMsg = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Edit Photo');
 
 		$db = Database::getInstance();
@@ -44,9 +56,10 @@ use Smr\Database;
 			$template->assign('AlbumEntry', $albumEntry);
 		}
 
-		$template->assign('AlbumEditHref', Page::create('album_edit_processing.php')->href());
-		$template->assign('AlbumDeleteHref', Page::create('album_delete_confirmation.php')->href());
+		$template->assign('AlbumEditHref', (new AlbumEditProcessor())->href());
+		$template->assign('AlbumDeleteHref', (new AlbumDeleteConfirm())->href());
 
-		if (isset($var['SuccessMsg'])) {
-			$template->assign('SuccessMsg', $var['SuccessMsg']);
-		}
+		$template->assign('SuccessMsg', $this->successMsg);
+	}
+
+}

@@ -1,10 +1,16 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
+use Smr\Page\AccountPageProcessor;
+use Smr\Pages\Player\CurrentSector;
 use Smr\Request;
+use Smr\Session;
+use SmrAccount;
 
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+class ContactFormProcessor extends AccountPageProcessor {
 
+	public function build(SmrAccount $account): never {
 		$receiver = Request::get('receiver');
 		$subject = Request::get('subject');
 		$msg = Request::get('msg');
@@ -20,9 +26,13 @@ use Smr\Request;
 		$mail->addAddress($receiver);
 		$mail->send();
 
+		$session = Session::getInstance();
 		if ($session->hasGame()) {
-			$body = 'current_sector.php';
+			$container = new CurrentSector();
 		} else {
-			$body = 'game_play.php';
+			$container = new GamePlay();
 		}
-		Page::create($body)->go();
+		$container->go();
+	}
+
+}

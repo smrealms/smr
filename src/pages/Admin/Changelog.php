@@ -1,17 +1,31 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
+class Changelog extends AccountPage {
 
+	use ReusableTrait;
+
+	public string $file = 'admin/changelog.php';
+
+	public function __construct(
+		private readonly string $changeTitle = '',
+		private readonly string $changeMessage = '',
+		private readonly string $affectedDb = ''
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Change Log');
 
-		$template->assign('ChangeTitle', $var['change_title'] ?? '');
-		$template->assign('ChangeMessage', $var['change_message'] ?? '');
-		$template->assign('AffectedDb', $var['affected_db'] ?? '');
+		$template->assign('ChangeTitle', $this->changeTitle);
+		$template->assign('ChangeMessage', $this->changeMessage);
+		$template->assign('AffectedDb', $this->affectedDb);
 
 		$first_entry = true;
 		$link_set_live = true;
@@ -32,8 +46,7 @@ use Smr\Database;
 				$went_live = date($account->getDateTimeFormat(), $went_live);
 			} else {
 				if ($link_set_live) {
-					$container = Page::create('admin/changelog_set_live_processing.php');
-					$container['version_id'] = $version_id;
+					$container = new ChangelogSetLiveProcessor($version_id);
 					$went_live = create_link($container, 'never');
 				} else {
 					$went_live = 'never';
@@ -60,14 +73,13 @@ use Smr\Database;
 
 			if ($first_entry) {
 				$first_entry = false;
-				$container = Page::create('admin/changelog_add_processing.php');
-				$container['version_id'] = $version_id;
+				$container = new ChangelogAddProcessor($version_id);
 				$template->assign('AddHREF', $container->href());
 
-				if (isset($var['change_title'])) {
+				if (!empty($this->changeTitle)) {
 					$version['changes'][] = [
-						'title' => '<span class="red">PREVIEW: </span>' . $var['change_title'],
-						'message' => $var['change_message'],
+						'title' => '<span class="red">PREVIEW: </span>' . $this->changeTitle,
+						'message' => $this->changeMessage,
 					];
 				}
 				$template->assign('FirstVersion', $version);
@@ -76,3 +88,6 @@ use Smr\Database;
 			}
 		}
 		$template->assign('Versions', $versions);
+	}
+
+}

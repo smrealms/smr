@@ -1,23 +1,38 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
 use Smr\Exceptions\AllianceNotFound;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
+use SmrAlliance;
+use SmrGame;
+use SmrPlayer;
 
+class NpcManageProcessor extends AccountPageProcessor {
+
+	public function __construct(
+		private readonly int $selectedGameID,
+		private readonly int $accountID,
+		private readonly string $login
+	) {}
+
+	public function build(SmrAccount $account): never {
 		$db = Database::getInstance();
-		$var = Smr\Session::getInstance()->getCurrentVar();
 
 		// Change active status of an NPC
 		if (Request::has('active-submit')) {
 			// Toggle the activity of this NPC
 			$active = Request::has('active');
-			$db->write('UPDATE npc_logins SET active=' . $db->escapeBoolean($active) . ' WHERE login=' . $db->escapeString($var['login']));
+			$db->write('UPDATE npc_logins SET active=' . $db->escapeBoolean($active) . ' WHERE login=' . $db->escapeString($this->login));
 		}
 
 		// Create a new NPC player in a selected game
 		if (Request::has('create_npc_player')) {
-			$accountID = $var['accountID'];
-			$gameID = $var['selected_game_id'];
+			$accountID = $this->accountID;
+			$gameID = $this->selectedGameID;
 			$playerName = Request::get('player_name');
 			$raceID = Request::getInt('race_id');
 			$npcPlayer = SmrPlayer::createPlayer($accountID, $gameID, $playerName, $raceID, false, true);
@@ -48,20 +63,8 @@ use Smr\Request;
 			$npcPlayer->getShip()->update();
 		}
 
-		// Add a new NPC account
-		if (Request::has('add_npc_account')) {
-			$login = Request::get('npc_login');
-			$email = $login . '@smrealms.de';
-			$npcAccount = SmrAccount::createAccount($login, '', $email, 0, 0);
-			$npcAccount->setValidated(true);
-			$npcAccount->update();
-			$db->insert('npc_logins', [
-				'login' => $db->escapeString($login),
-				'player_name' => $db->escapeString(Request::get('default_player_name')),
-				'alliance_name' => $db->escapeString(Request::get('default_alliance')),
-			]);
-		}
-
-		$container = Page::create('admin/npc_manage.php');
-		$container->addVar('selected_game_id');
+		$container = new NpcManage($this->selectedGameID);
 		$container->go();
+	}
+
+}

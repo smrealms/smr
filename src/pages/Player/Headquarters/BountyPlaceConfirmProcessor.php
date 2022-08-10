@@ -1,27 +1,37 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Headquarters;
+
+use AbstractSmrPlayer;
+use Exception;
 use Smr\BountyType;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
+use SmrLocation;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+class BountyPlaceConfirmProcessor extends PlayerPageProcessor {
 
-		if (!$player->getSector()->hasLocation($var['LocationID'])) {
+	public function __construct(
+		private readonly int $locationID,
+		private readonly int $otherAccountID,
+		private readonly int $credits,
+		private readonly int $smrCredits
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
+		if (!$player->getSector()->hasLocation($this->locationID)) {
 			create_error('That location does not exist in this sector');
 		}
 
-		$location = SmrLocation::getLocation($player->getGameID(), $var['LocationID']);
+		$location = SmrLocation::getLocation($player->getGameID(), $this->locationID);
 
 		[$type, $body] = match (true) {
-			$location->isHQ() => [BountyType::HQ, 'government.php'],
-			$location->isUG() => [BountyType::UG, 'underground.php'],
+			$location->isHQ() => [BountyType::HQ, Government::class],
+			$location->isUG() => [BountyType::UG, Underground::class],
 			default => throw new Exception('Location is not HQ or UG'),
 		};
-		$container = Page::create($body);
-		$container->addVar('LocationID');
+		$container = new $body($this->locationID);
 
 		// if we don't have a yes we leave immediatly
 		if (Request::get('action') != 'Yes') {
@@ -29,13 +39,13 @@ use Smr\Request;
 		}
 
 		// get values from container (validated in bounty_place_processing.php)
-		$amount = $var['amount'];
-		$smrCredits = $var['SmrCredits'];
-		$account_id = $var['account_id'];
+		$amount = $this->credits;
+		$smrCredits = $this->smrCredits;
+		$account_id = $this->otherAccountID;
 
 		// take the bounty from the cash
 		$player->decreaseCredits($amount);
-		$account->decreaseSmrCredits($smrCredits);
+		$player->getAccount()->decreaseSmrCredits($smrCredits);
 
 		$player->increaseHOF($smrCredits, ['Bounties', 'Placed', 'SMR Credits'], HOF_PUBLIC);
 		$player->increaseHOF($amount, ['Bounties', 'Placed', 'Money'], HOF_PUBLIC);
@@ -50,6 +60,9 @@ use Smr\Request;
 
 		//Update for top bounties list
 		$player->update();
-		$account->update();
+		$player->getAccount()->update();
 		$placed->update();
 		$container->go();
+	}
+
+}

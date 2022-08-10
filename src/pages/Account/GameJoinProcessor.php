@@ -1,19 +1,29 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
 use Smr\Database;
 use Smr\DisplayNameValidator;
 use Smr\Epoch;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
+use SmrAlliance;
+use SmrGame;
+use SmrPlayer;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
+class GameJoinProcessor extends AccountPageProcessor {
 
+	public function __construct(
+		private readonly int $gameID
+	) {}
+
+	public function build(SmrAccount $account): never {
 		$player_name = Request::get('player_name');
 
 		DisplayNameValidator::validate($player_name);
 
-		$gameID = $var['game_id'];
+		$gameID = $this->gameID;
 		$game = SmrGame::getGame($gameID);
 
 		$race_id = Request::getInt('race_id');
@@ -91,6 +101,8 @@ use Smr\Request;
 		]);
 
 		// Send the player directly into the game
-		$container = Page::create('game_play_processing.php');
-		$container->addVar('game_id');
+		$container = new GamePlayProcessor($this->gameID);
 		$container->go();
+	}
+
+}

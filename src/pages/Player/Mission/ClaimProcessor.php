@@ -1,9 +1,21 @@
 <?php declare(strict_types=1);
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player\Mission;
 
-		$rewardText = $player->claimMissionReward($var['MissionID']);
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
+use Smr\Pages\Player\CurrentSector;
 
-		Page::create('current_sector.php', ['MissionMessage' => $rewardText])->go();
+class ClaimProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $missionID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
+		$rewardText = $player->claimMissionReward($this->missionID);
+
+		(new CurrentSector(missionMessage: $rewardText))->go();
+	}
+
+}

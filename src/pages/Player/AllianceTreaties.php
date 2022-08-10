@@ -1,11 +1,24 @@
 <?php declare(strict_types=1);
 
-use Smr\Database;
+namespace Smr\Pages\Player;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+use AbstractSmrPlayer;
+use Menu;
+use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Template;
+use SmrAlliance;
+use SmrTreaty;
+
+class AllianceTreaties extends PlayerPage {
+
+	public string $file = 'alliance_treaties.php';
+
+	public function __construct(
+		private readonly ?string $message = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$alliance = $player->getAlliance();
 
 		$template->assign('PageTopic', 'Alliance Treaties');
@@ -21,9 +34,7 @@ use Smr\Database;
 		}
 		$template->assign('Alliances', $alliances);
 
-		if (isset($var['message'])) {
-			$template->assign('Message', $var['message']);
-		}
+		$template->assign('Message', $this->message);
 
 		$offers = [];
 		$dbResult = $db->read('SELECT * FROM alliance_treaties WHERE alliance_id_2 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND official = \'FALSE\'');
@@ -35,12 +46,9 @@ use Smr\Database;
 				}
 			}
 			$otherAllianceID = $dbRecord->getInt('alliance_id_1');
-			$container = Page::create('alliance_treaties_processing.php');
-			$container['alliance_id_1'] = $otherAllianceID;
-			$container['aa_access'] = $dbRecord->getBoolean('aa_access');
-			$container['accept'] = true;
+			$container = new AllianceTreatiesProcessor($otherAllianceID, true, $dbRecord->getBoolean('aa_access'));
 			$acceptHREF = $container->href();
-			$container['accept'] = false;
+			$container = new AllianceTreatiesProcessor($otherAllianceID, false);
 			$rejectHREF = $container->href();
 
 			$offers[] = [
@@ -52,5 +60,8 @@ use Smr\Database;
 		}
 		$template->assign('Offers', $offers);
 
-		$container = Page::create('alliance_treaties_confirm.php');
+		$container = new AllianceTreatiesConfirm();
 		$template->assign('SendOfferHREF', $container->href());
+	}
+
+}

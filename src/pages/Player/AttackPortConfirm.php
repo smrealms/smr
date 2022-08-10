@@ -1,7 +1,16 @@
 <?php declare(strict_types=1);
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPage;
+use Smr\Template;
+
+class AttackPortConfirm extends PlayerPage {
+
+	public string $file = 'port_attack_warning.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$sector = $player->getSector();
 
 		if (!$sector->hasPort()) {
@@ -10,16 +19,17 @@
 		$port = $sector->getPort();
 
 		if ($port->isDestroyed()) {
-			Page::create('port_attack.php')->go();
+			(new AttackPort())->go();
 		}
-
-		$template = Smr\Template::getInstance();
 
 		$template->assign('PageTopic', 'Port Raid');
 
-		$template->assign('PortAttackHREF', Page::create('port_attack_processing.php')->href());
+		$template->assign('PortAttackHREF', (new AttackPortProcessor())->href());
 		$template->assign('Port', $port);
 
 		$eligibleAttackers = $sector->getFightingTradersAgainstPort($player, $port, allEligible: true);
 		$template->assign('VisiblePlayers', $eligibleAttackers);
 		$template->assign('SectorPlayersLabel', 'Attackers');
+	}
+
+}

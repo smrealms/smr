@@ -1,10 +1,21 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+use PHPMailer\PHPMailer\PHPMailer;
 use Smr\Database;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
 
-		$var = Smr\Session::getInstance()->getCurrentVar();
+class NewsletterSendProcessor extends AccountPageProcessor {
 
+	public function __construct(
+		private readonly string $newsletterHtml,
+		private readonly string $newsletterText
+	) {}
+
+	public function build(SmrAccount $account): never {
 		// mailer
 		$mail = setupMailer();
 		$mail->setFrom('newsletter@smrealms.de', 'SMR Team');
@@ -13,7 +24,7 @@ use Smr\Request;
 
 		$mail->Subject = Request::get('subject');
 
-		function set_mail_body(PHPMailer\PHPMailer\PHPMailer $mail, ?string $newsletterHtml, ?string $newsletterText, ?string $salutation): void {
+		$set_mail_body = function(PHPMailer $mail, ?string $newsletterHtml, ?string $newsletterText, ?string $salutation): void {
 			// Prepend the salutation if one is given
 			if ($salutation) {
 				if (!empty($newsletterHtml)) {
@@ -36,13 +47,13 @@ use Smr\Request;
 
 			// attach footer
 			//$mail->Body   .= EOL.EOL.'Thank you,'.EOL.'   SMR Support Team'.EOL.EOL.'Note: You receive this e-mail because you are registered with Space Merchant Realms. If you prefer not to get any further notices please respond and we will disable your account.';
-		}
+		};
 
 		// Set the body of the e-mail
-		set_mail_body(
+		$set_mail_body(
 			$mail,
-			$var['newsletter_html'],
-			$var['newsletter_text'],
+			$this->newsletterHtml,
+			$this->newsletterText,
 			Request::get('salutation')
 		);
 
@@ -78,7 +89,7 @@ use Smr\Request;
 				$salutation = Request::get('salutation');
 				if (!empty($salutation)) {
 					$salutation .= ' ' . $to_name . ',';
-					set_mail_body($mail, $var['newsletter_html'], $var['newsletter_text'], $salutation);
+					$set_mail_body($mail, $this->newsletterHtml, $this->newsletterText, $salutation);
 				}
 
 				// debug output
@@ -117,4 +128,7 @@ use Smr\Request;
 			}
 		}
 
-		Page::create('admin/newsletter_send.php')->go();
+		(new NewsletterSend())->go();
+	}
+
+}

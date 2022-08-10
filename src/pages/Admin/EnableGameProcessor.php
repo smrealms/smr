@@ -1,7 +1,15 @@
 <?php declare(strict_types=1);
 
-use Smr\Request;
+namespace Smr\Pages\Admin;
 
+use Smr\Page\AccountPageProcessor;
+use Smr\Request;
+use SmrAccount;
+use SmrGame;
+
+class EnableGameProcessor extends AccountPageProcessor {
+
+	public function build(SmrAccount $account): never {
 		$game = SmrGame::getGame(Request::getInt('game_id'));
 		$game->setEnabled(true);
 		$game->save(); // because next page queries database
@@ -12,4 +20,7 @@ use Smr\Request;
 
 		$msg = '<span class="green">SUCCESS: </span>Enabled game ' . $game->getDisplayName();
 
-		Page::create('admin/enable_game.php', ['processing_msg' => $msg])->go();
+		(new EnableGame($msg))->go();
+	}
+
+}

@@ -1,13 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Planet;
+
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+
+class Ownership extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'planet_ownership.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		require_once(LIB . 'Default/planet.inc.php');
 		planet_common();
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
-
-		$container = Page::create('planet_ownership_processing.php');
+		$container = new OwnershipProcessor();
 		$template->assign('ProcessingHREF', $container->href());
 
 		$template->assign('Planet', $player->getSectorPlanet());
@@ -18,3 +28,6 @@
 		if ($playerPlanet !== null) {
 			$template->assign('PlayerPlanet', $playerPlanet->getSectorID());
 		}
+	}
+
+}

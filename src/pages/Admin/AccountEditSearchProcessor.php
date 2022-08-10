@@ -1,8 +1,15 @@
 <?php declare(strict_types=1);
 
-use Smr\Database;
-use Smr\Request;
+namespace Smr\Pages\Admin;
 
+use Smr\Database;
+use Smr\Page\AccountPageProcessor;
+use Smr\Request;
+use SmrAccount;
+
+class AccountEditSearchProcessor extends AccountPageProcessor {
+
+	public function build(SmrAccount $account): never {
 		$db = Database::getInstance();
 
 		$account_id = Request::getInt('account_id');
@@ -32,10 +39,12 @@ use Smr\Request;
 											   'hof_name LIKE ' . $db->escapeString(Request::get('hofname')) . ' OR ' .
 											   'validation_code LIKE ' . $db->escapeString(Request::get('val_code')) . ' LIMIT 1');
 		if ($dbResult->hasRecord()) {
-			$container = Page::create('admin/account_edit.php');
-			$container['account_id'] = $dbResult->record()->getInt('account_id');
+			$container = new AccountEdit($dbResult->record()->getInt('account_id'));
 		} else {
-			$container = Page::create('admin/account_edit_search.php');
-			$container['errorMsg'] = 'No matching accounts were found!';
+			$errorMsg = 'No matching accounts were found!';
+			$container = new AccountEditSearch(errorMessage: $errorMsg);
 		}
 		$container->go();
+	}
+
+}

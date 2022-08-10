@@ -1,20 +1,30 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\GalacticPost;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class PastEditionSelect extends PlayerPage {
 
+	public string $file = 'galactic_post_past.php';
+
+	public function __construct(
+		private readonly int $gameID
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Past <i>Galactic Post</i> Editions');
 		Menu::galacticPost();
 
-		$container = Page::create('galactic_post_past.php');
+		$container = new PastEditionSelectProcessor();
 		$template->assign('SelectGameHREF', $container->href());
 
 		// View past editions of current game by default
-		$selectedGameID = $session->getRequestVarInt('selected_game_id', $player->getGameID());
-		$template->assign('SelectedGame', $selectedGameID);
+		$template->assign('SelectedGame', $this->gameID);
 
 		// Get the list of games with published papers
 		// Add the current game to this list no matter what
@@ -30,13 +40,10 @@ use Smr\Database;
 		$template->assign('PublishedGames', $publishedGames);
 
 		// Get the list of published papers for the selected game
-		$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id=' . $db->escapeNumber($selectedGameID));
+		$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id=' . $db->escapeNumber($this->gameID));
 		$pastEditions = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$container = Page::create('galactic_post_read.php');
-			$container['paper_id'] = $dbRecord->getInt('paper_id');
-			$container['game_id'] = $selectedGameID;
-			$container['back'] = true;
+			$container = new EditionRead($this->gameID, $dbRecord->getInt('paper_id'), true);
 
 			$pastEditions[] = [
 				'title' => $dbRecord->getString('title'),
@@ -45,3 +52,6 @@ use Smr\Database;
 			];
 		}
 		$template->assign('PastEditions', $pastEditions);
+	}
+
+}

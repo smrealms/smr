@@ -1,23 +1,35 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin\UniGen;
+
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
+use SmrLocation;
+use SmrSector;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class DragLocationProcessor extends AccountPageProcessor {
 
+	public function __construct(
+		private readonly int $gameID,
+		private readonly int $galaxyID
+	) {}
+
+	public function build(SmrAccount $account): never {
 		// Move a location from one sector to another
 		$targetSectorID = Request::getInt('TargetSectorID');
 		$origSectorID = Request::getInt('OrigSectorID');
 		$locationTypeID = Request::getInt('LocationTypeID');
-		$targetSector = SmrSector::getSector($var['game_id'], $targetSectorID);
+		$targetSector = SmrSector::getSector($this->gameID, $targetSectorID);
 
 		// Skip if target sector already has the same location
 		if (!$targetSector->hasLocation($locationTypeID)) {
-			$location = SmrLocation::getLocation($var['game_id'], $locationTypeID);
-			SmrLocation::moveSectorLocation($var['game_id'], $origSectorID, $targetSectorID, $location);
+			$location = SmrLocation::getLocation($this->gameID, $locationTypeID);
+			SmrLocation::moveSectorLocation($this->gameID, $origSectorID, $targetSectorID, $location);
 		}
 
-		$container = Page::create('admin/unigen/universe_create_sectors.php');
-		$container->addVar('game_id');
-		$container->addVar('gal_on');
+		$container = new EditGalaxy($this->gameID, $this->galaxyID);
 		$container->go();
+	}
+
+}

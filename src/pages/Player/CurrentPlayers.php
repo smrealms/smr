@@ -1,12 +1,22 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class CurrentPlayers extends PlayerPage {
 
+	use ReusableTrait;
+
+	public string $file = 'current_players.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$inactiveTime = Epoch::time() - TIME_BEFORE_INACTIVE;
 
 		$template->assign('PageTopic', 'Current Players');
@@ -72,8 +82,7 @@ use Smr\Epoch;
 			$row['tr_class'] = $class;
 
 			// What should the player name be displayed as?
-			$container = Page::create('trader_search_result.php');
-			$container['player_id'] = $curr_player->getPlayerID();
+			$container = new SearchForTraderResult($curr_player->getPlayerID());
 			$name = $curr_player->getLevelName() . ' ' . $curr_player->getDisplayName();
 			$dbResult2 = $db->read('SELECT * FROM cpl_tag WHERE account_id = ' . $db->escapeNumber($curr_player->getAccountID()) . ' ORDER BY custom DESC');
 			foreach ($dbResult2->records() as $dbRecord2) {
@@ -92,3 +101,6 @@ use Smr\Epoch;
 		}
 
 		$template->assign('AllRows', $allRows);
+	}
+
+}

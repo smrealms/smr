@@ -1,17 +1,25 @@
 <?php declare(strict_types=1);
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player\Planet;
 
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
+
+class ConstructionProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly string $action,
+		private readonly int $constructionID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		if (!$player->isLandedOnPlanet()) {
 			create_error('You are not on a planet!');
 		}
 		$planet = $player->getSectorPlanet();
-		$action = $var['action'];
+		$action = $this->action;
 
-		/** @var int $constructionID */
-		$constructionID = $var['construction_id'];
+		$constructionID = $this->constructionID;
 
 		if ($action == 'Build') {
 			// now start the construction
@@ -26,4 +34,7 @@
 			$player->log(LOG_TYPE_PLANETS, 'Player cancels planet construction');
 		}
 
-		Page::create('planet_construction.php')->go();
+		(new Construction())->go();
+	}
+
+}

@@ -1,9 +1,16 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+namespace Smr\Pages\Account;
 
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
+
+class ReopenAccount extends AccountPage {
+
+	public string $file = 'reopen_account.php';
+
+	public function build(SmrAccount $account, Template $template): void {
 		// This page should only be accessed by players whose accounts
 		// have been closed at their own request.
 		$disabled = $account->isDisabled();
@@ -17,9 +24,8 @@
 
 		$template->assign('PageTopic', 'Re-Open Account?');
 
-		// It doesn't really matter what page we link to -- the closing
-		// conditional will be triggered in the loader since the account
-		// is still banned, so we do the unbanning there.
-		$container = Page::create('game_play.php');
-		$container['do_reopen_account'] = true;
+		$container = new ReopenAccountProcessor();
 		$template->assign('ReopenLink', $container->href());
+	}
+
+}

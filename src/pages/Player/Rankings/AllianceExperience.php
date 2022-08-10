@@ -1,9 +1,21 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player\Rankings;
 
+use AbstractSmrPlayer;
+use Menu;
+use Rankings;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+
+class AllianceExperience extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'rankings_alliance_experience.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Alliance Experience Rankings');
 		Menu::rankings(1, 0);
 
@@ -21,4 +33,7 @@
 
 		$template->assign('FilteredRankings', Rankings::collectAllianceRankings($rankedStats, $player, $minRank, $maxRank));
 
-		$template->assign('FilterRankingsHREF', Page::create('rankings_alliance_experience.php')->href());
+		$template->assign('FilterRankingsHREF', (new self())->href());
+	}
+
+}

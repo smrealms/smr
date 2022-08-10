@@ -1,10 +1,19 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPageProcessor;
+use SmrAccount;
 
-		$var = Smr\Session::getInstance()->getCurrentVar();
+class DatabaseCleanupProcessor extends AccountPageProcessor {
 
+	public function __construct(
+		private readonly string $action
+	) {}
+
+	public function build(SmrAccount $account): never {
 		// Get initial storage size
 		$db = Database::getInstance();
 		$initialBytes = $db->getDbBytes();
@@ -28,7 +37,7 @@ use Smr\Epoch;
 			'weighted_random',
 		];
 
-		if ($var['action'] == 'delete') {
+		if ($this->action == 'delete') {
 			$action = 'DELETE';
 			$method = 'write';
 		} else {
@@ -48,9 +57,8 @@ use Smr\Epoch;
 		// Get difference in storage size
 		$diffBytes = $initialBytes - $db->getDbBytes();
 
-		$container = Page::create('admin/db_cleanup.php');
-		$container['results'] = $rowsDeleted;
-		$container['diffBytes'] = $diffBytes;
-		$container['endedGames'] = $endedGameIDs;
-		$container->addVar('action');
+		$container = new DatabaseCleanup($this->action, $rowsDeleted, $diffBytes, $endedGameIDs);
 		$container->go();
+	}
+
+}

@@ -1,8 +1,21 @@
 <?php declare(strict_types=1);
 
-		$var = Smr\Session::getInstance()->getCurrentVar();
+namespace Smr\Pages\Admin\UniGen;
 
-		$galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
+use Smr\Page\AccountPageProcessor;
+use SmrAccount;
+use SmrGalaxy;
+use SmrSector;
+
+class ResetGalaxyProcessor extends AccountPageProcessor {
+
+	public function __construct(
+		private readonly int $gameID,
+		private readonly int $galaxyID
+	) {}
+
+	public function build(SmrAccount $account): never {
+		$galaxy = SmrGalaxy::getGalaxy($this->gameID, $this->galaxyID);
 
 		// Efficiently construct the caches before proceeding
 		$galaxy->getPorts();
@@ -18,8 +31,9 @@
 
 		SmrSector::saveSectors();
 
-		$container = Page::create('admin/unigen/universe_create_sectors.php');
-		$container->addVar('game_id');
-		$container->addVar('gal_on');
-		$container['message'] = '<span class="green">Success</span> : reset galaxy.';
+		$message = '<span class="green">Success</span> : reset galaxy.';
+		$container = new EditGalaxy($this->gameID, $this->galaxyID, $message);
 		$container->go();
+	}
+
+}

@@ -1,14 +1,22 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
+class AlbumModerateSelect extends AccountPage {
 
+	public string $file = 'admin/album_moderate_select.php';
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Moderate Photo Album');
 
 		require_once(LIB . 'Album/album_functions.php');
 
-		$moderateHREF = Page::create('admin/album_moderate.php')->href();
+		$moderateHREF = (new AlbumModerateSelectProcessor())->href();
 		$template->assign('ModerateHREF', $moderateHREF);
 
 		// Get all accounts that are eligible for moderation
@@ -20,3 +28,6 @@ use Smr\Database;
 			$approved[$accountId] = get_album_nick($accountId);
 		}
 		$template->assign('Approved', $approved);
+	}
+
+}

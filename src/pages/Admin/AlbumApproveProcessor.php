@@ -1,14 +1,27 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
+use Smr\Page\AccountPageProcessor;
+use SmrAccount;
 
-		$var = Smr\Session::getInstance()->getCurrentVar();
+class AlbumApproveProcessor extends AccountPageProcessor {
 
-		$approved = $var['approved'] ? 'YES' : 'NO';
+	public function __construct(
+		private readonly int $albumAccountID,
+		private readonly bool $approved
+	) {}
+
+	public function build(SmrAccount $account): never {
+		$approved = $this->approved ? 'YES' : 'NO';
 
 		$db = Database::getInstance();
 		$db->write('UPDATE album
 					SET approved = ' . $db->escapeString($approved) . '
-					WHERE account_id = ' . $db->escapeNumber($var['album_id']));
+					WHERE account_id = ' . $db->escapeNumber($this->albumAccountID));
 
-		Page::create('admin/album_approve.php')->go();
+		(new AlbumApprove())->go();
+	}
+
+}

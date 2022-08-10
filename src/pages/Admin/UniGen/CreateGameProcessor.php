@@ -1,8 +1,17 @@
 <?php declare(strict_types=1);
 
-use Smr\Database;
-use Smr\Request;
+namespace Smr\Pages\Admin\UniGen;
 
+use DateTime;
+use Smr\Database;
+use Smr\Page\AccountPageProcessor;
+use Smr\Request;
+use SmrAccount;
+use SmrGame;
+
+class CreateGameProcessor extends AccountPageProcessor {
+
+	public function build(SmrAccount $account): never {
 		$db = Database::getInstance();
 
 		//first create the game
@@ -51,6 +60,8 @@ use Smr\Request;
 		$game->setEnabled(false);
 		$game->save();
 
-		$container = Page::create('admin/unigen/universe_create_galaxies.php');
-		$container['game_id'] = $game->getGameID();
+		$container = new CreateGalaxies($game->getGameID());
 		$container->go();
+	}
+
+}

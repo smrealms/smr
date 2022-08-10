@@ -1,20 +1,29 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
 
+class VoteCreateProcessor extends AccountPageProcessor {
+
+	public function build(SmrAccount $account): never {
 		$action = Request::get('action');
 		if ($action == 'Preview Vote') {
-			$container = Page::create('admin/vote_create.php');
-			$container['PreviewVote'] = Request::get('question');
-			$container['Days'] = Request::getInt('days');
+			$container = new VoteCreate(
+				previewVote: Request::get('question'),
+				days: Request::getInt('days')
+			);
 			$container->go();
 		}
 		if ($action == 'Preview Option') {
-			$container = Page::create('admin/vote_create.php');
-			$container['PreviewOption'] = Request::get('option');
-			$container['VoteID'] = Request::getInt('vote');
+			$container = new VoteCreate(
+				previewOption: Request::get('option'),
+				voteID: Request::getInt('vote')
+			);
 			$container->go();
 		}
 
@@ -34,4 +43,7 @@ use Smr\Request;
 				'text' => $db->escapeString($option),
 			]);
 		}
-		Page::create('admin/vote_create.php')->go();
+		(new VoteCreate())->go();
+	}
+
+}

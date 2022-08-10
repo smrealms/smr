@@ -1,10 +1,20 @@
 <?php declare(strict_types=1);
 
-use Smr\Database;
-use Smr\Request;
+namespace Smr\Pages\Admin;
 
+use Smr\Database;
+use Smr\Page\AccountPageProcessor;
+use Smr\Request;
+use SmrAccount;
+
+class MessageBoxDeleteProcessor extends AccountPageProcessor {
+
+	public function __construct(
+		private readonly int $boxTypeID
+	) {}
+
+	public function build(SmrAccount $account): never {
 		$db = Database::getInstance();
-		$var = Smr\Session::getInstance()->getCurrentVar();
 
 		$action = Request::get('action');
 		if ($action == 'Marked Messages') {
@@ -16,10 +26,10 @@ use Smr\Request;
 				$db->write('DELETE FROM message_boxes WHERE message_id = ' . $db->escapeNumber($id));
 			}
 		} elseif ($action == 'All Messages') {
-			if (!isset($var['box_type_id'])) {
-				create_error('No box selected.');
-			}
-			$db->write('DELETE FROM message_boxes WHERE box_type_id = ' . $db->escapeNumber($var['box_type_id']));
+			$db->write('DELETE FROM message_boxes WHERE box_type_id = ' . $db->escapeNumber($this->boxTypeID));
 		}
 
-		Page::create('admin/box_view.php')->go();
+		(new MessageBoxView())->go();
+	}
+
+}

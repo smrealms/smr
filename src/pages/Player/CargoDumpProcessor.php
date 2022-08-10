@@ -1,18 +1,29 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Globals;
+use Plotter;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 use Smr\TransactionType;
+use SmrPort;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class CargoDumpProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $goodID,
+		private readonly ?int $goodAmount = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$ship = $player->getShip();
 		$sector = $player->getSector();
 
-		/** @var int $good_id */
-		$good_id = $var['good_id'];
+		$good_id = $this->goodID;
 		$good_name = Globals::getGoodName($good_id);
-		$amount = Request::getVarInt('amount');
+		$amount = $this->goodAmount ?? Request::getInt('amount');
 
 		if ($amount <= 0) {
 			create_error('You must actually enter an amount > 0!');
@@ -35,9 +46,7 @@ use Smr\TransactionType;
 			create_error('You can\'t dump cargo in a Federal Sector!');
 		}
 
-		$container = Page::create('current_sector.php');
-
-		$container['msg'] = 'You have jettisoned <span class="yellow">' . $amount . '</span> ' . pluralise($amount, 'unit', false) . ' of ' . $good_name;
+		$msg = 'You have jettisoned <span class="yellow">' . $amount . '</span> ' . pluralise($amount, 'unit', false) . ' of ' . $good_name;
 
 		if ($player->getExperience() > 0) {
 			// If they have any experience left, lose exp
@@ -59,8 +68,7 @@ use Smr\TransactionType;
 			$player->decreaseExperience($lost_xp);
 			$player->increaseHOF($lost_xp, ['Trade', 'Experience', 'Jettisoned'], HOF_PUBLIC);
 
-
-			$container['msg'] .= ' and have lost <span class="exp">' . $lost_xp . '</span> experience.';
+			$msg .= ' and have lost <span class="exp">' . $lost_xp . '</span> experience.';
 			// log action
 			$player->log(LOG_TYPE_TRADING, 'Dumps ' . $amount . ' of ' . $good_name . ' and loses ' . $lost_xp . ' experience');
 		} else {
@@ -74,7 +82,7 @@ use Smr\TransactionType;
 
 			$ship->decreaseArmour($damage);
 
-			$container['msg'] .= '. Due to your lack of piloting experience, the cargo pierces the hull of your ship as you clumsily try to jettison the goods through the bay doors, destroying <span class="red">' . $damage . '</span> ' . pluralise($damage, 'plate', false) . ' of armour!';
+			$msg .= '. Due to your lack of piloting experience, the cargo pierces the hull of your ship as you clumsily try to jettison the goods through the bay doors, destroying <span class="red">' . $damage . '</span> ' . pluralise($damage, 'plate', false) . ' of armour!';
 			// log action
 			$player->log(LOG_TYPE_TRADING, 'Dumps ' . $amount . ' of ' . $good_name . ' and takes ' . $damage . ' armour damage');
 		}
@@ -85,4 +93,8 @@ use Smr\TransactionType;
 		$ship->decreaseCargo($good_id, $amount);
 		$player->increaseHOF($amount, ['Trade', 'Goods', 'Jettisoned'], HOF_ALLIANCE);
 
+		$container = new CurrentSector(message: $msg);
 		$container->go();
+	}
+
+}

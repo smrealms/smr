@@ -1,18 +1,24 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
+use Exception;
 use Smr\Database;
 use Smr\DisplayNameValidator;
 use Smr\Exceptions\AccountNotFound;
+use Smr\Page\AccountPageProcessor;
+use Smr\Pages\Player\CurrentSector;
 use Smr\Request;
+use Smr\Session;
+use SmrAccount;
 
-		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+class PreferencesProcessor extends AccountPageProcessor {
 
-		if ($session->hasGame()) {
-			$container = Page::create('current_sector.php');
+	public function build(SmrAccount $account): never {
+		if (Session::getInstance()->hasGame()) {
+			$nextPage = CurrentSector::class;
 		} else {
-			$container = Page::create('game_play.php');
+			$nextPage = GamePlay::class;
 		}
 		$action = Request::get('action');
 
@@ -22,8 +28,8 @@ use Smr\Request;
 			$account->changeEmail($email);
 
 			// overwrite container
-			$container = Page::create('validate.php');
-			$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your email address, you will now need to revalidate with the code sent to the new email address.';
+			$nextPage = Validate::class;
+			$message = '<span class="green">SUCCESS: </span>You have changed your email address, you will now need to revalidate with the code sent to the new email address.';
 
 		} elseif ($action == 'Change Password') {
 			$new_password = Request::get('new_password');
@@ -47,7 +53,7 @@ use Smr\Request;
 			}
 
 			$account->setPassword($new_password);
-			$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your password.';
+			$message = '<span class="green">SUCCESS: </span>You have changed your password.';
 
 		} elseif ($action == 'Change Name') {
 			$HoF_name = Request::get('HoF_name');
@@ -66,14 +72,14 @@ use Smr\Request;
 
 			// set the HoF name in account stat
 			$account->setHofName($HoF_name);
-			$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your Hall of Fame name.';
+			$message = '<span class="green">SUCCESS: </span>You have changed your Hall of Fame name.';
 
 		} elseif ($action == 'Change Discord ID') {
 			$discordId = Request::get('discord_id');
 
 			if (empty($discordId)) {
 				$account->setDiscordId(null);
-				$container['msg'] = '<span class="green">SUCCESS: </span>You have deleted your Discord User ID.';
+				$message = '<span class="green">SUCCESS: </span>You have deleted your Discord User ID.';
 			} else {
 				// no duplicates
 				try {
@@ -86,7 +92,7 @@ use Smr\Request;
 				}
 
 				$account->setDiscordId($discordId);
-				$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your Discord User ID.';
+				$message = '<span class="green">SUCCESS: </span>You have changed your Discord User ID.';
 			}
 
 		} elseif ($action == 'Change IRC Nick') {
@@ -95,7 +101,7 @@ use Smr\Request;
 			// here you can delete your registered irc nick
 			if (empty($ircNick)) {
 				$account->setIrcNick(null);
-				$container['msg'] = '<span class="green">SUCCESS: </span>You have deleted your irc nick.';
+				$message = '<span class="green">SUCCESS: </span>You have deleted your irc nick.';
 			} else {
 				// Disallow control characters and spaces
 				if (!ctype_graph($ircNick)) {
@@ -114,42 +120,28 @@ use Smr\Request;
 
 				// save irc nick in db and set message
 				$account->setIrcNick($ircNick);
-				$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your irc nick.';
+				$message = '<span class="green">SUCCESS: </span>You have changed your irc nick.';
 			}
-
-		} elseif ($action == 'Yes') {
-			// Confirmed SMR Credit transfer
-			$var = $session->getCurrentVar();
-			$account_id = $var['account_id'];
-			$amount = $var['amount'];
-
-			// create his account
-			$his_account = SmrAccount::getAccount($account_id);
-
-			// take from us
-			$account->decreaseSmrCredits($amount);
-			// add to him
-			$his_account->increaseSmrCredits($amount);
-			$container['msg'] = '<span class="green">SUCCESS: </span>You have sent SMR credits.';
 
 		} elseif ($action == 'Change Timezone') {
 			$timez = Request::getInt('timez');
 
+			$db = Database::getInstance();
 			$db->write('UPDATE account SET offset = ' . $db->escapeNumber($timez) . ' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
-			$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your time offset.';
+			$message = '<span class="green">SUCCESS: </span>You have changed your time offset.';
 
 		} elseif ($action == 'Change Date Formats') {
 			$account->setDateFormat(Request::get('dateformat'));
 			$account->setTimeFormat(Request::get('timeformat'));
-			$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your date formats.';
+			$message = '<span class="green">SUCCESS: </span>You have changed your date formats.';
 
 		} elseif ($action == 'Change Images') {
 			$account->setDisplayShipImages(Request::get('images') == 'Yes');
-			$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your ship images preferences.';
+			$message = '<span class="green">SUCCESS: </span>You have changed your ship images preferences.';
 
 		} elseif ($action == 'Change Centering') {
 			$account->setCenterGalaxyMapOnPlayer(Request::get('centergalmap') == 'Yes');
-			$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your centering galaxy map preferences.';
+			$message = '<span class="green">SUCCESS: </span>You have changed your centering galaxy map preferences.';
 
 		} elseif ($action == 'Change Size') {
 			$fontsize = Request::getInt('fontsize');
@@ -157,7 +149,7 @@ use Smr\Request;
 				create_error('Minimum font size is 50%');
 			}
 			$account->setFontSize($fontsize);
-			$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your font size.';
+			$message = '<span class="green">SUCCESS: </span>You have changed your font size.';
 
 		} elseif ($action == 'Change CSS Options') {
 			$account->setCssLink(Request::get('csslink'));
@@ -170,13 +162,13 @@ use Smr\Request;
 				$account->setTemplate($cssTemplate);
 				$account->setColourScheme($cssColourScheme);
 			}
-			$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your CSS options.';
+			$message = '<span class="green">SUCCESS: </span>You have changed your CSS options.';
 
 		} elseif ($action == 'Save Hotkeys') {
 			foreach (SmrAccount::getDefaultHotkeys() as $hotkey => $binding) {
 				$account->setHotkey($hotkey, explode(' ', Request::get($hotkey)));
 			}
-			$container['msg'] = '<span class="green">SUCCESS: </span>You have saved your hotkeys.';
+			$message = '<span class="green">SUCCESS: </span>You have saved your hotkeys.';
 
 		} elseif ($action == 'Update Colours') {
 			$friendlyColour = Request::get('friendly_color');
@@ -192,10 +184,13 @@ use Smr\Request;
 			if (strlen($enemyColour) == 6) {
 				$account->setEnemyColour($enemyColour);
 			}
+			$message = '<span class="green">SUCCESS: </span> You have updated your colors.';
+
 		} elseif ($action == 'Toggle Ajax') {
 			$account->setUseAJAX(!$account->isUseAJAX());
 			$status = $account->isUseAJAX() ? 'enabled' : 'disabled';
-			$container['msg'] = '<span class="green">SUCCESS: </span> You have ' . $status . ' AJAX auto-refresh.';
+			$message = '<span class="green">SUCCESS: </span> You have ' . $status . ' AJAX auto-refresh.';
+
 		} else {
 			throw new Exception('Unknown action: ' . $action);
 		}
@@ -203,4 +198,8 @@ use Smr\Request;
 		// Update the account in case it has changed
 		$account->update();
 
+		$container = new $nextPage(message: $message);
 		$container->go();
+	}
+
+}

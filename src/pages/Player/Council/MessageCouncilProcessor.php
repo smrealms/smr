@@ -1,11 +1,20 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Council;
+
+use AbstractSmrPlayer;
+use Council;
+use Smr\Page\PlayerPageProcessor;
+use Smr\Pages\Player\CurrentSector;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class MessageCouncilProcessor extends PlayerPageProcessor {
 
+	public function __construct(
+		private readonly int $raceID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$message = htmlentities(Request::get('message'), ENT_COMPAT, 'utf-8');
 
 		if (empty($message)) {
@@ -13,11 +22,14 @@ use Smr\Request;
 		}
 
 		// send to all council members
-		$councilMembers = Council::getRaceCouncil($player->getGameID(), $var['race_id']);
+		$councilMembers = Council::getRaceCouncil($player->getGameID(), $this->raceID);
 		foreach ($councilMembers as $accountID) {
 			$player->sendMessage($accountID, MSG_POLITICAL, $message, true, $player->getAccountID() != $accountID);
 		}
 
-		$container = Page::create('current_sector.php');
-		$container['msg'] = '<span class="green">SUCCESS: </span>Your message has been sent.';
+		$msg = '<span class="green">SUCCESS: </span>Your message has been sent.';
+		$container = new CurrentSector(message: $msg);
 		$container->go();
+	}
+
+}

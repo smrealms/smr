@@ -1,32 +1,43 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
+use Smr\Page\ReusableTrait;
 use Smr\Request;
 
+class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
+
+	use ReusableTrait;
+
+	public function __construct(
+		private readonly int $allianceID,
+		private readonly AllianceMessageBoard|AllianceMessageBoardView $lastPage,
+		private readonly ?int $threadID = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
 
 		$body = htmlentities(Request::get('body'), ENT_COMPAT, 'utf-8');
 		$topic = Request::get('topic', ''); // only present for Create Thread
 		$allEyesOnly = Request::has('allEyesOnly'); // only present for Create Thread
 
+		$alliance_id = $this->allianceID;
+
 		$action = Request::get('action');
 		if ($action == 'Preview Thread' || $action == 'Preview Reply') {
-			if (!isset($var['thread_index'])) {
-				$container = Page::create('alliance_message.php', $var);
-			} else {
-				$container = Page::create('alliance_message_view.php', $var);
+			$container = $this->lastPage;
+			$container->preview = $body;
+			if ($container instanceof AllianceMessageBoard) {
+				$container->topic = $topic;
+				$container->allianceEyesOnly = $allEyesOnly;
 			}
-			$container['preview'] = $body;
-			$container['topic'] = $topic;
-			$container['AllianceEyesOnly'] = $allEyesOnly;
 			$container->go();
 		}
-
-		$alliance_id = $var['alliance_id'] ?? $player->getAllianceID();
 
 		// it could be we got kicked during writing the msg
 		if (!$player->hasAlliance()) {
@@ -38,14 +49,14 @@ use Smr\Request;
 		}
 
 		// if we don't have a thread id
-		if (!isset($var['thread_index'])) {
+		if ($this->threadID === null) {
 			// get one
 			$dbResult = $db->read('SELECT IFNULL(max(thread_id)+1, 0) AS next_thread_id FROM alliance_thread
 						WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 						AND alliance_id = ' . $db->escapeNumber($alliance_id));
 			$thread_id = $dbResult->record()->getInt('next_thread_id');
 		} else {
-			$thread_id = $var['thread_ids'][$var['thread_index']];
+			$thread_id = $this->threadID;
 		}
 
 		// now get the next reply id
@@ -101,17 +112,7 @@ use Smr\Request;
 			'time' => $db->escapeNumber(Epoch::time() + 2),
 		]);
 
-		if (isset($var['thread_index'])) {
-			$container = Page::create('alliance_message_view.php');
-			$container->addVar('thread_index');
-			$container->addVar('thread_ids');
-			$container->addVar('thread_topics');
-		} else {
-			$container = Page::create('alliance_message.php');
-		}
-		if (isset($var['alliance_eyes'])) {
-			$container->addVar('alliance_eyes');
-		}
-		$container['alliance_id'] = $alliance_id;
+		$this->lastPage->go();
+	}
 
-		$container->go();
+}

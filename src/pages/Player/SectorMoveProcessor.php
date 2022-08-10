@@ -1,24 +1,35 @@
 <?php declare(strict_types=1);
 
-use Smr\MovementType;
-use Smr\SectorLock;
+namespace Smr\Pages\Player;
 
+use AbstractSmrPlayer;
+use Globals;
+use Smr\MovementType;
+use Smr\Page\PlayerPageProcessor;
+use Smr\SectorLock;
+use SmrSector;
+
+class SectorMoveProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $targetSectorID,
+		private readonly CurrentSector|LocalMap $targetPage
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		require_once(LIB . 'Default/sector_mines.inc.php');
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
 		$sector = $player->getSector();
 
 		if (!$player->getGame()->hasStarted()) {
 			create_error('You cannot move until the game has started!');
 		}
 
-		if ($var['target_sector'] == $player->getSectorID()) {
-			Page::create($var['target_page'])->go();
+		if ($this->targetSectorID == $player->getSectorID()) {
+			$this->targetPage->go();
 		}
 
-		if ($sector->getWarp() == $var['target_sector']) {
+		if ($sector->getWarp() == $this->targetSectorID) {
 			$movement = MovementType::Warp;
 			$turns = TURNS_PER_WARP;
 		} else {
@@ -30,13 +41,13 @@ use Smr\SectorLock;
 		if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 			//make them pop on CPL
 			$player->updateLastCPLAction();
-			$player->setSectorID($var['target_sector']);
+			$player->setSectorID($this->targetSectorID);
 			$player->update();
 
 			// get new sector object
 			$sector = $player->getSector();
 			$sector->markVisited($player);
-			Page::create($var['target_page'])->go();
+			$this->targetPage->go();
 		}
 
 		// you can't move while on planet
@@ -48,19 +59,19 @@ use Smr\SectorLock;
 			create_error('You don\'t have enough turns to move!');
 		}
 
-		if (!$sector->isLinked($var['target_sector'])) {
+		if (!$sector->isLinked($this->targetSectorID)) {
 			create_error('You cannot move to that sector!');
 		}
 
 		// If not moving to your "green sector", you might hit mines...
-		if ($player->getLastSectorID() != $var['target_sector']) {
+		if ($player->getLastSectorID() != $this->targetSectorID) {
 			// Update the "green sector"
-			$player->setLastSectorID($var['target_sector']);
+			$player->setLastSectorID($this->targetSectorID);
 			hit_sector_mines($player);
 		}
 
 		// log action
-		$targetSector = SmrSector::getSector($player->getGameID(), $var['target_sector']);
+		$targetSector = SmrSector::getSector($player->getGameID(), $this->targetSectorID);
 		$player->actionTaken('WalkSector', ['Sector' => $targetSector]);
 
 		// send scout msg
@@ -68,7 +79,7 @@ use Smr\SectorLock;
 
 		// Move the user around
 		// TODO: (Must be done while holding both sector locks)
-		$player->setSectorID($var['target_sector']);
+		$player->setSectorID($this->targetSectorID);
 		$player->takeTurns($turns, $turns);
 		$player->update();
 
@@ -98,4 +109,7 @@ use Smr\SectorLock;
 		hit_sector_mines($player);
 
 		// otherwise
-		Page::create($var['target_page'])->go();
+		$this->targetPage->go();
+	}
+
+}

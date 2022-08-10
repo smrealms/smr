@@ -1,12 +1,21 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bar;
+
+use AbstractSmrPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+class BuyTickerProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $locationID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
+		$account = $player->getAccount();
 
 		if ($account->getTotalSmrCredits() < CREDITS_PER_TICKER) {
 			create_error('You don\'t have enough SMR Credits. Donate to SMR to gain SMR Credits!');
@@ -31,7 +40,9 @@ use Smr\Request;
 		$account->decreaseTotalSmrCredits(CREDITS_PER_TICKER);
 
 		//offer another drink and such
-		$container = Page::create('bar_main.php');
-		$container->addVar('LocationID');
-		$container['message'] = '<div class="center">Your system has been added.  Enjoy!</div><br />';
+		$message = '<div class="center">Your system has been added.  Enjoy!</div><br />';
+		$container = new BarMain($this->locationID, $message);
 		$container->go();
+	}
+
+}

@@ -1,9 +1,14 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class AllianceSetFlagshipProcessor extends PlayerPageProcessor {
+
+	public function build(AbstractSmrPlayer $player): never {
 		$alliance = $player->getAlliance();
 
 		$flagshipID = Request::getInt('flagship_id');
@@ -11,4 +16,7 @@ use Smr\Request;
 		$alliance->setFlagshipID($flagshipID);
 		$alliance->update();
 
-		Page::create('alliance_set_op.php')->go();
+		(new AllianceSetOp())->go();
+	}
+
+}

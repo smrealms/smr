@@ -1,21 +1,38 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Request;
+use Smr\Template;
+use SmrAccount;
+use SmrGame;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class AdminMessageSend extends AccountPage {
 
+	public string $file = 'admin/admin_message_send.php';
+
+	public const ALL_GAMES_ID = 20000;
+
+	public function __construct(
+		private ?int $sendGameID = null,
+		private readonly ?string $preview = null,
+		private readonly float $expireHours = 0.5,
+		private readonly int $sendAccountID = 0,
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Send Admin Message');
 
-		$gameID = $session->getRequestVarInt('SendGameID');
-		$container = Page::create('admin/admin_message_send_processing.php');
-		$container['SendGameID'] = $gameID;
+		$this->sendGameID ??= Request::getInt('SendGameID');
+		$gameID = $this->sendGameID;
+		$container = new AdminMessageSendProcessor($gameID);
 		$template->assign('AdminMessageSendFormHref', $container->href());
 		$template->assign('MessageGameID', $gameID);
-		$template->assign('ExpireTime', $var['expire'] ?? 0.5);
+		$template->assign('ExpireTime', $this->expireHours);
 
-		if ($gameID != 20000) {
+		if ($gameID != self::ALL_GAMES_ID) {
 			$game = SmrGame::getGame($gameID);
 			$gamePlayers = [['AccountID' => 0, 'Name' => 'All Players (' . $game->getName() . ')']];
 			$db = Database::getInstance();
@@ -27,11 +44,12 @@ use Smr\Database;
 				];
 			}
 			$template->assign('GamePlayers', $gamePlayers);
-			$template->assign('SelectedAccountID', $var['account_id'] ?? 0);
+			$template->assign('SelectedAccountID', $this->sendAccountID);
 		}
-		if (isset($var['preview'])) {
-			$template->assign('Preview', $var['preview']);
-		}
+		$template->assign('Preview', $this->preview);
 
-		$container = Page::create('admin/admin_message_send_select.php');
+		$container = new AdminMessageSendSelect();
 		$template->assign('BackHREF', $container->href());
+	}
+
+}

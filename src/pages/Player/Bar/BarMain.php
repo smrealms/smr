@@ -1,20 +1,32 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bar;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPage;
+use Smr\Template;
+use SmrLocation;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class BarMain extends PlayerPage {
 
+	public string $file = 'bar_main.php';
+
+	public function __construct(
+		private readonly int $locationID,
+		private readonly ?string $message = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		//get bar name
-		$location = SmrLocation::getLocation($player->getGameID(), $var['LocationID']);
+		$location = SmrLocation::getLocation($player->getGameID(), $this->locationID);
 		$template->assign('PageTopic', 'Welcome to ' . $location->getName());
-		Menu::bar();
+		Menu::bar($this->locationID);
 
-		if (isset($var['message'])) {
-			$template->assign('Message', $var['message']);
+		if ($this->message !== null) {
+			$template->assign('Message', $this->message);
 		} else {
 			$template->assign('Message', '<i>You enter and take a seat at the bar.
 			                              The bartender looks like the helpful type.</i>');
@@ -27,8 +39,7 @@ use Smr\Epoch;
 		if ($dbResult->hasRecord()) {
 			$winningTicket = $dbResult->record()->getInt('prize');
 
-			$container = Page::create('bar_lotto_claim.php');
-			$container->addVar('LocationID');
+			$container = new LottoClaimProcessor($this->locationID);
 			$template->assign('LottoClaimHREF', $container->href());
 		}
 		$template->assign('WinningTicket', $winningTicket);
@@ -36,21 +47,25 @@ use Smr\Epoch;
 		//get rid of drinks older than 30 mins
 		$db->write('DELETE FROM player_has_drinks WHERE time < ' . $db->escapeNumber(Epoch::time() - 1800));
 
-		$container = Page::create('bar_talk_bartender.php');
-		$container->addVar('LocationID');
+		$container = new TalkToBartender($this->locationID);
 		$template->assign('GossipHREF', $container->href());
 
-		$container = Page::create('bar_buy_drink_processing.php');
-		$container->addVar('LocationID');
-		$container['action'] = 'drink';
+		$container = new BuyDrinkProcessor($this->locationID, 'drink');
 		$template->assign('BuyDrinkHREF', $container->href());
-		$container['action'] = 'water';
+		$container = new BuyDrinkProcessor($this->locationID, 'water');
 		$template->assign('BuyWaterHREF', $container->href());
 
-		$container = Page::create('bar_ticker_buy.php');
-		$container->addVar('LocationID');
+		$container = new BuyTicker($this->locationID);
 		$template->assign('BuySystemHREF', $container->href());
 
-		$container = Page::create('bar_galmap_buy.php');
-		$container->addVar('LocationID');
+		$container = new BuyGalaxyMap($this->locationID);
 		$template->assign('BuyGalMapHREF', $container->href());
+
+		$container = new LottoBuyTicket($this->locationID);
+		$template->assign('LottoBuyHREF', $container->href());
+
+		$container = new PlayBlackjackBet($this->locationID);
+		$template->assign('BlackjackHREF', $container->href());
+	}
+
+}

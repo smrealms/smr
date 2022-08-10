@@ -1,15 +1,26 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Globals;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
 use Smr\SectorLock;
+use SmrForce;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class AttackForcesProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $ownerAccountID,
+		private readonly bool $bump = false
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$ship = $player->getShip();
 
-		$forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
+		$forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $this->ownerAccountID);
 		$forceOwner = $forces->getOwner();
 
 		if ($player->hasNewbieTurns()) {
@@ -30,7 +41,7 @@ use Smr\SectorLock;
 
 		// The attack is processed slightly differently if the attacker bumped into mines
 		// when moving into sector
-		$bump = $var['bump'];
+		$bump = $this->bump;
 
 		if ($bump) {
 			if (!$forces->hasMines()) {
@@ -125,15 +136,15 @@ use Smr\SectorLock;
 			SectorLock::getInstance()->acquireForPlayer($player);
 		}
 
-		// If they died on the shot they get to see the results
-		$container = Page::create('forces_attack.php', skipRedirect: $player->isDead());
-
 		// If player or target is dead there is no continue attack button
 		if ($player->isDead() || !$forces->exists()) {
-			$container['owner_id'] = 0;
+			$displayOwnerID = 0;
 		} else {
-			$container['owner_id'] = $forces->getOwnerID();
+			$displayOwnerID = $forces->getOwnerID();
 		}
 
-		$container['results'] = $results;
+		$container = new AttackForces($displayOwnerID, $results, $player->isDead());
 		$container->go();
+	}
+
+}

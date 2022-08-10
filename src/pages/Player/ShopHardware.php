@@ -1,24 +1,36 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player;
 
-		if (!$player->getSector()->hasLocation($var['LocationID'])) {
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPage;
+use Smr\Template;
+use SmrLocation;
+
+class ShopHardware extends PlayerPage {
+
+	public string $file = 'shop_hardware.php';
+
+	public function __construct(
+		private readonly int $locationID
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		if (!$player->getSector()->hasLocation($this->locationID)) {
 			create_error('That location does not exist in this sector');
 		}
 
 		$template->assign('PageTopic', 'Hardware Shop');
 
-		$location = SmrLocation::getLocation($player->getGameID(), $var['LocationID']);
+		$location = SmrLocation::getLocation($player->getGameID(), $this->locationID);
 		if ($location->isHardwareSold()) {
 			$hardwareSold = $location->getHardwareSold();
 			foreach ($hardwareSold as $hardwareTypeID => $hardware) {
-				$container = Page::create('shop_hardware_processing.php');
-				$container->addVar('LocationID');
-				$container['hardware_id'] = $hardwareTypeID;
+				$container = new ShopHardwareProcessor($hardwareTypeID, $this->locationID);
 				$hardwareSold[$hardwareTypeID]['HREF'] = $container->href();
 			}
 			$template->assign('HardwareSold', $hardwareSold);
 		}
+	}
+
+}

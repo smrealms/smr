@@ -1,13 +1,22 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
+use SmrAlliance;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class AllianceGovernanceProcessor extends PlayerPageProcessor {
 
-		$alliance_id = $var['alliance_id'] ?? $player->getAllianceID();
+	public function __construct(
+		private readonly int $allianceID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
+		$alliance_id = $this->allianceID;
+
 		if (Request::has('description')) {
 			$description = Request::get('description');
 		}
@@ -69,6 +78,8 @@ use Smr\Request;
 		}
 
 		$alliance->update();
-		$container = Page::create('alliance_roster.php');
-		$container['alliance_id'] = $alliance_id;
+		$container = new AllianceRoster($alliance_id);
 		$container->go();
+	}
+
+}

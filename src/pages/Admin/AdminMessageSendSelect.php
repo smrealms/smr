@@ -1,13 +1,22 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
+use SmrGame;
 
-		$template = Smr\Template::getInstance();
+class AdminMessageSendSelect extends AccountPage {
 
+	public string $file = 'admin/admin_message_send_select.php';
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Send Admin Message');
 
-		$template->assign('AdminMessageChooseGameFormHref', Page::create('admin/admin_message_send.php')->href());
+		$template->assign('AdminMessageChooseGameFormHref', (new AdminMessageSend())->href());
 
 		// Get a list of all games that have not yet ended
 		$activeGames = [];
@@ -17,3 +26,6 @@ use Smr\Epoch;
 			$activeGames[] = SmrGame::getGame($dbRecord->getInt('game_id'));
 		}
 		$template->assign('ActiveGames', $activeGames);
+	}
+
+}

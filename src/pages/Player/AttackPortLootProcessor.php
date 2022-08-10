@@ -1,13 +1,22 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Globals;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class AttackPortLootProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $goodID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$ship = $player->getShip();
 
-		$good_id = $var['GoodID'];
+		$good_id = $this->goodID;
 		$amount = Request::getInt('amount');
 		if ($amount <= 0) {
 			create_error('You must enter an amount > 0!');
@@ -33,5 +42,8 @@ use Smr\Request;
 		$ship->increaseCargo($good_id, $amount);
 		$port->decreaseGoodAmount($good_id, $amount);
 
-		$container = Page::create('port_loot.php');
+		$container = new AttackPortLoot();
 		$container->go();
+	}
+
+}

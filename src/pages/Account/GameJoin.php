@@ -1,16 +1,26 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPage;
 use Smr\Race;
 use Smr\RaceDetails;
+use Smr\Template;
+use SmrAccount;
+use SmrGame;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
+class GameJoin extends AccountPage {
 
-		$game = SmrGame::getGame($var['game_id']);
+	public string $file = 'game_join.php';
+
+	public function __construct(
+		private readonly int $gameID
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
+		$game = SmrGame::getGame($this->gameID);
 
 		// Don't allow vets to join Newbie games
 		if ($game->isGameType(SmrGame::GAME_TYPE_NEWBIE) && $account->isVeteran()) {
@@ -38,7 +48,7 @@ use Smr\RaceDetails;
 		$db = Database::getInstance();
 		foreach ($game->getPlayableRaceIDs() as $raceID) {
 			// get number of traders in game
-			$dbResult = $db->read('SELECT count(*) as number_of_race FROM player WHERE race_id = ' . $db->escapeNumber($raceID) . ' AND game_id = ' . $db->escapeNumber($var['game_id']));
+			$dbResult = $db->read('SELECT count(*) as number_of_race FROM player WHERE race_id = ' . $db->escapeNumber($raceID) . ' AND game_id = ' . $db->escapeNumber($this->gameID));
 
 			$races[$raceID] = [
 				'Name' => Race::getName($raceID),
@@ -56,8 +66,7 @@ use Smr\RaceDetails;
 		$template->assign('Game', $game);
 
 		if (Epoch::time() >= $game->getJoinTime()) {
-			$container = Page::create('game_join_processing.php');
-			$container->addVar('game_id');
+			$container = new GameJoinProcessor($this->gameID);
 			$template->assign('JoinGameFormHref', $container->href());
 		}
 
@@ -72,3 +81,6 @@ use Smr\RaceDetails;
 		// This instructs EndingJavascript.inc.php to include the javascript to display
 		// the Plotly.js radar charts.
 		$template->assign('AddRaceRadarChartJS', true);
+	}
+
+}

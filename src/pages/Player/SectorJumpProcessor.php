@@ -1,26 +1,37 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Globals;
+use Plotter;
 use Smr\MovementType;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 use Smr\SectorLock;
+use SmrSector;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class SectorJumpProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly ?int $targetSectorID = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$sector = $player->getSector();
 
 		if (!$player->getGame()->hasStarted()) {
 			create_error('You cannot move until the game has started!');
 		}
 
-		$target = Request::getVarInt('target');
+		$target = $this->targetSectorID ?? Request::getInt('target');
 
 		//allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
 		if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 			$player->setSectorID($target);
 			$player->update();
 			$sector->markVisited($player);
-			Page::create('current_sector.php')->go();
+			(new CurrentSector())->go();
 		}
 
 		// you can't move while on planet
@@ -43,8 +54,7 @@ use Smr\SectorLock;
 
 		// If the Calculate Turn Cost button was pressed
 		if (Request::get('action', '') == 'Calculate Turn Cost') {
-			$container = Page::create('sector_jump_calculate.php');
-			$container['target'] = $target;
+			$container = new SectorJumpCalculate($target);
 			$container->go();
 		}
 
@@ -113,4 +123,7 @@ use Smr\SectorLock;
 		require_once(LIB . 'Default/sector_mines.inc.php');
 		hit_sector_mines($player);
 
-		Page::create($var['target_page'])->go();
+		(new CurrentSector())->go();
+	}
+
+}

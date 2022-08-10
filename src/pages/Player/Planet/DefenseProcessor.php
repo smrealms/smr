@@ -1,10 +1,18 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Planet;
+
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class DefenseProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $hardwareTypeID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$ship = $player->getShip();
 
 		if (!$player->isLandedOnPlanet()) {
@@ -15,13 +23,10 @@ use Smr\Request;
 		if ($amount <= 0) {
 			create_error('You must actually enter an amount > 0!');
 		}
-		if ($player->getNewbieTurns() > 0) {
-			create_error('You can\'t drop defenses under newbie protection!');
-		}
 		// get a planet from the sector where the player is in
 		$planet = $player->getSectorPlanet();
 
-		$type_id = $var['type_id'];
+		$type_id = $this->hardwareTypeID;
 		$action = Request::get('action');
 		// transfer to ship
 		if ($action == 'Ship') {
@@ -130,4 +135,7 @@ use Smr\Request;
 			create_error('You must choose if you want to transfer to planet or to the ship!');
 		}
 
-		Page::create('planet_defense.php')->go();
+		(new Defense())->go();
+	}
+
+}

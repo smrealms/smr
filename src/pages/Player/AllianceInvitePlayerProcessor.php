@@ -1,12 +1,17 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+class AllianceInvitePlayerProcessor extends PlayerPageProcessor {
+
+	public function build(AbstractSmrPlayer $player): never {
+		$account = $player->getAccount();
 
 		$receiverID = Request::getInt('account_id');
 		$addMessage = Request::get('message');
@@ -36,5 +41,8 @@ use Smr\Request;
 
 		$player->sendAllianceInvitation($receiverID, $msg, $expires);
 
-		$container = Page::create('alliance_invite_player.php');
+		$container = new AllianceInvitePlayer();
 		$container->go();
+	}
+
+}

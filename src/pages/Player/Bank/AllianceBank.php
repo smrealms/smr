@@ -1,26 +1,34 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bank;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPage;
+use Smr\Session;
+use Smr\Template;
+use SmrAlliance;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+class AllianceBank extends PlayerPage {
 
-		// ********************************
-		// *
-		// * V a l i d a t e d ?
-		// *
-		// ********************************
+	public string $file = 'bank_alliance.php';
+
+	public function __construct(
+		private readonly int $allianceID,
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$session = Session::getInstance();
 
 		// is account validated?
-		if (!$account->isValidated()) {
+		if (!$player->getAccount()->isValidated()) {
 			create_error('You are not validated so you cannot use banks.');
 		}
 
-		$allianceID = $var['alliance_id'] ?? $player->getAllianceID();
+		$allianceID = $this->allianceID;
 
 		$alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
 		$template->assign('PageTopic', 'Bank');
@@ -115,22 +123,20 @@ use Smr\Epoch;
 
 			$template->assign('MinValue', $minValue);
 			$template->assign('MaxValue', $maxValue);
-			$container = Page::create('bank_alliance.php');
-			$container['alliance_id'] = $alliance->getAllianceID();
+			$container = new self($allianceID);
 			$template->assign('FilterTransactionsFormHREF', $container->href());
 
-			$container = Page::create('bank_alliance_exempt_processing.php');
-			$container['minVal'] = $minValue;
-			$container['maxVal'] = $maxValue;
+			$container = new AllianceBankExemptProcessor($minValue, $maxValue);
 			$template->assign('ExemptTransactionsFormHREF', $container->href());
 
 			$template->assign('Alliance', $alliance);
 		}
 
-		$container = Page::create('bank_report.php');
-		$container['alliance_id'] = $alliance->getAllianceID();
+		$container = new AllianceBankReport($allianceID);
 		$template->assign('BankReportHREF', $container->href());
 
-		$container = Page::create('bank_alliance_processing.php');
-		$container['alliance_id'] = $alliance->getAllianceID();
+		$container = new AllianceBankProcessor($allianceID);
 		$template->assign('BankTransactionFormHREF', $container->href());
+	}
+
+}

@@ -1,19 +1,21 @@
 <?php declare(strict_types=1);
 
-use Smr\Race;
-use Smr\SectorLock;
+namespace Smr;
 
-		// We can release the sector lock now because we know that the following
-		// code is read-only. This will help reduce sector lag and possible abuse.
-		SectorLock::getInstance()->release();
+use AbstractSmrPlayer;
+use Globals;
+use SmrForce;
+use SmrGame;
+use SmrLocation;
+use SmrPlanet;
+use SmrPort;
+use SmrSector;
+use SmrShipType;
+use SmrWeaponType;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->hasGame() ? $session->getPlayer() : null;
+class SectorsFile {
 
-		$gameID = $var['AdminCreateGameID'] ?? $player->getGameID();
-		$adminCreate = isset($var['AdminCreateGameID']);
-
+	public static function create(int $gameID, ?AbstractSmrPlayer $player, bool $adminCreate = false): never {
 		// NOTE: If the format of this file is changed in an incompatible way,
 		// make sure to update the SMR_FILE_VERSION!
 
@@ -121,7 +123,6 @@ use Smr\SectorLock;
 			$file .= $galaxy->getGalaxyID() . '=' . $galaxy->getWidth() . ',' . $galaxy->getHeight() . ',' . $galaxy->getGalaxyType() . ',' . inify($galaxy->getName()) . ',' . $galaxy->getMaxForceTime() . EOL;
 		}
 
-
 		foreach ($galaxies as $galaxy) {
 			// Efficiently construct the caches before proceeding
 			$galaxy->getLocations();
@@ -195,3 +196,6 @@ use Smr\SectorLock;
 		echo $file;
 
 		exit;
+	}
+
+}

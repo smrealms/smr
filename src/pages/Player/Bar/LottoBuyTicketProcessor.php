@@ -1,11 +1,20 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bar;
+
+use AbstractSmrPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
 
+class LottoBuyTicketProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $locationID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
 
 		if ($player->getCredits() < 1000000) {
 			create_error('There once was a man with less than $1,000,000...wait...thats you!');
@@ -35,7 +44,8 @@ use Smr\Epoch;
 		$message = ('<div class="center">Thanks for your purchase and good luck!  You currently');
 		$message .= (' own ' . pluralise($num, 'ticket') . '!</div><br />');
 
-		$container = Page::create('bar_main.php');
-		$container->addVar('LocationID');
-		$container['message'] = $message;
+		$container = new BarMain($this->locationID, $message);
 		$container->go();
+	}
+
+}

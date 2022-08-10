@@ -1,26 +1,29 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account\HistoryGames;
+
 use Smr\Database;
 use Smr\Request;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
+class GameNews extends HistoryPage {
 
-		$template->assign('PageTopic', 'Game News : ' . $var['game_name']);
-		Menu::historyGames(3);
+	public string $file = 'history_games_news.php';
+
+	protected function buildHistory(SmrAccount $account, Template $template): void {
+		$template->assign('PageTopic', 'Game News : ' . $this->historyGameName);
+		$this->addMenu($template);
 
 		$min = Request::getInt('min', 1);
 		$max = Request::getInt('max', 50);
 		$template->assign('Max', $max);
 		$template->assign('Min', $min);
 
-		$template->assign('ShowHREF', Page::copy($var)->href());
+		$template->assign('ShowHREF', $this->href());
 
 		$db = Database::getInstance();
-		$db->switchDatabases($var['HistoryDatabase']);
-		$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($var['view_game_id']) . ' AND news_id >= ' . $db->escapeNumber($min) . ' AND news_id <= ' . $db->escapeNumber($max));
+		$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($this->historyGameID) . ' AND news_id >= ' . $db->escapeNumber($min) . ' AND news_id <= ' . $db->escapeNumber($max));
 		$rows = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$rows[] = [
@@ -29,5 +32,6 @@ use Smr\Request;
 			];
 		}
 		$template->assign('Rows', $rows);
+	}
 
-		$db->switchDatabaseToLive(); // restore database
+}

@@ -1,13 +1,22 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bar;
+
+use AbstractSmrPlayer;
 use Smr\BarDrink;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
 
+class BuyDrinkProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $locationID,
+		private readonly string $action
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
 
 		$message = '<div class="center">';
 
@@ -19,7 +28,7 @@ use Smr\Epoch;
 		$dbResult = $db->read('SELECT IFNULL(MAX(drink_id), 0) AS max_drink_id FROM player_has_drinks WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 		$curr_drink_id = $dbResult->record()->getInt('max_drink_id');
 
-		if (isset($var['action']) && $var['action'] != 'drink') {
+		if ($this->action != 'drink') {
 			$drinkName = 'water';
 			$message .= 'You ask the bartender for some water and you quickly down it.<br />';
 			// have they been drinking recently?
@@ -85,7 +94,8 @@ use Smr\Epoch;
 		$player->increaseHOF(1, ['Bar', 'Drinks', 'Total'], HOF_PUBLIC);
 		$message .= '</div>';
 
-		$container = Page::create('bar_main.php');
-		$container->addVar('LocationID');
-		$container['message'] = $message;
+		$container = new BarMain($this->locationID, $message);
 		$container->go();
+	}
+
+}

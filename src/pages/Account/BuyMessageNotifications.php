@@ -1,19 +1,24 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
 use Smr\Messages;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
+class BuyMessageNotifications extends AccountPage {
 
-		if (isset($var['Message'])) {
-			$template->assign('Message', $var['Message']);
-		}
+	public string $file = 'buy_message_notifications.php';
+
+	public function __construct(
+		private readonly ?string $message = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
+		$template->assign('Message', $this->message);
 
 		$template->assign('PageTopic', 'Message Notifications');
-
-		$container = Page::create('buy_message_notifications_processing.php');
 
 		// Presently only player messages are eligible for notifications
 		$notifyTypeIDs = [MSG_PLAYER];
@@ -26,8 +31,11 @@ use Smr\Messages;
 			$messageBox['MessagesRemaining'] = $account->getMessageNotifications($messageTypeID);
 			$messageBox['MessagesPerCredit'] = MESSAGES_PER_CREDIT[$messageTypeID];
 
-			$container['MessageTypeID'] = $messageTypeID;
+			$container = new BuyMessageNotificationsProcessor($messageTypeID);
 			$messageBox['BuyHref'] = $container->href();
 			$messageBoxes[] = $messageBox;
 		}
 		$template->assign('MessageBoxes', $messageBoxes);
+	}
+
+}

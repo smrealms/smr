@@ -1,8 +1,16 @@
 <?php declare(strict_types=1);
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player;
 
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
+
+class PlotCourseCancelProcessor extends PlayerPageProcessor {
+
+	public function build(AbstractSmrPlayer $player): never {
 		$player->deletePlottedCourse();
 
-		Page::create('current_sector.php')->go();
+		(new CurrentSector())->go();
+	}
+
+}

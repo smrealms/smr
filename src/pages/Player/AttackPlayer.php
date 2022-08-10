@@ -1,12 +1,33 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player;
 
-		$template->assign('TraderCombatResults', $var['results']);
-		if ($var['target']) {
-			$template->assign('Target', SmrPlayer::getPlayer($var['target'], $player->getGameID()));
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPage;
+use Smr\Template;
+use SmrPlayer;
+
+class AttackPlayer extends PlayerPage {
+
+	public string $file = 'trader_attack.php';
+
+	/**
+	 * @param array<mixed> $results
+	 */
+	public function __construct(
+		private readonly array $results,
+		private readonly ?int $targetAccountID,
+		bool $playerDied
+	) {
+		$this->skipRedirect = $playerDied;
+	}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$template->assign('TraderCombatResults', $this->results);
+		if ($this->targetAccountID !== null) {
+			$template->assign('Target', SmrPlayer::getPlayer($this->targetAccountID, $player->getGameID()));
 		}
 		$template->assign('OverrideDeath', $player->isDead());
+	}
+
+}

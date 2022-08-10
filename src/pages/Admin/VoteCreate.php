@@ -1,15 +1,28 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class VoteCreate extends AccountPage {
 
+	public string $file = 'admin/vote_create.php';
+
+	public function __construct(
+		private readonly ?string $previewVote = null,
+		private readonly ?int $days = null,
+		private readonly ?string $previewOption = null,
+		private readonly ?int $voteID = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Create Vote');
 
-		$template->assign('VoteFormHREF', Page::create('admin/vote_create_processing.php')->href());
+		$template->assign('VoteFormHREF', (new VoteCreateProcessor())->href());
 
 		$voting = [];
 		$db = Database::getInstance();
@@ -20,15 +33,10 @@ use Smr\Epoch;
 			$voting[$voteID]['Question'] = $dbRecord->getString('question');
 		}
 		$template->assign('CurrentVotes', $voting);
-		if (isset($var['PreviewVote'])) {
-			$template->assign('PreviewVote', $var['PreviewVote']);
-		}
-		if (isset($var['Days'])) {
-			$template->assign('Days', $var['Days']);
-		}
-		if (isset($var['PreviewOption'])) {
-			$template->assign('PreviewOption', $var['PreviewOption']);
-		}
-		if (isset($var['VoteID'])) {
-			$template->assign('VoteID', $var['VoteID']);
-		}
+		$template->assign('PreviewVote', $this->previewVote);
+		$template->assign('Days', $this->days);
+		$template->assign('PreviewOption', $this->previewOption);
+		$template->assign('VoteID', $this->voteID);
+	}
+
+}

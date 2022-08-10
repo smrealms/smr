@@ -1,19 +1,35 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin\UniGen;
+
 use Smr\Admin\UniGenLocationCategories;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Request;
+use Smr\Template;
+use SmrAccount;
+use SmrGalaxy;
+use SmrLocation;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class CreateLocations extends AccountPage {
 
-		$session->getRequestVarInt('gal_on');
-		$template->assign('Galaxies', SmrGalaxy::getGameGalaxies($var['game_id']));
+	use ReusableTrait;
 
-		$container = Page::create('admin/unigen/universe_create_locations.php');
-		$container->addVar('game_id');
+	public string $file = 'admin/unigen/universe_create_locations.php';
+
+	public function __construct(
+		private readonly int $gameID,
+		private ?int $galaxyID = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
+		$this->galaxyID ??= Request::getInt('gal_on');
+		$template->assign('Galaxies', SmrGalaxy::getGameGalaxies($this->gameID));
+
+		$container = new self($this->gameID);
 		$template->assign('JumpGalaxyHREF', $container->href());
 
-		$locations = SmrLocation::getAllLocations($var['game_id']);
+		$locations = SmrLocation::getAllLocations($this->gameID);
 
 		// Initialize all location counts to zero
 		$totalLocs = [];
@@ -21,7 +37,7 @@ use Smr\Admin\UniGenLocationCategories;
 			$totalLocs[$location->getTypeID()] = 0;
 		}
 
-		$galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
+		$galaxy = SmrGalaxy::getGalaxy($this->gameID, $this->galaxyID);
 		$template->assign('Galaxy', $galaxy);
 
 		// Determine the current amount of each location
@@ -87,10 +103,12 @@ use Smr\Admin\UniGenLocationCategories;
 		$template->assign('LocTypes', $categories->locTypes);
 
 		// Form to make location changes
-		$container = Page::create('admin/unigen/universe_create_save_processing.php', $var);
-		$container['forward_to'] = 'admin/unigen/universe_create_sectors.php';
+		$container = new SaveProcessor($this->gameID, $this->galaxyID);
 		$template->assign('CreateLocationsFormHREF', $container->href());
 
 		// HREF to cancel and return to the previous page
-		$container = Page::create('admin/unigen/universe_create_sectors.php', $var);
+		$container = new EditGalaxy($this->gameID, $this->galaxyID);
 		$template->assign('CancelHREF', $container->href());
+	}
+
+}

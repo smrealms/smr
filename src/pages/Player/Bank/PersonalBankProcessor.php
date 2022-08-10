@@ -1,10 +1,14 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bank;
+
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class PersonalBankProcessor extends PlayerPageProcessor {
 
+	public function build(AbstractSmrPlayer $player): never {
 		$amount = Request::getInt('amount');
 		$action = Request::get('action');
 
@@ -30,4 +34,7 @@ use Smr\Request;
 		// log action
 		$player->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits for personal account');
 
-		Page::create('bank_personal.php')->go();
+		(new PersonalBank())->go();
+	}
+
+}

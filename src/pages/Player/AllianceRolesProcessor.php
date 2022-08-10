@@ -1,14 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Exception;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class AllianceRolesProcessor extends PlayerPageProcessor {
 
-		$alliance_id = $var['alliance_id'] ?? $player->getAllianceID();
+	public function __construct(
+		private readonly ?int $roleID = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
+		$db = Database::getInstance();
+
+		$alliance_id = $player->getAllianceID();
 
 		// Checkbox inputs only post if they are checked
 		$unlimited = Request::has('unlimited');
@@ -16,7 +25,7 @@ use Smr\Request;
 		$changePass = Request::has('changePW');
 		$removeMember = Request::has('removeMember');
 		$changeMOD = Request::has('changeMoD');
-		$changeRoles = Request::has('changeRoles') || (isset($var['role_id']) && $var['role_id'] == ALLIANCE_ROLE_LEADER); //Leader can always change roles.
+		$changeRoles = Request::has('changeRoles') || ($this->roleID === ALLIANCE_ROLE_LEADER); //Leader can always change roles.
 		$planetAccess = Request::has('planets');
 		$mbMessages = Request::has('mbMessages');
 		$exemptWith = Request::has('exemptWithdrawals');
@@ -37,9 +46,10 @@ use Smr\Request;
 		}
 
 		// with empty role the user wants to create a new entry
-		if (!isset($var['role_id'])) {
+		$roleName = Request::get('role');
+		if ($this->roleID === null) {
 			// role empty too? that doesn't make sence
-			if (empty(Request::get('role'))) {
+			if (empty($roleName)) {
 				throw new Exception('Empty role name is not allowed');
 			}
 
@@ -56,7 +66,7 @@ use Smr\Request;
 				'alliance_id' => $db->escapeNumber($alliance_id),
 				'game_id' => $db->escapeNumber($player->getGameID()),
 				'role_id' => $db->escapeNumber($role_id),
-				'role' => $db->escapeString(Request::get('role')),
+				'role' => $db->escapeString($roleName),
 				'with_per_day' => $db->escapeNumber($withPerDay),
 				'positive_balance' => $db->escapeBoolean($positiveBalance),
 				'remove_member' => $db->escapeBoolean($removeMember),
@@ -72,21 +82,21 @@ use Smr\Request;
 			]);
 			$db->unlock();
 		} else {
-			if (empty(Request::get('role'))) {
+			if (empty($roleName)) {
 				// if no role is given we delete that entry
-				if ($var['role_id'] == ALLIANCE_ROLE_LEADER) {
+				if ($this->roleID === ALLIANCE_ROLE_LEADER) {
 					create_error('You cannot delete the leader role.');
-				} elseif ($var['role_id'] == ALLIANCE_ROLE_NEW_MEMBER) {
+				} elseif ($this->roleID === ALLIANCE_ROLE_NEW_MEMBER) {
 					create_error('You cannot delete the new member role.');
 				}
 				$db->write('DELETE FROM alliance_has_roles
 							WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 							AND alliance_id = ' . $db->escapeNumber($alliance_id) . '
-							AND role_id = ' . $db->escapeNumber($var['role_id']));
+							AND role_id = ' . $db->escapeNumber($this->roleID));
 			} else {
 				// otherwise we update it
 				$db->write('UPDATE alliance_has_roles
-							SET role = ' . $db->escapeString(Request::get('role')) . ',
+							SET role = ' . $db->escapeString($roleName) . ',
 							with_per_day = ' . $db->escapeNumber($withPerDay) . ',
 							positive_balance = ' . $db->escapeBoolean($positiveBalance) . ',
 							remove_member = ' . $db->escapeBoolean($removeMember) . ',
@@ -101,11 +111,13 @@ use Smr\Request;
 							view_bonds = ' . $db->escapeBoolean($viewBonds) . '
 							WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 								AND alliance_id = ' . $db->escapeNumber($alliance_id) . '
-								AND role_id = ' . $db->escapeNumber($var['role_id']));
+								AND role_id = ' . $db->escapeNumber($this->roleID));
 
 			}
 
 		}
-		$container = Page::create('alliance_roles.php');
-		$container['alliance_id'] = $alliance_id;
+		$container = new AllianceRoles();
 		$container->go();
+	}
+
+}

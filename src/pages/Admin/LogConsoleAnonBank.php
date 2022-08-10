@@ -1,11 +1,17 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+class LogConsoleAnonBank extends AccountPage {
 
+	public string $file = 'admin/log_anonymous_account.php';
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Anonymous Account Access');
 
 		$db = Database::getInstance();
@@ -33,5 +39,8 @@ use Smr\Database;
 		}
 		$template->assign('AnonLogs', $anon_logs);
 
-		$container = Page::create('admin/log_console.php');
+		$container = new LogConsole();
 		$template->assign('BackHREF', $container->href());
+	}
+
+}

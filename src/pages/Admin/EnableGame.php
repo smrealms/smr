@@ -1,17 +1,25 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class EnableGame extends AccountPage {
 
+	public string $file = 'admin/enable_game.php';
+
+	public function __construct(
+		private readonly ?string $processingMessage = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Enable New Games');
 
 		// If we have just forwarded from the processing file, pass its message.
-		if (isset($var['processing_msg'])) {
-			$template->assign('ProcessingMsg', $var['processing_msg']);
-		}
+		$template->assign('ProcessingMsg', $this->processingMessage);
 
 		// Get the list of disabled games
 		$db = Database::getInstance();
@@ -24,5 +32,8 @@ use Smr\Database;
 		$template->assign('DisabledGames', $disabledGames);
 
 		// Create the link to the processing file
-		$linkContainer = Page::create('admin/enable_game_processing.php');
+		$linkContainer = new EnableGameProcessor();
 		$template->assign('EnableGameHREF', $linkContainer->href());
+	}
+
+}

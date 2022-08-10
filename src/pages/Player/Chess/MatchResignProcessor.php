@@ -1,20 +1,29 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Chess;
+
+use AbstractSmrPlayer;
 use Smr\Chess\ChessGame;
+use Smr\Page\PlayerPageProcessor;
+use Smr\Pages\Player\CurrentSector;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class MatchResignProcessor extends PlayerPageProcessor {
 
-		$chessGame = ChessGame::getChessGame($var['ChessGameID']);
+	public function __construct(
+		private readonly int $chessGameID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
+		$chessGame = ChessGame::getChessGame($this->chessGameID);
 		$result = $chessGame->resign($player->getAccountID());
 
-		$container = Page::create('current_sector.php');
-
-		$container['msg'] = match ($result) {
-			ChessGame::END_RESIGN => '[color=green]Success:[/color] You have resigned from [chess=' . $var['ChessGameID'] . '].',
-			ChessGame::END_CANCEL => '[color=green]Success:[/color] [chess=' . $var['ChessGameID'] . '] has been cancelled.',
+		$msg = match ($result) {
+			ChessGame::END_RESIGN => '[color=green]Success:[/color] You have resigned from [chess=' . $this->chessGameID . '].',
+			ChessGame::END_CANCEL => '[color=green]Success:[/color] [chess=' . $this->chessGameID . '] has been cancelled.',
 		};
 
+		$container = new CurrentSector(message: $msg);
 		$container->go();
+	}
+
+}

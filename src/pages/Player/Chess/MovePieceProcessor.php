@@ -1,18 +1,22 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Chess;
+
+use AbstractSmrPlayer;
 use Smr\Chess\ChessGame;
 use Smr\Chess\ChessPiece;
 use Smr\Exceptions\UserError;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class MovePieceProcessor extends PlayerPageProcessor {
 
-		$container = Page::create('chess_play.php');
-		$container->addVar('ChessGameID');
+	public function __construct(
+		private readonly int $chessGameID
+	) {}
 
-		$chessGame = ChessGame::getChessGame($var['ChessGameID']);
+	public function build(AbstractSmrPlayer $player): never {
+		$chessGame = ChessGame::getChessGame($this->chessGameID);
 		$x = Request::getInt('x');
 		$y = Request::getInt('y');
 		$toX = Request::getInt('toX');
@@ -23,6 +27,9 @@ use Smr\Request;
 		} catch (UserError $err) {
 			$message = $err->getMessage();
 		}
-		$container['MoveMessage'] = $message;
 
+		$container = new MatchPlay($this->chessGameID, $message);
 		$container->go();
+	}
+
+}

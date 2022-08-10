@@ -1,14 +1,27 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Council;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\CouncilVoting;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
 use Smr\Race;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class ViewCouncil extends PlayerPage {
 
-		$raceID = $var['race_id'] ?? $player->getRaceID();
+	use ReusableTrait;
+
+	public string $file = 'council_list.php';
+
+	public function __construct(
+		private readonly int $raceID
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$raceID = $this->raceID;
 
 		$template->assign('PageTopic', 'Ruling Council Of ' . Race::getName($raceID));
 		$template->assign('RaceID', $raceID);
@@ -18,3 +31,6 @@ use Smr\Race;
 		// check for relations here
 		CouncilVoting::modifyRelations($raceID, $player->getGameID());
 		CouncilVoting::checkPacts($raceID, $player->getGameID());
+	}
+
+}

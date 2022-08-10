@@ -1,8 +1,21 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$ship = $session->getPlayer()->getShip();
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Globals;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+
+class CargoDump extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'cargo_dump.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$ship = $player->getShip();
 
 		$template->assign('PageTopic', 'Dump Cargo');
 
@@ -10,9 +23,7 @@
 
 			$goods = [];
 			foreach ($ship->getCargo() as $goodID => $amount) {
-				$container = Page::create('cargo_dump_processing.php');
-				$container['good_id'] = $goodID;
-
+				$container = new CargoDumpProcessor($goodID);
 				$goods[] = [
 					'image' => Globals::getGood($goodID)['ImageLink'],
 					'name' => Globals::getGood($goodID)['Name'],
@@ -23,3 +34,6 @@
 
 			$template->assign('Goods', $goods);
 		}
+	}
+
+}

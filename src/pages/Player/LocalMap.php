@@ -1,12 +1,21 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Exception;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
 use Smr\Request;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class LocalMap extends PlayerPage {
 
+	use ReusableTrait;
+
+	public string $file = 'map_local.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		if ($player->isLandedOnPlanet()) {
 			create_error('You are on a planet!');
 		}
@@ -32,22 +41,10 @@ use Smr\Request;
 
 		$template->assign('SpaceView', true);
 
-		if (isset($var['ZoomDir'])) {
-			if ($var['ZoomDir'] == 'Shrink') {
-				$player->decreaseZoom(1);
-			} elseif ($var['ZoomDir'] == 'Expand') {
-				$player->increaseZoom(1);
-			}
-			// Unset so that refreshing doesn't zoom again
-			unset($var['ZoomDir']);
-		}
-
-		$container = Page::create('map_local.php');
-		$container['ZoomDir'] = 'Expand';
+		$container = new LocalMapProcessor('Expand');
 		$template->assign('MapExpandHREF', $container->href());
-		$container['ZoomDir'] = 'Shrink';
+		$container = new LocalMapProcessor('Shrink');
 		$template->assign('MapShrinkHREF', $container->href());
-
 
 		$galaxy = $player->getSector()->getGalaxy();
 
@@ -55,3 +52,6 @@ use Smr\Request;
 
 		$mapSectors = $galaxy->getMapSectors($player->getSectorID(), $player->getZoom());
 		$template->assign('MapSectors', $mapSectors);
+	}
+
+}

@@ -1,20 +1,28 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bank;
+
+use AbstractSmrPlayer;
+use Exception;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class AnonBankDetailProcessor extends PlayerPageProcessor {
 
+	public function __construct(
+		private readonly int $anonBankID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$action = Request::get('action');
 		if (!in_array($action, ['Deposit', 'Payment'])) {
 			throw new Exception('Invalid action submitted: ' . $action);
 		}
 
 		$amount = Request::getInt('amount');
-		$account_num = $var['account_num'];
+		$account_num = $this->anonBankID;
 		// no negative amounts are allowed
 		if ($amount <= 0) {
 			create_error('You must actually enter an amount > 0!');
@@ -60,7 +68,8 @@ use Smr\Request;
 		// Log the player action
 		$player->log(LOG_TYPE_BANK, $action . ' of ' . $amount . ' credits in anonymous account #' . $account_num);
 
-		$container = Page::create('bank_anon_detail.php');
-		$container['account_num'] = $account_num;
-		$container['allowed'] = 'yes';
+		$container = new AnonBankDetail($account_num);
 		$container->go();
+	}
+
+}

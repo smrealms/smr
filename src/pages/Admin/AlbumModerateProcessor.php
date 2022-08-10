@@ -1,17 +1,28 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
 
+class AlbumModerateProcessor extends AccountPageProcessor {
+
+	public function __construct(
+		private readonly int $albumAccountID,
+		private readonly string $task
+	) {}
+
+	public function build(SmrAccount $account): never {
 		$db = Database::getInstance();
-		$var = Smr\Session::getInstance()->getCurrentVar();
 
 		// get account_id from session
-		$account_id = $var['account_id'];
+		$account_id = $this->albumAccountID;
 
 		// check for each task
-		if ($var['task'] == 'reset_image') {
+		if ($this->task == 'reset_image') {
 			$email_txt = Request::get('email_txt');
 			$db->write('UPDATE album SET disabled = \'TRUE\' WHERE account_id = ' . $db->escapeNumber($account_id));
 
@@ -39,17 +50,17 @@ use Smr\Request;
 				$mail->send();
 			}
 
-		} elseif ($var['task'] == 'reset_location') {
+		} elseif ($this->task == 'reset_location') {
 			$db->write('UPDATE album SET location = \'\' WHERE account_id = ' . $db->escapeNumber($account_id));
-		} elseif ($var['task'] == 'reset_email') {
+		} elseif ($this->task == 'reset_email') {
 			$db->write('UPDATE album SET email = \'\' WHERE account_id =' . $db->escapeNumber($account_id));
-		} elseif ($var['task'] == 'reset_website') {
+		} elseif ($this->task == 'reset_website') {
 			$db->write('UPDATE album SET website = \'\' WHERE account_id = ' . $db->escapeNumber($account_id));
-		} elseif ($var['task'] == 'reset_birthdate') {
+		} elseif ($this->task == 'reset_birthdate') {
 			$db->write('UPDATE album SET day = 0, month = 0, year = 0 WHERE account_id = ' . $db->escapeNumber($account_id));
-		} elseif ($var['task'] == 'reset_other') {
+		} elseif ($this->task == 'reset_other') {
 			$db->write('UPDATE album SET other = \'\' WHERE account_id = ' . $db->escapeNumber($account_id));
-		} elseif ($var['task'] == 'delete_comment') {
+		} elseif ($this->task == 'delete_comment') {
 			// we just ignore if nothing was set
 			if (Request::has('comment_ids')) {
 				$db->write('DELETE
@@ -61,6 +72,8 @@ use Smr\Request;
 			create_error('No action chosen!');
 		}
 
-		$container = Page::create('admin/album_moderate.php');
-		$container->addVar('account_id');
+		$container = new AlbumModerate($this->albumAccountID);
 		$container->go();
+	}
+
+}

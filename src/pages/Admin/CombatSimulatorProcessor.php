@@ -1,7 +1,38 @@
 <?php declare(strict_types=1);
 
-use Smr\Request;
+namespace Smr\Pages\Admin;
 
+use DummyShip;
+use Smr\Page\AccountPageProcessor;
+use Smr\Request;
+use SmrAccount;
+
+/**
+ * @param array<int, \AbstractSmrPlayer> $realAttackers
+ * @param array<int, \AbstractSmrPlayer> $realDefenders
+ * @return array<string, mixed>
+ */
+function runAnAttack(array $realAttackers, array $realDefenders): array {
+	$results = [
+		'Attackers' => ['Traders' => [], 'TotalDamage' => 0],
+		'Defenders' => ['Traders' => [], 'TotalDamage' => 0],
+	];
+	foreach ($realAttackers as $accountID => $teamPlayer) {
+		$playerResults = $teamPlayer->shootPlayers($realDefenders);
+		$results['Attackers']['Traders'][] = $playerResults;
+		$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
+	}
+	foreach ($realDefenders as $accountID => $teamPlayer) {
+		$playerResults = $teamPlayer->shootPlayers($realAttackers);
+		$results['Defenders']['Traders'][] = $playerResults;
+		$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
+	}
+	return $results;
+}
+
+class CombatSimulatorProcessor extends AccountPageProcessor {
+
+	public function build(SmrAccount $account): never {
 		$usedNames = [];
 
 		$i = 1;
@@ -41,6 +72,7 @@ use Smr\Request;
 			}
 		}
 
+		$results = null;
 		if (Request::has('run') || Request::has('death_run')) {
 			if (Request::has('death_run')) {
 				$maxRounds = 100;
@@ -67,38 +99,13 @@ use Smr\Request;
 			}
 		}
 
-		/**
-		 * @param array<int, AbstractSmrPlayer> $realAttackers
-		 * @param array<int, AbstractSmrPlayer> $realDefenders
-		 * @return array<string, mixed>
-		 */
-		function runAnAttack(array $realAttackers, array $realDefenders): array {
-			$results = [
-				'Attackers' => ['Traders' => [], 'TotalDamage' => 0],
-				'Defenders' => ['Traders' => [], 'TotalDamage' => 0],
-			];
-			foreach ($realAttackers as $accountID => $teamPlayer) {
-				$playerResults = $teamPlayer->shootPlayers($realDefenders);
-				$results['Attackers']['Traders'][] = $playerResults;
-				$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
-			}
-			foreach ($realDefenders as $accountID => $teamPlayer) {
-				$playerResults = $teamPlayer->shootPlayers($realAttackers);
-				$results['Defenders']['Traders'][] = $playerResults;
-				$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
-			}
-			return $results;
-		}
-
 		// Save ships unless we're just updating the dummy list
 		if (!Request::has('update')) {
 			DummyShip::saveDummyShips();
 		}
 
-		$container = Page::create('admin/combat_simulator.php');
-		if (isset($results)) {
-			$container['results'] = $results;
-		}
-		$container['attackers'] = $attackers;
-		$container['defenders'] = $defenders;
+		$container = new CombatSimulator($results, $attackers, $defenders);
 		$container->go();
+	}
+
+}

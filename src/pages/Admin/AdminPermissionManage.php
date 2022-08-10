@@ -1,18 +1,28 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\AdminPermissions;
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
+class AdminPermissionManage extends AccountPage {
 
-		$admin_id = $session->getRequestVarInt('admin_id', 0);
+	use ReusableTrait;
+
+	public string $file = 'admin/permission_manage.php';
+
+	public function __construct(
+		private readonly ?int $adminAccountID = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
+		$admin_id = $this->adminAccountID;
 
 		$template->assign('PageTopic', 'Manage Admin Permissions');
-
-		$container = Page::create('admin/permission_manage.php');
-		$selectAdminHREF = $container->href();
-		$template->assign('SelectAdminHREF', $selectAdminHREF);
 
 		$adminLinks = [];
 		$db = Database::getInstance();
@@ -21,7 +31,7 @@ use Smr\Database;
 					GROUP BY account_id');
 		foreach ($dbResult->records() as $dbRecord) {
 			$accountID = $dbRecord->getInt('account_id');
-			$container['admin_id'] = $accountID;
+			$container = new self($accountID);
 			$adminLinks[$accountID] = [
 				'href' => $container->href(),
 				'name' => $dbRecord->getString('login'),
@@ -43,15 +53,19 @@ use Smr\Database;
 				}
 			}
 			$template->assign('ValidatedAccounts', $validatedAccounts);
+
+			$template->assign('SelectAdminHREF', (new AdminPermissionManageSelectProcessor())->href());
 		} else {
 			// get the account that we're editing
 			$editAccount = SmrAccount::getAccount($admin_id);
 			$template->assign('EditAccount', $editAccount);
 
-			$container = Page::create('admin/permission_manage_processing.php');
-			$container['admin_id'] = $admin_id;
+			$container = new AdminPermissionManageProcessor($admin_id);
 			$processingHREF = $container->href();
 			$template->assign('ProcessingHREF', $processingHREF);
 
 			$template->assign('PermissionCategories', AdminPermissions::getPermissionsByCategory());
 		}
+	}
+
+}

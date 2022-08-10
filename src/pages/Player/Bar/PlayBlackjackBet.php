@@ -1,12 +1,23 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player\Bar;
 
+use AbstractSmrPlayer;
+use Menu;
+use Smr\Page\PlayerPage;
+use Smr\Template;
+
+class PlayBlackjackBet extends PlayerPage {
+
+	public string $file = 'bar_gambling_bet.php';
+
+	public function __construct(
+		private readonly int $locationID,
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'BlackJack');
-		Menu::bar();
+		Menu::bar($this->locationID);
 
 		if ($player->hasNewbieTurns()) {
 			$maxBet = 100;
@@ -18,6 +29,8 @@
 		$template->assign('MaxBet', $maxBet);
 		$template->assign('MaxBetMsg', $maxBetMsg);
 
-		$container = Page::create('bar_gambling_processing.php');
-		$container->addVar('LocationID');
+		$container = new PlayBlackjackProcessor($this->locationID, 'new game');
 		$template->assign('PlayHREF', $container->href());
+	}
+
+}

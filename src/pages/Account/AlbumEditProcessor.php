@@ -1,8 +1,12 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
 
 function php_link_check(string $url): string|false {
 	/*	Purpose: Check HTTP Links
@@ -63,9 +67,9 @@ function php_link_check(string $url): string|false {
 	return $http['Status-Code'];
 }
 
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+class AlbumEditProcessor extends AccountPageProcessor {
 
+	public function build(SmrAccount $account): never {
 		$location = Request::get('location');
 		$email = Request::get('email');
 
@@ -120,7 +124,6 @@ function php_link_check(string $url): string|false {
 				create_error('Failed to upload image!');
 			}
 		}
-
 
 		// check if we had a album entry so far
 		$db = Database::getInstance();
@@ -185,6 +188,9 @@ function php_link_check(string $url): string|false {
 			$db->unlock();
 		}
 
-		$container = Page::create('album_edit.php');
-		$container['SuccessMsg'] = 'SUCCESS: Your information has been updated!';
+		$successMsg = 'SUCCESS: Your information has been updated!';
+		$container = new AlbumEdit($successMsg);
 		$container->go();
+	}
+
+}

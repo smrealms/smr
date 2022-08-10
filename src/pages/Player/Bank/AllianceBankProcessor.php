@@ -1,15 +1,24 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bank;
+
+use AbstractSmrPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
+use SmrAlliance;
 
+class AllianceBankProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $allianceID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
 
-		$alliance_id = $var['alliance_id'] ?? $player->getAllianceID();
+		$alliance_id = $this->allianceID;
 
 		$amount = Request::getInt('amount');
 
@@ -111,6 +120,8 @@ use Smr\Request;
 		// save money for alliance
 		$alliance->update();
 
-		$container = Page::create('bank_alliance.php');
-		$container['alliance_id'] = $alliance_id;
+		$container = new AllianceBank($alliance_id);
 		$container->go();
+	}
+
+}

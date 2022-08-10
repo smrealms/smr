@@ -1,13 +1,26 @@
 <?php declare(strict_types=1);
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player;
 
-		$player->setCustomShipName($var['ShipName']);
-		$account->decreaseTotalSmrCredits($var['cost']);
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
 
-		$container = Page::create('current_sector.php');
-		$container['msg'] = 'Thanks for your purchase! Your ship is ready!<br /><small>If your ship is found to use HTML inappropriately you may be banned. If your ship does contain inappropriate HTML, please notify an admin ASAP.</small>';
+class BuyShipNamePreviewProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly string $shipName,
+		private readonly int $cost
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
+		$account = $player->getAccount();
+
+		$player->setCustomShipName($this->shipName);
+		$account->decreaseTotalSmrCredits($this->cost);
+
+		$message = 'Thanks for your purchase! Your ship is ready!<br /><small>If your ship is found to use HTML inappropriately you may be banned. If your ship does contain inappropriate HTML, please notify an admin ASAP.</small>';
+		$container = new CurrentSector(message: $message);
 		$container->go();
+	}
+
+}

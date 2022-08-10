@@ -1,20 +1,39 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+namespace Smr\Pages\Admin\UniGen;
 
-		$editSectorID = $session->getRequestVarInt('sector_edit');
-		$editSector = SmrSector::getSector($var['game_id'], $editSectorID);
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Request;
+use Smr\Template;
+use SmrAccount;
+use SmrGalaxy;
+use SmrSector;
+
+class EditSector extends AccountPage {
+
+	use ReusableTrait;
+
+	public string $file = 'admin/unigen/universe_create_sector_details.php';
+
+	public function __construct(
+		private readonly int $gameID,
+		private readonly int $galaxyID,
+		private ?int $sectorID = null,
+		private readonly ?string $message = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
+		$this->sectorID ??= Request::getInt('sector_edit');
+		$editSector = SmrSector::getSector($this->gameID, $this->sectorID);
 		$template->assign('PageTopic', 'Edit Sector #' . $editSector->getSectorID() . ' (' . $editSector->getGalaxy()->getDisplayName() . ')');
 		$template->assign('EditSector', $editSector);
 
-		$galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);
+		$galaxies = SmrGalaxy::getGameGalaxies($this->gameID);
 		$lastSector = end($galaxies)->getEndSector();
 		$template->assign('LastSector', $lastSector);
 
-		$container = Page::create('admin/unigen/universe_create_save_processing.php', $var);
-		$container['forward_to'] = 'admin/unigen/universe_create_sector_details.php';
+		$container = new EditSectorProcessor($this->gameID, $this->galaxyID, $this->sectorID);
 		$template->assign('EditHREF', $container->href());
 
 		$selectedPlanetType = 0;
@@ -52,9 +71,10 @@
 		$template->assign('WarpGal', $warpGal);
 		$template->assign('WarpSectorID', $warpSectorID);
 
-		$container = Page::create('admin/unigen/universe_create_sectors.php', $var);
+		$container = new EditGalaxy($this->gameID, $this->galaxyID);
 		$template->assign('CancelHREF', $container->href());
 
-		if (isset($var['message'])) {
-			$template->assign('Message', $var['message']);
-		}
+		$template->assign('Message', $this->message);
+	}
+
+}

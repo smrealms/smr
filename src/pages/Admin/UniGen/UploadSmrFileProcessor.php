@@ -1,9 +1,22 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin\UniGen;
+
+use Smr\Page\AccountPageProcessor;
 use Smr\TransactionType;
+use SmrAccount;
+use SmrGalaxy;
+use SmrLocation;
+use SmrPort;
+use SmrSector;
 
-		$var = Smr\Session::getInstance()->getCurrentVar();
+class UploadSmrFileProcessor extends AccountPageProcessor {
 
+	public function __construct(
+		private readonly int $gameID
+	) {}
+
+	public function build(SmrAccount $account): never {
 		if ($_FILES['smr_file']['error'] !== UPLOAD_ERR_OK) {
 			create_error('Failed to upload SMR file!');
 		}
@@ -31,7 +44,7 @@ use Smr\TransactionType;
 		// Create the galaxies
 		foreach ($data['Galaxies'] as $galID => $details) {
 			[$width, $height, $type, $name, $maxForceTime] = explode(',', $details);
-			$galaxy = SmrGalaxy::createGalaxy($var['game_id'], $galID);
+			$galaxy = SmrGalaxy::createGalaxy($this->gameID, $galID);
 			$galaxy->setWidth(str2int($width));
 			$galaxy->setHeight(str2int($height));
 			$galaxy->setGalaxyType($type);
@@ -40,7 +53,7 @@ use Smr\TransactionType;
 		}
 		// Workaround for SmrGalaxy::getStartSector depending on all other galaxies
 		SmrGalaxy::saveGalaxies();
-		foreach (SmrGalaxy::getGameGalaxies($var['game_id'], true) as $galaxy) {
+		foreach (SmrGalaxy::getGameGalaxies($this->gameID, true) as $galaxy) {
 			$galaxy->generateSectors();
 		}
 
@@ -51,7 +64,7 @@ use Smr\TransactionType;
 			}
 
 			$sectorID = str2int($matches[1]);
-			$editSector = SmrSector::getSector($var['game_id'], $sectorID);
+			$editSector = SmrSector::getSector($this->gameID, $sectorID);
 
 			// Sector connections (we assume link sectors are correct)
 			foreach (['Up', 'Down', 'Left', 'Right'] as $dir) {
@@ -83,7 +96,7 @@ use Smr\TransactionType;
 			}
 
 			// Locations
-			$allLocs = SmrLocation::getAllLocations($var['game_id']);
+			$allLocs = SmrLocation::getAllLocations($this->gameID);
 			if (isset($vals['Locations'])) {
 				$locNames = explode(',', $vals['Locations']);
 				foreach ($locNames as $locName) {
@@ -104,7 +117,7 @@ use Smr\TransactionType;
 
 			// Warps
 			if (isset($vals['Warp'])) {
-				$editSector->setWarp(SmrSector::getSector($var['game_id'], str2int($vals['Warp'])));
+				$editSector->setWarp(SmrSector::getSector($this->gameID, str2int($vals['Warp'])));
 			}
 
 			// Planets
@@ -118,6 +131,8 @@ use Smr\TransactionType;
 		SmrSector::saveSectors();
 		SmrPort::savePorts();
 
-		$container = Page::create('admin/unigen/universe_create_sectors.php');
-		$container->addVar('game_id');
+		$container = new EditGalaxy($this->gameID);
 		$container->go();
+	}
+
+}

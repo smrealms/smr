@@ -1,10 +1,27 @@
 <?php declare(strict_types=1);
 
-use Smr\Request;
+namespace Smr\Pages\Player;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+use AbstractSmrPlayer;
+use Globals;
+use Smr\Page\PlayerPageProcessor;
+use Smr\Request;
+use SmrForce;
+
+class ForcesDropProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $ownerAccountID,
+		private readonly ?int $dropMines = null,
+		private readonly ?int $takeMines = null,
+		private readonly ?int $dropCDs = null,
+		private readonly ?int $takeCDs = null,
+		private readonly ?int $dropSDs = null,
+		private readonly ?int $takeSDs = null,
+		private readonly ?string $referrer = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$ship = $player->getShip();
 
 		if ($player->getNewbieTurns() > 0) {
@@ -20,19 +37,19 @@ use Smr\Request;
 		}
 
 		// take either from container or request, prefer container
-		$drop_mines = Request::getVarInt('drop_mines', 0);
-		$take_mines = Request::getVarInt('take_mines', 0);
-		$drop_combat_drones = Request::getVarInt('drop_combat_drones', 0);
-		$take_combat_drones = Request::getVarInt('take_combat_drones', 0);
-		$drop_scout_drones = Request::getVarInt('drop_scout_drones', 0);
-		$take_scout_drones = Request::getVarInt('take_scout_drones', 0);
+		$drop_mines = $this->dropMines ?? Request::getInt('drop_mines', 0);
+		$take_mines = $this->takeMines ?? Request::getInt('take_mines', 0);
+		$drop_combat_drones = $this->dropCDs ?? Request::getInt('drop_combat_drones', 0);
+		$take_combat_drones = $this->takeCDs ?? Request::getInt('take_combat_drones', 0);
+		$drop_scout_drones = $this->dropSDs ?? Request::getInt('drop_scout_drones', 0);
+		$take_scout_drones = $this->takeSDs ?? Request::getInt('take_scout_drones', 0);
 
 		// so how many forces do we take/add per type?
 		$change_mines = $drop_mines - $take_mines;
 		$change_combat_drones = $drop_combat_drones - $take_combat_drones;
 		$change_scout_drones = $drop_scout_drones - $take_scout_drones;
 
-		$forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
+		$forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $this->ownerAccountID);
 
 		// check max on that stack
 		$at_max = false;
@@ -219,9 +236,12 @@ use Smr\Request;
 		$forces->update(); // Needs to be in db to show up on CS instantly when querying sector forces
 
 		// If we dropped forces from the Local Map, stay on that page
-		if (isset($var['referrer']) && $var['referrer'] == 'map_local.php') {
-			$body = $var['referrer'];
+		if ($this->referrer === LocalMap::class) {
+			$container = new LocalMap();
 		} else {
-			$body = 'current_sector.php';
+			$container = new CurrentSector();
 		}
-		Page::create($body)->go();
+		$container->go();
+	}
+
+}

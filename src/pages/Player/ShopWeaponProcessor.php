@@ -1,20 +1,32 @@
 <?php declare(strict_types=1);
 
-use Smr\BuyerRestriction;
+namespace Smr\Pages\Player;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+use AbstractSmrPlayer;
+use Smr\BuyerRestriction;
+use Smr\Page\PlayerPageProcessor;
+use SmrLocation;
+use SmrWeapon;
+
+class ShopWeaponProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $locationID,
+		private readonly SmrWeapon $weapon,
+		private readonly ?int $sellOrderID = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$ship = $player->getShip();
 
-		if (!$player->getSector()->hasLocation($var['LocationID'])) {
+		if (!$player->getSector()->hasLocation($this->locationID)) {
 			create_error('That location does not exist in this sector');
 		}
 
-		$weapon = $var['Weapon'];
-		if (!isset($var['OrderID'])) {
+		$weapon = $this->weapon;
+		if ($this->sellOrderID === null) {
 			// If here, we are buying
-			$location = SmrLocation::getLocation($player->getGameID(), $var['LocationID']);
+			$location = SmrLocation::getLocation($player->getGameID(), $this->locationID);
 			if (!$location->isWeaponSold($weapon->getWeaponTypeID())) {
 				create_error('We do not sell that weapon here!');
 			}
@@ -68,10 +80,12 @@ use Smr\BuyerRestriction;
 			$player->increaseCredits(IFloor($weapon->getCost() * WEAPON_REFUND_PERCENT));
 
 			// take weapon
-			$ship->removeWeapon($var['OrderID']);
+			$ship->removeWeapon($this->sellOrderID);
 
 			$player->log(LOG_TYPE_HARDWARE, 'Player Sells a ' . $weapon->getName());
 		}
-		$container = Page::create('shop_weapon.php');
-		$container->addVar('LocationID');
+		$container = new ShopWeapon($this->locationID);
 		$container->go();
+	}
+
+}

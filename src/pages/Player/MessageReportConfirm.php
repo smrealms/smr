@@ -1,37 +1,39 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
-use Smr\Epoch;
+use Smr\Page\PlayerPage;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class MessageReportConfirm extends PlayerPage {
 
-		if (!isset($var['notified_time'])) {
-			$var['notified_time'] = Epoch::time();
-		}
+	public string $file = 'message_notify_confirm.php';
 
-		if (empty($var['message_id'])) {
-			create_error('Please click the small yellow icon to report a message!');
-		}
+	public function __construct(
+		private readonly int $folderID,
+		private readonly int $messageID
+	) {}
 
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		// get message form db
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT message_text
 					FROM message
-					WHERE message_id = ' . $db->escapeNumber($var['message_id']));
+					WHERE message_id = ' . $db->escapeNumber($this->messageID));
 		if (!$dbResult->hasRecord()) {
 			create_error('Could not find the message you selected!');
 		}
 
 		$template->assign('MessageText', $dbResult->record()->getString('message_text'));
 
-		$container = Page::create('message_notify_processing.php');
-		$container->addVar('folder_id');
-		$container->addVar('message_id');
-		$container->addVar('sent_time');
-		$container->addVar('notified_time');
+		$container = new MessageReportProcessor($this->folderID, $this->messageID);
 		$template->assign('ProcessingHREF', $container->href());
 
 		$template->assign('PageTopic', 'Report a Message');
 		Menu::messages();
+	}
+
+}

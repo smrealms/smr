@@ -1,13 +1,16 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Planet;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+class LandProcessor extends PlayerPageProcessor {
 
+	public function build(AbstractSmrPlayer $player): never {
 		// is account validated?
-		if (!$account->isValidated()) {
+		if (!$player->getAccount()->isValidated()) {
 			create_error('You are not validated so you can\'t land on a planet.');
 		}
 
@@ -39,4 +42,7 @@ use Smr\Database;
 		$player->setLandedOnPlanet(true);
 		$player->takeTurns(TURNS_TO_LAND);
 		$player->log(LOG_TYPE_MOVEMENT, 'Player lands at planet');
-		Page::create('planet_main.php')->go();
+		(new Main())->go();
+	}
+
+}

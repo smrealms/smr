@@ -1,23 +1,32 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPage;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+class AllianceSetOp extends PlayerPage {
+
+	public string $file = 'alliance_set_op.php';
+
+	public function __construct(
+		private readonly ?string $message = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$account = $player->getAccount();
 		$alliance = $player->getAlliance();
 
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 		Menu::alliance($alliance->getAllianceID());
 
-		$container = Page::create('alliance_set_op_processing.php');
-
 		// Print any error messages that may have been created
-		if (!empty($var['message'])) {
-			$template->assign('Message', $var['message']);
+		if ($this->message !== null) {
+			$template->assign('Message', $this->message);
 		}
 
 		// get the op from db
@@ -31,15 +40,19 @@ use Smr\Epoch;
 			$template->assign('OpCountdown', format_time($time - Epoch::time()));
 
 			// Add a cancel button
-			$container['cancel'] = true;
+			$cancel = true;
+		} else {
+			$cancel = false;
 		}
-
+		$container = new AllianceSetOpProcessor($cancel);
 		$template->assign('OpProcessingHREF', $container->href());
-
 
 		// Stuff for designating a flagship
 		$template->assign('FlagshipID', $alliance->getFlagshipID());
 		$template->assign('AlliancePlayers', $alliance->getMembers());
 
-		$container = Page::create('alliance_set_flagship_processing.php');
+		$container = new AllianceSetFlagshipProcessor();
 		$template->assign('FlagshipHREF', $container->href());
+	}
+
+}

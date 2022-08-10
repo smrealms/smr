@@ -1,13 +1,21 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Council;
+
+use AbstractSmrPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
+class VotingCenterProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $otherRaceID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
 
 		if (!$player->isOnCouncil()) {
 			create_error('You have to be on the council in order to vote.');
@@ -21,7 +29,7 @@ use Smr\Request;
 			$action = 'DEC';
 		}
 
-		$race_id = $var['race_id'];
+		$race_id = $this->otherRaceID;
 
 		if ($action == 'INC' || $action == 'DEC') {
 			$db->replace('player_votes_relation', [
@@ -58,7 +66,9 @@ use Smr\Request;
 					'WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 						AND race_id_1 = ' . $db->escapeNumber($race_id) . '
 						AND race_id_2 = ' . $db->escapeNumber($player->getRaceID()));
-
 		}
 
-		Page::create('council_vote.php')->go();
+		(new VotingCenter())->go();
+	}
+
+}

@@ -1,9 +1,22 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
+use SmrGame;
 
+class GameDeleteProcessor extends AccountPageProcessor {
+
+	public function __construct(
+		private readonly int $deleteGameID
+	) {}
+
+	public function build(SmrAccount $account): never {
+		$game_id = $this->deleteGameID;
 		create_error('Deleting games is disabled!');
 
 		$db = Database::getInstance();
@@ -19,10 +32,6 @@ use Smr\Request;
 		}
 
 		if ($action == 'Yes') {
-			// get game id
-			$var = Smr\Session::getInstance()->getCurrentVar();
-			$game_id = $var['delete_game_id'];
-
 			if ($save) {
 				$dbResult = $db->read('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id));
 
@@ -88,7 +97,6 @@ use Smr\Request;
 				}
 
 			}
-
 
 			$smr_db_sql[] = 'DELETE FROM alliance_vs_alliance WHERE game_id = ' . $db->escapeNumber($game_id);
 			$smr_db_sql[] = 'DELETE FROM anon_bank WHERE game_id = ' . $db->escapeNumber($game_id);
@@ -306,4 +314,7 @@ use Smr\Request;
 
 		}
 		$db = Database::getInstance();
-		Page::create('admin/admin_tools.php')->go();
+		(new AdminTools())->go();
+	}
+
+}

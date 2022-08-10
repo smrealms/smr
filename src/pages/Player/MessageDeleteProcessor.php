@@ -1,17 +1,24 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class MessageDeleteProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $folderID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$db = Database::getInstance();
 
 		// If not deleting marked messages, we are deleting entire folders
 		if (Request::get('action') == 'All Messages') {
-			$container = Page::create('message_box_delete_processing.php');
-			$container->addVar('folder_id');
+			$container = new MessageBoxDeleteProcessor($this->folderID);
 			$container->go();
 		}
 
@@ -22,7 +29,7 @@ use Smr\Request;
 		// Delete any individually selected messages
 		$message_id_list = Request::getIntArray('message_id', []);
 		if (!empty($message_id_list)) {
-			if ($var['folder_id'] == MSG_SENT) {
+			if ($this->folderID == MSG_SENT) {
 				$db->write('UPDATE message SET sender_delete = ' . $db->escapeBoolean(true) . ' WHERE message_id IN (' . $db->escapeArray($message_id_list) . ')');
 			} else {
 				$db->write('UPDATE message SET receiver_delete = ' . $db->escapeBoolean(true) . ' WHERE message_id IN (' . $db->escapeArray($message_id_list) . ')');
@@ -42,6 +49,8 @@ use Smr\Request;
 						AND receiver_delete = ' . $db->escapeBoolean(false));
 		}
 
-		$container = Page::create('message_view.php');
-		$container->addVar('folder_id');
+		$container = new MessageView($this->folderID);
 		$container->go();
+	}
+
+}

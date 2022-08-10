@@ -1,14 +1,30 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Exception;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
+use Smr\Page\ReusableTrait;
+use SmrGame;
+use SmrPlayer;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class AllianceDraftMemberProcessor extends PlayerPageProcessor {
 
-		/** @var int $pickedAccountID */
-		$pickedAccountID = $var['PickedAccountID'];
+	use ReusableTrait;
+
+	public function __construct(
+		private readonly int $pickedAccountID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
+		if (!$player->getGame()->isGameType(SmrGame::GAME_TYPE_DRAFT)) {
+			throw new Exception('This page is only allowed in Draft games!');
+		}
+
+		$pickedAccountID = $this->pickedAccountID;
 
 		require_once(LIB . 'Default/alliance_pick.inc.php');
 		$teams = get_draft_teams($player->getGameID());
@@ -49,4 +65,7 @@ use Smr\Epoch;
 			'time' => $db->escapeNumber(Epoch::time()),
 		]);
 
-		Page::create('alliance_pick.php')->go();
+		(new AllianceDraftMember())->go();
+	}
+
+}

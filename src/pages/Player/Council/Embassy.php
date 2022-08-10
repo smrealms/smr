@@ -1,12 +1,23 @@
 <?php declare(strict_types=1);
 
-use Smr\Database;
-use Smr\Race;
+namespace Smr\Pages\Player\Council;
 
-		$template = Smr\Template::getInstance();
+use AbstractSmrPlayer;
+use Menu;
+use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Race;
+use Smr\Template;
+
+class Embassy extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'council_embassy.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
 
 		if (!$player->isPresident()) {
 			create_error('Only the president can view the embassy.');
@@ -28,6 +39,9 @@ use Smr\Race;
 			if ($dbResult->hasRecord()) {
 				continue;
 			}
-			$voteRaces[$raceID] = Page::create('council_embassy_processing.php', ['race_id' => $raceID])->href();
+			$voteRaces[$raceID] = (new EmbassyProcessor($raceID))->href();
 		}
 		$template->assign('VoteRaceHrefs', $voteRaces);
+	}
+
+}

@@ -1,10 +1,14 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class NewbieLeaveProcessor extends PlayerPageProcessor {
 
+	public function build(AbstractSmrPlayer $player): never {
 		$action = Request::get('action');
 		if ($action == 'Yes!') {
 			$player->setNewbieTurns(0);
@@ -12,4 +16,7 @@ use Smr\Request;
 		}
 
 		$player->log(LOG_TYPE_MOVEMENT, 'Player drops newbie turns.');
-		Page::create('current_sector.php')->go();
+		(new CurrentSector())->go();
+	}
+
+}

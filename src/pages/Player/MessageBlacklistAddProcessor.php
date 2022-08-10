@@ -1,22 +1,28 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
+use SmrPlayer;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class MessageBlacklistAddProcessor extends PlayerPageProcessor {
 
-		$container = Page::create('message_blacklist.php');
+	public function __construct(
+		private readonly ?int $blacklistAccountID = null
+	) {}
 
-		if (isset($var['account_id'])) {
-			$blacklisted = SmrPlayer::getPlayer($var['account_id'], $player->getGameID());
+	public function build(AbstractSmrPlayer $player): never {
+		if ($this->blacklistAccountID !== null) {
+			$blacklisted = SmrPlayer::getPlayer($this->blacklistAccountID, $player->getGameID());
 		} else {
 			try {
 				$blacklisted = SmrPlayer::getPlayerByPlayerName(Request::get('PlayerName'), $player->getGameID());
 			} catch (PlayerNotFound) {
-				$container['msg'] = '<span class="red bold">ERROR: </span>Player does not exist.';
+				$container = new MessageBlacklist('<span class="red bold">ERROR: </span>Player does not exist.');
 				$container->go();
 			}
 		}
@@ -25,7 +31,7 @@ use Smr\Request;
 		$dbResult = $db->read('SELECT 1 FROM message_blacklist WHERE ' . $player->getSQL() . ' AND blacklisted_id=' . $db->escapeNumber($blacklisted->getAccountID()) . ' LIMIT 1');
 
 		if ($dbResult->hasRecord()) {
-			$container['msg'] = '<span class="red bold">ERROR: </span>Player is already blacklisted.';
+			$container = new MessageBlacklist('<span class="red bold">ERROR: </span>Player is already blacklisted.');
 			$container->go();
 		}
 
@@ -35,5 +41,8 @@ use Smr\Request;
 			'blacklisted_id' => $db->escapeNumber($blacklisted->getAccountID()),
 		]);
 
-		$container['msg'] = $blacklisted->getDisplayName() . ' has been added to your blacklist.';
+		$container = new MessageBlacklist($blacklisted->getDisplayName() . ' has been added to your blacklist.');
 		$container->go();
+	}
+
+}

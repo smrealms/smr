@@ -1,10 +1,17 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Exception;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
+use SmrGame;
+use SmrPlayer;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class AllianceRemoveMemberProcessor extends PlayerPageProcessor {
 
+	public function build(AbstractSmrPlayer $player): never {
 		$accountIDs = Request::getIntArray('account_id', []);
 
 		if (empty($accountIDs)) {
@@ -36,4 +43,7 @@ use Smr\Request;
 			$currPlayer->update(); // we need better locking here
 		}
 
-		Page::create('alliance_roster.php')->go();
+		(new AllianceRoster())->go();
+	}
+
+}

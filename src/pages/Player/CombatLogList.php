@@ -1,28 +1,41 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Globals;
+use Menu;
 use Smr\CombatLogType;
 use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
+class CombatLogList extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'combat_log_list.php';
+
+	public function __construct(
+		private readonly CombatLogType $action = CombatLogType::Personal,
+		private readonly int $page = 0,
+		private readonly ?string $message = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
 
 		$template->assign('PageTopic', 'Combat Logs');
 		Menu::combatLog();
 
 		// Do we have a message from the processing page?
-		if (isset($var['message'])) {
-			$template->assign('Message', $var['message']);
+		if ($this->message !== null) {
+			$template->assign('Message', $this->message);
 		}
 
-		// $var['action'] is the page log type
-		if (!isset($var['action'])) {
-			$var['action'] = CombatLogType::Personal;
-		}
-		/** @var \Smr\CombatLogType $action */
-		$action = $var['action'];
+		$action = $this->action;
 
 		$query = match ($action) {
 			CombatLogType::Personal, CombatLogType::Alliance => 'type=\'PLAYER\'',
@@ -45,7 +58,7 @@ use Smr\Database;
 			$query .= ' AND (attacker_id=' . $db->escapeNumber($player->getAccountID()) . ' OR defender_id=' . $db->escapeNumber($player->getAccountID()) . ') ';
 		}
 
-		$page = $var['page'] ?? 0;
+		$page = $this->page;
 		$dbResult = $db->read('SELECT count(*) as count FROM combat_logs c WHERE ' . $query);
 		$totalLogs = $dbResult->record()->getInt('count'); // count always returns a record
 		$template->assign('TotalLogs', $totalLogs);
@@ -68,20 +81,18 @@ use Smr\Database;
 		// Construct the list of logs of this type
 		$logs = [];
 		if ($dbResult->hasRecord()) {
-			// 'View' and 'Save' share the same form, so we use 'old_action' as a
+			// 'View' and 'Save' share the same form, so we use 'action' as a
 			// way to return to this page when we only want to save the logs.
-			$container = Page::create('combat_log_list_processing.php');
-			$container['old_action'] = $action;
+			$container = new CombatLogListProcessor($action);
 			$template->assign('LogFormHREF', $container->href());
 
 			// Set the links for the "view next/previous log list" buttons
-			$container = Page::copy($var);
 			if ($page > 0) {
-				$container['page'] = $page - 1;
+				$container = new self($action, $page - 1);
 				$template->assign('PreviousPage', $container->href());
 			}
 			if (($page + 1) * COMBAT_LOGS_PER_PAGE < $totalLogs) {
-				$container['page'] = $page + 1;
+				$container = new self($action, $page + 1);
 				$template->assign('NextPage', $container->href());
 			}
 			// Saved logs
@@ -99,3 +110,6 @@ use Smr\Database;
 			}
 		}
 		$template->assign('Logs', $logs);
+	}
+
+}

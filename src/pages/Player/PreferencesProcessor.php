@@ -1,26 +1,30 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Exception;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 use Smr\SectorLock;
 
-		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+class PreferencesProcessor extends PlayerPageProcessor {
 
-		$container = Page::create('current_sector.php');
+	public function build(AbstractSmrPlayer $player): never {
+		$db = Database::getInstance();
+		$account = $player->getAccount();
 
 		$action = Request::get('action');
 
 		if ($action == 'Change Kamikaze Setting') {
 			$player->setCombatDronesKamikazeOnMines(Request::get('kamikaze') == 'Yes');
-			$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your combat drones options.';
+			$message = '<span class="green">SUCCESS: </span>You have changed your combat drones options.';
 
 		} elseif ($action == 'Change Message Setting') {
 			$player->setForceDropMessages(Request::get('forceDropMessages') == 'Yes');
-			$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your message options.';
+			$message = '<span class="green">SUCCESS: </span>You have changed your message options.';
 
 		} elseif ($action == 'change_name') {
 			$old_name = $player->getDisplayName();
@@ -43,7 +47,7 @@ use Smr\SectorLock;
 				'type' => $db->escapeString('admin'),
 				'killer_id' => $db->escapeNumber($player->getAccountID()),
 			]);
-			$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
+			$message = '<span class="green">SUCCESS: </span>You have changed your player name.';
 
 		} elseif ($action == 'change_race') {
 			if (!$player->canChangeRace()) {
@@ -87,7 +91,13 @@ use Smr\SectorLock;
 				'type' => $db->escapeString('admin'),
 				'killer_id' => $db->escapeNumber($player->getAccountID()),
 			]);
-			$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player race.';
+			$message = '<span class="green">SUCCESS: </span>You have changed your player race.';
+		} else {
+			throw new Exception('Invalid action: ' . $action);
 		}
 
+		$container = new CurrentSector(message: $message);
 		$container->go();
+	}
+
+}

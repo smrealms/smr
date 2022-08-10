@@ -1,21 +1,35 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
 use Smr\Messages;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAccount;
+use SmrGame;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
+class MessageBoxView extends AccountPage {
+
+	use ReusableTrait;
+
+	public string $file = 'admin/box_view.php';
+
+	public function __construct(
+		private readonly ?int $boxTypeID = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
 
-		if (!isset($var['box_type_id'])) {
+		if ($this->boxTypeID === null) {
 			$template->assign('PageTopic', 'Viewing Message Boxes');
 
-			$container = Page::create('admin/box_view.php');
 			$boxes = [];
 			foreach (Messages::getAdminBoxNames() as $boxTypeID => $boxName) {
-				$container['box_type_id'] = $boxTypeID;
+				$container = new self($boxTypeID);
 				$boxes[$boxTypeID] = [
 					'ViewHREF' => $container->href(),
 					'BoxName' => $boxName,
@@ -30,15 +44,14 @@ use Smr\Messages;
 			}
 			$template->assign('Boxes', $boxes);
 		} else {
-			$boxName = Messages::getAdminBoxNames()[$var['box_type_id']];
+			$boxName = Messages::getAdminBoxNames()[$this->boxTypeID];
 			$template->assign('PageTopic', 'Viewing ' . $boxName);
 
-			$template->assign('BackHREF', Page::create('admin/box_view.php')->href());
-			$dbResult = $db->read('SELECT * FROM message_boxes WHERE box_type_id=' . $db->escapeNumber($var['box_type_id']) . ' ORDER BY send_time DESC');
+			$template->assign('BackHREF', (new self())->href());
+			$dbResult = $db->read('SELECT * FROM message_boxes WHERE box_type_id=' . $db->escapeNumber($this->boxTypeID) . ' ORDER BY send_time DESC');
 			$messages = [];
 			if ($dbResult->hasRecord()) {
-				$container = Page::create('admin/box_delete_processing.php');
-				$container->addVar('box_type_id');
+				$container = new MessageBoxDeleteProcessor($this->boxTypeID);
 				$template->assign('DeleteHREF', $container->href());
 				foreach ($dbResult->records() as $dbRecord) {
 					$gameID = $dbRecord->getInt('game_id');
@@ -58,10 +71,11 @@ use Smr\Messages;
 							$senderPlayer = SmrPlayer::getPlayer($senderID, $gameID);
 							$senderName .= ' a.k.a ' . $senderPlayer->getDisplayName();
 							if ($account->hasPermission(PERMISSION_SEND_ADMIN_MESSAGE)) {
-								$container = Page::create('admin/box_reply.php');
-								$container['sender_id'] = $senderID;
-								$container['game_id'] = $gameID;
-								$container->addVar('box_type_id');
+								$container = new MessageBoxReply(
+									boxTypeID: $this->boxTypeID,
+									senderAccountID: $senderID,
+									gameID: $gameID
+								);
 								$messages[$messageID]['ReplyHREF'] = $container->href();
 							}
 						}
@@ -82,3 +96,6 @@ use Smr\Messages;
 				$template->assign('Messages', $messages);
 			}
 		}
+	}
+
+}

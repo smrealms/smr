@@ -1,12 +1,23 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+namespace Smr\Pages\Account;
 
-		if (isset($var['msg'])) {
-			$template->assign('Message', $var['msg']);
-		}
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
+class Validate extends AccountPage {
+
+	public string $file = 'validate.php';
+
+	public function __construct(
+		private readonly ?string $message = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
+		$template->assign('Message', $this->message);
 		$template->assign('PageTopic', 'Validation Reminder');
-		$template->assign('ValidateFormHref', Page::create('validate_processing.php')->href());
+		$template->assign('ValidateFormHref', (new ValidateProcessor())->href());
+	}
+
+}

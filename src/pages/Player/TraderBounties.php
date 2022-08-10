@@ -1,11 +1,21 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\BountyType;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class TraderBounties extends PlayerPage {
 
+	use ReusableTrait;
+
+	public string $file = 'trader_bounties.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Bounties');
 
 		Menu::trader();
@@ -25,3 +35,6 @@ use Smr\BountyType;
 			$player->getClaimableBounties(BountyType::UG),
 		];
 		$template->assign('AllClaims', $allClaims);
+	}
+
+}

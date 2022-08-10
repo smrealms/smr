@@ -1,20 +1,29 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
+use Smr\Page\PlayerPage;
 use Smr\Request;
+use Smr\Template;
+use SmrAlliance;
+use SmrTreaty;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class AllianceTreatiesConfirm extends PlayerPage {
 
+	public string $file = 'alliance_treaties_confirm.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$alliance_id_1 = $player->getAllianceID();
 		$alliance_id_2 = Request::getInt('proposedAlliance');
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT 1 FROM alliance_treaties WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_1 = ' . $alliance_id_2 . ') AND (alliance_id_2 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_2 = ' . $db->escapeNumber($alliance_id_2) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()));
 		if ($dbResult->hasRecord()) {
-			$container = Page::create('alliance_treaties.php');
-			$container['message'] = '<span class="red bold">ERROR:</span> There is already an outstanding treaty with that alliance.';
+			$message = '<span class="red bold">ERROR:</span> There is already an outstanding treaty with that alliance.';
+			$container = new AllianceTreaties($message);
 			$container->go();
 		}
 
@@ -38,12 +47,11 @@ use Smr\Request;
 		$template->assign('Terms', $terms);
 
 		// Create links for yes/no response
-		$container = Page::create('alliance_treaties_confirm_processing.php');
-		$container['proposedAlliance'] = $alliance_id_2;
-		foreach ($terms as $term => $value) {
-			$container[$term] = $value;
-		}
+		$container = new AllianceTreatiesConfirmProcessor($alliance_id_2, $terms);
 		$template->assign('YesHREF', $container->href());
 
-		$container = Page::create('alliance_treaties.php');
+		$container = new AllianceTreaties();
 		$template->assign('NoHREF', $container->href());
+	}
+
+}

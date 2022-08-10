@@ -1,7 +1,18 @@
 <?php declare(strict_types=1);
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
+use Smr\Page\ReusableTrait;
+use Smr\Session;
+
+class WeaponDisplayToggleProcessor extends PlayerPageProcessor {
+
+	use ReusableTrait;
+
+	public function build(AbstractSmrPlayer $player): never {
+		$session = Session::getInstance();
 
 		$player->setDisplayWeapons(!$player->isDisplayWeapons());
 		// If this is called by ajax, we don't want to do any forwarding
@@ -9,4 +20,7 @@
 			exit;
 		}
 
-		Page::create('current_sector.php')->go();
+		(new CurrentSector())->go();
+	}
+
+}

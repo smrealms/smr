@@ -1,40 +1,53 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Messages;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$var = Smr\Session::getInstance()->getCurrentVar();
+class ReportedMessageReply extends AccountPage {
 
+	public string $file = 'admin/notify_reply.php';
+
+	public function __construct(
+		private readonly int $offenderAccountID,
+		private readonly int $offendedAccountID,
+		private readonly int $gameID,
+		private readonly ?string $offenderPreview = null,
+		private readonly ?int $offenderBanPoints = null,
+		private readonly ?string $offendedPreview = null,
+		private readonly ?int $offendedBanPoints = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Reply To Reported Messages');
 
-		$container = Page::create('admin/notify_reply_processing.php');
-		$container->addVar('game_id');
-		$container->addVar('offended');
-		$container->addVar('offender');
+		$container = new ReportedMessageReplyProcessor(
+			gameID: $this->gameID,
+			offenderAccountID: $this->offenderAccountID,
+			offendedAccountID: $this->offendedAccountID
+		);
 		$template->assign('NotifyReplyFormHref', $container->href());
 
-		$offender = Messages::getMessagePlayer($var['offender'], $var['game_id']);
+		$offender = Messages::getMessagePlayer($this->offenderAccountID, $this->gameID);
 		if (is_object($offender)) {
 			$offender = $offender->getDisplayName() . ' (Login: ' . $offender->getAccount()->getLogin() . ')';
 		}
 		$template->assign('Offender', $offender);
 
-		$offended = Messages::getMessagePlayer($var['offended'], $var['game_id']);
+		$offended = Messages::getMessagePlayer($this->offendedAccountID, $this->gameID);
 		if (is_object($offended)) {
 			$offended = $offended->getDisplayName() . ' (Login: ' . $offended->getAccount()->getLogin() . ')';
 		}
 		$template->assign('Offended', $offended);
 
-		if (isset($var['PreviewOffender'])) {
-			$template->assign('PreviewOffender', $var['PreviewOffender']);
-		}
-		if (isset($var['OffenderBanPoints'])) {
-			$template->assign('OffenderBanPoints', $var['OffenderBanPoints']);
-		}
+		$template->assign('PreviewOffender', $this->offenderPreview);
+		$template->assign('OffenderBanPoints', $this->offenderBanPoints);
 
-		if (isset($var['PreviewOffended'])) {
-			$template->assign('PreviewOffended', $var['PreviewOffended']);
-		}
-		if (isset($var['OffendedBanPoints'])) {
-			$template->assign('OffendedBanPoints', $var['OffendedBanPoints']);
-		}
+		$template->assign('PreviewOffended', $this->offendedPreview);
+		$template->assign('OffendedBanPoints', $this->offendedBanPoints);
+	}
+
+}

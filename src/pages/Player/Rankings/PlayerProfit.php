@@ -1,9 +1,21 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player\Rankings;
 
+use AbstractSmrPlayer;
+use Menu;
+use Rankings;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+
+class PlayerProfit extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'rankings_player_profit.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Profit Rankings');
 
 		Menu::rankings(0, 1);
@@ -20,6 +32,9 @@
 		$totalPlayers = count($rankedStats);
 		[$minRank, $maxRank] = Rankings::calculateMinMaxRanks($ourRank, $totalPlayers);
 
-		$template->assign('FilterRankingsHREF', Page::create('rankings_player_profit.php')->href());
+		$template->assign('FilterRankingsHREF', (new self())->href());
 
 		$template->assign('FilteredRankings', Rankings::collectRankings($rankedStats, $player, $minRank, $maxRank));
+	}
+
+}

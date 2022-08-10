@@ -1,21 +1,32 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class WordFilter extends AccountPage {
 
+	use ReusableTrait;
+
+	public string $file = 'admin/word_filter.php';
+
+	public function __construct(
+		private readonly ?string $message = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Word Filter');
 
-		if (isset($var['msg'])) {
-			$template->assign('Message', $var['msg']);
-		}
+		$template->assign('Message', $this->message);
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM word_filter');
 		if ($dbResult->hasRecord()) {
-			$container = Page::create('admin/word_filter_del.php');
+			$container = new WordFilterDeleteProcessor();
 			$template->assign('DelHREF', $container->href());
 
 			$filteredWords = [];
@@ -25,5 +36,8 @@ use Smr\Database;
 			$template->assign('FilteredWords', $filteredWords);
 		}
 
-		$container = Page::create('admin/word_filter_add.php');
+		$container = new WordFilterAddProcessor();
 		$template->assign('AddHREF', $container->href());
+	}
+
+}

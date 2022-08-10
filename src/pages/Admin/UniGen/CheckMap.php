@@ -1,17 +1,34 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin\UniGen;
+
+use Globals;
+use Plotter;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
 use Smr\Race;
 use Smr\Routes\RouteGenerator;
+use Smr\Template;
+use SmrAccount;
+use SmrGame;
+use SmrLocation;
 
-		$template = Smr\Template::getInstance();
-		$var = Smr\Session::getInstance()->getCurrentVar();
+class CheckMap extends AccountPage {
 
-		$game = SmrGame::getGame($var['game_id']);
+	use ReusableTrait;
+
+	public string $file = 'admin/unigen/check_map.php';
+
+	public function __construct(
+		private readonly int $gameID,
+		private readonly int $galaxyID
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
+		$game = SmrGame::getGame($this->gameID);
 		$template->assign('PageTopic', 'Check Map : ' . $game->getDisplayName());
 
-		$container = Page::create('admin/unigen/universe_create_sectors.php');
-		$container->addVar('game_id');
-		$container->addVar('gal_on');
+		$container = new EditGalaxy($this->gameID, $this->galaxyID);
 		$template->assign('BackHREF', $container->href());
 
 		$galaxies = $game->getGalaxies();
@@ -26,12 +43,12 @@ use Smr\Routes\RouteGenerator;
 			}
 		}
 		$missingLocs = array_diff(
-			array_keys(SmrLocation::getAllLocations($var['game_id'])),
+			array_keys(SmrLocation::getAllLocations($this->gameID)),
 			array_keys($existingLocs)
 		);
 		$missingLocNames = [];
 		foreach ($missingLocs as $locID) {
-			$missingLocNames[] = SmrLocation::getLocation($var['game_id'], $locID)->getName();
+			$missingLocNames[] = SmrLocation::getLocation($this->gameID, $locID)->getName();
 		}
 		$template->assign('MissingLocNames', $missingLocNames);
 
@@ -88,3 +105,6 @@ use Smr\Routes\RouteGenerator;
 			}
 		}
 		$template->assign('MaxSellMultipliers', $maxSellMultipliers);
+	}
+
+}

@@ -1,11 +1,15 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class TraderNoteAddProcessor extends PlayerPageProcessor {
 
+	public function build(AbstractSmrPlayer $player): never {
 		// Adds a new note into the database
 		$note = Request::get('note');
 		if (strlen($note) > 1000) {
@@ -21,4 +25,7 @@ use Smr\Request;
 			'note' => $db->escapeBinary(gzcompress($note)),
 		]);
 
-		Page::create('trader_status.php')->go();
+		(new TraderStatus())->go();
+	}
+
+}

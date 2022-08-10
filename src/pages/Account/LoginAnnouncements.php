@@ -1,26 +1,36 @@
 <?php declare(strict_types=1);
 
-use Smr\Database;
+namespace Smr\Pages\Account;
 
-		$template = Smr\Template::getInstance();
+use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
+
+class LoginAnnouncements extends AccountPage {
+
+	public string $file = 'announcements.php';
+
+	public function __construct(
+		private readonly bool $viewAll = false
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
 
 		$template->assign('PageTopic', 'Announcements');
 
-		if (!isset($var['view_all'])) {
-			$session = Smr\Session::getInstance();
-			$account = $session->getAccount();
-
+		if (!$this->viewAll) {
 			$dbResult = $db->read('SELECT time, msg
 						FROM announcement
 						WHERE time > ' . $db->escapeNumber($account->getLastLogin()) . '
 						ORDER BY time DESC');
+			$container = new LoginCheckChangelogProcessor();
 		} else {
 			$dbResult = $db->read('SELECT time, msg
 						FROM announcement
 						ORDER BY time DESC');
+			$container = new GamePlay();
 		}
 
 		$announcements = [];
@@ -32,6 +42,7 @@ use Smr\Database;
 		}
 		$template->assign('Announcements', $announcements);
 
-		$container = Page::create('login_check_processing.php');
-		$container['CheckType'] = 'Updates';
 		$template->assign('ContinueHREF', $container->href());
+	}
+
+}

@@ -1,21 +1,31 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
 use Smr\VoteLink;
+use Smr\VoteSite;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class VoteLinkProcessor extends PlayerPageProcessor {
 
-		$container = Page::create('current_sector.php');
+	public function __construct(
+		private readonly VoteSite $voteSite
+	) {}
 
-		$player = $session->getPlayer();
+	public function build(AbstractSmrPlayer $player): never {
 		if ($player->getGame()->hasStarted()) {
 			// Allow vote
-			$voteLink = new VoteLink($var['vote_site'], $player->getAccountID(), $player->getGameID());
+			$voteLink = new VoteLink($this->voteSite, $player->getAccountID(), $player->getGameID());
 			$voteLink->setClicked();
 			$voting = '<b><span class="red">v</span>o<span class="blue">t</span><span class="red">i</span>n<span class="blue">g</span></b>';
-			$container['msg'] = "Thank you for $voting! You will receive bonus turns once your vote is processed.";
+			$message = "Thank you for $voting! You will receive bonus turns once your vote is processed.";
 		} else {
 			create_error('You cannot gain bonus turns until the game has started!');
 		}
 
+		$container = new CurrentSector(message: $message);
 		$container->go();
+	}
+
+}

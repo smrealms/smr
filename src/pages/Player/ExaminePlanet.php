@@ -1,11 +1,18 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Globals;
 use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class ExaminePlanet extends PlayerPage {
 
+	public string $file = 'planet_examine.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Examine Planet');
 
 		$planet = $player->getSectorPlanet();
@@ -42,3 +49,6 @@ use Smr\Database;
 		}
 		$template->assign('VisiblePlayers', $eligibleAttackers);
 		$template->assign('SectorPlayersLabel', 'Attackers');
+	}
+
+}

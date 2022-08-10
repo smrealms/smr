@@ -1,17 +1,29 @@
 <?php declare(strict_types=1);
 
-use Smr\Epoch;
+namespace Smr\Pages\Player;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+use AbstractSmrPlayer;
+use Menu;
+use Smr\Epoch;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use Sorter;
+
+class AllianceRemoveMember extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'alliance_remove_member.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$account = $player->getAccount();
 		$alliance = $player->getAlliance();
 
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 		Menu::alliance($alliance->getAllianceID());
 
-		$container = Page::create('alliance_remove_member_processing.php');
+		$container = new AllianceRemoveMemberProcessor();
 		$template->assign('BanishHREF', $container->href());
 
 		$members = [];
@@ -34,3 +46,6 @@ use Smr\Epoch;
 		}
 		Sorter::sortByNumElement($members, 'sort_order', true);
 		$template->assign('Members', $members);
+	}
+
+}

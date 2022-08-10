@@ -1,15 +1,28 @@
 <?php declare(strict_types=1);
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player\Headquarters;
 
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
+use Smr\Pages\Player\CurrentSector;
+use SmrLocation;
+
+class GovernmentProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $locationID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		// Player has selected to become a deputy/smuggler
-		$location = SmrLocation::getLocation($player->getGameID(), $var['LocationID']);
+		$location = SmrLocation::getLocation($player->getGameID(), $this->locationID);
 		if ($location->isHQ()) {
 			$player->setAlignment(150);
 		} elseif ($location->isUG()) {
 			$player->setAlignment(-150);
 		}
 
-		Page::create('current_sector.php')->go();
+		(new CurrentSector())->go();
+	}
+
+}

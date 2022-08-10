@@ -1,13 +1,24 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Council;
+
+use AbstractSmrPlayer;
+use Globals;
+use Menu;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
 use Smr\Race;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class VotingCenter extends PlayerPage {
 
+	use ReusableTrait;
+
+	public string $file = 'council_vote.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		if (!$player->isOnCouncil()) {
 			create_error('You have to be on the council in order to vote.');
 		}
@@ -34,7 +45,7 @@ use Smr\Race;
 			if ($raceID == $player->getRaceID()) {
 				continue;
 			}
-			$container = Page::create('council_vote_processing.php', ['race_id' => $raceID]);
+			$container = new VotingCenterProcessor($raceID);
 			$voteRelations[$raceID] = [
 				'HREF' => $container->href(),
 				'Increased' => $votedForRace === $raceID && $votedFor === 'INC',
@@ -52,7 +63,7 @@ use Smr\Race;
 
 		foreach ($dbResult->records() as $dbRecord) {
 			$otherRaceID = $dbRecord->getInt('race_id_2');
-			$container = Page::create('council_vote_processing.php', ['race_id' => $otherRaceID]);
+			$container = new VotingCenterProcessor($otherRaceID);
 
 			// get 'yes' votes
 			$dbResult2 = $db->read('SELECT count(*) FROM player_votes_pact
@@ -91,3 +102,6 @@ use Smr\Race;
 			];
 		}
 		$template->assign('VoteTreaties', $voteTreaties);
+	}
+
+}

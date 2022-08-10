@@ -1,33 +1,52 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class DatabaseCleanup extends AccountPage {
 
+	public string $file = 'admin/db_cleanup.php';
+
+	/**
+	 * @param ?array<mixed> $results
+	 * @param ?array<int> $endedGames
+	 */
+	public function __construct(
+		private readonly ?string $action = null,
+		private readonly ?array $results = null,
+		private readonly ?int $diffBytes = null,
+		private readonly ?array $endedGames = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Database Cleanup');
 
-		function bytesToMB(int $bytes): string {
+		$bytesToMB = function(int $bytes): string {
 			return round($bytes / (1024 * 1024), 1) . ' MB';
-		}
+		};
 
 		$db = Database::getInstance();
-		$template->assign('DbSizeMB', bytesToMB($db->getDbBytes()));
+		$template->assign('DbSizeMB', $bytesToMB($db->getDbBytes()));
 
-		if (isset($var['results'])) {
+		if ($this->results !== null) {
 			// Display the results
-			$template->assign('Results', $var['results']);
-			$template->assign('DiffMB', bytesToMB($var['diffBytes']));
-			$template->assign('Action', $var['action']);
-			$template->assign('EndedGames', $var['endedGames']);
-			$container = Page::create('admin/db_cleanup.php');
+			$template->assign('Results', $this->results);
+			$template->assign('DiffMB', $bytesToMB($this->diffBytes));
+			$template->assign('Action', $this->action);
+			$template->assign('EndedGames', $this->endedGames);
+			$container = new self();
 			$template->assign('BackHREF', $container->href());
 		} else {
 			// Create processing links
-			$container = Page::create('admin/db_cleanup_processing.php');
-			$container['action'] = 'delete';
+			$container = new DatabaseCleanupProcessor('delete');
 			$template->assign('DeleteHREF', $container->href());
-			$container['action'] = 'preview';
+			$container = new DatabaseCleanupProcessor('preview');
 			$template->assign('PreviewHREF', $container->href());
 		}
+	}
+
+}

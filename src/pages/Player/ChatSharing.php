@@ -1,18 +1,27 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
+use Smr\Page\PlayerPage;
+use Smr\Template;
+use SmrAccount;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class ChatSharing extends PlayerPage {
 
+	public string $file = 'chat_sharing.php';
+
+	public function __construct(
+		private readonly ?string $message = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Chat Sharing Settings');
 
-		if (isset($var['message'])) {
-			$template->assign('Message', $var['message']);
-		}
+		$template->assign('Message', $this->message);
 
 		$shareFrom = [];
 		$db = Database::getInstance();
@@ -60,4 +69,8 @@ use Smr\Exceptions\PlayerNotFound;
 		$template->assign('ShareFrom', $shareFrom);
 		$template->assign('ShareTo', $shareTo);
 
-		$template->assign('ProcessingHREF', Page::create('chat_sharing_processing.php', ['share_to_ids' => array_keys($shareTo)])->href());
+		$container = new ChatSharingProcessor(array_keys($shareTo));
+		$template->assign('ProcessingHREF', $container->href());
+	}
+
+}

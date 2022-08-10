@@ -1,16 +1,28 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
+class ChangelogView extends AccountPage {
 
+	use ReusableTrait;
+
+	public string $file = 'changelog_view.php';
+
+	public function __construct(
+		private readonly ?int $lastLogin = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Change Log');
 
-		if (isset($var['Since'])) {
-			$container = Page::create('logged_in.php');
+		if ($this->lastLogin !== null) {
+			$container = new LoginProcessor();
 			$template->assign('ContinueHREF', $container->href());
 		}
 
@@ -18,7 +30,7 @@ use Smr\Database;
 
 		$dbResult = $db->read('SELECT *
 					FROM version
-					WHERE went_live > ' . (isset($var['Since']) ? $db->escapeNumber($var['Since']) : '0') . '
+					WHERE went_live > ' . $db->escapeNumber($this->lastLogin ?? 0) . '
 					ORDER BY version_id DESC');
 
 		$versions = [];
@@ -53,3 +65,6 @@ use Smr\Database;
 			];
 		}
 		$template->assign('Versions', $versions);
+	}
+
+}

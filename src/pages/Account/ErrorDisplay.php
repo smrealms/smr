@@ -1,8 +1,22 @@
 <?php declare(strict_types=1);
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+namespace Smr\Pages\Account;
 
-		$template = Smr\Template::getInstance();
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
+
+class ErrorDisplay extends AccountPage {
+
+	public string $file = 'error.php';
+
+	public function __construct(
+		public readonly string $message
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Error');
-		$template->assign('Message', $var['message']);
+		$template->assign('Message', $this->message);
+	}
+
+}

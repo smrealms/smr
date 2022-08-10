@@ -1,30 +1,41 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
+use Globals;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
+class FeatureRequest extends AccountPage {
+
+	use ReusableTrait;
+
+	public string $file = 'feature_request.php';
+
+	// Feature Requests show up as new for this many days
+	private const NEW_REQUEST_DAYS = 30;
+
+	public function __construct(
+		private readonly string $category = 'New'
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
 
 		if (!Globals::isFeatureRequestOpen()) {
 			create_error('Feature requests are currently not being accepted.');
 		}
 
-		if (!isset($var['category'])) {
-			$var['category'] = 'New';
-		}
-		$thisStatus = statusFromCategory($var['category']);
+		$thisStatus = self::statusFromCategory($this->category);
 
-		$template->assign('PageTopic', 'Feature Requests - ' . $var['category']);
-
-		// Feature Requests show up as new for this many days
-		const NEW_REQUEST_DAYS = 30;
+		$template->assign('PageTopic', 'Feature Requests - ' . $this->category);
 
 		$requestCategories = [
-			'New' => 'Open requests active within the past ' . NEW_REQUEST_DAYS . ' days',
+			'New' => 'Open requests active within the past ' . self::NEW_REQUEST_DAYS . ' days',
 			'All Open' => 'All requests that remain open for voting',
 			'Accepted' => 'Features planned for future implementation',
 			'Implemented' => 'Features that have already been implemented',
@@ -33,14 +44,13 @@ use Smr\Epoch;
 
 		$categoryTable = [];
 		foreach ($requestCategories as $category => $description) {
-			$status = statusFromCategory($category);
+			$status = self::statusFromCategory($category);
 
-			$container = Page::copy($var);
-			$container['category'] = $category;
+			$container = new self($category);
 			$categoryTable[$category] = [
-				'Selected' => $category == $var['category'],
+				'Selected' => $category == $this->category,
 				'HREF' => $container->href(),
-				'Count' => getFeaturesCount($status, ($category == 'New') ? NEW_REQUEST_DAYS : false),
+				'Count' => self::getFeaturesCount($status, ($category == 'New') ? self::NEW_REQUEST_DAYS : false),
 				'Description' => $description,
 			];
 		}
@@ -62,14 +72,13 @@ use Smr\Epoch;
 					'JOIN feature_request_comments super USING(feature_request_id) ' .
 					'WHERE comment_id = 1 ' .
 					'AND status = ' . $db->escapeString($thisStatus) .
-					($var['category'] == 'New' ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (Epoch::time() - NEW_REQUEST_DAYS * 86400) . ')' : '') .
+					($this->category == 'New' ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (Epoch::time() - self::NEW_REQUEST_DAYS * 86400) . ')' : '') .
 					' ORDER BY (SELECT MAX(posting_time) FROM feature_request_comments WHERE feature_request_id = super.feature_request_id) DESC');
 		if ($dbResult->hasRecord()) {
 			$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
 			$template->assign('FeatureModerator', $featureModerator);
-			$template->assign('FeatureRequestVoteFormHREF', Page::create('feature_request_vote_processing.php')->href());
+			$template->assign('FeatureRequestVoteFormHREF', (new FeatureRequestVoteProcessor($this))->href());
 
-			$commentsContainer = Page::create('feature_request_comments.php', $var);
 			$featureRequests = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$featureRequestID = $dbRecord->getInt('feature_request_id');
@@ -102,26 +111,29 @@ use Smr\Epoch;
 				foreach ($dbResult2->records() as $dbRecord2) {
 					$featureRequests[$featureRequestID]['Comments'] = $dbRecord2->getInt('COUNT(*)');
 				}
-				$commentsContainer['RequestID'] = $featureRequestID;
+				$commentsContainer = new FeatureRequestComments($featureRequestID, $this);
 				$featureRequests[$featureRequestID]['CommentsHREF'] = $commentsContainer->href();
 			}
 			$template->assign('FeatureRequests', $featureRequests);
 		}
 
-		$template->assign('FeatureRequestFormHREF', Page::create('feature_request_processing.php')->href());
+		$template->assign('FeatureRequestFormHREF', (new FeatureRequestProcessor())->href());
+	}
 
-		function statusFromCategory(string $category): string {
-			return ($category == 'New' || $category == 'All Open') ? 'Opened' : $category;
-		}
+	private static function statusFromCategory(string $category): string {
+		return ($category == 'New' || $category == 'All Open') ? 'Opened' : $category;
+	}
 
-		function getFeaturesCount(string $status, int|false $daysNew = false): int {
-			$db = Database::getInstance();
-			$dbResult = $db->read('
-				SELECT COUNT(*) AS count
-				FROM feature_request
-				JOIN feature_request_comments super USING(feature_request_id)
-				WHERE comment_id = 1
-				AND status = ' . $db->escapeString($status) .
-				($daysNew ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (Epoch::time() - $daysNew * 86400) . ')' : ''));
-			return $dbResult->record()->getInt('count');
-		}
+	private static function getFeaturesCount(string $status, int|false $daysNew = false): int {
+		$db = Database::getInstance();
+		$dbResult = $db->read('
+			SELECT COUNT(*) AS count
+			FROM feature_request
+			JOIN feature_request_comments super USING(feature_request_id)
+			WHERE comment_id = 1
+			AND status = ' . $db->escapeString($status) .
+			($daysNew ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (Epoch::time() - $daysNew * 86400) . ')' : ''));
+		return $dbResult->record()->getInt('count');
+	}
+
+}

@@ -1,10 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Planet;
+
+use AbstractSmrPlayer;
+use Globals;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+
+class Stockpile extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'planet_stockpile.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		require_once(LIB . 'Default/planet.inc.php');
 		planet_common();
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
 		$planet = $player->getSectorPlanet();
 		$ship = $player->getShip();
 
@@ -14,8 +27,7 @@
 				continue;
 			}
 
-			$container = Page::create('planet_stockpile_processing.php');
-			$container['good_id'] = $goodID;
+			$container = new StockpileProcessor($goodID);
 
 			$goodInfo[] = [
 				'Name' => $good['Name'],
@@ -27,5 +39,7 @@
 			];
 		}
 
-		$template = Smr\Template::getInstance();
 		$template->assign('GoodInfo', $goodInfo);
+	}
+
+}

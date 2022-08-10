@@ -1,11 +1,21 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPage;
+use Smr\Template;
+use SmrInvitation;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class AllianceInvitePlayer extends PlayerPage {
+
+	public string $file = 'alliance_invite_player.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$alliance = $player->getAlliance();
 		$game = $player->getGame();
 
@@ -15,8 +25,7 @@ use Smr\Epoch;
 		// Get list of pending invitations
 		$pendingInvites = [];
 		foreach (SmrInvitation::getAll($player->getAllianceID(), $player->getGameID()) as $invite) {
-			$container = Page::create('alliance_invite_cancel_processing.php');
-			$container['invite'] = $invite;
+			$container = new AllianceInviteCancelProcessor($invite);
 
 			$invited = $invite->getReceiver();
 			$pendingInvites[$invited->getAccountID()] = [
@@ -53,4 +62,7 @@ use Smr\Epoch;
 
 		$template->assign('ThisGame', $game);
 		$template->assign('ThisAlliance', $alliance);
-		$template->assign('InviteHREF', Page::create('alliance_invite_player_processing.php')->href());
+		$template->assign('InviteHREF', (new AllianceInvitePlayerProcessor())->href());
+	}
+
+}

@@ -1,21 +1,34 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$ship = $session->getPlayer()->getShip();
+class WeaponReorderProcessor extends PlayerPageProcessor {
 
-		if (isset($var['Up'])) {
-			$ship->moveWeaponUp($var['Up']);
+	public function __construct(
+		private readonly int $weaponOrderID,
+		private readonly string $direction
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
+		$ship = $player->getShip();
+
+		if ($this->direction == 'Up') {
+			$ship->moveWeaponUp($this->weaponOrderID);
 		}
 
-		if (isset($var['Down'])) {
-			$ship->moveWeaponDown($var['Down']);
+		if ($this->direction == 'Down') {
+			$ship->moveWeaponDown($this->weaponOrderID);
 		}
 
-		if (isset($var['Form'])) {
+		if ($this->direction == 'Form') {
 			$ship->setWeaponLocations(Request::getIntArray('weapon_reorder'));
 		}
 
-		Page::create('weapon_reorder.php')->go();
+		(new WeaponReorder())->go();
+	}
+
+}

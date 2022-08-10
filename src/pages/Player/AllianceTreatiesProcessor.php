@@ -1,23 +1,33 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
+use SmrAlliance;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class AllianceTreatiesProcessor extends PlayerPageProcessor {
 
+	public function __construct(
+		private readonly int $otherAllianceID,
+		private readonly bool $accept,
+		private readonly bool $allianceBankAccess = false
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		//get the alliances
 		if (!$player->hasAlliance()) {
 			create_error('You are not in an alliance!');
 		}
-		$alliance_id_1 = $var['alliance_id_1'];
+		$alliance_id_1 = $this->otherAllianceID;
 		$alliance_id_2 = $player->getAllianceID();
 
 		$db = Database::getInstance();
-		if ($var['accept']) {
+		if ($this->accept) {
 			$db->write('UPDATE alliance_treaties SET official = \'TRUE\' WHERE alliance_id_1 = ' . $db->escapeNumber($alliance_id_1) . ' AND alliance_id_2 = ' . $db->escapeNumber($alliance_id_2) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 
-			if ($var['aa_access']) {
+			if ($this->allianceBankAccess) {
 				//make an AA role for both alliances, use treaty_created column
 				$pairs = [
 					$alliance_id_1 => $alliance_id_2,
@@ -45,5 +55,8 @@ use Smr\Database;
 			$db->write('DELETE FROM alliance_treaties WHERE alliance_id_1 = ' . $db->escapeNumber($alliance_id_1) . ' AND alliance_id_2 = ' . $db->escapeNumber($alliance_id_2) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 		}
 
-		$container = Page::create('alliance_treaties.php');
+		$container = new AllianceTreaties();
 		$container->go();
+	}
+
+}

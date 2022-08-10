@@ -1,25 +1,36 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Page\AccountPage;
+use Smr\Session;
+use Smr\Template;
+use SmrAccount;
+use SmrGalaxy;
+use SmrGame;
+
+class CreateGalaxies extends AccountPage {
+
+	public string $file = 'admin/unigen/universe_create_galaxies.php';
+
+	public function __construct(
+		private readonly int $gameID
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
+		$session = Session::getInstance();
 		$numGals = $session->getRequestVarInt('num_gals', 12);
 
-		$game = SmrGame::getGame($var['game_id']);
+		$game = SmrGame::getGame($this->gameID);
 		$template->assign('PageTopic', 'Create Galaxies : ' . $game->getDisplayName());
 		$template->assign('GameEnabled', $game->isEnabled());
 
 		// Link for updating the number of galaxies
-		$container = Page::create('admin/unigen/universe_create_galaxies.php');
-		$container->addVar('game_id');
+		$container = new self($this->gameID);
 		$template->assign('UpdateNumGalsHREF', $container->href());
 
 		// Link for creating galaxies
-		$container = Page::create('admin/unigen/universe_create_save_processing.php');
-		$container['forward_to'] = 'admin/unigen/universe_create_sectors.php';
-		$container->addVar('game_id');
-		$container->addVar('num_gals');
+		$container = new CreateGalaxiesProcessor($this->gameID, $numGals);
 		$submit = [
 			'value' => 'Create Galaxies',
 			'href' => $container->href(),
@@ -27,8 +38,7 @@
 		$template->assign('Submit', $submit);
 
 		// Link for creating universe from SMR file
-		$container = Page::create('admin/unigen/upload_smr_file_processing.php');
-		$container->addVar('game_id');
+		$container = new UploadSmrFileProcessor($this->gameID);
 		$template->assign('UploadSmrFileHREF', $container->href());
 
 		//Galaxy Creation area
@@ -47,3 +57,6 @@
 			];
 		}
 		$template->assign('Galaxies', $galaxies);
+	}
+
+}

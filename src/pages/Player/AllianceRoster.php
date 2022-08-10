@@ -1,15 +1,31 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAlliance;
 
-		$template = Smr\Template::getInstance();
+class AllianceRoster extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'alliance_roster.php';
+
+	public function __construct(
+		private readonly ?int $allianceID = null,
+		private readonly bool $showRoles = false
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+		$account = $player->getAccount();
 
-		$allianceID = $var['alliance_id'] ?? $player->getAllianceID();
+		$allianceID = $this->allianceID ?? $player->getAllianceID();
 
 		$alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
 		$template->assign('Alliance', $alliance);
@@ -17,9 +33,7 @@ use Smr\Database;
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 		Menu::alliance($alliance->getAllianceID());
 
-		$varAction = $var['action'] ?? '';
-		// Does anyone actually use these?
-		$showRoles = $varAction == 'Show Alliance Roles';
+		$showRoles = $this->showRoles;
 		$template->assign('ShowRoles', $showRoles);
 		if ($showRoles) {
 			// initialize with text
@@ -36,14 +50,10 @@ use Smr\Database;
 			}
 			$template->assign('Roles', $roles);
 
-			$container = Page::create('alliance_roles_save_processing.php');
-			$container['alliance_id'] = $alliance->getAllianceID();
+			$container = new AllianceRolesSaveProcessor($allianceID);
 			$template->assign('SaveAllianceRolesHREF', $container->href());
 		}
 
-
-		// If the alliance is the player's alliance they get live information
-		// Otherwise it comes from the cache.
 		$dbResult = $db->read('SELECT
 			SUM(experience) AS alliance_xp,
 			FLOOR(AVG(experience)) AS alliance_avg
@@ -57,8 +67,7 @@ use Smr\Database;
 		$template->assign('AllianceAverageExp', $dbRecord->getInt('alliance_avg'));
 
 		if ($account->getAccountID() == $alliance->getLeaderID() || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION)) {
-			$container = Page::create('alliance_stat.php');
-			$container['alliance_id'] = $alliance->getAllianceID();
+			$container = new AllianceGovernance($allianceID);
 			$template->assign('EditAllianceDescriptionHREF', $container->href());
 		}
 
@@ -73,12 +82,7 @@ use Smr\Database;
 		if ($alliance->getAllianceID() == $player->getAllianceID()) {
 			// Alliance members get to see active/inactive status of members
 			$template->assign('ActiveIDs', $alliance->getActiveIDs());
-			$container = Page::create('alliance_roster.php');
-			if ($showRoles) {
-				$container['action'] = 'Hide Alliance Roles';
-			} else {
-				$container['action'] = 'Show Alliance Roles';
-			}
+			$container = new self($this->allianceID, !$showRoles);
 			$template->assign('ToggleRolesHREF', $container->href());
 		}
 
@@ -87,7 +91,9 @@ use Smr\Database;
 		$joinRestriction = $player->hasAlliance() ? true : $alliance->getJoinRestriction($player);
 		$template->assign('JoinRestriction', $joinRestriction);
 		if ($joinRestriction === false) {
-			$container = Page::create('alliance_join_processing.php');
-			$container['alliance_id'] = $alliance->getAllianceID();
+			$container = new AllianceJoinProcessor($allianceID);
 			$template->assign('JoinHREF', $container->href());
 		}
+	}
+
+}

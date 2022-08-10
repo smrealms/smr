@@ -1,14 +1,27 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
 use Smr\News;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class NewsReadCurrent extends PlayerPage {
 
-		$gameID = $var['GameID'] ?? $player->getGameID();
+	use ReusableTrait;
+
+	public string $file = 'news_read_current.php';
+
+	public function __construct(
+		private ?int $lastNewsUpdate = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$gameID = $player->getGameID();
 
 		$template->assign('PageTopic', 'Current News');
 		Menu::news($gameID);
@@ -16,12 +29,15 @@ use Smr\News;
 		News::doBreakingNewsAssign($gameID);
 		News::doLottoNewsAssign($gameID);
 
-		if (!isset($var['LastNewsUpdate'])) {
-			$var['LastNewsUpdate'] = $player->getLastNewsUpdate();
+		if ($this->lastNewsUpdate === null) {
+			$this->lastNewsUpdate = $player->getLastNewsUpdate();
 		}
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > ' . $db->escapeNumber($var['LastNewsUpdate']) . ' AND type != \'lotto\' ORDER BY news_id DESC');
+		$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > ' . $db->escapeNumber($this->lastNewsUpdate) . ' AND type != \'lotto\' ORDER BY news_id DESC');
 		$template->assign('NewsItems', News::getNewsItems($dbResult));
 
 		$player->updateLastNewsUpdate();
+	}
+
+}

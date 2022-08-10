@@ -1,17 +1,30 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Menu;
+use Smr\Page\PlayerPage;
+use Smr\Template;
+use SmrSector;
+
+class SectorScan extends PlayerPage {
+
+	public string $file = 'sector_scan.php';
+
+	public function __construct(
+		private readonly int $targetSectorID
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$sector = $player->getSector();
 
-		if (!$sector->isLinked($var['target_sector']) && $sector->getSectorID() != $var['target_sector']) {
+		if (!$sector->isLinked($this->targetSectorID) && $sector->getSectorID() != $this->targetSectorID) {
 			create_error('You cannot scan a sector you are not linked to.');
 		}
 
 		// initialize vars
-		$scanSector = SmrSector::getSector($player->getGameID(), $var['target_sector']);
+		$scanSector = SmrSector::getSector($player->getGameID(), $this->targetSectorID);
 
 		$template->assign('PageTopic', 'Sector Scan of #' . $scanSector->getSectorID() . ' (' . $scanSector->getGalaxy()->getDisplayName() . ')');
 		Menu::navigation($player);
@@ -48,7 +61,7 @@
 		$template->assign('EnemyForces', $enemy_forces);
 
 		// is it a warp or a normal move?
-		if ($sector->getWarp() == $var['target_sector']) {
+		if ($sector->getWarp() == $this->targetSectorID) {
 			$turns = TURNS_PER_WARP;
 		} else {
 			$turns = TURNS_PER_SECTOR;
@@ -56,3 +69,6 @@
 
 		$template->assign('ScanSector', $scanSector);
 		$template->assign('Turns', $turns);
+	}
+
+}

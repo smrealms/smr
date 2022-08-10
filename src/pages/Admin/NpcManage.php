@@ -1,16 +1,29 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
+use SmrGame;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
+class NpcManage extends AccountPage {
 
+	public string $file = 'admin/npc_manage.php';
+
+	public function __construct(
+		private readonly ?int $selectedGameID = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Manage NPCs');
 
-		$selectedGameID = $session->getRequestVarInt('selected_game_id', 0);
+		$selectedGameID = $this->selectedGameID;
 
-		$container = Page::create('admin/npc_manage.php');
+		$container = new NpcManageSelectProcessor();
 		$template->assign('SelectGameHREF', $container->href());
 
 		$games = [];
@@ -30,8 +43,7 @@ use Smr\Epoch;
 		$template->assign('Games', $games);
 		$template->assign('SelectedGameID', $selectedGameID);
 
-		$container = Page::create('admin/npc_manage_processing.php');
-		$container['selected_game_id'] = $selectedGameID;
+		$container = new NpcManageAddAccountProcessor($selectedGameID);
 		$template->assign('AddAccountHREF', $container->href());
 
 		$npcs = [];
@@ -40,8 +52,11 @@ use Smr\Epoch;
 			$accountID = $dbRecord->getInt('account_id');
 			$login = $dbRecord->getString('login');
 
-			$container['login'] = $login;
-			$container['accountID'] = $accountID;
+			$container = new NpcManageProcessor(
+				selectedGameID: $selectedGameID,
+				login: $login,
+				accountID: $accountID
+			);
 
 			$npcs[$accountID] = [
 				'login' => $login,
@@ -65,3 +80,6 @@ use Smr\Epoch;
 		}
 
 		$template->assign('Npcs', $npcs);
+	}
+
+}

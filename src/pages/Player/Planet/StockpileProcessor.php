@@ -1,10 +1,20 @@
 <?php declare(strict_types=1);
 
-use Smr\Request;
+namespace Smr\Pages\Player\Planet;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+use AbstractSmrPlayer;
+use Globals;
+use Smr\Page\PlayerPageProcessor;
+use Smr\Request;
+use SmrPlanet;
+
+class StockpileProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $goodID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$ship = $player->getShip();
 
 		if (!$player->isLandedOnPlanet()) {
@@ -16,8 +26,7 @@ use Smr\Request;
 			create_error('You must actually enter an amount > 0!');
 		}
 
-		/** @var int $goodID */
-		$goodID = $var['good_id'];
+		$goodID = $this->goodID;
 
 		// get a planet from the sector where the player is in
 		$planet = $player->getSectorPlanet();
@@ -58,4 +67,7 @@ use Smr\Request;
 			$ship->decreaseCargo($goodID, $amount);
 		}
 
-		Page::create('planet_stockpile.php')->go();
+		(new Stockpile())->go();
+	}
+
+}

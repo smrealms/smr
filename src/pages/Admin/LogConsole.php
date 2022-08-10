@@ -1,11 +1,24 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class LogConsole extends AccountPage {
 
+	public string $file = 'admin/log_console.php';
+
+	/**
+	 * @param array<int> $accountIDs
+	 */
+	public function __construct(
+		private readonly array $accountIDs = []
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Log Console');
 
 		$loggedAccounts = [];
@@ -21,7 +34,7 @@ use Smr\Database;
 				'AccountID' => $accountID,
 				'Login' => $dbRecord->getString('login'),
 				'TotalEntries' => $dbRecord->getInt('number_of_entries'),
-				'Checked' => isset($var['account_ids']) && in_array($accountID, $var['account_ids']),
+				'Checked' => in_array($accountID, $this->accountIDs),
 				'Notes' => '',
 			];
 
@@ -33,14 +46,9 @@ use Smr\Database;
 		$template->assign('LoggedAccounts', $loggedAccounts);
 
 		if (count($loggedAccounts) > 0) {
-			// put hidden fields in for log type to have all fields selected on next page.
-			$logTypes = [];
-			$dbResult = $db->read('SELECT log_type_id FROM log_type');
-			foreach ($dbResult->records() as $dbRecord) {
-				$logTypes[] = $dbRecord->getInt('log_type_id');
-			}
-			$template->assign('LogTypes', $logTypes);
-
-			$template->assign('LogConsoleFormHREF', Page::create('admin/log_console_detail.php')->href());
-			$template->assign('AnonAccessHREF', Page::create('admin/log_anonymous_account.php')->href());
+			$template->assign('LogConsoleFormHREF', (new LogConsoleProcessor())->href());
+			$template->assign('AnonAccessHREF', (new LogConsoleAnonBank())->href());
 		}
+	}
+
+}

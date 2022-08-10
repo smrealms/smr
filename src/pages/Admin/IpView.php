@@ -1,7 +1,22 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
+namespace Smr\Pages\Admin;
 
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAccount;
+
+class IpView extends AccountPage {
+
+	use ReusableTrait;
+
+	public string $file = 'admin/ip_view.php';
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'IP Search');
 
-		$template->assign('IpFormHref', Page::create('admin/ip_view_results.php')->href());
+		$template->assign('IpFormHref', (new IpViewResults())->href());
+	}
+
+}

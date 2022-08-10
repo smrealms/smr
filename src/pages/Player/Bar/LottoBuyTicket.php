@@ -1,18 +1,31 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bar;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Lotto;
+use Smr\Page\PlayerPage;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class LottoBuyTicket extends PlayerPage {
 
+	public string $file = 'bar_lotto_buy.php';
+
+	public function __construct(
+		private readonly int $locationID
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Galactic Lotto');
-		Menu::bar();
+		Menu::bar($this->locationID);
 
 		Lotto::checkForLottoWinner($player->getGameID());
 		$lottoInfo = Lotto::getLottoInfo($player->getGameID());
 		$template->assign('LottoInfo', $lottoInfo);
 
-		$container = Page::create('bar_lotto_buy_processing.php');
-		$container->addVar('LocationID');
+		$container = new LottoBuyTicketProcessor($this->locationID);
 		$template->assign('BuyTicketHREF', $container->href());
+	}
+
+}

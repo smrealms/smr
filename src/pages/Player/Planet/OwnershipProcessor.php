@@ -1,11 +1,15 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Planet;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class OwnershipProcessor extends PlayerPageProcessor {
 
+	public function build(AbstractSmrPlayer $player): never {
 		if (!$player->isLandedOnPlanet()) {
 			create_error('You are not on a planet!');
 		}
@@ -44,4 +48,7 @@ use Smr\Request;
 			$player->log(LOG_TYPE_PLANETS, 'Player sets planet password to ' . $password);
 		}
 
-		Page::create('planet_ownership.php')->go();
+		(new Ownership())->go();
+	}
+
+}

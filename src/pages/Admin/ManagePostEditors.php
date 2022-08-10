@@ -1,16 +1,28 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+use Globals;
 use Smr\Database;
 use Smr\Epoch;
-use Smr\Request;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class ManagePostEditors extends AccountPage {
 
+	public string $file = 'admin/manage_post_editors.php';
+
+	public function __construct(
+		private readonly ?int $selectedGameID = null,
+		private readonly ?string $processingMsg = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Manage Galactic Post Editors');
 
-		$container = Page::create('admin/manage_post_editors.php');
+		$container = new ManagePostEditorsSelectProcessor();
 		$template->assign('SelectGameHREF', $container->href());
 
 		// Get the list of active games ordered by reverse start date
@@ -27,7 +39,7 @@ use Smr\Request;
 
 		if ($activeGames) {
 			// Set the selected game (or the first in the list if not selected yet)
-			$selectedGameID = $session->getRequestVarInt('selected_game_id', $activeGames[0]['game_id']);
+			$selectedGameID = $this->selectedGameID ?? $activeGames[0]['game_id'];
 			$template->assign('SelectedGame', $selectedGameID);
 
 			// Get the list of current editors for the selected game
@@ -37,19 +49,14 @@ use Smr\Request;
 				$currentEditors[] = $editor->getDisplayName();
 			}
 			$template->assign('CurrentEditors', $currentEditors);
-		}
 
-		if (isset($var['processing_msg'])) {
-			if (Request::has('game_id')) {
-				// If we are selecting a different game, clear the processing message.
-				unset($var['processing_msg']);
-			} else {
-				// If we have just forwarded from the processing file, pass its message.
-				$template->assign('ProcessingMsg', $var['processing_msg']);
-			}
-		}
+			// If we have just forwarded from the processing file, pass its message.
+			$template->assign('ProcessingMsg', $this->processingMsg);
 
-		// Create the link to the processing file
-		// Pass entire $var so the processing file knows the selected game
-		$linkContainer = Page::create('admin/manage_post_editors_processing.php', $var);
-		$template->assign('PostEditorHREF', $linkContainer->href());
+			// Create the link to the processing file
+			$linkContainer = new ManagePostEditorsProcessor($selectedGameID);
+			$template->assign('PostEditorHREF', $linkContainer->href());
+		}
+	}
+
+}

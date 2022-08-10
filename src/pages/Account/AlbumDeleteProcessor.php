@@ -1,11 +1,15 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
 use Smr\Database;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
 
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+class AlbumDeleteProcessor extends AccountPageProcessor {
 
+	public function build(SmrAccount $account): never {
 		if (Request::get('action') == 'Yes') {
 			$db = Database::getInstance();
 			$db->write('DELETE
@@ -17,10 +21,8 @@ use Smr\Request;
 						WHERE album_id = ' . $db->escapeNumber($account->getAccountID()));
 		}
 
-		if ($session->hasGame()) {
-			$container = Page::create('current_sector.php');
-		} else {
-			$container = Page::create('game_play.php');
-		}
-
+		$container = new AlbumEdit();
 		$container->go();
+	}
+
+}

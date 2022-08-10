@@ -1,12 +1,16 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
 
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+class FeatureRequestProcessor extends AccountPageProcessor {
 
+	public function build(SmrAccount $account): never {
 		$feature = Request::get('feature');
 		if (empty($feature)) {
 			create_error('We need at least a feature description!');
@@ -33,4 +37,7 @@ use Smr\Request;
 			'vote_type' => $db->escapeString('YES'),
 		]);
 
-		Page::create('feature_request.php')->go();
+		(new FeatureRequest())->go();
+	}
+
+}

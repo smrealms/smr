@@ -1,9 +1,17 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
+class CheatingShipCheck extends AccountPage {
 
+	public string $file = 'admin/ship_check.php';
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Ship Integrity Check');
 
 		$db = Database::getInstance();
@@ -17,11 +25,12 @@ use Smr\Database;
 
 		$excessHardware = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$container = Page::create('admin/ship_check_processing.php');
-			$container['account_id'] = $dbRecord->getInt('account_id');
-			$container['hardware'] = $dbRecord->getInt('hardware_type_id');
-			$container['game_id'] = $dbRecord->getInt('game_id');
-			$container['max_amount'] = $dbRecord->getInt('max_amount');
+			$container = new CheatingShipCheckProcessor(
+				accountID: $dbRecord->getInt('account_id'),
+				hardwareTypeID: $dbRecord->getInt('hardware_type_id'),
+				gameID: $dbRecord->getInt('game_id'),
+				maxAmount: $dbRecord->getInt('max_amount')
+			);
 
 			$excessHardware[] = [
 				'player' => htmlentities($dbRecord->getString('player_name')),
@@ -33,3 +42,6 @@ use Smr\Database;
 			];
 		}
 		$template->assign('ExcessHardware', $excessHardware);
+	}
+
+}

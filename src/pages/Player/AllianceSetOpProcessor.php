@@ -1,20 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
+class AllianceSetOpProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly bool $cancel = false
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+		$account = $player->getAccount();
 
-		function error_on_page(string $error): never {
-			$message = '<span class="bold red">ERROR:</span> ' . $error;
-			Page::create('alliance_set_op.php', ['message' => $message])->go();
-		}
-
-		if (!empty($var['cancel'])) {
+		if ($this->cancel) {
 			// just get rid of op
 			$db->write('DELETE FROM alliance_has_op WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()));
 			$db->write('DELETE FROM alliance_has_op_response WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()));
@@ -28,12 +31,12 @@ use Smr\Request;
 			// schedule an op
 			$date = Request::get('date');
 			if (empty($date)) {
-				error_on_page('You must specify a date for the operation!');
+				$this->error('You must specify a date for the operation!');
 			}
 
 			$time = strtotime($date);
 			if ($time === false) {
-				error_on_page('The specified date is not in a valid format.');
+				$this->error('The specified date is not in a valid format.');
 			}
 
 			// add op to db
@@ -51,4 +54,12 @@ use Smr\Request;
 			}
 		}
 
-		Page::create('alliance_set_op.php')->go();
+		(new AllianceSetOp())->go();
+	}
+
+	public function error(string $error): never {
+		$message = '<span class="bold red">ERROR:</span> ' . $error;
+		(new AllianceSetOp($message))->go();
+	}
+
+}

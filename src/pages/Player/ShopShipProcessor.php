@@ -1,13 +1,22 @@
 <?php declare(strict_types=1);
 
-use Smr\BuyerRestriction;
+namespace Smr\Pages\Player;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+use AbstractSmrPlayer;
+use Smr\BuyerRestriction;
+use Smr\Page\PlayerPageProcessor;
+use SmrShipType;
+
+class ShopShipProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $shipTypeID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$ship = $player->getShip();
 
-		$shipTypeID = $var['ship_type_id'];
+		$shipTypeID = $this->shipTypeID;
 		$newShipType = SmrShipType::get($shipTypeID);
 		$cost = $ship->getCostToUpgrade($shipTypeID);
 
@@ -44,6 +53,8 @@ use Smr\BuyerRestriction;
 
 		$player->log(LOG_TYPE_HARDWARE, 'Buys a ' . $newShipType->getName() . ' for ' . $cost . ' credits');
 
-		$container = Page::create('current_sector.php');
-		$container->addVar('LocationID');
+		$container = new CurrentSector();
 		$container->go();
+	}
+
+}

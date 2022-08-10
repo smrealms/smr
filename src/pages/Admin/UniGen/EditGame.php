@@ -1,11 +1,26 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$var = Smr\Session::getInstance()->getCurrentVar();
+namespace Smr\Pages\Admin\UniGen;
 
+use Globals;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
+use SmrGame;
+
+class EditGame extends AccountPage {
+
+	public string $file = 'admin/unigen/game_edit.php';
+
+	public function __construct(
+		private readonly int $gameID,
+		private readonly int $galaxyID
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Edit Game Details');
 
-		$gameID = $var['game_id'];
+		$gameID = $this->gameID;
 
 		// Use Alskant-Creonti as a proxy for the starting political relations
 		$relations = Globals::getRaceRelations($gameID, RACE_ALSKANT)[RACE_CREONTI];
@@ -31,13 +46,12 @@
 		];
 		$template->assign('Game', $gameArray);
 
-		$container = Page::create('admin/unigen/game_edit_processing.php');
-		$container->addVar('game_id');
-		$container->addVar('gal_on');
+		$container = new EditGameProcessor($this->gameID, $this->galaxyID);
 		$template->assign('ProcessingHREF', $container->href());
 		$template->assign('SubmitValue', 'Modify Game');
 
-		$container = Page::create('admin/unigen/universe_create_sectors.php');
-		$container->addVar('game_id');
-		$container->addVar('gal_on');
+		$container = new EditGalaxy($this->gameID, $this->galaxyID);
 		$template->assign('CancelHREF', $container->href());
+	}
+
+}

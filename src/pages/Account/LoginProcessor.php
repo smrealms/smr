@@ -1,14 +1,17 @@
 <?php declare(strict_types=1);
 
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+namespace Smr\Pages\Account;
 
+use Smr\Page\AccountPageProcessor;
+use SmrAccount;
+
+class LoginProcessor extends AccountPageProcessor {
+
+	public function build(SmrAccount $account): never {
 		// update last login time
 		$account->updateLastLogin();
 
-		if ($session->hasGame()) {
-			$body = 'current_sector.php';
-		} else {
-			$body = 'game_play.php';
-		}
-		Page::create($body)->go();
+		(new GamePlay())->go();
+	}
+
+}

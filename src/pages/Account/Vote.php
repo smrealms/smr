@@ -1,12 +1,18 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+class Vote extends AccountPage {
 
+	public string $file = 'vote.php';
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Voting');
 
 		$db = Database::getInstance();
@@ -22,9 +28,7 @@ use Smr\Epoch;
 			foreach ($dbResult->records() as $dbRecord) {
 				$voteID = $dbRecord->getInt('vote_id');
 				$voting[$voteID]['ID'] = $voteID;
-				$container = Page::create('vote_processing.php');
-				$container['forward_to'] = 'vote.php';
-				$container['vote_id'] = $voteID;
+				$container = new VoteProcessor($voteID, new self());
 				$voting[$voteID]['HREF'] = $container->href();
 				$voting[$voteID]['Question'] = $dbRecord->getString('question');
 				if ($dbRecord->getInt('end') > Epoch::time()) {
@@ -44,3 +48,6 @@ use Smr\Epoch;
 			}
 			$template->assign('Voting', $voting);
 		}
+	}
+
+}

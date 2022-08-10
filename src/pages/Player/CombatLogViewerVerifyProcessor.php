@@ -1,18 +1,25 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 
-		// Verify that the player is permitted to view the requested combat log
-		// Qualifications:
-		//  * Log must be from the current game
-		//  * Attacker or defender is the player OR in the player's alliance
+// Verify that the player is permitted to view the requested combat log
+// Qualifications:
+//  * Log must be from the current game
+//  * Attacker or defender is the player OR in the player's alliance
+class CombatLogViewerVerifyProcessor extends PlayerPageProcessor {
 
+	public function __construct(
+		private readonly int $logID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
 
-		$query = 'SELECT 1 FROM combat_logs WHERE log_id=' . $db->escapeNumber($var['log_id']) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' AND ';
+		$query = 'SELECT 1 FROM combat_logs WHERE log_id=' . $db->escapeNumber($this->logID) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' AND ';
 		if ($player->hasAlliance()) {
 			$query .= '(attacker_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' OR defender_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ')';
 		} else {
@@ -26,7 +33,8 @@ use Smr\Database;
 		}
 
 		// Player has permission, so go to the display page!
-		$container = Page::create('combat_log_viewer.php');
-		$container['log_ids'] = [$var['log_id']];
-		$container['current_log'] = 0;
+		$container = new CombatLogViewer([$this->logID]);
 		$container->go();
+	}
+
+}

@@ -1,14 +1,28 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
+use Menu;
 use Smr\Database;
 use Smr\News;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
 use Smr\Request;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class NewsReadArchives extends AccountPage {
 
-		$gameID = $var['GameID'] ?? $session->getPlayer()->getGameID();
+	use ReusableTrait;
+
+	public string $file = 'news_read.php';
+
+	public function __construct(
+		private readonly int $gameID
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
+		$gameID = $this->gameID;
 
 		$min_news = Request::getInt('min_news', 1);
 		$max_news = Request::getInt('max_news', 50);
@@ -25,8 +39,11 @@ use Smr\Request;
 		News::doBreakingNewsAssign($gameID);
 		News::doLottoNewsAssign($gameID);
 
-		$template->assign('ViewNewsFormHref', Page::create('news_read.php', ['GameID' => $gameID])->href());
+		$template->assign('ViewNewsFormHref', (new self($this->gameID))->href());
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type != \'lotto\' ORDER BY news_id DESC LIMIT ' . ($min_news - 1) . ', ' . ($max_news - $min_news + 1));
 		$template->assign('NewsItems', News::getNewsItems($dbResult));
+	}
+
+}

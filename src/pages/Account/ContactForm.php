@@ -1,12 +1,25 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+namespace Smr\Pages\Account;
 
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAccount;
+
+class ContactForm extends AccountPage {
+
+	use ReusableTrait;
+
+	public string $file = 'contact.php';
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Contact Form');
 
-		$container = Page::create('contact_processing.php');
+		$container = new ContactFormProcessor();
 		$template->assign('ProcessingHREF', $container->href());
 
 		$template->assign('From', $account->getLogin());
+	}
+
+}

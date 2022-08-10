@@ -1,12 +1,17 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
 use Smr\SectorLock;
 
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+class AttackPortProcessor extends PlayerPageProcessor {
+
+	public function build(AbstractSmrPlayer $player): never {
+		$account = $player->getAccount();
 		$ship = $player->getShip();
 		$sector = $player->getSector();
 
@@ -35,11 +40,9 @@ use Smr\SectorLock;
 			create_error('This port does not exist.');
 		}
 
-
 		if ($port->isDestroyed()) {
-			Page::create('port_attack.php')->go();
+			(new AttackPort())->go();
 		}
-
 
 		// ********************************
 		// *
@@ -113,6 +116,8 @@ use Smr\SectorLock;
 		}
 
 		// If they died on the shot they get to see the results
-		$container = Page::create('port_attack.php', skipRedirect: $player->isDead());
-		$container['results'] = $results;
+		$container = new AttackPort($results, $player->isDead());
 		$container->go();
+	}
+
+}

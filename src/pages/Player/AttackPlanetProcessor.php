@@ -1,12 +1,18 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
 use Smr\SectorLock;
+use SmrPlayer;
 
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+class AttackPlanetProcessor extends PlayerPageProcessor {
+
+	public function build(AbstractSmrPlayer $player): never {
+		$account = $player->getAccount();
 		$ship = $player->getShip();
 
 		if ($player->hasNewbieTurns()) {
@@ -44,7 +50,6 @@ use Smr\SectorLock;
 
 		// take the turns
 		$player->takeTurns(TURNS_TO_SHOOT_PLANET);
-
 
 		// ********************************
 		// *
@@ -136,7 +141,8 @@ use Smr\SectorLock;
 		}
 
 		// If they died on the shot they get to see the results
-		$container = Page::create('planet_attack.php', skipRedirect: $player->isDead());
-		$container['sector_id'] = $planet->getSectorID();
-		$container['results'] = $results;
+		$container = new AttackPlanet($planet->getSectorID(), $results, $player->isDead());
 		$container->go();
+	}
+
+}

@@ -1,17 +1,25 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
+use SmrPlayer;
 
+class ChatSharingProcessor extends PlayerPageProcessor {
+
+	/**
+	 * @param array<int> $shareAccountIDs Account IDs already being shared to
+	 */
+	public function __construct(
+		private readonly array $shareAccountIDs
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
-
-		function error_on_page(string $message): never {
-			$message = '<span class="bold red">ERROR:</span> ' . $message;
-			Page::create('chat_sharing.php', ['message' => $message])->go();
-		}
 
 		// Process adding a "share to" account
 		if (Request::has('add')) {
@@ -30,8 +38,7 @@ use Smr\Request;
 				error_on_page($e->getMessage());
 			}
 
-			$var = $session->getCurrentVar();
-			if (in_array($accountId, $var['share_to_ids'])) {
+			if (in_array($accountId, $this->shareAccountIDs)) {
 				error_on_page('You are already sharing with this player!');
 			}
 
@@ -53,4 +60,12 @@ use Smr\Request;
 			$db->write('DELETE FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND from_account_id=' . $db->escapeNumber(Request::getInt('remove_share_from')) . ' AND game_id=' . $db->escapeNumber(Request::getInt('game_id')));
 		}
 
-		Page::create('chat_sharing.php')->go();
+		(new ChatSharing())->go();
+	}
+
+}
+
+function error_on_page(string $message): never {
+	$message = '<span class="bold red">ERROR:</span> ' . $message;
+	(new ChatSharing($message))->go();
+}

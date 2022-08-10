@@ -1,14 +1,30 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Globals;
+use Menu;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAlliance;
+use SmrForce;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class AllianceForces extends PlayerPage {
 
-		$allianceID = $var['alliance_id'] ?? $player->getAllianceID();
+	use ReusableTrait;
+
+	public string $file = 'alliance_forces.php';
+
+	public function __construct(
+		private readonly int $allianceID
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$allianceID = $this->allianceID;
 
 		$alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
@@ -57,3 +73,6 @@ use Smr\Epoch;
 			$forces[] = SmrForce::getForce($player->getGameID(), $dbRecord->getInt('sector_id'), $dbRecord->getInt('owner_id'), false, $dbRecord);
 		}
 		$template->assign('Forces', $forces);
+	}
+
+}

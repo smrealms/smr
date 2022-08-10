@@ -1,12 +1,27 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player\Rankings;
 
+use AbstractSmrPlayer;
+use Menu;
+use Rankings;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+
+class RaceKills extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'rankings_race_kills.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Racial Standings');
 
 		Menu::rankings(2, 1);
 
 		$rankedStats = Rankings::raceStats('kills', $player->getGameID());
 		$template->assign('Ranks', Rankings::collectRaceRankings($rankedStats, $player));
+	}
+
+}

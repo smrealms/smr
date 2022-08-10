@@ -1,18 +1,26 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin\UniGen;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
+use SmrGame;
 
-		$template = Smr\Template::getInstance();
+class CreateGame extends AccountPage {
+
+	public string $file = 'admin/unigen/game_create.php';
+
+	public function build(SmrAccount $account, Template $template): void {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
 
 		//get information
-		$container = Page::create('admin/unigen/game_create_processing.php');
+		$container = new CreateGameProcessor();
 		$template->assign('CreateGalaxiesHREF', $container->href());
 
-		$container = Page::create('admin/unigen/universe_create_sectors.php');
+		$container = new EditGalaxy();
 		$template->assign('EditGameHREF', $container->href());
 
 		$canEditEnabledGames = $account->hasPermission(PERMISSION_EDIT_ENABLED_GAMES);
@@ -49,3 +57,6 @@ use Smr\Epoch;
 			$games[] = SmrGame::getGame($dbRecord->getInt('game_id'));
 		}
 		$template->assign('EditGames', $games);
+	}
+
+}

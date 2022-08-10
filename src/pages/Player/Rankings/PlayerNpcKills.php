@@ -1,9 +1,18 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player\Rankings;
 
+use AbstractSmrPlayer;
+use Menu;
+use Rankings;
+use Smr\Page\PlayerPage;
+use Smr\Template;
+
+class PlayerNpcKills extends PlayerPage {
+
+	public string $file = 'rankings_player_npc_kills.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'NPC Kill Rankings');
 
 		Menu::rankings(0, 5);
@@ -20,6 +29,9 @@
 		$totalPlayers = count($rankedStats);
 		[$minRank, $maxRank] = Rankings::calculateMinMaxRanks($ourRank, $totalPlayers);
 
-		$template->assign('FilterRankingsHREF', Page::create('rankings_player_npc_kills.php')->href());
+		$template->assign('FilterRankingsHREF', (new self())->href());
 
 		$template->assign('FilteredRankings', Rankings::collectRankings($rankedStats, $player, $minRank, $maxRank));
+	}
+
+}

@@ -1,10 +1,14 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Planet;
+
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class DefenseWeaponProcessor extends PlayerPageProcessor {
 
+	public function build(AbstractSmrPlayer $player): never {
 		if (!$player->isLandedOnPlanet()) {
 			create_error('You are not on a planet!');
 		}
@@ -37,4 +41,7 @@ use Smr\Request;
 			$planet->moveMountedWeaponDown(Request::getInt('move_down'));
 		}
 
-		Page::create('planet_defense.php')->go();
+		(new Defense())->go();
+	}
+
+}

@@ -1,13 +1,22 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
 use Smr\SectorLock;
+use SmrPlayer;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+class AttackPlayerProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $targetAccountID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
+		$account = $player->getAccount();
 		$sector = $player->getSector();
 
 		if ($player->hasNewbieTurns()) {
@@ -26,7 +35,7 @@ use Smr\SectorLock;
 			create_error('You are not allowed to fight!');
 		}
 
-		$targetPlayer = SmrPlayer::getPlayer($var['target'], $player->getGameID());
+		$targetPlayer = SmrPlayer::getPlayer($this->targetAccountID, $player->getGameID());
 
 		if ($player->traderNAPAlliance($targetPlayer)) {
 			create_error('Your alliance does not allow you to attack this trader.');
@@ -63,7 +72,7 @@ use Smr\SectorLock;
 		 * @param array<string, array<int, AbstractSmrPlayer>> $fightingPlayers
 		 * @return array<string, mixed>
 		 */
-		function teamAttack(array $fightingPlayers, string $attack, string $defend): array {
+		$teamAttack = function(array $fightingPlayers, string $attack, string $defend): array {
 			$results = ['Traders' => [], 'TotalDamage' => 0];
 			foreach ($fightingPlayers[$attack] as $accountID => $teamPlayer) {
 				$playerResults = $teamPlayer->shootPlayers($fightingPlayers[$defend]);
@@ -84,11 +93,11 @@ use Smr\SectorLock;
 				}
 			}
 			return $results;
-		}
+		};
 
 		$results = [
-			'Attackers' => teamAttack($fightingPlayers, 'Attackers', 'Defenders'),
-			'Defenders' => teamAttack($fightingPlayers, 'Defenders', 'Attackers'),
+			'Attackers' => $teamAttack($fightingPlayers, 'Attackers', 'Defenders'),
+			'Defenders' => $teamAttack($fightingPlayers, 'Defenders', 'Attackers'),
 		];
 
 		$account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'] . ' and the other team does ' . $results['Defenders']['TotalDamage'], $sector->getSectorID());
@@ -101,7 +110,7 @@ use Smr\SectorLock;
 			'timestamp' => $db->escapeNumber(Epoch::time()),
 			'attacker_id' => $db->escapeNumber($player->getAccountID()),
 			'attacker_alliance_id' => $db->escapeNumber($player->getAllianceID()),
-			'defender_id' => $db->escapeNumber($var['target']),
+			'defender_id' => $db->escapeNumber($this->targetAccountID),
 			'defender_alliance_id' => $db->escapeNumber($targetPlayer->getAllianceID()),
 			'result' => $db->escapeObject($results, true),
 		]);
@@ -113,15 +122,14 @@ use Smr\SectorLock;
 			SectorLock::getInstance()->acquireForPlayer($player);
 		}
 
-		// If they died on the shot they get to see the results
-		$container = Page::create('trader_attack.php', skipRedirect: $player->isDead());
-
 		// If player or target is dead there is no continue attack button
 		if ($player->isDead() || $targetPlayer->isDead()) {
-			$container['target'] = 0;
+			$targetAccountID = null;
 		} else {
-			$container->addVar('target');
+			$targetAccountID = $this->targetAccountID;
 		}
-
-		$container['results'] = $results;
+		$container = new AttackPlayer($results, $targetAccountID, $player->isDead());
 		$container->go();
+	}
+
+}

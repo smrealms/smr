@@ -1,17 +1,28 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bar;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class TalkToBartender extends PlayerPage {
 
+	public string $file = 'bar_talk_bartender.php';
+
+	public function __construct(
+		private readonly int $locationID,
+		private ?string $message = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Talk to Bartender');
-		Menu::bar();
+		Menu::bar($this->locationID);
 
 		// We save the displayed message in session since it is randomized
-		if (!isset($var['Message'])) {
+		if ($this->message === null) {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT message FROM bar_tender WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY rand() LIMIT 1');
 			if ($dbResult->hasRecord()) {
@@ -19,14 +30,18 @@ use Smr\Database;
 			} else {
 				$message = 'I havent heard anything recently... got anything to tell me?';
 			}
-			$var['Message'] = $message;
+			$this->message = $message;
 		}
-		$template->assign('Message', bbifyMessage($var['Message']));
+		$template->assign('Message', bbifyMessage($this->message));
 
-		$container = Page::create('bar_talk_bartender.php');
-		$container->addVar('LocationID');
+		$container = new self($this->locationID);
 		$template->assign('ListenHREF', $container->href());
 
-		$container = Page::create('bar_talk_bartender_processing.php');
-		$container->addVar('LocationID');
+		$container = new TalkToBartenderProcessor($this->locationID);
 		$template->assign('ProcessingHREF', $container->href());
+
+		$container = new BarMain($this->locationID);
+		$template->assign('BackHREF', $container->href());
+	}
+
+}

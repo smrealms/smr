@@ -1,11 +1,19 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\GalacticPost;
+
+use AbstractSmrPlayer;
+use Exception;
+use Menu;
 use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class EditorOptions extends PlayerPage {
 
+	public string $file = 'galactic_post.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		if (!$player->isGPEditor()) {
 			throw new Exception('Only the GP Editor is allowed to view this page!');
 		}
@@ -15,10 +23,10 @@ use Smr\Database;
 
 		$db = Database::getInstance();
 
-		$container = Page::create('galactic_post_view_article.php');
+		$container = new ArticleView();
 		$template->assign('ViewArticlesHREF', $container->href());
 
-		$container = Page::create('galactic_post_make_paper.php');
+		$container = new PaperMake();
 		$template->assign('MakePaperHREF', $container->href());
 
 		$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
@@ -40,20 +48,19 @@ use Smr\Database;
 			];
 
 			if ($hasEnoughArticles && !$published) {
-				$container = Page::create('galactic_post_make_current.php');
-				$container['id'] = $paper_id;
+				$container = new PaperPublishProcessor($paper_id);
 				$paper['PublishHREF'] = $container->href();
 			}
 
-			$container = Page::create('galactic_post_delete_confirm.php');
-			$container['paper'] = 'yes';
-			$container['id'] = $paper_id;
+			$container = new PaperDeleteConfirm($paper_id);
 			$paper['DeleteHREF'] = $container->href();
 
-			$container = Page::create('galactic_post_paper_edit.php');
-			$container['id'] = $paper_id;
+			$container = new PaperEdit($paper_id);
 			$paper['EditHREF'] = $container->href();
 
 			$papers[] = $paper;
 		}
 		$template->assign('Papers', $papers);
+	}
+
+}

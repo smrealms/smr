@@ -1,13 +1,24 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Plotter;
 use Smr\Exceptions\SectorNotFound;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
+use SmrSector;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class PlotCourseConventionalProcessor extends PlayerPageProcessor {
 
-		$start = Request::getVarInt('from');
-		$target = Request::getVarInt('to');
+	public function __construct(
+		private readonly ?int $from = null,
+		private readonly ?int $to = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
+		$start = $this->from ?? Request::getInt('from');
+		$target = $this->to ?? Request::getInt('to');
 
 		// perform some basic checks on both numbers
 		if (empty($start) || empty($target)) {
@@ -31,3 +42,6 @@ use Smr\Request;
 
 		require_once(LIB . 'Default/course_plot.inc.php');
 		course_plot_forward($player, $path);
+	}
+
+}

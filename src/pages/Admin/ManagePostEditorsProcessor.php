@@ -1,28 +1,35 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
+use SmrPlayer;
 
+class ManagePostEditorsProcessor extends AccountPageProcessor {
+
+	public function __construct(
+		private readonly int $selectedGameID
+	) {}
+
+	public function build(SmrAccount $account): never {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
 
 		// Get the selected game
-		$game_id = $var['selected_game_id'];
+		$game_id = $this->selectedGameID;
 
 		// Get the POST variables
 		$player_id = Request::getInt('player_id');
 		$action = Request::get('submit');
 
-		// Pass entire $var so that the selected game remains selected
-		$container = Page::create('admin/manage_post_editors.php', $var);
-
 		try {
 			$selected_player = SmrPlayer::getPlayerByPlayerID($player_id, $game_id);
 		} catch (PlayerNotFound $e) {
 			$msg = "<span class='red'>ERROR: </span>" . $e->getMessage();
-			$container['processing_msg'] = $msg;
+			$container = new ManagePostEditors($this->selectedGameID, $msg);
 			$container->go();
 		}
 
@@ -50,5 +57,8 @@ use Smr\Request;
 			$msg = "<span class='red'>ERROR: </span>Do not know action '$action'!";
 		}
 
-		$container['processing_msg'] = $msg;
+		$container = new ManagePostEditors($this->selectedGameID, $msg);
 		$container->go();
+	}
+
+}

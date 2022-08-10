@@ -1,19 +1,25 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class MessageBlacklistDeleteProcessor extends PlayerPageProcessor {
 
-		$container = Page::create('message_blacklist.php');
-
+	public function build(AbstractSmrPlayer $player): never {
 		$entry_ids = Request::getIntArray('entry_ids', []);
 		if (empty($entry_ids)) {
-			$container['msg'] = '<span class="red bold">ERROR: </span>No entries selected for deletion.';
+			$container = new MessageBlacklist('<span class="red bold">ERROR: </span>No entries selected for deletion.');
 			$container->go();
 		}
 
 		$db = Database::getInstance();
 		$db->write('DELETE FROM message_blacklist WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND entry_id IN (' . $db->escapeArray($entry_ids) . ')');
+		$container = new MessageBlacklist();
 		$container->go();
+	}
+
+}

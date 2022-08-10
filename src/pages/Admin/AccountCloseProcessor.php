@@ -1,10 +1,14 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
 
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+class AccountCloseProcessor extends AccountPageProcessor {
 
+	public function build(SmrAccount $account): never {
 		// Number of banned accounts
 		$amount = 0;
 
@@ -61,6 +65,8 @@ use Smr\Request;
 		if ($amount > 20) {
 			$msg .= '  How do you sleep at night ;)';
 		}
-		$container = Page::create('admin/admin_tools.php');
-		$container['msg'] = $msg;
+		$container = new AdminTools($msg);
 		$container->go();
+	}
+
+}

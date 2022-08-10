@@ -1,29 +1,39 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account\HistoryGames;
+
+use Exception;
 use Smr\Database;
+use Smr\Session;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class ExtendedStats extends HistoryPage {
 
-		$game_id = $var['view_game_id'];
-		$template->assign('PageTopic', 'Extended Stats : ' . $var['game_name']);
-		Menu::historyGames(1);
+	public string $file = 'history_games_detail.php';
 
-		$oldAccountID = $session->getAccount()->getOldAccountID($var['HistoryDatabase']);
+	public function __construct(
+		protected readonly string $historyDatabase,
+		protected readonly int $historyGameID,
+		protected readonly string $historyGameName,
+	) {}
 
-		$container = Page::create('history_games_detail.php', $var);
-		if (isset($container['action'])) {
-			unset($container['action']);
-		}
+	protected function buildHistory(SmrAccount $account, Template $template): void {
+		$game_id = $this->historyGameID;
+		$template->assign('PageTopic', 'Extended Stats : ' . $this->historyGameName);
+		$this->addMenu($template);
+
+		$oldAccountID = $account->getOldAccountID($this->historyDatabase);
+
+		$container = new self($this->historyDatabase, $this->historyGameID, $this->historyGameName);
 		$template->assign('SelfHREF', $container->href());
 
 		// Default page has no category (action) selected yet
+		$session = Session::getInstance();
 		$action = $session->getRequestVar('action', '');
 		if (!empty($action)) {
 			$rankings = [];
 			$db = Database::getInstance();
-			$db->switchDatabases($var['HistoryDatabase']);
 			if (in_array($action, ['Top Mined Sectors', 'Most Dangerous Sectors'], true)) {
 				[$sql, $header] = match ($action) {
 					'Top Mined Sectors' => ['mines', 'Mines'],
@@ -50,13 +60,10 @@ use Smr\Database;
 				$oldAllianceID = $dbResult->hasRecord() ? $dbResult->record()->getInt('alliance_id') : 0;
 				// Get the top 25 alliance ordered by the requested stat
 				$dbResult = $db->read('SELECT alliance_name, alliance_id, ' . $sql . ' as val FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND alliance_id > 0 GROUP BY alliance_id ORDER BY val DESC, alliance_id LIMIT 25');
-				$container = Page::create('history_alliance_detail.php', $var);
-				$container['selected_index'] = 1;
-				$container['previous_page'] = Page::copy($var);
 				foreach ($dbResult->records() as $dbRecord) {
 					$allianceID = $dbRecord->getInt('alliance_id');
 					$name = htmlentities($dbRecord->getString('alliance_name'));
-					$container['alliance_id'] = $allianceID;
+					$container = new AllianceDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $allianceID, $this);
 					$rankings[] = [
 						'bold' => $oldAllianceID == $allianceID ? 'class="bold"' : '',
 						'data' => [
@@ -68,15 +75,12 @@ use Smr\Database;
 				$headers = ['Alliance', $header];
 			} elseif ($action == 'Top Planets') {
 				$dbResult = $db->read('SELECT sector_id, owner_id, IFNULL(player_name, \'Unclaimed\') as player_name, IFNULL(alliance_name, \'None\') as alliance_name, IFNULL(player.alliance_id, 0) as alliance_id, ROUND((turrets + hangers + generators) / 3, 2) as level FROM planet LEFT JOIN player ON planet.owner_id = player.account_id AND planet.game_id = player.game_id LEFT JOIN alliance ON player.alliance_id = alliance.alliance_id AND planet.game_id = alliance.game_id WHERE planet.game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY level DESC LIMIT 25');
-				$container = Page::create('history_alliance_detail.php', $var);
-				$container['selected_index'] = 1;
-				$container['previous_page'] = Page::copy($var);
 				foreach ($dbResult->records() as $dbRecord) {
 					$ownerID = $dbRecord->getInt('owner_id');
 					$allianceID = $dbRecord->getInt('alliance_id');
 					$allianceName = $dbRecord->getString('alliance_name');
 					if ($allianceID != 0) {
-						$container['alliance_id'] = $allianceID;
+						$container = new AllianceDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $allianceID, $this);
 						$allianceName = create_link($container, $allianceName);
 					}
 					$rankings[] = [
@@ -93,7 +97,9 @@ use Smr\Database;
 			} else {
 				throw new Exception('Unknown action');
 			}
-			$db->switchDatabaseToLive(); // restore database
 			$template->assign('Rankings', $rankings);
 			$template->assign('Headers', $headers);
 		}
+	}
+
+}

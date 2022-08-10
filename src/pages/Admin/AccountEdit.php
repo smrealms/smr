@@ -1,19 +1,35 @@
 <?php declare(strict_types=1);
 
-use Smr\Database;
+namespace Smr\Pages\Admin;
 
-		$template = Smr\Template::getInstance();
+use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAccount;
+use SmrPlayer;
+
+class AccountEdit extends AccountPage {
+
+	use ReusableTrait;
+
+	public string $file = 'admin/account_edit.php';
+
+	public function __construct(
+		private readonly int $editAccountID
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$db = Database::getInstance();
-		$var = Smr\Session::getInstance()->getCurrentVar();
 
 		$template->assign('PageTopic', 'Edit Account');
 
-		$account_id = $var['account_id'];
+		$account_id = $this->editAccountID;
 		$curr_account = SmrAccount::getAccount($account_id);
 
 		$template->assign('EditingAccount', $curr_account);
-		$template->assign('EditFormHREF', Page::create('admin/account_edit_processing.php', ['account_id' => $curr_account->getAccountID()])->href());
-		$template->assign('ResetFormHREF', Page::create('admin/account_edit_search.php')->href());
+		$template->assign('EditFormHREF', (new AccountEditProcessor($account_id))->href());
+		$template->assign('ResetFormHREF', (new AccountEditSearch())->href());
 
 		$editingPlayers = [];
 		$dbResult = $db->read('SELECT * FROM player WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY game_id ASC');
@@ -68,3 +84,6 @@ use Smr\Database;
 			];
 		}
 		$template->assign('RecentIPs', $recentIPs);
+	}
+
+}

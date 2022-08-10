@@ -1,11 +1,25 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+namespace Smr\Pages\Admin;
 
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
+
+class AnnouncementCreate extends AccountPage {
+
+	public string $file = 'admin/announcement_create.php';
+
+	public function __construct(
+		private readonly ?string $preview = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Create Announcement');
-		$template->assign('AnnouncementCreateFormHref', Page::create('admin/announcement_create_processing.php')->href());
-		if (isset($var['preview'])) {
-			$template->assign('Preview', htmlentities($var['preview']));
+		$template->assign('AnnouncementCreateFormHref', (new AnnouncementCreateProcessor())->href());
+		if ($this->preview !== null) {
+			$template->assign('Preview', htmlentities($this->preview));
 		}
+	}
+
+}

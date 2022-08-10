@@ -1,12 +1,20 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
+class GameDelete extends AccountPage {
 
+	public string $file = 'admin/game_delete.php';
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Deleting A Game');
 
-		$container = Page::create('admin/game_delete_confirm.php');
+		$container = new GameDeleteConfirm();
 		$template->assign('ConfirmHREF', $container->href());
 
 		$db = Database::getInstance();
@@ -21,3 +29,6 @@ use Smr\Database;
 			];
 		}
 		$template->assign('Games', $games);
+	}
+
+}

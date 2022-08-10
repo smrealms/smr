@@ -1,28 +1,39 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
+use SmrPlayer;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
+class MessageBoxReplyProcessor extends AccountPageProcessor {
 
+	public function __construct(
+		private readonly int $senderAccountID,
+		private readonly int $gameID,
+		private readonly int $boxTypeID
+	) {}
+
+	public function build(SmrAccount $account): never {
 		$message = Request::get('message');
 		$banPoints = Request::getInt('BanPoints');
 		$rewardCredits = Request::getInt('RewardCredits');
 		if (Request::get('action') == 'Preview message') {
-			$container = Page::create('admin/box_reply.php');
-			$container['BanPoints'] = $banPoints;
-			$container['RewardCredits'] = $rewardCredits;
-			$container->addVar('game_id');
-			$container->addVar('sender_id');
-			$container->addVar('box_type_id');
-			$container['Preview'] = $message;
+			$container = new MessageBoxReply(
+				boxTypeID: $this->boxTypeID,
+				senderAccountID: $this->senderAccountID,
+				gameID: $this->gameID,
+				preview: $message,
+				banPoints: $banPoints,
+				rewardCredits: $rewardCredits
+			);
 			$container->go();
 		}
 
-		SmrPlayer::sendMessageFromAdmin($var['game_id'], $var['sender_id'], $message);
+		SmrPlayer::sendMessageFromAdmin($this->gameID, $this->senderAccountID, $message);
 
-		$senderAccount = SmrAccount::getAccount($var['sender_id']);
+		$senderAccount = SmrAccount::getAccount($this->senderAccountID);
 		$senderAccount->increaseSmrRewardCredits($rewardCredits);
 
 		//do we have points?
@@ -31,4 +42,7 @@ use Smr\Request;
 			$senderAccount->addPoints($banPoints, $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
 		}
 
-		Page::create('admin/box_view.php')->go();
+		(new MessageBoxView())->go();
+	}
+
+}

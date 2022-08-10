@@ -1,12 +1,27 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+namespace Smr\Pages\Player;
 
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+
+class SearchForTrader extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'trader_search.php';
+
+	public function __construct(
+		private readonly bool $emptyResult = false
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Search For Trader');
-		$template->assign('TraderSearchHREF', Page::create('trader_search_result.php')->href());
+		$template->assign('TraderSearchHREF', (new SearchForTraderResult())->href());
 
-		if (isset($var['empty_result'])) {
-			$template->assign('EmptyResult', $var['empty_result'] === true);
-		}
+		$template->assign('EmptyResult', $this->emptyResult);
+	}
+
+}

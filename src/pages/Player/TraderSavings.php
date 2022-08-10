@@ -1,12 +1,22 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
 use Smr\Lotto;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class TraderSavings extends PlayerPage {
 
+	use ReusableTrait;
+
+	public string $file = 'trader_savings.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Savings');
 
 		Menu::trader();
@@ -43,3 +53,6 @@ use Smr\Lotto;
 		// Number of winning lotto tickets this player has to claim
 		$dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0');
 		$template->assign('WinningTickets', $dbResult->record()->getInt('count(*)'));
+	}
+
+}

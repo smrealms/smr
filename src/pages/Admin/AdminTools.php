@@ -1,26 +1,35 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\AdminPermissions;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
+class AdminTools extends AccountPage {
 
-		if (isset($var['errorMsg'])) {
-			$template->assign('ErrorMessage', $var['errorMsg']);
-		}
-		if (isset($var['msg'])) {
-			$template->assign('Message', $var['msg']);
-		}
+	public string $file = 'admin/admin_tools.php';
+
+	public function __construct(
+		private readonly ?string $message = null,
+		private readonly ?string $errorMessage = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
+		$template->assign('ErrorMessage', $this->errorMessage);
+		$template->assign('Message', $this->message);
 
 		$adminPermissions = [];
 		foreach (array_keys($account->getPermissions()) as $permissionID) {
 			[$name, $link, $categoryID] = AdminPermissions::getPermissionInfo($permissionID);
 			$adminPermissions[$categoryID][] = [
-				'Link' => empty($link) ? false : Page::create($link)->href(),
+				'Link' => $link === null ? false : (new $link())->href(),
 				'Name' => $name,
 			];
 		}
 
 		$template->assign('AdminPermissions', $adminPermissions);
+	}
+
+}

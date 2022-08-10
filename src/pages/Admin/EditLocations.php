@@ -1,18 +1,32 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+use Globals;
+use Smr\Page\AccountPage;
 use Smr\Request;
+use Smr\Template;
+use SmrAccount;
+use SmrLocation;
+use SmrShipType;
+use SmrWeaponType;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class EditLocations extends AccountPage {
 
-		$template->assign('ViewAllLocationsLink', Page::create('admin/location_edit.php')->href());
+	public string $file = 'admin/location_edit.php';
+
+	public function __construct(
+		private readonly ?int $locationTypeID = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
+		$template->assign('ViewAllLocationsLink', (new self())->href());
 
 		// For the purposes of editing, the game ID doesn't matter (yet)
 		$gameID = 0;
 
-		if (isset($var['location_type_id'])) {
-			$location = SmrLocation::getLocation($gameID, $var['location_type_id']);
+		if ($this->locationTypeID !== null) {
+			$location = SmrLocation::getLocation($gameID, $this->locationTypeID);
 			if (Request::has('save')) {
 				$addShipID = Request::getInt('add_ship_id');
 				if ($addShipID != 0) {
@@ -51,3 +65,6 @@ use Smr\Request;
 		} else {
 			$template->assign('Locations', SmrLocation::getAllLocations($gameID));
 		}
+	}
+
+}

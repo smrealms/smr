@@ -1,13 +1,26 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Globals;
+use Smr\Page\PlayerPage;
 use Smr\ShipClass;
+use Smr\Template;
+use SmrLocation;
+use SmrShipType;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class ShopShip extends PlayerPage {
 
-		$location = SmrLocation::getLocation($player->getGameID(), $var['LocationID']);
+	public string $file = 'shop_ship.php';
+
+	public function __construct(
+		private readonly int $locationID,
+		private readonly ?int $shipTypeID = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$location = SmrLocation::getLocation($player->getGameID(), $this->locationID);
 		$template->assign('PageTopic', $location->getName());
 
 		$shipsSold = $location->getShipsSold();
@@ -28,18 +41,16 @@ use Smr\ShipClass;
 		$template->assign('ShipsUnavailable', $shipsUnavailable);
 		$template->assign('ShipsSold', $shipsSold);
 
-		$container = Page::create('shop_ship.php');
-		$container->addVar('LocationID');
 		$shipsSoldHREF = [];
 		foreach (array_keys($shipsSold) as $shipTypeID) {
-			$container['ship_type_id'] = $shipTypeID;
+			$container = new self($this->locationID, $shipTypeID);
 			$shipsSoldHREF[$shipTypeID] = $container->href();
 		}
 		$template->assign('ShipsSoldHREF', $shipsSoldHREF);
 
-		if (isset($var['ship_type_id'])) {
+		if ($this->shipTypeID !== null) {
 			$ship = $player->getShip();
-			$compareShip = SmrShipType::get($var['ship_type_id']);
+			$compareShip = SmrShipType::get($this->shipTypeID);
 
 			$shipDiffs = [];
 			foreach (Globals::getHardwareTypes() as $hardwareTypeID => $hardware) {
@@ -62,12 +73,13 @@ use Smr\ShipClass;
 			];
 			$template->assign('ShipDiffs', $shipDiffs);
 
-			$container = Page::create('shop_ship_processing.php');
-			$container->addVar('LocationID');
-			$container->addVar('ship_type_id');
+			$container = new ShopShipProcessor($this->shipTypeID);
 			$template->assign('BuyHREF', $container->href());
 
 			$template->assign('CompareShip', $compareShip);
 			$template->assign('TradeInValue', $ship->getRefundValue());
 			$template->assign('TotalCost', $ship->getCostToUpgrade($compareShip->getTypeID()));
 		}
+	}
+
+}

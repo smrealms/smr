@@ -1,23 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account\HistoryGames;
+
 use Smr\Database;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
+class Summary extends HistoryPage {
 
+	public string $file = 'history_games.php';
+
+	protected function buildHistory(SmrAccount $account, Template $template): void {
 		//topic
-		if (!isset($var['game_name']) || !isset($var['view_game_id'])) {
-			create_error('No game specified!');
-		}
-		$game_name = $var['game_name'];
-		$game_id = $var['view_game_id'];
+		$game_name = $this->historyGameName;
+		$game_id = $this->historyGameID;
 		$template->assign('PageTopic', 'Old SMR Game : ' . $game_name);
-		Menu::historyGames(0);
+		$this->addMenu($template);
 
 		$db = Database::getInstance();
-		$db->switchDatabases($var['HistoryDatabase']);
 		$dbResult = $db->read('SELECT start_date, type, end_date, game_name, speed, game_id ' .
 			'FROM game WHERE game_id = ' . $db->escapeNumber($game_id));
 		$dbRecord = $dbResult->record();
@@ -40,7 +40,7 @@ use Smr\Database;
 		$template->assign('NumAlliances', $dbResult->record()->getInt('count(*)'));
 
 		// Get linked player information, if available
-		$oldAccountID = $account->getOldAccountID($var['HistoryDatabase']);
+		$oldAccountID = $account->getOldAccountID($this->historyDatabase);
 		$dbResult = $db->read('SELECT alliance_id FROM player WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND account_id = ' . $db->escapeNumber($oldAccountID));
 		$oldAllianceID = $dbResult->hasRecord() ? $dbResult->record()->getInt('alliance_id') : 0;
 
@@ -66,9 +66,6 @@ use Smr\Database;
 		}
 		$template->assign('PlayerKills', $playerKills);
 
-		$container = Page::create('history_alliance_detail.php', $var);
-		$container['selected_index'] = 0;
-
 		//now for the alliance stuff
 		$allianceExp = [];
 		$dbResult = $db->read('SELECT SUM(experience) as exp, alliance_name, alliance_id
@@ -77,7 +74,7 @@ use Smr\Database;
 		foreach ($dbResult->records() as $dbRecord) {
 			$alliance = htmlentities($dbRecord->getString('alliance_name'));
 			$id = $dbRecord->getInt('alliance_id');
-			$container['alliance_id'] = $id;
+			$container = new AllianceDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $id, $this);
 			$allianceExp[] = [
 				'bold' => $dbRecord->getInt('alliance_id') == $oldAllianceID ? 'class="bold"' : '',
 				'exp' => $dbRecord->getInt('exp'),
@@ -91,7 +88,7 @@ use Smr\Database;
 		foreach ($dbResult->records() as $dbRecord) {
 			$alliance = htmlentities($dbRecord->getString('alliance_name'));
 			$id = $dbRecord->getInt('alliance_id');
-			$container['alliance_id'] = $id;
+			$container = new AllianceDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $id, $this);
 			$allianceKills[] = [
 				'bold' => $dbRecord->getInt('alliance_id') == $oldAllianceID ? 'class="bold"' : '',
 				'kills' => $dbRecord->getInt('kills'),
@@ -99,5 +96,6 @@ use Smr\Database;
 			];
 		}
 		$template->assign('AllianceKills', $allianceKills);
+	}
 
-		$db->switchDatabaseToLive(); // restore database
+}

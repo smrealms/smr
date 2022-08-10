@@ -1,15 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bank;
+
+use AbstractSmrPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class AllianceBankReportProcessor extends PlayerPageProcessor {
 
+	public function __construct(
+		private readonly int $allianceID,
+		private readonly string $text
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		// Send the bank report to the alliance message board
-		$alliance_id = $var['alliance_id'];
-		$text = $var['text'];
+		$alliance_id = $this->allianceID;
+		$text = $this->text;
 
 		// Check if the "Bank Statement" thread exists yet
 		$db = Database::getInstance();
@@ -41,7 +49,8 @@ use Smr\Epoch;
 			]);
 		}
 
-		$container = Page::create('bank_report.php');
-		$container->addVar('alliance_id');
-		$container['sent_report'] = true;
+		$container = new AllianceBankReport($alliance_id, reportSent: true);
 		$container->go();
+	}
+
+}

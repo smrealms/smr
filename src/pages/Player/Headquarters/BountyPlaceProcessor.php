@@ -1,11 +1,18 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Headquarters;
+
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+class BountyPlaceProcessor extends PlayerPageProcessor {
 
+	public function __construct(
+		private readonly int $locationID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$amount = Request::getInt('amount');
 		$smrCredits = Request::getInt('smrcredits');
 
@@ -13,7 +20,7 @@ use Smr\Request;
 			create_error('You dont have that much money.');
 		}
 
-		if ($account->getSmrCredits() < $smrCredits) {
+		if ($player->getAccount()->getSmrCredits() < $smrCredits) {
 			create_error('You dont have that many SMR credits.');
 		}
 
@@ -21,10 +28,13 @@ use Smr\Request;
 			create_error('You must enter an amount greater than 0!');
 		}
 
-		$container = Page::create('bounty_place_confirm.php');
-		$container['amount'] = $amount;
-		$container['SmrCredits'] = $smrCredits;
-		$container['player_id'] = Request::getInt('player_id');
-		$container->addVar('LocationID');
-
+		$container = new BountyPlaceConfirm(
+			$this->locationID,
+			$amount,
+			$smrCredits,
+			Request::getInt('player_id')
+		);
 		$container->go();
+	}
+
+}

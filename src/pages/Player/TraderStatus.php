@@ -1,34 +1,45 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Globals;
+use Menu;
 use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class TraderStatus extends PlayerPage {
 
+	use ReusableTrait;
+
+	public string $file = 'trader_status.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Trader Status');
 
 		Menu::trader();
 
 		if ($player->hasNewbieTurns()) {
-			$container = Page::create('leave_newbie.php');
+			$container = new NewbieLeave();
 			$template->assign('LeaveNewbieHREF', $container->href());
 		}
 
-		$container = Page::create('trader_relations.php');
+		$container = new TraderRelations();
 		$template->assign('RelationsHREF', $container->href());
 
-		$container = Page::create('trader_savings.php');
+		$container = new TraderSavings();
 		$template->assign('SavingsHREF', $container->href());
 
 		// Bounties
-		$container = Page::create('trader_bounties.php');
+		$container = new TraderBounties();
 		$template->assign('BountiesHREF', $container->href());
 
 		$template->assign('BountiesClaimable', count($player->getClaimableBounties()));
 
 		// Ship
-		$container = Page::create('configure_hardware.php');
+		$container = new HardwareConfigure();
 		$template->assign('HardwareHREF', $container->href());
 
 		$hardware = [];
@@ -55,10 +66,10 @@ use Smr\Database;
 
 		$template->assign('NextLevelName', $player->getNextLevel()['Name']);
 
-		$container = Page::create('rankings_view.php');
+		$container = new UserRankingView();
 		$template->assign('UserRankingsHREF', $container->href());
 
-		$container = Page::create('note_delete_processing.php');
+		$container = new TraderNoteDeleteProcessor();
 		$template->assign('NoteDeleteHREF', $container->href());
 
 		$notes = [];
@@ -69,5 +80,8 @@ use Smr\Database;
 		}
 		$template->assign('Notes', $notes);
 
-		$container = Page::create('note_add_processing.php');
+		$container = new TraderNoteAddProcessor();
 		$template->assign('NoteAddHREF', $container->href());
+	}
+
+}

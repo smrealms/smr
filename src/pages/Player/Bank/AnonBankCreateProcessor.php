@@ -1,11 +1,15 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bank;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class AnonBankCreateProcessor extends PlayerPageProcessor {
 
+	public function build(AbstractSmrPlayer $player): never {
 		$password = Request::get('password');
 
 		if (empty($password)) {
@@ -24,6 +28,9 @@ use Smr\Request;
 			'amount' => 0,
 		]);
 
-		$container = Page::create('bank_anon.php');
-		$container['message'] = '<p>Account #' . $nextID . ' has been opened for you.</p>';
+		$message = '<p>Account #' . $nextID . ' has been opened for you.</p>';
+		$container = new AnonBank($message);
 		$container->go();
+	}
+
+}

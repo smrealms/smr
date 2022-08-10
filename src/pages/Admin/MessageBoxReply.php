@@ -1,26 +1,44 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Messages;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
-		$var = Smr\Session::getInstance()->getCurrentVar();
+class MessageBoxReply extends AccountPage {
 
-		$boxName = Messages::getAdminBoxNames()[$var['box_type_id']];
+	public string $file = 'admin/box_reply.php';
+
+	public function __construct(
+		private readonly int $boxTypeID,
+		private readonly int $senderAccountID,
+		private readonly int $gameID,
+		private readonly ?string $preview = null,
+		private readonly int $banPoints = 0,
+		private readonly int $rewardCredits = 0
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
+		$boxName = Messages::getAdminBoxNames()[$this->boxTypeID];
 		$template->assign('PageTopic', 'Reply To ' . $boxName);
 
-		$container = Page::create('admin/box_reply_processing.php');
-		$container->addVar('game_id');
-		$container->addVar('sender_id');
-		$container->addVar('box_type_id');
+		$container = new MessageBoxReplyProcessor(
+			senderAccountID: $this->senderAccountID,
+			gameID: $this->gameID,
+			boxTypeID: $this->boxTypeID
+		);
 		$template->assign('BoxReplyFormHref', $container->href());
-		$template->assign('Sender', SmrPlayer::getPlayer($var['sender_id'], $var['game_id']));
-		$template->assign('SenderAccount', SmrAccount::getAccount($var['sender_id']));
-		if (isset($var['Preview'])) {
-			$template->assign('Preview', $var['Preview']);
-		}
-		$template->assign('BanPoints', $var['BanPoints'] ?? 0);
-		$template->assign('RewardCredits', $var['RewardCredits'] ?? 0);
+		$template->assign('Sender', SmrPlayer::getPlayer($this->senderAccountID, $this->gameID));
+		$template->assign('SenderAccount', SmrAccount::getAccount($this->senderAccountID));
+		$template->assign('Preview', $this->preview);
+		$template->assign('BanPoints', $this->banPoints);
+		$template->assign('RewardCredits', $this->rewardCredits);
 
-		$container = Page::create('admin/box_view.php');
-		$container->addVar('box_type_id');
+		$container = new MessageBoxView($this->boxTypeID);
 		$template->assign('BackHREF', $container->href());
+	}
+
+}

@@ -1,16 +1,29 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+class AlbumModerate extends AccountPage {
 
+	use ReusableTrait;
+
+	public string $file = 'admin/album_moderate.php';
+
+	public function __construct(
+		private readonly int $albumAccountID
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Moderate Photo Album');
 
 		require_once(LIB . 'Album/album_functions.php');
 
-		$account_id = $session->getRequestVarInt('account_id');
+		$account_id = $this->albumAccountID;
 
 		// check if the given account really has an entry
 		$db = Database::getInstance();
@@ -48,24 +61,21 @@ use Smr\Database;
 		];
 		$template->assign('Entry', $entry);
 
-		$template->assign('BackHREF', Page::create('admin/album_moderate_select.php')->href());
+		$template->assign('BackHREF', (new AlbumModerateSelect())->href());
 
-		$container = Page::create('admin/album_moderate_processing.php');
-		$container['account_id'] = $account_id;
-
-		$container['task'] = 'reset_image';
+		$container = new AlbumModerateProcessor($account_id, 'reset_image');
 		$template->assign('ResetImageHREF', $container->href());
-		$container['task'] = 'reset_location';
+		$container = new AlbumModerateProcessor($account_id, 'reset_location');
 		$template->assign('ResetLocationHREF', $container->href());
-		$container['task'] = 'reset_email';
+		$container = new AlbumModerateProcessor($account_id, 'reset_email');
 		$template->assign('ResetEmailHREF', $container->href());
-		$container['task'] = 'reset_website';
+		$container = new AlbumModerateProcessor($account_id, 'reset_website');
 		$template->assign('ResetWebsiteHREF', $container->href());
-		$container['task'] = 'reset_birthdate';
+		$container = new AlbumModerateProcessor($account_id, 'reset_birthdate');
 		$template->assign('ResetBirthdateHREF', $container->href());
-		$container['task'] = 'reset_other';
+		$container = new AlbumModerateProcessor($account_id, 'reset_other');
 		$template->assign('ResetOtherHREF', $container->href());
-		$container['task'] = 'delete_comment';
+		$container = new AlbumModerateProcessor($account_id, 'delete_comment');
 		$template->assign('DeleteCommentHREF', $container->href());
 
 		$default_email = 'Dear Photo Album User,' . EOL . EOL .
@@ -90,3 +100,6 @@ use Smr\Database;
 			];
 		}
 		$template->assign('Comments', $comments);
+	}
+
+}

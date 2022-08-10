@@ -1,10 +1,18 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
+class ServerStatus extends AccountPage {
 
-		$processingHREF = Page::create('admin/game_status_processing.php')->href();
+	public string $file = 'admin/game_status.php';
+
+	public function build(SmrAccount $account, Template $template): void {
+		$processingHREF = new ServerStatusProcessor();
 		$template->assign('ProcessingHREF', $processingHREF);
 
 		$db = Database::getInstance();
@@ -16,3 +24,6 @@ use Smr\Database;
 			$template->assign('PageTopic', 'Open Server');
 			$template->assign('ServerIsOpen', false);
 		}
+	}
+
+}

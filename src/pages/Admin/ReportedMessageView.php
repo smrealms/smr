@@ -1,15 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
 use Smr\Messages;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
+use SmrGame;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+class ReportedMessageView extends AccountPage {
 
+	public string $file = 'admin/notify_view.php';
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Viewing Reported Messages');
 
-		$container = Page::create('admin/notify_delete_processing.php');
+		$container = new ReportedMessageDeleteProcessor();
 		$template->assign('DeleteHREF', $container->href());
 
 		$db = Database::getInstance();
@@ -20,10 +28,11 @@ use Smr\Messages;
 			$sender = Messages::getMessagePlayer($dbRecord->getInt('from_id'), $gameID);
 			$receiver = Messages::getMessagePlayer($dbRecord->getInt('to_id'), $gameID);
 
-			$container = Page::create('admin/notify_reply.php');
-			$container['offender'] = $dbRecord->getInt('from_id');
-			$container['offended'] = $dbRecord->getInt('to_id');
-			$container['game_id'] = $gameID;
+			$container = new ReportedMessageReply(
+				offenderAccountID: $dbRecord->getInt('from_id'),
+				offendedAccountID: $dbRecord->getInt('to_id'),
+				gameID: $gameID
+			);
 
 			$getName = function(SmrPlayer|string $messagePlayer) use ($container, $account): string {
 				if ($messagePlayer instanceof SmrPlayer) {
@@ -55,3 +64,6 @@ use Smr\Messages;
 			];
 		}
 		$template->assign('Messages', $messages);
+	}
+
+}

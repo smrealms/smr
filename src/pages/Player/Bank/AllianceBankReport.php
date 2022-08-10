@@ -1,15 +1,27 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bank;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class AllianceBankReport extends PlayerPage {
 
-		$alliance_id = $var['alliance_id'] ?? $player->getAllianceID();
-		const WITHDRAW = 0;
-		const DEPOSIT = 1;
+	public string $file = 'bank_report.php';
+
+	private const WITHDRAW = 0;
+	private const DEPOSIT = 1;
+
+	public function __construct(
+		private readonly int $allianceID,
+		private readonly bool $reportSent = false
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$alliance_id = $this->allianceID;
 
 		//get all transactions
 		$db = Database::getInstance();
@@ -19,11 +31,11 @@ use Smr\Database;
 		}
 		$trans = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$transType = ($dbRecord->getString('transaction') == 'Payment') ? WITHDRAW : DEPOSIT;
+			$transType = ($dbRecord->getString('transaction') == 'Payment') ? self::WITHDRAW : self::DEPOSIT;
 			$payeeId = ($dbRecord->getInt('exempt')) ? 0 : $dbRecord->getInt('payee_id');
 			// initialize payee if necessary
 			if (!isset($trans[$payeeId])) {
-				$trans[$payeeId] = [WITHDRAW => 0, DEPOSIT => 0];
+				$trans[$payeeId] = [self::WITHDRAW => 0, self::DEPOSIT => 0];
 			}
 			$trans[$payeeId][$transType] += $dbRecord->getInt('amount');
 		}
@@ -32,7 +44,7 @@ use Smr\Database;
 		$playerIDs = array_keys($trans);
 		$totals = [];
 		foreach ($trans as $accId => $transArray) {
-			$totals[$accId] = $transArray[DEPOSIT] - $transArray[WITHDRAW];
+			$totals[$accId] = $transArray[self::DEPOSIT] - $transArray[self::WITHDRAW];
 		}
 		arsort($totals, SORT_NUMERIC);
 		$dbResult = $db->read('SELECT * FROM player WHERE account_id IN (' . $db->escapeArray($playerIDs) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY player_name');
@@ -49,8 +61,8 @@ use Smr\Database;
 			$balance += $total;
 			$text .= '<tr>';
 			$text .= '<td><span class="yellow">' . $players[$accId] . '</span></td>';
-			$text .= '<td class="right">' . number_format($trans[$accId][DEPOSIT]) . '</td>';
-			$text .= '<td class="right">-' . number_format($trans[$accId][WITHDRAW]) . '</td>';
+			$text .= '<td class="right">' . number_format($trans[$accId][self::DEPOSIT]) . '</td>';
+			$text .= '<td class="right">-' . number_format($trans[$accId][self::WITHDRAW]) . '</td>';
 			$text .= '<td class="right"><span class="';
 			if ($total < 0) {
 				$text .= 'red bold';
@@ -64,12 +76,13 @@ use Smr\Database;
 		$text = '<div class="center"><br />Ending Balance: ' . number_format($balance) . '</div><br />' . $text;
 		$template->assign('BankReport', $text);
 
-		if (!isset($var['sent_report'])) {
-			$container = Page::create('bank_report_processing.php');
-			$container['alliance_id'] = $alliance_id;
-			$container['text'] = $text;
+		if (!$this->reportSent) {
+			$container = new AllianceBankReportProcessor($alliance_id, $text);
 			$template->assign('SendReportHREF', $container->href());
 		}
 
 		$template->assign('PageTopic', 'Alliance Bank Report');
 		Menu::bank();
+	}
+
+}

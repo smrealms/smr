@@ -1,13 +1,24 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Chess;
+
+use AbstractSmrPlayer;
 use Smr\Chess\ChessGame;
+use Smr\Page\PlayerPage;
+use Smr\Template;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class MatchPlay extends PlayerPage {
 
-		$chessGame = ChessGame::getChessGame($var['ChessGameID']);
+	public string $file = 'chess_play.php';
+
+	public function __construct(
+		private readonly int $chessGameID,
+		private readonly string $moveMessage = ''
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$chessGame = ChessGame::getChessGame($this->chessGameID);
 		$template->assign('ChessGame', $chessGame);
 
 		// Board orientation depends on the player's color.
@@ -33,5 +44,10 @@ use Smr\Chess\ChessGame;
 		}
 		$template->assign('FileCoords', $fileCoords);
 
-		$template->assign('MoveMessage', $var['MoveMessage'] ?? '');
-		$template->assign('ChessMoveHREF', Page::create('chess_move_processing.php', ['AJAX' => true, 'ChessGameID' => $var['ChessGameID']])->href());
+		$template->assign('MoveMessage', $this->moveMessage);
+		$container = new MovePieceProcessor($this->chessGameID);
+		$container->allowAjax = true;
+		$template->assign('ChessMoveHREF', $container->href());
+	}
+
+}

@@ -1,21 +1,29 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Template;
+use SmrAlliance;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class AllianceGovernance extends PlayerPage {
 
-		$alliance_id = $var['alliance_id'] ?? $player->getAllianceID();
+	public string $file = 'alliance_stat.php';
+
+	public function __construct(
+		private readonly int $allianceID
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$alliance_id = $this->allianceID;
 
 		$alliance = SmrAlliance::getAlliance($alliance_id, $player->getGameID());
+		$account = $player->getAccount();
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 		Menu::alliance($alliance_id);
-
-		$container = Page::create('alliance_stat_processing.php');
-		$container['alliance_id'] = $alliance_id;
 
 		$role_id = $player->getAllianceRole($alliance->getAllianceID());
 
@@ -31,6 +39,7 @@ use Smr\Database;
 		}
 		$change_chat = $player->getAllianceID() == $alliance_id && $player->isAllianceLeader();
 
+		$container = new AllianceGovernanceProcessor($alliance_id);
 		$template->assign('FormHREF', $container->href());
 		$template->assign('Alliance', $alliance);
 
@@ -39,3 +48,6 @@ use Smr\Database;
 		$template->assign('CanChangeChatChannel', $change_chat);
 		$template->assign('CanChangeMOTD', $change_mod);
 		$template->assign('HidePassword', $alliance->getRecruitType() != SmrAlliance::RECRUIT_PASSWORD);
+	}
+
+}

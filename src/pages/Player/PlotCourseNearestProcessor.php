@@ -1,16 +1,25 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Plotter;
+use Smr\Page\PlayerPageProcessor;
 use Smr\PlotGroup;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class PlotCourseNearestProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly mixed $realX = null // for NPCs only
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$sector = $player->getSector();
 
-		if (isset($var['RealX'])) {
+		if ($this->realX !== null) {
 			// This is only used by NPC's
-			$realX = $var['RealX'];
+			$realX = $this->realX;
 		} else {
 			$xType = PlotGroup::from(Request::get('xtype'));
 			$X = Request::get('X');
@@ -27,3 +36,6 @@ use Smr\Request;
 
 		require_once(LIB . 'Default/course_plot.inc.php');
 		course_plot_forward($player, $path);
+	}
+
+}

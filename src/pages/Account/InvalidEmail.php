@@ -1,9 +1,17 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+namespace Smr\Pages\Account;
 
+use Exception;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
+
+class InvalidEmail extends AccountPage {
+
+	public string $file = 'invalid_email.php';
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Invalid E-mail Address');
 
 		// This page should only be accessed by players whose accounts
@@ -13,9 +21,8 @@
 			throw new Exception('Account not disabled for invalid email');
 		}
 
-		// It doesn't really matter what page we link to -- the closing
-		// conditional will be triggered in the loader since the account
-		// is still banned, so we do the unbanning there.
-		$container = Page::create('game_play.php');
-		$container['do_reopen_account'] = true;
+		$container = new InvalidEmailProcessor();
 		$template->assign('ReopenLink', $container->href());
+	}
+
+}

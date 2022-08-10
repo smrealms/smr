@@ -1,16 +1,27 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAlliance;
+use SmrGame;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class AllianceList extends PlayerPage {
 
+	use ReusableTrait;
+
+	public string $file = 'alliance_list.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'List Of Alliances');
 
 		$allowCreate = !$player->hasAlliance() && (!$player->getGame()->isGameType(SmrGame::GAME_TYPE_DRAFT) || $player->isDraftLeader());
 		if ($allowCreate) {
-			$container = Page::create('alliance_create.php');
+			$container = new AllianceCreate();
 			$template->assign('CreateAllianceHREF', $container->href());
 		}
 
@@ -42,3 +53,6 @@ use Smr\Database;
 			];
 		}
 		$template->assign('Alliances', $alliances);
+	}
+
+}

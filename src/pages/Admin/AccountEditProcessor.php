@@ -1,16 +1,25 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Exceptions\UserError;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
+use SmrPlayer;
 
+class AccountEditProcessor extends AccountPageProcessor {
+
+	public function __construct(
+		private readonly int $editAccountID
+	) {}
+
+	public function build(SmrAccount $account): never {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
 
-		$account_id = $var['account_id'];
+		$account_id = $this->editAccountID;
 		$curr_account = SmrAccount::getAccount($account_id);
 
 		// request
@@ -220,9 +229,12 @@ use Smr\Request;
 		}
 
 		//get his login name
-		$container = Page::create('admin/account_edit_search.php');
-		$container['msg'] = 'You ' . implode(' and ', $actions) . ' for the account of ' . $curr_account->getLogin() . '.';
+		$msg = 'You ' . implode(' and ', $actions) . ' for the account of ' . $curr_account->getLogin() . '.';
+		$container = new AccountEditSearch(message: $msg);
 
 		// Update the selected account in case it has been changed
 		$curr_account->update();
 		$container->go();
+	}
+
+}

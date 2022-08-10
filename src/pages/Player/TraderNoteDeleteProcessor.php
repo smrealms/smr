@@ -1,11 +1,15 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class TraderNoteDeleteProcessor extends PlayerPageProcessor {
 
+	public function build(AbstractSmrPlayer $player): never {
 		$note_ids = Request::getIntArray('note_id', []);
 		if (!empty($note_ids)) {
 			$db = Database::getInstance();
@@ -14,4 +18,7 @@ use Smr\Request;
 							AND note_id IN (' . $db->escapeArray($note_ids) . ')');
 		}
 
-		Page::create('trader_status.php')->go();
+		(new TraderStatus())->go();
+	}
+
+}

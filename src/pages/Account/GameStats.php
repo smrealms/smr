@@ -1,14 +1,27 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
+use Rankings;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
+use SmrGame;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class GameStats extends AccountPage {
 
+	public string $file = 'game_stats.php';
+
+	public function __construct(
+		private readonly int $gameID
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		//get game id
-		$gameID = $var['game_id'];
+		$gameID = $this->gameID;
 
 		$statsGame = SmrGame::getGame($gameID);
 		$template->assign('StatsGame', $statsGame);
@@ -31,7 +44,7 @@ use Smr\Exceptions\PlayerNotFound;
 
 		// Get current account's player for this game (if any)
 		try {
-			$player = SmrPlayer::getPlayer($session->getAccountID(), $gameID);
+			$player = SmrPlayer::getPlayer($account->getAccountID(), $gameID);
 		} catch (PlayerNotFound) {
 			$player = null;
 		}
@@ -51,8 +64,7 @@ use Smr\Exceptions\PlayerNotFound;
 				$alliance = $info['Alliance'];
 				if ($statsGame->hasEnded()) {
 					// If game has ended, offer a link to alliance roster details
-					$data = ['game_id' => $gameID, 'alliance_id' => $alliance->getAllianceID()];
-					$href = Page::create('previous_game_alliance_detail.php', $data)->href();
+					$href = (new PreviousGameAllianceDetail($gameID, $alliance->getAllianceID()))->href();
 					$allianceName = create_link($href, $alliance->getAllianceDisplayName());
 				} else {
 					$allianceName = $alliance->getAllianceDisplayName();
@@ -63,3 +75,6 @@ use Smr\Exceptions\PlayerNotFound;
 		};
 		$template->assign('AllianceExpRankings', $allianceTopTen('experience'));
 		$template->assign('AllianceKillRankings', $allianceTopTen('kills'));
+	}
+
+}

@@ -1,9 +1,18 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+namespace Smr\Pages\Account;
 
+use Smr\Page\AccountPage;
+use Smr\Session;
+use Smr\Template;
+use SmrAccount;
+
+class PreferencesTransferConfirm extends AccountPage {
+
+	public string $file = 'preferences_confirm.php';
+
+	public function build(SmrAccount $account, Template $template): void {
+		$session = Session::getInstance();
 		$amount = $session->getRequestVarInt('amount');
 		$account_id = $session->getRequestVarInt('account_id');
 		if ($amount <= 0) {
@@ -18,7 +27,8 @@
 		$template->assign('Amount', $amount);
 		$template->assign('HofName', SmrAccount::getAccount($account_id)->getHofDisplayName());
 
-		$container = Page::create('preferences_processing.php');
-		$container['account_id'] = $account_id;
-		$container['amount'] = $amount;
+		$container = new PreferencesTransferProcessor($amount, $account_id);
 		$template->assign('SubmitHREF', $container->href());
+	}
+
+}

@@ -1,18 +1,27 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Council;
+
+use AbstractSmrPlayer;
+use Council;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
+use SmrPlayer;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class EmbassyProcessor extends PlayerPageProcessor {
 
+	public function __construct(
+		private readonly int $otherRaceID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		if (!$player->isPresident()) {
 			create_error('Only the president can view the embassy.');
 		}
 
-		$race_id = $var['race_id'];
+		$race_id = $this->otherRaceID;
 		$type = strtoupper(Request::get('action'));
 		$time = Epoch::time() + TIME_FOR_COUNCIL_VOTE;
 
@@ -52,7 +61,6 @@ use Smr\Request;
 			]);
 		}
 
-
 		// Send vote announcement to members of the player's council (war votes)
 		// or both races' councils (peace votes).
 		$councilMembers = Council::getRaceCouncil($player->getGameID(), $player->getRaceID());
@@ -76,4 +84,7 @@ use Smr\Request;
 			}
 		}
 
-		Page::create('council_embassy.php')->go();
+		(new Embassy())->go();
+	}
+
+}

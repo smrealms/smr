@@ -1,11 +1,15 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\GalacticPost;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class PaperMakeProcessor extends PlayerPageProcessor {
 
+	public function build(AbstractSmrPlayer $player): never {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY paper_id DESC');
 		if ($dbResult->hasRecord()) {
@@ -20,5 +24,8 @@ use Smr\Request;
 			'title' => $db->escapeString($title),
 		]);
 		//send em back
-		$container = Page::create('galactic_post_view_article.php');
+		$container = new ArticleView();
 		$container->go();
+	}
+
+}

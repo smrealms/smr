@@ -1,16 +1,25 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
 use Smr\BountyType;
-use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
+use SmrAlliance;
 
-		$template = Smr\Template::getInstance();
-		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
+class PreviousGameAllianceDetail extends AccountPage {
 
-		$gameID = $var['game_id'];
-		$allianceID = $var['alliance_id'];
+	public string $file = 'previous_game_alliance_detail.php';
+
+	public function __construct(
+		private readonly int $gameID,
+		private readonly int $allianceID
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
+		$gameID = $this->gameID;
+		$allianceID = $this->allianceID;
 
 		$alliance = SmrAlliance::getAlliance($allianceID, $gameID);
 		$template->assign('Alliance', $alliance);
@@ -18,7 +27,7 @@ use Smr\Database;
 		$template->assign('PageTopic', 'Alliance Roster: ' . $alliance->getAllianceDisplayName(false, true));
 
 		// Offer a back button
-		$container = Page::create('game_stats.php', ['game_id' => $gameID]);
+		$container = new GameStats($gameID);
 		$template->assign('BackHREF', $container->href());
 
 		$players = [];
@@ -36,3 +45,6 @@ use Smr\Database;
 			];
 		}
 		$template->assign('Players', $players);
+	}
+
+}

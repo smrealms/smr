@@ -1,10 +1,22 @@
 <?php declare(strict_types=1);
 
-use Smr\Database;
+namespace Smr\Pages\Player\Rankings;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+use AbstractSmrPlayer;
+use Menu;
+use Rankings;
+use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+
+class SectorKills extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'rankings_sector_kill.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 
 		$template->assign('PageTopic', 'Sector Death Rankings');
 
@@ -24,7 +36,10 @@ use Smr\Database;
 		$totalSectors = count($rankedStats);
 		[$minRank, $maxRank] = Rankings::calculateMinMaxRanks($ourRank, $totalSectors);
 
-		$container = Page::create('rankings_sector_kill.php');
+		$container = new self();
 		$template->assign('SubmitHREF', $container->href());
 
 		$template->assign('TopCustom', Rankings::collectSectorRankings($rankedStats, $player, $minRank, $maxRank));
+	}
+
+}

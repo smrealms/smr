@@ -1,14 +1,24 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bar;
+
+use AbstractSmrPlayer;
+use Exception;
+use Globals;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
+use SmrAccount;
+use SmrEnhancedWeaponEvent;
+use SmrGalaxy;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class TalkToBartenderProcessor extends PlayerPageProcessor {
 
-		$container = Page::create('bar_talk_bartender.php');
-		$container->addVar('LocationID');
+	public function __construct(
+		private readonly int $locationID
+	) {}
 
+	public function build(AbstractSmrPlayer $player): never {
 		$action = Request::get('action');
 
 		if ($action == 'tell') {
@@ -25,9 +35,9 @@ use Smr\Request;
 				]);
 				SmrAccount::doMessageSendingToBox($player->getAccountID(), BOX_BARTENDER, $gossip, $player->getGameID());
 
-				$container['Message'] = 'Huh, that\'s news to me...<br /><br />Got anything else to tell me?';
+				$message = 'Huh, that\'s news to me...<br /><br />Got anything else to tell me?';
 			} else {
-				$container['Message'] = 'So you\'re the tight-lipped sort, eh? No matter, no matter...<br /><br /><i>The bartender slowly scans the room with squinted eyes and then leans in close.</i><br /><br />Must be a sensational story you\'ve got there. Don\'t worry, I can keep a secret. What\'s on your mind?';
+				$message = 'So you\'re the tight-lipped sort, eh? No matter, no matter...<br /><br /><i>The bartender slowly scans the room with squinted eyes and then leans in close.</i><br /><br />Must be a sensational story you\'ve got there. Don\'t worry, I can keep a secret. What\'s on your mind?';
 			}
 		} elseif ($action == 'tip') {
 			$event = SmrEnhancedWeaponEvent::getLatestEvent($player->getGameID());
@@ -36,7 +46,7 @@ use Smr\Request;
 			// Tip needs to be more than a specific fraction of the weapon cost
 			$tip = Request::getInt('tip');
 			$player->decreaseCredits($tip);
-			$container['Message'] = '<i>The bartender notices your ' . number_format($tip) . ' credit tip.</i><br /><br />';
+			$message = '<i>The bartender notices your ' . number_format($tip) . ' credit tip.</i><br /><br />';
 
 			if ($tip > 0.25 * $cost) {
 				$eventSectorID = $event->getSectorID();
@@ -66,12 +76,18 @@ use Smr\Request;
 					$timeHint = 'heard some time ago';
 				}
 
-				$container['Message'] .= 'Thank you kindly!<br /><br /><i>The bartender begins to turn away, hesitates, and then turns back to you.</i><br /><br />By the way, I ' . $timeHint . ' that a weapon shop in ' . $locationHint . ' has some ' . $qualifier . ' stock that a person like you just might be interested in. That\'s all I know about it...<br /><br />Got anything to tell me?';
+				$message .= 'Thank you kindly!<br /><br /><i>The bartender begins to turn away, hesitates, and then turns back to you.</i><br /><br />By the way, I ' . $timeHint . ' that a weapon shop in ' . $locationHint . ' has some ' . $qualifier . ' stock that a person like you just might be interested in. That\'s all I know about it...<br /><br />Got anything to tell me?';
 			} elseif ($tip > 0.05 * $cost) {
-				$container['Message'] .= 'Oh, so it\'s secrets you\'re after, eh? Well, it\'ll cost ya more than that...<br /><br />Got anything to tell me?';
+				$message .= 'Oh, so it\'s secrets you\'re after, eh? Well, it\'ll cost ya more than that...<br /><br />Got anything to tell me?';
 			} else {
-				$container['Message'] .= 'Thanks, I guess...<br /><br />Got anything to tell me?';
+				$message .= 'Thanks, I guess...<br /><br />Got anything to tell me?';
 			}
+		} else {
+			throw new Exception('Invalid action: ' . $action);
 		}
 
+		$container = new TalkToBartender($this->locationID, $message);
 		$container->go();
+	}
+
+}

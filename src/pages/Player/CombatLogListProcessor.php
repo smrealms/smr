@@ -1,24 +1,32 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Exception;
+use Smr\CombatLogType;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
+class CombatLogListProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly CombatLogType $action
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		// If here, we have hit either the 'Save', 'Delete', or 'View' form buttons.
 		// Immediately return to the log list if we haven't selected any logs.
-		if (!Request::has('id')) {
-			$container = Page::create('combat_log_list.php');
-			$container['message'] = 'You must select at least one combat log!';
-			$container->addVar('old_action', 'action');
+		$logIDs = array_keys(Request::getArray('id', []));
+		if (count($logIDs) === 0) {
+			$message = 'You must select at least one combat log!';
+			$container = new CombatLogList($this->action, message: $message);
 			$container->go();
 		}
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
-
-		$submitAction = Request::get('action');
-		$logIDs = array_keys(Request::getArray('id'));
-
 		// Do we need to save any logs (or delete any saved logs)?
+		$submitAction = Request::get('action');
 		if ($submitAction == 'Save' || $submitAction == 'Delete') {
 			$db = Database::getInstance();
 			if ($submitAction == 'Save') {
@@ -47,14 +55,15 @@ use Smr\Request;
 			}
 
 			// Now that the logs have been saved/deleted, go back to the log list
-			$container = Page::create('combat_log_list.php');
-			$container['message'] = $submitAction . 'd ' . $db->getChangedRows() . ' new logs.';
-			$container->addVar('old_action', 'action');
+			$message = $submitAction . 'd ' . $db->getChangedRows() . ' new logs.';
+			$container = new CombatLogList($this->action, message: $message);
 			$container->go();
 		} elseif ($submitAction == 'View') {
-			$container = Page::create('combat_log_viewer.php');
-			$container['log_ids'] = $logIDs;
-			sort($container['log_ids']);
-			$container['current_log'] = 0;
+			sort($logIDs);
+			$container = new CombatLogViewer($logIDs);
 			$container->go();
 		}
+		throw new Exception('Unknown action: ' . $submitAction);
+	}
+
+}

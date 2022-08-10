@@ -1,23 +1,36 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
+use Globals;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPage;
+use Smr\Pages\Account\HistoryGames\ExtendedStats;
+use Smr\Pages\Account\HistoryGames\GameNews;
+use Smr\Pages\Account\HistoryGames\HallOfFame;
+use Smr\Pages\Account\HistoryGames\Summary;
+use Smr\Template;
+use SmrAccount;
+use SmrGame;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
+class GamePlay extends AccountPage {
 
+	public string $file = 'game_play.php';
+
+	public function __construct(
+		private readonly ?string $message = null,
+		private readonly ?string $errorMessage = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Play Game');
 
-		if (isset($var['errorMsg'])) {
-			$template->assign('ErrorMessage', $var['errorMsg']);
-		}
-		if (isset($var['msg'])) {
-			$template->assign('Message', $var['msg']);
-		}
+		$template->assign('ErrorMessage', $this->errorMessage);
+		$template->assign('Message', $this->message);
 
-		$template->assign('UserRankingLink', $account->getUserRankingHREF());
+		$template->assign('UserRankingLink', (new UserRankingView())->href());
 		$template->assign('UserRankName', $account->getRank()->name);
 
 		// ***************************************
@@ -42,8 +55,7 @@ use Smr\Epoch;
 			$games['Play'][$game_id]['EndDate'] = date($account->getDateTimeFormatSplit(), $dbRecord->getInt('end_time'));
 			$games['Play'][$game_id]['Speed'] = $dbRecord->getFloat('game_speed');
 
-			$container = Page::create('game_play_processing.php');
-			$container['game_id'] = $game_id;
+			$container = new GamePlayProcessor($game_id);
 			$games['Play'][$game_id]['PlayGameLink'] = $container->href();
 
 			// creates a new player object
@@ -63,18 +75,15 @@ use Smr\Epoch;
 
 			// create a container that will hold next url and additional variables.
 
-			$container_game = Page::create('game_stats.php');
-			$container_game['game_id'] = $game_id;
+			$container_game = new GameStats($game_id);
 			$games['Play'][$game_id]['GameStatsLink'] = $container_game->href();
 			$games['Play'][$game_id]['Turns'] = $curr_player->getTurns();
 			$games['Play'][$game_id]['LastMovement'] = format_time(Epoch::time() - $curr_player->getLastActive(), true);
-
 		}
 
 		if (empty($games['Play'])) {
 			unset($games['Play']);
 		}
-
 
 		// ***************************************
 		// ** Join Games
@@ -111,8 +120,7 @@ use Smr\Epoch;
 				'Credits' => $game->getCreditsNeeded(),
 			];
 			// create a container that will hold next url and additional variables.
-			$container = Page::create('game_join.php');
-			$container['game_id'] = $game_id;
+			$container = new GameJoin($game_id);
 
 			$games['Join'][$game_id]['JoinGameLink'] = $container->href();
 		}
@@ -135,16 +143,11 @@ use Smr\Epoch;
 			$games['Previous'][$game_id]['Type'] = SmrGame::GAME_TYPES[$dbRecord->getInt('game_type')];
 			$games['Previous'][$game_id]['Speed'] = $dbRecord->getFloat('game_speed');
 			// create a container that will hold next url and additional variables.
-			$data = [
-				'game_id' => $game_id,
-				'GameID' => $game_id,
-				'game_name' => $games['Previous'][$game_id]['Name'],
-			];
-			$container = Page::create('hall_of_fame_new.php', $data);
+			$container = new HallOfFameAll($game_id);
 			$games['Previous'][$game_id]['PreviousGameHOFLink'] = $container->href();
-			$container = Page::create('news_read.php', $data);
+			$container = new NewsReadArchives($game_id);
 			$games['Previous'][$game_id]['PreviousGameNewsLink'] = $container->href();
-			$container = Page::create('game_stats.php', $data);
+			$container = new GameStats($game_id);
 			$games['Previous'][$game_id]['PreviousGameLink'] = $container->href();
 		}
 
@@ -156,25 +159,21 @@ use Smr\Epoch;
 			foreach ($dbResult->records() as $dbRecord) {
 				$game_id = $dbRecord->getInt('game_id');
 				$index = $databaseName . $game_id;
+				$gameName = $dbRecord->getString('game_name');
 				$games['Previous'][$index]['ID'] = $game_id;
-				$games['Previous'][$index]['Name'] = $dbRecord->getString('game_name');
+				$games['Previous'][$index]['Name'] = $gameName;
 				$games['Previous'][$index]['StartDate'] = date($account->getDateFormat(), $dbRecord->getInt('start_date'));
 				$games['Previous'][$index]['EndDate'] = date($account->getDateFormat(), $dbRecord->getInt('end_date'));
 				$games['Previous'][$index]['Type'] = $dbRecord->getString('type');
 				$games['Previous'][$index]['Speed'] = $dbRecord->getFloat('speed');
 				// create a container that will hold next url and additional variables.
-				$data = [
-					'view_game_id' => $game_id,
-					'HistoryDatabase' => $databaseName,
-					'game_name' => $games['Previous'][$index]['Name'],
-				];
-				$container = Page::create('history_games.php', $data);
+				$container = new Summary($databaseName, $game_id, $gameName);
 				$games['Previous'][$index]['PreviousGameLink'] = $container->href();
-				$container = Page::create('history_games_hof.php', $data);
+				$container = new HallOfFame($databaseName, $game_id, $gameName);
 				$games['Previous'][$index]['PreviousGameHOFLink'] = $container->href();
-				$container = Page::create('history_games_news.php', $data);
+				$container = new GameNews($databaseName, $game_id, $gameName);
 				$games['Previous'][$index]['PreviousGameNewsLink'] = $container->href();
-				$container = Page::create('history_games_detail.php', $data);
+				$container = new ExtendedStats($databaseName, $game_id, $gameName);
 				$games['Previous'][$index]['PreviousGameStatsLink'] = $container->href();
 			}
 		}
@@ -185,7 +184,7 @@ use Smr\Epoch;
 		// ***************************************
 		// ** Voting
 		// ***************************************
-		$container = Page::create('vote.php');
+		$container = new Vote();
 		$template->assign('VotingHref', $container->href());
 
 		$dbResult = $db->read('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(Epoch::time()) . ' ORDER BY end DESC');
@@ -199,8 +198,7 @@ use Smr\Epoch;
 			foreach ($dbResult->records() as $dbRecord) {
 				$voteID = $dbRecord->getInt('vote_id');
 				$voting[$voteID]['ID'] = $voteID;
-				$container = Page::create('vote_processing.php', ['forward_to' => 'game_play.php']);
-				$container['vote_id'] = $voteID;
+				$container = new VoteProcessor($voteID, new self());
 				$voting[$voteID]['HREF'] = $container->href();
 				$voting[$voteID]['Question'] = $dbRecord->getString('question');
 				$voting[$voteID]['TimeRemaining'] = format_time($dbRecord->getInt('end') - Epoch::time(), true);
@@ -219,6 +217,8 @@ use Smr\Epoch;
 		// ***************************************
 		// ** Announcements View
 		// ***************************************
-		$container = Page::create('announcements.php');
-		$container['view_all'] = 'yes';
+		$container = new LoginAnnouncements(viewAll: true);
 		$template->assign('OldAnnouncementsLink', $container->href());
+	}
+
+}

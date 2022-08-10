@@ -1,15 +1,38 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Globals;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Pages\Account\HallOfFamePersonal;
+use Smr\Pages\Account\NewsReadAdvanced;
+use Smr\Pages\Player\Council\ViewCouncil;
+use Smr\Request;
+use Smr\Template;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class SearchForTraderResult extends PlayerPage {
 
-		$player_id = $session->getRequestVarInt('player_id');
+	use ReusableTrait;
+
+	public string $file = 'trader_search_result.php';
+
+	public function __construct(
+		private ?int $playerID = null,
+		private ?string $playerName = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$this->playerID ??= Request::getInt('player_id');
+		$player_id = $this->playerID;
+
 		// When clicking on a player name, only the 'player_id' is supplied
-		$player_name = $session->getRequestVar('player_name', '');
+		$this->playerName ??= Request::get('player_name', '');
+		$player_name = $this->playerName;
 
 		if (empty($player_name) && empty($player_id)) {
 			create_error('You must specify either a player name or ID!');
@@ -43,64 +66,59 @@ use Smr\Exceptions\PlayerNotFound;
 		/**
 		 * @return array<string, SmrPlayer|string>
 		 */
-		function playerLinks(SmrPlayer $linkPlayer): array {
+		$playerLinks = function(SmrPlayer $linkPlayer) use ($player): array {
 			$result = ['Player' => $linkPlayer];
 
-			$container = Page::create('trader_search_result.php');
-			$container['player_id'] = $linkPlayer->getPlayerID();
+			$container = new self($linkPlayer->getPlayerID());
 			$result['SearchHREF'] = $container->href();
 
-			$container = Page::create('council_list.php');
-			$container['race_id'] = $linkPlayer->getRaceID();
+			$container = new ViewCouncil($linkPlayer->getRaceID());
 			$result['RaceHREF'] = $container->href();
 
-			$container = Page::create('message_send.php');
-			$container['receiver'] = $linkPlayer->getAccountID();
+			$container = new MessageSend($linkPlayer->getAccountID());
 			$result['MessageHREF'] = $container->href();
 
-			$container = Page::create('bounty_view.php');
-			$container['id'] = $linkPlayer->getAccountID();
+			$container = new BountyView($linkPlayer->getAccountID());
 			$result['BountyHREF'] = $container->href();
 
-			$container = Page::create('hall_of_fame_player_detail.php');
-			$container['account_id'] = $linkPlayer->getAccountID();
-			$container['game_id'] = $linkPlayer->getGameID();
-			$container['sending_page'] = 'search';
+			$container = new HallOfFamePersonal($linkPlayer->getAccountID(), $linkPlayer->getGameID());
 			$result['HofHREF'] = $container->href();
 
-			$container = Page::create('news_read_advanced.php');
-			$container['submit'] = 'Search For Player';
-			$container['playerName'] = $linkPlayer->getPlayerName();
+			$container = new NewsReadAdvanced(
+				gameID: $linkPlayer->getGameID(),
+				submit: 'Search For Player',
+				accountIDs: [$linkPlayer->getAccountID()]
+			);
 			$result['NewsHREF'] = $container->href();
 
-			$player = Smr\Session::getInstance()->getPlayer();
 			if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
-				$container = Page::create('sector_jump_processing.php');
-				$container['to'] = $linkPlayer->getSectorID();
+				$container = new SectorJumpProcessor($linkPlayer->getSectorID());
 				$result['JumpHREF'] = $container->href();
 			}
 
 			return $result;
-		}
+		};
 
 		if (empty($resultPlayer) && empty($similarPlayers)) {
-			$container = Page::create('trader_search.php');
-			$container['empty_result'] = true;
+			$container = new SearchForTrader(emptyResult: true);
 			$container->go();
 		}
 
 		if (!empty($resultPlayer)) {
-			$resultPlayerLinks = playerLinks($resultPlayer);
+			$resultPlayerLinks = $playerLinks($resultPlayer);
 			$template->assign('ResultPlayerLinks', $resultPlayerLinks);
 		}
 
 		if (!empty($similarPlayers)) {
 			$similarPlayersLinks = [];
 			foreach ($similarPlayers as $similarPlayer) {
-				$similarPlayersLinks[] = playerLinks($similarPlayer);
+				$similarPlayersLinks[] = $playerLinks($similarPlayer);
 			}
 			$template->assign('SimilarPlayersLinks', $similarPlayersLinks);
 		}
 
 		$template->assign('PageTopic', 'Search For Trader Results');
 		$template->assign('Player', $player);
+	}
+
+}

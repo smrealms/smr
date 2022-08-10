@@ -1,18 +1,26 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bar;
+
+use AbstractSmrPlayer;
 use Smr\Blackjack\Result;
 use Smr\Blackjack\Table;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class PlayBlackjackProcessor extends PlayerPageProcessor {
 
-		/** @var \Smr\Blackjack\Table $table */
-		$table = $var['table'] ?? new Table();
+	public function __construct(
+		private readonly int $locationID,
+		private readonly string $action,
+		private readonly ?Table $table = null,
+		private readonly ?int $bet = null
+	) {}
 
-		$do = $var['player_does'] ?? 'new game';
-		$bet = Request::getVarInt('bet');
+	public function build(AbstractSmrPlayer $player): never {
+		$table = $this->table ?? new Table();
+		$bet = $this->bet ?? Request::getInt('bet');
+		$do = $this->action;
 
 		if ($do == 'new game') {
 			if ($player->getCredits() < $bet) {
@@ -66,11 +74,14 @@ use Smr\Request;
 			}
 		}
 
-		$player->update();
-		$container = Page::create('bar_gambling.php');
-		$container->addVar('LocationID');
-		$container['bet'] = $bet;
-		$container['table'] = $table;
-		$container['gameEnded'] = $gameEnded;
-		$container['winningsMsg'] = $winningsMsg;
+		$container = new PlayBlackjack(
+			locationID: $this->locationID,
+			table: $table,
+			gameEnded: $gameEnded,
+			bet: $bet,
+			winningsMsg: $winningsMsg
+		);
 		$container->go();
+	}
+
+}

@@ -1,9 +1,22 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
+namespace Smr\Pages\Player;
 
+use AbstractSmrPlayer;
+use Menu;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+
+class UserRankingView extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'rankings_view.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Extended User Rankings');
-		if ($session->hasGame()) {
-			Menu::trader();
-		}
+		Menu::trader();
+	}
+
+}

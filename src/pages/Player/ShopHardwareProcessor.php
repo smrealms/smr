@@ -1,17 +1,27 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Exception;
+use Globals;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class ShopHardwareProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $hardwareID,
+		private readonly int $locationID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$ship = $player->getShip();
 
 		$action = Request::get('action');
 		$amount = Request::getInt('amount');
 
-		/** @var int $hardware_id */
-		$hardware_id = $var['hardware_id'];
+		$hardware_id = $this->hardwareID;
 		$hardware_name = Globals::getHardwareName($hardware_id);
 		$cost = Globals::getHardwareCost($hardware_id);
 
@@ -63,6 +73,8 @@ use Smr\Request;
 
 		$player->log(LOG_TYPE_HARDWARE, 'Player ' . $action . 's ' . $amount . ' ' . $hardware_name);
 
-		$container = Page::create('shop_hardware.php');
-		$container->addVar('LocationID');
+		$container = new ShopHardware($this->locationID);
 		$container->go();
+	}
+
+}

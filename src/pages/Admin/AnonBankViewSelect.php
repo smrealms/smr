@@ -1,15 +1,27 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+namespace Smr\Pages\Admin;
 
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
+
+class AnonBankViewSelect extends AccountPage {
+
+	public string $file = 'admin/anon_acc_view_select.php';
+
+	public function __construct(
+		private readonly ?string $message = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		//view anon acct activity.
 		$template->assign('PageTopic', 'View Anonymous Account Info');
 
-		$container = Page::create('admin/anon_acc_view.php');
+		$container = new AnonBankView();
 		$template->assign('AnonViewHREF', $container->href());
 
-		if (isset($var['message'])) {
-			$template->assign('Message', $var['message']);
-		}
+		$template->assign('Message', $this->message);
+	}
+
+}

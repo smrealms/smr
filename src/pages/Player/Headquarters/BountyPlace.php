@@ -1,18 +1,27 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Headquarters;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class BountyPlace extends PlayerPage {
 
+	public string $file = 'bounty_place.php';
+
+	public function __construct(
+		private readonly int $locationID
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Place Bounty');
 
-		Menu::headquarters($var['LocationID']);
+		Menu::headquarters($this->locationID);
 
-		$container = Page::create('bounty_place_processing.php');
-		$container->addVar('LocationID');
+		$container = new BountyPlaceProcessor($this->locationID);
 		$template->assign('SubmitHREF', $container->href());
 
 		$bountyPlayers = [];
@@ -22,3 +31,6 @@ use Smr\Database;
 			$bountyPlayers[$dbRecord->getInt('player_id')] = htmlentities($dbRecord->getString('player_name'));
 		}
 		$template->assign('BountyPlayers', $bountyPlayers);
+	}
+
+}

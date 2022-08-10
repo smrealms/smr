@@ -1,8 +1,15 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bar;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Blackjack\Card;
 use Smr\Blackjack\Hand;
 use Smr\Blackjack\Result;
+use Smr\Blackjack\Table;
+use Smr\Page\PlayerPage;
+use Smr\Template;
 
 function display_card(Card $card, bool $show): string {
 	//only display what the card really is if they want to
@@ -44,21 +51,26 @@ function display_hand(Hand $hand, bool $revealHand): string {
 	return $html;
 }
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class PlayBlackjack extends PlayerPage {
 
+	public string $file = 'bar_gambling.php';
+
+	public function __construct(
+		private readonly int $locationID,
+		private readonly Table $table,
+		private readonly bool $gameEnded,
+		private readonly int $bet,
+		private readonly string $winningsMsg
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'BlackJack');
-		Menu::bar();
+		Menu::bar($this->locationID);
 
-		/** @var \Smr\Blackjack\Table $table */
-		$table = $var['table'];
-
-		$gameEnded = $var['gameEnded'];
+		$table = $this->table;
+		$gameEnded = $this->gameEnded;
 
 		$resultMsg = '';
-		$winningsMsg = '';
 		if ($gameEnded) {
 			// Construct the result message
 			$result = $table->getPlayerResult();
@@ -67,8 +79,6 @@ function display_hand(Hand $hand, bool $revealHand): string {
 				Result::Tie => '<h1 class="yellow">TIE Game</h1>',
 				Result::Lose => '<h1 class="red">Dealer Wins</h1>',
 			};
-
-			$winningsMsg = $var['winningsMsg'];
 		}
 		$template->assign('ResultMsg', $resultMsg);
 
@@ -103,19 +113,32 @@ function display_hand(Hand $hand, bool $revealHand): string {
 		$template->assign('PlayerStatus', implode('<br />', $result));
 
 		// Create action buttons
-		$container = Page::create('bar_gambling_processing.php');
-		$container->addVar('LocationID');
-		$container->addVar('bet');
-
 		if ($gameEnded) {
-			$template->assign('Winnings', $var['winningsMsg']);
+			$container = new PlayBlackjackProcessor(
+				locationID: $this->locationID,
+				action: 'new game',
+				bet: $this->bet
+			);
+			$template->assign('Winnings', $this->winningsMsg);
 			$template->assign('BetHREF', $container->href());
-			$template->assign('Bet', $var['bet']);
+			$template->assign('Bet', $this->bet);
 		} else {
-			$container['table'] = $table;
-			$container['player_does'] = 'HIT';
+			$container = new PlayBlackjackProcessor(
+				locationID: $this->locationID,
+				action: 'HIT',
+				table: $table,
+				bet: $this->bet
+			);
 			$template->assign('HitHREF', $container->href());
 
-			$container['player_does'] = 'STAY';
+			$container = new PlayBlackjackProcessor(
+				locationID: $this->locationID,
+				action: 'STAY',
+				table: $table,
+				bet: $this->bet
+			);
 			$template->assign('StayHREF', $container->href());
 		}
+	}
+
+}

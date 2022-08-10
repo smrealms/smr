@@ -1,28 +1,37 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Exception;
+use Globals;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 use Smr\TransactionType;
+use SmrPort;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class ShopGoodsProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $goodID,
+		private readonly ?int $amount = null,
+		private readonly int $bargainNumber = 0,
+		private readonly ?int $bargainPrice = null, // only for NPC
+		private readonly ?int $offeredPrice = null,
+		private readonly ?int $idealPrice = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$ship = $player->getShip();
 		$sector = $player->getSector();
 
-		$amount = Request::getVarInt('amount');
+		$amount = $this->amount ?? Request::getInt('amount');
 		// no negative amounts are allowed
 		if ($amount <= 0) {
 			create_error('You must enter an amount > 0!');
 		}
 
-		$bargain_price = Request::getVarInt('bargain_price', 0);
-		// no negative amounts are allowed
-		if ($bargain_price < 0) {
-			create_error('Negative prices are not allowed!');
-		}
-
-		/** @var int $good_id */
-		$good_id = $var['good_id'];
+		$good_id = $this->goodID;
 		$good_name = Globals::getGoodName($good_id);
 
 		// do we have enough turns?
@@ -63,36 +72,46 @@ use Smr\TransactionType;
 			create_error('Scanning your ship indicates you don\'t have enough free cargo bays!');
 		}
 
-		// check if the guy has enough money
-		if ($transaction === TransactionType::Buy && $player->getCredits() < $bargain_price) {
-			create_error('You don\'t have enough credits!');
-		}
-
 		// get relations for us (global + personal)
 		$relations = $player->getRelation($port->getRaceID());
 
-		if (!isset($var['ideal_price'])) {
-			$ideal_price = $port->getIdealPrice($good_id, $transaction, $amount, $relations);
-		} else {
-			/** @var int $ideal_price */
-			$ideal_price = $var['ideal_price'];
-		}
-
-		if (!isset($var['offered_price'])) {
-			$offered_price = $port->getOfferPrice($ideal_price, $relations, $transaction);
-		} else {
-			/** @var int $offered_price */
-			$offered_price = $var['offered_price'];
-		}
+		$ideal_price = $this->idealPrice ?? $port->getIdealPrice($good_id, $transaction, $amount, $relations);
+		$offered_price = $this->offeredPrice ?? $port->getOfferPrice($ideal_price, $relations, $transaction);
 
 		// nothing should happen here but just to avoid / by 0
 		if ($ideal_price == 0 || $offered_price == 0) {
 			create_error('Port calculation error...buy more goods.');
 		}
 
-		$stealing = false;
-		if (Request::getVar('action') === TransactionType::STEAL) {
-			$stealing = true;
+		$stealing = Request::get('action', '') === TransactionType::STEAL;
+
+		if (!$stealing && $this->bargainNumber === 0) {
+			$container = new ShopGoodsNegotiate(
+				goodID: $this->goodID,
+				amount: $amount,
+				bargainNumber: $this->bargainNumber,
+				bargainPrice: $offered_price,
+				offeredPrice: $offered_price,
+				idealPrice: $ideal_price
+			);
+			$container->go();
+		}
+
+		if ($stealing) {
+			$bargain_price = 0;
+		} else {
+			$bargain_price = $this->bargainPrice ?? Request::getInt('bargain_price');
+			if ($bargain_price <= 0) {
+				create_error('You must enter an amount > 0!');
+			}
+		}
+
+		// check if the guy has enough money
+		if ($transaction === TransactionType::Buy && $player->getCredits() < $bargain_price) {
+			create_error('You don\'t have enough credits!');
+		}
+
+		if ($stealing) {
 			if (!$ship->isUnderground()) {
 				throw new Exception('Player tried to steal in a non-underground ship!');
 			}
@@ -111,17 +130,15 @@ use Smr\TransactionType;
 				$player->decreaseRelationsByTrade($amount, $port->getRaceID());
 
 				$fineMessage = '<span class="red">A Federation patrol caught you loading stolen goods onto your ship!<br />The stolen goods have been confiscated and you have been fined ' . number_format($fine) . ' credits.</span>';
-				$container = Page::create('shop_goods.php');
-				$container['trade_msg'] = $fineMessage;
+				$container = new ShopGoods($fineMessage);
 				$container->go();
 			}
 		}
 
 		// can we accept the current price?
 		if ($stealing ||
-			(!empty($bargain_price) &&
-			 (($transaction === TransactionType::Buy && $bargain_price >= $ideal_price) ||
-			  ($transaction === TransactionType::Sell && $bargain_price <= $ideal_price)))) {
+			  ($transaction === TransactionType::Buy && $bargain_price >= $ideal_price) ||
+			  ($transaction === TransactionType::Sell && $bargain_price <= $ideal_price)) {
 
 			// base xp is the amount you would get for a perfect trade.
 			// this is the absolut max. the real xp can only be smaller.
@@ -197,35 +214,63 @@ use Smr\TransactionType;
 				$tradeMessage .= '<br />Your ' . $qualifier . ' ' . $skill . ' skills have earned you <span class="exp">' . $gained_exp . ' </span> ' . pluralise($gained_exp, 'experience point', false) . '!';
 			}
 
-
 			if ($ship->getEmptyHolds() == 0) {
-				$container = Page::create('current_sector.php');
+				$container = new CurrentSector(tradeMessage: $tradeMessage);
 			} else {
-				$container = Page::create('shop_goods.php');
+				$container = new ShopGoods($tradeMessage);
 			}
-			$container['trade_msg'] = $tradeMessage;
-
 		} else {
-			// does the trader try to outsmart us?
-			$container = Page::create('shop_goods_trade.php');
+			// lose relations for bad bargain
+			$player->decreaseRelationsByTrade($amount, $port->getRaceID());
+			$player->increaseHOF(1, ['Trade', 'Results', 'Fail'], HOF_PUBLIC);
 
-			require_once(LIB . 'Default/shop_goods.inc.php');
-			check_bargain_number($amount, $ideal_price, $offered_price, $bargain_price, $container, $player);
+			// do we have enough of it?
+			$maxTries = 5;
+			if ($this->bargainNumber > 1 && rand($this->bargainNumber, $maxTries) >= $maxTries) {
+				$player->decreaseRelationsByTrade($amount, $port->getRaceID());
+				$player->increaseHOF(1, ['Trade', 'Results', 'Epic Fail'], HOF_PUBLIC);
+				create_error('You don\'t want to accept my offer? I\'m sick of you! Get out of here!');
+			}
+
+			$port_off = IRound($offered_price * 100 / $ideal_price);
+			$trader_off = IRound($bargain_price * 100 / $ideal_price);
+
+			// get relative numbers!
+			// be careful! one of this value is negative!
+			$port_off_rel = 100 - $port_off;
+			$trader_off_rel = 100 - $trader_off;
+
+			// Should we change the offer price?
+			// only do something, if we are more off than the trader
+			if (abs($port_off_rel) > abs($trader_off_rel)) {
+				// get a random number between
+				// (port_off) and (100 +/- $trader_off_rel)
+				if (100 + $trader_off_rel < $port_off) {
+					$offer_modifier = rand(100 + $trader_off_rel, $port_off);
+				} else {
+					$offer_modifier = rand($port_off, 100 + $trader_off_rel);
+				}
+				$offered_price = IRound($ideal_price * $offer_modifier / 100);
+			}
 
 			// transfer values to next page
-			$container->addVar('good_id');
-
-			$container['amount'] = $amount;
-			$container['bargain_price'] = $bargain_price;
+			$container = new ShopGoodsNegotiate(
+				goodID: $this->goodID,
+				amount: $amount,
+				bargainNumber: $this->bargainNumber,
+				bargainPrice: $bargain_price,
+				offeredPrice: $offered_price,
+				idealPrice: $ideal_price
+			);
 		}
 
-		$container['ideal_price'] = $ideal_price;
-		$container['offered_price'] = $offered_price;
-
 		// only take turns if they bargained
-		if (!isset($container['number_of_bargains']) || $container['number_of_bargains'] != 1) {
+		if (!$stealing) {
 			$player->takeTurns(TURNS_PER_TRADE, TURNS_PER_TRADE);
 		}
 
 		// go to next page
 		$container->go();
+	}
+
+}

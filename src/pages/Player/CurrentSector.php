@@ -1,17 +1,41 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Pages\Player\Planet\Main as PlanetMain;
+use Smr\Template;
+use SmrGame;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class CurrentSector extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'current_sector.php';
+
+	/** @var array<int> */
+	private array $unreadMissions;
+	private ?string $attackMessage = null;
+
+	public function __construct(
+		private readonly ?string $message = null,
+		private readonly ?string $errorMessage = null,
+		private readonly ?string $missionMessage = null,
+		private readonly ?string $tradeMessage = null,
+		private readonly bool $showForceRefreshMessage = false
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$sector = $player->getSector();
 
 		// If on a planet, forward to planet_main.php
 		if ($player->isLandedOnPlanet()) {
-			Page::create('planet_main.php', $var)->go();
+			(new PlanetMain($this->message, $this->errorMessage))->go();
 		}
 
 		$template->assign('SpaceView', true);
@@ -19,7 +43,6 @@ use Smr\Epoch;
 		$template->assign('PageTopic', 'Current Sector: ' . $player->getSectorID() . ' (' . $sector->getGalaxy()->getDisplayName() . ')');
 
 		Menu::navigation($player);
-
 
 		// *******************************************
 		// *
@@ -60,10 +83,8 @@ use Smr\Epoch;
 
 		doTickerAssigns($template, $player, $db);
 
-		if (!isset($var['UnreadMissions'])) {
-			$var['UnreadMissions'] = $player->markMissionsRead();
-		}
-		$template->assign('UnreadMissions', $var['UnreadMissions']);
+		$this->unreadMissions ??= $player->markMissionsRead();
+		$template->assign('UnreadMissions', $this->unreadMissions);
 
 		// *******************************************
 		// *
@@ -100,26 +121,26 @@ use Smr\Epoch;
 		// Do we have an unseen attack message to store in this var?
 		$dbResult = $db->read('SELECT * FROM sector_message WHERE ' . $player->getSQL());
 		if ($dbResult->hasRecord()) {
-			$var['AttackMessage'] = $dbResult->record()->getString('message');
+			$this->attackMessage = $dbResult->record()->getString('message');
 			$db->write('DELETE FROM sector_message WHERE ' . $player->getSQL());
 		}
 
-		if (isset($var['AttackMessage'])) {
-			checkForAttackMessage($var['AttackMessage'], $player);
+		if ($this->attackMessage !== null) {
+			checkForAttackMessage($this->attackMessage, $player);
 		}
-		if (isset($var['showForceRefreshMessage'])) {
+		if ($this->showForceRefreshMessage) {
 			$template->assign('ForceRefreshMessage', getForceRefreshMessage($player));
 		}
-		if (isset($var['MissionMessage'])) {
-			$template->assign('MissionMessage', $var['MissionMessage']);
+		if ($this->missionMessage !== null) {
+			$template->assign('MissionMessage', $this->missionMessage);
 		}
-		if (isset($var['msg'])) {
-			$template->assign('VarMessage', bbifyMessage($var['msg']));
+		if ($this->message !== null) {
+			$template->assign('VarMessage', bbifyMessage($this->message));
 		}
 
 		//error msgs take precedence
-		if (isset($var['errorMsg'])) {
-			$template->assign('ErrorMessage', $var['errorMsg']);
+		if ($this->errorMessage !== null) {
+			$template->assign('ErrorMessage', $this->errorMessage);
 		}
 
 		// *******************************************
@@ -128,8 +149,8 @@ use Smr\Epoch;
 		// *
 		// *******************************************
 
-		if (!empty($var['trade_msg'])) {
-			$template->assign('TradeMessage', $var['trade_msg']);
+		if ($this->tradeMessage !== null) {
+			$template->assign('TradeMessage', $this->tradeMessage);
 		}
 
 		// *******************************************
@@ -161,6 +182,9 @@ use Smr\Epoch;
 		$template->assign('VisiblePlayers', $visiblePlayers);
 		$template->assign('CloakedPlayers', $cloakedPlayers);
 		$template->assign('SectorPlayersLabel', 'Ships');
+	}
+
+}
 
 
 function getForceRefreshMessage(AbstractSmrPlayer $player): string {
@@ -182,7 +206,7 @@ function checkForAttackMessage(string $msg, AbstractSmrPlayer $player): void {
 		// $msg now contains only the log_id, if there is one
 		$logID = str2int($msg);
 
-		$template = Smr\Template::getInstance();
+		$template = Template::getInstance();
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($logID) . ' LIMIT 1');
 		if ($dbResult->hasRecord()) {

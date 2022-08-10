@@ -1,12 +1,20 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
+use SmrAlliance;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class AllianceJoinProcessor extends PlayerPageProcessor {
 
-		$alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
+	public function __construct(
+		private readonly int $allianceID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
+		$alliance = SmrAlliance::getAlliance($this->allianceID, $player->getGameID());
 
 		$joinRestriction = $alliance->getJoinRestriction($player);
 		if ($joinRestriction !== false) {
@@ -22,4 +30,7 @@ use Smr\Request;
 		$player->joinAlliance($alliance->getAllianceID());
 		$player->update();
 
-		Page::create('alliance_roster.php')->go();
+		(new AllianceRoster($this->allianceID))->go();
+	}
+
+}

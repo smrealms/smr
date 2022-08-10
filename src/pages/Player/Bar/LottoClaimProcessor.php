@@ -1,10 +1,18 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bar;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class LottoClaimProcessor extends PlayerPageProcessor {
 
+	public function __construct(
+		private readonly int $locationID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$message = '';
 		//check if we really are a winner
 		$db = Database::getInstance();
@@ -21,7 +29,8 @@ use Smr\Database;
 			$db->write('DELETE FROM news WHERE type = \'lotto\' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 		}
 		//offer another drink and such
-		$container = Page::create('bar_main.php');
-		$container->addVar('LocationID');
-		$container['message'] = $message;
+		$container = new BarMain($this->locationID, $message);
 		$container->go();
+	}
+
+}

@@ -1,22 +1,46 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Globals;
+use Menu;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAlliance;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class AllianceMessageBoardView extends PlayerPage {
 
-		if (!isset($var['alliance_id'])) {
-			$var['alliance_id'] = $player->getAllianceID();
-		}
+	use ReusableTrait;
 
-		$alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
-		$thread_index = $var['thread_index'];
-		$thread_id = $var['thread_ids'][$thread_index];
+	public string $file = 'alliance_message_view.php';
 
-		$template->assign('PageTopic', $var['thread_topics'][$thread_index]);
+	/**
+	 * @param array<int> $threadIDs
+	 * @param array<int, string> $threadTopics
+	 * @param array<int, bool> $allianceEyesOnly
+	 */
+	public function __construct(
+		private readonly int $allianceID,
+		private readonly array $threadIDs,
+		private readonly array $threadTopics,
+		private readonly array $allianceEyesOnly,
+		private int $threadIndex,
+		public ?string $preview = null,
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$allianceID = $this->allianceID;
+
+		$alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
+		$thread_index = $this->threadIndex;
+		$thread_id = $this->threadIDs[$thread_index];
+
+		$template->assign('PageTopic', $this->threadTopics[$thread_index]);
 		Menu::alliance($alliance->getAllianceID());
 
 		$db = Database::getInstance();
@@ -38,19 +62,19 @@ use Smr\Epoch;
 			$mbWrite = $dbResult->hasRecord();
 		}
 
-		$container = Page::create('alliance_message_view.php', $var);
-
-		if (isset($var['thread_ids'][$thread_index - 1])) {
-			$container['thread_index'] = $thread_index - 1;
-			$template->assign('PrevThread', ['Topic' => $var['thread_topics'][$thread_index - 1], 'Href' => $container->href()]);
+		if (isset($this->threadIDs[$thread_index - 1])) {
+			$container = clone($this);
+			$container->threadIndex -= 1;
+			$template->assign('PrevThread', ['Topic' => $this->threadTopics[$thread_index - 1], 'Href' => $container->href()]);
 		}
-		if (isset($var['thread_ids'][$thread_index + 1])) {
-			$container['thread_index'] = $thread_index + 1;
-			$template->assign('NextThread', ['Topic' => $var['thread_topics'][$thread_index + 1], 'Href' => $container->href()]);
+		if (isset($this->threadIDs[$thread_index + 1])) {
+			$container = clone($this);
+			$container->threadIndex += 1;
+			$template->assign('NextThread', ['Topic' => $this->threadTopics[$thread_index + 1], 'Href' => $container->href()]);
 		}
 
 		$thread = [];
-		$thread['AllianceEyesOnly'] = is_array($var['alliance_eyes']) && $var['alliance_eyes'][$thread_index];
+		$thread['AllianceEyesOnly'] = $this->allianceEyesOnly[$thread_index];
 		//for report type (system sent) messages
 		$players = [
 			ACCOUNT_ID_PLANET => 'Planet Reporter',
@@ -78,22 +102,25 @@ use Smr\Epoch;
 
 		$thread['CanDelete'] = $dbResult->getNumRecords() > 1 && $thread['CanDelete'];
 		$thread['Replies'] = [];
-		$container = Page::create('alliance_message_delete_processing.php', $var);
-		$container['thread_id'] = $thread_id;
 		foreach ($dbResult->records() as $dbRecord) {
-			$thread['Replies'][$dbRecord->getInt('reply_id')] = ['Sender' => $players[$dbRecord->getInt('sender_id')], 'Message' => $dbRecord->getString('text'), 'SendTime' => $dbRecord->getInt('time')];
+			$replyID = $dbRecord->getInt('reply_id');
+			$thread['Replies'][$replyID] = [
+				'Sender' => $players[$dbRecord->getInt('sender_id')],
+				'Message' => $dbRecord->getString('text'),
+				'SendTime' => $dbRecord->getInt('time'),
+			];
 			if ($thread['CanDelete']) {
-				$container['reply_id'] = $dbRecord->getInt('reply_id');
-				$thread['Replies'][$dbRecord->getInt('reply_id')]['DeleteHref'] = $container->href();
+				$container = new AllianceMessageBoardDeleteReplyProcessor($allianceID, $this, $thread_id, $replyID);
+				$thread['Replies'][$replyID]['DeleteHref'] = $container->href();
 			}
 		}
 
 		if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
-			$container = Page::create('alliance_message_add_processing.php', $var);
-			$container['thread_index'] = $thread_index;
+			$container = new AllianceMessageBoardAddProcessor($allianceID, $this, $thread_id);
 			$thread['CreateThreadReplyFormHref'] = $container->href();
 		}
 		$template->assign('Thread', $thread);
-		if (isset($var['preview'])) {
-			$template->assign('Preview', $var['preview']);
-		}
+		$template->assign('Preview', $this->preview);
+	}
+
+}

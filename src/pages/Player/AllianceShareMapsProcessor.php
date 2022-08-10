@@ -1,10 +1,15 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
+use SmrPort;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class AllianceShareMapsProcessor extends PlayerPageProcessor {
 
+	public function build(AbstractSmrPlayer $player): never {
 		$alliance_ids = [];
 
 		// get a list of alliance member (remove current player)
@@ -39,4 +44,7 @@ use Smr\Database;
 			$cachedPort->addCachePorts($alliance_ids);
 		}
 
-		Page::create('alliance_roster.php')->go();
+		(new AllianceRoster())->go();
+	}
+
+}

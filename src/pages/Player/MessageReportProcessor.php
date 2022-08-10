@@ -1,23 +1,26 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$var = Smr\Session::getInstance()->getCurrentVar();
+class MessageReportProcessor extends PlayerPageProcessor {
 
-		$container = Page::create('message_view.php');
-		$container->addVar('folder_id');
+	public function __construct(
+		private readonly int $folderID,
+		private readonly int $messageID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
+		$container = new MessageView($this->folderID);
 
 		if (Request::get('action') == 'No') {
 			$container->go();
 		}
-
-		if (empty($var['message_id'])) {
-			create_error('Please click the small yellow icon to report a message!');
-		}
-
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
 
 		// get next id
 		$db = Database::getInstance();
@@ -27,7 +30,7 @@ use Smr\Request;
 		// get message form db
 		$dbResult = $db->read('SELECT account_id, sender_id, message_text
 					FROM message
-					WHERE message_id = ' . $var['message_id'] . ' AND receiver_delete = \'FALSE\'');
+					WHERE message_id = ' . $this->messageID . ' AND receiver_delete = \'FALSE\'');
 		if (!$dbResult->hasRecord()) {
 			create_error('Could not find the message you selected!');
 		}
@@ -40,8 +43,11 @@ use Smr\Request;
 			'from_id' => $dbRecord->getInt('sender_id'),
 			'to_id' => $dbRecord->getInt('account_id'),
 			'text' => $db->escapeString($dbRecord->getString('message_text')),
-			'sent_time' => $db->escapeNumber($var['sent_time']),
-			'notify_time' => $db->escapeNumber($var['notified_time']),
+			'sent_time' => $db->escapeNumber($dbRecord->getInt('send_time')),
+			'notify_time' => $db->escapeNumber(Epoch::time()),
 		]);
 
 		$container->go();
+	}
+
+}

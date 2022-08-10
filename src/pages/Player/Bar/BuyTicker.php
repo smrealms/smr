@@ -1,13 +1,24 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bar;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Epoch;
+use Smr\Page\PlayerPage;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class BuyTicker extends PlayerPage {
 
+	public string $file = 'bar_ticker_buy.php';
+
+	public function __construct(
+		private readonly int $locationID
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Buy System');
-		Menu::bar();
+		Menu::bar($this->locationID);
 
 		//they can buy the ticker...first we need to find out what they want
 		$tickers = [];
@@ -26,6 +37,8 @@ use Smr\Epoch;
 		}
 		$template->assign('Tickers', $tickers);
 
-		$container = Page::create('bar_ticker_buy_processing.php');
-		$container->addVar('LocationID');
+		$container = new BuyTickerProcessor($this->locationID);
 		$template->assign('BuyHREF', $container->href());
+	}
+
+}

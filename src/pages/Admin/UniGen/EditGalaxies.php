@@ -1,15 +1,27 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$var = Smr\Session::getInstance()->getCurrentVar();
+namespace Smr\Pages\Admin\UniGen;
 
-		$game = SmrGame::getGame($var['game_id']);
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
+use SmrGame;
+
+class EditGalaxies extends AccountPage {
+
+	public string $file = 'admin/unigen/galaxies_edit.php';
+
+	public function __construct(
+		private readonly int $gameID,
+		private readonly int $galaxyID
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
+		$game = SmrGame::getGame($this->gameID);
 		$template->assign('PageTopic', 'Edit Galaxies : ' . $game->getDisplayName());
 		$template->assign('GameEnabled', $game->isEnabled());
 
-		$container = Page::create('admin/unigen/galaxies_edit_processing.php');
-		$container->addVar('game_id');
-		$container->addVar('gal_on');
+		$container = new EditGalaxiesProcessor($this->gameID, $this->galaxyID);
 		$submit = [
 			'value' => 'Edit Galaxies',
 			'href' => $container->href(),
@@ -28,7 +40,8 @@
 		}
 		$template->assign('Galaxies', $galaxies);
 
-		$container = Page::create('admin/unigen/universe_create_sectors.php');
-		$container->addVar('game_id');
-		$container->addVar('gal_on');
+		$container = new EditGalaxy($this->gameID, $this->galaxyID);
 		$template->assign('BackHREF', $container->href());
+	}
+
+}

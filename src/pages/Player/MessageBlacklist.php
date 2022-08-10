@@ -1,18 +1,28 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class MessageBlacklist extends PlayerPage {
 
+	public string $file = 'message_blacklist.php';
+
+	public function __construct(
+		private readonly ?string $message = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Player Blacklist');
 
 		Menu::messages();
 
-		if (isset($var['msg'])) {
-			$template->assign('Message', $var['msg']);
+		if ($this->message !== null) {
+			$template->assign('Message', $this->message);
 		}
 
 		$db = Database::getInstance();
@@ -25,9 +35,12 @@ use Smr\Database;
 		$template->assign('Blacklist', $blacklist);
 
 		if ($blacklist) {
-			$container = Page::create('message_blacklist_del.php');
+			$container = new MessageBlacklistDeleteProcessor();
 			$template->assign('BlacklistDeleteHREF', $container->href());
 		}
 
-		$container = Page::create('message_blacklist_add.php');
+		$container = new MessageBlacklistAddProcessor();
 		$template->assign('BlacklistAddHREF', $container->href());
+	}
+
+}

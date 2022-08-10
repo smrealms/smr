@@ -1,19 +1,30 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class AllianceOpResponseProcessor extends PlayerPageProcessor {
 
+	public function __construct(
+		private readonly int $allianceID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$response = strtoupper(Request::get('op_response'));
 
 		$db = Database::getInstance();
 		$db->replace('alliance_has_op_response', [
-			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+			'alliance_id' => $db->escapeNumber($this->allianceID),
 			'game_id' => $db->escapeNumber($player->getGameID()),
 			'account_id' => $db->escapeNumber($player->getAccountID()),
 			'response' => $db->escapeString($response),
 		]);
 
-		Page::create('alliance_mod.php')->go();
+		(new AllianceMotd($this->allianceID))->go();
+	}
+
+}

@@ -1,16 +1,28 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin\UniGen;
+
+use DateTime;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
+use SmrGame;
 
-		$var = Smr\Session::getInstance()->getCurrentVar();
+class EditGameProcessor extends AccountPageProcessor {
 
+	public function __construct(
+		private readonly int $gameID,
+		private readonly int $galaxyID
+	) {}
+
+	public function build(SmrAccount $account): never {
 		// Get the dates ("|" sets hr/min/sec to 0)
 		$join = DateTime::createFromFormat('d/m/Y|', Request::get('game_join'));
 		$start = empty(Request::get('game_start')) ? $join :
 			DateTime::createFromFormat('d/m/Y|', Request::get('game_start'));
 		$end = DateTime::createFromFormat('d/m/Y|', Request::get('game_end'));
 
-		$game = SmrGame::getGame($var['game_id']);
+		$game = SmrGame::getGame($this->gameID);
 		$game->setName(Request::get('game_name'));
 		$game->setDescription(Request::get('desc'));
 		$game->setGameTypeID(Request::getInt('game_type'));
@@ -31,8 +43,9 @@ use Smr\Request;
 		}
 		$game->save();
 
-		$container = Page::create('admin/unigen/universe_create_sectors.php');
-		$container['message'] = '<span class="green">SUCCESS: edited game details</span>';
-		$container->addVar('game_id');
-		$container->addVar('gal_on');
+		$message = '<span class="green">SUCCESS: edited game details</span>';
+		$container = new EditGalaxy($this->gameID, $this->galaxyID, $message);
 		$container->go();
+	}
+
+}

@@ -1,26 +1,40 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
+use Globals;
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAccount;
+
+class FeatureRequestComments extends AccountPage {
+
+	use ReusableTrait;
+
+	public string $file = 'feature_request_comments.php';
+
+	public function __construct(
+		private readonly int $featureRequestID,
+		private readonly FeatureRequest $previousPage
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 
 		if (!Globals::isFeatureRequestOpen()) {
 			create_error('Feature requests are currently not being accepted.');
 		}
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
-
 		$template->assign('PageTopic', 'Feature Request Comments');
 
-		$container = Page::create('feature_request.php', $var);
-		$template->assign('BackHref', $container->href());
+		$template->assign('BackHref', $this->previousPage->href());
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT *
 					FROM feature_request
 					JOIN feature_request_comments USING(feature_request_id)
-					WHERE feature_request_id = ' . $db->escapeNumber($var['RequestID']) . '
+					WHERE feature_request_id = ' . $db->escapeNumber($this->featureRequestID) . '
 					ORDER BY comment_id ASC');
 		if ($dbResult->hasRecord()) {
 			$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
@@ -28,8 +42,8 @@ use Smr\Database;
 
 			// variables needed to set the status for this feature request
 			if ($featureModerator) {
-				$template->assign('FeatureRequestId', $var['RequestID']);
-				$template->assign('FeatureRequestStatusFormHREF', Page::create('feature_request_vote_processing.php')->href());
+				$template->assign('FeatureRequestId', $this->featureRequestID);
+				$template->assign('FeatureRequestStatusFormHREF', (new FeatureRequestVoteProcessor($this))->href());
 			}
 
 			$featureRequestComments = [];
@@ -48,5 +62,8 @@ use Smr\Database;
 			$template->assign('Comments', $featureRequestComments);
 		}
 
-		$container = Page::create('feature_request_comment_processing.php', $var);
+		$container = new FeatureRequestCommentProcessor($this->featureRequestID, $this);
 		$template->assign('FeatureRequestCommentFormHREF', $container->href());
+	}
+
+}

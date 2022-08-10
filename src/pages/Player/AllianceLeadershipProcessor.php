@@ -1,14 +1,18 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$leader_id = Request::getInt('leader_id');
+class AllianceLeadershipProcessor extends PlayerPageProcessor {
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+	public function build(AbstractSmrPlayer $player): never {
 		$alliance = $player->getAlliance();
 
+		$leader_id = Request::getInt('leader_id');
 		$alliance->setLeaderID($leader_id);
 		$alliance->update();
 
@@ -20,4 +24,7 @@ use Smr\Request;
 		$playerMessage = 'You are now the leader of ' . $alliance->getAllianceBBLink() . '!';
 		$player->sendMessageFromAllianceCommand($leader_id, $playerMessage);
 
-		Page::create('alliance_roster.php')->go();
+		(new AllianceRoster())->go();
+	}
+
+}

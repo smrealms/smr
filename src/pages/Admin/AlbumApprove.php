@@ -1,7 +1,12 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
 function get_album_nick(int $album_id): string {
 	if ($album_id == 0) {
@@ -11,8 +16,11 @@ function get_album_nick(int $album_id): string {
 	return SmrAccount::getAccount($album_id)->getHofDisplayName();
 }
 
-		$template = Smr\Template::getInstance();
+class AlbumApprove extends AccountPage {
 
+	public string $file = 'admin/album_approve.php';
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Approve Album Entries');
 
 		$db = Database::getInstance();
@@ -81,10 +89,11 @@ function get_album_nick(int $album_id): string {
 			$time_passed = Epoch::time() - $last_changed;
 			$template->assign('TimePassed', $time_passed);
 
-			$container = Page::create('admin/album_approve_processing.php');
-			$container['album_id'] = $album_id;
-			$container['approved'] = true;
+			$container = new AlbumApproveProcessor($album_id, approved: true);
 			$template->assign('ApproveHREF', $container->href());
-			$container['approved'] = false;
+			$container = new AlbumApproveProcessor($album_id, approved: false);
 			$template->assign('RejectHREF', $container->href());
 		}
+	}
+
+}

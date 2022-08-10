@@ -1,26 +1,36 @@
 <?php declare(strict_types=1);
 
-use Smr\Database;
+namespace Smr\Pages\Player;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$ship = $session->getPlayer()->getShip();
+use AbstractSmrPlayer;
+use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+
+class HardwareConfigure extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'configure_hardware.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$ship = $player->getShip();
 
 		$template->assign('PageTopic', 'Configure Hardware');
 
 		if ($ship->hasCloak()) {
-			$container = Page::create('configure_hardware_processing.php');
 			if (!$ship->isCloaked()) {
-				$container['action'] = 'Enable';
+				$action = 'Enable Cloak';
 			} else {
-				$container['action'] = 'Disable';
+				$action = 'Disable Cloak';
 			}
+			$container = new HardwareConfigureProcessor($action);
 			$template->assign('ToggleCloakHREF', $container->href());
 		}
 
 		if ($ship->hasIllusion()) {
-			$container = Page::create('configure_hardware_processing.php');
-			$container['action'] = 'Set Illusion';
+			$container = new HardwareConfigureProcessor('Set Illusion');
 			$template->assign('SetIllusionFormHREF', $container->href());
 
 			$ships = [];
@@ -30,12 +40,14 @@ use Smr\Database;
 				$ships[$dbRecord->getInt('ship_type_id')] = $dbRecord->getString('ship_name');
 			}
 			$template->assign('IllusionShips', $ships);
-			$container['action'] = 'Disable Illusion';
+			$container = new HardwareConfigureProcessor('Disable Illusion');
 			$template->assign('DisableIllusionHref', $container->href());
 		}
 
 		if ($ship->hasJump()) {
-			$container = Page::create('sector_jump_processing.php');
-			$container['target_page'] = 'current_sector.php';
+			$container = new SectorJumpProcessor();
 			$template->assign('JumpDriveFormLink', $container->href());
 		}
+	}
+
+}

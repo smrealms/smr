@@ -1,24 +1,26 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
 use Smr\Database;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
 
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+class ValidateProcessor extends AccountPageProcessor {
 
-		$container = Page::create('validate.php');
-
+	public function build(SmrAccount $account): never {
 		if (Request::get('action') == 'resend') {
 			$account->sendValidationEmail();
-			$container['msg'] = '<span class="green">The validation code has been resent to your e-mail address!</span>';
-			$container->go();
+			$message = '<span class="green">The validation code has been resent to your e-mail address!</span>';
+			(new Validate($message))->go();
 		}
 
 		// Only skip validation check if we explicitly chose to validate later
 		if (Request::get('action') != 'skip') {
 			if ($account->getValidationCode() != Request::get('validation_code')) {
-				$container['msg'] = '<span class="red">The validation code you entered is incorrect!</span>';
-				$container->go();
+				$message = '<span class="red">The validation code you entered is incorrect!</span>';
+				(new Validate($message))->go();
 			}
 
 			$account->setValidated(true);
@@ -31,6 +33,8 @@ use Smr\Request;
 						AND notification_type = \'validation_code\'');
 		}
 
-		$container = Page::create('login_check_processing.php');
-		$container['CheckType'] = 'Announcements';
+		$container = new LoginCheckAnnouncementsProcessor();
 		$container->go();
+	}
+
+}

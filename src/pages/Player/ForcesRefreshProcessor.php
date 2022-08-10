@@ -1,11 +1,23 @@
 <?php declare(strict_types=1);
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player;
 
-		$forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
+use SmrForce;
+
+class ForcesRefreshProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly int $ownerAccountID
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
+		$forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $this->ownerAccountID);
 
 		$forces->updateExpire();
 
-		Page::create('current_sector.php')->go();
+		(new CurrentSector())->go();
+	}
+
+}

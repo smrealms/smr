@@ -1,7 +1,19 @@
 <?php declare(strict_types=1);
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player;
 
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
+
+class NewbieWarningProcessor extends PlayerPageProcessor {
+
+	public function __construct() {
+		$this->skipRedirect = true;
+	}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$player->setNewbieWarning(false);
-		Page::create('newbie_warning.php')->go();
+		(new NewbieWarning())->go();
+	}
+
+}

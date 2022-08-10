@@ -1,16 +1,19 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
 
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+class AnnouncementCreateProcessor extends AccountPageProcessor {
 
+	public function build(SmrAccount $account): never {
 		$message = Request::get('message');
 		if (Request::get('action') == 'Preview announcement') {
-			$container = Page::create('admin/announcement_create.php');
-			$container['preview'] = $message;
+			$container = new AnnouncementCreate($message);
 			$container->go();
 		}
 
@@ -22,4 +25,7 @@ use Smr\Request;
 			'msg' => $db->escapeString($message),
 		]);
 
-		Page::create('admin/admin_tools.php')->go();
+		(new AdminTools())->go();
+	}
+
+}

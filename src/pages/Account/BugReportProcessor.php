@@ -1,9 +1,17 @@
 <?php declare(strict_types=1);
 
-use Smr\Request;
+namespace Smr\Pages\Account;
 
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+use Smr\Page\AccountPageProcessor;
+use Smr\Pages\Player\CurrentSector;
+use Smr\Request;
+use Smr\Session;
+use SmrAccount;
+
+class BugReportProcessor extends AccountPageProcessor {
+
+	public function build(SmrAccount $account): never {
+		$session = Session::getInstance();
 
 		$steps = Request::get('steps');
 		$subject = Request::get('subject');
@@ -37,10 +45,13 @@ use Smr\Request;
 			$mail->send();
 		}
 
+		$message = '<span class="admin">ADMIN</span>: Bug report submitted. Thank you for helping to improve the game!';
 		if ($session->hasGame()) {
-			$container = Page::create('current_sector.php');
+			$container = new CurrentSector(message: $message);
 		} else {
-			$container = Page::create('game_play.php');
+			$container = new GamePlay(message: $message);
 		}
-		$container['msg'] = '<span class="admin">ADMIN</span>: Bug report submitted. Thank you for helping to improve the game!';
 		$container->go();
+	}
+
+}

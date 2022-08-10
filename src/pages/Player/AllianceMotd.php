@@ -1,16 +1,29 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Globals;
+use Menu;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAlliance;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class AllianceMotd extends PlayerPage {
 
-		$allianceID = $var['alliance_id'] ?? $player->getAllianceID();
+	use ReusableTrait;
 
-		$alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
+	public string $file = 'alliance_mod.php';
+
+	public function __construct(
+		private readonly int $allianceID
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$alliance = SmrAlliance::getAlliance($this->allianceID, $player->getGameID());
 		$template->assign('Alliance', $alliance);
 
 		Globals::canAccessPage('AllianceMOTD', $player, ['AllianceID' => $alliance->getAllianceID()]);
@@ -29,7 +42,7 @@ use Smr\Epoch;
 			$dbResult2 = $db->read('SELECT response FROM alliance_has_op_response WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL());
 
 			$response = $dbResult2->hasRecord() ? $dbResult2->record()->getString('response') : null;
-			$responseHREF = Page::create('alliance_op_response_processing.php')->href();
+			$responseHREF = (new AllianceOpResponseProcessor($this->allianceID))->href();
 			$template->assign('OpResponseHREF', $responseHREF);
 
 			$responseInputs = [];
@@ -45,9 +58,11 @@ use Smr\Epoch;
 		$dbResult = $db->read('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
 		$dbRecord = $dbResult->record();
 		if ($dbRecord->getBoolean('change_mod') || $dbRecord->getBoolean('change_pass')) {
-			$container = Page::create('alliance_stat.php');
-			$container['alliance_id'] = $alliance->getAllianceID();
+			$container = new AllianceGovernance($alliance->getAllianceID());
 			$template->assign('EditHREF', $container->href());
 		}
 
 		$template->assign('DiscordServer', $alliance->getDiscordServer());
+	}
+
+}

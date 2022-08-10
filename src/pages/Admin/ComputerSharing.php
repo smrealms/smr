@@ -1,12 +1,21 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
+class ComputerSharing extends AccountPage {
 
+	use ReusableTrait;
+
+	public string $file = 'admin/comp_share.php';
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Computer Sharing');
 
 		$unusedAfter = 86400 * 365; // 1 year
@@ -94,3 +103,6 @@ use Smr\Epoch;
 			}
 		}
 		$template->assign('Tables', $tables);
+	}
+
+}

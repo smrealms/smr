@@ -1,11 +1,23 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player;
 
-		$path = $var['Path'];
+use AbstractSmrPlayer;
+use Menu;
+use Smr\Page\PlayerPage;
+use Smr\Path;
+use Smr\Template;
+
+class PlotCourseResult extends PlayerPage {
+
+	public string $file = 'course_plot_result.php';
+
+	public function __construct(
+		private readonly Path $path
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$path = $this->path;
 		$fullPath = implode(' - ', $path->getPath());
 
 		$template->assign('PageTopic', 'Plot A Course');
@@ -13,3 +25,6 @@
 
 		$template->assign('Path', $path);
 		$template->assign('FullPath', $fullPath);
+	}
+
+}

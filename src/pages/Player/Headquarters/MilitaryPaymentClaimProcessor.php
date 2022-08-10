@@ -1,31 +1,31 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+namespace Smr\Pages\Player\Headquarters;
 
-		$template->assign('PageTopic', 'Military Payment Center');
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
 
-		Menu::headquarters($var['LocationID']);
+class MilitaryPaymentClaimProcessor extends PlayerPageProcessor {
 
-		// We can only claim the payment once, so to prevent clobbering the message
-		// upon AJAX refresh, we store it as a session variable when we first get it.
-		if (!isset($var['ClaimText'])) {
-			$player = $session->getPlayer();
-			if ($player->hasMilitaryPayment()) {
-				$payment = $player->getMilitaryPayment();
-				$player->increaseHOF($payment, ['Military Payment', 'Money', 'Claimed'], HOF_PUBLIC);
+	public function __construct(
+		private readonly int $locationID
+	) {}
 
-				// add to our cash
-				$player->increaseCredits($payment);
-				$player->setMilitaryPayment(0);
+	public function build(AbstractSmrPlayer $player): never {
+		if ($player->hasMilitaryPayment()) {
+			$payment = $player->getMilitaryPayment();
+			$player->increaseHOF($payment, ['Military Payment', 'Money', 'Claimed'], HOF_PUBLIC);
 
-				$claimText = ('For your military activity you have been paid <span class="creds">' . number_format($payment) . '</span> credits.');
-			} else {
-				$claimText = ('You have done nothing worthy of military payment.');
-			}
+			// add to our cash
+			$player->increaseCredits($payment);
+			$player->setMilitaryPayment(0);
 
-			$var['ClaimText'] = $claimText;
+			$claimText = ('For your military activity you have been paid <span class="creds">' . number_format($payment) . '</span> credits.');
+		} else {
+			$claimText = ('You have done nothing worthy of military payment.');
 		}
 
-		$template->assign('ClaimText', $var['ClaimText']);
+		(new MilitaryPaymentClaim($this->locationID, $claimText))->go();
+	}
+
+}

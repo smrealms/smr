@@ -1,7 +1,16 @@
 <?php declare(strict_types=1);
 
-use Smr\Request;
+namespace Smr\Pages\Admin;
 
+use DummyShip;
+use Smr\Page\AccountPageProcessor;
+use Smr\Request;
+use SmrAccount;
+use SmrWeapon;
+
+class EditDummiesProcessor extends AccountPageProcessor {
+
+	public function build(SmrAccount $account): never {
 		$name = Request::get('dummy_name');
 		$dummyShip = DummyShip::getCachedDummyShip($name);
 		$dummyPlayer = $dummyShip->getPlayer();
@@ -18,4 +27,7 @@ use Smr\Request;
 		}
 		$dummyShip->cacheDummyShip();
 
-		Page::create('admin/edit_dummys.php')->go();
+		(new EditDummies())->go();
+	}
+
+}

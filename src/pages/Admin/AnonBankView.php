@@ -1,14 +1,24 @@
 <?php declare(strict_types=1);
 
-use Smr\Database;
+namespace Smr\Pages\Admin;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
+use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Session;
+use Smr\Template;
+use SmrAccount;
+
+class AnonBankView extends AccountPage {
+
+	public string $file = 'admin/anon_acc_view.php';
+
+	public function build(SmrAccount $account, Template $template): void {
+		$session = Session::getInstance();
 
 		//view anon acct activity.
 		$template->assign('PageTopic', 'View Anonymous Account Info');
 
-		$container = Page::create('admin/anon_acc_view_select.php');
+		$container = new AnonBankViewSelect();
 		$template->assign('BackHREF', $container->href());
 
 		$anonID = $session->getRequestVarInt('anon_account');
@@ -31,9 +41,12 @@ use Smr\Database;
 		}
 		if (!$rows) {
 			$message = '<p><span class="red">Anon account #' . $anonID . ' in Game ' . $gameID . ' does NOT exist!</span></p>';
-			$container['message'] = $message;
+			$container = new AnonBankViewSelect($message);
 			$container->go();
 		}
 		$template->assign('Rows', $rows);
 		$template->assign('AnonID', $anonID);
 		$template->assign('ViewGameID', $gameID);
+	}
+
+}

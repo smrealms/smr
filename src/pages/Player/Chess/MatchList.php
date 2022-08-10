@@ -1,12 +1,21 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Chess;
+
+use AbstractSmrPlayer;
 use Smr\Chess\ChessGame;
 use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class MatchList extends PlayerPage {
 
+	use ReusableTrait;
+
+	public string $file = 'chess.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$chessGames = ChessGame::getOngoingPlayerGames($player);
 		$template->assign('ChessGames', $chessGames);
 		$template->assign('PageTopic', 'Casino');
@@ -33,3 +42,6 @@ use Smr\Database;
 			}
 			$template->assign('NPCList', $npcs);
 		}
+	}
+
+}

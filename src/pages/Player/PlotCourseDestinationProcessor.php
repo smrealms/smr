@@ -1,10 +1,14 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class PlotCourseDestinationProcessor extends PlayerPageProcessor {
 
+	public function build(AbstractSmrPlayer $player): never {
 		$type = Request::get('type');
 		$sectorId = Request::getInt('sectorId');
 
@@ -30,6 +34,8 @@ use Smr\Request;
 				create_error('42 would be the right answer !!!');
 		}
 
-		$container = Page::create('course_plot.php');
-
+		$container = new PlotCourse();
 		$container->go();
+	}
+
+}

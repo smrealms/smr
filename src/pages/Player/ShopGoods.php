@@ -1,9 +1,21 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Globals;
+use Smr\Page\PlayerPage;
+use Smr\Template;
+
+class ShopGoods extends PlayerPage {
+
+	public string $file = 'shop_goods.php';
+
+	public function __construct(
+		private readonly ?string $tradeMessage = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$ship = $player->getShip();
 
 		// create object from port we can work with
@@ -22,9 +34,9 @@
 		$searchedByFeds = false;
 
 		//The player is sent here after trading and sees this if his offer is accepted.
-		if (!empty($var['trade_msg'])) {
-			$template->assign('TradeMsg', $var['trade_msg']);
-		} elseif ($player->getLastPort() != $player->getSectorID()) {
+		$template->assign('TradeMsg', $this->tradeMessage);
+
+		if ($player->getLastPort() != $player->getSectorID()) {
 			// test if we are searched, but only if we hadn't a previous trade here
 
 			$baseChance = PORT_SEARCH_BASE_CHANCE;
@@ -95,12 +107,10 @@
 
 		$player->setLastPort($player->getSectorID());
 
-		$container = Page::create('shop_goods_processing.php');
-
 		$boughtGoods = [];
 		foreach ($port->getVisibleGoodsBought($player) as $goodID) {
 			$good = Globals::getGood($goodID);
-			$container['good_id'] = $goodID;
+			$container = new ShopGoodsProcessor($goodID);
 			$good['HREF'] = $container->href();
 
 			$amount = $port->getGoodAmount($goodID);
@@ -116,7 +126,7 @@
 		$soldGoods = [];
 		foreach ($port->getVisibleGoodsSold($player) as $goodID) {
 			$good = Globals::getGood($goodID);
-			$container['good_id'] = $goodID;
+			$container = new ShopGoodsProcessor($goodID);
 			$good['HREF'] = $container->href();
 
 			$amount = $port->getGoodAmount($goodID);
@@ -132,5 +142,8 @@
 		$template->assign('BoughtGoods', $boughtGoods);
 		$template->assign('SoldGoods', $soldGoods);
 
-		$container = Page::create('current_sector.php');
+		$container = new CurrentSector();
 		$template->assign('LeavePortHREF', $container->href());
+	}
+
+}

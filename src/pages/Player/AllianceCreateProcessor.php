@@ -1,11 +1,17 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Exception;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
+use SmrAlliance;
 
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
+class AllianceCreateProcessor extends PlayerPageProcessor {
 
+	public function build(AbstractSmrPlayer $player): never {
 		if ($player->getAllianceJoinable() > Epoch::time()) {
 			create_error('You cannot create an alliance for another ' . format_time($player->getAllianceJoinable() - Epoch::time()) . '.');
 		}
@@ -46,4 +52,7 @@ use Smr\Request;
 		$player->joinAlliance($alliance->getAllianceID());
 		$player->update();
 
-		Page::create('alliance_roster.php')->go();
+		(new AllianceRoster())->go();
+	}
+
+}

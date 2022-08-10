@@ -1,15 +1,35 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Globals;
+use Menu;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAlliance;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
+class AllianceMessageBoard extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'alliance_message.php';
+
+	public function __construct(
+		private readonly int $allianceID,
+		public ?string $preview = null,
+		public ?string $topic = null,
+		public ?bool $allianceEyesOnly = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
 
-		$allianceID = $var['alliance_id'] ?? $player->getAllianceID();
+		$allianceID = $this->allianceID;
 
 		$alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
@@ -44,9 +64,6 @@ use Smr\Exceptions\PlayerNotFound;
 		$dbResult = $db->read($query);
 		$threads = [];
 		if ($dbResult->hasRecord()) {
-
-			$container = Page::create('alliance_message_delete_processing.php');
-			$container['alliance_id'] = $alliance->getAllianceID();
 
 			$i = 0;
 			$alliance_eyes = [];
@@ -92,7 +109,7 @@ use Smr\Exceptions\PlayerNotFound;
 				$dbResult2 = $db->read('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . $player->getSQL() . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
 				$threads[$i]['CanDelete'] = $player->getAccountID() == $sender_id || $dbResult2->record()->getBoolean('mb_messages');
 				if ($threads[$i]['CanDelete']) {
-					$container['thread_id'] = $threadID;
+					$container = new AllianceMessageBoardDeleteThreadProcessor($allianceID, $this, $threadID);
 					$threads[$i]['DeleteHref'] = $container->href();
 				}
 				$threads[$i]['Replies'] = $dbRecord->getInt('num_replies');
@@ -100,30 +117,20 @@ use Smr\Exceptions\PlayerNotFound;
 				++$i;
 			}
 
-			$container = Page::create('alliance_message_view.php');
-			$container['alliance_id'] = $alliance->getAllianceID();
-			$container['thread_ids'] = $thread_ids;
-			$container['thread_topics'] = $thread_topics;
-			$container['alliance_eyes'] = $alliance_eyes;
 			for ($j = 0; $j < $i; $j++) {
-				$container['thread_index'] = $j;
+				$container = new AllianceMessageBoardView($this->allianceID, $thread_ids, $thread_topics, $alliance_eyes, $j);
 				$threads[$j]['ViewHref'] = $container->href();
 			}
 		}
 		$template->assign('Threads', $threads);
 
 		if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
-			$container = Page::create('alliance_message_add_processing.php');
-			$container['alliance_id'] = $alliance->getAllianceID();
+			$container = new AllianceMessageBoardAddProcessor($allianceID, $this);
 			$template->assign('CreateNewThreadFormHref', $container->href());
+			$template->assign('Preview', $this->preview);
+			$template->assign('Topic', $this->topic);
+			$template->assign('AllianceEyesOnly', $this->allianceEyesOnly);
 		}
+	}
 
-		if (isset($var['preview'])) {
-			$template->assign('Preview', $var['preview']);
-		}
-		if (isset($var['topic'])) {
-			$template->assign('Topic', $var['topic']);
-		}
-		if (isset($var['AllianceEyesOnly'])) {
-			$template->assign('AllianceEyesOnly', $var['AllianceEyesOnly']);
-		}
+}

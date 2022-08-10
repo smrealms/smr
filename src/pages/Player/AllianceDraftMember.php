@@ -1,12 +1,31 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Exception;
+use Menu;
 use Smr\Database;
 use Smr\Exceptions\AllianceNotFound;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAlliance;
+use SmrGame;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
+class AllianceDraftMember extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'alliance_pick.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		if (!$player->getGame()->isGameType(SmrGame::GAME_TYPE_DRAFT)) {
+			throw new Exception('This page is only allowed in Draft games!');
+		}
+
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
 		$alliance = $player->getAlliance();
 
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
@@ -36,7 +55,7 @@ use Smr\Exceptions\AllianceNotFound;
 			$pickPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 			$players[] = [
 				'Player' => $pickPlayer,
-				'HREF' => Page::create('alliance_pick_processing.php', ['PickedAccountID' => $pickPlayer->getAccountID()])->href(),
+				'HREF' => (new AllianceDraftMemberProcessor($pickPlayer->getAccountID()))->href(),
 			];
 		}
 
@@ -56,3 +75,6 @@ use Smr\Exceptions\AllianceNotFound;
 		}
 
 		$template->assign('History', $history);
+	}
+
+}

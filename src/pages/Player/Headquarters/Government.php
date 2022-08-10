@@ -1,22 +1,34 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Headquarters;
+
+use AbstractSmrPlayer;
+use Globals;
+use Menu;
 use Smr\Bounties;
 use Smr\BountyType;
+use Smr\Page\PlayerPage;
 use Smr\Race;
+use Smr\Template;
+use SmrLocation;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class Government extends PlayerPage {
 
+	public string $file = 'government.php';
+
+	public function __construct(
+		private readonly int $locationID
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		// check if our alignment is high enough
 		if ($player->hasEvilAlignment()) {
 			create_error('You are not allowed to enter our Government HQ!');
 		}
-		if (!$player->getSector()->hasLocation($var['LocationID'])) {
+		if (!$player->getSector()->hasLocation($this->locationID)) {
 			create_error('That location does not exist in this sector');
 		}
-		$location = SmrLocation::getLocation($player->getGameID(), $var['LocationID']);
+		$location = SmrLocation::getLocation($player->getGameID(), $this->locationID);
 		if (!$location->isHQ()) {
 			create_error('There is no headquarters. Obviously.');
 		}
@@ -30,7 +42,7 @@ use Smr\Race;
 		$template->assign('PageTopic', $location->getName());
 
 		// header menu
-		Menu::headquarters($var['LocationID']);
+		Menu::headquarters($this->locationID);
 
 		$warRaces = [];
 		if ($raceID != RACE_NEUTRAL) {
@@ -47,7 +59,9 @@ use Smr\Race;
 		$template->assign('MyBounties', $player->getClaimableBounties(BountyType::HQ));
 
 		if ($player->hasNeutralAlignment()) {
-			$container = Page::create('government_processing.php');
-			$container->addVar('LocationID');
+			$container = new GovernmentProcessor($this->locationID);
 			$template->assign('JoinHREF', $container->href());
 		}
+	}
+
+}

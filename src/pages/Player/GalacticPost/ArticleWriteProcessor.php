@@ -1,13 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\GalacticPost;
+
+use AbstractSmrPlayer;
+use Globals;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\PlayerPageProcessor;
+use Smr\Pages\Player\CurrentSector;
 use Smr\Request;
+use SmrPlayer;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class ArticleWriteProcessor extends PlayerPageProcessor {
 
+	public function __construct(
+		private readonly ?int $articleID = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$title = Request::get('title');
 		$message = Request::get('message');
 		if (!$player->isGPEditor()) {
@@ -16,20 +26,15 @@ use Smr\Request;
 		}
 
 		if (Request::get('action') == 'Preview article') {
-			$container = Page::create('galactic_post_write_article.php');
-			$container['PreviewTitle'] = $title;
-			$container['Preview'] = $message;
-			if (isset($var['id'])) {
-				$container->addVar('id');
-			}
+			$container = new ArticleWrite($this->articleID, $title, $message);
 			$container->go();
 		}
 
 		$db = Database::getInstance();
-		if (isset($var['id'])) {
+		if ($this->articleID !== null) {
 			// Editing an article
-			$db->write('UPDATE galactic_post_article SET last_modified = ' . $db->escapeNumber(Epoch::time()) . ', text = ' . $db->escapeString($message) . ', title = ' . $db->escapeString($title) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));
-			Page::create('galactic_post_view_article.php')->go();
+			$db->write('UPDATE galactic_post_article SET last_modified = ' . $db->escapeNumber(Epoch::time()) . ', text = ' . $db->escapeString($message) . ', title = ' . $db->escapeString($title) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($this->articleID));
+			(new ArticleView($this->articleID))->go();
 		} else {
 			// Adding a new article
 			$editorMsg = 'Dear Galactic Post editors,<br /><br />[player=' . $player->getPlayerID() . '] has just submitted an article to the Galactic Post!';
@@ -51,5 +56,10 @@ use Smr\Request;
 				'last_modified' => $db->escapeNumber(Epoch::time()),
 			]);
 			$db->write('UPDATE galactic_post_writer SET last_wrote = ' . $db->escapeNumber(Epoch::time()) . ' WHERE account_id = ' . $db->escapeNumber($player->getAccountID()));
-			Page::create('galactic_post_read.php')->go();
+			$msg = '<span class="green">SUCCESS</span>: Your article has been submitted.';
+			$container = new CurrentSector(message: $msg);
+			$container->go();
 		}
+	}
+
+}

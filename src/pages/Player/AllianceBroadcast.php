@@ -1,19 +1,37 @@
 <?php declare(strict_types=1);
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+namespace Smr\Pages\Player;
 
-		$alliance = SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
+use AbstractSmrPlayer;
+use Menu;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAlliance;
+
+class AllianceBroadcast extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'alliance_broadcast.php';
+
+	public function __construct(
+		private readonly int $allianceID,
+		private readonly ?string $preview = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$alliance = SmrAlliance::getAlliance($this->allianceID, $player->getGameID());
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 		Menu::alliance($alliance->getAllianceID());
 
-		$container = Page::create('message_send_processing.php');
-		$container->addVar('alliance_id');
+		$container = new MessageSendProcessor(allianceID: $this->allianceID);
 		$template->assign('MessageSendFormHref', $container->href());
 
 		$template->assign('Receiver', 'Whole Alliance');
-		if (isset($var['preview'])) {
-			$template->assign('Preview', $var['preview']);
+		if ($this->preview !== null) {
+			$template->assign('Preview', $this->preview);
 		}
+	}
+
+}

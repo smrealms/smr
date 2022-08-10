@@ -1,11 +1,22 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
+use Smr\Page\AccountPage;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class AccountEditSearch extends AccountPage {
 
+	public string $file = 'admin/account_edit_search.php';
+
+	public function __construct(
+		private readonly ?string $message = null,
+		private readonly ?string $errorMessage = null
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
 		$template->assign('PageTopic', 'Edit Account');
 
 		$games = [];
@@ -16,11 +27,10 @@ use Smr\Database;
 			$games[$gameID] = $dbRecord->getString('game_name') . ' (' . $gameID . ')';
 		}
 		$template->assign('Games', $games);
-		$template->assign('SearchHREF', Page::create('admin/account_edit_search_processing.php')->href());
+		$template->assign('SearchHREF', (new AccountEditSearchProcessor())->href());
 
-		if (isset($var['errorMsg'])) {
-			$template->assign('ErrorMessage', $var['errorMsg']);
-		}
-		if (isset($var['msg'])) {
-			$template->assign('Message', $var['msg']);
-		}
+		$template->assign('ErrorMessage', $this->errorMessage);
+		$template->assign('Message', $this->message);
+	}
+
+}

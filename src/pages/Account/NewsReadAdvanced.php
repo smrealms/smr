@@ -1,13 +1,35 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
+use Menu;
 use Smr\Database;
 use Smr\News;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAccount;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
+class NewsReadAdvanced extends AccountPage {
 
-		$gameID = $var['GameID'] ?? $session->getPlayer()->getGameID();
+	use ReusableTrait;
+
+	public string $file = 'news_read_advanced.php';
+
+	/**
+	 * @param ?array<int> $accountIDs
+	 * @param ?array<int> $allianceIDs
+	 */
+	public function __construct(
+		private readonly int $gameID,
+		private readonly ?string $submit = null,
+		private readonly ?string $label = null,
+		private readonly ?array $accountIDs = null,
+		private readonly ?array $allianceIDs = null,
+	) {}
+
+	public function build(SmrAccount $account, Template $template): void {
+		$gameID = $this->gameID;
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT alliance_id, alliance_name
@@ -21,41 +43,28 @@ use Smr\News;
 		}
 		$template->assign('NewsAlliances', $newsAlliances);
 
-		$template->assign('AdvancedNewsFormHref', Page::create('news_read_advanced.php', ['GameID' => $gameID])->href());
+		$template->assign('AdvancedNewsFormHref', (new NewsReadAdvancedProcessor($this->gameID))->href());
 
 		// No submit value when first navigating to the page
-		$submit_value = $session->getRequestVar('submit', '');
+		$submit_value = $this->submit;
 
 		if ($submit_value == 'Search For Player') {
-			$p_name = $session->getRequestVar('playerName');
-			$template->assign('ResultsFor', $p_name);
-			$dbResult = $db->read('SELECT account_id FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $p_name . '%') . ' AND game_id = ' . $db->escapeNumber($gameID));
-			$IDs = [0];
-			foreach ($dbResult->records() as $dbRecord) {
-				$IDs[] = $dbRecord->getInt('account_id');
-			}
-			$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND (killer_id IN (' . $db->escapeArray($IDs) . ') OR dead_id IN (' . $db->escapeArray($IDs) . ')) ORDER BY news_id DESC');
+			$template->assign('ResultsFor', $this->label);
+			$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND (killer_id IN (' . $db->escapeArray($this->accountIDs) . ') OR dead_id IN (' . $db->escapeArray($this->accountIDs) . ')) ORDER BY news_id DESC');
 		} elseif ($submit_value == 'Search For Alliance') {
-			$allianceID = $session->getRequestVarInt('allianceID');
+			$allianceID = $this->allianceIDs[0];
 			$template->assign('ResultsFor', $newsAlliances[$allianceID]['Name']);
 			$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND ((killer_alliance = ' . $db->escapeNumber($allianceID) . ' AND killer_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ') OR (dead_alliance = ' . $db->escapeNumber($allianceID) . ' AND dead_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ')) ORDER BY news_id DESC');
 		} elseif ($submit_value == 'Search For Players') {
-			$player1 = $session->getRequestVar('player1');
-			$player2 = $session->getRequestVar('player2');
-			$template->assign('ResultsFor', $player1 . ' vs. ' . $player2);
-			$dbResult = $db->read('SELECT account_id FROM player WHERE (player_name LIKE ' . $db->escapeString('%' . $player1 . '%') . ' OR player_name LIKE ' . $db->escapeString('%' . $player2 . '%') . ') AND game_id = ' . $db->escapeNumber($gameID));
-			$IDs = [0];
-			foreach ($dbResult->records() as $dbRecord) {
-				$IDs[] = $dbRecord->getInt('account_id');
-			}
+			$template->assign('ResultsFor', $this->label);
 			$dbResult = $db->read('SELECT * FROM news
 						WHERE game_id = ' . $db->escapeNumber($gameID) . '
 							AND (
-								killer_id IN (' . $db->escapeArray($IDs) . ') AND dead_id IN (' . $db->escapeArray($IDs) . ')
+								killer_id IN (' . $db->escapeArray($this->accountIDs) . ') AND dead_id IN (' . $db->escapeArray($this->accountIDs) . ')
 							) ORDER BY news_id DESC');
 		} elseif ($submit_value == 'Search For Alliances') {
-			$allianceID1 = $session->getRequestVarInt('alliance1');
-			$allianceID2 = $session->getRequestVarInt('alliance2');
+			$allianceID1 = $this->allianceIDs[0];
+			$allianceID2 = $this->allianceIDs[1];
 			$template->assign('ResultsFor', $newsAlliances[$allianceID1]['Name'] . ' vs. ' . $newsAlliances[$allianceID2]['Name']);
 			$dbResult = $db->read('SELECT * FROM news
 						WHERE game_id = ' . $db->escapeNumber($gameID) . '
@@ -72,3 +81,6 @@ use Smr\News;
 
 		$template->assign('PageTopic', 'Advanced News');
 		Menu::news($gameID);
+	}
+
+}

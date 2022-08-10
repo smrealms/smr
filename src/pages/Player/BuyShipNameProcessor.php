@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use DOMDocument;
+use Globals;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
 function checkShipLogo(string $filename): void {
@@ -97,14 +103,14 @@ function checkHtmlShipName(string $name): void {
 
 //-----------------------------------------------------
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+class BuyShipNameProcessor extends PlayerPageProcessor {
+
+	public function build(AbstractSmrPlayer $player): never {
+		$account = $player->getAccount();
 
 		$action = Request::get('action');
 
-		$cred_cost = $var['costs'][$action];
+		$cred_cost = Globals::getBuyShipNameCosts()[$action];
 		if ($account->getTotalSmrCredits() < $cred_cost) {
 			create_error('You don\'t have enough SMR Credits. These can be earned by donating to SMR!');
 		}
@@ -122,9 +128,7 @@ function checkHtmlShipName(string $name): void {
 			} elseif ($action == 'html') {
 				checkTextShipName($name, 128);
 				checkHtmlShipName($name);
-				$container = Page::create('buy_ship_name_preview.php');
-				$container['ShipName'] = $name;
-				$container['cost'] = $cred_cost;
+				$container = new BuyShipNamePreview($name, $cred_cost);
 				$container->go();
 			}
 		}
@@ -132,6 +136,9 @@ function checkHtmlShipName(string $name): void {
 		$player->setCustomShipName($name);
 		$account->decreaseTotalSmrCredits($cred_cost);
 
-		$container = Page::create('current_sector.php');
-		$container['msg'] = 'Thanks for your purchase! Your ship is ready!';
+		$message = 'Thanks for your purchase! Your ship is ready!';
+		$container = new CurrentSector(message: $message);
 		$container->go();
+	}
+
+}

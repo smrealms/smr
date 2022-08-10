@@ -1,24 +1,32 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
+use SmrPlayer;
 
-		$var = Smr\Session::getInstance()->getCurrentVar();
+class AdminMessageSendProcessor extends AccountPageProcessor {
 
-		const ALL_GAMES_ID = 20000;
+	public function __construct(
+		private readonly int $sendGameID
+	) {}
+
+	public function build(SmrAccount $account): never {
 		$message = Request::get('message');
 		$expire = Request::getFloat('expire');
-		$game_id = $var['SendGameID'];
+		$game_id = $this->sendGameID;
 
 		if (Request::get('action') == 'Preview message') {
-			$container = Page::create('admin/admin_message_send.php');
-			$container->addVar('SendGameID');
-			$container['preview'] = $message;
-			$container['expire'] = $expire;
-			if ($game_id != ALL_GAMES_ID) {
-				$container['account_id'] = Request::getInt('account_id');
+			if ($game_id != AdminMessageSend::ALL_GAMES_ID) {
+				$sendAccountID = Request::getInt('account_id');
+			} else {
+				$sendAccountID = 0;
 			}
+			$container = new AdminMessageSend($game_id, $message, $expire, $sendAccountID);
 			$container->go();
 		}
 
@@ -31,7 +39,7 @@ use Smr\Request;
 		$db = Database::getInstance();
 
 		$receivers = [];
-		if ($game_id != ALL_GAMES_ID) {
+		if ($game_id != AdminMessageSend::ALL_GAMES_ID) {
 			$account_id = Request::getInt('account_id');
 			if ($account_id == 0) {
 				// Send to all players in the requested game
@@ -55,6 +63,8 @@ use Smr\Request;
 		}
 		$msg = '<span class="green">SUCCESS: </span>Your message has been sent.';
 
-		$container = Page::create('admin/admin_tools.php');
-		$container['msg'] = $msg;
+		$container = new AdminTools($msg);
 		$container->go();
+	}
+
+}

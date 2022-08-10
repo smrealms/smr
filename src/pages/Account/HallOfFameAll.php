@@ -1,15 +1,38 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
 use Smr\Database;
 use Smr\Epoch;
 use Smr\HallOfFame;
+use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
+use SmrAccount;
+use SmrGame;
+use SmrPlayer;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$account = $session->getAccount();
+class HallOfFameAll extends AccountPage {
 
-		$game_id = $var['game_id'] ?? null;
+	use ReusableTrait;
+
+	public string $file = 'hall_of_fame_new.php';
+
+	public function __construct(
+		private readonly ?int $gameID = null,
+		public readonly ?string $viewType = null
+	) {}
+
+	/**
+	 * Construct a new object with the same properties, but a different
+	 * viewType.
+	 */
+	public function withViewType(?string $viewType): self {
+		return new self($this->gameID, $viewType);
+	}
+
+	public function build(SmrAccount $account, Template $template): void {
+		$game_id = $this->gameID;
 
 		if (empty($game_id)) {
 			$topic = 'All Time Hall of Fame';
@@ -18,22 +41,19 @@ use Smr\HallOfFame;
 		}
 		$template->assign('PageTopic', $topic);
 
-		$container = Page::create('hall_of_fame_player_detail.php');
-		if (isset($game_id)) {
-			$container['game_id'] = $game_id;
-		}
+		$container = new HallOfFamePersonal($account->getAccountID(), $game_id);
 		$template->assign('PersonalHofHREF', $container->href());
 
-		$breadcrumb = HallOfFame::buildBreadcrumb($var, isset($game_id) ? 'Current HoF' : 'Global HoF');
+		$breadcrumb = HallOfFame::buildBreadcrumb($this, isset($game_id) ? 'Current HoF' : 'Global HoF');
 		$template->assign('Breadcrumb', $breadcrumb);
 
-		$viewType = $var['viewType'] ?? '';
+		$viewType = $this->viewType;
 		$hofVis = SmrPlayer::getHOFVis();
 
 		if (!isset($hofVis[$viewType])) {
 			// Not a complete HOF type, so continue to show categories
 			$allowedVis = [HOF_PUBLIC, HOF_ALLIANCE];
-			$categories = HallOfFame::getHofCategories($allowedVis, $game_id, $account->getAccountID());
+			$categories = HallOfFame::getHofCategories($this, $allowedVis, $game_id, $account->getAccountID());
 			$template->assign('Categories', $categories);
 
 		} else {
@@ -64,11 +84,14 @@ use Smr\HallOfFame;
 					$foundMe = true;
 				}
 				$amount = HallOfFame::applyHofVisibilityMask($dbRecord->getFloat('amount'), $hofVis[$viewType], $game_id, $accountID);
-				$rows[] = HallOfFame::displayHOFRow($rank++, $accountID, $amount);
+				$rows[] = HallOfFame::displayHOFRow($rank++, $accountID, $game_id, $amount);
 			}
 			if (!$foundMe) {
 				$rank = HallOfFame::getHofRank($viewType, $account->getAccountID(), $game_id);
-				$rows[] = HallOfFame::displayHOFRow($rank['Rank'], $account->getAccountID(), $rank['Amount']);
+				$rows[] = HallOfFame::displayHOFRow($rank['Rank'], $account->getAccountID(), $game_id, $rank['Amount']);
 			}
 			$template->assign('Rows', $rows);
 		}
+	}
+
+}

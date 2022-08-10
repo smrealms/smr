@@ -1,19 +1,31 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin\UniGen;
+
 use Smr\Database;
+use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use SmrAccount;
+use SmrGalaxy;
+use SmrGame;
+use SmrLocation;
+use SmrPlanet;
+use SmrPort;
+use SmrSector;
 
+class EditGalaxiesProcessor extends AccountPageProcessor {
+
+	public function __construct(
+		private readonly int $gameID,
+		private readonly int $galaxyID
+	) {}
+
+	public function build(SmrAccount $account): never {
 		$db = Database::getInstance();
-		$var = Smr\Session::getInstance()->getCurrentVar();
 
-		$gameID = $var['game_id'];
+		$gameID = $this->gameID;
 		$game = SmrGame::getGame($gameID);
 		$galaxies = $game->getGalaxies();
-
-		// Prepare our forwarding container
-		$container = Page::create('admin/unigen/universe_create_sectors.php');
-		$container->addVar('gal_on');
-		$container->addVar('game_id');
 
 		// Save the original sizes for later processing
 		$origGals = [];
@@ -45,16 +57,15 @@ use Smr\Request;
 		}
 		if ($galaxySizesUnchanged) {
 			SmrGalaxy::saveGalaxies();
-			$container['message'] = '<span class="green">SUCCESS: </span>Edited galaxies (sizes unchanged).';
+			$message = '<span class="green">SUCCESS: </span>Edited galaxies (sizes unchanged).';
+			$container = new EditGalaxy($this->gameID, $this->galaxyID, $message);
 			$container->go();
 		}
-
 
 		// *** BEGIN GALAXY DIMENSION MODIFICATION! ***
 		// Warning: This changes primary keys for several tables, which needs to be
 		// done carefully. It also interacts with the caches in unexpected ways.
 		// *** BEGIN GALAXY DIMENSION MODIFICATION! ***
-
 
 		// Efficiently construct the caches before proceeding
 		// NOTE: these will be associated with the old sector IDs, so the caches
@@ -207,5 +218,9 @@ use Smr\Request;
 		SmrGalaxy::saveGalaxies();
 		SmrSector::saveSectors();
 
-		$container['message'] = '<span class="green">SUCCESS: </span>Edited galaxies (sizes have changed).';
+		$message = '<span class="green">SUCCESS: </span>Edited galaxies (sizes have changed).';
+		$container = new EditGalaxy($this->gameID, $this->galaxyID, $message);
 		$container->go();
+	}
+
+}

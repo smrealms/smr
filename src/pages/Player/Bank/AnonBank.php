@@ -1,11 +1,23 @@
 <?php declare(strict_types=1);
 
-use Smr\Database;
+namespace Smr\Pages\Player\Bank;
 
-		$template = Smr\Template::getInstance();
-		$session = Smr\Session::getInstance();
-		$account = $session->getAccount();
-		$player = $session->getPlayer();
+use AbstractSmrPlayer;
+use Menu;
+use Smr\Database;
+use Smr\Page\PlayerPage;
+use Smr\Template;
+
+class AnonBank extends PlayerPage {
+
+	public string $file = 'bank_anon.php';
+
+	public function __construct(
+		private readonly ?string $message = null
+	) {}
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
+		$account = $player->getAccount();
 
 		// is account validated?
 		if (!$account->isValidated()) {
@@ -15,10 +27,10 @@ use Smr\Database;
 		$template->assign('PageTopic', 'Anonymous Account');
 		Menu::bank();
 
-		$container = Page::create('bank_anon_detail.php');
+		$container = new AnonBankProcessor();
 		$template->assign('AccessHREF', $container->href());
 
-		$template->assign('Message', $var['message'] ?? '');
+		$template->assign('Message', $this->message ?? '');
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM anon_bank
@@ -41,13 +53,15 @@ use Smr\Database;
 				$anon['last_transaction'] = 'No transactions';
 			}
 
-			$container['account_num'] = $anon['anon_id'];
-			$container['password'] = $anon['password'];
+			$container = new AnonBankDetail($anon['anon_id']);
 			$anon['href'] = $container->href();
 
 			$ownedAnon[] = $anon;
 		}
 		$template->assign('OwnedAnon', $ownedAnon);
 
-		$container = Page::create('bank_anon_create.php');
+		$container = new AnonBankCreate();
 		$template->assign('CreateHREF', $container->href());
+	}
+
+}

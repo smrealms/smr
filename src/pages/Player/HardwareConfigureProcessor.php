@@ -1,13 +1,21 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$player = $session->getPlayer();
+class HardwareConfigureProcessor extends PlayerPageProcessor {
+
+	public function __construct(
+		private readonly string $action
+	) {}
+
+	public function build(AbstractSmrPlayer $player): never {
 		$ship = $player->getShip();
 
-		if ($var['action'] == 'Enable') {
+		if ($this->action == 'Enable Cloak') {
 			if ($player->getTurns() < TURNS_TO_CLOAK) {
 				create_error('You do not have enough turns to cloak.');
 			}
@@ -15,13 +23,16 @@ use Smr\Request;
 			$player->increaseHOF(TURNS_TO_CLOAK, ['Movement', 'Cloaking', 'Turns Used'], HOF_ALLIANCE);
 			$player->increaseHOF(1, ['Movement', 'Cloaking', 'Times'], HOF_ALLIANCE);
 			$ship->enableCloak();
-		} elseif ($var['action'] == 'Disable') {
+		} elseif ($this->action == 'Disable Cloak') {
 			$ship->decloak();
-		} elseif ($var['action'] == 'Set Illusion') {
+		} elseif ($this->action == 'Set Illusion') {
 			$ship->setIllusion(Request::getInt('ship_type_id'), Request::getInt('attack'), Request::getInt('defense'));
-		} elseif ($var['action'] == 'Disable Illusion') {
+		} elseif ($this->action == 'Disable Illusion') {
 			$ship->disableIllusion();
 		}
 
-		$container = Page::create('current_sector.php');
+		$container = new CurrentSector();
 		$container->go();
+	}
+
+}

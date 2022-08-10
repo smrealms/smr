@@ -1,12 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use AbstractSmrPlayer;
+use Menu;
 use Smr\Database;
 use Smr\Messages;
+use Smr\Page\PlayerPage;
+use Smr\Page\ReusableTrait;
+use Smr\Template;
 
-		$template = Smr\Template::getInstance();
+class MessageBox extends PlayerPage {
+
+	use ReusableTrait;
+
+	public string $file = 'message_box.php';
+
+	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$db = Database::getInstance();
-		$session = Smr\Session::getInstance();
-		$player = $session->getPlayer();
 
 		Menu::messages();
 
@@ -46,14 +57,15 @@ use Smr\Messages;
 			}
 			$messageBox['MessageCount'] = $dbResult->record()->getInt('message_count');
 
-			$container = Page::create('message_view.php');
-			$container['folder_id'] = $message_type_id;
+			$container = new MessageView($message_type_id);
 			$messageBox['ViewHref'] = $container->href();
 
-			$container = Page::create('message_box_delete_processing.php');
-			$container['folder_id'] = $message_type_id;
+			$container = new MessageBoxDeleteProcessor($message_type_id);
 			$messageBox['DeleteHref'] = $container->href();
 			$messageBoxes[] = $messageBox;
 		}
 
 		$template->assign('MessageBoxes', $messageBoxes);
+	}
+
+}
