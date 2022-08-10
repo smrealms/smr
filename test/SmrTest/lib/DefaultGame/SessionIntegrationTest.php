@@ -107,12 +107,12 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 	 */
 	public function test_ajax_var(bool $varAjax): void {
 		// Set the current var to an arbitrary page
-		$page1 = Page::create('some_page');
+		$page1 = new Page();
 		$this->session->setCurrentVar($page1);
 
 		// Add a link to another page
-		$page2 = Page::create('another_page');
-		$page2['AJAX'] = $varAjax;
+		$page2 = new Page();
+		$page2->allowAjax = $varAjax;
 		$sn = $this->session->addLink($page2);
 		$this->session->update();
 
@@ -141,7 +141,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 
 		// Add a page to the session so that we can find it later.
 		// (This mimics Page::href but with better access to the SN.)
-		$page = Page::create('some_page');
+		$page = new Page();
 		$sn = $this->session->addLink($page);
 		$this->session->update();
 
@@ -155,16 +155,17 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 
 		// The current var should now be accessible
 		$var = $session->getCurrentVar();
-		self::assertSame('some_page', $var->file);
+		self::assertEquals($page, $var);
 
 		// We can now change the current var
-		$page2 = Page::create('another_page');
+		$page2 = new Page();
+		$page2->file = 'another file';
 		$session->setCurrentVar($page2);
 		// Old references to $var should not be modified
-		self::assertSame('some_page', $var->file);
+		self::assertEquals($page, $var);
 		// But a new reference to $var should be updated
 		$var2 = $session->getCurrentVar();
-		self::assertSame('another_page', $var2->file);
+		self::assertSame($page2, $var2);
 
 		// If we make a new session, but keep the same SN (e.g. ajax),
 		// we should still get the updated var, even though it wasn't
@@ -183,16 +184,17 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 
 	public function test_addLink(): void {
 		// If we add two different pages, we should get different SNs.
-		$page = Page::create('some_page');
+		$page = new Page();
 		$sn = $this->session->addLink($page);
 
-		$page2 = Page::create('another_page');
+		$page2 = new Page();
+		$page2->file = 'another_page';
 		self::assertNotEquals($sn, $this->session->addLink($page2));
 	}
 
 	public function test_addLink_page_already_added(): void {
 		// If we add the same page object twice, it will give the same SN.
-		$page = Page::create('some_page');
+		$page = new Page();
 		$sn = $this->session->addLink($page);
 		self::assertSame($sn, $this->session->addLink($page));
 
@@ -203,13 +205,13 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 
 		// It also works if we modify the page object (though this isn't
 		// recommended, we clone when adding from Page::href to avoid this).
-		$page['bla'] = true;
+		$page->allowAjax = true;
 		self::assertSame($sn, $this->session->addLink($page));
 	}
 
 	public function test_clearLinks(): void {
 		srand(0); // seed rng to avoid getting the same random SN twice
-		$page = Page::create('some_page');
+		$page = new Page();
 		$sn = $this->session->addLink($page);
 
 		// After clearing links, the same page will return a different SN.
@@ -219,7 +221,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 
 	public function test_getRequestVar(): void {
 		// Initialize the current var so that we can update it
-		$page = Page::create('some_page');
+		$page = new Page();
 		$this->session->setCurrentVar($page);
 
 		// Prepare request values
@@ -233,17 +235,17 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		// 1. The index is not set in the current var beforehand
 		// 2. We return the expected value from getRequestVar
 		// 3. The value is stored in the current var afterwards
-		self::assertArrayNotHasKey('str', $this->session->getCurrentVar());
+		self::assertArrayNotHasKey('str', $this->session->getRequestData());
 		self::assertSame('foo', $this->session->getRequestVar('str'));
-		self::assertSame('foo', $this->session->getCurrentVar()['str']);
+		self::assertSame('foo', $this->session->getRequestData()['str']);
 
-		self::assertArrayNotHasKey('int', $this->session->getCurrentVar());
+		self::assertArrayNotHasKey('int', $this->session->getRequestData());
 		self::assertSame(4, $this->session->getRequestVarInt('int'));
-		self::assertSame(4, $this->session->getCurrentVar()['int']);
+		self::assertSame(4, $this->session->getRequestData()['int']);
 
-		self::assertArrayNotHasKey('arr', $this->session->getCurrentVar());
+		self::assertArrayNotHasKey('arr', $this->session->getRequestData());
 		self::assertSame([5, 6], $this->session->getRequestVarIntArray('arr'));
-		self::assertSame([5, 6], $this->session->getCurrentVar()['arr']);
+		self::assertSame([5, 6], $this->session->getRequestData()['arr']);
 	}
 
 }

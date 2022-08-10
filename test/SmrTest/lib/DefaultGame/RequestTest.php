@@ -3,7 +3,6 @@
 namespace SmrTest\lib\DefaultGame;
 
 use Exception;
-use Page;
 use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
 use Smr\Request;
@@ -34,16 +33,15 @@ class RequestTest extends TestCase {
 
 	/**
 	 * Insert a mock Session into the DI container to return the input $var
-	 * when getCurrentVar is called on it.
+	 * when getRequestData is called on it.
 	 *
 	 * @param array<string, mixed> $var
 	 */
 	private function setVar(array $var): void {
-		$page = Page::create('test', $var); // just an ArrayObject
 		$session = $this->createMock(Session::class);
 		$session
-			->method('getCurrentVar')
-			->willReturn($page);
+			->method('getRequestData')
+			->willReturn($var);
 		DiContainer::getContainer()->set(Session::class, $session);
 	}
 
