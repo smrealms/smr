@@ -2,53 +2,53 @@
 
 use Smr\Database;
 
-$template = Smr\Template::getInstance();
-$session = Smr\Session::getInstance();
-$var = $session->getCurrentVar();
+		$template = Smr\Template::getInstance();
+		$session = Smr\Session::getInstance();
+		$var = $session->getCurrentVar();
 
-Menu::galacticPost();
+		Menu::galacticPost();
 
-if (!empty($var['paper_id'])) {
-	if (!isset($var['game_id'])) {
-		create_error('Must specify a game ID!');
-	}
-	$template->assign('PaperGameID', $var['game_id']);
+		if (!empty($var['paper_id'])) {
+			if (!isset($var['game_id'])) {
+				create_error('Must specify a game ID!');
+			}
+			$template->assign('PaperGameID', $var['game_id']);
 
-	// Create link back to past editions
-	if (isset($var['back']) && $var['back']) {
-		$container = Page::create('galactic_post_past.php');
-		$container->addVar('game_id');
-		$template->assign('BackHREF', $container->href());
-	}
+			// Create link back to past editions
+			if (isset($var['back']) && $var['back']) {
+				$container = Page::create('galactic_post_past.php');
+				$container->addVar('game_id');
+				$template->assign('BackHREF', $container->href());
+			}
 
-	$db = Database::getInstance();
-	$dbResult = $db->read('SELECT title FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND paper_id = ' . $var['paper_id']);
-	$paper_name = bbifyMessage($dbResult->record()->getString('title'), $var['game_id']);
-	$template->assign('PageTopic', 'Reading <i>Galactic Post</i> Edition : ' . $paper_name);
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT title FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND paper_id = ' . $var['paper_id']);
+			$paper_name = bbifyMessage($dbResult->record()->getString('title'), $var['game_id']);
+			$template->assign('PageTopic', 'Reading <i>Galactic Post</i> Edition : ' . $paper_name);
 
-	//now get the articles in this paper.
-	$dbResult = $db->read('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article USING(game_id, article_id) WHERE paper_id = ' . $db->escapeNumber($var['paper_id']) . ' AND game_id = ' . $db->escapeNumber($var['game_id']));
+			//now get the articles in this paper.
+			$dbResult = $db->read('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article USING(game_id, article_id) WHERE paper_id = ' . $db->escapeNumber($var['paper_id']) . ' AND game_id = ' . $db->escapeNumber($var['game_id']));
 
-	$articles = [];
-	foreach ($dbResult->records() as $dbRecord) {
-		$articles[] = [
-			'title' => $dbRecord->getString('title'),
-			'text' => $dbRecord->getString('text'),
-		];
-	}
+			$articles = [];
+			foreach ($dbResult->records() as $dbRecord) {
+				$articles[] = [
+					'title' => $dbRecord->getString('title'),
+					'text' => $dbRecord->getString('text'),
+				];
+			}
 
-	// Determine the layout of the articles on the page
-	$articleLayout = [];
-	$row = 0;
-	foreach ($articles as $i => $article) {
-		$articleLayout[$row][] = $article;
+			// Determine the layout of the articles on the page
+			$articleLayout = [];
+			$row = 0;
+			foreach ($articles as $i => $article) {
+				$articleLayout[$row][] = $article;
 
-		// start a new row every 2 articles
-		if ($i % 2 == 1) {
-			$row++;
+				// start a new row every 2 articles
+				if ($i % 2 == 1) {
+					$row++;
+				}
+			}
+			$template->assign('ArticleLayout', $articleLayout);
+		} else {
+			$template->assign('PageTopic', 'Galactic Post');
 		}
-	}
-	$template->assign('ArticleLayout', $articleLayout);
-} else {
-	$template->assign('PageTopic', 'Galactic Post');
-}

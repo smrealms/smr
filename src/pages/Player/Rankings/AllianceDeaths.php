@@ -1,24 +1,24 @@
 <?php declare(strict_types=1);
 
-$template = Smr\Template::getInstance();
-$session = Smr\Session::getInstance();
-$player = $session->getPlayer();
+		$template = Smr\Template::getInstance();
+		$session = Smr\Session::getInstance();
+		$player = $session->getPlayer();
 
-$template->assign('PageTopic', 'Alliance Death Rankings');
-Menu::rankings(1, 3);
+		$template->assign('PageTopic', 'Alliance Death Rankings');
+		Menu::rankings(1, 3);
 
-$rankedStats = Rankings::allianceStats('deaths', $player->getGameID());
-$ourRank = 0;
-if ($player->hasAlliance()) {
-	$ourRank = Rankings::ourRank($rankedStats, $player->getAllianceID());
-	$template->assign('OurRank', $ourRank);
-}
+		$rankedStats = Rankings::allianceStats('deaths', $player->getGameID());
+		$ourRank = 0;
+		if ($player->hasAlliance()) {
+			$ourRank = Rankings::ourRank($rankedStats, $player->getAllianceID());
+			$template->assign('OurRank', $ourRank);
+		}
 
-$template->assign('Rankings', Rankings::collectAllianceRankings($rankedStats, $player));
+		$template->assign('Rankings', Rankings::collectAllianceRankings($rankedStats, $player));
 
-$numAlliances = count($rankedStats);
-[$minRank, $maxRank] = Rankings::calculateMinMaxRanks($ourRank, $numAlliances);
+		$numAlliances = count($rankedStats);
+		[$minRank, $maxRank] = Rankings::calculateMinMaxRanks($ourRank, $numAlliances);
 
-$template->assign('FilteredRankings', Rankings::collectAllianceRankings($rankedStats, $player, $minRank, $maxRank));
+		$template->assign('FilteredRankings', Rankings::collectAllianceRankings($rankedStats, $player, $minRank, $maxRank));
 
-$template->assign('FilterRankingsHREF', Page::create('rankings_alliance_death.php')->href());
+		$template->assign('FilterRankingsHREF', Page::create('rankings_alliance_death.php')->href());

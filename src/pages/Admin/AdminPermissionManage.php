@@ -3,55 +3,55 @@
 use Smr\AdminPermissions;
 use Smr\Database;
 
-$template = Smr\Template::getInstance();
-$session = Smr\Session::getInstance();
+		$template = Smr\Template::getInstance();
+		$session = Smr\Session::getInstance();
 
-$admin_id = $session->getRequestVarInt('admin_id', 0);
+		$admin_id = $session->getRequestVarInt('admin_id', 0);
 
-$template->assign('PageTopic', 'Manage Admin Permissions');
+		$template->assign('PageTopic', 'Manage Admin Permissions');
 
-$container = Page::create('admin/permission_manage.php');
-$selectAdminHREF = $container->href();
-$template->assign('SelectAdminHREF', $selectAdminHREF);
+		$container = Page::create('admin/permission_manage.php');
+		$selectAdminHREF = $container->href();
+		$template->assign('SelectAdminHREF', $selectAdminHREF);
 
-$adminLinks = [];
-$db = Database::getInstance();
-$dbResult = $db->read('SELECT account_id, login
-			FROM account_has_permission JOIN account USING(account_id)
-			GROUP BY account_id');
-foreach ($dbResult->records() as $dbRecord) {
-	$accountID = $dbRecord->getInt('account_id');
-	$container['admin_id'] = $accountID;
-	$adminLinks[$accountID] = [
-		'href' => $container->href(),
-		'name' => $dbRecord->getString('login'),
-	];
-}
-$template->assign('AdminLinks', $adminLinks);
-
-if (empty($admin_id)) {
-	// If we don't have an account_id here display an account list
-	$validatedAccounts = [];
-	$dbResult = $db->read('SELECT account_id, login
-				FROM account
-				WHERE validated = ' . $db->escapeBoolean(true) . '
-				ORDER BY login');
-	foreach ($dbResult->records() as $dbRecord) {
-		$accountID = $dbRecord->getInt('account_id');
-		if (!array_key_exists($accountID, $adminLinks)) {
-			$validatedAccounts[$accountID] = $dbRecord->getString('login');
+		$adminLinks = [];
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT account_id, login
+					FROM account_has_permission JOIN account USING(account_id)
+					GROUP BY account_id');
+		foreach ($dbResult->records() as $dbRecord) {
+			$accountID = $dbRecord->getInt('account_id');
+			$container['admin_id'] = $accountID;
+			$adminLinks[$accountID] = [
+				'href' => $container->href(),
+				'name' => $dbRecord->getString('login'),
+			];
 		}
-	}
-	$template->assign('ValidatedAccounts', $validatedAccounts);
-} else {
-	// get the account that we're editing
-	$editAccount = SmrAccount::getAccount($admin_id);
-	$template->assign('EditAccount', $editAccount);
+		$template->assign('AdminLinks', $adminLinks);
 
-	$container = Page::create('admin/permission_manage_processing.php');
-	$container['admin_id'] = $admin_id;
-	$processingHREF = $container->href();
-	$template->assign('ProcessingHREF', $processingHREF);
+		if (empty($admin_id)) {
+			// If we don't have an account_id here display an account list
+			$validatedAccounts = [];
+			$dbResult = $db->read('SELECT account_id, login
+						FROM account
+						WHERE validated = ' . $db->escapeBoolean(true) . '
+						ORDER BY login');
+			foreach ($dbResult->records() as $dbRecord) {
+				$accountID = $dbRecord->getInt('account_id');
+				if (!array_key_exists($accountID, $adminLinks)) {
+					$validatedAccounts[$accountID] = $dbRecord->getString('login');
+				}
+			}
+			$template->assign('ValidatedAccounts', $validatedAccounts);
+		} else {
+			// get the account that we're editing
+			$editAccount = SmrAccount::getAccount($admin_id);
+			$template->assign('EditAccount', $editAccount);
 
-	$template->assign('PermissionCategories', AdminPermissions::getPermissionsByCategory());
-}
+			$container = Page::create('admin/permission_manage_processing.php');
+			$container['admin_id'] = $admin_id;
+			$processingHREF = $container->href();
+			$template->assign('ProcessingHREF', $processingHREF);
+
+			$template->assign('PermissionCategories', AdminPermissions::getPermissionsByCategory());
+		}

@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-$session = Smr\Session::getInstance();
-$var = $session->getCurrentVar();
-$player = $session->getPlayer();
+		$session = Smr\Session::getInstance();
+		$var = $session->getCurrentVar();
+		$player = $session->getPlayer();
 
-$player->declineMission($var['MissionID']);
+		$player->declineMission($var['MissionID']);
 
-Page::create('current_sector.php')->go();
+		Page::create('current_sector.php')->go();

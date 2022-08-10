@@ -97,41 +97,41 @@ function checkHtmlShipName(string $name): void {
 
 //-----------------------------------------------------
 
-$session = Smr\Session::getInstance();
-$var = $session->getCurrentVar();
-$account = $session->getAccount();
-$player = $session->getPlayer();
+		$session = Smr\Session::getInstance();
+		$var = $session->getCurrentVar();
+		$account = $session->getAccount();
+		$player = $session->getPlayer();
 
-$action = Request::get('action');
+		$action = Request::get('action');
 
-$cred_cost = $var['costs'][$action];
-if ($account->getTotalSmrCredits() < $cred_cost) {
-	create_error('You don\'t have enough SMR Credits. These can be earned by donating to SMR!');
-}
+		$cred_cost = $var['costs'][$action];
+		if ($account->getTotalSmrCredits() < $cred_cost) {
+			create_error('You don\'t have enough SMR Credits. These can be earned by donating to SMR!');
+		}
 
-if ($action == 'logo') {
-	$filename = $player->getAccountID() . 'logo' . $player->getGameID();
-	checkShipLogo($filename);
-	$name = '<img style="padding:3px;" src="upload/' . $filename . '">';
-} else {
-	// Player submitted a text or HTML ship name
-	$name = Request::get('ship_name');
-	if ($action == 'text') {
-		checkTextShipName($name, 48);
-		$name = htmlentities($name, ENT_NOQUOTES, 'utf-8');
-	} elseif ($action == 'html') {
-		checkTextShipName($name, 128);
-		checkHtmlShipName($name);
-		$container = Page::create('buy_ship_name_preview.php');
-		$container['ShipName'] = $name;
-		$container['cost'] = $cred_cost;
+		if ($action == 'logo') {
+			$filename = $player->getAccountID() . 'logo' . $player->getGameID();
+			checkShipLogo($filename);
+			$name = '<img style="padding:3px;" src="upload/' . $filename . '">';
+		} else {
+			// Player submitted a text or HTML ship name
+			$name = Request::get('ship_name');
+			if ($action == 'text') {
+				checkTextShipName($name, 48);
+				$name = htmlentities($name, ENT_NOQUOTES, 'utf-8');
+			} elseif ($action == 'html') {
+				checkTextShipName($name, 128);
+				checkHtmlShipName($name);
+				$container = Page::create('buy_ship_name_preview.php');
+				$container['ShipName'] = $name;
+				$container['cost'] = $cred_cost;
+				$container->go();
+			}
+		}
+
+		$player->setCustomShipName($name);
+		$account->decreaseTotalSmrCredits($cred_cost);
+
+		$container = Page::create('current_sector.php');
+		$container['msg'] = 'Thanks for your purchase! Your ship is ready!';
 		$container->go();
-	}
-}
-
-$player->setCustomShipName($name);
-$account->decreaseTotalSmrCredits($cred_cost);
-
-$container = Page::create('current_sector.php');
-$container['msg'] = 'Thanks for your purchase! Your ship is ready!';
-$container->go();

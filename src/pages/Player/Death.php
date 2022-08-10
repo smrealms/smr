@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
 
-$template = Smr\Template::getInstance();
+		$template = Smr\Template::getInstance();
 
-$template->assign('PageTopic', 'Death');
+		$template->assign('PageTopic', 'Death');

@@ -2,16 +2,16 @@
 
 use Smr\Race;
 
-$template = Smr\Template::getInstance();
-$var = Smr\Session::getInstance()->getCurrentVar();
+		$template = Smr\Template::getInstance();
+		$var = Smr\Session::getInstance()->getCurrentVar();
 
-$raceName = Race::getName($var['race_id']);
-$template->assign('RaceName', $raceName);
+		$raceName = Race::getName($var['race_id']);
+		$template->assign('RaceName', $raceName);
 
-$template->assign('PageTopic', 'Send message to Ruling Council of the ' . $raceName);
+		$template->assign('PageTopic', 'Send message to Ruling Council of the ' . $raceName);
 
-Menu::messages();
+		Menu::messages();
 
-$container = Page::create('council_send_message_processing.php');
-$container->addVar('race_id');
-$template->assign('SendHREF', $container->href());
+		$container = Page::create('council_send_message_processing.php');
+		$container->addVar('race_id');
+		$template->assign('SendHREF', $container->href());

@@ -3,49 +3,49 @@
 use Smr\Database;
 use Smr\Race;
 
-$template = Smr\Template::getInstance();
-$session = Smr\Session::getInstance();
-$var = $session->getCurrentVar();
-$account = $session->getAccount();
+		$template = Smr\Template::getInstance();
+		$session = Smr\Session::getInstance();
+		$var = $session->getCurrentVar();
+		$account = $session->getAccount();
 
-Menu::historyGames($var['selected_index']);
+		Menu::historyGames($var['selected_index']);
 
-//offer a back button
-if (isset($var['previous_page'])) {
-	$container = $var['previous_page'];
-} else {
-	$container = Page::create('history_games.php', $var);
-}
-$template->assign('BackHREF', $container->href());
+		//offer a back button
+		if (isset($var['previous_page'])) {
+			$container = $var['previous_page'];
+		} else {
+			$container = Page::create('history_games.php', $var);
+		}
+		$template->assign('BackHREF', $container->href());
 
-$game_id = $var['view_game_id'];
-$id = $var['alliance_id'];
+		$game_id = $var['view_game_id'];
+		$id = $var['alliance_id'];
 
-$db = Database::getInstance();
-$db->switchDatabases($var['HistoryDatabase']);
-$dbResult = $db->read('SELECT alliance_name, leader_id FROM alliance WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($game_id));
-$dbRecord = $dbResult->record();
-$leaderID = $dbRecord->getInt('leader_id');
-$template->assign('PageTopic', 'Alliance Roster: ' . htmlentities($dbRecord->getString('alliance_name')));
+		$db = Database::getInstance();
+		$db->switchDatabases($var['HistoryDatabase']);
+		$dbResult = $db->read('SELECT alliance_name, leader_id FROM alliance WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($game_id));
+		$dbRecord = $dbResult->record();
+		$leaderID = $dbRecord->getInt('leader_id');
+		$template->assign('PageTopic', 'Alliance Roster: ' . htmlentities($dbRecord->getString('alliance_name')));
 
-//get alliance members
-$oldAccountID = $account->getOldAccountID($var['HistoryDatabase']);
-$dbResult = $db->read('SELECT * FROM player WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY experience DESC');
-$players = [];
-foreach ($dbResult->records() as $dbRecord) {
-	$memberAccountID = $dbRecord->getInt('account_id');
-	$players[] = [
-		'leader' => $memberAccountID == $leaderID ? '*' : '',
-		'bold' => $memberAccountID == $oldAccountID ? 'class="bold"' : '',
-		'player_name' => htmlentities($dbRecord->getString('player_name')),
-		'experience' => $dbRecord->getInt('experience'),
-		'alignment' => $dbRecord->getInt('alignment'),
-		'race' => Race::getName($dbRecord->getInt('race')),
-		'kills' => $dbRecord->getInt('kills'),
-		'deaths' => $dbRecord->getInt('deaths'),
-		'bounty' => $dbRecord->getInt('bounty'),
-	];
-}
-$template->assign('Players', $players);
+		//get alliance members
+		$oldAccountID = $account->getOldAccountID($var['HistoryDatabase']);
+		$dbResult = $db->read('SELECT * FROM player WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY experience DESC');
+		$players = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$memberAccountID = $dbRecord->getInt('account_id');
+			$players[] = [
+				'leader' => $memberAccountID == $leaderID ? '*' : '',
+				'bold' => $memberAccountID == $oldAccountID ? 'class="bold"' : '',
+				'player_name' => htmlentities($dbRecord->getString('player_name')),
+				'experience' => $dbRecord->getInt('experience'),
+				'alignment' => $dbRecord->getInt('alignment'),
+				'race' => Race::getName($dbRecord->getInt('race')),
+				'kills' => $dbRecord->getInt('kills'),
+				'deaths' => $dbRecord->getInt('deaths'),
+				'bounty' => $dbRecord->getInt('bounty'),
+			];
+		}
+		$template->assign('Players', $players);
 
-$db->switchDatabaseToLive(); // restore database
+		$db->switchDatabaseToLive(); // restore database

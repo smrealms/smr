@@ -2,25 +2,25 @@
 
 use Smr\Request;
 
-$session = Smr\Session::getInstance();
-$var = $session->getCurrentVar();
+		$session = Smr\Session::getInstance();
+		$var = $session->getCurrentVar();
 
-// Move a warp from one sector to another
-$targetSectorID = Request::getInt('TargetSectorID');
-$origSectorID = Request::getInt('OrigSectorID');
+		// Move a warp from one sector to another
+		$targetSectorID = Request::getInt('TargetSectorID');
+		$origSectorID = Request::getInt('OrigSectorID');
 
-$origSector = SmrSector::getSector($var['game_id'], $origSectorID);
-$warpSector = $origSector->getWarpSector();
-$targetSector = SmrSector::getSector($var['game_id'], $targetSectorID);
+		$origSector = SmrSector::getSector($var['game_id'], $origSectorID);
+		$warpSector = $origSector->getWarpSector();
+		$targetSector = SmrSector::getSector($var['game_id'], $targetSectorID);
 
-// Skip if target sector already has a warp
-if (!$targetSector->hasWarp()) {
-	$origSector->removeWarp();
-	$targetSector->setWarp($warpSector);
-	SmrSector::saveSectors();
-}
+		// Skip if target sector already has a warp
+		if (!$targetSector->hasWarp()) {
+			$origSector->removeWarp();
+			$targetSector->setWarp($warpSector);
+			SmrSector::saveSectors();
+		}
 
-$container = Page::create('admin/unigen/universe_create_sectors.php');
-$container->addVar('game_id');
-$container->addVar('gal_on');
-$container->go();
+		$container = Page::create('admin/unigen/universe_create_sectors.php');
+		$container->addVar('game_id');
+		$container->addVar('gal_on');
+		$container->go();

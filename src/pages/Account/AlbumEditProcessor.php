@@ -63,128 +63,128 @@ function php_link_check(string $url): string|false {
 	return $http['Status-Code'];
 }
 
-$session = Smr\Session::getInstance();
-$account = $session->getAccount();
+		$session = Smr\Session::getInstance();
+		$account = $session->getAccount();
 
-$location = Request::get('location');
-$email = Request::get('email');
+		$location = Request::get('location');
+		$email = Request::get('email');
 
-// get website (and validate it)
-$website = Request::get('website');
-if ($website != '') {
-	// add http:// if missing
-	if (!preg_match('=://=', $website)) {
-		$website = 'http://' . $website;
-	}
+		// get website (and validate it)
+		$website = Request::get('website');
+		if ($website != '') {
+			// add http:// if missing
+			if (!preg_match('=://=', $website)) {
+				$website = 'http://' . $website;
+			}
 
-	// validate
-	$status = floor(php_link_check($website) / 100);
+			// validate
+			$status = floor(php_link_check($website) / 100);
 
-	if ($status != 2 && $status != 3) {
-		create_error('The website you entered is invalid!');
-	}
-}
+			if ($status != 2 && $status != 3) {
+				create_error('The website you entered is invalid!');
+			}
+		}
 
-$other = Request::get('other');
+		$other = Request::get('other');
 
-$day = Request::getInt('day');
-$month = Request::getInt('month');
-$year = Request::getInt('year');
+		$day = Request::getInt('day');
+		$month = Request::getInt('month');
+		$year = Request::getInt('year');
 
-// check if we have an image
-$noPicture = true;
-if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
-	$noPicture = false;
-	// get dimensions
-	$size = getimagesize($_FILES['photo']['tmp_name']);
-	if ($size === false) {
-		create_error('Uploaded file must be an image!');
-	}
+		// check if we have an image
+		$noPicture = true;
+		if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
+			$noPicture = false;
+			// get dimensions
+			$size = getimagesize($_FILES['photo']['tmp_name']);
+			if ($size === false) {
+				create_error('Uploaded file must be an image!');
+			}
 
-	$allowed_types = [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG];
-	if (!in_array($size[2], $allowed_types)) {
-		create_error('Only gif, jpg or png-image allowed!');
-	}
+			$allowed_types = [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG];
+			if (!in_array($size[2], $allowed_types)) {
+				create_error('Only gif, jpg or png-image allowed!');
+			}
 
-	// check if width > 500
-	if ($size[0] > 500) {
-		create_error('Image is wider than 500 pixels!');
-	}
+			// check if width > 500
+			if ($size[0] > 500) {
+				create_error('Image is wider than 500 pixels!');
+			}
 
-	// check if height > 500
-	if ($size[1] > 500) {
-		create_error('Image is higher than 500 pixels!');
-	}
+			// check if height > 500
+			if ($size[1] > 500) {
+				create_error('Image is higher than 500 pixels!');
+			}
 
-	if (!move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . $account->getAccountID())) {
-		create_error('Failed to upload image!');
-	}
-}
+			if (!move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . $account->getAccountID())) {
+				create_error('Failed to upload image!');
+			}
+		}
 
 
-// check if we had a album entry so far
-$db = Database::getInstance();
-$dbResult = $db->read('SELECT 1 FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
-if ($dbResult->hasRecord()) {
-	if (!$noPicture) {
-		$comment = '<span class="green">*** Picture changed</span>';
-	}
+		// check if we had a album entry so far
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT 1 FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
+		if ($dbResult->hasRecord()) {
+			if (!$noPicture) {
+				$comment = '<span class="green">*** Picture changed</span>';
+			}
 
-	// change album entry
-	$db->write('UPDATE album
-				SET location = ' . $db->escapeString($location) . ',
-					email = ' . $db->escapeString($email) . ',
-					website= ' . $db->escapeString($website) . ',
-					day = ' . $db->escapeNumber($day) . ',
-					month = ' . $db->escapeNumber($month) . ',
-					year = ' . $db->escapeNumber($year) . ',
-					other = ' . $db->escapeString($other) . ',
-					last_changed = ' . $db->escapeNumber(Epoch::time()) . ',
-					approved = \'TBC\',
-					disabled = \'FALSE\'
-				WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
-} else {
-	// if he didn't upload a picture before
-	// we kick him out here
-	if ($noPicture) {
-		create_error('What is it worth if you don\'t upload an image?');
-	}
+			// change album entry
+			$db->write('UPDATE album
+						SET location = ' . $db->escapeString($location) . ',
+							email = ' . $db->escapeString($email) . ',
+							website= ' . $db->escapeString($website) . ',
+							day = ' . $db->escapeNumber($day) . ',
+							month = ' . $db->escapeNumber($month) . ',
+							year = ' . $db->escapeNumber($year) . ',
+							other = ' . $db->escapeString($other) . ',
+							last_changed = ' . $db->escapeNumber(Epoch::time()) . ',
+							approved = \'TBC\',
+							disabled = \'FALSE\'
+						WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
+		} else {
+			// if he didn't upload a picture before
+			// we kick him out here
+			if ($noPicture) {
+				create_error('What is it worth if you don\'t upload an image?');
+			}
 
-	$comment = '<span class="green">*** Picture added</span>';
+			$comment = '<span class="green">*** Picture added</span>';
 
-	// add album entry
-	$db->insert('album', [
-		'account_id' => $db->escapeNumber($account->getAccountID()),
-		'location' => $db->escapeString($location),
-		'email' => $db->escapeString($email),
-		'website' => $db->escapeString($website),
-		'day' => $db->escapeNumber($day),
-		'month' => $db->escapeNumber($month),
-		'year' => $db->escapeNumber($year),
-		'other' => $db->escapeString($other),
-		'created' => $db->escapeNumber(Epoch::time()),
-		'last_changed' => $db->escapeNumber(Epoch::time()),
-		'approved' => $db->escapeString('TBC'),
-	]);
-}
+			// add album entry
+			$db->insert('album', [
+				'account_id' => $db->escapeNumber($account->getAccountID()),
+				'location' => $db->escapeString($location),
+				'email' => $db->escapeString($email),
+				'website' => $db->escapeString($website),
+				'day' => $db->escapeNumber($day),
+				'month' => $db->escapeNumber($month),
+				'year' => $db->escapeNumber($year),
+				'other' => $db->escapeString($other),
+				'created' => $db->escapeNumber(Epoch::time()),
+				'last_changed' => $db->escapeNumber(Epoch::time()),
+				'approved' => $db->escapeString('TBC'),
+			]);
+		}
 
-if (!empty($comment)) {
-	// check if we have comments for this album already
-	$db->lockTable('album_has_comments');
+		if (!empty($comment)) {
+			// check if we have comments for this album already
+			$db->lockTable('album_has_comments');
 
-	$dbResult = $db->read('SELECT IFNULL(MAX(comment_id)+1, 0) AS next_comment_id FROM album_has_comments WHERE album_id = ' . $db->escapeNumber($account->getAccountID()));
-	$comment_id = $dbResult->record()->getInt('next_comment_id');
+			$dbResult = $db->read('SELECT IFNULL(MAX(comment_id)+1, 0) AS next_comment_id FROM album_has_comments WHERE album_id = ' . $db->escapeNumber($account->getAccountID()));
+			$comment_id = $dbResult->record()->getInt('next_comment_id');
 
-	$db->insert('album_has_comments', [
-		'album_id' => $db->escapeNumber($account->getAccountID()),
-		'comment_id' => $db->escapeNumber($comment_id),
-		'time' => $db->escapeNumber(Epoch::time()),
-		'post_id' => 0,
-		'msg' => $db->escapeString($comment),
-	]);
-	$db->unlock();
-}
+			$db->insert('album_has_comments', [
+				'album_id' => $db->escapeNumber($account->getAccountID()),
+				'comment_id' => $db->escapeNumber($comment_id),
+				'time' => $db->escapeNumber(Epoch::time()),
+				'post_id' => 0,
+				'msg' => $db->escapeString($comment),
+			]);
+			$db->unlock();
+		}
 
-$container = Page::create('album_edit.php');
-$container['SuccessMsg'] = 'SUCCESS: Your information has been updated!';
-$container->go();
+		$container = Page::create('album_edit.php');
+		$container['SuccessMsg'] = 'SUCCESS: Your information has been updated!';
+		$container->go();

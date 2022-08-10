@@ -3,94 +3,94 @@
 use Smr\Database;
 use Smr\Epoch;
 
-$template = Smr\Template::getInstance();
-$session = Smr\Session::getInstance();
-$account = $session->getAccount();
+		$template = Smr\Template::getInstance();
+		$session = Smr\Session::getInstance();
+		$account = $session->getAccount();
 
-$template->assign('PageTopic', 'Computer Sharing');
+		$template->assign('PageTopic', 'Computer Sharing');
 
-$unusedAfter = 86400 * 365; // 1 year
+		$unusedAfter = 86400 * 365; // 1 year
 
-$used = [];
+		$used = [];
 
-//check the db and get the info we need
-$db = Database::getInstance();
-$dbResult = $db->read('SELECT * FROM multi_checking_cookie WHERE `use` = \'TRUE\'');
-$tables = [];
-foreach ($dbResult->records() as $dbRecord) {
-	//get info about linked IDs
-	$accountIDs = explode('-', $dbRecord->getString('array'));
+		//check the db and get the info we need
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT * FROM multi_checking_cookie WHERE `use` = \'TRUE\'');
+		$tables = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			//get info about linked IDs
+			$accountIDs = explode('-', $dbRecord->getString('array'));
 
-	//make sure this is good data.
-	$cookieVersion = array_shift($accountIDs);
-	if ($cookieVersion != MULTI_CHECKING_COOKIE_VERSION) {
-		continue;
-	}
-
-	//how many are they linked to?
-	$rows = count($accountIDs);
-
-	$currTabAccId = $dbRecord->getInt('account_id');
-
-	//if this account was listed with another we can skip it.
-	if (isset($used[$currTabAccId])) {
-		continue;
-	}
-
-	if ($rows > 1) {
-		$dbResult2 = $db->read('SELECT login FROM account WHERE account_id =' . $db->escapeNumber($currTabAccId) . ' AND last_login > ' . $db->escapeNumber(Epoch::time() - $unusedAfter));
-		if (!$dbResult2->hasRecord()) {
-			continue;
-		}
-		$currTabAccLogin = $dbResult2->record()->getString('login');
-
-		$rows = [];
-		foreach ($accountIDs as $currLinkAccId) {
-			$currLinkAccId = (int)$currLinkAccId;
-			$dbResult2 = $db->read('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = ' . $db->escapeNumber($currLinkAccId) . ' AND last_login > ' . $db->escapeNumber(Epoch::time() - $unusedAfter));
-			if (!$dbResult2->hasRecord()) {
+			//make sure this is good data.
+			$cookieVersion = array_shift($accountIDs);
+			if ($cookieVersion != MULTI_CHECKING_COOKIE_VERSION) {
 				continue;
 			}
-			$dbRecord2 = $dbResult2->record();
-			$currLinkAccLogin = $dbRecord2->getString('login');
 
-			$style = $dbRecord2->getBoolean('validated') ? '' : 'text-decoration:line-through;';
-			$email = $dbRecord2->getString('email');
-			$valid = $dbRecord2->getBoolean('validated') ? 'Valid' : 'Invalid';
-			$common_ip = $dbRecord2->getString('common_ip');
-			$last_login = date($account->getDateTimeFormat(), $dbRecord2->getInt('last_login'));
+			//how many are they linked to?
+			$rows = count($accountIDs);
 
-			$dbResult2 = $db->read('SELECT * FROM account_is_closed WHERE account_id = ' . $db->escapeNumber($currLinkAccId));
-			$isDisabled = $dbResult2->hasRecord();
-			if ($isDisabled) {
-				$suspicion = $dbResult2->record()->getString('suspicion');
-			} else {
-				$suspicion = '';
+			$currTabAccId = $dbRecord->getInt('account_id');
+
+			//if this account was listed with another we can skip it.
+			if (isset($used[$currTabAccId])) {
+				continue;
 			}
 
-			$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($currLinkAccId));
-			if ($dbResult2->hasRecord()) {
-				$exception = $dbResult2->record()->getString('reason');
-			} else {
-				$exception = '';
+			if ($rows > 1) {
+				$dbResult2 = $db->read('SELECT login FROM account WHERE account_id =' . $db->escapeNumber($currTabAccId) . ' AND last_login > ' . $db->escapeNumber(Epoch::time() - $unusedAfter));
+				if (!$dbResult2->hasRecord()) {
+					continue;
+				}
+				$currTabAccLogin = $dbResult2->record()->getString('login');
+
+				$rows = [];
+				foreach ($accountIDs as $currLinkAccId) {
+					$currLinkAccId = (int)$currLinkAccId;
+					$dbResult2 = $db->read('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = ' . $db->escapeNumber($currLinkAccId) . ' AND last_login > ' . $db->escapeNumber(Epoch::time() - $unusedAfter));
+					if (!$dbResult2->hasRecord()) {
+						continue;
+					}
+					$dbRecord2 = $dbResult2->record();
+					$currLinkAccLogin = $dbRecord2->getString('login');
+
+					$style = $dbRecord2->getBoolean('validated') ? '' : 'text-decoration:line-through;';
+					$email = $dbRecord2->getString('email');
+					$valid = $dbRecord2->getBoolean('validated') ? 'Valid' : 'Invalid';
+					$common_ip = $dbRecord2->getString('common_ip');
+					$last_login = date($account->getDateTimeFormat(), $dbRecord2->getInt('last_login'));
+
+					$dbResult2 = $db->read('SELECT * FROM account_is_closed WHERE account_id = ' . $db->escapeNumber($currLinkAccId));
+					$isDisabled = $dbResult2->hasRecord();
+					if ($isDisabled) {
+						$suspicion = $dbResult2->record()->getString('suspicion');
+					} else {
+						$suspicion = '';
+					}
+
+					$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($currLinkAccId));
+					if ($dbResult2->hasRecord()) {
+						$exception = $dbResult2->record()->getString('reason');
+					} else {
+						$exception = '';
+					}
+
+					$used[$currLinkAccId] = true;
+
+					$rows[] = [
+						'name' => $currLinkAccLogin . ' (' . $currLinkAccId . ')',
+						'account_id' => $currLinkAccId,
+						'associated_ids' => implode('-', $accountIDs),
+						'style' => $style,
+						'color' => $isDisabled ? 'red' : '',
+						'common_ip' => $common_ip,
+						'last_login' => $last_login,
+						'suspicion' => $suspicion,
+						'exception' => $exception,
+						'email' => $email . ' (' . $valid . ')',
+					];
+				}
+				$tables[] = $rows;
 			}
-
-			$used[$currLinkAccId] = true;
-
-			$rows[] = [
-				'name' => $currLinkAccLogin . ' (' . $currLinkAccId . ')',
-				'account_id' => $currLinkAccId,
-				'associated_ids' => implode('-', $accountIDs),
-				'style' => $style,
-				'color' => $isDisabled ? 'red' : '',
-				'common_ip' => $common_ip,
-				'last_login' => $last_login,
-				'suspicion' => $suspicion,
-				'exception' => $exception,
-				'email' => $email . ' (' . $valid . ')',
-			];
 		}
-		$tables[] = $rows;
-	}
-}
-$template->assign('Tables', $tables);
+		$template->assign('Tables', $tables);

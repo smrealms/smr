@@ -2,8 +2,8 @@
 
 use Smr\PlanetList;
 
-$var = Smr\Session::getInstance()->getCurrentVar();
+		$var = Smr\Session::getInstance()->getCurrentVar();
 
-Menu::planetList($var['alliance_id'], 0);
+		Menu::planetList($var['alliance_id'], 0);
 
-PlanetList::common($var['alliance_id'], true);
+		PlanetList::common($var['alliance_id'], true);

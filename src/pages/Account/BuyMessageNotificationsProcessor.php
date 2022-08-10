@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
-$session = Smr\Session::getInstance();
-$var = $session->getCurrentVar();
-$account = $session->getAccount();
+		$session = Smr\Session::getInstance();
+		$var = $session->getCurrentVar();
+		$account = $session->getAccount();
 
-if ($account->getTotalSmrCredits() < 1) {
-	create_error('You do not have enough SMR credits.');
-}
+		if ($account->getTotalSmrCredits() < 1) {
+			create_error('You do not have enough SMR credits.');
+		}
 
-$account->decreaseTotalSmrCredits(1);
-$account->increaseMessageNotifications($var['MessageTypeID'], MESSAGES_PER_CREDIT[$var['MessageTypeID']]);
-$account->update();
+		$account->decreaseTotalSmrCredits(1);
+		$account->increaseMessageNotifications($var['MessageTypeID'], MESSAGES_PER_CREDIT[$var['MessageTypeID']]);
+		$account->update();
 
-Page::create('buy_message_notifications.php', ['Message' => '<span class="green">SUCCESS</span>: You have purchased ' . MESSAGES_PER_CREDIT[$var['MessageTypeID']] . ' message notifications.'])->go();
+		Page::create('buy_message_notifications.php', ['Message' => '<span class="green">SUCCESS</span>: You have purchased ' . MESSAGES_PER_CREDIT[$var['MessageTypeID']] . ' message notifications.'])->go();

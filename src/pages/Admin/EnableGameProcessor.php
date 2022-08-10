@@ -2,14 +2,14 @@
 
 use Smr\Request;
 
-$game = SmrGame::getGame(Request::getInt('game_id'));
-$game->setEnabled(true);
-$game->save(); // because next page queries database
+		$game = SmrGame::getGame(Request::getInt('game_id'));
+		$game->setEnabled(true);
+		$game->save(); // because next page queries database
 
-// Create the Newbie Help Alliance
-require_once(LIB . 'Default/nha.inc.php');
-createNHA($game->getGameID());
+		// Create the Newbie Help Alliance
+		require_once(LIB . 'Default/nha.inc.php');
+		createNHA($game->getGameID());
 
-$msg = '<span class="green">SUCCESS: </span>Enabled game ' . $game->getDisplayName();
+		$msg = '<span class="green">SUCCESS: </span>Enabled game ' . $game->getDisplayName();
 
-Page::create('admin/enable_game.php', ['processing_msg' => $msg])->go();
+		Page::create('admin/enable_game.php', ['processing_msg' => $msg])->go();

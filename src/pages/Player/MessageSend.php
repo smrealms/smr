@@ -1,25 +1,25 @@
 <?php declare(strict_types=1);
 
-$template = Smr\Template::getInstance();
-$session = Smr\Session::getInstance();
-$var = $session->getCurrentVar();
-$player = $session->getPlayer();
+		$template = Smr\Template::getInstance();
+		$session = Smr\Session::getInstance();
+		$var = $session->getCurrentVar();
+		$player = $session->getPlayer();
 
-$template->assign('PageTopic', 'Send Message');
+		$template->assign('PageTopic', 'Send Message');
 
-Menu::messages();
+		Menu::messages();
 
-$container = Page::create('message_send_processing.php');
+		$container = Page::create('message_send_processing.php');
 
-if (isset($var['receiver'])) {
-	$container->addVar('receiver');
-	$template->assign('Receiver', SmrPlayer::getPlayer($var['receiver'], $player->getGameID())->getDisplayName());
-} else {
-	$template->assign('Receiver', 'All Online');
-}
+		if (isset($var['receiver'])) {
+			$container->addVar('receiver');
+			$template->assign('Receiver', SmrPlayer::getPlayer($var['receiver'], $player->getGameID())->getDisplayName());
+		} else {
+			$template->assign('Receiver', 'All Online');
+		}
 
-$template->assign('MessageSendFormHref', $container->href());
+		$template->assign('MessageSendFormHref', $container->href());
 
-if (isset($var['preview'])) {
-	$template->assign('Preview', $var['preview']);
-}
+		if (isset($var['preview'])) {
+			$template->assign('Preview', $var['preview']);
+		}

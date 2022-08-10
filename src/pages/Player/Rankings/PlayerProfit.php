@@ -1,25 +1,25 @@
 <?php declare(strict_types=1);
 
-$template = Smr\Template::getInstance();
-$session = Smr\Session::getInstance();
-$player = $session->getPlayer();
+		$template = Smr\Template::getInstance();
+		$session = Smr\Session::getInstance();
+		$player = $session->getPlayer();
 
-$template->assign('PageTopic', 'Profit Rankings');
+		$template->assign('PageTopic', 'Profit Rankings');
 
-Menu::rankings(0, 1);
+		Menu::rankings(0, 1);
 
-$hofCategory = ['Trade', 'Money', 'Profit'];
-$rankedStats = Rankings::playerStatsFromHOF($hofCategory, $player->getGameID());
+		$hofCategory = ['Trade', 'Money', 'Profit'];
+		$rankedStats = Rankings::playerStatsFromHOF($hofCategory, $player->getGameID());
 
-// what rank are we?
-$ourRank = Rankings::ourRank($rankedStats, $player->getPlayerID());
-$template->assign('OurRank', $ourRank);
+		// what rank are we?
+		$ourRank = Rankings::ourRank($rankedStats, $player->getPlayerID());
+		$template->assign('OurRank', $ourRank);
 
-$template->assign('Rankings', Rankings::collectRankings($rankedStats, $player));
+		$template->assign('Rankings', Rankings::collectRankings($rankedStats, $player));
 
-$totalPlayers = count($rankedStats);
-[$minRank, $maxRank] = Rankings::calculateMinMaxRanks($ourRank, $totalPlayers);
+		$totalPlayers = count($rankedStats);
+		[$minRank, $maxRank] = Rankings::calculateMinMaxRanks($ourRank, $totalPlayers);
 
-$template->assign('FilterRankingsHREF', Page::create('rankings_player_profit.php')->href());
+		$template->assign('FilterRankingsHREF', Page::create('rankings_player_profit.php')->href());
 
-$template->assign('FilteredRankings', Rankings::collectRankings($rankedStats, $player, $minRank, $maxRank));
+		$template->assign('FilteredRankings', Rankings::collectRankings($rankedStats, $player, $minRank, $maxRank));
