@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\Database;
+use Smr\Pages\Account\LoginCheckValidatedProcessor;
 use Smr\Request;
 
 try {
@@ -18,7 +19,7 @@ try {
 		// update last login column
 		$session->getAccount()->updateLastLogin();
 
-		$href = Page::create('login_check_processing.php')->href(true);
+		$href = (new LoginCheckValidatedProcessor())->href(true);
 		$session->update();
 
 		header('Location: ' . $href);

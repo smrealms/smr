@@ -33,11 +33,11 @@ if ($WinningTicket) { ?>
 } ?>
 
 <div class="buttonA">
-	<a class="buttonA" href="<?php echo Globals::getBarLottoPlayHREF(); ?>">Play the Galactic Lotto</a>
+	<a class="buttonA" href="<?php echo $LottoBuyHREF; ?>">Play the Galactic Lotto</a>
 </div>
 &nbsp;&nbsp;&nbsp;&nbsp;
 <div class="buttonA">
-	<a class="buttonA" href="<?php echo Globals::getBarBlackjackHREF(); ?>">Play Some Blackjack</a>
+	<a class="buttonA" href="<?php echo $BlackjackHREF; ?>">Play Some Blackjack</a>
 </div>
 
 <br />

@@ -10,6 +10,6 @@
 </form>
 
 <br />
-<a href="<?php echo Globals::getBarMainHREF(); ?>" class="submitStyle">Enough talk</a>
+<a href="<?php echo $BackHREF; ?>" class="submitStyle">Enough talk</a>
 &nbsp;&nbsp;
 <a href="<?php echo $ListenHREF; ?>" class="submitStyle">Keep listening</a>

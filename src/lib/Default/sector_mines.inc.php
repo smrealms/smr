@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Pages\Player\AttackForcesProcessor;
+use Smr\Pages\Player\CurrentSector;
 use Smr\ShipClass;
 
 function hit_sector_mines(AbstractSmrPlayer $player): void {
@@ -22,18 +24,16 @@ function hit_sector_mines(AbstractSmrPlayer $player): void {
 	if ($player->hasNewbieTurns() || $ship->getClass() === ShipClass::Scout) {
 		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost($ship);
 		$player->takeTurns($turns, $turns);
-		$container = Page::create('current_sector.php');
 		if ($player->hasNewbieTurns()) {
 			$flavor = 'Because of your newbie status you have been spared from the harsh reality of the forces';
 		} else {
 			$flavor = 'Your ship was sufficiently agile to evade them';
 		}
-		$container['msg'] = 'You have just flown past a sprinkle of mines.<br />' . $flavor . ',<br />but it has cost you <span class="red">' . pluralise($turns, 'turn') . '</span> to navigate the minefield safely.';
+		$msg = 'You have just flown past a sprinkle of mines.<br />' . $flavor . ',<br />but it has cost you <span class="red">' . pluralise($turns, 'turn') . '</span> to navigate the minefield safely.';
+		$container = new CurrentSector(message: $msg);
 		$container->go();
 	} else {
-		$container = Page::create('forces_attack_processing.php');
-		$container['bump'] = true;
-		$container['owner_id'] = $mine_owner_id;
+		$container = new AttackForcesProcessor($mine_owner_id, bump: true);
 		$container->go();
 	}
 

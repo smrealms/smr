@@ -2,6 +2,43 @@
 
 use Smr\Database;
 use Smr\Exceptions\UserError;
+use Smr\Pages\Account\BugReportProcessor;
+use Smr\Pages\Account\BuyMessageNotifications;
+use Smr\Pages\Account\FeatureRequest;
+use Smr\Pages\Account\NewsReadAdvanced;
+use Smr\Pages\Player\AllianceBroadcast;
+use Smr\Pages\Player\AllianceForces;
+use Smr\Pages\Player\AllianceList;
+use Smr\Pages\Player\AllianceMessageBoard;
+use Smr\Pages\Player\AllianceMotd;
+use Smr\Pages\Player\AllianceOptions;
+use Smr\Pages\Player\AllianceRoster;
+use Smr\Pages\Player\AttackPlayerProcessor;
+use Smr\Pages\Player\Bank\AllianceBank;
+use Smr\Pages\Player\BetaFunctions;
+use Smr\Pages\Player\BuyShipName;
+use Smr\Pages\Player\Chess\MatchList;
+use Smr\Pages\Player\Chess\MatchStartProcessor;
+use Smr\Pages\Player\Council\MessageCouncil;
+use Smr\Pages\Player\Council\ViewCouncil;
+use Smr\Pages\Player\CurrentPlayers;
+use Smr\Pages\Player\CurrentSector;
+use Smr\Pages\Player\ListPlanetDefense;
+use Smr\Pages\Player\ListPlanetFinancial;
+use Smr\Pages\Player\LocalMap;
+use Smr\Pages\Player\MessageBlacklist;
+use Smr\Pages\Player\MessageBox;
+use Smr\Pages\Player\MessageSend;
+use Smr\Pages\Player\PlotCourse;
+use Smr\Pages\Player\PlotCourseConventionalProcessor;
+use Smr\Pages\Player\SectorMoveProcessor;
+use Smr\Pages\Player\SectorScan;
+use Smr\Pages\Player\SectorsFileDownloadProcessor;
+use Smr\Pages\Player\ShopGoods;
+use Smr\Pages\Player\TraderBounties;
+use Smr\Pages\Player\TraderRelations;
+use Smr\Pages\Player\TraderStatus;
+use Smr\Pages\Player\WeaponReorderProcessor;
 use Smr\Race;
 
 class Globals {
@@ -104,7 +141,7 @@ class Globals {
 	public static function getColouredRaceName(int $raceID, int $relations, bool $linked = true): string {
 		$raceName = get_colored_text($relations, Race::getName($raceID));
 		if ($linked === true) {
-			$container = Page::create('council_list.php', ['race_id' => $raceID]);
+			$container = new ViewCouncil($raceID);
 			$raceName = create_link($container, $raceName);
 		}
 		return $raceName;
@@ -213,97 +250,67 @@ class Globals {
 	}
 
 	public static function getFeatureRequestHREF(): string {
-		return Page::create('feature_request.php')->href();
+		return (new FeatureRequest())->href();
 	}
 
 	public static function getCurrentSectorHREF(): string {
-		return self::$AVAILABLE_LINKS['CurrentSector'] = Page::create('current_sector.php')->href();
+		return self::$AVAILABLE_LINKS['CurrentSector'] = (new CurrentSector())->href();
 	}
 
 	public static function getLocalMapHREF(): string {
-		return self::$AVAILABLE_LINKS['LocalMap'] = Page::create('map_local.php')->href();
+		return self::$AVAILABLE_LINKS['LocalMap'] = (new LocalMap())->href();
 	}
 
 	public static function getCurrentPlayersHREF(): string {
-		return self::$AVAILABLE_LINKS['CurrentPlayers'] = Page::create('current_players.php')->href();
+		return self::$AVAILABLE_LINKS['CurrentPlayers'] = (new CurrentPlayers())->href();
 	}
 
 	public static function getTradeHREF(): string {
-		return self::$AVAILABLE_LINKS['EnterPort'] = Page::create('shop_goods.php')->href();
+		return self::$AVAILABLE_LINKS['EnterPort'] = (new ShopGoods())->href();
 	}
 
 	public static function getAttackTraderHREF(int $accountID): string {
-		$container = Page::create('trader_attack_processing.php');
-		$container['target'] = $accountID;
+		$container = new AttackPlayerProcessor($accountID);
 		return self::$AVAILABLE_LINKS['AttackTrader'] = $container->href();
 	}
 
 	public static function getBetaFunctionsHREF(): string { //BETA
-		return Page::create('beta_functions.php')->href();
+		return (new BetaFunctions())->href();
 	}
 
 	public static function getBugReportProcessingHREF(): string {
-		return Page::create('bug_report_processing.php')->href();
+		return (new BugReportProcessor())->href();
 	}
 
 	public static function getWeaponReorderHREF(int $weaponOrderID, string $direction): string {
-		$container = Page::create('weapon_reorder_processing.php');
-		$container[$direction] = $weaponOrderID;
+		$container = new WeaponReorderProcessor($weaponOrderID, $direction);
 		return $container->href();
 	}
 
-	public static function getSmrFileCreateHREF(int $adminCreateGameID = null): string {
-		$container = Page::create('smr_file_create.php');
-		$container['AdminCreateGameID'] = $adminCreateGameID;
+	public static function getSmrFileCreateHREF(): string {
+		$container = new SectorsFileDownloadProcessor();
 		return $container->href();
 	}
 
 	public static function getCurrentSectorMoveHREF(AbstractSmrPlayer $player, int $toSector): string {
-		return self::getSectorMoveHREF($player, $toSector, 'current_sector.php');
+		return self::getSectorMoveHREF($player, $toSector, new CurrentSector());
 	}
 
-	public static function getSectorMoveHREF(AbstractSmrPlayer $player, int $toSector, string $targetPage): string {
-		$container = Page::create('sector_move_processing.php');
-		$container['target_page'] = $targetPage;
-		$container['target_sector'] = $toSector;
+	public static function getSectorMoveHREF(AbstractSmrPlayer $player, int $toSector, CurrentSector|LocalMap $targetPage): string {
+		$container = new SectorMoveProcessor($toSector, $targetPage);
 		return self::$AVAILABLE_LINKS['Move' . $player->getSector()->getSectorDirection($toSector)] = $container->href();
 	}
 
 	public static function getSectorScanHREF(AbstractSmrPlayer $player, int $toSector): string {
-		$container = Page::create('sector_scan.php');
-		$container['target_sector'] = $toSector;
+		$container = new SectorScan($toSector);
 		return self::$AVAILABLE_LINKS['Scan' . $player->getSector()->getSectorDirection($toSector)] = $container->href();
 	}
 
 	public static function getPlotCourseHREF(int $fromSector = null, int $toSector = null): string {
 		if ($fromSector === null && $toSector === null) {
-			return self::$AVAILABLE_LINKS['PlotCourse'] = Page::create('course_plot.php')->href();
+			return self::$AVAILABLE_LINKS['PlotCourse'] = (new PlotCourse())->href();
 		}
-		return Page::create('course_plot_processing.php', ['from' => $fromSector, 'to' => $toSector])->href();
-	}
-
-	public static function getPlanetMainHREF(): string {
-		return Page::create('planet_main.php')->href();
-	}
-
-	public static function getPlanetConstructionHREF(): string {
-		return Page::create('planet_construction.php')->href();
-	}
-
-	public static function getPlanetDefensesHREF(): string {
-		return Page::create('planet_defense.php')->href();
-	}
-
-	public static function getPlanetOwnershipHREF(): string {
-		return Page::create('planet_ownership.php')->href();
-	}
-
-	public static function getPlanetStockpileHREF(): string {
-		return Page::create('planet_stockpile.php')->href();
-	}
-
-	public static function getPlanetFinancesHREF(): string {
-		return Page::create('planet_financial.php')->href();
+		return (new PlotCourseConventionalProcessor(from: $fromSector, to: $toSector))->href();
 	}
 
 	public static function getAllianceHREF(int $allianceID = null): string {
@@ -313,131 +320,103 @@ class Globals {
 		return self::getAllianceListHREF();
 	}
 
-	public static function getAllianceBankHREF(int $allianceID = null): string {
-		$container = Page::create('bank_alliance.php');
-		$container['alliance_id'] = $allianceID;
+	public static function getAllianceBankHREF(int $allianceID): string {
+		$container = new AllianceBank($allianceID);
 		return $container->href();
 	}
 
 	public static function getAllianceRosterHREF(int $allianceID = null): string {
-		$container = Page::create('alliance_roster.php');
-		$container['alliance_id'] = $allianceID;
-		return $container->href();
+		return (new AllianceRoster($allianceID))->href();
 	}
 
 	public static function getAllianceListHREF(): string {
-		return Page::create('alliance_list.php')->href();
+		return (new AllianceList())->href();
 	}
 
-	public static function getAllianceNewsHREF(int $allianceID): string {
-		return Page::create('news_read_advanced.php', ['allianceID' => $allianceID, 'submit' => 'Search For Alliance'])->href();
+	public static function getAllianceNewsHREF(int $gameID, int $allianceID): string {
+		return (new NewsReadAdvanced(gameID: $gameID, submit: 'Search For Alliance', allianceIDs: [$allianceID]))->href();
 	}
 
 	public static function getAllianceMotdHREF(int $allianceID): string {
-		return Page::create('alliance_mod.php', ['alliance_id' => $allianceID])->href();
+		return (new AllianceMotd($allianceID))->href();
 	}
 
 	public static function getAllianceMessageHREF(int $allianceID): string {
-		return Page::create('alliance_broadcast.php', ['alliance_id' => $allianceID])->href();
+		return (new AllianceBroadcast($allianceID))->href();
 	}
 
 	public static function getAllianceMessageBoardHREF(int $allianceID): string {
-		return Page::create('alliance_message.php', ['alliance_id' => $allianceID])->href();
+		return (new AllianceMessageBoard($allianceID))->href();
 	}
 
 	public static function getAllianceForcesHREF(int $allianceID): string {
-		return Page::create('alliance_forces.php', ['alliance_id' => $allianceID])->href();
+		return (new AllianceForces($allianceID))->href();
 	}
 
-	public static function getAllianceOptionsHREF(int $allianceID): string {
-		return Page::create('alliance_option.php', ['alliance_id' => $allianceID])->href();
+	public static function getAllianceOptionsHREF(): string {
+		return (new AllianceOptions())->href();
 	}
 
 	public static function getPlanetListHREF(int $allianceID): string {
-		return Page::create('planet_list.php', ['alliance_id' => $allianceID])->href();
+		return (new ListPlanetDefense($allianceID))->href();
 	}
 
 	public static function getPlanetListFinancialHREF(int $allianceID): string {
-		return Page::create('planet_list_financial.php', ['alliance_id' => $allianceID])->href();
+		return (new ListPlanetFinancial($allianceID))->href();
 	}
 
 	public static function getViewMessageBoxesHREF(): string {
-		return Page::create('message_box.php')->href();
+		return (new MessageBox())->href();
 	}
 
 	public static function getSendGlobalMessageHREF(): string {
-		return Page::create('message_send.php')->href();
+		return (new MessageSend())->href();
 	}
 
 	public static function getManageBlacklistHREF(): string {
-		return Page::create('message_blacklist.php')->href();
+		return (new MessageBlacklist())->href();
 	}
 
 	public static function getSendCouncilMessageHREF(int $raceID): string {
-		$container = Page::create('council_send_message.php');
-		$container['race_id'] = $raceID;
-		$container['folder_id'] = MSG_POLITICAL;
+		$container = new MessageCouncil($raceID);
 		return $container->href();
 	}
 
 	public static function getTraderStatusHREF(): string {
-		return Page::create('trader_status.php')->href();
+		return (new TraderStatus())->href();
 	}
 
-	public static function getCouncilHREF(int $raceID = null): string {
-		$container = Page::create('council_list.php');
-		$container['race_id'] = $raceID;
+	public static function getCouncilHREF(int $raceID): string {
+		$container = new ViewCouncil($raceID);
 		return $container->href();
 	}
 
 	public static function getTraderRelationsHREF(): string {
-		return Page::create('trader_relations.php')->href();
+		return (new TraderRelations())->href();
 	}
 
 	public static function getTraderBountiesHREF(): string {
-		return Page::create('trader_bounties.php')->href();
-	}
-
-	public static function getPoliticsHREF(): string {
-		return Page::create('council_list.php')->href();
+		return (new TraderBounties())->href();
 	}
 
 	public static function getCasinoHREF(): string {
-		return Page::create('chess.php')->href();
+		return (new MatchList())->href();
 	}
 
 	public static function getChessHREF(): string {
-		return Page::create('chess.php')->href();
+		return (new MatchList())->href();
 	}
 
 	public static function getChessCreateHREF(): string {
-		return Page::create('chess_create_processing.php')->href();
-	}
-
-	public static function getBarMainHREF(): string {
-		$container = Page::create('bar_main.php');
-		$container->addVar('LocationID');
-		return $container->href();
-	}
-
-	public static function getBarLottoPlayHREF(): string {
-		$container = Page::create('bar_lotto_buy.php');
-		$container->addVar('LocationID');
-		return $container->href();
-	}
-
-	public static function getBarBlackjackHREF(): string {
-		$container = Page::create('bar_gambling_bet.php');
-		$container->addVar('LocationID');
-		return $container->href();
+		return (new MatchStartProcessor())->href();
 	}
 
 	public static function getBuyMessageNotificationsHREF(): string {
-		return Page::create('buy_message_notifications.php')->href();
+		return (new BuyMessageNotifications())->href();
 	}
 
 	public static function getBuyShipNameHREF(): string {
-		return Page::create('buy_ship_name.php')->href();
+		return (new BuyShipName())->href();
 	}
 
 	/**

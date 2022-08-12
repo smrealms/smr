@@ -4,6 +4,12 @@ use Smr\BountyType;
 use Smr\Database;
 use Smr\DatabaseRecord;
 use Smr\Epoch;
+use Smr\Pages\Player\AttackPortClaimProcessor;
+use Smr\Pages\Player\AttackPortConfirm;
+use Smr\Pages\Player\AttackPortLootProcessor;
+use Smr\Pages\Player\AttackPortPayoutProcessor;
+use Smr\Pages\Player\AttackPortProcessor;
+use Smr\Pages\Player\CurrentSector;
 use Smr\PortPayoutType;
 use Smr\TransactionType;
 
@@ -1085,27 +1091,22 @@ class AbstractSmrPort {
 	}
 
 	public function getRaidWarningHREF(): string {
-		return Page::create('port_attack_warning.php')->href();
+		return (new AttackPortConfirm())->href();
 	}
 
 	public function getAttackHREF(): string {
-		$container = Page::create('port_attack_processing.php');
-		$container['port_id'] = $this->getSectorID();
-		return $container->href();
+		return (new AttackPortProcessor())->href();
 	}
 
 	public function getClaimHREF(): string {
-		$container = Page::create('port_claim_processing.php');
-		$container['port_id'] = $this->getSectorID();
-		return $container->href();
+		return (new AttackPortClaimProcessor())->href();
 	}
 
 	/**
 	 * @return ($justContainer is false ? string : Page)
 	 */
 	public function getRazeHREF(bool $justContainer = false): string|Page {
-		$container = Page::create('port_payout_processing.php');
-		$container['PayoutType'] = PortPayoutType::Raze;
+		$container = new AttackPortPayoutProcessor(PortPayoutType::Raze);
 		return $justContainer === false ? $container->href() : $container;
 	}
 
@@ -1114,18 +1115,15 @@ class AbstractSmrPort {
 	 */
 	public function getLootHREF(bool $justContainer = false): string|Page {
 		if ($this->getCredits() > 0) {
-			$container = Page::create('port_payout_processing.php');
-			$container['PayoutType'] = PortPayoutType::Loot;
+			$container = new AttackPortPayoutProcessor(PortPayoutType::Loot);
 		} else {
-			$container = Page::create('current_sector.php');
-			$container['msg'] = 'This port has already been looted.';
+			$container = new CurrentSector(message: 'This port has already been looted.');
 		}
 		return $justContainer === false ? $container->href() : $container;
 	}
 
 	public function getLootGoodHREF(int $boughtGoodID): string {
-		$container = Page::create('port_loot_processing.php');
-		$container['GoodID'] = $boughtGoodID;
+		$container = new AttackPortLootProcessor($boughtGoodID);
 		return $container->href();
 	}
 

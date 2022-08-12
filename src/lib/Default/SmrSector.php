@@ -4,6 +4,7 @@ use Smr\Database;
 use Smr\DatabaseRecord;
 use Smr\Exceptions\SectorNotFound;
 use Smr\MovementType;
+use Smr\Pages\Player\LocalMap;
 
 class SmrSector {
 
@@ -970,7 +971,7 @@ class SmrSector {
 	}
 
 	public function getLocalMapMoveHREF(AbstractSmrPlayer $player): string {
-		return Globals::getSectorMoveHREF($player, $this->getSectorID(), 'map_local.php');
+		return Globals::getSectorMoveHREF($player, $this->getSectorID(), new LocalMap());
 	}
 
 	public function getCurrentSectorMoveHREF(AbstractSmrPlayer $player): string {

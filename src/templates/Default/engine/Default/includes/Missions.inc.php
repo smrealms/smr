@@ -1,4 +1,10 @@
 <?php
+
+use Smr\Pages\Player\Mission\AbandonProcessor;
+use Smr\Pages\Player\Mission\AcceptProcessor;
+use Smr\Pages\Player\Mission\ClaimProcessor;
+use Smr\Pages\Player\Mission\DeclineProcessor;
+
 if (isset($MissionMessage)) { ?>
 	<span class="green">Mission Complete: </span><?php
 	echo $MissionMessage;
@@ -9,8 +15,8 @@ foreach ($ThisPlayer->getAvailableMissions() as $MissionID => $Mission) { ?>
 	echo bbifyMessage($Mission['Steps'][0]['Text']); ?>
 	<div class="buttonA">
 		<p>
-			<a href="<?php echo Mission::getAcceptHREF($MissionID); ?>" class="buttonA">Accept</a>&nbsp;
-			<a href="<?php echo Mission::getDeclineHREF($MissionID); ?>" class="buttonA">Decline</a>
+			<a href="<?php echo (new AcceptProcessor($MissionID))->href(); ?>" class="buttonA">Accept</a>&nbsp;
+			<a href="<?php echo (new DeclineProcessor($MissionID))->href(); ?>" class="buttonA">Decline</a>
 		</p>
 	</div><?php
 }
@@ -22,13 +28,13 @@ foreach ($ThisPlayer->getActiveMissions() as $MissionID => $Mission) {
 	}
 	if ($Mission['Task']['Step'] == 'Claim') { ?>
 		<div class="buttonA">
-			<p><a href="<?php echo Mission::getClaimRewardHREF($MissionID); ?>" class="buttonA">Claim Reward</a></p>
+			<p><a href="<?php echo (new ClaimProcessor($MissionID))->href(); ?>" class="buttonA">Claim Reward</a></p>
 		</div><?php
 	} else { ?>
 		<span class="green">Current Task: </span><?php
 		echo bbifyMessage($Mission['Task']['Task']); ?><br/>
 		<div class="buttonA">
-			<p><a class="buttonA" href="<?php echo Mission::getAbandonHREF($MissionID); ?>">Abandon Mission</a></p>
+			<p><a class="buttonA" href="<?php echo (new AbandonProcessor($MissionID))->href(); ?>">Abandon Mission</a></p>
 		</div><?php
 	}
 }

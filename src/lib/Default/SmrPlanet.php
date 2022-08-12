@@ -4,6 +4,12 @@ use Smr\Database;
 use Smr\DatabaseRecord;
 use Smr\Epoch;
 use Smr\Exceptions\UserError;
+use Smr\Pages\Player\AttackPlanetProcessor;
+use Smr\Pages\Player\ExaminePlanet;
+use Smr\Pages\Player\Planet\BondConfirm;
+use Smr\Pages\Player\Planet\ConstructionProcessor;
+use Smr\Pages\Player\Planet\FinancialProcessor;
+use Smr\Pages\Player\Planet\LandProcessor;
 use Smr\PlanetTypes\PlanetType;
 
 class SmrPlanet {
@@ -1053,37 +1059,33 @@ class SmrPlanet {
 	}
 
 	public function getExamineHREF(): string {
-		return Page::create('planet_examine.php')->href();
+		return (new ExaminePlanet())->href();
 	}
 
 	public function getLandHREF(): string {
-		return Page::create('planet_land_processing.php')->href();
+		return (new LandProcessor())->href();
 	}
 
 	public function getAttackHREF(): string {
-		return Page::create('planet_attack_processing.php')->href();
+		return (new AttackPlanetProcessor())->href();
 	}
 
 	public function getBuildHREF(int $structureID): string {
-		$container = Page::create('planet_construction_processing.php');
-		$container['construction_id'] = $structureID;
-		$container['action'] = 'Build';
+		$container = new ConstructionProcessor('Build', $structureID);
 		return $container->href();
 	}
 
 	public function getCancelHREF(int $structureID): string {
-		$container = Page::create('planet_construction_processing.php');
-		$container['construction_id'] = $structureID;
-		$container['action'] = 'Cancel';
+		$container = new ConstructionProcessor('Cancel', $structureID);
 		return $container->href();
 	}
 
 	public function getFinancesHREF(): string {
-		return Page::create('planet_financial_processing.php')->href();
+		return (new FinancialProcessor())->href();
 	}
 
 	public function getBondConfirmationHREF(): string {
-		return Page::create('planet_bond_confirmation.php')->href();
+		return (new BondConfirm())->href();
 	}
 
 	/**

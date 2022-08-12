@@ -6,6 +6,16 @@ use AbstractSmrPlayer;
 use Page;
 use Smr\Container\DiContainer;
 use Smr\Exceptions\UserError;
+use Smr\Pages\Player\AttackPlayerProcessor;
+use Smr\Pages\Player\ExamineTrader;
+use Smr\Pages\Player\ForcesDrop;
+use Smr\Pages\Player\ForcesDropProcessor;
+use Smr\Pages\Player\ForcesRefreshProcessor;
+use Smr\Pages\Player\HardwareConfigure;
+use Smr\Pages\Player\SectorJumpProcessor;
+use Smr\Pages\Player\SectorMoveProcessor;
+use Smr\Pages\Player\SectorScan;
+use Smr\Pages\Player\ShopGoodsProcessor;
 use SmrAccount;
 use SmrPlayer;
 
@@ -14,16 +24,16 @@ class Session {
 	private const TIME_BEFORE_EXPIRY = 172800; // 2 days
 
 	private const URL_LOAD_DELAY = [
-		'configure_hardware.php' => .4,
-		'forces_drop.php' => .4,
-		'forces_drop_processing.php' => .5,
-		'forces_refresh_processing.php' => .4,
-		'sector_jump_processing.php' => .4,
-		'sector_move_processing.php' => .4,
-		'sector_scan.php' => .4,
-		'shop_goods_processing.php' => .4,
-		'trader_attack_processing.php' => .75,
-		'trader_examine.php' => .75,
+		HardwareConfigure::class => .4,
+		ForcesDrop::class => .4,
+		ForcesDropProcessor::class => .5,
+		ForcesRefreshProcessor::class => .4,
+		SectorJumpProcessor::class => .4,
+		SectorMoveProcessor::class => .4,
+		SectorScan::class => .4,
+		ShopGoodsProcessor::class => .4,
+		AttackPlayerProcessor::class => .75,
+		ExamineTrader::class => .75,
 	];
 
 	protected Database $db;

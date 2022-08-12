@@ -3,7 +3,7 @@
 namespace Smr;
 
 use Exception;
-use Page;
+use Smr\Pages\Player\VoteLinkProcessor;
 
 /**
  * Site-independent handling of links to external game voting sites.
@@ -156,7 +156,7 @@ class VoteLink {
 			return false;
 		}
 		// This page will prepare the account for the voting callback.
-		return Page::create('vote_link.php', ['vote_site' => $this->site])->href();
+		return (new VoteLinkProcessor($this->site))->href();
 	}
 
 }

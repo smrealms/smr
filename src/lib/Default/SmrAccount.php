@@ -4,6 +4,7 @@ use Smr\Database;
 use Smr\Epoch;
 use Smr\Exceptions\AccountNotFound;
 use Smr\Exceptions\UserError;
+use Smr\Pages\Account\HallOfFamePersonal;
 use Smr\SocialLogin\SocialLogin;
 use Smr\UserRanking;
 
@@ -1338,12 +1339,8 @@ class SmrAccount {
 		}
 	}
 
-	public function getUserRankingHREF(): string {
-		return Page::create('rankings_view.php')->href();
-	}
-
 	public function getPersonalHofHREF(): string {
-		return Page::create('hall_of_fame_player_detail.php', ['account_id' => $this->getAccountID()])->href();
+		return (new HallOfFamePersonal($this->getAccountID()))->href();
 	}
 
 }

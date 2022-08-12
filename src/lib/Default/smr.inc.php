@@ -6,6 +6,39 @@ use Smr\Database;
 use Smr\Epoch;
 use Smr\Exceptions\UserError;
 use Smr\Messages;
+use Smr\Pages\Account\AlbumEdit;
+use Smr\Pages\Account\BugReport;
+use Smr\Pages\Account\ChangelogView;
+use Smr\Pages\Account\ChatJoin;
+use Smr\Pages\Account\ContactForm;
+use Smr\Pages\Account\Donation;
+use Smr\Pages\Account\ErrorDisplay;
+use Smr\Pages\Account\GameLeaveProcessor;
+use Smr\Pages\Account\GamePlay;
+use Smr\Pages\Account\HallOfFameAll;
+use Smr\Pages\Account\LogoffProcessor;
+use Smr\Pages\Account\Preferences;
+use Smr\Pages\Admin\AdminTools;
+use Smr\Pages\Player\AllianceInviteAcceptProcessor;
+use Smr\Pages\Player\AllianceMotd;
+use Smr\Pages\Player\AllianceRoster;
+use Smr\Pages\Player\CargoDump;
+use Smr\Pages\Player\CombatLogList;
+use Smr\Pages\Player\CombatLogViewerVerifyProcessor;
+use Smr\Pages\Player\CurrentSector;
+use Smr\Pages\Player\DeathProcessor;
+use Smr\Pages\Player\ForcesDrop;
+use Smr\Pages\Player\ForcesDropProcessor;
+use Smr\Pages\Player\ForcesList;
+use Smr\Pages\Player\GalacticPost\CurrentEditionProcessor;
+use Smr\Pages\Player\HardwareConfigure;
+use Smr\Pages\Player\MessageView;
+use Smr\Pages\Player\NewbieWarningProcessor;
+use Smr\Pages\Player\NewsReadCurrent;
+use Smr\Pages\Player\Rankings\PlayerExperience;
+use Smr\Pages\Player\SearchForTrader;
+use Smr\Pages\Player\SearchForTraderResult;
+use Smr\Pages\Player\WeaponReorder;
 use Smr\Race;
 use Smr\SectorLock;
 use Smr\Session;
@@ -22,8 +55,7 @@ function parseBoolean(mixed $check): bool {
 }
 
 function linkCombatLog(int $logID): string {
-	$container = Page::create('combat_log_viewer_verify.php');
-	$container['log_id'] = $logID;
+	$container = new CombatLogViewerVerifyProcessor($logID);
 	return '<a href="' . $container->href() . '"><img src="images/notify.gif" width="14" height="11" border="0" title="View the combat log" /></a>';
 }
 
@@ -67,11 +99,10 @@ function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string 
 				$alliance = SmrAlliance::getAlliance($allianceID, $overrideGameID);
 				if ($disableBBLinks === false && $overrideGameID == $session->getGameID()) {
 					if ($session->hasGame() && $alliance->getAllianceID() == $session->getPlayer()->getAllianceID()) {
-						$container = Page::create('alliance_mod.php');
+						$container = new AllianceMotd($alliance->getAllianceID());
 					} else {
-						$container = Page::create('alliance_roster.php');
+						$container = new AllianceRoster($alliance->getAllianceID());
 					}
-					$container['alliance_id'] = $alliance->getAllianceID();
 					return create_link($container, $alliance->getAllianceDisplayName());
 				}
 				return $alliance->getAllianceDisplayName();
@@ -132,8 +163,7 @@ function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string 
 				}
 				$allianceID = (int)$default;
 				$alliance = SmrAlliance::getAlliance($allianceID, $overrideGameID);
-				$container = Page::create('alliance_invite_accept_processing.php');
-				$container['alliance_id'] = $alliance->getAllianceID();
+				$container = new AllianceInviteAcceptProcessor($allianceID);
 				return '<div class="buttonA"><a class="buttonA" href="' . $container->href() . '">Join ' . $alliance->getAllianceDisplayName() . '</a></div>';
 		}
 	} catch (Throwable) {
@@ -211,12 +241,10 @@ function handleUserError(string $message): never {
 
 	$session = Session::getInstance();
 	if ($session->hasGame()) {
-		$container = Page::create('current_sector.php');
 		$errorMsg = '<span class="red bold">ERROR: </span>' . $message;
-		$container['errorMsg'] = $errorMsg;
+		$container = new CurrentSector(errorMessage: $errorMsg);
 	} else {
-		$container = Page::create('error.php');
-		$container['message'] = $message;
+		$container = new ErrorDisplay(message: $message);
 	}
 
 	if ($session->ajax) {
@@ -359,13 +387,13 @@ function do_voodoo(): never {
 		// Check if we need to redirect to a different page
 		if (!$var->skipRedirect && !$session->ajax) {
 			if ($player->getGame()->hasEnded()) {
-				Page::create('game_leave_processing.php', ['forward_to' => 'game_play.php', 'errorMsg' => 'The game has ended.'], skipRedirect: true)->go();
+				(new GameLeaveProcessor(new GamePlay(errorMessage: 'The game has ended.')))->go();
 			}
 			if ($player->isDead()) {
-				Page::create('death_processing.php', skipRedirect: true)->go();
+				(new DeathProcessor())->go();
 			}
 			if ($player->getNewbieWarning() && $player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT) {
-				Page::create('newbie_warning_processing.php', skipRedirect: true)->go();
+				(new NewbieWarningProcessor())->go();
 			}
 		}
 	}
@@ -489,33 +517,33 @@ function doSkeletonAssigns(Template $template): void {
 	$template->assign('FontSize', $account->getFontSize() - 20);
 	$template->assign('timeDisplay', date($account->getDateTimeFormatSplit(), Epoch::time()));
 
-	$container = Page::create('hall_of_fame_new.php');
+	$container = new HallOfFameAll();
 	$template->assign('HallOfFameLink', $container->href());
 
 	$template->assign('AccountID', $account->getAccountID());
-	$template->assign('PlayGameLink', Page::create('game_leave_processing.php', ['forward_to' => 'game_play.php'])->href());
+	$template->assign('PlayGameLink', (new GameLeaveProcessor(new GamePlay()))->href());
 
-	$template->assign('LogoutLink', Page::create('logoff.php')->href());
+	$template->assign('LogoutLink', (new LogoffProcessor())->href());
 
-	$container = Page::create('game_leave_processing.php', ['forward_to' => 'admin/admin_tools.php']);
+	$container = new GameLeaveProcessor(new AdminTools());
 	$template->assign('AdminToolsLink', $container->href());
 
-	$container = Page::create('preferences.php');
+	$container = new Preferences();
 	$template->assign('PreferencesLink', $container->href());
 
-	$container = Page::create('album_edit.php');
+	$container = new AlbumEdit();
 	$template->assign('EditPhotoLink', $container->href());
 
-	$container = Page::create('bug_report.php');
+	$container = new BugReport();
 	$template->assign('ReportABugLink', $container->href());
 
-	$container = Page::create('contact.php');
+	$container = new ContactForm();
 	$template->assign('ContactFormLink', $container->href());
 
-	$container = Page::create('chat_rules.php');
+	$container = new ChatJoin();
 	$template->assign('IRCLink', $container->href());
 
-	$container = Page::create('donation.php');
+	$container = new Donation();
 	$template->assign('DonateLink', $container->href());
 
 	if ($session->hasGame()) {
@@ -527,40 +555,38 @@ function doSkeletonAssigns(Template $template): void {
 
 		$template->assign('TraderLink', Globals::getTraderStatusHREF());
 
-		$template->assign('PoliticsLink', Globals::getPoliticsHREF());
+		$template->assign('PoliticsLink', Globals::getCouncilHREF($player->getRaceID()));
 
-		$container = Page::create('combat_log_list.php');
+		$container = new CombatLogList();
 		$template->assign('CombatLogsLink', $container->href());
 
 		$template->assign('PlanetLink', Globals::getPlanetListHREF($player->getAllianceID()));
 
-		$container = Page::create('forces_list.php');
+		$container = new ForcesList();
 		$template->assign('ForcesLink', $container->href());
 
 		$template->assign('MessagesLink', Globals::getViewMessageBoxesHREF());
 
-		$container = Page::create('news_read_current.php');
+		$container = new NewsReadCurrent();
 		$template->assign('ReadNewsLink', $container->href());
 
-		$container = Page::create('galactic_post_current.php');
+		$container = new CurrentEditionProcessor();
 		$template->assign('GalacticPostLink', $container->href());
 
-		$container = Page::create('trader_search.php');
+		$container = new SearchForTrader();
 		$template->assign('SearchForTraderLink', $container->href());
 
-		$container = Page::create('rankings_player_experience.php');
+		$container = new PlayerExperience();
 		$template->assign('RankingsLink', $container->href());
 
-		$container = Page::create('hall_of_fame_new.php');
-		$container['game_id'] = $player->getGameID();
+		$container = new HallOfFameAll($player->getGameID());
 		$template->assign('CurrentHallOfFameLink', $container->href());
 
 		$unreadMessages = [];
 		$dbResult = $db->read('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . $player->getSQL() . ' GROUP BY message_type_id');
-		$container = Page::create('message_view.php');
 		foreach ($dbResult->records() as $dbRecord) {
 			$messageTypeID = $dbRecord->getInt('message_type_id');
-			$container['folder_id'] = $messageTypeID;
+			$container = new MessageView($messageTypeID);
 			$unreadMessages[] = [
 				'href' => $container->href(),
 				'num' => $dbRecord->getInt('COUNT(*)'),
@@ -570,8 +596,7 @@ function doSkeletonAssigns(Template $template): void {
 		}
 		$template->assign('UnreadMessages', $unreadMessages);
 
-		$container = Page::create('trader_search_result.php');
-		$container['player_id'] = $player->getPlayerID();
+		$container = new SearchForTraderResult($player->getPlayerID());
 		$template->assign('PlayerNameLink', $container->href());
 
 		if (is_array(Globals::getHiddenPlayers()) && in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
@@ -579,40 +604,30 @@ function doSkeletonAssigns(Template $template): void {
 		}
 
 		// ******* Hardware *******
-		$container = Page::create('configure_hardware.php');
+		$container = new HardwareConfigure();
 		$template->assign('HardwareLink', $container->href());
 
 		// ******* Forces *******
-		$template->assign('ForceDropLink', Page::create('forces_drop.php')->href());
+		$template->assign('ForceDropLink', (new ForcesDrop())->href());
 
 		$ship = $player->getShip();
 		$var = Session::getInstance()->getCurrentVar();
 		if ($ship->hasMines()) {
-			$container = Page::create('forces_drop_processing.php');
-			$container['owner_id'] = $player->getAccountID();
-			$container['drop_mines'] = 1;
-			$container['referrer'] = $var->file;
+			$container = new ForcesDropProcessor($player->getAccountID(), referrer: $var::class, dropMines: 1);
 			$template->assign('DropMineLink', $container->href());
 		}
 		if ($ship->hasCDs()) {
-			$container = Page::create('forces_drop_processing.php');
-			$container['owner_id'] = $player->getAccountID();
-			$container['drop_combat_drones'] = 1;
-			$container['referrer'] = $var->file;
+			$container = new ForcesDropProcessor($player->getAccountID(), referrer: $var::class, dropCDs: 1);
 			$template->assign('DropCDLink', $container->href());
 		}
-
 		if ($ship->hasSDs()) {
-			$container = Page::create('forces_drop_processing.php');
-			$container['owner_id'] = $player->getAccountID();
-			$container['drop_scout_drones'] = 1;
-			$container['referrer'] = $var->file;
+			$container = new ForcesDropProcessor($player->getAccountID(), referrer: $var::class, dropSDs: 1);
 			$template->assign('DropSDLink', $container->href());
 		}
 
-		$template->assign('CargoJettisonLink', Page::create('cargo_dump.php')->href());
+		$template->assign('CargoJettisonLink', (new CargoDump())->href());
 
-		$template->assign('WeaponReorderLink', Page::create('weapon_reorder.php')->href());
+		$template->assign('WeaponReorderLink', (new WeaponReorder())->href());
 
 	}
 
@@ -641,7 +656,7 @@ function doSkeletonAssigns(Template $template): void {
 	$version = '';
 	if ($dbResult->hasRecord()) {
 		$dbRecord = $dbResult->record();
-		$container = Page::create('changelog_view.php');
+		$container = new ChangelogView();
 		$version = create_link($container, 'v' . $dbRecord->getInt('major_version') . '.' . $dbRecord->getInt('minor_version') . '.' . $dbRecord->getInt('patch_level'));
 	}
 

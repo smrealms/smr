@@ -4,10 +4,11 @@ namespace Smr\Chess;
 
 use AbstractSmrPlayer;
 use Exception;
-use Page;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Exceptions\UserError;
+use Smr\Pages\Player\Chess\MatchPlay;
+use Smr\Pages\Player\Chess\MatchResignProcessor;
 use SmrAccount;
 use SmrPlayer;
 
@@ -885,11 +886,11 @@ class ChessGame {
 	}
 
 	public function getPlayGameHREF(): string {
-		return Page::create('chess_play.php', ['ChessGameID' => $this->chessGameID])->href();
+		return (new MatchPlay($this->chessGameID))->href();
 	}
 
 	public function getResignHREF(): string {
-		return Page::create('chess_resign_processing.php', ['ChessGameID' => $this->chessGameID])->href();
+		return (new MatchResignProcessor($this->chessGameID))->href();
 	}
 
 }
