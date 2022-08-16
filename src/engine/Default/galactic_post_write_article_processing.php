@@ -28,10 +28,10 @@ if (isset($var['id'])) {
 	Page::create('galactic_post_view_article.php')->go();
 } else {
 	// Adding a new article
-	$message = 'Dear Galactic Post editors,<br /><br />[player=' . $player->getPlayerID() . '] has just submitted an article to the Galactic Post!';
+	$editorMsg = 'Dear Galactic Post editors,<br /><br />[player=' . $player->getPlayerID() . '] has just submitted an article to the Galactic Post!';
 	foreach (Globals::getGalacticPostEditorIDs($player->getGameID()) as $editorID) {
 		if ($editorID != $player->getAccountID()) {
-			SmrPlayer::sendMessageFromAdmin($player->getGameID(), $editorID, $message);
+			SmrPlayer::sendMessageFromAdmin($player->getGameID(), $editorID, $editorMsg);
 		}
 	}
 
