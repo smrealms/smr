@@ -24,7 +24,7 @@ $papers = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$paper_name = $dbRecord->getString('title');
 	$paper_id = $dbRecord->getInt('paper_id');
-	$published = $dbRecord->getInt('online_since');
+	$published = $dbRecord->getNullableInt('online_since') !== null;
 
 	$dbResult2 = $db->read('SELECT count(*) FROM galactic_post_paper_content WHERE paper_id = ' . $db->escapeNumber($paper_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	$numArticles = $dbResult2->record()->getInt('count(*)');
@@ -34,11 +34,10 @@ foreach ($dbResult->records() as $dbRecord) {
 		'title' => $dbRecord->getString('title'),
 		'num_articles' => $numArticles,
 		'color' => $hasEnoughArticles ? 'green' : 'red',
-		'published' => !empty($published) && $published > 0,
+		'published' => $published,
 	];
 
-	if (!empty($published)) {
-	} elseif ($hasEnoughArticles) {
+	if ($hasEnoughArticles && !$published) {
 		$container = Page::create('galactic_post_make_current.php');
 		$container['id'] = $paper_id;
 		$paper['PublishHREF'] = $container->href();
