@@ -31,7 +31,7 @@
 					} elseif ($AttackResultsType == 'PORT') {
 						$this->includeTemplate('includes/PortFullCombatResults.inc.php', ['FullPortCombatResults' => $AttackResults, 'MinimalDisplay' => true, 'AlreadyDestroyed' => false]);
 					} elseif ($AttackResultsType == 'PLANET') {
-						$this->includeTemplate('includes/PlanetFullCombatResults.inc.php', ['FullPlanetCombatResults' => $AttackResults, 'MinimalDisplay' => true, 'AlreadyDestroyed' => false]);
+						$this->includeTemplate('includes/PlanetFullCombatResults.inc.php', ['FullPlanetCombatResults' => $AttackResults, 'MinimalDisplay' => true]);
 					} ?><br /><?php
 				}
 				if (isset($VarMessage)) {

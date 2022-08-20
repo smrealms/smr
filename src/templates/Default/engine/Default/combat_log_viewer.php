@@ -28,7 +28,6 @@ if ($CombatResultsType == 'PLAYER') {
 	$this->includeTemplate('includes/PlanetFullCombatResults.inc.php', [
 		'FullPlanetCombatResults' => $CombatResults,
 		'MinimalDisplay' => false,
-		'AlreadyDestroyed' => false,
 	]);
 }
 ?>
