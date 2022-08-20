@@ -22,9 +22,6 @@
         <!-- Allow more compact docstrings (i.e. single line @var). -->
         <exclude name="PSR2R.Commenting.DocComment" />
 
-        <!-- Temporary until advanced PHPStan typehints are supported. -->
-        <exclude name="PSR2R.Commenting.FullyQualifiedClassNameInDocBlock" />
-
         <!-- Erroneous sniff. Static and self are not interchangeable. -->
         <exclude name="PSR2R.PHP.PreferStaticOverSelf" />
 

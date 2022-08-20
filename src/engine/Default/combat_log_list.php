@@ -20,7 +20,7 @@ if (isset($var['message'])) {
 if (!isset($var['action'])) {
 	$var['action'] = CombatLogType::Personal;
 }
-/** @var CombatLogType $action */
+/** @var \Smr\CombatLogType $action */
 $action = $var['action'];
 
 $query = match ($action) {

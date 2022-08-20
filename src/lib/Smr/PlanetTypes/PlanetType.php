@@ -65,7 +65,7 @@ abstract class PlanetType {
 	/**
 	 * Access properties of structures that this planet type can build.
 	 *
-	 * @return SmrPlanetStructureType|array<int, SmrPlanetStructureType>
+	 * @return \SmrPlanetStructureType|array<int, \SmrPlanetStructureType>
 	 */
 	public function structureTypes(int $structureID = null): SmrPlanetStructureType|array {
 		if (!isset($this->structures)) {

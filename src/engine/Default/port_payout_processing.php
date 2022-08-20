@@ -11,7 +11,7 @@ if (!$port->isDestroyed()) {
 	create_error('The port is no longer defenceless!');
 }
 
-/** @var PortPayoutType $payoutType */
+/** @var \Smr\PortPayoutType $payoutType */
 $payoutType = $var['PayoutType'];
 
 $credits = match ($payoutType) {
