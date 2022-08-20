@@ -29,7 +29,7 @@ jobs:
           fetch-depth: 2
 
       - name: Build test environment
-        run: composer run start:integration-services
+        run: composer run start:test-services
 
       - name: Run tests
         run: composer run test
