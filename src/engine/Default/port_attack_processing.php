@@ -43,9 +43,7 @@ if ($port->isDestroyed()) {
 // *
 // ********************************
 
-$results = ['Attackers' => ['TotalDamage' => 0],
-				'Forces' => [],
-				'Forced' => false];
+$results = ['Attackers' => ['TotalDamage' => 0]];
 
 $attackers = $sector->getFightingTradersAgainstPort($player, $port);
 
