@@ -23,7 +23,7 @@ if (isset($var['news'])) {
 
 // Get the articles that are not already in a paper
 $articles = [];
-$dbResult = $db->read('SELECT * FROM galactic_post_article WHERE article_id NOT IN (SELECT article_id FROM galactic_post_paper_content) AND game_id = ' . $db->escapeNumber($player->getGameID()));
+$dbResult = $db->read('SELECT * FROM galactic_post_article WHERE article_id NOT IN (SELECT article_id FROM galactic_post_paper_content WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()));
 foreach ($dbResult->records() as $dbRecord) {
 	$title = $dbRecord->getString('title');
 	$writer = SmrPlayer::getPlayer($dbRecord->getInt('writer_id'), $player->getGameID());
