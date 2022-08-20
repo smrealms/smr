@@ -48,9 +48,7 @@ $player->takeTurns(TURNS_TO_SHOOT_PLANET);
 // *
 // ********************************
 
-$results = ['Attackers' => ['TotalDamage' => 0],
-				'Forces' => [],
-				'Forced' => false];
+$results = ['Attackers' => ['TotalDamage' => 0]];
 
 $attackers = $player->getSector()->getFightingTradersAgainstPlanet($player, $planet);
 
