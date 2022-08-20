@@ -60,7 +60,7 @@ x-smr-test: &smr-test
         - ./src:/smr/src:rw
         - ./test:/smr/test:rw
     depends_on:
-        - mysql-integration-test
+        - mysql-test
 
 x-mysql-common: &mysql-common
     image: mysql:8.0
@@ -124,10 +124,10 @@ services:
         volumes:
             - ./db/patches:/flyway/sql:ro
 
-    flyway-integration-test:
+    flyway-test:
         <<: *flyway-common
         depends_on:
-            - mysql-integration-test
+            - mysql-test
 
     mysql:
         <<: *mysql-common
@@ -135,10 +135,10 @@ services:
             - ./vol_db:/var/lib/mysql:rw
 
     # MySQL container with no volumes mounted for testing
-    mysql-integration-test:
+    mysql-test:
         <<: *mysql-common
 
-    smr-integration-test:
+    phpunit:
         <<: *smr-test
         entrypoint: vendor/bin/phpunit
         environment:

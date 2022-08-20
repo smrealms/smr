@@ -139,7 +139,7 @@ Now all core/shared "Default" code should be in the abstract version, with the n
 SMR uses [PHPUnit](https://phpunit.de/) to run unit tests.
 ### Setup
 1. Ensure the MySQL container is running, and ready for any integration tests that touch the database:
-   * `composer start:integration-services`
+   * `composer start:test-services`
 1. Run `composer run test` to execute the full suite of tests.
 1. Add new tests as needed in the `/test` directory.
 
@@ -154,7 +154,7 @@ This information applies to IDEA-based IDEs, e.g. `IntelliJ`, `PHPStorm`. For ot
 
 1. `File > Settings > Languages & Frameworks > PHP`. In the `CLI Interpreter` area, click the `...` button
 1. Press the "+" button in the top left, and select `From Docker, Vagrant, VM, WSL, Remote...`
-1. In the new window, choose `Docker Compose`, and in the `Service` area, select `smr-integration-test`. Press "OK".
+1. In the new window, choose `Docker Compose`, and in the `Service` area, select `phpunit`. Press "OK".
 1. It will check the configuration by starting up the Docker container, and gathering PHP information. Once that's finished, you should be on a configuration screen for the new interpreter. It should have the PHP information from the Docker container, and also the `Xdebug` information.
 1. In the `Environment variables` box on the new intepreter's screen, paste in the values from `/test/env` in the project directory.
 1. The rest of the default settings should be fine, so you can press "Apply".
