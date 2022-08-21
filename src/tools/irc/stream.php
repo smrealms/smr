@@ -60,13 +60,6 @@ function readFromStream($fp): bool {
 		return true;
 	}
 
-	// Since we close the database connection between polls, we will need
-	// to reconnect before doing anything that requires the database. Note
-	// that everything above this point does *not* need the database, but
-	// we *may* need it beyond this point.
-	$db = Smr\Database::getInstance();
-	$db->reconnect();
-
 	// server msg
 	if (server_msg_307($fp, $rdata)) {
 		return true;

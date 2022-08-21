@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 function echo_r(string $message): void {
 	echo date('Y-m-d H:i:s => ') . $message . EOL;
 }
@@ -31,7 +33,7 @@ while (true) {
 
 	// delete all seen stats that appear to be on (we do not want to take
 	// something for granted that happend while we were away)
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$db->write('DELETE from irc_seen WHERE signed_off = 0');
 
 	// Reset last ping each time we try connecting.
@@ -89,7 +91,7 @@ while (true) {
 			readFromStream($fp);
 			// Close database connection between calls to avoid
 			// stale or timed out server errors.
-			$db->close();
+			Database::resetInstance();
 		}
 		fclose($fp); // close socket
 
