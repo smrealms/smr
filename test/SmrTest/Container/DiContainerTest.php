@@ -60,4 +60,27 @@ class DiContainerTest extends TestCase {
 		self::assertSame($dbName, 'smr_live_test');
 	}
 
+	/**
+	 * @runInSeparateProcess
+	 */
+	public function test_initialized(): void {
+		// Note that we need to run in a separate process since this is the
+		// only way to ensure that the DiContainer is not yet initialized
+		// (and static properties cannot be unset).
+
+		// Before the DiContainer is initialized, all entries should report
+		// that they are not initialized as well.
+		$entry = 'DatabaseName';
+		self::assertFalse(DiContainer::initialized($entry));
+
+		// After the DiContainer is initialized, all entries should still
+		// report that they are not initialized.
+		DiContainer::initialize(false);
+		self::assertFalse(DiContainer::initialized($entry));
+
+		// Only once the entry is requested should it be initialized.
+		DiContainer::get($entry);
+		self::assertTrue(DiContainer::initialized($entry));
+	}
+
 }
