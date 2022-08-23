@@ -46,15 +46,23 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertSame($original, $second);
 	}
 
-	public function test_performing_operations_on_closed_database_throws_error(): void {
-		// Given a Database instance
+	public function test_resetInstance_returns_new_instance(): void {
+		// Given an original mysql instance
+		$originalMysql = DiContainer::get(mysqli::class);
+		// And resetInstance is called
+		Database::resetInstance();
+		// And Database is usable again after reconnecting
+		Database::getInstance()->read('SELECT 1');
+		// Then new mysqli instance is not the same as the original instance
+		self::assertNotSame($originalMysql, DiContainer::get(mysqli::class));
+	}
+
+	public function test_resetInstance_closes_connection(): void {
 		$db = Database::getInstance();
-		// And disconnect is called
-		$db->close();
-		// When calling database methods
+		Database::resetInstance();
 		$this->expectException(Error::class);
-		$this->expectExceptionMessage('Typed property Smr\Database::$dbConn must not be accessed before initialization');
-		$db->read('foo query');
+		$this->expectExceptionMessage('mysqli object is already closed');
+		$db->read('SELECT 1');
 	}
 
 	public function test_getDbBytes(): void {
@@ -65,39 +73,6 @@ class DatabaseIntegrationTest extends TestCase {
 		// we can do a fuzzier comparison. Until then, this is a useful check
 		// that the test database is properly reset between invocations.
 		self::assertSame($bytes, 730800);
-	}
-
-	public function test_closing_database_returns_boolean(): void {
-		$db = Database::getInstance();
-		// Returns true when closing an open database connection
-		self::assertTrue($db->close());
-		// Returns false if the database has already been closed
-		self::assertFalse($db->close());
-	}
-
-	public function test_reconnect_after_connection_closed(): void {
-		// Given an original mysql connection
-		$originalMysql = DiContainer::get(mysqli::class);
-		// And a Database instance
-		$db = Database::getInstance();
-		// And disconnect is called
-		$db->close();
-		// And Database is usable again after reconnecting
-		$db->reconnect();
-		$db->read('SELECT 1');
-		// Then new mysqli instance is not the same as the initial mock
-		self::assertNotSame($originalMysql, DiContainer::get(mysqli::class));
-	}
-
-	public function test_reconnect_when_connection_not_closed(): void {
-		// Given an original mysql connection
-		$originalMysql = DiContainer::get(mysqli::class);
-		// And a Database instance
-		$db = Database::getInstance();
-		// And reconnect is called before closing the connection
-		$db->reconnect();
-		// Then the two mysqli instances are the same
-		self::assertSame($originalMysql, DiContainer::get(mysqli::class));
 	}
 
 	public function test_escapeBoolean(): void {

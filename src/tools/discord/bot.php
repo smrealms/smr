@@ -2,6 +2,7 @@
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Smr\Database;
 use Smr\Discord\Commands\Forces;
 use Smr\Discord\Commands\Game;
 use Smr\Discord\Commands\Invite;
@@ -59,6 +60,6 @@ $seedlistCmd = (new Seedlist())->register($discord);
 
 // Close the connection we may have opened during startup
 // to avoid a mysql timeout.
-Smr\Database::getInstance()->close();
+Database::resetInstance();
 
 $discord->run();

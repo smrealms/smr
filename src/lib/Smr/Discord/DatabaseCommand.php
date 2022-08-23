@@ -26,11 +26,6 @@ abstract class DatabaseCommand extends Command {
 	 * Wrapper to properly handle a DatabaseCommand response.
 	 */
 	final public function response(string ...$args): array {
-		// Since we close the database connection after each call, we may
-		// need to reconnect here.
-		$db = Database::getInstance();
-		$db->reconnect();
-
 		try {
 			$link = new PlayerLink($this->message);
 			if (!$link->valid) {
@@ -41,7 +36,7 @@ abstract class DatabaseCommand extends Command {
 		} finally {
 			// Close the database connection after a command has executed.
 			// This is necessary to prevent a blocking database timeout error.
-			$db->close();
+			Database::resetInstance();
 		}
 	}
 

@@ -23,6 +23,31 @@ class Database {
 	}
 
 	/**
+	 * This should not be needed except perhaps by persistent services
+	 * (such as Dicord/IRC clients) to prevent connection timeouts between
+	 * callbacks.
+	 *
+	 * Closes the underlying database connection and resets the state of the
+	 * DI container so that a new Database and mysqli instance will be made
+	 * the next time Database::getInstance() is called. Existing instances of
+	 * this class will no longer be valid, and will throw when attempting to
+	 * perform database operations.
+	 *
+	 * This function is safe to use even if the DI container or the Database
+	 * instances have not been initialized yet.
+	 */
+	public static function resetInstance(): void {
+		if (DiContainer::initialized(mysqli::class)) {
+			$container = DiContainer::getContainer();
+			if (DiContainer::initialized(self::class)) {
+				self::getInstance()->dbConn->close();
+				$container->reset(self::class);
+			}
+			$container->reset(mysqli::class);
+		}
+	}
+
+	/**
 	 * Used by the DI container to construct a mysqli instance.
 	 * Not intended to be used outside the DI context.
 	 */
@@ -51,8 +76,8 @@ class Database {
 	 * @param string $dbName The name of the database that was used to construct the mysqli instance
 	 */
 	public function __construct(
-		private mysqli $dbConn,
-		private string $dbName,
+		private readonly mysqli $dbConn,
+		private readonly string $dbName,
 	) {}
 
 	/**
@@ -78,46 +103,6 @@ class Database {
 	public function getDbBytes(): int {
 		$query = 'SELECT SUM(data_length + index_length) as db_bytes FROM information_schema.tables WHERE table_schema=(SELECT database())';
 		return $this->read($query)->record()->getInt('db_bytes');
-	}
-
-	/**
-	 * This should not be needed except perhaps by persistent connections
-	 *
-	 * Closes the connection to the MySQL database. After closing this connection,
-	 * this instance is no longer valid, and will subsequently throw exceptions when
-	 * attempting to perform database operations.
-	 *
-	 * Once the connection is closed, you must call Database::reconnect() before
-	 * any further database queries can be made.
-	 *
-	 * @return bool Whether the underlying connection was closed by this call.
-	 */
-	public function close(): bool {
-		if (!isset($this->dbConn)) {
-			// Connection is already closed; nothing to do.
-			return false;
-		}
-		$this->dbConn->close();
-		unset($this->dbConn);
-		// Set the mysqli instance in the dependency injection container to
-		// null so that we don't accidentally try to use it.
-		DiContainer::getContainer()->set(mysqli::class, null);
-		return true;
-	}
-
-	/**
-	 * Reconnects to the MySQL database, and replaces the managed mysqli instance
-	 * in the dependency injection container for future retrievals.
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
-	 */
-	public function reconnect(): void {
-		if (isset($this->dbConn)) {
-			return; // No reconnect needed
-		}
-		$newMysqli = DiContainer::make(mysqli::class);
-		DiContainer::getContainer()->set(mysqli::class, $newMysqli);
-		$this->dbConn = $newMysqli;
 	}
 
 	/**
