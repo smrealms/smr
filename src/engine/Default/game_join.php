@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Race;
+use Smr\RaceDetails;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -25,15 +30,15 @@ if ($game->hasEnded()) {
 }
 
 $races = [];
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 foreach ($game->getPlayableRaceIDs() as $raceID) {
 	// get number of traders in game
 	$dbResult = $db->read('SELECT count(*) as number_of_race FROM player WHERE race_id = ' . $db->escapeNumber($raceID) . ' AND game_id = ' . $db->escapeNumber($var['game_id']));
 
 	$races[$raceID] = [
-		'Name' => Smr\Race::getName($raceID),
-		'ShortDescription' => Smr\RaceDetails::getShortDescription($raceID),
-		'LongDescription' => Smr\RaceDetails::getLongDescription($raceID),
+		'Name' => Race::getName($raceID),
+		'ShortDescription' => RaceDetails::getShortDescription($raceID),
+		'LongDescription' => RaceDetails::getLongDescription($raceID),
 		'NumberOfPlayers' => $dbResult->record()->getInt('number_of_race'),
 		'Selected' => false,
 	];
@@ -45,7 +50,7 @@ if (empty($races)) {
 $template->assign('PageTopic', 'Join Game: ' . $game->getDisplayName());
 $template->assign('Game', $game);
 
-if (Smr\Epoch::time() >= $game->getJoinTime()) {
+if (Epoch::time() >= $game->getJoinTime()) {
 	$container = Page::create('game_join_processing.php');
 	$container->addVar('game_id');
 	$template->assign('JoinGameFormHref', $container->href());

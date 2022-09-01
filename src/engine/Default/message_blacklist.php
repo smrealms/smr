@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -13,7 +15,7 @@ if (isset($var['msg'])) {
 	$template->assign('Message', $var['msg']);
 }
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT p.player_name, p.game_id, b.entry_id FROM player p JOIN message_blacklist b ON p.account_id = b.blacklisted_id AND b.game_id = p.game_id WHERE b.account_id=' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY p.game_id, p.player_name');
 
 $blacklist = [];

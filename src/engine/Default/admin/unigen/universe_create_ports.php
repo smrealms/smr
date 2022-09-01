@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Race;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -16,7 +18,7 @@ $template->assign('Galaxy', $galaxy);
 
 // initialize totals
 $totalPorts = array_fill(1, SmrPort::MAX_LEVEL, 0);
-$totalRaces = array_fill_keys(Smr\Race::getAllIDs(), 0);
+$totalRaces = array_fill_keys(Race::getAllIDs(), 0);
 $racePercents = $totalRaces;
 
 foreach ($galaxy->getSectors() as $galSector) {

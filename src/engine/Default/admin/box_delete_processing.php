@@ -1,15 +1,18 @@
 <?php declare(strict_types=1);
 
-$db = Smr\Database::getInstance();
+use Smr\Database;
+use Smr\Request;
+
+$db = Database::getInstance();
 $var = Smr\Session::getInstance()->getCurrentVar();
 
-$action = Smr\Request::get('action');
+$action = Request::get('action');
 if ($action == 'Marked Messages') {
-	if (!Smr\Request::has('message_id')) {
+	if (!Request::has('message_id')) {
 		create_error('You must choose the messages you want to delete.');
 	}
 
-	foreach (Smr\Request::getIntArray('message_id') as $id) {
+	foreach (Request::getIntArray('message_id') as $id) {
 		$db->write('DELETE FROM message_boxes WHERE message_id = ' . $db->escapeNumber($id));
 	}
 } elseif ($action == 'All Messages') {

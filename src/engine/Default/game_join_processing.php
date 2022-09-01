@@ -1,17 +1,22 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\DisplayNameValidator;
+use Smr\Epoch;
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
 
-$player_name = Smr\Request::get('player_name');
+$player_name = Request::get('player_name');
 
-Smr\DisplayNameValidator::validate($player_name);
+DisplayNameValidator::validate($player_name);
 
 $gameID = $var['game_id'];
 $game = SmrGame::getGame($gameID);
 
-$race_id = Smr\Request::getInt('race_id');
+$race_id = Request::getInt('race_id');
 if (!in_array($race_id, $game->getPlayableRaceIDs())) {
 	create_error('Please choose a race!');
 }
@@ -44,7 +49,7 @@ $player->giveStartingRelations();
 
 // The `player_visited_sector` table holds *unvisited* sectors, so that once
 // all sectors are visited (the majority of the game), the table is empty.
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $db->write('INSERT INTO player_visited_sector (account_id, game_id, sector_id)
             SELECT ' . $db->escapeNumber($account->getAccountID()) . ', game_id, sector_id
               FROM sector WHERE game_id = ' . $db->escapeNumber($gameID));
@@ -72,7 +77,7 @@ $player->getShip()->update();
 // Announce the player joining in the news
 $news = '[player=' . $player->getPlayerID() . '] has joined the game!';
 $db->insert('news', [
-	'time' => $db->escapeNumber(Smr\Epoch::time()),
+	'time' => $db->escapeNumber(Epoch::time()),
 	'news_message' => $db->escapeString($news),
 	'game_id' => $db->escapeNumber($gameID),
 	'type' => $db->escapeString('admin'),

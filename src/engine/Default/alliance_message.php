@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Exceptions\PlayerNotFound;
+
 $template = Smr\Template::getInstance();
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -80,7 +83,7 @@ if ($dbResult->hasRecord()) {
 			try {
 				$author = SmrPlayer::getPlayer($sender_id, $player->getGameID());
 				$playerName = $author->getLinkedDisplayName(false);
-			} catch (Smr\Exceptions\PlayerNotFound) {
+			} catch (PlayerNotFound) {
 				$playerName = 'Unknown'; // default
 			}
 		}

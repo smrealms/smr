@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -28,7 +30,7 @@ $links[] = [
 
 $role_id = $player->getAllianceRole($alliance->getAllianceID());
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
 $dbRecord = $dbResult->record();
 

@@ -1,4 +1,8 @@
 <?php declare(strict_types=1);
+
+use Smr\Database;
+use Smr\Race;
+
 try {
 	require_once('../bootstrap.php');
 
@@ -6,7 +10,7 @@ try {
 
 	// Get a list of all the shops that sell each ship
 	$shipLocs = [];
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT ship_type_id, location_type.* FROM location_sells_ships JOIN ship_type USING (ship_type_id) JOIN location_type USING (location_type_id) WHERE location_type_id NOT IN (' . $db->escapeArray([RACE_WARS_SHIPS, LOCATION_TYPE_TEST_SHIPYARD]) . ')');
 	foreach ($dbResult->records() as $dbRecord) {
 		$shipTypeID = $dbRecord->getInt('ship_type_id');
@@ -50,7 +54,7 @@ function buildShipStats(SmrShipType $ship, array $shipLocs): array {
 	// We want to put them all in an array so we dont have to have 15 td rows.
 	$stat = [
 		'name' => $ship->getName(),
-		'race race' . $ship->getRaceID() => Smr\Race::getName($ship->getRaceID()),
+		'race race' . $ship->getRaceID() => Race::getName($ship->getRaceID()),
 		'class_' => $ship->getClass()->name,
 		'cost' => number_format($ship->getCost()),
 		'speed' => $ship->getSpeed(),

@@ -1,12 +1,15 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\News;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
 $gameID = $var['GameID'] ?? $session->getPlayer()->getGameID();
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT alliance_id, alliance_name
 			FROM alliance
 			WHERE game_id = ' . $db->escapeNumber($gameID));
@@ -65,7 +68,7 @@ if ($submit_value == 'Search For Player') {
 	$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY news_id DESC LIMIT 50');
 }
 
-$template->assign('NewsItems', Smr\News::getNewsItems($dbResult));
+$template->assign('NewsItems', News::getNewsItems($dbResult));
 
 $template->assign('PageTopic', 'Advanced News');
 Menu::news($gameID);

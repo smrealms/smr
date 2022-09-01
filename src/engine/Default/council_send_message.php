@@ -1,9 +1,11 @@
 <?php declare(strict_types=1);
 
+use Smr\Race;
+
 $template = Smr\Template::getInstance();
 $var = Smr\Session::getInstance()->getCurrentVar();
 
-$raceName = Smr\Race::getName($var['race_id']);
+$raceName = Race::getName($var['race_id']);
 $template->assign('RaceName', $raceName);
 
 $template->assign('PageTopic', 'Send message to Ruling Council of the ' . $raceName);

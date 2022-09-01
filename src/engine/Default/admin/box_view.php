@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Messages;
+
 $template = Smr\Template::getInstance();
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
@@ -11,7 +14,7 @@ if (!isset($var['box_type_id'])) {
 
 	$container = Page::create('admin/box_view.php');
 	$boxes = [];
-	foreach (Smr\Messages::getAdminBoxNames() as $boxTypeID => $boxName) {
+	foreach (Messages::getAdminBoxNames() as $boxTypeID => $boxName) {
 		$container['box_type_id'] = $boxTypeID;
 		$boxes[$boxTypeID] = [
 			'ViewHREF' => $container->href(),
@@ -27,7 +30,7 @@ if (!isset($var['box_type_id'])) {
 	}
 	$template->assign('Boxes', $boxes);
 } else {
-	$boxName = Smr\Messages::getAdminBoxNames()[$var['box_type_id']];
+	$boxName = Messages::getAdminBoxNames()[$var['box_type_id']];
 	$template->assign('PageTopic', 'Viewing ' . $boxName);
 
 	$template->assign('BackHREF', Page::create('admin/box_view.php')->href());

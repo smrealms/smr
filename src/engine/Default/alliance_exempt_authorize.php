@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
@@ -9,7 +11,7 @@ $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID());
 
 //get rid of already approved entries
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $db->write('UPDATE alliance_bank_transactions SET request_exempt = 0 WHERE exempt = 1');
 
 

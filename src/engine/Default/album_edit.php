@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -7,7 +9,7 @@ $account = $session->getAccount();
 
 $template->assign('PageTopic', 'Edit Photo');
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 if ($dbResult->hasRecord()) {
 	$dbRecord = $dbResult->record();

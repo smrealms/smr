@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
@@ -16,7 +18,7 @@ $template->assign('SelectedGame', $selectedGameID);
 
 // Get the list of games with published papers
 // Add the current game to this list no matter what
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT game_name, game_id FROM game WHERE game_id IN (SELECT DISTINCT game_id FROM galactic_post_paper WHERE online_since IS NOT NULL) OR game_id=' . $db->escapeNumber($player->getGameID()) . ' ORDER BY game_id DESC');
 $publishedGames = [];
 foreach ($dbResult->records() as $dbRecord) {

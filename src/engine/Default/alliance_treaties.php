@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -10,7 +12,7 @@ $template->assign('PageTopic', 'Alliance Treaties');
 Menu::alliance($alliance->getAllianceID());
 
 $alliances = [];
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($player->getAllianceID()) . ' ORDER BY alliance_name');
 foreach ($dbResult->records() as $dbRecord) {
 	$allianceID = $dbRecord->getInt('alliance_id');

@@ -1,4 +1,8 @@
 <?php declare(strict_types=1);
+
+use Smr\Exceptions\AccountNotFound;
+use Smr\Request;
+
 try {
 
 	require_once('../bootstrap.php');
@@ -8,7 +12,7 @@ try {
 	if ($session->hasAccount()) {
 		create_error('You\'re already logged in! Creating multis is against the rules!');
 	}
-	$socialLogin = Smr\Request::has('socialReg');
+	$socialLogin = Request::has('socialReg');
 	if ($socialLogin) {
 		session_start();
 		if (!$_SESSION['socialLogin']) {
@@ -21,7 +25,7 @@ try {
 		$reCaptcha = new \ReCaptcha\ReCaptcha(RECAPTCHA_PRIVATE);
 		// Was there a reCAPTCHA response?
 		$resp = $reCaptcha->verify(
-			Smr\Request::get('g-recaptcha-response', ''),
+			Request::get('g-recaptcha-response', ''),
 			$_SERVER['REMOTE_ADDR']
 		);
 
@@ -30,8 +34,8 @@ try {
 		}
 	}
 
-	$login = Smr\Request::get('login');
-	$password = Smr\Request::get('password');
+	$login = Request::get('login');
+	$password = Request::get('password');
 	if (str_contains($login, '\'')) {
 		create_error('Illegal character in login detected! Don\'t use the apostrophe.');
 	}
@@ -47,7 +51,7 @@ try {
 		create_error('Password is missing!');
 	}
 
-	$pass_verify = Smr\Request::get('pass_verify');
+	$pass_verify = Request::get('pass_verify');
 	if ($password != $pass_verify) {
 		create_error('The passwords you entered do not match.');
 	}
@@ -57,7 +61,7 @@ try {
 	// 2. social account creation without an associated e-mail
 	// In these two cases, we still need to validate the input address.
 	if (!$socialLogin || empty($_SESSION['socialLogin']->getEmail())) {
-		$email = Smr\Request::get('email');
+		$email = Request::get('email');
 		$validatedBySocial = false;
 	} else {
 		$email = $_SESSION['socialLogin']->getEmail();
@@ -74,18 +78,18 @@ try {
 	try {
 		SmrAccount::getAccountByLogin($login);
 		create_error('This login name is already registered.');
-	} catch (Smr\Exceptions\AccountNotFound) {
+	} catch (AccountNotFound) {
 		// Proceed, login is not yet registered
 	}
 
-	$referral = Smr\Request::getInt('referral_id');
+	$referral = Request::getInt('referral_id');
 
-	$timez = Smr\Request::getInt('timez');
+	$timez = Request::getInt('timez');
 
 	// creates a new user account object
 	try {
 		$account = SmrAccount::createAccount($login, $password, $email, $timez, $referral);
-	} catch (Smr\Exceptions\AccountNotFound) {
+	} catch (AccountNotFound) {
 		create_error('Invalid referral account ID!');
 	}
 	$account->increaseSmrRewardCredits(2 * CREDITS_PER_DOLLAR); // Give $2 worth of "reward" credits for joining.

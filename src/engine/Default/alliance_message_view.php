@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -16,13 +19,13 @@ $thread_id = $var['thread_ids'][$thread_index];
 $template->assign('PageTopic', $var['thread_topics'][$thread_index]);
 Menu::alliance($alliance->getAllianceID());
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $db->replace('player_read_thread', [
 	'account_id' => $db->escapeNumber($player->getAccountID()),
 	'game_id' => $db->escapeNumber($player->getGameID()),
 	'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
 	'thread_id' => $db->escapeNumber($thread_id),
-	'time' => $db->escapeNumber(Smr\Epoch::time() + 2),
+	'time' => $db->escapeNumber(Epoch::time() + 2),
 ]);
 
 $mbWrite = true;

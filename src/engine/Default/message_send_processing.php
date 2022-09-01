@@ -1,12 +1,15 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-$message = htmlentities(Smr\Request::get('message'), ENT_COMPAT, 'utf-8');
+$message = htmlentities(Request::get('message'), ENT_COMPAT, 'utf-8');
 
-if (Smr\Request::get('action') == 'Preview message') {
+if (Request::get('action') == 'Preview message') {
 	if (isset($var['alliance_id'])) {
 		$container = Page::create('alliance_broadcast.php');
 		$container->addVar('alliance_id');
@@ -25,7 +28,7 @@ if (empty($message)) {
 }
 
 if (isset($var['alliance_id'])) {
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT account_id FROM player
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND alliance_id = ' . $var['alliance_id'] . '

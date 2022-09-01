@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Exceptions\AccountNotFound;
+
 try {
 	require_once('../bootstrap.php');
 
@@ -22,7 +24,7 @@ try {
 	try {
 		$account = SmrAccount::getAccountByEmail($socialLogin->getEmail());
 		$template->assign('MatchingLogin', $account->getLogin());
-	} catch (Smr\Exceptions\AccountNotFound) {
+	} catch (AccountNotFound) {
 		// Proceed without matching account
 	}
 

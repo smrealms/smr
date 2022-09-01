@@ -1,15 +1,19 @@
 <?php declare(strict_types=1);
 
-$db = Smr\Database::getInstance();
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Request;
+
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-$body = htmlentities(Smr\Request::get('body'), ENT_COMPAT, 'utf-8');
-$topic = Smr\Request::get('topic', ''); // only present for Create Thread
-$allEyesOnly = Smr\Request::has('allEyesOnly'); // only present for Create Thread
+$body = htmlentities(Request::get('body'), ENT_COMPAT, 'utf-8');
+$topic = Request::get('topic', ''); // only present for Create Thread
+$allEyesOnly = Request::has('allEyesOnly'); // only present for Create Thread
 
-$action = Smr\Request::get('action');
+$action = Request::get('action');
 if ($action == 'Preview Thread' || $action == 'Preview Reply') {
 	if (!isset($var['thread_index'])) {
 		$container = Page::create('alliance_message.php', $var);
@@ -87,14 +91,14 @@ $db->insert('alliance_thread', [
 	'reply_id' => $db->escapeNumber($reply_id),
 	'text' => $db->escapeString($body),
 	'sender_id' => $db->escapeNumber($player->getAccountID()),
-	'time' => $db->escapeNumber(Smr\Epoch::time()),
+	'time' => $db->escapeNumber(Epoch::time()),
 ]);
 $db->replace('player_read_thread', [
 	'account_id' => $db->escapeNumber($player->getAccountID()),
 	'game_id' => $db->escapeNumber($player->getGameID()),
 	'alliance_id' => $db->escapeNumber($alliance_id),
 	'thread_id' => $db->escapeNumber($thread_id),
-	'time' => $db->escapeNumber(Smr\Epoch::time() + 2),
+	'time' => $db->escapeNumber(Epoch::time() + 2),
 ]);
 
 if (isset($var['thread_index'])) {

@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 
-$db = Smr\Database::getInstance();
+use Smr\Database;
+use Smr\Exceptions\PlayerNotFound;
+use Smr\Request;
+
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
@@ -10,8 +14,8 @@ function error_on_page(string $message): never {
 }
 
 // Process adding a "share to" account
-if (Smr\Request::has('add')) {
-	$addPlayerID = Smr\Request::getInt('add_player_id');
+if (Request::has('add')) {
+	$addPlayerID = Request::getInt('add_player_id');
 	if (empty($addPlayerID)) {
 		error_on_page('You must specify a Player ID to share with!');
 	}
@@ -22,7 +26,7 @@ if (Smr\Request::has('add')) {
 
 	try {
 		$accountId = SmrPlayer::getPlayerByPlayerID($addPlayerID, $player->getGameID())->getAccountID();
-	} catch (Smr\Exceptions\PlayerNotFound $e) {
+	} catch (PlayerNotFound $e) {
 		error_on_page($e->getMessage());
 	}
 
@@ -31,7 +35,7 @@ if (Smr\Request::has('add')) {
 		error_on_page('You are already sharing with this player!');
 	}
 
-	$gameId = Smr\Request::has('all_games') ? '0' : $player->getGameID();
+	$gameId = Request::has('all_games') ? '0' : $player->getGameID();
 	$db->insert('account_shares_info', [
 		'to_account_id' => $db->escapeNumber($accountId),
 		'from_account_id' => $db->escapeNumber($player->getAccountID()),
@@ -40,13 +44,13 @@ if (Smr\Request::has('add')) {
 }
 
 // Process removing a "share to" account
-if (Smr\Request::has('remove_share_to')) {
-	$db->write('DELETE FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber(Smr\Request::getInt('remove_share_to')) . ' AND from_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber(Smr\Request::getInt('game_id')));
+if (Request::has('remove_share_to')) {
+	$db->write('DELETE FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber(Request::getInt('remove_share_to')) . ' AND from_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber(Request::getInt('game_id')));
 }
 
 // Process removing a "share from" account
-if (Smr\Request::has('remove_share_from')) {
-	$db->write('DELETE FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND from_account_id=' . $db->escapeNumber(Smr\Request::getInt('remove_share_from')) . ' AND game_id=' . $db->escapeNumber(Smr\Request::getInt('game_id')));
+if (Request::has('remove_share_from')) {
+	$db->write('DELETE FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND from_account_id=' . $db->escapeNumber(Request::getInt('remove_share_from')) . ' AND game_id=' . $db->escapeNumber(Request::getInt('game_id')));
 }
 
 Page::create('chat_sharing.php')->go();

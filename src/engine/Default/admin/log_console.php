@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -8,7 +10,7 @@ $template->assign('PageTopic', 'Log Console');
 
 $loggedAccounts = [];
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT account_id as account_id, login, count(*) as number_of_entries
 			FROM account_has_logs
 			JOIN account USING(account_id)

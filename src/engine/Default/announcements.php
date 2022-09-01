@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 

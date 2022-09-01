@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\SectorLock;
+
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 $player = $session->getPlayer();
@@ -80,12 +84,12 @@ $results['Planet'] = $planet->shootPlayers($attackers);
 $account->log(LOG_TYPE_PLANET_BUSTING, 'Player attacks planet, the planet does ' . $results['Planet']['TotalDamage'] . ', their team does ' . $results['Attackers']['TotalDamage'] . ' and downgrades: ' . var_export($results['Attackers']['Downgrades'], true), $planet->getSectorID());
 
 // Add this log to the `combat_logs` database table
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $logId = $db->insert('combat_logs', [
 	'game_id' => $db->escapeNumber($player->getGameID()),
 	'type' => $db->escapeString('PLANET'),
 	'sector_id' => $db->escapeNumber($planet->getSectorID()),
-	'timestamp' => $db->escapeNumber(Smr\Epoch::time()),
+	'timestamp' => $db->escapeNumber(Epoch::time()),
 	'attacker_id' => $db->escapeNumber($player->getAccountID()),
 	'attacker_alliance_id' => $db->escapeNumber($player->getAllianceID()),
 	'defender_id' => $db->escapeNumber($planetOwner->getAccountID()),
@@ -128,7 +132,7 @@ foreach ($attackers as $attacker) {
 if ($player->isDead()) {
 	saveAllAndReleaseLock(updateSession: false);
 	// Grab the lock in the new sector to avoid reloading session
-	Smr\SectorLock::getInstance()->acquireForPlayer($player);
+	SectorLock::getInstance()->acquireForPlayer($player);
 }
 
 // If they died on the shot they get to see the results

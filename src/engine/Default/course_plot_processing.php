@@ -1,10 +1,13 @@
 <?php declare(strict_types=1);
 
+use Smr\Exceptions\SectorNotFound;
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$start = Smr\Request::getVarInt('from');
-$target = Smr\Request::getVarInt('to');
+$start = Request::getVarInt('from');
+$target = Request::getVarInt('to');
 
 // perform some basic checks on both numbers
 if (empty($start) || empty($target)) {
@@ -18,7 +21,7 @@ if ($start == $target) {
 try {
 	$startSector = SmrSector::getSector($player->getGameID(), $start);
 	$targetSector = SmrSector::getSector($player->getGameID(), $target);
-} catch (Smr\Exceptions\SectorNotFound) {
+} catch (SectorNotFound) {
 	create_error('The sectors have to exist!');
 }
 

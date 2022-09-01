@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
@@ -17,7 +19,7 @@ if (count($alliance_ids) == 0) {
 $unvisitedSectors = $player->getUnvisitedSectors();
 
 // delete all visited sectors from the table of all our alliance mates
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $query = 'DELETE
 			FROM player_visited_sector
 			WHERE account_id IN (' . $db->escapeArray($alliance_ids) . ')

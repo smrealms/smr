@@ -1,9 +1,15 @@
 <?php declare(strict_types=1);
 
+use Smr\Container\DiContainer;
+use Smr\Database;
+use Smr\Epoch;
 use Smr\Npc\Exceptions\FinalAction;
 use Smr\Npc\Exceptions\ForwardAction;
 use Smr\Npc\Exceptions\TradeRouteDrained;
 use Smr\Npc\NpcActor;
+use Smr\Race;
+use Smr\Routes\RouteGenerator;
+use Smr\SectorLock;
 use Smr\TransactionType;
 
 function overrideForward(Page $container): never {
@@ -25,7 +31,7 @@ const OVERRIDE_FORWARD = true;
 require_once(realpath(dirname(__FILE__)) . '/../../bootstrap.php');
 
 // Enable NPC-specific conditions
-Smr\Container\DiContainer::getContainer()->set('NPC_SCRIPT', true);
+DiContainer::getContainer()->set('NPC_SCRIPT', true);
 
 // Raise exceptions for all types of errors for improved error reporting
 // and to attempt to shut down the NPCs cleanly on errors.
@@ -162,7 +168,7 @@ function debug(string $message, mixed $debugObject = null): void {
 		$session = Smr\Session::getInstance();
 		$accountID = $session->getAccountID();
 		$var = $session->getCurrentVar();
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$logID = $db->insert('npc_logs', [
 			'script_id' => $db->escapeNumber(defined('SCRIPT_ID') ? SCRIPT_ID : 0),
 			'npc_id' => $db->escapeNumber($accountID),
@@ -206,10 +212,10 @@ function processContainer(Page $container): never {
 	$previousContainer = $container;
 	debug('Executing container', $container);
 	// The next "page request" must occur at an updated time.
-	Smr\Epoch::update();
+	Epoch::update();
 	$session->setCurrentVar($container);
 
-	Smr\SectorLock::getInstance()->acquireForPlayer($player);
+	SectorLock::getInstance()->acquireForPlayer($player);
 	$container->process();
 	throw new Exception('Container did not forward as expected!');
 }
@@ -226,7 +232,7 @@ function releaseNPC(): void {
 		return;
 	}
 	$login = $session->getAccount()->getLogin();
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$db->write('UPDATE npc_logins SET working=' . $db->escapeBoolean(false) . ' WHERE login=' . $db->escapeString($login));
 	if ($db->getChangedRows() > 0) {
 		debug('Released NPC: ' . $login);
@@ -235,7 +241,7 @@ function releaseNPC(): void {
 	}
 
 	// Delete sector lock associated with this NPC
-	Smr\SectorLock::resetInstance();
+	SectorLock::resetInstance();
 }
 
 function exitNPC(): void {
@@ -253,7 +259,7 @@ function changeNPCLogin(): void {
 	debug('Choosing new NPC');
 	static $availableNpcs = null;
 
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$session = Smr\Session::getInstance();
 
 	if ($availableNpcs === null) {
@@ -265,7 +271,7 @@ function changeNPCLogin(): void {
 		}
 
 		// Make sure to select NPCs from active games only
-		$dbResult = $db->read('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY last_turn_update ASC');
+		$dbResult = $db->read('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < ' . $db->escapeNumber(Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Epoch::time()) . ' ORDER BY last_turn_update ASC');
 		foreach ($dbResult->records() as $dbRecord) {
 			$availableNpcs[] = [
 				'account_id' => $dbRecord->getInt('account_id'),
@@ -445,7 +451,7 @@ function findRoutes(AbstractSmrPlayer $player): array {
 
 	// Only allow NPCs to trade at ports of their race and neutral ports
 	$tradeRaces = [];
-	foreach (Smr\Race::getAllIDs() as $raceID) {
+	foreach (Race::getAllIDs() as $raceID) {
 		$tradeRaces[$raceID] = false;
 	}
 	$tradeRaces[$player->getRaceID()] = true;
@@ -473,7 +479,7 @@ function findRoutes(AbstractSmrPlayer $player): array {
 	$numberOfRoutes = 100;
 	$maxDistance = 15;
 
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT routes FROM route_cache WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND max_ports=' . $db->escapeNumber($maxNumberOfPorts) . ' AND goods_allowed=' . $db->escapeObject($tradeGoods) . ' AND races_allowed=' . $db->escapeObject($tradeRaces) . ' AND start_sector_id=' . $db->escapeNumber($startSectorID) . ' AND end_sector_id=' . $db->escapeNumber($endSectorID) . ' AND routes_for_port=' . $db->escapeNumber($routesForPort) . ' AND max_distance=' . $db->escapeNumber($maxDistance));
 	if ($dbResult->hasRecord()) {
 		$routes = $dbResult->record()->getObject('routes', true);
@@ -489,12 +495,12 @@ function findRoutes(AbstractSmrPlayer $player): array {
 
 	$distances = Plotter::calculatePortToPortDistances($ports, $tradeRaces, $maxDistance, $startSectorID, $endSectorID);
 
-	$allRoutes = Smr\Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $ports, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
+	$allRoutes = RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $ports, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
 
 	unset($distances);
 
 	$routesMerged = [];
-	foreach ($allRoutes[Smr\Routes\RouteGenerator::MONEY_ROUTE] as $multi => $routesByMulti) {
+	foreach ($allRoutes[RouteGenerator::MONEY_ROUTE] as $multi => $routesByMulti) {
 		$routesMerged += $routesByMulti; //Merge arrays
 	}
 

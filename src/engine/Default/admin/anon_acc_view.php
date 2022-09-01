@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 
@@ -12,7 +14,7 @@ $template->assign('BackHREF', $container->href());
 $anonID = $session->getRequestVarInt('anon_account');
 $gameID = $session->getRequestVarInt('view_game_id');
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT *
 			FROM anon_bank_transactions
 			JOIN player USING(account_id, game_id)

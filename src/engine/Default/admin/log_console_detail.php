@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 
@@ -15,7 +17,7 @@ $log_type_ids = $session->getRequestVarIntArray('log_type_ids');
 if (count($account_ids) == 0) {
 	create_error('You have to select the log files you want to view/delete!');
 }
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $account_list = $db->escapeArray($account_ids);
 
 $action = $session->getRequestVar('action');

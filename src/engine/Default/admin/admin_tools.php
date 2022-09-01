@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\AdminPermissions;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -14,7 +16,7 @@ if (isset($var['msg'])) {
 
 $adminPermissions = [];
 foreach (array_keys($account->getPermissions()) as $permissionID) {
-	[$name, $link, $categoryID] = Smr\AdminPermissions::getPermissionInfo($permissionID);
+	[$name, $link, $categoryID] = AdminPermissions::getPermissionInfo($permissionID);
 	$adminPermissions[$categoryID][] = [
 		'Link' => empty($link) ? false : Page::create($link)->href(),
 		'Name' => $name,

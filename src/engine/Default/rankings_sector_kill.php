@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
@@ -8,7 +10,7 @@ $template->assign('PageTopic', 'Sector Death Rankings');
 
 Menu::rankings(3, 0);
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT sector_id, battles as amount FROM sector WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY battles DESC, sector_id');
 $rankedStats = [];
 foreach ($dbResult->records() as $index => $dbRecord) {

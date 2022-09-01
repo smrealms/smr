@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
@@ -22,9 +25,9 @@ $defaultGame = [
 	'maxTurns' => DEFAULT_MAX_TURNS,
 	'startTurnHours' => DEFAULT_START_TURN_HOURS,
 	'maxPlayers' => 5000,
-	'joinDate' => date('d/m/Y', Smr\Epoch::time()),
+	'joinDate' => date('d/m/Y', Epoch::time()),
 	'startDate' => '',
-	'endDate' => date('d/m/Y', Smr\Epoch::time() + (2 * 31 * 86400)), // 3 months
+	'endDate' => date('d/m/Y', Epoch::time() + (2 * 31 * 86400)), // 3 months
 	'smrCredits' => 0,
 	'gameType' => 'Default',
 	'allianceMax' => 25,

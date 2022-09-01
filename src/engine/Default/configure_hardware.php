@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $ship = $session->getPlayer()->getShip();
@@ -22,7 +24,7 @@ if ($ship->hasIllusion()) {
 	$template->assign('SetIllusionFormHREF', $container->href());
 
 	$ships = [];
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT ship_type_id,ship_name FROM ship_type ORDER BY ship_name');
 	foreach ($dbResult->records() as $dbRecord) {
 		$ships[$dbRecord->getInt('ship_type_id')] = $dbRecord->getString('ship_name');

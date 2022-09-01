@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 /**
  * @return array<string>
  */
 function shared_channel_msg_op_turns(AbstractSmrPlayer $player): array {
 	// get the op from db
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT 1
 				FROM alliance_has_op
 				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '

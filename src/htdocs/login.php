@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Request;
+
 try {
 
 	require_once('../bootstrap.php');
@@ -23,9 +26,9 @@ try {
 	}
 
 	$template = Smr\Template::getInstance();
-	if (Smr\Request::has('msg')) {
-		$template->assign('Message', htmlentities(Smr\Request::get('msg'), ENT_COMPAT, 'utf-8'));
-	} elseif (Smr\Request::has('status')) {
+	if (Request::has('msg')) {
+		$template->assign('Message', htmlentities(Request::get('msg'), ENT_COMPAT, 'utf-8'));
+	} elseif (Request::has('status')) {
 		session_start();
 		if (isset($_SESSION['login_msg'])) {
 			$template->assign('Message', $_SESSION['login_msg']);
@@ -35,7 +38,7 @@ try {
 
 	// Get recent non-admin game news
 	$gameNews = [];
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT * FROM news WHERE type != \'admin\' ORDER BY time DESC LIMIT 4');
 	foreach ($dbResult->records() as $dbRecord) {
 		$overrideGameID = $dbRecord->getInt('game_id'); //for bbifyMessage

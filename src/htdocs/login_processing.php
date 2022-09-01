@@ -1,4 +1,12 @@
 <?php declare(strict_types=1);
+
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Exceptions\AccountNotFound;
+use Smr\Login\Redirect;
+use Smr\Request;
+use Smr\SocialLogin\SocialLogin;
+
 try {
 
 	require_once('../bootstrap.php');
@@ -11,8 +19,8 @@ try {
 
 	$session = Smr\Session::getInstance();
 	if (!$session->hasAccount()) {
-		if (Smr\Request::has('loginType')) {
-			$socialLogin = Smr\SocialLogin\SocialLogin::get(Smr\Request::get('loginType'))->login();
+		if (Request::has('loginType')) {
+			$socialLogin = SocialLogin::get(Request::get('loginType'))->login();
 			if (!$socialLogin->isValid()) {
 				$msg = 'Error validating ' . $socialLogin->getLoginType() . ' login. Please try logging in again.';
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
@@ -21,7 +29,7 @@ try {
 
 			try {
 				$account = SmrAccount::getAccountBySocialLogin($socialLogin);
-			} catch (Smr\Exceptions\AccountNotFound) {
+			} catch (AccountNotFound) {
 				// Let them create an account or link to existing
 				if (session_status() === PHP_SESSION_NONE) {
 					session_start();
@@ -32,8 +40,8 @@ try {
 			}
 		} else {
 			// Defaults allow redirect to login.php when this page is directly accessed
-			$login = Smr\Request::get('login', '');
-			$password = Smr\Request::get('password', '');
+			$login = Request::get('login', '');
+			$password = Request::get('password', '');
 
 			// has the user submitted empty fields
 			if (empty($login) || empty($password)) {
@@ -46,9 +54,9 @@ try {
 				// Throw an exception if account isn't found or password is wrong
 				$account = SmrAccount::getAccountByLogin($login);
 				if (!$account->checkPassword($password)) {
-					throw new Smr\Exceptions\AccountNotFound('Wrong password');
+					throw new AccountNotFound('Wrong password');
 				}
-			} catch (Smr\Exceptions\AccountNotFound) {
+			} catch (AccountNotFound) {
 				$msg = 'Password is incorrect!';
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				exit;
@@ -66,7 +74,7 @@ try {
 	$account = $session->getAccount();
 
 	// If linking a social login to an existing account
-	if (Smr\Request::has('social')) {
+	if (Request::has('social')) {
 		session_start();
 		if (!isset($_SESSION['socialLogin'])) {
 			create_error('Tried a social login link without having a social session.');
@@ -84,17 +92,17 @@ try {
 	// *
 	// ********************************
 
-	Smr\Login\Redirect::redirectIfDisabled($account);
-	Smr\Login\Redirect::redirectIfOffline($account);
+	Redirect::redirectIfDisabled($account);
+	Redirect::redirectIfOffline($account);
 
 	// *********************************
 	// *
 	// * a u t o   n e w b i e   t u r n
 	// *
 	// *********************************
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT * FROM active_session ' .
-			   'WHERE last_accessed > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_NEWBIE_TIME));
+			   'WHERE last_accessed > ' . $db->escapeNumber(Epoch::time() - TIME_BEFORE_NEWBIE_TIME));
 	if (!$dbResult->hasRecord()) {
 		$db->write('UPDATE player SET newbie_turns = 1
 					WHERE newbie_turns = 0 AND
@@ -107,7 +115,7 @@ try {
 	// *
 	// ******************************************
 
-	$db->write('DELETE FROM player_has_ticker WHERE expires <= ' . $db->escapeNumber(Smr\Epoch::time()));
+	$db->write('DELETE FROM player_has_ticker WHERE expires <= ' . $db->escapeNumber(Epoch::time()));
 
 	// save ip
 	$account->updateIP();
@@ -177,11 +185,11 @@ try {
 		'`use`' => $db->escapeString($use),
 	]);
 	//now we update their cookie with the newest info
-	setcookie('Session_Info', $new, Smr\Epoch::time() + 157680000);
+	setcookie('Session_Info', $new, Epoch::time() + 157680000);
 
 
 	//get rid of expired messages
-	$db->write('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND expire_time != 0');
+	$db->write('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < ' . $db->escapeNumber(Epoch::time()) . ' AND expire_time != 0');
 	// Mark message as read if it was sent to self as a mass mail.
 	$db->write('UPDATE message SET msg_read = \'TRUE\' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' AND account_id = sender_id AND message_type_id IN (' . $db->escapeArray([MSG_ALLIANCE, MSG_GLOBAL, MSG_POLITICAL]) . ');');
 	//check to see if we need to remove player_has_unread

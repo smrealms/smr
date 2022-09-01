@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 function main_page(): void {
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$session = Smr\Session::getInstance();
 
 	// list of all first letter nicks
@@ -59,7 +61,7 @@ function main_page(): void {
 }
 
 function album_entry(int $album_id): void {
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$session = Smr\Session::getInstance();
 
 	// list of all first letter nicks

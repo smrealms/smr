@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 
-$db = Smr\Database::getInstance();
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Request;
+
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -9,7 +13,7 @@ if (!$player->isOnCouncil()) {
 	create_error('You have to be on the council in order to vote.');
 }
 
-$action = strtoupper(Smr\Request::get('action'));
+$action = strtoupper(Request::get('action'));
 
 if ($action == 'INCREASE') {
 	$action = 'INC';
@@ -26,7 +30,7 @@ if ($action == 'INC' || $action == 'DEC') {
 		'race_id_1' => $db->escapeNumber($player->getRaceID()),
 		'race_id_2' => $db->escapeNumber($race_id),
 		'action' => $db->escapeString($action),
-		'time' => $db->escapeNumber(Smr\Epoch::time()),
+		'time' => $db->escapeNumber(Epoch::time()),
 	]);
 } elseif ($action == 'YES' || $action == 'NO') {
 	$db->replace('player_votes_pact', [

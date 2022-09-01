@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 function user_quit(string $rdata): bool {
 
 	// :Fubar!Mibbit@coldfront-77C78B7B.dyn.optonline.net QUIT :Quit: http://www.mibbit.com ajax IRC Client
@@ -13,7 +15,7 @@ function user_quit(string $rdata): bool {
 		echo_r('[QUIT] ' . $nick . '!' . $user . '@' . $host . ' stated ' . $quit_msg);
 
 		// database object
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 
 		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
 
@@ -49,7 +51,7 @@ function user_nick(string $rdata): bool {
 		echo_r('[NICK] ' . $nick . ' -> ' . $new_nick);
 
 		// database object
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 
 		$channel_list = [];
 

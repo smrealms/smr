@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\HallOfFame;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -20,7 +24,7 @@ if (isset($game_id)) {
 }
 $template->assign('PersonalHofHREF', $container->href());
 
-$breadcrumb = Smr\HallOfFame::buildBreadcrumb($var, isset($game_id) ? 'Current HoF' : 'Global HoF');
+$breadcrumb = HallOfFame::buildBreadcrumb($var, isset($game_id) ? 'Current HoF' : 'Global HoF');
 $template->assign('Breadcrumb', $breadcrumb);
 
 $viewType = $var['viewType'] ?? '';
@@ -29,13 +33,13 @@ $hofVis = SmrPlayer::getHOFVis();
 if (!isset($hofVis[$viewType])) {
 	// Not a complete HOF type, so continue to show categories
 	$allowedVis = [HOF_PUBLIC, HOF_ALLIANCE];
-	$categories = Smr\HallOfFame::getHofCategories($allowedVis, $game_id, $account->getAccountID());
+	$categories = HallOfFame::getHofCategories($allowedVis, $game_id, $account->getAccountID());
 	$template->assign('Categories', $categories);
 
 } else {
 	// Rankings page
-	$db = Smr\Database::getInstance();
-	$gameIDSql = ' AND game_id ' . (isset($game_id) ? '= ' . $db->escapeNumber($game_id) : 'IN (SELECT game_id FROM game WHERE end_time < ' . Smr\Epoch::time() . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
+	$db = Database::getInstance();
+	$gameIDSql = ' AND game_id ' . (isset($game_id) ? '= ' . $db->escapeNumber($game_id) : 'IN (SELECT game_id FROM game WHERE end_time < ' . Epoch::time() . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
 
 	$rank = 1;
 	$foundMe = false;
@@ -59,12 +63,12 @@ if (!isset($hofVis[$viewType])) {
 		if ($accountID == $account->getAccountID()) {
 			$foundMe = true;
 		}
-		$amount = Smr\HallOfFame::applyHofVisibilityMask($dbRecord->getFloat('amount'), $hofVis[$viewType], $game_id, $accountID);
-		$rows[] = Smr\HallOfFame::displayHOFRow($rank++, $accountID, $amount);
+		$amount = HallOfFame::applyHofVisibilityMask($dbRecord->getFloat('amount'), $hofVis[$viewType], $game_id, $accountID);
+		$rows[] = HallOfFame::displayHOFRow($rank++, $accountID, $amount);
 	}
 	if (!$foundMe) {
-		$rank = Smr\HallOfFame::getHofRank($viewType, $account->getAccountID(), $game_id);
-		$rows[] = Smr\HallOfFame::displayHOFRow($rank['Rank'], $account->getAccountID(), $rank['Amount']);
+		$rank = HallOfFame::getHofRank($viewType, $account->getAccountID(), $game_id);
+		$rows[] = HallOfFame::displayHOFRow($rank['Rank'], $account->getAccountID(), $rank['Amount']);
 	}
 	$template->assign('Rows', $rows);
 }

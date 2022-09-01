@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $template = Smr\Template::getInstance();
 
 $template->assign('PageTopic', 'Edit Dummys');
@@ -11,7 +13,7 @@ $template->assign('Weapons', SmrWeaponType::getAllWeaponTypes());
 $template->assign('SelectDummysLink', Page::create('admin/edit_dummys.php')->href());
 $template->assign('EditDummysLink', Page::create('admin/edit_dummys_processing.php')->href());
 
-$name = Smr\Request::get('dummy_name', 'New Dummy');
+$name = Request::get('dummy_name', 'New Dummy');
 $dummyShip = DummyShip::getCachedDummyShip($name);
 
 $template->assign('DummyPlayer', $dummyShip->getPlayer());

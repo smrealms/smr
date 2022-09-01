@@ -1,11 +1,14 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Request;
+
 $var = Smr\Session::getInstance()->getCurrentVar();
 
 $container = Page::create('message_view.php');
 $container->addVar('folder_id');
 
-if (Smr\Request::get('action') == 'No') {
+if (Request::get('action') == 'No') {
 	$container->go();
 }
 
@@ -17,7 +20,7 @@ $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
 // get next id
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT IFNULL(max(notify_id)+1, 0) as next_notify_id FROM message_notify WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY notify_id DESC');
 $notify_id = $dbResult->record()->getInt('next_notify_id');
 

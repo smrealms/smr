@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
@@ -8,15 +11,15 @@ if (!$player->isLandedOnPlanet()) {
 }
 // get a planet from the sector where the player is in
 $planet = $player->getSectorPlanet();
-$action = Smr\Request::get('action');
+$action = Request::get('action');
 
 if ($action == 'Take Ownership') {
-	if ($planet->hasOwner() && $planet->getPassword() != Smr\Request::get('password')) {
+	if ($planet->hasOwner() && $planet->getPassword() != Request::get('password')) {
 		create_error('You entered an incorrect password for this planet!');
 	}
 
 	// delete all previous ownerships
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$db->write('UPDATE planet SET owner_id = 0, password = NULL
 				WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . '
 				AND game_id = ' . $db->escapeNumber($player->getGameID()));
@@ -26,7 +29,7 @@ if ($action == 'Take Ownership') {
 	$planet->removePassword();
 	$player->log(LOG_TYPE_PLANETS, 'Player takes ownership of planet.');
 } elseif ($action == 'Rename') {
-	$name = Smr\Request::get('name');
+	$name = Request::get('name');
 	if (empty($name)) {
 		create_error('You cannot leave your planet nameless!');
 	}
@@ -36,7 +39,7 @@ if ($action == 'Take Ownership') {
 
 } elseif ($action == 'Set Password') {
 	// set password
-	$password = Smr\Request::get('password');
+	$password = Request::get('password');
 	$planet->setPassword($password);
 	$player->log(LOG_TYPE_PLANETS, 'Player sets planet password to ' . $password);
 }

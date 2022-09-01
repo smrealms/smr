@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -20,7 +22,7 @@ $template->assign('SelfHREF', $container->href());
 $action = $session->getRequestVar('action', '');
 if (!empty($action)) {
 	$rankings = [];
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$db->switchDatabases($var['HistoryDatabase']);
 	if (in_array($action, ['Top Mined Sectors', 'Most Dangerous Sectors'], true)) {
 		[$sql, $header] = match ($action) {

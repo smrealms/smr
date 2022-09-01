@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\BountyType;
+use Smr\Database;
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
@@ -25,13 +26,13 @@ if (!isset($var['ClaimText'])) {
 	if (!empty($bounties)) {
 		$claimText .= ('You have claimed the following bounties<br /><br />');
 
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		foreach ($bounties as $bounty) {
 			// get bounty id from db
 			$amount = $bounty['credits'];
 			$smrCredits = $bounty['smr_credits'];
 			// no interest on bounties
-			// $time = Smr\Epoch::time();
+			// $time = Epoch::time();
 			// $days = ($time - $db->getField('time')) / 60 / 60 / 24;
 			// $amount = round($db->getField('amount') * pow(1.05,$days));
 

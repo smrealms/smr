@@ -1,25 +1,29 @@
 <?php declare(strict_types=1);
 
-$db = Smr\Database::getInstance();
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Request;
+
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
-$action = Smr\Request::get('action');
+$action = Request::get('action');
 if ($action == 'Vote') {
 	if ($account->getAccountID() == ACCOUNT_ID_NHL) {
 		create_error('This account is not allowed to cast a vote!');
 	}
-	if (Smr\Request::has('vote')) {
+	if (Request::has('vote')) {
 		$query = 'REPLACE INTO account_votes_for_feature VALUES ';
-		foreach (Smr\Request::getArray('vote') as $requestID => $vote) {
+		foreach (Request::getArray('vote') as $requestID => $vote) {
 			$query .= '(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($requestID) . ',' . $db->escapeString($vote) . '),';
 		}
 		$db->write(substr($query, 0, -1));
 	}
-	if (Smr\Request::has('favourite')) {
+	if (Request::has('favourite')) {
 		$db->replace('account_votes_for_feature', [
 			'account_id' => $db->escapeNumber($account->getAccountID()),
-			'feature_request_id' => $db->escapeNumber(Smr\Request::getInt('favourite')),
+			'feature_request_id' => $db->escapeNumber(Request::getInt('favourite')),
 			'vote_type' => $db->escapeString('FAVOURITE'),
 		]);
 	}
@@ -29,14 +33,14 @@ if ($action == 'Vote') {
 	if (!$account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST)) {
 		create_error('You do not have permission to do that');
 	}
-	if (!Smr\Request::has('status')) {
+	if (!Request::has('status')) {
 		create_error('You have to select a status to set');
 	}
-	$status = Smr\Request::get('status');
-	if (!Smr\Request::has('set_status_ids')) {
+	$status = Request::get('status');
+	if (!Request::has('set_status_ids')) {
 		create_error('You have to select a feature');
 	}
-	$setStatusIDs = Smr\Request::getIntArray('set_status_ids');
+	$setStatusIDs = Request::getIntArray('set_status_ids');
 
 	$db->write('UPDATE feature_request fr SET status = ' . $db->escapeString($status) . '
 			, fav = (
@@ -62,7 +66,7 @@ if ($action == 'Vote') {
 		$db->insert('feature_request_comments', [
 			'feature_request_id' => $db->escapeNumber($featureID),
 			'poster_id' => $db->escapeNumber($account->getAccountID()),
-			'posting_time' => $db->escapeNumber(Smr\Epoch::time()),
+			'posting_time' => $db->escapeNumber(Epoch::time()),
 			'anonymous' => $db->escapeBoolean(false),
 			'text' => $db->escapeString($status),
 		]);

@@ -1,10 +1,15 @@
 <?php declare(strict_types=1);
+
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Request;
+
 try {
 	require_once('../../bootstrap.php');
 	require_once(LIB . 'Album/album_functions.php');
 
 	// database object
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	?>
 	<!DOCTYPE html>
 	<html>
@@ -38,8 +43,8 @@ try {
 	<tr>
 	<td valign="top">
 	<?php
-	if (Smr\Request::has('nick')) {
-		$query = urldecode(Smr\Request::get('nick'));
+	if (Request::has('nick')) {
+		$query = urldecode(Request::get('nick'));
 
 		$dbResult = $db->read('SELECT account_id as album_id
 					FROM album JOIN account USING(account_id)
@@ -134,7 +139,7 @@ Quick Search:<br />
 
 <tr>
 	<td class="left" style='font-size:65%;'>
-		&copy; 2002-<?php echo date('Y', Smr\Epoch::time()); ?> by <a href="<?php echo URL; ?>"><?php echo URL; ?></a><br />
+		&copy; 2002-<?php echo date('Y', Epoch::time()); ?> by <a href="<?php echo URL; ?>"><?php echo URL; ?></a><br />
 		Hosted by <a href='http://www.fem.tu-ilmenau.de/' target='fem'>FeM</a>
 	</td>
 </tr>

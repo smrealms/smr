@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Messages;
+
 $template = Smr\Template::getInstance();
 $var = Smr\Session::getInstance()->getCurrentVar();
 
@@ -11,13 +13,13 @@ $container->addVar('offended');
 $container->addVar('offender');
 $template->assign('NotifyReplyFormHref', $container->href());
 
-$offender = Smr\Messages::getMessagePlayer($var['offender'], $var['game_id']);
+$offender = Messages::getMessagePlayer($var['offender'], $var['game_id']);
 if (is_object($offender)) {
 	$offender = $offender->getDisplayName() . ' (Login: ' . $offender->getAccount()->getLogin() . ')';
 }
 $template->assign('Offender', $offender);
 
-$offended = Smr\Messages::getMessagePlayer($var['offended'], $var['game_id']);
+$offended = Messages::getMessagePlayer($var['offended'], $var['game_id']);
 if (is_object($offended)) {
 	$offended = $offended->getDisplayName() . ' (Login: ' . $offended->getAccount()->getLogin() . ')';
 }

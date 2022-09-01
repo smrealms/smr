@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\PlanetList;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -12,7 +15,7 @@ Menu::planetList($var['alliance_id'], 1);
 $viewBonds = true;
 if ($var['alliance_id'] != 0) {
 	$role_id = $player->getAllianceRole($var['alliance_id']);
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('
 		SELECT 1
 		FROM alliance_has_roles
@@ -24,4 +27,4 @@ if ($var['alliance_id'] != 0) {
 }
 $template->assign('CanViewBonds', $viewBonds);
 
-Smr\PlanetList::common($var['alliance_id'], $viewBonds);
+PlanetList::common($var['alliance_id'], $viewBonds);

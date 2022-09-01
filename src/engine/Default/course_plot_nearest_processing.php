@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\PlotGroup;
+use Smr\Request;
 
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -11,8 +12,8 @@ if (isset($var['RealX'])) {
 	// This is only used by NPC's
 	$realX = $var['RealX'];
 } else {
-	$xType = PlotGroup::from(Smr\Request::get('xtype'));
-	$X = Smr\Request::get('X');
+	$xType = PlotGroup::from(Request::get('xtype'));
+	$X = Request::get('X');
 	$realX = Plotter::getX($xType, $X, $player->getGameID(), $player);
 
 	$player->log(LOG_TYPE_MOVEMENT, 'Player plots to nearest ' . $xType->value . ': ' . $X . '.');

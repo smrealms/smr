@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 /**
  * Adds a database layer to an AbstractSmrShip instance.
  * Loads and saves ship properties from/to the database.
@@ -33,7 +35,7 @@ class SmrShip extends AbstractSmrShip {
 
 	protected function __construct(AbstractSmrPlayer $player) {
 		parent::__construct($player);
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$this->SQL = 'account_id=' . $db->escapeNumber($this->getAccountID()) . ' AND game_id=' . $db->escapeNumber($this->getGameID());
 
 		$this->loadHardware();
@@ -58,7 +60,7 @@ class SmrShip extends AbstractSmrShip {
 	 */
 	protected function loadWeapons(): void {
 		// determine weapon
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM ship_has_weapon JOIN weapon_type USING (weapon_type_id)
 							WHERE ' . $this->SQL . '
 							ORDER BY order_id LIMIT ' . $db->escapeNumber($this->getHardpoints()));
@@ -80,7 +82,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->hardware = [];
 
 		// get currently hardware from db
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT *
 							FROM ship_has_hardware
 							JOIN hardware_type USING(hardware_type_id)
@@ -100,7 +102,7 @@ class SmrShip extends AbstractSmrShip {
 		$this->cargo = [];
 
 		// get cargo from db
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM ship_has_cargo WHERE ' . $this->SQL);
 		foreach ($dbResult->records() as $dbRecord) {
 			// adding cargo and amount to array
@@ -114,7 +116,7 @@ class SmrShip extends AbstractSmrShip {
 			return;
 		}
 		// write cargo info
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		foreach ($this->getCargo() as $id => $amount) {
 			if ($amount > 0) {
 				$db->replace('ship_has_cargo', [
@@ -135,7 +137,7 @@ class SmrShip extends AbstractSmrShip {
 
 	public function updateHardware(): void {
 		// write hardware info only for hardware that has changed
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		foreach ($this->hasChangedHardware as $hardwareTypeID => $hasChanged) {
 			if ($hasChanged === false) {
 				continue;
@@ -160,7 +162,7 @@ class SmrShip extends AbstractSmrShip {
 			return;
 		}
 		// write weapon info
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$db->write('DELETE FROM ship_has_weapon WHERE ' . $this->SQL);
 		foreach ($this->weapons as $orderID => $weapon) {
 			$db->insert('ship_has_weapon', [
@@ -180,7 +182,7 @@ class SmrShip extends AbstractSmrShip {
 		if ($this->hasCloak() === false) {
 			return;
 		}
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT 1 FROM ship_is_cloaked WHERE ' . $this->SQL);
 		$this->isCloaked = $dbResult->hasRecord();
 	}
@@ -189,7 +191,7 @@ class SmrShip extends AbstractSmrShip {
 		if ($this->hasChangedCloak === false) {
 			return;
 		}
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		if ($this->isCloaked === false) {
 			$db->write('DELETE FROM ship_is_cloaked WHERE ' . $this->SQL);
 		} else {
@@ -206,7 +208,7 @@ class SmrShip extends AbstractSmrShip {
 		if ($this->hasIllusion() === false) {
 			return;
 		}
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM ship_has_illusion WHERE ' . $this->SQL);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
@@ -222,7 +224,7 @@ class SmrShip extends AbstractSmrShip {
 		if ($this->hasChangedIllusion === false) {
 			return;
 		}
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		if ($this->illusionShip === false) {
 			$db->write('DELETE FROM ship_has_illusion WHERE ' . $this->SQL);
 		} else {

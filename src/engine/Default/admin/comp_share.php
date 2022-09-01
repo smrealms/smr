@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
@@ -11,7 +14,7 @@ $unusedAfter = 86400 * 365; // 1 year
 $used = [];
 
 //check the db and get the info we need
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT * FROM multi_checking_cookie WHERE `use` = \'TRUE\'');
 $tables = [];
 foreach ($dbResult->records() as $dbRecord) {
@@ -35,7 +38,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	}
 
 	if ($rows > 1) {
-		$dbResult2 = $db->read('SELECT login FROM account WHERE account_id =' . $db->escapeNumber($currTabAccId) . ' AND last_login > ' . $db->escapeNumber(Smr\Epoch::time() - $unusedAfter));
+		$dbResult2 = $db->read('SELECT login FROM account WHERE account_id =' . $db->escapeNumber($currTabAccId) . ' AND last_login > ' . $db->escapeNumber(Epoch::time() - $unusedAfter));
 		if (!$dbResult2->hasRecord()) {
 			continue;
 		}
@@ -44,7 +47,7 @@ foreach ($dbResult->records() as $dbRecord) {
 		$rows = [];
 		foreach ($accountIDs as $currLinkAccId) {
 			$currLinkAccId = (int)$currLinkAccId;
-			$dbResult2 = $db->read('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = ' . $db->escapeNumber($currLinkAccId) . ' AND last_login > ' . $db->escapeNumber(Smr\Epoch::time() - $unusedAfter));
+			$dbResult2 = $db->read('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = ' . $db->escapeNumber($currLinkAccId) . ' AND last_login > ' . $db->escapeNumber(Epoch::time() - $unusedAfter));
 			if (!$dbResult2->hasRecord()) {
 				continue;
 			}

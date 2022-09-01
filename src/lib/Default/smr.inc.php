@@ -1,5 +1,16 @@
 <?php declare(strict_types=1);
 
+use Smr\Chess\ChessGame;
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Exceptions\UserError;
+use Smr\Messages;
+use Smr\Race;
+use Smr\SectorLock;
+use Smr\Template;
+use Smr\VoteLink;
+use Smr\VoteSite;
+
 function parseBoolean(mixed $check): bool {
 	// Only negative strings are not implicitly converted to the correct bool
 	if (is_string($check) && (strcasecmp($check, 'NO') == 0 || strcasecmp($check, 'FALSE') == 0)) {
@@ -65,7 +76,7 @@ function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string 
 
 			case 'race':
 				$raceNameID = $default;
-				foreach (Smr\Race::getAllNames() as $raceID => $raceName) {
+				foreach (Race::getAllNames() as $raceID => $raceName) {
 					if ((is_numeric($raceNameID) && $raceNameID == $raceID)
 						|| $raceNameID == $raceName) {
 						if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
@@ -94,7 +105,7 @@ function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string 
 					return is_numeric($default);
 				}
 				$chessGameID = (int)$default;
-				$chessGame = Smr\Chess\ChessGame::getChessGame($chessGameID);
+				$chessGame = ChessGame::getChessGame($chessGameID);
 				return '<a href="' . $chessGame->getPlayGameHREF() . '">chess game (' . $chessGame->getChessGameID() . ')</a>';
 
 			case 'sector':
@@ -188,7 +199,7 @@ function create_error(string $message): never {
 		// appropriate error page.
 		$errorHREF = $container->href();
 		// json_encode the HREF as a safety precaution
-		$template = Smr\Template::getInstance();
+		$template = Template::getInstance();
 		$template->addJavascriptForAjax('EVAL', 'location.href = ' . json_encode($errorHREF));
 	}
 	$container->go();
@@ -238,7 +249,7 @@ function word_filter(string $string): string {
 	static $words;
 
 	if (!is_array($words)) {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT word_value, word_replacement FROM word_filter');
 		$words = [];
 		foreach ($dbResult->records() as $dbRecord) {
@@ -297,13 +308,13 @@ function do_voodoo(): never {
 			//&& ($var->file == 'current_sector.php' || $var->file == 'map_local.php') //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
 		) {
 			// We skip locking if we've already failed to display error page
-			$lock = Smr\SectorLock::getInstance();
+			$lock = SectorLock::getInstance();
 			if (!$lock->hasFailed() && $lock->acquireForPlayer($player)) {
 				// Reload var info in case it changed between grabbing lock.
 				$session->fetchVarInfo();
 				if ($session->hasCurrentVar() === false) {
 					if (ENABLE_DEBUG) {
-						$db = Smr\Database::getInstance();
+						$db = Database::getInstance();
 						$db->insert('debug', [
 							'debug_type' => $db->escapeString('SPAM'),
 							'account_id' => $db->escapeNumber($account->getAccountID()),
@@ -311,7 +322,7 @@ function do_voodoo(): never {
 							'value_2' => 0,
 						]);
 					}
-					throw new Smr\Exceptions\UserError('Please do not spam click!');
+					throw new UserError('Please do not spam click!');
 				}
 				$var = $session->getCurrentVar();
 
@@ -347,7 +358,7 @@ function do_voodoo(): never {
 	$var->process();
 
 	// Populate the template
-	$template = Smr\Template::getInstance();
+	$template = Template::getInstance();
 	if (isset($player)) {
 		$template->assign('UnderAttack', $player->removeUnderAttack());
 	}
@@ -391,7 +402,7 @@ function do_voodoo(): never {
 
 function saveAllAndReleaseLock(bool $updateSession = true): void {
 	// Only save if we have a lock.
-	$lock = Smr\SectorLock::getInstance();
+	$lock = SectorLock::getInstance();
 	if ($lock->isActive()) {
 		SmrSector::saveSectors();
 		SmrShip::saveShips();
@@ -417,11 +428,11 @@ function saveAllAndReleaseLock(bool $updateSession = true): void {
 	}
 }
 
-function doTickerAssigns(Smr\Template $template, AbstractSmrPlayer $player, Smr\Database $db): void {
+function doTickerAssigns(Template $template, AbstractSmrPlayer $player, Database $db): void {
 	//any ticker news?
 	if ($player->hasTickers()) {
 		$ticker = [];
-		$max = Smr\Epoch::time() - 60;
+		$max = Epoch::time() - 60;
 		$dateFormat = $player->getAccount()->getDateTimeFormat();
 		if ($player->hasTicker('NEWS')) {
 			//get recent news (5 mins)
@@ -439,7 +450,7 @@ function doTickerAssigns(Smr\Template $template, AbstractSmrPlayer $player, Smr\
 						AND game_id=' . $db->escapeNumber($player->getGameID()) . '
 						AND message_type_id=' . $db->escapeNumber(MSG_SCOUT) . '
 						AND send_time>=' . $db->escapeNumber($max) . '
-						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type=' . $db->escapeString('BLOCK') . ' AND expires > ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ') AND receiver_delete = \'FALSE\'
+						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type=' . $db->escapeString('BLOCK') . ' AND expires > ' . $db->escapeNumber(Epoch::time()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ') AND receiver_delete = \'FALSE\'
 						ORDER BY send_time DESC
 						LIMIT 4');
 			foreach ($dbResult->records() as $dbRecord) {
@@ -453,16 +464,16 @@ function doTickerAssigns(Smr\Template $template, AbstractSmrPlayer $player, Smr\
 	}
 }
 
-function doSkeletonAssigns(Smr\Template $template): void {
+function doSkeletonAssigns(Template $template): void {
 	$session = Smr\Session::getInstance();
 	$account = $session->getAccount();
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 
 	$template->assign('CSSLink', $account->getCssUrl());
 	$template->assign('CSSColourLink', $account->getCssColourUrl());
 
 	$template->assign('FontSize', $account->getFontSize() - 20);
-	$template->assign('timeDisplay', date($account->getDateTimeFormatSplit(), Smr\Epoch::time()));
+	$template->assign('timeDisplay', date($account->getDateTimeFormatSplit(), Epoch::time()));
 
 	$container = Page::create('hall_of_fame_new.php');
 	$template->assign('HallOfFameLink', $container->href());
@@ -539,8 +550,8 @@ function doSkeletonAssigns(Smr\Template $template): void {
 			$unreadMessages[] = [
 				'href' => $container->href(),
 				'num' => $dbRecord->getInt('COUNT(*)'),
-				'alt' => Smr\Messages::getMessageTypeNames($messageTypeID),
-				'img' => Smr\Messages::getMessageTypeImage($messageTypeID),
+				'alt' => Messages::getMessageTypeNames($messageTypeID),
+				'img' => Messages::getMessageTypeImage($messageTypeID),
 			];
 		}
 		$template->assign('UnreadMessages', $unreadMessages);
@@ -593,8 +604,8 @@ function doSkeletonAssigns(Smr\Template $template): void {
 
 	// ------- VOTING --------
 	$voteLinks = [];
-	foreach (Smr\VoteSite::cases() as $site) {
-		$link = new Smr\VoteLink($site, $account->getAccountID(), $session->getGameID());
+	foreach (VoteSite::cases() as $site) {
+		$link = new VoteLink($site, $account->getAccountID(), $session->getGameID());
 		$voteLinks[] = [
 			'img' => $link->getImg(),
 			'url' => $link->getUrl(),
@@ -604,7 +615,7 @@ function doSkeletonAssigns(Smr\Template $template): void {
 	$template->assign('VoteLinks', $voteLinks);
 
 	// Determine the minimum time until the next vote across all sites
-	$minVoteWait = Smr\VoteLink::getMinTimeUntilFreeTurns($account->getAccountID(), $session->getGameID());
+	$minVoteWait = VoteLink::getMinTimeUntilFreeTurns($account->getAccountID(), $session->getGameID());
 	if ($minVoteWait <= 0) {
 		$template->assign('TimeToNextVote', 'now');
 	} else {
@@ -621,7 +632,7 @@ function doSkeletonAssigns(Smr\Template $template): void {
 	}
 
 	$template->assign('Version', $version);
-	$template->assign('CurrentYear', date('Y', Smr\Epoch::time()));
+	$template->assign('CurrentYear', date('Y', Epoch::time()));
 }
 
 /**

@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Messages;
+
 $template = Smr\Template::getInstance();
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
@@ -10,7 +13,7 @@ Menu::messages();
 $template->assign('PageTopic', 'View Messages');
 
 $messageBoxes = [];
-foreach (Smr\Messages::getMessageTypeNames() as $message_type_id => $message_type_name) {
+foreach (Messages::getMessageTypeNames() as $message_type_id => $message_type_name) {
 	$messageBox = [];
 	$messageBox['Name'] = $message_type_name;
 

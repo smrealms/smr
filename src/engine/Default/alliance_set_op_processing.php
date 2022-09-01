@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
 
-$db = Smr\Database::getInstance();
+use Smr\Database;
+use Smr\Request;
+
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
@@ -23,7 +26,7 @@ if (!empty($var['cancel'])) {
 	// so they may get an errant alliance message icon if logged in.
 } else {
 	// schedule an op
-	$date = Smr\Request::get('date');
+	$date = Request::get('date');
 	if (empty($date)) {
 		error_on_page('You must specify a date for the operation!');
 	}

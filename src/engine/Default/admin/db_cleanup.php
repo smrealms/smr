@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -10,7 +12,7 @@ function bytesToMB(int $bytes): string {
 	return round($bytes / (1024 * 1024), 1) . ' MB';
 }
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $template->assign('DbSizeMB', bytesToMB($db->getDbBytes()));
 
 if (isset($var['results'])) {

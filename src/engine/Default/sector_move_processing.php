@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\MovementType;
+use Smr\SectorLock;
 
 require_once(LIB . 'Default/sector_mines.inc.php');
 
@@ -72,7 +73,7 @@ $player->takeTurns($turns, $turns);
 $player->update();
 
 // We need to release the lock on our old sector
-$lock = Smr\SectorLock::getInstance();
+$lock = SectorLock::getInstance();
 $lock->release();
 
 // We need a lock on the new sector so that more than one person isn't hitting the same mines

@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Irc\Exceptions\Timeout;
+
 require_once(TOOLS . 'irc/server.php');
 require_once(TOOLS . 'irc/ctcp.php');
 require_once(TOOLS . 'irc/invite.php');
@@ -42,7 +44,7 @@ function readFromStream($fp): bool {
 	if ($last_ping < time() - 300) {
 		echo_r('TIMEOUT detected!');
 		fclose($fp); // close socket
-		throw new Smr\Irc\Exceptions\Timeout();
+		throw new Timeout();
 	}
 
 	// we simply do some poll stuff here

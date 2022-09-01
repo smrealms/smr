@@ -1,14 +1,17 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$inactiveTime = Smr\Epoch::time() - TIME_BEFORE_INACTIVE;
+$inactiveTime = Epoch::time() - TIME_BEFORE_INACTIVE;
 
 $template->assign('PageTopic', 'Current Players');
-$db = Smr\Database::getInstance();
-$db->write('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . $db->escapeNumber(Smr\Epoch::time()));
+$db = Database::getInstance();
+$db->write('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . $db->escapeNumber(Epoch::time()));
 
 $dbResult = $db->read('SELECT count(*) count FROM active_session
 			WHERE last_accessed >= ' . $db->escapeNumber($inactiveTime) . ' AND

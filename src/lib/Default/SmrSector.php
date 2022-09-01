@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\DatabaseRecord;
+use Smr\Exceptions\SectorNotFound;
 use Smr\MovementType;
 
 class SmrSector {
@@ -11,7 +14,7 @@ class SmrSector {
 	/** @var array<int, array<int, array<int, self>>> */
 	protected static array $CACHE_LOCATION_SECTORS = [];
 
-	protected Smr\Database $db;
+	protected Database $db;
 	protected readonly string $SQL;
 
 	protected int $battles;
@@ -43,7 +46,7 @@ class SmrSector {
 		try {
 			self::getSector($gameID, $sectorID);
 			return true;
-		} catch (Smr\Exceptions\SectorNotFound) {
+		} catch (SectorNotFound) {
 			return false;
 		}
 	}
@@ -53,7 +56,7 @@ class SmrSector {
 	 */
 	public static function getGalaxySectors(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID])) {
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM sector WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id=' . $db->escapeNumber($galaxyID) . ' ORDER BY sector_id ASC');
 			$sectors = [];
 			foreach ($dbResult->records() as $dbRecord) {
@@ -70,7 +73,7 @@ class SmrSector {
 	 */
 	public static function getLocationSectors(int $gameID, int $locationTypeID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID])) {
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM location JOIN sector USING (game_id, sector_id) WHERE location_type_id = ' . $db->escapeNumber($locationTypeID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY sector_id ASC');
 			$sectors = [];
 			foreach ($dbResult->records() as $dbRecord) {
@@ -82,7 +85,7 @@ class SmrSector {
 		return self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID];
 	}
 
-	public static function getSector(int $gameID, int $sectorID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): self {
+	public static function getSector(int $gameID, int $sectorID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): self {
 		if (!isset(self::$CACHE_SECTORS[$gameID][$sectorID]) || $forceUpdate) {
 			self::$CACHE_SECTORS[$gameID][$sectorID] = new self($gameID, $sectorID, false, $dbRecord);
 		}
@@ -115,9 +118,9 @@ class SmrSector {
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
 		bool $create = false,
-		Smr\DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null
 	) {
-		$this->db = Smr\Database::getInstance();
+		$this->db = Database::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
 
 		// Do we already have a database record for this sector?
@@ -145,7 +148,7 @@ class SmrSector {
 			$this->warp = 0;
 			$this->isNew = true;
 		} else {
-			throw new Smr\Exceptions\SectorNotFound('No sector ' . $sectorID . ' in game ' . $gameID);
+			throw new SectorNotFound('No sector ' . $sectorID . ' in game ' . $gameID);
 		}
 	}
 

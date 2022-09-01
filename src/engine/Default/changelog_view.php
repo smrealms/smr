@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -12,7 +14,7 @@ if (isset($var['Since'])) {
 	$template->assign('ContinueHREF', $container->href());
 }
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 
 $dbResult = $db->read('SELECT *
 			FROM version

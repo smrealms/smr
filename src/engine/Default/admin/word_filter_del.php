@@ -1,8 +1,11 @@
 <?php declare(strict_types=1);
 
-if (Smr\Request::has('word_ids')) {
-	$db = Smr\Database::getInstance();
-	$db->write('DELETE FROM word_filter WHERE word_id IN (' . $db->escapeArray(Smr\Request::getIntArray('word_ids')) . ')');
+use Smr\Database;
+use Smr\Request;
+
+if (Request::has('word_ids')) {
+	$db = Database::getInstance();
+	$db->write('DELETE FROM word_filter WHERE word_id IN (' . $db->escapeArray(Request::getIntArray('word_ids')) . ')');
 }
 
 $container = Page::create('admin/word_filter.php');

@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Race;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
@@ -12,7 +16,7 @@ $template->assign('PageTopic', 'Ruling Council Of ' . $player->getRaceName());
 Menu::council($player->getRaceID());
 
 // determine for what we voted
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT * FROM player_votes_relation
 			WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 				AND game_id = ' . $db->escapeNumber($player->getGameID()));
@@ -26,7 +30,7 @@ if ($dbResult->hasRecord()) {
 
 $voteRelations = [];
 $raceRelations = Globals::getRaceRelations($player->getGameID(), $player->getRaceID());
-foreach (Smr\Race::getPlayableIDs() as $raceID) {
+foreach (Race::getPlayableIDs() as $raceID) {
 	if ($raceID == $player->getRaceID()) {
 		continue;
 	}
@@ -42,7 +46,7 @@ $template->assign('VoteRelations', $voteRelations);
 
 $voteTreaties = [];
 $dbResult = $db->read('SELECT * FROM race_has_voting
-			WHERE ' . $db->escapeNumber(Smr\Epoch::time()) . ' < end_time
+			WHERE ' . $db->escapeNumber(Epoch::time()) . ' < end_time
 			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()));
 

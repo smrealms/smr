@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
@@ -7,7 +9,7 @@ $account = $session->getAccount();
 $variable = $session->getRequestVar('variable');
 $type = $session->getRequestVar('type');
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 
 $container = Page::create('admin/ip_view.php');
 $template->assign('BackHREF', $container->href());

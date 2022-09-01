@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
 
 use Smr\Exceptions\UserError;
+use Smr\PlanetTypes\PlanetType;
+use Smr\Race;
+use Smr\Request;
 use Smr\TransactionType;
 
 /**
@@ -73,17 +76,17 @@ function addLocationToSector(SmrLocation $location, SmrSector $sector): void {
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
-$submit = Smr\Request::getVar('submit');
+$submit = Request::getVar('submit');
 $var['submit'] = null; // clear if set
 
 if ($submit == 'Create Galaxies') {
 	for ($i = 1; $i <= $var['num_gals']; $i++) {
 		$galaxy = SmrGalaxy::createGalaxy($var['game_id'], $i);
-		$galaxy->setName(Smr\Request::get('gal' . $i));
-		$galaxy->setWidth(Smr\Request::getInt('width' . $i));
-		$galaxy->setHeight(Smr\Request::getInt('height' . $i));
-		$galaxy->setGalaxyType(Smr\Request::get('type' . $i));
-		$galaxy->setMaxForceTime(IFloor(Smr\Request::getFloat('forces' . $i) * 3600));
+		$galaxy->setName(Request::get('gal' . $i));
+		$galaxy->setWidth(Request::getInt('width' . $i));
+		$galaxy->setHeight(Request::getInt('height' . $i));
+		$galaxy->setGalaxyType(Request::get('type' . $i));
+		$galaxy->setMaxForceTime(IFloor(Request::getFloat('forces' . $i) * 3600));
 	}
 	// Workaround for SmrGalaxy::getStartSector depending on all other galaxies
 	SmrGalaxy::saveGalaxies();
@@ -95,7 +98,7 @@ if ($submit == 'Create Galaxies') {
 	$var['message'] = '<span class="green">Success</span> : Succesfully created galaxies.';
 } elseif ($submit == 'Redo Connections') {
 	$galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
-	$connectivity = Smr\Request::getFloat('connect');
+	$connectivity = Request::getFloat('connect');
 	if (!$galaxy->setConnectivity($connectivity)) {
 		$var['message'] = '<span class="red">Error</span> : Regenerating connections failed.';
 	} else {
@@ -112,8 +115,8 @@ if ($submit == 'Create Galaxies') {
 		$galSector->removeAllLocations();
 	}
 	foreach (SmrLocation::getAllLocations() as $location) {
-		if (Smr\Request::has('loc' . $location->getTypeID())) {
-			$numLoc = Smr\Request::getInt('loc' . $location->getTypeID());
+		if (Request::has('loc' . $location->getTypeID())) {
+			$numLoc = Request::getInt('loc' . $location->getTypeID());
 			for ($i = 0; $i < $numLoc; $i++) {
 				//4 per sector max locs and no locations inside fed
 				$randSector = findValidSector(
@@ -139,9 +142,9 @@ if ($submit == 'Create Galaxies') {
 	$galaxies = SmrGalaxy::getGameGalaxies($var['game_id']);
 	foreach ($galaxies as $eachGalaxy) {
 		//do we have a warp to this gal?
-		if (Smr\Request::has('warp' . $eachGalaxy->getGalaxyID())) {
+		if (Request::has('warp' . $eachGalaxy->getGalaxyID())) {
 			// Sanity check the number
-			$numWarps = Smr\Request::getInt('warp' . $eachGalaxy->getGalaxyID());
+			$numWarps = Request::getInt('warp' . $eachGalaxy->getGalaxyID());
 			if ($numWarps > 10) {
 				create_error('Specify no more than 10 warps between two galaxies!');
 			}
@@ -173,8 +176,8 @@ if ($submit == 'Create Galaxies') {
 		}
 	}
 
-	foreach (array_keys(Smr\PlanetTypes\PlanetType::PLANET_TYPES) as $planetTypeID) {
-		$numberOfPlanets = Smr\Request::getInt('type' . $planetTypeID);
+	foreach (array_keys(PlanetType::PLANET_TYPES) as $planetTypeID) {
+		$numberOfPlanets = Request::getInt('type' . $planetTypeID);
 		for ($i = 1; $i <= $numberOfPlanets; $i++) {
 			$galSector = findValidSector(
 				$galSectors,
@@ -187,14 +190,14 @@ if ($submit == 'Create Galaxies') {
 } elseif ($submit == 'Create Ports') {
 	$numLevelPorts = [];
 	for ($i = 1; $i <= SmrPort::MAX_LEVEL; $i++) {
-		$numLevelPorts[$i] = Smr\Request::getInt('port' . $i);
+		$numLevelPorts[$i] = Request::getInt('port' . $i);
 	}
 	$totalPorts = array_sum($numLevelPorts);
 
 	$totalRaceDist = 0;
 	$numRacePorts = [];
-	foreach (Smr\Race::getAllIDs() as $raceID) {
-		$racePercent = Smr\Request::getInt('race' . $raceID);
+	foreach (Race::getAllIDs() as $raceID) {
+		$racePercent = Request::getInt('race' . $raceID);
 		if (!empty($racePercent)) {
 			$totalRaceDist += $racePercent;
 			$numRacePorts[$raceID] = ceil($racePercent / 100 * $totalPorts);
@@ -245,7 +248,7 @@ if ($submit == 'Create Galaxies') {
 	$editSector = SmrSector::getSector($var['game_id'], $var['sector_edit']);
 
 	//update planet
-	$planetTypeID = Smr\Request::getInt('plan_type');
+	$planetTypeID = Request::getInt('plan_type');
 	if ($planetTypeID == 0) {
 		$editSector->removePlanet();
 	} elseif (!$editSector->hasPlanet()) {
@@ -255,22 +258,22 @@ if ($submit == 'Create Galaxies') {
 	}
 
 	//update port
-	$portLevel = Smr\Request::getInt('port_level');
+	$portLevel = Request::getInt('port_level');
 	if ($portLevel > 0) {
 		if (!$editSector->hasPort()) {
 			$port = $editSector->createPort();
 		} else {
 			$port = $editSector->getPort();
 		}
-		$port->setRaceID(Smr\Request::getInt('port_race'));
+		$port->setRaceID(Request::getInt('port_race'));
 		if ($port->getLevel() != $portLevel) {
 			$port->upgradeToLevel($portLevel);
 			$port->setCreditsToDefault();
-		} elseif (Smr\Request::has('select_goods')) {
+		} elseif (Request::has('select_goods')) {
 			// Only set the goods manually if the level hasn't changed
 			$goods = [];
 			foreach (array_keys(Globals::getGoods()) as $goodID) {
-				$trans = Smr\Request::get('good' . $goodID);
+				$trans = Request::get('good' . $goodID);
 				if ($trans != 'None') {
 					$goods[$goodID] = TransactionType::from($trans);
 				}
@@ -287,8 +290,8 @@ if ($submit == 'Create Galaxies') {
 	//update locations
 	$locationsToAdd = [];
 	for ($x = 0; $x < UNI_GEN_LOCATION_SLOTS; $x++) {
-		if (Smr\Request::getInt('loc_type' . $x) != 0) {
-			$locationTypeID = Smr\Request::getInt('loc_type' . $x);
+		if (Request::getInt('loc_type' . $x) != 0) {
+			$locationTypeID = Request::getInt('loc_type' . $x);
 			$locationsToAdd[$locationTypeID] = SmrLocation::getLocation($locationTypeID);
 		}
 	}
@@ -296,7 +299,7 @@ if ($submit == 'Create Galaxies') {
 	foreach ($locationsToAdd as $locationToAddID => $locationToAdd) {
 		// Skip duplicate locations
 		if (!$editSector->hasLocation($locationToAddID)) {
-			if (Smr\Request::has('add_linked_locs')) {
+			if (Request::has('add_linked_locs')) {
 				addLocationToSector($locationToAdd, $editSector);
 			} else {
 				$editSector->addLocation($locationToAdd);
@@ -305,7 +308,7 @@ if ($submit == 'Create Galaxies') {
 	}
 
 	// update warp
-	$warpSectorID = Smr\Request::getInt('warp');
+	$warpSectorID = Request::getInt('warp');
 	if ($warpSectorID > 0) {
 		$warp = SmrSector::getSector($var['game_id'], $warpSectorID);
 		if ($editSector->equals($warp)) {

@@ -1,12 +1,14 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 $ship = $player->getShip();
 
-$action = Smr\Request::get('action');
-$amount = Smr\Request::getInt('amount');
+$action = Request::get('action');
+$amount = Request::getInt('amount');
 
 /** @var int $hardware_id */
 $hardware_id = $var['hardware_id'];

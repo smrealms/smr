@@ -1,12 +1,14 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 $ship = $player->getShip();
 
 $good_id = $var['GoodID'];
-$amount = Smr\Request::getInt('amount');
+$amount = Request::getInt('amount');
 if ($amount <= 0) {
 	create_error('You must enter an amount > 0!');
 }

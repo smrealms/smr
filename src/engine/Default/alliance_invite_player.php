@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
@@ -19,7 +22,7 @@ foreach (SmrInvitation::getAll($player->getAllianceID(), $player->getGameID()) a
 	$pendingInvites[$invited->getAccountID()] = [
 		'invited' => $invited->getDisplayName(true),
 		'invited_by' => $invite->getSender()->getDisplayName(),
-		'expires' => format_time($invite->getExpires() - Smr\Epoch::time(), true),
+		'expires' => format_time($invite->getExpires() - Epoch::time(), true),
 		'cancelHREF' => $container->href(),
 	];
 }
@@ -29,7 +32,7 @@ $template->assign('PendingInvites', $pendingInvites);
 // List those who joined the game most recently first.
 $invitePlayers = [];
 if ($alliance->getNumMembers() < $game->getAllianceMaxPlayers()) {
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT * FROM player
 	            WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 	              AND alliance_id != ' . $db->escapeNumber($alliance->getAllianceID()) . '

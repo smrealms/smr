@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 
-$db = Smr\Database::getInstance();
+use Smr\BarDrink;
+use Smr\Database;
+use Smr\Epoch;
+
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -28,9 +32,9 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 	// choose which drink to serve
 	if (rand(1, 20) == 1) {
 		//only have a chance at special drinks if they are very lucky
-		$drinkList = Smr\BarDrink::getAll();
+		$drinkList = BarDrink::getAll();
 	} else {
-		$drinkList = Smr\BarDrink::getCommon();
+		$drinkList = BarDrink::getCommon();
 	}
 	$drinkName = array_rand_value($drinkList);
 
@@ -39,17 +43,17 @@ if (isset($var['action']) && $var['action'] != 'drink') {
 		'account_id' => $db->escapeNumber($player->getAccountID()),
 		'game_id' => $db->escapeNumber($player->getGameID()),
 		'drink_id' => $db->escapeNumber($curr_drink_id),
-		'time' => $db->escapeNumber(Smr\Epoch::time()),
+		'time' => $db->escapeNumber(Epoch::time()),
 	]);
 
-	if (!Smr\BarDrink::isSpecial($drinkName)) {
+	if (!BarDrink::isSpecial($drinkName)) {
 		$message .= ('You have bought a ' . $drinkName . ' for $10');
 		$player->increaseHOF(1, ['Bar', 'Drinks', 'Alcoholic'], HOF_PUBLIC);
 	} else {
 		$message .= 'The bartender says, "I\'ve got something special for ya."<br />'
 			. 'They turn around for a minute and whip up a ' . $drinkName . '.<br />'
 			. 'You take a long, deep draught and feel like you have been drinking for hours.<br />'
-			. Smr\BarDrink::getSpecialMessage($drinkName) . '<br />';
+			. BarDrink::getSpecialMessage($drinkName) . '<br />';
 		$player->increaseHOF(1, ['Bar', 'Drinks', 'Special'], HOF_PUBLIC);
 	}
 

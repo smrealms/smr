@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Exceptions\SocialLoginInvalidType;
+use Smr\SocialLogin\SocialLogin;
+
 try {
 
 	if (isset($_GET['type'])) {
@@ -13,8 +16,8 @@ try {
 
 		require_once('../bootstrap.php');
 		try {
-			header('Location: ' . Smr\SocialLogin\SocialLogin::get($type)->getLoginUrl());
-		} catch (Smr\Exceptions\SocialLoginInvalidType) {
+			header('Location: ' . SocialLogin::get($type)->getLoginUrl());
+		} catch (SocialLoginInvalidType) {
 			create_error('Unknown social login type');
 		}
 	}

@@ -1,20 +1,22 @@
 <?php declare(strict_types=1);
 // Callback script for player voting on external sites
 
+use Smr\Request;
+use Smr\SectorLock;
 use Smr\VoteLink;
 use Smr\VoteSite;
 
 try {
 	require_once('../bootstrap.php');
 
-	if (Smr\Request::has('account') && Smr\Request::has('game') && Smr\Request::has('link')) {
+	if (Request::has('account') && Request::has('game') && Request::has('link')) {
 		// callback from TWG
-		$accountId = Smr\Request::getInt('account');
-		$gameId = Smr\Request::getInt('game');
-		$linkId = Smr\Request::getInt('link');
-	} elseif (Smr\Request::has('votedef')) {
+		$accountId = Request::getInt('account');
+		$gameId = Request::getInt('game');
+		$linkId = Request::getInt('link');
+	} elseif (Request::has('votedef')) {
 		// callback from DOG
-		$data = explode(',', Smr\Request::get('votedef'));
+		$data = explode(',', Request::get('votedef'));
 		$accountId = (int)$data[0];
 		$gameId = (int)$data[1];
 		$linkId = (int)$data[2];
@@ -32,7 +34,7 @@ try {
 	// Lock the sector to ensure the player gets the turns
 	// Refresh player after lock is acquired in case any values are stale
 	$player = SmrPlayer::getPlayer($accountId, $gameId);
-	$lock = Smr\SectorLock::getInstance();
+	$lock = SectorLock::getInstance();
 	$lock->acquireForPlayer($player);
 	$player = SmrPlayer::getPlayer($accountId, $gameId, true);
 

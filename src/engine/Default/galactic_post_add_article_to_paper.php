@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 //limit 4 per paper...make sure we arent over that
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT 1 FROM galactic_post_paper_content WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND paper_id = ' . $db->escapeNumber($var['paper_id']));
 if ($dbResult->getNumRecords() >= 8) {
 	create_error('You can only have 8 articles per paper.');

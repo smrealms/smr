@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\Database;
+use Smr\Irc\Exceptions\Timeout;
 
 function echo_r(string $message): void {
 	echo date('Y-m-d H:i:s => ') . $message . EOL;
@@ -95,7 +96,7 @@ while (true) {
 		}
 		fclose($fp); // close socket
 
-	} catch (Smr\Irc\Exceptions\Timeout) {
+	} catch (Timeout) {
 		// Ignore the timeout exception, we'll loop round and reconnect.
 	}
 } // end of while running

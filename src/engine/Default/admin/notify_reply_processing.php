@@ -1,14 +1,16 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
 
-$offenderReply = Smr\Request::get('offenderReply');
-$offenderBanPoints = Smr\Request::getInt('offenderBanPoints');
-$offendedReply = Smr\Request::get('offendedReply');
-$offendedBanPoints = Smr\Request::getInt('offendedBanPoints');
-if (Smr\Request::get('action') == 'Preview messages') {
+$offenderReply = Request::get('offenderReply');
+$offenderBanPoints = Request::getInt('offenderBanPoints');
+$offendedReply = Request::get('offendedReply');
+$offendedBanPoints = Request::getInt('offendedBanPoints');
+if (Request::get('action') == 'Preview messages') {
 	$container = Page::create('admin/notify_reply.php');
 	$container->addVar('offender');
 	$container->addVar('offended');

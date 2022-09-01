@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Request;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -11,8 +15,8 @@ $template->assign('SelectGameHREF', $container->href());
 
 // Get the list of active Draft games ordered by reverse start date
 $activeGames = [];
-$db = Smr\Database::getInstance();
-$dbResult = $db->read('SELECT game_id, game_name FROM game WHERE game_type=' . $db->escapeNumber(SmrGame::GAME_TYPE_DRAFT) . ' AND join_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY start_time DESC');
+$db = Database::getInstance();
+$dbResult = $db->read('SELECT game_id, game_name FROM game WHERE game_type=' . $db->escapeNumber(SmrGame::GAME_TYPE_DRAFT) . ' AND join_time < ' . $db->escapeNumber(Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Epoch::time()) . ' ORDER BY start_time DESC');
 foreach ($dbResult->records() as $dbRecord) {
 	$activeGames[] = [
 		'game_name' => $dbRecord->getString('game_name'),
@@ -41,7 +45,7 @@ if ($activeGames) {
 }
 
 if (isset($var['processing_msg'])) {
-	if (Smr\Request::has('selected_game_id')) {
+	if (Request::has('selected_game_id')) {
 		// If we are selecting a different game, clear the processing message.
 		unset($var['processing_msg']);
 	} else {

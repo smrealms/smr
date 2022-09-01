@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -14,7 +16,7 @@ $game_id = $var['view_game_id'];
 $template->assign('PageTopic', 'Old SMR Game : ' . $game_name);
 Menu::historyGames(0);
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $db->switchDatabases($var['HistoryDatabase']);
 $dbResult = $db->read('SELECT start_date, type, end_date, game_name, speed, game_id ' .
 	'FROM game WHERE game_id = ' . $db->escapeNumber($game_id));

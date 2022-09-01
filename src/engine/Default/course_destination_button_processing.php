@@ -1,22 +1,24 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$type = Smr\Request::get('type');
-$sectorId = Smr\Request::getInt('sectorId');
+$type = Request::get('type');
+$sectorId = Request::getInt('sectorId');
 
 switch ($type) {
 	case 'add':
-		$label = Smr\Request::get('label');
+		$label = Request::get('label');
 		$player->addDestinationButton($sectorId, $label);
 		break;
 
 	case 'move':
 		// These are submitted as floats by ui.draggable.position JS, but
 		// we (and the browser) only accept integer positions.
-		$offsetTop = Smr\Request::getInt('offsetTop');
-		$offsetLeft = Smr\Request::getInt('offsetLeft');
+		$offsetTop = Request::getInt('offsetTop');
+		$offsetLeft = Request::getInt('offsetLeft');
 		$player->moveDestinationButton($sectorId, $offsetTop, $offsetLeft);
 		break;
 

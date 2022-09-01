@@ -1,12 +1,14 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 require_once(TOOLS . 'chat_helpers/channel_msg_seedlist.php');
 
 /**
  * @return array<string>
  */
 function shared_channel_msg_forces(AbstractSmrPlayer $player, ?string $option = null): array {
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	if (empty($option)) {
 		$dbResult = $db->read('SELECT sector_has_forces.sector_id AS sector, expire_time
 			FROM sector_has_forces

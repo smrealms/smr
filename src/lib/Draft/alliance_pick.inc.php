@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 /**
  * Returns an array with all relevant information about draft teams,
  * including their current size and if the leader can pick teammates.
@@ -7,7 +9,7 @@
  * @return array<int, array<string, mixed>>
  */
 function get_draft_teams(int $gameId): array {
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT account_id FROM draft_leaders WHERE game_id=' . $db->escapeNumber($gameId));
 
 	// Get team leader, alliance, and alliance size

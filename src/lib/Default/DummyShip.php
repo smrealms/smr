@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 class DummyShip extends AbstractSmrShip {
 
 	/** @var array<string, self> */
@@ -17,7 +19,7 @@ class DummyShip extends AbstractSmrShip {
 	}
 
 	public function cacheDummyShip(): void {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$db->replace('cached_dummys', [
 			'type' => $db->escapeString('DummyShip'),
 			'id' => $db->escapeString($this->getPlayer()->getPlayerName()),
@@ -28,7 +30,7 @@ class DummyShip extends AbstractSmrShip {
 	public static function getCachedDummyShip(string $dummyName): self {
 		if (!isset(self::$CACHED_DUMMY_SHIPS[$dummyName])) {
 			// Load ship from the dummy database cache, if available
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT info FROM cached_dummys WHERE type = \'DummyShip\'
 						AND id = ' . $db->escapeString($dummyName));
 			if ($dbResult->hasRecord()) {
@@ -46,7 +48,7 @@ class DummyShip extends AbstractSmrShip {
 	 * @return array<string>
 	 */
 	public static function getDummyNames(): array {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT id FROM cached_dummys');
 		$dummyNames = [];
 		foreach ($dbResult->records() as $dbRecord) {

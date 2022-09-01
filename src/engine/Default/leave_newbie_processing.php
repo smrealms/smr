@@ -1,9 +1,11 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$action = Smr\Request::get('action');
+$action = Request::get('action');
 if ($action == 'Yes!') {
 	$player->setNewbieTurns(0);
 	$player->setNewbieWarning(false);

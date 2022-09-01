@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Exceptions\PlayerNotFound;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
@@ -15,17 +18,17 @@ if (empty($player_name) && empty($player_id)) {
 if (!empty($player_id)) {
 	try {
 		$resultPlayer = SmrPlayer::getPlayerByPlayerID($player_id, $player->getGameID());
-	} catch (Smr\Exceptions\PlayerNotFound) {
+	} catch (PlayerNotFound) {
 		// No player found, we'll return an empty result
 	}
 } else {
 	try {
 		$resultPlayer = SmrPlayer::getPlayerByPlayerName($player_name, $player->getGameID());
-	} catch (Smr\Exceptions\PlayerNotFound) {
+	} catch (PlayerNotFound) {
 		// No exact match, but that's okay
 	}
 
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT * FROM player
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND player_name LIKE ' . $db->escapeString('%' . $player_name . '%') . '

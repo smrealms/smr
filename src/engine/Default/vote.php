@@ -1,12 +1,15 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
 $template->assign('PageTopic', 'Voting');
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT * FROM voting ORDER BY end DESC');
 if ($dbResult->hasRecord()) {
 	$votedFor = [];
@@ -24,8 +27,8 @@ if ($dbResult->hasRecord()) {
 		$container['vote_id'] = $voteID;
 		$voting[$voteID]['HREF'] = $container->href();
 		$voting[$voteID]['Question'] = $dbRecord->getString('question');
-		if ($dbRecord->getInt('end') > Smr\Epoch::time()) {
-			$voting[$voteID]['TimeRemaining'] = format_time($dbRecord->getInt('end') - Smr\Epoch::time(), true);
+		if ($dbRecord->getInt('end') > Epoch::time()) {
+			$voting[$voteID]['TimeRemaining'] = format_time($dbRecord->getInt('end') - Epoch::time(), true);
 		} else {
 			$voting[$voteID]['EndDate'] = date($account->getDateFormat(), $dbRecord->getInt('end'));
 		}

@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
@@ -60,7 +62,7 @@ $container = Page::create('note_delete_processing.php');
 $template->assign('NoteDeleteHREF', $container->href());
 
 $notes = [];
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT * FROM player_has_notes WHERE ' . $player->getSQL() . ' ORDER BY note_id DESC');
 foreach ($dbResult->records() as $dbRecord) {
 	$notes[$dbRecord->getInt('note_id')] = $dbRecord->getString('note');

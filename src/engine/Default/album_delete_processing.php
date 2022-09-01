@@ -1,10 +1,13 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
-if (Smr\Request::get('action') == 'Yes') {
-	$db = Smr\Database::getInstance();
+if (Request::get('action') == 'Yes') {
+	$db = Database::getInstance();
 	$db->write('DELETE
 				FROM album
 				WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));

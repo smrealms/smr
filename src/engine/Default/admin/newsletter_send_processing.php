@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Request;
+
 $var = Smr\Session::getInstance()->getCurrentVar();
 
 // mailer
@@ -8,7 +11,7 @@ $mail->setFrom('newsletter@smrealms.de', 'SMR Team');
 
 $mail->Encoding = 'base64';
 
-$mail->Subject = Smr\Request::get('subject');
+$mail->Subject = Request::get('subject');
 
 function set_mail_body(PHPMailer\PHPMailer\PHPMailer $mail, ?string $newsletterHtml, ?string $newsletterText, ?string $salutation): void {
 	// Prepend the salutation if one is given
@@ -40,10 +43,10 @@ set_mail_body(
 	$mail,
 	$var['newsletter_html'],
 	$var['newsletter_text'],
-	Smr\Request::get('salutation')
+	Request::get('salutation')
 );
 
-if (Smr\Request::get('to_email') == '*') {
+if (Request::get('to_email') == '*') {
 	// Send the newsletter to all players.
 	// Disable output buffering here so we can monitor the progress.
 	header('X-Accel-Buffering: no'); // disable Nginx output buffering
@@ -51,7 +54,7 @@ if (Smr\Request::get('to_email') == '*') {
 	ob_end_flush(); // turn off PHP output buffering
 
 	// Skip all smrealms.de addresses (NPC, multi) to avoid spamming ourselves.
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT account_id, email, login FROM account WHERE validated="TRUE" AND email NOT LIKE "%@smrealms.de" AND NOT(EXISTS(SELECT account_id FROM account_is_closed WHERE account_is_closed.account_id=account.account_id))');
 
 	$total = $dbResult->getNumRecords();
@@ -72,7 +75,7 @@ if (Smr\Request::get('to_email') == '*') {
 		$to_name = $dbRecord->getString('login');
 
 		// Reset the message body with personalized salutation, if requested
-		$salutation = Smr\Request::get('salutation');
+		$salutation = Request::get('salutation');
 		if (!empty($salutation)) {
 			$salutation .= ' ' . $to_name . ',';
 			set_mail_body($mail, $var['newsletter_html'], $var['newsletter_text'], $salutation);
@@ -106,7 +109,7 @@ if (Smr\Request::get('to_email') == '*') {
 } else {
 
 	$mail->addReplyTo('support@smrealms.de', 'SMR Support');
-	$mail->addAddress(Smr\Request::get('to_email'));
+	$mail->addAddress(Request::get('to_email'));
 
 	if (!$mail->send()) {
 		echo 'error.' . EOL . $mail->ErrorInfo;

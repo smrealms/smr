@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\SectorLock;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
@@ -10,7 +12,7 @@ $session->updateGame($var['game_id']);
 $player = SmrPlayer::getPlayer($account->getAccountID(), $var['game_id']);
 
 // skip var update in do_voodoo
-Smr\SectorLock::getInstance()->acquireForPlayer($player);
+SectorLock::getInstance()->acquireForPlayer($player);
 
 $player->updateLastCPLAction();
 

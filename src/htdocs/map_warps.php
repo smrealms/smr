@@ -1,11 +1,14 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Request;
+
 try {
 	require_once('../bootstrap.php');
 
 	$session = Smr\Session::getInstance();
 
-	$gameID = Smr\Request::getInt('game');
+	$gameID = Request::getInt('game');
 	if (!$session->hasAccount() || !SmrGame::gameExists($gameID)) {
 		header('Location: /login.php');
 		exit;
@@ -31,7 +34,7 @@ try {
 	}
 
 	// The d3 graph links are the warp connections between galaxies
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT sector_id, warp FROM sector WHERE warp !=0 AND game_id = ' . $db->escapeNumber($gameID));
 	foreach ($dbResult->records() as $dbRecord) {
 		$warp1 = SmrSector::getSector($gameID, $dbRecord->getInt('sector_id'));

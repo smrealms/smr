@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\DatabaseRecord;
+
 class AbstractSmrLocation {
 
 	/** @var array<int, SmrLocation> */
@@ -9,7 +12,7 @@ class AbstractSmrLocation {
 	/** @var array<int, array<int, array<int, SmrLocation>>> */
 	protected static array $CACHE_SECTOR_LOCATIONS = [];
 
-	protected Smr\Database $db;
+	protected Database $db;
 	protected readonly string $SQL;
 
 	protected string $name;
@@ -40,7 +43,7 @@ class AbstractSmrLocation {
 	 */
 	public static function getAllLocations(bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_ALL_LOCATIONS)) {
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM location_type ORDER BY location_type_id');
 			$locations = [];
 			foreach ($dbResult->records() as $dbRecord) {
@@ -56,7 +59,7 @@ class AbstractSmrLocation {
 	 * @return array<int, array<int, SmrLocation>>
 	 */
 	public static function getGalaxyLocations(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT location_type.*, sector_id FROM location LEFT JOIN sector USING(game_id, sector_id) LEFT JOIN location_type USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyLocations = [];
 		foreach ($dbResult->records() as $dbRecord) {
@@ -74,7 +77,7 @@ class AbstractSmrLocation {
 	 */
 	public static function getSectorLocations(int $gameID, int $sectorID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID])) {
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM location LEFT JOIN location_type USING (location_type_id) WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID));
 			$locations = [];
 			foreach ($dbResult->records() as $dbRecord) {
@@ -88,7 +91,7 @@ class AbstractSmrLocation {
 
 	public static function addSectorLocation(int $gameID, int $sectorID, SmrLocation $location): void {
 		self::getSectorLocations($gameID, $sectorID); // make sure cache is populated
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$db->insert('location', [
 			'game_id' => $db->escapeNumber($gameID),
 			'sector_id' => $db->escapeNumber($sectorID),
@@ -106,7 +109,7 @@ class AbstractSmrLocation {
 		self::getSectorLocations($gameID, $oldSectorID);
 		self::getSectorLocations($gameID, $newSectorID);
 
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$db->write('UPDATE location SET sector_id = ' . $db->escapeNumber($newSectorID) . ' WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($oldSectorID) . ' AND location_type_id = ' . $location->getTypeID());
 		unset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$oldSectorID][$location->getTypeID()]);
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$newSectorID][$location->getTypeID()] = $location;
@@ -116,12 +119,12 @@ class AbstractSmrLocation {
 	}
 
 	public static function removeSectorLocations(int $gameID, int $sectorID): void {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$db->write('DELETE FROM location WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] = [];
 	}
 
-	public static function getLocation(int $locationTypeID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): SmrLocation {
+	public static function getLocation(int $locationTypeID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): SmrLocation {
 		if ($forceUpdate || !isset(self::$CACHE_LOCATIONS[$locationTypeID])) {
 			self::$CACHE_LOCATIONS[$locationTypeID] = new SmrLocation($locationTypeID, $dbRecord);
 		}
@@ -130,9 +133,9 @@ class AbstractSmrLocation {
 
 	protected function __construct(
 		protected readonly int $typeID,
-		Smr\DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null
 	) {
-		$this->db = Smr\Database::getInstance();
+		$this->db = Database::getInstance();
 		$this->SQL = 'location_type_id = ' . $this->db->escapeNumber($typeID);
 
 		if ($dbRecord === null) {

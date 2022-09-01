@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -10,7 +12,7 @@ $alliance2 = SmrAlliance::getAlliance($var['proposedAlliance'], $player->getGame
 $alliance_id_1 = $alliance1->getAllianceID();
 $alliance_id_2 = $alliance2->getAllianceID();
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $db->insert('alliance_treaties', [
 	'alliance_id_1' => $db->escapeNumber($alliance_id_1),
 	'alliance_id_2' => $db->escapeNumber($alliance_id_2),

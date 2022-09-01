@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Exceptions\AccountNotFound;
+use Smr\Exceptions\UserError;
+use Smr\SocialLogin\SocialLogin;
 use Smr\UserRanking;
 
 class SmrAccount {
@@ -35,7 +40,7 @@ class SmrAccount {
 		'AttackTrader' => ['f'],
 	];
 
-	protected Smr\Database $db;
+	protected Database $db;
 	protected readonly string $SQL;
 
 	protected string $login;
@@ -108,67 +113,67 @@ class SmrAccount {
 
 	public static function getAccountByLogin(string $login, bool $forceUpdate = false): self {
 		if (!empty($login)) {
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account WHERE login = ' . $db->escapeString($login));
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
 			}
 		}
-		throw new Smr\Exceptions\AccountNotFound('Account login not found.');
+		throw new AccountNotFound('Account login not found.');
 	}
 
 	public static function getAccountByHofName(string $hofName, bool $forceUpdate = false): self {
 		if (!empty($hofName)) {
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account WHERE hof_name = ' . $db->escapeString($hofName));
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
 			}
 		}
-		throw new Smr\Exceptions\AccountNotFound('Account HoF name not found.');
+		throw new AccountNotFound('Account HoF name not found.');
 	}
 
 	public static function getAccountByEmail(?string $email, bool $forceUpdate = false): self {
 		if (!empty($email)) {
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account WHERE email = ' . $db->escapeString($email));
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
 			}
 		}
-		throw new Smr\Exceptions\AccountNotFound('Account email not found.');
+		throw new AccountNotFound('Account email not found.');
 	}
 
 	public static function getAccountByDiscordId(?string $id, bool $forceUpdate = false): self {
 		if (!empty($id)) {
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account where discord_id = ' . $db->escapeString($id));
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
 			}
 		}
-		throw new Smr\Exceptions\AccountNotFound('Account discord ID not found.');
+		throw new AccountNotFound('Account discord ID not found.');
 	}
 
 	public static function getAccountByIrcNick(?string $nick, bool $forceUpdate = false): self {
 		if (!empty($nick)) {
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account WHERE irc_nick = ' . $db->escapeString($nick));
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
 			}
 		}
-		throw new Smr\Exceptions\AccountNotFound('Account IRC nick not found.');
+		throw new AccountNotFound('Account IRC nick not found.');
 	}
 
-	public static function getAccountBySocialLogin(Smr\SocialLogin\SocialLogin $social, bool $forceUpdate = false): self {
+	public static function getAccountBySocialLogin(SocialLogin $social, bool $forceUpdate = false): self {
 		if ($social->isValid()) {
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account JOIN account_auth USING(account_id)
 				WHERE login_type = ' . $db->escapeString($social->getLoginType()) . '
 				AND auth_key = ' . $db->escapeString($social->getUserID()));
@@ -177,7 +182,7 @@ class SmrAccount {
 				return self::getAccount($accountID, $forceUpdate);
 			}
 		}
-		throw new Smr\Exceptions\AccountNotFound('Account social login not found.');
+		throw new AccountNotFound('Account social login not found.');
 	}
 
 	public static function createAccount(string $login, string $password, string $email, int $timez, int $referral): self {
@@ -185,14 +190,14 @@ class SmrAccount {
 			// Will throw if referral account doesn't exist
 			self::getAccount($referral);
 		}
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$passwordHash = password_hash($password, PASSWORD_DEFAULT);
 		$db->insert('account', [
 			'login' => $db->escapeString($login),
 			'password' => $db->escapeString($passwordHash),
 			'email' => $db->escapeString($email),
 			'validation_code' => $db->escapeString(random_string(10)),
-			'last_login' => $db->escapeNumber(Smr\Epoch::time()),
+			'last_login' => $db->escapeNumber(Epoch::time()),
 			'offset' => $db->escapeNumber($timez),
 			'referral_id' => $db->escapeNumber($referral),
 			'hof_name' => $db->escapeString($login),
@@ -204,7 +209,7 @@ class SmrAccount {
 	/**
 	 * @return array<string, string>
 	 */
-	public static function getUserScoreCaseStatement(Smr\Database $db): array {
+	public static function getUserScoreCaseStatement(Database $db): array {
 		$userRankingTypes = [];
 		$case = 'IFNULL(FLOOR(SUM(CASE type ';
 		foreach (self::USER_RANKINGS_SCORE as [$stat, $a, $b]) {
@@ -217,7 +222,7 @@ class SmrAccount {
 	}
 
 	protected function __construct(protected readonly int $accountID) {
-		$this->db = Smr\Database::getInstance();
+		$this->db = Database::getInstance();
 		$this->SQL = 'account_id = ' . $this->db->escapeNumber($accountID);
 		$dbResult = $this->db->read('SELECT * FROM account WHERE ' . $this->SQL);
 
@@ -278,7 +283,7 @@ class SmrAccount {
 				$this->hofName = $this->login;
 			}
 		} else {
-			throw new Smr\Exceptions\AccountNotFound('Account ID ' . $accountID . ' does not exist!');
+			throw new AccountNotFound('Account ID ' . $accountID . ' does not exist!');
 		}
 	}
 
@@ -297,7 +302,7 @@ class SmrAccount {
 		$expireTime = $dbRecord->getInt('expires');
 
 		// are we over this time?
-		if ($expireTime > 0 && $expireTime < Smr\Epoch::time()) {
+		if ($expireTime > 0 && $expireTime < Epoch::time()) {
 			// get rid of the expire entry
 			$this->unbanAccount();
 			return false;
@@ -369,17 +374,17 @@ class SmrAccount {
 		// save...first make sure there isn't one for these keys (someone could double click and get error)
 		$this->db->replace('account_has_ip', [
 			'account_id' => $this->db->escapeNumber($this->accountID),
-			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'time' => $this->db->escapeNumber(Epoch::time()),
 			'ip' => $this->db->escapeString($curr_ip),
 			'host' => $this->db->escapeString($host),
 		]);
 	}
 
 	public function updateLastLogin(): void {
-		if ($this->last_login == Smr\Epoch::time()) {
+		if ($this->last_login == Epoch::time()) {
 			return;
 		}
-		$this->last_login = Smr\Epoch::time();
+		$this->last_login = Epoch::time();
 		$this->hasChanged = true;
 		$this->update();
 	}
@@ -474,7 +479,7 @@ class SmrAccount {
 	}
 
 	public function getRank(): UserRanking {
-		$rank = Smr\UserRanking::getRankFromScore($this->getScore());
+		$rank = UserRanking::getRankFromScore($this->getScore());
 		if ($rank->value > $this->maxRankAchieved) {
 			$this->updateMaxRankAchieved($rank->value);
 		}
@@ -510,7 +515,7 @@ class SmrAccount {
 		if ($this->isLoggingEnabled()) {
 			$this->db->insert('account_has_logs', [
 				'account_id' => $this->db->escapeNumber($this->accountID),
-				'microtime' => $this->db->escapeNumber(Smr\Epoch::microtime()),
+				'microtime' => $this->db->escapeNumber(Epoch::microtime()),
 				'log_type_id' => $this->db->escapeNumber($log_type_id),
 				'message' => $this->db->escapeString($msg),
 				'sector_id' => $this->db->escapeNumber($sector_id),
@@ -645,13 +650,13 @@ class SmrAccount {
 	}
 
 	public static function doMessageSendingToBox(int $senderID, int $boxTypeID, string $message, int $gameID = 0): void {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$db->insert('message_boxes', [
 			'box_type_id' => $db->escapeNumber($boxTypeID),
 			'game_id' => $db->escapeNumber($gameID),
 			'message_text' => $db->escapeString($message),
 			'sender_id' => $db->escapeNumber($senderID),
-			'send_time' => $db->escapeNumber(Smr\Epoch::time()),
+			'send_time' => $db->escapeNumber(Epoch::time()),
 		]);
 	}
 
@@ -691,11 +696,11 @@ class SmrAccount {
 	 */
 	public static function checkEmail(string $email, self $owner = null): void {
 		if (empty($email)) {
-			throw new Smr\Exceptions\UserError('Email address is missing!');
+			throw new UserError('Email address is missing!');
 		}
 
 		if (str_contains($email, ' ')) {
-			throw new Smr\Exceptions\UserError('The email is invalid! It cannot contain any spaces.');
+			throw new UserError('The email is invalid! It cannot contain any spaces.');
 		}
 
 		// get user and host for the provided address
@@ -703,15 +708,15 @@ class SmrAccount {
 
 		// check if the host got a MX or at least an A entry
 		if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
-			throw new Smr\Exceptions\UserError('This is not a valid email address! The domain ' . $host . ' does not exist.');
+			throw new UserError('This is not a valid email address! The domain ' . $host . ' does not exist.');
 		}
 
 		try {
 			$other = self::getAccountByEmail($email);
 			if ($owner === null || !$owner->equals($other)) {
-				throw new Smr\Exceptions\UserError('This email address is already registered.');
+				throw new UserError('This email address is already registered.');
 			}
-		} catch (Smr\Exceptions\AccountNotFound) {
+		} catch (AccountNotFound) {
 			// Proceed, this email is not yet in use
 		}
 	}
@@ -742,7 +747,7 @@ class SmrAccount {
 		$this->db->replace('notification', [
 			'notification_type' => $this->db->escapeString('validation_code'),
 			'account_id' => $this->db->escapeNumber($this->getAccountID()),
-			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'time' => $this->db->escapeNumber(Epoch::time()),
 		]);
 
 		$emailMessage =
@@ -944,7 +949,7 @@ class SmrAccount {
 	}
 
 	public function isActive(): bool {
-		$dbResult = $this->db->read('SELECT 1 FROM active_session WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND last_accessed >= ' . $this->db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE) . ' LIMIT 1');
+		$dbResult = $this->db->read('SELECT 1 FROM active_session WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND last_accessed >= ' . $this->db->escapeNumber(Epoch::time() - TIME_BEFORE_INACTIVE) . ' LIMIT 1');
 		return $dbResult->hasRecord();
 	}
 
@@ -1126,7 +1131,7 @@ class SmrAccount {
 	}
 
 	public function isMailBanned(): bool {
-		return $this->mailBanned > Smr\Epoch::time();
+		return $this->mailBanned > Epoch::time();
 	}
 
 	public function setMailBanned(int $time): void {
@@ -1138,7 +1143,7 @@ class SmrAccount {
 	}
 
 	public function increaseMailBanned(int $increaseTime): void {
-		$time = max(Smr\Epoch::time(), $this->getMailBanned());
+		$time = max(Epoch::time(), $this->getMailBanned());
 		$this->setMailBanned($time + $increaseTime);
 	}
 
@@ -1174,9 +1179,9 @@ class SmrAccount {
 				$this->points = $dbRecord->getInt('points');
 				$lastUpdate = $dbRecord->getInt('last_update');
 				//we are gonna check for reducing points...
-				if ($this->points > 0 && $lastUpdate < Smr\Epoch::time() - (7 * 86400)) {
+				if ($this->points > 0 && $lastUpdate < Epoch::time() - (7 * 86400)) {
 					$removePoints = 0;
-					while ($lastUpdate < Smr\Epoch::time() - (7 * 86400)) {
+					while ($lastUpdate < Epoch::time() - (7 * 86400)) {
 						$removePoints++;
 						$lastUpdate += (7 * 86400);
 					}
@@ -1197,12 +1202,12 @@ class SmrAccount {
 			$this->db->insert('account_has_points', [
 				'account_id' => $this->db->escapeNumber($this->getAccountID()),
 				'points' => $this->db->escapeNumber($numPoints),
-				'last_update' => $this->db->escapeNumber($lastUpdate ?? Smr\Epoch::time()),
+				'last_update' => $this->db->escapeNumber($lastUpdate ?? Epoch::time()),
 			]);
 		} elseif ($numPoints <= 0) {
 			$this->db->write('DELETE FROM account_has_points WHERE ' . $this->SQL);
 		} else {
-			$this->db->write('UPDATE account_has_points SET points = ' . $this->db->escapeNumber($numPoints) . (isset($lastUpdate) ? ', last_update = ' . $this->db->escapeNumber(Smr\Epoch::time()) : '') . ' WHERE ' . $this->SQL);
+			$this->db->write('UPDATE account_has_points SET points = ' . $this->db->escapeNumber($numPoints) . (isset($lastUpdate) ? ', last_update = ' . $this->db->escapeNumber(Epoch::time()) : '') . ' WHERE ' . $this->SQL);
 		}
 		$this->points = $numPoints;
 	}
@@ -1215,7 +1220,7 @@ class SmrAccount {
 
 	public function addPoints(int $numPoints, self $admin, int $reasonID, string $suspicion): int|false {
 		//do we have points
-		$this->setPoints($this->getPoints() + $numPoints, Smr\Epoch::time());
+		$this->setPoints($this->getPoints() + $numPoints, Epoch::time());
 		$totalPoints = $this->getPoints();
 		if ($totalPoints < 10) {
 			return false; //leave scripts its only a warning
@@ -1244,7 +1249,7 @@ class SmrAccount {
 		if ($days == 0) {
 			$expireTime = 0;
 		} else {
-			$expireTime = Smr\Epoch::time() + $days * 86400;
+			$expireTime = Epoch::time() + $days * 86400;
 		}
 		$this->banAccount($expireTime, $admin, $reasonID, $suspicion);
 
@@ -1284,7 +1289,7 @@ class SmrAccount {
 
 		$this->db->insert('account_has_closing_history', [
 			'account_id' => $this->db->escapeNumber($this->getAccountID()),
-			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'time' => $this->db->escapeNumber(Epoch::time()),
 			'admin_id' => $this->db->escapeNumber($admin->getAccountID()),
 			'action' => $this->db->escapeString('Closed'),
 		]);
@@ -1295,7 +1300,7 @@ class SmrAccount {
 
 		$dbResult = $this->db->read('SELECT game_id FROM game JOIN player USING (game_id)
 						WHERE ' . $this->SQL . '
-						AND end_time >= ' . $this->db->escapeNumber(Smr\Epoch::time()));
+						AND end_time >= ' . $this->db->escapeNumber(Epoch::time()));
 		foreach ($dbResult->records() as $dbRecord) {
 			$player = SmrPlayer::getPlayer($this->getAccountID(), $dbRecord->getInt('game_id'));
 			$player->updateTurns();
@@ -1315,11 +1320,11 @@ class SmrAccount {
 		$this->db->write('DELETE FROM account_is_closed WHERE ' . $this->SQL);
 		$this->db->insert('account_has_closing_history', [
 			'account_id' => $this->db->escapeNumber($this->getAccountID()),
-			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'time' => $this->db->escapeNumber(Epoch::time()),
 			'admin_id' => $this->db->escapeNumber($adminID),
 			'action' => $this->db->escapeString('Opened'),
 		]);
-		$this->db->write('UPDATE player SET last_turn_update = GREATEST(' . $this->db->escapeNumber(Smr\Epoch::time()) . ', last_turn_update) WHERE ' . $this->SQL);
+		$this->db->write('UPDATE player SET last_turn_update = GREATEST(' . $this->db->escapeNumber(Epoch::time()) . ', last_turn_update) WHERE ' . $this->SQL);
 		if ($admin !== null) {
 			$this->log(LOG_TYPE_ACCOUNT_CHANGES, 'Account reopened by ' . $admin->getLogin() . '.');
 		} else {

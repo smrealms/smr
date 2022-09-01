@@ -1,10 +1,12 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 
 $template->assign('PageTopic', 'Ship Integrity Check');
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT * FROM ship_type_support_hardware, player, ship_has_hardware, hardware_type ' .
 		   'WHERE ship_type_support_hardware.ship_type_id = player.ship_type_id AND ' .
 				 'player.account_id = ship_has_hardware.account_id AND ' .

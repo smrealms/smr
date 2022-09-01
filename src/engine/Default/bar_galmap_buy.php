@@ -1,12 +1,16 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Request;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
 $player = $session->getPlayer();
 
-$timeUntilMaps = $player->getGame()->getStartTime() + TIME_MAP_BUY_WAIT - Smr\Epoch::time();
+$timeUntilMaps = $player->getGame()->getStartTime() + TIME_MAP_BUY_WAIT - Epoch::time();
 if ($timeUntilMaps > 0) {
 	create_error('You cannot buy maps for another ' . format_time($timeUntilMaps) . '!');
 }
@@ -17,7 +21,7 @@ if ($account->getTotalSmrCredits() < CREDITS_PER_GAL_MAP) {
 
 //gal map buy
 if (isset($var['process'])) {
-	$galaxyID = Smr\Request::getInt('gal_id');
+	$galaxyID = Request::getInt('gal_id');
 
 	//get start sector
 	$galaxy = SmrGalaxy::getGalaxy($player->getGameID(), $galaxyID);
@@ -26,7 +30,7 @@ if (isset($var['process'])) {
 	$high = $galaxy->getEndSector();
 
 	// Have they already got this map? (Are there any unexplored sectors?
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT 1 FROM player_visited_sector WHERE sector_id >= ' . $db->escapeNumber($low) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND ' . $player->getSQL() . ' LIMIT 1');
 	if (!$dbResult->hasRecord()) {
 		create_error('You already have maps of this galaxy!');

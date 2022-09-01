@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -18,7 +20,7 @@ if (!empty($var['paper_id'])) {
 		$template->assign('BackHREF', $container->href());
 	}
 
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT title FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND paper_id = ' . $var['paper_id']);
 	$paper_name = bbifyMessage($dbResult->record()->getString('title'));
 	$template->assign('PageTopic', 'Reading <i>Galactic Post</i> Edition : ' . $paper_name);

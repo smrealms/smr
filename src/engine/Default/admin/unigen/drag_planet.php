@@ -1,12 +1,14 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
 // Move a planet from one sector to another (note that this will
 // currently only retain the planet type and inhabitable time).
-$targetSectorID = Smr\Request::getInt('TargetSectorID');
-$origSectorID = Smr\Request::getInt('OrigSectorID');
+$targetSectorID = Request::getInt('TargetSectorID');
+$origSectorID = Request::getInt('OrigSectorID');
 $origPlanet = SmrPlanet::getPlanet($var['game_id'], $origSectorID);
 $targetSector = SmrSector::getSector($var['game_id'], $targetSectorID);
 

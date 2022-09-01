@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
@@ -20,7 +22,7 @@ foreach ($player->getTickers() as $ticker) {
 	if ($ticker['Type'] == 'BLOCK') {
 		$type = 'Scout Message Blocker';
 	}
-	$tickers[$type] = $ticker['Expires'] - Smr\Epoch::time();
+	$tickers[$type] = $ticker['Expires'] - Epoch::time();
 }
 $template->assign('Tickers', $tickers);
 

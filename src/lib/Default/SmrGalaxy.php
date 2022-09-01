@@ -1,4 +1,9 @@
 <?php declare(strict_types=1);
+
+use Smr\Database;
+use Smr\DatabaseRecord;
+use Smr\Exceptions\GalaxyNotFound;
+
 class SmrGalaxy {
 
 	/** @var array<int, array<int, self>> */
@@ -11,7 +16,7 @@ class SmrGalaxy {
 	public const TYPE_PLANET = 'Planet';
 	public const TYPES = [self::TYPE_RACIAL, self::TYPE_NEUTRAL, self::TYPE_PLANET];
 
-	protected Smr\Database $db;
+	protected Database $db;
 	protected readonly string $SQL;
 
 	protected string $name;
@@ -35,7 +40,7 @@ class SmrGalaxy {
 	 */
 	public static function getGameGalaxies(int $gameID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_GAME_GALAXIES[$gameID])) {
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM game_galaxy WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY galaxy_id ASC');
 			$galaxies = [];
 			foreach ($dbResult->records() as $dbRecord) {
@@ -47,7 +52,7 @@ class SmrGalaxy {
 		return self::$CACHE_GAME_GALAXIES[$gameID];
 	}
 
-	public static function getGalaxy(int $gameID, int $galaxyID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): self {
+	public static function getGalaxy(int $gameID, int $galaxyID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): self {
 		if ($forceUpdate || !isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
 			$g = new self($gameID, $galaxyID, false, $dbRecord);
 			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
@@ -75,9 +80,9 @@ class SmrGalaxy {
 		protected readonly int $gameID,
 		protected readonly int $galaxyID,
 		bool $create = false,
-		Smr\DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null
 	) {
-		$this->db = Smr\Database::getInstance();
+		$this->db = Database::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . '
 		              AND galaxy_id = ' . $this->db->escapeNumber($galaxyID);
 
@@ -96,7 +101,7 @@ class SmrGalaxy {
 			$this->galaxyType = $dbRecord->getString('galaxy_type');
 			$this->maxForceTime = $dbRecord->getInt('max_force_time');
 		} elseif ($create === false) {
-			throw new Smr\Exceptions\GalaxyNotFound('No such galaxy: ' . $gameID . '-' . $galaxyID);
+			throw new GalaxyNotFound('No such galaxy: ' . $gameID . '-' . $galaxyID);
 		}
 	}
 

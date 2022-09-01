@@ -1,27 +1,30 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 $alliance_id = $var['alliance_id'] ?? $player->getAllianceID();
-if (Smr\Request::has('description')) {
-	$description = Smr\Request::get('description');
+if (Request::has('description')) {
+	$description = Request::get('description');
 }
-if (Smr\Request::has('discord_server')) {
-	$discordServer = Smr\Request::get('discord_server');
+if (Request::has('discord_server')) {
+	$discordServer = Request::get('discord_server');
 }
-if (Smr\Request::has('discord_channel')) {
-	$discordChannel = Smr\Request::get('discord_channel');
+if (Request::has('discord_channel')) {
+	$discordChannel = Request::get('discord_channel');
 }
-if (Smr\Request::has('irc')) {
-	$irc = Smr\Request::get('irc');
+if (Request::has('irc')) {
+	$irc = Request::get('irc');
 }
-if (Smr\Request::has('mod')) {
-	$mod = Smr\Request::get('mod');
+if (Request::has('mod')) {
+	$mod = Request::get('mod');
 }
-if (Smr\Request::has('url')) {
-	$url = Smr\Request::get('url');
+if (Request::has('url')) {
+	$url = Request::get('url');
 }
 
 // Prevent XSS attacks
@@ -30,9 +33,9 @@ if (isset($url) && preg_match('/"/', $url)) {
 }
 
 $alliance = SmrAlliance::getAlliance($alliance_id, $player->getGameID());
-if (Smr\Request::has('recruit_type')) {
-	$recruitType = Smr\Request::get('recruit_type');
-	$password = Smr\Request::get('password', '');
+if (Request::has('recruit_type')) {
+	$recruitType = Request::get('recruit_type');
+	$password = Request::get('password', '');
 	$alliance->setRecruitType($recruitType, $password);
 }
 if (isset($description)) {
@@ -46,7 +49,7 @@ if (isset($discordChannel)) {
 		$alliance->setDiscordChannel(null);
 	} else {
 		// no duplicates in a given game
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT 1 FROM alliance WHERE discord_channel =' . $db->escapeString($discordChannel) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
 		if ($dbResult->hasRecord()) {
 			create_error('Another alliance is already using that Discord Channel ID!');

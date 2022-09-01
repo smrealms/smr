@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -9,7 +11,7 @@ if (!$player->isLandedOnPlanet()) {
 	create_error('You are not on a planet!');
 }
 
-$amount = Smr\Request::getInt('amount');
+$amount = Request::getInt('amount');
 if ($amount <= 0) {
 	create_error('You must actually enter an amount > 0!');
 }
@@ -19,7 +21,7 @@ $goodID = $var['good_id'];
 
 // get a planet from the sector where the player is in
 $planet = $player->getSectorPlanet();
-$action = Smr\Request::get('action');
+$action = Request::get('action');
 if ($action == 'Ship') {
 	// transfer to ship
 

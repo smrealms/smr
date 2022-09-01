@@ -1,10 +1,13 @@
 <?php declare(strict_types=1);
+
+use Smr\Database;
+
 // Verify that the player is permitted to view the requested combat log
 // Qualifications:
 //  * Log must be from the current game
 //  * Attacker or defender is the player OR in the player's alliance
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();

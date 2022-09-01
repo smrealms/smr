@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\Bounties;
 use Smr\BountyType;
 
 $template = Smr\Template::getInstance();
@@ -23,7 +24,7 @@ $template->assign('PageTopic', $location->getName());
 
 Menu::headquarters($var['LocationID']);
 
-$template->assign('AllBounties', Smr\Bounties::getMostWanted(BountyType::UG));
+$template->assign('AllBounties', Bounties::getMostWanted(BountyType::UG));
 $template->assign('MyBounties', $player->getClaimableBounties(BountyType::UG));
 
 if ($player->hasNeutralAlignment()) {

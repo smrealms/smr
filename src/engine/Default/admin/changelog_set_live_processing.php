@@ -1,10 +1,13 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $var = Smr\Session::getInstance()->getCurrentVar();
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $db->write('UPDATE version
-			SET went_live = ' . $db->escapeNumber(Smr\Epoch::time()) . '
+			SET went_live = ' . $db->escapeNumber(Epoch::time()) . '
 			WHERE version_id = ' . $db->escapeNumber($var['version_id']));
 
 // Initialize the next version (since the version set live is not always the

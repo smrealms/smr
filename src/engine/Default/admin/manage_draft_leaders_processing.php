@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 
-$db = Smr\Database::getInstance();
+use Smr\Database;
+use Smr\Exceptions\PlayerNotFound;
+use Smr\Request;
+
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
@@ -8,16 +12,16 @@ $var = $session->getCurrentVar();
 $gameId = $var['selected_game_id'];
 
 // Get the POST variables
-$playerId = Smr\Request::getInt('player_id');
-$homeSectorID = Smr\Request::getInt('home_sector_id');
-$action = Smr\Request::get('submit');
+$playerId = Request::getInt('player_id');
+$homeSectorID = Request::getInt('home_sector_id');
+$action = Request::get('submit');
 
 // Pass entire $var so that the selected game remains selected
 $container = Page::create('admin/manage_draft_leaders.php', $var);
 
 try {
 	$selectedPlayer = SmrPlayer::getPlayerByPlayerID($playerId, $gameId);
-} catch (Smr\Exceptions\PlayerNotFound $e) {
+} catch (PlayerNotFound $e) {
 	$msg = "<span class='red'>ERROR: </span>" . $e->getMessage();
 	$container['processing_msg'] = $msg;
 	$container->go();

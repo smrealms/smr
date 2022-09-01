@@ -5,7 +5,6 @@ namespace Smr\Chess;
 use AbstractSmrPlayer;
 use Exception;
 use Page;
-use Smr;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Exceptions\UserError;
@@ -20,7 +19,7 @@ class ChessGame {
 	/** @var array<int, self> */
 	protected static array $CACHE_CHESS_GAMES = [];
 
-	private Smr\Database $db;
+	private Database $db;
 
 	private readonly int $whiteID;
 	private readonly int $blackID;

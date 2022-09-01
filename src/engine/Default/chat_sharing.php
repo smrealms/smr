@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Exceptions\PlayerNotFound;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -12,14 +15,14 @@ if (isset($var['message'])) {
 }
 
 $shareFrom = [];
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT * FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND (game_id=0 OR game_id=' . $db->escapeNumber($player->getGameID()) . ')');
 foreach ($dbResult->records() as $dbRecord) {
 	$fromAccountId = $dbRecord->getInt('from_account_id');
 	$gameId = $dbRecord->getInt('game_id');
 	try {
 		$otherPlayer = SmrPlayer::getPlayer($fromAccountId, $player->getGameID());
-	} catch (Smr\Exceptions\PlayerNotFound) {
+	} catch (PlayerNotFound) {
 		// Player has not joined this game yet
 		$otherPlayer = null;
 	}
@@ -40,7 +43,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$toAccountId = $dbRecord->getInt('to_account_id');
 	try {
 		$otherPlayer = SmrPlayer::getPlayer($toAccountId, $player->getGameID());
-	} catch (Smr\Exceptions\PlayerNotFound) {
+	} catch (PlayerNotFound) {
 		// Player has not joined this game yet
 		$otherPlayer = null;
 	}

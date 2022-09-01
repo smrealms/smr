@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 class Council {
 
 	/** @var array<int, array<int, array<int, int>>> */
@@ -20,7 +22,7 @@ class Council {
 			// Require council members to have > 0 exp to ensure that players
 			// cannot perform council activities before the game starts.
 			$i = 1;
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id, alignment
 								FROM player
 								WHERE game_id = ' . $db->escapeNumber($gameID) . '

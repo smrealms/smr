@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Exceptions\UserError;
+use Smr\Race;
+
 class Globals {
 
 	/** @var array<int> */
@@ -15,11 +19,11 @@ class Globals {
 	protected static array $RACE_RELATIONS;
 	/** @var array<string, string> */
 	protected static array $AVAILABLE_LINKS = [];
-	protected static Smr\Database $db;
+	protected static Database $db;
 
 	protected static function initialiseDatabase(): void {
 		if (!isset(self::$db)) {
-			self::$db = Smr\Database::getInstance();
+			self::$db = Database::getInstance();
 		}
 	}
 
@@ -38,7 +42,7 @@ class Globals {
 			case 'AllianceMOTD':
 				if ($player->getAllianceID() != $extraInfo['AllianceID']) {
 					logException(new Exception('Tried to access page without permission.'));
-					throw new Smr\Exceptions\UserError('You cannot access this page.');
+					throw new UserError('You cannot access this page.');
 				}
 				break;
 		}
@@ -98,7 +102,7 @@ class Globals {
 	}
 
 	public static function getColouredRaceName(int $raceID, int $relations, bool $linked = true): string {
-		$raceName = get_colored_text($relations, Smr\Race::getName($raceID));
+		$raceName = get_colored_text($relations, Race::getName($raceID));
 		if ($linked === true) {
 			$container = Page::create('council_list.php', ['race_id' => $raceID]);
 			$raceName = create_link($container, $raceName);
@@ -197,7 +201,7 @@ class Globals {
 			self::initialiseDatabase();
 			//get relations
 			self::$RACE_RELATIONS[$gameID][$raceID] = [];
-			foreach (Smr\Race::getAllIDs() as $otherRaceID) {
+			foreach (Race::getAllIDs() as $otherRaceID) {
 				self::$RACE_RELATIONS[$gameID][$raceID][$otherRaceID] = 0;
 			}
 			$dbResult = self::$db->read('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1=' . self::$db->escapeNumber($raceID) . ' AND game_id=' . self::$db->escapeNumber($gameID));

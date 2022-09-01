@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -34,7 +37,7 @@ $links['Warp'] = ['ID' => $sector->getWarp()];
 
 $unvisited = [];
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeArray($links) . ') AND ' . $player->getSQL());
 foreach ($dbResult->records() as $dbRecord) {
 	$unvisited[$dbRecord->getInt('sector_id')] = true;
@@ -69,7 +72,7 @@ $template->assign('UnreadMissions', $var['UnreadMissions']);
 // *******************************************
 $game = SmrGame::getGame($player->getGameID());
 if (!$game->hasStarted()) {
-	$turnsMessage = 'The game will start in ' . format_time($game->getStartTime() - Smr\Epoch::time()) . '!';
+	$turnsMessage = 'The game will start in ' . format_time($game->getStartTime() - Epoch::time()) . '!';
 } else {
 	$turnsMessage = $player->getTurnsLevel()->message();
 }
@@ -165,13 +168,13 @@ function checkForForceRefreshMessage(string &$msg): void {
 	if ($contains > 0) {
 		$template = Smr\Template::getInstance();
 		if (!$template->hasTemplateVar('ForceRefreshMessage')) {
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$player = Smr\Session::getInstance()->getPlayer();
 
 			$forceRefreshMessage = '';
-			$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at > ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
+			$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at > ' . $db->escapeNumber(Epoch::time()) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
 			if ($dbResult->hasRecord()) {
-				$remainingTime = $dbResult->record()->getInt('refresh_at') - Smr\Epoch::time();
+				$remainingTime = $dbResult->record()->getInt('refresh_at') - Epoch::time();
 				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in ' . $remainingTime . ' seconds.';
 				$db->replace('sector_message', [
 					'game_id' => $db->escapeNumber($player->getGameID()),
@@ -202,7 +205,7 @@ function checkForAttackMessage(string &$msg): void {
 
 		$template = Smr\Template::getInstance();
 		if (!$template->hasTemplateVar('AttackResults')) {
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($logID) . ' LIMIT 1');
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();

@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -38,12 +41,12 @@ if ($pickedPlayer->getSectorID() === 1) {
 $pickedPlayer->update();
 
 // Update the draft history
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $db->insert('draft_history', [
 	'game_id' => $db->escapeNumber($player->getGameID()),
 	'leader_account_id' => $db->escapeNumber($player->getAccountID()),
 	'picked_account_id' => $db->escapeNumber($pickedPlayer->getAccountID()),
-	'time' => $db->escapeNumber(Smr\Epoch::time()),
+	'time' => $db->escapeNumber(Epoch::time()),
 ]);
 
 Page::create('alliance_pick.php')->go();

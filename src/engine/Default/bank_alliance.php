@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -24,7 +27,7 @@ $template->assign('PageTopic', 'Bank');
 
 Menu::bank();
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT * FROM alliance_treaties WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND (alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')
 			AND aa_access = 1 AND official = \'TRUE\'');
@@ -61,7 +64,7 @@ if ($dbRecord->getBoolean('positive_balance')) {
 	$template->assign('UnlimitedWithdrawal', true);
 } else {
 	$dbResult = $db->read('SELECT IFNULL(sum(amount), 0) as total FROM alliance_bank_transactions WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
-				AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND transaction = \'Payment\' AND exempt = 0 AND time > ' . $db->escapeNumber(Smr\Epoch::time() - 86400));
+				AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND transaction = \'Payment\' AND exempt = 0 AND time > ' . $db->escapeNumber(Epoch::time() - 86400));
 	$totalWithdrawn = $dbResult->record()->getInt('total');
 	$template->assign('WithdrawalPerDay', $withdrawalPerDay);
 	$template->assign('RemainingWithdrawal', $withdrawalPerDay - $totalWithdrawn);

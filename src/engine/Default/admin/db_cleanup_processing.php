@@ -1,13 +1,16 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $var = Smr\Session::getInstance()->getCurrentVar();
 
 // Get initial storage size
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $initialBytes = $db->getDbBytes();
 
 $endedGameIDs = [];
-$dbResult = $db->read('SELECT game_id FROM game WHERE end_time < ' . $db->escapeNumber(Smr\Epoch::time()));
+$dbResult = $db->read('SELECT game_id FROM game WHERE end_time < ' . $db->escapeNumber(Epoch::time()));
 foreach ($dbResult->records() as $dbRecord) {
 	$endedGameIDs[] = $dbRecord->getInt('game_id');
 }

@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
 use Smr\BuyerRestriction;
+use Smr\Database;
+use Smr\DatabaseRecord;
 use Smr\ShipClass;
 
 /**
@@ -30,10 +32,10 @@ class SmrShipType {
 		self::$CACHE_SHIP_TYPES = [];
 	}
 
-	public static function get(int $shipTypeID, Smr\DatabaseRecord $dbRecord = null): self {
+	public static function get(int $shipTypeID, DatabaseRecord $dbRecord = null): self {
 		if (!isset(self::$CACHE_SHIP_TYPES[$shipTypeID])) {
 			if ($dbRecord === null) {
-				$db = Smr\Database::getInstance();
+				$db = Database::getInstance();
 				$dbResult = $db->read('SELECT * FROM ship_type WHERE ship_type_id = ' . $db->escapeNumber($shipTypeID));
 				$dbRecord = $dbResult->record();
 			} elseif ($shipTypeID !== $dbRecord->getInt('ship_type_id')) {
@@ -48,7 +50,7 @@ class SmrShipType {
 	 * @return array<int, self>
 	 */
 	public static function getAll(): array {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM ship_type ORDER BY ship_type_id ASC');
 		foreach ($dbResult->records() as $dbRecord) {
 			// populate the cache
@@ -57,7 +59,7 @@ class SmrShipType {
 		return self::$CACHE_SHIP_TYPES;
 	}
 
-	protected function __construct(Smr\DatabaseRecord $dbRecord) {
+	protected function __construct(DatabaseRecord $dbRecord) {
 		$this->name = $dbRecord->getString('ship_name');
 		$this->typeID = $dbRecord->getInt('ship_type_id');
 		$this->class = ShipClass::from($dbRecord->getInt('ship_class_id'));
@@ -85,7 +87,7 @@ class SmrShipType {
 		};
 
 		// get supported hardware from db
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT hardware_type_id, max_amount FROM ship_type_support_hardware ' .
 			'WHERE ship_type_id = ' . $db->escapeNumber($this->typeID) . ' ORDER BY hardware_type_id');
 

@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
@@ -20,7 +22,7 @@ if (!$planetLand) {
 	if ($planet->hasOwner()) {
 		$ownerAllianceID = $planet->getOwner()->getAllianceID();
 	}
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('
 		SELECT 1
 		FROM alliance_treaties

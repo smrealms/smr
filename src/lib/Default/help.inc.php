@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 function echo_nav(int $topic_id): void {
 	// database object
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 
 	// get current entry
 	$dbResult = $db->read('SELECT * FROM manual WHERE topic_id = ' . $db->escapeNumber($topic_id));
@@ -113,7 +115,7 @@ function echo_nav(int $topic_id): void {
 
 function echo_content(int $topic_id): void {
 	// database object
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 
 	// get current entry
 	$dbResult = $db->read('SELECT * FROM manual WHERE topic_id = ' . $topic_id);
@@ -135,7 +137,7 @@ function echo_content(int $topic_id): void {
 
 function echo_subsection(int $topic_id): void {
 	// database object
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 
 	// check if there are subsections
 	$dbResult = $db->read('SELECT 1 FROM manual WHERE parent_topic_id = ' . $db->escapeNumber($topic_id) . ' ORDER BY order_id');
@@ -152,7 +154,7 @@ function echo_subsection(int $topic_id): void {
 
 function echo_menu(int $topic_id): void {
 	// database object
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 
 	$dbResult = $db->read('SELECT * FROM manual WHERE parent_topic_id = ' . $db->escapeNumber($topic_id) . ' ORDER BY order_id');
 	if ($dbResult->hasRecord()) {
@@ -170,7 +172,7 @@ function echo_menu(int $topic_id): void {
 }
 
 function get_numbering(int $topic_id): string {
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 
 	$dbResult = $db->read('SELECT * FROM manual WHERE topic_id = ' . $db->escapeNumber($topic_id));
 	if (!$dbResult->hasRecord()) {

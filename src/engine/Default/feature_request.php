@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
@@ -59,7 +62,7 @@ $dbResult = $db->read('SELECT * ' .
 			'JOIN feature_request_comments super USING(feature_request_id) ' .
 			'WHERE comment_id = 1 ' .
 			'AND status = ' . $db->escapeString($thisStatus) .
-			($var['category'] == 'New' ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (Smr\Epoch::time() - NEW_REQUEST_DAYS * 86400) . ')' : '') .
+			($var['category'] == 'New' ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (Epoch::time() - NEW_REQUEST_DAYS * 86400) . ')' : '') .
 			' ORDER BY (SELECT MAX(posting_time) FROM feature_request_comments WHERE feature_request_id = super.feature_request_id) DESC');
 if ($dbResult->hasRecord()) {
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
@@ -112,13 +115,13 @@ function statusFromCategory(string $category): string {
 }
 
 function getFeaturesCount(string $status, int|false $daysNew = false): int {
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('
 		SELECT COUNT(*) AS count
 		FROM feature_request
 		JOIN feature_request_comments super USING(feature_request_id)
 		WHERE comment_id = 1
 		AND status = ' . $db->escapeString($status) .
-		($daysNew ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (Smr\Epoch::time() - $daysNew * 86400) . ')' : ''));
+		($daysNew ? ' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (Epoch::time() - $daysNew * 86400) . ')' : ''));
 	return $dbResult->record()->getInt('count');
 }

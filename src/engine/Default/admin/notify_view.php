@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Messages;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
@@ -9,13 +12,13 @@ $template->assign('PageTopic', 'Viewing Reported Messages');
 $container = Page::create('admin/notify_delete_processing.php');
 $template->assign('DeleteHREF', $container->href());
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT * FROM message_notify');
 $messages = [];
 foreach ($dbResult->records() as $dbRecord) {
 	$gameID = $dbRecord->getInt('game_id');
-	$sender = Smr\Messages::getMessagePlayer($dbRecord->getInt('from_id'), $gameID);
-	$receiver = Smr\Messages::getMessagePlayer($dbRecord->getInt('to_id'), $gameID);
+	$sender = Messages::getMessagePlayer($dbRecord->getInt('from_id'), $gameID);
+	$receiver = Messages::getMessagePlayer($dbRecord->getInt('to_id'), $gameID);
 
 	$container = Page::create('admin/notify_reply.php');
 	$container['offender'] = $dbRecord->getInt('from_id');

@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -17,8 +20,8 @@ Menu::alliance($alliance->getAllianceID());
 
 // Check to see if an alliance op is scheduled
 // Display it for 1 hour past start time (late arrivals, etc.)
-$db = Smr\Database::getInstance();
-$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' AND time > ' . $db->escapeNumber(Smr\Epoch::time() - 3600));
+$db = Database::getInstance();
+$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' AND time > ' . $db->escapeNumber(Epoch::time() - 3600));
 if ($dbResult->hasRecord()) {
 	$template->assign('OpTime', $dbResult->record()->getInt('time'));
 
