@@ -146,7 +146,7 @@ services:
 
     phpstan:
         <<: *smr-test
-        entrypoint: vendor/bin/phpstan --memory-limit=4G --ansi analyse
+        entrypoint: vendor/bin/phpstan --memory-limit=4G --ansi analyse -v
 
     phpcs:
         <<: *smr-test
