@@ -1,9 +1,13 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
-$feature = Smr\Request::get('feature');
+$feature = Request::get('feature');
 if (empty($feature)) {
 	create_error('We need at least a feature description!');
 }
@@ -12,13 +16,13 @@ if (strlen($feature) > 500) {
 }
 
 // add this feature to db
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $featureRequestID = $db->insert('feature_request', []);
 $db->insert('feature_request_comments', [
 	'feature_request_id' => $db->escapeNumber($featureRequestID),
 	'poster_id' => $db->escapeNumber($account->getAccountID()),
-	'posting_time' => $db->escapeNumber(Smr\Epoch::time()),
-	'anonymous' => $db->escapeBoolean(Smr\Request::has('anon')),
+	'posting_time' => $db->escapeNumber(Epoch::time()),
+	'anonymous' => $db->escapeBoolean(Request::has('anon')),
 	'text' => $db->escapeString(word_filter($feature)),
 ]);
 

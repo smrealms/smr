@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
@@ -12,7 +14,7 @@ if (!$player->hasAlliance()) {
 }
 
 // get list of alliances
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT
 count(account_id) as alliance_member_count,
 sum(experience) as alliance_xp,

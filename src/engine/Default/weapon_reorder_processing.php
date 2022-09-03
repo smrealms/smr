@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $ship = $session->getPlayer()->getShip();
@@ -13,7 +15,7 @@ if (isset($var['Down'])) {
 }
 
 if (isset($var['Form'])) {
-	$ship->setWeaponLocations(Smr\Request::getIntArray('weapon_reorder'));
+	$ship->setWeaponLocations(Request::getIntArray('weapon_reorder'));
 }
 
 Page::create('weapon_reorder.php')->go();

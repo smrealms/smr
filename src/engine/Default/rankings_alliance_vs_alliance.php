@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -8,7 +10,7 @@ $player = $session->getPlayer();
 $template->assign('PageTopic', 'Alliance VS Alliance Rankings');
 
 Menu::rankings(1, 4);
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $container = Page::create('rankings_alliance_vs_alliance.php');
 $template->assign('SubmitHREF', $container->href());
 

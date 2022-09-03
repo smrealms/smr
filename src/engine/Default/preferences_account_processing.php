@@ -1,6 +1,11 @@
 <?php declare(strict_types=1);
 
-$db = Smr\Database::getInstance();
+use Smr\Database;
+use Smr\DisplayNameValidator;
+use Smr\Exceptions\AccountNotFound;
+use Smr\Request;
+
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
@@ -9,10 +14,10 @@ if ($session->hasGame()) {
 } else {
 	$container = Page::create('game_play.php');
 }
-$action = Smr\Request::get('action');
+$action = Request::get('action');
 
 if ($action == 'Save and resend validation code') {
-	$email = Smr\Request::get('email');
+	$email = Request::get('email');
 
 	$account->changeEmail($email);
 
@@ -21,9 +26,9 @@ if ($action == 'Save and resend validation code') {
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your email address, you will now need to revalidate with the code sent to the new email address.';
 
 } elseif ($action == 'Change Password') {
-	$new_password = Smr\Request::get('new_password');
-	$old_password = Smr\Request::get('old_password');
-	$retype_password = Smr\Request::get('retype_password');
+	$new_password = Request::get('new_password');
+	$old_password = Request::get('old_password');
+	$retype_password = Request::get('retype_password');
 
 	if (empty($new_password)) {
 		create_error('You must enter a non empty password!');
@@ -45,9 +50,9 @@ if ($action == 'Save and resend validation code') {
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your password.';
 
 } elseif ($action == 'Change Name') {
-	$HoF_name = Smr\Request::get('HoF_name');
+	$HoF_name = Request::get('HoF_name');
 
-	Smr\DisplayNameValidator::validate($HoF_name);
+	DisplayNameValidator::validate($HoF_name);
 
 	//no duplicates
 	try {
@@ -55,7 +60,7 @@ if ($action == 'Save and resend validation code') {
 		if (!$account->equals($other)) {
 			create_error('Someone is already using that Hall of Fame name!');
 		}
-	} catch (Smr\Exceptions\AccountNotFound) {
+	} catch (AccountNotFound) {
 		// Proceed, this Hall of Fame name is not in use
 	}
 
@@ -64,7 +69,7 @@ if ($action == 'Save and resend validation code') {
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your Hall of Fame name.';
 
 } elseif ($action == 'Change Discord ID') {
-	$discordId = Smr\Request::get('discord_id');
+	$discordId = Request::get('discord_id');
 
 	if (empty($discordId)) {
 		$account->setDiscordId(null);
@@ -76,7 +81,7 @@ if ($action == 'Save and resend validation code') {
 			if (!$account->equals($other)) {
 				create_error('Someone is already using that Discord User ID!');
 			}
-		} catch (Smr\Exceptions\AccountNotFound) {
+		} catch (AccountNotFound) {
 			// Proceed, this Discord ID is not in use
 		}
 
@@ -85,7 +90,7 @@ if ($action == 'Save and resend validation code') {
 	}
 
 } elseif ($action == 'Change IRC Nick') {
-	$ircNick = Smr\Request::get('irc_nick');
+	$ircNick = Request::get('irc_nick');
 
 	// here you can delete your registered irc nick
 	if (empty($ircNick)) {
@@ -103,7 +108,7 @@ if ($action == 'Save and resend validation code') {
 			if (!$account->equals($other)) {
 				create_error('Someone is already using that IRC nick!');
 			}
-		} catch (Smr\Exceptions\AccountNotFound) {
+		} catch (AccountNotFound) {
 			// Proceed, this IRC nick is not in use
 		}
 
@@ -128,26 +133,26 @@ if ($action == 'Save and resend validation code') {
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have sent SMR credits.';
 
 } elseif ($action == 'Change Timezone') {
-	$timez = Smr\Request::getInt('timez');
+	$timez = Request::getInt('timez');
 
 	$db->write('UPDATE account SET offset = ' . $db->escapeNumber($timez) . ' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your time offset.';
 
 } elseif ($action == 'Change Date Formats') {
-	$account->setDateFormat(Smr\Request::get('dateformat'));
-	$account->setTimeFormat(Smr\Request::get('timeformat'));
+	$account->setDateFormat(Request::get('dateformat'));
+	$account->setTimeFormat(Request::get('timeformat'));
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your date formats.';
 
 } elseif ($action == 'Change Images') {
-	$account->setDisplayShipImages(Smr\Request::get('images') == 'Yes');
+	$account->setDisplayShipImages(Request::get('images') == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your ship images preferences.';
 
 } elseif ($action == 'Change Centering') {
-	$account->setCenterGalaxyMapOnPlayer(Smr\Request::get('centergalmap') == 'Yes');
+	$account->setCenterGalaxyMapOnPlayer(Request::get('centergalmap') == 'Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your centering galaxy map preferences.';
 
 } elseif ($action == 'Change Size') {
-	$fontsize = Smr\Request::getInt('fontsize');
+	$fontsize = Request::getInt('fontsize');
 	if ($fontsize < 50) {
 		create_error('Minimum font size is 50%');
 	}
@@ -155,8 +160,8 @@ if ($action == 'Save and resend validation code') {
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your font size.';
 
 } elseif ($action == 'Change CSS Options') {
-	$account->setCssLink(Smr\Request::get('csslink'));
-	$cssTemplateAndColor = Smr\Request::get('template');
+	$account->setCssLink(Request::get('csslink'));
+	$cssTemplateAndColor = Request::get('template');
 	if ($cssTemplateAndColor == 'None') {
 		$account->setDefaultCSSEnabled(false);
 	} else {
@@ -169,14 +174,14 @@ if ($action == 'Save and resend validation code') {
 
 } elseif ($action == 'Save Hotkeys') {
 	foreach (SmrAccount::getDefaultHotkeys() as $hotkey => $binding) {
-		$account->setHotkey($hotkey, explode(' ', Smr\Request::get($hotkey)));
+		$account->setHotkey($hotkey, explode(' ', Request::get($hotkey)));
 	}
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have saved your hotkeys.';
 
 } elseif ($action == 'Update Colours') {
-	$friendlyColour = Smr\Request::get('friendly_color');
-	$neutralColour = Smr\Request::get('neutral_color');
-	$enemyColour = Smr\Request::get('enemy_color');
+	$friendlyColour = Request::get('friendly_color');
+	$neutralColour = Request::get('neutral_color');
+	$enemyColour = Request::get('enemy_color');
 
 	if (strlen($friendlyColour) == 6) {
 		$account->setFriendlyColour($friendlyColour);

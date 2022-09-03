@@ -1,29 +1,33 @@
 <?php declare(strict_types=1);
+
+use Smr\Exceptions\AccountNotFound;
+use Smr\Request;
+
 try {
 	require_once('../bootstrap.php');
 
-	$password = Smr\Request::get('password');
+	$password = Request::get('password');
 	if (empty($password)) {
 		create_error('Password is missing!');
 	}
 
-	$pass_verify = Smr\Request::get('pass_verify');
+	$pass_verify = Request::get('pass_verify');
 	if ($password != $pass_verify) {
 		create_error('The passwords you entered do not match.');
 	}
 
-	$login = Smr\Request::get('login');
+	$login = Request::get('login');
 	if ($login == $password) {
 		create_error('Your password cannot be the same as your login!');
 	}
 
-	$passwordReset = Smr\Request::get('password_reset');
+	$passwordReset = Request::get('password_reset');
 	try {
 		$account = SmrAccount::getAccountByLogin($login);
 		if (empty($passwordReset) || $account->getPasswordReset() != $passwordReset) {
-			throw new Smr\Exceptions\AccountNotFound('Wrong password reset code');
+			throw new AccountNotFound('Wrong password reset code');
 		}
-	} catch (Smr\Exceptions\AccountNotFound) {
+	} catch (AccountNotFound) {
 		create_error('User does not exist or reset password code is incorrect.');
 	}
 

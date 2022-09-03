@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -18,14 +21,14 @@ if (!empty($var['message'])) {
 }
 
 // get the op from db
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND  game_id=' . $db->escapeNumber($player->getGameID()));
 
 if ($dbResult->hasRecord()) {
 	// An op is already scheduled, so get the time
 	$time = $dbResult->record()->getInt('time');
 	$template->assign('OpDate', date($account->getDateTimeFormat(), $time));
-	$template->assign('OpCountdown', format_time($time - Smr\Epoch::time()));
+	$template->assign('OpCountdown', format_time($time - Epoch::time()));
 
 	// Add a cancel button
 	$container['cancel'] = true;

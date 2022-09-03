@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 
 $template->assign('PageTopic', 'Moderate Photo Album');
@@ -10,7 +12,7 @@ $moderateHREF = Page::create('admin/album_moderate.php')->href();
 $template->assign('ModerateHREF', $moderateHREF);
 
 // Get all accounts that are eligible for moderation
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT account_id FROM album WHERE Approved = \'YES\'');
 $approved = [];
 foreach ($dbResult->records() as $dbRecord) {

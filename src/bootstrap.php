@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\Container\DiContainer;
+use Smr\Exceptions\UserError;
 use Smr\SectorLock;
 use Smr\Session;
 
@@ -103,7 +104,7 @@ function handleException(Throwable $e): void {
 	// The real error message may display sensitive information, so we
 	// need to catch any exceptions that are thrown while logging the error.
 	try {
-		if ($e instanceof Smr\Exceptions\UserError) {
+		if ($e instanceof UserError) {
 			create_error($e->getMessage());
 		}
 		logException($e);

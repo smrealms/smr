@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Race;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -7,7 +9,7 @@ $player = $session->getPlayer();
 
 $raceID = $var['race_id'] ?? $player->getRaceID();
 
-$template->assign('PageTopic', 'Ruling Council Of ' . Smr\Race::getName($raceID));
+$template->assign('PageTopic', 'Ruling Council Of ' . Race::getName($raceID));
 
 // echo menu
 Menu::council($raceID);
@@ -17,7 +19,7 @@ $raceRelations = Globals::getRaceRelations($player->getGameID(), $raceID);
 $peaceRaces = [];
 $neutralRaces = [];
 $warRaces = [];
-foreach (Smr\Race::getPlayableIDs() as $otherRaceID) {
+foreach (Race::getPlayableIDs() as $otherRaceID) {
 	if ($raceID != $otherRaceID) {
 		if ($raceRelations[$otherRaceID] >= RELATIONS_PEACE) {
 			$peaceRaces[] = $otherRaceID;

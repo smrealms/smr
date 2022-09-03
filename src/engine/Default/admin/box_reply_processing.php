@@ -1,13 +1,15 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
 
-$message = Smr\Request::get('message');
-$banPoints = Smr\Request::getInt('BanPoints');
-$rewardCredits = Smr\Request::getInt('RewardCredits');
-if (Smr\Request::get('action') == 'Preview message') {
+$message = Request::get('message');
+$banPoints = Request::getInt('BanPoints');
+$rewardCredits = Request::getInt('RewardCredits');
+if (Request::get('action') == 'Preview message') {
 	$container = Page::create('admin/box_reply.php');
 	$container['BanPoints'] = $banPoints;
 	$container['RewardCredits'] = $rewardCredits;

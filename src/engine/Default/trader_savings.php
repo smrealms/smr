@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Lotto;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
@@ -9,7 +12,7 @@ $template->assign('PageTopic', 'Savings');
 Menu::trader();
 
 $anonAccounts = [];
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT * FROM anon_bank WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 foreach ($dbResult->records() as $dbRecord) {
 	$anonAccounts[] = [
@@ -19,8 +22,8 @@ foreach ($dbResult->records() as $dbRecord) {
 }
 $template->assign('AnonAccounts', $anonAccounts);
 
-Smr\Lotto::checkForLottoWinner($player->getGameID());
-$template->assign('LottoInfo', Smr\Lotto::getLottoInfo($player->getGameID()));
+Lotto::checkForLottoWinner($player->getGameID());
+$template->assign('LottoInfo', Lotto::getLottoInfo($player->getGameID()));
 
 // Number of active lotto tickets this player has
 $dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time > 0');

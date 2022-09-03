@@ -1,21 +1,24 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Request;
+
 $var = Smr\Session::getInstance()->getCurrentVar();
 
-$change_title = Smr\Request::get('change_title');
-$change_message = Smr\Request::get('change_message');
-$affected_db = Smr\Request::get('affected_db');
+$change_title = Request::get('change_title');
+$change_message = Request::get('change_message');
+$affected_db = Request::get('affected_db');
 
 $container = Page::create('admin/changelog.php');
 
-if (Smr\Request::get('action') == 'Preview') {
+if (Request::get('action') == 'Preview') {
 	$container['change_title'] = $change_title;
 	$container['change_message'] = $change_message;
 	$container['affected_db'] = $affected_db;
 	$container->go();
 }
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $db->lockTable('changelog');
 
 $dbResult = $db->read('SELECT IFNULL(MAX(changelog_id)+1, 0) AS next_changelog_id

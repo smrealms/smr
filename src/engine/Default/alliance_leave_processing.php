@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
@@ -16,7 +18,7 @@ if ($action == 'YES') {
 	// Don't delete the Newbie Help Alliance!
 	if ($alliance->getNumMembers() == 1 && !$alliance->isNHA()) {
 		// Retain the alliance, but delete some auxilliary info
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$db->write('DELETE FROM alliance_bank_transactions
 		            WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 		            AND game_id = ' . $db->escapeNumber($player->getGameID()));

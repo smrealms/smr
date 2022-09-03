@@ -1,10 +1,12 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-$message = htmlentities(Smr\Request::get('message'), ENT_COMPAT, 'utf-8');
+$message = htmlentities(Request::get('message'), ENT_COMPAT, 'utf-8');
 
 if (empty($message)) {
 	create_error('You have to enter text to send a message!');

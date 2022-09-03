@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
 
-$db = Smr\Database::getInstance();
+use Smr\Database;
+use Smr\Request;
+
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -11,8 +14,8 @@ if (isset($var['minVal'])) {
 				AND transaction_id BETWEEN ' . $db->escapeNumber($var['minVal']) . ' AND ' . $db->escapeNumber($var['maxVal']));
 }
 
-if (Smr\Request::has('exempt')) {
-	$trans_ids = array_keys(Smr\Request::getArray('exempt'));
+if (Request::has('exempt')) {
+	$trans_ids = array_keys(Request::getArray('exempt'));
 	$db->write('UPDATE alliance_bank_transactions SET exempt = 1, request_exempt = 0 WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 				AND transaction_id IN (' . $db->escapeArray($trans_ids) . ')');
 }

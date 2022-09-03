@@ -1,19 +1,23 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Request;
+
 $var = Smr\Session::getInstance()->getCurrentVar();
 
 const ALL_GAMES_ID = 20000;
-$message = Smr\Request::get('message');
-$expire = Smr\Request::getFloat('expire');
+$message = Request::get('message');
+$expire = Request::getFloat('expire');
 $game_id = $var['SendGameID'];
 
-if (Smr\Request::get('action') == 'Preview message') {
+if (Request::get('action') == 'Preview message') {
 	$container = Page::create('admin/admin_message_send.php');
 	$container->addVar('SendGameID');
 	$container['preview'] = $message;
 	$container['expire'] = $expire;
 	if ($game_id != ALL_GAMES_ID) {
-		$container['account_id'] = Smr\Request::getInt('account_id');
+		$container['account_id'] = Request::getInt('account_id');
 	}
 	$container->go();
 }
@@ -21,14 +25,14 @@ if (Smr\Request::get('action') == 'Preview message') {
 $expire = IRound($expire * 3600); // convert hours to seconds
 // When expire==0, message will not expire
 if ($expire > 0) {
-	$expire += Smr\Epoch::time();
+	$expire += Epoch::time();
 }
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 
 $receivers = [];
 if ($game_id != ALL_GAMES_ID) {
-	$account_id = Smr\Request::getInt('account_id');
+	$account_id = Request::getInt('account_id');
 	if ($account_id == 0) {
 		// Send to all players in the requested game
 		$dbResult = $db->read('SELECT account_id FROM player WHERE game_id = ' . $db->escapeNumber($game_id));
@@ -40,7 +44,7 @@ if ($game_id != ALL_GAMES_ID) {
 	}
 } else {
 	//send to all players in games that haven't ended yet
-	$dbResult = $db->read('SELECT game_id,account_id FROM player JOIN game USING(game_id) WHERE end_time > ' . $db->escapeNumber(Smr\Epoch::time()));
+	$dbResult = $db->read('SELECT game_id,account_id FROM player JOIN game USING(game_id) WHERE end_time > ' . $db->escapeNumber(Epoch::time()));
 	foreach ($dbResult->records() as $dbRecord) {
 		$receivers[] = [$dbRecord->getInt('game_id'), $dbRecord->getInt('account_id')];
 	}

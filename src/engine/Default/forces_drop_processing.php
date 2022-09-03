@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -18,12 +20,12 @@ if ($player->getSector()->hasLocation()) {
 }
 
 // take either from container or request, prefer container
-$drop_mines = Smr\Request::getVarInt('drop_mines', 0);
-$take_mines = Smr\Request::getVarInt('take_mines', 0);
-$drop_combat_drones = Smr\Request::getVarInt('drop_combat_drones', 0);
-$take_combat_drones = Smr\Request::getVarInt('take_combat_drones', 0);
-$drop_scout_drones = Smr\Request::getVarInt('drop_scout_drones', 0);
-$take_scout_drones = Smr\Request::getVarInt('take_scout_drones', 0);
+$drop_mines = Request::getVarInt('drop_mines', 0);
+$take_mines = Request::getVarInt('take_mines', 0);
+$drop_combat_drones = Request::getVarInt('drop_combat_drones', 0);
+$take_combat_drones = Request::getVarInt('take_combat_drones', 0);
+$drop_scout_drones = Request::getVarInt('drop_scout_drones', 0);
+$take_scout_drones = Request::getVarInt('take_scout_drones', 0);
 
 // so how many forces do we take/add per type?
 $change_mines = $drop_mines - $take_mines;

@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
 
 use Smr\BountyType;
+use Smr\Database;
+use Smr\DatabaseRecord;
+use Smr\Epoch;
 use Smr\PortPayoutType;
 use Smr\TransactionType;
 
@@ -36,7 +39,7 @@ class AbstractSmrPort {
 	protected const BASE_PAYOUT = 0.85; // fraction of credits for looting
 	public const RAZE_PAYOUT = 0.75; // fraction of base payout for razing
 
-	protected Smr\Database $db;
+	protected Database $db;
 	protected readonly string $SQL;
 
 	protected int $shields;
@@ -76,7 +79,7 @@ class AbstractSmrPort {
 	 * @return array<int, SmrPort>
 	 */
 	public static function getGalaxyPorts(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		// Use a left join so that we populate the cache for every sector
 		$dbResult = $db->read('SELECT port.* FROM port LEFT JOIN sector USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPorts = [];
@@ -91,7 +94,7 @@ class AbstractSmrPort {
 		return $galaxyPorts;
 	}
 
-	public static function getPort(int $gameID, int $sectorID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): SmrPort {
+	public static function getPort(int $gameID, int $sectorID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): SmrPort {
 		if ($forceUpdate || !isset(self::$CACHE_PORTS[$gameID][$sectorID])) {
 			self::$CACHE_PORTS[$gameID][$sectorID] = new SmrPort($gameID, $sectorID, $dbRecord);
 		}
@@ -99,7 +102,7 @@ class AbstractSmrPort {
 	}
 
 	public static function removePort(int $gameID, int $sectorID): void {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$SQL = 'game_id = ' . $db->escapeNumber($gameID) . '
 		        AND sector_id = ' . $db->escapeNumber($sectorID);
 		$db->write('DELETE FROM port WHERE ' . $SQL);
@@ -134,10 +137,10 @@ class AbstractSmrPort {
 	protected function __construct(
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
-		Smr\DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null
 	) {
-		$this->cachedTime = Smr\Epoch::time();
-		$this->db = Smr\Database::getInstance();
+		$this->cachedTime = Epoch::time();
+		$this->db = Database::getInstance();
 		$this->SQL = 'sector_id = ' . $this->db->escapeNumber($sectorID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
 
 		if ($dbRecord === null) {
@@ -188,8 +191,8 @@ class AbstractSmrPort {
 			$defences += max(0, IRound(self::DEFENCES_PER_TEN_MIL_CREDITS * $this->getCredits() / 10000000));
 			$cds += max(0, IRound(self::CDS_PER_TEN_MIL_CREDITS * $this->getCredits() / 10000000));
 			// Defences restock (check for fed arrival)
-			if (Smr\Epoch::time() < $this->getReinforceTime() + self::TIME_FEDS_STAY) {
-				$federalMod = (self::TIME_FEDS_STAY - (Smr\Epoch::time() - $this->getReinforceTime())) / self::TIME_FEDS_STAY;
+			if (Epoch::time() < $this->getReinforceTime() + self::TIME_FEDS_STAY) {
+				$federalMod = (self::TIME_FEDS_STAY - (Epoch::time() - $this->getReinforceTime())) / self::TIME_FEDS_STAY;
 				$federalMod = max(0, IRound($federalMod * self::MAX_FEDS_BONUS));
 				$defences += $federalMod;
 				$cds += IRound($federalMod / 10);
@@ -238,7 +241,7 @@ class AbstractSmrPort {
 				$this->goodTransactions[$goodID] = TransactionType::from($dbRecord->getString('transaction_type'));
 				$this->goodAmounts[$goodID] = $dbRecord->getInt('amount');
 
-				$secondsSinceLastUpdate = Smr\Epoch::time() - $dbRecord->getInt('last_update');
+				$secondsSinceLastUpdate = Epoch::time() - $dbRecord->getInt('last_update');
 				$this->restockGood($goodID, $secondsSinceLastUpdate);
 			}
 		}
@@ -662,14 +665,14 @@ class AbstractSmrPort {
 				'game_id' => $this->db->escapeNumber($this->getGameID()),
 				'account_id' => $this->db->escapeNumber($attacker->getAccountID()),
 				'sector_id' => $this->db->escapeNumber($this->getSectorID()),
-				'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+				'time' => $this->db->escapeNumber(Epoch::time()),
 				'level' => $this->db->escapeNumber($this->getLevel()),
 			]);
 		}
 		if (!$this->isUnderAttack()) {
 
 			//5 mins per port level
-			$nextReinforce = Smr\Epoch::time() + $this->getLevel() * 300;
+			$nextReinforce = Epoch::time() + $this->getLevel() * 300;
 
 			$this->setReinforceTime($nextReinforce);
 			$this->updateAttackStarted();
@@ -693,7 +696,7 @@ class AbstractSmrPort {
 
 			$this->db->insert('news', [
 				'game_id' => $this->db->escapeNumber($this->getGameID()),
-				'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+				'time' => $this->db->escapeNumber(Epoch::time()),
 				'news_message' => $this->db->escapeString($newsMessage),
 				'killer_id' => $this->db->escapeNumber($trigger->getAccountID()),
 				'killer_alliance' => $this->db->escapeNumber($trigger->getAllianceID()),
@@ -943,7 +946,7 @@ class AbstractSmrPort {
 		if (!$this->isUnderAttack()) {
 			return 0;
 		}
-		return min(1, max(0, ($this->getReinforceTime() - Smr\Epoch::time()) / ($this->getReinforceTime() - $this->getAttackStarted())));
+		return min(1, max(0, ($this->getReinforceTime() - Epoch::time()) / ($this->getReinforceTime() - $this->getAttackStarted())));
 	}
 
 	public function getReinforceTime(): int {
@@ -963,7 +966,7 @@ class AbstractSmrPort {
 	}
 
 	private function updateAttackStarted(): void {
-		$this->setAttackStarted(Smr\Epoch::time());
+		$this->setAttackStarted(Epoch::time());
 	}
 
 	private function setAttackStarted(int $time): void {
@@ -975,7 +978,7 @@ class AbstractSmrPort {
 	}
 
 	public function isUnderAttack(): bool {
-		return ($this->getReinforceTime() >= Smr\Epoch::time());
+		return ($this->getReinforceTime() >= Epoch::time());
 	}
 
 	public function isDestroyed(): bool {
@@ -1172,7 +1175,7 @@ class AbstractSmrPort {
 
 	public static function getCachedPort(int $gameID, int $sectorID, int $accountID, bool $forceUpdate = false): SmrPort|false {
 		if ($forceUpdate || !isset(self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID])) {
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT visited, port_info
 						FROM player_visited_port
 						JOIN port_info_cache USING (game_id,sector_id,port_info_hash)
@@ -1202,7 +1205,7 @@ class AbstractSmrPort {
 
 	public function __wakeup() {
 		$this->cachedVersion = true;
-		$this->db = Smr\Database::getInstance();
+		$this->db = Database::getInstance();
 	}
 
 	public function update(): void {
@@ -1261,7 +1264,7 @@ class AbstractSmrPort {
 				continue;
 			}
 			$amount = $this->getGoodAmount($goodID);
-			$this->db->write('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . ', last_update = ' . $this->db->escapeNumber(Smr\Epoch::time()) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $this->db->escapeNumber($goodID));
+			$this->db->write('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . ', last_update = ' . $this->db->escapeNumber(Epoch::time()) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $this->db->escapeNumber($goodID));
 			unset($this->goodAmountsChanged[$goodID]);
 		}
 
@@ -1275,7 +1278,7 @@ class AbstractSmrPort {
 					'good_id' => $this->db->escapeNumber($goodID),
 					'transaction_type' => $this->db->escapeString($this->getGoodTransaction($goodID)->value),
 					'amount' => $this->db->escapeNumber($this->getGoodAmount($goodID)),
-					'last_update' => $this->db->escapeNumber(Smr\Epoch::time()),
+					'last_update' => $this->db->escapeNumber(Epoch::time()),
 				]);
 			} else {
 				// remove the good
@@ -1383,7 +1386,7 @@ class AbstractSmrPort {
 	public function getAttackersToCredit(): array {
 		//get all players involved for HoF
 		$attackers = [];
-		$dbResult = $this->db->read('SELECT player.* FROM player_attacks_port JOIN player USING (game_id, account_id) WHERE game_id = ' . $this->db->escapeNumber($this->gameID) . ' AND player_attacks_port.sector_id = ' . $this->db->escapeNumber($this->sectorID) . ' AND time > ' . $this->db->escapeNumber(Smr\Epoch::time() - self::TIME_TO_CREDIT_RAID));
+		$dbResult = $this->db->read('SELECT player.* FROM player_attacks_port JOIN player USING (game_id, account_id) WHERE game_id = ' . $this->db->escapeNumber($this->gameID) . ' AND player_attacks_port.sector_id = ' . $this->db->escapeNumber($this->sectorID) . ' AND time > ' . $this->db->escapeNumber(Epoch::time() - self::TIME_TO_CREDIT_RAID));
 		foreach ($dbResult->records() as $dbRecord) {
 			$attackers[] = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $this->getGameID(), false, $dbRecord);
 		}
@@ -1457,7 +1460,7 @@ class AbstractSmrPort {
 		}
 		$this->db->insert('news', [
 			'game_id' => $this->db->escapeNumber($this->getGameID()),
-			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'time' => $this->db->escapeNumber(Epoch::time()),
 			'news_message' => $this->db->escapeString($news),
 			'killer_id' => $this->db->escapeNumber($killer->getAccountID()),
 			'killer_alliance' => $this->db->escapeNumber($killer->getAllianceID()),

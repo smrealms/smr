@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -24,12 +27,12 @@ $template->assign('UserRankName', $account->getRank()->name);
 $games = [];
 $games['Play'] = [];
 $game_id_list = [];
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT end_time, game_id, game_name, game_speed, game_type
 			FROM game JOIN player USING (game_id)
 			WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . '
 				AND enabled = \'TRUE\'
-				AND end_time >= ' . $db->escapeNumber(Smr\Epoch::time()) . '
+				AND end_time >= ' . $db->escapeNumber(Epoch::time()) . '
 			ORDER BY start_time, game_id DESC');
 foreach ($dbResult->records() as $dbRecord) {
 	$game_id = $dbRecord->getInt('game_id');
@@ -54,7 +57,7 @@ foreach ($dbResult->records() as $dbRecord) {
 
 	$result2 = $db->read('SELECT count(*) as num_playing
 					FROM player
-					WHERE last_cpl_action >= ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE) . '
+					WHERE last_cpl_action >= ' . $db->escapeNumber(Epoch::time() - TIME_BEFORE_INACTIVE) . '
 						AND game_id = ' . $db->escapeNumber($game_id));
 	$games['Play'][$game_id]['NumberPlaying'] = $result2->record()->getInt('num_playing');
 
@@ -64,7 +67,7 @@ foreach ($dbResult->records() as $dbRecord) {
 	$container_game['game_id'] = $game_id;
 	$games['Play'][$game_id]['GameStatsLink'] = $container_game->href();
 	$games['Play'][$game_id]['Turns'] = $curr_player->getTurns();
-	$games['Play'][$game_id]['LastMovement'] = format_time(Smr\Epoch::time() - $curr_player->getLastActive(), true);
+	$games['Play'][$game_id]['LastMovement'] = format_time(Epoch::time() - $curr_player->getLastActive(), true);
 
 }
 
@@ -81,13 +84,13 @@ if (count($game_id_list) > 0) {
 	$dbResult = $db->read('SELECT game_id
 				FROM game
 				WHERE game_id NOT IN (' . $db->escapeArray($game_id_list) . ')
-					AND end_time >= ' . $db->escapeNumber(Smr\Epoch::time()) . '
+					AND end_time >= ' . $db->escapeNumber(Epoch::time()) . '
 					AND enabled = ' . $db->escapeBoolean(true) . '
 				ORDER BY start_time DESC');
 } else {
 	$dbResult = $db->read('SELECT game_id
 				FROM game
-				WHERE end_time >= ' . $db->escapeNumber(Smr\Epoch::time()) . '
+				WHERE end_time >= ' . $db->escapeNumber(Epoch::time()) . '
 					AND enabled = ' . $db->escapeBoolean(true) . '
 				ORDER BY start_time DESC');
 }
@@ -122,7 +125,7 @@ $games['Previous'] = [];
 
 //New previous games
 $dbResult = $db->read('SELECT start_time, end_time, game_name, game_type, game_speed, game_id ' .
-		'FROM game WHERE enabled = \'TRUE\' AND end_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY game_id DESC');
+		'FROM game WHERE enabled = \'TRUE\' AND end_time < ' . $db->escapeNumber(Epoch::time()) . ' ORDER BY game_id DESC');
 foreach ($dbResult->records() as $dbRecord) {
 	$game_id = $dbRecord->getInt('game_id');
 	$games['Previous'][$game_id]['ID'] = $game_id;
@@ -185,7 +188,7 @@ $template->assign('Games', $games);
 $container = Page::create('vote.php');
 $template->assign('VotingHref', $container->href());
 
-$dbResult = $db->read('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(Smr\Epoch::time()) . ' ORDER BY end DESC');
+$dbResult = $db->read('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(Epoch::time()) . ' ORDER BY end DESC');
 if ($dbResult->hasRecord()) {
 	$votedFor = [];
 	$dbResult2 = $db->read('SELECT * FROM voting_results WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
@@ -200,7 +203,7 @@ if ($dbResult->hasRecord()) {
 		$container['vote_id'] = $voteID;
 		$voting[$voteID]['HREF'] = $container->href();
 		$voting[$voteID]['Question'] = $dbRecord->getString('question');
-		$voting[$voteID]['TimeRemaining'] = format_time($dbRecord->getInt('end') - Smr\Epoch::time(), true);
+		$voting[$voteID]['TimeRemaining'] = format_time($dbRecord->getInt('end') - Epoch::time(), true);
 		$voting[$voteID]['Options'] = [];
 		$dbResult2 = $db->read('SELECT option_id,text,count(account_id) FROM voting_options LEFT OUTER JOIN voting_results USING(vote_id,option_id) WHERE vote_id = ' . $db->escapeNumber($dbRecord->getInt('vote_id')) . ' GROUP BY option_id');
 		foreach ($dbResult2->records() as $dbRecord2) {

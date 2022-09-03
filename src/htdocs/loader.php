@@ -1,4 +1,7 @@
 <?php declare(strict_types=1);
+
+use Smr\Login\Redirect;
+
 try {
 	require_once('../bootstrap.php');
 
@@ -60,7 +63,7 @@ try {
 
 	$account = $session->getAccount();
 	// get reason for disabled user
-	$disabled = Smr\Login\Redirect::redirectIfDisabled($account);
+	$disabled = Redirect::redirectIfDisabled($account);
 	if ($disabled !== false) {
 		// save session (incase we forward)
 		$session->update();

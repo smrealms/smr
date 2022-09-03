@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\SectorLock;
+
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 $player = $session->getPlayer();
@@ -77,12 +81,12 @@ $account->log(LOG_TYPE_PORT_RAIDING, 'Player attacks port, the port does ' . $re
 
 $port->update();
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $logId = $db->insert('combat_logs', [
 	'game_id' => $db->escapeNumber($player->getGameID()),
 	'type' => $db->escapeString('PORT'),
 	'sector_id' => $db->escapeNumber($port->getSectorID()),
-	'timestamp' => $db->escapeNumber(Smr\Epoch::time()),
+	'timestamp' => $db->escapeNumber(Epoch::time()),
 	'attacker_id' => $db->escapeNumber($player->getAccountID()),
 	'attacker_alliance_id' => $db->escapeNumber($player->getAllianceID()),
 	'defender_id' => $db->escapeNumber(ACCOUNT_ID_PORT),
@@ -105,7 +109,7 @@ foreach ($attackers as $attacker) {
 if ($player->isDead()) {
 	saveAllAndReleaseLock(updateSession: false);
 	// Grab the lock in the new sector to avoid reloading session
-	Smr\SectorLock::getInstance()->acquireForPlayer($player);
+	SectorLock::getInstance()->acquireForPlayer($player);
 }
 
 // If they died on the shot they get to see the results

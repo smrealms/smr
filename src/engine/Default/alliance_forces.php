@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -11,7 +14,7 @@ $alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
 $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID());
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('
 SELECT
 	IFNULL(sum(mines), 0) as tot_mines,
@@ -20,7 +23,7 @@ SELECT
 FROM sector_has_forces JOIN player ON player.game_id=sector_has_forces.game_id AND sector_has_forces.owner_id=player.account_id
 WHERE player.game_id=' . $db->escapeNumber($alliance->getGameID()) . '
 	AND player.alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
-	AND expire_time >= ' . $db->escapeNumber(Smr\Epoch::time()));
+	AND expire_time >= ' . $db->escapeNumber(Epoch::time()));
 $dbRecord = $dbResult->record();
 
 // Get total number of forces
@@ -46,7 +49,7 @@ FROM player
 JOIN sector_has_forces ON player.game_id = sector_has_forces.game_id AND player.account_id = sector_has_forces.owner_id
 WHERE player.game_id=' . $db->escapeNumber($alliance->getGameID()) . '
 AND player.alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
-AND expire_time >= ' . $db->escapeNumber(Smr\Epoch::time()) . '
+AND expire_time >= ' . $db->escapeNumber(Epoch::time()) . '
 ORDER BY sector_id ASC');
 
 $forces = [];

@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
 use Smr\BuyerRestriction;
+use Smr\Database;
+use Smr\DatabaseRecord;
 
 /**
  * Defines the base weapon types for ships/planets.
@@ -20,10 +22,10 @@ class SmrWeaponType {
 	protected readonly int $powerLevel;
 	protected readonly BuyerRestriction $buyerRestriction;
 
-	public static function getWeaponType(int $weaponTypeID, Smr\DatabaseRecord $dbRecord = null): self {
+	public static function getWeaponType(int $weaponTypeID, DatabaseRecord $dbRecord = null): self {
 		if (!isset(self::$CACHE_WEAPON_TYPES[$weaponTypeID])) {
 			if ($dbRecord === null) {
-				$db = Smr\Database::getInstance();
+				$db = Database::getInstance();
 				$dbResult = $db->read('SELECT * FROM weapon_type WHERE weapon_type_id = ' . $db->escapeNumber($weaponTypeID));
 				$dbRecord = $dbResult->record();
 			}
@@ -37,7 +39,7 @@ class SmrWeaponType {
 	 * @return array<int, self>
 	 */
 	public static function getAllWeaponTypes(): array {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM weapon_type');
 		$weapons = [];
 		foreach ($dbResult->records() as $dbRecord) {
@@ -53,7 +55,7 @@ class SmrWeaponType {
 	 * @return array<int, self>
 	 */
 	public static function getAllSoldWeaponTypes(int $gameID): array {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT DISTINCT weapon_type.* FROM weapon_type JOIN location_sells_weapons USING (weapon_type_id) JOIN location USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID));
 		$weapons = [];
 		foreach ($dbResult->records() as $dbRecord) {
@@ -65,7 +67,7 @@ class SmrWeaponType {
 
 	protected function __construct(
 		protected readonly int $weaponTypeID,
-		Smr\DatabaseRecord $dbRecord
+		DatabaseRecord $dbRecord
 	) {
 		$this->name = $dbRecord->getString('weapon_name');
 		$this->raceID = $dbRecord->getInt('race_id');

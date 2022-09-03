@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
@@ -18,7 +20,7 @@ $template->assign('AccessHREF', $container->href());
 
 $template->assign('Message', $var['message'] ?? '');
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT * FROM anon_bank
 			WHERE owner_id=' . $db->escapeNumber($player->getAccountID()) . '
 			AND game_id=' . $db->escapeNumber($player->getGameID()));

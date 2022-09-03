@@ -1,4 +1,9 @@
 <?php declare(strict_types=1);
+
+use Smr\Exceptions\GalaxyNotFound;
+use Smr\Exceptions\SectorNotFound;
+use Smr\Request;
+
 try {
 	require_once('../bootstrap.php');
 
@@ -22,18 +27,18 @@ try {
 		exit;
 	}
 
-	if (Smr\Request::has('sector_id')) {
-		$sectorID = Smr\Request::getInt('sector_id');
+	if (Request::has('sector_id')) {
+		$sectorID = Request::getInt('sector_id');
 		try {
 			$galaxy = SmrGalaxy::getGalaxyContaining($session->getGameID(), $sectorID);
-		} catch (Smr\Exceptions\SectorNotFound) {
+		} catch (SectorNotFound) {
 			create_error('Invalid sector ID');
 		}
-	} elseif (Smr\Request::has('galaxy_id')) {
-		$galaxyID = Smr\Request::getInt('galaxy_id');
+	} elseif (Request::has('galaxy_id')) {
+		$galaxyID = Request::getInt('galaxy_id');
 		try {
 			$galaxy = SmrGalaxy::getGalaxy($session->getGameID(), $galaxyID);
-		} catch (Smr\Exceptions\GalaxyNotFound) {
+		} catch (GalaxyNotFound) {
 			create_error('Invalid galaxy ID');
 		}
 	}
@@ -52,9 +57,9 @@ try {
 
 	// Set temporary options
 	if ($player->hasAlliance()) {
-		if (Smr\Request::has('change_settings')) {
-			$_SESSION['show_seedlist_sectors'] = Smr\Request::has('show_seedlist_sectors');
-			$_SESSION['hide_allied_forces'] = Smr\Request::has('hide_allied_forces');
+		if (Request::has('change_settings')) {
+			$_SESSION['show_seedlist_sectors'] = Request::has('show_seedlist_sectors');
+			$_SESSION['hide_allied_forces'] = Request::has('hide_allied_forces');
 		}
 		$showSeedlistSectors = $_SESSION['show_seedlist_sectors'] ?? false;
 		$hideAlliedForces = $_SESSION['hide_allied_forces'] ?? false;

@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $var = Smr\Session::getInstance()->getCurrentVar();
 
 //get our variables
@@ -9,7 +11,7 @@ $max_amount = $var['max_amount'];
 $account_id = $var['account_id'];
 
 //update it so they arent cheating
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $db->write('UPDATE ship_has_hardware ' .
 		   'SET amount = ' . $db->escapeNumber($max_amount) . ' ' .
 		   'WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND ' .

@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 /**
  * @param resource $fp
  */
@@ -13,7 +15,7 @@ function notice_nickserv_registered_user($fp, string $rdata): bool {
 
 		echo_r('[NOTICE_NICKSERV_REGISTERED_NICK] ' . $nick . ' is ' . $registeredNick);
 
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 
 		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
 		foreach ($dbResult->records() as $dbRecord) {

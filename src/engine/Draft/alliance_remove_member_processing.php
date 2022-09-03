@@ -1,9 +1,11 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$accountIDs = Smr\Request::getIntArray('account_id', []);
+$accountIDs = Request::getIntArray('account_id', []);
 
 if (empty($accountIDs)) {
 	create_error('You have to choose someone to remove them!');

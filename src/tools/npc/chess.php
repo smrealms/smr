@@ -1,10 +1,14 @@
 <?php declare(strict_types=1);
 
+use Smr\Chess\ChessGame;
 use Smr\Chess\Colour;
+use Smr\Container\DiContainer;
+use Smr\Database;
+use Smr\Epoch;
 
 function debug(string $message, mixed $debugObject = null): void {
 	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ? EOL . var_export($debugObject, true) : '') . EOL;
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$logID = $db->insert('npc_logs', [
 		'script_id' => defined('SCRIPT_ID') ? SCRIPT_ID : 0,
 		'npc_id' => 0,
@@ -28,7 +32,7 @@ try {
 	debug('Script started');
 
 	// Enable NPC-specific conditions
-	Smr\Container\DiContainer::getContainer()->set('NPC_SCRIPT', true);
+	DiContainer::getContainer()->set('NPC_SCRIPT', true);
 
 	$descriptorSpec = [
 		0 => ['pipe', 'r'], // stdin is a pipe that the child will read from
@@ -63,9 +67,9 @@ try {
 
 	while (true) {
 		// The next "page request" must occur at an updated time.
-		Smr\Epoch::update();
+		Epoch::update();
 
-		foreach (Smr\Chess\ChessGame::getNPCMoveGames(true) as $chessGame) {
+		foreach (ChessGame::getNPCMoveGames(true) as $chessGame) {
 			debug('Looking at game: ' . $chessGame->getChessGameID());
 			writeToEngine('position fen ' . $chessGame->getFENString(), false);
 			writeToEngine('go ' . ($chessGame->getCurrentTurnColour() == Colour::White ? 'w' : 'b') . 'time ' . UCI_TIME_PER_MOVE_MS, true, false);

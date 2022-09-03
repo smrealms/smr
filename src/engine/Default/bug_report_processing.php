@@ -1,12 +1,14 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
-$steps = Smr\Request::get('steps');
-$subject = Smr\Request::get('subject');
-$error_msg = Smr\Request::get('error_msg');
-$description = Smr\Request::get('description');
+$steps = Request::get('steps');
+$subject = Request::get('subject');
+$error_msg = Request::get('error_msg');
+$description = Request::get('description');
 
 $delim = EOL . EOL . '-----------' . EOL . EOL;
 $message = 'Login: ' . $account->getLogin() . EOL .

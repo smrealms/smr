@@ -1,8 +1,11 @@
 <?php declare(strict_types=1);
 
+use Smr\Race;
+use Smr\SectorLock;
+
 // We can release the sector lock now because we know that the following
 // code is read-only. This will help reduce sector lag and possible abuse.
-Smr\SectorLock::getInstance()->release();
+SectorLock::getInstance()->release();
 
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -18,7 +21,7 @@ $file = ';SMR1.6 Sectors File v' . SMR_FILE_VERSION . '
 ; Created on ' . date(DEFAULT_DATE_TIME_FORMAT) . '
 [Races]
 ; Name = ID' . EOL;
-foreach (Smr\Race::getAllNames() as $raceID => $raceName) {
+foreach (Race::getAllNames() as $raceID => $raceName) {
 	$file .= inify($raceName) . '=' . $raceID . EOL;
 }
 

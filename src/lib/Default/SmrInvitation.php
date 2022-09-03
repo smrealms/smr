@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\DatabaseRecord;
+use Smr\Epoch;
+use Smr\Exceptions\AllianceInvitationNotFound;
+
 /**
  * Object interfacing with the alliance_invites_player table.
  */
@@ -13,7 +18,7 @@ class SmrInvitation {
 	private readonly int $expires;
 
 	public static function send(int $allianceID, int $gameID, int $receiverAccountID, int $senderAccountID, int $messageID, int $expires): void {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$db->insert('alliance_invites_player', [
 			'game_id' => $db->escapeNumber($gameID),
 			'account_id' => $db->escapeNumber($receiverAccountID),
@@ -31,8 +36,8 @@ class SmrInvitation {
 	 */
 	public static function getAll(int $allianceID, int $gameID): array {
 		// Remove any expired invitations
-		$db = Smr\Database::getInstance();
-		$db->write('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(Smr\Epoch::time()));
+		$db = Database::getInstance();
+		$db->write('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(Epoch::time()));
 
 		$dbResult = $db->read('SELECT * FROM alliance_invites_player WHERE alliance_id=' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID));
 		$invites = [];
@@ -47,17 +52,17 @@ class SmrInvitation {
 	 */
 	public static function get(int $allianceID, int $gameID, int $receiverAccountID): self {
 		// Remove any expired invitations
-		$db = Smr\Database::getInstance();
-		$db->write('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(Smr\Epoch::time()));
+		$db = Database::getInstance();
+		$db->write('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(Epoch::time()));
 
 		$dbResult = $db->read('SELECT * FROM alliance_invites_player WHERE alliance_id=' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND account_id=' . $db->escapeNumber($receiverAccountID));
 		if ($dbResult->hasRecord()) {
 			return new self($dbResult->record());
 		}
-		throw new Smr\Exceptions\AllianceInvitationNotFound();
+		throw new AllianceInvitationNotFound();
 	}
 
-	public function __construct(Smr\DatabaseRecord $dbRecord) {
+	public function __construct(DatabaseRecord $dbRecord) {
 		$this->allianceID = $dbRecord->getInt('alliance_id');
 		$this->gameID = $dbRecord->getInt('game_id');
 		$this->receiverAccountID = $dbRecord->getInt('account_id');
@@ -67,7 +72,7 @@ class SmrInvitation {
 	}
 
 	public function delete(): void {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$db->write('DELETE FROM alliance_invites_player WHERE alliance_id=' . $db->escapeNumber($this->allianceID) . ' AND game_id=' . $db->escapeNumber($this->gameID) . ' AND account_id=' . $db->escapeNumber($this->receiverAccountID));
 		$db->write('DELETE FROM message WHERE message_id=' . $db->escapeNumber($this->messageID));
 	}

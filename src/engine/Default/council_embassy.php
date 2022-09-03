@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Race;
+
 $template = Smr\Template::getInstance();
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
@@ -14,7 +17,7 @@ $template->assign('PageTopic', 'Ruling Council Of ' . $player->getRaceName());
 Menu::council($player->getRaceID());
 
 $voteRaces = [];
-foreach (Smr\Race::getPlayableIDs() as $raceID) {
+foreach (Race::getPlayableIDs() as $raceID) {
 	if ($raceID == $player->getRaceID()) {
 		continue;
 	}

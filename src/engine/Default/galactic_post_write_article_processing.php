@@ -1,17 +1,21 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-$title = Smr\Request::get('title');
-$message = Smr\Request::get('message');
+$title = Request::get('title');
+$message = Request::get('message');
 if (!$player->isGPEditor()) {
 	$title = htmlentities($title, ENT_COMPAT, 'utf-8');
 	$message = htmlentities($message, ENT_COMPAT, 'utf-8');
 }
 
-if (Smr\Request::get('action') == 'Preview article') {
+if (Request::get('action') == 'Preview article') {
 	$container = Page::create('galactic_post_write_article.php');
 	$container['PreviewTitle'] = $title;
 	$container['Preview'] = $message;
@@ -21,10 +25,10 @@ if (Smr\Request::get('action') == 'Preview article') {
 	$container->go();
 }
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 if (isset($var['id'])) {
 	// Editing an article
-	$db->write('UPDATE galactic_post_article SET last_modified = ' . $db->escapeNumber(Smr\Epoch::time()) . ', text = ' . $db->escapeString($message) . ', title = ' . $db->escapeString($title) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));
+	$db->write('UPDATE galactic_post_article SET last_modified = ' . $db->escapeNumber(Epoch::time()) . ', text = ' . $db->escapeString($message) . ', title = ' . $db->escapeString($title) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($var['id']));
 	Page::create('galactic_post_view_article.php')->go();
 } else {
 	// Adding a new article
@@ -44,8 +48,8 @@ if (isset($var['id'])) {
 		'writer_id' => $db->escapeNumber($player->getAccountID()),
 		'title' => $db->escapeString($title),
 		'text' => $db->escapeString($message),
-		'last_modified' => $db->escapeNumber(Smr\Epoch::time()),
+		'last_modified' => $db->escapeNumber(Epoch::time()),
 	]);
-	$db->write('UPDATE galactic_post_writer SET last_wrote = ' . $db->escapeNumber(Smr\Epoch::time()) . ' WHERE account_id = ' . $db->escapeNumber($player->getAccountID()));
+	$db->write('UPDATE galactic_post_writer SET last_wrote = ' . $db->escapeNumber(Epoch::time()) . ' WHERE account_id = ' . $db->escapeNumber($player->getAccountID()));
 	Page::create('galactic_post_read.php')->go();
 }

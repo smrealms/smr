@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 /**
  * @return array<int>
  */
 function get_seedlist(AbstractSmrPlayer $player): array {
 	// Return the seedlist
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT sector_id FROM alliance_has_seedlist
 						WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 							AND game_id = ' . $db->escapeNumber($player->getGameID()));
@@ -58,7 +60,7 @@ function shared_channel_msg_seedlist_add(AbstractSmrPlayer $player, ?array $sect
 	$currentSeedlist = get_seedlist($player);
 	$initSizeSeedlist = count($currentSeedlist);
 
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	foreach ($sectors as $sector) {
 		// check if the sector is a part of the game
 		$dbResult = $db->read('SELECT 1
@@ -119,7 +121,7 @@ function shared_channel_msg_seedlist_del(AbstractSmrPlayer $player, ?array $sect
 	}
 
 	// remove sectors from the db
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$db->write('DELETE FROM alliance_has_seedlist
 				WHERE alliance_id = ' . $player->getAllianceID() . '
 					AND game_id = ' . $player->getGameID() . '

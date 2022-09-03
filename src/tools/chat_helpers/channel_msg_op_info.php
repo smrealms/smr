@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 /**
  * @return array<string>
  */
 function shared_channel_msg_op_info(AbstractSmrPlayer $player): array {
 	// get the op from db
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	if (!$dbResult->hasRecord()) {
 		return ['Your leader has not scheduled an operation.'];
@@ -20,7 +22,7 @@ function shared_channel_msg_op_info(AbstractSmrPlayer $player): array {
 	// function to return op info message for each player
 	$getOpInfoMessage = function($player) use ($opTime) {
 		// have we signed up?
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT response FROM alliance_has_op_response WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL());
 		if ($dbResult->hasRecord()) {
 			$msg = $player->getPlayerName() . ' is on the ' . $dbResult->record()->getString('response') . ' list.';

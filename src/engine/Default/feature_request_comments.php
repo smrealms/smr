@@ -1,4 +1,7 @@
 <?php declare(strict_types=1);
+
+use Smr\Database;
+
 if (!Globals::isFeatureRequestOpen()) {
 	create_error('Feature requests are currently not being accepted.');
 }
@@ -13,7 +16,7 @@ $template->assign('PageTopic', 'Feature Request Comments');
 $container = Page::create('feature_request.php', $var);
 $template->assign('BackHref', $container->href());
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT *
 			FROM feature_request
 			JOIN feature_request_comments USING(feature_request_id)

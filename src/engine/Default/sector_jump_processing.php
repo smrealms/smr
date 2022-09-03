@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
 use Smr\MovementType;
+use Smr\Request;
+use Smr\SectorLock;
 
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -11,7 +13,7 @@ if (!$player->getGame()->hasStarted()) {
 	create_error('You cannot move until the game has started!');
 }
 
-$target = Smr\Request::getVarInt('target');
+$target = Request::getVarInt('target');
 
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
 if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
@@ -40,7 +42,7 @@ if (!SmrSector::sectorExists($player->getGameID(), $target)) {
 }
 
 // If the Calculate Turn Cost button was pressed
-if (Smr\Request::get('action', '') == 'Calculate Turn Cost') {
+if (Request::get('action', '') == 'Calculate Turn Cost') {
 	$container = Page::create('sector_jump_calculate.php');
 	$container['target'] = $target;
 	$container->go();
@@ -92,7 +94,7 @@ $player->log(LOG_TYPE_MOVEMENT, 'Jumps to sector: ' . $target . ' but hits: ' . 
 $player->update();
 
 // We need to release the lock on our old sector
-$lock = Smr\SectorLock::getInstance();
+$lock = SectorLock::getInstance();
 $lock->release();
 
 // We need a lock on the new sector so that more than one person isn't hitting the same mines

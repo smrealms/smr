@@ -1,11 +1,14 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$response = strtoupper(Smr\Request::get('op_response'));
+$response = strtoupper(Request::get('op_response'));
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $db->replace('alliance_has_op_response', [
 	'alliance_id' => $db->escapeNumber($player->getAllianceID()),
 	'game_id' => $db->escapeNumber($player->getGameID()),

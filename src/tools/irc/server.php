@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 /**
  * Very important!
  * If we do not answer the ping from server we will be disconnected
@@ -43,7 +45,7 @@ function server_msg_307($fp, string $rdata): bool {
 
 		echo_r('[SERVER_307] ' . $server . ' said that ' . $nick . ' is registered');
 
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
 		foreach ($dbResult->records() as $dbRecord) {
 			$seen_id = $dbRecord->getInt('seen_id');
@@ -74,7 +76,7 @@ function server_msg_318($fp, string $rdata): bool {
 
 		echo_r('[SERVER_318] ' . $server . ' end of /WHOIS for ' . $nick);
 
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 
 		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered IS NULL');
 		foreach ($dbResult->records() as $dbRecord) {
@@ -133,7 +135,7 @@ function server_msg_352($fp, string $rdata): bool {
 
 		echo_r('[WHO] ' . $channel . ': ' . $nick);
 
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 
 		// check if we have seen this user before
 		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND channel = ' . $db->escapeString($channel));
@@ -182,7 +184,7 @@ function server_msg_401($fp, string $rdata): bool {
 
 		echo_r('[SERVER_401] ' . $server . ' said: "No such nick/channel" for ' . $nick);
 
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 
 		// get the user in question
 		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND signed_off = 0');

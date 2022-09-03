@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
@@ -11,7 +13,7 @@ if (!$player->isGPEditor()) {
 $template->assign('PageTopic', 'Galactic Post');
 Menu::galacticPost();
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 
 $container = Page::create('galactic_post_view_article.php');
 $template->assign('ViewArticlesHREF', $container->href());

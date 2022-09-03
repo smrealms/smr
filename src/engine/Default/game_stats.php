@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
 
 $template = Smr\Template::getInstance();
@@ -14,7 +15,7 @@ $template->assign('StatsGame', $statsGame);
 
 $template->assign('PageTopic', 'Game Stats: ' . $statsGame->getName() . ' (' . $gameID . ')');
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT count(*) total_players, IFNULL(MAX(experience),0) max_exp, IFNULL(MAX(alignment),0) max_align, IFNULL(MIN(alignment),0) min_alignment, IFNULL(MAX(kills),0) max_kills FROM player WHERE game_id = ' . $gameID . ' ORDER BY experience DESC');
 if ($dbResult->hasRecord()) {
 	$dbRecord = $dbResult->record();

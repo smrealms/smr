@@ -1,11 +1,16 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Exceptions\GameNotFound;
+use Smr\Race;
+
 class SmrGame {
 
 	/** @var array<int, self> */
 	protected static array $CACHE_GAMES = [];
 
-	protected Smr\Database $db;
+	protected Database $db;
 
 	protected string $name;
 	protected string $description;
@@ -53,7 +58,7 @@ class SmrGame {
 		try {
 			self::getGame($gameID);
 			return true;
-		} catch (Smr\Exceptions\GameNotFound) {
+		} catch (GameNotFound) {
 			return false;
 		}
 	}
@@ -86,7 +91,7 @@ class SmrGame {
 		protected readonly int $gameID,
 		bool $create = false
 	) {
-		$this->db = Smr\Database::getInstance();
+		$this->db = Database::getInstance();
 
 		$dbResult = $this->db->read('SELECT * FROM game WHERE game_id = ' . $this->db->escapeNumber($gameID));
 		if ($dbResult->hasRecord()) {
@@ -110,7 +115,7 @@ class SmrGame {
 		} elseif ($create === true) {
 			$this->isNew = true;
 		} else {
-			throw new Smr\Exceptions\GameNotFound('No such game: ' . $gameID);
+			throw new GameNotFound('No such game: ' . $gameID);
 		}
 	}
 
@@ -187,7 +192,7 @@ class SmrGame {
 	}
 
 	public function hasStarted(): bool {
-		return Smr\Epoch::time() >= $this->getStartTime();
+		return Epoch::time() >= $this->getStartTime();
 	}
 
 	/**
@@ -222,7 +227,7 @@ class SmrGame {
 	}
 
 	public function hasEnded(): bool {
-		return $this->getEndTime() < Smr\Epoch::time();
+		return $this->getEndTime() < Epoch::time();
 	}
 
 	/**
@@ -407,8 +412,8 @@ class SmrGame {
 		if ($relations < MIN_GLOBAL_RELATIONS || $relations > MAX_GLOBAL_RELATIONS) {
 			throw new Exception('Invalid relations: ' . $relations);
 		}
-		foreach (Smr\Race::getAllIDs() as $raceID1) {
-			foreach (Smr\Race::getAllIDs() as $raceID2) {
+		foreach (Race::getAllIDs() as $raceID1) {
+			foreach (Race::getAllIDs() as $raceID2) {
 				if ($raceID1 == $raceID2) {
 					// Max relations for a race with itself
 					$amount = MAX_GLOBAL_RELATIONS;
@@ -454,7 +459,7 @@ class SmrGame {
 	 * Returns the time (in seconds) until restricted ships are unlocked.
 	 */
 	public function timeUntilShipUnlock(): int {
-		return $this->getStartTime() + TIME_FOR_RAIDER_UNLOCK - Smr\Epoch::time();
+		return $this->getStartTime() + TIME_FOR_RAIDER_UNLOCK - Epoch::time();
 	}
 
 }

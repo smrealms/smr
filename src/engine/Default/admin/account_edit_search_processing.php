@@ -1,10 +1,13 @@
 <?php declare(strict_types=1);
 
-$db = Smr\Database::getInstance();
+use Smr\Database;
+use Smr\Request;
 
-$account_id = Smr\Request::getInt('account_id');
-$player_name = Smr\Request::get('player_name');
-$searchGameID = Smr\Request::getInt('game_id');
+$db = Database::getInstance();
+
+$account_id = Request::getInt('account_id');
+$player_name = Request::get('player_name');
+$searchGameID = Request::getInt('game_id');
 
 if (!empty($player_name)) {
 	$gameIDClause = $searchGameID != 0 ? ' AND game_id = ' . $db->escapeNumber($searchGameID) . ' ' : '';
@@ -24,10 +27,10 @@ if (!empty($player_name)) {
 
 // get account from db
 $dbResult = $db->read('SELECT account_id FROM account WHERE account_id = ' . $db->escapeNumber($account_id) . ' OR ' .
-									   'login LIKE ' . $db->escapeString(Smr\Request::get('login')) . ' OR ' .
-									   'email LIKE ' . $db->escapeString(Smr\Request::get('email')) . ' OR ' .
-									   'hof_name LIKE ' . $db->escapeString(Smr\Request::get('hofname')) . ' OR ' .
-									   'validation_code LIKE ' . $db->escapeString(Smr\Request::get('val_code')) . ' LIMIT 1');
+									   'login LIKE ' . $db->escapeString(Request::get('login')) . ' OR ' .
+									   'email LIKE ' . $db->escapeString(Request::get('email')) . ' OR ' .
+									   'hof_name LIKE ' . $db->escapeString(Request::get('hofname')) . ' OR ' .
+									   'validation_code LIKE ' . $db->escapeString(Request::get('val_code')) . ' LIMIT 1');
 if ($dbResult->hasRecord()) {
 	$container = Page::create('admin/account_edit.php');
 	$container['account_id'] = $dbResult->record()->getInt('account_id');

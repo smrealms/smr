@@ -1,13 +1,16 @@
 <?php declare(strict_types=1);
 
+use Smr\Epoch;
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-if ($player->getAllianceJoinable() > Smr\Epoch::time()) {
-	create_error('You cannot create an alliance for another ' . format_time($player->getAllianceJoinable() - Smr\Epoch::time()) . '.');
+if ($player->getAllianceJoinable() > Epoch::time()) {
+	create_error('You cannot create an alliance for another ' . format_time($player->getAllianceJoinable() - Epoch::time()) . '.');
 }
 
-$name = Smr\Request::get('name');
+$name = Request::get('name');
 if (empty($name)) {
 	throw new Exception('No alliance name entered');
 }
@@ -17,10 +20,10 @@ if (!ctype_print($name)) {
 	create_error('The alliance name contains invalid characters!');
 }
 
-$password = Smr\Request::get('password', '');
-$description = Smr\Request::get('description');
-$recruitType = Smr\Request::get('recruit_type');
-$perms = Smr\Request::get('Perms');
+$password = Request::get('password', '');
+$description = Request::get('description');
+$recruitType = Request::get('recruit_type');
+$perms = Request::get('Perms');
 
 $name2 = strtolower($name);
 if ($name2 == 'none' || $name2 == '(none)' || $name2 == '( none )' || $name2 == 'no alliance') {

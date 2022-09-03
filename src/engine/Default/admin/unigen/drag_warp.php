@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
 // Move a warp from one sector to another
-$targetSectorID = Smr\Request::getInt('TargetSectorID');
-$origSectorID = Smr\Request::getInt('OrigSectorID');
+$targetSectorID = Request::getInt('TargetSectorID');
+$origSectorID = Request::getInt('OrigSectorID');
 
 $origSector = SmrSector::getSector($var['game_id'], $origSectorID);
 $warpSector = $origSector->getWarpSector();

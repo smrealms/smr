@@ -1,10 +1,15 @@
 <?php declare(strict_types=1);
 
+use Smr\Blackjack\Card;
+use Smr\Blackjack\Deck;
+use Smr\Blackjack\Hand;
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-function display_card(Smr\Blackjack\Card $card, bool $show): string {
+function display_card(Card $card, bool $show): string {
 	//only display what the card really is if they want to
 	$card_height = 100;
 	$card_width = 125;
@@ -30,7 +35,7 @@ function display_card(Smr\Blackjack\Card $card, bool $show): string {
 	return $return;
 }
 
-function display_hand(Smr\Blackjack\Hand $hand, bool $revealHand): string {
+function display_hand(Hand $hand, bool $revealHand): string {
 	$html = '<table class="center"><tr>';
 	foreach ($hand->getCards() as $key => $card) {
 		//do we need a new row?
@@ -44,7 +49,7 @@ function display_hand(Smr\Blackjack\Hand $hand, bool $revealHand): string {
 	return $html;
 }
 
-function check_for_win(Smr\Blackjack\Hand $dealerHand, Smr\Blackjack\Hand $playerHand): string {
+function check_for_win(Hand $dealerHand, Hand $playerHand): string {
 	//does the player win
 	return match (true) {
 		$playerHand->hasBusted() => 'no',
@@ -56,12 +61,12 @@ function check_for_win(Smr\Blackjack\Hand $dealerHand, Smr\Blackjack\Hand $playe
 	};
 }
 
-$deck = $var['deck'] ?? new Smr\Blackjack\Deck();
-$playerHand = $var['player_hand'] ?? new Smr\Blackjack\Hand();
-$dealerHand = $var['dealer_hand'] ?? new Smr\Blackjack\Hand();
+$deck = $var['deck'] ?? new Deck();
+$playerHand = $var['player_hand'] ?? new Hand();
+$dealerHand = $var['dealer_hand'] ?? new Hand();
 
 $do = $var['player_does'] ?? 'new game';
-$bet = Smr\Request::getVarInt('bet');
+$bet = Request::getVarInt('bet');
 
 if ($do == 'new game') {
 	if ($player->getCredits() < $bet) {

@@ -1,12 +1,14 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
 $template->assign('PageTopic', 'Anonymous Account Access');
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT account_id FROM account_has_logs GROUP BY account_id');
 $log_account_ids = [];
 foreach ($dbResult->records() as $dbRecord) {

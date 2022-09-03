@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -12,7 +15,7 @@ Menu::galacticPost();
 if (isset($var['news'])) {
 	$db->insert('news', [
 		'game_id' => $db->escapeNumber($player->getGameID()),
-		'time' => $db->escapeNumber(Smr\Epoch::time()),
+		'time' => $db->escapeNumber(Epoch::time()),
 		'news_message' => $db->escapeString($var['news']),
 		'type' => $db->escapeString('breaking'),
 	]);

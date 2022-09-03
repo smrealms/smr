@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -16,7 +18,7 @@ $template->assign('ExpireTime', $var['expire'] ?? 0.5);
 if ($gameID != 20000) {
 	$game = SmrGame::getGame($gameID);
 	$gamePlayers = [['AccountID' => 0, 'Name' => 'All Players (' . $game->getName() . ')']];
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT account_id,player_id,player_name FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY player_name');
 	foreach ($dbResult->records() as $dbRecord) {
 		$gamePlayers[] = [

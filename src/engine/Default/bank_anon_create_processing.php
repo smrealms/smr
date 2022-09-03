@@ -1,15 +1,18 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$password = Smr\Request::get('password');
+$password = Request::get('password');
 
 if (empty($password)) {
 	create_error('You cannot use a blank password!');
 }
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT IFNULL(MAX(anon_id), 0) as max_id FROM anon_bank WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 $nextID = $dbResult->record()->getInt('max_id') + 1;
 

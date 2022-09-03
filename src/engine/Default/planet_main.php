@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 require_once(LIB . 'Default/planet.inc.php');
 planet_common();
 
@@ -17,7 +19,7 @@ if (isset($var['msg'])) {
 	$template->assign('Msg', bbifyMessage($var['msg']));
 }
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 doTickerAssigns($template, $player, $db);
 
 $template->assign('LaunchLink', Page::create('planet_launch_processing.php')->href());

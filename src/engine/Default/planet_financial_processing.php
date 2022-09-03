@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
@@ -7,11 +9,11 @@ if (!$player->isLandedOnPlanet()) {
 	create_error('You are not on a planet!');
 }
 $planet = $player->getSectorPlanet();
-$action = Smr\Request::get('action');
+$action = Request::get('action');
 
 if ($action == 'Deposit' || $action == 'Withdraw') {
 	// Player has requested a planetary fund transaction
-	$amount = Smr\Request::getInt('amount');
+	$amount = Request::getInt('amount');
 	if ($amount <= 0) {
 		create_error('You must actually enter an amount > 0!');
 	}

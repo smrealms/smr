@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\AdminPermissions;
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 
@@ -12,7 +15,7 @@ $selectAdminHREF = $container->href();
 $template->assign('SelectAdminHREF', $selectAdminHREF);
 
 $adminLinks = [];
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT account_id, login
 			FROM account_has_permission JOIN account USING(account_id)
 			GROUP BY account_id');
@@ -50,5 +53,5 @@ if (empty($admin_id)) {
 	$processingHREF = $container->href();
 	$template->assign('ProcessingHREF', $processingHREF);
 
-	$template->assign('PermissionCategories', Smr\AdminPermissions::getPermissionsByCategory());
+	$template->assign('PermissionCategories', AdminPermissions::getPermissionsByCategory());
 }

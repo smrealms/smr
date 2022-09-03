@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -16,7 +18,7 @@ $template->assign('PreferencesConfirmFormHREF', Page::create('preferences_confir
 $template->assign('ChatSharingHREF', Page::create('chat_sharing.php')->href());
 
 $transferAccounts = [];
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT account_id,hof_name FROM account WHERE validated = ' . $db->escapeBoolean(true) . ' ORDER BY hof_name');
 foreach ($dbResult->records() as $dbRecord) {
 	$transferAccounts[$dbRecord->getInt('account_id')] = htmlspecialchars($dbRecord->getString('hof_name'));

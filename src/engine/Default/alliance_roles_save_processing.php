@@ -1,11 +1,14 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-foreach (Smr\Request::getIntArray('role', []) as $accountID => $roleID) {
-	$db = Smr\Database::getInstance();
+foreach (Request::getIntArray('role', []) as $accountID => $roleID) {
+	$db = Database::getInstance();
 	$db->replace('player_has_alliance_role', [
 		'account_id' => $db->escapeNumber($accountID),
 		'game_id' => $db->escapeNumber($player->getGameID()),

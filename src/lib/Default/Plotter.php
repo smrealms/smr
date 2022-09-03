@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Exceptions\UserError;
+use Smr\Path;
 use Smr\PlotGroup;
 use Smr\TransactionType;
 
@@ -43,7 +45,7 @@ class Plotter {
 	 * is not true for findDistanceToX. If $x is not a SmrSector, then this
 	 * function does 2x the work.
 	 */
-	public static function findReversiblePathToX(mixed $x, SmrSector $sector, bool $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy = null, AbstractSmrPlayer $player = null): Smr\Path {
+	public static function findReversiblePathToX(mixed $x, SmrSector $sector, bool $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy = null, AbstractSmrPlayer $player = null): Path {
 		if ($x instanceof SmrSector) {
 
 			// To ensure reversibility, always plot lowest to highest.
@@ -57,7 +59,7 @@ class Plotter {
 			}
 			$path = self::findDistanceToX($end, $start, $useFirst, $needsToHaveBeenExploredBy, $player);
 			if ($path === false) {
-				throw new Smr\Exceptions\UserError('Unable to plot from ' . $sector->getSectorID() . ' to ' . $x->getSectorID() . '.');
+				throw new UserError('Unable to plot from ' . $sector->getSectorID() . ' to ' . $x->getSectorID() . '.');
 			}
 			// Reverse if we plotted $x -> $sector (since we want $sector -> $x)
 			if ($reverse) {
@@ -69,7 +71,7 @@ class Plotter {
 			// At this point we don't know what sector $x will be at
 			$path = self::findDistanceToX($x, $sector, $useFirst, $needsToHaveBeenExploredBy, $player);
 			if ($path === false) {
-				throw new Smr\Exceptions\UserError('Unable to find what you\'re looking for, it either hasn\'t been added to this game or you haven\'t explored it yet.');
+				throw new UserError('Unable to find what you\'re looking for, it either hasn\'t been added to this game or you haven\'t explored it yet.');
 			}
 			// Now that we know where $x is, make sure path is reversible
 			// (i.e. start sector < end sector)
@@ -91,7 +93,7 @@ class Plotter {
 	 *
 	 * @return Smr\Path|array<int, array<int, Smr\Path>>|false
 	 */
-	public static function findDistanceToX(mixed $x, SmrSector $sector, bool $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy = null, AbstractSmrPlayer $player = null, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): Smr\Path|array|false {
+	public static function findDistanceToX(mixed $x, SmrSector $sector, bool $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy = null, AbstractSmrPlayer $player = null, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): Path|array|false {
 		$warpAddIndex = TURNS_WARP_SECTOR_EQUIVALENCE - 1;
 
 		$checkSector = $sector;
@@ -101,7 +103,7 @@ class Plotter {
 		$visitedSectors = [];
 		$visitedSectors[$checkSector->getSectorID()] = true;
 		if ($x == 'Distance') {
-			$distances[0][$checkSector->getSectorID()] = new Smr\Path($checkSector->getSectorID());
+			$distances[0][$checkSector->getSectorID()] = new Path($checkSector->getSectorID());
 		}
 
 		$distanceQ = [];
@@ -110,13 +112,13 @@ class Plotter {
 		}
 		//Warps first as a slight optimisation due to how visitedSectors is set.
 		if ($checkSector->hasWarp() === true) {
-			$d = new Smr\Path($checkSector->getSectorID());
+			$d = new Path($checkSector->getSectorID());
 			$d->addWarp($checkSector->getWarp());
 			$distanceQ[$warpAddIndex][] = $d;
 		}
 		foreach ($checkSector->getLinks() as $nextSector) {
 			$visitedSectors[$nextSector] = true;
-			$d = new Smr\Path($checkSector->getSectorID());
+			$d = new Path($checkSector->getSectorID());
 			$d->addLink($nextSector);
 			$distanceQ[0][] = $d;
 		}

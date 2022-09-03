@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\BuyerRestriction;
+use Smr\DatabaseRecord;
 
 /**
  * Defines a concrete realization of a weapon type for ships/planets.
@@ -19,13 +20,13 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	protected bool $bonusDamage = false; // default
 	protected bool $damageRollover = false; // fixed for all SmrWeapons
 
-	public static function getWeapon(int $weaponTypeID, Smr\DatabaseRecord $dbRecord = null): self {
+	public static function getWeapon(int $weaponTypeID, DatabaseRecord $dbRecord = null): self {
 		return new self($weaponTypeID, $dbRecord);
 	}
 
 	protected function __construct(
 		protected readonly int $weaponTypeID,
-		Smr\DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null
 	) {
 		$this->weaponType = SmrWeaponType::getWeaponType($weaponTypeID, $dbRecord);
 		$this->raceID = $this->weaponType->getRaceID();

@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 /**
  * Create the Newbie Help Alliance and populate its Message Board
  */
@@ -213,7 +216,7 @@ function createNHA(int $gameID): void {
 	It is important to note that weakly defended planets should NOT be considered safe parking spots.',
 	];
 
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$threadID = 1;
 	foreach ($threads as $topic => $text) {
 		$db->replace('alliance_thread_topic', [
@@ -229,7 +232,7 @@ function createNHA(int $gameID): void {
 			'reply_id' => 1,
 			'text' => $db->escapeString($text),
 			'sender_id' => $db->escapeNumber(ACCOUNT_ID_NHL),
-			'time' => $db->escapeNumber(Smr\Epoch::time()),
+			'time' => $db->escapeNumber(Epoch::time()),
 		]);
 		$threadID++;
 	}

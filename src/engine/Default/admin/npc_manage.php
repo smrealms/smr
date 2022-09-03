@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 
@@ -11,8 +14,8 @@ $container = Page::create('admin/npc_manage.php');
 $template->assign('SelectGameHREF', $container->href());
 
 $games = [];
-$db = Smr\Database::getInstance();
-$dbResult = $db->read('SELECT game_id FROM game WHERE end_time > ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND enabled = ' . $db->escapeBoolean(true) . ' ORDER BY game_id DESC');
+$db = Database::getInstance();
+$dbResult = $db->read('SELECT game_id FROM game WHERE end_time > ' . $db->escapeNumber(Epoch::time()) . ' AND enabled = ' . $db->escapeBoolean(true) . ' ORDER BY game_id DESC');
 foreach ($dbResult->records() as $dbRecord) {
 	$gameID = $dbRecord->getInt('game_id');
 	if (empty($selectedGameID)) {

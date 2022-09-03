@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Exceptions\PlayerNotFound;
+use Smr\HallOfFame;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -12,7 +15,7 @@ $game_id = $var['game_id'] ?? null;
 if (isset($game_id)) {
 	try {
 		$hofPlayer = SmrPlayer::getPlayer($account_id, $game_id);
-	} catch (Smr\Exceptions\PlayerNotFound) {
+	} catch (PlayerNotFound) {
 		create_error('That player has not yet joined this game.');
 	}
 	$template->assign('PageTopic', htmlentities($hofPlayer->getPlayerName()) . '\'s Personal Hall of Fame: ' . SmrGame::getGame($game_id)->getDisplayName());
@@ -21,7 +24,7 @@ if (isset($game_id)) {
 	$template->assign('PageTopic', $hofName . '\'s All Time Personal Hall of Fame');
 }
 
-$breadcrumb = Smr\HallOfFame::buildBreadcrumb($var, 'Personal HoF');
+$breadcrumb = HallOfFame::buildBreadcrumb($var, 'Personal HoF');
 $template->assign('Breadcrumb', $breadcrumb);
 
 $viewType = $var['viewType'] ?? '';
@@ -36,18 +39,18 @@ if (!isset($hofVis[$viewType])) {
 	} elseif (isset($hofPlayer) && $hofPlayer->sameAlliance($player)) {
 		$allowedVis[] = HOF_ALLIANCE;
 	}
-	$categories = Smr\HallOfFame::getHofCategories($allowedVis, $game_id, $account_id);
+	$categories = HallOfFame::getHofCategories($allowedVis, $game_id, $account_id);
 	$template->assign('Categories', $categories);
 
 } else {
 	// Rankings page
-	$hofRank = Smr\HallOfFame::getHofRank($viewType, $account_id, $game_id);
-	$rows = [Smr\HallOfFame::displayHOFRow($hofRank['Rank'], $account_id, $hofRank['Amount'])];
+	$hofRank = HallOfFame::getHofRank($viewType, $account_id, $game_id);
+	$rows = [HallOfFame::displayHOFRow($hofRank['Rank'], $account_id, $hofRank['Amount'])];
 
 	if ($account->getAccountID() != $account_id) {
 		//current player's score.
-		$playerRank = Smr\HallOfFame::getHofRank($viewType, $account->getAccountID(), $game_id);
-		$row = Smr\HallOfFame::displayHOFRow($playerRank['Rank'], $account->getAccountID(), $playerRank['Amount']);
+		$playerRank = HallOfFame::getHofRank($viewType, $account->getAccountID(), $game_id);
+		$row = HallOfFame::displayHOFRow($playerRank['Rank'], $account->getAccountID(), $playerRank['Amount']);
 		if ($playerRank['Rank'] >= $hofRank['Rank']) {
 			$rows[] = $row;
 		} else {

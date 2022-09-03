@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
 use Smr\TransactionType;
 
 $session = Smr\Session::getInstance();
@@ -8,13 +9,13 @@ $player = $session->getPlayer();
 $ship = $player->getShip();
 $sector = $player->getSector();
 
-$amount = Smr\Request::getVarInt('amount');
+$amount = Request::getVarInt('amount');
 // no negative amounts are allowed
 if ($amount <= 0) {
 	create_error('You must enter an amount > 0!');
 }
 
-$bargain_price = Smr\Request::getVarInt('bargain_price', 0);
+$bargain_price = Request::getVarInt('bargain_price', 0);
 // no negative amounts are allowed
 if ($bargain_price < 0) {
 	create_error('Negative prices are not allowed!');
@@ -90,7 +91,7 @@ if ($ideal_price == 0 || $offered_price == 0) {
 }
 
 $stealing = false;
-if (Smr\Request::getVar('action') === TransactionType::STEAL) {
+if (Request::getVar('action') === TransactionType::STEAL) {
 	$stealing = true;
 	if (!$ship->isUnderground()) {
 		throw new Exception('Player tried to steal in a non-underground ship!');

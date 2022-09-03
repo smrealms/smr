@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -11,7 +13,7 @@ if ($joinRestriction !== false) {
 	create_error($joinRestriction);
 }
 
-if (Smr\Request::get('password') != $alliance->getPassword()) {
+if (Request::get('password') != $alliance->getPassword()) {
 	create_error('Incorrect Password!');
 }
 

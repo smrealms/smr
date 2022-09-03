@@ -1,8 +1,11 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Request;
+
 // If here, we have hit either the 'Save', 'Delete', or 'View' form buttons.
 // Immediately return to the log list if we haven't selected any logs.
-if (!Smr\Request::has('id')) {
+if (!Request::has('id')) {
 	$container = Page::create('combat_log_list.php');
 	$container['message'] = 'You must select at least one combat log!';
 	$container->addVar('old_action', 'action');
@@ -12,12 +15,12 @@ if (!Smr\Request::has('id')) {
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$submitAction = Smr\Request::get('action');
-$logIDs = array_keys(Smr\Request::getArray('id'));
+$submitAction = Request::get('action');
+$logIDs = array_keys(Request::getArray('id'));
 
 // Do we need to save any logs (or delete any saved logs)?
 if ($submitAction == 'Save' || $submitAction == 'Delete') {
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	if ($submitAction == 'Save') {
 		//save the logs we checked
 		// Query means people can only save logs that they are allowd to view.

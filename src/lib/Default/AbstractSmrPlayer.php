@@ -2,6 +2,16 @@
 require_once('missions.inc.php');
 
 use Smr\BountyType;
+use Smr\Database;
+use Smr\DatabaseRecord;
+use Smr\DisplayNameValidator;
+use Smr\Epoch;
+use Smr\Exceptions\AccountNotFound;
+use Smr\Exceptions\PlayerNotFound;
+use Smr\Exceptions\UserError;
+use Smr\Messages;
+use Smr\Path;
+use Smr\Race;
 use Smr\ScoutMessageGroupType;
 use Smr\TurnsLevel;
 
@@ -26,7 +36,7 @@ abstract class AbstractSmrPlayer {
 	/** @var array<int, array<int, SmrPlayer>> */
 	protected static array $CACHE_PLAYERS = [];
 
-	protected Smr\Database $db;
+	protected Database $db;
 	protected readonly string $SQL;
 
 	protected string $playerName;
@@ -75,7 +85,7 @@ abstract class AbstractSmrPlayer {
 	protected bool $forceDropMessages;
 	protected ScoutMessageGroupType $scoutMessageGroupType;
 	protected bool $ignoreGlobals;
-	protected ?Smr\Path $plottedCourse;
+	protected ?Path $plottedCourse;
 	protected bool $nameChanged;
 	protected bool $raceChanged;
 	protected bool $combatDronesKamikazeOnMines;
@@ -145,8 +155,8 @@ abstract class AbstractSmrPlayer {
 	 * @return array<int, array<int, SmrPlayer>>
 	 */
 	public static function getGalaxyPlayers(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
-		$db = Smr\Database::getInstance();
-		$dbResult = $db->read('SELECT player.* FROM player LEFT JOIN sector USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_HIDDEN) . ' OR newbie_turns = 0) AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT player.* FROM player LEFT JOIN sector USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(Epoch::time() - TIME_BEFORE_HIDDEN) . ' OR newbie_turns = 0) AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyPlayers = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$sectorID = $dbRecord->getInt('sector_id');
@@ -163,8 +173,8 @@ abstract class AbstractSmrPlayer {
 	 */
 	public static function getSectorPlayers(int $gameID, int $sectorID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID])) {
-			$db = Smr\Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_HIDDEN) . ' OR newbie_turns = 0) AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT * FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(Epoch::time() - TIME_BEFORE_HIDDEN) . ' OR newbie_turns = 0) AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
 			$players = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$accountID = $dbRecord->getInt('account_id');
@@ -180,7 +190,7 @@ abstract class AbstractSmrPlayer {
 	 */
 	public static function getPlanetPlayers(int $gameID, int $sectorID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID])) {
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(true) . ' AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
 			$players = [];
 			foreach ($dbResult->records() as $dbRecord) {
@@ -197,7 +207,7 @@ abstract class AbstractSmrPlayer {
 	 */
 	public static function getAlliancePlayers(int $gameID, int $allianceID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID])) {
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM player WHERE alliance_id = ' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY experience DESC');
 			$players = [];
 			foreach ($dbResult->records() as $dbRecord) {
@@ -209,7 +219,7 @@ abstract class AbstractSmrPlayer {
 		return self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID];
 	}
 
-	public static function getPlayer(int $accountID, int $gameID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): SmrPlayer {
+	public static function getPlayer(int $accountID, int $gameID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): SmrPlayer {
 		if ($forceUpdate || !isset(self::$CACHE_PLAYERS[$gameID][$accountID])) {
 			self::$CACHE_PLAYERS[$gameID][$accountID] = new SmrPlayer($gameID, $accountID, $dbRecord);
 		}
@@ -217,31 +227,31 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public static function getPlayerByPlayerID(int $playerID, int $gameID, bool $forceUpdate = false): SmrPlayer {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_id = ' . $db->escapeNumber($playerID));
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			return self::getPlayer($dbRecord->getInt('account_id'), $gameID, $forceUpdate, $dbRecord);
 		}
-		throw new Smr\Exceptions\PlayerNotFound('Player ID not found.');
+		throw new PlayerNotFound('Player ID not found.');
 	}
 
 	public static function getPlayerByPlayerName(string $playerName, int $gameID, bool $forceUpdate = false): SmrPlayer {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_name = ' . $db->escapeString($playerName));
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			return self::getPlayer($dbRecord->getInt('account_id'), $gameID, $forceUpdate, $dbRecord);
 		}
-		throw new Smr\Exceptions\PlayerNotFound('Player Name not found.');
+		throw new PlayerNotFound('Player Name not found.');
 	}
 
 	protected function __construct(
 		protected readonly int $gameID,
 		protected readonly int $accountID,
-		Smr\DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null
 	) {
-		$this->db = Smr\Database::getInstance();
+		$this->db = Database::getInstance();
 		$this->SQL = 'account_id = ' . $this->db->escapeNumber($accountID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
 
 		if ($dbRecord === null) {
@@ -251,7 +261,7 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 		if ($dbRecord === null) {
-			throw new Smr\Exceptions\PlayerNotFound('Invalid accountID: ' . $accountID . ' OR gameID: ' . $gameID);
+			throw new PlayerNotFound('Invalid accountID: ' . $accountID . ' OR gameID: ' . $gameID);
 		}
 
 		$this->playerName = $dbRecord->getString('player_name');
@@ -299,16 +309,16 @@ abstract class AbstractSmrPlayer {
 	 * Insert a new player into the database. Returns the new player object.
 	 */
 	public static function createPlayer(int $accountID, int $gameID, string $playerName, int $raceID, bool $isNewbie, bool $npc = false): self {
-		$time = Smr\Epoch::time();
-		$db = Smr\Database::getInstance();
+		$time = Epoch::time();
+		$db = Database::getInstance();
 		$db->lockTable('player');
 
 		// Player names must be unique within each game
 		try {
 			self::getPlayerByPlayerName($playerName, $gameID);
 			$db->unlock();
-			throw new Smr\Exceptions\UserError('That player name already exists.');
-		} catch (Smr\Exceptions\PlayerNotFound) {
+			throw new UserError('That player name already exists.');
+		} catch (PlayerNotFound) {
 			// Player name does not yet exist, we may proceed
 		}
 
@@ -356,7 +366,7 @@ abstract class AbstractSmrPlayer {
 		foreach ($dbResult->records() as $dbRecord) {
 			try {
 				$otherPlayer = self::getPlayer($dbRecord->getInt('from_account_id'), $this->getGameID(), $forceUpdate);
-			} catch (Smr\Exceptions\PlayerNotFound) {
+			} catch (PlayerNotFound) {
 				// Skip players that have not joined this game
 				continue;
 			}
@@ -673,7 +683,7 @@ abstract class AbstractSmrPlayer {
 	 */
 	protected static function doMessageSending(int $senderID, int $receiverID, int $gameID, int $messageTypeID, string $message, int $expires, bool $senderDelete = false, bool $unread = true): int {
 		$message = trim($message);
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		// Keep track of the message_id so it can be returned
 		$insertID = $db->insert('message', [
 			'account_id' => $db->escapeNumber($receiverID),
@@ -681,7 +691,7 @@ abstract class AbstractSmrPlayer {
 			'message_type_id' => $db->escapeNumber($messageTypeID),
 			'message_text' => $db->escapeString($message),
 			'sender_id' => $db->escapeNumber($senderID),
-			'send_time' => $db->escapeNumber(Smr\Epoch::time()),
+			'send_time' => $db->escapeNumber(Epoch::time()),
 			'expire_time' => $db->escapeNumber($expires),
 			'sender_delete' => $db->escapeBoolean($senderDelete),
 		]);
@@ -699,14 +709,14 @@ abstract class AbstractSmrPlayer {
 			case MSG_PLAYER:
 				$receiverAccount = SmrAccount::getAccount($receiverID);
 				if ($receiverAccount->isValidated() && $receiverAccount->isReceivingMessageNotifications($messageTypeID) && !$receiverAccount->isActive()) {
-					$sender = Smr\Messages::getMessagePlayer($senderID, $gameID, $messageTypeID);
+					$sender = Messages::getMessagePlayer($senderID, $gameID, $messageTypeID);
 					if ($sender instanceof self) {
 						$sender = $sender->getDisplayName();
 					}
 					$mail = setupMailer();
 					$mail->Subject = 'Message Notification';
 					$mail->setFrom('notifications@smrealms.de', 'SMR Notifications');
-					$bbifiedMessage = 'From: ' . $sender . ' Date: ' . date($receiverAccount->getDateTimeFormat(), Smr\Epoch::time()) . "<br/>\r\n<br/>\r\n" . bbifyMessage($message, true);
+					$bbifiedMessage = 'From: ' . $sender . ' Date: ' . date($receiverAccount->getDateTimeFormat(), Epoch::time()) . "<br/>\r\n<br/>\r\n" . bbifyMessage($message, true);
 					$mail->msgHTML($bbifiedMessage);
 					$mail->AltBody = strip_tags($bbifiedMessage);
 					$mail->addAddress($receiverAccount->getEmail(), $receiverAccount->getHofName());
@@ -728,17 +738,17 @@ abstract class AbstractSmrPlayer {
 	public function sendGlobalMessage(string $message, bool $canBeIgnored = true): void {
 		if ($canBeIgnored) {
 			if ($this->getAccount()->isMailBanned()) {
-				throw new Smr\Exceptions\UserError('You are currently banned from sending messages');
+				throw new UserError('You are currently banned from sending messages');
 			}
 		}
 		$this->sendMessageToBox(BOX_GLOBALS, $message);
 
 		// send to all online player
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT account_id
 					FROM active_session
 					JOIN player USING (game_id, account_id)
-					WHERE active_session.last_accessed >= ' . $db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE) . '
+					WHERE active_session.last_accessed >= ' . $db->escapeNumber(Epoch::time() - TIME_BEFORE_INACTIVE) . '
 						AND game_id = ' . $db->escapeNumber($this->getGameID()) . '
 						AND ignore_globals = \'FALSE\'
 						AND account_id != ' . $db->escapeNumber($this->getAccountID()));
@@ -756,7 +766,7 @@ abstract class AbstractSmrPlayer {
 		//get expire time
 		if ($canBeIgnored) {
 			if ($this->getAccount()->isMailBanned()) {
-				throw new Smr\Exceptions\UserError('You are currently banned from sending messages');
+				throw new UserError('You are currently banned from sending messages');
 			}
 			// Don't send messages to players ignoring us
 			$dbResult = $this->db->read('SELECT 1 FROM message_blacklist WHERE account_id=' . $this->db->escapeNumber($receiverID) . ' AND blacklisted_id=' . $this->db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
@@ -780,7 +790,7 @@ abstract class AbstractSmrPlayer {
 				MSG_CASINO => 86400 * 31, // 1 month
 				default => 86400 * 7, // 1 week
 			};
-			$expires += Smr\Epoch::time();
+			$expires += Epoch::time();
 		}
 
 		// Do not put scout messages in the sender's sent box
@@ -795,39 +805,39 @@ abstract class AbstractSmrPlayer {
 	public function sendMessageFromOpAnnounce(int $receiverID, string $message, int $expires = null): void {
 		// get expire time if not set
 		if ($expires === null) {
-			$expires = Smr\Epoch::time() + 86400 * 14;
+			$expires = Epoch::time() + 86400 * 14;
 		}
 		self::doMessageSending(ACCOUNT_ID_OP_ANNOUNCE, $receiverID, $this->getGameID(), MSG_ALLIANCE, $message, $expires);
 	}
 
 	public function sendMessageFromAllianceCommand(int $receiverID, string $message): void {
-		$expires = Smr\Epoch::time() + 86400 * 365;
+		$expires = Epoch::time() + 86400 * 365;
 		self::doMessageSending(ACCOUNT_ID_ALLIANCE_COMMAND, $receiverID, $this->getGameID(), MSG_PLAYER, $message, $expires);
 	}
 
 	public static function sendMessageFromPlanet(int $gameID, int $receiverID, string $message): void {
 		//get expire time
-		$expires = Smr\Epoch::time() + 86400 * 31;
+		$expires = Epoch::time() + 86400 * 31;
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_PLANET, $receiverID, $gameID, MSG_PLANET, $message, $expires);
 	}
 
 	public static function sendMessageFromPort(int $gameID, int $receiverID, string $message): void {
 		//get expire time
-		$expires = Smr\Epoch::time() + 86400 * 31;
+		$expires = Epoch::time() + 86400 * 31;
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_PORT, $receiverID, $gameID, MSG_PLAYER, $message, $expires);
 	}
 
 	public static function sendMessageFromFedClerk(int $gameID, int $receiverID, string $message): void {
-		$expires = Smr\Epoch::time() + 86400 * 365;
+		$expires = Epoch::time() + 86400 * 365;
 		self::doMessageSending(ACCOUNT_ID_FED_CLERK, $receiverID, $gameID, MSG_PLAYER, $message, $expires);
 	}
 
 	public static function sendMessageFromAdmin(int $gameID, int $receiverID, string $message, int $expires = null): void {
 		//get expire time
 		if ($expires === null) {
-			$expires = Smr\Epoch::time() + 86400 * 365;
+			$expires = Epoch::time() + 86400 * 365;
 		}
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_ADMIN, $receiverID, $gameID, MSG_ADMIN, $message, $expires);
@@ -836,7 +846,7 @@ abstract class AbstractSmrPlayer {
 	public static function sendMessageFromAllianceAmbassador(int $gameID, int $receiverID, string $message, int $expires = null): void {
 		//get expire time
 		if ($expires === null) {
-			$expires = Smr\Epoch::time() + 86400 * 31;
+			$expires = Epoch::time() + 86400 * 31;
 		}
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_ALLIANCE_AMBASSADOR, $receiverID, $gameID, MSG_ALLIANCE, $message, $expires);
@@ -845,7 +855,7 @@ abstract class AbstractSmrPlayer {
 	public static function sendMessageFromCasino(int $gameID, int $receiverID, string $message, int $expires = null): void {
 		//get expire time
 		if ($expires === null) {
-			$expires = Smr\Epoch::time() + 86400 * 7;
+			$expires = Epoch::time() + 86400 * 7;
 		}
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_CASINO, $receiverID, $gameID, MSG_CASINO, $message, $expires);
@@ -854,7 +864,7 @@ abstract class AbstractSmrPlayer {
 	public static function sendMessageFromRace(int $raceID, int $gameID, int $receiverID, string $message, int $expires = null): void {
 		//get expire time
 		if ($expires === null) {
-			$expires = Smr\Epoch::time() + 86400 * 5;
+			$expires = Epoch::time() + 86400 * 5;
 		}
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_GROUP_RACES + $raceID, $receiverID, $gameID, MSG_POLITICAL, $message, $expires);
@@ -894,11 +904,11 @@ abstract class AbstractSmrPlayer {
 	public function canBeProtectedByRace(int $raceID): bool {
 		if (!isset($this->canFed)) {
 			$this->canFed = [];
-			foreach (Smr\Race::getAllIDs() as $raceID2) {
+			foreach (Race::getAllIDs() as $raceID2) {
 				$this->canFed[$raceID2] = $this->getRelation($raceID2) >= ALIGN_FED_PROTECTION;
 			}
 			$dbResult = $this->db->read('SELECT race_id, allowed FROM player_can_fed
-								WHERE ' . $this->SQL . ' AND expiry > ' . $this->db->escapeNumber(Smr\Epoch::time()));
+								WHERE ' . $this->SQL . ' AND expiry > ' . $this->db->escapeNumber(Epoch::time()));
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->canFed[$dbRecord->getInt('race_id')] = $dbRecord->getBoolean('allowed');
 			}
@@ -1228,7 +1238,7 @@ abstract class AbstractSmrPlayer {
 	public function getLevelName(): string {
 		$level_name = Globals::getLevelRequirements()[$this->getLevelID()]['Name'];
 		if ($this->isPresident()) {
-			$level_name = '<img src="images/council_president.png" title="' . Smr\Race::getName($this->getRaceID()) . ' President" height="12" width="16" />&nbsp;' . $level_name;
+			$level_name = '<img src="images/council_president.png" title="' . Race::getName($this->getRaceID()) . ' President" height="12" width="16" />&nbsp;' . $level_name;
 		}
 		return $level_name;
 	}
@@ -1289,11 +1299,11 @@ abstract class AbstractSmrPlayer {
 	public function changePlayerName(string $name): void {
 		// Check if the player already has this name (case-sensitive)
 		if ($this->getPlayerName() == $name) {
-			throw new Smr\Exceptions\UserError('Your player already has that name!');
+			throw new UserError('Your player already has that name!');
 		}
 
 		// Make sure the name passes some basic character requirements
-		Smr\DisplayNameValidator::validate($name);
+		DisplayNameValidator::validate($name);
 
 		// Check if name is in use by any other player.
 		try {
@@ -1303,10 +1313,10 @@ abstract class AbstractSmrPlayer {
 			// different case (since we did a case-sensitive identity check
 			// above), and we allow it to be changed.
 			if ($this->equals($other)) {
-				throw new Smr\Exceptions\PlayerNotFound();
+				throw new PlayerNotFound();
 			}
-			throw new Smr\Exceptions\UserError('That name is already being used in this game!');
-		} catch (Smr\Exceptions\PlayerNotFound) {
+			throw new UserError('That name is already being used in this game!');
+		} catch (PlayerNotFound) {
 			// Name is not in use, continue.
 		}
 
@@ -1341,7 +1351,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function canChangeRace(): bool {
-		return !$this->isRaceChanged() && (Smr\Epoch::time() - $this->getGame()->getStartTime() < TIME_FOR_RACE_CHANGE);
+		return !$this->isRaceChanged() && (Epoch::time() - $this->getGame()->getStartTime() < TIME_FOR_RACE_CHANGE);
 	}
 
 	public static function getColouredRaceNameOrDefault(int $otherRaceID, self $player = null, bool $linked = false): string {
@@ -1438,8 +1448,8 @@ abstract class AbstractSmrPlayer {
 
 		// Don't have a delay for switching alliance after leaving NHA, or for disbanding an alliance.
 		if (!$this->isAllianceLeader() && !$alliance->isNHA()) {
-			$this->setAllianceJoinable(Smr\Epoch::time() + self::TIME_FOR_ALLIANCE_SWITCH);
-			$alliance->getLeader()->setAllianceJoinable(Smr\Epoch::time() + self::TIME_FOR_ALLIANCE_SWITCH); //We set the joinable time for leader here, that way a single player alliance won't cause a player to wait before switching.
+			$this->setAllianceJoinable(Epoch::time() + self::TIME_FOR_ALLIANCE_SWITCH);
+			$alliance->getLeader()->setAllianceJoinable(Epoch::time() + self::TIME_FOR_ALLIANCE_SWITCH); //We set the joinable time for leader here, that way a single player alliance won't cause a player to wait before switching.
 		}
 
 		$this->setAllianceID(0);
@@ -1460,7 +1470,7 @@ abstract class AbstractSmrPlayer {
 			// Do not throw an exception if the NHL account doesn't exist.
 			try {
 				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I joined your alliance!', false);
-			} catch (Smr\Exceptions\AccountNotFound $e) {
+			} catch (AccountNotFound $e) {
 				if ($alliance->getLeaderID() != ACCOUNT_ID_NHL) {
 					throw $e;
 				}
@@ -1520,7 +1530,7 @@ abstract class AbstractSmrPlayer {
 		if (!isset($this->personalRelations)) {
 			//get relations
 			$this->personalRelations = [];
-			foreach (Smr\Race::getAllIDs() as $raceID) {
+			foreach (Race::getAllIDs() as $raceID) {
 				$this->personalRelations[$raceID] = 0;
 			}
 			$dbResult = $this->db->read('SELECT race_id,relation FROM player_has_relation WHERE ' . $this->SQL);
@@ -1557,7 +1567,7 @@ abstract class AbstractSmrPlayer {
 			$raceRelations = Globals::getRaceRelations($this->getGameID(), $this->getRaceID());
 			$personalRels = $this->getPersonalRelations(); // make sure they're initialised.
 			$this->relations = [];
-			foreach (Smr\Race::getAllIDs() as $raceID) {
+			foreach (Race::getAllIDs() as $raceID) {
 				$this->relations[$raceID] = $personalRels[$raceID] + $raceRelations[$raceID];
 			}
 		}
@@ -1650,7 +1660,7 @@ abstract class AbstractSmrPlayer {
 	public function giveStartingRelations(): void {
 		if ($this->getRaceID() === RACE_ALSKANT) {
 			// Give Alskants bonus personal relations to start.
-			foreach (Smr\Race::getAllIDs() as $raceID) {
+			foreach (Race::getAllIDs() as $raceID) {
 				$this->setRelations(ALSKANT_BONUS_RELATIONS, $raceID);
 			}
 		}
@@ -1669,7 +1679,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function updateLastNewsUpdate(): void {
-		$this->setLastNewsUpdate(Smr\Epoch::time());
+		$this->setLastNewsUpdate(Epoch::time());
 	}
 
 	public function getLastPort(): int {
@@ -1684,7 +1694,7 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getPlottedCourse(): ?Smr\Path {
+	public function getPlottedCourse(): ?Path {
 		if (!isset($this->plottedCourse)) {
 			// check if we have a course plotted
 			$dbResult = $this->db->read('SELECT course FROM player_plotted_course WHERE ' . $this->SQL);
@@ -1715,7 +1725,7 @@ abstract class AbstractSmrPlayer {
 		return $this->plottedCourse;
 	}
 
-	public function setPlottedCourse(Smr\Path $plottedCourse): void {
+	public function setPlottedCourse(Path $plottedCourse): void {
 		$this->plottedCourse = $plottedCourse;
 		$this->db->replace('player_plotted_course', [
 			'account_id' => $this->db->escapeNumber($this->getAccountID()),
@@ -1745,7 +1755,7 @@ abstract class AbstractSmrPlayer {
 	public function getJumpInfo(SmrSector $targetSector): array {
 		$path = Plotter::findDistanceToX($targetSector, $this->getSector(), true);
 		if ($path === false) {
-			throw new Smr\Exceptions\UserError('Unable to plot from ' . $this->getSectorID() . ' to ' . $targetSector->getSectorID() . '.');
+			throw new UserError('Unable to plot from ' . $this->getSectorID() . ' to ' . $targetSector->getSectorID() . '.');
 		}
 		$distance = $path->getDistance();
 
@@ -1780,7 +1790,7 @@ abstract class AbstractSmrPlayer {
 	public function moveDestinationButton(int $sectorID, int $offsetTop, int $offsetLeft): void {
 
 		if ($offsetLeft < 0 || $offsetLeft > 500 || $offsetTop < 0 || $offsetTop > 300) {
-			throw new Smr\Exceptions\UserError('The saved sector must be in the box!');
+			throw new UserError('The saved sector must be in the box!');
 		}
 
 		foreach ($this->getStoredDestinations() as &$sd) {
@@ -1795,19 +1805,19 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 
-		throw new Smr\Exceptions\UserError('You do not have a saved sector for #' . $sectorID);
+		throw new UserError('You do not have a saved sector for #' . $sectorID);
 	}
 
 	public function addDestinationButton(int $sectorID, string $label): void {
 
 		if (!SmrSector::sectorExists($this->getGameID(), $sectorID)) {
-			throw new Smr\Exceptions\UserError('You want to add a non-existent sector?');
+			throw new UserError('You want to add a non-existent sector?');
 		}
 
 		// sector already stored ?
 		foreach ($this->getStoredDestinations() as $sd) {
 			if ($sd['SectorID'] == $sectorID) {
-				throw new Smr\Exceptions\UserError('Sector already stored!');
+				throw new UserError('Sector already stored!');
 			}
 		}
 
@@ -1850,7 +1860,7 @@ abstract class AbstractSmrPlayer {
 		if (!isset($this->tickers)) {
 			$this->tickers = [];
 			//get ticker info
-			$dbResult = $this->db->read('SELECT type,time,expires,recent FROM player_has_ticker WHERE ' . $this->SQL . ' AND expires > ' . $this->db->escapeNumber(Smr\Epoch::time()));
+			$dbResult = $this->db->read('SELECT type,time,expires,recent FROM player_has_ticker WHERE ' . $this->SQL . ' AND expires > ' . $this->db->escapeNumber(Epoch::time()));
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->tickers[$dbRecord->getString('type')] = [
 					'Type' => $dbRecord->getString('type'),
@@ -2018,7 +2028,7 @@ abstract class AbstractSmrPlayer {
 			'SmrCredits' => 0,
 			'Type' => $type,
 			'Claimer' => 0,
-			'Time' => Smr\Epoch::time(),
+			'Time' => Epoch::time(),
 			'ID' => $this->getNextBountyID(),
 			'New' => true,
 		];
@@ -2147,7 +2157,7 @@ abstract class AbstractSmrPlayer {
 	public static function getHOFVis(): array {
 		if (!isset(self::$HOFVis)) {
 			//Get Player HOF Vis
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT type,visibility FROM hof_visibility');
 			self::$HOFVis = [];
 			foreach ($dbResult->records() as $dbRecord) {
@@ -2307,7 +2317,7 @@ abstract class AbstractSmrPlayer {
 		$this->getSector()->increaseBattles(1);
 		$this->db->insert('news', [
 			'game_id' => $this->db->escapeNumber($this->getGameID()),
-			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'time' => $this->db->escapeNumber(Epoch::time()),
 			'news_message' => $this->db->escapeString($msg),
 			'killer_id' => $this->db->escapeNumber($killer->getAccountID()),
 			'killer_alliance' => $this->db->escapeNumber($killer->getAllianceID()),
@@ -2351,7 +2361,7 @@ abstract class AbstractSmrPlayer {
 		}
 
 		//check for federal bounty being offered for current port raiders;
-		$this->db->write('DELETE FROM player_attacks_port WHERE time < ' . $this->db->escapeNumber(Smr\Epoch::time() - self::TIME_FOR_FEDERAL_BOUNTY_ON_PR));
+		$this->db->write('DELETE FROM player_attacks_port WHERE time < ' . $this->db->escapeNumber(Epoch::time() - self::TIME_FOR_FEDERAL_BOUNTY_ON_PR));
 		$query = 'SELECT 1
 					FROM player_attacks_port
 					JOIN port USING(game_id, sector_id)
@@ -2469,7 +2479,7 @@ abstract class AbstractSmrPlayer {
 		// insert the news entry
 		$this->db->insert('news', [
 			'game_id' => $this->db->escapeNumber($this->getGameID()),
-			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'time' => $this->db->escapeNumber(Epoch::time()),
 			'news_message' => $this->db->escapeString($news_message),
 			'killer_id' => $this->db->escapeNumber($owner->getAccountID()),
 			'killer_alliance' => $this->db->escapeNumber($owner->getAllianceID()),
@@ -2515,7 +2525,7 @@ abstract class AbstractSmrPlayer {
 		// insert the news entry
 		$this->db->insert('news', [
 			'game_id' => $this->db->escapeNumber($this->getGameID()),
-			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'time' => $this->db->escapeNumber(Epoch::time()),
 			'news_message' => $this->db->escapeString($news_message),
 			'killer_id' => $this->db->escapeNumber(ACCOUNT_ID_PORT),
 			'dead_id' => $this->db->escapeNumber($this->getAccountID()),
@@ -2561,7 +2571,7 @@ abstract class AbstractSmrPlayer {
 		// insert the news entry
 		$this->db->insert('news', [
 			'game_id' => $this->db->escapeNumber($this->getGameID()),
-			'time' => $this->db->escapeNumber(Smr\Epoch::time()),
+			'time' => $this->db->escapeNumber(Epoch::time()),
 			'news_message' => $this->db->escapeString($news_message),
 			'killer_id' => $this->db->escapeNumber($planetOwner->getAccountID()),
 			'killer_alliance' => $this->db->escapeNumber($planetOwner->getAllianceID()),
@@ -2645,7 +2655,7 @@ abstract class AbstractSmrPlayer {
 		$this->increaseHOF($takeNewbie, ['Movement', 'Turns Used', 'Newbie'], HOF_ALLIANCE);
 
 		// Player has taken an action
-		$this->setLastActive(Smr\Epoch::time());
+		$this->setLastActive(Epoch::time());
 		$this->updateLastCPLAction();
 	}
 
@@ -2695,7 +2705,7 @@ abstract class AbstractSmrPlayer {
 		}
 
 		// how many turns would he get right now?
-		$extraTurns = $this->getTurnsGained(Smr\Epoch::time());
+		$extraTurns = $this->getTurnsGained(Epoch::time());
 
 		// do we have at least one turn to give?
 		if ($extraTurns > 0) {
@@ -2743,7 +2753,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function updateLastCPLAction(): void {
-		$this->setLastCPLAction(Smr\Epoch::time());
+		$this->setLastCPLAction(Epoch::time());
 	}
 
 	public function setNewbieWarning(bool $bool): void {
@@ -2854,7 +2864,7 @@ abstract class AbstractSmrPlayer {
 				// sector that does not exist or cannot be reached.
 				// (Probably shouldn't bestow this mission in the first place)
 				$this->deleteMission($missionID);
-				throw new Smr\Exceptions\UserError('Cannot find a path to the destination!');
+				throw new UserError('Cannot find a path to the destination!');
 			}
 			$this->missions[$missionID]['Sector'] = $path->getEndSectorID();
 		}
@@ -2878,7 +2888,7 @@ abstract class AbstractSmrPlayer {
 			'On Step' => $step,
 			'Progress' => 0,
 			'Unread' => true,
-			'Expires' => (Smr\Epoch::time() + 86400),
+			'Expires' => (Epoch::time() + 86400),
 			'Sector' => 0,
 			'Starting Sector' => $this->getSectorID(),
 		];

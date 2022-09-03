@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Template;
+
 class Rankings {
 
 	/**
@@ -128,7 +131,7 @@ class Rankings {
 	 * @return array<int, Smr\DatabaseRecord>
 	 */
 	public static function raceStats(string $stat, int $gameID): array {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$raceStats = [];
 		$dbResult = $db->read('SELECT race_id, COALESCE(SUM(' . $stat . '), 0) as amount, count(*) as num_players FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' GROUP BY race_id ORDER BY amount DESC');
 		foreach ($dbResult->records() as $dbRecord) {
@@ -143,7 +146,7 @@ class Rankings {
 	 * @return array<int, Smr\DatabaseRecord>
 	 */
 	public static function playerStats(string $stat, int $gameID, ?int $limit = null): array {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$playerStats = [];
 		$query = 'SELECT player.*, ' . $stat . ' AS amount FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY amount DESC, player_name';
 		if ($limit !== null) {
@@ -163,7 +166,7 @@ class Rankings {
 	 * @return array<int, Smr\DatabaseRecord>
 	 */
 	public static function playerStatsFromHOF(array $category, int $gameID): array {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$playerStats = [];
 		$dbResult = $db->read('SELECT p.*, COALESCE(ph.amount,0) amount FROM player p LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = ' . $db->escapeString(implode(':', $category)) . ' WHERE p.game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY amount DESC, player_name');
 		foreach ($dbResult->records() as $dbRecord) {
@@ -179,7 +182,7 @@ class Rankings {
 	 * @return array<int, Smr\DatabaseRecord>
 	 */
 	public static function allianceStatsFromHOF(array $category, int $gameID): array {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$allianceStats = [];
 		$dbResult = $db->read('SELECT alliance.*, COALESCE(SUM(amount), 0) amount
 			FROM alliance
@@ -200,7 +203,7 @@ class Rankings {
 	 * @return array<int, Smr\DatabaseRecord>
 	 */
 	public static function allianceStats(string $stat, int $gameID, ?int $limit = null): array {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$allianceStats = [];
 		if ($stat === 'experience') {
 			$query = 'SELECT alliance.*, COALESCE(SUM(experience), 0) amount
@@ -247,7 +250,7 @@ class Rankings {
 
 		$maxRank = min($maxRank, $totalRanks);
 
-		$template = Smr\Template::getInstance();
+		$template = Template::getInstance();
 		$template->assign('MinRank', $minRank);
 		$template->assign('MaxRank', $maxRank);
 		$template->assign('TotalRanks', $totalRanks);

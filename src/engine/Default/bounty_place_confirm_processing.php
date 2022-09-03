@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\BountyType;
+use Smr\Request;
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
@@ -23,7 +24,7 @@ $container = Page::create($body);
 $container->addVar('LocationID');
 
 // if we don't have a yes we leave immediatly
-if (Smr\Request::get('action') != 'Yes') {
+if (Request::get('action') != 'Yes') {
 	$container->go();
 }
 

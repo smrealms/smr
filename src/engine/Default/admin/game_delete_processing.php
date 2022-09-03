@@ -1,14 +1,18 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Request;
+
 create_error('Deleting games is disabled!');
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 
 $smr_db_sql = [];
 $history_db_sql = [];
 
-$action = Smr\Request::get('action');
-if (Smr\Request::get('save') == 'Yes') {
+$action = Request::get('action');
+if (Request::get('save') == 'Yes') {
 	$save = true;
 } else {
 	$save = false;
@@ -279,7 +283,7 @@ if ($action == 'Yes') {
 	$smr_db_sql[] = 'DELETE FROM ship_has_illusion WHERE game_id = ' . $game_id;
 	$smr_db_sql[] = 'DELETE FROM ship_has_weapon WHERE game_id = ' . $game_id;
 	$smr_db_sql[] = 'DELETE FROM ship_is_cloaked WHERE game_id = ' . $game_id;
-	$smr_db_sql[] = 'UPDATE game SET end_time=' . Smr\Epoch::time() . ' WHERE game_id = ' . $game_id . ' AND end_time > ' . Smr\Epoch::time(); // Do not delete game placeholder, just make sure game is finished
+	$smr_db_sql[] = 'UPDATE game SET end_time=' . Epoch::time() . ' WHERE game_id = ' . $game_id . ' AND end_time > ' . Epoch::time(); // Do not delete game placeholder, just make sure game is finished
 	$smr_db_sql[] = 'UPDATE active_session SET game_id = 0 WHERE game_id = ' . $game_id;
 
 	// now do the sql stuff
@@ -298,8 +302,8 @@ if ($action == 'Yes') {
 
 	// don't know why exactly we have to do that,
 	// but it seems that the db is used globally instead kept to each object
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 
 }
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 Page::create('admin/admin_tools.php')->go();

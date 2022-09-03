@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
 use Smr\TransactionType;
 
 $session = Smr\Session::getInstance();
@@ -11,7 +12,7 @@ $sector = $player->getSector();
 /** @var int $good_id */
 $good_id = $var['good_id'];
 $good_name = Globals::getGoodName($good_id);
-$amount = Smr\Request::getVarInt('amount');
+$amount = Request::getVarInt('amount');
 
 if ($amount <= 0) {
 	create_error('You must actually enter an amount > 0!');

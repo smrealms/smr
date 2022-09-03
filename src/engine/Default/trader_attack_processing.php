@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\SectorLock;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $account = $session->getAccount();
@@ -89,12 +93,12 @@ $results = [
 
 $account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'] . ' and the other team does ' . $results['Defenders']['TotalDamage'], $sector->getSectorID());
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $db->insert('combat_logs', [
 	'game_id' => $db->escapeNumber($player->getGameID()),
 	'type' => $db->escapeString('PLAYER'),
 	'sector_id' => $db->escapeNumber($sector->getSectorID()),
-	'timestamp' => $db->escapeNumber(Smr\Epoch::time()),
+	'timestamp' => $db->escapeNumber(Epoch::time()),
 	'attacker_id' => $db->escapeNumber($player->getAccountID()),
 	'attacker_alliance_id' => $db->escapeNumber($player->getAllianceID()),
 	'defender_id' => $db->escapeNumber($var['target']),
@@ -106,7 +110,7 @@ $db->insert('combat_logs', [
 if ($player->isDead()) {
 	saveAllAndReleaseLock(updateSession: false);
 	// Grab the lock in the new sector to avoid reloading session
-	Smr\SectorLock::getInstance()->acquireForPlayer($player);
+	SectorLock::getInstance()->acquireForPlayer($player);
 }
 
 // If they died on the shot they get to see the results

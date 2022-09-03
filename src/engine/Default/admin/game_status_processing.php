@@ -1,12 +1,15 @@
 <?php declare(strict_types=1);
 
-$db = Smr\Database::getInstance();
+use Smr\Database;
+use Smr\Request;
+
+$db = Database::getInstance();
 
 $container = Page::create('admin/admin_tools.php');
 
-$action = Smr\Request::get('action');
+$action = Request::get('action');
 if ($action == 'Close') {
-	$reason = Smr\Request::get('close_reason');
+	$reason = Request::get('close_reason');
 	$db->replace('game_disable', [
 		'reason' => $db->escapeString($reason),
 	]);

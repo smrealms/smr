@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
-$lock = Smr\SectorLock::getInstance();
+use Smr\SectorLock;
+
+$lock = SectorLock::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 

@@ -1,9 +1,11 @@
 <?php declare(strict_types=1);
 
+use Smr\Messages;
+
 $template = Smr\Template::getInstance();
 $var = Smr\Session::getInstance()->getCurrentVar();
 
-$boxName = Smr\Messages::getAdminBoxNames()[$var['box_type_id']];
+$boxName = Messages::getAdminBoxNames()[$var['box_type_id']];
 $template->assign('PageTopic', 'Reply To ' . $boxName);
 
 $container = Page::create('admin/box_reply_processing.php');

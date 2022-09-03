@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 /**
  * Weighted random number generator used to make events achieve their expected
  * rate of success faster than a pure random number generator.
@@ -17,7 +19,7 @@ class WeightedRandom {
 
 	protected const WEIGHTING_CHANGE = 50; // as a percent
 
-	protected Smr\Database $db;
+	protected Database $db;
 
 	protected float $weighting;
 
@@ -52,7 +54,7 @@ class WeightedRandom {
 		protected readonly string $type,
 		protected readonly int $typeID
 	) {
-		$this->db = Smr\Database::getInstance();
+		$this->db = Database::getInstance();
 		$dbResult = $this->db->read('SELECT weighting FROM weighted_random WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' AND account_id = ' . $this->db->escapeNumber($accountID) . ' AND type = ' . $this->db->escapeString($type) . ' AND type_id = ' . $this->db->escapeNumber($typeID));
 		if ($dbResult->hasRecord()) {
 			$this->weighting = $dbResult->record()->getInt('weighting');

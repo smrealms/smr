@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\BarDrink;
 use Smr\PlotGroup;
 
 const MISSION_ACTIONS = [
@@ -68,7 +69,7 @@ const MISSIONS = [
 				'Detail' => [
 					'SectorID' => '<Sector>',
 				],
-				'Text' => '*Hiccup* Hey! I need you to...*Hiccup* do me a favor. All the ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' in this bar is awful! Go to the Sal...*Hiccup*...the Salvene HQ, they\'ll know a good bar.',
+				'Text' => '*Hiccup* Hey! I need you to...*Hiccup* do me a favor. All the ' . BarDrink::SALVENE_SWAMP_SODA . ' in this bar is awful! Go to the Sal...*Hiccup*...the Salvene HQ, they\'ll know a good bar.',
 				'Task' => 'Go to the Salvene HQ at [sector=<Sector>]',
 			],
 			[
@@ -80,24 +81,24 @@ const MISSIONS = [
 				'Detail' => [
 					'SectorID' => '<Sector>',
 				],
-				'Text' => 'Here we are! The Salvene HQ! You ask around a bit and find that the bar in [sector=<Sector>] does the best ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' around!',
-				'Task' => 'Go to the bar at [sector=<Sector>] and buy a ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' from the bartender. This may take many tries.',
+				'Text' => 'Here we are! The Salvene HQ! You ask around a bit and find that the bar in [sector=<Sector>] does the best ' . BarDrink::SALVENE_SWAMP_SODA . ' around!',
+				'Task' => 'Go to the bar at [sector=<Sector>] and buy a ' . BarDrink::SALVENE_SWAMP_SODA . ' from the bartender. This may take many tries.',
 			],
 			[
 				'Step' => 'BuyDrink',
 				'Detail' => [
 					'SectorID' => '<Sector>',
-					'Drink' => Smr\BarDrink::SALVENE_SWAMP_SODA,
+					'Drink' => BarDrink::SALVENE_SWAMP_SODA,
 				],
-				'Text' => 'Here we are! Now let\'s get this ' . Smr\BarDrink::SALVENE_SWAMP_SODA . '.',
-				'Task' => 'Go to the bar at [sector=<Sector>] and buy a ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' from the bartender. This may take many tries.',
+				'Text' => 'Here we are! Now let\'s get this ' . BarDrink::SALVENE_SWAMP_SODA . '.',
+				'Task' => 'Go to the bar at [sector=<Sector>] and buy a ' . BarDrink::SALVENE_SWAMP_SODA . ' from the bartender. This may take many tries.',
 			],
 			[
 				'Step' => 'EnterSector',
 				'Detail' => [
 					'SectorID' => '<Starting Sector>',
 				],
-				'Text' => 'Finally! A true ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ', let\'s return to that drunk!',
+				'Text' => 'Finally! A true ' . BarDrink::SALVENE_SWAMP_SODA . ', let\'s return to that drunk!',
 				'Task' => 'Return to [sector=<Starting Sector>] to claim your reward.',
 			],
 			[
@@ -110,7 +111,7 @@ const MISSIONS = [
 				'Detail' => [
 					'SectorID' => '<Starting Sector>',
 				],
-				'Text' => 'You hand the ' . Smr\BarDrink::SALVENE_SWAMP_SODA . ' to the drunk!',
+				'Text' => 'You hand the ' . BarDrink::SALVENE_SWAMP_SODA . ' to the drunk!',
 			],
 		],
 	],

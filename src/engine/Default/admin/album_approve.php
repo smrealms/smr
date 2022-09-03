@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 function get_album_nick(int $album_id): string {
 	if ($album_id == 0) {
 		return 'System';
@@ -12,7 +15,7 @@ $template = Smr\Template::getInstance();
 
 $template->assign('PageTopic', 'Approve Album Entries');
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT *
 			FROM album
 			WHERE approved = \'TBC\'
@@ -75,7 +78,7 @@ if ($dbResult->hasRecord()) {
 	$template->assign('Birthdate', $birthdate);
 
 	// get the time that passed since the entry was last changed
-	$time_passed = Smr\Epoch::time() - $last_changed;
+	$time_passed = Epoch::time() - $last_changed;
 	$template->assign('TimePassed', $time_passed);
 
 	$container = Page::create('admin/album_approve_processing.php');

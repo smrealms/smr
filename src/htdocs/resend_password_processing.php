@@ -1,15 +1,19 @@
 <?php declare(strict_types=1);
+
+use Smr\Exceptions\AccountNotFound;
+use Smr\Request;
+
 try {
 	require_once('../bootstrap.php');
 
-	if (empty(Smr\Request::get('email'))) {
+	if (empty(Request::get('email'))) {
 		create_error('You must specify an e-mail address!');
 	}
 
 	// get this user from db
 	try {
-		$account = SmrAccount::getAccountByEmail(Smr\Request::get('email'));
-	} catch (Smr\Exceptions\AccountNotFound) {
+		$account = SmrAccount::getAccountByEmail(Request::get('email'));
+	} catch (AccountNotFound) {
 		// unknown user
 		create_error('The specified e-mail address is not registered!');
 	}

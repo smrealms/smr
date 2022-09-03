@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -10,7 +12,7 @@ $account_num = $session->getRequestVarInt('account_num');
 $session->getRequestVarInt('maxValue', 0);
 $session->getRequestVarInt('minValue', 0);
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT *
 			FROM anon_bank
 			WHERE anon_id=' . $db->escapeNumber($account_num) . '

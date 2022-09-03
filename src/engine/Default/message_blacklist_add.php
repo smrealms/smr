@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Exceptions\PlayerNotFound;
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -10,14 +14,14 @@ if (isset($var['account_id'])) {
 	$blacklisted = SmrPlayer::getPlayer($var['account_id'], $player->getGameID());
 } else {
 	try {
-		$blacklisted = SmrPlayer::getPlayerByPlayerName(Smr\Request::get('PlayerName'), $player->getGameID());
-	} catch (Smr\Exceptions\PlayerNotFound) {
+		$blacklisted = SmrPlayer::getPlayerByPlayerName(Request::get('PlayerName'), $player->getGameID());
+	} catch (PlayerNotFound) {
 		$container['msg'] = '<span class="red bold">ERROR: </span>Player does not exist.';
 		$container->go();
 	}
 }
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT 1 FROM message_blacklist WHERE ' . $player->getSQL() . ' AND blacklisted_id=' . $db->escapeNumber($blacklisted->getAccountID()) . ' LIMIT 1');
 
 if ($dbResult->hasRecord()) {

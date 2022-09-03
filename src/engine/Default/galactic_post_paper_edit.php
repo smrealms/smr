@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -8,7 +10,7 @@ $player = $session->getPlayer();
 $template->assign('PageTopic', 'Edit Paper');
 Menu::galacticPost();
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT title FROM galactic_post_paper WHERE paper_id = ' . $db->escapeNumber($var['id']) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 $template->assign('PaperTitle', bbifyMessage($dbResult->record()->getString('title')));
 

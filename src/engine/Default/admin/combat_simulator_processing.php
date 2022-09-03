@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $usedNames = [];
 
 $i = 1;
 $attackers = [];
-if (Smr\Request::has('attackers')) {
-	foreach (Smr\Request::getArray('attackers') as $attackerName) {
+if (Request::has('attackers')) {
+	foreach (Request::getArray('attackers') as $attackerName) {
 		if ($attackerName == 'none') {
 			continue;
 		}
@@ -20,7 +22,7 @@ if (Smr\Request::has('attackers')) {
 
 $i = 1;
 $defenders = [];
-foreach (Smr\Request::getArray('defenders') as $defenderName) {
+foreach (Request::getArray('defenders') as $defenderName) {
 	if ($defenderName == 'none') {
 		continue;
 	}
@@ -32,15 +34,15 @@ foreach (Smr\Request::getArray('defenders') as $defenderName) {
 	++$i;
 }
 
-if (Smr\Request::has('repair')) {
+if (Request::has('repair')) {
 	foreach ([...$attackers, ...$defenders] as $player) {
 		$player->setDead(false);
 		$player->getShip()->setHardwareToMax();
 	}
 }
 
-if (Smr\Request::has('run') || Smr\Request::has('death_run')) {
-	if (Smr\Request::has('death_run')) {
+if (Request::has('run') || Request::has('death_run')) {
+	if (Request::has('death_run')) {
 		$maxRounds = 100;
 	} else {
 		$maxRounds = 1;
@@ -89,7 +91,7 @@ function runAnAttack(array $realAttackers, array $realDefenders): array {
 }
 
 // Save ships unless we're just updating the dummy list
-if (!Smr\Request::has('update')) {
+if (!Request::has('update')) {
 	DummyShip::saveDummyShips();
 }
 

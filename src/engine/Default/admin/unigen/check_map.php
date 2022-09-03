@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Race;
+use Smr\Routes\RouteGenerator;
+
 $template = Smr\Template::getInstance();
 $var = Smr\Session::getInstance()->getCurrentVar();
 
@@ -38,7 +41,7 @@ foreach (array_keys(Globals::getGoods()) as $goodID) {
 	$tradeGoods[$goodID] = true;
 }
 $tradeRaces = [];
-foreach (Smr\Race::getAllIDs() as $raceID) {
+foreach (Race::getAllIDs() as $raceID) {
 	$tradeRaces[$raceID] = true;
 }
 
@@ -52,13 +55,13 @@ foreach ($galaxies as $galaxy) {
 	$galaxy->getSectors(); // Efficiently construct the sector cache
 	$ports = $galaxy->getPorts();
 	$distances = Plotter::calculatePortToPortDistances($ports, $tradeRaces, $maxDistance, $galaxy->getStartSector(), $galaxy->getEndSector());
-	$allGalaxyRoutes[$galaxy->getDisplayName()] = Smr\Routes\RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $ports, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
+	$allGalaxyRoutes[$galaxy->getDisplayName()] = RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $ports, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
 }
 $template->assign('AllGalaxyRoutes', $allGalaxyRoutes);
 
 $routeTypes = [
-	Smr\Routes\RouteGenerator::EXP_ROUTE => 'Experience',
-	Smr\Routes\RouteGenerator::MONEY_ROUTE => 'Profit',
+	RouteGenerator::EXP_ROUTE => 'Experience',
+	RouteGenerator::MONEY_ROUTE => 'Profit',
 ];
 $template->assign('RouteTypes', $routeTypes);
 

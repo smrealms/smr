@@ -1,13 +1,16 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Request;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
 $alliance_id_1 = $player->getAllianceID();
-$alliance_id_2 = Smr\Request::getInt('proposedAlliance');
+$alliance_id_2 = Request::getInt('proposedAlliance');
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT 1 FROM alliance_treaties WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_1 = ' . $alliance_id_2 . ') AND (alliance_id_2 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_2 = ' . $db->escapeNumber($alliance_id_2) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()));
 if ($dbResult->hasRecord()) {
 	$container = Page::create('alliance_treaties.php');
@@ -25,7 +28,7 @@ Menu::alliance($alliance1->getAllianceID());
 // Get the terms selected for this offer
 $terms = [];
 foreach (array_keys(SmrTreaty::TYPES) as $type) {
-	$terms[$type] = Smr\Request::has($type);
+	$terms[$type] = Request::has($type);
 }
 // A few terms get added automatically if a more restrictive term has
 // been selected.

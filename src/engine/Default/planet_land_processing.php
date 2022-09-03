@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 $player = $session->getPlayer();
@@ -26,7 +28,7 @@ if ($planet->getMaxLanded() != 0 && $planet->getMaxLanded() <= $planet->countPla
 
 if ($player->hasAlliance()) {
 	$role_id = $player->getAllianceRole();
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
 	if (!$dbResult->record()->getBoolean('planet_access')) {
 		if ($planet->hasOwner() && $planet->getOwnerID() != $player->getAccountID()) {

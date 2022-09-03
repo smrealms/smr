@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -9,10 +13,10 @@ if (!$player->isPresident()) {
 }
 
 $race_id = $var['race_id'];
-$type = strtoupper(Smr\Request::get('action'));
-$time = Smr\Epoch::time() + TIME_FOR_COUNCIL_VOTE;
+$type = strtoupper(Request::get('action'));
+$time = Epoch::time() + TIME_FOR_COUNCIL_VOTE;
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT count(*) FROM race_has_voting
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()));

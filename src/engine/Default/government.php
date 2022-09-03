@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Bounties;
 use Smr\BountyType;
+use Smr\Race;
 
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
@@ -35,13 +37,13 @@ if ($raceID != RACE_NEUTRAL) {
 	$raceRelations = Globals::getRaceRelations($player->getGameID(), $raceID);
 	foreach ($raceRelations as $otherRaceID => $relation) {
 		if ($relation <= RELATIONS_WAR) {
-			$warRaces[] = Smr\Race::getName($otherRaceID);
+			$warRaces[] = Race::getName($otherRaceID);
 		}
 	}
 }
 $template->assign('WarRaces', $warRaces);
 
-$template->assign('AllBounties', Smr\Bounties::getMostWanted(BountyType::HQ));
+$template->assign('AllBounties', Bounties::getMostWanted(BountyType::HQ));
 $template->assign('MyBounties', $player->getClaimableBounties(BountyType::HQ));
 
 if ($player->hasNeutralAlignment()) {

@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -7,7 +9,7 @@ $var = $session->getCurrentVar();
 $template->assign('PageTopic', 'Edit Account');
 
 $games = [];
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT game_id, game_name FROM game WHERE enabled = \'TRUE\' ORDER BY game_id DESC');
 foreach ($dbResult->records() as $dbRecord) {
 	$gameID = $dbRecord->getInt('game_id');

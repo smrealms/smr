@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Messages;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -10,7 +14,7 @@ Menu::messages();
 /** @var int $folderID */
 $folderID = $var['folder_id'];
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $whereClause = 'WHERE game_id = ' . $db->escapeNumber($player->getGameID());
 if ($folderID == MSG_SENT) {
 	$whereClause .= ' AND sender_id = ' . $db->escapeNumber($player->getAccountID()) . '
@@ -52,7 +56,7 @@ if ($page == 0 && !USING_AJAX) {
 	$player->setMessagesRead($messageBox['Type']);
 }
 
-$messageBox['Name'] = Smr\Messages::getMessageTypeNames($folderID);
+$messageBox['Name'] = Messages::getMessageTypeNames($folderID);
 $template->assign('PageTopic', 'Viewing ' . $messageBox['Name']);
 
 if ($messageBox['Type'] == MSG_GLOBAL || $messageBox['Type'] == MSG_SCOUT) {
@@ -76,7 +80,7 @@ $messageBox['Messages'] = [];
 // Group scout messages if they wouldn't fit on a single page
 if ($folderID == MSG_SCOUT && !isset($var['show_all']) && $messageBox['TotalMessages'] > $player->getScoutMessageGroupLimit()) {
 	// get rid of all old scout messages (>48h)
-	$db->write('DELETE FROM message WHERE expire_time < ' . $db->escapeNumber(Smr\Epoch::time()) . ' AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT));
+	$db->write('DELETE FROM message WHERE expire_time < ' . $db->escapeNumber(Epoch::time()) . ' AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT));
 
 	$dispContainer = Page::create('message_view.php');
 	$dispContainer['folder_id'] = MSG_SCOUT;
@@ -102,7 +106,7 @@ $template->assign('MessageBox', $messageBox);
  */
 function displayScouts(array &$messageBox, AbstractSmrPlayer $player): void {
 	// Generate the group messages
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT player.*, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, sum(msg_read=\'FALSE\') as total_unread
 					FROM message
 					JOIN player ON player.account_id = message.sender_id AND message.game_id = player.game_id
@@ -175,7 +179,7 @@ function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $
 
 	// Display the sender (except for scout messages)
 	if ($type != MSG_SCOUT) {
-		$sender = Smr\Messages::getMessagePlayer($sender_id, $game_id, $type);
+		$sender = Messages::getMessagePlayer($sender_id, $game_id, $type);
 		if ($sender instanceof AbstractSmrPlayer) {
 			$message['Sender'] = $sender;
 			$container = Page::create('trader_search_result.php');

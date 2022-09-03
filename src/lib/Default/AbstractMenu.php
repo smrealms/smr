@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\CombatLogType;
+use Smr\Database;
 
 /**
  * Creates menu navigation bars.
@@ -46,7 +47,7 @@ class AbstractMenu {
 	}
 
 	public static function alliance(int $alliance_id): void {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$player = Smr\Session::getInstance()->getPlayer();
 
 		$in_alliance = ($alliance_id == $player->getAllianceID() || in_array($player->getAccountID(), Globals::getHiddenPlayers()));

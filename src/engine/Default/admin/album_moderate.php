@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
@@ -11,7 +13,7 @@ require_once(LIB . 'Album/album_functions.php');
 $account_id = $session->getRequestVarInt('account_id');
 
 // check if the given account really has an entry
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account_id) . ' AND Approved = \'YES\'');
 $dbRecord = $dbResult->record();
 

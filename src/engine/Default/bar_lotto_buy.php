@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Lotto;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
@@ -7,8 +9,8 @@ $player = $session->getPlayer();
 $template->assign('PageTopic', 'Galactic Lotto');
 Menu::bar();
 
-Smr\Lotto::checkForLottoWinner($player->getGameID());
-$lottoInfo = Smr\Lotto::getLottoInfo($player->getGameID());
+Lotto::checkForLottoWinner($player->getGameID());
+$lottoInfo = Lotto::getLottoInfo($player->getGameID());
 $template->assign('LottoInfo', $lottoInfo);
 
 $container = Page::create('bar_lotto_buy_processing.php');

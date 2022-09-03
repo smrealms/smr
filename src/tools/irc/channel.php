@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 /**
  * @param resource $fp
  */
@@ -14,7 +16,7 @@ function channel_join($fp, string $rdata): bool {
 
 		echo_r('[JOIN] ' . $nick . '!' . $user . '@' . $host . ' joined ' . $channel);
 
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 
 		// check if we have seen this user before
 		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND channel = ' . $db->escapeString($channel));
@@ -84,7 +86,7 @@ function channel_part($fp, string $rdata): bool {
 		echo_r('[PART] ' . $nick . '!' . $user . '@' . $host . ' ' . $channel);
 
 		// database object
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 
 		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND channel = ' . $db->escapeString($channel));
 

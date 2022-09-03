@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -9,7 +11,7 @@ if (!$player->isLandedOnPlanet()) {
 	create_error('You are not on a planet!');
 }
 
-$amount = Smr\Request::getInt('amount');
+$amount = Request::getInt('amount');
 if ($amount <= 0) {
 	create_error('You must actually enter an amount > 0!');
 }
@@ -20,7 +22,7 @@ if ($player->getNewbieTurns() > 0) {
 $planet = $player->getSectorPlanet();
 
 $type_id = $var['type_id'];
-$action = Smr\Request::get('action');
+$action = Request::get('action');
 // transfer to ship
 if ($action == 'Ship') {
 	if ($type_id == HARDWARE_SHIELDS) {

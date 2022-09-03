@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\DatabaseRecord;
+use Smr\Epoch;
+
 class SmrForce {
 
 	/** @var array<int, array<int, array<int, self>>> */
@@ -20,7 +24,7 @@ class SmrForce {
 	public const MAX_CDS = 50;
 	public const MAX_SDS = 5;
 
-	protected Smr\Database $db;
+	protected Database $db;
 	protected readonly string $SQL;
 
 	protected int $combatDrones = 0;
@@ -54,7 +58,7 @@ class SmrForce {
 	 * @return array<int, array<int, self>>
 	 */
 	public static function getGalaxyForces(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT sector_has_forces.* FROM sector_has_forces LEFT JOIN sector USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
 		$galaxyForces = [];
 		foreach ($dbResult->records() as $dbRecord) {
@@ -73,7 +77,7 @@ class SmrForce {
 	public static function getSectorForces(int $gameID, int $sectorID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_FORCES[$gameID][$sectorID])) {
 			self::tidyUpForces(SmrGalaxy::getGalaxyContaining($gameID, $sectorID));
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM sector_has_forces WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY expire_time ASC');
 			$forces = [];
 			foreach ($dbResult->records() as $dbRecord) {
@@ -85,7 +89,7 @@ class SmrForce {
 		return self::$CACHE_SECTOR_FORCES[$gameID][$sectorID];
 	}
 
-	public static function getForce(int $gameID, int $sectorID, int $ownerID, bool $forceUpdate = false, Smr\DatabaseRecord $dbRecord = null): self {
+	public static function getForce(int $gameID, int $sectorID, int $ownerID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): self {
 		if ($forceUpdate || !isset(self::$CACHE_FORCES[$gameID][$sectorID][$ownerID])) {
 			self::tidyUpForces(SmrGalaxy::getGalaxyContaining($gameID, $sectorID));
 			$p = new self($gameID, $sectorID, $ownerID, $dbRecord);
@@ -97,15 +101,15 @@ class SmrForce {
 	public static function tidyUpForces(SmrGalaxy $galaxyToTidy): void {
 		if (!isset(self::$TIDIED_UP[$galaxyToTidy->getGameID()][$galaxyToTidy->getGalaxyID()])) {
 			self::$TIDIED_UP[$galaxyToTidy->getGameID()][$galaxyToTidy->getGalaxyID()] = true;
-			$db = Smr\Database::getInstance();
+			$db = Database::getInstance();
 			$db->write('UPDATE sector_has_forces
 						SET refresher=0,
 							expire_time = (refresh_at + if(combat_drones+mines=0,
 															LEAST(' . $db->escapeNumber(self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY) . ', scout_drones*' . $db->escapeNumber(self::TIME_PER_SCOUT_ONLY) . '),
 															LEAST(' . $db->escapeNumber($galaxyToTidy->getMaxForceTime()) . ', (combat_drones*' . $db->escapeNumber(self::TIME_PERCENT_PER_COMBAT) . '+scout_drones*' . $db->escapeNumber(self::TIME_PERCENT_PER_SCOUT) . '+mines*' . $db->escapeNumber(self::TIME_PERCENT_PER_MINE) . ')*' . $db->escapeNumber($galaxyToTidy->getMaxForceTime()) . ')
 														))
-						WHERE game_id = ' . $db->escapeNumber($galaxyToTidy->getGameID()) . ' AND sector_id >= ' . $db->escapeNumber($galaxyToTidy->getStartSector()) . ' AND sector_id <= ' . $db->escapeNumber($galaxyToTidy->getEndSector()) . ' AND refresher != 0 AND refresh_at <= ' . $db->escapeNumber(Smr\Epoch::time()));
-			$db->write('DELETE FROM sector_has_forces WHERE expire_time < ' . $db->escapeNumber(Smr\Epoch::time()));
+						WHERE game_id = ' . $db->escapeNumber($galaxyToTidy->getGameID()) . ' AND sector_id >= ' . $db->escapeNumber($galaxyToTidy->getStartSector()) . ' AND sector_id <= ' . $db->escapeNumber($galaxyToTidy->getEndSector()) . ' AND refresher != 0 AND refresh_at <= ' . $db->escapeNumber(Epoch::time()));
+			$db->write('DELETE FROM sector_has_forces WHERE expire_time < ' . $db->escapeNumber(Epoch::time()));
 		}
 	}
 
@@ -113,9 +117,9 @@ class SmrForce {
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
 		protected readonly int $ownerID,
-		Smr\DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null
 	) {
-		$this->db = Smr\Database::getInstance();
+		$this->db = Database::getInstance();
 		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . '
 		              AND sector_id = ' . $this->db->escapeNumber($sectorID) . '
 		              AND owner_id = ' . $this->db->escapeNumber($ownerID);
@@ -252,7 +256,7 @@ class SmrForce {
 	}
 
 	public function hasExpired(): bool {
-		return $this->expire < Smr\Epoch::time();
+		return $this->expire < Epoch::time();
 	}
 
 	public function getExpire(): int {
@@ -266,8 +270,8 @@ class SmrForce {
 		if ($time == $this->getExpire()) {
 			return;
 		}
-		if ($time > Smr\Epoch::time() + $this->getMaxExpireTime()) {
-			$time = Smr\Epoch::time() + $this->getMaxExpireTime();
+		if ($time > Epoch::time() + $this->getMaxExpireTime()) {
+			$time = Epoch::time() + $this->getMaxExpireTime();
 		}
 		$this->hasChanged = true;
 		$this->expire = $time;
@@ -283,7 +287,7 @@ class SmrForce {
 		} else {
 			$time = ($this->getCDs() * self::TIME_PERCENT_PER_COMBAT + $this->getSDs() * self::TIME_PERCENT_PER_SCOUT + $this->getMines() * self::TIME_PERCENT_PER_MINE) * $this->getMaxGalaxyExpireTime();
 		}
-		$this->setExpire(Smr\Epoch::time() + IFloor($time));
+		$this->setExpire(Epoch::time() + IFloor($time));
 	}
 
 	public function getMaxExpireTime(): int {

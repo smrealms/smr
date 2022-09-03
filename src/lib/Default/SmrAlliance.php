@@ -1,14 +1,17 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
 use Smr\DatabaseRecord;
+use Smr\Epoch;
 use Smr\Exceptions\AllianceNotFound;
+use Smr\Exceptions\UserError;
 
 class SmrAlliance {
 
 	/** @var array<int, array<int, self>> */
 	protected static array $CACHE_ALLIANCES = [];
 
-	protected Smr\Database $db;
+	protected Database $db;
 	protected readonly string $SQL;
 
 	protected string $allianceName;
@@ -48,7 +51,7 @@ class SmrAlliance {
 	}
 
 	public static function getAllianceByDiscordChannel(string $channel, bool $forceUpdate = false): self {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT alliance.* FROM alliance JOIN game USING(game_id) WHERE discord_channel = ' . $db->escapeString($channel) . ' AND game.end_time > ' . $db->escapeNumber(time()) . ' ORDER BY game_id DESC LIMIT 1');
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
@@ -58,7 +61,7 @@ class SmrAlliance {
 	}
 
 	public static function getAllianceByIrcChannel(string $channel, bool $forceUpdate = false): self {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT alliance_id, game_id FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel) . ' LIMIT 1');
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
@@ -68,7 +71,7 @@ class SmrAlliance {
 	}
 
 	public static function getAllianceByName(string $name, int $gameID, bool $forceUpdate = false): self {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM alliance WHERE alliance_name = ' . $db->escapeString($name) . ' AND game_id = ' . $db->escapeNumber($gameID));
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
@@ -83,7 +86,7 @@ class SmrAlliance {
 		DatabaseRecord $dbRecord = null
 	) {
 		if ($allianceID != 0) {
-			$this->db = Smr\Database::getInstance();
+			$this->db = Database::getInstance();
 			$this->SQL = 'alliance_id=' . $this->db->escapeNumber($allianceID) . ' AND game_id=' . $this->db->escapeNumber($gameID);
 
 			if ($dbRecord === null) {
@@ -117,21 +120,21 @@ class SmrAlliance {
 	 * Starts alliance with "closed" recruitment (for safety).
 	 */
 	public static function createAlliance(int $gameID, string $name, bool $allowNHA = false): self {
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$db->lockTable('alliance');
 
 		// check if the alliance name already exists
 		try {
 			self::getAllianceByName($name, $gameID);
 			$db->unlock();
-			throw new Smr\Exceptions\UserError('That alliance name already exists.');
-		} catch (Smr\Exceptions\AllianceNotFound) {
+			throw new UserError('That alliance name already exists.');
+		} catch (AllianceNotFound) {
 			// alliance with this name does not yet exist
 		}
 
 		if (!$allowNHA && trim($name) === NHA_ALLIANCE_NAME) {
 			$db->unlock();
-			throw new Smr\Exceptions\UserError('That alliance name is reserved.');
+			throw new UserError('That alliance name is reserved.');
 		}
 
 		// get the next alliance id (start at 1 if there are no alliances yet)
@@ -258,7 +261,7 @@ class SmrAlliance {
 				$ircChannel = '#' . $ircChannel;
 			}
 			if ($ircChannel == '#smr' || $ircChannel == '#smr-bar') {
-				throw new Smr\Exceptions\UserError('Please enter a valid irc channel for your alliance.');
+				throw new UserError('Please enter a valid irc channel for your alliance.');
 			}
 
 			$this->db->replace('irc_alliance_has_channel', [
@@ -443,8 +446,8 @@ class SmrAlliance {
 		if (!$this->isRecruiting()) {
 			return 'This alliance is not currently accepting new recruits.';
 		}
-		if ($player->getAllianceJoinable() > Smr\Epoch::time()) {
-			return 'You cannot join another alliance for ' . format_time($player->getAllianceJoinable() - Smr\Epoch::time()) . '.';
+		if ($player->getAllianceJoinable() > Epoch::time()) {
+			return 'You cannot join another alliance for ' . format_time($player->getAllianceJoinable() - Epoch::time()) . '.';
 		}
 		if ($this->getNumMembers() < $this->getGame()->getAllianceMaxPlayers()) {
 			if ($player->hasNewbieStatus()) {
@@ -536,7 +539,7 @@ class SmrAlliance {
 		$dbResult = $this->db->read('SELECT account_id
 						FROM active_session
 						JOIN player USING(account_id, game_id)
-						WHERE ' . $this->SQL . ' AND last_accessed >= ' . $this->db->escapeNumber(Smr\Epoch::time() - TIME_BEFORE_INACTIVE));
+						WHERE ' . $this->SQL . ' AND last_accessed >= ' . $this->db->escapeNumber(Epoch::time() - TIME_BEFORE_INACTIVE));
 
 		foreach ($dbResult->records() as $dbRecord) {
 			$activeIDs[] = $dbRecord->getInt('account_id');

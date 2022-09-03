@@ -1,11 +1,14 @@
 <?php declare(strict_types=1);
 
-$word = strtoupper(Smr\Request::get('Word'));
-$word_replacement = strtoupper(Smr\Request::get('WordReplacement'));
+use Smr\Database;
+use Smr\Request;
+
+$word = strtoupper(Request::get('Word'));
+$word_replacement = strtoupper(Request::get('WordReplacement'));
 
 $container = Page::create('admin/word_filter.php');
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT 1 FROM word_filter WHERE word_value=' . $db->escapeString($word) . ' LIMIT 1');
 if ($dbResult->hasRecord()) {
 	$container['msg'] = '<span class="red bold">ERROR: </span>This word is already filtered!';

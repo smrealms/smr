@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Exceptions\AllianceNotFound;
+
 $template = Smr\Template::getInstance();
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 $alliance = $player->getAlliance();
@@ -22,7 +25,7 @@ $template->assign('CanPick', $teams[$player->getAccountID()]['CanPick']);
 try {
 	$NHA = SmrAlliance::getAllianceByName(NHA_ALLIANCE_NAME, $player->getGameID());
 	$NHAID = $NHA->getAllianceID();
-} catch (Smr\Exceptions\AllianceNotFound) {
+} catch (AllianceNotFound) {
 	$NHAID = 0;
 }
 

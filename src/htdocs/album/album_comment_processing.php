@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Request;
+
 try {
 	require_once('../../bootstrap.php');
 	require_once(LIB . 'Album/album_functions.php');
@@ -10,14 +14,14 @@ try {
 		create_error('You need to be logged in to post comments!');
 	}
 
-	$album_id = Smr\Request::getInt('album_id', 0);
+	$album_id = Request::getInt('album_id', 0);
 	if ($album_id <= 0) {
 		create_error('Whose album do you want to comment on?');
 	}
 
 	$account = $session->getAccount();
 
-	$action = Smr\Request::get('action');
+	$action = Request::get('action');
 	if ($action == 'Moderate') {
 		if (!$account->hasPermission(PERMISSION_MODERATE_PHOTO_ALBUM)) {
 			create_error('You do not have permission to do that!');
@@ -32,15 +36,15 @@ try {
 		exit;
 	}
 
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 
-	$comment = Smr\Request::get('comment');
+	$comment = Request::get('comment');
 	if (empty($comment)) {
 		create_error('Please enter a comment.');
 	}
 
 	// get current time
-	$curr_time = Smr\Epoch::time();
+	$curr_time = Epoch::time();
 
 	$comment = word_filter($comment);
 	$account->sendMessageToBox(BOX_ALBUM_COMMENTS, $comment);

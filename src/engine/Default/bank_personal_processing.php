@@ -1,10 +1,12 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
-$amount = Smr\Request::getInt('amount');
-$action = Smr\Request::get('action');
+$amount = Request::getInt('amount');
+$action = Request::get('action');
 
 // no negative amounts are allowed
 if ($amount <= 0) {

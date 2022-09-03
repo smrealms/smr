@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\SectorLock;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
@@ -96,12 +100,12 @@ if (!$bump) {
 }
 
 // Add this log to the `combat_logs` database table
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $logId = $db->insert('combat_logs', [
 	'game_id' => $db->escapeNumber($player->getGameID()),
 	'type' => $db->escapeString('FORCE'),
 	'sector_id' => $db->escapeNumber($forces->getSectorID()),
-	'timestamp' => $db->escapeNumber(Smr\Epoch::time()),
+	'timestamp' => $db->escapeNumber(Epoch::time()),
 	'attacker_id' => $db->escapeNumber($player->getAccountID()),
 	'attacker_alliance_id' => $db->escapeNumber($player->getAllianceID()),
 	'defender_id' => $db->escapeNumber($forceOwner->getAccountID()),
@@ -118,7 +122,7 @@ if ($sendMessage) {
 if ($player->isDead()) {
 	saveAllAndReleaseLock(updateSession: false);
 	// Grab the lock in the new sector to avoid reloading session
-	Smr\SectorLock::getInstance()->acquireForPlayer($player);
+	SectorLock::getInstance()->acquireForPlayer($player);
 }
 
 // If they died on the shot they get to see the results

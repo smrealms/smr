@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 
-$db = Smr\Database::getInstance();
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Request;
+
+$db = Database::getInstance();
 $var = Smr\Session::getInstance()->getCurrentVar();
 
 // get account_id from session
@@ -8,7 +12,7 @@ $account_id = $var['account_id'];
 
 // check for each task
 if ($var['task'] == 'reset_image') {
-	$email_txt = Smr\Request::get('email_txt');
+	$email_txt = Request::get('email_txt');
 	$db->write('UPDATE album SET disabled = \'TRUE\' WHERE account_id = ' . $db->escapeNumber($account_id));
 
 	$db->lockTable('album_has_comments');
@@ -18,7 +22,7 @@ if ($var['task'] == 'reset_image') {
 	$db->insert('album_has_comments', [
 		'album_id' => $db->escapeNumber($account_id),
 		'comment_id' => $db->escapeNumber($comment_id),
-		'time' => $db->escapeNumber(Smr\Epoch::time()),
+		'time' => $db->escapeNumber(Epoch::time()),
 		'post_id' => 0,
 		'msg' => $db->escapeString('<span class="green">*** Picture disabled by an admin</span>'),
 	]);
@@ -47,11 +51,11 @@ if ($var['task'] == 'reset_image') {
 	$db->write('UPDATE album SET other = \'\' WHERE account_id = ' . $db->escapeNumber($account_id));
 } elseif ($var['task'] == 'delete_comment') {
 	// we just ignore if nothing was set
-	if (Smr\Request::has('comment_ids')) {
+	if (Request::has('comment_ids')) {
 		$db->write('DELETE
 					FROM album_has_comments
 					WHERE album_id = ' . $db->escapeNumber($account_id) . ' AND
-						  comment_id IN (' . $db->escapeArray(Smr\Request::getIntArray('comment_ids')) . ')');
+						  comment_id IN (' . $db->escapeArray(Request::getIntArray('comment_ids')) . ')');
 	}
 } else {
 	create_error('No action chosen!');

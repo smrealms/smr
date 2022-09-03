@@ -1,11 +1,14 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
 if (!isset($var['notified_time'])) {
-	$var['notified_time'] = Smr\Epoch::time();
+	$var['notified_time'] = Epoch::time();
 }
 
 if (empty($var['message_id'])) {
@@ -13,7 +16,7 @@ if (empty($var['message_id'])) {
 }
 
 // get message form db
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT message_text
 			FROM message
 			WHERE message_id = ' . $db->escapeNumber($var['message_id']));

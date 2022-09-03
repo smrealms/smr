@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 
-$db = Smr\Database::getInstance();
+use Smr\Database;
+use Smr\Exceptions\PlayerNotFound;
+use Smr\Request;
+
+$db = Database::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 
@@ -8,15 +12,15 @@ $var = $session->getCurrentVar();
 $game_id = $var['selected_game_id'];
 
 // Get the POST variables
-$player_id = Smr\Request::getInt('player_id');
-$action = Smr\Request::get('submit');
+$player_id = Request::getInt('player_id');
+$action = Request::get('submit');
 
 // Pass entire $var so that the selected game remains selected
 $container = Page::create('admin/manage_post_editors.php', $var);
 
 try {
 	$selected_player = SmrPlayer::getPlayerByPlayerID($player_id, $game_id);
-} catch (Smr\Exceptions\PlayerNotFound $e) {
+} catch (PlayerNotFound $e) {
 	$msg = "<span class='red'>ERROR: </span>" . $e->getMessage();
 	$container['processing_msg'] = $msg;
 	$container->go();

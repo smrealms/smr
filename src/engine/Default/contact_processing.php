@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
-$receiver = Smr\Request::get('receiver');
-$subject = Smr\Request::get('subject');
-$msg = Smr\Request::get('msg');
+$receiver = Request::get('receiver');
+$subject = Request::get('subject');
+$msg = Request::get('msg');
 
 $mail = setupMailer();
 $mail->Subject = PAGE_PREFIX . $subject;

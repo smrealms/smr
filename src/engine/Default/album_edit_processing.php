@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Request;
+
 function php_link_check(string $url): string|false {
 	/*	Purpose: Check HTTP Links
 	*	Usage:	$var = phpLinkCheck(absoluteURI)
@@ -62,11 +66,11 @@ function php_link_check(string $url): string|false {
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
 
-$location = Smr\Request::get('location');
-$email = Smr\Request::get('email');
+$location = Request::get('location');
+$email = Request::get('email');
 
 // get website (and validate it)
-$website = Smr\Request::get('website');
+$website = Request::get('website');
 if ($website != '') {
 	// add http:// if missing
 	if (!preg_match('=://=', $website)) {
@@ -81,11 +85,11 @@ if ($website != '') {
 	}
 }
 
-$other = Smr\Request::get('other');
+$other = Request::get('other');
 
-$day = Smr\Request::getInt('day');
-$month = Smr\Request::getInt('month');
-$year = Smr\Request::getInt('year');
+$day = Request::getInt('day');
+$month = Request::getInt('month');
+$year = Request::getInt('year');
 
 // check if we have an image
 $noPicture = true;
@@ -119,7 +123,7 @@ if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
 
 
 // check if we had a album entry so far
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT 1 FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
 if ($dbResult->hasRecord()) {
 	if (!$noPicture) {
@@ -135,7 +139,7 @@ if ($dbResult->hasRecord()) {
 					month = ' . $db->escapeNumber($month) . ',
 					year = ' . $db->escapeNumber($year) . ',
 					other = ' . $db->escapeString($other) . ',
-					last_changed = ' . $db->escapeNumber(Smr\Epoch::time()) . ',
+					last_changed = ' . $db->escapeNumber(Epoch::time()) . ',
 					approved = \'TBC\',
 					disabled = \'FALSE\'
 				WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
@@ -158,8 +162,8 @@ if ($dbResult->hasRecord()) {
 		'month' => $db->escapeNumber($month),
 		'year' => $db->escapeNumber($year),
 		'other' => $db->escapeString($other),
-		'created' => $db->escapeNumber(Smr\Epoch::time()),
-		'last_changed' => $db->escapeNumber(Smr\Epoch::time()),
+		'created' => $db->escapeNumber(Epoch::time()),
+		'last_changed' => $db->escapeNumber(Epoch::time()),
 		'approved' => $db->escapeString('TBC'),
 	]);
 }
@@ -174,7 +178,7 @@ if (!empty($comment)) {
 	$db->insert('album_has_comments', [
 		'album_id' => $db->escapeNumber($account->getAccountID()),
 		'comment_id' => $db->escapeNumber($comment_id),
-		'time' => $db->escapeNumber(Smr\Epoch::time()),
+		'time' => $db->escapeNumber(Epoch::time()),
 		'post_id' => 0,
 		'msg' => $db->escapeString($comment),
 	]);

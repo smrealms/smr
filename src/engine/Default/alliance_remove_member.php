@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $account = $session->getAccount();
@@ -20,7 +22,7 @@ foreach ($alliance->getMembers() as $alliancePlayer) {
 	}
 	// get the amount of time since last_active
 	$lastActive = $alliancePlayer->getLastCPLAction();
-	$diff = 864000 + max(-864000, $lastActive - Smr\Epoch::time());
+	$diff = 864000 + max(-864000, $lastActive - Epoch::time());
 	$lastActiveDate = get_colored_text_range($diff, 864000, date($account->getDateTimeFormat(), $lastActive));
 
 	$members[] = [

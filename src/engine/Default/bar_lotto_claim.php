@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $session = Smr\Session::getInstance();
 $player = $session->getPlayer();
 
 $message = '';
 //check if we really are a winner
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT * FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0');
 if ($dbResult->hasRecord()) {
 	$prize = $dbResult->record()->getInt('prize');

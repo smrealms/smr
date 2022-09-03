@@ -1,4 +1,7 @@
 <?php declare(strict_types=1);
+
+use Smr\Database;
+
 try {
 	require_once('../bootstrap.php');
 
@@ -6,7 +9,7 @@ try {
 
 	// Get a list of all the shops that sell each weapon
 	$weaponLocs = [];
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT weapon_type_id, location_type.* FROM location_sells_weapons JOIN weapon_type USING (weapon_type_id) JOIN location_type USING (location_type_id) WHERE location_type_id != ' . $db->escapeNumber(RACE_WARS_WEAPONS));
 	foreach ($dbResult->records() as $dbRecord) {
 		$weaponLocs[$dbRecord->getInt('weapon_type_id')][] = SmrLocation::getLocation($dbRecord->getInt('location_type_id'), false, $dbRecord)->getName();

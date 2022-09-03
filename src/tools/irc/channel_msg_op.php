@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 /**
  * @param resource $fp
  */
@@ -74,7 +76,7 @@ function channel_msg_op_cancel($fp, string $rdata, AbstractSmrPlayer $player): b
 		}
 
 		// get the op from db
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT 1
 					FROM alliance_has_op
 					WHERE alliance_id = ' . $player->getAllianceID() . '
@@ -121,7 +123,7 @@ function channel_msg_op_set($fp, string $rdata, AbstractSmrPlayer $player): bool
 		}
 
 		// get the op from db
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT 1
 					FROM alliance_has_op
 					WHERE alliance_id = ' . $player->getAllianceID() . '
@@ -195,7 +197,7 @@ function channel_msg_op_response($fp, string $rdata, AbstractSmrPlayer $player):
 		echo_r('[OP_' . $response . '] by ' . $nick . ' in ' . $channel);
 
 		// get the op info from db
-		$db = Smr\Database::getInstance();
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT 1
 					FROM alliance_has_op
 					WHERE alliance_id = ' . $player->getAllianceID() . '
@@ -258,7 +260,7 @@ function channel_op_notification($fp, string $rdata, string $nick, string $chann
 		return true;
 	}
 
-	$db = Smr\Database::getInstance();
+	$db = Database::getInstance();
 	// check if there is an upcoming op
 	$dbResult = $db->read('SELECT 1
 				FROM alliance_has_op

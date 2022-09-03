@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -19,7 +22,7 @@ if (isset($var['message'])) {
 
 $winningTicket = false;
 //check for winner
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT prize FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0');
 if ($dbResult->hasRecord()) {
 	$winningTicket = $dbResult->record()->getInt('prize');
@@ -31,7 +34,7 @@ if ($dbResult->hasRecord()) {
 $template->assign('WinningTicket', $winningTicket);
 
 //get rid of drinks older than 30 mins
-$db->write('DELETE FROM player_has_drinks WHERE time < ' . $db->escapeNumber(Smr\Epoch::time() - 1800));
+$db->write('DELETE FROM player_has_drinks WHERE time < ' . $db->escapeNumber(Epoch::time() - 1800));
 
 $container = Page::create('bar_talk_bartender.php');
 $container->addVar('LocationID');

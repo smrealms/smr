@@ -1,15 +1,19 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+use Smr\Epoch;
+use Smr\Request;
+
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-$action = Smr\Request::get('action');
+$action = Request::get('action');
 if (!in_array($action, ['Deposit', 'Payment'])) {
 	throw new Exception('Invalid action submitted: ' . $action);
 }
 
-$amount = Smr\Request::getInt('amount');
+$amount = Request::getInt('amount');
 $account_num = $var['account_num'];
 // no negative amounts are allowed
 if ($amount <= 0) {
@@ -17,7 +21,7 @@ if ($amount <= 0) {
 }
 
 // Get the next transaction ID for this anon bank
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT IFNULL(MAX(transaction_id), 0) AS max_id FROM anon_bank_transactions WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
 $trans_id = $dbResult->record()->getInt('max_id') + 1;
 
@@ -50,7 +54,7 @@ $db->insert('anon_bank_transactions', [
 	'transaction_id' => $db->escapeNumber($trans_id),
 	'transaction' => $db->escapeString($action),
 	'amount' => $db->escapeNumber($amount),
-	'time' => $db->escapeNumber(Smr\Epoch::time()),
+	'time' => $db->escapeNumber(Epoch::time()),
 ]);
 
 // Log the player action

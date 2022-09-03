@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Database;
+
 $template = Smr\Template::getInstance();
 $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
@@ -14,7 +16,7 @@ $template->assign('AffectedDb', $var['affected_db'] ?? '');
 $first_entry = true;
 $link_set_live = true;
 
-$db = Smr\Database::getInstance();
+$db = Database::getInstance();
 $dbResult = $db->read('SELECT * FROM version ORDER BY version_id DESC');
 
 $versions = [];

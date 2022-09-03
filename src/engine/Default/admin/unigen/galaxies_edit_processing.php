@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
 
-$db = Smr\Database::getInstance();
+use Smr\Database;
+use Smr\Request;
+
+$db = Database::getInstance();
 $var = Smr\Session::getInstance()->getCurrentVar();
 
 $gameID = $var['game_id'];
@@ -23,12 +26,12 @@ foreach ($galaxies as $i => $galaxy) {
 
 // Modify the galaxy properties
 foreach ($galaxies as $i => $galaxy) {
-	$galaxy->setName(Smr\Request::get('gal' . $i));
-	$galaxy->setGalaxyType(Smr\Request::get('type' . $i));
-	$galaxy->setMaxForceTime(IFloor(Smr\Request::getFloat('forces' . $i) * 3600));
+	$galaxy->setName(Request::get('gal' . $i));
+	$galaxy->setGalaxyType(Request::get('type' . $i));
+	$galaxy->setMaxForceTime(IFloor(Request::getFloat('forces' . $i) * 3600));
 	if (!$game->isEnabled()) {
-		$galaxy->setWidth(Smr\Request::getInt('width' . $i));
-		$galaxy->setHeight(Smr\Request::getInt('height' . $i));
+		$galaxy->setWidth(Request::getInt('width' . $i));
+		$galaxy->setHeight(Request::getInt('height' . $i));
 	}
 }
 
