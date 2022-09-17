@@ -379,10 +379,7 @@ function do_voodoo(): never {
 	doSkeletonAssigns($template);
 
 	// Set ajax refresh time
-	$ajaxRefresh = $var['AllowAjax'] ?? true; // hack for bar_gambling_processing.php
-	if (!$account->isUseAJAX()) {
-		$ajaxRefresh = false;
-	}
+	$ajaxRefresh = $account->isUseAJAX();
 	if ($ajaxRefresh) {
 		// If we can refresh, specify the refresh interval in millisecs
 		if (isset($player) && $player->canFight()) {
