@@ -118,7 +118,7 @@ if ($gameEnded) {
 	} elseif ($win == 'tie') {
 		$resultMsg = '<h1 class="yellow">TIE Game</h1>';
 	} else {
-		$resultMsg = '<h1 class="red">Bank Wins</h1>';
+		$resultMsg = '<h1 class="red">Dealer Wins</h1>';
 	}
 
 	// Process winnings and HoF stats
@@ -144,21 +144,22 @@ if ($gameEnded) {
 $message = '<div class="center">';
 $message .= $resultMsg;
 
-// Display the bank side
-$message .= '<div>Bank\'s Cards are</div><br />';
+// Display the dealer side
+
+$message .= '<div>Dealer\'s Cards are</div><br />';
 $message .= display_hand($dealerHand, $gameEnded);
 
 $result = [];
 if ($gameEnded) {
-	$result[] = 'Bank has a total of ' . $dealerHand->getValue();
+	$result[] = 'Dealer has a total of ' . $dealerHand->getValue();
 } else {
-	// Only the bank's first card is visible to the player
-	$result[] = 'Bank has at least ' . $dealerHand->getCards()[0]->getValue();
+	// Only the dealer's first card is visible to the player
+	$result[] = 'Dealer has at least ' . $dealerHand->getCards()[0]->getValue();
 }
 if ($dealerHand->hasBlackjack()) {
-	$result[] = 'Bank has BLACKJACK!';
+	$result[] = 'Dealer has BLACKJACK!';
 } elseif ($dealerHand->hasBusted()) {
-	$result[] = 'Bank <span class="red"><b>BUSTED</b></span>';
+	$result[] = 'Dealer <span class="red"><b>BUSTED</b></span>';
 }
 $message .= '<div>' . implode('<br />', $result) . '</div><br />';
 
