@@ -8,11 +8,6 @@ $player = $session->getPlayer();
 $template->assign('PageTopic', 'BlackJack');
 Menu::bar();
 
-if (isset($var['message'])) {
-	$template->assign('Message', $var['message']);
-	return;
-}
-
 if ($player->hasNewbieTurns()) {
 	$maxBet = 100;
 	$maxBetMsg = 'Since you have newbie protection, your max bet is ' . $maxBet . '.';
