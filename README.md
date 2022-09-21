@@ -7,8 +7,8 @@
 
 ## Dependencies
 Make sure the following software is installed:
-* docker (version 18.06.0+)
-* docker-compose (version 1.22.0+)
+* docker (version 19.03.0+)
+* docker compose plugin (v2)
 
 To run unit tests on your machine:
 * Composer (2.0.5+)
@@ -26,7 +26,7 @@ The options must be consistent between the various configuration files.
 ## Populate the mysql database
 To initialize the database or update it with new patches, run:
 ```
-docker-compose run --rm flyway
+docker compose run --rm flyway
 ```
 
 To modify the database, add a file called `V<VERSION_NUMBER>__<NAME>.sql` into
@@ -35,18 +35,18 @@ To modify the database, add a file called `V<VERSION_NUMBER>__<NAME>.sql` into
 You can optionally start up [phpMyAdmin](https://www.phpmyadmin.net/) to
 inspect your mysql database in a web browser at `http://localhost/pma/`:
 ```
-docker-compose up --build -d pma
+docker compose up --build -d pma
 ```
 
 ## Start up the services
 Then you can start up the persistent game services
 ```
-docker-compose up --build -d traefik smr
+docker compose up --build -d traefik smr
 ```
 
 For development, it may be desirable to automatically pick up source code changes without rebuilding the docker image. Simply use the `smr-dev` service instead of `smr`, i.e.:
 ```
-docker-compose up --build -d traefik smr-dev
+docker compose up --build -d traefik smr-dev
 ```
 
 
