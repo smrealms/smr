@@ -258,7 +258,7 @@ class AbstractSmrLocation {
 
 	public function isHQ(): bool {
 		if (!isset($this->HQ)) {
-			$dbResult = $this->db->read('SELECT * FROM location_is_hq WHERE ' . $this->SQL);
+			$dbResult = $this->db->read('SELECT 1 FROM location_is_hq WHERE ' . $this->SQL);
 			$this->HQ = $dbResult->hasRecord();
 		}
 		return $this->HQ;
@@ -278,7 +278,7 @@ class AbstractSmrLocation {
 
 	public function isUG(): bool {
 		if (!isset($this->UG)) {
-			$dbResult = $this->db->read('SELECT * FROM location_is_ug WHERE ' . $this->SQL);
+			$dbResult = $this->db->read('SELECT 1 FROM location_is_ug WHERE ' . $this->SQL);
 			$this->UG = $dbResult->hasRecord();
 		}
 		return $this->UG;
