@@ -203,15 +203,11 @@ if ($stealing ||
 	} else {
 		$container = Page::create('shop_goods.php');
 	}
-	$container->addVar('ideal_price');
-	$container->addVar('offered_price');
 	$container['trade_msg'] = $tradeMessage;
 
 } else {
 	// does the trader try to outsmart us?
 	$container = Page::create('shop_goods_trade.php');
-	$container->addVar('ideal_price');
-	$container->addVar('offered_price');
 
 	require_once(LIB . 'Default/shop_goods.inc.php');
 	check_bargain_number($amount, $ideal_price, $offered_price, $bargain_price, $container, $player);
@@ -222,6 +218,9 @@ if ($stealing ||
 	$container['amount'] = $amount;
 	$container['bargain_price'] = $bargain_price;
 }
+
+$container['ideal_price'] = $ideal_price;
+$container['offered_price'] = $offered_price;
 
 // only take turns if they bargained
 if (!isset($container['number_of_bargains']) || $container['number_of_bargains'] != 1) {
