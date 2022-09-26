@@ -1,5 +1,3 @@
-version: '3.7'
-
 networks:
     frontend:
         name: frontend
@@ -15,6 +13,7 @@ x-smr-builder: &smr-builder
         args:
             - NO_DEV
     image: local/smr
+    pull_policy: never
 
 # Base configuration for `smr` (production) and `smr-dev` (testing).
 x-smr-common: &smr-common
@@ -116,7 +115,7 @@ services:
     flyway: &flyway-common
         image: flyway/flyway:latest-alpine
         # Allow retries in case the mysql service is still spinning up
-        command: -connectRetries=20 -url=jdbc:mysql://${MYSQL_HOST}/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true&useSSL=false -user=${MYSQL_USER} -password=${MYSQL_PASSWORD} migrate
+        command: ["-connectRetries=20", "-url=jdbc:mysql://${MYSQL_HOST}/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true&useSSL=false", "-user=${MYSQL_USER}", "-password=${MYSQL_PASSWORD}", "migrate"]
         networks:
             - backend
         depends_on:

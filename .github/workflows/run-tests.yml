@@ -17,7 +17,6 @@ jobs:
 
     env:
       # Use buildkit for faster builds
-      COMPOSE_DOCKER_CLI_BUILD: 1
       DOCKER_BUILDKIT: 1
       BUILDKIT_PROGRESS: plain
 
