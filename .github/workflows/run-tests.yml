@@ -13,7 +13,7 @@ jobs:
   build-and-test:
     name: Build and Test
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     env:
       # Use buildkit for faster builds
