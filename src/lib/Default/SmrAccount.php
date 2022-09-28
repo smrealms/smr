@@ -1338,11 +1338,6 @@ class SmrAccount {
 		}
 	}
 
-	public function getToggleAJAXHREF(): string {
-		$var = Smr\Session::getInstance()->getCurrentVar();
-		return Page::create('toggle_processing.php', ['toggle' => 'AJAX', 'referrer' => $var->file])->href();
-	}
-
 	public function getUserRankingHREF(): string {
 		return Page::create('rankings_view.php')->href();
 	}

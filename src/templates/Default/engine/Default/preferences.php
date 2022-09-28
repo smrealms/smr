@@ -274,7 +274,7 @@ if (isset($GameID)) { ?>
 		<tr>
 			<td>Use AJAX (Auto&nbsp;Refresh):</td>
 			<td>
-				<a href="<?php echo $ThisAccount->getToggleAJAXHREF() ?>"><?php if ($ThisAccount->isUseAJAX()) { ?>Disable AJAX (Currently Enabled)<?php } else { ?>Enable AJAX (Currently Disabled)<?php } ?></a><br />
+				<button type="submit" name="action" value="Toggle Ajax"><?php echo $ThisAccount->isUseAJAX() ? 'Disable' : 'Enable'; ?> AJAX</button> (Currently <?php echo $ThisAccount->isUseAJAX() ? 'Enabled' : 'Disabled'; ?>)<br />
 			</td>
 		</tr>
 

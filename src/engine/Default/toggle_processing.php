@@ -1,20 +1,12 @@
 <?php declare(strict_types=1);
 
 $session = Smr\Session::getInstance();
-$var = $session->getCurrentVar();
+$player = $session->getPlayer();
 
-if ($var['toggle'] == 'WeaponHiding') {
-	$player = $session->getPlayer();
-	$player->setDisplayWeapons(!$player->isDisplayWeapons());
-	// If this is called by ajax, we don't want to do any forwarding
-	if (USING_AJAX) {
-		exit;
-	}
-} elseif ($var['toggle'] == 'AJAX') {
-	$account = $session->getAccount();
-	$account->setUseAJAX(!$account->isUseAJAX());
-	$account->update();
+$player->setDisplayWeapons(!$player->isDisplayWeapons());
+// If this is called by ajax, we don't want to do any forwarding
+if (USING_AJAX) {
+	exit;
 }
 
-$body = $var['referrer'] ?? 'current_sector.php';
-Page::create($body)->go();
+Page::create('current_sector.php')->go();

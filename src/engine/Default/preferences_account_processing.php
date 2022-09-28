@@ -192,6 +192,12 @@ if ($action == 'Save and resend validation code') {
 	if (strlen($enemyColour) == 6) {
 		$account->setEnemyColour($enemyColour);
 	}
+} elseif ($action == 'Toggle Ajax') {
+	$account->setUseAJAX(!$account->isUseAJAX());
+	$status = $account->isUseAJAX() ? 'enabled' : 'disabled';
+	$container['msg'] = '<span class="green">SUCCESS: </span> You have ' . $status . ' AJAX auto-refresh.';
+} else {
+	throw new Exception('Unknown action: ' . $action);
 }
 
 // Update the account in case it has changed

@@ -3205,7 +3205,6 @@ abstract class AbstractSmrPlayer {
 
 	public function getToggleWeaponHidingHREF(bool $ajax = false): string {
 		$container = Page::create('toggle_processing.php');
-		$container['toggle'] = 'WeaponHiding';
 		$container['AJAX'] = $ajax;
 		return $container->href();
 	}
