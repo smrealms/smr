@@ -53,7 +53,7 @@ parameters:
             # should reset its method return value cache, but PHPStan cannot
             # detect that this is happening. (Level 4)
             message: '#Right side of || is always false.#'
-            path: src/engine/Default/trader_attack_processing.php
+            path: src/pages/Player/AttackPlayerProcessor.php
             count: 1
         -
             # Caused by temporary use of `markTestSkipped`. (Level 4)
@@ -63,14 +63,14 @@ parameters:
         -
             # This Admin Tool is temporarily(?) disabled. (Level 4)
             message: '#Unreachable statement - code above always terminates.#'
-            path: src/engine/Default/admin/game_delete_processing.php
+            path: src/pages/Admin/GameDeleteProcessor.php
             count: 1
         -
             # https://github.com/phpstan/phpstan/issues/7520
             message: '#Expression in empty\(\) is always falsy.#'
             paths:
                 - src/bootstrap.php
-                - src/engine/Default/bug_report_processing.php
+                - src/pages/Account/BugReportProcessor.php
         -
             # https://github.com/thephpleague/oauth2-client/issues/897
             message: '#Parameter \#1 \$token of method .*::getResourceOwner\(\) expects .*AccessToken, .*AccessTokenInterface given.#'
