@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\Chess\ChessGame;
+use Smr\Container\DiContainer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Exceptions\UserError;
@@ -188,12 +189,28 @@ function bbifyMessage(string $message, bool $noLinks = false): string {
 }
 
 function create_error(string $message): never {
+	throw new UserError($message);
+}
+
+function handleUserError(string $message): never {
 	if ($_SERVER['SCRIPT_NAME'] !== LOADER_URI) {
 		header('Location: /error.php?msg=' . urlencode($message));
 		exit;
 	}
-	$container = Page::create('error.php');
-	$container['message'] = $message;
+
+	// If we're throwing an error, we don't care what data was stored in the
+	// Template from the original page.
+	DiContainer::getContainer()->reset(Template::class);
+
+	if (Session::getInstance()->hasGame()) {
+		$container = Page::create('current_sector.php');
+		$errorMsg = '<span class="red bold">ERROR: </span>' . $message;
+		$container['errorMsg'] = $errorMsg;
+	} else {
+		$container = Page::create('error.php');
+		$container['message'] = $message;
+	}
+
 	if (USING_AJAX) {
 		// To avoid the page just not refreshing when an error is encountered
 		// during ajax updates, use javascript to auto-redirect to the

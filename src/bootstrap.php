@@ -105,7 +105,7 @@ function handleException(Throwable $e): void {
 	// need to catch any exceptions that are thrown while logging the error.
 	try {
 		if ($e instanceof UserError) {
-			create_error($e->getMessage());
+			handleUserError($e->getMessage());
 		}
 		logException($e);
 		$errorType = 'Unexpected Error!';
