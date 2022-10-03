@@ -17,7 +17,6 @@ class Template {
 	private array $ajaxJS = [];
 	/** @var array<string> */
 	protected array $jsAlerts = [];
-	private bool $displayCalled = false;
 	/** @var array<string> */
 	protected array $jsSources = [];
 
@@ -33,12 +32,6 @@ class Template {
 	 */
 	public static function getInstance(): self {
 		return DiContainer::get(self::class);
-	}
-
-	public function __destruct() {
-		if (!$this->displayCalled && !empty($this->data)) {
-			error_log('Template destroyed before displaying the following assigned keys: ' . implode(', ', array_keys($this->data)));
-		}
 	}
 
 	public function hasTemplateVar(string $var): bool {
@@ -97,9 +90,6 @@ class Template {
 			header('Content-Type: text/html; charset=utf-8');
 		}
 		echo $output;
-
-		// Record that display was called for error-checking in dtor
-		$this->displayCalled = true;
 	}
 
 
