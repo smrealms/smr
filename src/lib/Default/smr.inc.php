@@ -7,6 +7,7 @@ use Smr\Exceptions\UserError;
 use Smr\Messages;
 use Smr\Race;
 use Smr\SectorLock;
+use Smr\Session;
 use Smr\Template;
 use Smr\VoteLink;
 use Smr\VoteSite;
@@ -35,7 +36,7 @@ function linkCombatLog(int $logID): string {
  */
 function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string $default, array $tagParams, string $tagContent): bool|string {
 	global $overrideGameID, $disableBBLinks;
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 	try {
 		switch ($tagName) {
 			case 'combatlog':
@@ -283,7 +284,7 @@ function pluralise(int|float $amount, string $word, bool $includeAmount = true):
  * (see loader.php for the initialization of the globals).
  */
 function do_voodoo(): never {
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 	$var = $session->getCurrentVar();
 
 	if (!defined('AJAX_CONTAINER')) {
@@ -419,7 +420,7 @@ function saveAllAndReleaseLock(bool $updateSession = true): void {
 		}
 		if ($updateSession) {
 			//Update session here to make sure current page $var is up to date before releasing lock.
-			Smr\Session::getInstance()->update();
+			Session::getInstance()->update();
 		}
 		$lock->release();
 	}
@@ -462,7 +463,7 @@ function doTickerAssigns(Template $template, AbstractSmrPlayer $player, Database
 }
 
 function doSkeletonAssigns(Template $template): void {
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 	$account = $session->getAccount();
 	$db = Database::getInstance();
 
@@ -569,7 +570,7 @@ function doSkeletonAssigns(Template $template): void {
 		$template->assign('ForceDropLink', Page::create('forces_drop.php')->href());
 
 		$ship = $player->getShip();
-		$var = Smr\Session::getInstance()->getCurrentVar();
+		$var = Session::getInstance()->getCurrentVar();
 		if ($ship->hasMines()) {
 			$container = Page::create('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
