@@ -18,8 +18,13 @@ function logException(Throwable $e): void {
 			$account = $session->getAccount();
 			$message .= 'Login: ' . $account->getLogin() . "\n" .
 				'E-Mail: ' . $account->getEmail() . "\n" .
-				'Account ID: ' . $account->getAccountID() . "\n" .
-				'Game ID: ' . $session->getGameID() . $delim;
+				'Account ID: ' . $account->getAccountID();
+			if ($session->hasGame()) {
+				$message .= "\n" .
+					'Game ID: ' . $session->getGameID() . "\n" .
+					'Sector ID: ' . $session->getPlayer()->getSectorID();
+			}
+			$message .= $delim;
 		}
 
 		$var = $session->hasCurrentVar() ? $session->getCurrentVar() : null;
@@ -105,7 +110,7 @@ function handleException(Throwable $e): void {
 	// need to catch any exceptions that are thrown while logging the error.
 	try {
 		if ($e instanceof UserError) {
-			create_error($e->getMessage());
+			handleUserError($e->getMessage());
 		}
 		logException($e);
 		$errorType = 'Unexpected Error!';
