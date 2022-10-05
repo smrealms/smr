@@ -18,8 +18,13 @@ function logException(Throwable $e): void {
 			$account = $session->getAccount();
 			$message .= 'Login: ' . $account->getLogin() . "\n" .
 				'E-Mail: ' . $account->getEmail() . "\n" .
-				'Account ID: ' . $account->getAccountID() . "\n" .
-				'Game ID: ' . $session->getGameID() . $delim;
+				'Account ID: ' . $account->getAccountID();
+			if ($session->hasGame()) {
+				$message .= "\n" .
+					'Game ID: ' . $session->getGameID() . "\n" .
+					'Sector ID: ' . $session->getPlayer()->getSectorID();
+			}
+			$message .= $delim;
 		}
 
 		$var = $session->hasCurrentVar() ? $session->getCurrentVar() : null;
