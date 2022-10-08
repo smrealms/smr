@@ -28,15 +28,6 @@ if (!empty($var['trade_msg'])) {
 	// test if we are searched, but only if we hadn't a previous trade here
 
 	$baseChance = PORT_SEARCH_BASE_CHANCE;
-	if ($port->hasGood(GOODS_SLAVES)) {
-		$baseChance -= PORT_SEARCH_REDUCTION_PER_EVIL_GOOD;
-	}
-	if ($port->hasGood(GOODS_WEAPONS)) {
-		$baseChance -= PORT_SEARCH_REDUCTION_PER_EVIL_GOOD;
-	}
-	if ($port->hasGood(GOODS_NARCOTICS)) {
-		$baseChance -= PORT_SEARCH_REDUCTION_PER_EVIL_GOOD;
-	}
 
 	if ($ship->isUnderground()) {
 		$baseChance -= PORT_SEARCH_REDUCTION_FOR_EVIL_SHIP;
