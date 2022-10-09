@@ -16,9 +16,6 @@ $events = [];
 // supply/demand list
 $sds = [];
 
-// on<something> actions
-$actions = [];
-
 $debugging = false;
 foreach ($argv as $arg) {
 	if ($arg == '-debug') {

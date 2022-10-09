@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\Database;
+use Smr\Irc\CallbackEvent;
 
 /**
  * @param resource $fp
@@ -26,14 +27,12 @@ function notice_nickserv_registered_user($fp, string $rdata): bool {
 						WHERE seen_id = ' . $seen_id);
 		}
 
-		global $actions;
-		foreach ($actions as $key => $action) {
+		foreach (CallbackEvent::getAll() as $event) {
 
 			// is that a callback for our nick?
-			if ($action[0] == 'NICKSERV_INFO' && $nick == $action[2]) {
-				unset($actions[$key]);
-
-				$action[3]();
+			if ($event->type == 'NICKSERV_INFO' && $event->nick == $nick) {
+				CallbackEvent::remove($event);
+				($event->callback)();
 			}
 
 		}
@@ -56,16 +55,15 @@ function notice_nickserv_unknown_user($fp, string $rdata): bool {
 
 		echo_r('[NOTICE_NICKSERV_UNKNOWN_NICK] ' . $nick);
 
-		global $actions;
-		foreach ($actions as $key => $action) {
+		foreach (CallbackEvent::getAll() as $event) {
 
 			// is that a callback for our nick?
-			if ($action[0] == 'NICKSERV_INFO' && $nick == $action[2]) {
+			if ($event->type == 'NICKSERV_INFO' && $event->nick == $nick) {
 
-				unset($actions[$key]);
+				CallbackEvent::remove($event);
 
-				if ($action[5] === true) {
-					fwrite($fp, 'PRIVMSG ' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
+				if ($event->validate) {
+					fwrite($fp, 'PRIVMSG ' . $event->channel . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
 				}
 
 			}
