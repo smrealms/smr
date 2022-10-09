@@ -37,3 +37,12 @@ function setupDragDrop() {
 	});
 
 }
+
+window.toggleLink = function(elem) {
+	var href = elem.dataset.href;
+	var data = {
+		SectorID: elem.dataset.sector,
+		Dir: elem.dataset.dir,
+	};
+	ajaxLink(href, setupDragDrop, data);
+}

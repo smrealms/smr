@@ -369,14 +369,18 @@ div.lmLeft.con, div.lmRight.con {
 div.wall {
 	background: black;
 }
-/* Local map wall/connector containers */
-a.lmUp, a.lmLeft, a.lmRight, a.lmDown {
-	background: none;
+
+/* Uni Gen sector link toggle */
+div.lm_sector div.toggle_link {
+	position: absolute;
+	height: 100%;
+	width: 100%;
 	z-index: 2;
 }
-a.lmUp:hover div, a.lmLeft:hover div, a.lmRight:hover div, a.lmDown:hover div {
+div.lm_sector div.toggle_link:hover {
 	background: blue;
 }
+
 .lmUp, .lmDown {
 	position: absolute;
 	left: 0px;
