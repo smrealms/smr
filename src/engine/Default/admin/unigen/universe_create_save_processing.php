@@ -106,8 +106,8 @@ if ($submit == 'Create Galaxies') {
 	}
 	SmrSector::saveSectors();
 } elseif ($submit == 'Toggle Link') {
-	$linkSector = SmrSector::getSector($var['game_id'], $var['sector_id']);
-	$linkSector->toggleLink($var['dir']);
+	$linkSector = SmrSector::getSector($var['game_id'], Request::getInt('SectorID'));
+	$linkSector->toggleLink(Request::get('Dir'));
 	SmrSector::saveSectors();
 } elseif ($submit == 'Create Locations') {
 	$galSectors = SmrSector::getGalaxySectors($var['game_id'], $var['gal_on']);

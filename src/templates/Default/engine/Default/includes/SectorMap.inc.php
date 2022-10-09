@@ -22,18 +22,18 @@
 						} else { ?> normalSeclmu<?php } ?>"><?php
 
 						if ($isVisited) {
-							if (isset($ToggleLink)) {
-								$ToggleLink['sector_id'] = $Sector->getSectorID();
-							}
-							foreach ($MovementTypes as $MovementType) {
-								if (isset($ToggleLink)) {
-									$ToggleLink['dir'] = $MovementType; ?>
-									<a onclick="ajaxLink('<?php echo $ToggleLink->href(); ?>', setupDragDrop)" class="lm<?php echo $MovementType; ?>"><?php
-								} ?>
-								<div class="lm<?php echo $MovementType; ?> <?php if ($Sector->getLink($MovementType)) { ?>con<?php } else { ?>wall<?php } ?>"></div><?php
-								if (isset($ToggleLink)) { ?>
-									</a><?php
-								}
+							foreach ($MovementTypes as $MovementType) { ?>
+								<div class="lm<?php echo $MovementType; ?> <?php echo $Sector->hasLink($MovementType) ? 'con' : 'wall'; ?>"><?php
+									if (isset($ToggleLinkHREF)) { ?>
+										<div
+											class="toggle_link"
+											onclick="toggleLink(this)"
+											data-href="<?php echo $ToggleLinkHREF; ?>"
+											data-sector="<?php echo $Sector->getSectorID(); ?>"
+											data-dir="<?php echo $MovementType; ?>"
+										></div><?php
+									} ?>
+								</div><?php
 							}
 							if ($Sector->hasLocation() || $Sector->hasPlanet()) { ?>
 								<div class="lmlocs"><?php

@@ -63,7 +63,7 @@ $template->assign('SubmitChangesHREF', $container->href());
 
 $container['submit'] = 'Toggle Link';
 $container['AJAX'] = true;
-$template->assign('ToggleLink', $container);
+$template->assign('ToggleLinkHREF', $container->href());
 
 $container = Page::create('admin/unigen/drag_location.php');
 $container->addVar('game_id');
