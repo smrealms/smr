@@ -28,7 +28,6 @@ function setupDragDrop() {
 		drop: function(event, ui) {
 			var href = ui.draggable.data("href");
 			var data = {
-				ajax: 1,
 				TargetSectorID: $(this).find(".lmsector").text(),
 				OrigSectorID: ui.draggable.data("sector"),
 				LocationTypeID: ui.draggable.data("loc"),
