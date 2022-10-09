@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\Database;
+use Smr\Irc\CallbackEvent;
 
 /**
  * Very important!
@@ -87,24 +88,28 @@ function server_msg_318($fp, string $rdata): bool {
 						'WHERE seen_id = ' . $seen_id);
 		}
 
-		global $actions;
-		foreach ($actions as $key => $action) {
+		foreach (CallbackEvent::getAll() as $event) {
 
 			// is that a callback for our nick?
-			if ($action[0] == 'MSG_318' && $nick == $action[2]) {
+			if ($event->type == 'MSG_318' && $event->nick == $nick) {
 
-				unset($actions[$key]);
+				CallbackEvent::remove($event);
 
 				// so we should do a callback but need to check first if the guy has registered
-				$dbResult = $db->read('SELECT 1 FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($action[1]));
+				$dbResult = $db->read('SELECT 1 FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($event->channel));
 				if ($dbResult->hasRecord()) {
 					//Forward to a NICKSERV INFO call.
-					$action[0] = 'NICKSERV_INFO';
-					$action[4] = time();
-					$actions[] = $action;
 					fwrite($fp, 'NICKSERV INFO ' . $nick . EOL);
-				} elseif ($action[5] === true) {
-					fwrite($fp, 'PRIVMSG ' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
+					CallbackEvent::add(new CallbackEvent(
+						type: 'NICKSERV_INFO',
+						channel: $event->channel,
+						nick: $event->nick,
+						callback: $event->callback,
+						time: time(),
+						validate: $event->validate
+					));
+				} elseif ($event->validate) {
+					fwrite($fp, 'PRIVMSG ' . $event->channel . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
 				}
 
 			}

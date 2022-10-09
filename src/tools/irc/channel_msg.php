@@ -4,25 +4,28 @@ use Smr\Database;
 use Smr\Exceptions\AccountNotFound;
 use Smr\Exceptions\AllianceNotFound;
 use Smr\Exceptions\PlayerNotFound;
+use Smr\Irc\CallbackEvent;
 
 /**
  * @param resource $fp
  */
-function check_for_registration($fp, string $nick, string $channel, callable $callback, bool $validationMessages = true): AbstractSmrPlayer|false {
-	//Force $validationMessages to always be boolean.
-	$validationMessages = $validationMessages === true;
-
+function check_for_registration($fp, string $nick, string $channel, Closure $callback, bool $validationMessages = true): AbstractSmrPlayer|false {
 	$db = Database::getInstance();
 
 	// only registered users are allowed to use this command
 	$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
 	if (!$dbResult->hasRecord()) {
 
-		global $actions;
-
 		// execute a whois and continue here on whois
 		fwrite($fp, 'WHOIS ' . $nick . EOL);
-		$actions[] = ['MSG_318', $channel, $nick, $callback, time(), $validationMessages];
+		CallbackEvent::add(new CallbackEvent(
+			type: 'MSG_318',
+			channel: $channel,
+			nick: $nick,
+			callback: $callback,
+			time: time(),
+			validate: $validationMessages
+		));
 
 		return false;
 	}
