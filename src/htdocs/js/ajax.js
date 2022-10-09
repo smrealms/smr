@@ -6,7 +6,7 @@ var exec = function(s) {
 };
 
 (function() {
-	var updateRefreshTimeout, refreshSpeed, refreshReady = true, xmlHttpRefresh, sn;
+	var updateRefreshTimeout, refreshSpeed, refreshReady = true, xmlHttpRefresh, refreshUrl = null;
 
 	/**
 	 * Turn off AJAX auto-refresh by default. It can only be enabled by
@@ -43,18 +43,6 @@ var exec = function(s) {
 		cancelRefresh();
 	}
 
-	function getURLParameter(paramName, href) {
-		if ( href.indexOf("?") > -1 ) {
-			var paramList = href.substr(href.indexOf("?")).split("&");
-			for (var i = 0; i < paramList.length; i++) {
-				if (paramList[i].toUpperCase().indexOf(paramName.toUpperCase() + "=") > -1 ) {
-					return paramList[i].split("=")[1];
-				}
-			}
-		}
-		return false;
-	}
-
 	// This is used as a jQuery.get callback, but we don't use the arguments
 	// (textStatus, jqXHR), so they are omitted here.
 	function updateRefresh(data) {
@@ -85,7 +73,7 @@ var exec = function(s) {
 	function updateRefreshRequest() {
 		if (refreshEnabled === true && refreshReady === true) {
 			refreshReady = false;
-			xmlHttpRefresh = $.get('', {sn:sn, ajax:1}, updateRefresh, 'xml');
+			xmlHttpRefresh = $.get(refreshUrl, {ajax:1}, updateRefresh, 'xml');
 		}
 	}
 
@@ -108,10 +96,7 @@ var exec = function(s) {
 			return;
 		}
 		refreshSpeed = _refreshSpeed;
-		sn = getURLParameter('sn', location.href);
-		if(sn===false) {
-			return;
-		}
+		refreshUrl = location.href;
 		scheduleRefresh();
 	};
 
@@ -174,13 +159,11 @@ var exec = function(s) {
 	 * Auto-refresh is stopped during the request, and started back up
 	 * (if not disabled) after the request completes.
 	 */
-	window.ajaxLink = function(link, callback=null, params=null) {
+	window.ajaxLink = function(link, callback=null, params={}) {
 		cancelRefresh();
-		if (params === null) {
-			params = {ajax: 1};
-		}
+		params.ajax = 1;
 		$.get(link, params, function(data) {
-				sn = getURLParameter('sn', link);
+				refreshUrl = link;
 				updateRefresh(data);
 				if (callback !== null) {
 					callback();
