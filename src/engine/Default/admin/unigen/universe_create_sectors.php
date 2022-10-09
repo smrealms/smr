@@ -86,7 +86,7 @@ $template->assign('DragWarpHREF', $container->href());
 $container = Page::create('admin/unigen/universe_create_sector_details.php');
 $container->addVar('game_id');
 $container->addVar('gal_on');
-$template->assign('UniGen', $container);
+$template->assign('ModifySectorHREF', $container->href());
 
 $container = Page::create('admin/unigen/universe_create_locations.php', $container);
 $template->assign('ModifyLocationsHREF', $container->href());
@@ -99,9 +99,6 @@ $template->assign('ModifyPortsHREF', $container->href());
 
 $container = Page::create('admin/unigen/universe_create_warps.php', $container);
 $template->assign('ModifyWarpsHREF', $container->href());
-
-$container = Page::create('admin/unigen/universe_create_sector_details.php', $container);
-$template->assign('ModifySectorHREF', $container->href());
 
 $template->assign('SMRFileHREF', Globals::getSmrFileCreateHREF($var['game_id']));
 
@@ -116,3 +113,5 @@ $template->assign('EditGalaxyDetailsHREF', $container->href());
 
 $container = Page::create('admin/unigen/galaxy_reset_processing.php', $container);
 $template->assign('ResetGalaxyHREF', $container->href());
+
+$template->assign('UniGen', true);
