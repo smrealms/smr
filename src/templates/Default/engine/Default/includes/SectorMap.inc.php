@@ -146,9 +146,10 @@
 							}
 						} ?>
 						<div class="lmsector"><?php echo $Sector->getSectorID(); ?></div><?php
-						if ($UniGen) {
-							$UniGen['sector_edit'] = $Sector->getSectorID(); ?>
-							<a class="move_hack" href="<?php echo $UniGen->href(); ?>"></a><?php
+						if ($UniGen) { ?>
+							<form action="<?php echo $ModifySectorHREF; ?>" method="POST">
+								<button class="move_hack" name="sector_edit" value="<?php echo $Sector->getSectorID(); ?>"></button>
+							</form><?php
 						} elseif ($GalaxyMap) { ?>
 							<a class="move_hack" href="<?php echo $Sector->getGalaxyMapHREF(); ?>"></a><?php
 						} elseif ($isLinkedSector) { ?>
