@@ -130,8 +130,7 @@ if ($Alliance->getAllianceID() == $ThisPlayer->getAllianceID()) { ?>
 if ($JoinRestriction === false) { ?>
 	<form class="standard" method="POST" action="<?php echo $JoinHREF; ?>"><?php
 		if ($Alliance->getRecruitType() == SmrAlliance::RECRUIT_OPEN) { ?>
-			<p>This alliance is accepting all recruits!</p>
-			<input hidden name="password" value=""><?php
+			<p>This alliance is accepting all recruits!</p><?php
 		} else { ?>
 			<p>Enter password to join alliance</p>
 			<input required name="password" size="30">&nbsp;<?php
