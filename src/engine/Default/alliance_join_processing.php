@@ -13,7 +13,8 @@ if ($joinRestriction !== false) {
 	create_error($joinRestriction);
 }
 
-if (Request::get('password') != $alliance->getPassword()) {
+// Open recruitment implies an empty password
+if (Request::get('password', '') != $alliance->getPassword()) {
 	create_error('Incorrect Password!');
 }
 
