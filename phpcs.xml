@@ -136,4 +136,9 @@
     <rule ref="Spryker.Commenting.DocBlockReturnNullableType.ReturnNullableMissing">
         <severity>0</severity>
     </rule>
+
+    <!-- Allow assignment in else-if where it is really needed. -->
+    <rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition">
+        <exclude-pattern>src/templates/Default/engine/Default/alliance_roster\.php</exclude-pattern>
+    </rule>
 </ruleset>
