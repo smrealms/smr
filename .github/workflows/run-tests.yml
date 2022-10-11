@@ -40,3 +40,6 @@ jobs:
 
       - name: Run static analysis
         run: composer run phpstan
+
+      - name: Run code sniffer
+        run: composer run phpcs
