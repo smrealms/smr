@@ -44,7 +44,7 @@ x-smr-cli: &smr-cli
 
 # Base configuration for SMR testing tools
 x-smr-test: &smr-test
-    <<: *smr-cli
+    <<: *smr-builder
     # Allow the process to be interruptible with SIGINT.
     # Note that this may corrupt the test database and require a reset.
     # (see https://github.com/docker-library/php/issues/505)
@@ -58,8 +58,6 @@ x-smr-test: &smr-test
         # Mount the source code instead of copying it.
         - ./src:/smr/src:rw
         - ./test:/smr/test:rw
-    depends_on:
-        - mysql-test
 
 x-mysql-common: &mysql-common
     image: mysql:8.0
@@ -140,8 +138,12 @@ services:
     phpunit:
         <<: *smr-test
         entrypoint: vendor/bin/phpunit
+        networks:
+            - backend
         environment:
             - XDEBUG_MODE=coverage
+        depends_on:
+            - mysql-test
 
     phpstan:
         <<: *smr-test
