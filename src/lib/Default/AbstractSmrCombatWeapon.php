@@ -95,6 +95,9 @@ abstract class AbstractSmrCombatWeapon {
 	 */
 	protected function doPlayerDamageToPlayer(array $return, AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer): array {
 		$return['WeaponDamage'] = $this->getModifiedDamageAgainstPlayer($weaponPlayer, $targetPlayer);
+		if ($weaponPlayer->getShip()->getAmbush()) {
+			$return ['WeaponDamage'] *= 1.1;
+		}
 		$return['ActualDamage'] = $targetPlayer->getShip()->takeDamage($return['WeaponDamage']);
 
 		if ($return['ActualDamage']['KillingShot']) {

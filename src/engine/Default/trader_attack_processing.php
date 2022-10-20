@@ -51,7 +51,10 @@ shuffle($fightingPlayers['Defenders']);
 //decloak all fighters
 foreach ($fightingPlayers as $teamPlayers) {
 	foreach ($teamPlayers as $teamPlayer) {
-		$teamPlayer->getShip()->decloak();
+		if ($teamPlayer->getShip()->isCloaked()) {
+			$teamPlayer->getShip()->setAmbush();
+			$teamPlayer->getShip()->decloak();
+		}
 	}
 }
 

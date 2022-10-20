@@ -40,6 +40,7 @@ class AbstractSmrShip {
 	protected bool $isCloaked = false;
 	/** @var array<string, int>|false */
 	protected array|false $illusionShip = false;
+	protected bool $ambush = false;
 
 	protected bool $hasChangedWeapons = false;
 	protected bool $hasChangedCargo = false;
@@ -379,6 +380,27 @@ class AbstractSmrShip {
 
 	public function getIllusionDefense(): int {
 		return $this->getIllusionShip()['Defense'];
+	}
+	
+	/**
+	 *  returns whether or not an ambush bonus is active
+	 */
+	public function getAmbush() : bool {
+		return $this->ambush;
+	}
+	
+	/**
+	 *  sets ambush bonus firing out of cloak
+	 */
+	public function setAmbush() : void {
+		$this->ambush = true;
+	}
+
+	/**
+	 *  clears ambush bonus after shot out of cloak
+	 */
+	public function clearAmbush() : void {
+		$this->ambush = false;
 	}
 
 	public function getPlayer(): AbstractSmrPlayer {
@@ -787,6 +809,7 @@ class AbstractSmrShip {
 			$results['Drones'] = $thisCDs->shootPlayer($thisPlayer, array_rand_value($targetPlayers));
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
+		$thisPlayer->getShip()->clearAmbush();
 		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLAYER));
 		$thisPlayer->increaseHOF($results['TotalDamage'], ['Combat', 'Player', 'Damage Done'], HOF_PUBLIC);
 		$thisPlayer->increaseHOF(1, ['Combat', 'Player', 'Shots'], HOF_PUBLIC);
