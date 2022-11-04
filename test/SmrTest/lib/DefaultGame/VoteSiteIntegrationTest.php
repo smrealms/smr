@@ -125,22 +125,28 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 		}
 	}
 
-	public function test_getMinTimeUntilFreeTurns(): void {
-		// Set arbitrary test data
+	public function test_getMinTimeUntilFreeTurns_default(): void {
+		// Test that by default that the min time is negative
 		$accountID = 9;
 		$gameID = 17;
-
-		// Test that by default that the min time is negative
 		self::assertTrue(VoteLink::getMinTimeUntilFreeTurns($accountID, $gameID) < 0);
+	}
 
+	public function test_getMinTimeUntilFreeTurns_some_links_clicked(): void {
 		// Test that min time is still negative if we claim turns on one site
+		$accountID = 9;
+		$gameID = 17;
 		$link = new VoteLink(VoteSite::DOG, $accountID, $gameID);
 		$link->setClicked();
 		$link->setFreeTurnsAwarded();
 		VoteLink::clearCache();
 		self::assertTrue(VoteLink::getMinTimeUntilFreeTurns($accountID, $gameID) < 0);
+	}
 
+	public function test_getMinTimeUntilFreeTurns_all_links_clicked(): void {
 		// Test that the min time is positive if we claim turns on all sites
+		$accountID = 9;
+		$gameID = 17;
 		foreach (VoteSite::cases() as $site) {
 			$link = new VoteLink($site, $accountID, $gameID);
 			if ($link->freeTurnsReady()) {
