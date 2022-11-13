@@ -5,7 +5,12 @@ namespace SmrTest\lib\DefaultGame;
 use AbstractSmrPort;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Smr\BountyType;
+use Smr\Container\DiContainer;
+use Smr\Database;
 use Smr\TransactionType;
+use SmrPlayer;
+use SmrSector;
 
 /**
  * @covers AbstractSmrPort
@@ -14,6 +19,7 @@ class AbstractSmrPortTest extends TestCase {
 
 	protected function tearDown(): void {
 		AbstractSmrPort::clearCache();
+		DiContainer::initialize(false);
 	}
 
 	public function test_new_port_does_not_exist_yet(): void {
@@ -333,6 +339,43 @@ class AbstractSmrPortTest extends TestCase {
 				0, 0, 0,
 			],
 		];
+	}
+
+	/**
+	 * Ensure that the state of the port is self-consistent when it is
+	 * destroyed and loses a level in the same attack.
+	 */
+	public function test_port_loses_level_on_raid_killshot(): void {
+		// We're not testing database modifications, so stub it
+		$db = $this->createStub(Database::class);
+		DiContainer::getContainer()->set(Database::class, $db);
+
+		// Add a few basic checks on the player that gets the killshot
+		$player = $this->createMock(SmrPlayer::class);
+		$player
+			->expects(self::once())
+			->method('decreaseRelations')
+			->with(AbstractSmrPort::KILLER_RELATIONS_LOSS, RACE_NEUTRAL);
+		$player
+			->expects(self::once())
+			->method('increaseCurrentBountyAmount')
+			->with(BountyType::HQ, 0);
+
+		// Set up the port
+		$portLevel = 3;
+		SmrSector::createSector(1, 1);
+		$port = AbstractSmrPort::createPort(1, 1);
+		$port->upgradeToLevel($portLevel);
+
+		// Imitate the scenario of de-leveling a port in the same attack that
+		// destroys the port. While there's a lot we could verify here, most
+		// important is to make sure that it doesn't throw.
+		$result = $port->killPortByPlayer($player);
+		$port->upgradeToLevel($portLevel - 1);
+		$port->update();
+
+		// killPortByPlayer should always return an empty array
+		self::assertSame([], $result);
 	}
 
 }
