@@ -592,7 +592,9 @@ class AbstractSmrPort {
 		}
 
 		unset($this->goodAmounts[$goodID]);
+		unset($this->goodAmountsChanged[$goodID]);
 		unset($this->goodTransactions[$goodID]);
+		unset($this->goodDistances[$goodID]);
 
 		// Flag for update
 		$this->cacheIsValid = false;
