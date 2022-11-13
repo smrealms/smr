@@ -38,6 +38,7 @@ class AbstractSmrPort {
 	protected const GOODS_TRADED_MONEY_MULTIPLIER = 50;
 	protected const BASE_PAYOUT = 0.85; // fraction of credits for looting
 	public const RAZE_PAYOUT = 0.75; // fraction of base payout for razing
+	public const KILLER_RELATIONS_LOSS = 45; // relations lost by killer in PR
 
 	protected Database $db;
 	protected readonly string $SQL;
@@ -1444,8 +1445,6 @@ class AbstractSmrPort {
 	 * @return array<string, mixed>
 	 */
 	public function killPortByPlayer(AbstractSmrPlayer $killer): array {
-		$return = [];
-
 		// Port is destroyed, so empty the port of all trade goods
 		foreach ($this->getAllGoodIDs() as $goodID) {
 			$this->setGoodAmount($goodID, 0);
@@ -1470,15 +1469,14 @@ class AbstractSmrPort {
 		]);
 
 		// Killer gets a relations change and a bounty if port is taken
-		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();
-		$killer->increaseCurrentBountyAmount(BountyType::HQ, $return['KillerBounty']);
-		$killer->increaseHOF($return['KillerBounty'], ['Combat', 'Port', 'Bounties', 'Gained'], HOF_PUBLIC);
+		$killerBounty = $killer->getExperience() * $this->getLevel();
+		$killer->increaseCurrentBountyAmount(BountyType::HQ, $killerBounty);
+		$killer->increaseHOF($killerBounty, ['Combat', 'Port', 'Bounties', 'Gained'], HOF_PUBLIC);
 
-		$return['KillerRelations'] = 45;
-		$killer->decreaseRelations($return['KillerRelations'], $this->getRaceID());
-		$killer->increaseHOF($return['KillerRelations'], ['Combat', 'Port', 'Relation', 'Loss'], HOF_PUBLIC);
+		$killer->decreaseRelations(self::KILLER_RELATIONS_LOSS, $this->getRaceID());
+		$killer->increaseHOF(self::KILLER_RELATIONS_LOSS, ['Combat', 'Port', 'Relation', 'Loss'], HOF_PUBLIC);
 
-		return $return;
+		return [];
 	}
 
 	public function hasX(mixed $x): bool {
