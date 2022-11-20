@@ -202,7 +202,8 @@ function handleUserError(string $message): never {
 	// Template from the original page.
 	DiContainer::getContainer()->reset(Template::class);
 
-	if (Session::getInstance()->hasGame()) {
+	$session = Session::getInstance();
+	if ($session->hasGame()) {
 		$container = Page::create('current_sector.php');
 		$errorMsg = '<span class="red bold">ERROR: </span>' . $message;
 		$container['errorMsg'] = $errorMsg;
@@ -211,7 +212,7 @@ function handleUserError(string $message): never {
 		$container['message'] = $message;
 	}
 
-	if (USING_AJAX) {
+	if ($session->ajax) {
 		// To avoid the page just not refreshing when an error is encountered
 		// during ajax updates, use javascript to auto-redirect to the
 		// appropriate error page.
@@ -308,7 +309,7 @@ function do_voodoo(): never {
 		define('AJAX_CONTAINER', isset($var['AJAX']) && $var['AJAX'] === true);
 	}
 
-	if (!AJAX_CONTAINER && USING_AJAX && $session->hasChangedSN()) {
+	if (!AJAX_CONTAINER && $session->ajax && $session->hasChangedSN()) {
 		exit;
 	}
 	//ob_clean();
@@ -322,7 +323,7 @@ function do_voodoo(): never {
 		$player = $session->getPlayer();
 		$sectorID = $player->getSectorID();
 
-		if (!USING_AJAX //AJAX should never do anything that requires a lock.
+		if (!$session->ajax //AJAX should never do anything that requires a lock.
 			//&& ($var->file == 'current_sector.php' || $var->file == 'map_local.php') //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
 		) {
 			// We skip locking if we've already failed to display error page
@@ -358,7 +359,7 @@ function do_voodoo(): never {
 		$player->updateTurns();
 
 		// Check if we need to redirect to a different page
-		if (!$var->skipRedirect && !USING_AJAX) {
+		if (!$var->skipRedirect && !$session->ajax) {
 			if ($player->getGame()->hasEnded()) {
 				Page::create('game_leave_processing.php', ['forward_to' => 'game_play.php', 'errorMsg' => 'The game has ended.'], skipRedirect: true)->go();
 			}
@@ -408,7 +409,7 @@ function do_voodoo(): never {
 	}
 	$template->assign('AJAX_ENABLE_REFRESH', $ajaxRefresh);
 
-	$template->display('skeleton.php', USING_AJAX || AJAX_CONTAINER);
+	$template->display('skeleton.php', $session->ajax || AJAX_CONTAINER);
 
 	$session->update();
 

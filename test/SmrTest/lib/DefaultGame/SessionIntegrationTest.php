@@ -89,6 +89,17 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertNotEquals($sessionID, $session->getSessionID());
 	}
 
+	public function test_ajax(): void {
+		// If $_REQUEST is empty, ajax is false
+		self::assertFalse($this->session->ajax);
+
+		// Test other values in $_REQUEST
+		$_REQUEST['ajax'] = 1;
+		self::assertTrue(DiContainer::make(Session::class)->ajax);
+		$_REQUEST['ajax'] = 'anything other than 1';
+		self::assertFalse(DiContainer::make(Session::class)->ajax);
+	}
+
 	public function test_current_var(): void {
 		// With an empty session, there should be no current var
 		self::assertFalse($this->session->hasCurrentVar());
@@ -125,6 +136,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		// we should still get the updated var, even though it wasn't
 		// the one originally associated with this SN.
 		$session->update();
+		$_REQUEST['ajax'] = 1;
 		$session = DiContainer::make(Session::class);
 		self::assertEquals($var2, $session->getCurrentVar());
 

@@ -33,6 +33,7 @@ class Session {
 	private array $links = [];
 	private ?Page $currentPage = null;
 	private bool $generate;
+	public readonly bool $ajax;
 	private string $SN;
 	private string $lastSN;
 	private int $accountID;
@@ -82,10 +83,11 @@ class Session {
 		$this->db->write('DELETE FROM active_session WHERE last_accessed < ' . $this->db->escapeNumber(time() - self::TIME_BEFORE_EXPIRY));
 
 		// try to get current session
+		$this->ajax = Request::getInt('ajax', 0) === 1;
 		$this->SN = Request::get('sn', '');
 		$this->fetchVarInfo();
 
-		if (!USING_AJAX && $this->hasCurrentVar()) {
+		if (!$this->ajax && $this->hasCurrentVar()) {
 			$file = $this->getCurrentVar()->file;
 			$loadDelay = self::URL_LOAD_DELAY[$file] ?? 0;
 			$timeBetweenLoads = microtime(true) - $this->lastAccessed;
@@ -119,7 +121,7 @@ class Session {
 
 			[$this->links, $lastPage] = $dbRecord->getObject('session_var', true);
 
-			$ajaxRefresh = USING_AJAX && !$this->hasChangedSN();
+			$ajaxRefresh = $this->ajax && !$this->hasChangedSN();
 			if ($ajaxRefresh) {
 				$this->currentPage = $lastPage;
 			} elseif (isset($this->links[$this->SN])) {
@@ -146,9 +148,9 @@ class Session {
 	public function update(): void {
 		$sessionVar = [$this->links, $this->currentPage];
 		if (!$this->generate) {
-			$this->db->write('UPDATE active_session SET account_id=' . $this->db->escapeNumber($this->accountID) . ',game_id=' . $this->db->escapeNumber($this->gameID) . (!USING_AJAX ? ',last_accessed=' . $this->db->escapeNumber(Epoch::microtime()) : '') . ',session_var=' . $this->db->escapeObject($sessionVar, true) .
+			$this->db->write('UPDATE active_session SET account_id=' . $this->db->escapeNumber($this->accountID) . ',game_id=' . $this->db->escapeNumber($this->gameID) . (!$this->ajax ? ',last_accessed=' . $this->db->escapeNumber(Epoch::microtime()) : '') . ',session_var=' . $this->db->escapeObject($sessionVar, true) .
 					',last_sn=' . $this->db->escapeString($this->SN) .
-					' WHERE session_id=' . $this->db->escapeString($this->sessionID) . (USING_AJAX ? ' AND last_sn=' . $this->db->escapeString($this->lastSN) : ''));
+					' WHERE session_id=' . $this->db->escapeString($this->sessionID) . ($this->ajax ? ' AND last_sn=' . $this->db->escapeString($this->lastSN) : ''));
 		} else {
 			$this->db->write('DELETE FROM active_session WHERE account_id = ' . $this->db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->db->escapeNumber($this->gameID));
 			$this->db->insert('active_session', [

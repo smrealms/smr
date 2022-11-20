@@ -90,7 +90,8 @@ if ($folderID == MSG_SCOUT && !isset($var['show_all']) && $messageBox['TotalMess
 	}
 }
 
-if ($page == 0 && !USING_AJAX) {
+// This should really be part of a (pre)processing page
+if ($page == 0 && !$session->ajax) {
 	$player->setMessagesRead($folderID);
 }
 

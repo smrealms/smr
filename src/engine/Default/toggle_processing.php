@@ -5,7 +5,7 @@ $player = $session->getPlayer();
 
 $player->setDisplayWeapons(!$player->isDisplayWeapons());
 // If this is called by ajax, we don't want to do any forwarding
-if (USING_AJAX) {
+if ($session->ajax) {
 	exit;
 }
 

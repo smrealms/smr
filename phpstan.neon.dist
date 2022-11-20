@@ -27,7 +27,6 @@ parameters:
         - RECAPTCHA_PRIVATE
         - SMTP_HOSTNAME
         - TWITTER_CONSUMER_KEY
-        - USING_AJAX
         # We code in protection against a value of 0
         - SmrMines::TOTAL_ENEMY_MINES_MODIFIER
 

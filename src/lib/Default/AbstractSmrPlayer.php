@@ -2256,7 +2256,7 @@ abstract class AbstractSmrPlayer {
 			return $var['UnderAttack'];
 		}
 		$underAttack = $this->isUnderAttack();
-		if ($underAttack && !USING_AJAX) {
+		if ($underAttack && !$session->ajax) {
 			$var['UnderAttack'] = $underAttack; //Remember we are under attack for AJAX
 		}
 		$this->setUnderAttack(false);
