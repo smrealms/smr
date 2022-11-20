@@ -51,11 +51,6 @@ if (($page + 1) * MESSAGES_PER_PAGE < $messageBox['TotalMessages']) {
 	$template->assign('NextPageHREF', $container->href());
 }
 
-// remove entry for this folder from unread msg table
-if ($page == 0 && !USING_AJAX) {
-	$player->setMessagesRead($messageBox['Type']);
-}
-
 $messageBox['Name'] = Messages::getMessageTypeNames($folderID);
 $template->assign('PageTopic', 'Viewing ' . $messageBox['Name']);
 
@@ -94,10 +89,11 @@ if ($folderID == MSG_SCOUT && !isset($var['show_all']) && $messageBox['TotalMess
 		$messageBox['Messages'][] = displayMessage($dbRecord->getInt('message_id'), $dbRecord->getInt('account_id'), $dbRecord->getInt('sender_id'), $player->getGameID(), $dbRecord->getString('message_text'), $dbRecord->getInt('send_time'), $dbRecord->getBoolean('msg_read'), $folderID, $player->getAccount());
 	}
 }
-if (!USING_AJAX) {
-	$db->write('UPDATE message SET msg_read = \'TRUE\'
-				WHERE message_type_id = ' . $db->escapeNumber($folderID) . ' AND ' . $player->getSQL());
+
+if ($page == 0 && !USING_AJAX) {
+	$player->setMessagesRead($folderID);
 }
+
 $template->assign('MessageBox', $messageBox);
 
 

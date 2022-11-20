@@ -873,6 +873,8 @@ abstract class AbstractSmrPlayer {
 	public function setMessagesRead(int $messageTypeID): void {
 		$this->db->write('DELETE FROM player_has_unread_messages
 							WHERE ' . $this->SQL . ' AND message_type_id = ' . $this->db->escapeNumber($messageTypeID));
+		$this->db->write('UPDATE message SET msg_read = ' . $this->db->escapeBoolean(true) . '
+				WHERE message_type_id = ' . $this->db->escapeNumber($messageTypeID) . ' AND ' . $this->SQL);
 	}
 
 	public function getSafeAttackRating(): int {
