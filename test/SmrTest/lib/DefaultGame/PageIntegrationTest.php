@@ -75,16 +75,6 @@ class PageIntegrationTest extends TestCase {
 		self::assertEquals($page, $copy);
 	}
 
-	public function test_remainingPageLoads(): void {
-		// Create a Page that does not use the default page loads
-		$page = Page::create('current_sector.php');
-		self::assertSame(999999, $page->remainingPageLoads);
-
-		// Create a Page that does use the default page loads
-		$page = Page::create('test');
-		self::assertSame(1, $page->remainingPageLoads);
-	}
-
 	public function test_href(): void {
 		// Create an arbitrary Page
 		$page = Page::create('file');
@@ -140,25 +130,6 @@ class PageIntegrationTest extends TestCase {
 		$page2 = Page::create('file', $page);
 		// Then skipRedirect should NOT be inherited (false by default)
 		self::assertFalse($page2->skipRedirect);
-	}
-
-	public function test_getCommonID(): void {
-		// Create an arbitrary Page with data
-		$data = ['some' => 'data'];
-		$page1 = Page::create('test1', $data);
-		// Check the value of the common ID
-		$expected = 'b5cce3676aa819381ad18dc1a5f41710';
-		self::assertSame($expected, $page1->getCommonID());
-
-		// Create a page with the same data but a different file
-		$page2 = Page::create('test2', $page1);
-		// Check that the common ID changes
-		self::assertNotEquals($page1->getCommonID(), $page2->getCommonID());
-
-		// Create a page with the same file but different data
-		$page3 = Page::create('test1', ['different' => 'data']);
-		// Check that the common ID changes
-		self::assertNotEquals($page1->getCommonID(), $page3->getCommonID());
 	}
 
 }

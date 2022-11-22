@@ -27,6 +27,8 @@ function logException(Throwable $e): void {
 			$message .= $delim;
 		}
 
+		$message .= 'ajax: ' . var_export($session->ajax, true) . "\n";
+
 		$var = $session->hasCurrentVar() ? $session->getCurrentVar() : null;
 		$message .= '$var: ' . print_r($var, true) . $delim;
 	}
@@ -41,7 +43,6 @@ function logException(Throwable $e): void {
 	$message .=
 		'User IP: ' . getIpAddress() . "\n" .
 		'User Agent: ' . ($_SERVER['HTTP_USER_AGENT'] ?? 'undefined') . "\n" .
-		'USING_AJAX: ' . (defined('USING_AJAX') ? var_export(USING_AJAX, true) : 'undefined') . "\n" .
 		'URL: ' . (defined('URL') ? URL : 'undefined');
 
 	// Try to release lock so they can carry on normally
@@ -122,7 +123,7 @@ function handleException(Throwable $e): void {
 
 	// If this is an ajax update, we don't really have a way to redirect
 	// to an error page at this time.
-	if (!ENABLE_DEBUG && (!defined('USING_AJAX') || !USING_AJAX)) {
+	if (!ENABLE_DEBUG) {
 		header('location: /error.php?msg=' . urlencode($errorType));
 	}
 }

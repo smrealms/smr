@@ -19,8 +19,6 @@ try {
 	// *
 	// ********************************
 
-	//echo '<pre>';echo_r($session);echo'</pre>';
-	//exit;
 	// do we have a session?
 	$session = Smr\Session::getInstance();
 	if (!$session->hasAccount()) {
@@ -30,7 +28,7 @@ try {
 
 	// check if we got a sn number with our url
 	if (empty($session->getSN())) {
-		if (!USING_AJAX) {
+		if (!$session->ajax) {
 			create_error('Your browser lost the SN. Try to reload the page!');
 		} else {
 			exit;
@@ -39,7 +37,7 @@ try {
 
 	// do we have such a container object in the db?
 	if ($session->hasCurrentVar() === false) {
-		if (!USING_AJAX) {
+		if (!$session->ajax) {
 			create_error('Please avoid using the back button!');
 		} else {
 			exit;

@@ -471,5 +471,3 @@ const DEFAULT_CSS_COLOUR = CSS_COLOUR_URLS['Default']['Default'];
 
 const AJAX_DEFAULT_REFRESH_TIME = 1500;
 const AJAX_UNPROTECTED_REFRESH_TIME = 800;
-
-define('USING_AJAX', isset($_REQUEST['ajax']) && $_REQUEST['ajax'] == 1);

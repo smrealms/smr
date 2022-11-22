@@ -11,12 +11,12 @@
  */
 class Page extends ArrayObject {
 
-	private const ALWAYS_AVAILABLE = 999999;
+	private const ALWAYS_AVAILABLE = true;
 
-	// Defines the number of pages that can be loaded after
-	// this page before the links on this page become invalid
-	// (i.e. before you get a back button error).
-	private const URL_DEFAULT_REMAINING_PAGE_LOADS = [
+	// Defines if the page is is always available, or if it is invalid after one
+	// use (i.e. if you get a back button error when navigating back to it).
+	public const ALWAYS_AVAILABLE_PAGES = [
+			'album_edit.php' => self::ALWAYS_AVAILABLE,
 			'alliance_broadcast.php' => self::ALWAYS_AVAILABLE,
 			'alliance_forces.php' => self::ALWAYS_AVAILABLE,
 			'alliance_list.php' => self::ALWAYS_AVAILABLE,
@@ -33,7 +33,7 @@ class Page extends ArrayObject {
 			'course_plot.php' => self::ALWAYS_AVAILABLE,
 			'changelog_view.php' => self::ALWAYS_AVAILABLE,
 			'chat_rules.php' => self::ALWAYS_AVAILABLE,
-			'chess_play.php' => self::ALWAYS_AVAILABLE,
+			'chess.php' => self::ALWAYS_AVAILABLE,
 			'combat_log_list.php' => self::ALWAYS_AVAILABLE,
 			'combat_log_viewer.php' => self::ALWAYS_AVAILABLE,
 			'current_sector.php' => self::ALWAYS_AVAILABLE,
@@ -50,11 +50,13 @@ class Page extends ArrayObject {
 			'feature_request.php' => self::ALWAYS_AVAILABLE,
 			'forces_list.php' => self::ALWAYS_AVAILABLE,
 			'forces_mass_refresh.php' => self::ALWAYS_AVAILABLE,
-			'hall_of_fame_player_new.php' => self::ALWAYS_AVAILABLE,
+			'galactic_post_current.php' => self::ALWAYS_AVAILABLE,
+			'hall_of_fame_new.php' => self::ALWAYS_AVAILABLE,
 			'hall_of_fame_player_detail.php' => self::ALWAYS_AVAILABLE,
 			'leave_newbie.php' => self::ALWAYS_AVAILABLE,
 			'logoff.php' => self::ALWAYS_AVAILABLE,
 			'map_local.php' => self::ALWAYS_AVAILABLE,
+			'message_box.php' => self::ALWAYS_AVAILABLE,
 			'message_view.php' => self::ALWAYS_AVAILABLE,
 			'message_send.php' => self::ALWAYS_AVAILABLE,
 			'news_read_advanced.php' => self::ALWAYS_AVAILABLE,
@@ -82,6 +84,7 @@ class Page extends ArrayObject {
 			'rankings_race.php' => self::ALWAYS_AVAILABLE,
 			'rankings_sector_kill.php' => self::ALWAYS_AVAILABLE,
 			'rankings_view.php' => self::ALWAYS_AVAILABLE,
+			'smr_file_create.php' => self::ALWAYS_AVAILABLE,
 			'trader_bounties.php' => self::ALWAYS_AVAILABLE,
 			'trader_relations.php' => self::ALWAYS_AVAILABLE,
 			'trader_savings.php' => self::ALWAYS_AVAILABLE,
@@ -93,7 +96,7 @@ class Page extends ArrayObject {
 			'alliance_message_add_processing.php' => self::ALWAYS_AVAILABLE,
 			'alliance_message_delete_processing.php' => self::ALWAYS_AVAILABLE,
 			'alliance_pick_processing.php' => self::ALWAYS_AVAILABLE,
-			'chess_move_processing.php' => self::ALWAYS_AVAILABLE,
+			'game_leave_processing.php' => self::ALWAYS_AVAILABLE,
 			'toggle_processing.php' => self::ALWAYS_AVAILABLE,
 			//Admin pages
 			'admin/account_edit.php' => self::ALWAYS_AVAILABLE,
@@ -116,7 +119,7 @@ class Page extends ArrayObject {
 			'admin/unigen/universe_create_warps.php' => self::ALWAYS_AVAILABLE,
 		];
 
-	public int $remainingPageLoads;
+	public readonly bool $reusable;
 
 	/**
 	 * @param array<string, mixed> $data
@@ -127,7 +130,9 @@ class Page extends ArrayObject {
 		public readonly bool $skipRedirect // to skip redirect hooks at beginning of page processing
 	) {
 		parent::__construct($data);
-		$this->remainingPageLoads = self::URL_DEFAULT_REMAINING_PAGE_LOADS[$file] ?? 1; // Allow refreshing
+
+		// Pages are single-use unless explicitly whitelisted
+		$this->reusable = self::ALWAYS_AVAILABLE_PAGES[$file] ?? false;
 	}
 
 	/**
@@ -188,11 +193,8 @@ class Page extends ArrayObject {
 	 * the next request, we can grab the container out of the Smr\Session.
 	 */
 	public function href(bool $forceFullURL = false): string {
-
-		// We need to make a clone because the instance saved in the Session
-		// must not be modified if we re-use this instance to create more
-		// links. Ideally this would not be necessary, but the usage of this
-		// method would need to change globally first (no Page re-use).
+		// We need to clone this instance in case it is modified after being added
+		// to the session links. This would not be necessary if Page was readonly.
 		$sn = Smr\Session::getInstance()->addLink(self::copy($this));
 
 		$href = '?sn=' . $sn;
@@ -200,22 +202,6 @@ class Page extends ArrayObject {
 			return LOADER_URI . $href;
 		}
 		return $href;
-	}
-
-	/**
-	 * Returns a hash of the contents of the container to identify when two
-	 * containers are equivalent (apart from page-load tracking metadata, which
-	 * we strip out to prevent false differences).
-	 *
-	 * CommonID MUST be unique to a specific action. If there will be different
-	 * outcomes from containers given the same ID then problems will arise.
-	 */
-	public function getCommonID(): string {
-		$commonContainer = $this->getArrayCopy();
-		$commonContainer['_FILE'] = $this->file; // must include file in ID
-		// NOTE: This ID will change if the order of elements in the container
-		// changes. If this causes unnecessary SN changes, sort the container!
-		return md5(serialize($commonContainer));
 	}
 
 	/**

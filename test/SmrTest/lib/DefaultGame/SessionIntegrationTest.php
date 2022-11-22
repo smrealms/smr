@@ -89,6 +89,17 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertNotEquals($sessionID, $session->getSessionID());
 	}
 
+	public function test_ajax(): void {
+		// If $_REQUEST is empty, ajax is false
+		self::assertFalse($this->session->ajax);
+
+		// Test other values in $_REQUEST
+		$_REQUEST['ajax'] = 1;
+		self::assertTrue(DiContainer::make(Session::class)->ajax);
+		$_REQUEST['ajax'] = 'anything other than 1';
+		self::assertFalse(DiContainer::make(Session::class)->ajax);
+	}
+
 	public function test_current_var(): void {
 		// With an empty session, there should be no current var
 		self::assertFalse($this->session->hasCurrentVar());
@@ -112,10 +123,6 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		$var = $session->getCurrentVar();
 		self::assertSame('some_page', $var->file);
 
-		// The RemainingPageLoads should still be 1 because we effectively
-		// reloaded the page by creating a new Session.
-		self::assertSame(1, $var->remainingPageLoads);
-
 		// We can now change the current var
 		$page2 = Page::create('another_page');
 		$session->setCurrentVar($page2);
@@ -125,11 +132,55 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		$var2 = $session->getCurrentVar();
 		self::assertSame('another_page', $var2->file);
 
+		// If we make a new session, but keep the same SN (e.g. ajax),
+		// we should still get the updated var, even though it wasn't
+		// the one originally associated with this SN.
+		$session->update();
+		$_REQUEST['ajax'] = 1;
+		$session = DiContainer::make(Session::class);
+		self::assertEquals($var2, $session->getCurrentVar());
+
 		// If we destroy the Session, then the current var should no longer
 		// be accessible to a new Session.
 		$session->destroy();
 		$session = DiContainer::make(Session::class);
 		self::assertFalse($session->hasCurrentVar());
+	}
+
+	public function test_addLink(): void {
+		// If we add two different pages, we should get different SNs.
+		$page = Page::create('some_page');
+		$sn = $this->session->addLink($page);
+
+		$page2 = Page::create('another_page');
+		self::assertNotEquals($sn, $this->session->addLink($page2));
+	}
+
+	public function test_addLink_page_already_added(): void {
+		// If we add the same page object twice, it will give the same SN.
+		$page = Page::create('some_page');
+		$sn = $this->session->addLink($page);
+		self::assertSame($sn, $this->session->addLink($page));
+
+		// This works if the pages are equal, but not the same object.
+		$page2 = clone $page;
+		self::assertNotSame($page, $page2);
+		self::assertSame($sn, $this->session->addLink($page2));
+
+		// It also works if we modify the page object (though this isn't
+		// recommended, we clone when adding from Page::href to avoid this).
+		$page['bla'] = true;
+		self::assertSame($sn, $this->session->addLink($page));
+	}
+
+	public function test_clearLinks(): void {
+		srand(0); // seed rng to avoid getting the same random SN twice
+		$page = Page::create('some_page');
+		$sn = $this->session->addLink($page);
+
+		// After clearing links, the same page will return a different SN.
+		$this->session->clearLinks();
+		self::assertNotSame($sn, $this->session->addLink($page));
 	}
 
 	public function test_getRequestVar(): void {

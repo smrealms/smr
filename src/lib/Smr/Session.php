@@ -30,10 +30,10 @@ class Session {
 	private string $sessionID;
 	private int $gameID;
 	/** @var array<string, Page> */
-	private array $var;
-	/** @var array<string, string> */
-	private array $commonIDs = [];
+	private array $links = [];
+	private ?Page $currentPage = null;
 	private bool $generate;
+	public readonly bool $ajax;
 	private string $SN;
 	private string $lastSN;
 	private int $accountID;
@@ -83,12 +83,13 @@ class Session {
 		$this->db->write('DELETE FROM active_session WHERE last_accessed < ' . $this->db->escapeNumber(time() - self::TIME_BEFORE_EXPIRY));
 
 		// try to get current session
+		$this->ajax = Request::getInt('ajax', 0) === 1;
 		$this->SN = Request::get('sn', '');
 		$this->fetchVarInfo();
 
-		if (!USING_AJAX && !empty($this->SN) && !empty($this->var[$this->SN])) {
-			$var = $this->var[$this->SN];
-			$loadDelay = self::URL_LOAD_DELAY[$var->file] ?? 0;
+		if (!$this->ajax && $this->hasCurrentVar()) {
+			$file = $this->getCurrentVar()->file;
+			$loadDelay = self::URL_LOAD_DELAY[$file] ?? 0;
 			$timeBetweenLoads = microtime(true) - $this->lastAccessed;
 			if ($timeBetweenLoads < $loadDelay) {
 				$sleepTime = IRound(($loadDelay - $timeBetweenLoads) * 1000000);
@@ -97,7 +98,7 @@ class Session {
 			}
 			if (ENABLE_DEBUG) {
 				$this->db->insert('debug', [
-					'debug_type' => $this->db->escapeString('Delay: ' . $var->file),
+					'debug_type' => $this->db->escapeString('Delay: ' . $file),
 					'account_id' => $this->db->escapeNumber($this->accountID),
 					'value' => $this->db->escapeNumber($timeBetweenLoads),
 				]);
@@ -118,24 +119,22 @@ class Session {
 			// We may not have ajax_returns if ajax was disabled
 			$this->previousAjaxReturns = $dbRecord->getObject('ajax_returns', true, true);
 
-			$this->var = $dbRecord->getObject('session_var', true);
+			[$this->links, $lastPage] = $dbRecord->getObject('session_var', true);
 
-			foreach ($this->var as $sn => $var) {
-				if ($var->remainingPageLoads < 0) {
-					//This link is no longer valid
-					unset($this->var[$sn]);
-				} else {
-					// The following is skipped for the current SN, because:
-					// a) If we decremented RemainingPageLoads, we wouldn't be
-					//    able to refresh the current page.
-					// b) If we register its CommonID and then subsequently
-					//    modify its data (which is quite common for the
-					//    "current var"), the CommonID is not updated. Then any
-					//    var with the same data as the original will wrongly
-					//    share its CommonID.
-					if ($sn !== $this->SN) {
-						$var->remainingPageLoads -= 1;
-						$this->commonIDs[$var->getCommonID()] = $sn;
+			$ajaxRefresh = $this->ajax && !$this->hasChangedSN();
+			if ($ajaxRefresh) {
+				$this->currentPage = $lastPage;
+			} elseif (isset($this->links[$this->SN])) {
+				// If the current page is modified during page processing, we need
+				// to make sure the original link is unchanged. So we clone it here.
+				$this->currentPage = clone $this->links[$this->SN];
+			}
+
+			if (!$ajaxRefresh) { // since form pages don't ajax refresh properly
+				foreach ($this->links as $sn => $link) {
+					if (!$link->reusable) {
+						// This link is no longer valid
+						unset($this->links[$sn]);
 					}
 				}
 			}
@@ -143,21 +142,15 @@ class Session {
 			$this->generate = true;
 			$this->accountID = 0;
 			$this->gameID = 0;
-			$this->var = [];
 		}
 	}
 
 	public function update(): void {
-		foreach ($this->var as $sn => $var) {
-			if ($var->remainingPageLoads <= 0) {
-				//This link was valid this load but will not be in the future, removing it now saves database space and data transfer.
-				unset($this->var[$sn]);
-			}
-		}
+		$sessionVar = [$this->links, $this->currentPage];
 		if (!$this->generate) {
-			$this->db->write('UPDATE active_session SET account_id=' . $this->db->escapeNumber($this->accountID) . ',game_id=' . $this->db->escapeNumber($this->gameID) . (!USING_AJAX ? ',last_accessed=' . $this->db->escapeNumber(Epoch::microtime()) : '') . ',session_var=' . $this->db->escapeObject($this->var, true) .
+			$this->db->write('UPDATE active_session SET account_id=' . $this->db->escapeNumber($this->accountID) . ',game_id=' . $this->db->escapeNumber($this->gameID) . (!$this->ajax ? ',last_accessed=' . $this->db->escapeNumber(Epoch::microtime()) : '') . ',session_var=' . $this->db->escapeObject($sessionVar, true) .
 					',last_sn=' . $this->db->escapeString($this->SN) .
-					' WHERE session_id=' . $this->db->escapeString($this->sessionID) . (USING_AJAX ? ' AND last_sn=' . $this->db->escapeString($this->lastSN) : ''));
+					' WHERE session_id=' . $this->db->escapeString($this->sessionID) . ($this->ajax ? ' AND last_sn=' . $this->db->escapeString($this->lastSN) : ''));
 		} else {
 			$this->db->write('DELETE FROM active_session WHERE account_id = ' . $this->db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->db->escapeNumber($this->gameID));
 			$this->db->insert('active_session', [
@@ -165,7 +158,7 @@ class Session {
 				'account_id' => $this->db->escapeNumber($this->accountID),
 				'game_id' => $this->db->escapeNumber($this->gameID),
 				'last_accessed' => $this->db->escapeNumber(Epoch::microtime()),
-				'session_var' => $this->db->escapeObject($this->var, true),
+				'session_var' => $this->db->escapeObject($sessionVar, true),
 			]);
 			$this->generate = false;
 		}
@@ -257,14 +250,14 @@ class Session {
 	 * Check if the session has a var associated with the current SN.
 	 */
 	public function hasCurrentVar(): bool {
-		return isset($this->var[$this->SN]);
+		return $this->currentPage !== null;
 	}
 
 	/**
 	 * Returns the session var associated with the current SN.
 	 */
 	public function getCurrentVar(): Page {
-		return $this->var[$this->SN];
+		return $this->currentPage;
 	}
 
 	/**
@@ -302,36 +295,29 @@ class Session {
 	 * Replace the global $var with the given $container.
 	 */
 	public function setCurrentVar(Page $container): void {
-		//Do not allow sharing SN, useful for forwarding.
-		if ($this->hasCurrentVar()) {
-			$var = $this->getCurrentVar();
-			unset($this->commonIDs[$var->getCommonID()]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
-		}
-
-		$this->var[$this->SN] = $container;
+		$this->currentPage = $container;
 	}
 
 	public function clearLinks(): void {
-		$this->var = [$this->SN => $this->var[$this->SN]];
-		$this->commonIDs = [];
+		$this->links = [];
 	}
 
+	/**
+	 * Add a page to the session so that it can be used on next page load.
+	 * It will be associated with an SN that will be used for linking.
+	 */
 	public function addLink(Page $container): string {
-		$sn = $this->generateSN($container);
-		$this->var[$sn] = $container;
-		return $sn;
-	}
-
-	protected function generateSN(Page $container): string {
-		$commonID = $container->getCommonID();
-		if (isset($this->commonIDs[$commonID])) {
-			$sn = $this->commonIDs[$commonID];
-		} else {
-			do {
-				$sn = random_alphabetic_string(6);
-			} while (isset($this->var[$sn]));
-			$this->commonIDs[$commonID] = $sn;
+		// If we already had a link to this exact page, use the existing SN for it.
+		foreach ($this->links as $sn => $link) {
+			if ($container == $link) { // loose equality to compare contents
+				return $sn;
+			}
 		}
+		// This page isn't an existing link, so give it a new SN.
+		do {
+			$sn = random_alphabetic_string(6);
+		} while (isset($this->links[$sn]));
+		$this->links[$sn] = $container;
 		return $sn;
 	}
 
