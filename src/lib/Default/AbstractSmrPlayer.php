@@ -2249,17 +2249,11 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function removeUnderAttack(): bool {
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		if (isset($var['UnderAttack'])) {
-			return $var['UnderAttack'];
-		}
+	public function removeUnderAttack(bool $ajax): bool {
 		$underAttack = $this->isUnderAttack();
-		if ($underAttack && !$session->ajax) {
-			$var['UnderAttack'] = $underAttack; //Remember we are under attack for AJAX
+		if (!$ajax) {
+			$this->setUnderAttack(false); // only remove on a non-ajax page load
 		}
-		$this->setUnderAttack(false);
 		return $underAttack;
 	}
 

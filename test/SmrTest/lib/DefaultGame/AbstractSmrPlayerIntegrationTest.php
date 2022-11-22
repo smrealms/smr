@@ -154,4 +154,23 @@ class AbstractSmrPlayerIntegrationTest extends BaseIntegrationSpec {
 		];
 	}
 
+	public function test_UnderAttack(): void {
+		$player = AbstractSmrPlayer::createPlayer(1, 1, 'test', RACE_HUMAN, false);
+
+		// Not under attack by default
+		self::assertFalse($player->isUnderAttack());
+
+		// Value is changed by setting it
+		$player->setUnderAttack(true);
+		self::assertTrue($player->isUnderAttack());
+
+		// Value is not set to false on ajax page loads
+		self::assertTrue($player->removeUnderAttack(ajax: true));
+		self::assertTrue($player->isUnderAttack());
+
+		// Value is set to false on non-ajax page loads
+		self::assertTrue($player->removeUnderAttack(ajax: false));
+		self::assertFalse($player->isUnderAttack());
+	}
+
 }

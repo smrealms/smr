@@ -379,7 +379,7 @@ function do_voodoo(): never {
 	// Populate the template
 	$template = Template::getInstance();
 	if (isset($player)) {
-		$template->assign('UnderAttack', $player->removeUnderAttack());
+		$template->assign('UnderAttack', $player->removeUnderAttack($session->ajax));
 	}
 
 	//Nothing below this point should require the lock.
