@@ -25,6 +25,14 @@ foreach ($accountIDs as $accountID) {
 		throw new Exception('Cannot kick someone from another alliance!');
 	}
 	$currPlayer->leaveAlliance($player);
+
+	// In Draft games, banish the player to sector 1
+	if ($player->getGame()->isGameType(SmrGame::GAME_TYPE_DRAFT)) {
+		$currPlayer->setSectorID(1);
+		$currPlayer->setNewbieTurns(max(1, $currPlayer->getNewbieTurns()));
+		$currPlayer->setLandedOnPlanet(false);
+	}
+
 	$currPlayer->update(); // we need better locking here
 }
 

@@ -434,6 +434,9 @@ class SmrAlliance {
 	}
 
 	public function getJoinRestriction(AbstractSmrPlayer $player, bool $doAllianceCheck = true): string|false {
+		if ($player->getGame()->isGameType(SmrGame::GAME_TYPE_DRAFT)) {
+			return 'Alliance members will be selected by the Draft Leaders.';
+		}
 		if (!$player->getAccount()->isValidated()) {
 			return 'You cannot join an alliance until you validate your account.';
 		}
