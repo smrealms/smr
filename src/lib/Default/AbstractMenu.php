@@ -8,7 +8,7 @@ use Smr\Database;
  */
 class AbstractMenu {
 
-	public static function headquarters(int $locationTypeID): void {
+	public static function headquarters(int $locationTypeID, bool $addBountyPages = true): void {
 		$links = [];
 		$location = SmrLocation::getLocation($locationTypeID);
 		if ($location->isHQ()) {
@@ -19,8 +19,10 @@ class AbstractMenu {
 		} else {
 			throw new Exception('Location is not HQ or UG: ' . $location->getName());
 		}
-		$links[] = ['bounty_claim.php', 'Claim Bounty'];
-		$links[] = ['bounty_place.php', 'Place Bounty'];
+		if ($addBountyPages) {
+			$links[] = ['bounty_claim.php', 'Claim Bounty'];
+			$links[] = ['bounty_place.php', 'Place Bounty'];
+		}
 
 		$menuItems = [];
 		foreach ($links as $link) {
