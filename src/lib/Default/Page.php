@@ -208,7 +208,7 @@ class Page extends ArrayObject {
 	 * Process this page by executing the associated file.
 	 */
 	public function process(): void {
-		require(get_file_loc($this->file));
+		require(ENGINE . 'Default/' . $this->file);
 	}
 
 }

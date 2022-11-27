@@ -47,7 +47,7 @@ try {
 
 	// Determine where to load game scripts from (in case we need a special
 	// game script from outside the current Smr\Session game).
-	// Must not call `get_file_loc` until after we have set $overrideGameID.
+	// Must not call `get_game_dir` until after we have set $overrideGameID.
 	$overrideGameID = 0;
 	if (isset($var['game_id']) && is_numeric($var['game_id'])) {
 		$overrideGameID = $var['game_id'];

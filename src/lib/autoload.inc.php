@@ -43,31 +43,3 @@ function get_class_loc(string $className): void {
 		}
 	}
 }
-
-/**
- * Includes the correct game-specific version of a non-class file.
- * Caches the result to reduce the expense of multiple calls for the same file.
- * Try to avoid calling this before `$overrideGameID` is set!
- * Note: This is only intended to be used in Page::process.
- */
-function get_file_loc(string $fileName): string {
-	$gameDir = get_game_dir();
-
-	static $cache = [];
-	$cacheKey = $gameDir . $fileName;
-	if (isset($cache[$cacheKey])) {
-		return $cache[$cacheKey];
-	}
-
-	$gameDirs = array_unique([$gameDir, 'Default/']);
-	foreach ($gameDirs as $gameDir) {
-		$filePath = ENGINE . $gameDir . $fileName;
-		if (is_file($filePath) && is_readable($filePath)) {
-			$cache[$cacheKey] = $filePath;
-			return $filePath;
-		}
-	}
-
-	//We haven't matched on anything
-	throw new Exception('Cannot match given filename: ' . $fileName);
-}
