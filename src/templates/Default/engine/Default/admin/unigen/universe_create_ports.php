@@ -23,17 +23,17 @@
 					foreach ($TotalPorts as $Level => $Count) { ?>
 						<tr>
 							<td class="right">Level <?php echo $Level; ?></td>
-							<td><input class="center" type="number" value="<?php echo $Count; ?>" size="5" name="port<?php echo $Level; ?>" onInput="levelCalc(<?php echo SmrPort::MAX_LEVEL; ?>);" /></td>
+							<td><input class="center" type="number" value="<?php echo $Count; ?>" size="5" name="port<?php echo $Level; ?>" onInput="levelCalc();" /></td>
 						</tr><?php
 					} ?>
 					<tr>
 						<th class="right">Total</th>
-						<td><input class="center" type="number" disabled="disabled" size="5" name="total" value="<?php echo $Total; ?>" /></td>
+						<td><input class="center" type="number" disabled="disabled" size="5" id="totalLevel" value="<?php echo $Total; ?>" /></td>
 					</tr>
 					<tr>
 						<td class="center" colspan="2">
 							<div class="buttonA">
-								<a class="buttonA" onClick="setZero(<?php echo SmrPort::MAX_LEVEL; ?>);">Set All Zero</a>
+								<a class="buttonA" onClick="setZero();">Set All Zero</a>
 							</div>
 						</td>
 					</tr>
@@ -54,12 +54,12 @@
 					} ?>
 					<tr>
 						<th class="right">Total</th>
-						<td><input class="center" type="number" disabled="disabled" size="5" name="racedist" value="<?php echo $TotalPercent; ?>" /></td>
+						<td><input class="center" type="number" disabled="disabled" size="5" id="totalRace" value="<?php echo $TotalPercent; ?>" /></td>
 					</tr>
 					<tr>
 						<td class="center" colspan="2">
 							<div class="buttonA">
-								<a class="buttonA" onClick="setEven();">Set All Equal</a>
+								<a class="buttonA" onClick="setEqual();">Set All Equal</a>
 							</div>
 						</td>
 					</tr>
