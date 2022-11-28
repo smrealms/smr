@@ -13,7 +13,7 @@ $template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 Menu::alliance($alliance->getAllianceID());
 
 // Get the current teams
-require_once(LIB . 'Draft/alliance_pick.inc.php');
+require_once(LIB . 'Default/alliance_pick.inc.php');
 $teams = get_draft_teams($player->getGameID());
 $template->assign('Teams', $teams);
 
