@@ -570,6 +570,15 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getHome(): int {
+		// Draft games may have customized home sectors
+		if ($this->getGame()->isGameType(SmrGame::GAME_TYPE_DRAFT) && $this->hasAlliance()) {
+			$leaderID = $this->getAlliance()->getLeaderID();
+			$dbResult = $this->db->read('SELECT home_sector_id FROM draft_leaders WHERE account_id = ' . $this->db->escapeNumber($leaderID) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
+			if ($dbResult->hasRecord()) {
+				return $dbResult->record()->getInt('home_sector_id');
+			}
+		}
+
 		// get his home sector
 		$hq_id = GOVERNMENT + $this->getRaceID();
 		$raceHqSectors = SmrSector::getLocationSectors($this->getGameID(), $hq_id);
