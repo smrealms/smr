@@ -15,7 +15,7 @@ Menu::headquarters($var['LocationID']);
 
 if (!isset($var['ClaimText'])) {
 	// Determine if we're claiming Fed or UG bounties
-	$location = SmrLocation::getLocation($var['LocationID']);
+	$location = SmrLocation::getLocation($player->getGameID(), $var['LocationID']);
 	if ($location->isHQ()) {
 		$bounties = $player->getClaimableBounties(BountyType::HQ);
 	} elseif ($location->isUG()) {

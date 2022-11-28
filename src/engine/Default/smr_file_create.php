@@ -63,7 +63,7 @@ foreach (SmrShipType::getAll() as $ship) {
 
 $file .= '[Locations]
 ; Name = +Sells' . EOL;
-foreach (SmrLocation::getAllLocations() as $location) {
+foreach (SmrLocation::getAllLocations($gameID) as $location) {
 	$file .= inify($location->getName()) . '=';
 	$locSells = '';
 	if ($location->isWeaponSold()) {

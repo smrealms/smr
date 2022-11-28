@@ -14,7 +14,7 @@ if (!$player->getSector()->hasLocation($var['LocationID'])) {
 $weapon = $var['Weapon'];
 if (!isset($var['OrderID'])) {
 	// If here, we are buying
-	$location = SmrLocation::getLocation($var['LocationID']);
+	$location = SmrLocation::getLocation($player->getGameID(), $var['LocationID']);
 	if (!$location->isWeaponSold($weapon->getWeaponTypeID())) {
 		create_error('We do not sell that weapon here!');
 	}

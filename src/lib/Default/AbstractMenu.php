@@ -12,7 +12,7 @@ class AbstractMenu {
 		$gameID = Smr\Session::getInstance()->getGameID();
 
 		$links = [];
-		$location = SmrLocation::getLocation($locationTypeID);
+		$location = SmrLocation::getLocation($gameID, $locationTypeID);
 		if ($location->isHQ()) {
 			$links[] = ['government.php', 'Government'];
 			$links[] = ['military_payment_claim.php', 'Claim Military Payment'];

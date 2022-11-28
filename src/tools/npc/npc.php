@@ -355,7 +355,7 @@ function plotToFed(AbstractSmrPlayer $player): Page {
 	}
 
 	$fedLocID = $player->getRaceID() + LOCATION_GROUP_RACIAL_BEACONS;
-	$container = plotToNearest($player, SmrLocation::getLocation($fedLocID));
+	$container = plotToNearest($player, SmrLocation::getLocation($player->getGameID(), $fedLocID));
 	if ($container === false) {
 		debug('Plotted to fed whilst in fed, switch NPC and wait for turns');
 		throw new FinalAction();

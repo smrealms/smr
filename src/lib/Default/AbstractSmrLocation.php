@@ -41,14 +41,14 @@ class AbstractSmrLocation {
 	/**
 	 * @return array<int, SmrLocation>
 	 */
-	public static function getAllLocations(bool $forceUpdate = false): array {
+	public static function getAllLocations(int $gameID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_ALL_LOCATIONS)) {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM location_type ORDER BY location_type_id');
 			$locations = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$locationTypeID = $dbRecord->getInt('location_type_id');
-				$locations[$locationTypeID] = SmrLocation::getLocation($locationTypeID, $forceUpdate, $dbRecord);
+				$locations[$locationTypeID] = SmrLocation::getLocation($gameID, $locationTypeID, $forceUpdate, $dbRecord);
 			}
 			self::$CACHE_ALL_LOCATIONS = $locations;
 		}
@@ -65,7 +65,7 @@ class AbstractSmrLocation {
 		foreach ($dbResult->records() as $dbRecord) {
 			$sectorID = $dbRecord->getInt('sector_id');
 			$locationTypeID = $dbRecord->getInt('location_type_id');
-			$location = self::getLocation($locationTypeID, $forceUpdate, $dbRecord);
+			$location = self::getLocation($gameID, $locationTypeID, $forceUpdate, $dbRecord);
 			self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID][$locationTypeID] = $location;
 			$galaxyLocations[$sectorID][$locationTypeID] = $location;
 		}
@@ -82,7 +82,7 @@ class AbstractSmrLocation {
 			$locations = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$locationTypeID = $dbRecord->getInt('location_type_id');
-				$locations[$locationTypeID] = self::getLocation($locationTypeID, $forceUpdate, $dbRecord);
+				$locations[$locationTypeID] = self::getLocation($gameID, $locationTypeID, $forceUpdate, $dbRecord);
 			}
 			self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] = $locations;
 		}
@@ -124,14 +124,15 @@ class AbstractSmrLocation {
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] = [];
 	}
 
-	public static function getLocation(int $locationTypeID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): SmrLocation {
+	public static function getLocation(int $gameID, int $locationTypeID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): SmrLocation {
 		if ($forceUpdate || !isset(self::$CACHE_LOCATIONS[$locationTypeID])) {
-			self::$CACHE_LOCATIONS[$locationTypeID] = new SmrLocation($locationTypeID, $dbRecord);
+			self::$CACHE_LOCATIONS[$locationTypeID] = new SmrLocation($gameID, $locationTypeID, $dbRecord);
 		}
 		return self::$CACHE_LOCATIONS[$locationTypeID];
 	}
 
 	protected function __construct(
+		protected readonly int $gameID,
 		protected readonly int $typeID,
 		DatabaseRecord $dbRecord = null
 	) {
@@ -153,6 +154,10 @@ class AbstractSmrLocation {
 		} else {
 			throw new Exception('Cannot find location: ' . $typeID);
 		}
+	}
+
+	public function getGameID(): int {
+		return $this->gameID;
 	}
 
 	public function getTypeID(): int {
@@ -436,13 +441,13 @@ class AbstractSmrLocation {
 		$linkedLocations = [];
 		if ($this->isHQ()) {
 			if ($this->getTypeID() == LOCATION_TYPE_FEDERAL_HQ) {
-				$linkedLocations[] = SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_BEACON);
-				$linkedLocations[] = SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_MINT);
+				$linkedLocations[] = SmrLocation::getLocation($this->gameID, LOCATION_TYPE_FEDERAL_BEACON);
+				$linkedLocations[] = SmrLocation::getLocation($this->gameID, LOCATION_TYPE_FEDERAL_MINT);
 			} else {
 				$raceID = $this->getRaceID();
-				$linkedLocations[] = SmrLocation::getLocation(LOCATION_GROUP_RACIAL_BEACONS + $raceID);
-				$linkedLocations[] = SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHIPS + $raceID);
-				$linkedLocations[] = SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHOPS + $raceID);
+				$linkedLocations[] = SmrLocation::getLocation($this->gameID, LOCATION_GROUP_RACIAL_BEACONS + $raceID);
+				$linkedLocations[] = SmrLocation::getLocation($this->gameID, LOCATION_GROUP_RACIAL_SHIPS + $raceID);
+				$linkedLocations[] = SmrLocation::getLocation($this->gameID, LOCATION_GROUP_RACIAL_SHOPS + $raceID);
 			}
 		}
 		return $linkedLocations;

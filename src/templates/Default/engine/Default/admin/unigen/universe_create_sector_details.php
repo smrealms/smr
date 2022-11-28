@@ -71,7 +71,7 @@
 					<b><?php echo ($i + 1); ?>. </b>
 					<select name="loc_type<?php echo $i; ?>">
 						<option value="0">No Location</option><?php
-						foreach (SmrLocation::getAllLocations() as $id => $location) { ?>
+						foreach (SmrLocation::getAllLocations($EditSector->getGameID()) as $id => $location) { ?>
 							<option value="<?php echo $id ?>" <?php echo ($id == $SectorLocationIDs[$i] ? 'selected' : ''); ?>><?php echo $location->getName(); ?></option><?php
 						} ?>
 					</select>

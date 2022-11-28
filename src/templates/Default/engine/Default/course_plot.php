@@ -60,7 +60,7 @@ if (isset($XType)) { ?>
 					<option value="Hardware">Any Hardware Shop</option>
 					<option value="Ship">Any Ship Shop</option>
 					<option value="Weapon">Any Weapon Shop</option><?php
-					$Locations = SmrLocation::getAllLocations();
+					$Locations = SmrLocation::getAllLocations($ThisPlayer->getGameID());
 					Sorter::sortByNumMethod($Locations, 'getName');
 					foreach ($Locations as $Location) {
 						?><option value="<?php echo $Location->getTypeID(); ?>"><?php echo $Location->getName(); ?></option><?php

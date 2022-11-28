@@ -13,7 +13,7 @@ $container = Page::create('admin/unigen/universe_create_locations.php');
 $container->addVar('game_id');
 $template->assign('JumpGalaxyHREF', $container->href());
 
-$locations = SmrLocation::getAllLocations();
+$locations = SmrLocation::getAllLocations($var['game_id']);
 
 // Initialize all location counts to zero
 $totalLocs = [];

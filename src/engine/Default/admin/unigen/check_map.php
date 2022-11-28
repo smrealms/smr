@@ -26,12 +26,12 @@ foreach ($galaxies as $galaxy) {
 	}
 }
 $missingLocs = array_diff(
-	array_keys(SmrLocation::getAllLocations()),
+	array_keys(SmrLocation::getAllLocations($var['game_id'])),
 	array_keys($existingLocs)
 );
 $missingLocNames = [];
 foreach ($missingLocs as $locID) {
-	$missingLocNames[] = SmrLocation::getLocation($locID)->getName();
+	$missingLocNames[] = SmrLocation::getLocation($var['game_id'], $locID)->getName();
 }
 $template->assign('MissingLocNames', $missingLocNames);
 

@@ -8,8 +8,11 @@ $var = $session->getCurrentVar();
 
 $template->assign('ViewAllLocationsLink', Page::create('admin/location_edit.php')->href());
 
+// For the purposes of editing, the game ID doesn't matter (yet)
+$gameID = 0;
+
 if (isset($var['location_type_id'])) {
-	$location = SmrLocation::getLocation($var['location_type_id']);
+	$location = SmrLocation::getLocation($gameID, $var['location_type_id']);
 	if (Request::has('save')) {
 		$addShipID = Request::getInt('add_ship_id');
 		if ($addShipID != 0) {
@@ -46,5 +49,5 @@ if (isset($var['location_type_id'])) {
 	$template->assign('Weapons', SmrWeaponType::getAllWeaponTypes());
 	$template->assign('AllHardware', Globals::getHardwareTypes());
 } else {
-	$template->assign('Locations', SmrLocation::getAllLocations());
+	$template->assign('Locations', SmrLocation::getAllLocations($gameID));
 }

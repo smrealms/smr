@@ -83,7 +83,7 @@ foreach ($data as $key => $vals) {
 	}
 
 	// Locations
-	$allLocs = SmrLocation::getAllLocations();
+	$allLocs = SmrLocation::getAllLocations($var['game_id']);
 	if (isset($vals['Locations'])) {
 		$locNames = explode(',', $vals['Locations']);
 		foreach ($locNames as $locName) {
