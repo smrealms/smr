@@ -8,7 +8,9 @@ use Smr\Database;
  */
 class AbstractMenu {
 
-	public static function headquarters(int $locationTypeID, bool $addBountyPages = true): void {
+	public static function headquarters(int $locationTypeID): void {
+		$gameID = Smr\Session::getInstance()->getGameID();
+
 		$links = [];
 		$location = SmrLocation::getLocation($locationTypeID);
 		if ($location->isHQ()) {
@@ -19,7 +21,9 @@ class AbstractMenu {
 		} else {
 			throw new Exception('Location is not HQ or UG: ' . $location->getName());
 		}
-		if ($addBountyPages) {
+
+		// No bounties in Semi Wars games
+		if (!SmrGame::getGame($gameID)->isGameType(SmrGame::GAME_TYPE_SEMI_WARS)) {
 			$links[] = ['bounty_claim.php', 'Claim Bounty'];
 			$links[] = ['bounty_place.php', 'Place Bounty'];
 		}
