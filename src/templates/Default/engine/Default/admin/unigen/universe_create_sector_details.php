@@ -16,7 +16,7 @@
 	<h2>Port</h2>
 	<select name="port_level">
 		<option value="0">No Port</option><?php
-		for ($i = 1; $i <= SmrPort::MAX_LEVEL; $i++) { ?>
+		for ($i = 1; $i <= SmrPort::getMaxLevelByGame($EditSector->getGameID()); $i++) { ?>
 			<option value="<?php echo $i; ?>" <?php echo ($i == $SelectedPortLevel ? 'selected' : ''); ?>>Level <?php echo $i; ?></option><?php
 		} ?>
 	</select>&nbsp;

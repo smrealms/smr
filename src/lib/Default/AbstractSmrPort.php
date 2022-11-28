@@ -27,7 +27,6 @@ class AbstractSmrPort {
 	protected const BASE_DEFENCES = 500;
 	protected const DEFENCES_PER_LEVEL = 700;
 	protected const DEFENCES_PER_TEN_MIL_CREDITS = 250;
-	public const MAX_LEVEL = 9;
 	protected const BASE_REFRESH_PER_HOUR = [
 		'1' => 150,
 		'2' => 110,
@@ -884,9 +883,18 @@ class AbstractSmrPort {
 		return $this->level;
 	}
 
+	public static function getMaxLevelByGame(int $gameID): int {
+		$game = SmrGame::getGame($gameID);
+		if ($game->isGameType(SmrGame::GAME_TYPE_HUNTER_WARS)) {
+			$maxLevel = 6;
+		} else {
+			$maxLevel = 9;
+		}
+		return $maxLevel;
+	}
+
 	public function getMaxLevel(): int {
-		// Hunter Wars redefines this, so use lazy static binding
-		return static::MAX_LEVEL;
+		return self::getMaxLevelByGame($this->gameID);
 	}
 
 	public function getShields(): int {

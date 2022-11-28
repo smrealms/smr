@@ -17,7 +17,7 @@ $galaxy = SmrGalaxy::getGalaxy($var['game_id'], $var['gal_on']);
 $template->assign('Galaxy', $galaxy);
 
 // initialize totals
-$totalPorts = array_fill(1, SmrPort::MAX_LEVEL, 0);
+$totalPorts = array_fill(1, SmrPort::getMaxLevelByGame($var['game_id']), 0);
 $totalRaces = array_fill_keys(Race::getAllIDs(), 0);
 $racePercents = $totalRaces;
 

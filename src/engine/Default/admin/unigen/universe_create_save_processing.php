@@ -189,7 +189,8 @@ if ($submit == 'Create Galaxies') {
 	$var['message'] = '<span class="green">Success</span> : Succesfully added planets.';
 } elseif ($submit == 'Create Ports') {
 	$numLevelPorts = [];
-	for ($i = 1; $i <= SmrPort::MAX_LEVEL; $i++) {
+	$maxPortLevel = SmrPort::getMaxLevelByGame($var['game_id']);
+	for ($i = 1; $i <= $maxPortLevel; $i++) {
 		$numLevelPorts[$i] = Request::getInt('port' . $i);
 	}
 	$totalPorts = array_sum($numLevelPorts);
