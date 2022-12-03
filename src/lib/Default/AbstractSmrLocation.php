@@ -2,6 +2,7 @@
 
 use Smr\Database;
 use Smr\DatabaseRecord;
+use Smr\ShipClass;
 
 class AbstractSmrLocation {
 
@@ -132,7 +133,7 @@ class AbstractSmrLocation {
 	}
 
 	protected function __construct(
-		protected readonly int $gameID,
+		protected readonly int $gameID, // use 0 to be independent of game
 		protected readonly int $typeID,
 		DatabaseRecord $dbRecord = null
 	) {
@@ -358,6 +359,16 @@ class AbstractSmrLocation {
 			foreach ($dbResult->records() as $dbRecord) {
 				$shipTypeID = $dbRecord->getInt('ship_type_id');
 				$this->shipsSold[$shipTypeID] = SmrShipType::get($shipTypeID, $dbRecord);
+			}
+
+			if ($this->gameID > 0 && SmrGame::getGame($this->gameID)->isGameType(SmrGame::GAME_TYPE_HUNTER_WARS)) {
+				// Remove ships that are not allowed in Hunter Wars
+				unset($this->shipsSold[SHIP_TYPE_PLANETARY_SUPER_FREIGHTER]);
+				foreach ($this->shipsSold as $shipID => $ship) {
+					if ($ship->getClass() === ShipClass::Raider) {
+						unset($this->shipsSold[$shipID]);
+					}
+				}
 			}
 		}
 		return $this->shipsSold;
