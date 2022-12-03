@@ -41,14 +41,15 @@ try {
 	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT * FROM news WHERE type != \'admin\' ORDER BY time DESC LIMIT 4');
 	foreach ($dbResult->records() as $dbRecord) {
-		$overrideGameID = $dbRecord->getInt('game_id'); //for bbifyMessage
 		$gameNews[] = [
 			'Time' => date(DEFAULT_DATE_TIME_FORMAT_SPLIT, $dbRecord->getInt('time')),
-			'Message' => bbifyMessage($dbRecord->getString('news_message')),
+			'Message' => bbifyMessage(
+				$dbRecord->getString('news_message'),
+				$dbRecord->getInt('game_id'),
+			),
 		];
 	}
 	$template->assign('GameNews', $gameNews);
-	unset($overrideGameID);
 
 	// SMR game blurb
 	$story = [

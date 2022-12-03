@@ -45,19 +45,6 @@ try {
 	}
 	$var = $session->getCurrentVar();
 
-	// Determine where to load game scripts from (in case we need a special
-	// game script from outside the current Smr\Session game).
-	$overrideGameID = 0;
-	if (isset($var['game_id']) && is_numeric($var['game_id'])) {
-		$overrideGameID = $var['game_id'];
-	}
-	if ($overrideGameID == 0 && isset($var['GameID']) && is_numeric($var['GameID'])) {
-		$overrideGameID = $var['GameID'];
-	}
-	if ($overrideGameID == 0) {
-		$overrideGameID = $session->getGameID();
-	}
-
 	$account = $session->getAccount();
 	// get reason for disabled user
 	$disabled = Redirect::redirectIfDisabled($account);
