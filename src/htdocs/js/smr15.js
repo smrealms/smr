@@ -9,41 +9,51 @@
 		}, 0);
 	};
 
-	function doCalc(type, number, totalDest) {
-		var i = 1, total = 0, df=document.FORM;
-		for(; i<=number; i++) {
-			total += df[type+i].value * 1;
-		}
+	function doCalc(type, totalDest) {
+		var df = document.FORM;
+		var inputs = df.querySelectorAll('input[name*="' + type + '"]');
+		var total = 0;
+		inputs.forEach(function(input) {
+			total += Number(input.value);
+		});
 		df[totalDest].value = total;
 	};
 
 	// Recalculate total number of ports, summing over level
-	window.levelCalc = function(maxPortLevel) {
-		doCalc('port', maxPortLevel, 'total');
+	window.levelCalc = function() {
+		doCalc('port', 'totalLevel');
 	};
 
 	// Recalculate sum of port race percentages
 	window.raceCalc = function() {
-		doCalc('race', 9, 'racedist');
+		doCalc('race', 'totalRace');
 	};
 
 	// Set the total number of ports to zero
-	window.setZero = function(maxPortLevel) {
+	window.setZero = function() {
 		var df = document.FORM;
-		for (var i=1; i<=maxPortLevel; i++) {
-			df['port'+i].value = 0;
-		}
-		df.total.value = 0;
+		var inputs = df.querySelectorAll('input[name*="port"]');
+		inputs.forEach(function(input) {
+			input.value = 0;
+		});
+		df.totalLevel.value = 0;
 	};
 
 	// Set the port race distribution to be equal
-	window.setEven = function() {
-		var i = 2, df=document.FORM;
-		df.race1.value = 12;
-		for(; i<=9; i++) {
-			df['race'+i].value = 11;
-		}
-		df.racedist.value = 100;
+	window.setEqual = function() {
+		var df = document.FORM;
+		var inputs = df.querySelectorAll('input[name*="race"]');
+		var baseValue = Math.floor(100 / inputs.length);
+		var leftover = 100 - inputs.length * baseValue;
+		inputs.forEach(function(input) {
+			if (leftover > 0) {
+				input.value = baseValue + 1;
+				leftover -= 1;
+			} else {
+				input.value = baseValue;
+			}
+		});
+		df.totalRace.value = 100;
 	};
 
 	var body, currentlyFlashing=false, flashColour, origColour, intervalFlash, timeoutStopFlash;

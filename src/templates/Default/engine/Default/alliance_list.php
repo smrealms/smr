@@ -1,5 +1,5 @@
 <?php
-if (!$ThisPlayer->hasAlliance()) { ?>
+if (isset($CreateAllianceHREF)) { ?>
 	<div class="center">
 		<div class="buttonA">
 			<a class="buttonA" href="<?php echo $CreateAllianceHREF; ?>">Create your own alliance!</a>

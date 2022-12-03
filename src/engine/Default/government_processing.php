@@ -5,7 +5,7 @@ $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 // Player has selected to become a deputy/smuggler
-$location = SmrLocation::getLocation($var['LocationID']);
+$location = SmrLocation::getLocation($player->getGameID(), $var['LocationID']);
 if ($location->isHQ()) {
 	$player->setAlignment(150);
 } elseif ($location->isUG()) {

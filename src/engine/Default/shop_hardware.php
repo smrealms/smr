@@ -11,7 +11,7 @@ if (!$player->getSector()->hasLocation($var['LocationID'])) {
 
 $template->assign('PageTopic', 'Hardware Shop');
 
-$location = SmrLocation::getLocation($var['LocationID']);
+$location = SmrLocation::getLocation($player->getGameID(), $var['LocationID']);
 if ($location->isHardwareSold()) {
 	$hardwareSold = $location->getHardwareSold();
 	foreach ($hardwareSold as $hardwareTypeID => $hardware) {

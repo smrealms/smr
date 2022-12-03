@@ -15,7 +15,8 @@ try {
 	foreach ($dbResult->records() as $dbRecord) {
 		$shipTypeID = $dbRecord->getInt('ship_type_id');
 		$locTypeID = $dbRecord->getInt('location_type_id');
-		$shipLocs[$shipTypeID][] = SmrLocation::getLocation($locTypeID, false, $dbRecord)->getName();
+		$gameID = 0; // doesn't matter for ship list (yet)
+		$shipLocs[$shipTypeID][] = SmrLocation::getLocation($gameID, $locTypeID, false, $dbRecord)->getName();
 	}
 
 	// Get a list of all locations that sell ships

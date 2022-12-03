@@ -10,7 +10,7 @@ $player = $session->getPlayer();
 /** @var int $pickedAccountID */
 $pickedAccountID = $var['PickedAccountID'];
 
-require_once(LIB . 'Draft/alliance_pick.inc.php');
+require_once(LIB . 'Default/alliance_pick.inc.php');
 $teams = get_draft_teams($player->getGameID());
 if (!$teams[$player->getAccountID()]['CanPick']) {
 	create_error('You have to wait for others to pick first.');

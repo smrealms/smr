@@ -18,7 +18,10 @@ class News {
 
 		$newsItems = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$message = bbifyMessage($dbRecord->getString('news_message'));
+			$message = bbifyMessage(
+				$dbRecord->getString('news_message'),
+				$dbRecord->getInt('game_id'),
+			);
 			if ($dbRecord->getString('type') == 'admin') {
 				$message = '<span class="admin">ADMIN </span>' . $message;
 			}
@@ -36,7 +39,10 @@ class News {
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$template = Template::getInstance();
-			$template->assign('BreakingNews', ['Time' => $dbRecord->getInt('time'), 'Message' => bbifyMessage($dbRecord->getString('news_message'))]);
+			$template->assign('BreakingNews', [
+				'Time' => $dbRecord->getInt('time'),
+				'Message' => bbifyMessage($dbRecord->getString('news_message'), $gameID),
+			]);
 		}
 	}
 
@@ -47,7 +53,10 @@ class News {
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$template = Template::getInstance();
-			$template->assign('LottoNews', ['Time' => $dbRecord->getInt('time'), 'Message' => bbifyMessage($dbRecord->getString('news_message'))]);
+			$template->assign('LottoNews', [
+				'Time' => $dbRecord->getInt('time'),
+				'Message' => bbifyMessage($dbRecord->getString('news_message'), $gameID),
+			]);
 		}
 	}
 

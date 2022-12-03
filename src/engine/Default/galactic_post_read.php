@@ -12,6 +12,7 @@ if (!empty($var['paper_id'])) {
 	if (!isset($var['game_id'])) {
 		create_error('Must specify a game ID!');
 	}
+	$template->assign('PaperGameID', $var['game_id']);
 
 	// Create link back to past editions
 	if (isset($var['back']) && $var['back']) {
@@ -22,7 +23,7 @@ if (!empty($var['paper_id'])) {
 
 	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT title FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND paper_id = ' . $var['paper_id']);
-	$paper_name = bbifyMessage($dbResult->record()->getString('title'));
+	$paper_name = bbifyMessage($dbResult->record()->getString('title'), $var['game_id']);
 	$template->assign('PageTopic', 'Reading <i>Galactic Post</i> Edition : ' . $paper_name);
 
 	//now get the articles in this paper.

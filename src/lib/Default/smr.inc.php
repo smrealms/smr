@@ -149,7 +149,7 @@ function inify(string $text): string {
 	return str_replace(',', '', html_entity_decode($text));
 }
 
-function bbifyMessage(string $message, bool $noLinks = false): string {
+function bbifyMessage(string $message, int $gameID = null, bool $noLinks = false): string {
 	static $bbParser;
 	if (!isset($bbParser)) {
 		$bbParser = new \Nbbc\BBCode();
@@ -175,6 +175,13 @@ function bbifyMessage(string $message, bool $noLinks = false): string {
 		$bbParser->addRule('chess', $smrRule);
 		$bbParser->addRule('sector', $smrRule);
 		$bbParser->addRule('join_alliance', $smrRule);
+	}
+
+	global $overrideGameID;
+	if ($gameID === null) {
+		$overrideGameID = Session::getInstance()->getGameID();
+	} else {
+		$overrideGameID = $gameID;
 	}
 
 	global $disableBBLinks;

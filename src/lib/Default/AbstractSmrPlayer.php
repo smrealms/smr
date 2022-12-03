@@ -570,6 +570,15 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getHome(): int {
+		// Draft games may have customized home sectors
+		if ($this->getGame()->isGameType(SmrGame::GAME_TYPE_DRAFT) && $this->hasAlliance()) {
+			$leaderID = $this->getAlliance()->getLeaderID();
+			$dbResult = $this->db->read('SELECT home_sector_id FROM draft_leaders WHERE account_id = ' . $this->db->escapeNumber($leaderID) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
+			if ($dbResult->hasRecord()) {
+				return $dbResult->record()->getInt('home_sector_id');
+			}
+		}
+
 		// get his home sector
 		$hq_id = GOVERNMENT + $this->getRaceID();
 		$raceHqSectors = SmrSector::getLocationSectors($this->getGameID(), $hq_id);
@@ -716,7 +725,7 @@ abstract class AbstractSmrPlayer {
 					$mail = setupMailer();
 					$mail->Subject = 'Message Notification';
 					$mail->setFrom('notifications@smrealms.de', 'SMR Notifications');
-					$bbifiedMessage = 'From: ' . $sender . ' Date: ' . date($receiverAccount->getDateTimeFormat(), Epoch::time()) . "<br/>\r\n<br/>\r\n" . bbifyMessage($message, true);
+					$bbifiedMessage = 'From: ' . $sender . ' Date: ' . date($receiverAccount->getDateTimeFormat(), Epoch::time()) . "<br/>\r\n<br/>\r\n" . bbifyMessage($message, $gameID, true);
 					$mail->msgHTML($bbifiedMessage);
 					$mail->AltBody = strip_tags($bbifiedMessage);
 					$mail->addAddress($receiverAccount->getEmail(), $receiverAccount->getHofName());

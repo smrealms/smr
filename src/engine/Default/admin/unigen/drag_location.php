@@ -13,7 +13,7 @@ $targetSector = SmrSector::getSector($var['game_id'], $targetSectorID);
 
 // Skip if target sector already has the same location
 if (!$targetSector->hasLocation($locationTypeID)) {
-	$location = SmrLocation::getLocation($locationTypeID);
+	$location = SmrLocation::getLocation($var['game_id'], $locationTypeID);
 	SmrLocation::moveSectorLocation($var['game_id'], $origSectorID, $targetSectorID, $location);
 }
 

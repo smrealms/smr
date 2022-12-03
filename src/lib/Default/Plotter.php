@@ -33,7 +33,7 @@ class Plotter {
 			PlotGroup::Technology => Globals::getHardwareTypes($X),
 			PlotGroup::Ships => SmrShipType::get($X),
 			PlotGroup::Weapons => SmrWeaponType::getWeaponType($X),
-			PlotGroup::Locations => SmrLocation::getLocation($X),
+			PlotGroup::Locations => SmrLocation::getLocation($gameID, $X),
 			PlotGroup::SellGoods, PlotGroup::BuyGoods => $getGoodWithTransaction($X),
 			PlotGroup::Galaxies => SmrGalaxy::getGalaxy($gameID, $X), // $X is the galaxyID
 		};

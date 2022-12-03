@@ -114,7 +114,7 @@ if ($submit == 'Create Galaxies') {
 	foreach ($galSectors as $galSector) {
 		$galSector->removeAllLocations();
 	}
-	foreach (SmrLocation::getAllLocations() as $location) {
+	foreach (SmrLocation::getAllLocations($var['game_id']) as $location) {
 		if (Request::has('loc' . $location->getTypeID())) {
 			$numLoc = Request::getInt('loc' . $location->getTypeID());
 			for ($i = 0; $i < $numLoc; $i++) {
@@ -189,7 +189,8 @@ if ($submit == 'Create Galaxies') {
 	$var['message'] = '<span class="green">Success</span> : Succesfully added planets.';
 } elseif ($submit == 'Create Ports') {
 	$numLevelPorts = [];
-	for ($i = 1; $i <= SmrPort::MAX_LEVEL; $i++) {
+	$maxPortLevel = SmrPort::getMaxLevelByGame($var['game_id']);
+	for ($i = 1; $i <= $maxPortLevel; $i++) {
 		$numLevelPorts[$i] = Request::getInt('port' . $i);
 	}
 	$totalPorts = array_sum($numLevelPorts);
@@ -292,7 +293,7 @@ if ($submit == 'Create Galaxies') {
 	for ($x = 0; $x < UNI_GEN_LOCATION_SLOTS; $x++) {
 		if (Request::getInt('loc_type' . $x) != 0) {
 			$locationTypeID = Request::getInt('loc_type' . $x);
-			$locationsToAdd[$locationTypeID] = SmrLocation::getLocation($locationTypeID);
+			$locationsToAdd[$locationTypeID] = SmrLocation::getLocation($var['game_id'], $locationTypeID);
 		}
 	}
 	$editSector->removeAllLocations();

@@ -4,7 +4,7 @@ To do this you must choose a name for yourself and select your race.<br />
 <br /><?php
 if ($Game->getDescription()) { ?>
 	<h2>Round Description</h2>
-	<p><?php echo bbifyMessage($Game->getDescription()); ?></p><?php
+	<p><?php echo bbifyMessage($Game->getDescription(), $Game->getGameID()); ?></p><?php
 }?>
 
 <table class="standard">

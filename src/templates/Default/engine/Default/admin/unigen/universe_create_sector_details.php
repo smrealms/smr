@@ -16,7 +16,7 @@
 	<h2>Port</h2>
 	<select name="port_level">
 		<option value="0">No Port</option><?php
-		for ($i = 1; $i <= SmrPort::MAX_LEVEL; $i++) { ?>
+		for ($i = 1; $i <= SmrPort::getMaxLevelByGame($EditSector->getGameID()); $i++) { ?>
 			<option value="<?php echo $i; ?>" <?php echo ($i == $SelectedPortLevel ? 'selected' : ''); ?>>Level <?php echo $i; ?></option><?php
 		} ?>
 	</select>&nbsp;
@@ -71,7 +71,7 @@
 					<b><?php echo ($i + 1); ?>. </b>
 					<select name="loc_type<?php echo $i; ?>">
 						<option value="0">No Location</option><?php
-						foreach (SmrLocation::getAllLocations() as $id => $location) { ?>
+						foreach (SmrLocation::getAllLocations($EditSector->getGameID()) as $id => $location) { ?>
 							<option value="<?php echo $id ?>" <?php echo ($id == $SectorLocationIDs[$i] ? 'selected' : ''); ?>><?php echo $location->getName(); ?></option><?php
 						} ?>
 					</select>

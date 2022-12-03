@@ -100,14 +100,11 @@ class Template {
 			$templateDir = 'Default/';
 		}
 		$templateDirs = array_unique([$templateDir, 'Default/']);
-		$gameDirs = array_unique([get_game_dir(), 'Default/']);
 
-		foreach ($gameDirs as $gameDir) {
-			foreach ($templateDirs as $templateDir) {
-				$filePath = TEMPLATES . $templateDir . 'engine/' . $gameDir . $templateName;
-				if (is_file($filePath)) {
-					return $filePath;
-				}
+		foreach ($templateDirs as $templateDir) {
+			$filePath = TEMPLATES . $templateDir . 'engine/Default/' . $templateName;
+			if (is_file($filePath)) {
+				return $filePath;
 			}
 		}
 		foreach ($templateDirs as $templateDir) {

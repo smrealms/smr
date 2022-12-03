@@ -12,6 +12,11 @@ $account = $session->getAccount();
 
 $game = SmrGame::getGame($var['game_id']);
 
+// Don't allow vets to join Newbie games
+if ($game->isGameType(SmrGame::GAME_TYPE_NEWBIE) && $account->isVeteran()) {
+	create_error('Veteran players are not allowed to join Newbie games!');
+}
+
 // do we need credits for this game?
 if ($game->getCreditsNeeded() > 0) {
 	// do we have enough

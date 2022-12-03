@@ -16,7 +16,7 @@ if ($player->hasEvilAlignment()) {
 if (!$player->getSector()->hasLocation($var['LocationID'])) {
 	create_error('That location does not exist in this sector');
 }
-$location = SmrLocation::getLocation($var['LocationID']);
+$location = SmrLocation::getLocation($player->getGameID(), $var['LocationID']);
 if (!$location->isHQ()) {
 	create_error('There is no headquarters. Obviously.');
 }

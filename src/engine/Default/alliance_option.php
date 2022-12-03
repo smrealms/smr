@@ -16,11 +16,25 @@ Menu::alliance($alliance->getAllianceID());
 // Create an array of links with descriptions
 $links = [];
 
-$container = Page::create('alliance_leave_confirm.php');
-$links[] = [
-	'link' => create_link($container, 'Leave Alliance'),
-	'text' => 'Leave the alliance. Alliance leaders must hand over leadership before leaving.',
-];
+$isDraftGame = $player->getGame()->isGameType(SmrGame::GAME_TYPE_DRAFT);
+
+if ($isDraftGame && $player->isDraftLeader()) {
+	// Draft leaders get to pick members
+	$container = Page::create('alliance_pick.php');
+	$links[] = [
+		'link' => create_link($container, 'Draft Members'),
+		'text' => 'Choose members to join your alliance.',
+	];
+}
+
+if (!$isDraftGame) {
+	// Players can choose to leave their alliance (except in Draft games)
+	$container = Page::create('alliance_leave_confirm.php');
+	$links[] = [
+		'link' => create_link($container, 'Leave Alliance'),
+		'text' => 'Leave the alliance. Alliance leaders must hand over leadership before leaving.',
+	];
+}
 
 $container = Page::create('alliance_share_maps_processing.php');
 $links[] = [

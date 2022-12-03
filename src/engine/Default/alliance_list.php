@@ -8,7 +8,8 @@ $player = $session->getPlayer();
 
 $template->assign('PageTopic', 'List Of Alliances');
 
-if (!$player->hasAlliance()) {
+$allowCreate = !$player->hasAlliance() && (!$player->getGame()->isGameType(SmrGame::GAME_TYPE_DRAFT) || $player->isDraftLeader());
+if ($allowCreate) {
 	$container = Page::create('alliance_create.php');
 	$template->assign('CreateAllianceHREF', $container->href());
 }

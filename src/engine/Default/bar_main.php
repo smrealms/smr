@@ -9,7 +9,7 @@ $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
 //get bar name
-$location = SmrLocation::getLocation($var['LocationID']);
+$location = SmrLocation::getLocation($player->getGameID(), $var['LocationID']);
 $template->assign('PageTopic', 'Welcome to ' . $location->getName());
 Menu::bar();
 

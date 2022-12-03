@@ -9,6 +9,7 @@ use Smr\BountyType;
 use Smr\Container\DiContainer;
 use Smr\Database;
 use Smr\TransactionType;
+use SmrGame;
 use SmrPlayer;
 use SmrSector;
 
@@ -20,6 +21,11 @@ class AbstractSmrPortTest extends TestCase {
 	protected function tearDown(): void {
 		AbstractSmrPort::clearCache();
 		DiContainer::initialize(false);
+	}
+
+	public static function tearDownAfterClass(): void {
+		SmrSector::clearCache();
+		SmrGame::clearCache();
 	}
 
 	public function test_new_port_does_not_exist_yet(): void {
@@ -361,9 +367,12 @@ class AbstractSmrPortTest extends TestCase {
 			->method('increaseCurrentBountyAmount')
 			->with(BountyType::HQ, 0);
 
+		// Make objects that must be accessed statically (can't be mocked)
+		SmrSector::createSector(1, 1);
+		SmrGame::createGame(1)->setGameTypeID(SmrGame::GAME_TYPE_DEFAULT);
+
 		// Set up the port
 		$portLevel = 3;
-		SmrSector::createSector(1, 1);
 		$port = AbstractSmrPort::createPort(1, 1);
 		$port->upgradeToLevel($portLevel);
 

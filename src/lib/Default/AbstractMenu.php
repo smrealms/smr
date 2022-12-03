@@ -9,8 +9,10 @@ use Smr\Database;
 class AbstractMenu {
 
 	public static function headquarters(int $locationTypeID): void {
+		$gameID = Smr\Session::getInstance()->getGameID();
+
 		$links = [];
-		$location = SmrLocation::getLocation($locationTypeID);
+		$location = SmrLocation::getLocation($gameID, $locationTypeID);
 		if ($location->isHQ()) {
 			$links[] = ['government.php', 'Government'];
 			$links[] = ['military_payment_claim.php', 'Claim Military Payment'];
@@ -19,8 +21,12 @@ class AbstractMenu {
 		} else {
 			throw new Exception('Location is not HQ or UG: ' . $location->getName());
 		}
-		$links[] = ['bounty_claim.php', 'Claim Bounty'];
-		$links[] = ['bounty_place.php', 'Place Bounty'];
+
+		// No bounties in Semi Wars games
+		if (!SmrGame::getGame($gameID)->isGameType(SmrGame::GAME_TYPE_SEMI_WARS)) {
+			$links[] = ['bounty_claim.php', 'Claim Bounty'];
+			$links[] = ['bounty_place.php', 'Place Bounty'];
+		}
 
 		$menuItems = [];
 		foreach ($links as $link) {

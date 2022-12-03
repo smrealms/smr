@@ -15,7 +15,7 @@ if ($player->hasGoodAlignment()) {
 if (!$player->getSector()->hasLocation($var['LocationID'])) {
 	create_error('That location does not exist in this sector');
 }
-$location = SmrLocation::getLocation($var['LocationID']);
+$location = SmrLocation::getLocation($player->getGameID(), $var['LocationID']);
 if (!$location->isUG()) {
 	create_error('There is no underground here.');
 }

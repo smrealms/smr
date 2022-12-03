@@ -28,8 +28,14 @@ if ($account->getTotalSmrCredits() < $creditsNeeded) {
 }
 $account->decreaseTotalSmrCredits($creditsNeeded);
 
+// Decide whether the player should be "newbie" or "vet"
+if ($game->isGameType(SmrGame::GAME_TYPE_SEMI_WARS)) {
+	$isNewbie = false; // all players considered vet in Semi Wars
+} else {
+	$isNewbie = !$account->isVeteran();
+}
+
 // for newbie and beginner another ship, more shields and armour
-$isNewbie = !$account->isVeteran();
 if ($isNewbie) {
 	$startingNewbieTurns = STARTING_NEWBIE_TURNS_NEWBIE;
 } else {

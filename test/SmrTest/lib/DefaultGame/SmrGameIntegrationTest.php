@@ -96,4 +96,11 @@ class SmrGameIntegrationTest extends BaseIntegrationSpec {
 		}
 	}
 
+	public function test_isGameType(): void {
+		$game = SmrGame::createGame(1);
+		$game->setGameTypeID(SmrGame::GAME_TYPE_NEWBIE);
+		self::assertTrue($game->isGameType(SmrGame::GAME_TYPE_NEWBIE));
+		self::assertFalse($game->isGameType(SmrGame::GAME_TYPE_DEFAULT));
+	}
+
 }

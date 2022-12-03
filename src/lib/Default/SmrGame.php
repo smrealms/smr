@@ -281,6 +281,10 @@ class SmrGame {
 		$this->hasChanged = true;
 	}
 
+	public function isGameType(int $gameTypeID): bool {
+		return $this->gameTypeID === $gameTypeID;
+	}
+
 	public function getGameType(): string {
 		return self::GAME_TYPES[$this->gameTypeID];
 	}

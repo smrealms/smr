@@ -7,7 +7,7 @@ $session = Smr\Session::getInstance();
 $var = $session->getCurrentVar();
 $player = $session->getPlayer();
 
-$location = SmrLocation::getLocation($var['LocationID']);
+$location = SmrLocation::getLocation($player->getGameID(), $var['LocationID']);
 $template->assign('PageTopic', $location->getName());
 
 $shipsSold = $location->getShipsSold();

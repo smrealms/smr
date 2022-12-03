@@ -11,8 +11,8 @@ if (empty($ArticleLayout)) { ?>
 			<tr><?php
 				foreach ($Columns as $Column) { ?>
 					<td class="center top" width=50%>
-						<font size="6"><?php echo bbifyMessage($Column['title']); ?></font><br /><br />
-						<div style="text-align: justify;"><?php echo bbifyMessage($Column['text']); ?></div><br /><br />
+						<font size="6"><?php echo bbifyMessage($Column['title'], $PaperGameID); ?></font><br /><br />
+						<div style="text-align: justify;"><?php echo bbifyMessage($Column['text'], $PaperGameID); ?></div><br /><br />
 					</td><?php
 				} ?>
 			</tr><?php
