@@ -97,22 +97,23 @@ if (!empty($protectionMessage)) {
 
 //enableProtectionDependantRefresh($template,$player);
 
+// Do we have an unseen attack message to store in this var?
 $dbResult = $db->read('SELECT * FROM sector_message WHERE ' . $player->getSQL());
 if ($dbResult->hasRecord()) {
-	$msg = $dbResult->record()->getString('message');
+	$var['AttackMessage'] = $dbResult->record()->getString('message');
 	$db->write('DELETE FROM sector_message WHERE ' . $player->getSQL());
-	checkForForceRefreshMessage($msg);
-	checkForAttackMessage($msg);
 }
+
 if (isset($var['AttackMessage'])) {
-	$msg = $var['AttackMessage'];
-	checkForAttackMessage($msg);
+	checkForAttackMessage($var['AttackMessage'], $player);
+}
+if (isset($var['showForceRefreshMessage'])) {
+	$template->assign('ForceRefreshMessage', getForceRefreshMessage($player));
 }
 if (isset($var['MissionMessage'])) {
 	$template->assign('MissionMessage', $var['MissionMessage']);
 }
 if (isset($var['msg'])) {
-	checkForForceRefreshMessage($var['msg']);
 	$template->assign('VarMessage', bbifyMessage($var['msg']));
 }
 
@@ -162,60 +163,35 @@ $template->assign('CloakedPlayers', $cloakedPlayers);
 $template->assign('SectorPlayersLabel', 'Ships');
 
 
-function checkForForceRefreshMessage(string &$msg): void {
-	$contains = 0;
-	$msg = str_replace('[Force Check]', '', $msg, $contains);
-	if ($contains > 0) {
-		$template = Smr\Template::getInstance();
-		if (!$template->hasTemplateVar('ForceRefreshMessage')) {
-			$db = Database::getInstance();
-			$player = Smr\Session::getInstance()->getPlayer();
-
-			$forceRefreshMessage = '';
-			$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at > ' . $db->escapeNumber(Epoch::time()) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
-			if ($dbResult->hasRecord()) {
-				$remainingTime = $dbResult->record()->getInt('refresh_at') - Epoch::time();
-				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in ' . $remainingTime . ' seconds.';
-				$db->replace('sector_message', [
-					'game_id' => $db->escapeNumber($player->getGameID()),
-					'account_id' => $db->escapeNumber($player->getAccountID()),
-					'message' => $db->escapeString('[Force Check]'),
-				]);
-			} else {
-				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
-			}
-			$template->assign('ForceRefreshMessage', $forceRefreshMessage);
-		}
+function getForceRefreshMessage(AbstractSmrPlayer $player): string {
+	$db = Database::getInstance();
+	$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at > ' . $db->escapeNumber(Epoch::time()) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
+	if ($dbResult->hasRecord()) {
+		$remainingTime = $dbResult->record()->getInt('refresh_at') - Epoch::time();
+		$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in ' . $remainingTime . ' seconds.';
+	} else {
+		$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
 	}
+	return $forceRefreshMessage;
 }
 
-function checkForAttackMessage(string &$msg): void {
+function checkForAttackMessage(string $msg, AbstractSmrPlayer $player): void {
 	$contains = 0;
 	$msg = str_replace('[ATTACK_RESULTS]', '', $msg, $contains);
 	if ($contains > 0) {
 		// $msg now contains only the log_id, if there is one
-		if (!is_numeric($msg)) {
-			throw new Exception('Improperly formatted attack message: ' . $msg);
-		}
-		$logID = (int)$msg;
-
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$var['AttackMessage'] = '[ATTACK_RESULTS]' . $msg;
+		$logID = str2int($msg);
 
 		$template = Smr\Template::getInstance();
-		if (!$template->hasTemplateVar('AttackResults')) {
-			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($logID) . ' LIMIT 1');
-			if ($dbResult->hasRecord()) {
-				$dbRecord = $dbResult->record();
-				$player = $session->getPlayer();
-				if ($player->getSectorID() == $dbRecord->getInt('sector_id')) {
-					$results = $dbRecord->getObject('result', true);
-					$template->assign('AttackResultsType', $dbRecord->getString('type'));
-					$template->assign('AttackResults', $results);
-					$template->assign('AttackLogLink', linkCombatLog($logID));
-				}
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($logID) . ' LIMIT 1');
+		if ($dbResult->hasRecord()) {
+			$dbRecord = $dbResult->record();
+			if ($player->getSectorID() == $dbRecord->getInt('sector_id')) {
+				$results = $dbRecord->getObject('result', true);
+				$template->assign('AttackResultsType', $dbRecord->getString('type'));
+				$template->assign('AttackResults', $results);
+				$template->assign('AttackLogLink', linkCombatLog($logID));
 			}
 		}
 	}

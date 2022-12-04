@@ -16,7 +16,6 @@ foreach ($sectorForces as $sectorForce) {
 	}
 }
 
-$message = '[Force Check]'; //this notifies the CS to look for info.
 $container = Page::create('current_sector.php');
-$container['msg'] = $message;
+$container['showForceRefreshMessage'] = true;
 $container->go();

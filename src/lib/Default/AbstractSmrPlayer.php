@@ -1834,7 +1834,7 @@ abstract class AbstractSmrPlayer {
 
 		$this->storedDestinations[] = [
 			'Label' => $label,
-			'SectorID' => (int)$sectorID,
+			'SectorID' => $sectorID,
 			'OffsetTop' => 1,
 			'OffsetLeft' => 1,
 		];
