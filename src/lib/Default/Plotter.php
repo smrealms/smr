@@ -17,7 +17,7 @@ class Plotter {
 		}
 
 		// In all other cases, X is a numeric ID
-		$X = (int)$X;
+		$X = str2int($X);
 
 		// Helper function for plots to trade goods
 		$getGoodWithTransaction = function(int $goodID) use ($xType, $player) {

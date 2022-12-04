@@ -180,10 +180,7 @@ function checkForAttackMessage(string &$msg): void {
 	$msg = str_replace('[ATTACK_RESULTS]', '', $msg, $contains);
 	if ($contains > 0) {
 		// $msg now contains only the log_id, if there is one
-		if (!is_numeric($msg)) {
-			throw new Exception('Improperly formatted attack message: ' . $msg);
-		}
-		$logID = (int)$msg;
+		$logID = str2int($msg);
 
 		$session = Smr\Session::getInstance();
 		$var = $session->getCurrentVar();
