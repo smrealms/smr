@@ -101,18 +101,19 @@ $dbResult = $db->read('SELECT * FROM sector_message WHERE ' . $player->getSQL())
 if ($dbResult->hasRecord()) {
 	$msg = $dbResult->record()->getString('message');
 	$db->write('DELETE FROM sector_message WHERE ' . $player->getSQL());
-	checkForForceRefreshMessage($msg);
 	checkForAttackMessage($msg);
 }
 if (isset($var['AttackMessage'])) {
 	$msg = $var['AttackMessage'];
 	checkForAttackMessage($msg);
 }
+if (isset($var['showForceRefreshMessage'])) {
+	$template->assign('ForceRefreshMessage', getForceRefreshMessage($player));
+}
 if (isset($var['MissionMessage'])) {
 	$template->assign('MissionMessage', $var['MissionMessage']);
 }
 if (isset($var['msg'])) {
-	checkForForceRefreshMessage($var['msg']);
 	$template->assign('VarMessage', bbifyMessage($var['msg']));
 }
 
@@ -162,31 +163,16 @@ $template->assign('CloakedPlayers', $cloakedPlayers);
 $template->assign('SectorPlayersLabel', 'Ships');
 
 
-function checkForForceRefreshMessage(string &$msg): void {
-	$contains = 0;
-	$msg = str_replace('[Force Check]', '', $msg, $contains);
-	if ($contains > 0) {
-		$template = Smr\Template::getInstance();
-		if (!$template->hasTemplateVar('ForceRefreshMessage')) {
-			$db = Database::getInstance();
-			$player = Smr\Session::getInstance()->getPlayer();
-
-			$forceRefreshMessage = '';
-			$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at > ' . $db->escapeNumber(Epoch::time()) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
-			if ($dbResult->hasRecord()) {
-				$remainingTime = $dbResult->record()->getInt('refresh_at') - Epoch::time();
-				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in ' . $remainingTime . ' seconds.';
-				$db->replace('sector_message', [
-					'game_id' => $db->escapeNumber($player->getGameID()),
-					'account_id' => $db->escapeNumber($player->getAccountID()),
-					'message' => $db->escapeString('[Force Check]'),
-				]);
-			} else {
-				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
-			}
-			$template->assign('ForceRefreshMessage', $forceRefreshMessage);
-		}
+function getForceRefreshMessage(AbstractSmrPlayer $player): string {
+	$db = Database::getInstance();
+	$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at > ' . $db->escapeNumber(Epoch::time()) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
+	if ($dbResult->hasRecord()) {
+		$remainingTime = $dbResult->record()->getInt('refresh_at') - Epoch::time();
+		$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in ' . $remainingTime . ' seconds.';
+	} else {
+		$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
 	}
+	return $forceRefreshMessage;
 }
 
 function checkForAttackMessage(string &$msg): void {
