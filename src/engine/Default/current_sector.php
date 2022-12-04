@@ -97,15 +97,15 @@ if (!empty($protectionMessage)) {
 
 //enableProtectionDependantRefresh($template,$player);
 
+// Do we have an unseen attack message to store in this var?
 $dbResult = $db->read('SELECT * FROM sector_message WHERE ' . $player->getSQL());
 if ($dbResult->hasRecord()) {
-	$msg = $dbResult->record()->getString('message');
+	$var['AttackMessage'] = $dbResult->record()->getString('message');
 	$db->write('DELETE FROM sector_message WHERE ' . $player->getSQL());
-	checkForAttackMessage($msg);
 }
+
 if (isset($var['AttackMessage'])) {
-	$msg = $var['AttackMessage'];
-	checkForAttackMessage($msg);
+	checkForAttackMessage($var['AttackMessage'], $player);
 }
 if (isset($var['showForceRefreshMessage'])) {
 	$template->assign('ForceRefreshMessage', getForceRefreshMessage($player));
@@ -175,30 +175,23 @@ function getForceRefreshMessage(AbstractSmrPlayer $player): string {
 	return $forceRefreshMessage;
 }
 
-function checkForAttackMessage(string &$msg): void {
+function checkForAttackMessage(string $msg, AbstractSmrPlayer $player): void {
 	$contains = 0;
 	$msg = str_replace('[ATTACK_RESULTS]', '', $msg, $contains);
 	if ($contains > 0) {
 		// $msg now contains only the log_id, if there is one
 		$logID = str2int($msg);
 
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		$var['AttackMessage'] = '[ATTACK_RESULTS]' . $msg;
-
 		$template = Smr\Template::getInstance();
-		if (!$template->hasTemplateVar('AttackResults')) {
-			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($logID) . ' LIMIT 1');
-			if ($dbResult->hasRecord()) {
-				$dbRecord = $dbResult->record();
-				$player = $session->getPlayer();
-				if ($player->getSectorID() == $dbRecord->getInt('sector_id')) {
-					$results = $dbRecord->getObject('result', true);
-					$template->assign('AttackResultsType', $dbRecord->getString('type'));
-					$template->assign('AttackResults', $results);
-					$template->assign('AttackLogLink', linkCombatLog($logID));
-				}
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($logID) . ' LIMIT 1');
+		if ($dbResult->hasRecord()) {
+			$dbRecord = $dbResult->record();
+			if ($player->getSectorID() == $dbRecord->getInt('sector_id')) {
+				$results = $dbRecord->getObject('result', true);
+				$template->assign('AttackResultsType', $dbRecord->getString('type'));
+				$template->assign('AttackResults', $results);
+				$template->assign('AttackLogLink', linkCombatLog($logID));
 			}
 		}
 	}
