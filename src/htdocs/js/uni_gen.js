@@ -32,7 +32,7 @@ function setupDragDrop() {
 				OrigSectorID: ui.draggable.data("sector"),
 				LocationTypeID: ui.draggable.data("loc"),
 			};
-			ajaxLink(href, setupDragDrop, data);
+			ajaxLink(href, {callback: setupDragDrop, params: data});
 		},
 	});
 
@@ -44,5 +44,5 @@ window.toggleLink = function(elem) {
 		SectorID: elem.dataset.sector,
 		Dir: elem.dataset.dir,
 	};
-	ajaxLink(href, setupDragDrop, data);
+	ajaxLink(href, {callback: setupDragDrop, params: data});
 }
