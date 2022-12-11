@@ -317,7 +317,7 @@ function do_voodoo(): never {
 	}
 
 	if (!AJAX_CONTAINER && $session->ajax && $session->hasChangedSN()) {
-		exit;
+		create_error('The previous page failed to auto-refresh properly!');
 	}
 	//ob_clean();
 
