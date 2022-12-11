@@ -4,6 +4,7 @@ namespace SmrTest\lib\DefaultGame;
 
 use Page;
 use Smr\Container\DiContainer;
+use Smr\Exceptions\UserError;
 use Smr\Session;
 use SmrAccount;
 use SmrTest\BaseIntegrationSpec;
@@ -16,7 +17,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 	private Session $session;
 
 	protected function tablesToTruncate(): array {
-		return ['debug'];
+		return ['debug', 'active_session'];
 	}
 
 	protected function setUp(): void {
@@ -100,6 +101,40 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertFalse(DiContainer::make(Session::class)->ajax);
 	}
 
+	/**
+	 * @testWith [true]
+	 *           [false]
+	 */
+	public function test_ajax_var(bool $varAjax): void {
+		// Set the current var to an arbitrary page
+		$page1 = Page::create('some_page');
+		$this->session->setCurrentVar($page1);
+
+		// Add a link to another page
+		$page2 = Page::create('another_page');
+		$page2['AJAX'] = $varAjax;
+		$sn = $this->session->addLink($page2);
+		$this->session->update();
+
+		// Now pretend we're making an ajax call with the second page
+		$_REQUEST = [
+			'sn' => $sn,
+			'ajax' => '1',
+		];
+		$_COOKIE['session_id'] = $this->session->getSessionID();
+		if ($varAjax) {
+			// If the container allows ajax, this is a valid operation
+			$session = DiContainer::make(Session::class);
+			self::assertTrue($session->ajax);
+			self::assertSame($sn, $session->getSN());
+		} else {
+			// Otherwise, this should be a page refresh, but SN changes
+			$this->expectException(UserError::class);
+			$this->expectExceptionMessage('The previous page failed to auto-refresh properly!');
+			DiContainer::make(Session::class);
+		}
+	}
+
 	public function test_current_var(): void {
 		// With an empty session, there should be no current var
 		self::assertFalse($this->session->hasCurrentVar());
@@ -108,12 +143,11 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		// (This mimics Page::href but with better access to the SN.)
 		$page = Page::create('some_page');
 		$sn = $this->session->addLink($page);
-		$sessionID = $this->session->getSessionID(); // needed for later
 		$this->session->update();
 
 		// Create a new Session, requesting the SN we just made
 		$_REQUEST['sn'] = $sn;
-		$_COOKIE['session_id'] = $sessionID;
+		$_COOKIE['session_id'] = $this->session->getSessionID();
 		$session = DiContainer::make(Session::class);
 
 		// Now we should be able to find this sn in the var
