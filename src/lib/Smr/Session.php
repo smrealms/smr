@@ -5,6 +5,7 @@ namespace Smr;
 use AbstractSmrPlayer;
 use Page;
 use Smr\Container\DiContainer;
+use Smr\Exceptions\UserError;
 use SmrAccount;
 use SmrPlayer;
 
@@ -128,6 +129,13 @@ class Session {
 				// If the current page is modified during page processing, we need
 				// to make sure the original link is unchanged. So we clone it here.
 				$this->currentPage = clone $this->links[$this->SN];
+
+				// If SN changes during an ajax update, it is an error unless user is
+				// requesting a page that is allowed to be executed in an ajax call.
+				$allowAjax = $this->currentPage['AJAX'] ?? false;
+				if (!$allowAjax && $this->ajax && $this->hasChangedSN()) {
+					throw new UserError('The previous page failed to auto-refresh properly!');
+				}
 			}
 
 			if (!$ajaxRefresh) { // since form pages don't ajax refresh properly

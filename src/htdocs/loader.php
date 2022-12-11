@@ -28,20 +28,12 @@ try {
 
 	// check if we got a sn number with our url
 	if (empty($session->getSN())) {
-		if (!$session->ajax) {
-			create_error('Your browser lost the SN. Try to reload the page!');
-		} else {
-			exit;
-		}
+		create_error('Your browser lost the SN. Try to reload the page!');
 	}
 
 	// do we have such a container object in the db?
 	if ($session->hasCurrentVar() === false) {
-		if (!$session->ajax) {
-			create_error('Please avoid using the back button!');
-		} else {
-			exit;
-		}
+		create_error('Please avoid using the back button!');
 	}
 	$var = $session->getCurrentVar();
 

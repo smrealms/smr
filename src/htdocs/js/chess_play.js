@@ -8,7 +8,7 @@
 		var e = $(this);
 		data.toX = e.data('x');
 		data.toY = e.data('y');
-		ajaxLink(submitMoveHREF, highlightMoves, data);
+		ajaxLink(submitMoveHREF, {callback: highlightMoves, params: data});
 	}
 
 	function bindOne(func, arg) {

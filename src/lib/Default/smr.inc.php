@@ -312,15 +312,6 @@ function do_voodoo(): never {
 	$session = Session::getInstance();
 	$var = $session->getCurrentVar();
 
-	if (!defined('AJAX_CONTAINER')) {
-		define('AJAX_CONTAINER', isset($var['AJAX']) && $var['AJAX'] === true);
-	}
-
-	if (!AJAX_CONTAINER && $session->ajax && $session->hasChangedSN()) {
-		exit;
-	}
-	//ob_clean();
-
 	// create account object
 	$account = $session->getAccount();
 
@@ -416,7 +407,7 @@ function do_voodoo(): never {
 	}
 	$template->assign('AJAX_ENABLE_REFRESH', $ajaxRefresh);
 
-	$template->display('skeleton.php', $session->ajax || AJAX_CONTAINER);
+	$template->display('skeleton.php', $session->ajax);
 
 	$session->update();
 

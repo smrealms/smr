@@ -43,9 +43,10 @@ var exec = function(s) {
 		cancelRefresh();
 	}
 
-	// This is used as a jQuery.get callback, but we don't use the arguments
-	// (textStatus, jqXHR), so they are omitted here.
-	function updateRefresh(data) {
+	/**
+	 * Update content displayed on the page given XML data.
+	 */
+	function updateDisplay(data) {
 		$('all > *', data).each(function(i, e) {
 			if(e.tagName === 'JS') {
 				$(e.childNodes).each(function(i, e) {
@@ -66,14 +67,12 @@ var exec = function(s) {
 				$('#'+e.tagName).html($(e).text());
 			}
 		});
-		refreshReady = true;
-		scheduleRefresh();
 	}
 
 	function updateRefreshRequest() {
 		if (refreshEnabled === true && refreshReady === true) {
 			refreshReady = false;
-			xmlHttpRefresh = $.get(refreshUrl, {ajax:1}, updateRefresh, 'xml');
+			xmlHttpRefresh = ajaxLink(refreshUrl);
 		}
 	}
 
@@ -159,23 +158,32 @@ var exec = function(s) {
 	 * Auto-refresh is stopped during the request, and started back up
 	 * (if not disabled) after the request completes.
 	 */
-	window.ajaxLink = function(link, callback=null, params={}) {
+	window.ajaxLink = function(link, {callback=null, params={}, updateRefreshUrl=true} = {}) {
 		cancelRefresh();
 		params.ajax = 1;
-		$.get(link, params, function(data) {
-				refreshUrl = link;
-				updateRefresh(data);
+		return $.get(link, params, function(data) {
+				// Update content on the page based on the XML results. The callback,
+				// if any, may depend on the updated elements, so run after update.
+				updateDisplay(data);
 				if (callback !== null) {
 					callback();
 				}
-			}, 'xml');
+
+				// Update refresh URL so that subsequent refreshes use the correct SN.
+				if (updateRefreshUrl) {
+					refreshUrl = link;
+				}
+				refreshReady = true;
+				scheduleRefresh();
+		}, 'xml');
 	};
 
 	window.toggleWepD = function(link) {
 		$('.wep1:visible').slideToggle(600);
 		$('.wep1:hidden').fadeToggle(600);
-		// Omit updateRefresh here so that we can smoothly animate the change
-		$.get(link, {ajax: 1});
+		// Don't change refreshUrl here, because the toggle link exits without
+		// returning any content updates.
+		ajaxLink(link, {updateRefreshUrl: false});
 	};
 
 })();
