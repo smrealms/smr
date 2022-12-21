@@ -114,22 +114,23 @@ Engine files and their associated templates should be placed in `src/engine` and
 ## Links
 If possible use a function from `Globals` or a relevant object to generate links (e.g. `Globals::getCurrentSectorHREF()` or `$otherPlayer->getExamineTraderHREF()`).
 This is usually clearer and allows hooking into the hotkey system.
-To create a link you first create a "container" using the `Page` class:
+To create a link you first create a "container" using a `Page` class, e.g.:
 
 ```php
-$container = Page::create($file);
+$container = new CurrentSector();
 ```
-You can then call `$container->href()` to get a HREF, which will load the given page or `Smr\Session::generateSN($container)` to get just the sn.
-Along with this you can also assign extra values to `$container` which will be available on the next page under `$var`.
+You can then call `$container->href()` to get a HREF, which will give a link that
+can be displayed on the page. In this example, clicking the link will load the
+"Current Sector" page next.
 
-```php
-$container = Page::create('sector_move_processing.php');
-$container['target_sector'] = 1;
-$link = $container->href();
-```
+You can also call `$container->go()`, which will immediately forward to this page
+within the same HTTP request.
 
 ## Request variables
-For any page which takes input through POST or GET, these values must be accessed using `Smr\Session::getRequestVar()` and relatives, which will store the value in `$var`. This is required because auto-refresh updates of the page will *not* resend these inputs, but they are still required to render the page correctly.
+For any page which takes input through POST or GET, these values may be accessed
+using `Smr\Session::getRequestVar()` and relatives, which will store the value
+in the session. When a page is auto-refreshed with AJAX, these inputs are not
+resent, but they are still required to render the page correctly.
 
 ## Abstract vs normal classes
 This initially started out to be used in the "standard" way for NPCs but that idea has since been discarded.
