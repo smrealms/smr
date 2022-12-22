@@ -51,7 +51,6 @@ class ComputerSharing extends AccountPage {
 				if (!$dbResult2->hasRecord()) {
 					continue;
 				}
-				$currTabAccLogin = $dbResult2->record()->getString('login');
 
 				$rows = [];
 				foreach ($accountIDs as $currLinkAccId) {

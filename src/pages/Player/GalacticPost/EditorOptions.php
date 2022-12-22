@@ -32,7 +32,6 @@ class EditorOptions extends PlayerPage {
 		$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 		$papers = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$paper_name = $dbRecord->getString('title');
 			$paper_id = $dbRecord->getInt('paper_id');
 			$published = $dbRecord->getNullableInt('online_since') !== null;
 

@@ -10,8 +10,6 @@ use SmrPort;
 class AllianceShareMapsProcessor extends PlayerPageProcessor {
 
 	public function build(AbstractSmrPlayer $player): never {
-		$alliance_ids = [];
-
 		// get a list of alliance member (remove current player)
 		$memberIDs = $player->getAlliance()->getMemberIDs();
 		$alliance_ids = array_diff($memberIDs, [$player->getAccountID()]);

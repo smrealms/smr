@@ -80,7 +80,6 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 								AND transaction = \'Payment\'
 								AND exempt = 0
 								AND time > ' . $db->escapeNumber(Epoch::time() - 86400));
-				$total = 0;
 				$total = $dbResult->record()->getInt('total');
 				if ($total + $amount > $withdrawalPerDay) {
 					create_error('Your alliance doesn\'t allow you to take that much cash this often!');
