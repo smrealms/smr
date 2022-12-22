@@ -2,9 +2,9 @@
 
 namespace SmrTest\lib\DefaultGame;
 
-use Page;
 use Smr\Container\DiContainer;
 use Smr\Exceptions\UserError;
+use Smr\Page\Page;
 use Smr\Session;
 use SmrAccount;
 use SmrTest\BaseIntegrationSpec;

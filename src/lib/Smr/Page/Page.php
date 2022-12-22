@@ -1,9 +1,7 @@
 <?php declare(strict_types=1);
 
-use Smr\Page\AccountPage;
-use Smr\Page\AccountPageProcessor;
-use Smr\Page\PlayerPage;
-use Smr\Page\PlayerPageProcessor;
+namespace Smr\Page;
+
 use Smr\Session;
 use Smr\Template;
 
@@ -49,7 +47,7 @@ class Page {
 		if (defined('OVERRIDE_FORWARD') && OVERRIDE_FORWARD === true) {
 			overrideForward($this);
 		}
-		Smr\Session::getInstance()->setCurrentVar($this);
+		Session::getInstance()->setCurrentVar($this);
 		do_voodoo();
 	}
 
@@ -61,7 +59,7 @@ class Page {
 	public function href(bool $forceFullURL = false): string {
 		// We need to clone this instance in case it is modified after being added
 		// to the session links. This would not be necessary if Page was readonly.
-		$sn = Smr\Session::getInstance()->addLink(clone $this);
+		$sn = Session::getInstance()->addLink(clone $this);
 
 		$href = '?sn=' . $sn;
 		if ($forceFullURL === true || $_SERVER['SCRIPT_NAME'] !== LOADER_URI) {

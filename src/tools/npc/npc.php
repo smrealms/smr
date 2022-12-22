@@ -7,6 +7,7 @@ use Smr\Npc\Exceptions\FinalAction;
 use Smr\Npc\Exceptions\ForwardAction;
 use Smr\Npc\Exceptions\TradeRouteDrained;
 use Smr\Npc\NpcActor;
+use Smr\Page\Page;
 use Smr\Pages\Account\ErrorDisplay;
 use Smr\Pages\Player\CargoDumpProcessor;
 use Smr\Pages\Player\CurrentSector;

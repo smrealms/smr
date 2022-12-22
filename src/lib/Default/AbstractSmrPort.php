@@ -4,6 +4,7 @@ use Smr\BountyType;
 use Smr\Database;
 use Smr\DatabaseRecord;
 use Smr\Epoch;
+use Smr\Page\Page;
 use Smr\Pages\Player\AttackPortClaimProcessor;
 use Smr\Pages\Player\AttackPortConfirm;
 use Smr\Pages\Player\AttackPortLootProcessor;

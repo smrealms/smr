@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Account;
 
-use Page;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
+use Smr\Page\Page;
 use Smr\Request;
 use SmrAccount;
 

@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Account;
 
-use Page;
 use Smr\Page\AccountPageProcessor;
+use Smr\Page\Page;
 use Smr\Page\ReusableTrait;
 use Smr\Session;
 use SmrAccount;

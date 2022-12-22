@@ -2,7 +2,6 @@
 
 namespace Smr\Page;
 
-use Page;
 use SmrAccount;
 
 abstract class AccountPageProcessor extends Page {

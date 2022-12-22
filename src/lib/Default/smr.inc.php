@@ -6,6 +6,7 @@ use Smr\Database;
 use Smr\Epoch;
 use Smr\Exceptions\UserError;
 use Smr\Messages;
+use Smr\Page\Page;
 use Smr\Pages\Account\AlbumEdit;
 use Smr\Pages\Account\BugReport;
 use Smr\Pages\Account\ChangelogView;

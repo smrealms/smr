@@ -2,7 +2,6 @@
 
 namespace Smr\Page;
 
-use Page;
 use Smr\Template;
 use SmrAccount;
 

@@ -3,9 +3,9 @@
 namespace Smr;
 
 use AbstractSmrPlayer;
-use Page;
 use Smr\Container\DiContainer;
 use Smr\Exceptions\UserError;
+use Smr\Page\Page;
 use Smr\Pages\Player\AttackPlayerProcessor;
 use Smr\Pages\Player\ExamineTrader;
 use Smr\Pages\Player\ForcesDrop;

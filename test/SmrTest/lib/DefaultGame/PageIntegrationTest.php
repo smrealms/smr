@@ -2,16 +2,16 @@
 
 namespace SmrTest\lib\DefaultGame;
 
-use Page;
 use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
+use Smr\Page\Page;
 use Smr\Session;
 
 /**
  * This is an integration test, but does not need to extend BaseIntegrationTest
  * since we are not (or should not be!) writing any data.
  *
- * @covers Page
+ * @covers Smr\Page\Page
  */
 class PageIntegrationTest extends TestCase {
 

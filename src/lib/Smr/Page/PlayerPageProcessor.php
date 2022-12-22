@@ -3,7 +3,6 @@
 namespace Smr\Page;
 
 use AbstractSmrPlayer;
-use Page;
 
 abstract class PlayerPageProcessor extends Page {
 
