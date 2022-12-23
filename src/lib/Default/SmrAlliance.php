@@ -433,7 +433,7 @@ class SmrAlliance {
 		$this->flagshipID = $accountID;
 	}
 
-	public function getJoinRestriction(AbstractSmrPlayer $player, bool $doAllianceCheck = true): string|false {
+	public function getJoinRestriction(AbstractSmrPlayer $player, bool $doAllianceCheck = true, bool $doRecruitingCheck = true): string|false {
 		if ($player->getGame()->isGameType(SmrGame::GAME_TYPE_DRAFT)) {
 			return 'Alliance members will be selected by the Draft Leaders.';
 		}
@@ -446,7 +446,7 @@ class SmrAlliance {
 		if ($doAllianceCheck && $player->hasAlliance()) {
 			return 'You are already in an alliance!';
 		}
-		if (!$this->isRecruiting()) {
+		if ($doRecruitingCheck && !$this->isRecruiting()) {
 			return 'This alliance is not currently accepting new recruits.';
 		}
 		if ($player->getAllianceJoinable() > Epoch::time()) {
