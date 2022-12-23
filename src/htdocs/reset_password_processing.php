@@ -34,7 +34,8 @@ try {
 	$account->setPassword($password);
 	$account->update();
 
-	header('Location: /login.php');
+	$msg = 'You have successfully reset your password!';
+	header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 } catch (Throwable $e) {
 	handleException($e);
 }
