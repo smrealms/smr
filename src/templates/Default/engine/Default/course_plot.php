@@ -91,12 +91,12 @@ if (isset($XType)) { ?>
 Add new destinations below. Stored destinations can be organized by dragging.
 
 <div id="droppableObject" class="savedDestinationArea"><?php
-	foreach ($StoredDestinations as $SD) { ?>
+	foreach ($StoredDestinations as $sectorID => $SD) { ?>
 		<div class="draggableObject savedDestination"
-			style="top:<?php echo $SD['OffsetTop']; ?>px; left:<?php echo $SD['OffsetLeft']; ?>px"
-			data-sector-id="<?php echo $SD['SectorID']; ?>">
-			<a href="javascript:processCourse(<?php echo $SD['SectorID']; ?>)"> <?php echo '#' . $SD['SectorID'] . ' - ' . $SD['Label']; ?></a>
-			<a href="javascript:processRemove(<?php echo $SD['SectorID']; ?>)"> <img src="images/silk/cross.png" width="16" height="16" alt="X" title="Delete Saved Sector"/></a>
+			style="top:<?php echo $SD->offsetTop; ?>px; left:<?php echo $SD->offsetLeft; ?>px"
+			data-sector-id="<?php echo $sectorID; ?>">
+			<a href="javascript:processCourse(<?php echo $sectorID; ?>)"> <?php echo $SD->getDisplayName(); ?></a>
+			<a href="javascript:processRemove(<?php echo $sectorID; ?>)"> <img src="images/silk/cross.png" width="16" height="16" alt="X" title="Delete Saved Sector"/></a>
 		</div><?php
 	} ?>
 </div>

@@ -18,6 +18,7 @@ use Smr\Pages\Player\WeaponDisplayToggleProcessor;
 use Smr\Path;
 use Smr\Race;
 use Smr\ScoutMessageGroupType;
+use Smr\StoredDestination;
 use Smr\TurnsLevel;
 
 abstract class AbstractSmrPlayer {
@@ -95,7 +96,7 @@ abstract class AbstractSmrPlayer {
 	protected bool $raceChanged;
 	protected bool $combatDronesKamikazeOnMines;
 	protected string|false $customShipName;
-	/** @var array<array<string, mixed>> */
+	/** @var array<int, StoredDestination> */
 	protected array $storedDestinations;
 	/** @var array<int, bool> */
 	protected array $canFed;
@@ -1785,64 +1786,67 @@ abstract class AbstractSmrPlayer {
 	}
 
 	/**
-	 * @return array<array<string, mixed>>
+	 * @return array<int, StoredDestination>
 	 */
-	public function &getStoredDestinations(): array {
+	public function getStoredDestinations(): array {
 		if (!isset($this->storedDestinations)) {
 			$this->storedDestinations = [];
 			$dbResult = $this->db->read('SELECT * FROM player_stored_sector WHERE ' . $this->SQL);
 			foreach ($dbResult->records() as $dbRecord) {
-				$this->storedDestinations[] = [
-					'Label' => $dbRecord->getString('label'),
-					'SectorID' => $dbRecord->getInt('sector_id'),
-					'OffsetTop' => $dbRecord->getInt('offset_top'),
-					'OffsetLeft' => $dbRecord->getInt('offset_left'),
-				];
+				$sectorID = $dbRecord->getInt('sector_id');
+				$this->storedDestinations[$sectorID] = new StoredDestination(
+					sectorID: $sectorID,
+					label: $dbRecord->getString('label'),
+					offsetTop: $dbRecord->getInt('offset_top'),
+					offsetLeft: $dbRecord->getInt('offset_left'),
+				);
 			}
 		}
 		return $this->storedDestinations;
 	}
 
 	public function moveDestinationButton(int $sectorID, int $offsetTop, int $offsetLeft): void {
+		$this->getStoredDestinations(); // make sure property is initialized
 
 		if ($offsetLeft < 0 || $offsetLeft > 500 || $offsetTop < 0 || $offsetTop > 300) {
 			throw new UserError('The saved sector must be in the box!');
 		}
 
-		foreach ($this->getStoredDestinations() as &$sd) {
-			if ($sd['SectorID'] == $sectorID) {
-				$sd['OffsetTop'] = $offsetTop;
-				$sd['OffsetLeft'] = $offsetLeft;
-				$this->db->write('
-					UPDATE player_stored_sector
-						SET offset_left = ' . $this->db->escapeNumber($offsetLeft) . ', offset_top=' . $this->db->escapeNumber($offsetTop) . '
-					WHERE ' . $this->SQL . ' AND sector_id = ' . $this->db->escapeNumber($sectorID));
-				return;
-			}
+		if (!isset($this->storedDestinations[$sectorID])) {
+			throw new UserError('You do not have a saved sector for #' . $sectorID);
 		}
 
-		throw new UserError('You do not have a saved sector for #' . $sectorID);
+		// Replace destination with updated offsets
+		$this->storedDestinations[$sectorID] = new StoredDestination(
+			sectorID: $sectorID,
+			label: $this->storedDestinations[$sectorID]->label,
+			offsetTop: $offsetTop,
+			offsetLeft: $offsetLeft,
+		);
+		$this->db->write('
+			UPDATE player_stored_sector
+				SET offset_left = ' . $this->db->escapeNumber($offsetLeft) . ', offset_top=' . $this->db->escapeNumber($offsetTop) . '
+			WHERE ' . $this->SQL . ' AND sector_id = ' . $this->db->escapeNumber($sectorID));
 	}
 
 	public function addDestinationButton(int $sectorID, string $label): void {
+		$this->getStoredDestinations(); // make sure property is initialized
 
 		if (!SmrSector::sectorExists($this->getGameID(), $sectorID)) {
 			throw new UserError('You want to add a non-existent sector?');
 		}
 
 		// sector already stored ?
-		foreach ($this->getStoredDestinations() as $sd) {
-			if ($sd['SectorID'] == $sectorID) {
-				throw new UserError('Sector already stored!');
-			}
+		if (isset($this->storedDestinations[$sectorID])) {
+			throw new UserError('Sector already stored!');
 		}
 
-		$this->storedDestinations[] = [
-			'Label' => $label,
-			'SectorID' => $sectorID,
-			'OffsetTop' => 1,
-			'OffsetLeft' => 1,
-		];
+		$this->storedDestinations[$sectorID] = new StoredDestination(
+			label: $label,
+			sectorID: $sectorID,
+			offsetTop: 1,
+			offsetLeft: 1,
+		);
 
 		$this->db->insert('player_stored_sector', [
 			'account_id' => $this->db->escapeNumber($this->getAccountID()),
@@ -1855,18 +1859,17 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function deleteDestinationButton(int $sectorID): void {
+		$this->getStoredDestinations(); // make sure property is initialized
 
-		foreach ($this->getStoredDestinations() as $key => $sd) {
-			if ($sd['SectorID'] == $sectorID) {
-				$this->db->write('
-					DELETE FROM player_stored_sector
-					WHERE ' . $this->SQL . '
-					AND sector_id = ' . $this->db->escapeNumber($sectorID));
-				unset($this->storedDestinations[$key]);
-				return;
-			}
+		if (!isset($this->storedDestinations[$sectorID])) {
+			throw new Exception('Could not find stored destination');
 		}
-		throw new Exception('Could not find stored destination');
+
+		$this->db->write('
+			DELETE FROM player_stored_sector
+			WHERE ' . $this->SQL . '
+			AND sector_id = ' . $this->db->escapeNumber($sectorID));
+		unset($this->storedDestinations[$sectorID]);
 	}
 
 	/**
