@@ -167,11 +167,14 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		$var2 = $session->getCurrentVar();
 		self::assertSame($page2, $var2);
 
-		// If we make a new session, but keep the same SN (e.g. ajax),
-		// we should still get the updated var, even though it wasn't
-		// the one originally associated with this SN.
+		// If we make a new session, but keep the same SN, we should still get
+		// the updated var, even though it wasn't the one originally associated
+		// with this SN.
 		$session->update();
-		$_REQUEST['ajax'] = 1;
+		$_REQUEST['ajax'] = 1; // simulate AJAX refresh
+		$session = DiContainer::make(Session::class);
+		self::assertEquals($var2, $session->getCurrentVar());
+		$_REQUEST['ajax'] = 0; // simulate F5 refresh
 		$session = DiContainer::make(Session::class);
 		self::assertEquals($var2, $session->getCurrentVar());
 

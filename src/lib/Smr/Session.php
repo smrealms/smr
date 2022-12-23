@@ -142,12 +142,16 @@ class Session {
 				// If the current page is modified during page processing, we need
 				// to make sure the original link is unchanged. So we clone it here.
 				$this->currentPage = clone $this->links[$this->SN];
+			} elseif (!$this->hasChangedSN()) {
+				// If we're manually refreshing the page (F5), but the SN is not
+				// reusable, it is safe to use the previous displayed page.
+				$this->currentPage = $lastPage;
+			}
 
-				// If SN changes during an ajax update, it is an error unless user is
-				// requesting a page that is allowed to be executed in an ajax call.
-				if ($this->ajax && $this->hasChangedSN() && !$this->currentPage->allowAjax) {
-					throw new UserError('The previous page failed to auto-refresh properly!');
-				}
+			// If SN changes during an ajax update, it is an error unless user is
+			// requesting a page that is allowed to be executed in an ajax call.
+			if ($this->ajax && $this->hasChangedSN() && !$this->currentPage->allowAjax) {
+				throw new UserError('The previous page failed to auto-refresh properly!');
 			}
 
 			if (!$ajaxRefresh) { // since form pages don't ajax refresh properly
@@ -338,9 +342,11 @@ class Session {
 			}
 		}
 		// This page isn't an existing link, so give it a new SN.
+		// Don't allow it to be the current SN, even if it's no longer valid,
+		// so that we can guarantee that an unchanged SN implies the same page.
 		do {
 			$sn = random_alphabetic_string(6);
-		} while (isset($this->links[$sn]));
+		} while (isset($this->links[$sn]) && $sn === $this->SN);
 		$this->links[$sn] = $container;
 		return $sn;
 	}
