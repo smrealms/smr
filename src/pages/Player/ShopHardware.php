@@ -20,9 +20,9 @@ class ShopHardware extends PlayerPage {
 			create_error('That location does not exist in this sector');
 		}
 
-		$template->assign('PageTopic', 'Hardware Shop');
-
 		$location = SmrLocation::getLocation($player->getGameID(), $this->locationID);
+		$template->assign('PageTopic', $location->getName());
+
 		if ($location->isHardwareSold()) {
 			$hardwareSold = $location->getHardwareSold();
 			foreach ($hardwareSold as $hardwareTypeID => $hardware) {
