@@ -44,7 +44,7 @@ if (isset($HardwareSold)) { ?>
 				<td><?php echo $Hardware['Name']; ?></td>
 				<td><input form="sell<?php echo HARDWARE_COMBAT; ?>" type="number" name="amount" value="<?php echo $MaxAmountToSell; ?>" size="5" onKeyUp="recalcOnKeyUp('sell',<?php echo HARDWARE_COMBAT; ?>,<?php echo $UnitRefund; ?>)" class="center"></td>
 				<td class="center"><?php echo number_format($UnitRefund); ?></td>
-				<td><input type="number" name="total" disabled="disabled" value="<?php echo $MaxAmountToSell * $UnitRefund; ?>" size="7" class="center"></td>
+				<td><input form="sell<?php echo HARDWARE_COMBAT; ?>" type="number" name="total" disabled="disabled" value="<?php echo $MaxAmountToSell * $UnitRefund; ?>" size="7" class="center"></td>
 				<td class="center">
 					<form method="POST" id="sell<?php echo HARDWARE_COMBAT; ?>" action="<?php echo $Hardware['HREF']; ?>">
 						<input type="submit" name="action" value="Sell" />
