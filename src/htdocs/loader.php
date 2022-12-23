@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 
 use Smr\Login\Redirect;
+use Smr\Pages\Account\InvalidEmail;
+use Smr\Pages\Account\InvalidEmailProcessor;
+use Smr\Pages\Account\ReopenAccount;
+use Smr\Pages\Account\ReopenAccountProcessor;
 
 try {
 	require_once('../bootstrap.php');
@@ -44,19 +48,17 @@ try {
 		// save session (incase we forward)
 		$session->update();
 		if ($disabled['Reason'] == CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
-			if (isset($var['do_reopen_account'])) {
-				// The user has attempted to re-validate their e-mail
-				Page::create('invalid_email_processing.php')->go();
-			} else {
-				Page::create('invalid_email.php')->go();
+			if (!($var instanceof InvalidEmailProcessor)) {
+				(new InvalidEmail())->go();
 			}
+			// The user has attempted to re-validate their e-mail
+			// so let this page process normally.
 		} elseif ($disabled['Reason'] == CLOSE_ACCOUNT_BY_REQUEST_REASON) {
-			if (isset($var['do_reopen_account'])) {
-				// The user has requested to reopen their account
-				$account->unbanAccount($account);
-			} else {
-				Page::create('reopen_account.php')->go();
+			if (!($var instanceof ReopenAccountProcessor)) {
+				(new ReopenAccount())->go();
 			}
+			// The user has requested to reopen their account
+			// so let this page process normally.
 		} else {
 			throw new Exception('Unexpected disabled reason');
 		}

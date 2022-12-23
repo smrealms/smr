@@ -2,6 +2,14 @@
 
 use Smr\Database;
 use Smr\DatabaseRecord;
+use Smr\Pages\Admin\EditLocations;
+use Smr\Pages\Player\Bank\PersonalBank;
+use Smr\Pages\Player\Bar\BarMain;
+use Smr\Pages\Player\Headquarters\Government;
+use Smr\Pages\Player\Headquarters\Underground;
+use Smr\Pages\Player\ShopHardware;
+use Smr\Pages\Player\ShopShip;
+use Smr\Pages\Player\ShopWeapon;
 use Smr\ShipClass;
 
 class AbstractSmrLocation {
@@ -465,14 +473,22 @@ class AbstractSmrLocation {
 	}
 
 	public function getExamineHREF(): string {
-		$container = Page::create($this->getAction());
-		$container['LocationID'] = $this->getTypeID();
+		$action = $this->processor;
+		$container = match ($action) {
+			'shop_hardware.php' => new ShopHardware($this->typeID),
+			'shop_ship.php' => new ShopShip($this->typeID),
+			'shop_weapon.php' => new ShopWeapon($this->typeID),
+			'government.php' => new Government($this->typeID),
+			'underground.php' => new Underground($this->typeID),
+			'bank_personal.php' => new PersonalBank(),
+			'bar_main.php' => new BarMain($this->typeID),
+			default => throw new Exception('Unknown action: ' . $action),
+		};
 		return $container->href();
 	}
 
 	public function getEditHREF(): string {
-		$container = Page::create('location_edit.php');
-		$container['location_type_id'] = $this->getTypeID();
+		$container = new EditLocations($this->getTypeID());
 		return $container->href();
 	}
 

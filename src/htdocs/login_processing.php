@@ -4,6 +4,7 @@ use Smr\Database;
 use Smr\Epoch;
 use Smr\Exceptions\AccountNotFound;
 use Smr\Login\Redirect;
+use Smr\Pages\Account\LoginCheckValidatedProcessor;
 use Smr\Request;
 use Smr\SocialLogin\SocialLogin;
 
@@ -67,7 +68,7 @@ try {
 	}
 
 	// this sn identifies our container later
-	$href = Page::create('login_check_processing.php')->href(true);
+	$href = (new LoginCheckValidatedProcessor())->href(true);
 	$session->update();
 
 	// get this user from db

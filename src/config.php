@@ -5,7 +5,6 @@ error_reporting(E_ALL);
 // Repository paths
 const ROOT = __DIR__ . '/../';
 const LIB = ROOT . 'src/lib/';
-const ENGINE = ROOT . 'src/engine/';
 const WWW = ROOT . 'src/htdocs/';
 const UPLOAD = WWW . 'upload/';
 const ADMIN = ROOT . 'src/admin/';

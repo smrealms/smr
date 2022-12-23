@@ -10,6 +10,11 @@ use Smr\Exceptions\AccountNotFound;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Exceptions\UserError;
 use Smr\Messages;
+use Smr\Pages\Player\ExamineTrader;
+use Smr\Pages\Player\NewbieLeaveProcessor;
+use Smr\Pages\Player\Planet\KickProcessor;
+use Smr\Pages\Player\SearchForTraderResult;
+use Smr\Pages\Player\WeaponDisplayToggleProcessor;
 use Smr\Path;
 use Smr\Race;
 use Smr\ScoutMessageGroupType;
@@ -2261,15 +2266,11 @@ abstract class AbstractSmrPlayer {
 	public function removeUnderAttack(): bool {
 		$session = Smr\Session::getInstance();
 		$var = $session->getCurrentVar();
-		if (isset($var['UnderAttack'])) {
-			return $var['UnderAttack'];
+		if ($var->underAttack === null) {
+			$var->underAttack = $this->isUnderAttack(); // remember if we are under attack for AJAX
+			$this->setUnderAttack(false);
 		}
-		$underAttack = $this->isUnderAttack();
-		if ($underAttack && !$session->ajax) {
-			$var['UnderAttack'] = $underAttack; //Remember we are under attack for AJAX
-		}
-		$this->setUnderAttack(false);
-		return $underAttack;
+		return $var->underAttack;
 	}
 
 	public function killPlayer(int $sectorID): void {
@@ -3185,12 +3186,11 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getLeaveNewbieProtectionHREF(): string {
-		return Page::create('leave_newbie_processing.php')->href();
+		return (new NewbieLeaveProcessor())->href();
 	}
 
 	public function getExamineTraderHREF(): string {
-		$container = Page::create('trader_examine.php');
-		$container['target'] = $this->getAccountID();
+		$container = new ExamineTrader($this->getAccountID());
 		return $container->href();
 	}
 
@@ -3199,14 +3199,12 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getPlanetKickHREF(): string {
-		$container = Page::create('planet_kick_processing.php');
-		$container['account_id'] = $this->getAccountID();
+		$container = new KickProcessor($this->getAccountID());
 		return $container->href();
 	}
 
 	public function getTraderSearchHREF(): string {
-		$container = Page::create('trader_search_result.php');
-		$container['player_id'] = $this->getPlayerID();
+		$container = new SearchForTraderResult($this->getPlayerID());
 		return $container->href();
 	}
 
@@ -3215,8 +3213,8 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getToggleWeaponHidingHREF(bool $ajax = false): string {
-		$container = Page::create('toggle_processing.php');
-		$container['AJAX'] = $ajax;
+		$container = new WeaponDisplayToggleProcessor();
+		$container->allowAjax = $ajax;
 		return $container->href();
 	}
 

@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Pages\Player\CurrentSector;
+use Smr\Pages\Player\PlotCourseResult;
 use Smr\Path;
 
 /**
@@ -12,13 +14,12 @@ function course_plot_forward(AbstractSmrPlayer $player, Path $path): never {
 
 		if (!$player->isLandedOnPlanet()) {
 			// If the course can immediately be followed, display it on the current sector page
-			$container = Page::create('current_sector.php');
+			$container = new CurrentSector();
 			$container->go();
 		}
 	}
 
-	$container = Page::create('course_plot_result.php');
-	$container['Path'] = $path;
+	$container = new PlotCourseResult($path);
 	$container->go();
 
 }

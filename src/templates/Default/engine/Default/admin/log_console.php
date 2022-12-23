@@ -4,13 +4,7 @@
 </p><?php
 
 if (count($LoggedAccounts) > 0) { ?>
-	<form method="POST" action="<?php echo $LogConsoleFormHREF; ?>"><?php
-
-		// put hidden fields in for log type to have all fields selected on next page.
-		foreach ($LogTypes as $LogType) { ?>
-			<input type="hidden" name="log_type_ids[<?php echo $LogType; ?>]" value="1"><?php
-		} ?>
-
+	<form method="POST" action="<?php echo $LogConsoleFormHREF; ?>">
 		<table class="standard">
 			<tr>
 				<th>Login</th>

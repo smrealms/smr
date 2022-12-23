@@ -4,10 +4,10 @@ namespace Smr\Npc;
 
 use AbstractSmrPlayer;
 use Exception;
-use Page;
 use Smr\Npc\Exceptions\FinalAction;
 use Smr\Npc\Exceptions\ForwardAction;
 use Smr\Npc\Exceptions\TradeRouteDrained;
+use Smr\Page\Page;
 use Smr\Routes\RouteIterator;
 use Smr\TransactionType;
 use SmrSector;

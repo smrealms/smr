@@ -126,7 +126,7 @@ class Request {
 	 * Helper function to avoid code duplication in getVar* functions.
 	 */
 	private static function getVarX(string $index, mixed $default, callable $func): mixed {
-		$var = Session::getInstance()->getCurrentVar();
+		$var = Session::getInstance()->getRequestData();
 		if (isset($var[$index])) {
 			// An index may be present in both var and request. This indicates
 			// a logical error in the code, unless the values are the same,

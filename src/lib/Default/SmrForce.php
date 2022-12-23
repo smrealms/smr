@@ -3,6 +3,11 @@
 use Smr\Database;
 use Smr\DatabaseRecord;
 use Smr\Epoch;
+use Smr\Pages\Player\AttackForcesProcessor;
+use Smr\Pages\Player\ForcesDrop;
+use Smr\Pages\Player\ForcesDropProcessor;
+use Smr\Pages\Player\ForcesRefreshAllProcessor;
+use Smr\Pages\Player\ForcesRefreshProcessor;
 
 class SmrForce {
 
@@ -395,68 +400,52 @@ class SmrForce {
 	}
 
 	public function getExamineDropForcesHREF(): string {
-		$container = Page::create('forces_drop.php');
-		$container['owner_id'] = $this->getOwnerID();
+		$container = new ForcesDrop($this->getOwnerID());
 		return $container->href();
 	}
 
 	public function getAttackForcesHREF(): string {
-		$container = Page::create('forces_attack_processing.php');
-		$container['bump'] = false;
-		$container['owner_id'] = $this->getOwnerID();
+		$container = new AttackForcesProcessor($this->getOwnerID());
 		return $container->href();
 	}
 
 	public function getRefreshHREF(): string {
-		$container = Page::create('forces_refresh_processing.php');
-		$container['owner_id'] = $this->getOwnerID();
+		$container = new ForcesRefreshProcessor($this->getOwnerID());
 		return $container->href();
 	}
 
-	protected function getDropContainer(): Page {
-		$container = Page::create('forces_drop_processing.php');
-		$container['owner_id'] = $this->getOwnerID();
-		return $container;
-	}
-
 	public function getDropSDHREF(): string {
-		$container = $this->getDropContainer();
-		$container['drop_scout_drones'] = 1;
+		$container = new ForcesDropProcessor($this->getOwnerID(), dropSDs: 1);
 		return $container->href();
 	}
 
 	public function getTakeSDHREF(): string {
-		$container = $this->getDropContainer();
-		$container['take_scout_drones'] = 1;
+		$container = new ForcesDropProcessor($this->getOwnerID(), takeSDs: 1);
 		return $container->href();
 	}
 
 	public function getDropCDHREF(): string {
-		$container = $this->getDropContainer();
-		$container['drop_combat_drones'] = 1;
+		$container = new ForcesDropProcessor($this->getOwnerID(), dropCDs: 1);
 		return $container->href();
 	}
 
 	public function getTakeCDHREF(): string {
-		$container = $this->getDropContainer();
-		$container['take_combat_drones'] = 1;
+		$container = new ForcesDropProcessor($this->getOwnerID(), takeCDs: 1);
 		return $container->href();
 	}
 
 	public function getDropMineHREF(): string {
-		$container = $this->getDropContainer();
-		$container['drop_mines'] = 1;
+		$container = new ForcesDropProcessor($this->getOwnerID(), dropMines: 1);
 		return $container->href();
 	}
 
 	public function getTakeMineHREF(): string {
-		$container = $this->getDropContainer();
-		$container['take_mines'] = 1;
+		$container = new ForcesDropProcessor($this->getOwnerID(), takeMines: 1);
 		return $container->href();
 	}
 
 	public static function getRefreshAllHREF(): string {
-		$container = Page::create('forces_mass_refresh.php');
+		$container = new ForcesRefreshAllProcessor();
 		return $container->href();
 	}
 

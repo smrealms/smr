@@ -4,7 +4,7 @@ if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage
 	<p>
 	<b>From: </b><span class="admin">Administrator</span><br />
 	<b>To: </b><?php
-		if ($MessageGameID != 20000) { ?>
+		if ($MessageGameID != Smr\Pages\Admin\AdminMessageSend::ALL_GAMES_ID) { ?>
 			<select name="account_id" required size="1"><?php
 				foreach ($GamePlayers as $GamePlayer) {
 					?><option <?php if ($SelectedAccountID === $GamePlayer['AccountID']) { echo 'selected'; } ?> value="<?php echo $GamePlayer['AccountID']; ?>"><?php echo $GamePlayer['Name']; ?></option><?php

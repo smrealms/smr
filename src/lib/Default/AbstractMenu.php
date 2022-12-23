@@ -2,6 +2,51 @@
 
 use Smr\CombatLogType;
 use Smr\Database;
+use Smr\Pages\Account\NewsReadAdvanced;
+use Smr\Pages\Account\NewsReadArchives;
+use Smr\Pages\Player\Bank\AllianceBank;
+use Smr\Pages\Player\Bank\AnonBank;
+use Smr\Pages\Player\Bank\PersonalBank;
+use Smr\Pages\Player\Bar\BarMain;
+use Smr\Pages\Player\Bar\LottoBuyTicket;
+use Smr\Pages\Player\Bar\PlayBlackjackBet;
+use Smr\Pages\Player\CombatLogList;
+use Smr\Pages\Player\Council\Embassy;
+use Smr\Pages\Player\Council\MessageCouncil;
+use Smr\Pages\Player\Council\PoliticalStatus;
+use Smr\Pages\Player\Council\ViewCouncil;
+use Smr\Pages\Player\Council\VotingCenter;
+use Smr\Pages\Player\GalacticPost\ArticleWrite;
+use Smr\Pages\Player\GalacticPost\CurrentEditionProcessor;
+use Smr\Pages\Player\GalacticPost\EditorOptions;
+use Smr\Pages\Player\GalacticPost\PastEditionSelect;
+use Smr\Pages\Player\Headquarters\BountyClaimProcessor;
+use Smr\Pages\Player\Headquarters\BountyPlace;
+use Smr\Pages\Player\Headquarters\Government;
+use Smr\Pages\Player\Headquarters\MilitaryPaymentClaimProcessor;
+use Smr\Pages\Player\Headquarters\Underground;
+use Smr\Pages\Player\NewsReadCurrent;
+use Smr\Pages\Player\Planet\Construction;
+use Smr\Pages\Player\Planet\Defense;
+use Smr\Pages\Player\Planet\Financial;
+use Smr\Pages\Player\Planet\Main;
+use Smr\Pages\Player\Planet\Ownership;
+use Smr\Pages\Player\Planet\Stockpile;
+use Smr\Pages\Player\Rankings\AllianceDeaths;
+use Smr\Pages\Player\Rankings\AllianceExperience;
+use Smr\Pages\Player\Rankings\AllianceKills;
+use Smr\Pages\Player\Rankings\AllianceProfit;
+use Smr\Pages\Player\Rankings\AllianceVsAlliance;
+use Smr\Pages\Player\Rankings\PlayerAssists;
+use Smr\Pages\Player\Rankings\PlayerDeaths;
+use Smr\Pages\Player\Rankings\PlayerExperience;
+use Smr\Pages\Player\Rankings\PlayerKills;
+use Smr\Pages\Player\Rankings\PlayerNpcKills;
+use Smr\Pages\Player\Rankings\PlayerProfit;
+use Smr\Pages\Player\Rankings\RaceDeaths;
+use Smr\Pages\Player\Rankings\RaceExperience;
+use Smr\Pages\Player\Rankings\RaceKills;
+use Smr\Pages\Player\Rankings\SectorKills;
 
 /**
  * Creates menu navigation bars.
@@ -14,26 +59,26 @@ class AbstractMenu {
 		$links = [];
 		$location = SmrLocation::getLocation($gameID, $locationTypeID);
 		if ($location->isHQ()) {
-			$links[] = ['government.php', 'Government'];
-			$links[] = ['military_payment_claim.php', 'Claim Military Payment'];
+			$links[] = [Government::class, 'Government'];
+			$links[] = [MilitaryPaymentClaimProcessor::class, 'Claim Military Payment'];
 		} elseif ($location->isUG()) {
-			$links[] = ['underground.php', 'Underground'];
+			$links[] = [Underground::class, 'Underground'];
 		} else {
 			throw new Exception('Location is not HQ or UG: ' . $location->getName());
 		}
 
 		// No bounties in Semi Wars games
 		if (!SmrGame::getGame($gameID)->isGameType(SmrGame::GAME_TYPE_SEMI_WARS)) {
-			$links[] = ['bounty_claim.php', 'Claim Bounty'];
-			$links[] = ['bounty_place.php', 'Place Bounty'];
+			$links[] = [BountyClaimProcessor::class, 'Claim Bounty'];
+			$links[] = [BountyPlace::class, 'Place Bounty'];
 		}
 
 		$menuItems = [];
-		foreach ($links as $link) {
-			$container = Page::create($link[0], ['LocationID' => $locationTypeID]);
+		foreach ($links as [$class, $text]) {
+			$container = new $class($locationTypeID);
 			$menuItems[] = [
 				'Link' => $container->href(),
-				'Text' => $link[1],
+				'Text' => $text,
 			];
 		}
 		$template = Smr\Template::getInstance();
@@ -102,10 +147,10 @@ class AbstractMenu {
 		}
 		if ($in_alliance) {
 			$menuItems[] = ['Link' => Globals::getAllianceForcesHREF($alliance_id), 'Text' => 'Forces'];
-			$menuItems[] = ['Link' => Globals::getAllianceOptionsHREF($alliance_id), 'Text' => 'Options'];
+			$menuItems[] = ['Link' => Globals::getAllianceOptionsHREF(), 'Text' => 'Options'];
 		}
 		$menuItems[] = ['Link' => Globals::getAllianceListHREF(), 'Text' => 'List Alliances'];
-		$menuItems[] = ['Link' => Globals::getAllianceNewsHREF($alliance_id), 'Text' => 'View News'];
+		$menuItems[] = ['Link' => Globals::getAllianceNewsHREF($player->getGameID(), $alliance_id), 'Text' => 'View News'];
 
 		$template = Smr\Template::getInstance();
 		$template->assign('MenuItems', $menuItems);
@@ -115,45 +160,12 @@ class AbstractMenu {
 		$player = Smr\Session::getInstance()->getPlayer();
 
 		$menuItems = [];
-		$menuItems[] = ['Link' => Page::create('galactic_post_current.php')->href(), 'Text' => 'Current Edition'];
-		$menuItems[] = ['Link' => Page::create('galactic_post_past.php')->href(), 'Text' => 'Past Editions'];
-		$menuItems[] = ['Link' => Page::create('galactic_post_write_article.php')->href(), 'Text' => 'Write an article'];
+		$menuItems[] = ['Link' => (new CurrentEditionProcessor())->href(), 'Text' => 'Current Edition'];
+		$menuItems[] = ['Link' => (new PastEditionSelect($player->getGameID()))->href(), 'Text' => 'Past Editions'];
+		$menuItems[] = ['Link' => (new ArticleWrite())->href(), 'Text' => 'Write an article'];
 		if ($player->isGPEditor()) {
-			$menuItems[] = ['Link' => Page::create('galactic_post.php')->href(), 'Text' => 'Editor Options'];
+			$menuItems[] = ['Link' => (new EditorOptions())->href(), 'Text' => 'Editor Options'];
 		}
-
-		$template = Smr\Template::getInstance();
-		$template->assign('MenuItems', $menuItems);
-	}
-
-	public static function historyGames(int $selected_index): void {
-		$menuItems = [];
-		$container = Page::create('history_games.php');
-		$container->addVar('HistoryDatabase');
-		$container->addVar('view_game_id');
-		$container->addVar('game_name');
-		$menuItems[] = [
-			'Link' => $container->href(),
-			'Text' => 'Game Details',
-		];
-		$container = Page::create('history_games_detail.php', $container);
-		$menuItems[] = [
-			'Link' => $container->href(),
-			'Text' => 'Extended Stats',
-		];
-		$container = Page::create('history_games_hof.php', $container);
-		$menuItems[] = [
-			'Link' => $container->href(),
-			'Text' => 'Hall of Fame',
-		];
-		$container = Page::create('history_games_news.php', $container);
-		$menuItems[] = [
-			'Link' => $container->href(),
-			'Text' => 'Game News',
-		];
-		// make the selected index bold
-		$boldItem =& $menuItems[$selected_index]['Text'];
-		$boldItem = '<b>' . $boldItem . '</b>';
 
 		$template = Smr\Template::getInstance();
 		$template->assign('MenuItems', $menuItems);
@@ -175,11 +187,10 @@ class AbstractMenu {
 	}
 
 	public static function combatLog(): void {
-		$container = Page::create('combat_log_list.php');
 		$menuItems = [];
 
 		foreach (CombatLogType::cases() as $type) {
-			$container['action'] = $type;
+			$container = new CombatLogList($type);
 			$menuItems[] = ['Link' => $container->href(), 'Text' => $type->name];
 		}
 
@@ -195,28 +206,28 @@ class AbstractMenu {
 						['Link' => Globals::getTraderStatusHREF(), 'Text' => 'Trader Status'],
 						['Link' => Globals::getPlanetListHREF($player->getAllianceID()), 'Text' => 'Planets'],
 						['Link' => Globals::getAllianceHREF($player->getAllianceID()), 'Text' => 'Alliance'],
-						['Link' => Globals::getCouncilHREF(), 'Text' => 'Politics'],
+						['Link' => Globals::getCouncilHREF($player->getRaceID()), 'Text' => 'Politics'],
 						['Link' => Globals::getTraderRelationsHREF(), 'Text' => 'Relations'],
 						['Link' => Globals::getTraderBountiesHREF(), 'Text' => 'Bounties']]);
 	}
 
 	public static function planet(SmrPlanet $planet): void {
 		$menu_array = [];
-		$menu_array[] = ['Link' => Globals::getPlanetMainHREF(), 'Text' => 'Planet Main'];
+		$menu_array[] = ['Link' => (new Main())->href(), 'Text' => 'Planet Main'];
 		if ($planet->hasMenuOption('CONSTRUCTION')) {
-			$menu_array[] = ['Link' => Globals::getPlanetConstructionHREF(), 'Text' => 'Construction'];
+			$menu_array[] = ['Link' => (new Construction())->href(), 'Text' => 'Construction'];
 		}
 		if ($planet->hasMenuOption('DEFENSE')) {
-			$menu_array[] = ['Link' => Globals::getPlanetDefensesHREF(), 'Text' => 'Defense'];
+			$menu_array[] = ['Link' => (new Defense())->href(), 'Text' => 'Defense'];
 		}
 		if ($planet->hasMenuOption('OWNERSHIP')) {
-			$menu_array[] = ['Link' => Globals::getPlanetOwnershipHREF(), 'Text' => 'Ownership'];
+			$menu_array[] = ['Link' => (new Ownership())->href(), 'Text' => 'Ownership'];
 		}
 		if ($planet->hasMenuOption('STOCKPILE')) {
-			$menu_array[] = ['Link' => Globals::getPlanetStockpileHREF(), 'Text' => 'Stockpile'];
+			$menu_array[] = ['Link' => (new Stockpile())->href(), 'Text' => 'Stockpile'];
 		}
 		if ($planet->hasMenuOption('FINANCE')) {
-			$menu_array[] = ['Link' => Globals::getPlanetFinancesHREF(), 'Text' => 'Financial'];
+			$menu_array[] = ['Link' => (new Financial())->href(), 'Text' => 'Financial'];
 		}
 
 		$template = Smr\Template::getInstance();
@@ -233,15 +244,15 @@ class AbstractMenu {
 
 		// player rankings
 		$menu_item = [];
-		$menu_item['entry'] = create_link(Page::create('rankings_player_experience.php'), 'Player Rankings', 'nav');
+		$menu_item['entry'] = create_link(new PlayerExperience(), 'Player Rankings', 'nav');
 
 		$menu_subitem = [];
-		$menu_subitem[] = create_link(Page::create('rankings_player_experience.php'), 'Experience', 'nav');
-		$menu_subitem[] = create_link(Page::create('rankings_player_profit.php'), 'Profit', 'nav');
-		$menu_subitem[] = create_link(Page::create('rankings_player_kills.php'), 'Kills', 'nav');
-		$menu_subitem[] = create_link(Page::create('rankings_player_death.php'), 'Deaths', 'nav');
-		$menu_subitem[] = create_link(Page::create('rankings_player_assists.php'), 'Assists', 'nav');
-		$menu_subitem[] = create_link(Page::create('rankings_player_npc_kills.php'), 'NPC Kills', 'nav');
+		$menu_subitem[] = create_link(new PlayerExperience(), 'Experience', 'nav');
+		$menu_subitem[] = create_link(new PlayerProfit(), 'Profit', 'nav');
+		$menu_subitem[] = create_link(new PlayerKills(), 'Kills', 'nav');
+		$menu_subitem[] = create_link(new PlayerDeaths(), 'Deaths', 'nav');
+		$menu_subitem[] = create_link(new PlayerAssists(), 'Assists', 'nav');
+		$menu_subitem[] = create_link(new PlayerNpcKills(), 'NPC Kills', 'nav');
 
 		$menu_item['submenu'] = $menu_subitem;
 
@@ -249,14 +260,14 @@ class AbstractMenu {
 
 		// alliance rankings
 		$menu_item = [];
-		$menu_item['entry'] = create_link(Page::create('rankings_alliance_experience.php'), 'Alliance Rankings', 'nav');
+		$menu_item['entry'] = create_link(new AllianceExperience(), 'Alliance Rankings', 'nav');
 
 		$menu_subitem = [];
-		$menu_subitem[] = create_link(Page::create('rankings_alliance_experience.php'), 'Experience', 'nav');
-		$menu_subitem[] = create_link(Page::create('rankings_alliance_profit.php'), 'Profit', 'nav');
-		$menu_subitem[] = create_link(Page::create('rankings_alliance_kills.php'), 'Kills', 'nav');
-		$menu_subitem[] = create_link(Page::create('rankings_alliance_death.php'), 'Deaths', 'nav');
-		$menu_subitem[] = create_link(Page::create('rankings_alliance_vs_alliance.php'), 'Versus', 'nav');
+		$menu_subitem[] = create_link(new AllianceExperience(), 'Experience', 'nav');
+		$menu_subitem[] = create_link(new AllianceProfit(), 'Profit', 'nav');
+		$menu_subitem[] = create_link(new AllianceKills(), 'Kills', 'nav');
+		$menu_subitem[] = create_link(new AllianceDeaths(), 'Deaths', 'nav');
+		$menu_subitem[] = create_link(new AllianceVsAlliance(), 'Versus', 'nav');
 
 		$menu_item['submenu'] = $menu_subitem;
 
@@ -264,12 +275,12 @@ class AbstractMenu {
 
 		// racial rankings
 		$menu_item = [];
-		$menu_item['entry'] = create_link(Page::create('rankings_race.php'), 'Racial Standings', 'nav');
+		$menu_item['entry'] = create_link(new RaceExperience(), 'Racial Standings', 'nav');
 
 		$menu_subitem = [];
-		$menu_subitem[] = create_link(Page::create('rankings_race.php'), 'Experience', 'nav');
-		$menu_subitem[] = create_link(Page::create('rankings_race_kills.php'), 'Kills', 'nav');
-		$menu_subitem[] = create_link(Page::create('rankings_race_death.php'), 'Deaths', 'nav');
+		$menu_subitem[] = create_link(new RaceExperience(), 'Experience', 'nav');
+		$menu_subitem[] = create_link(new RaceKills(), 'Kills', 'nav');
+		$menu_subitem[] = create_link(new RaceDeaths(), 'Deaths', 'nav');
 
 		$menu_item['submenu'] = $menu_subitem;
 
@@ -277,7 +288,7 @@ class AbstractMenu {
 
 		// sector rankings
 		$menu_item = [];
-		$menu_item['entry'] = create_link(Page::create('rankings_sector_kill.php'), 'Sector Kills', 'nav');
+		$menu_item['entry'] = create_link(new SectorKills(), 'Sector Kills', 'nav');
 		$menu[] = $menu_item;
 
 		create_sub_menu($menu, $active_level1, $active_level2);
@@ -287,18 +298,17 @@ class AbstractMenu {
 		$player = Smr\Session::getInstance()->getPlayer();
 
 		$links = [];
-		$links[] = ['bank_personal.php', 'Personal Account'];
+		$links[] = [new PersonalBank(), 'Personal Account'];
 		if ($player->hasAlliance()) {
-			$links[] = ['bank_alliance.php', 'Alliance Account'];
+			$links[] = [new AllianceBank($player->getAllianceID()), 'Alliance Account'];
 		}
-		$links[] = ['bank_anon.php', 'Anonymous Account'];
+		$links[] = [new AnonBank(), 'Anonymous Account'];
 
 		$menuItems = [];
-		foreach ($links as $link) {
-			$container = Page::create($link[0]);
+		foreach ($links as [$container, $label]) {
 			$menuItems[] = [
 				'Link' => $container->href(),
-				'Text' => $link[1],
+				'Text' => $label,
 			];
 		}
 
@@ -308,22 +318,21 @@ class AbstractMenu {
 
 	public static function council(int $race_id): void {
 		$player = Smr\Session::getInstance()->getPlayer();
-		$data = ['race_id' => $race_id];
 
-		$container = Page::create('council_list.php', $data);
+		$container = new ViewCouncil($race_id);
 		$menu_items = [];
 		$menu_items[] = [
 			'Link' => $container->href(),
 			'Text' => 'View Council',
 		];
 
-		$container = Page::create('council_politics.php', $data);
+		$container = new PoliticalStatus($race_id);
 		$menu_items[] = [
 			'Link' => $container->href(),
 			'Text' => 'Political Status',
 		];
 
-		$container = Page::create('council_send_message.php', $data);
+		$container = new MessageCouncil($race_id);
 		$menu_items[] = [
 			'Link' => $container->href(),
 			'Text' => 'Send Message',
@@ -331,14 +340,14 @@ class AbstractMenu {
 
 		if ($player->getRaceID() == $race_id) {
 			if ($player->isOnCouncil()) {
-				$container = Page::create('council_vote.php');
+				$container = new VotingCenter();
 				$menu_items[] = [
 					'Link' => $container->href(),
 					'Text' => 'Voting Center',
 				];
 			}
 			if ($player->isPresident()) {
-				$container = Page::create('council_embassy.php');
+				$container = new Embassy();
 				$menu_items[] = [
 					'Link' => $container->href(),
 					'Text' => 'Embassy',
@@ -350,12 +359,13 @@ class AbstractMenu {
 		$template->assign('MenuItems', $menu_items);
 	}
 
-	public static function bar(): void {
+	public static function bar(int $locationID): void {
 		$template = Smr\Template::getInstance();
 		$template->assign('MenuItems', [
-					['Link' => Globals::getBarMainHREF(), 'Text' => 'Bar Main'],
-					['Link' => Globals::getBarLottoPlayHREF(), 'Text' => 'Lotto'],
-					['Link' => Globals::getBarBlackjackHREF(), 'Text' => 'BlackJack']]);
+			['Link' => (new BarMain($locationID))->href(), 'Text' => 'Bar Main'],
+			['Link' => (new LottoBuyTicket($locationID))->href(), 'Text' => 'Lotto'],
+			['Link' => (new PlayBlackjackBet($locationID))->href(), 'Text' => 'BlackJack'],
+		]);
 	}
 
 	public static function news(int $gameID): void {
@@ -364,16 +374,16 @@ class AbstractMenu {
 		$menuItems = [];
 		if ($session->getGameID() == $gameID) {
 			$menuItems[] = [
-				'Link' => Page::create('news_read_current.php', ['GameID' => $gameID])->href(),
+				'Link' => (new NewsReadCurrent())->href(),
 				'Text' => 'Read Current News',
 			];
 		}
 		$menuItems[] = [
-			'Link' => Page::create('news_read.php', ['GameID' => $gameID])->href(),
+			'Link' => (new NewsReadArchives($gameID))->href(),
 			'Text' => 'Read Latest News',
 		];
 		$menuItems[] = [
-			'Link' => Page::create('news_read_advanced.php', ['GameID' => $gameID])->href(),
+			'Link' => (new NewsReadAdvanced($gameID))->href(),
 			'Text' => 'Advanced News',
 		];
 

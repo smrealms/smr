@@ -2,7 +2,8 @@
 
 namespace Smr;
 
-use Page;
+use Smr\Pages\Account\HallOfFameAll;
+use Smr\Pages\Account\HallOfFamePersonal;
 use SmrAccount;
 use SmrGame;
 use SmrPlayer;
@@ -16,11 +17,10 @@ class HallOfFame {
 	 * @param array<string> $allowedVis
 	 * @return array<array<string, string>>
 	 */
-	public static function getHofCategories(array $allowedVis, ?int $game_id, int $account_id): array {
+	public static function getHofCategories(HallOfFameAll|HallOfFamePersonal $page, array $allowedVis, ?int $game_id, int $account_id): array {
 		// Get the HOF type that we're currently viewing
-		$var = Session::getInstance()->getCurrentVar();
-		if (isset($var['viewType'])) {
-			$viewType = $var['viewType'];
+		if ($page->viewType !== null) {
+			$viewType = $page->viewType;
 			$viewTypeList = explode(':', $viewType);
 		} else {
 			$viewType = '';
@@ -45,8 +45,8 @@ class HallOfFame {
 			// Make each category a link to view the subcategory page
 			$category = $extra[0];
 			if (!isset($categories[$category])) {
-				$container = Page::copy($var);
-				$container['viewType'] = implode(':', array_merge($viewTypeList, [$category]));
+				$containerViewType = implode(':', array_merge($viewTypeList, [$category]));
+				$container = $page->withViewType($containerViewType);
 				$categories[$category] = create_link($container, $category);
 
 				// Prepare subcategories
@@ -56,7 +56,6 @@ class HallOfFame {
 			// Register all subcategories
 			$subcategory = $extra[1] ?? 'View';
 			if (!isset($subcategories[$category][$subcategory])) {
-				$container = Page::copy($var);
 				$rankMsg = '';
 				if (count($extra) <= 2) {
 					// Subcategory is a complete HOF type
@@ -64,10 +63,11 @@ class HallOfFame {
 					if ($rank['Rank'] != 0) {
 						$rankMsg = ' (#' . $rank['Rank'] . ')';
 					}
-					$container['viewType'] = $hofType;
+					$containerViewType = $hofType;
 				} else {
-					$container['viewType'] = implode(':', array_merge($viewTypeList, [$category, $subcategory]));
+					$containerViewType = implode(':', array_merge($viewTypeList, [$category, $subcategory]));
 				}
+				$container = $page->withViewType($containerViewType);
 				$subcategories[$category][$subcategory] = create_submit_link($container, $subcategory . $rankMsg);
 			}
 		}
@@ -144,13 +144,11 @@ class HallOfFame {
 		return $rank;
 	}
 
-	public static function displayHOFRow(int $rank, int $accountID, float|string $amount): string {
-		$var = Session::getInstance()->getCurrentVar();
-
+	public static function displayHOFRow(int $rank, int $accountID, ?int $gameID, float|string $amount): string {
 		$account = Session::getInstance()->getAccount();
-		if (isset($var['game_id']) && SmrGame::gameExists($var['game_id'])) {
+		if ($gameID !== null && SmrGame::gameExists($gameID)) {
 			try {
-				$hofPlayer = SmrPlayer::getPlayer($accountID, $var['game_id']);
+				$hofPlayer = SmrPlayer::getPlayer($accountID, $gameID);
 			} catch (Exceptions\PlayerNotFound) {
 				$hofAccount = SmrAccount::getAccount($accountID);
 			}
@@ -164,12 +162,7 @@ class HallOfFame {
 		$return = ('<tr>');
 		$return .= ('<td ' . $bold . '>' . $rank . '</td>');
 
-		$container = Page::create('hall_of_fame_player_detail.php');
-		$container['account_id'] = $accountID;
-
-		if (isset($var['game_id'])) {
-			$container->addVar('game_id');
-		}
+		$container = new HallOfFamePersonal($accountID, $gameID);
 
 		if (isset($hofPlayer) && is_object($hofPlayer)) {
 			$return .= ('<td ' . $bold . '>' . create_link($container, htmlentities($hofPlayer->getPlayerName())) . '</td>');
@@ -183,20 +176,20 @@ class HallOfFame {
 		return $return;
 	}
 
-	public static function buildBreadcrumb(Page $var, string $hofName): string {
-		$container = Page::copy($var);
-		unset($container['viewType']);
+	public static function buildBreadcrumb(HallOfFameAll|HallOfFamePersonal $page, string $hofName): string {
+		$container = $page->withViewType(null);
 		$viewing = '<span class="bold">Currently viewing: </span>' . create_link($container, $hofName);
 
-		if (isset($var['viewType'])) {
-			$typeList = explode(':', $var['viewType']);
+		if ($page->viewType !== null) {
+			$typeList = explode(':', $page->viewType);
 		} else {
 			$typeList = [];
 		}
 		$breadcrumbTypeList = [];
 		foreach ($typeList as $hofType) {
 			$breadcrumbTypeList[] = $hofType;
-			$container['viewType'] = implode(':', $breadcrumbTypeList);
+			$viewType = implode(':', $breadcrumbTypeList);
+			$container = $page->withViewType($viewType);
 			$viewing .= ' &rarr; ' . create_link($container, $hofType);
 		}
 		$viewing .= '<br /><br />';

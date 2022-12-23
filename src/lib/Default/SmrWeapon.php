@@ -2,6 +2,7 @@
 
 use Smr\BuyerRestriction;
 use Smr\DatabaseRecord;
+use Smr\Pages\Player\ShopWeaponProcessor;
 
 /**
  * Defines a concrete realization of a weapon type for ships/planets.
@@ -102,17 +103,12 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	}
 
 	public function getBuyHREF(SmrLocation $location): string {
-		$container = Page::create('shop_weapon_processing.php');
-		$container['LocationID'] = $location->getTypeID();
-		$container['Weapon'] = $this;
+		$container = new ShopWeaponProcessor($location->getTypeID(), $this);
 		return $container->href();
 	}
 
 	public function getSellHREF(SmrLocation $location, int $orderID): string {
-		$container = Page::create('shop_weapon_processing.php');
-		$container['LocationID'] = $location->getTypeID();
-		$container['Weapon'] = $this;
-		$container['OrderID'] = $orderID;
+		$container = new ShopWeaponProcessor($location->getTypeID(), $this, $orderID);
 		return $container->href();
 	}
 

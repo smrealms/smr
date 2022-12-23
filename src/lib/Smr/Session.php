@@ -3,9 +3,19 @@
 namespace Smr;
 
 use AbstractSmrPlayer;
-use Page;
 use Smr\Container\DiContainer;
 use Smr\Exceptions\UserError;
+use Smr\Page\Page;
+use Smr\Pages\Player\AttackPlayerProcessor;
+use Smr\Pages\Player\ExamineTrader;
+use Smr\Pages\Player\ForcesDrop;
+use Smr\Pages\Player\ForcesDropProcessor;
+use Smr\Pages\Player\ForcesRefreshProcessor;
+use Smr\Pages\Player\HardwareConfigure;
+use Smr\Pages\Player\SectorJumpProcessor;
+use Smr\Pages\Player\SectorMoveProcessor;
+use Smr\Pages\Player\SectorScan;
+use Smr\Pages\Player\ShopGoodsProcessor;
 use SmrAccount;
 use SmrPlayer;
 
@@ -14,16 +24,16 @@ class Session {
 	private const TIME_BEFORE_EXPIRY = 172800; // 2 days
 
 	private const URL_LOAD_DELAY = [
-		'configure_hardware.php' => .4,
-		'forces_drop.php' => .4,
-		'forces_drop_processing.php' => .5,
-		'forces_refresh_processing.php' => .4,
-		'sector_jump_processing.php' => .4,
-		'sector_move_processing.php' => .4,
-		'sector_scan.php' => .4,
-		'shop_goods_processing.php' => .4,
-		'trader_attack_processing.php' => .75,
-		'trader_examine.php' => .75,
+		HardwareConfigure::class => .4,
+		ForcesDrop::class => .4,
+		ForcesDropProcessor::class => .5,
+		ForcesRefreshProcessor::class => .4,
+		SectorJumpProcessor::class => .4,
+		SectorMoveProcessor::class => .4,
+		SectorScan::class => .4,
+		ShopGoodsProcessor::class => .4,
+		AttackPlayerProcessor::class => .75,
+		ExamineTrader::class => .75,
 	];
 
 	protected Database $db;
@@ -33,6 +43,8 @@ class Session {
 	/** @var array<string, Page> */
 	private array $links = [];
 	private ?Page $currentPage = null;
+	/** @var array<string, mixed> */
+	private array $requestData = [];
 	private bool $generate;
 	public readonly bool $ajax;
 	private string $SN;
@@ -89,7 +101,7 @@ class Session {
 		$this->fetchVarInfo();
 
 		if (!$this->ajax && $this->hasCurrentVar()) {
-			$file = $this->getCurrentVar()->file;
+			$file = $this->getCurrentVar()::class;
 			$loadDelay = self::URL_LOAD_DELAY[$file] ?? 0;
 			$timeBetweenLoads = microtime(true) - $this->lastAccessed;
 			if ($timeBetweenLoads < $loadDelay) {
@@ -120,11 +132,12 @@ class Session {
 			// We may not have ajax_returns if ajax was disabled
 			$this->previousAjaxReturns = $dbRecord->getObject('ajax_returns', true, true);
 
-			[$this->links, $lastPage] = $dbRecord->getObject('session_var', true);
+			[$this->links, $lastPage, $lastRequestData] = $dbRecord->getObject('session_var', true);
 
 			$ajaxRefresh = $this->ajax && !$this->hasChangedSN();
 			if ($ajaxRefresh) {
 				$this->currentPage = $lastPage;
+				$this->requestData = $lastRequestData;
 			} elseif (isset($this->links[$this->SN])) {
 				// If the current page is modified during page processing, we need
 				// to make sure the original link is unchanged. So we clone it here.
@@ -132,15 +145,14 @@ class Session {
 
 				// If SN changes during an ajax update, it is an error unless user is
 				// requesting a page that is allowed to be executed in an ajax call.
-				$allowAjax = $this->currentPage['AJAX'] ?? false;
-				if (!$allowAjax && $this->ajax && $this->hasChangedSN()) {
+				if ($this->ajax && $this->hasChangedSN() && !$this->currentPage->allowAjax) {
 					throw new UserError('The previous page failed to auto-refresh properly!');
 				}
 			}
 
 			if (!$ajaxRefresh) { // since form pages don't ajax refresh properly
 				foreach ($this->links as $sn => $link) {
-					if (!$link->reusable) {
+					if ($link->isLinkReusable() === false) {
 						// This link is no longer valid
 						unset($this->links[$sn]);
 					}
@@ -154,7 +166,7 @@ class Session {
 	}
 
 	public function update(): void {
-		$sessionVar = [$this->links, $this->currentPage];
+		$sessionVar = [$this->links, $this->currentPage, $this->requestData];
 		if (!$this->generate) {
 			$this->db->write('UPDATE active_session SET account_id=' . $this->db->escapeNumber($this->accountID) . ',game_id=' . $this->db->escapeNumber($this->gameID) . (!$this->ajax ? ',last_accessed=' . $this->db->escapeNumber(Epoch::microtime()) : '') . ',session_var=' . $this->db->escapeObject($sessionVar, true) .
 					',last_sn=' . $this->db->escapeString($this->SN) .
@@ -269,6 +281,13 @@ class Session {
 	}
 
 	/**
+	 * @return array<string, mixed>
+	 */
+	public function getRequestData(): array {
+		return $this->requestData;
+	}
+
+	/**
 	 * Gets a var from $var, $_REQUEST, or $default. Then stores it in the
 	 * session so that it can still be retrieved when the page auto-refreshes.
 	 * This is the recommended way to get $_REQUEST data for display pages.
@@ -276,15 +295,13 @@ class Session {
 	 */
 	public function getRequestVar(string $varName, string $default = null): string {
 		$result = Request::getVar($varName, $default);
-		$var = $this->getCurrentVar();
-		$var[$varName] = $result;
+		$this->requestData[$varName] = $result;
 		return $result;
 	}
 
 	public function getRequestVarInt(string $varName, int $default = null): int {
 		$result = Request::getVarInt($varName, $default);
-		$var = $this->getCurrentVar();
-		$var[$varName] = $result;
+		$this->requestData[$varName] = $result;
 		return $result;
 	}
 
@@ -294,8 +311,7 @@ class Session {
 	 */
 	public function getRequestVarIntArray(string $varName, array $default = null): array {
 		$result = Request::getVarIntArray($varName, $default);
-		$var = $this->getCurrentVar();
-		$var[$varName] = $result;
+		$this->requestData[$varName] = $result;
 		return $result;
 	}
 

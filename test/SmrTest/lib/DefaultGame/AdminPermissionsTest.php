@@ -4,6 +4,7 @@ namespace SmrTest\lib\DefaultGame;
 
 use PHPUnit\Framework\TestCase;
 use Smr\AdminPermissions;
+use Smr\Pages\Admin\EnableGame;
 
 /**
  * @covers Smr\AdminPermissions
@@ -12,7 +13,7 @@ class AdminPermissionsTest extends TestCase {
 
 	public function test_getPermissionInfo(): void {
 		// Spot check one of the permissions
-		$expected = ['Enable Games', 'admin/enable_game.php', 5];
+		$expected = ['Enable Games', EnableGame::class, 5];
 		self::assertSame($expected, AdminPermissions::getPermissionInfo(33));
 	}
 
