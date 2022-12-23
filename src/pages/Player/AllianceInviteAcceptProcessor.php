@@ -24,7 +24,11 @@ class AllianceInviteAcceptProcessor extends PlayerPageProcessor {
 
 		// Make sure the player can join the new alliance before leaving the current one
 		$newAlliance = SmrAlliance::getAlliance($this->allianceID, $player->getGameID());
-		$joinRestriction = $newAlliance->getJoinRestriction($player, false);
+		$joinRestriction = $newAlliance->getJoinRestriction(
+			player: $player,
+			doAllianceCheck: false,
+			doRecruitingCheck: false, // invitations override recruitment status
+		);
 		if ($joinRestriction !== false) {
 			create_error($joinRestriction);
 		}
