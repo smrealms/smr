@@ -2409,65 +2409,52 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 
+		$killingHof = ['Killing'];
 		if ($this->isNPC()) {
-			$killer->increaseHOF($return['KillerExp'], ['Killing', 'NPC', 'Experience', 'Gained'], HOF_PUBLIC);
-			$killer->increaseHOF($expBeforeDeath, ['Killing', 'NPC', 'Experience', 'Of Traders Killed'], HOF_PUBLIC);
+			$killingHof[] = 'NPC';
+		}
+		$killer->increaseHOF($return['KillerExp'], [...$killingHof, 'Experience', 'Gained'], HOF_PUBLIC);
+		$killer->increaseHOF($expBeforeDeath, [...$killingHof, 'Experience', 'Of Traders Killed'], HOF_PUBLIC);
+		$killer->increaseHOF($return['DeadExp'], [...$killingHof, 'Experience', 'Lost By Traders Killed'], HOF_PUBLIC);
 
-			$killer->increaseHOF($return['DeadExp'], ['Killing', 'Experience', 'Lost By NPCs Killed'], HOF_PUBLIC);
+		$killer->increaseHOF($return['KillerCredits'], [...$killingHof, 'Money', 'Lost By Traders Killed'], HOF_PUBLIC);
+		$killer->increaseHOF($return['KillerCredits'], [...$killingHof, 'Money', 'Gain'], HOF_PUBLIC);
+		$killer->increaseHOF($this->getShip()->getCost(), [...$killingHof, 'Money', 'Cost Of Ships Killed'], HOF_PUBLIC);
+		$killer->increaseHOF($return['BountyGained']['Amount'], [...$killingHof, 'Money', 'Bounty Gained'], HOF_PUBLIC);
 
-			$killer->increaseHOF($return['KillerCredits'], ['Killing', 'NPC', 'Money', 'Lost By Traders Killed'], HOF_PUBLIC);
-			$killer->increaseHOF($return['KillerCredits'], ['Killing', 'NPC', 'Money', 'Gain'], HOF_PUBLIC);
-			$killer->increaseHOF($this->getShip()->getCost(), ['Killing', 'NPC', 'Money', 'Cost Of Ships Killed'], HOF_PUBLIC);
-
-			if ($killerAlignChange > 0) {
-				$killer->increaseHOF($killerAlignChange, ['Killing', 'NPC', 'Alignment', 'Gain'], HOF_PUBLIC);
-			} else {
-				$killer->increaseHOF(-$killerAlignChange, ['Killing', 'NPC', 'Alignment', 'Loss'], HOF_PUBLIC);
-			}
-
-			$killer->increaseHOF($return['BountyGained']['Amount'], ['Killing', 'NPC', 'Money', 'Bounty Gained'], HOF_PUBLIC);
-
-			$killer->increaseHOF(1, ['Killing', 'NPC Kills'], HOF_PUBLIC);
+		if ($killerAlignChange > 0) {
+			$killer->increaseHOF($killerAlignChange, [...$killingHof, 'Alignment', 'Gain'], HOF_PUBLIC);
 		} else {
-			$killer->increaseHOF($return['KillerExp'], ['Killing', 'Experience', 'Gained'], HOF_PUBLIC);
-			$killer->increaseHOF($expBeforeDeath, ['Killing', 'Experience', 'Of Traders Killed'], HOF_PUBLIC);
-
-			$killer->increaseHOF($return['DeadExp'], ['Killing', 'Experience', 'Lost By Traders Killed'], HOF_PUBLIC);
-
-			$killer->increaseHOF($return['KillerCredits'], ['Killing', 'Money', 'Lost By Traders Killed'], HOF_PUBLIC);
-			$killer->increaseHOF($return['KillerCredits'], ['Killing', 'Money', 'Gain'], HOF_PUBLIC);
-			$killer->increaseHOF($this->getShip()->getCost(), ['Killing', 'Money', 'Cost Of Ships Killed'], HOF_PUBLIC);
-
-			if ($killerAlignChange > 0) {
-				$killer->increaseHOF($killerAlignChange, ['Killing', 'Alignment', 'Gain'], HOF_PUBLIC);
-			} else {
-				$killer->increaseHOF(-$killerAlignChange, ['Killing', 'Alignment', 'Loss'], HOF_PUBLIC);
-			}
-
-			$killer->increaseHOF($return['BountyGained']['Amount'], ['Killing', 'Money', 'Bounty Gained'], HOF_PUBLIC);
-
-			if ($this->getShip()->getAttackRatingWithMaxCDs() <= MAX_ATTACK_RATING_NEWBIE && $this->hasNewbieStatus() && !$killer->hasNewbieStatus()) { //Newbie kill
-				$killer->increaseHOF(1, ['Killing', 'Newbie Kills'], HOF_PUBLIC);
-			} else {
-				$killer->increaseKills(1);
-				$killer->increaseHOF(1, ['Killing', 'Kills'], HOF_PUBLIC);
-
-				if ($killer->hasAlliance()) {
-					$this->db->write('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($killer->getGameID()));
-				}
-
-				// alliance vs. alliance stats
-				$this->incrementAllianceVsDeaths($killer->getAllianceID());
-			}
+			$killer->increaseHOF(-$killerAlignChange, [...$killingHof, 'Alignment', 'Loss'], HOF_PUBLIC);
 		}
 
-		$this->increaseHOF($return['BountyGained']['Amount'], ['Dying', 'Players', 'Money', 'Bounty Gained By Killer'], HOF_PUBLIC);
-		$this->increaseHOF($return['KillerExp'], ['Dying', 'Players', 'Experience', 'Gained By Killer'], HOF_PUBLIC);
+		if ($this->isNPC()) {
+			$killer->increaseHOF(1, ['Killing', 'NPC Kills'], HOF_PUBLIC);
+		} elseif ($this->getShip()->getAttackRatingWithMaxCDs() <= MAX_ATTACK_RATING_NEWBIE && $this->hasNewbieStatus() && !$killer->hasNewbieStatus()) { //Newbie kill
+			$killer->increaseHOF(1, ['Killing', 'Newbie Kills'], HOF_PUBLIC);
+		} else {
+			$killer->increaseKills(1);
+			$killer->increaseHOF(1, ['Killing', 'Kills'], HOF_PUBLIC);
+
+			if ($killer->hasAlliance()) {
+				$this->db->write('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($killer->getGameID()));
+			}
+
+			// alliance vs. alliance stats
+			$this->incrementAllianceVsDeaths($killer->getAllianceID());
+		}
+
+		$dyingHof = ['Dying', 'Players'];
+		if ($killer->isNPC()) {
+			$dyingHof[] = 'NPC';
+		}
+		$this->increaseHOF($return['BountyGained']['Amount'], [...$dyingHof, 'Money', 'Bounty Gained By Killer'], HOF_PUBLIC);
+		$this->increaseHOF($return['KillerExp'], [...$dyingHof, 'Experience', 'Gained By Killer'], HOF_PUBLIC);
+		$this->increaseHOF($return['DeadExp'], [...$dyingHof, 'Experience', 'Lost'], HOF_PUBLIC);
+		$this->increaseHOF($return['KillerCredits'], [...$dyingHof, 'Money Lost'], HOF_PUBLIC);
+		$this->increaseHOF($this->getShip()->getCost(), [...$dyingHof, 'Money', 'Cost Of Ships Lost'], HOF_PUBLIC);
+		$this->increaseHOF(1, [...$dyingHof, 'Deaths'], HOF_PUBLIC);
 		$this->increaseHOF($return['DeadExp'], ['Dying', 'Experience', 'Lost'], HOF_PUBLIC);
-		$this->increaseHOF($return['DeadExp'], ['Dying', 'Players', 'Experience', 'Lost'], HOF_PUBLIC);
-		$this->increaseHOF($return['KillerCredits'], ['Dying', 'Players', 'Money Lost'], HOF_PUBLIC);
-		$this->increaseHOF($this->getShip()->getCost(), ['Dying', 'Players', 'Money', 'Cost Of Ships Lost'], HOF_PUBLIC);
-		$this->increaseHOF(1, ['Dying', 'Players', 'Deaths'], HOF_PUBLIC);
 
 		$this->killPlayer($this->getSectorID());
 		return $return;
