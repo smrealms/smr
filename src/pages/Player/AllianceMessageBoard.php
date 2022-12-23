@@ -48,20 +48,28 @@ class AllianceMessageBoard extends PlayerPage {
 						AND mb_write = 1 AND official = \'TRUE\' LIMIT 1');
 			$mbWrite = $dbResult->hasRecord();
 		}
-		$query = 'SELECT
-			alliance_only, topic, thread_id,
-			max(time) as sendtime,
-			min(sender_id) as sender_id,
-			count(reply_id) as num_replies
-		FROM alliance_thread_topic
-			JOIN alliance_thread USING(game_id,alliance_id,thread_id)
-		WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
-			AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID());
-		if (!$in_alliance) {
-			$query .= ' AND alliance_only = ' . $db->escapeBoolean(false);
-		}
-		$query .= ' GROUP BY thread_id ORDER BY sendtime DESC';
-		$dbResult = $db->read($query);
+
+		// Get a list of all topics, with author, number of replies, and time of
+		// the latest reply. (Note: this is a bit complicated because we don't
+		// store the topic author in `alliance_thread_topic`.)
+		$dbResult = $db->read('
+			WITH
+				t1 AS (
+					SELECT * FROM alliance_thread_topic
+						JOIN alliance_thread USING(game_id, alliance_id, thread_id)
+					WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
+						AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) .
+						($in_alliance ? '' : ' AND alliance_only = ' . $db->escapeBoolean(false)) . '
+				),
+				t2 AS (
+					SELECT t1.*,
+						FIRST_VALUE(sender_id) OVER (PARTITION BY thread_id ORDER BY reply_id) as author_account_id
+					FROM t1
+				)
+			SELECT alliance_only, topic, thread_id, MAX(time) as sendtime, COUNT(reply_id) as num_replies, author_account_id
+			FROM t2
+			GROUP BY thread_id ORDER BY sendtime DESC
+		');
 		$threads = [];
 		if ($dbResult->hasRecord()) {
 
@@ -89,16 +97,16 @@ class AllianceMessageBoard extends PlayerPage {
 				$threads[$i]['Unread'] = !$dbResult2->hasRecord();
 
 				// Determine the thread author display name
-				$sender_id = $dbRecord->getInt('sender_id');
-				if ($sender_id == ACCOUNT_ID_PLANET) {
+				$authorAccountID = $dbRecord->getInt('author_account_id');
+				if ($authorAccountID == ACCOUNT_ID_PLANET) {
 					$playerName = 'Planet Reporter';
-				} elseif ($sender_id == ACCOUNT_ID_BANK_REPORTER) {
+				} elseif ($authorAccountID == ACCOUNT_ID_BANK_REPORTER) {
 					$playerName = 'Bank Reporter';
-				} elseif ($sender_id == ACCOUNT_ID_ADMIN) {
+				} elseif ($authorAccountID == ACCOUNT_ID_ADMIN) {
 					$playerName = 'Game Admins';
 				} else {
 					try {
-						$author = SmrPlayer::getPlayer($sender_id, $player->getGameID());
+						$author = SmrPlayer::getPlayer($authorAccountID, $player->getGameID());
 						$playerName = $author->getLinkedDisplayName(false);
 					} catch (PlayerNotFound) {
 						$playerName = 'Unknown'; // default
@@ -107,7 +115,7 @@ class AllianceMessageBoard extends PlayerPage {
 				$threads[$i]['Sender'] = $playerName;
 
 				$dbResult2 = $db->read('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . $player->getSQL() . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
-				$threads[$i]['CanDelete'] = $player->getAccountID() == $sender_id || $dbResult2->record()->getBoolean('mb_messages');
+				$threads[$i]['CanDelete'] = $player->getAccountID() == $authorAccountID || $dbResult2->record()->getBoolean('mb_messages');
 				if ($threads[$i]['CanDelete']) {
 					$container = new AllianceMessageBoardDeleteThreadProcessor($allianceID, $this, $threadID);
 					$threads[$i]['DeleteHref'] = $container->href();
