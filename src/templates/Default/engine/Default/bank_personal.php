@@ -10,7 +10,7 @@ if ($ThisPlayer->getBank() >= MAX_MONEY) { ?>
 <br />
 
 <form method="POST" action="<?php echo $ProcessingHREF; ?>">
-	Amount:&nbsp;<input type="number" name="amount" required size="10"><br /><br />
+	Amount:&nbsp;<input type="number" name="amount" min="1" required size="10"><br /><br />
 	<input type="submit" name="action" value="Deposit" />
 	&nbsp;&nbsp;
 	<input type="submit" name="action" value="Withdraw" />
