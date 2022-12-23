@@ -3,6 +3,7 @@
 namespace Smr\Pages\Admin\UniGen;
 
 use Smr\Page\AccountPage;
+use Smr\Race;
 use Smr\Session;
 use Smr\Template;
 use SmrAccount;
@@ -41,15 +42,18 @@ class CreateGalaxies extends AccountPage {
 		$container = new UploadSmrFileProcessor($this->gameID);
 		$template->assign('UploadSmrFileHREF', $container->href());
 
-		//Galaxy Creation area
-		$defaultNames = [0, 'Alskant', 'Creonti', 'Human', 'Ik\'Thorne', 'Nijarin', 'Salvene', 'Thevian', 'WQ Human', 'Omar', 'Salzik', 'Manton', 'Livstar', 'Teryllia', 'Doriath', 'Anconus', 'Valheru', 'Sardine', 'Clacher', 'Tangeria'];
+		// Create default list of galaxy names (starting with race names)
+		$raceNames = Race::getPlayableNames();
+		sort($raceNames);
+		$defaultNames = [...$raceNames, 'Omar', 'Salzik', 'Manton', 'Livstar', 'Teryllia', 'Doriath', 'Anconus', 'Valheru', 'Sardine', 'Clacher', 'Tangeria'];
 		$template->assign('NumGals', $numGals);
 
+		//Galaxy Creation area
 		$galaxies = [];
 		for ($i = 1; $i <= $numGals; ++$i) {
-			$isRacial = $i <= 8;
+			$isRacial = $i <= count($raceNames);
 			$galaxies[$i] = [
-				'Name' => $defaultNames[$i] ?? 'Unknown',
+				'Name' => $defaultNames[$i - 1] ?? 'Unknown',
 				'Width' => 10,
 				'Height' => 10,
 				'Type' => $isRacial ? SmrGalaxy::TYPE_RACIAL : SmrGalaxy::TYPE_NEUTRAL,
