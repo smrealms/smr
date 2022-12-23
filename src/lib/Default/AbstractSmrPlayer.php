@@ -2343,6 +2343,7 @@ abstract class AbstractSmrPlayer {
 		// Dead player loses between 5% and 25% experience
 		$expLossPercentage = 0.15 + 0.10 * ($this->getLevelID() - $killer->getLevelID()) / $this->getMaxLevel();
 		$return['DeadExp'] = max(0, IFloor($this->getExperience() * $expLossPercentage));
+		$expBeforeDeath = $this->getExperience();
 		$this->decreaseExperience($return['DeadExp']);
 
 		// Killer gains 50% of the lost exp
@@ -2410,7 +2411,7 @@ abstract class AbstractSmrPlayer {
 
 		if ($this->isNPC()) {
 			$killer->increaseHOF($return['KillerExp'], ['Killing', 'NPC', 'Experience', 'Gained'], HOF_PUBLIC);
-			$killer->increaseHOF($this->getExperience(), ['Killing', 'NPC', 'Experience', 'Of Traders Killed'], HOF_PUBLIC);
+			$killer->increaseHOF($expBeforeDeath, ['Killing', 'NPC', 'Experience', 'Of Traders Killed'], HOF_PUBLIC);
 
 			$killer->increaseHOF($return['DeadExp'], ['Killing', 'Experience', 'Lost By NPCs Killed'], HOF_PUBLIC);
 
@@ -2429,7 +2430,7 @@ abstract class AbstractSmrPlayer {
 			$killer->increaseHOF(1, ['Killing', 'NPC Kills'], HOF_PUBLIC);
 		} else {
 			$killer->increaseHOF($return['KillerExp'], ['Killing', 'Experience', 'Gained'], HOF_PUBLIC);
-			$killer->increaseHOF($this->getExperience(), ['Killing', 'Experience', 'Of Traders Killed'], HOF_PUBLIC);
+			$killer->increaseHOF($expBeforeDeath, ['Killing', 'Experience', 'Of Traders Killed'], HOF_PUBLIC);
 
 			$killer->increaseHOF($return['DeadExp'], ['Killing', 'Experience', 'Lost By Traders Killed'], HOF_PUBLIC);
 
