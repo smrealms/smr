@@ -4,8 +4,10 @@
 <form method="POST" action="<?php echo $ProcessingHREF; ?>">
 	<input type="text" name="gossip_tell" size="30" />
 	<button type="submit" name="action" value="tell">Spread gossip</button>
+</form>
 	<br /><br />
-	<input type="number" name="tip" class="center" min="1" max="<?php echo $ThisPlayer->getCredits(); ?>" />
+<form method="POST" action="<?php echo $ProcessingHREF; ?>">
+	<input type="number" name="tip" class="center" min="1" max="<?php echo $ThisPlayer->getCredits(); ?>" required />
 	<button type="submit" name="action" value="tip">Give to tip jar</button>
 </form>
 
