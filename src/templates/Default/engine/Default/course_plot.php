@@ -106,7 +106,7 @@ Add new destinations below. Stored destinations can be organized by dragging.
 <h2>Add new destination</h2>
 
 <form class="standard" id="manageDestination" method="POST" action="<?php echo $ManageDestination; ?>">
-	<label for="sectorId">Sector:</label>&nbsp;<input type="number" name="sectorId" style="width:75px" /> &nbsp; &nbsp;
+	<label for="sectorId">Sector:</label>&nbsp;<input type="number" name="sectorId" style="width:75px" min="1" required /> &nbsp; &nbsp;
 	<label for="label">Label:</label>&nbsp;<input type="text" name="label" value="" size="14"/> &nbsp;
 	<input type="hidden" name="type" value="add"/>
 	<input type="hidden" name="offsetTop" value="0"/>
