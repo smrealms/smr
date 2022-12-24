@@ -25,6 +25,9 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 		}
 		$player->decreaseCredits(10);
 
+		//get rid of drinks older than 30 mins
+		$db->write('DELETE FROM player_has_drinks WHERE time < ' . $db->escapeNumber(Epoch::time() - 1800));
+
 		$dbResult = $db->read('SELECT IFNULL(MAX(drink_id), 0) AS max_drink_id FROM player_has_drinks WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 		$curr_drink_id = $dbResult->record()->getInt('max_drink_id');
 
