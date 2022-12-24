@@ -475,6 +475,12 @@ div.lm_sector div.toggle_link:hover {
 	z-index: 1;
 }
 
+/* Current Sector */
+#sector_port .goods {
+	font-size: 0; /* no space between port goods */
+	padding-bottom: 1px;
+}
+
 /** Chess **/
 .chessFont {
 	font-family: 'Times New Roman';
