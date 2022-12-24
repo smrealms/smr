@@ -184,6 +184,9 @@ class AbstractSmrPort {
 			$this->credits = 0;
 			$this->upgrade = 0;
 			$this->experience = 0;
+
+			$this->goodAmounts = [];
+			$this->goodTransactions = [];
 		}
 	}
 
@@ -336,6 +339,13 @@ class AbstractSmrPort {
 			}
 		}
 		throw new Exception('Port does not trade goodID ' . $goodID);
+	}
+
+	/**
+	 * @return array<int, TransactionType>
+	 */
+	public function getGoodTransactions(): array {
+		return $this->goodTransactions;
 	}
 
 	public function hasGood(int $goodID, ?TransactionType $type = null): bool {
