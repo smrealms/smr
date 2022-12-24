@@ -16,9 +16,6 @@ try {
 
 	$session = Smr\Session::getInstance();
 	if ($session->hasAccount()) {
-		// update last login column
-		$session->getAccount()->updateLastLogin();
-
 		$href = (new LoginCheckValidatedProcessor())->href(true);
 		$session->update();
 
