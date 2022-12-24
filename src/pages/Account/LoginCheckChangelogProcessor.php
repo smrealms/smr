@@ -12,7 +12,7 @@ class LoginCheckChangelogProcessor extends AccountPageProcessor {
 		$lastLogin = $account->getLastLogin();
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM version WHERE went_live >= ' . $db->escapeNumber($lastLogin) . ' LIMIT 1');
+		$dbResult = $db->read('SELECT 1 FROM version WHERE went_live > ' . $db->escapeNumber($lastLogin) . ' LIMIT 1');
 		// do we have updates?
 		if ($dbResult->hasRecord()) {
 			(new ChangelogView($lastLogin))->go();
