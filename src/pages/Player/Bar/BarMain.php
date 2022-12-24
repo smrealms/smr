@@ -5,7 +5,6 @@ namespace Smr\Pages\Player\Bar;
 use AbstractSmrPlayer;
 use Menu;
 use Smr\Database;
-use Smr\Epoch;
 use Smr\Page\PlayerPage;
 use Smr\Template;
 use SmrLocation;
@@ -43,9 +42,6 @@ class BarMain extends PlayerPage {
 			$template->assign('LottoClaimHREF', $container->href());
 		}
 		$template->assign('WinningTicket', $winningTicket);
-
-		//get rid of drinks older than 30 mins
-		$db->write('DELETE FROM player_has_drinks WHERE time < ' . $db->escapeNumber(Epoch::time() - 1800));
 
 		$container = new TalkToBartender($this->locationID);
 		$template->assign('GossipHREF', $container->href());
