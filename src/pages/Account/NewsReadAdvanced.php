@@ -36,10 +36,9 @@ class NewsReadAdvanced extends AccountPage {
 					FROM alliance
 					WHERE game_id = ' . $db->escapeNumber($gameID));
 
-		$newsAlliances = [];
-		$newsAlliances[0] = ['ID' => 0, 'Name' => 'None'];
+		$newsAlliances = [0 => 'None'];
 		foreach ($dbResult->records() as $dbRecord) {
-			$newsAlliances[$dbRecord->getInt('alliance_id')] = ['ID' => $dbRecord->getInt('alliance_id'), 'Name' => htmlentities($dbRecord->getString('alliance_name'))];
+			$newsAlliances[$dbRecord->getInt('alliance_id')] = htmlentities($dbRecord->getString('alliance_name'));
 		}
 		$template->assign('NewsAlliances', $newsAlliances);
 
@@ -53,7 +52,7 @@ class NewsReadAdvanced extends AccountPage {
 			$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND (killer_id IN (' . $db->escapeArray($this->accountIDs) . ') OR dead_id IN (' . $db->escapeArray($this->accountIDs) . ')) ORDER BY news_id DESC');
 		} elseif ($submit_value == 'Search For Alliance') {
 			$allianceID = $this->allianceIDs[0];
-			$template->assign('ResultsFor', $newsAlliances[$allianceID]['Name']);
+			$template->assign('ResultsFor', $newsAlliances[$allianceID]);
 			$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND ((killer_alliance = ' . $db->escapeNumber($allianceID) . ' AND killer_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ') OR (dead_alliance = ' . $db->escapeNumber($allianceID) . ' AND dead_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ')) ORDER BY news_id DESC');
 		} elseif ($submit_value == 'Search For Players') {
 			$template->assign('ResultsFor', $this->label);
@@ -65,7 +64,7 @@ class NewsReadAdvanced extends AccountPage {
 		} elseif ($submit_value == 'Search For Alliances') {
 			$allianceID1 = $this->allianceIDs[0];
 			$allianceID2 = $this->allianceIDs[1];
-			$template->assign('ResultsFor', $newsAlliances[$allianceID1]['Name'] . ' vs. ' . $newsAlliances[$allianceID2]['Name']);
+			$template->assign('ResultsFor', $newsAlliances[$allianceID1] . ' vs. ' . $newsAlliances[$allianceID2]);
 			$dbResult = $db->read('SELECT * FROM news
 						WHERE game_id = ' . $db->escapeNumber($gameID) . '
 							AND (

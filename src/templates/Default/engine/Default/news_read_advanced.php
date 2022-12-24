@@ -13,10 +13,8 @@
 					<h2>Alliance Search</h2>
 					<select name="allianceID" required>
 						<option value="" disabled selected>Select an alliance</option><?php
-						if (isset($NewsAlliances) && count($NewsAlliances) > 0) {
-							foreach ($NewsAlliances as $NewsAlliance) {
-								?><option value="<?php echo $NewsAlliance['ID']; ?>"><?php echo $NewsAlliance['Name']; ?></option><?php
-							}
+						foreach ($NewsAlliances as $NewsAllianceID => $NewsAllianceName) {
+							?><option value="<?php echo $NewsAllianceID; ?>"><?php echo $NewsAllianceName; ?></option><?php
 						} ?>
 					</select><br />
 					<br />
@@ -41,19 +39,15 @@
 					<h2>Alliance Vs Alliance Search</h2>
 					<select name="alliance1" required>
 						<option value="" disabled selected>Select an alliance</option><?php
-						if (isset($NewsAlliances) && count($NewsAlliances) > 0) {
-							foreach ($NewsAlliances as $NewsAlliance) {
-								?><option value="<?php echo $NewsAlliance['ID']; ?>"><?php echo $NewsAlliance['Name']; ?></option><?php
-							}
+						foreach ($NewsAlliances as $NewsAllianceID => $NewsAllianceName) {
+							?><option value="<?php echo $NewsAllianceID; ?>"><?php echo $NewsAllianceName; ?></option><?php
 						} ?>
 					</select>
 						vs.
 					<select name="alliance2" required>
 						<option value="" disabled selected>Select an alliance</option><?php
-						if (isset($NewsAlliances) && count($NewsAlliances) > 0) {
-							foreach ($NewsAlliances as $NewsAlliance) {
-								?><option value="<?php echo $NewsAlliance['ID']; ?>"><?php echo $NewsAlliance['Name']; ?></option><?php
-							}
+						foreach ($NewsAlliances as $NewsAllianceID => $NewsAllianceName) {
+							?><option value="<?php echo $NewsAllianceID; ?>"><?php echo $NewsAllianceName; ?></option><?php
 						} ?>
 					</select><br />
 					<br />
