@@ -122,6 +122,41 @@ class AbstractSmrPortTest extends TestCase {
 		$port->getGoodTransaction(GOODS_ORE);
 	}
 
+	public function test_setPortGoods(): void {
+		$port = AbstractSmrPort::createPort(1, 1);
+		$port->setLevel(1);
+
+		// By default, a port's goods are empty
+		self::assertSame([], $port->getGoodTransactions());
+
+		// If we try to add an out-of-order good, we don't modify the port
+		// and we return false.
+		$badGoods = [
+			GOODS_TEXTILES => TransactionType::Buy,
+		];
+		self::assertFalse($port->setPortGoods($badGoods));
+		self::assertSame([], $port->getGoodTransactions());
+
+		// If we add valid goods, the port is properly modified
+		// (A level 1 port requires 3 goods)
+		$validGoods = [
+			GOODS_WOOD => TransactionType::Buy,
+			GOODS_FOOD => TransactionType::Buy,
+			GOODS_ORE => TransactionType::Sell,
+		];
+		self::assertTrue($port->setPortGoods($validGoods));
+		self::assertSame($validGoods, $port->getGoodTransactions());
+
+		// If we specify new goods, they are completely overriden
+		$validGoods2 = [
+			GOODS_WOOD => TransactionType::Sell, // opposite transaction
+			GOODS_FOOD => TransactionType::Buy, // same transaction
+			GOODS_SLAVES => TransactionType::Buy, // different good
+		];
+		self::assertTrue($port->setPortGoods($validGoods2));
+		self::assertSame($validGoods2, $port->getGoodTransactions());
+	}
+
 	public function test_shields(): void {
 		$port = AbstractSmrPort::createPort(1, 1);
 		// newly created ports start with no shields
