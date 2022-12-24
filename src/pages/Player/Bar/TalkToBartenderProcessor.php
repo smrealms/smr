@@ -8,7 +8,6 @@ use Globals;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
-use SmrAccount;
 use SmrEnhancedWeaponEvent;
 use SmrGalaxy;
 
@@ -33,7 +32,7 @@ class TalkToBartenderProcessor extends PlayerPageProcessor {
 					'message_id' => $db->escapeNumber($messageID),
 					'message' => $db->escapeString($gossip),
 				]);
-				SmrAccount::doMessageSendingToBox($player->getAccountID(), BOX_BARTENDER, $gossip, $player->getGameID());
+				$player->sendMessageToBox(BOX_BARTENDER, $gossip);
 
 				$message = 'Huh, that\'s news to me...<br /><br />Got anything else to tell me?';
 			} else {
