@@ -244,6 +244,11 @@ class Rankings {
 		$minRank = $session->getRequestVarInt('min_rank', $ourRank - 5);
 		$maxRank = $session->getRequestVarInt('max_rank', $ourRank + 5);
 
+		// Swap min and max if user input them in the wrong order
+		if ($minRank > $maxRank) {
+			[$minRank, $maxRank] = [$maxRank, $minRank];
+		}
+
 		if ($minRank <= 0 || $minRank > $totalRanks) {
 			$minRank = 1;
 		}
