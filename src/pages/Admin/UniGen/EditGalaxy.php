@@ -84,6 +84,10 @@ class EditGalaxy extends AccountPage {
 		$container->allowAjax = true;
 		$template->assign('DragPlanetHREF', $container->href());
 
+		$container = new DragPortProcessor($this->gameID, $this->galaxyID);
+		$container->allowAjax = true;
+		$template->assign('DragPortHREF', $container->href());
+
 		$container = new DragWarpProcessor($this->gameID, $this->galaxyID);
 		$container->allowAjax = true;
 		$template->assign('DragWarpHREF', $container->href());

@@ -75,6 +75,13 @@
 								} ?>
 								<div class="lmport <?php if ($Sector->getLinkLeft()) { ?>a<?php } else { ?>b<?php } ?>
 									"><?php
+									if ($UniGen) { ?>
+										<div
+											class="drag_loc"
+											data-href="<?php echo $DragPortHREF; ?>"
+											data-sector="<?php echo $Sector->getSectorID(); ?>"
+										><?php
+									}
 									if ($isCurrentSector && !$GalaxyMap) {
 										?><a href="<?php echo Globals::getTradeHREF(); ?>"><?php
 									} ?>
@@ -90,6 +97,7 @@
 												$Good = Globals::getGood($GoodID); ?>
 												<img src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" title="<?php echo $Good['Name'] ?>" alt="<?php echo $Good['Name']; ?>" /><?php
 											}
+									if ($UniGen) { ?></div><?php }
 									if ($isCurrentSector && !$GalaxyMap) { ?></a><?php } ?>
 								</div><?php
 							}
