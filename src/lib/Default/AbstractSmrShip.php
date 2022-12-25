@@ -771,6 +771,9 @@ class AbstractSmrShip {
 	public function shootPlayers(array $targetPlayers): array {
 		$thisPlayer = $this->getPlayer();
 		$results = ['Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []];
+		foreach ($targetPlayers as $targetPlayer) {
+			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
+		}
 		if ($thisPlayer->isDead()) {
 			$results['DeadBeforeShot'] = true;
 			return $results;
@@ -780,12 +783,14 @@ class AbstractSmrShip {
 			$results['Weapons'][$orderID] = $weapon->shootPlayer($thisPlayer, array_rand_value($targetPlayers));
 			if ($results['Weapons'][$orderID]['Hit']) {
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['TargetPlayer']->getAccountID()] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 			}
 		}
 		if ($this->hasCDs()) {
 			$thisCDs = new SmrCombatDrones($this->getCDs());
 			$results['Drones'] = $thisCDs->shootPlayer($thisPlayer, array_rand_value($targetPlayers));
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
+			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLAYER));
 		$thisPlayer->increaseHOF($results['TotalDamage'], ['Combat', 'Player', 'Damage Done'], HOF_PUBLIC);

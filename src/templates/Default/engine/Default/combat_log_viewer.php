@@ -15,7 +15,10 @@ Sector <?php echo $CombatLogSector ?><br />
 
 <?php
 if ($CombatResultsType == 'PLAYER') {
-	$this->includeTemplate('includes/TraderFullCombatResults.inc.php', ['TraderCombatResults' => $CombatResults]);
+	$this->includeTemplate('includes/TraderFullCombatResults.inc.php', [
+		'TraderCombatResults' => $CombatResults,
+		'MinimalDisplay' => false,
+	]);
 } elseif ($CombatResultsType == 'FORCE') {
 	$this->includeTemplate('includes/ForceFullCombatResults.inc.php', ['FullForceCombatResults' => $CombatResults]);
 } elseif ($CombatResultsType == 'PORT') {

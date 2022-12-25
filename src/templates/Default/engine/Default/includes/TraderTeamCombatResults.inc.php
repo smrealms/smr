@@ -4,6 +4,16 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 		$ShootingPlayer = $TraderResults['Player'];
 		$TotalDamage = $TraderResults['TotalDamage'];
 
+		if ($MinimalDisplay) {
+			echo $ShootingPlayer->getDisplayName();
+			if ($TotalDamage > 0) { ?>
+				hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php
+			} else { ?>
+				does no damage this round<?php
+			} ?>.<br /><br /><?php
+			continue;
+		}
+
 		if ($TraderResults['DeadBeforeShot']) {
 			echo $ShootingPlayer->getDisplayName() ?> died before they were able to attack!<br /><?php
 		} else {
@@ -129,5 +139,24 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 		} ?>.<br /><br /><?php
 	}
 }
-$TotalDamage = $TraderTeamCombatResults['TotalDamage']; ?>
-This fleet <?php if ($TotalDamage > 0) { ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php } else { ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.<br />
+$TotalDamage = $TraderTeamCombatResults['TotalDamage'];
+
+$TotalDamageToThisPlayer = 0;
+foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
+	// Check if ThisPlayer was a target in this round of combat
+	if (!isset($TraderResults['TotalDamagePerTargetPlayer'][$ThisPlayer->getAccountID()])) {
+		$TotalDamageToThisPlayer = null;
+		break;
+	}
+	$TotalDamageToThisPlayer += $TraderResults['TotalDamagePerTargetPlayer'][$ThisPlayer->getAccountID()];
+} ?>
+
+This fleet <?php
+if ($TotalDamage > 0) { ?>
+	hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php
+	if ($TotalDamageToThisPlayer !== null) {
+		?>, of which <span class="red"><?php echo $TotalDamageToThisPlayer; ?></span> was done to you<?php
+	}
+} else { ?>
+	does no damage this round. You call that a fleet? They need a better recruiter<?php
+} ?>.
