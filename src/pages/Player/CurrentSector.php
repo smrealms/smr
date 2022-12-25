@@ -10,6 +10,7 @@ use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Pages\Player\Planet\Main as PlanetMain;
 use Smr\Template;
+use Smr\TurnsLevel;
 use SmrGame;
 
 class CurrentSector extends PlayerPage {
@@ -96,6 +97,9 @@ class CurrentSector extends PlayerPage {
 			$turnsMessage = 'The game will start in ' . format_time($game->getStartTime() - Epoch::time()) . '!';
 		} else {
 			$turnsMessage = $player->getTurnsLevel()->message();
+			if ($player->getTurnsLevel() === TurnsLevel::None) {
+				$turnsMessage .= ' You will gain another turn in ' . format_time($player->getTimeUntilNextTurn()) . '.';
+			}
 		}
 		$template->assign('TurnsMessage', $turnsMessage);
 
