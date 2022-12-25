@@ -102,7 +102,7 @@
 			<br />Name: <?php echo $ThisShip->getName(); ?>
 			<br />Speed: <?php echo $ThisShip->getRealSpeed(); ?> turns/hour
 			<br />Max: <?php echo $ThisPlayer->getMaxTurns(); ?> turns
-			<br />At max turns in <span id="max_turns"><?php echo format_time($ThisPlayer->getTimeUntilMaxTurns(Smr\Epoch::time()), true); ?></span>.
+			<br />At max turns <span id="max_turns"><?php echo in_time_or_now($ThisPlayer->getTimeUntilMaxTurns(Smr\Epoch::time()), true); ?></span>.
 			Next turn in <span id="next_turn"><?php echo format_time($ThisPlayer->getTimeUntilNextTurn(), true); ?></span>.
 			<br /><br />
 

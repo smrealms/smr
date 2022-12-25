@@ -52,7 +52,7 @@ function shared_channel_msg_op_info(AbstractSmrPlayer $player): array {
 	$result = array_map($getOpInfoMessage, $player->getSharingPlayers(true));
 
 	// Prepend the time left until the op
-	array_unshift($result, 'The next scheduled op is in ' . format_time($opTime - time(), true) . '.');
+	array_unshift($result, 'The next scheduled op is ' . in_time_or_now($opTime - time(), true) . '.');
 
 	return $result;
 }
