@@ -101,7 +101,9 @@ class CurrentSector extends PlayerPage {
 				$turnsMessage .= ' You will gain another turn in ' . format_time($player->getTimeUntilNextTurn()) . '.';
 			}
 		}
-		$template->assign('TurnsMessage', $turnsMessage);
+		if (!empty($turnsMessage)) {
+			$template->assign('TurnsMessage', $turnsMessage);
+		}
 
 		$protectionMessage = '';
 		if ($player->getNewbieTurns()) {
