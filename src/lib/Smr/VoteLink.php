@@ -79,7 +79,7 @@ class VoteLink {
 
 		// If not in the vote_link database, this site is eligible now.
 		$lastClaimTime = self::$CACHE_TIMEOUTS[$this->site->value] ?? 0;
-		return $lastClaimTime + self::TIME_BETWEEN_VOTING - Epoch::time();
+		return max(0, $lastClaimTime + self::TIME_BETWEEN_VOTING - Epoch::time());
 	}
 
 	/**

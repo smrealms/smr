@@ -646,11 +646,7 @@ function doSkeletonAssigns(Template $template): void {
 
 	// Determine the minimum time until the next vote across all sites
 	$minVoteWait = VoteLink::getMinTimeUntilFreeTurns($account->getAccountID(), $session->getGameID());
-	if ($minVoteWait <= 0) {
-		$template->assign('TimeToNextVote', 'now');
-	} else {
-		$template->assign('TimeToNextVote', 'in ' . format_time($minVoteWait, true));
-	}
+	$template->assign('TimeToNextVote', in_time_or_now($minVoteWait, true));
 
 	// ------- VERSION --------
 	$dbResult = $db->read('SELECT * FROM version ORDER BY went_live DESC LIMIT 1');
@@ -663,6 +659,19 @@ function doSkeletonAssigns(Template $template): void {
 
 	$template->assign('Version', $version);
 	$template->assign('CurrentYear', date('Y', Epoch::time()));
+}
+
+/**
+ * Convert an integer number of seconds into a human-readable time for
+ * grammatically-correct use in a sentence, i.e. prefixed with "in" when
+ * the amount is positive.
+ */
+function in_time_or_now(int $seconds, bool $short = false): string {
+	$result = format_time($seconds, $short);
+	if ($seconds > 0) {
+		$result = 'in ' . $result;
+	}
+	return $result;
 }
 
 /**
