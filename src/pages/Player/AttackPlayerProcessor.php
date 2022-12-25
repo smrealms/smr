@@ -103,7 +103,7 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 		$account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'] . ' and the other team does ' . $results['Defenders']['TotalDamage'], $sector->getSectorID());
 
 		$db = Database::getInstance();
-		$db->insert('combat_logs', [
+		$logId = $db->insert('combat_logs', [
 			'game_id' => $db->escapeNumber($player->getGameID()),
 			'type' => $db->escapeString('PLAYER'),
 			'sector_id' => $db->escapeNumber($sector->getSectorID()),
@@ -114,6 +114,19 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 			'defender_alliance_id' => $db->escapeNumber($targetPlayer->getAllianceID()),
 			'result' => $db->escapeObject($results, true),
 		]);
+
+		// Update sector messages for other players
+		foreach ($fightingPlayers as $teamPlayers) {
+			foreach ($teamPlayers as $teamPlayer) {
+				if (!$player->equals($teamPlayer)) {
+					$db->replace('sector_message', [
+						'account_id' => $db->escapeNumber($teamPlayer->getAccountID()),
+						'game_id' => $db->escapeNumber($teamPlayer->getGameID()),
+						'message' => $db->escapeString('[ATTACK_RESULTS]' . $logId),
+					]);
+				}
+			}
+		}
 
 		// If player died they are now in another sector, and thus locks need reset
 		if ($player->isDead()) {

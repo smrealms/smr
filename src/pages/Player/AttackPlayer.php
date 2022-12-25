@@ -24,6 +24,7 @@ class AttackPlayer extends PlayerPage {
 
 	public function build(AbstractSmrPlayer $player, Template $template): void {
 		$template->assign('TraderCombatResults', $this->results);
+		$template->assign('MinimalDisplay', false);
 		if ($this->targetAccountID !== null) {
 			$template->assign('Target', SmrPlayer::getPlayer($this->targetAccountID, $player->getGameID()));
 		}
