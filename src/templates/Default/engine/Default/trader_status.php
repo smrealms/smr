@@ -103,6 +103,7 @@
 			<br />Speed: <?php echo $ThisShip->getRealSpeed(); ?> turns/hour
 			<br />Max: <?php echo $ThisPlayer->getMaxTurns(); ?> turns
 			<br />At max turns in <span id="max_turns"><?php echo format_time($ThisPlayer->getTimeUntilMaxTurns(Smr\Epoch::time()), true); ?></span>.
+			Next turn in <span id="next_turn"><?php echo format_time($ThisPlayer->getTimeUntilNextTurn(), true); ?></span>.
 			<br /><br />
 
 			<a href="<?php echo $HardwareHREF; ?>">

@@ -2684,6 +2684,15 @@ abstract class AbstractSmrPlayer {
 	}
 
 	/**
+	 * Calculate the time in seconds until the next turn is awarded.
+	 */
+	public function getTimeUntilNextTurn(): int {
+		$secondsSinceUpdate = Epoch::time() - $this->getLastTurnUpdate();
+		$secondsPerTurn = 3600 / $this->getShip()->getRealSpeed();
+		return ICeil(fmod(abs($secondsSinceUpdate - $secondsPerTurn), $secondsPerTurn));
+	}
+
+	/**
 	 * Grant the player their starting turns.
 	 */
 	public function giveStartingTurns(): void {
