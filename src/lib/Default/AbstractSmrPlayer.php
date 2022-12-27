@@ -2266,16 +2266,6 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function removeUnderAttack(): bool {
-		$session = Smr\Session::getInstance();
-		$var = $session->getCurrentVar();
-		if ($var->underAttack === null) {
-			$var->underAttack = $this->isUnderAttack(); // remember if we are under attack for AJAX
-			$this->setUnderAttack(false);
-		}
-		return $var->underAttack;
-	}
-
 	public function killPlayer(int $sectorID): void {
 		$sector = SmrSector::getSector($this->getGameID(), $sectorID);
 		//msg taken care of in trader_att_proc.php
