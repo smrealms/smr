@@ -2,6 +2,7 @@
 
 namespace Smr\Page;
 
+use AbstractSmrPlayer;
 use Smr\Session;
 use Smr\Template;
 
@@ -23,7 +24,7 @@ class Page {
 	/**
 	 * Storage to remember if we need to display the Under Attack message.
 	 */
-	public ?bool $underAttack = null;
+	protected bool $underAttack = false;
 
 	/**
 	 * Template file associated with page (for display pages only).
@@ -38,6 +39,27 @@ class Page {
 	public function isLinkReusable(): bool {
 		// Pages are single-use unless explicitly whitelisted by ReusableTrait
 		return false;
+	}
+
+	/**
+	 * Determine if we should show the player that they are under attack,
+	 * since it needs to persist across ajax updates.
+	 */
+	public function showUnderAttack(AbstractSmrPlayer $player, bool $ajax): bool {
+		// Only ever change the stored value from false -> true so that the under
+		// attack warning persists for the lifetime of this Page.
+		if ($player->isUnderAttack()) {
+			$this->underAttack = true;
+		}
+
+		// Don't modify the player state in an ajax call so that the next real
+		// page load will also show if the player is under attack (to avoid brief
+		// warning flashes if the ajax call occurs just before a real page load).
+		if (!$ajax) {
+			$player->setUnderAttack(false);
+		}
+
+		return $this->underAttack;
 	}
 
 	/**
