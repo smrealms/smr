@@ -58,11 +58,16 @@ class CommandTest extends TestCase {
 	}
 
 	public function test_callback_catches_Exception(): void {
-		$this->markTestSkipped('To revisit when we use Monolog for logging');
-
 		// Stub the response method of an arbitrary Command to throw an Exception
-		$mockCommand = $this->createPartialMock(MagicEightBall::class, ['response']);
-		$mockCommand->method('response')->willThrowException(new Exception());
+		$mockCommand = $this->createPartialMock(MagicEightBall::class, ['response', 'logException']);
+		$err = new Exception(__METHOD__);
+		$mockCommand
+			->method('response')
+			->willThrowException($err);
+		$mockCommand
+			->expects(self::once())
+			->method('logException')
+			->with($err);
 
 		// Mock the DiscordPHP Message, and make sure we call reply on it
 		$mockPromise = $this->createMock(ExtendedPromiseInterface::class);

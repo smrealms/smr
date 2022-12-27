@@ -36,6 +36,12 @@ abstract class Command {
 	 */
 	abstract public function response(string ...$args): array;
 
+	protected function logException(Throwable $err): void {
+		// Isolate this global function call so it can be mocked during testing.
+		// A better solution is probably to switch to Monolog for logging.
+		logException($err);
+	}
+
 	/**
 	 * Wrapper to properly handle a Command response.
 	 *
@@ -48,7 +54,7 @@ abstract class Command {
 		} catch (UserError $err) {
 			$lines = [$err->getMessage()];
 		} catch (Throwable $err) {
-			logException($err);
+			$this->logException($err);
 			$lines = ['I encountered an error. Please report this to an admin!'];
 		}
 		if ($lines) {

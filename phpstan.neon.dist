@@ -56,11 +56,6 @@ parameters:
             path: src/pages/Player/AttackPlayerProcessor.php
             count: 1
         -
-            # Caused by temporary use of `markTestSkipped`. (Level 4)
-            message: '#Unreachable statement - code above always terminates.#'
-            path: test/SmrTest/lib/DefaultGame/Discord/CommandTest.php
-            count: 1
-        -
             # This Admin Tool is temporarily(?) disabled. (Level 4)
             message: '#Unreachable statement - code above always terminates.#'
             path: src/pages/Admin/GameDeleteProcessor.php
