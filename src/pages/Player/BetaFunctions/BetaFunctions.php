@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Smr\Pages\Player;
+namespace Smr\Pages\Player\BetaFunctions;
 
 use AbstractSmrPlayer;
 use Globals;
@@ -26,15 +26,15 @@ class BetaFunctions extends PlayerPage {
 		$template->assign('PageTopic', 'Beta Functions');
 
 		// let them map all
-		$container = new BetaFunctionsProcessor('Map');
+		$container = new RevealMapProcessor();
 		$template->assign('MapHREF', $container->href());
 
 		// let them get money
-		$container = new BetaFunctionsProcessor('Money');
+		$container = new AddMoneyProcessor();
 		$template->assign('MoneyHREF', $container->href());
 
 		//next time for ship
-		$container = new BetaFunctionsProcessor('Ship');
+		$container = new SetShipProcessor();
 		$template->assign('ShipHREF', $container->href());
 		$shipList = [];
 		foreach (SmrShipType::getAll() as $shipTypeID => $shipType) {
@@ -44,7 +44,7 @@ class BetaFunctions extends PlayerPage {
 		$template->assign('ShipList', $shipList);
 
 		//next weapons
-		$container = new BetaFunctionsProcessor('Weapon');
+		$container = new AddWeaponsProcessor();
 		$template->assign('AddWeaponHREF', $container->href());
 		$weaponList = [];
 		foreach (SmrWeaponType::getAllWeaponTypes() as $weaponTypeID => $weaponType) {
@@ -54,31 +54,31 @@ class BetaFunctions extends PlayerPage {
 		$template->assign('WeaponList', $weaponList);
 
 		//Remove Weapons
-		$container = new BetaFunctionsProcessor('RemWeapon');
+		$container = new RemoveWeaponsProcessor();
 		$template->assign('RemoveWeaponsHREF', $container->href());
 
 		//allow to get full hardware
-		$container = new BetaFunctionsProcessor('Uno');
+		$container = new RepairShipProcessor();
 		$template->assign('UnoHREF', $container->href());
 
 		//move whereever you want
-		$container = new BetaFunctionsProcessor('Warp');
+		$container = new SetSectorProcessor();
 		$template->assign('WarpHREF', $container->href());
 
 		//set turns
-		$container = new BetaFunctionsProcessor('Turns');
+		$container = new SetTurnsProcessor();
 		$template->assign('TurnsHREF', $container->href());
 
 		//set experience
-		$container = new BetaFunctionsProcessor('Exp');
+		$container = new SetExperienceProcessor();
 		$template->assign('ExperienceHREF', $container->href());
 
 		//Set alignment
-		$container = new BetaFunctionsProcessor('Align');
+		$container = new SetAlignmentProcessor();
 		$template->assign('AlignmentHREF', $container->href());
 
 		//add any type of hardware
-		$container = new BetaFunctionsProcessor('Hard_add');
+		$container = new SetHardwareProcessor();
 		$template->assign('HardwareHREF', $container->href());
 		$hardware = [];
 		foreach (Globals::getHardwareTypes() as $hardwareTypeID => $hardwareType) {
@@ -87,25 +87,25 @@ class BetaFunctions extends PlayerPage {
 		$template->assign('Hardware', $hardware);
 
 		//change personal relations
-		$container = new BetaFunctionsProcessor('Relations');
+		$container = new SetPersonalRelationsProcessor();
 		$template->assign('PersonalRelationsHREF', $container->href());
 
 		//change race relations
-		$container = new BetaFunctionsProcessor('Race_relations');
+		$container = new SetPoliticalRelationsProcessor();
 		$template->assign('RaceRelationsHREF', $container->href());
 
 		//change race
-		$container = new BetaFunctionsProcessor('Race');
+		$container = new SetRaceProcessor();
 		$template->assign('ChangeRaceHREF', $container->href());
 
 		if ($sector->hasPlanet()) {
-			$container = new BetaFunctionsProcessor('planet_buildings');
+			$container = new PlanetBuildingsProcessor();
 			$template->assign('MaxBuildingsHREF', $container->href());
 
-			$container = new BetaFunctionsProcessor('planet_defenses');
+			$container = new PlanetDefensesProcessor();
 			$template->assign('MaxDefensesHREF', $container->href());
 
-			$container = new BetaFunctionsProcessor('planet_stockpile');
+			$container = new PlanetStockpileProcessor();
 			$template->assign('MaxStockpileHREF', $container->href());
 		}
 	}

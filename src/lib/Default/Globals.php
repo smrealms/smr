@@ -15,7 +15,7 @@ use Smr\Pages\Player\AllianceOptions;
 use Smr\Pages\Player\AllianceRoster;
 use Smr\Pages\Player\AttackPlayerProcessor;
 use Smr\Pages\Player\Bank\AllianceBank;
-use Smr\Pages\Player\BetaFunctions;
+use Smr\Pages\Player\BetaFunctions\BetaFunctions;
 use Smr\Pages\Player\BuyShipName;
 use Smr\Pages\Player\Chess\MatchList;
 use Smr\Pages\Player\Chess\MatchStartProcessor;
