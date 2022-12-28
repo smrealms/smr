@@ -64,13 +64,10 @@ class HallOfFameAll extends AccountPage {
 			$rank = 1;
 			$foundMe = false;
 
-			$viewTypeList = explode(':', $viewType);
-			$view = end($viewTypeList);
-
-			if ($view == HOF_TYPE_DONATION) {
+			if ($viewType == HOF_TYPE_DONATION) {
 				$dbResult = $db->read('SELECT account_id, SUM(amount) as amount FROM account_donated
 							GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
-			} elseif ($view == HOF_TYPE_USER_SCORE) {
+			} elseif ($viewType == HOF_TYPE_USER_SCORE) {
 				$statements = SmrAccount::getUserScoreCaseStatement($db);
 				$query = 'SELECT account_id, ' . $statements['CASE'] . ' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25';
 				$dbResult = $db->read($query);
