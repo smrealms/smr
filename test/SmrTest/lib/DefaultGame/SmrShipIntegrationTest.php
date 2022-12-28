@@ -15,7 +15,7 @@ class SmrShipIntegrationTest extends BaseIntegrationSpec {
 	private AbstractSmrPlayer $player; // will be mocked
 
 	protected function tablesToTruncate(): array {
-		return ['ship_has_hardware'];
+		return ['ship_has_cargo', 'ship_has_hardware', 'ship_has_illusion', 'ship_has_weapon', 'ship_is_cloaked'];
 	}
 
 	protected function setUp(): void {
