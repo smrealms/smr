@@ -20,10 +20,10 @@ class HallOfFame {
 	public static function getHofCategories(HallOfFameAll|HallOfFamePersonal $page, array $allowedVis, ?int $game_id, int $account_id): array {
 		// Get the HOF type that we're currently viewing
 		if ($page->viewType !== null) {
-			$viewType = $page->viewType;
-			$viewTypeList = explode(':', $viewType);
+			$viewTypeFilter = $page->viewType . ':'; // avoid matching partial types
+			$viewTypeList = explode(':', $page->viewType);
 		} else {
-			$viewType = '';
+			$viewTypeFilter = '';
 			$viewTypeList = [];
 		}
 
@@ -34,7 +34,7 @@ class HallOfFame {
 				// Not allowed to view
 				continue;
 			}
-			if (!str_starts_with($hofType, $viewType)) {
+			if (!str_starts_with($hofType, $viewTypeFilter)) {
 				// Isn't a subtype of the current type
 				continue;
 			}
