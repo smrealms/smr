@@ -330,6 +330,7 @@ function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port): Page
 	return new ShopGoodsProcessor(
 		goodID: $goodID,
 		amount: $amount,
+		bargainNumber: 1,
 		bargainPrice: $offeredPrice // take the offered price
 	);
 }
