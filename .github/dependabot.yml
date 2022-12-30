@@ -6,28 +6,34 @@ updates:
   directory: "/"
   schedule:
     interval: daily
+  rebase-strategy: disabled
 
 - package-ecosystem: docker
   directory: "/.github/actions/api-docs"
   schedule:
     interval: daily
+  rebase-strategy: disabled
 
 - package-ecosystem: docker
   directory: "/api-docs"
   schedule:
     interval: daily
+  rebase-strategy: disabled
 
 - package-ecosystem: docker
   directory: "/db"
   schedule:
     interval: daily
+  rebase-strategy: disabled
 
 - package-ecosystem: docker
   directory: "/"
   schedule:
     interval: daily
+  rebase-strategy: disabled
 
 - package-ecosystem: composer
   directory: "/"
   schedule:
     interval: daily
+  rebase-strategy: disabled
