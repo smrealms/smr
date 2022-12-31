@@ -17,8 +17,10 @@ class Plotter {
 			return $X;
 		}
 
-		// In all other cases, X is a numeric ID
-		$X = str2int($X);
+		// In all other cases, X is either an int or a numeric string
+		if (is_string($X)) {
+			$X = str2int($X);
+		}
 
 		// Helper function for plots to trade goods
 		$getGoodWithTransaction = function(int $goodID) use ($xType, $player) {
