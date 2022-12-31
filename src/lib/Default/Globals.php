@@ -48,8 +48,6 @@ class Globals {
 	/** @var array<int, array<string, string|int>> */
 	protected static array $LEVEL_REQUIREMENTS;
 	/** @var array<int, array<string, string|int>> */
-	protected static array $GOODS;
-	/** @var array<int, array<string, string|int>> */
 	protected static array $HARDWARE_TYPES;
 	protected static bool $FEATURE_REQUEST_OPEN;
 	/** @var array<int, array<int, array<int, int>>> */
@@ -145,46 +143,6 @@ class Globals {
 			$raceName = create_link($container, $raceName);
 		}
 		return $raceName;
-	}
-
-	/**
-	 * @return array<int, array<string, string|int>>
-	 */
-	public static function getGoods(): array {
-		if (!isset(self::$GOODS)) {
-			self::initialiseDatabase();
-			self::$GOODS = [];
-
-			// determine user level
-			$dbResult = self::$db->read('SELECT * FROM good ORDER BY good_id');
-			foreach ($dbResult->records() as $dbRecord) {
-				self::$GOODS[$dbRecord->getInt('good_id')] = [
-					'Type' => 'Good',
-					'ID' => $dbRecord->getInt('good_id'),
-					'Name' => $dbRecord->getString('good_name'),
-					'Max' => $dbRecord->getInt('max_amount'),
-					'BasePrice' => $dbRecord->getInt('base_price'),
-					'Class' => $dbRecord->getInt('good_class'),
-					'ImageLink' => 'images/port/' . $dbRecord->getInt('good_id') . '.png',
-					'AlignRestriction' => $dbRecord->getInt('align_restriction'),
-				];
-			}
-		}
-		return self::$GOODS;
-	}
-
-	/**
-	 * @return array<string, string|int>
-	 */
-	public static function getGood(int $goodID): array {
-		return self::getGoods()[$goodID];
-	}
-
-	public static function getGoodName(int $goodID): string {
-		if ($goodID == GOODS_NOTHING) {
-			return 'Nothing';
-		}
-		return self::getGoods()[$goodID]['Name'];
 	}
 
 	/**

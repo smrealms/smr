@@ -3,6 +3,7 @@
 use Smr\Exceptions\UserError;
 use Smr\Path;
 use Smr\PlotGroup;
+use Smr\TradeGood;
 use Smr\TransactionType;
 
 class Plotter {
@@ -21,12 +22,15 @@ class Plotter {
 
 		// Helper function for plots to trade goods
 		$getGoodWithTransaction = function(int $goodID) use ($xType, $player) {
-			$good = Globals::getGood($goodID);
-			if (isset($player) && !$player->meetsAlignmentRestriction($good['AlignRestriction'])) {
+			$good = TradeGood::get($goodID);
+			if (isset($player) && !$player->meetsAlignmentRestriction($good->alignRestriction)) {
 				throw new Exception('Player trying to access alignment-restricted good!');
 			}
-			$good['TransactionType'] = TransactionType::from(explode(' ', $xType->value)[0]);
-			return $good;
+			return [
+				'Type' => 'Good',
+				'GoodID' => $goodID,
+				'TransactionType' => TransactionType::from(explode(' ', $xType->value)[0]),
+			];
 		};
 
 		return match ($xType) {

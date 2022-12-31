@@ -29,8 +29,8 @@ class SectorsFile {
 
 		$file .= '[Goods]
 		; ID = Name, BasePrice' . EOL;
-		foreach (Globals::getGoods() as $good) {
-			$file .= $good['ID'] . '=' . inify($good['Name']) . ',' . $good['BasePrice'] . EOL;
+		foreach (TradeGood::getAll() as $goodID => $good) {
+			$file .= $goodID . '=' . inify($good->name) . ',' . $good->basePrice . EOL;
 		}
 
 		$file .= '[Weapons]

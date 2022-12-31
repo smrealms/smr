@@ -3,10 +3,10 @@
 namespace Smr\Pages\Player;
 
 use AbstractSmrPlayer;
-use Globals;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
+use Smr\TradeGood;
 
 class CargoDump extends PlayerPage {
 
@@ -24,9 +24,10 @@ class CargoDump extends PlayerPage {
 			$goods = [];
 			foreach ($ship->getCargo() as $goodID => $amount) {
 				$container = new CargoDumpProcessor($goodID);
+				$good = TradeGood::get($goodID);
 				$goods[] = [
-					'image' => Globals::getGood($goodID)['ImageLink'],
-					'name' => Globals::getGood($goodID)['Name'],
+					'image' => $good->getImageHTML(),
+					'name' => $good->name,
 					'amount' => $amount,
 					'dump_href' => $container->href(),
 				];

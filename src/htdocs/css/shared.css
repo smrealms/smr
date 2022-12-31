@@ -196,12 +196,18 @@ div.secNavBox a:hover {
 table.center, table.centered {
 	margin:auto;
 }
+.pad1 {
+	padding: 1px;
+}
 .nopad {
 	margin: 0px;
 	padding: 0px;
 }
 .noWrap {
 	white-space: nowrap;
+}
+ul.nobullets {
+	list-style-type: none; /* Remove bullets */
 }
 .auto {
 	width: auto;

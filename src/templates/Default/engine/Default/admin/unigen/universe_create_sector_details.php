@@ -38,15 +38,15 @@
 				foreach ([1, 2, 3] as $class) { ?>
 					<td class="top">
 					<table class="nobord"><?php
-						foreach (Globals::getGoods() as $good) {
-							if ($good['Class'] == $class) { ?>
+						foreach (Smr\TradeGood::getAll() as $goodID => $good) {
+							if ($good->class == $class) { ?>
 								<tr>
 								<td>
-									<img class="bottom" src="<?php echo $good['ImageLink']; ?>" width="13" height="16" />&nbsp;
-									<select name="good<?php echo $good['ID']; ?>">
+									<?php echo $good->getImageHTML(); ?>&nbsp;
+									<select name="good<?php echo $goodID; ?>">
 										<option value="None">--</option><?php
 										foreach (Smr\TransactionType::cases() as $trans) { ?>
-											<option <?php if ($Port->hasGood($good['ID'], $trans)) { ?> selected <?php } ?> value="<?php echo $trans->value; ?>"><?php echo $trans->value; ?></option><?php
+											<option <?php if ($Port->hasGood($goodID, $trans)) { ?> selected <?php } ?> value="<?php echo $trans->value; ?>"><?php echo $trans->value; ?></option><?php
 										} ?>
 									</select>
 								</td>

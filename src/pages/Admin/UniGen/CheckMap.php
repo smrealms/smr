@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
-use Globals;
 use Plotter;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Race;
 use Smr\Routes\RouteGenerator;
 use Smr\Template;
+use Smr\TradeGood;
 use SmrAccount;
 use SmrGame;
 use SmrLocation;
@@ -54,7 +54,7 @@ class CheckMap extends AccountPage {
 
 		// Calculate the best trade routes for each galaxy
 		$tradeGoods = [GOODS_NOTHING => true];
-		foreach (array_keys(Globals::getGoods()) as $goodID) {
+		foreach (TradeGood::getAllIDs() as $goodID) {
 			$tradeGoods[$goodID] = true;
 		}
 		$tradeRaces = [];
@@ -100,7 +100,7 @@ class CheckMap extends AccountPage {
 				}
 			}
 			if (!empty($max)) {
-				$output = $max['Distance'] . 'x ' . Globals::getGoodName($max['GoodID']) . ' at Port #' . $max['Port']->getSectorID() . ' (' . $max['Port']->getRaceName() . ')';
+				$output = $max['Distance'] . 'x ' . TradeGood::get($max['GoodID'])->name . ' at Port #' . $max['Port']->getSectorID() . ' (' . $max['Port']->getRaceName() . ')';
 				$maxSellMultipliers[$galaxy->getDisplayName()] = $output;
 			}
 		}

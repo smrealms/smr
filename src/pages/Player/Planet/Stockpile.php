@@ -3,10 +3,10 @@
 namespace Smr\Pages\Player\Planet;
 
 use AbstractSmrPlayer;
-use Globals;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
+use Smr\TradeGood;
 
 class Stockpile extends PlayerPage {
 
@@ -22,7 +22,7 @@ class Stockpile extends PlayerPage {
 		$ship = $player->getShip();
 
 		$goodInfo = [];
-		foreach (Globals::getGoods() as $goodID => $good) {
+		foreach (TradeGood::getAll() as $goodID => $good) {
 			if (!$ship->hasCargo($goodID) && !$planet->hasStockpile($goodID)) {
 				continue;
 			}
@@ -30,8 +30,8 @@ class Stockpile extends PlayerPage {
 			$container = new StockpileProcessor($goodID);
 
 			$goodInfo[] = [
-				'Name' => $good['Name'],
-				'ImageLink' => $good['ImageLink'],
+				'Name' => $good->name,
+				'ImageHTML' => $good->getImageHTML(),
 				'ShipAmount' => $ship->getCargo($goodID),
 				'PlanetAmount' => $planet->getStockpile($goodID),
 				'DefaultAmount' => min($ship->getCargo($goodID), $planet->getRemainingStockpile($goodID)),

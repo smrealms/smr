@@ -19,6 +19,7 @@ use Smr\Path;
 use Smr\Race;
 use Smr\ScoutMessageGroupType;
 use Smr\StoredDestination;
+use Smr\TradeGood;
 use Smr\TurnsLevel;
 
 abstract class AbstractSmrPlayer {
@@ -3137,14 +3138,13 @@ abstract class AbstractSmrPlayer {
 	/**
 	 * Get an array of goods that are visible to the player
 	 *
-	 * @return array<int, array<string, string|int>>
+	 * @return array<int, TradeGood>
 	 */
 	public function getVisibleGoods(): array {
-		$goods = Globals::getGoods();
 		$visibleGoods = [];
-		foreach ($goods as $key => $good) {
-			if ($this->meetsAlignmentRestriction($good['AlignRestriction'])) {
-				$visibleGoods[$key] = $good;
+		foreach (TradeGood::getAll() as $goodID => $good) {
+			if ($this->meetsAlignmentRestriction($good->alignRestriction)) {
+				$visibleGoods[$goodID] = $good;
 			}
 		}
 		return $visibleGoods;

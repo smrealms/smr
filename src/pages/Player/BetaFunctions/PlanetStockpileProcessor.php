@@ -3,14 +3,14 @@
 namespace Smr\Pages\Player\BetaFunctions;
 
 use AbstractSmrPlayer;
-use Globals;
+use Smr\TradeGood;
 use SmrPlanet;
 
 class PlanetStockpileProcessor extends BetaFunctionsPageProcessor {
 
 	public function buildBetaFunctionsProcessor(AbstractSmrPlayer $player): void {
 		$planet = $player->getSector()->getPlanet();
-		foreach (Globals::getGoods() as $goodID => $good) {
+		foreach (TradeGood::getAllIDs() as $goodID) {
 			$planet->setStockpile($goodID, SmrPlanet::MAX_STOCKPILE);
 		}
 	}

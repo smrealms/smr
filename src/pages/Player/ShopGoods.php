@@ -3,9 +3,9 @@
 namespace Smr\Pages\Player;
 
 use AbstractSmrPlayer;
-use Globals;
 use Smr\Page\PlayerPage;
 use Smr\Template;
+use Smr\TradeGood;
 
 class ShopGoods extends PlayerPage {
 
@@ -63,11 +63,10 @@ class ShopGoods extends PlayerPage {
 					$player->increaseHOF(1, ['Trade', 'Search', 'Caught', 'Number Of Times'], HOF_PUBLIC);
 					//find the fine
 					//get base for ports that dont happen to trade that good
-					$GOODS = Globals::getGoods();
 					$fine = $totalFine = $port->getLevel() *
-					    (($ship->getCargo(GOODS_SLAVES) * $GOODS[GOODS_SLAVES]['BasePrice']) +
-					     ($ship->getCargo(GOODS_WEAPONS) * $GOODS[GOODS_WEAPONS]['BasePrice']) +
-					     ($ship->getCargo(GOODS_NARCOTICS) * $GOODS[GOODS_NARCOTICS]['BasePrice']));
+					    (($ship->getCargo(GOODS_SLAVES) * TradeGood::get(GOODS_SLAVES)->basePrice) +
+					     ($ship->getCargo(GOODS_WEAPONS) * TradeGood::get(GOODS_WEAPONS)->basePrice) +
+					     ($ship->getCargo(GOODS_NARCOTICS) * TradeGood::get(GOODS_NARCOTICS)->basePrice));
 					$player->increaseHOF($ship->getCargo(GOODS_SLAVES) + $ship->getCargo(GOODS_WEAPONS) + $ship->getCargo(GOODS_NARCOTICS), ['Trade', 'Search', 'Caught', 'Goods Confiscated'], HOF_PUBLIC);
 					$player->increaseHOF($totalFine, ['Trade', 'Search', 'Caught', 'Amount Fined'], HOF_PUBLIC);
 					$template->assign('TotalFine', $totalFine);
@@ -108,35 +107,29 @@ class ShopGoods extends PlayerPage {
 		$player->setLastPort($player->getSectorID());
 
 		$boughtGoods = [];
-		foreach ($port->getVisibleGoodsBought($player) as $goodID) {
-			$good = Globals::getGood($goodID);
-			$container = new ShopGoodsProcessor($goodID);
-			$good['HREF'] = $container->href();
-
-			$amount = $port->getGoodAmount($goodID);
-			$good['PortAmount'] = $amount;
-			if ($amount < $ship->getEmptyHolds()) {
-				$good['Amount'] = $amount;
-			} else {
-				$good['Amount'] = $ship->getEmptyHolds();
-			}
-			$boughtGoods[$goodID] = $good;
+		foreach ($port->getVisibleGoodsBought($player) as $goodID => $good) {
+			$portAmount = $port->getGoodAmount($goodID);
+			$boughtGoods[$goodID] = [
+				'HREF' => (new ShopGoodsProcessor($goodID))->href(),
+				'Image' => $good->getImageHTML(),
+				'Name' => $good->name,
+				'BasePrice' => $good->basePrice,
+				'PortAmount' => $portAmount,
+				'Amount' => min($portAmount, $ship->getEmptyHolds()),
+			];
 		}
 
 		$soldGoods = [];
-		foreach ($port->getVisibleGoodsSold($player) as $goodID) {
-			$good = Globals::getGood($goodID);
-			$container = new ShopGoodsProcessor($goodID);
-			$good['HREF'] = $container->href();
-
-			$amount = $port->getGoodAmount($goodID);
-			$good['PortAmount'] = $amount;
-			if ($amount < $ship->getCargo($goodID)) {
-				$good['Amount'] = $amount;
-			} else {
-				$good['Amount'] = $ship->getCargo($goodID);
-			}
-			$soldGoods[$goodID] = $good;
+		foreach ($port->getVisibleGoodsSold($player) as $goodID => $good) {
+			$portAmount = $port->getGoodAmount($goodID);
+			$soldGoods[$goodID] = [
+				'HREF' => (new ShopGoodsProcessor($goodID))->href(),
+				'Image' => $good->getImageHTML(),
+				'Name' => $good->name,
+				'BasePrice' => $good->basePrice,
+				'PortAmount' => $portAmount,
+				'Amount' => min($portAmount, $ship->getCargo($goodID)),
+			];
 		}
 
 		$template->assign('BoughtGoods', $boughtGoods);

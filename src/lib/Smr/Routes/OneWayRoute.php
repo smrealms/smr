@@ -2,9 +2,9 @@
 
 namespace Smr\Routes;
 
-use Globals;
 use Smr\Path;
 use Smr\Race;
+use Smr\TradeGood;
 use Smr\TransactionType;
 use SmrPort;
 
@@ -64,7 +64,7 @@ class OneWayRoute extends Route {
 		}
 		$numGoods = 1;
 		$relations = 1000; // assume max relations
-		$supply = Globals::getGood($this->goodId)['Max']; // assume max supply
+		$supply = TradeGood::get($this->goodId)->maxPortAmount; // assume max supply
 		$buyPrice = SmrPort::idealPrice($this->goodId, TransactionType::Buy, $numGoods, $relations, $supply, $this->buyDi);
 		$sellPrice = SmrPort::idealPrice($this->goodId, TransactionType::Sell, $numGoods, $relations, $supply, $this->sellDi);
 		return $sellPrice - $buyPrice;
@@ -95,8 +95,15 @@ class OneWayRoute extends Route {
 		return [$this];
 	}
 
+	public function getGoodName(): string {
+		if ($this->goodId == GOODS_NOTHING) {
+			return 'Nothing';
+		}
+		return TradeGood::get($this->goodId)->name;
+	}
+
 	public function getRouteString(): string {
-		$buy = $this->buySectorId . ' (' . Race::getName($this->buyPortRace) . ') buy ' . Globals::getGoodName($this->goodId) . ' for ' . $this->buyDi . 'x';
+		$buy = $this->buySectorId . ' (' . Race::getName($this->buyPortRace) . ') buy ' . $this->getGoodName() . ' for ' . $this->buyDi . 'x';
 		$sell = ' to sell at ' . $this->sellSectorId . ' (' . Race::getName($this->sellPortRace) . ') for ' . $this->sellDi . 'x';
 		$distance = ' (Distance: ' . $this->path->getDistance() . ($this->path->getNumWarps() > 0 ? ' + ' . $this->path->getNumWarps() . ' warps) ' : ')');
 		return $buy . $sell . $distance;

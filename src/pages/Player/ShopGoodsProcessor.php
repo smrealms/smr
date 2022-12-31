@@ -4,9 +4,9 @@ namespace Smr\Pages\Player;
 
 use AbstractSmrPlayer;
 use Exception;
-use Globals;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
+use Smr\TradeGood;
 use Smr\TransactionType;
 use SmrPort;
 
@@ -32,7 +32,8 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 		}
 
 		$good_id = $this->goodID;
-		$good_name = Globals::getGoodName($good_id);
+		$portGood = TradeGood::get($good_id);
+		$good_name = $portGood->name;
 
 		// do we have enough turns?
 		if ($player->getTurns() == 0) {
@@ -152,7 +153,6 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 			}
 			$gained_exp = IRound($expPercent * $base_xp);
 
-			$portGood = Globals::getGood($good_id);
 			if ($stealing) {
 				$msg_transaction = 'stolen';
 				$ship->increaseCargo($good_id, $amount);

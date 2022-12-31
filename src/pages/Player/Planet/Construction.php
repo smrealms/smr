@@ -3,10 +3,10 @@
 namespace Smr\Pages\Player\Planet;
 
 use AbstractSmrPlayer;
-use Globals;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
+use Smr\TradeGood;
 
 class Construction extends PlayerPage {
 
@@ -18,7 +18,7 @@ class Construction extends PlayerPage {
 		require_once(LIB . 'Default/planet.inc.php');
 		planet_common();
 
-		$template->assign('Goods', Globals::getGoods());
+		$template->assign('Goods', TradeGood::getAll());
 	}
 
 }

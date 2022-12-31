@@ -3,9 +3,9 @@
 namespace Smr\Pages\Player;
 
 use AbstractSmrPlayer;
-use Globals;
 use Smr\Page\PlayerPage;
 use Smr\Template;
+use Smr\TradeGood;
 use Smr\TransactionType;
 
 class ShopGoodsNegotiate extends PlayerPage {
@@ -28,7 +28,7 @@ class ShopGoodsNegotiate extends PlayerPage {
 		$port = $player->getSectorPort();
 		// get values from request
 		$good_id = $this->goodID;
-		$portGood = Globals::getGood($good_id);
+		$portGood = TradeGood::get($good_id);
 		$transaction = $port->getGoodTransaction($good_id);
 
 		// Has the player failed a bargain?

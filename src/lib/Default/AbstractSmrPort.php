@@ -12,6 +12,7 @@ use Smr\Pages\Player\AttackPortPayoutProcessor;
 use Smr\Pages\Player\AttackPortProcessor;
 use Smr\Pages\Player\CurrentSector;
 use Smr\PortPayoutType;
+use Smr\TradeGood;
 use Smr\TransactionType;
 
 class AbstractSmrPort {
@@ -225,7 +226,7 @@ class AbstractSmrPort {
 			return;
 		}
 
-		$goodClass = Globals::getGood($goodID)['Class'];
+		$goodClass = TradeGood::get($goodID)->class;
 		$refreshPerHour = self::BASE_REFRESH_PER_HOUR[$goodClass] * $this->getGame()->getGameSpeed();
 		$refreshPerSec = $refreshPerHour / 3600;
 		$amountToAdd = IFloor($secondsSinceLastUpdate * $refreshPerSec);
@@ -259,31 +260,32 @@ class AbstractSmrPort {
 
 	/**
 	 * @param array<int> $goodIDs
-	 * @return array<int>
+	 * @return array<int, TradeGood>
 	 */
 	private function getVisibleGoods(array $goodIDs, AbstractSmrPlayer $player = null): array {
-		if ($player == null) {
-			return $goodIDs;
+		$visibleGoods = [];
+		foreach ($goodIDs as $goodID) {
+			$good = TradeGood::get($goodID);
+			if ($player === null || $player->meetsAlignmentRestriction($good->alignRestriction)) {
+				$visibleGoods[$goodID] = $good;
+			}
 		}
-		return array_filter($goodIDs, function($goodID) use ($player) {
-			$good = Globals::getGood($goodID);
-			return $player->meetsAlignmentRestriction($good['AlignRestriction']);
-		});
+		return $visibleGoods;
 	}
 
 	/**
-	 * Get IDs of goods that can be sold by $player to the port
+	 * Get goods that can be sold by $player to the port
 	 *
-	 * @return array<int>
+	 * @return array<int, TradeGood>
 	 */
 	public function getVisibleGoodsSold(AbstractSmrPlayer $player = null): array {
 		return $this->getVisibleGoods($this->getSellGoodIDs(), $player);
 	}
 
 	/**
-	 * Get IDs of goods that can be bought by $player from the port
+	 * Get goods that can be bought by $player from the port
 	 *
-	 * @return array<int>
+	 * @return array<int, TradeGood>
 	 */
 	public function getVisibleGoodsBought(AbstractSmrPlayer $player = null): array {
 		return $this->getVisibleGoods($this->getBuyGoodIDs(), $player);
@@ -316,9 +318,12 @@ class AbstractSmrPort {
 
 	public function getGoodDistance(int $goodID): int {
 		if (!isset($this->goodDistances[$goodID])) {
-			$x = Globals::getGood($goodID);
 			// Calculate distance to the opposite of the offered transaction
-			$x['TransactionType'] = $this->getGoodTransaction($goodID)->opposite();
+			$x = [
+				'Type' => 'Good',
+				'GoodID' => $goodID,
+				'TransactionType' => $this->getGoodTransaction($goodID)->opposite(),
+			];
 			$di = Plotter::findDistanceToX($x, $this->getSector(), true);
 			if (is_object($di)) {
 				$di = $di->getDistance();
@@ -361,7 +366,7 @@ class AbstractSmrPort {
 			throw new Exception('Cannot update a cached port!');
 		}
 		// The new amount must be between 0 and the max for this good
-		$amount = max(0, min($amount, Globals::getGood($goodID)['Max']));
+		$amount = max(0, min($amount, TradeGood::get($goodID)->maxPortAmount));
 		if ($this->getGoodAmount($goodID) == $amount) {
 			return;
 		}
@@ -377,14 +382,11 @@ class AbstractSmrPort {
 		return $this->goodAmounts[$goodID];
 	}
 
-	/**
-	 * @param array<string, string|int> $good
-	 */
-	public function decreaseGood(array $good, int $amount, bool $doRefresh): void {
-		$this->setGoodAmount($good['ID'], $this->getGoodAmount($good['ID']) - $amount);
+	public function decreaseGood(TradeGood $good, int $amount, bool $doRefresh): void {
+		$this->setGoodAmount($good->id, $this->getGoodAmount($good->id) - $amount);
 		if ($doRefresh === true) {
 			//get id of goods to replenish
-			$this->refreshGoods($good['Class'], $amount);
+			$this->refreshGoods($good->class, $amount);
 		}
 	}
 
@@ -404,17 +406,14 @@ class AbstractSmrPort {
 		//refresh goods that need it
 		$refreshClass = $classTraded + 1;
 		foreach ($this->getAllGoodIDs() as $goodID) {
-			$goodClass = Globals::getGood($goodID)['Class'];
+			$goodClass = TradeGood::get($goodID)->class;
 			if ($goodClass == $refreshClass) {
 				$this->increaseGoodAmount($goodID, $refreshAmount);
 			}
 		}
 	}
 
-	/**
-	 * @param array<string, string|int> $good
-	 */
-	protected function tradeGoods(array $good, int $goodsTraded, int $exp): void {
+	protected function tradeGoods(TradeGood $good, int $goodsTraded, int $exp): void {
 		$goodsTradedMoney = $goodsTraded * self::GOODS_TRADED_MONEY_MULTIPLIER;
 		$this->increaseUpgrade($goodsTradedMoney);
 		$this->increaseCredits($goodsTradedMoney);
@@ -422,10 +421,7 @@ class AbstractSmrPort {
 		$this->decreaseGood($good, $goodsTraded, true);
 	}
 
-	/**
-	 * @param array<string, string|int> $good
-	 */
-	public function buyGoods(array $good, int $goodsTraded, int $idealPrice, int $bargainPrice, int $exp): void {
+	public function buyGoods(TradeGood $good, int $goodsTraded, int $idealPrice, int $bargainPrice, int $exp): void {
 		$this->tradeGoods($good, $goodsTraded, $exp);
 		// Limit upgrade/credits to prevent massive increases in a single trade
 		$cappedBargainPrice = min(max($idealPrice, $goodsTraded * 1000), $bargainPrice);
@@ -433,17 +429,11 @@ class AbstractSmrPort {
 		$this->increaseCredits($cappedBargainPrice);
 	}
 
-	/**
-	 * @param array<string, string|int> $good
-	 */
-	public function sellGoods(array $good, int $goodsTraded, int $exp): void {
+	public function sellGoods(TradeGood $good, int $goodsTraded, int $exp): void {
 		$this->tradeGoods($good, $goodsTraded, $exp);
 	}
 
-	/**
-	 * @param array<string, string|int> $good
-	 */
-	public function stealGoods(array $good, int $goodsTraded): void {
+	public function stealGoods(TradeGood $good, int $goodsTraded): void {
 		$this->decreaseGood($good, $goodsTraded, false);
 	}
 
@@ -494,16 +484,13 @@ class AbstractSmrPort {
 		};
 	}
 
-	/**
-	 * @return array<string, string|int>
-	 */
-	protected function selectAndAddGood(int $goodClass): array {
-		$GOODS = Globals::getGoods();
-		shuffle($GOODS);
-		foreach ($GOODS as $good) {
-			if (!$this->hasGood($good['ID']) && $good['Class'] == $goodClass) {
+	protected function selectAndAddGood(int $goodClass): TradeGood {
+		$goods = TradeGood::getAll();
+		shuffle($goods);
+		foreach ($goods as $good) {
+			if (!$this->hasGood($good->id) && $good->class == $goodClass) {
 				$transactionType = array_rand_value(TransactionType::cases());
-				$this->addPortGood($good['ID'], $transactionType);
+				$this->addPortGood($good->id, $transactionType);
 				return $good;
 			}
 		}
@@ -536,14 +523,14 @@ class AbstractSmrPort {
 	 * Only modifies goods that need to change.
 	 * Returns false on invalid input.
 	 *
-	 * @param array<int, TransactionType> $goods
+	 * @param array<int, TransactionType> $goodTransactions
 	 */
-	public function setPortGoods(array $goods): bool {
+	public function setPortGoods(array $goodTransactions): bool {
 		// Validate the input list of goods to make sure we have the correct
 		// number of each good class for this port level.
 		$givenClasses = [];
-		foreach (array_keys($goods) as $goodID) {
-			$givenClasses[] = Globals::getGood($goodID)['Class'];
+		foreach (array_keys($goodTransactions) as $goodID) {
+			$givenClasses[] = TradeGood::get($goodID)->class;
 		}
 		$expectedClasses = [1, 1]; // Level 1 has 2 extra Class 1 goods
 		foreach (range(1, $this->getLevel()) as $level) {
@@ -555,12 +542,12 @@ class AbstractSmrPort {
 
 		// Remove goods not specified or that have the wrong transaction
 		foreach ($this->getAllGoodIDs() as $goodID) {
-			if (!isset($goods[$goodID]) || !$this->hasGood($goodID, $goods[$goodID])) {
+			if (!isset($goodTransactions[$goodID]) || !$this->hasGood($goodID, $goodTransactions[$goodID])) {
 				$this->removePortGood($goodID);
 			}
 		}
 		// Add goods
-		foreach ($goods as $goodID => $trans) {
+		foreach ($goodTransactions as $goodID => $trans) {
 			$this->addPortGood($goodID, $trans);
 		}
 		return true;
@@ -586,7 +573,7 @@ class AbstractSmrPort {
 		// sort ID arrays, since the good ID might not be the largest
 		ksort($this->goodTransactions);
 
-		$this->goodAmounts[$goodID] = Globals::getGood($goodID)['Max'];
+		$this->goodAmounts[$goodID] = TradeGood::get($goodID)->maxPortAmount;
 
 		// Flag for update
 		$this->cacheIsValid = false;
@@ -639,9 +626,9 @@ class AbstractSmrPort {
 		shuffle($goodIDs);
 
 		foreach ($goodIDs as $goodID) {
-			$good = Globals::getGood($goodID);
-			if ($good['Class'] == $goodClass) {
-				$this->removePortGood($good['ID']);
+			$good = TradeGood::get($goodID);
+			if ($good->class == $goodClass) {
+				$this->removePortGood($good->id);
 				return;
 			}
 		}
@@ -661,7 +648,7 @@ class AbstractSmrPort {
 			$newGood = $this->selectAndAddGood($goodClass);
 			// Set new good to 0 supply
 			// (since other goods are set to 0 when port is destroyed)
-			$this->setGoodAmount($newGood['ID'], 0);
+			$this->setGoodAmount($newGood->id, 0);
 		} else {
 			// Don't make the port level 0
 			$this->decreaseLevel(1);
@@ -1056,9 +1043,9 @@ class AbstractSmrPort {
 	 */
 	public static function idealPrice(int $goodID, TransactionType $transactionType, int $numGoods, int $relations, int $supply, int $dist): int {
 		$relations = min(1000, $relations); // no effect for higher relations
-		$good = Globals::getGood($goodID);
-		$base = $good['BasePrice'] * $numGoods;
-		$maxSupply = $good['Max'];
+		$good = TradeGood::get($goodID);
+		$base = $good->basePrice * $numGoods;
+		$maxSupply = $good->maxPortAmount;
 
 		$distFactor = pow($dist, 1.3);
 		if ($transactionType === TransactionType::Sell) {
@@ -1498,9 +1485,7 @@ class AbstractSmrPort {
 
 	public function hasX(mixed $x): bool {
 		if (is_array($x) && $x['Type'] == 'Good') { // instanceof Good) - No Good class yet, so array is the best we can do
-			if (isset($x['ID'])) {
-				return $this->hasGood($x['ID'], $x['TransactionType'] ?? null);
-			}
+			return $this->hasGood($x['GoodID'], $x['TransactionType']);
 		}
 		return false;
 	}

@@ -69,8 +69,8 @@ if (isset($XType)) { ?>
 				case Smr\PlotGroup::SellGoods:
 				case Smr\PlotGroup::BuyGoods:
 					$Goods = $ThisPlayer->getVisibleGoods();
-					foreach ($Goods as $Good) {
-						?><option value="<?php echo $Good['ID']; ?>"><?php echo $Good['Name']; ?></option><?php
+					foreach ($Goods as $GoodID => $Good) {
+						?><option value="<?php echo $GoodID; ?>"><?php echo $Good->name; ?></option><?php
 					}
 					break;
 				case Smr\PlotGroup::Galaxies:

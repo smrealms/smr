@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
-use Globals;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use Smr\TradeGood;
 use Smr\TransactionType;
 use SmrAccount;
 use SmrLocation;
@@ -45,14 +45,14 @@ class EditSectorProcessor extends AccountPageProcessor {
 				$port->setCreditsToDefault();
 			} elseif (Request::has('select_goods')) {
 				// Only set the goods manually if the level hasn't changed
-				$goods = [];
-				foreach (array_keys(Globals::getGoods()) as $goodID) {
+				$goodTransactions = [];
+				foreach (TradeGood::getAllIDs() as $goodID) {
 					$trans = Request::get('good' . $goodID);
 					if ($trans != 'None') {
-						$goods[$goodID] = TransactionType::from($trans);
+						$goodTransactions[$goodID] = TransactionType::from($trans);
 					}
 				}
-				if (!$port->setPortGoods($goods)) {
+				if (!$port->setPortGoods($goodTransactions)) {
 					create_error('Invalid goods specified for this port level!');
 				}
 			}

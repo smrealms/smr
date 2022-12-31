@@ -29,7 +29,7 @@ You are currently building: <?php
 			<td class="left noWrap"><?php
 				foreach ($Structure->goods() as $GoodID => $Amount) {
 					$Good = $Goods[$GoodID]; ?>
-					&nbsp;<img class="bottom" src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" title="<?php echo $Good['Name']; ?>" alt="" />&nbsp;<span <?php if ($ThisPlanet->getStockpile($GoodID) < $Amount) { ?> class="red" <?php } ?>><?php echo $Amount; ?></span>&nbsp;<br /><?php
+					&nbsp;<?php echo $Good->getImageHTML(); ?>&nbsp;<span <?php if ($ThisPlanet->getStockpile($GoodID) < $Amount) { ?> class="red" <?php } ?>><?php echo $Amount; ?></span>&nbsp;<br /><?php
 				} ?>
 			</td>
 			<td class="noWrap">
@@ -55,10 +55,11 @@ You are currently building: <?php
 <p>Your stockpile contains:<?php
 if ($ThisPlanet->hasStockpile()) { ?>
 	</p>
-	<ul><?php
-		foreach ($ThisPlanet->getStockpile() as $id => $Amount) {
-			if ($Amount > 0) { ?>
-				<li><img src="<?php echo $Goods[$id]['ImageLink']; ?>" width="13" height="16" title="<?php echo $Goods[$id]['Name']; ?>" alt="<?php echo $Goods[$id]['Name']; ?>" />&nbsp;<?php echo $Goods[$id]['Name']; ?>: <?php echo $Amount; ?></li><?php
+	<ul class="nobullets"><?php
+		foreach ($ThisPlanet->getStockpile() as $GoodID => $Amount) {
+			if ($Amount > 0) {
+				$Good = $Goods[$GoodID]; ?>
+				<li class="pad1"><?php echo $Good->getImageHTML(); ?>&nbsp;<?php echo $Good->name; ?>: <?php echo $Amount; ?></li><?php
 			}
 		} ?>
 	</ul><?php
