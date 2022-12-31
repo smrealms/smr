@@ -12,7 +12,7 @@ class ServerStatus extends AccountPage {
 	public string $file = 'admin/game_status.php';
 
 	public function build(SmrAccount $account, Template $template): void {
-		$processingHREF = new ServerStatusProcessor();
+		$processingHREF = (new ServerStatusProcessor())->href();
 		$template->assign('ProcessingHREF', $processingHREF);
 
 		$db = Database::getInstance();
