@@ -23,20 +23,10 @@ class CreateGameProcessor extends AccountPageProcessor {
 		$dbResult = $db->read('SELECT IFNULL(MAX(game_id), 0) AS max_game_id FROM game');
 		$newID = $dbResult->record()->getInt('max_game_id') + 1;
 
-		// Get the dates ("|" sets hr/min/sec to 0)
-		$join = DateTime::createFromFormat('d/m/Y|', Request::get('game_join'));
-		if ($join === false) {
-			create_error('Join Date is not valid!');
-		}
+		$join = new DateTime(Request::get('game_join'));
 		$start = empty(Request::get('game_start')) ? $join :
-			DateTime::createFromFormat('d/m/Y|', Request::get('game_start'));
-		if ($start === false) {
-			create_error('Start Date is not valid!');
-		}
-		$end = DateTime::createFromFormat('d/m/Y|', Request::get('game_end'));
-		if ($end === false) {
-			create_error('End Date is not valid!');
-		}
+			new DateTime(Request::get('game_start'));
+		$end = new DateTime(Request::get('game_end'));
 
 		$game = SmrGame::createGame($newID);
 		$game->setName(Request::get('game_name'));

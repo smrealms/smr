@@ -25,16 +25,16 @@
 		<td><input required type="number" size="6" name="max_players" value="<?php echo $Game['maxPlayers']; ?>"></td>
 	</tr>
 	<tr>
-		<td class="right">Join Date (DD/MM/YYYY)</td>
-		<td><input required type="text" size="20" name="game_join" value="<?php echo $Game['joinDate']; ?>"></td>
+		<td class="right">Join Date</td>
+		<td><input required type="date" name="game_join" value="<?php echo $Game['joinDate']; ?>"></td>
 	</tr>
 	<tr>
-		<td class="right">Start Date (DD/MM/YYYY)</td>
-		<td><input type="text" size="20" name="game_start" value="<?php echo $Game['startDate']; ?>"> Leave blank to use Join Date</td>
+		<td class="right">Start Date</td>
+		<td><input type="date" name="game_start" value="<?php echo $Game['startDate']; ?>"> Leave blank to use Join Date</td>
 	</tr>
 	<tr>
-		<td class="right">End Date (DD/MM/YYYY)</td>
-		<td><input required type="text" size="20" name="game_end" value="<?php echo $Game['endDate']; ?>"></td></tr>
+		<td class="right">End Date</td>
+		<td><input required type="date" size="20" name="game_end" value="<?php echo $Game['endDate']; ?>"></td></tr>
 	<tr>
 		<td class="right">SMR Credits Required</td>
 		<td><input type="number" size="5" name="creds_needed" value="<?php echo $Game['smrCredits']; ?>"></td>

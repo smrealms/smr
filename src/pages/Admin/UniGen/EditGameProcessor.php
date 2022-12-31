@@ -16,11 +16,10 @@ class EditGameProcessor extends AccountPageProcessor {
 	) {}
 
 	public function build(SmrAccount $account): never {
-		// Get the dates ("|" sets hr/min/sec to 0)
-		$join = DateTime::createFromFormat('d/m/Y|', Request::get('game_join'));
+		$join = new DateTime(Request::get('game_join'));
 		$start = empty(Request::get('game_start')) ? $join :
-			DateTime::createFromFormat('d/m/Y|', Request::get('game_start'));
-		$end = DateTime::createFromFormat('d/m/Y|', Request::get('game_end'));
+			new DateTime(Request::get('game_start'));
+		$end = new DateTime(Request::get('game_end'));
 
 		$game = SmrGame::getGame($this->gameID);
 		$game->setName(Request::get('game_name'));
