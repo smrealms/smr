@@ -39,8 +39,8 @@ if (isset($GameID)) { ?>
 	}
 	if ($ThisShip->hasActiveIllusion()) { ?>
 		<a href="<?php echo $HardwareLink; ?>">
-			<span class="npcColour"><?php echo $ThisShip->getIllusionShipName(); ?></span><br />
-			IG Rating : <?php echo $ThisShip->getIllusionAttack(); ?>/<?php echo $ThisShip->getIllusionDefense(); ?>
+			<span class="npcColour"><?php echo $ThisShip->getIllusion()->getName(); ?></span><br />
+			IG Rating : <?php echo $ThisShip->getIllusion()->attackRating; ?>/<?php echo $ThisShip->getIllusion()->defenseRating; ?>
 		</a><br />
 		<br /><?php
 	} ?>

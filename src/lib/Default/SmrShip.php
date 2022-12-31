@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\Database;
+use Smr\ShipIllusion;
 
 /**
  * Adds a database layer to an AbstractSmrShip instance.
@@ -212,11 +213,11 @@ class SmrShip extends AbstractSmrShip {
 		$dbResult = $db->read('SELECT * FROM ship_has_illusion WHERE ' . $this->SQL);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
-			$this->illusionShip = [
-				'ID' => $dbRecord->getInt('ship_type_id'),
-				'Attack' => $dbRecord->getInt('attack'),
-				'Defense' => $dbRecord->getInt('defense'),
-			];
+			$this->illusionShip = new ShipIllusion(
+				shipTypeID: $dbRecord->getInt('ship_type_id'),
+				attackRating: $dbRecord->getInt('attack'),
+				defenseRating: $dbRecord->getInt('defense'),
+			);
 		}
 	}
 
@@ -231,9 +232,9 @@ class SmrShip extends AbstractSmrShip {
 			$db->replace('ship_has_illusion', [
 				'account_id' => $db->escapeNumber($this->getAccountID()),
 				'game_id' => $db->escapeNumber($this->getGameID()),
-				'ship_type_id' => $db->escapeNumber($this->illusionShip['ID']),
-				'attack' => $db->escapeNumber($this->illusionShip['Attack']),
-				'defense' => $db->escapeNumber($this->illusionShip['Defense']),
+				'ship_type_id' => $db->escapeNumber($this->illusionShip->shipTypeID),
+				'attack' => $db->escapeNumber($this->illusionShip->attackRating),
+				'defense' => $db->escapeNumber($this->illusionShip->defenseRating),
 			]);
 		}
 		$this->hasChangedIllusion = false;
