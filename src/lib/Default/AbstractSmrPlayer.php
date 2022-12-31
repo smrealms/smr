@@ -493,6 +493,9 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
+	/**
+	 * @phpstan-assert-if-true !false $this->getCustomShipName()
+	 */
 	public function hasCustomShipName(): bool {
 		return $this->getCustomShipName() !== false;
 	}
