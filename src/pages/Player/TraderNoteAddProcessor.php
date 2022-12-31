@@ -3,6 +3,7 @@
 namespace Smr\Pages\Player;
 
 use AbstractSmrPlayer;
+use Exception;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
@@ -17,12 +18,15 @@ class TraderNoteAddProcessor extends PlayerPageProcessor {
 		}
 
 		$note = htmlentities($note, ENT_QUOTES, 'utf-8');
-		$note = nl2br($note);
+		$note = gzcompress(nl2br($note));
+		if ($note === false) {
+			throw new Exception('An error occurred while compressing note');
+		}
 		$db = Database::getInstance();
 		$db->insert('player_has_notes', [
 			'account_id' => $db->escapeNumber($player->getAccountID()),
 			'game_id' => $db->escapeNumber($player->getGameID()),
-			'note' => $db->escapeBinary(gzcompress($note)),
+			'note' => $db->escapeBinary($note),
 		]);
 
 		(new TraderStatus())->go();
