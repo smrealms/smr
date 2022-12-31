@@ -155,7 +155,7 @@ class IpViewResults extends AccountPage {
 				//=========================================================
 				// List all IPs for a specific alliance
 				//=========================================================
-				[$allianceID, $gameID] = preg_split('/[\/]/', $variable);
+				[$allianceID, $gameID] = array_map(trim(...), explode('/', $variable));
 				if (!is_numeric($gameID) || !is_numeric($allianceID)) {
 					create_error('Incorrect format used.');
 				}
@@ -183,7 +183,7 @@ class IpViewResults extends AccountPage {
 				//=========================================================
 				// List all IPs for specified players
 				//=========================================================
-				$list = preg_split('/[,]+[\s]/', $variable);
+				$list = array_map(trim(...), explode(',', $variable));
 				$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE player_name IN (' . $db->escapeArray($list) . ') ORDER BY ip');
 				$summary = 'Listing all IPs for ingame names ' . $variable;
 
@@ -191,7 +191,7 @@ class IpViewResults extends AccountPage {
 				//=========================================================
 				// List all IPs for specified logins
 				//=========================================================
-				$list = preg_split('/[,]+[\s]/', $variable);
+				$list = array_map(trim(...), explode(',', $variable));
 				$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN account USING(account_id) WHERE login IN (' . $db->escapeArray($list) . ') ORDER BY ip');
 				$summary = 'Listing all IPs for logins ' . $variable;
 
@@ -250,7 +250,7 @@ class IpViewResults extends AccountPage {
 					'date' => date($account->getDateTimeFormat(), $time),
 					'ip' => $ip,
 					'host' => $host,
-					'names' => implode(', ', array_unique($names)),
+					'names' => htmlentities(implode(', ', array_unique($names))),
 					'exception' => $ex,
 					'close_reason' => $close_reason,
 				];
