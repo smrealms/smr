@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
+use Exception;
 use Smr\Page\AccountPageProcessor;
 use Smr\TransactionType;
 use SmrAccount;
@@ -22,6 +23,9 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 		}
 
 		$ini_str = file_get_contents($_FILES['smr_file']['tmp_name']);
+		if ($ini_str === false) {
+			throw new Exception('Failed to read temporary file');
+		}
 
 		// We only care about the sections after [Metadata], and the earlier
 		// sections have invalid INI key characters (e.g. Creonti "Big Daddy", Salvene
@@ -35,6 +39,9 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 			create_error('Could not find [Metadata] section in SMR file');
 		}
 		$data = parse_ini_string($ini_substr, true, INI_SCANNER_RAW);
+		if ($data === false) {
+			create_error('Failed to parse SMR file. Please check the file for errors.');
+		}
 
 		$version = $data['Metadata']['FileVersion'];
 		if ($version !== SMR_FILE_VERSION) {
