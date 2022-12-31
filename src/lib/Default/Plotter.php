@@ -49,7 +49,7 @@ class Plotter {
 	 * is not true for findDistanceToX. If $x is not a SmrSector, then this
 	 * function does 2x the work.
 	 */
-	public static function findReversiblePathToX(mixed $x, SmrSector $sector, bool $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy = null, AbstractSmrPlayer $player = null): Path {
+	public static function findReversiblePathToX(mixed $x, SmrSector $sector, AbstractSmrPlayer $needsToHaveBeenExploredBy = null, AbstractSmrPlayer $player = null): Path {
 		if ($x instanceof SmrSector) {
 
 			// To ensure reversibility, always plot lowest to highest.
@@ -61,7 +61,7 @@ class Plotter {
 				$start = $sector;
 				$end = $x;
 			}
-			$path = self::findDistanceToX($end, $start, $useFirst, $needsToHaveBeenExploredBy, $player);
+			$path = self::findDistanceToX($end, $start, true, $needsToHaveBeenExploredBy, $player);
 			if ($path === false) {
 				throw new UserError('Unable to plot from ' . $sector->getSectorID() . ' to ' . $x->getSectorID() . '.');
 			}
@@ -73,7 +73,7 @@ class Plotter {
 		} else {
 
 			// At this point we don't know what sector $x will be at
-			$path = self::findDistanceToX($x, $sector, $useFirst, $needsToHaveBeenExploredBy, $player);
+			$path = self::findDistanceToX($x, $sector, true, $needsToHaveBeenExploredBy, $player);
 			if ($path === false) {
 				throw new UserError('Unable to find what you\'re looking for, it either hasn\'t been added to this game or you haven\'t explored it yet.');
 			}
@@ -82,6 +82,9 @@ class Plotter {
 			if ($path->getEndSectorID() < $sector->getSectorID()) {
 				$endSector = SmrSector::getSector($sector->getGameID(), $path->getEndSectorID());
 				$path = self::findDistanceToX($sector, $endSector, true);
+				if ($path === false) {
+					throw new Exception('Unable to find reverse path');
+				}
 				$path->reversePath();
 			}
 
@@ -90,14 +93,17 @@ class Plotter {
 	}
 
 	/**
-	 * Returns the shortest path from $sector to $x as a Distance object.
-	 * $x can be any type implemented by SmrSector::hasX or the string 'Distance'.
+	 * Returns the shortest path from $sector to $x as a Path object.
 	 * The resulting path prefers neighbors in their order in SmrSector->links,
 	 * (i.e. up, down, left, right).
 	 *
-	 * @return Smr\Path|array<int, array<int, Smr\Path>>|false
+	 * @param mixed $x If the string 'Distance', then distances to all visited sectors will
+	 *                 be returned. Otherwise, must be a type implemented by SmrSector::hasX,
+	 *                 and will only return distances to sectors for which hasX returns true.
+	 *
+	 * @return ($useFirst is true ? Smr\Path|false : array<int, Smr\Path>)
 	 */
-	public static function findDistanceToX(mixed $x, SmrSector $sector, bool $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy = null, AbstractSmrPlayer $player = null, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): Path|array|false {
+	public static function findDistanceToX(mixed $x, SmrSector $sector, bool $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy = null, AbstractSmrPlayer $player = null, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): array|Path|false {
 		$warpAddIndex = TURNS_WARP_SECTOR_EQUIVALENCE - 1;
 
 		$checkSector = $sector;
@@ -106,9 +112,6 @@ class Plotter {
 		$sectorsTravelled = 0;
 		$visitedSectors = [];
 		$visitedSectors[$checkSector->getSectorID()] = true;
-		if ($x == 'Distance') {
-			$distances[0][$checkSector->getSectorID()] = new Path($checkSector->getSectorID());
-		}
 
 		$distanceQ = [];
 		for ($i = 0; $i <= TURNS_WARP_SECTOR_EQUIVALENCE; $i++) {
@@ -130,10 +133,7 @@ class Plotter {
 		while ($maybeWarps <= TURNS_WARP_SECTOR_EQUIVALENCE) {
 			$sectorsTravelled++;
 			if ($sectorsTravelled > $distanceLimit) {
-				return $distances;
-			}
-			if ($x == 'Distance') {
-				$distances[$sectorsTravelled] = [];
+				break;
 			}
 			$distanceQ[] = [];
 			$q = array_shift($distanceQ);
@@ -148,10 +148,9 @@ class Plotter {
 																// We still need to mark walked sectors as visited before we go to each one otherwise we get a huge number of paths being checked twice (up then left, left then up are essentially the same but if we set up-left as visited only when we actually check it then it gets queued up twice - nasty)
 				if ($checkSectorID >= $lowLimit && $checkSectorID <= $highLimit) {
 					$checkSector = SmrSector::getSector($gameID, $checkSectorID);
-					if ($x == 'Distance') {
-						$distances[$sectorsTravelled][$checkSector->getSectorID()] = $distance;
-					} elseif (($needsToHaveBeenExploredBy === null || $needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID())) === true
-							&& $checkSector->hasX($x, $player) === true) {
+					// Does this sector satisfy our criteria?
+					if ($x == 'Distance' || (($needsToHaveBeenExploredBy === null || $needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID())) === true
+							&& $checkSector->hasX($x, $player) === true)) {
 						if ($useFirst === true) {
 							return $distance;
 						}
@@ -186,7 +185,7 @@ class Plotter {
 	/**
 	 * @param array<int, \SmrPort> $ports
 	 * @param array<int, bool> $races
-	 * @return array<int, array<int, Smr\Path>|false>
+	 * @return array<int, array<int, Smr\Path>>
 	 */
 	public static function calculatePortToPortDistances(array $ports, array $races, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): array {
 		$distances = [];
@@ -200,9 +199,9 @@ class Plotter {
 	}
 
 	/**
-	 * @return array<int, Smr\Path>|false
+	 * @return array<int, Smr\Path>
 	 */
-	public static function findDistanceToOtherPorts(SmrSector $sector, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): array|false {
+	public static function findDistanceToOtherPorts(SmrSector $sector, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): array {
 		return self::findDistanceToX('Port', $sector, false, null, null, $distanceLimit, $lowLimit, $highLimit);
 	}
 
