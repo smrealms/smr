@@ -146,7 +146,7 @@
 				<td class="shrink">
 					<input type="checkbox" name="note_id[]" value="<?php echo $NoteID; ?>" />
 				</td>
-				<td><?php echo bbifyMessage(gzuncompress($Note)); ?></td>
+				<td><?php echo bbifyMessage($Note); ?></td>
 			</tr><?php
 		} ?>
 	</table>

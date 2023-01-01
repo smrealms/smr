@@ -3,6 +3,7 @@
 namespace Smr\Pages\Player;
 
 use AbstractSmrPlayer;
+use Exception;
 use Globals;
 use Menu;
 use Smr\Database;
@@ -76,7 +77,11 @@ class TraderStatus extends PlayerPage {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM player_has_notes WHERE ' . $player->getSQL() . ' ORDER BY note_id DESC');
 		foreach ($dbResult->records() as $dbRecord) {
-			$notes[$dbRecord->getInt('note_id')] = $dbRecord->getString('note');
+			$note = gzuncompress($dbRecord->getString('note'));
+			if ($note === false) {
+				throw new Exception('Failed to gzuncompress note!');
+			}
+			$notes[$dbRecord->getInt('note_id')] = $note;
 		}
 		$template->assign('Notes', $notes);
 
