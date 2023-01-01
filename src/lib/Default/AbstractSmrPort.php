@@ -21,7 +21,7 @@ class AbstractSmrPort {
 
 	/** @var array<int, array<int, SmrPort>> */
 	protected static array $CACHE_PORTS = [];
-	/** @var array<int, array<int, array<int, SmrPort>>> */
+	/** @var array<int, array<int, array<int, SmrPort|false>>> */
 	protected static array $CACHE_CACHED_PORTS = [];
 
 	public const DAMAGE_NEEDED_FOR_ALIGNMENT_CHANGE = 300; // single player
