@@ -486,7 +486,7 @@ class ChessGame {
 	}
 
 	/**
-	 * @return array<string, int>|false
+	 * @return array{Type: string, X: int, ToX: int}|false
 	 */
 	public static function isCastling(int $x, int $toX): array|false {
 		$movement = $toX - $x;
