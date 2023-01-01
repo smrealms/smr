@@ -2388,21 +2388,17 @@ abstract class AbstractSmrPlayer {
 
 		// If the alignment difference is greater than 200 then a bounty may be set
 		$alignmentDiff = abs($this->getAlignment() - $killer->getAlignment());
-		$return['BountyGained'] = [
-			'Type' => 'None',
-			'Amount' => 0,
-		];
+		$bountyGainedByKiller = 0;
 		if ($alignmentDiff >= 200) {
 			// If the podded players alignment makes them deputy or member then set bounty
-			if ($this->hasGoodAlignment()) {
-				$return['BountyGained']['Type'] = BountyType::HQ;
-			} elseif ($this->hasEvilAlignment()) {
-				$return['BountyGained']['Type'] = BountyType::UG;
-			}
-
-			if ($return['BountyGained']['Type'] != 'None') {
-				$return['BountyGained']['Amount'] = IFloor(pow($alignmentDiff, 2.56));
-				$killer->increaseCurrentBountyAmount($return['BountyGained']['Type'], $return['BountyGained']['Amount']);
+			$bountyType = match (true) {
+				$this->hasGoodAlignment() => BountyType::HQ,
+				$this->hasEvilAlignment() => BountyType::UG,
+				default => null,
+			};
+			if ($bountyType !== null) {
+				$bountyGainedByKiller = IFloor(pow($alignmentDiff, 2.56));
+				$killer->increaseCurrentBountyAmount($bountyType, $bountyGainedByKiller);
 			}
 		}
 
@@ -2417,7 +2413,7 @@ abstract class AbstractSmrPlayer {
 		$killer->increaseHOF($return['KillerCredits'], [...$killingHof, 'Money', 'Lost By Traders Killed'], HOF_PUBLIC);
 		$killer->increaseHOF($return['KillerCredits'], [...$killingHof, 'Money', 'Gain'], HOF_PUBLIC);
 		$killer->increaseHOF($this->getShip()->getCost(), [...$killingHof, 'Money', 'Cost Of Ships Killed'], HOF_PUBLIC);
-		$killer->increaseHOF($return['BountyGained']['Amount'], [...$killingHof, 'Money', 'Bounty Gained'], HOF_PUBLIC);
+		$killer->increaseHOF($bountyGainedByKiller, [...$killingHof, 'Money', 'Bounty Gained'], HOF_PUBLIC);
 
 		if ($killerAlignChange > 0) {
 			$killer->increaseHOF($killerAlignChange, [...$killingHof, 'Alignment', 'Gain'], HOF_PUBLIC);
@@ -2445,7 +2441,7 @@ abstract class AbstractSmrPlayer {
 		if ($killer->isNPC()) {
 			$dyingHof[] = 'NPC';
 		}
-		$this->increaseHOF($return['BountyGained']['Amount'], [...$dyingHof, 'Money', 'Bounty Gained By Killer'], HOF_PUBLIC);
+		$this->increaseHOF($bountyGainedByKiller, [...$dyingHof, 'Money', 'Bounty Gained By Killer'], HOF_PUBLIC);
 		$this->increaseHOF($return['KillerExp'], [...$dyingHof, 'Experience', 'Gained By Killer'], HOF_PUBLIC);
 		$this->increaseHOF($return['DeadExp'], [...$dyingHof, 'Experience', 'Lost'], HOF_PUBLIC);
 		$this->increaseHOF($return['KillerCredits'], [...$dyingHof, 'Money Lost'], HOF_PUBLIC);
