@@ -3,6 +3,7 @@
 use Smr\Database;
 use Smr\DatabaseRecord;
 use Smr\Exceptions\SectorNotFound;
+use Smr\HardwareType;
 use Smr\MovementType;
 use Smr\Pages\Player\LocalMap;
 
@@ -1010,7 +1011,7 @@ class SmrSector {
 		}
 
 		//Check if it's possible for location to have X, hacky but nice performance gains
-		if ($x instanceof SmrWeaponType || $x instanceof SmrShipType || (is_array($x) && $x['Type'] == 'Hardware') || (is_string($x) && ($x == 'Bank' || $x == 'Bar' || $x == 'Fed' || $x == 'SafeFed' || $x == 'HQ' || $x == 'UG' || $x == 'Hardware' || $x == 'Ship' || $x == 'Weapon'))) {
+		if ($x instanceof SmrWeaponType || $x instanceof SmrShipType || $x instanceof HardwareType || (is_string($x) && ($x == 'Bank' || $x == 'Bar' || $x == 'Fed' || $x == 'SafeFed' || $x == 'HQ' || $x == 'UG' || $x == 'Hardware' || $x == 'Ship' || $x == 'Weapon'))) {
 			foreach ($this->getLocations() as $loc) {
 				if ($loc->hasX($x, $player)) {
 					return true;

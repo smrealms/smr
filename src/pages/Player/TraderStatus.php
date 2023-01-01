@@ -4,9 +4,9 @@ namespace Smr\Pages\Player;
 
 use AbstractSmrPlayer;
 use Exception;
-use Globals;
 use Menu;
 use Smr\Database;
+use Smr\HardwareType;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
@@ -43,22 +43,19 @@ class TraderStatus extends PlayerPage {
 		$container = new HardwareConfigure();
 		$template->assign('HardwareHREF', $container->href());
 
-		$hardware = [];
 		$shipType = $player->getShip()->getType();
-		if ($shipType->canHaveScanner()) {
-			$hardware[] = Globals::getHardwareTypes(HARDWARE_SCANNER)['Name'];
-		}
-		if ($shipType->canHaveIllusion()) {
-			$hardware[] = Globals::getHardwareTypes(HARDWARE_ILLUSION)['Name'];
-		}
-		if ($shipType->canHaveCloak()) {
-			$hardware[] = Globals::getHardwareTypes(HARDWARE_CLOAK)['Name'];
-		}
-		if ($shipType->canHaveJump()) {
-			$hardware[] = Globals::getHardwareTypes(HARDWARE_JUMP)['Name'];
-		}
-		if ($shipType->canHaveDCS()) {
-			$hardware[] = Globals::getHardwareTypes(HARDWARE_DCS)['Name'];
+		$hardwareChecks = [
+			HARDWARE_SCANNER => $shipType->canHaveScanner(),
+			HARDWARE_ILLUSION => $shipType->canHaveIllusion(),
+			HARDWARE_CLOAK => $shipType->canHaveCloak(),
+			HARDWARE_JUMP => $shipType->canHaveJump(),
+			HARDWARE_DCS => $shipType->canHaveDCS(),
+		];
+		$hardware = [];
+		foreach ($hardwareChecks as $hardwareTypeID => $shipTypeCanHave) {
+			if ($shipTypeCanHave) {
+				$hardware[] = HardwareType::get($hardwareTypeID)->name;
+			}
 		}
 		if (empty($hardware)) {
 			$hardware[] = 'none';

@@ -2,6 +2,7 @@
 
 use Smr\Database;
 use Smr\DatabaseRecord;
+use Smr\HardwareType;
 use Smr\Pages\Admin\EditLocations;
 use Smr\Pages\Player\Bank\PersonalBank;
 use Smr\Pages\Player\Bar\BarMain;
@@ -34,7 +35,7 @@ class AbstractSmrLocation {
 	protected bool $HQ;
 	protected bool $UG;
 
-	/** @var array<int, array<string, string|int>> */
+	/** @var array<int, \Smr\HardwareType> */
 	protected array $hardwareSold;
 	/** @var array<int, SmrShipType> */
 	protected array $shipsSold;
@@ -313,14 +314,15 @@ class AbstractSmrLocation {
 	}
 
 	/**
-	 * @return array<int, array<string, string|int>>
+	 * @return array<int, \Smr\HardwareType>
 	 */
 	public function getHardwareSold(): array {
 		if (!isset($this->hardwareSold)) {
 			$this->hardwareSold = [];
 			$dbResult = $this->db->read('SELECT hardware_type_id FROM location_sells_hardware WHERE ' . $this->SQL);
 			foreach ($dbResult->records() as $dbRecord) {
-				$this->hardwareSold[$dbRecord->getInt('hardware_type_id')] = Globals::getHardwareTypes($dbRecord->getInt('hardware_type_id'));
+				$hardwareTypeID = $dbRecord->getInt('hardware_type_id');
+				$this->hardwareSold[$hardwareTypeID] = HardwareType::get($hardwareTypeID);
 			}
 		}
 		return $this->hardwareSold;
@@ -346,7 +348,7 @@ class AbstractSmrLocation {
 			'location_type_id' => $this->db->escapeNumber($this->getTypeID()),
 			'hardware_type_id' => $this->db->escapeNumber($hardwareTypeID),
 		]);
-		$this->hardwareSold[$hardwareTypeID] = Globals::getHardwareTypes($hardwareTypeID);
+		$this->hardwareSold[$hardwareTypeID] = HardwareType::get($hardwareTypeID);
 	}
 
 	public function removeHardwareSold(int $hardwareTypeID): void {
@@ -503,8 +505,8 @@ class AbstractSmrLocation {
 		if ($x instanceof SmrShipType) {
 			return $this->isShipSold($x->getTypeID());
 		}
-		if (is_array($x) && $x['Type'] == 'Hardware') { // instanceof ShipEquipment)
-			return $this->isHardwareSold($x['ID']);
+		if ($x instanceof HardwareType) {
+			return $this->isHardwareSold($x->typeID);
 		}
 		if (is_string($x)) {
 			if ($x == 'Bank') {

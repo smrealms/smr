@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\Exceptions\UserError;
+use Smr\HardwareType;
 use Smr\Path;
 use Smr\PlotGroup;
 use Smr\TradeGood;
@@ -36,7 +37,7 @@ class Plotter {
 		};
 
 		return match ($xType) {
-			PlotGroup::Technology => Globals::getHardwareTypes($X),
+			PlotGroup::Technology => HardwareType::get($X),
 			PlotGroup::Ships => SmrShipType::get($X),
 			PlotGroup::Weapons => SmrWeaponType::getWeaponType($X),
 			PlotGroup::Locations => SmrLocation::getLocation($gameID, $X),

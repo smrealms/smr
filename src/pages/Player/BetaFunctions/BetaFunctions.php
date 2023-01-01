@@ -3,7 +3,7 @@
 namespace Smr\Pages\Player\BetaFunctions;
 
 use AbstractSmrPlayer;
-use Globals;
+use Smr\HardwareType;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
@@ -81,8 +81,8 @@ class BetaFunctions extends PlayerPage {
 		$container = new SetHardwareProcessor();
 		$template->assign('HardwareHREF', $container->href());
 		$hardware = [];
-		foreach (Globals::getHardwareTypes() as $hardwareTypeID => $hardwareType) {
-			$hardware[$hardwareTypeID] = $hardwareType['Name'];
+		foreach (HardwareType::getAll() as $hardwareTypeID => $hardwareType) {
+			$hardware[$hardwareTypeID] = $hardwareType->name;
 		}
 		$template->assign('Hardware', $hardware);
 

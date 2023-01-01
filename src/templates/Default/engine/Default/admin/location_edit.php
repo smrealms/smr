@@ -33,7 +33,7 @@ if (isset($Locations)) {
 			<table><?php
 				foreach ($Location->getHardwareSold() as $HardwareID => $Hardware) { ?>
 					<tr>
-						<td><?php echo $Hardware['Name']; ?></td>
+						<td><?php echo $Hardware->name; ?></td>
 						<td><input type="checkbox" name="remove_hardware[]" value="<?php echo $HardwareID; ?>" /></td>
 					</tr><?php
 				} ?>
@@ -43,7 +43,7 @@ if (isset($Locations)) {
 						<select name="add_hardware_id">
 							<option value="0">None</option><?php
 							foreach ($AllHardware as $HardwareID => $Hardware) { ?>
-								<option value="<?php echo $HardwareID; ?>"><?php echo $Hardware['Name']; ?></option><?php
+								<option value="<?php echo $HardwareID; ?>"><?php echo $Hardware->name; ?></option><?php
 							} ?>
 					</select>
 					</td>

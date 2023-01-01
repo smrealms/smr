@@ -32,9 +32,9 @@ if (isset($XType)) { ?>
 		<select name="X" onchange="this.form.submit()"><?php
 			switch ($XType) {
 				case Smr\PlotGroup::Technology:
-					$Hardwares = Globals::getHardwareTypes();
+					$Hardwares = Smr\HardwareType::getAll();
 					foreach ($Hardwares as $Hardware) {
-						?><option value="<?php echo $Hardware['ID']; ?>"><?php echo $Hardware['Name']; ?></option><?php
+						?><option value="<?php echo $Hardware->typeID; ?>"><?php echo $Hardware->name; ?></option><?php
 					}
 					break;
 				case Smr\PlotGroup::Ships:

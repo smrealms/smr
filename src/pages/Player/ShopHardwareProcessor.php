@@ -4,7 +4,7 @@ namespace Smr\Pages\Player;
 
 use AbstractSmrPlayer;
 use Exception;
-use Globals;
+use Smr\HardwareType;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
@@ -22,8 +22,9 @@ class ShopHardwareProcessor extends PlayerPageProcessor {
 		$amount = Request::getInt('amount');
 
 		$hardware_id = $this->hardwareID;
-		$hardware_name = Globals::getHardwareName($hardware_id);
-		$cost = Globals::getHardwareCost($hardware_id);
+		$hardwareType = HardwareType::get($this->hardwareID);
+		$hardware_name = $hardwareType->name;
+		$cost = $hardwareType->cost;
 
 		// no negative amounts are allowed
 		if ($amount <= 0) {

@@ -47,8 +47,6 @@ class Globals {
 	protected static array $HIDDEN_PLAYERS;
 	/** @var array<int, array<string, string|int>> */
 	protected static array $LEVEL_REQUIREMENTS;
-	/** @var array<int, array<string, string|int>> */
-	protected static array $HARDWARE_TYPES;
 	protected static bool $FEATURE_REQUEST_OPEN;
 	/** @var array<int, array<int, array<int, int>>> */
 	protected static array $RACE_RELATIONS;
@@ -143,39 +141,6 @@ class Globals {
 			$raceName = create_link($container, $raceName);
 		}
 		return $raceName;
-	}
-
-	/**
-	 * @return ($hardwareTypeID is null ? array<int, array<string, string|int>> : array<string, string|int>)
-	 */
-	public static function getHardwareTypes(int $hardwareTypeID = null): array {
-		if (!isset(self::$HARDWARE_TYPES)) {
-			self::initialiseDatabase();
-			self::$HARDWARE_TYPES = [];
-
-			// determine user level
-			$dbResult = self::$db->read('SELECT * FROM hardware_type ORDER BY hardware_type_id');
-			foreach ($dbResult->records() as $dbRecord) {
-				self::$HARDWARE_TYPES[$dbRecord->getInt('hardware_type_id')] = [
-					'Type' => 'Hardware',
-					'ID' => $dbRecord->getInt('hardware_type_id'),
-					'Name' => $dbRecord->getString('hardware_name'),
-					'Cost' => $dbRecord->getInt('cost'),
-				];
-			}
-		}
-		if ($hardwareTypeID === null) {
-			return self::$HARDWARE_TYPES;
-		}
-		return self::$HARDWARE_TYPES[$hardwareTypeID];
-	}
-
-	public static function getHardwareName(int $hardwareTypeID): string {
-		return self::getHardwareTypes()[$hardwareTypeID]['Name'];
-	}
-
-	public static function getHardwareCost(int $hardwareTypeID): int {
-		return self::getHardwareTypes()[$hardwareTypeID]['Cost'];
 	}
 
 	public static function isFeatureRequestOpen(): bool {

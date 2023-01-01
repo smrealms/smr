@@ -24,10 +24,14 @@ class ShopHardware extends PlayerPage {
 		$template->assign('PageTopic', $location->getName());
 
 		if ($location->isHardwareSold()) {
-			$hardwareSold = $location->getHardwareSold();
-			foreach ($hardwareSold as $hardwareTypeID => $hardware) {
+			$hardwareSold = [];
+			foreach ($location->getHardwareSold() as $hardwareTypeID => $hardwareType) {
 				$container = new ShopHardwareProcessor($hardwareTypeID, $this->locationID);
-				$hardwareSold[$hardwareTypeID]['HREF'] = $container->href();
+				$hardwareSold[$hardwareTypeID] = [
+					'HREF' => $container->href(),
+					'Cost' => $hardwareType->cost,
+					'Name' => $hardwareType->name,
+				];
 			}
 			$template->assign('HardwareSold', $hardwareSold);
 		}

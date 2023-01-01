@@ -3,7 +3,6 @@
 namespace Smr;
 
 use AbstractSmrPlayer;
-use Globals;
 use SmrForce;
 use SmrGame;
 use SmrLocation;
@@ -42,9 +41,8 @@ class SectorsFile {
 
 		$file .= '[ShipEquipment]
 		; Name = Cost' . EOL;
-		$hardwares = Globals::getHardwareTypes();
-		foreach ($hardwares as $hardware) {
-			$file .= inify($hardware['Name']) . '=' . $hardware['Cost'] . EOL;
+		foreach (HardwareType::getAll() as $hardware) {
+			$file .= inify($hardware->name) . '=' . $hardware->cost . EOL;
 		}
 
 		$file .= '[Ships]
@@ -54,7 +52,7 @@ class SectorsFile {
 			$file .= inify($ship->getName()) . '=' . inify($ship->getRaceName()) . ',' . $ship->getCost() . ',' . $ship->getSpeed() . ',' . $ship->getHardpoints() . ',' . $ship->getMaxPower() . ',' . $ship->getClass()->name;
 			$shipEquip = [];
 			foreach ($ship->getAllMaxHardware() as $hardwareID => $maxHardware) {
-				$shipEquip[] = $hardwares[$hardwareID]['Name'] . '=' . $maxHardware;
+				$shipEquip[] = HardwareType::get($hardwareID)->name . '=' . $maxHardware;
 			}
 			if (!empty($shipEquip)) {
 				$file .= ',ShipEquipment=' . implode(';', $shipEquip);
@@ -78,7 +76,7 @@ class SectorsFile {
 			if ($location->isHardwareSold()) {
 				$locSells .= 'ShipEquipment=';
 				foreach ($location->getHardwareSold() as $locHardware) {
-					$locSells .= $locHardware['Name'] . ';';
+					$locSells .= $locHardware->name . ';';
 				}
 				$locSells = substr($locSells, 0, -1) . ',';
 			}
@@ -171,7 +169,7 @@ class SectorsFile {
 				if ($adminCreate === false && $sector->hasFriendlyForces($player)) {
 					$forcesString = 'FriendlyForces=';
 					foreach ($sector->getFriendlyForces($player) as $forces) {
-						$forcesString .= inify($forces->getOwner()->getPlayerName()) . '=' . inify(Globals::getHardwareName(HARDWARE_MINE)) . '=' . $forces->getMines() . ';' . inify(Globals::getHardwareName(HARDWARE_COMBAT)) . '=' . $forces->getCDs() . ';' . inify(Globals::getHardwareName(HARDWARE_SCOUT)) . '=' . $forces->getSDs() . ',';
+						$forcesString .= inify($forces->getOwner()->getPlayerName()) . '=' . inify(HardwareType::get(HARDWARE_MINE)->name) . '=' . $forces->getMines() . ';' . inify(HardwareType::get(HARDWARE_COMBAT)->name) . '=' . $forces->getCDs() . ';' . inify(HardwareType::get(HARDWARE_SCOUT)->name) . '=' . $forces->getSDs() . ',';
 					}
 					$file .= substr($forcesString, 0, -1) . EOL;
 				}

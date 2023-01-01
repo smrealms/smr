@@ -3,10 +3,10 @@
 namespace Smr\Pages\Player;
 
 use AbstractSmrPlayer;
-use Globals;
 use Menu;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\HardwareType;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
@@ -51,11 +51,10 @@ class AllianceForces extends PlayerPage {
 		$template->assign('Total', $total);
 
 			// Get total cost of forces
-		$hardwareTypes = Globals::getHardwareTypes();
 		$totalCost = [
-			'Mines' => $total['Mines'] * $hardwareTypes[HARDWARE_MINE]['Cost'],
-			'CDs' => $total['CDs'] * $hardwareTypes[HARDWARE_COMBAT]['Cost'],
-			'SDs' => $total['SDs'] * $hardwareTypes[HARDWARE_SCOUT]['Cost'],
+			'Mines' => $total['Mines'] * HardwareType::get(HARDWARE_MINE)->cost,
+			'CDs' => $total['CDs'] * HardwareType::get(HARDWARE_COMBAT)->cost,
+			'SDs' => $total['SDs'] * HardwareType::get(HARDWARE_SCOUT)->cost,
 		];
 		$template->assign('TotalCost', $totalCost);
 

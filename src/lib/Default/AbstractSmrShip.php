@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\HardwareType;
 use Smr\ShipClass;
 use Smr\ShipIllusion;
 
@@ -444,7 +445,7 @@ class AbstractSmrShip {
 		$cost = 0;
 		$hardwareTypes = [HARDWARE_SHIELDS, HARDWARE_ARMOUR, HARDWARE_CARGO];
 		foreach ($hardwareTypes as $hardwareTypeID) {
-			$cost += max(0, $otherShipType->getMaxHardware($hardwareTypeID) - $this->getHardware($hardwareTypeID)) * Globals::getHardwareCost($hardwareTypeID);
+			$cost += max(0, $otherShipType->getMaxHardware($hardwareTypeID) - $this->getHardware($hardwareTypeID)) * HardwareType::get($hardwareTypeID)->cost;
 		}
 		return $cost;
 	}
