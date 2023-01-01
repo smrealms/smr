@@ -121,7 +121,7 @@
 				<img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Experience Levels"/>
 			</a>
 			<br />
-			<?php echo $NextLevelName . ' : ' . number_format($ThisPlayer->getNextLevelExperience()); ?> experience
+			<?php echo $NextLevel->name . ' : ' . number_format($NextLevel->expRequired); ?> experience
 
 			<br /><br />
 			<a href="<?php echo $UserRankingsHREF; ?>">

@@ -62,7 +62,7 @@ class TraderStatus extends PlayerPage {
 		}
 		$template->assign('Hardware', $hardware);
 
-		$template->assign('NextLevelName', $player->getNextLevel()['Name']);
+		$template->assign('NextLevel', $player->getLevel()->next());
 
 		$container = new UserRankingView();
 		$template->assign('UserRankingsHREF', $container->href());

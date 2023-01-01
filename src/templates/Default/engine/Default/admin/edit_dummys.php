@@ -19,7 +19,7 @@
 				Level
 				<select name="exp">
 					<?php foreach ($Levels as $LevelID => $Level) {
-						?><option value="<?php echo $Level['Requirement']; ?>"<?php if ($LevelID == $DummyPlayer->getLevelID()) { ?> selected="selected"<?php } ?>><?php echo $LevelID; ?></option><?php
+						?><option value="<?php echo $Level->expRequired; ?>"<?php if ($LevelID == $DummyPlayer->getLevelID()) { ?> selected="selected"<?php } ?>><?php echo $LevelID; ?></option><?php
 					} ?>
 				</select>
 				Ship:

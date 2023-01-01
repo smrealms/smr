@@ -1,4 +1,7 @@
 <?php declare(strict_types=1);
+
+use Smr\PlayerLevel;
+
 try {
 	require_once('../bootstrap.php'); ?>
 
@@ -19,12 +22,11 @@ try {
 		<th>Rank Name</th>
 		<th>Required Experience</th>
 	</tr><?php
-	$levels = Globals::getLevelRequirements();
-	foreach ($levels as $levelID => $level) { ?>
+	foreach (PlayerLevel::getAll() as $levelID => $level) { ?>
 		<tr>
 			<td><?php echo $levelID; ?></td>
-			<td><?php echo $level['Name']; ?></td>
-			<td><?php echo $level['Requirement']; ?></td>
+			<td><?php echo $level->name; ?></td>
+			<td><?php echo $level->expRequired; ?></td>
 		</tr><?php
 	} ?>
 	</table><?php

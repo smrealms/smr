@@ -16,6 +16,7 @@ use Smr\Pages\Player\Planet\KickProcessor;
 use Smr\Pages\Player\SearchForTraderResult;
 use Smr\Pages\Player\WeaponDisplayToggleProcessor;
 use Smr\Path;
+use Smr\PlayerLevel;
 use Smr\Race;
 use Smr\ScoutMessageGroupType;
 use Smr\StoredDestination;
@@ -60,7 +61,7 @@ abstract class AbstractSmrPlayer {
 	protected int $credits;
 	protected int $alignment;
 	protected int $experience;
-	protected ?int $level;
+	protected ?PlayerLevel $level;
 	protected int $allianceID;
 	protected int $shipID;
 	protected int $kills;
@@ -1111,34 +1112,16 @@ abstract class AbstractSmrPlayer {
 	 * This value is rounded because it is used primarily in HTML img widths.
 	 */
 	public function getNextLevelPercentAcquired(): int {
-		if ($this->getNextLevelExperience() == $this->getThisLevelExperience()) {
+		$currentLevelExp = $this->getLevel()->expRequired;
+		$nextLevelExp = $this->getLevel()->next()->expRequired;
+		if ($nextLevelExp == $currentLevelExp) {
 			return 100;
 		}
-		return max(0, min(100, IRound(($this->getExperience() - $this->getThisLevelExperience()) / ($this->getNextLevelExperience() - $this->getThisLevelExperience()) * 100)));
+		return max(0, min(100, IRound(($this->getExperience() - $currentLevelExp) / ($nextLevelExp - $currentLevelExp) * 100)));
 	}
 
 	public function getNextLevelPercentRemaining(): int {
 		return 100 - $this->getNextLevelPercentAcquired();
-	}
-
-	/**
-	 * @return array<string, string|int>
-	 */
-	public function getNextLevel(): array {
-		$LEVELS = Globals::getLevelRequirements();
-		if (!isset($LEVELS[$this->getLevelID() + 1])) {
-			return $LEVELS[$this->getLevelID()]; //Return current level experience if on last level.
-		}
-		return $LEVELS[$this->getLevelID() + 1];
-	}
-
-	public function getNextLevelExperience(): int {
-		return $this->getNextLevel()['Requirement'];
-	}
-
-	public function getThisLevelExperience(): int {
-		$LEVELS = Globals::getLevelRequirements();
-		return $LEVELS[$this->getLevelID()]['Requirement'];
 	}
 
 	public function setExperience(int $experience): void {
@@ -1212,6 +1195,7 @@ abstract class AbstractSmrPlayer {
 		$this->setExperience($newExperience);
 		$this->increaseHOF($experience, ['Experience', 'Total', 'Gain'], HOF_PUBLIC);
 	}
+
 	public function decreaseExperience(int $experience): void {
 		if ($experience < 0) {
 			throw new Exception('Trying to decrease negative experience.');
@@ -1236,28 +1220,24 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	/**
-	 * Returns the numerical level of the player (e.g. 1-50).
-	 */
-	public function getLevelID(): int {
+	public function getLevel(): PlayerLevel {
 		// The level is cached for performance reasons unless `setExperience`
 		// is called and the player's experience changes.
 		if (!isset($this->level)) {
-			$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
-			foreach ($LEVELS_REQUIREMENTS as $level_id => $require) {
-				if ($this->getExperience() >= $require['Requirement']) {
-					continue;
-				}
-				$this->level = $level_id - 1;
-				return $this->level;
-			}
-			$this->level = max(array_keys($LEVELS_REQUIREMENTS));
+			$this->level = PlayerLevel::get($this->getExperience());
 		}
 		return $this->level;
 	}
 
+	/**
+	 * Returns the numerical level of the player (e.g. 1-50).
+	 */
+	public function getLevelID(): int {
+		return $this->getLevel()->id;
+	}
+
 	public function getLevelName(): string {
-		$level_name = Globals::getLevelRequirements()[$this->getLevelID()]['Name'];
+		$level_name = $this->getLevel()->name;
 		if ($this->isPresident()) {
 			$level_name = '<img src="images/council_president.png" title="' . Race::getName($this->getRaceID()) . ' President" height="12" width="16" />&nbsp;' . $level_name;
 		}
@@ -1265,7 +1245,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getMaxLevel(): int {
-		return max(array_keys(Globals::getLevelRequirements()));
+		return PlayerLevel::getMax();
 	}
 
 	public function getPlayerID(): int {

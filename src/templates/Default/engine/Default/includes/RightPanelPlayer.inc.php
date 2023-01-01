@@ -24,7 +24,7 @@ if (isset($GameID)) { ?>
 	Experience : <span id="exp"><?php echo number_format($ThisPlayer->getExperience()); ?></span><br />
 	<a href="level_requirements.php" target="levelRequirements">Level : <span id="lvl"><?php echo $ThisPlayer->getLevelID(); ?></span></a><br />
 	<a href="level_requirements.php" target="levelRequirements">Next Level: </a><a href="<?php echo WIKI_URL; ?>/game-guide/experience-levels" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Experience Levels"/></a><br /><?php
-	$NextLevelExperience = number_format($ThisPlayer->getNextLevelExperience());
+	$NextLevelExperience = number_format($ThisPlayer->getLevel()->next()->expRequired);
 	$Experience = number_format($ThisPlayer->getExperience()); ?>
 	<a href="level_requirements.php" target="levelRequirements">
 		<span id="lvlBar">

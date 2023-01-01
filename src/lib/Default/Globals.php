@@ -45,8 +45,6 @@ class Globals {
 
 	/** @var array<int> */
 	protected static array $HIDDEN_PLAYERS;
-	/** @var array<int, array<string, string|int>> */
-	protected static array $LEVEL_REQUIREMENTS;
 	protected static bool $FEATURE_REQUEST_OPEN;
 	/** @var array<int, array<int, array<int, int>>> */
 	protected static array $RACE_RELATIONS;
@@ -107,26 +105,6 @@ class Globals {
 			$editorIDs[] = $dbRecord->getInt('account_id');
 		}
 		return $editorIDs;
-	}
-
-	/**
-	 * @return array<int, array<string, string|int>>
-	 */
-	public static function getLevelRequirements(): array {
-		if (!isset(self::$LEVEL_REQUIREMENTS)) {
-			self::initialiseDatabase();
-			self::$LEVEL_REQUIREMENTS = [];
-
-			// determine user level
-			$dbResult = self::$db->read('SELECT * FROM level ORDER BY level_id ASC');
-			foreach ($dbResult->records() as $dbRecord) {
-				self::$LEVEL_REQUIREMENTS[$dbRecord->getInt('level_id')] = [
-					'Name' => $dbRecord->getString('level_name'),
-					'Requirement' => $dbRecord->getInt('requirement'),
-				];
-			}
-		}
-		return self::$LEVEL_REQUIREMENTS;
 	}
 
 	public static function getColouredRaceNameForRace(int $raceID, int $gameID, int $fromRaceID, bool $linked = true): string {

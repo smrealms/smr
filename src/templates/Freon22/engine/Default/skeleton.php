@@ -50,7 +50,7 @@
 												Level: <a class="nav" href="/level_requirements.php" target="levelRequirements"><span id="lvl"><?php echo $ThisPlayer->getLevelID(); ?></span></a>
 												<br />
 												Next Level: <?php
-													$NextLevelExperience = number_format($ThisPlayer->getNextLevelExperience());
+													$NextLevelExperience = number_format($ThisPlayer->getLevel()->next()->expRequired);
 													$Experience = number_format($ThisPlayer->getExperience()); ?>
 													<span id="lvlBar">
 														<img src="images/bar_left.gif" width="5" height="10" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
