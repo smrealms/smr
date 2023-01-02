@@ -50,13 +50,6 @@ class Globals {
 	protected static array $RACE_RELATIONS;
 	/** @var array<string, string> */
 	protected static array $AVAILABLE_LINKS = [];
-	protected static Database $db;
-
-	protected static function initialiseDatabase(): void {
-		if (!isset(self::$db)) {
-			self::$db = Database::getInstance();
-		}
-	}
 
 	/**
 	 * @return array<string, string>
@@ -84,8 +77,8 @@ class Globals {
 	 */
 	public static function getHiddenPlayers(): array {
 		if (!isset(self::$HIDDEN_PLAYERS)) {
-			self::initialiseDatabase();
-			$dbResult = self::$db->read('SELECT account_id FROM hidden_players');
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT account_id FROM hidden_players');
 			self::$HIDDEN_PLAYERS = [0]; //stop errors
 			foreach ($dbResult->records() as $dbRecord) {
 				self::$HIDDEN_PLAYERS[] = $dbRecord->getInt('account_id');
@@ -98,9 +91,9 @@ class Globals {
 	 * @return array<int>
 	 */
 	public static function getGalacticPostEditorIDs(int $gameID): array {
-		self::initialiseDatabase();
 		$editorIDs = [];
-		$dbResult = self::$db->read('SELECT account_id FROM galactic_post_writer WHERE position=\'editor\' AND game_id=' . self::$db->escapeNumber($gameID));
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT account_id FROM galactic_post_writer WHERE position=\'editor\' AND game_id=' . $db->escapeNumber($gameID));
 		foreach ($dbResult->records() as $dbRecord) {
 			$editorIDs[] = $dbRecord->getInt('account_id');
 		}
@@ -123,8 +116,8 @@ class Globals {
 
 	public static function isFeatureRequestOpen(): bool {
 		if (!isset(self::$FEATURE_REQUEST_OPEN)) {
-			self::initialiseDatabase();
-			$dbResult = self::$db->read('SELECT open FROM open_forms WHERE type=\'FEATURE\'');
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT open FROM open_forms WHERE type=\'FEATURE\'');
 
 			self::$FEATURE_REQUEST_OPEN = $dbResult->record()->getBoolean('open');
 		}
@@ -136,13 +129,13 @@ class Globals {
 	 */
 	public static function getRaceRelations(int $gameID, int $raceID): array {
 		if (!isset(self::$RACE_RELATIONS[$gameID][$raceID])) {
-			self::initialiseDatabase();
 			//get relations
 			self::$RACE_RELATIONS[$gameID][$raceID] = [];
 			foreach (Race::getAllIDs() as $otherRaceID) {
 				self::$RACE_RELATIONS[$gameID][$raceID][$otherRaceID] = 0;
 			}
-			$dbResult = self::$db->read('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1=' . self::$db->escapeNumber($raceID) . ' AND game_id=' . self::$db->escapeNumber($gameID));
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1=' . $db->escapeNumber($raceID) . ' AND game_id=' . $db->escapeNumber($gameID));
 			foreach ($dbResult->records() as $dbRecord) {
 				self::$RACE_RELATIONS[$gameID][$raceID][$dbRecord->getInt('race_id_2')] = $dbRecord->getInt('relation');
 			}
