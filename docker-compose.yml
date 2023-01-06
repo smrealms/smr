@@ -49,6 +49,8 @@ x-smr-test: &smr-test
     # Note that this may corrupt the test database and require a reset.
     # (see https://github.com/docker-library/php/issues/505)
     init: true
+    environment:
+        - XDEBUG_MODE=off
     volumes:
         - ./config/config.specific.sample.php:/smr/config/config.specific.php:ro
         - ./test/env:/smr/config/env:ro
