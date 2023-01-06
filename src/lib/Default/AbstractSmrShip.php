@@ -898,7 +898,7 @@ class AbstractSmrShip {
 	}
 
 	/**
-	 * @param array<string, int|bool> $damage
+	 * @param WeaponDamageData $damage
 	 * @return array<string, int|bool>
 	 */
 	public function takeDamage(array $damage): array {
@@ -934,7 +934,7 @@ class AbstractSmrShip {
 	}
 
 	/**
-	 * @param array<string, int|bool> $damage
+	 * @param WeaponDamageData $damage
 	 * @return array<string, int|bool>
 	 */
 	public function takeDamageFromMines(array $damage): array {

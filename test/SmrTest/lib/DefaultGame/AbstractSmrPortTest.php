@@ -208,7 +208,7 @@ class AbstractSmrPortTest extends TestCase {
 	/**
 	 * @dataProvider dataProvider_takeDamage
 	 *
-	 * @param array<string, int|bool> $damage
+	 * @param WeaponDamageData $damage
 	 * @param array<string, int|bool> $expected
 	 */
 	public function test_takeDamage(string $case, array $damage, array $expected, int $shields, int $cds, int $armour): void {
@@ -223,7 +223,7 @@ class AbstractSmrPortTest extends TestCase {
 	}
 
 	/**
-	 * @return array<array<mixed>>
+	 * @return array<array{0: string, 1: WeaponDamageData, 2: array<string, int|bool>, 3: int, 4: int, 5: int}>
 	 */
 	public function dataProvider_takeDamage(): array {
 		return [

@@ -35,44 +35,44 @@ abstract class AbstractSmrCombatWeapon {
 	}
 
 	/**
-	 * @return array<string, int|bool>
+	 * @return WeaponDamageData
 	 */
 	public function getDamage(): array {
 		return ['Shield' => $this->getShieldDamage(), 'Armour' => $this->getArmourDamage(), 'Rollover' => $this->isDamageRollover()];
 	}
 
 	/**
-	 * @return array<string, int|bool>
+	 * @return WeaponDamageData
 	 */
 	abstract public function getModifiedDamageAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces): array;
 
 	/**
-	 * @return array<string, int|bool>
+	 * @return WeaponDamageData
 	 */
 	abstract public function getModifiedDamageAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port): array;
 
 	/**
-	 * @return array<string, int|bool>
+	 * @return WeaponDamageData
 	 */
 	abstract public function getModifiedDamageAgainstPlanet(AbstractSmrPlayer $weaponPlayer, SmrPlanet $planet): array;
 
 	/**
-	 * @return array<string, int|bool>
+	 * @return WeaponDamageData
 	 */
 	abstract public function getModifiedPortDamageAgainstPlayer(AbstractSmrPort $port, AbstractSmrPlayer $targetPlayer): array;
 
 	/**
-	 * @return array<string, int|bool>
+	 * @return WeaponDamageData
 	 */
 	abstract public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer): array;
 
 	/**
-	 * @return array<string, int|bool>
+	 * @return WeaponDamageData
 	 */
 	abstract public function getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer): array;
 
 	/**
-	 * @return array<string, int|bool>
+	 * @return WeaponDamageData
 	 */
 	abstract public function getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer): array;
 

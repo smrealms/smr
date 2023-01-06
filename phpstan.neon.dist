@@ -30,6 +30,9 @@ parameters:
         # We code in protection against a value of 0
         - SmrMines::TOTAL_ENEMY_MINES_MODIFIER
 
+    typeAliases:
+        WeaponDamageData: 'array{Shield: int, Armour: int, Rollover: bool, Launched?: int, Kamikaze?: int}'
+
     #----------------------------------------------
     # Warning suppression (to be fixed eventually!)
     #----------------------------------------------
