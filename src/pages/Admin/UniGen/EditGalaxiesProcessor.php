@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
+use Exception;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
@@ -211,6 +212,9 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 			if ($oldID !== false && isset($oldWarps[$oldID])) {
 				$oldWarpID = $oldWarps[$oldID];
 				$newWarpID = array_search($oldWarpID, $sectorMap);
+				if ($newWarpID === false) {
+					throw new Exception('Warp sector unexpectedly missing from mapping: ' . $oldWarpID);
+				}
 				$newSector->setWarp(SmrSector::getSector($gameID, $newWarpID));
 			}
 		}
