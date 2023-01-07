@@ -112,7 +112,7 @@ class Database {
 	public function write(string $query): void {
 		$result = $this->dbConn->query($query);
 		if ($result !== true) {
-			throw new RuntimeException('Wrong query type');
+			throw new RuntimeException('Wrong query type or query failed');
 		}
 	}
 
@@ -121,7 +121,11 @@ class Database {
 	 * Used for SELECT queries, for example.
 	 */
 	public function read(string $query): DatabaseResult {
-		return new DatabaseResult($this->dbConn->query($query));
+		$result = $this->dbConn->query($query);
+		if (is_bool($result)) {
+			throw new RuntimeException('Wrong query type or query failed');
+		}
+		return new DatabaseResult($result);
 	}
 
 	/**
