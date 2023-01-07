@@ -100,7 +100,11 @@ abstract class BaseIntegrationSpec extends TestCase {
 		}
 		$checksums = [];
 		foreach ($result as $record) {
-			$checksums[$record['Table']] = (int)$record['Checksum'];
+			$table = $record['Table'];
+			if (!is_string($table)) {
+				throw new Exception('Expected string table names, got : ' . $table);
+			}
+			$checksums[$table] = (int)$record['Checksum'];
 		}
 		return $checksums;
 	}
