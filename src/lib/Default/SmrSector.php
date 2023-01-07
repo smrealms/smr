@@ -2,6 +2,7 @@
 
 use Smr\Database;
 use Smr\DatabaseRecord;
+use Smr\Exceptions\CachedPortNotFound;
 use Smr\Exceptions\SectorNotFound;
 use Smr\HardwareType;
 use Smr\MovementType;
@@ -580,13 +581,18 @@ class SmrSector {
 	}
 
 	public function hasCachedPort(AbstractSmrPlayer $player = null): bool {
-		return $this->getCachedPort($player) !== false;
-	}
-
-	public function getCachedPort(AbstractSmrPlayer $player = null): SmrPort|false {
 		if ($player === null) {
 			return false;
 		}
+		try {
+			$this->getCachedPort($player);
+			return true;
+		} catch (CachedPortNotFound) {
+			return false;
+		}
+	}
+
+	public function getCachedPort(AbstractSmrPlayer $player): SmrPort {
 		return SmrPort::getCachedPort($this->getGameID(), $this->getSectorID(), $player->getAccountID());
 	}
 

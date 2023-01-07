@@ -4,6 +4,7 @@ use Smr\BountyType;
 use Smr\Database;
 use Smr\DatabaseRecord;
 use Smr\Epoch;
+use Smr\Exceptions\CachedPortNotFound;
 use Smr\Page\Page;
 use Smr\Pages\Player\AttackPortClaimProcessor;
 use Smr\Pages\Player\AttackPortConfirm;
@@ -1180,7 +1181,10 @@ class AbstractSmrPort {
 		return false;
 	}
 
-	public static function getCachedPort(int $gameID, int $sectorID, int $accountID, bool $forceUpdate = false): SmrPort|false {
+	/**
+	 * @throws \Smr\Exceptions\CachedPortNotFound If the cached port is not found in the database.
+	 */
+	public static function getCachedPort(int $gameID, int $sectorID, int $accountID, bool $forceUpdate = false): SmrPort {
 		if ($forceUpdate || !isset(self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID])) {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT visited, port_info
@@ -1198,7 +1202,11 @@ class AbstractSmrPort {
 				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = false;
 			}
 		}
-		return self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID];
+		$port = self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID];
+		if ($port === false) {
+			throw new CachedPortNotFound();
+		}
+		return $port;
 	}
 
 	// This is a magic method used when serializing an SmrPort instance.
