@@ -161,11 +161,19 @@ class Database {
 	}
 
 	public function getChangedRows(): int {
-		return $this->dbConn->affected_rows;
+		$affectedRows = $this->dbConn->affected_rows;
+		if (is_string($affectedRows)) {
+			throw new Exception('Number of rows is too large to represent as an int: ' . $affectedRows);
+		}
+		return $affectedRows;
 	}
 
 	public function getInsertID(): int {
-		return $this->dbConn->insert_id;
+		$insertID = $this->dbConn->insert_id;
+		if (is_string($insertID)) {
+			throw new Exception('Number of rows is too large to represent as an int: ' . $insertID);
+		}
+		return $insertID;
 	}
 
 	public function escape(mixed $escape): mixed {
