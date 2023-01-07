@@ -52,8 +52,9 @@ class BountyPlaceConfirmProcessor extends PlayerPageProcessor {
 		$player->increaseHOF(1, ['Bounties', 'Placed', 'Number'], HOF_PUBLIC);
 
 		$placed = SmrPlayer::getPlayer($account_id, $player->getGameID());
-		$placed->increaseCurrentBountyAmount($type, $amount);
-		$placed->increaseCurrentBountySmrCredits($type, $smrCredits);
+		$bounty = $placed->getActiveBounty($type);
+		$bounty->increaseCredits($amount);
+		$bounty->increaseSmrCredits($smrCredits);
 		$placed->increaseHOF($smrCredits, ['Bounties', 'Received', 'SMR Credits'], HOF_PUBLIC);
 		$placed->increaseHOF($amount, ['Bounties', 'Received', 'Money'], HOF_PUBLIC);
 		$placed->increaseHOF(1, ['Bounties', 'Received', 'Number'], HOF_PUBLIC);

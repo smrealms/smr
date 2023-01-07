@@ -4,7 +4,7 @@ namespace Smr\Pages\Player\Headquarters;
 
 use AbstractSmrPlayer;
 use Menu;
-use Smr\Bounties;
+use Smr\Bounty;
 use Smr\BountyType;
 use Smr\Page\PlayerPage;
 use Smr\Template;
@@ -35,7 +35,7 @@ class Underground extends PlayerPage {
 
 		Menu::headquarters($this->locationID);
 
-		$template->assign('AllBounties', Bounties::getMostWanted(BountyType::UG));
+		$template->assign('AllBounties', Bounty::getMostWanted(BountyType::UG, $player->getGameID()));
 		$template->assign('MyBounties', $player->getClaimableBounties(BountyType::UG));
 
 		if ($player->hasNeutralAlignment()) {

@@ -21,9 +21,9 @@ class TraderBounties extends PlayerPage {
 		Menu::trader();
 
 		foreach (BountyType::cases() as $type) {
-			if ($player->hasCurrentBounty($type)) {
-				$bounty = $player->getCurrentBounty($type);
-				$msg = number_format($bounty['Amount']) . ' credits and ' . number_format($bounty['SmrCredits']) . ' SMR credits';
+			if ($player->hasActiveBounty($type)) {
+				$bounty = $player->getActiveBounty($type);
+				$msg = number_format($bounty->getCredits()) . ' credits and ' . number_format($bounty->getSmrCredits()) . ' SMR credits';
 			} else {
 				$msg = 'None';
 			}

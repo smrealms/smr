@@ -1474,7 +1474,7 @@ class AbstractSmrPort {
 
 		// Killer gets a relations change and a bounty if port is taken
 		$killerBounty = $killer->getExperience() * $this->getLevel();
-		$killer->increaseCurrentBountyAmount(BountyType::HQ, $killerBounty);
+		$killer->getActiveBounty(BountyType::HQ)->increaseCredits($killerBounty);
 		$killer->increaseHOF($killerBounty, ['Combat', 'Port', 'Bounties', 'Gained'], HOF_PUBLIC);
 
 		$killer->decreaseRelations(self::KILLER_RELATIONS_LOSS, $this->getRaceID());

@@ -29,8 +29,8 @@ class BountyClaimProcessor extends PlayerPageProcessor {
 			$db = Database::getInstance();
 			foreach ($bounties as $bounty) {
 				// get bounty id from db
-				$amount = $bounty['credits'];
-				$smrCredits = $bounty['smr_credits'];
+				$amount = $bounty->getCredits();
+				$smrCredits = $bounty->getSmrCredits();
 				// no interest on bounties
 				// $time = Smr\Epoch::time();
 				// $days = ($time - $db->getField('time')) / 60 / 60 / 24;
@@ -39,7 +39,7 @@ class BountyClaimProcessor extends PlayerPageProcessor {
 				// add bounty to our cash
 				$player->increaseCredits($amount);
 				$player->getAccount()->increaseSmrCredits($smrCredits);
-				$claimText .= ($bounty['player']->getDisplayName() . ' : <span class="creds">' . number_format($amount) . '</span> credits and <span class="red">' . number_format($smrCredits) . '</span> SMR credits<br />');
+				$claimText .= ($bounty->getTargetPlayer()->getDisplayName() . ' : <span class="creds">' . number_format($amount) . '</span> credits and <span class="red">' . number_format($smrCredits) . '</span> SMR credits<br />');
 
 				// add HoF stat
 				$player->increaseHOF(1, ['Bounties', 'Claimed', 'Results'], HOF_PUBLIC);
@@ -47,10 +47,8 @@ class BountyClaimProcessor extends PlayerPageProcessor {
 				$player->increaseHOF($smrCredits, ['Bounties', 'Claimed', 'SMR Credits'], HOF_PUBLIC);
 
 				// delete bounty
-				$db->write('DELETE FROM bounty
-								WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-									AND claimer_id = ' . $db->escapeNumber($player->getAccountID()) . '
-									AND bounty_id = ' . $db->escapeNumber($bounty['bounty_id']));
+				$bounty->setClaimed();
+				$bounty->update();
 			}
 		} else {
 			$claimText = ('You have no claimable bounties<br /><br />');
