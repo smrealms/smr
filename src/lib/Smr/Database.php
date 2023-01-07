@@ -226,10 +226,15 @@ class Database {
 		if ($nullable === true && $object === null) {
 			return 'NULL';
 		}
+		$objectStr = serialize($object);
 		if ($compress === true) {
-			return $this->escapeBinary(gzcompress(serialize($object)));
+			$objectBin = gzcompress($objectStr);
+			if ($objectBin === false) {
+				throw new Exception('An error occurred while compressing the object');
+			}
+			return $this->escapeBinary($objectBin);
 		}
-		return $this->escapeString(serialize($object));
+		return $this->escapeString($objectStr);
 	}
 
 }
