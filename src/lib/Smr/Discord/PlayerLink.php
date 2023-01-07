@@ -4,6 +4,7 @@ namespace Smr\Discord;
 
 use AbstractSmrPlayer;
 use Discord\Parts\Channel\Message;
+use Discord\Parts\Thread\Thread;
 use Smr\Database;
 use Smr\Exceptions\AccountNotFound;
 use Smr\Exceptions\AllianceNotFound;
@@ -34,7 +35,14 @@ class PlayerLink {
 			throw new UserError("There is no SMR account associated with your Discord User ID. To set this up, go to `Preferences` in-game and set `$user_id` as your `Discord User ID`.");
 		}
 
-		if ($message->channel->is_private) {
+		// Handle if the message was sent in a thread
+		if ($message->channel instanceof Thread) {
+			$channel = $message->channel->parent;
+		} else {
+			$channel = $message->channel;
+		}
+
+		if ($channel->is_private) {
 			// Get the most recent enabled game, since there is no other way to determine the game ID
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT MAX(game_id) FROM game WHERE enabled=' . $db->escapeBoolean(true) . ' AND end_time > ' . $db->escapeNumber(time()) . ' GROUP BY enabled');
@@ -45,7 +53,7 @@ class PlayerLink {
 		} else {
 			// Find the alliance associated with this public channel
 			// force update in case the ID has been changed in-game
-			$channel_id = $message->channel->id;
+			$channel_id = $channel->id;
 			try {
 				$alliance = SmrAlliance::getAllianceByDiscordChannel($channel_id, true);
 			} catch (AllianceNotFound) {
