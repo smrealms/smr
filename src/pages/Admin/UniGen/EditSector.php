@@ -7,7 +7,7 @@ use Smr\Page\ReusableTrait;
 use Smr\Request;
 use Smr\Template;
 use SmrAccount;
-use SmrGalaxy;
+use SmrGame;
 use SmrSector;
 
 class EditSector extends AccountPage {
@@ -29,9 +29,7 @@ class EditSector extends AccountPage {
 		$template->assign('PageTopic', 'Edit Sector #' . $editSector->getSectorID() . ' (' . $editSector->getGalaxy()->getDisplayName() . ')');
 		$template->assign('EditSector', $editSector);
 
-		$galaxies = SmrGalaxy::getGameGalaxies($this->gameID);
-		$lastSector = end($galaxies)->getEndSector();
-		$template->assign('LastSector', $lastSector);
+		$template->assign('LastSector', SmrGame::getGame($this->gameID)->getLastSectorID());
 
 		$container = new EditSectorProcessor($this->gameID, $this->galaxyID, $this->sectorID);
 		$template->assign('EditHREF', $container->href());
