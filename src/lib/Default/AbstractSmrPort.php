@@ -14,6 +14,7 @@ use Smr\Pages\Player\AttackPortProcessor;
 use Smr\Pages\Player\CurrentSector;
 use Smr\PortPayoutType;
 use Smr\TradeGood;
+use Smr\TradeGoodTransaction;
 use Smr\TransactionType;
 
 class AbstractSmrPort {
@@ -320,11 +321,10 @@ class AbstractSmrPort {
 	public function getGoodDistance(int $goodID): int {
 		if (!isset($this->goodDistances[$goodID])) {
 			// Calculate distance to the opposite of the offered transaction
-			$x = [
-				'Type' => 'Good',
-				'GoodID' => $goodID,
-				'TransactionType' => $this->getGoodTransaction($goodID)->opposite(),
-			];
+			$x = new TradeGoodTransaction(
+				goodID: $goodID,
+				transactionType: $this->getGoodTransaction($goodID)->opposite(),
+			);
 			$di = Plotter::findDistanceToX($x, $this->getSector(), true);
 			if (is_object($di)) {
 				$di = $di->getDistance();
@@ -1488,13 +1488,6 @@ class AbstractSmrPort {
 		$killer->increaseHOF(self::KILLER_RELATIONS_LOSS, ['Combat', 'Port', 'Relation', 'Loss'], HOF_PUBLIC);
 
 		return [];
-	}
-
-	public function hasX(mixed $x): bool {
-		if (is_array($x) && $x['Type'] == 'Good') { // instanceof Good) - No Good class yet, so array is the best we can do
-			return $this->hasGood($x['GoodID'], $x['TransactionType']);
-		}
-		return false;
 	}
 
 }

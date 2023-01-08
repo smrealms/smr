@@ -7,6 +7,7 @@ use Plotter;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 use Smr\TradeGood;
+use Smr\TradeGoodTransaction;
 use Smr\TransactionType;
 use SmrPort;
 
@@ -52,11 +53,10 @@ class CargoDumpProcessor extends PlayerPageProcessor {
 			// If they have any experience left, lose exp
 
 			// get the distance
-			$x = [
-				'Type' => 'Good',
-				'GoodID' => $good_id,
-				'TransactionType' => TransactionType::Sell,
-			];
+			$x = new TradeGoodTransaction(
+				goodID: $good_id,
+				transactionType: TransactionType::Sell,
+			);
 			$good_distance = Plotter::findDistanceToX($x, $sector, true);
 			if (is_object($good_distance)) {
 				$good_distance = $good_distance->getDistance();

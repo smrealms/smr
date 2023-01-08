@@ -5,6 +5,7 @@ use Smr\HardwareType;
 use Smr\Path;
 use Smr\PlotGroup;
 use Smr\TradeGood;
+use Smr\TradeGoodTransaction;
 use Smr\TransactionType;
 
 class Plotter {
@@ -29,11 +30,10 @@ class Plotter {
 			if (isset($player) && !$player->meetsAlignmentRestriction($good->alignRestriction)) {
 				throw new Exception('Player trying to access alignment-restricted good!');
 			}
-			return [
-				'Type' => 'Good',
-				'GoodID' => $goodID,
-				'TransactionType' => TransactionType::from(explode(' ', $xType->value)[0]),
-			];
+			return new TradeGoodTransaction(
+				goodID: $goodID,
+				transactionType: TransactionType::from(explode(' ', $xType->value)[0]),
+			);
 		};
 
 		return match ($xType) {
