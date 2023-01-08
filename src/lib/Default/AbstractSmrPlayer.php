@@ -2558,8 +2558,7 @@ abstract class AbstractSmrPlayer {
 	public function getTurnsGained(int $time, bool $forceUpdate = false): int {
 		$timeDiff = $time - $this->getLastTurnUpdate();
 		$ship = $this->getShip($forceUpdate);
-		$extraTurns = IFloor($timeDiff * $ship->getRealSpeed() / 3600);
-		return $extraTurns;
+		return IFloor($timeDiff * $ship->getRealSpeed() / 3600);
 	}
 
 	public function updateTurns(): void {

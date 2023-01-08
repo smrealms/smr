@@ -962,15 +962,13 @@ class SmrPlanet {
 
 	// Amount of exp gained to build the next building of this type
 	private function getConstructionExp(int $constructionID): int {
-		$expGain = $this->getStructureTypes($constructionID)->expGain();
-		return $expGain;
+		return $this->getStructureTypes($constructionID)->expGain();
 	}
 
 	// Amount of time (in seconds) to build the next building of this type
 	public function getConstructionTime(int $constructionID): int {
 		$baseTime = $this->getStructureTypes($constructionID)->baseTime();
-		$constructionTime = ICeil($baseTime * $this->getCompletionModifier($constructionID) / $this->getGame()->getGameSpeed());
-		return $constructionTime;
+		return ICeil($baseTime * $this->getCompletionModifier($constructionID) / $this->getGame()->getGameSpeed());
 	}
 
 	/**
@@ -1287,7 +1285,7 @@ class SmrPlanet {
 			}
 		}
 
-		$return = [
+		return [
 			'KillingShot' => !$alreadyDead && $this->isDestroyed(),
 			'TargetAlreadyDead' => $alreadyDead,
 			'Shield' => $shieldDamage,
@@ -1297,7 +1295,6 @@ class SmrPlanet {
 			'Armour' => $armourDamage,
 			'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
 		];
-		return $return;
 	}
 
 	protected function takeDamageToShields(int $damage): int {

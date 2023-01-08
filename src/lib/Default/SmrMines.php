@@ -18,8 +18,7 @@ class SmrMines extends AbstractSmrCombatWeapon {
 	}
 
 	public function getModifiedAccuracy(): float {
-		$modifiedAccuracy = $this->getBaseAccuracy();
-		return $modifiedAccuracy;
+		return $this->getBaseAccuracy();
 	}
 
 	public function getModifiedForceAccuracyAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer, bool $minesAreAttacker): float {
@@ -70,8 +69,7 @@ class SmrMines extends AbstractSmrCombatWeapon {
 
 	public function getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer, bool $minesAreAttacker = false): array {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
-			$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-			return $return;
+			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		}
 		$damage = $this->getDamage();
 		if ($targetPlayer->getShip()->isFederal()) { // do less damage to fed ships

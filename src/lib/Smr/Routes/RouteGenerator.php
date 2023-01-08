@@ -41,11 +41,10 @@ class RouteGenerator {
 			$totalTasks++;
 		}
 		self::trimRoutes($numberOfRoutes);
-		$allRoutes = [
+		return [
 			self::EXP_ROUTE => self::$expRoutes,
 			self::MONEY_ROUTE => self::$moneyRoutes,
 		];
-		return $allRoutes;
 	}
 
 	/**

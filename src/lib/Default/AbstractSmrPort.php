@@ -1364,7 +1364,7 @@ class AbstractSmrPort {
 			}
 		}
 
-		$return = [
+		return [
 						'KillingShot' => !$alreadyDead && $this->isDestroyed(),
 						'TargetAlreadyDead' => $alreadyDead,
 						'Shield' => $shieldDamage,
@@ -1374,7 +1374,6 @@ class AbstractSmrPort {
 						'Armour' => $armourDamage,
 						'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
 		];
-		return $return;
 	}
 
 	protected function takeDamageToShields(int $damage): int {

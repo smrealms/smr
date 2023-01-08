@@ -56,6 +56,9 @@
         <exclude name="Squiz.WhiteSpace.MemberVarSpacing" />
     </rule>
 
+    <!-- Add sniffs not included by PSR2R. -->
+    <rule ref="SlevomatCodingStandard.Variables.UselessVariable" />
+
     <!-- Use more compact arrow functions, "fn()" instead of "fn ()". -->
     <rule ref="SlevomatCodingStandard.Functions.ArrowFunctionDeclaration">
         <properties>

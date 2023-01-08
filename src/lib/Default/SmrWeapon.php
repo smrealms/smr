@@ -165,8 +165,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	}
 
 	public function getModifiedAccuracyAgainstForces(AbstractSmrPlayer $weaponPlayer, SmrForce $forces): float {
-		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
-		return $modifiedAccuracy;
+		return $this->getModifiedAccuracy($weaponPlayer);
 	}
 
 	public function getModifiedAccuracyAgainstPort(AbstractSmrPlayer $weaponPlayer, SmrPort $port): float {
@@ -196,8 +195,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 	}
 
 	public function getModifiedPortAccuracy(AbstractSmrPort $port): float {
-		$modifiedAccuracy = $this->getBaseAccuracy();
-		return $modifiedAccuracy;
+		return $this->getBaseAccuracy();
 	}
 
 	public function getModifiedPortAccuracyAgainstPlayer(AbstractSmrPort $port, AbstractSmrPlayer $targetPlayer): float {
@@ -258,24 +256,21 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 
 	public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer): array {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculating any damage mods.
-			$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-			return $return;
+			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		}
 		return $this->getDamage();
 	}
 
 	public function getModifiedPortDamageAgainstPlayer(AbstractSmrPort $port, AbstractSmrPlayer $targetPlayer): array {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculating any damage mods.
-			$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-			return $return;
+			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		}
 		return $this->getDamage();
 	}
 
 	public function getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer): array {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculating any damage mods.
-			$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-			return $return;
+			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		}
 		return $this->getDamage();
 	}
