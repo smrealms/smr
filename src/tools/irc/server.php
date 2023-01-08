@@ -132,7 +132,6 @@ function server_msg_352($fp, string $rdata): bool {
 	// :ice.coldfront.net 352 Caretaker #KMFDM caretaker coldfront-425DB813.dip.t-dialin.net ice.coldfront.net Caretaker Hr :0 Official SMR bot
 	if (preg_match('/^:(.*?) 352 ' . IRC_BOT_NICK . ' (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?)$/i', $rdata, $msg)) {
 
-		$server = $msg[1];
 		$channel = $msg[2];
 		$user = $msg[3];
 		$host = $msg[4];

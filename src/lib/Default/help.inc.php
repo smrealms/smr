@@ -121,8 +121,6 @@ function echo_content(int $topic_id): void {
 	$dbResult = $db->read('SELECT * FROM manual WHERE topic_id = ' . $topic_id);
 	if ($dbResult->hasRecord()) {
 		$dbRecord = $dbResult->record();
-		$parent_topic_id = $dbRecord->getInt('parent_topic_id');
-		$order_id = $dbRecord->getInt('order_id');
 		$topic = stripslashes($dbRecord->getString('topic'));
 		$text = stripslashes($dbRecord->getString('text'));
 
@@ -161,7 +159,6 @@ function echo_menu(int $topic_id): void {
 		echo ('<ul type="disc">');
 		foreach ($dbResult->records() as $dbRecord) {
 			$sub_topic_id = $dbRecord->getInt('topic_id');
-			$order_id = $dbRecord->getInt('order_id');
 			$sub_topic = stripslashes($dbRecord->getString('topic'));
 
 			echo ('<li><a href="/manual.php?' . $sub_topic_id . '">' . get_numbering($sub_topic_id) . $sub_topic . '</a></li>');

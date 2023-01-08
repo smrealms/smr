@@ -57,6 +57,11 @@
     </rule>
 
     <!-- Add sniffs not included by PSR2R. -->
+    <rule ref="SlevomatCodingStandard.Variables.UnusedVariable">
+        <properties>
+            <property name="ignoreUnusedValuesWhenOnlyKeysAreUsedInForeach" value="true" />
+        </properties>
+    </rule>
     <rule ref="SlevomatCodingStandard.Variables.UselessVariable" />
 
     <!-- Use more compact arrow functions, "fn()" instead of "fn ()". -->

@@ -507,7 +507,7 @@ function findRoutes(AbstractSmrPlayer $player): array {
 	unset($distances);
 
 	$routesMerged = [];
-	foreach ($allRoutes[RouteGenerator::MONEY_ROUTE] as $multi => $routesByMulti) {
+	foreach ($allRoutes[RouteGenerator::MONEY_ROUTE] as $routesByMulti) {
 		$routesMerged += $routesByMulti; //Merge arrays
 	}
 

@@ -1,7 +1,7 @@
 <?php
 if (count($AlliedAllianceBanks) > 0) { ?>
 	<ul><?php
-	foreach ($AlliedAllianceBanks as $AlliedAllianceID => $AlliedAlliance) { ?>
+	foreach ($AlliedAllianceBanks as $AlliedAlliance) { ?>
 		<li>
 			<a class="bold" href="<?php echo Globals::getAllianceBankHREF($AlliedAlliance->getAllianceID()); ?>"><?php echo $AlliedAlliance->getAllianceDisplayName(); ?>'s Account</a>
 		</li><?php

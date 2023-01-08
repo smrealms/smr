@@ -1,7 +1,6 @@
 <?php
 if (isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Results'])) {
 	foreach ($ForcesCombatResults['Results'] as $ForceType => $ForceResults) {
-		$ShootingWeapon = $ForceResults['Weapon'];
 		$ShotHit = $ForceResults['Hit'];
 		$ActualDamage = $ForceResults['ActualDamage'];
 		$WeaponDamage = $ForceResults['WeaponDamage'];

@@ -12,13 +12,13 @@
 						<div class="goods">
 							<img src="images/port/sell.png" width="5" height="16" alt="Sell (<?php echo $Port->getRaceName(); ?>)"
 								title="Sell (<?php echo $Port->getRaceName(); ?>)" class="port<?php echo $Port->getRaceID(); ?>"/><?php
-							foreach ($Port->getVisibleGoodsBought($ThisPlayer) as $GoodID => $Good) {
+							foreach ($Port->getVisibleGoodsBought($ThisPlayer) as $Good) {
 								echo $Good->getImageHTML();
 							} ?>
 							<br />
 							<img src="images/port/buy.png" width="5" height="16" alt="Buy (<?php echo $Port->getRaceName(); ?>)"
 								title="Buy (<?php echo $Port->getRaceName(); ?>)" class="port<?php echo $Port->getRaceID(); ?>"/><?php
-							foreach ($Port->getVisibleGoodsSold($ThisPlayer) as $GoodID => $Good) {
+							foreach ($Port->getVisibleGoodsSold($ThisPlayer) as $Good) {
 								echo $Good->getImageHTML();
 							} ?>
 						</div>

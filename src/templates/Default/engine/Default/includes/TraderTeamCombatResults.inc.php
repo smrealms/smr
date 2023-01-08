@@ -1,6 +1,6 @@
 <?php
 if (is_array($TraderTeamCombatResults['Traders'])) {
-	foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
+	foreach ($TraderTeamCombatResults['Traders'] as $TraderResults) {
 		$ShootingPlayer = $TraderResults['Player'];
 		$TotalDamage = $TraderResults['TotalDamage'];
 
@@ -142,7 +142,7 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 $TotalDamage = $TraderTeamCombatResults['TotalDamage'];
 
 $TotalDamageToThisPlayer = 0;
-foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
+foreach ($TraderTeamCombatResults['Traders'] as $TraderResults) {
 	// Check if ThisPlayer was a target in this round of combat
 	if (!isset($TraderResults['TotalDamagePerTargetPlayer'][$ThisPlayer->getAccountID()])) {
 		$TotalDamageToThisPlayer = null;

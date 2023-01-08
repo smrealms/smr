@@ -1,7 +1,7 @@
 <?php
 
 if (is_array($TraderTeamCombatResults['Traders'])) {
-	foreach ($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults) {
+	foreach ($TraderTeamCombatResults['Traders'] as $TraderResults) {
 		$ShootingPlayer = $TraderResults['Player'];
 		$TotalDamage = $TraderResults['TotalDamage'];
 		if ($TraderResults['DeadBeforeShot']) {

@@ -1012,7 +1012,7 @@ class SmrPlanet {
 	public function stopBuilding(int $constructionID): bool {
 		$matchingBuilding = false;
 		$latestFinish = 0;
-		foreach ($this->getCurrentlyBuilding() as $key => $building) {
+		foreach ($this->getCurrentlyBuilding() as $building) {
 			if ($building['ConstructionID'] == $constructionID && $building['Finishes'] > $latestFinish) {
 				$latestFinish = $building['Finishes'];
 				$matchingBuilding = $building;
