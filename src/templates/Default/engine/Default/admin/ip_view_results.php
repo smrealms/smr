@@ -21,7 +21,7 @@ if ($type == 'comp_share') {
 				foreach ($Rows as $Row) { ?>
 					<tr>
 						<td><?php echo $Row['account_id']; ?></td>
-						<td><?php echo $Row['login']; ?></td>
+						<td><?php echo htmlentities($Row['login']); ?></td>
 						<td><?php echo $Row['ip']; ?></td>
 						<td><?php echo $Row['host']; ?></td><?php
 						if ($Row['matches']) { ?>
@@ -93,7 +93,7 @@ if ($type == 'comp_share') {
 				foreach ($Rows as $Row) { ?>
 					<tr>
 						<td><?php echo $Row['account_id']; ?></td>
-						<td><?php echo $Row['login']; ?></td>
+						<td><?php echo htmlentities($Row['login']); ?></td>
 						<td><?php echo $Row['date']; ?></td>
 						<td><?php echo $Row['ip']; ?></td>
 						<td><?php echo $Row['host']; ?></td>
