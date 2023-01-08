@@ -702,8 +702,8 @@ class SmrAccount {
 			throw new UserError('Email address is missing!');
 		}
 
-		if (str_contains($email, ' ')) {
-			throw new UserError('The email is invalid! It cannot contain any spaces.');
+		if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+			throw new UserError('This email address is not in a valid format!');
 		}
 
 		// check if the host got a MX or at least an A entry
