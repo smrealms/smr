@@ -3,8 +3,8 @@
 namespace Smr\Pages\Admin;
 
 use DummyShip;
-use Globals;
 use Smr\Page\AccountPage;
+use Smr\PlayerLevel;
 use Smr\Request;
 use Smr\Template;
 use SmrAccount;
@@ -31,7 +31,7 @@ class EditDummies extends AccountPage {
 		$template->assign('DummyPlayer', $dummyShip->getPlayer());
 		$template->assign('DummyShip', $dummyShip);
 		$template->assign('ShipWeapons', $dummyShip->getWeapons());
-		$template->assign('Levels', Globals::getLevelRequirements());
+		$template->assign('Levels', PlayerLevel::getAll());
 
 		$template->assign('DummyNames', DummyShip::getDummyNames());
 	}

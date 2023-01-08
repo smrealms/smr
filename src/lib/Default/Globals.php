@@ -45,24 +45,11 @@ class Globals {
 
 	/** @var array<int> */
 	protected static array $HIDDEN_PLAYERS;
-	/** @var array<int, array<string, string|int>> */
-	protected static array $LEVEL_REQUIREMENTS;
-	/** @var array<int, array<string, string|int>> */
-	protected static array $GOODS;
-	/** @var array<int, array<string, string|int>> */
-	protected static array $HARDWARE_TYPES;
 	protected static bool $FEATURE_REQUEST_OPEN;
 	/** @var array<int, array<int, array<int, int>>> */
 	protected static array $RACE_RELATIONS;
 	/** @var array<string, string> */
 	protected static array $AVAILABLE_LINKS = [];
-	protected static Database $db;
-
-	protected static function initialiseDatabase(): void {
-		if (!isset(self::$db)) {
-			self::$db = Database::getInstance();
-		}
-	}
 
 	/**
 	 * @return array<string, string>
@@ -90,8 +77,8 @@ class Globals {
 	 */
 	public static function getHiddenPlayers(): array {
 		if (!isset(self::$HIDDEN_PLAYERS)) {
-			self::initialiseDatabase();
-			$dbResult = self::$db->read('SELECT account_id FROM hidden_players');
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT account_id FROM hidden_players');
 			self::$HIDDEN_PLAYERS = [0]; //stop errors
 			foreach ($dbResult->records() as $dbRecord) {
 				self::$HIDDEN_PLAYERS[] = $dbRecord->getInt('account_id');
@@ -104,33 +91,13 @@ class Globals {
 	 * @return array<int>
 	 */
 	public static function getGalacticPostEditorIDs(int $gameID): array {
-		self::initialiseDatabase();
 		$editorIDs = [];
-		$dbResult = self::$db->read('SELECT account_id FROM galactic_post_writer WHERE position=\'editor\' AND game_id=' . self::$db->escapeNumber($gameID));
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT account_id FROM galactic_post_writer WHERE position=\'editor\' AND game_id=' . $db->escapeNumber($gameID));
 		foreach ($dbResult->records() as $dbRecord) {
 			$editorIDs[] = $dbRecord->getInt('account_id');
 		}
 		return $editorIDs;
-	}
-
-	/**
-	 * @return array<int, array<string, string|int>>
-	 */
-	public static function getLevelRequirements(): array {
-		if (!isset(self::$LEVEL_REQUIREMENTS)) {
-			self::initialiseDatabase();
-			self::$LEVEL_REQUIREMENTS = [];
-
-			// determine user level
-			$dbResult = self::$db->read('SELECT * FROM level ORDER BY level_id ASC');
-			foreach ($dbResult->records() as $dbRecord) {
-				self::$LEVEL_REQUIREMENTS[$dbRecord->getInt('level_id')] = [
-					'Name' => $dbRecord->getString('level_name'),
-					'Requirement' => $dbRecord->getInt('requirement'),
-				];
-			}
-		}
-		return self::$LEVEL_REQUIREMENTS;
 	}
 
 	public static function getColouredRaceNameForRace(int $raceID, int $gameID, int $fromRaceID, bool $linked = true): string {
@@ -147,83 +114,10 @@ class Globals {
 		return $raceName;
 	}
 
-	/**
-	 * @return array<int, array<string, string|int>>
-	 */
-	public static function getGoods(): array {
-		if (!isset(self::$GOODS)) {
-			self::initialiseDatabase();
-			self::$GOODS = [];
-
-			// determine user level
-			$dbResult = self::$db->read('SELECT * FROM good ORDER BY good_id');
-			foreach ($dbResult->records() as $dbRecord) {
-				self::$GOODS[$dbRecord->getInt('good_id')] = [
-					'Type' => 'Good',
-					'ID' => $dbRecord->getInt('good_id'),
-					'Name' => $dbRecord->getString('good_name'),
-					'Max' => $dbRecord->getInt('max_amount'),
-					'BasePrice' => $dbRecord->getInt('base_price'),
-					'Class' => $dbRecord->getInt('good_class'),
-					'ImageLink' => 'images/port/' . $dbRecord->getInt('good_id') . '.png',
-					'AlignRestriction' => $dbRecord->getInt('align_restriction'),
-				];
-			}
-		}
-		return self::$GOODS;
-	}
-
-	/**
-	 * @return array<string, string|int>
-	 */
-	public static function getGood(int $goodID): array {
-		return self::getGoods()[$goodID];
-	}
-
-	public static function getGoodName(int $goodID): string {
-		if ($goodID == GOODS_NOTHING) {
-			return 'Nothing';
-		}
-		return self::getGoods()[$goodID]['Name'];
-	}
-
-	/**
-	 * @return ($hardwareTypeID is null ? array<int, array<string, string|int>> : array<string, string|int>)
-	 */
-	public static function getHardwareTypes(int $hardwareTypeID = null): array {
-		if (!isset(self::$HARDWARE_TYPES)) {
-			self::initialiseDatabase();
-			self::$HARDWARE_TYPES = [];
-
-			// determine user level
-			$dbResult = self::$db->read('SELECT * FROM hardware_type ORDER BY hardware_type_id');
-			foreach ($dbResult->records() as $dbRecord) {
-				self::$HARDWARE_TYPES[$dbRecord->getInt('hardware_type_id')] = [
-					'Type' => 'Hardware',
-					'ID' => $dbRecord->getInt('hardware_type_id'),
-					'Name' => $dbRecord->getString('hardware_name'),
-					'Cost' => $dbRecord->getInt('cost'),
-				];
-			}
-		}
-		if ($hardwareTypeID === null) {
-			return self::$HARDWARE_TYPES;
-		}
-		return self::$HARDWARE_TYPES[$hardwareTypeID];
-	}
-
-	public static function getHardwareName(int $hardwareTypeID): string {
-		return self::getHardwareTypes()[$hardwareTypeID]['Name'];
-	}
-
-	public static function getHardwareCost(int $hardwareTypeID): int {
-		return self::getHardwareTypes()[$hardwareTypeID]['Cost'];
-	}
-
 	public static function isFeatureRequestOpen(): bool {
 		if (!isset(self::$FEATURE_REQUEST_OPEN)) {
-			self::initialiseDatabase();
-			$dbResult = self::$db->read('SELECT open FROM open_forms WHERE type=\'FEATURE\'');
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT open FROM open_forms WHERE type=\'FEATURE\'');
 
 			self::$FEATURE_REQUEST_OPEN = $dbResult->record()->getBoolean('open');
 		}
@@ -235,13 +129,13 @@ class Globals {
 	 */
 	public static function getRaceRelations(int $gameID, int $raceID): array {
 		if (!isset(self::$RACE_RELATIONS[$gameID][$raceID])) {
-			self::initialiseDatabase();
 			//get relations
 			self::$RACE_RELATIONS[$gameID][$raceID] = [];
 			foreach (Race::getAllIDs() as $otherRaceID) {
 				self::$RACE_RELATIONS[$gameID][$raceID][$otherRaceID] = 0;
 			}
-			$dbResult = self::$db->read('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1=' . self::$db->escapeNumber($raceID) . ' AND game_id=' . self::$db->escapeNumber($gameID));
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1=' . $db->escapeNumber($raceID) . ' AND game_id=' . $db->escapeNumber($gameID));
 			foreach ($dbResult->records() as $dbRecord) {
 				self::$RACE_RELATIONS[$gameID][$raceID][$dbRecord->getInt('race_id_2')] = $dbRecord->getInt('relation');
 			}

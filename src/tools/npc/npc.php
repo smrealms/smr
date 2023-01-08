@@ -18,6 +18,7 @@ use Smr\Pages\Player\ShopGoodsProcessor;
 use Smr\Race;
 use Smr\Routes\RouteGenerator;
 use Smr\SectorLock;
+use Smr\TradeGood;
 use Smr\TransactionType;
 
 function overrideForward(Page $container): never {
@@ -447,8 +448,8 @@ function findRoutes(AbstractSmrPlayer $player): array {
 	debug('Finding Routes');
 
 	$tradeGoods = [GOODS_NOTHING => false];
-	foreach (Globals::getGoods() as $goodID => $good) {
-		if ($player->meetsAlignmentRestriction($good['AlignRestriction'])) {
+	foreach (TradeGood::getAll() as $goodID => $good) {
+		if ($player->meetsAlignmentRestriction($good->alignRestriction)) {
 			$tradeGoods[$goodID] = true;
 		} else {
 			$tradeGoods[$goodID] = false;

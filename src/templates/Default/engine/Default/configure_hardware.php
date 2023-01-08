@@ -17,7 +17,7 @@ if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()
 					<td>Ship:</td>
 					<td>
 						<select name="ship_type_id" size="1"><?php
-							$CurrentShipID = $ThisShip->hasActiveIllusion() ? $ThisShip->getIllusionShipID() : $ThisShip->getTypeID();
+							$CurrentShipID = $ThisShip->hasActiveIllusion() ? $ThisShip->getIllusion()->shipTypeID : $ThisShip->getTypeID();
 							foreach ($IllusionShips as $ShipTypeID => $ShipName) {
 								?><option value="<?php echo $ShipTypeID; ?>"<?php if ($CurrentShipID == $ShipTypeID) { ?> selected="selected"<?php } ?>><?php echo $ShipName; ?></option><?php
 							} ?>
@@ -26,7 +26,7 @@ if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()
 				</tr>
 				<tr>
 					<td>Attack/Defense</td>
-					<td><input type="number" class="center" name="attack" value="<?php if ($ThisShip->hasActiveIllusion()) { echo $ThisShip->getIllusionAttack(); } else { ?>0<?php } ?>" size="4">&nbsp;/&nbsp;<input type="number" class="center" name="defense" value="<?php if ($ThisShip->hasActiveIllusion()) { echo $ThisShip->getIllusionDefense(); } else { ?>0<?php } ?>" size="4"></td>
+					<td><input type="number" class="center" name="attack" value="<?php if ($ThisShip->hasActiveIllusion()) { echo $ThisShip->getIllusion()->attackRating; } else { ?>0<?php } ?>" size="4">&nbsp;/&nbsp;<input type="number" class="center" name="defense" value="<?php if ($ThisShip->hasActiveIllusion()) { echo $ThisShip->getIllusion()->defenseRating; } else { ?>0<?php } ?>" size="4"></td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>

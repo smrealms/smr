@@ -3,6 +3,7 @@
 namespace Smr\Pages\Admin;
 
 use DateTime;
+use Exception;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Template;
@@ -109,10 +110,13 @@ class LogConsoleDetail extends AccountPage {
 
 			// DateTime only takes strings, and we need an explicit precision
 			$millitime = sprintf('%.3f', $microtime);
-			$date = DateTime::createFromFormat('U.v', $millitime)->format('Y-m-d H:i:s.v');
+			$datetime = DateTime::createFromFormat('U.v', $millitime);
+			if ($datetime === false) {
+				throw new Exception('Failed to parse time: ' . $millitime);
+			}
 
 			$logs[] = [
-				'date' => $date,
+				'date' => $datetime->format('Y-m-d H:i:s.v'),
 				'type' => $logTypes[$log_type_id],
 				'sectorID' => $sector_id,
 				'message' => $message,

@@ -10,6 +10,9 @@ use SmrPlayer;
  */
 class Lotto {
 
+	public const TICKET_COST = 1000000; // cost of 1 ticket
+	public const WIN_FRAC = 0.9; // fraction of ticket sales returned to winner
+
 	public static function checkForLottoWinner(int $gameID): void {
 
 		// No more lotto winners after the game has ended
@@ -67,7 +70,7 @@ class Lotto {
 	 * @return array<string, int>
 	 */
 	public static function getLottoInfo(int $gameID): array {
-		$amount = 1000000;
+		$amount = self::TICKET_COST; // pot starts with 1 ticket value
 		$firstBuy = Epoch::time();
 
 		$db = Database::getInstance();
@@ -75,7 +78,7 @@ class Lotto {
 				WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > 0');
 		$dbRecord = $dbResult->record();
 		if ($dbRecord->getInt('num') > 0) {
-			$amount += $dbRecord->getInt('num') * 1000000 * .9;
+			$amount += $dbRecord->getInt('num') * IFloor(self::TICKET_COST * self::WIN_FRAC);
 			$firstBuy = $dbRecord->getInt('time');
 		}
 		//find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)

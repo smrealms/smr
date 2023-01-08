@@ -76,7 +76,7 @@ class CreateLocations extends AccountPage {
 			if ($location->isHardwareSold()) {
 				$extra .= $categories->addLoc($location->getTypeID(), 'Hardware');
 				foreach ($location->getHardwareSold() as $hardware) {
-					$extra .= $hardware['Name'] . '<br />';
+					$extra .= $hardware->name . '<br />';
 				}
 			}
 			if ($location->isBar()) {

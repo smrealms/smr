@@ -32,7 +32,7 @@ class PlotCourseNearestProcessor extends PlayerPageProcessor {
 			create_error('Current sector has what you\'re looking for!');
 		}
 
-		$path = Plotter::findReversiblePathToX($realX, $sector, true, $player, $player);
+		$path = Plotter::findReversiblePathToX($realX, $sector, $player, $player);
 
 		require_once(LIB . 'Default/course_plot.inc.php');
 		course_plot_forward($player, $path);

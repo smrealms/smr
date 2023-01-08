@@ -3,9 +3,9 @@
 namespace Smr\Pages\Player;
 
 use AbstractSmrPlayer;
-use Globals;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
+use Smr\TradeGood;
 
 class AttackPortLootProcessor extends PlayerPageProcessor {
 
@@ -38,7 +38,7 @@ class AttackPortLootProcessor extends PlayerPageProcessor {
 			create_error('You don\'t have enough turns to loot.');
 		}
 
-		$player->log(LOG_TYPE_TRADING, 'Player Loots ' . $amount . ' ' . Globals::getGoodName($good_id));
+		$player->log(LOG_TYPE_TRADING, 'Player Loots ' . $amount . ' ' . TradeGood::get($good_id)->name);
 		$ship->increaseCargo($good_id, $amount);
 		$port->decreaseGoodAmount($good_id, $amount);
 

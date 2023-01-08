@@ -80,7 +80,7 @@ class AdminPermissions {
 	/**
 	 * Returns the info for the admin permission with the given ID.
 	 *
-	 * @return array{string, ?\Smr\Page\Page, int}
+	 * @return array{string, ?class-string<\Smr\Page\Page>, int}
 	 */
 	public static function getPermissionInfo(int $permissionID): array {
 		return self::PERMISSION_TABLE[$permissionID];

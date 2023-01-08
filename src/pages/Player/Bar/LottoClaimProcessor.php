@@ -4,6 +4,7 @@ namespace Smr\Pages\Player\Bar;
 
 use AbstractSmrPlayer;
 use Smr\Database;
+use Smr\Lotto;
 use Smr\Page\PlayerPageProcessor;
 
 class LottoClaimProcessor extends PlayerPageProcessor {
@@ -19,7 +20,7 @@ class LottoClaimProcessor extends PlayerPageProcessor {
 		$dbResult = $db->read('SELECT * FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0');
 		if ($dbResult->hasRecord()) {
 			$prize = $dbResult->record()->getInt('prize');
-			$NHLAmount = ($prize - 1000000) / 9;
+			$NHLAmount = IFloor(($prize - Lotto::TICKET_COST) * (1 - Lotto::WIN_FRAC)); // NHL gets leftover after winner's cut
 			$db->write('UPDATE player SET bank = bank + ' . $db->escapeNumber($NHLAmount) . ' WHERE account_id = ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 			$player->increaseCredits($prize);
 			$player->increaseHOF($prize, ['Bar', 'Lotto', 'Money', 'Claimed'], HOF_PUBLIC);

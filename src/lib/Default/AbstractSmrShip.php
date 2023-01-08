@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\HardwareType;
 use Smr\ShipClass;
+use Smr\ShipIllusion;
 
 /**
  * Properties and methods for a ship instance.
@@ -38,8 +40,7 @@ class AbstractSmrShip {
 	/** @var array<int, int> */
 	protected array $hardware = [];
 	protected bool $isCloaked = false;
-	/** @var array<string, int>|false */
-	protected array|false $illusionShip = false;
+	protected ShipIllusion|false $illusionShip = false;
 
 	protected bool $hasChangedWeapons = false;
 	protected bool $hasChangedCargo = false;
@@ -129,21 +130,21 @@ class AbstractSmrShip {
 
 	public function getDisplayAttackRating(): int {
 		if ($this->hasActiveIllusion()) {
-			return $this->getIllusionAttack();
+			return $this->getIllusion()->attackRating;
 		}
 		return $this->getAttackRating();
 	}
 
 	public function getDisplayDefenseRating(): int {
 		if ($this->hasActiveIllusion()) {
-			return $this->getIllusionDefense();
+			return $this->getIllusion()->defenseRating;
 		}
 		return $this->getDefenseRating();
 	}
 
 	public function getDisplayName(): string {
 		if ($this->hasActiveIllusion()) {
-			return $this->getIllusionShipName();
+			return $this->getIllusion()->getName();
 		}
 		return $this->getName();
 	}
@@ -331,54 +332,41 @@ class AbstractSmrShip {
 	}
 
 	/**
-	 * @return array<string, int>|false
+	 * @phpstan-assert-if-true !false $this->getIllusion()
 	 */
-	public function getIllusionShip(): array|false {
-		return $this->illusionShip;
+	public function hasActiveIllusion(): bool {
+		return $this->getIllusion() !== false;
 	}
 
-	public function hasActiveIllusion(): bool {
-		return $this->getIllusionShip() !== false;
+	/**
+	 * @return \Smr\ShipIllusion|false
+	 */
+	public function getIllusion(): ShipIllusion|false {
+		return $this->illusionShip;
 	}
 
 	public function setIllusion(int $shipTypeID, int $attack, int $defense): void {
 		if ($this->hasIllusion() === false) {
 			throw new Exception('Ship does not have the supported hardware!');
 		}
-		$newIllusionShip = [
-			'ID' => $shipTypeID,
-			'Attack' => $attack,
-			'Defense' => $defense,
-		];
-		if ($this->getIllusionShip() === $newIllusionShip) {
+		$newIllusion = new ShipIllusion(
+			shipTypeID: $shipTypeID,
+			attackRating: $attack,
+			defenseRating: $defense,
+		);
+		if ($this->getIllusion() === $newIllusion) {
 			return;
 		}
-		$this->illusionShip = $newIllusionShip;
+		$this->illusionShip = $newIllusion;
 		$this->hasChangedIllusion = true;
 	}
 
 	public function disableIllusion(): void {
-		if ($this->getIllusionShip() === false) {
+		if ($this->getIllusion() === false) {
 			return;
 		}
 		$this->illusionShip = false;
 		$this->hasChangedIllusion = true;
-	}
-
-	public function getIllusionShipID(): int {
-		return $this->getIllusionShip()['ID'];
-	}
-
-	public function getIllusionShipName(): string {
-		return SmrShipType::get($this->getIllusionShip()['ID'])->getName();
-	}
-
-	public function getIllusionAttack(): int {
-		return $this->getIllusionShip()['Attack'];
-	}
-
-	public function getIllusionDefense(): int {
-		return $this->getIllusionShip()['Defense'];
 	}
 
 	public function getPlayer(): AbstractSmrPlayer {
@@ -457,7 +445,7 @@ class AbstractSmrShip {
 		$cost = 0;
 		$hardwareTypes = [HARDWARE_SHIELDS, HARDWARE_ARMOUR, HARDWARE_CARGO];
 		foreach ($hardwareTypes as $hardwareTypeID) {
-			$cost += max(0, $otherShipType->getMaxHardware($hardwareTypeID) - $this->getHardware($hardwareTypeID)) * Globals::getHardwareCost($hardwareTypeID);
+			$cost += max(0, $otherShipType->getMaxHardware($hardwareTypeID) - $this->getHardware($hardwareTypeID)) * HardwareType::get($hardwareTypeID)->cost;
 		}
 		return $cost;
 	}
@@ -910,7 +898,7 @@ class AbstractSmrShip {
 	}
 
 	/**
-	 * @param array<string, int|bool> $damage
+	 * @param WeaponDamageData $damage
 	 * @return array<string, int|bool>
 	 */
 	public function takeDamage(array $damage): array {
@@ -946,7 +934,7 @@ class AbstractSmrShip {
 	}
 
 	/**
-	 * @param array<string, int|bool> $damage
+	 * @param WeaponDamageData $damage
 	 * @return array<string, int|bool>
 	 */
 	public function takeDamageFromMines(array $damage): array {

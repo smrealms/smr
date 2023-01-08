@@ -2,6 +2,7 @@
 
 namespace Smr;
 
+use Exception;
 use Generator;
 use mysqli_result;
 use RuntimeException;
@@ -36,7 +37,11 @@ class DatabaseResult {
 	}
 
 	public function getNumRecords(): int {
-		return $this->dbResult->num_rows;
+		$numRows = $this->dbResult->num_rows;
+		if (is_string($numRows)) {
+			throw new Exception('Number of rows is too large to represent as an int: ' . $numRows);
+		}
+		return $numRows;
 	}
 
 	public function hasRecord(): bool {

@@ -5,6 +5,7 @@ namespace Smr\Pages\Player\Bar;
 use AbstractSmrPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Lotto;
 use Smr\Page\PlayerPageProcessor;
 
 class LottoBuyTicketProcessor extends PlayerPageProcessor {
@@ -16,8 +17,8 @@ class LottoBuyTicketProcessor extends PlayerPageProcessor {
 	public function build(AbstractSmrPlayer $player): never {
 		$db = Database::getInstance();
 
-		if ($player->getCredits() < 1000000) {
-			create_error('There once was a man with less than $1,000,000...wait...thats you!');
+		if ($player->getCredits() < Lotto::TICKET_COST) {
+			create_error('There once was a trader with less than $' . number_format(Lotto::TICKET_COST) . ' ...wait...thats you!');
 		}
 
 		$time = Epoch::time();
@@ -36,8 +37,8 @@ class LottoBuyTicketProcessor extends PlayerPageProcessor {
 			'account_id' => $db->escapeNumber($player->getAccountID()),
 			'time' => $db->escapeNumber($time),
 		]);
-		$player->decreaseCredits(1000000);
-		$player->increaseHOF(1000000, ['Bar', 'Lotto', 'Money', 'Spent'], HOF_PUBLIC);
+		$player->decreaseCredits(Lotto::TICKET_COST);
+		$player->increaseHOF(Lotto::TICKET_COST, ['Bar', 'Lotto', 'Money', 'Spent'], HOF_PUBLIC);
 		$player->increaseHOF(1, ['Bar', 'Lotto', 'Tickets Bought'], HOF_PUBLIC);
 		$dbResult = $db->read('SELECT count(*) as num FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time > 0 GROUP BY account_id');
 		$num = $dbResult->record()->getInt('num');

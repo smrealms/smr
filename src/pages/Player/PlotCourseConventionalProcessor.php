@@ -38,7 +38,7 @@ class PlotCourseConventionalProcessor extends PlayerPageProcessor {
 
 		$player->log(LOG_TYPE_MOVEMENT, 'Player plots to ' . $target . '.');
 
-		$path = Plotter::findReversiblePathToX($targetSector, $startSector, true);
+		$path = Plotter::findReversiblePathToX($targetSector, $startSector);
 
 		require_once(LIB . 'Default/course_plot.inc.php');
 		course_plot_forward($player, $path);

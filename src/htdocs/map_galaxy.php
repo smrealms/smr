@@ -71,7 +71,7 @@ try {
 	// Get the last sector in the last galaxy for form validation
 	$galaxies = SmrGalaxy::getGameGalaxies($session->getGameID());
 	$template->assign('GameGalaxies', $galaxies);
-	$template->assign('LastSector', end($galaxies)->getEndSector());
+	$template->assign('LastSector', $player->getGame()->getLastSectorID());
 
 	if (!isset($galaxy)) {
 		$galaxy = SmrGalaxy::getGalaxyContaining($player->getGameID(), $player->getSectorID());

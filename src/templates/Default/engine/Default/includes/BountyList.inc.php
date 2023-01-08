@@ -7,9 +7,9 @@
 	<?php
 	foreach ($Bounties as $Bounty) { ?>
 		<tr>
-			<td><?php echo $Bounty['player']->getLinkedDisplayName(); ?></td>
-			<td><span class="creds"><?php echo number_format($Bounty['credits']); ?></span></td>
-			<td><span class="red"><?php echo number_format($Bounty['smr_credits']); ?></span></td>
+			<td><?php echo $Bounty->getTargetPlayer()->getLinkedDisplayName(); ?></td>
+			<td><span class="creds"><?php echo number_format($Bounty->getCredits()); ?></span></td>
+			<td><span class="red"><?php echo number_format($Bounty->getSmrCredits()); ?></span></td>
 		</tr><?php
 	} ?>
 </table>

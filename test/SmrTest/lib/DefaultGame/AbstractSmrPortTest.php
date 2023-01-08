@@ -5,6 +5,7 @@ namespace SmrTest\lib\DefaultGame;
 use AbstractSmrPort;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Smr\Bounty;
 use Smr\BountyType;
 use Smr\Container\DiContainer;
 use Smr\Database;
@@ -208,7 +209,7 @@ class AbstractSmrPortTest extends TestCase {
 	/**
 	 * @dataProvider dataProvider_takeDamage
 	 *
-	 * @param array<string, int|bool> $damage
+	 * @param WeaponDamageData $damage
 	 * @param array<string, int|bool> $expected
 	 */
 	public function test_takeDamage(string $case, array $damage, array $expected, int $shields, int $cds, int $armour): void {
@@ -223,7 +224,7 @@ class AbstractSmrPortTest extends TestCase {
 	}
 
 	/**
-	 * @return array<array<mixed>>
+	 * @return array<array{0: string, 1: WeaponDamageData, 2: array<string, int|bool>, 3: int, 4: int, 5: int}>
 	 */
 	public function dataProvider_takeDamage(): array {
 		return [
@@ -392,6 +393,14 @@ class AbstractSmrPortTest extends TestCase {
 		DiContainer::getContainer()->set(Database::class, $db);
 
 		// Add a few basic checks on the player that gets the killshot
+		$portLevel = 3;
+		$playerExp = 100;
+
+		$bounty = $this->createMock(Bounty::class);
+		$bounty
+			->expects(self::once())
+			->method('increaseCredits')
+			->with($portLevel * $playerExp);
 		$player = $this->createMock(SmrPlayer::class);
 		$player
 			->expects(self::once())
@@ -399,15 +408,18 @@ class AbstractSmrPortTest extends TestCase {
 			->with(AbstractSmrPort::KILLER_RELATIONS_LOSS, RACE_NEUTRAL);
 		$player
 			->expects(self::once())
-			->method('increaseCurrentBountyAmount')
-			->with(BountyType::HQ, 0);
+			->method('getActiveBounty')
+			->with(BountyType::HQ)
+			->willReturn($bounty);
+		$player
+			->method('getExperience')
+			->willReturn($playerExp);
 
 		// Make objects that must be accessed statically (can't be mocked)
 		SmrSector::createSector(1, 1);
 		SmrGame::createGame(1)->setGameTypeID(SmrGame::GAME_TYPE_DEFAULT);
 
 		// Set up the port
-		$portLevel = 3;
 		$port = AbstractSmrPort::createPort(1, 1);
 		$port->upgradeToLevel($portLevel);
 

@@ -1,5 +1,7 @@
 <?php
 
+use Smr\TradeGood;
+
 if (count($Planets) > 0) { ?>
 	<table id="planet-list" class="standard inset left centered">
 		<thead>
@@ -27,21 +29,21 @@ if (count($Planets) > 0) { ?>
 					<td class="sort_sector center"><a href="<?php echo Globals::getPlotCourseHREF($ThisPlayer->getSectorID(), $Planet->getSectorID()); ?>"><?php echo $Planet->getSectorID(); ?></a>&nbsp;(<a href="<?php echo $Planet->getGalaxy()->getGalaxyMapHREF(); ?>" target="gal_map"><?php echo $Planet->getGalaxy()->getDisplayName(); ?></a>)</td>
 					<td class="noWrap"><?php
 						foreach ($Planet->getStructureTypes() as $Structure) { ?>
-							<img style="padding:1px;" class="bottom" src="images/<?php echo $Structure->image(); ?>"  width="16" height="16" alt="" title="<?php echo $Structure->name(); ?>" />&nbsp;<?php echo $Planet->getBuilding($Structure->structureID()); ?>&nbsp;/&nbsp;<?php echo $Planet->getMaxBuildings($Structure->structureID()); ?><br /><?php
+							<img class="bottom pad1" src="images/<?php echo $Structure->image(); ?>"  width="16" height="16" alt="" title="<?php echo $Structure->name(); ?>" />&nbsp;<?php echo $Planet->getBuilding($Structure->structureID()); ?>&nbsp;/&nbsp;<?php echo $Planet->getMaxBuildings($Structure->structureID()); ?><br /><?php
 						} ?>
 					</td>
 					<td class="noWrap"><?php
 						if ($Planet->hasStructureType(PLANET_GENERATOR)) { ?>
-							<img style="padding:1px" class="bottom" src="images/shields.png" width="16" height="16" alt="" title="Shields" />&nbsp;<?php echo $Planet->getShields(); ?>&nbsp;/&nbsp;<?php echo $Planet->getMaxShields(); ?><br /><?php
+							<img class="bottom pad1" src="images/shields.png" width="16" height="16" alt="" title="Shields" />&nbsp;<?php echo $Planet->getShields(); ?>&nbsp;/&nbsp;<?php echo $Planet->getMaxShields(); ?><br /><?php
 						}
 						if ($Planet->hasStructureType(PLANET_HANGAR)) { ?>
-							<img style="padding:1px" class="bottom" src="images/cd.png" width="16" height="16" alt="" title="Combat Drones" />&nbsp;<?php echo $Planet->getCDs(); ?>&nbsp;/&nbsp;<?php echo $Planet->getMaxCDs(); ?><br /><?php
+							<img class="bottom pad1" src="images/cd.png" width="16" height="16" alt="" title="Combat Drones" />&nbsp;<?php echo $Planet->getCDs(); ?>&nbsp;/&nbsp;<?php echo $Planet->getMaxCDs(); ?><br /><?php
 						}
 						if ($Planet->hasStructureType(PLANET_BUNKER)) { ?>
-							<img style="padding:1px" class="bottom" src="images/armour.png" width="16" height="16" alt="" title="Armour" />&nbsp;<?php echo $Planet->getArmour(); ?>&nbsp;/&nbsp;<?php echo $Planet->getMaxArmour(); ?><br /><?php
+							<img class="bottom pad1" src="images/armour.png" width="16" height="16" alt="" title="Armour" />&nbsp;<?php echo $Planet->getArmour(); ?>&nbsp;/&nbsp;<?php echo $Planet->getMaxArmour(); ?><br /><?php
 						}
 						if ($Planet->hasStructureType(PLANET_WEAPON_MOUNT)) { ?>
-							<img style="padding:1px" class="bottom" src="images/weapon_shop.png" width="16" height="16" alt="" title="Mounted Weapons" />&nbsp;<?php echo count($Planet->getMountedWeapons()); ?>&nbsp;/&nbsp;<?php echo $Planet->getBuilding(PLANET_WEAPON_MOUNT);
+							<img class="bottom pad1" src="images/weapon_shop.png" width="16" height="16" alt="" title="Mounted Weapons" />&nbsp;<?php echo count($Planet->getMountedWeapons()); ?>&nbsp;/&nbsp;<?php echo $Planet->getBuilding(PLANET_WEAPON_MOUNT);
 						}
 					?></td>
 					<td class="noWrap"><?php
@@ -49,8 +51,8 @@ if (count($Planets) > 0) { ?>
 						foreach ($Planet->getStockpile() as $GoodID => $Amount) {
 							if ($Amount > 0) {
 								$Supply = true;
-								$Good = Globals::getGood($GoodID); ?>
-								&nbsp;<img style="padding:1px" class="bottom" src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" title="<?php echo $Good['Name']; ?>" alt="<?php echo $Good['Name']; ?>" />&nbsp;<?php echo $Amount; ?><br /><?php
+								$Good = TradeGood::get($GoodID); ?>
+								&nbsp;<?php echo $Good->getImageHTML(); ?>&nbsp;<?php echo $Amount; ?><br /><?php
 							}
 						}
 						if ($Supply === false) {

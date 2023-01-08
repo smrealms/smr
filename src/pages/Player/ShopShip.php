@@ -3,7 +3,7 @@
 namespace Smr\Pages\Player;
 
 use AbstractSmrPlayer;
-use Globals;
+use Smr\HardwareType;
 use Smr\Page\PlayerPage;
 use Smr\ShipClass;
 use Smr\Template;
@@ -53,8 +53,8 @@ class ShopShip extends PlayerPage {
 			$compareShip = SmrShipType::get($this->shipTypeID);
 
 			$shipDiffs = [];
-			foreach (Globals::getHardwareTypes() as $hardwareTypeID => $hardware) {
-				$shipDiffs[$hardware['Name']] = [
+			foreach (HardwareType::getAll() as $hardwareTypeID => $hardware) {
+				$shipDiffs[$hardware->name] = [
 					'Old' => $ship->getType()->getMaxHardware($hardwareTypeID),
 					'New' => $compareShip->getMaxHardware($hardwareTypeID),
 				];

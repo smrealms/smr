@@ -107,6 +107,11 @@ class SmrMines extends AbstractSmrCombatWeapon {
 	protected function doForceDamageToPlayer(array $return, SmrForce $forces, AbstractSmrPlayer $targetPlayer, bool $minesAreAttacker = false): array {
 		$return['WeaponDamage'] = $this->getModifiedForceDamageAgainstPlayer($forces, $targetPlayer, $minesAreAttacker);
 		$return['ActualDamage'] = $targetPlayer->getShip()->takeDamageFromMines($return['WeaponDamage']);
+
+		// Update the number of mines launched so that we don't detonate more than needed
+		if (!isset($return['WeaponDamage']['Launched'])) {
+			throw new Exception('Mines must report the number launched');
+		}
 		$return['ActualDamage']['Launched'] = ICeil($return['WeaponDamage']['Launched'] * $return['ActualDamage']['TotalDamage'] / $return['WeaponDamage']['Shield']); // assumes mines do the same shield/armour damage
 
 		if ($return['ActualDamage']['KillingShot']) {

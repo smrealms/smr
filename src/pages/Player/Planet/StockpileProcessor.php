@@ -3,9 +3,9 @@
 namespace Smr\Pages\Player\Planet;
 
 use AbstractSmrPlayer;
-use Globals;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
+use Smr\TradeGood;
 use SmrPlanet;
 
 class StockpileProcessor extends PlayerPageProcessor {
@@ -47,7 +47,7 @@ class StockpileProcessor extends PlayerPageProcessor {
 			// now transfer
 			$planet->decreaseStockpile($goodID, $amount);
 			$ship->increaseCargo($goodID, $amount);
-			$player->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' ' . Globals::getGoodName($goodID) . ' from planet.');
+			$player->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' ' . TradeGood::get($goodID)->name . ' from planet.');
 
 		} elseif ($action == 'Planet') {
 			// transfer to planet

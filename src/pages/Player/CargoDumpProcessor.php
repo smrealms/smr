@@ -3,10 +3,10 @@
 namespace Smr\Pages\Player;
 
 use AbstractSmrPlayer;
-use Globals;
 use Plotter;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
+use Smr\TradeGood;
 use Smr\TransactionType;
 use SmrPort;
 
@@ -22,7 +22,7 @@ class CargoDumpProcessor extends PlayerPageProcessor {
 		$sector = $player->getSector();
 
 		$good_id = $this->goodID;
-		$good_name = Globals::getGoodName($good_id);
+		$good = TradeGood::get($good_id);
 		$amount = $this->goodAmount ?? Request::getInt('amount');
 
 		if ($amount <= 0) {
@@ -46,14 +46,17 @@ class CargoDumpProcessor extends PlayerPageProcessor {
 			create_error('You can\'t dump cargo in a Federal Sector!');
 		}
 
-		$msg = 'You have jettisoned <span class="yellow">' . $amount . '</span> ' . pluralise($amount, 'unit', false) . ' of ' . $good_name;
+		$msg = 'You have jettisoned <span class="yellow">' . $amount . '</span> ' . pluralise($amount, 'unit', false) . ' of ' . $good->name;
 
 		if ($player->getExperience() > 0) {
 			// If they have any experience left, lose exp
 
 			// get the distance
-			$x = Globals::getGood($good_id);
-			$x['TransactionType'] = TransactionType::Sell;
+			$x = [
+				'Type' => 'Good',
+				'GoodID' => $good_id,
+				'TransactionType' => TransactionType::Sell,
+			];
 			$good_distance = Plotter::findDistanceToX($x, $sector, true);
 			if (is_object($good_distance)) {
 				$good_distance = $good_distance->getDistance();
@@ -70,7 +73,7 @@ class CargoDumpProcessor extends PlayerPageProcessor {
 
 			$msg .= ' and have lost <span class="exp">' . $lost_xp . '</span> experience.';
 			// log action
-			$player->log(LOG_TYPE_TRADING, 'Dumps ' . $amount . ' of ' . $good_name . ' and loses ' . $lost_xp . ' experience');
+			$player->log(LOG_TYPE_TRADING, 'Dumps ' . $amount . ' of ' . $good->name . ' and loses ' . $lost_xp . ' experience');
 		} else {
 			// No experience to lose, so damage the ship
 			$damage = ICeil($amount / 5);
@@ -84,7 +87,7 @@ class CargoDumpProcessor extends PlayerPageProcessor {
 
 			$msg .= '. Due to your lack of piloting experience, the cargo pierces the hull of your ship as you clumsily try to jettison the goods through the bay doors, destroying <span class="red">' . $damage . '</span> ' . pluralise($damage, 'plate', false) . ' of armour!';
 			// log action
-			$player->log(LOG_TYPE_TRADING, 'Dumps ' . $amount . ' of ' . $good_name . ' and takes ' . $damage . ' armour damage');
+			$player->log(LOG_TYPE_TRADING, 'Dumps ' . $amount . ' of ' . $good->name . ' and takes ' . $damage . ' armour damage');
 		}
 
 		// take turn

@@ -36,8 +36,8 @@ function getPlayerOptionClass(AbstractSmrPlayer $player, AbstractSmrPlayer $othe
 							}
 							echo $Ship->getName();
 							if ($Ship->hasActiveIllusion()) {
-								if ($Ship->getName() != $Ship->getIllusionShipName()) {
-									?> <span class="npcColour">(<?php echo $Ship->getIllusionShipName(); ?>)</span><?php
+								if ($Ship->getName() != $Ship->getIllusion()->getName()) {
+									?> <span class="npcColour">(<?php echo $Ship->getIllusion()->getName(); ?>)</span><?php
 								}
 							}
 						} else {
@@ -54,7 +54,7 @@ function getPlayerOptionClass(AbstractSmrPlayer $player, AbstractSmrPlayer $othe
 						if ($ThisPlayer->traderMAPAlliance($Player)) {
 							echo $Ship->getAttackRating(); ?> / <?php echo $Ship->getDefenseRating();
 							if ($Ship->hasActiveIllusion()) {
-								?> <span class="npcColour">(<?php echo $Ship->getIllusionAttack(); ?> / <?php echo $Ship->getIllusionDefense(); ?>)</span><?php
+								?> <span class="npcColour">(<?php echo $Ship->getIllusion()->attackRating; ?> / <?php echo $Ship->getIllusion()->defenseRating; ?>)</span><?php
 							}
 						} else {
 							echo $Ship->getDisplayAttackRating(); ?> / <?php echo $Ship->getDisplayDefenseRating();

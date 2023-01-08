@@ -194,13 +194,14 @@ function str2int(string $val): int {
 
 /**
  * Generate a cryptographically strong random hexadecimal string.
- * The requested length must be a multiple of 2.
+ * The requested length must be an even number >= 2.
  */
 function random_string(int $length): string {
-	if ($length % 2 != 0) {
-		throw new Exception('Length must be a multiple of 2!');
+	$numBytes = (int)($length / 2);
+	if ($numBytes < 1 || $length % 2 != 0) {
+		throw new Exception('Length must be an even number >= 2!');
 	}
-	return bin2hex(random_bytes($length / 2));
+	return bin2hex(random_bytes($numBytes));
 }
 
 /**

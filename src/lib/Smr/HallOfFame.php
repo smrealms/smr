@@ -102,7 +102,7 @@ class HallOfFame {
 	}
 
 	/**
-	 * @return array<string, float|int>
+	 * @return array{Rank: int, Amount: float|string}
 	 */
 	public static function getHofRank(string $viewType, int $accountID, ?int $gameID): array {
 		$db = Database::getInstance();

@@ -85,12 +85,20 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 		// TODO: (Must be done while holding both sector locks)
 		$misjump = rand(0, $maxMisjump);
 		if ($misjump > 0) { // we missed the sector
-			$distances = Plotter::findDistanceToX('Distance', $targetSector, false, null, null, $misjump);
-			while (count($distances[$misjump]) == 0) {
+			$paths = Plotter::findDistanceToX('Distance', $targetSector, false, null, null, $misjump);
+
+			// Group candidate sectors by distance from the target
+			$distances = [0 => [$targetSector->getSectorID()]]; // fallback to target
+			foreach ($paths as $sectorID => $path) {
+				$distances[$path->getDistance()][] = $sectorID;
+			}
+
+			// Try to find a valid sector, reduce misjump if none
+			while (!isset($distances[$misjump])) {
 				$misjump--;
 			}
 
-			$misjumpSector = array_rand($distances[$misjump]);
+			$misjumpSector = array_rand_value($distances[$misjump]);
 			$player->setSectorID($misjumpSector);
 			unset($distances);
 		} else { // we hit it. exactly

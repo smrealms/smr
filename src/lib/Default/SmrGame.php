@@ -400,6 +400,14 @@ class SmrGame {
 		return count($this->getGalaxies());
 	}
 
+	public function getLastSectorID(): int {
+		$galaxies = $this->getGalaxies();
+		if (count($galaxies) == 0) {
+			throw new Exception('There are no galaxies in this game yet!');
+		}
+		return end($galaxies)->getEndSector();
+	}
+
 	public function equals(self $otherGame): bool {
 		return $otherGame->getGameID() == $this->getGameID();
 	}

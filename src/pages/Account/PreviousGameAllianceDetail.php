@@ -41,7 +41,7 @@ class PreviousGameAllianceDetail extends AccountPage {
 				'race' => $player->getRaceName(),
 				'kills' => $player->getKills(),
 				'deaths' => $player->getDeaths(),
-				'bounty' => $player->getCurrentBountyAmount(BountyType::UG) + $player->getCurrentBountyAmount(BountyType::HQ),
+				'bounty' => $player->getActiveBounty(BountyType::UG)->getCredits() + $player->getActiveBounty(BountyType::HQ)->getCredits(),
 			];
 		}
 		$template->assign('Players', $players);

@@ -151,13 +151,10 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			return $return;
 		}
 		$damage = $this->getDamage();
-		if ($targetPlayer->getShip()->hasDCS()) {
-			$damage['Shield'] *= DCS_PLAYER_DAMAGE_DECIMAL_PERCENT;
-			$damage['Armour'] *= DCS_PLAYER_DAMAGE_DECIMAL_PERCENT;
-		}
+		$dcsMod = $targetPlayer->getShip()->hasDCS() ? DCS_PLAYER_DAMAGE_DECIMAL_PERCENT : 1;
 		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedAccuracyAgainstPlayer($weaponPlayer, $targetPlayer) / 100);
-		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
-		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);
+		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield'] * $dcsMod);
+		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour'] * $dcsMod);
 		return $damage;
 	}
 
@@ -167,15 +164,10 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			return $return;
 		}
 		$damage = $this->getDamage();
-
-		if ($targetPlayer->getShip()->hasDCS()) {
-			$damage['Shield'] *= DCS_FORCE_DAMAGE_DECIMAL_PERCENT;
-			$damage['Armour'] *= DCS_FORCE_DAMAGE_DECIMAL_PERCENT;
-		}
-
+		$dcsMod = $targetPlayer->getShip()->hasDCS() ? DCS_FORCE_DAMAGE_DECIMAL_PERCENT : 1;
 		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer) / 100);
-		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
-		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);
+		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield'] * $dcsMod);
+		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour'] * $dcsMod);
 		return $damage;
 	}
 
@@ -185,14 +177,10 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			return $return;
 		}
 		$damage = $this->getDamage();
-
-		if ($targetPlayer->getShip()->hasDCS()) {
-			$damage['Shield'] *= DCS_PORT_DAMAGE_DECIMAL_PERCENT;
-			$damage['Armour'] *= DCS_PORT_DAMAGE_DECIMAL_PERCENT;
-		}
+		$dcsMod = $targetPlayer->getShip()->hasDCS() ? DCS_PORT_DAMAGE_DECIMAL_PERCENT : 1;
 		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedPortAccuracyAgainstPlayer($port, $targetPlayer) / 100);
-		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
-		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);
+		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield'] * $dcsMod);
+		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour'] * $dcsMod);
 		return $damage;
 	}
 
@@ -202,14 +190,10 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 			return $return;
 		}
 		$damage = $this->getDamage();
-
-		if ($targetPlayer->getShip()->hasDCS()) {
-			$damage['Shield'] *= DCS_PLANET_DAMAGE_DECIMAL_PERCENT;
-			$damage['Armour'] *= DCS_PLANET_DAMAGE_DECIMAL_PERCENT;
-		}
+		$dcsMod = $targetPlayer->getShip()->hasDCS() ? DCS_PLANET_DAMAGE_DECIMAL_PERCENT : 1;
 		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedPlanetAccuracyAgainstPlayer($planet, $targetPlayer) / 100);
-		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
-		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);
+		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield'] * $dcsMod);
+		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour'] * $dcsMod);
 		return $damage;
 	}
 

@@ -486,7 +486,7 @@ class ChessGame {
 	}
 
 	/**
-	 * @return array<string, int>|false
+	 * @return array{Type: string, X: int, ToX: int}|false
 	 */
 	public static function isCastling(int $x, int $toX): array|false {
 		$movement = $toX - $x;
@@ -591,11 +591,9 @@ class ChessGame {
 			throw new Exception('Move of length "' . strlen($move) . '" is not valid, full move: ' . $move);
 		}
 		$file = $move[0];
-		/** @var numeric-string $rank */
-		$rank = $move[1];
+		$rank = str2int($move[1]);
 		$toFile = $move[2];
-		/** @var numeric-string $toRank */
-		$toRank = $move[3];
+		$toRank = str2int($move[3]);
 
 		$aVal = ord('a');
 		$x = ord($file) - $aVal;

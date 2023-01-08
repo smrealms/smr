@@ -34,10 +34,10 @@ if ($BoughtGoods) { ?>
 		</tr><?php
 		foreach ($BoughtGoods as $goodID => $good) { ?>
 			<tr class="center">
-				<td class="left"><img src="<?php echo $good['ImageLink']; ?>" width="13" height="16" title="<?php echo $good['Name']; ?>" alt=""><?php echo $good['Name']; ?></td>
+				<td class="left"><span class="pad1"><?php echo $good['Image']; ?></span>&nbsp;<?php echo $good['Name']; ?></td>
 				<td class="ajax" id="amount<?php echo $goodID; ?>"><?php echo $good['PortAmount']; ?></td>
 				<td><?php echo $good['BasePrice']; ?></td>
-				<td><?php echo $ThisShip->getCargo($good['ID']); ?></td>
+				<td><?php echo $ThisShip->getCargo($goodID); ?></td>
 				<td><input form="form<?php echo $goodID; ?>" type="number" name="amount" value="<?php echo $good['Amount']; ?>" required min="1" size="4" class="center"></td>
 				<td>
 					<form id="form<?php echo $goodID; ?>" method="POST" action="<?php echo $good['HREF']; ?>">
@@ -66,7 +66,7 @@ if ($SoldGoods) { ?>
 		</tr><?php
 		foreach ($SoldGoods as $goodID => $good) { ?>
 			<tr class="center">
-				<td class="left"><img src="<?php echo $good['ImageLink']; ?>" width="13" height="16" title="<?php echo $good['Name']; ?>" alt=""><?php echo $good['Name']; ?></td>
+				<td class="left"><span class="pad1"><?php echo $good['Image']; ?></span>&nbsp;<?php echo $good['Name']; ?></td>
 				<td class="ajax" id="amount<?php echo $goodID; ?>"><?php echo $good['PortAmount']; ?></td>
 				<td><?php echo $good['BasePrice']; ?></td>
 				<td><?php echo $ThisShip->getCargo($goodID); ?></td>

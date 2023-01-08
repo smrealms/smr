@@ -1,4 +1,7 @@
 <?php
+
+use Smr\TradeGood;
+
 if (isset($GameID)) { ?>
 	<span id="flagship"><?php
 	if ($ThisPlayer->isFlagship()) {
@@ -36,8 +39,8 @@ if (isset($GameID)) { ?>
 	}
 	if ($ThisShip->hasActiveIllusion()) { ?>
 		<a href="<?php echo $HardwareLink; ?>">
-			<span class="npcColour"><?php echo $ThisShip->getIllusionShipName(); ?></span><br />
-			IG Rating : <?php echo $ThisShip->getIllusionAttack(); ?>/<?php echo $ThisShip->getIllusionDefense(); ?>
+			<span class="npcColour"><?php echo $ThisShip->getIllusion()->getName(); ?></span><br />
+			IG Rating : <?php echo $ThisShip->getIllusion()->attackRating; ?>/<?php echo $ThisShip->getIllusion()->defenseRating; ?>
 		</a><br />
 		<br /><?php
 	} ?>
@@ -64,8 +67,8 @@ if (isset($GameID)) { ?>
 	<?php
 	if ($ThisShip->hasCargo()) {
 		foreach ($ThisShip->getCargo() as $GoodID => $GoodAmount) {
-			$Good = Globals::getGood($GoodID); ?>
-			<img src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" title="<?php echo $Good['Name']; ?>" alt="<?php echo $Good['Name']; ?>"> : <?php echo $GoodAmount; ?><br /><?php
+			$Good = TradeGood::get($GoodID);
+			echo $Good->getImageHTML(); ?> : <?php echo $GoodAmount; ?><br /><?php
 		}
 	} ?>
 	Empty : <?php echo $ThisShip->getEmptyHolds(); ?><br /><br />

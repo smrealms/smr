@@ -64,7 +64,7 @@ class SmrAccount {
 	protected int $mailBanned;
 	/** @var array<string, float> */
 	protected array $HOF;
-	/** @var array<int, array<array<string, mixed>>> */
+	/** @var array<int, array<array{Stat: array<string>, Score: float}>> */
 	protected array $individualScores;
 	protected int $score;
 	protected ?string $cssLink;
@@ -364,11 +364,13 @@ class SmrAccount {
 				time = ' . $this->db->escapeNumber($delete_time) . ' AND
 				ip = ' . $this->db->escapeString($delete_ip));
 		}
-		[$fi, $se, $th, $fo] = preg_split('/[.\s,]/', $curr_ip, 4);
-		if ($curr_ip != 'unknown' && $curr_ip != 'unknown...' && $curr_ip != 'unknown, unknown') {
-			$curr_ip = $fi . '.' . $se . '.' . $th . '.' . $fo;
+
+		// Determine host from IP address
+		$host = false;
+		if (filter_var($curr_ip, FILTER_VALIDATE_IP) !== false) {
 			$host = gethostbyaddr($curr_ip);
-		} else {
+		}
+		if ($host === false) {
 			$host = 'unknown';
 		}
 
@@ -455,7 +457,7 @@ class SmrAccount {
 	}
 
 	/**
-	 * @return array<int, array<array<string, mixed>>>
+	 * @return array<array{Stat: array<string>, Score: float}>
 	 */
 	public function getIndividualScores(SmrPlayer $player = null): array {
 		$gameID = 0;

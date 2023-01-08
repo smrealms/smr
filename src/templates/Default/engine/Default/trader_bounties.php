@@ -20,14 +20,13 @@ You have the following bounties on your head:<br /><br />
 	</tr>
 
 	<tr><?php
-		// AllClaims is array(ClaimsHQ, ClaimsUG)
 		foreach ($AllClaims as $Claims) { ?>
 			<td style="width:50%" class="top"><?php
 				if (empty($Claims)) {
 					echo 'None';
 				}
 				foreach ($Claims as $Claim) {
-					echo $Claim['player']->getLinkedDisplayName(); ?> : <span class="creds"><?php echo number_format($Claim['credits']); ?></span> credits and <span class="yellow"><?php echo number_format($Claim['smr_credits']); ?></span> SMR credits<br />
+					echo $Claim->getTargetPlayer()->getLinkedDisplayName(); ?> : <span class="creds"><?php echo number_format($Claim->getCredits()); ?></span> credits and <span class="yellow"><?php echo number_format($Claim->getSmrCredits()); ?></span> SMR credits<br />
 					<?php
 				} ?>
 			</td><?php

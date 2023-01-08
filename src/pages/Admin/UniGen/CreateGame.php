@@ -33,9 +33,9 @@ class CreateGame extends AccountPage {
 			'maxTurns' => DEFAULT_MAX_TURNS,
 			'startTurnHours' => DEFAULT_START_TURN_HOURS,
 			'maxPlayers' => 5000,
-			'joinDate' => date('d/m/Y', Epoch::time()),
+			'joinDate' => date('Y-m-d', Epoch::time()),
 			'startDate' => '',
-			'endDate' => date('d/m/Y', Epoch::time() + (2 * 31 * 86400)), // 3 months
+			'endDate' => date('Y-m-d', Epoch::time() + (2 * 31 * 86400)), // 3 months
 			'smrCredits' => 0,
 			'gameType' => 'Default',
 			'allianceMax' => 25,

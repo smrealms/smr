@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Admin;
 
-use Globals;
+use Smr\HardwareType;
 use Smr\Page\AccountPage;
 use Smr\Request;
 use Smr\Template;
@@ -61,7 +61,7 @@ class EditLocations extends AccountPage {
 			$template->assign('Location', $location);
 			$template->assign('ShipTypes', SmrShipType::getAll());
 			$template->assign('Weapons', SmrWeaponType::getAllWeaponTypes());
-			$template->assign('AllHardware', Globals::getHardwareTypes());
+			$template->assign('AllHardware', HardwareType::getAll());
 		} else {
 			$template->assign('Locations', SmrLocation::getAllLocations($gameID));
 		}

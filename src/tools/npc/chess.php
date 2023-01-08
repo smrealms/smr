@@ -76,7 +76,11 @@ try {
 			stream_set_blocking($fromEngine, true);
 			$move = '';
 			while (!str_starts_with($move, 'bestmove')) {
-				$move = trim(fgets($fromEngine));
+				$move = fgets($fromEngine);
+				if ($move === false) {
+					throw new Exception('Failed to get move from the UCI engine');
+				}
+				$move = trim($move);
 				debug('<-- ' . $move);
 				if (str_starts_with($move, 'Seg')) {
 					// Segfault

@@ -8,6 +8,7 @@ use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Smr\ShipClass;
+use Smr\ShipIllusion;
 
 /**
  * This test is expected to not make any changes to the database.
@@ -75,30 +76,26 @@ class AbstractSmrShipTest extends TestCase {
 		$ship = new AbstractSmrShip($this->player);
 
 		// ship has no IG initially
-		self::assertFalse($ship->getIllusionShip());
+		self::assertFalse($ship->getIllusion());
 
 		// remain unset when disabled without hardware
 		$ship->disableIllusion();
-		self::assertFalse($ship->getIllusionShip());
+		self::assertFalse($ship->getIllusion());
 
 		// add IG hardware
 		$ship->increaseHardware(HARDWARE_ILLUSION, 1);
-		self::assertFalse($ship->getIllusionShip());
+		self::assertFalse($ship->getIllusion());
 		// enable
 		$ship->setIllusion(SHIP_TYPE_THIEF, 12, 13);
-		$expected = [
-			'ID' => SHIP_TYPE_THIEF,
-			'Attack' => 12,
-			'Defense' => 13,
-		];
-		self::assertSame($expected, $ship->getIllusionShip());
-		self::assertSame($expected['ID'], $ship->getIllusionShipID());
-		self::assertSame($expected['Attack'], $ship->getIllusionAttack());
-		self::assertSame($expected['Defense'], $ship->getIllusionDefense());
-		self::assertSame('Thief', $ship->getIllusionShipName());
+		$expected = new ShipIllusion(
+			shipTypeID: SHIP_TYPE_THIEF,
+			attackRating: 12,
+			defenseRating: 13,
+		);
+		self::assertEquals($expected, $ship->getIllusion());
 		// disable
 		$ship->disableIllusion();
-		self::assertFalse($ship->getIllusionShip());
+		self::assertFalse($ship->getIllusion());
 	}
 
 	public function test_illusion_throws_when_missing_hardware(): void {
@@ -190,7 +187,7 @@ class AbstractSmrShipTest extends TestCase {
 	/**
 	 * @dataProvider dataProvider_takeDamage
 	 *
-	 * @param array<string, int|bool> $damage
+	 * @param WeaponDamageData $damage
 	 * @param array<string, int|bool> $expected
 	 */
 	public function test_takeDamage(string $case, array $damage, array $expected, int $shields, int $cds, int $armour): void {
@@ -208,7 +205,7 @@ class AbstractSmrShipTest extends TestCase {
 	}
 
 	/**
-	 * @return array<array<mixed>>
+	 * @return array<array{0: string, 1: WeaponDamageData, 2: array<string, int|bool>, 3: int, 4: int, 5: int}>
 	 */
 	public function dataProvider_takeDamage(): array {
 		return [

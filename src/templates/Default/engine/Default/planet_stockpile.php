@@ -19,7 +19,7 @@ if (empty($GoodInfo)) { ?>
 	foreach ($GoodInfo as $info) { ?>
 		<form method="POST" action="<?php echo $info['HREF']; ?>">
 			<tr>
-				<td class="left"><img src="<?php echo $info['ImageLink']; ?>" width="13" height="16" title="<?php echo $info['Name']; ?>" alt=""></td>
+				<td class="left"><?php echo $info['ImageHTML']; ?></td>
 				<td><?php echo $info['Name']; ?></td>
 				<td class="center"><?php echo $info['ShipAmount']; ?></td>
 				<td class="center"><?php echo $info['PlanetAmount']; ?></td>

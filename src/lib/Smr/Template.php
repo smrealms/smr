@@ -3,6 +3,7 @@
 namespace Smr;
 
 use DOMDocument;
+use DOMElement;
 use DOMNode;
 use DOMXPath;
 use Exception;
@@ -173,7 +174,11 @@ class Template {
 		if (isset($this->ajaxJS[$varName])) {
 			throw new Exception('Trying to set javascript val twice: ' . $varName);
 		}
-		return $this->ajaxJS[$varName] = json_encode($obj);
+		$json = json_encode($obj);
+		if ($json === false) {
+			throw new Exception('Failed to encode to json: ' . $varName);
+		}
+		return $this->ajaxJS[$varName] = $json;
 	}
 
 	protected function addJavascriptAlert(string $string): void {
@@ -222,7 +227,13 @@ class Template {
 
 		foreach ($ajaxSelectors as $selector) {
 			$matchNodes = $xpath->query($selector);
+			if ($matchNodes === false) {
+				throw new Exception('XPath query failed for selector: ' . $selector);
+			}
 			foreach ($matchNodes as $node) {
+				if (!($node instanceof DOMElement)) {
+					throw new Exception('XPath query returned unexpected DOMNode type: ' . $node->nodeType);
+				}
 				$id = $node->getAttribute('id');
 				$inner = $getInnerHTML($node);
 				if (!$session->addAjaxReturns($id, $inner) && $returnXml) {
@@ -240,7 +251,11 @@ class Template {
 		} else {
 			// Skip if middle_panel has ajax-enabled children.
 			foreach ($ajaxSelectors as $selector) {
-				if (count($xpath->query($selector, $mid)) > 0) {
+				$matchNodes = $xpath->query($selector, $mid);
+				if ($matchNodes === false) {
+					throw new Exception('XPath query failed for selector: ' . $selector);
+				}
+				if (count($matchNodes) > 0) {
 					$doAjaxMiddle = false;
 					break;
 				}

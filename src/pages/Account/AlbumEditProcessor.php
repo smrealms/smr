@@ -2,69 +2,33 @@
 
 namespace Smr\Pages\Account;
 
+use Exception;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
 use SmrAccount;
 
-function php_link_check(string $url): string|false {
-	/*	Purpose: Check HTTP Links
-	*	Usage:	$var = phpLinkCheck(absoluteURI)
-	*					$var['Status-Code'] will return the HTTP status code
-	*					(e.g. 200 or 404). In case of a 3xx code (redirection)
-	*					$var['Location-Status-Code'] will contain the status
-	*					code of the new loaction.
-	*					See echo_r($var) for the complete result
-	*
-	*	Author:	Johannes Froemter <j-f@gmx.net>
-	*	Date:		2001-04-14
-	*	Version: 0.1 (currently requires PHP4)
-	*/
-	$url = trim($url);
-	if (!preg_match('=://=', $url)) {
-		$url = 'http://' . $url;
+/**
+ * Determine whether a URL is reachable based on HTTP status code class.
+ */
+function isUrlReachable(string $url): bool {
+	$ch = curl_init($url);
+	if ($ch === false) {
+		throw new Exception('Failed to initialize curl');
 	}
-	$url = parse_url($url);
-	if (!in_array(strtolower($url['scheme']), ['http', 'https'])) {
-		return false;
-	}
+	curl_setopt_array($ch, [
+		CURLOPT_HEADER => true,
+		CURLOPT_NOBODY => true, // headers only
+		CURLOPT_RETURNTRANSFER => true, // don't print output
+		CURLOPT_TIMEOUT => 5, // in seconds
+	]);
+	curl_exec($ch);
+	$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
 
-	if (!isset($url['port'])) {
-		$url['port'] = 80;
-	}
-	if (!isset($url['path'])) {
-		$url['path'] = '/';
-	}
-
-	if (!checkdnsrr($url['host'], 'A')) {
-		return false;
-	}
-
-	$fp = fsockopen($url['host'], $url['port'], $errno, $errstr, 30);
-	if ($fp === false) {
-		return false;
-	}
-
-	$head = '';
-	$httpRequest = 'HEAD ' . $url['path'] . ' HTTP/1.1' . EOL
-							. 'Host: ' . $url['host'] . EOL
-							. 'Connection: close' . EOL . EOL;
-	fwrite($fp, $httpRequest);
-	while (!feof($fp)) {
-		$head .= fgets($fp, 1024);
-	}
-	fclose($fp);
-
-	preg_match('=^(HTTP/\d+\.\d+) (\d{3}) ([^\r\n]*)=', $head, $matches);
-	$http = [
-		'Status-Line' => $matches[0],
-		'HTTP-Version' => $matches[1],
-		'Status-Code' => $matches[2],
-		'Reason-Phrase' => $matches[3],
-	];
-
-	return $http['Status-Code'];
+	$statusClass = floor($statusCode / 100);
+	return $statusClass == 2 || $statusClass == 3;
 }
 
 class AlbumEditProcessor extends AccountPageProcessor {
@@ -82,9 +46,7 @@ class AlbumEditProcessor extends AccountPageProcessor {
 			}
 
 			// validate
-			$status = floor(php_link_check($website) / 100);
-
-			if ($status != 2 && $status != 3) {
+			if (!isUrlReachable($website)) {
 				create_error('The website you entered is invalid!');
 			}
 		}

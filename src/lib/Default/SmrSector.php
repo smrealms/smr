@@ -2,7 +2,9 @@
 
 use Smr\Database;
 use Smr\DatabaseRecord;
+use Smr\Exceptions\CachedPortNotFound;
 use Smr\Exceptions\SectorNotFound;
+use Smr\HardwareType;
 use Smr\MovementType;
 use Smr\Pages\Player\LocalMap;
 
@@ -579,13 +581,18 @@ class SmrSector {
 	}
 
 	public function hasCachedPort(AbstractSmrPlayer $player = null): bool {
-		return $this->getCachedPort($player) !== false;
-	}
-
-	public function getCachedPort(AbstractSmrPlayer $player = null): SmrPort|false {
 		if ($player === null) {
 			return false;
 		}
+		try {
+			$this->getCachedPort($player);
+			return true;
+		} catch (CachedPortNotFound) {
+			return false;
+		}
+	}
+
+	public function getCachedPort(AbstractSmrPlayer $player): SmrPort {
 		return SmrPort::getCachedPort($this->getGameID(), $this->getSectorID(), $player->getAccountID());
 	}
 
@@ -1010,7 +1017,7 @@ class SmrSector {
 		}
 
 		//Check if it's possible for location to have X, hacky but nice performance gains
-		if ($x instanceof SmrWeaponType || $x instanceof SmrShipType || (is_array($x) && $x['Type'] == 'Hardware') || (is_string($x) && ($x == 'Bank' || $x == 'Bar' || $x == 'Fed' || $x == 'SafeFed' || $x == 'HQ' || $x == 'UG' || $x == 'Hardware' || $x == 'Ship' || $x == 'Weapon'))) {
+		if ($x instanceof SmrWeaponType || $x instanceof SmrShipType || $x instanceof HardwareType || (is_string($x) && ($x == 'Bank' || $x == 'Bar' || $x == 'Fed' || $x == 'SafeFed' || $x == 'HQ' || $x == 'UG' || $x == 'Hardware' || $x == 'Ship' || $x == 'Weapon'))) {
 			foreach ($this->getLocations() as $loc) {
 				if ($loc->hasX($x, $player)) {
 					return true;

@@ -1,6 +1,6 @@
 # Distributed PHPStan config
 parameters:
-    level: 6
+    level: 7
     paths:
         - src
         - test
@@ -29,6 +29,9 @@ parameters:
         - TWITTER_CONSUMER_KEY
         # We code in protection against a value of 0
         - SmrMines::TOTAL_ENEMY_MINES_MODIFIER
+
+    typeAliases:
+        WeaponDamageData: 'array{Shield: int, Armour: int, Rollover: bool, Launched?: int, Kamikaze?: int}'
 
     #----------------------------------------------
     # Warning suppression (to be fixed eventually!)
@@ -81,3 +84,8 @@ parameters:
             message: '#Call to an undefined method DI\\Container::(initialized|reset)\(\).#'
             path: test/SmrTest/Container/ResettableContainerTraitTest.php
             count: 9
+        -
+            # https://github.com/discord-php/DiscordPHP/pull/1033
+            message: '#Parameter \#2 $callable of closure expects Callable|string, Closure given.#'
+            path: src/lib/Smr/Discord/Command.php
+            count: 1

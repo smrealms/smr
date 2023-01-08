@@ -3,7 +3,7 @@
 namespace SmrTest\lib\DefaultGame;
 
 use Exception;
-use Globals;
+use Smr\TradeGood;
 use SmrPlanet;
 use SmrTest\BaseIntegrationSpec;
 
@@ -141,7 +141,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$planet = SmrPlanet::createPlanet(1, 1, 1, 1);
 		$this->assertFalse($planet->hasStockpile());
 		$this->assertSame([], $planet->getStockpile());
-		foreach (array_keys(Globals::getGoods()) as $goodID) {
+		foreach (TradeGood::getAllIDs() as $goodID) {
 			$this->assertFalse($planet->hasStockpile($goodID));
 			$this->assertSame(0, $planet->getStockpile($goodID));
 		}
@@ -155,7 +155,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$planet->increaseStockpile(GOODS_ORE, 50);
 		$this->assertTrue($planet->hasStockpile());
 		$this->assertSame([GOODS_ORE => 50], $planet->getStockpile());
-		foreach (array_keys(Globals::getGoods()) as $goodID) {
+		foreach (TradeGood::getAllIDs() as $goodID) {
 			if ($goodID === GOODS_ORE) {
 				$this->assertTrue($planet->hasStockpile($goodID));
 				$this->assertSame(50, $planet->getStockpile($goodID));
@@ -169,7 +169,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 		$planet->decreaseStockpile(GOODS_ORE, 10);
 		$this->assertTrue($planet->hasStockpile());
 		$this->assertSame([GOODS_ORE => 40], $planet->getStockpile());
-		foreach (array_keys(Globals::getGoods()) as $goodID) {
+		foreach (TradeGood::getAllIDs() as $goodID) {
 			if ($goodID === GOODS_ORE) {
 				$this->assertTrue($planet->hasStockpile($goodID));
 				$this->assertSame(40, $planet->getStockpile($goodID));
@@ -360,7 +360,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 	/**
 	 * @dataProvider dataProvider_takeDamage
 	 *
-	 * @param array<string, int|bool> $damage
+	 * @param WeaponDamageData $damage
 	 * @param array<string, int|bool> $expected
 	 */
 	public function test_takeDamage(string $case, array $damage, array $expected, int $shields, int $cds, int $armour): void {
@@ -378,7 +378,7 @@ class SmrPlanetIntegrationTest extends BaseIntegrationSpec {
 	}
 
 	/**
-	 * @return array<array<mixed>>
+	 * @return array<array{0: string, 1: WeaponDamageData, 2: array<string, int|bool>, 3: int, 4: int, 5: int}>
 	 */
 	public function dataProvider_takeDamage(): array {
 		return [

@@ -112,7 +112,7 @@ class Database {
 	public function write(string $query): void {
 		$result = $this->dbConn->query($query);
 		if ($result !== true) {
-			throw new RuntimeException('Wrong query type');
+			throw new RuntimeException('Wrong query type or query failed');
 		}
 	}
 
@@ -121,7 +121,11 @@ class Database {
 	 * Used for SELECT queries, for example.
 	 */
 	public function read(string $query): DatabaseResult {
-		return new DatabaseResult($this->dbConn->query($query));
+		$result = $this->dbConn->query($query);
+		if (is_bool($result)) {
+			throw new RuntimeException('Wrong query type or query failed');
+		}
+		return new DatabaseResult($result);
 	}
 
 	/**
@@ -161,11 +165,19 @@ class Database {
 	}
 
 	public function getChangedRows(): int {
-		return $this->dbConn->affected_rows;
+		$affectedRows = $this->dbConn->affected_rows;
+		if (is_string($affectedRows)) {
+			throw new Exception('Number of rows is too large to represent as an int: ' . $affectedRows);
+		}
+		return $affectedRows;
 	}
 
 	public function getInsertID(): int {
-		return $this->dbConn->insert_id;
+		$insertID = $this->dbConn->insert_id;
+		if (is_string($insertID)) {
+			throw new Exception('Number of rows is too large to represent as an int: ' . $insertID);
+		}
+		return $insertID;
 	}
 
 	public function escape(mixed $escape): mixed {
@@ -218,10 +230,15 @@ class Database {
 		if ($nullable === true && $object === null) {
 			return 'NULL';
 		}
+		$objectStr = serialize($object);
 		if ($compress === true) {
-			return $this->escapeBinary(gzcompress(serialize($object)));
+			$objectBin = gzcompress($objectStr);
+			if ($objectBin === false) {
+				throw new Exception('An error occurred while compressing the object');
+			}
+			return $this->escapeBinary($objectBin);
 		}
-		return $this->escapeString(serialize($object));
+		return $this->escapeString($objectStr);
 	}
 
 }

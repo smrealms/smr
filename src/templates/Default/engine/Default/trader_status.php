@@ -86,10 +86,10 @@
 			<br />You can claim <span class="yellow"><?php echo $BountiesClaimable; ?></span> bounties.
 
 			<?php
-			if ($ThisPlayer->hasCurrentBounty(Smr\BountyType::HQ)) { ?>
+			if ($ThisPlayer->hasActiveBounty(Smr\BountyType::HQ)) { ?>
 				<br />You are <span class="red">wanted</span> by the <span class="green">Federal Government</span>!<?php
 			}
-			if ($ThisPlayer->hasCurrentBounty(Smr\BountyType::UG)) { ?>
+			if ($ThisPlayer->hasActiveBounty(Smr\BountyType::UG)) { ?>
 				<br />You are <span class="red">wanted</span> by the <span class="red">Underground</span>!<?php
 			} ?>
 
@@ -121,7 +121,7 @@
 				<img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Experience Levels"/>
 			</a>
 			<br />
-			<?php echo $NextLevelName . ' : ' . number_format($ThisPlayer->getNextLevelExperience()); ?> experience
+			<?php echo $NextLevel->name . ' : ' . number_format($NextLevel->expRequired); ?> experience
 
 			<br /><br />
 			<a href="<?php echo $UserRankingsHREF; ?>">
@@ -146,7 +146,7 @@
 				<td class="shrink">
 					<input type="checkbox" name="note_id[]" value="<?php echo $NoteID; ?>" />
 				</td>
-				<td><?php echo bbifyMessage(gzuncompress($Note)); ?></td>
+				<td><?php echo bbifyMessage($Note); ?></td>
 			</tr><?php
 		} ?>
 	</table>

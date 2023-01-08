@@ -5,7 +5,7 @@ namespace Smr\Pages\Player\Headquarters;
 use AbstractSmrPlayer;
 use Globals;
 use Menu;
-use Smr\Bounties;
+use Smr\Bounty;
 use Smr\BountyType;
 use Smr\Page\PlayerPage;
 use Smr\Race;
@@ -55,7 +55,7 @@ class Government extends PlayerPage {
 		}
 		$template->assign('WarRaces', $warRaces);
 
-		$template->assign('AllBounties', Bounties::getMostWanted(BountyType::HQ));
+		$template->assign('AllBounties', Bounty::getMostWanted(BountyType::HQ, $player->getGameID()));
 		$template->assign('MyBounties', $player->getClaimableBounties(BountyType::HQ));
 
 		if ($player->hasNeutralAlignment()) {
