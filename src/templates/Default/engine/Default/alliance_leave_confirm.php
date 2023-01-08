@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $YesHREF
+ * @var string $NoHREF
+ */
+
 ?>
 Do you really want to leave this alliance?<br /><br />
 

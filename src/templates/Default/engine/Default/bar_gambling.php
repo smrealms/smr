@@ -1,5 +1,17 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $PlayerStatus
+ * @var string $DealerStatus
+ * @var string $PlayerHand
+ * @var string $DealerHand
+ * @var string $ResultMsg
+ * @var ?string $HitHREF
+ * @var ?string $StayHREF
+ * @var ?string $BetHREF
+ * @var ?int $Bet
+ */
+
 ?>
 <div class="center">
 	<?php echo $ResultMsg; ?>

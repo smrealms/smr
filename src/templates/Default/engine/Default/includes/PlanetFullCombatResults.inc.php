@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var bool $MinimalDisplay
+ * @var array<string, mixed> $FullPlanetCombatResults
+ */
+
 if (!$MinimalDisplay) { ?>
 	<h1>Attacker Results</h1><br /><?php
 }

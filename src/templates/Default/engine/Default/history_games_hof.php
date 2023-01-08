@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var ?string $BackHREF
+ * @var ?string $StatName
+ */
+
 if (isset($Links)) { ?>
 	<table class="center standard">
 		<tr><th>Categories</th></tr><?php

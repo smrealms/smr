@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var string $Message
+ * @var string $ProcessingHREF
+ * @var string $BackHREF
+ * @var string $ListenHREF
+ */
+
 ?>
 <p><?php echo $Message; ?></p>
 <br />

@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Template $this
+ * @var bool $MinimalDisplay
+ * @var ?string $AttackLogLink
+ * @var array<string, mixed> $PortCombatResults
+ */
+
 $CombatPort = $PortCombatResults['Port'];
 $TotalDamage = $PortCombatResults['TotalDamage'];
 if ($MinimalDisplay) {

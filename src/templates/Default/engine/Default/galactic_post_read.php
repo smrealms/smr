@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var ?int $PaperGameID
+ */
+
 if (!empty($BackHREF)) { ?>
 	<a href="<?php echo $BackHREF; ?>"><b>&lt;&lt;Back</b></a><?php
 }

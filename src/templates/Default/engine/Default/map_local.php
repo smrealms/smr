@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var string $MapExpandHREF
+ * @var string $MapShrinkHREF
+ * @var string $GalaxyName
+ */
+
 ?>
 <table class="nobord fullwidth">
 	<tr>

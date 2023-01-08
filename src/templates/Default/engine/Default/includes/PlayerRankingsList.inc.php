@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var string $RankingStat
+ * @var array<int, array{Player: Smr\Player, Class: string, Value: int}> $Rankings
+ */
+
 ?>
 <table class="standard center inset">
 	<tr>

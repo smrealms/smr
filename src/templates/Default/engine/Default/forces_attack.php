@@ -2,6 +2,12 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Ship $ThisShip
+ * @var Smr\Template $this
+ * @var bool $OverrideDeath
+ */
+
 $this->includeTemplate('includes/ForceFullCombatResults.inc.php'); ?><br />
 <br />
 <div class="center"><?php

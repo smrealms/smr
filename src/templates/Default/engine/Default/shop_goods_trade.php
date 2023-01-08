@@ -1,5 +1,18 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Port $Port
+ * @var Smr\TradeGood $Good
+ * @var int $Amount
+ * @var int $OfferedPrice
+ * @var int $BargainPrice
+ * @var string $ShopHREF
+ * @var string $LeaveHREF
+ * @var string $BargainHREF
+ * @var string $PortAction
+ */
+
 // Create an array for use later
 $TradeCalcInfo = [
 	$Amount,

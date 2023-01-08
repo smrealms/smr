@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<int> $Speeds
+ * @var array<int> $Hardpoints
+ * @var array<string> $BooleanFields
+ * @var array<string> $AllLocs
+ * @var array<array<string, string|int>> $shipArray
+ */
+
 ?>
 <!DOCTYPE html>
 <html>

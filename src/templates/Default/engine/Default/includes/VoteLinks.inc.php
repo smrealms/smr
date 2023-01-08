@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<array{img: string, url: string, sn: string|false}> $VoteLinks
+ * @var string $TimeToNextVote
+ */
+
 if (Smr\Session::getInstance()->hasGame()) { ?>
 	<div>Get <b><u>FREE TURNS</u></b> for voting if you see the star, available <span id="v"><?php echo $TimeToNextVote ?></span>.</div><?php
 } ?>

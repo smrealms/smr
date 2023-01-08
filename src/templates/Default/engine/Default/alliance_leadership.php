@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var string $HandoverHREF
+ * @var array<int, Smr\Player> $AlliancePlayers
+ */
+
 ?>
 Please select the new Leader:
 

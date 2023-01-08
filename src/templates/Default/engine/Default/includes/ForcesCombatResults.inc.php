@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var array<string, mixed> $ForcesCombatResults
+ */
+
 if (isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Results'])) {
 	foreach ($ForcesCombatResults['Results'] as $ForceType => $ForceResults) {
 		$ShotHit = $ForceResults['Hit'];

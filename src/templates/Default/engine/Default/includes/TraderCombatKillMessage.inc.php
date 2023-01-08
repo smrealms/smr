@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $TargetPlayer
+ * @var ?Smr\Player $ShootingPlayer
+ * @var array<string, int> $KillResults
+ */
+
 echo $TargetPlayer->getDisplayName(); ?> has been <span class="red">DESTROYED</span>, losing <span class="exp"><?php echo number_format($KillResults['DeadExp'])?></span> experience.<br /><?php
 if (isset($ShootingPlayer)) {
 	// Killed by another player

@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var string $CancelHREF
+ */
+
 $this->includeTemplate('admin/unigen/GameDetails.inc.php'); ?>
 
 <p><span class="red">WARNING: </span>Modifying the "Game Type" may put the game in an inconsistent state!</p>

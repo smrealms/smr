@@ -3,6 +3,15 @@
 use Smr\Globals;
 use Smr\TradeGood;
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Ship $ThisShip
+ * @var string $HardwareLink
+ * @var string $ForceDropLink
+ * @var string $CargoJettisonLink
+ * @var string $WeaponReorderLink
+ */
+
 if (isset($GameID)) { ?>
 	<span id="flagship"><?php
 	if ($ThisPlayer->isFlagship()) {

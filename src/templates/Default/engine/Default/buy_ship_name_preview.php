@@ -2,6 +2,11 @@
 
 use Smr\Globals;
 
+/**
+ * @var string $ContinueHREF
+ * @var string $ShipName
+ */
+
 ?>
 <div class="center">
 	If you ship is found to use HTML inappropriately you may be banned.

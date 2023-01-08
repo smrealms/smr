@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var ?string $AttackResultsType
+ */
+
 ?>
 <table class="fullwidth" style="border:none">
 	<tr>

@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Location $ThisLocation
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Ship $ThisShip
+ * @var Smr\Template $this
+ * @var array<int, Smr\Combat\Weapon\Weapon> $WeaponsSold
+ */
+
 if ($ThisLocation->isWeaponSold()) { ?>
 	<h2>Buy weapons:</h2><br />
 	<table id="weapon-list" class="center standard">

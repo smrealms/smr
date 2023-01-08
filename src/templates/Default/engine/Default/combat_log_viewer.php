@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var int $CombatLogSector
+ * @var string $CombatLogTimestamp
+ * @var string $CombatResultsType
+ * @var array<mixed> $CombatResults
+ */
+
 if (isset($PreviousLogHREF) || isset($NextLogHREF)) { ?>
 	<div class="center"><?php
 	if (isset($PreviousLogHREF)) {

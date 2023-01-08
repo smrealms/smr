@@ -2,6 +2,24 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Player $ThisPlayer
+ * @var array<int, Smr\Alliance> $AlliedAllianceBanks
+ * @var bool $CanExempt
+ * @var ?int $TotalWithdrawn
+ * @var ?int $WithdrawalPerDay
+ * @var ?int $RemainingWithdrawal
+ * @var ?array<int, array{Time: int, Player: Smr\AbstractPlayer, Reason: string, TransactionType: string, Withdrawal: string, Deposit: string, Exempt: bool}> $BankTransactions
+ * @var ?Smr\Alliance $Alliance
+ * @var ?int $MinValue
+ * @var ?int $MaxValue
+ * @var ?string $FilterTransactionsFormHREF
+ * @var ?string $ExemptTransactionsFormHREF
+ * @var string $BankReportHREF
+ * @var string $BankTransactionFormHREF
+ */
+
 if (count($AlliedAllianceBanks) > 0) { ?>
 	<ul><?php
 	foreach ($AlliedAllianceBanks as $AlliedAlliance) { ?>

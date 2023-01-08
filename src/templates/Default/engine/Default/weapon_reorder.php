@@ -2,6 +2,11 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Ship $ThisShip
+ * @var Smr\Template $this
+ */
+
 if ($ThisShip->hasWeapons()) { ?>
 	<div class="center">
 		<p>To reorder your weapons simply drag and drop them into the desired order.</p>

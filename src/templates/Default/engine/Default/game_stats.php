@@ -1,5 +1,18 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Game $StatsGame
+ * @var int $TotalPlayers
+ * @var int $HighestExp
+ * @var int $HighestAlign
+ * @var int $LowestAlign
+ * @var int $HighestKills
+ * @var int $TotalAlliances
+ * @var array<int, array{Alliance: Smr\Alliance, Class: string, Value: int, AllianceName: string}> $AllianceExpRankings
+ * @var array<int, array{Alliance: Smr\Alliance, Class: string, Value: int, AllianceName: string}> $AllianceKillRankings
+ */
+
 ?>
 <h2>Description</h2>
 <?php echo bbifyMessage($StatsGame->getDescription(), $StatsGame->getGameID()); ?>

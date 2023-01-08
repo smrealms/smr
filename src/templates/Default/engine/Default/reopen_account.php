@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $ReopenLink
+ */
+
 ?>
 Welcome back to <b>Space Merchant Realms</b>!
 

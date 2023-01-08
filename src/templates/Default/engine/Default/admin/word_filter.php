@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $DelHREF
+ * @var string $AddHREF
+ */
+
 ?>
 <h2>Filtered Words</h2><br />
 

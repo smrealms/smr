@@ -1,5 +1,14 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var int $Balance
+ * @var string $TransactionHREF
+ * @var ?string $ShowHREF
+ * @var ?int $MinValue
+ * @var ?int $MaxValue
+ * @var ?array<int, array{date: string, payment: string, deposit: string, link: string}> $Transactions
+ */
+
 if (isset($Transactions)) { ?>
 	<form method="POST" action="<?php echo $ShowHREF; ?>">
 		<table cellspacing="5" cellpadding="0" class="nobord center">

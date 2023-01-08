@@ -2,6 +2,11 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Template $this
+ * @var bool $OverrideDeath
+ */
+
 $this->includeTemplate('includes/TraderFullCombatResults.inc.php'); ?><br />
 <br />
 <div class="center"><?php

@@ -2,6 +2,12 @@
 
 use Smr\Sector;
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Sector $ThisSector
+ * @var Smr\Ship $ThisShip
+ */
+
 if ($ThisPlayer->hasPlottedCourse()) {
 	$PlottedCourse = $ThisPlayer->getPlottedCourse();
 	$CancelCourseHREF = (new Smr\Pages\Player\PlotCourseCancelProcessor())->href();

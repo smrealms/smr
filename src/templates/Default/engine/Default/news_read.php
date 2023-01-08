@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var int $MinNews
+ * @var int $MaxNews
+ * @var string $ViewNewsFormHref
+ */
+
 $this->includeTemplate('includes/CommonNews.inc.php'); ?>
 
 <div class="center">View News entries</div><br />

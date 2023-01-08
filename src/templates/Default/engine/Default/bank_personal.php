@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var string $ProcessingHREF
+ */
+
 ?>
 Hello <?php echo $ThisPlayer->getDisplayName(); ?>
 <br /><br />

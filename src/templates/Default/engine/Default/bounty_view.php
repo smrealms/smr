@@ -2,6 +2,10 @@
 
 use Smr\BountyType;
 
+/**
+ * @var Smr\Player $BountyPlayer
+ */
+
 if ($BountyPlayer->hasBounties()) {
 	$Bounties = $BountyPlayer->getBounties();
 	foreach (BountyType::cases() as $BountyType) {

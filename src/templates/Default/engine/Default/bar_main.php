@@ -2,6 +2,19 @@
 
 use Smr\Globals;
 
+/**
+ * @var string $Message
+ * @var string $GossipHREF
+ * @var string $BuyDrinkHREF
+ * @var string $BuyWaterHREF
+ * @var int|false $WinningTicket
+ * @var ?string $LottoClaimHREF
+ * @var string $LottoBuyHREF
+ * @var string $BlackjackHREF
+ * @var string $BuySystemHREF
+ * @var string $BuyGalMapHREF
+ */
+
 echo $Message; ?>
 
 <p>What can I do for ya?</p>

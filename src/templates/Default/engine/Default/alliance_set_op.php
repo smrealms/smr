@@ -1,5 +1,14 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var ?string $OpDate
+ * @var ?string $OpCountdown
+ * @var string $OpProcessingHREF
+ * @var string $FlagshipHREF
+ * @var int $FlagshipID
+ * @var array<int, Smr\Player> $AlliancePlayers
+ */
+
 ?>
 <h2>Alliance Operation Schedule</h2>
 <?php

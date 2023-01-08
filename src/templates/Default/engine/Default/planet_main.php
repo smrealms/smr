@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Planet $ThisPlanet
+ * @var Smr\Template $this
+ * @var string $LaunchLink
+ */
+
 if (isset($ErrorMsg)) {
 	echo $ErrorMsg; ?><br /><?php
 }

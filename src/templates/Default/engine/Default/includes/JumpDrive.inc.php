@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Ship $ThisShip
+ * @var string $JumpDriveFormLink
+ */
+
 if ($ThisShip->hasJump()) { ?>
 	<br />
 	<form class="standard" id="JumpDriveForm" method="POST" action="<?php echo $JumpDriveFormLink; ?>">

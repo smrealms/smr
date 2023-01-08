@@ -2,6 +2,12 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Sector $ThisSector
+ * @var ?bool $PortIsAtWar
+ */
+
 ?>
 <div id="sector_port" class="ajax">
 	<?php if ($ThisSector->hasPort()) {

@@ -1,5 +1,15 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Sector $ScanSector
+ * @var int $EnemyVessel
+ * @var int $FriendlyVessel
+ * @var int $EnemyForces
+ * @var int $FriendlyForces
+ * @var int $Turns
+ */
+
 ?>
 <table class="standard">
 	<tr>

@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<string, array{Selected: bool, HREF: string, Count: int, Description: string}> $CategoryTable
+ * @var bool $CanVote
+ * @var string $FeatureRequestFormHREF
+ * @var ?string $FeatureRequestVoteFormHREF
+ * @var ?bool $FeatureModerator
+ */
+
 ?>
 <table>
 	<tr>

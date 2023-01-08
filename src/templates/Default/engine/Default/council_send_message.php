@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var string $SendHREF
+ * @var string $RaceName
+ */
+
 ?>
 <form method="POST" action="<?php echo $SendHREF; ?>">
 	<p>

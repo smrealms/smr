@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Player $ThisPlayer
+ */
+
 ?>
 You are ranked as a <span style="font-size: 125%; color: greenyellow;"><?php echo $ThisAccount->getRank()->name; ?></span> player with a score of <span class="green"><?php echo number_format($ThisAccount->getScore()); ?></span>.<br /><br />
 

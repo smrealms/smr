@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Planet $ThisPlanet
+ * @var Smr\Template $this
+ * @var bool $PlanetLand
+ */
+
 ?>
 <table>
 	<tr>

@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $Amount
+ * @var string $SmrCredits
+ * @var string $BountyPlayer
+ * @var string $ProcessingHREF
+ */
+
 ?>
 <p>Are you sure you want to place a <span class="creds"><?php echo $Amount; ?></span>
 credit and <span class="yellow"><?php echo $SmrCredits; ?></span>

@@ -2,6 +2,16 @@
 
 use Smr\Alliance;
 
+/**
+ * @var Smr\Alliance $Alliance
+ * @var string $FormHREF
+ * @var bool $CanChangePassword
+ * @var bool $HidePassword
+ * @var bool $CanChangeDescription
+ * @var bool $CanChangeChatChannel
+ * @var bool $CanChangeMOTD
+ */
+
 ?>
 <form method="POST" action="<?php echo $FormHREF; ?>">
 <table cellspacing="0" cellpadding="0" class="nobord nohpad">

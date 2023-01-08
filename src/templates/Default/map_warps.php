@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $GameName
+ * @var non-empty-string $GraphData
+ */
+
 ?>
 <!DOCTYPE html>
 <html>

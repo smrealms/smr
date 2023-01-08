@@ -3,6 +3,12 @@
 use Smr\Council;
 use Smr\Player;
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Template $this
+ * @var int $RaceID
+ */
+
 ?>
 <div class="center">
 	<a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>

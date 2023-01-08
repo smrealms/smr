@@ -2,6 +2,12 @@
 
 use Smr\Globals;
 
+/**
+ * @var array<Smr\Planet> $Planets
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Template $this
+ */
+
 if (count($Planets) > 0) { ?>
 	<table id="planet-list" class="standard inset center">
 		<thead>

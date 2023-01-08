@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $Message
+ * @var string $AccessHREF
+ * @var string $CreateHREF
+ * @var array<array{anon_id: int, password: string, amount: int, last_transaction: string, href: string}> $OwnedAnon
+ */
+
 echo $Message; ?>
 
 <h2>Access accounts</h2><br />

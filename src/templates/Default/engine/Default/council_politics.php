@@ -2,6 +2,13 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var array<int> $PeaceRaces
+ * @var array<int> $NeutralRaces
+ * @var array<int> $WarRaces
+ */
+
 ?>
 <a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
 <div class="center">

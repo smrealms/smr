@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<Smr\Bounty> $AllBounties
+ * @var array<Smr\Bounty> $MyBounties
+ * @var Smr\Template $this
+ */
+
 ?>
 <p>The location appears to be abandoned, until a group of
 heavily-armed figures advance from the shadows.</p>

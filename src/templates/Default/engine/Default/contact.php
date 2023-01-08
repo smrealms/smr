@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $ProcessingHREF
+ * @var string $From
+ */
+
 ?>
 <p>Please use this form to send your feedback or
 questions to the admin team of Space Merchant Realms!</p>

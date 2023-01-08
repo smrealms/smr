@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Account $ThisAccount
+ */
+
 if (isset($BreakingNews)) {
 	?><b>MAJOR NEWS! - <?php echo date($ThisAccount->getDateTimeFormat(), $BreakingNews['Time']); ?></b><br />
 	<table class="standard">

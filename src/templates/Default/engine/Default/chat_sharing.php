@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $ProcessingHREF
+ * @var array<int, array{"Player ID": string|int, "Player Name": string, "All Games": string, "Game ID": int}> $ShareFrom
+ * @var array<int, array{"Player ID": string|int, "Player Name": string, "All Games": string, "Game ID": int}> $ShareTo
+ */
+
 if (!empty($Message)) { ?>
 	<?php echo $Message; ?><?php
 } ?>

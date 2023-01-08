@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Sector $ThisSector
+ */
+
 if ($ThisSector->hasLocation()) { ?>
 	<table class="standard csl">
 		<tr>

@@ -5,6 +5,11 @@ use Smr\Pages\Player\Mission\AcceptProcessor;
 use Smr\Pages\Player\Mission\ClaimProcessor;
 use Smr\Pages\Player\Mission\DeclineProcessor;
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var array<int> $UnreadMissions
+ */
+
 if (isset($MissionMessage)) { ?>
 	<span class="green">Mission Complete: </span><?php
 	echo $MissionMessage;

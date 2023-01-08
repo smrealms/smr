@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $TargetPlayer
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Sector $ThisSector
+ * @var Smr\Ship $ThisShip
+ */
+
 $canAttack = false;
 
 if ($ThisPlayer->hasNewbieTurns()) {

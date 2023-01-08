@@ -1,5 +1,14 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Ship $ThisShip
+ * @var Smr\Template $this
+ * @var ?string $ToggleCloakHREF
+ * @var ?string $SetIllusionFormHREF
+ * @var ?string $DisableIllusionHref
+ * @var ?array<int, string> $IllusionShips
+ */
+
 if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()) {
 	?>You have no configurable hardware installed!<?php
 } else { ?>

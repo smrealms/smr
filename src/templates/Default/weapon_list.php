@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<int> $PowerLevels
+ * @var array<string> $AllLocs
+ * @var array<array{restriction: array<string>, weapon_name: string, race_id: int, race_name: string, cost: string, shield_damage: int, armour_damage: int, accuracy: int, power_level: int, locs: array<string>}> $Weapons
+ */
+
 ?>
 <!DOCTYPE html>
 <html>

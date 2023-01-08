@@ -1,5 +1,17 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var string $RankingStat
+ * @var int $OurRank
+ * @var int $MaxRank
+ * @var int $MinRank
+ * @var int $TotalRanks
+ * @var array<int, array{Player: Smr\Player, Class: string, Value: int}> $Rankings
+ * @var array<int, array{Player: Smr\Player, Class: string, Value: int}> $FilteredRankings
+ * @var string $FilterRankingsHREF
+ */
+
 ?>
 <div class="center">
 	<p>Here are the rankings of players by their <?php echo $RankingStat; ?>.</p>

@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $RankingStat
+ * @var array<int, array{Alliance: Smr\Alliance, Class: string, Value: int}> $Rankings
+ */
+
 ?>
 <table class="standard center inset">
 	<tr>

@@ -3,6 +3,12 @@
 use Smr\Globals;
 use Smr\TradeGood;
 
+/**
+ * @var array<Smr\Planet> $Planets
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Template $this
+ */
+
 if (count($Planets) > 0) { ?>
 	<table id="planet-list" class="standard inset left centered">
 		<thead>

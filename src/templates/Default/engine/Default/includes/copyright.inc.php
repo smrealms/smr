@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $CurrentYear
+ * @var string $Version
+ */
+
 ?>
 <div class="right">
 	SMR <?php echo $Version; ?>&copy;2007-<?php echo $CurrentYear; ?> Page and SMR<br />

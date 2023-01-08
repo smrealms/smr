@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var string $ViewArticlesHREF
+ * @var string $MakePaperHREF
+ * @var array<array{title: string, num_articles: int, color: string, published: bool, PublishHREF?: string, DeleteHREF: string, EditHREF: string}> $Papers
+ */
+
 ?>
 Welcome <?php echo $ThisPlayer->getDisplayName(); ?>, your position is <i>Editor</i><br /><br />
 <b>EDITOR OPTIONS</b>

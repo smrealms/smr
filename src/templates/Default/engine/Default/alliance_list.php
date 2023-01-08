@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var array<array{Name: string, TotalExperience: int, AverageExperience: int, Members: int, OpenRecruitment: bool}> $Alliances
+ */
+
 if (isset($CreateAllianceHREF)) { ?>
 	<div class="center">
 		<div class="buttonA">

@@ -2,6 +2,12 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Template $this
+ * @var int|false $AJAX_ENABLE_REFRESH
+ */
+
 ?>
 <script src="/js/jquery.hotkeys.js"></script>
 <script src="/js/ajax.js"></script>

@@ -2,6 +2,34 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Player $ThisPlayer
+ * @var string $timeDisplay
+ * @var string $PlotCourseLink
+ * @var string $TraderLink
+ * @var string $PoliticsLink
+ * @var string $CombatLogsLink
+ * @var string $PlanetLink
+ * @var string $ForcesLink
+ * @var string $MessagesLink
+ * @var string $ReadNewsLink
+ * @var string $GalacticPostLink
+ * @var string $SearchForTraderLink
+ * @var string $RankingsLink
+ * @var string $CurrentHallOfFameLink
+ * @var string $HallOfFameLink
+ * @var string $PlayGameLink
+ * @var string $PreferencesLink
+ * @var string $AdminToolsLink
+ * @var string $LogoutLink
+ * @var string $EditPhotoLink
+ * @var string $ReportABugLink
+ * @var string $ContactFormLink
+ * @var string $IRCLink
+ * @var string $DonateLink
+ */
+
 ?>
 <span class="yellow">
 	<span id="tod"><?php echo $timeDisplay; ?></span>

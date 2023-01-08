@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $CreateHREF
+ */
+
 ?>
 Please enter the desired password for your new account.<br /><br />
 <form method="POST" action="<?php echo $CreateHREF; ?>">

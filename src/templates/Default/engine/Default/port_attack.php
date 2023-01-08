@@ -3,6 +3,13 @@
 use Smr\Globals;
 use Smr\Port;
 
+/**
+ * @var Smr\Port $Port
+ * @var Smr\Template $this
+ * @var bool $OverrideDeath
+ * @var bool $CreditedAttacker
+ */
+
 $this->includeTemplate('includes/PortFullCombatResults.inc.php'); ?><br />
 <br />
 <div class="center"><?php

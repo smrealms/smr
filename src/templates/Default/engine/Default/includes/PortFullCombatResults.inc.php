@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var bool $MinimalDisplay
+ * @var bool $AlreadyDestroyed
+ * @var array<string, mixed> $FullPortCombatResults
+ */
+
 if (!$AlreadyDestroyed) {
 	if (!$MinimalDisplay) { ?>
 		<h1>Attacker Results</h1><br /><?php

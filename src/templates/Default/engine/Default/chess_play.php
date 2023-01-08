@@ -1,5 +1,16 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Chess\ChessGame $ChessGame
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Template $this
+ * @var array<int, array<int, ?Smr\Chess\ChessPiece>> $Board
+ * @var array<string> $FileCoords
+ * @var string $MoveMessage
+ * @var string $ChessMoveHREF
+ */
+
 ?>
 <p><span id="chess_status">
 	<?php if (isset($Winner)) { ?>

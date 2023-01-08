@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var array{AllianceEyesOnly: bool, CanDelete: bool, Replies: array<int, array{Sender: string, Message: string, SendTime: int, DeleteHref?: string}>, CreateThreadReplyFormHref?: string} $Thread
+ */
+
 if (isset($PrevThread) || isset($NextThread)) { ?>
 	<h2>Switch Topic</h2><br />
 	<table class="nobord fullwidth">

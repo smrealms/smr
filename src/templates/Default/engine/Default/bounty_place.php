@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $SubmitHREF
+ * @var array<int, string> $BountyPlayers
+ */
+
 ?>
 <form method="POST" action="<?php echo $SubmitHREF; ?>">
 	Select the player you want to add the bounty to<br />

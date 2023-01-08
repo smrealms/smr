@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Account $EditingAccount
+ * @var Smr\Account $ThisAccount
+ */
+
 ?>
 <form name="form_acc" method="POST" action="<?php echo $EditFormHREF; ?>">
 	<table cellpadding="3" border="0">

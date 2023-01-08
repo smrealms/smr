@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $BuyTicketHREF
+ * @var array{Prize: int, TimeRemaining: int} $LottoInfo
+ */
+
 ?>
 <br />
 <div class="center">

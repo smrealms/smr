@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Ship $ThisShip
+ * @var ?array<int, array{HREF: string, Cost: int, Name: string}> $HardwareSold
+ */
+
 if (isset($HardwareSold)) { ?>
 	<h2>Buy Hardware</h2>
 	<table class="standard">

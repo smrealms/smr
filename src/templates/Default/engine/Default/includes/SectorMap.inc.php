@@ -2,6 +2,18 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Sector $ThisSector
+ * @var Smr\Ship $ThisShip
+ * @var array<array<Smr\Sector>> $MapSectors
+ * @var ?string $DragLocationHREF
+ * @var ?string $DragPlanetHREF
+ * @var ?string $DragPortHREF
+ * @var ?string $DragWarpHREF
+ * @var ?string $ModifySectorHREF
+ */
+
 ?>
 <table class="lmt centered"><?php
 	$GalaxyMap = isset($GalaxyMap) && $GalaxyMap;

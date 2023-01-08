@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var string $Receiver
+ * @var string $MessageSendFormHref
+ */
+
 if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($Preview); ?></td></tr></table><?php } ?>
 <form name="MessageSendForm" method="POST" action="<?php echo $MessageSendFormHref; ?>">
 	<p>

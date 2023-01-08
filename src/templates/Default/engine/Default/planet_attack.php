@@ -2,6 +2,12 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Planet $Planet
+ * @var Smr\Template $this
+ * @var bool $OverrideDeath
+ */
+
 $this->includeTemplate('includes/PlanetFullCombatResults.inc.php'); ?><br />
 <br />
 <div class="center"><?php

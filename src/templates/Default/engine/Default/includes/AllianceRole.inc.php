@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<string, mixed> $Role
+ */
+
 ?>
 <form class="standard" id="RoleEditForm<?php echo $Role['RoleID']; ?>" method="POST" action="<?php echo $Role['HREF']; ?>">
 	<table class="standard">

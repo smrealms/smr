@@ -2,7 +2,15 @@
 
 use Smr\PlanetStructureType;
 
-foreach ($TraderTeamCombatResults['Traders'] as $TraderResults) {
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Template $this
+ * @var bool $MinimalDisplay
+ * @var array<string, mixed> $TraderTeamCombatResults
+ */
+
+$AllTraderResults = $TraderTeamCombatResults['Traders'];
+foreach ($AllTraderResults as $TraderResults) {
 	$ShootingPlayer = $TraderResults['Player'];
 	$TotalDamage = $TraderResults['TotalDamage'];
 	if ($MinimalDisplay && !$ThisPlayer->equals($ShootingPlayer)) {

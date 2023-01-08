@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Galaxy $Galaxy
+ * @var Smr\Template $this
+ */
+
 ?>
 <table class="center standard">
 	<tr>
