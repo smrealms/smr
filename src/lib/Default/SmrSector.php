@@ -7,6 +7,7 @@ use Smr\Exceptions\SectorNotFound;
 use Smr\HardwareType;
 use Smr\MovementType;
 use Smr\Pages\Player\LocalMap;
+use Smr\TradeGoodTransaction;
 
 class SmrSector {
 
@@ -1009,11 +1010,8 @@ class SmrSector {
 		if ($x instanceof SmrGalaxy) {
 			return $x->contains($this);
 		}
-
-		if (is_array($x) && $x['Type'] == 'Good') { //Check if it's possible for port to have X, hacky but nice performance gains
-			if ($this->hasPort() && $this->getPort()->hasX($x)) {
-				return true;
-			}
+		if ($x instanceof TradeGoodTransaction) {
+			return $this->hasPort() && $this->getPort()->hasGood($x->goodID, $x->transactionType);
 		}
 
 		//Check if it's possible for location to have X, hacky but nice performance gains
