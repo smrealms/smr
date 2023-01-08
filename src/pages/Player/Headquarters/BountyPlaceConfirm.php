@@ -32,10 +32,10 @@ class BountyPlaceConfirm extends PlayerPage {
 		$template->assign('BountyPlayer', $bountyPlayer->getLinkedDisplayName());
 
 		$container = new BountyPlaceConfirmProcessor(
-			$this->locationID,
-			$bountyPlayer->getAccountID(),
-			$this->credits,
-			$this->smrCredits
+			locationID: $this->locationID,
+			otherAccountID: $bountyPlayer->getAccountID(),
+			credits: $this->credits,
+			smrCredits: $this->smrCredits
 		);
 		$template->assign('ProcessingHREF', $container->href());
 	}

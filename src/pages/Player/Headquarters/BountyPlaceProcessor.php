@@ -29,10 +29,10 @@ class BountyPlaceProcessor extends PlayerPageProcessor {
 		}
 
 		$container = new BountyPlaceConfirm(
-			$this->locationID,
-			$amount,
-			$smrCredits,
-			Request::getInt('player_id')
+			locationID: $this->locationID,
+			otherPlayerID: Request::getInt('player_id'),
+			credits: $amount,
+			smrCredits: $smrCredits,
 		);
 		$container->go();
 	}
