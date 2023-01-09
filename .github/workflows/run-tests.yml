@@ -60,10 +60,10 @@ jobs:
           load: true
 
       - name: Setup test environment
-        run: composer run start:test-services
+        run: composer start:test-services
 
       - name: Run phpunit tests
-        run: composer run test
+        run: composer test
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -92,7 +92,7 @@ jobs:
           load: true
 
       - name: Run static analysis
-        run: composer run phpstan
+        run: composer phpstan
 
   phpcs:
     name: PHP_CodeSniffer
@@ -116,4 +116,4 @@ jobs:
           load: true
 
       - name: Run code sniffer
-        run: composer run phpcs
+        run: composer phpcs
