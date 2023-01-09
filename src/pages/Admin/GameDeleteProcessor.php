@@ -24,14 +24,10 @@ class GameDeleteProcessor extends AccountPageProcessor {
 		$smr_db_sql = [];
 		$history_db_sql = [];
 
-		$action = Request::get('action');
-		if (Request::get('save') == 'Yes') {
-			$save = true;
-		} else {
-			$save = false;
-		}
+		$delete = Request::getBool('action');
+		$save = Request::getBool('save');
 
-		if ($action == 'Yes') {
+		if ($delete) {
 			if ($save) {
 				$dbResult = $db->read('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id));
 

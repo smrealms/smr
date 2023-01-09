@@ -15,7 +15,7 @@ class MessagePreferenceProcessor extends PlayerPageProcessor {
 
 	public function build(AbstractSmrPlayer $player): never {
 		if (Request::has('ignore_globals')) {
-			$player->setIgnoreGlobals(Request::get('ignore_globals') == 'Yes');
+			$player->setIgnoreGlobals(Request::getBool('ignore_globals'));
 		} elseif (Request::has('group_scouts')) {
 			$groupType = ScoutMessageGroupType::from(Request::get('group_scouts'));
 			$player->setScoutMessageGroupType($groupType);

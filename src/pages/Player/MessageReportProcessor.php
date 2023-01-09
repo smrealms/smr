@@ -18,7 +18,7 @@ class MessageReportProcessor extends PlayerPageProcessor {
 	public function build(AbstractSmrPlayer $player): never {
 		$container = new MessageView($this->folderID);
 
-		if (Request::get('action') == 'No') {
+		if (Request::getBool('action') === false) {
 			$container->go();
 		}
 

@@ -20,6 +20,23 @@ class Request {
 	}
 
 	/**
+	 * Returns index value as a boolean for boolean-like inputs.
+	 */
+	public static function getBool(string $index, bool $default = null): bool {
+		if (self::has($index)) {
+			$bool = filter_var($_REQUEST[$index], FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);
+			if ($bool === null) {
+				throw new Exception('Value is not boolean for index: ' . $index);
+			}
+			return $bool;
+		}
+		if ($default !== null) {
+			return $default;
+		}
+		throw new Exception('No request variable for index: ' . $index);
+	}
+
+	/**
 	 * Returns index value as an integer.
 	 */
 	public static function getInt(string $index, int $default = null): int {

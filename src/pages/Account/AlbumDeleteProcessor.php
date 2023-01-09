@@ -10,7 +10,7 @@ use SmrAccount;
 class AlbumDeleteProcessor extends AccountPageProcessor {
 
 	public function build(SmrAccount $account): never {
-		if (Request::get('action') == 'Yes') {
+		if (Request::getBool('action')) {
 			$db = Database::getInstance();
 			$db->write('DELETE
 						FROM album

@@ -29,8 +29,8 @@ class AccountEditProcessor extends AccountPageProcessor {
 		$choise = Request::get('choise', ''); // no radio button selected by default
 		$reason_pre_select = Request::getInt('reason_pre_select');
 		$reason_msg = Request::get('reason_msg');
-		$veteran_status = Request::get('veteran_status') == 'TRUE';
-		$logging_status = Request::get('logging_status') == 'TRUE';
+		$veteran_status = Request::getBool('veteran_status');
+		$logging_status = Request::getBool('logging_status');
 		$except = Request::get('exception_add', ''); // missing if account already has an exception
 		$points = Request::getInt('points');
 		$names = Request::getArray('player_name', []); // missing when no games joined
