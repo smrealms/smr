@@ -149,4 +149,11 @@
     <rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition">
         <exclude-pattern>src/templates/Default/engine/Default/alliance_roster\.php</exclude-pattern>
     </rule>
+
+    <!-- Ignore unused variable warnings for bad global variables. Fix ASAP! -->
+    <rule ref="SlevomatCodingStandard.Variables.UnusedVariable">
+        <exclude-pattern>src/tools/npc/chess\.php</exclude-pattern>
+        <exclude-pattern>src/tools/irc/irc\.php</exclude-pattern>
+        <exclude-pattern>src/tools/npc/npc\.php</exclude-pattern>
+    </rule>
 </ruleset>
