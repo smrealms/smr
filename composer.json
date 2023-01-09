@@ -46,6 +46,11 @@
 			"docker compose --env-file test/env run --rm flyway-test"
 		],
 		"test": [
+			"@phpstan",
+			"@phpunit",
+			"@phpcs"
+		],
+		"phpunit": [
 			"docker compose --env-file test/env run --rm phpunit"
 		],
 		"phpcs": [

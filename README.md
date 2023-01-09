@@ -141,7 +141,7 @@ SMR uses [PHPUnit](https://phpunit.de/) to run unit tests.
 ### Setup
 1. Ensure the MySQL container is running, and ready for any integration tests that touch the database:
    * `composer start:test-services`
-1. Run `composer run test` to execute the full suite of tests.
+1. Run `composer phpunit` to execute the full suite of PHPUnit tests.
 1. Add new tests as needed in the `/test` directory.
 
 ### Setting up your IDE to run tests
