@@ -706,10 +706,8 @@ class SmrAccount {
 			throw new UserError('The email is invalid! It cannot contain any spaces.');
 		}
 
-		// get user and host for the provided address
-		[$user, $host] = explode('@', $email);
-
 		// check if the host got a MX or at least an A entry
+		$host = explode('@', $email)[1];
 		if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
 			throw new UserError('This is not a valid email address! The domain ' . $host . ' does not exist.');
 		}
