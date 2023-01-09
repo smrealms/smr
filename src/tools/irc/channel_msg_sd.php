@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
+use Smr\Irc\Message;
+
 /**
  * @param resource $fp
  */
-function channel_msg_sd($fp, string $rdata): bool {
+function channel_msg_sd($fp, Message $msg): bool {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!sd(\s*help)?\s$/i', $rdata, $msg)) {
+	if (preg_match('/^!sd(\s*help)?$/i', $msg->text)) {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
 
 		echo_r('[SD] by ' . $nick . ' in ' . $channel);
 
@@ -29,18 +29,16 @@ function channel_msg_sd($fp, string $rdata): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_sd_set($fp, string $rdata): bool {
+function channel_msg_sd_set($fp, Message $msg): bool {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!sd set (\d+) (\d+)\s$/i', $rdata, $msg)) {
+	if (preg_match('/^!sd set (\d+) (\d+)$/i', $msg->text, $args)) {
 
 		global $sds;
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
-		$sector = $msg[5];
-		$sd = $msg[6];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
+		$sector = $args[1];
+		$sd = $args[2];
 
 		echo_r('[SD_SET] by ' . $nick . ' in ' . $channel);
 
@@ -71,17 +69,15 @@ function channel_msg_sd_set($fp, string $rdata): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_sd_del($fp, string $rdata): bool {
+function channel_msg_sd_del($fp, Message $msg): bool {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!sd del (\d+)\s$/i', $rdata, $msg)) {
+	if (preg_match('/^!sd del (\d+)$/i', $msg->text, $args)) {
 
 		global $sds;
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
-		$sector = $msg[5];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
+		$sector = $args[1];
 
 		echo_r('[SD_DEL] by ' . $nick . ' in ' . $channel);
 
@@ -107,16 +103,14 @@ function channel_msg_sd_del($fp, string $rdata): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_sd_list($fp, string $rdata, AbstractSmrPlayer $player): bool {
+function channel_msg_sd_list($fp, Message $msg, AbstractSmrPlayer $player): bool {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!sd list\s$/i', $rdata, $msg)) {
+	if ($msg->text == '!sd list') {
 
 		global $sds;
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
 
 		echo_r('[SD_LIST] by ' . $nick . ' in ' . $channel);
 

@@ -1,18 +1,17 @@
 <?php declare(strict_types=1);
 
 use Smr\Database;
+use Smr\Irc\Message;
 
 /**
  * @param resource $fp
  */
-function channel_msg_op($fp, string $rdata): bool {
+function channel_msg_op($fp, Message $msg): bool {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op(\s*help)?\s$/i', $rdata, $msg)) {
+	if (preg_match('/^!op(\s*help)?$/i', $msg->text)) {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
 
 		echo_r('[OP] by ' . $nick . ' in ' . $channel);
 
@@ -34,13 +33,11 @@ function channel_msg_op($fp, string $rdata): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_op_info($fp, string $rdata, AbstractSmrPlayer $player): bool {
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op info\s$/i', $rdata, $msg)) {
+function channel_msg_op_info($fp, Message $msg, AbstractSmrPlayer $player): bool {
+	if ($msg->text == '!op info') {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
 
 		echo_r('[OP_INFO] by ' . $nick . ' in ' . $channel);
 
@@ -58,14 +55,12 @@ function channel_msg_op_info($fp, string $rdata, AbstractSmrPlayer $player): boo
 /**
  * @param resource $fp
  */
-function channel_msg_op_cancel($fp, string $rdata, AbstractSmrPlayer $player): bool {
+function channel_msg_op_cancel($fp, Message $msg, AbstractSmrPlayer $player): bool {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op cancel\s$/i', $rdata, $msg)) {
+	if ($msg->text == '!op cancel') {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
 
 		echo_r('[OP_CANCEL] by ' . $nick . ' in ' . $channel);
 
@@ -104,15 +99,13 @@ function channel_msg_op_cancel($fp, string $rdata, AbstractSmrPlayer $player): b
 /**
  * @param resource $fp
  */
-function channel_msg_op_set($fp, string $rdata, AbstractSmrPlayer $player): bool {
+function channel_msg_op_set($fp, Message $msg, AbstractSmrPlayer $player): bool {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op set (.*)\s$/i', $rdata, $msg)) {
+	if (preg_match('/^!op set (.*)$/i', $msg->text, $args)) {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
-		$op_time = $msg[5];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
+		$op_time = $args[1];
 
 		echo_r('[OP_SET] by ' . $nick . ' in ' . $channel);
 
@@ -155,13 +148,11 @@ function channel_msg_op_set($fp, string $rdata, AbstractSmrPlayer $player): bool
 /**
  * @param resource $fp
  */
-function channel_msg_op_turns($fp, string $rdata, AbstractSmrPlayer $player): bool {
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op turns\s$/i', $rdata, $msg)) {
+function channel_msg_op_turns($fp, Message $msg, AbstractSmrPlayer $player): bool {
+	if ($msg->text == '!op turns') {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
 
 		echo_r('[OP_TURNS] by ' . $nick . ' in ' . $channel);
 
@@ -184,15 +175,13 @@ function channel_msg_op_turns($fp, string $rdata, AbstractSmrPlayer $player): bo
 /**
  * @param resource $fp
  */
-function channel_msg_op_response($fp, string $rdata, AbstractSmrPlayer $player): bool {
+function channel_msg_op_response($fp, Message $msg, AbstractSmrPlayer $player): bool {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op (yes|no|maybe)\s$/i', $rdata, $msg)) {
+	if (preg_match('/^!op (yes|no|maybe)$/i', $msg->text, $args)) {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
-		$response = strtoupper($msg[5]);
+		$nick = $msg->nick;
+		$channel = $msg->channel;
+		$response = strtoupper($args[1]);
 
 		echo_r('[OP_' . $response . '] by ' . $nick . ' in ' . $channel);
 
@@ -225,13 +214,11 @@ function channel_msg_op_response($fp, string $rdata, AbstractSmrPlayer $player):
 /**
  * @param resource $fp
  */
-function channel_msg_op_list($fp, string $rdata, AbstractSmrPlayer $player): bool {
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op list\s$/i', $rdata, $msg)) {
+function channel_msg_op_list($fp, Message $msg, AbstractSmrPlayer $player): bool {
+	if ($msg->text == '!op list') {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
 
 		echo_r('[OP_LIST] by ' . $nick . ' in ' . $channel);
 

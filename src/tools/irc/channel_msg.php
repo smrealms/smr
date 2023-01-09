@@ -5,6 +5,7 @@ use Smr\Exceptions\AccountNotFound;
 use Smr\Exceptions\AllianceNotFound;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Irc\CallbackEvent;
+use Smr\Irc\Message;
 
 /**
  * @param resource $fp
@@ -80,13 +81,11 @@ function check_for_registration($fp, string $nick, string $channel, Closure $cal
 /**
  * @param resource $fp
  */
-function channel_msg_with_registration($fp, string $rdata): bool {
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!(money|forces|seed|seedlist|op|sd)\s/i', $rdata, $msg)) {
+function channel_msg_with_registration($fp, Message $msg): bool {
+	if (preg_match('/^!(money|forces|seed|seedlist|op|sd)\s/i', $msg->text)) {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
 
 		// check if the query is in public channel
 		if ($channel == '#smr' || $channel == '#smr-bar') {
@@ -94,56 +93,56 @@ function channel_msg_with_registration($fp, string $rdata): bool {
 			return true;
 		}
 
-		$callback = function() use($fp, $rdata): bool {
-			return channel_msg_with_registration($fp, $rdata);
+		$callback = function() use($fp, $msg): bool {
+			return channel_msg_with_registration($fp, $msg);
 		};
 		$player = check_for_registration($fp, $nick, $channel, $callback);
 		if ($player === false) {
 			return true;
 		}
 
-		if (channel_msg_money($fp, $rdata, $player)) {
+		if (channel_msg_money($fp, $msg, $player)) {
 			return true;
 		}
-		if (channel_msg_forces($fp, $rdata, $player)) {
-			return true;
-		}
-
-		if (channel_msg_seed($fp, $rdata, $player)) {
-			return true;
-		}
-		if (channel_msg_seedlist_add($fp, $rdata, $player)) {
-			return true;
-		}
-		if (channel_msg_seedlist_del($fp, $rdata, $player)) {
+		if (channel_msg_forces($fp, $msg, $player)) {
 			return true;
 		}
 
-		if (channel_msg_op_info($fp, $rdata, $player)) {
+		if (channel_msg_seed($fp, $msg, $player)) {
 			return true;
 		}
-		if (channel_msg_op_cancel($fp, $rdata, $player)) {
+		if (channel_msg_seedlist_add($fp, $msg, $player)) {
 			return true;
 		}
-		if (channel_msg_op_set($fp, $rdata, $player)) {
+		if (channel_msg_seedlist_del($fp, $msg, $player)) {
 			return true;
 		}
-		if (channel_msg_op_turns($fp, $rdata, $player)) {
+
+		if (channel_msg_op_info($fp, $msg, $player)) {
 			return true;
 		}
-		if (channel_msg_op_response($fp, $rdata, $player)) {
+		if (channel_msg_op_cancel($fp, $msg, $player)) {
 			return true;
 		}
-		if (channel_msg_op_list($fp, $rdata, $player)) {
+		if (channel_msg_op_set($fp, $msg, $player)) {
 			return true;
 		}
-		if (channel_msg_sd_set($fp, $rdata)) {
+		if (channel_msg_op_turns($fp, $msg, $player)) {
 			return true;
 		}
-		if (channel_msg_sd_del($fp, $rdata)) {
+		if (channel_msg_op_response($fp, $msg, $player)) {
 			return true;
 		}
-		if (channel_msg_sd_list($fp, $rdata, $player)) {
+		if (channel_msg_op_list($fp, $msg, $player)) {
+			return true;
+		}
+		if (channel_msg_sd_set($fp, $msg)) {
+			return true;
+		}
+		if (channel_msg_sd_del($fp, $msg)) {
+			return true;
+		}
+		if (channel_msg_sd_list($fp, $msg, $player)) {
 			return true;
 		}
 
@@ -156,7 +155,7 @@ function channel_msg_with_registration($fp, string $rdata): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_seen($fp, string $rdata): bool {
+function channel_msg_seen($fp, Message $msg): bool {
 
 	// <Caretaker> MrSpock, Azool (Azool@smrealms.rulez) was last seen quitting #smr
 	// 2 days 10 hours 43 minutes ago (05.10. 05:04) stating 'Some people follow their dreams,
@@ -166,13 +165,11 @@ function channel_msg_seen($fp, string $rdata): bool {
 
 	// MrSpock, please look a bit closer at the memberlist of this channel.
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seen\s(.*)\s$/i', $rdata, $msg)) {
+	if (preg_match('/^!seen\s(.*)$/i', $msg->text, $args)) {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
-		$seennick = $msg[5];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
+		$seennick = $args[1];
 
 		echo_r('[SEEN] by ' . $nick . ' in ' . $channel . ' for ' . $seennick);
 
@@ -229,14 +226,12 @@ function channel_msg_seen($fp, string $rdata): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_money($fp, string $rdata, AbstractSmrPlayer $player): bool {
+function channel_msg_money($fp, Message $msg, AbstractSmrPlayer $player): bool {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!money\s$/i', $rdata, $msg)) {
+	if ($msg->text == '!money') {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
 
 		echo_r('[MONEY] by ' . $nick . ' in ' . $channel);
 
@@ -255,19 +250,17 @@ function channel_msg_money($fp, string $rdata, AbstractSmrPlayer $player): bool 
 /**
  * @param resource $fp
  */
-function channel_msg_timer($fp, string $rdata): bool {
+function channel_msg_timer($fp, Message $msg): bool {
 
-	if (preg_match('/^:(.*)!(.*)@(.*) PRIVMSG (.*) :!timer(\s\d+)?(\s.+)?\s$/i', $rdata, $msg)) {
+	if (preg_match('/^!timer(\s\d+)?(\s.+)?$/i', $msg->text, $args)) {
 
 		global $events;
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
 
 		// no countdown means we give a list of active timers
-		if (!isset($msg[5])) {
+		if (!isset($args[1])) {
 
 			fwrite($fp, 'PRIVMSG ' . $channel . ' :The following timers have been defined for this channel:' . EOL);
 			foreach ($events as $event) {
@@ -279,15 +272,15 @@ function channel_msg_timer($fp, string $rdata): bool {
 			return true;
 		}
 
-		$countdown = $msg[5];
+		$countdown = $args[1];
 		if (!is_numeric($countdown)) {
 			fwrite($fp, 'PRIVMSG ' . $channel . ' :I need to know in how many minutes the timer needs to go off. Example: !timer 25 message to channel' . EOL);
 			return true;
 		}
 
 		$message = 'ALERT! ALERT! ALERT!';
-		if (isset($msg[6])) {
-			$message .= ' ' . $msg[6];
+		if (isset($args[2])) {
+			$message .= ' ' . $args[2];
 		}
 
 		echo_r('[TIMER] ' . $nick . ' started a timer with ' . $countdown . ' minute(s) (' . $message . ') in ' . $channel);
@@ -305,14 +298,12 @@ function channel_msg_timer($fp, string $rdata): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_8ball($fp, string $rdata): bool {
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!8ball (.*)\s$/i', $rdata, $msg)) {
+function channel_msg_8ball($fp, Message $msg): bool {
+	if (preg_match('/^!8ball (.*)$/i', $msg->text, $args)) {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
-		$question = $msg[4];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
+		$question = $args[1];
 
 		echo_r('[8BALL] by ' . $nick . ' in ' . $channel . '. Question: ' . $question);
 
@@ -327,14 +318,12 @@ function channel_msg_8ball($fp, string $rdata): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_forces($fp, string $rdata, AbstractSmrPlayer $player): bool {
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!forces(.*)\s$/i', $rdata, $msg)) {
+function channel_msg_forces($fp, Message $msg, AbstractSmrPlayer $player): bool {
+	if (preg_match('/^!forces(.*)$/i', $msg->text, $args)) {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
-		$galaxy = trim($msg[5]);
+		$nick = $msg->nick;
+		$channel = $msg->channel;
+		$galaxy = trim($args[1]);
 
 		echo_r('[FORCE_EXPIRE] by ' . $nick . ' in ' . $channel . ' Galaxy: ' . $galaxy);
 
@@ -352,15 +341,15 @@ function channel_msg_forces($fp, string $rdata, AbstractSmrPlayer $player): bool
 /**
  * @param resource $fp
  */
-function channel_msg_help($fp, string $rdata): bool {
+function channel_msg_help($fp, Message $msg): bool {
 
 	// global help?
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!help\s$/i', $rdata, $msg)) {
+	if ($msg->text == '!help') {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
+		$nick = $msg->nick;
+		$user = $msg->user;
+		$host = $msg->host;
+		$channel = $msg->channel;
 
 		echo_r('[HELP] ' . $nick . '!' . $user . '@' . $host . ' ' . $channel);
 
@@ -383,13 +372,13 @@ function channel_msg_help($fp, string $rdata): bool {
 		return true;
 
 		// help on a spec command?
-	} elseif (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!help\s(.*)\s$/i', $rdata, $msg)) {
+	} elseif (preg_match('/^!help\s(.*)\s$/i', $msg->text, $args)) {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
-		$topic = $msg[5];
+		$nick = $msg->nick;
+		$user = $msg->user;
+		$host = $msg->host;
+		$channel = $msg->channel;
+		$topic = $args[1];
 
 		echo_r('[HELP' . $topic . '] ' . $nick . '!' . $user . '@' . $host . ' ' . $channel);
 

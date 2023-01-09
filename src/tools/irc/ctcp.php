@@ -5,12 +5,10 @@
  */
 function ctcp_version($fp, string $rdata): bool {
 
+	// :(nick)!(user)@(host) PRIVMSG (botnick)
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:' . chr(1) . 'VERSION' . chr(1) . '\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$botnick = $msg[4];
 
 		echo_r('[CTCP_VERSION] by ' . $nick);
 
@@ -26,12 +24,10 @@ function ctcp_version($fp, string $rdata): bool {
  */
 function ctcp_finger($fp, string $rdata): bool {
 
+	// :(nick)!(user)@(host) PRIVMSG (botnick)
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:' . chr(1) . 'FINGER' . chr(1) . '\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$botnick = $msg[4];
 
 		echo_r('[CTCP_FINGER] by ' . $nick);
 
@@ -47,12 +43,10 @@ function ctcp_finger($fp, string $rdata): bool {
  */
 function ctcp_time($fp, string $rdata): bool {
 
+	// :(nick)!(user)@(host) PRIVMSG (botnick)
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:' . chr(1) . 'TIME' . chr(1) . '\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$botnick = $msg[4];
 
 		echo_r('[CTCP_TIME] by ' . $nick);
 
@@ -68,12 +62,10 @@ function ctcp_time($fp, string $rdata): bool {
  */
 function ctcp_ping($fp, string $rdata): bool {
 
+	// :(nick)!(user)@(host) PRIVMSG (botnick)
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:' . chr(1) . 'PING\s(.*)' . chr(1) . '\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$botnick = $msg[4];
 		$their_time = $msg[5];
 
 		echo_r('[CTCP_PING] by ' . $nick . ' at ' . $their_time);
