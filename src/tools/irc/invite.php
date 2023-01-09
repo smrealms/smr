@@ -9,8 +9,6 @@ function invite($fp, string $rdata): bool {
 	if (preg_match('/^:(.*)!(.*)@(.*) INVITE ' . IRC_BOT_NICK . ' :(.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
 		$channel = $msg[4];
 
 		echo_r('[INVITE] by ' . $nick . ' for ' . $channel);

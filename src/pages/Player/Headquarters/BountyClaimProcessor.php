@@ -4,7 +4,6 @@ namespace Smr\Pages\Player\Headquarters;
 
 use AbstractSmrPlayer;
 use Smr\BountyType;
-use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
 use SmrLocation;
 
@@ -26,7 +25,6 @@ class BountyClaimProcessor extends PlayerPageProcessor {
 		if (!empty($bounties)) {
 			$claimText = ('You have claimed the following bounties<br /><br />');
 
-			$db = Database::getInstance();
 			foreach ($bounties as $bounty) {
 				// get bounty id from db
 				$amount = $bounty->getCredits();

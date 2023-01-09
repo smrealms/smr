@@ -74,7 +74,7 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 		 */
 		$teamAttack = function(array $fightingPlayers, string $attack, string $defend): array {
 			$results = ['Traders' => [], 'TotalDamage' => 0];
-			foreach ($fightingPlayers[$attack] as $accountID => $teamPlayer) {
+			foreach ($fightingPlayers[$attack] as $teamPlayer) {
 				$playerResults = $teamPlayer->shootPlayers($fightingPlayers[$defend]);
 				$results['Traders'][$teamPlayer->getAccountID()] = $playerResults;
 				$results['TotalDamage'] += $playerResults['TotalDamage'];

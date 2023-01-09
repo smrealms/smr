@@ -21,8 +21,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 	}
 
 	public function getModifiedAccuracy(): float {
-		$modifiedAccuracy = $this->getBaseAccuracy();
-		return $modifiedAccuracy;
+		return $this->getBaseAccuracy();
 	}
 
 	protected function getModifiedAccuracyAgainstForcesUsingRandom(AbstractSmrPlayer $weaponPlayer, SmrForce $forces, int $random): float {
@@ -147,8 +146,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 
 	public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer $weaponPlayer, AbstractSmrPlayer $targetPlayer): array {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
-			$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-			return $return;
+			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		}
 		$damage = $this->getDamage();
 		$dcsMod = $targetPlayer->getShip()->hasDCS() ? DCS_PLAYER_DAMAGE_DECIMAL_PERCENT : 1;
@@ -160,8 +158,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 
 	public function getModifiedForceDamageAgainstPlayer(SmrForce $forces, AbstractSmrPlayer $targetPlayer): array {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
-			$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-			return $return;
+			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		}
 		$damage = $this->getDamage();
 		$dcsMod = $targetPlayer->getShip()->hasDCS() ? DCS_FORCE_DAMAGE_DECIMAL_PERCENT : 1;
@@ -173,8 +170,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 
 	public function getModifiedPortDamageAgainstPlayer(AbstractSmrPort $port, AbstractSmrPlayer $targetPlayer): array {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
-			$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-			return $return;
+			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		}
 		$damage = $this->getDamage();
 		$dcsMod = $targetPlayer->getShip()->hasDCS() ? DCS_PORT_DAMAGE_DECIMAL_PERCENT : 1;
@@ -186,8 +182,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon {
 
 	public function getModifiedPlanetDamageAgainstPlayer(SmrPlanet $planet, AbstractSmrPlayer $targetPlayer): array {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
-			$return = ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-			return $return;
+			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		}
 		$damage = $this->getDamage();
 		$dcsMod = $targetPlayer->getShip()->hasDCS() ? DCS_PLANET_DAMAGE_DECIMAL_PERCENT : 1;

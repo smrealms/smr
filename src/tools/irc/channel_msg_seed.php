@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
+use Smr\Irc\Message;
+
 /**
  * @param resource $fp
  */
-function channel_msg_seed($fp, string $rdata, AbstractSmrPlayer $player): bool {
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seed\s$/i', $rdata, $msg)) {
+function channel_msg_seed($fp, Message $msg, AbstractSmrPlayer $player): bool {
+	if ($msg->text == '!seed') {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
 
 		echo_r('[SEED] by ' . $nick . ' in ' . $channel);
 
@@ -27,13 +27,11 @@ function channel_msg_seed($fp, string $rdata, AbstractSmrPlayer $player): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_seedlist($fp, string $rdata): bool {
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seedlist(\s*help)?\s$/i', $rdata, $msg)) {
+function channel_msg_seedlist($fp, Message $msg): bool {
+	if (preg_match('/^!seedlist(\s*help)?$/i', $msg->text)) {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
+		$nick = $msg->nick;
+		$channel = $msg->channel;
 
 		echo_r('[SEEDLIST] by ' . $nick . ' in ' . $channel);
 
@@ -51,14 +49,12 @@ function channel_msg_seedlist($fp, string $rdata): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_seedlist_add($fp, string $rdata, AbstractSmrPlayer $player): bool {
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seedlist add (.*)\s$/i', $rdata, $msg)) {
+function channel_msg_seedlist_add($fp, Message $msg, AbstractSmrPlayer $player): bool {
+	if (preg_match('/^!seedlist add (.*)$/i', $msg->text, $args)) {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
-		$sectors = explode(' ', $msg[5]);
+		$nick = $msg->nick;
+		$channel = $msg->channel;
+		$sectors = explode(' ', $args[1]);
 
 		echo_r('[SEEDLIST_ADD] by ' . $nick . ' in ' . $channel);
 
@@ -76,14 +72,12 @@ function channel_msg_seedlist_add($fp, string $rdata, AbstractSmrPlayer $player)
 /**
  * @param resource $fp
  */
-function channel_msg_seedlist_del($fp, string $rdata, AbstractSmrPlayer $player): bool {
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seedlist del (.*)\s$/i', $rdata, $msg)) {
+function channel_msg_seedlist_del($fp, Message $msg, AbstractSmrPlayer $player): bool {
+	if (preg_match('/^!seedlist del (.*)$/i', $msg->text, $args)) {
 
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
-		$sectors = explode(' ', $msg[5]);
+		$nick = $msg->nick;
+		$channel = $msg->channel;
+		$sectors = explode(' ', $args[1]);
 
 		echo_r('[SEEDLIST_DEL] by ' . $nick . ' in ' . $channel);
 

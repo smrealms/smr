@@ -382,8 +382,7 @@ class SmrGalaxy {
 			$totalLinks += $galSector->getNumberOfLinks();
 		}
 		// There are 4 possible links per sector
-		$connectivity = 100 * $totalLinks / (4 * $this->getSize());
-		return $connectivity;
+		return 100 * $totalLinks / (4 * $this->getSize());
 	}
 
 	/**

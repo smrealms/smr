@@ -507,7 +507,7 @@ class SmrForce {
 				}
 			}
 		}
-		$return = [
+		return [
 						'KillingShot' => !$alreadyDead && !$this->exists(),
 						'TargetAlreadyDead' => $alreadyDead,
 						'Mines' => $minesDamage,
@@ -521,7 +521,6 @@ class SmrForce {
 						'HasSDs' => $this->hasSDs(),
 						'TotalDamage' => $minesDamage + $cdDamage + $sdDamage,
 		];
-		return $return;
 	}
 
 	protected function takeDamageToMines(int $damage): int {

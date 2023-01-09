@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\Irc\Exceptions\Timeout;
+use Smr\Irc\Message;
 
 require_once(TOOLS . 'irc/server.php');
 require_once(TOOLS . 'irc/ctcp.php');
@@ -118,36 +119,46 @@ function readFromStream($fp): bool {
 		return true;
 	}
 
-	if (channel_action_slap($fp, $rdata)) {
-		return true;
-	}
+	if (preg_match('/^:(?P<nick>.*)!(?P<user>.*)@(?P<host>.*)\sPRIVMSG\s(?P<channel>.*)\s:(?P<text>.*)/i', $rdata, $args)) {
+		$msg = new Message(
+			nick: $args['nick'],
+			user: $args['user'],
+			host: $args['host'],
+			channel: $args['channel'],
+			text: strtolower(trim($args['text'])),
+		);
 
-	// channel msg (!xyz) without registration
-	if (channel_msg_help($fp, $rdata)) {
-		return true;
-	}
-	if (channel_msg_seedlist($fp, $rdata)) {
-		return true;
-	}
-	if (channel_msg_op($fp, $rdata)) {
-		return true;
-	}
-	if (channel_msg_timer($fp, $rdata)) {
-		return true;
-	}
-	if (channel_msg_8ball($fp, $rdata)) {
-		return true;
-	}
-	if (channel_msg_seen($fp, $rdata)) {
-		return true;
-	}
-	if (channel_msg_sd($fp, $rdata)) {
-		return true;
-	}
+		if (channel_action_slap($fp, $msg)) {
+			return true;
+		}
 
-	// channel msg (!xyz) with registration
-	if (channel_msg_with_registration($fp, $rdata)) {
-		return true;
+		// channel msg (!xyz) without registration
+		if (channel_msg_help($fp, $msg)) {
+			return true;
+		}
+		if (channel_msg_seedlist($fp, $msg)) {
+			return true;
+		}
+		if (channel_msg_op($fp, $msg)) {
+			return true;
+		}
+		if (channel_msg_timer($fp, $msg)) {
+			return true;
+		}
+		if (channel_msg_8ball($fp, $msg)) {
+			return true;
+		}
+		if (channel_msg_seen($fp, $msg)) {
+			return true;
+		}
+		if (channel_msg_sd($fp, $msg)) {
+			return true;
+		}
+
+		// channel msg (!xyz) with registration
+		if (channel_msg_with_registration($fp, $msg)) {
+			return true;
+		}
 	}
 
 	// MrSpock can use this to send commands as caretaker

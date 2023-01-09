@@ -124,13 +124,9 @@ class Template {
 		if ($this->nestedIncludes > 15) {
 			throw new Exception('Nested more than 15 template includes, is something wrong?');
 		}
-		foreach ($this->data as $key => $value) {
-			$$key = $value;
-		}
+		extract($this->data);
 		if ($assignVars !== null) {
-			foreach ($assignVars as $key => $value) {
-				$$key = $value;
-			}
+			extract($assignVars);
 		}
 		$this->nestedIncludes++;
 		require($this->getTemplateLocation($templateName));

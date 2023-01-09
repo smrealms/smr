@@ -308,12 +308,8 @@ class GameDeleteProcessor extends AccountPageProcessor {
 			}
 			$db->switchDatabaseToLive();
 
-			// don't know why exactly we have to do that,
-			// but it seems that the db is used globally instead kept to each object
-			$db = Database::getInstance();
-
 		}
-		$db = Database::getInstance();
+
 		(new AdminTools())->go();
 	}
 

@@ -25,7 +25,7 @@ class SectorKills extends PlayerPage {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT sector_id, battles as amount FROM sector WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY battles DESC, sector_id');
 		$rankedStats = [];
-		foreach ($dbResult->records() as $index => $dbRecord) {
+		foreach ($dbResult->records() as $dbRecord) {
 			$rankedStats[$dbRecord->getInt('sector_id')] = $dbRecord;
 		}
 		$template->assign('TopTen', Rankings::collectSectorRankings($rankedStats, $player));

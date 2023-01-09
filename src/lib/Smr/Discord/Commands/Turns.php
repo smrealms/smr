@@ -29,9 +29,7 @@ class Turns extends DatabaseCommand {
 
 		// Calculate time to max turns
 		$timeToMax = $player->getTimeUntilMaxTurns(time(), true);
-		$msg .= ' At max turns ' . in_time_or_now($timeToMax, true) . '.';
-
-		return $msg;
+		return $msg . ' At max turns ' . in_time_or_now($timeToMax, true) . '.';
 	}
 
 }
