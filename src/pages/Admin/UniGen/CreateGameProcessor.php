@@ -41,7 +41,7 @@ class CreateGameProcessor extends AccountPageProcessor {
 		$game->setStartTime($start->getTimestamp());
 		$game->setEndTime($end->getTimestamp());
 		$game->setGameSpeed(Request::getFloat('game_speed'));
-		$game->setIgnoreStats(Request::get('ignore_stats') == 'Yes');
+		$game->setIgnoreStats(Request::getBool('ignore_stats'));
 		$game->setStartingCredits(Request::getInt('starting_credits'));
 		$game->setCreditsNeeded(Request::getInt('creds_needed'));
 		$game->setStartingRelations(Request::getInt('relations'));

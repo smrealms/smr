@@ -136,11 +136,11 @@ class PreferencesProcessor extends AccountPageProcessor {
 			$message = '<span class="green">SUCCESS: </span>You have changed your date formats.';
 
 		} elseif ($action == 'Change Images') {
-			$account->setDisplayShipImages(Request::get('images') == 'Yes');
+			$account->setDisplayShipImages(Request::getBool('images'));
 			$message = '<span class="green">SUCCESS: </span>You have changed your ship images preferences.';
 
 		} elseif ($action == 'Change Centering') {
-			$account->setCenterGalaxyMapOnPlayer(Request::get('centergalmap') == 'Yes');
+			$account->setCenterGalaxyMapOnPlayer(Request::getBool('centergalmap'));
 			$message = '<span class="green">SUCCESS: </span>You have changed your centering galaxy map preferences.';
 
 		} elseif ($action == 'Change Size') {

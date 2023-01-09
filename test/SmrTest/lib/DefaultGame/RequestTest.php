@@ -16,6 +16,7 @@ class RequestTest extends TestCase {
 	public static function setUpBeforeClass(): void {
 		// All request variables are stored by PHP as strings
 		$_REQUEST = [
+			'bool' => 'true',
 			'int' => '2',
 			'float' => '3.14',
 			'str' => 'ing',
@@ -52,6 +53,46 @@ class RequestTest extends TestCase {
 		$this->assertTrue(Request::has('str'));
 		// An index that doesn't exist
 		$this->assertFalse(Request::has('noexist'));
+	}
+
+	//------------------------------------------------------------------------
+
+	public function test_getBool(): void {
+		// An index that exists, with default
+		$this->assertTrue(Request::getBool('bool', false));
+		// An index that exists, no default
+		$this->assertTrue(Request::getBool('bool'));
+		// An index that doesn't exist, with default
+		$this->assertFalse(Request::getBool('noexist', false));
+	}
+
+	public function test_getBool_no_exist_exception(): void {
+		// An index that doesn't exist, no default
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('No request variable for index: noexist');
+		Request::getBool('noexist');
+	}
+
+	public function test_getBool_nonboolean_exception(): void {
+		// An index whose value is not a boolean
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Value is not boolean for index: int');
+		Request::getBool('int');
+	}
+
+	/**
+	 * @testWith ["yes", true]
+	 *           [1, true]
+	 *           ["TRUE", true]
+	 *           ["on", true]
+	 *           ["no", false]
+	 *           [0, false]
+	 *           ["FALSE", false]
+	 *           ["off", false]
+	 */
+	public function test_getBool_aliases(string|int $input, bool $expected): void {
+		$_REQUEST['bool_alias'] = $input;
+		self::assertSame($expected, Request::getBool('bool_alias'));
 	}
 
 	//------------------------------------------------------------------------

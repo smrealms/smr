@@ -15,7 +15,7 @@ class PreferencesTransferProcessor extends AccountPageProcessor {
 
 	public function build(SmrAccount $account): never {
 		$message = null;
-		if (Request::get('action') == 'Yes') {
+		if (Request::getBool('action')) {
 			// take from us
 			$account->decreaseSmrCredits($this->amount);
 			// add to recepient

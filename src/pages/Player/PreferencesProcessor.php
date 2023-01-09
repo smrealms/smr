@@ -19,11 +19,11 @@ class PreferencesProcessor extends PlayerPageProcessor {
 		$action = Request::get('action');
 
 		if ($action == 'Change Kamikaze Setting') {
-			$player->setCombatDronesKamikazeOnMines(Request::get('kamikaze') == 'Yes');
+			$player->setCombatDronesKamikazeOnMines(Request::getBool('kamikaze'));
 			$message = '<span class="green">SUCCESS: </span>You have changed your combat drones options.';
 
 		} elseif ($action == 'Change Message Setting') {
-			$player->setForceDropMessages(Request::get('forceDropMessages') == 'Yes');
+			$player->setForceDropMessages(Request::getBool('forceDropMessages'));
 			$message = '<span class="green">SUCCESS: </span>You have changed your message options.';
 
 		} elseif ($action == 'change_name') {
