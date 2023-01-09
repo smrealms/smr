@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
-use SmrPlayer;
 
 class ChatSharingProcessor extends PlayerPageProcessor {
 
@@ -18,7 +18,7 @@ class ChatSharingProcessor extends PlayerPageProcessor {
 		private readonly array $shareAccountIDs
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 
 		// Process adding a "share to" account
@@ -33,7 +33,7 @@ class ChatSharingProcessor extends PlayerPageProcessor {
 			}
 
 			try {
-				$accountId = SmrPlayer::getPlayerByPlayerID($addPlayerID, $player->getGameID())->getAccountID();
+				$accountId = Player::getPlayerByPlayerID($addPlayerID, $player->getGameID())->getAccountID();
 			} catch (PlayerNotFound $e) {
 				error_on_page($e->getMessage());
 			}

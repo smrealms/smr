@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
@@ -13,7 +13,7 @@ class WeaponReorderProcessor extends PlayerPageProcessor {
 		private readonly string $direction
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$ship = $player->getShip();
 
 		if ($this->direction == 'Up') {

@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Account;
+use Smr\Galaxy;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Request;
 use Smr\Template;
-use SmrAccount;
-use SmrGalaxy;
 
 class EditGalaxy extends AccountPage {
 
@@ -22,12 +22,12 @@ class EditGalaxy extends AccountPage {
 		private ?int $focusSectorID = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$this->gameID ??= Request::getInt('game_id');
 		$this->galaxyID ??= Request::getInt('gal_on', 1);
 		$this->focusSectorID ??= Request::getInt('focus_sector_id', 0);
 
-		$galaxies = SmrGalaxy::getGameGalaxies($this->gameID);
+		$galaxies = Galaxy::getGameGalaxies($this->gameID);
 		if (empty($galaxies)) {
 			// Game was created, but no galaxies exist, so go back to
 			// the galaxy generation page
@@ -35,7 +35,7 @@ class EditGalaxy extends AccountPage {
 			$container->go();
 		}
 
-		$galaxy = SmrGalaxy::getGalaxy($this->gameID, $this->galaxyID);
+		$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 
 		// Efficiently construct the caches before proceeding
 		$galaxy->getSectors();

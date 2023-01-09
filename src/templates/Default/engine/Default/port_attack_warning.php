@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+
 ?>
 <span class="red">WARNING WARNING</span> port assault about to commence!!<br />
 

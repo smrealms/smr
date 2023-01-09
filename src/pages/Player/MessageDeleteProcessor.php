@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
@@ -13,7 +13,7 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 		private readonly int $folderID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 
 		// If not deleting marked messages, we are deleting entire folders

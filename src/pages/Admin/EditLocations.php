@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\HardwareType;
+use Smr\Location;
 use Smr\Page\AccountPage;
 use Smr\Request;
+use Smr\ShipType;
 use Smr\Template;
-use SmrAccount;
-use SmrLocation;
-use SmrShipType;
-use SmrWeaponType;
+use Smr\WeaponType;
 
 class EditLocations extends AccountPage {
 
@@ -19,14 +19,14 @@ class EditLocations extends AccountPage {
 		private readonly ?int $locationTypeID = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('ViewAllLocationsLink', (new self())->href());
 
 		// For the purposes of editing, the game ID doesn't matter (yet)
 		$gameID = 0;
 
 		if ($this->locationTypeID !== null) {
-			$location = SmrLocation::getLocation($gameID, $this->locationTypeID);
+			$location = Location::getLocation($gameID, $this->locationTypeID);
 			if (Request::has('save')) {
 				$addShipID = Request::getInt('add_ship_id');
 				if ($addShipID != 0) {
@@ -59,11 +59,11 @@ class EditLocations extends AccountPage {
 			}
 
 			$template->assign('Location', $location);
-			$template->assign('ShipTypes', SmrShipType::getAll());
-			$template->assign('Weapons', SmrWeaponType::getAllWeaponTypes());
+			$template->assign('ShipTypes', ShipType::getAll());
+			$template->assign('Weapons', WeaponType::getAllWeaponTypes());
 			$template->assign('AllHardware', HardwareType::getAll());
 		} else {
-			$template->assign('Locations', SmrLocation::getAllLocations($gameID));
+			$template->assign('Locations', Location::getAllLocations($gameID));
 		}
 	}
 

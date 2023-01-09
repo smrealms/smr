@@ -23,7 +23,7 @@ class RouteGenerator {
 
 	/**
 	 * @param int $maxNumPorts
-	 * @param array<int, \SmrPort> $ports
+	 * @param array<int, \Smr\Port> $ports
 	 * @param array<int, bool> $goods
 	 * @param array<int, bool> $races
 	 * @param array<int, array<int, \Smr\Path>> $distances
@@ -94,7 +94,7 @@ class RouteGenerator {
 	}
 
 	/**
-	 * @param array<int, \SmrPort> $ports
+	 * @param array<int, \Smr\Port> $ports
 	 * @param array<int, array<int, \Smr\Path>> $distances
 	 * @param int $routesForPort
 	 * @param array<int, bool> $goods

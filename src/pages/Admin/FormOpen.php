@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Admin;
 
-use Globals;
+use Smr\Account;
+use Smr\Globals;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAccount;
 
 class FormOpen extends AccountPage {
 
@@ -14,7 +14,7 @@ class FormOpen extends AccountPage {
 
 	public string $file = 'admin/form_open.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Open/Close Forms');
 
 		$container = new FormOpenProcessor(

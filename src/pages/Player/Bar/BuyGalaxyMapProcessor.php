@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player\Bar;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Galaxy;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
-use SmrGalaxy;
 
 class BuyGalaxyMapProcessor extends PlayerPageProcessor {
 
@@ -15,7 +15,7 @@ class BuyGalaxyMapProcessor extends PlayerPageProcessor {
 		private readonly int $locationID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$account = $player->getAccount();
 
 		$timeUntilMaps = $player->getGame()->getStartTime() + TIME_MAP_BUY_WAIT - Epoch::time();
@@ -31,7 +31,7 @@ class BuyGalaxyMapProcessor extends PlayerPageProcessor {
 		$galaxyID = Request::getInt('gal_id');
 
 		//get start sector
-		$galaxy = SmrGalaxy::getGalaxy($player->getGameID(), $galaxyID);
+		$galaxy = Galaxy::getGalaxy($player->getGameID(), $galaxyID);
 		$low = $galaxy->getStartSector();
 		//get end sector
 		$high = $galaxy->getEndSector();

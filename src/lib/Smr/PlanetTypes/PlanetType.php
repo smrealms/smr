@@ -3,7 +3,7 @@
 namespace Smr\PlanetTypes;
 
 use Exception;
-use SmrPlanetStructureType;
+use Smr\PlanetStructureType;
 
 /**
  * Defines intrinsic properties of planet types.
@@ -35,7 +35,7 @@ abstract class PlanetType {
 	 */
 	abstract public function menuOptions(): array;
 
-	/** @var array<int, SmrPlanetStructureType> */
+	/** @var array<int, PlanetStructureType> */
 	private array $structures;
 
 	/**
@@ -65,12 +65,12 @@ abstract class PlanetType {
 	/**
 	 * Access properties of structures that this planet type can build.
 	 *
-	 * @return \SmrPlanetStructureType|array<int, \SmrPlanetStructureType>
+	 * @return \Smr\PlanetStructureType|array<int, PlanetStructureType>
 	 */
-	public function structureTypes(int $structureID = null): SmrPlanetStructureType|array {
+	public function structureTypes(int $structureID = null): PlanetStructureType|array {
 		if (!isset($this->structures)) {
 			foreach ($this->getStructureData() as $ID => $Info) {
-				$this->structures[$ID] = new SmrPlanetStructureType($ID, $Info);
+				$this->structures[$ID] = new PlanetStructureType($ID, $Info);
 			}
 		}
 		if ($structureID === null) {

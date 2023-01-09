@@ -2,15 +2,15 @@
 
 namespace Smr\Pages\Player\Headquarters;
 
-use AbstractSmrPlayer;
-use Globals;
-use Menu;
+use Smr\AbstractPlayer;
 use Smr\Bounty;
 use Smr\BountyType;
+use Smr\Globals;
+use Smr\Location;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Race;
 use Smr\Template;
-use SmrLocation;
 
 class Government extends PlayerPage {
 
@@ -20,7 +20,7 @@ class Government extends PlayerPage {
 		private readonly int $locationID
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		// check if our alignment is high enough
 		if ($player->hasEvilAlignment()) {
 			create_error('You are not allowed to enter our Government HQ!');
@@ -28,7 +28,7 @@ class Government extends PlayerPage {
 		if (!$player->getSector()->hasLocation($this->locationID)) {
 			create_error('That location does not exist in this sector');
 		}
-		$location = SmrLocation::getLocation($player->getGameID(), $this->locationID);
+		$location = Location::getLocation($player->getGameID(), $this->locationID);
 		if (!$location->isHQ()) {
 			create_error('There is no headquarters. Obviously.');
 		}

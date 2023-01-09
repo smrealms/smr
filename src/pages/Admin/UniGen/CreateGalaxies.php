@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Account;
+use Smr\Galaxy;
+use Smr\Game;
 use Smr\Page\AccountPage;
 use Smr\Race;
 use Smr\Session;
 use Smr\Template;
-use SmrAccount;
-use SmrGalaxy;
-use SmrGame;
 
 class CreateGalaxies extends AccountPage {
 
@@ -18,11 +18,11 @@ class CreateGalaxies extends AccountPage {
 		private readonly int $gameID
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$session = Session::getInstance();
 		$numGals = $session->getRequestVarInt('num_gals', 12);
 
-		$game = SmrGame::getGame($this->gameID);
+		$game = Game::getGame($this->gameID);
 		$template->assign('PageTopic', 'Create Galaxies : ' . $game->getDisplayName());
 		$template->assign('GameEnabled', $game->isEnabled());
 
@@ -56,7 +56,7 @@ class CreateGalaxies extends AccountPage {
 				'Name' => $defaultNames[$i - 1] ?? 'Unknown',
 				'Width' => 10,
 				'Height' => 10,
-				'Type' => $isRacial ? SmrGalaxy::TYPE_RACIAL : SmrGalaxy::TYPE_NEUTRAL,
+				'Type' => $isRacial ? Galaxy::TYPE_RACIAL : Galaxy::TYPE_NEUTRAL,
 				'ForceMaxHours' => $isRacial ? 12 : 60,
 			];
 		}

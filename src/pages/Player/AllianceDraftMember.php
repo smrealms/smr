@@ -2,17 +2,17 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
 use Exception;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Exceptions\AllianceNotFound;
+use Smr\Game;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
-use SmrAlliance;
-use SmrGame;
-use SmrPlayer;
 
 class AllianceDraftMember extends PlayerPage {
 
@@ -20,8 +20,8 @@ class AllianceDraftMember extends PlayerPage {
 
 	public string $file = 'alliance_pick.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
-		if (!$player->getGame()->isGameType(SmrGame::GAME_TYPE_DRAFT)) {
+	public function build(AbstractPlayer $player, Template $template): void {
+		if (!$player->getGame()->isGameType(Game::GAME_TYPE_DRAFT)) {
 			throw new Exception('This page is only allowed in Draft games!');
 		}
 
@@ -42,7 +42,7 @@ class AllianceDraftMember extends PlayerPage {
 
 		// If players were placed into the NHA, they are still eligible to be picked
 		try {
-			$NHA = SmrAlliance::getAllianceByName(NHA_ALLIANCE_NAME, $player->getGameID());
+			$NHA = Alliance::getAllianceByName(NHA_ALLIANCE_NAME, $player->getGameID());
 			$NHAID = $NHA->getAllianceID();
 		} catch (AllianceNotFound) {
 			$NHAID = 0;
@@ -52,7 +52,7 @@ class AllianceDraftMember extends PlayerPage {
 		$players = [];
 		$dbResult = $db->read('SELECT * FROM player WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND (alliance_id=0 OR alliance_id=' . $db->escapeNumber($NHAID) . ') AND account_id NOT IN (SELECT account_id FROM draft_leaders WHERE draft_leaders.game_id=player.game_id) AND account_id NOT IN (SELECT picked_account_id FROM draft_history WHERE draft_history.game_id=player.game_id) AND account_id != ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ';');
 		foreach ($dbResult->records() as $dbRecord) {
-			$pickPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
+			$pickPlayer = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 			$players[] = [
 				'Player' => $pickPlayer,
 				'HREF' => (new AllianceDraftMemberProcessor($pickPlayer->getAccountID()))->href(),
@@ -65,8 +65,8 @@ class AllianceDraftMember extends PlayerPage {
 		$history = [];
 		$dbResult = $db->read('SELECT * FROM draft_history WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' ORDER BY draft_id');
 		foreach ($dbResult->records() as $dbRecord) {
-			$leader = SmrPlayer::getPlayer($dbRecord->getInt('leader_account_id'), $player->getGameID());
-			$pickedPlayer = SmrPlayer::getPlayer($dbRecord->getInt('picked_account_id'), $player->getGameID());
+			$leader = Player::getPlayer($dbRecord->getInt('leader_account_id'), $player->getGameID());
+			$pickedPlayer = Player::getPlayer($dbRecord->getInt('picked_account_id'), $player->getGameID());
 			$history[] = [
 				'Leader' => $leader,
 				'Player' => $pickedPlayer,

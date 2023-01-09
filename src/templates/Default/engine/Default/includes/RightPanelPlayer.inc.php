@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+
 if (isset($GameID)) { ?>
 	<span id="attack_area"><?php if ($UnderAttack) { ?><p class="attack_warning">You Are Under Attack!</p><script>triggerAttackBlink('3B1111');</script><?php } ?></span><?php
 	$this->includeTemplate('includes/UnreadMessages.inc.php'); ?>

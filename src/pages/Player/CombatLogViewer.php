@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
 use Smr\Database;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
@@ -23,7 +23,7 @@ class CombatLogViewer extends PlayerPage {
 		private readonly int $currentLog = 0
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		// Set properties for the current display page
 		$display_id = $this->logIDs[$this->currentLog];
 		$db = Database::getInstance();

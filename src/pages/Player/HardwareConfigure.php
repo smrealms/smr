@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
@@ -14,7 +14,7 @@ class HardwareConfigure extends PlayerPage {
 
 	public string $file = 'configure_hardware.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$ship = $player->getShip();
 
 		$template->assign('PageTopic', 'Configure Hardware');

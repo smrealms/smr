@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class CheatingShipCheck extends AccountPage {
 
 	public string $file = 'admin/ship_check.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Ship Integrity Check');
 
 		$db = Database::getInstance();

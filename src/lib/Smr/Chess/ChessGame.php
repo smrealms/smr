@@ -2,15 +2,15 @@
 
 namespace Smr\Chess;
 
-use AbstractSmrPlayer;
 use Exception;
+use Smr\AbstractPlayer;
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Exceptions\UserError;
 use Smr\Pages\Player\Chess\MatchPlay;
 use Smr\Pages\Player\Chess\MatchResignProcessor;
-use SmrAccount;
-use SmrPlayer;
+use Smr\Player;
 
 class ChessGame {
 
@@ -62,7 +62,7 @@ class ChessGame {
 	/**
 	 * @return array<self>
 	 */
-	public static function getOngoingPlayerGames(AbstractSmrPlayer $player): array {
+	public static function getOngoingPlayerGames(AbstractPlayer $player): array {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT chess_game_id FROM chess_game WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (black_id = ' . $db->escapeNumber($player->getAccountID()) . ' OR white_id = ' . $db->escapeNumber($player->getAccountID()) . ') AND (end_time > ' . Epoch::time() . ' OR end_time IS NULL);');
 		$games = [];
@@ -389,7 +389,7 @@ class ChessGame {
 			];
 	}
 
-	public static function insertNewGame(int $startDate, ?int $endDate, AbstractSmrPlayer $whitePlayer, AbstractSmrPlayer $blackPlayer): int {
+	public static function insertNewGame(int $startDate, ?int $endDate, AbstractPlayer $whitePlayer, AbstractPlayer $blackPlayer): int {
 		$db = Database::getInstance();
 		$chessGameID = $db->insert('chess_game', [
 			'start_time' => $db->escapeNumber($startDate),
@@ -724,10 +724,10 @@ class ChessGame {
 		if ($checking == 'MATE') {
 			$message = 'You have checkmated your opponent, congratulations!';
 			$this->setWinner($this->getColourID($forColour));
-			SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'You have just lost [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
+			Player::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'You have just lost [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
 		} else {
 			$message = ''; // non-mating valid move, no message
-			SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'It is now your turn in [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
+			Player::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'It is now your turn in [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
 			if ($checking == 'CHECK') {
 				$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Check Given'], HOF_PUBLIC);
 				$otherPlayer->increaseHOF(1, [$chessType, 'Moves', 'Check Received'], HOF_PUBLIC);
@@ -750,16 +750,16 @@ class ChessGame {
 		return $this->gameID;
 	}
 
-	public function getWhitePlayer(): AbstractSmrPlayer {
-		return SmrPlayer::getPlayer($this->whiteID, $this->getGameID());
+	public function getWhitePlayer(): AbstractPlayer {
+		return Player::getPlayer($this->whiteID, $this->getGameID());
 	}
 
 	public function getWhiteID(): int {
 		return $this->whiteID;
 	}
 
-	public function getBlackPlayer(): AbstractSmrPlayer {
-		return SmrPlayer::getPlayer($this->blackID, $this->getGameID());
+	public function getBlackPlayer(): AbstractPlayer {
+		return Player::getPlayer($this->blackID, $this->getGameID());
 	}
 
 	public function getBlackID(): int {
@@ -773,8 +773,8 @@ class ChessGame {
 		};
 	}
 
-	public function getColourPlayer(Colour $colour): AbstractSmrPlayer {
-		return SmrPlayer::getPlayer($this->getColourID($colour), $this->getGameID());
+	public function getColourPlayer(Colour $colour): AbstractPlayer {
+		return Player::getPlayer($this->getColourID($colour), $this->getGameID());
 	}
 
 	public function getColourForAccountID(int $accountID): Colour {
@@ -801,7 +801,7 @@ class ChessGame {
 	}
 
 	/**
-	 * @return array<string, AbstractSmrPlayer>
+	 * @return array<string, AbstractPlayer>
 	 */
 	public function setWinner(int $accountID): array {
 		$this->winner = $accountID;
@@ -833,20 +833,20 @@ class ChessGame {
 		return count($this->getMoves()) % 2 == 0 ? $this->whiteID : $this->blackID;
 	}
 
-	public function getCurrentTurnPlayer(): AbstractSmrPlayer {
-		return SmrPlayer::getPlayer($this->getCurrentTurnAccountID(), $this->getGameID());
+	public function getCurrentTurnPlayer(): AbstractPlayer {
+		return Player::getPlayer($this->getCurrentTurnAccountID(), $this->getGameID());
 	}
 
-	public function getCurrentTurnAccount(): SmrAccount {
-		return SmrAccount::getAccount($this->getCurrentTurnAccountID());
+	public function getCurrentTurnAccount(): Account {
+		return Account::getAccount($this->getCurrentTurnAccountID());
 	}
 
-	public function getWhiteAccount(): SmrAccount {
-		return SmrAccount::getAccount($this->getWhiteID());
+	public function getWhiteAccount(): Account {
+		return Account::getAccount($this->getWhiteID());
 	}
 
-	public function getBlackAccount(): SmrAccount {
-		return SmrAccount::getAccount($this->getBlackID());
+	public function getBlackAccount(): Account {
+		return Account::getAccount($this->getBlackID());
 	}
 
 	public function isCurrentTurn(int $accountID): bool {
@@ -879,7 +879,7 @@ class ChessGame {
 		$results = $this->setWinner($winnerAccountID);
 		$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
 		$results['Loser']->increaseHOF(1, [$chessType, 'Games', 'Resigned'], HOF_PUBLIC);
-		SmrPlayer::sendMessageFromCasino($results['Winner']->getGameID(), $results['Winner']->getAccountID(), '[player=' . $results['Loser']->getPlayerID() . '] just resigned against you in [chess=' . $this->getChessGameID() . '].');
+		Player::sendMessageFromCasino($results['Winner']->getGameID(), $results['Winner']->getAccountID(), '[player=' . $results['Loser']->getPlayerID() . '] just resigned against you in [chess=' . $this->getChessGameID() . '].');
 		return self::END_RESIGN;
 	}
 

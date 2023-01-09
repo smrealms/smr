@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Epoch;
 
@@ -8,7 +9,7 @@ use Smr\Epoch;
  */
 function createNHA(int $gameID): void {
 
-	$alliance = SmrAlliance::createAlliance($gameID, NHA_ALLIANCE_NAME, true);
+	$alliance = Alliance::createAlliance($gameID, NHA_ALLIANCE_NAME, true);
 	$alliance->createDefaultRoles();
 	$alliance->setAllianceDescription('Newbie Help Alliance');
 	$alliance->setLeaderID(ACCOUNT_ID_NHL);

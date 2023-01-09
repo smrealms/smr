@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player\Bar;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
 use Smr\Epoch;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Template;
 
@@ -16,7 +16,7 @@ class BuyTicker extends PlayerPage {
 		private readonly int $locationID
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Buy System');
 		Menu::bar($this->locationID);
 

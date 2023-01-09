@@ -2,7 +2,7 @@
 
 namespace SmrTest\lib\DefaultGame;
 
-use SmrAlliance;
+use Smr\Alliance;
 use SmrTest\BaseIntegrationSpec;
 
 require_once(LIB . 'Default/nha.inc.php');
@@ -27,7 +27,7 @@ class CreateNHATest extends BaseIntegrationSpec {
 		createNHA($gameID);
 
 		// Reload NHA and make sure relevant properties are set
-		$alliance = SmrAlliance::getAllianceByName(NHA_ALLIANCE_NAME, $gameID, true);
+		$alliance = Alliance::getAllianceByName(NHA_ALLIANCE_NAME, $gameID, true);
 		self::assertSame(ACCOUNT_ID_NHL, $alliance->getLeaderID());
 		self::assertSame('Newbie Help Alliance', $alliance->getAllianceName());
 		self::assertSame(DISCORD_SERVER_ID, $alliance->getDiscordServer());

@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player\Bar;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\BarDrink;
 use Smr\Database;
 use Smr\Epoch;
@@ -15,7 +15,7 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 		private readonly string $action
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 
 		$message = '<div class="center">';

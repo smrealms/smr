@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Account\HistoryGames;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Request;
 use Smr\Template;
-use SmrAccount;
 
 class GameNews extends HistoryPage {
 
 	public string $file = 'history_games_news.php';
 
-	protected function buildHistory(SmrAccount $account, Template $template): void {
+	protected function buildHistory(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Game News : ' . $this->historyGameName);
 		$this->addMenu($template);
 

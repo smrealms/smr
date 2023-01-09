@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+
 if (count($Planets) > 0) { ?>
 	<table id="planet-list" class="standard inset center">
 		<thead>

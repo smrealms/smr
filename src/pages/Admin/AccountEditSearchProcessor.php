@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class AccountEditSearchProcessor extends AccountPageProcessor {
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$db = Database::getInstance();
 
 		$account_id = Request::getInt('account_id');

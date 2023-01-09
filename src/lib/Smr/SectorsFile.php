@@ -2,19 +2,9 @@
 
 namespace Smr;
 
-use AbstractSmrPlayer;
-use SmrForce;
-use SmrGame;
-use SmrLocation;
-use SmrPlanet;
-use SmrPort;
-use SmrSector;
-use SmrShipType;
-use SmrWeaponType;
-
 class SectorsFile {
 
-	public static function create(int $gameID, ?AbstractSmrPlayer $player, bool $adminCreate = false): never {
+	public static function create(int $gameID, ?AbstractPlayer $player, bool $adminCreate = false): never {
 		// NOTE: If the format of this file is changed in an incompatible way,
 		// make sure to update the SMR_FILE_VERSION!
 
@@ -35,7 +25,7 @@ class SectorsFile {
 		$file .= '[Weapons]
 		; Weapon = Race,Cost,Shield,Armour,Accuracy,Power level,Restriction
 		; Restriction: 0=none, 1=good, 2=evil, 3=newbie, 4=port, 5=planet' . EOL;
-		foreach (SmrWeaponType::getAllWeaponTypes() as $weapon) {
+		foreach (WeaponType::getAllWeaponTypes() as $weapon) {
 			$file .= inify($weapon->getName()) . '=' . inify($weapon->getRaceName()) . ',' . $weapon->getCost() . ',' . $weapon->getShieldDamage() . ',' . $weapon->getArmourDamage() . ',' . $weapon->getAccuracy() . ',' . $weapon->getPowerLevel() . ',' . $weapon->getBuyerRestriction()->value . EOL;
 		}
 
@@ -48,7 +38,7 @@ class SectorsFile {
 		$file .= '[Ships]
 		; Name = Race,Cost,TPH,Hardpoints,Power,Class,+Equipment (Optional),+Restrictions(Optional)
 		; Restrictions:Align(Integer)' . EOL;
-		foreach (SmrShipType::getAll() as $ship) {
+		foreach (ShipType::getAll() as $ship) {
 			$file .= inify($ship->getName()) . '=' . inify($ship->getRaceName()) . ',' . $ship->getCost() . ',' . $ship->getSpeed() . ',' . $ship->getHardpoints() . ',' . $ship->getMaxPower() . ',' . $ship->getClass()->name;
 			$shipEquip = [];
 			foreach ($ship->getAllMaxHardware() as $hardwareID => $maxHardware) {
@@ -63,7 +53,7 @@ class SectorsFile {
 
 		$file .= '[Locations]
 		; Name = +Sells' . EOL;
-		foreach (SmrLocation::getAllLocations($gameID) as $location) {
+		foreach (Location::getAllLocations($gameID) as $location) {
 			$file .= inify($location->getName()) . '=';
 			$locSells = '';
 			if ($location->isWeaponSold()) {
@@ -109,7 +99,7 @@ class SectorsFile {
 		}
 
 		// Everything below here must be valid INI syntax (safe to parse)
-		$game = SmrGame::getGame($gameID);
+		$game = Game::getGame($gameID);
 		$file .= '[Metadata]
 		FileVersion=' . SMR_FILE_VERSION . '
 		[Game]
@@ -174,10 +164,10 @@ class SectorsFile {
 					$file .= substr($forcesString, 0, -1) . EOL;
 				}
 			}
-			SmrPort::clearCache();
-			SmrForce::clearCache();
-			SmrPlanet::clearCache();
-			SmrSector::clearCache();
+			Port::clearCache();
+			Force::clearCache();
+			Planet::clearCache();
+			Sector::clearCache();
 		}
 
 		$size = strlen($file);

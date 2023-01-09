@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player\Chess;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Chess\ChessGame;
 use Smr\Chess\ChessPiece;
 use Smr\Exceptions\UserError;
@@ -15,7 +15,7 @@ class MovePieceProcessor extends PlayerPageProcessor {
 		private readonly int $chessGameID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$chessGame = ChessGame::getChessGame($this->chessGameID);
 		$x = Request::getInt('x');
 		$y = Request::getInt('y');

@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
 use DOMDocument;
-use Globals;
+use Smr\AbstractPlayer;
+use Smr\Globals;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
@@ -105,7 +105,7 @@ function checkHtmlShipName(string $name): void {
 
 class BuyShipNameProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$account = $player->getAccount();
 
 		$action = Request::get('action');

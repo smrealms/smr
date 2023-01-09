@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+
 if (isset($AccountID)) { ?>
 <div class="LeftNavOne noWrap"><?php
 	if (isset($GameID)) {

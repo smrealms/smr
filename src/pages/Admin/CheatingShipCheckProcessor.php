@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
-use SmrAccount;
 
 class CheatingShipCheckProcessor extends AccountPageProcessor {
 
@@ -15,7 +15,7 @@ class CheatingShipCheckProcessor extends AccountPageProcessor {
 		private readonly int $accountID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		//get our variables
 		$game_id = $this->gameID;
 		$hardware_id = $this->hardwareTypeID;

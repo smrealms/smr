@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
 class MessageBlacklistDeleteProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$entry_ids = Request::getIntArray('entry_ids', []);
 		if (empty($entry_ids)) {
 			$container = new MessageBlacklist('<span class="red bold">ERROR: </span>No entries selected for deletion.');

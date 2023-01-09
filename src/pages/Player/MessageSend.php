@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
-use SmrPlayer;
 
 class MessageSend extends PlayerPage {
 
@@ -20,13 +20,13 @@ class MessageSend extends PlayerPage {
 		private readonly ?string $preview = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Send Message');
 
 		Menu::messages();
 
 		if ($this->receiverAccountID !== null) {
-			$template->assign('Receiver', SmrPlayer::getPlayer($this->receiverAccountID, $player->getGameID())->getDisplayName());
+			$template->assign('Receiver', Player::getPlayer($this->receiverAccountID, $player->getGameID())->getDisplayName());
 		} else {
 			$template->assign('Receiver', 'All Online');
 		}

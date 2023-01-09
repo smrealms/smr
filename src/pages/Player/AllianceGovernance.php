@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Template;
-use SmrAlliance;
 
 class AllianceGovernance extends PlayerPage {
 
@@ -17,10 +17,10 @@ class AllianceGovernance extends PlayerPage {
 		private readonly int $allianceID
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$alliance_id = $this->allianceID;
 
-		$alliance = SmrAlliance::getAlliance($alliance_id, $player->getGameID());
+		$alliance = Alliance::getAlliance($alliance_id, $player->getGameID());
 		$account = $player->getAccount();
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 		Menu::alliance($alliance_id);
@@ -47,7 +47,7 @@ class AllianceGovernance extends PlayerPage {
 		$template->assign('CanChangePassword', $change_pass);
 		$template->assign('CanChangeChatChannel', $change_chat);
 		$template->assign('CanChangeMOTD', $change_mod);
-		$template->assign('HidePassword', $alliance->getRecruitType() != SmrAlliance::RECRUIT_PASSWORD);
+		$template->assign('HidePassword', $alliance->getRecruitType() != Alliance::RECRUIT_PASSWORD);
 	}
 
 }

@@ -3,7 +3,6 @@
 namespace Smr;
 
 use Exception;
-use SmrPlayer;
 
 /**
  * Collection of functions to help display messages and message boxes.
@@ -56,7 +55,7 @@ class Messages {
 		];
 	}
 
-	public static function getMessagePlayer(int $accountID, int $gameID, int $messageType = null): string|SmrPlayer {
+	public static function getMessagePlayer(int $accountID, int $gameID, int $messageType = null): string|Player {
 		if ($accountID == ACCOUNT_ID_PORT) {
 			$return = '<span class="yellow">Port Defenses</span>';
 		} elseif ($accountID == ACCOUNT_ID_ADMIN) {
@@ -78,7 +77,7 @@ class Messages {
 				}
 			}
 			if (!empty($accountID)) {
-				$return = SmrPlayer::getPlayer($accountID, $gameID);
+				$return = Player::getPlayer($accountID, $gameID);
 			} else {
 				$return = match ($messageType) {
 					MSG_ADMIN => '<span class="admin">Administrator</span>',

@@ -2,19 +2,19 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
+use Smr\Game;
 use Smr\Messages;
 use Smr\Page\AccountPage;
+use Smr\Player;
 use Smr\Template;
-use SmrAccount;
-use SmrGame;
-use SmrPlayer;
 
 class ReportedMessageView extends AccountPage {
 
 	public string $file = 'admin/notify_view.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Viewing Reported Messages');
 
 		$container = new ReportedMessageDeleteProcessor();
@@ -34,8 +34,8 @@ class ReportedMessageView extends AccountPage {
 				gameID: $gameID
 			);
 
-			$getName = function(SmrPlayer|string $messagePlayer) use ($container, $account): string {
-				if ($messagePlayer instanceof SmrPlayer) {
+			$getName = function(Player|string $messagePlayer) use ($container, $account): string {
+				if ($messagePlayer instanceof Player) {
 					$name = $messagePlayer->getDisplayName() . ' (Login: ' . $messagePlayer->getAccount()->getLogin() . ')';
 				} else {
 					$name = $messagePlayer;
@@ -47,10 +47,10 @@ class ReportedMessageView extends AccountPage {
 				return $name;
 			};
 
-			if (!SmrGame::gameExists($gameID)) {
+			if (!Game::gameExists($gameID)) {
 				$gameName = 'Game ' . $gameID . ' no longer exists';
 			} else {
-				$gameName = SmrGame::getGame($gameID)->getDisplayName();
+				$gameName = Game::getGame($gameID)->getDisplayName();
 			}
 
 			$messages[] = [

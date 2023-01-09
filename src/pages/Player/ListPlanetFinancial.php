@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
 use Smr\Database;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\PlanetList;
@@ -20,7 +20,7 @@ class ListPlanetFinancial extends PlayerPage {
 		private readonly int $allianceID
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		Menu::planetList($this->allianceID, 1);
 
 		// Determine if the player can view bonds on the planet list.

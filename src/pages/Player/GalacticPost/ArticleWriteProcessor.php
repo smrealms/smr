@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use AbstractSmrPlayer;
-use Globals;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Globals;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Player\CurrentSector;
+use Smr\Player;
 use Smr\Request;
-use SmrPlayer;
 
 class ArticleWriteProcessor extends PlayerPageProcessor {
 
@@ -17,7 +17,7 @@ class ArticleWriteProcessor extends PlayerPageProcessor {
 		private readonly ?int $articleID = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$title = Request::get('title');
 		$message = Request::get('message');
 		if (!$player->isGPEditor()) {
@@ -40,7 +40,7 @@ class ArticleWriteProcessor extends PlayerPageProcessor {
 			$editorMsg = 'Dear Galactic Post editors,<br /><br />[player=' . $player->getPlayerID() . '] has just submitted an article to the Galactic Post!';
 			foreach (Globals::getGalacticPostEditorIDs($player->getGameID()) as $editorID) {
 				if ($editorID != $player->getAccountID()) {
-					SmrPlayer::sendMessageFromAdmin($player->getGameID(), $editorID, $editorMsg);
+					Player::sendMessageFromAdmin($player->getGameID(), $editorID, $editorMsg);
 				}
 			}
 

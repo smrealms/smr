@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+
 ?>
 <table class="lmt centered"><?php
 	$GalaxyMap = isset($GalaxyMap) && $GalaxyMap;

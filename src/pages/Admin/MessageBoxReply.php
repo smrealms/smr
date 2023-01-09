@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Messages;
 use Smr\Page\AccountPage;
+use Smr\Player;
 use Smr\Template;
-use SmrAccount;
-use SmrPlayer;
 
 class MessageBoxReply extends AccountPage {
 
@@ -21,7 +21,7 @@ class MessageBoxReply extends AccountPage {
 		private readonly int $rewardCredits = 0
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$boxName = Messages::getAdminBoxNames()[$this->boxTypeID];
 		$template->assign('PageTopic', 'Reply To ' . $boxName);
 
@@ -31,8 +31,8 @@ class MessageBoxReply extends AccountPage {
 			boxTypeID: $this->boxTypeID
 		);
 		$template->assign('BoxReplyFormHref', $container->href());
-		$template->assign('Sender', SmrPlayer::getPlayer($this->senderAccountID, $this->gameID));
-		$template->assign('SenderAccount', SmrAccount::getAccount($this->senderAccountID));
+		$template->assign('Sender', Player::getPlayer($this->senderAccountID, $this->gameID));
+		$template->assign('SenderAccount', Account::getAccount($this->senderAccountID));
 		$template->assign('Preview', $this->preview);
 		$template->assign('BanPoints', $this->banPoints);
 		$template->assign('RewardCredits', $this->rewardCredits);

@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
@@ -13,7 +13,7 @@ class AllianceOpResponseProcessor extends PlayerPageProcessor {
 		private readonly int $allianceID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$response = strtoupper(Request::get('op_response'));
 
 		$db = Database::getInstance();

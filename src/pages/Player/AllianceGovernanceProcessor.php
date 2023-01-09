@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
-use SmrAlliance;
 
 class AllianceGovernanceProcessor extends PlayerPageProcessor {
 
@@ -14,7 +14,7 @@ class AllianceGovernanceProcessor extends PlayerPageProcessor {
 		private readonly int $allianceID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$alliance_id = $this->allianceID;
 
 		if (Request::has('description')) {
@@ -41,7 +41,7 @@ class AllianceGovernanceProcessor extends PlayerPageProcessor {
 			create_error('You cannot use a " in the image link!');
 		}
 
-		$alliance = SmrAlliance::getAlliance($alliance_id, $player->getGameID());
+		$alliance = Alliance::getAlliance($alliance_id, $player->getGameID());
 		if (Request::has('recruit_type')) {
 			$recruitType = Request::get('recruit_type');
 			$password = Request::get('password', '');

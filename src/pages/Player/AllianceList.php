@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
+use Smr\Game;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAlliance;
-use SmrGame;
 
 class AllianceList extends PlayerPage {
 
@@ -16,10 +16,10 @@ class AllianceList extends PlayerPage {
 
 	public string $file = 'alliance_list.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'List Of Alliances');
 
-		$allowCreate = !$player->hasAlliance() && (!$player->getGame()->isGameType(SmrGame::GAME_TYPE_DRAFT) || $player->isDraftLeader());
+		$allowCreate = !$player->hasAlliance() && (!$player->getGame()->isGameType(Game::GAME_TYPE_DRAFT) || $player->isDraftLeader());
 		if ($allowCreate) {
 			$container = new AllianceCreate();
 			$template->assign('CreateAllianceHREF', $container->href());
@@ -42,14 +42,14 @@ class AllianceList extends PlayerPage {
 		$alliances = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$allianceID = $dbRecord->getInt('alliance_id');
-			$alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID(), false, $dbRecord);
+			$alliance = Alliance::getAlliance($allianceID, $player->getGameID(), false, $dbRecord);
 
 			$alliances[$allianceID] = [
 				'Name' => $alliance->getAllianceDisplayName(true),
 				'TotalExperience' => $dbRecord->getInt('alliance_xp'),
 				'AverageExperience' => $dbRecord->getInt('alliance_avg'),
 				'Members' => $dbRecord->getInt('alliance_member_count'),
-				'OpenRecruitment' => $alliance->getRecruitType() === SmrAlliance::RECRUIT_OPEN,
+				'OpenRecruitment' => $alliance->getRecruitType() === Alliance::RECRUIT_OPEN,
 			];
 		}
 		$template->assign('Alliances', $alliances);

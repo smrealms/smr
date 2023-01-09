@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\Database;
+use Smr\Player;
 
 /**
  * Returns an array with all relevant information about draft teams,
@@ -15,7 +16,7 @@ function get_draft_teams(int $gameId): array {
 	// Get team leader, alliance, and alliance size
 	$teams = [];
 	foreach ($dbResult->records() as $dbRecord) {
-		$leader = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $gameId);
+		$leader = Player::getPlayer($dbRecord->getInt('account_id'), $gameId);
 		if (!$leader->hasAlliance() || $leader->getAlliance()->isNHA()) {
 			// Special case for leaders who haven't made their own alliance yet,
 			// or are still in the Newbie Help Alliance.

@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Template;
 
@@ -11,7 +11,7 @@ class AllianceLeaveConfirm extends PlayerPage {
 
 	public string $file = 'alliance_leave_confirm.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$alliance = $player->getAlliance();
 
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));

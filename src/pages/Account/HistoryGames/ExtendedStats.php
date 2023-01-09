@@ -3,10 +3,10 @@
 namespace Smr\Pages\Account\HistoryGames;
 
 use Exception;
+use Smr\Account;
 use Smr\Database;
 use Smr\Session;
 use Smr\Template;
-use SmrAccount;
 
 class ExtendedStats extends HistoryPage {
 
@@ -18,7 +18,7 @@ class ExtendedStats extends HistoryPage {
 		protected readonly string $historyGameName,
 	) {}
 
-	protected function buildHistory(SmrAccount $account, Template $template): void {
+	protected function buildHistory(Account $account, Template $template): void {
 		$game_id = $this->historyGameID;
 		$template->assign('PageTopic', 'Extended Stats : ' . $this->historyGameName);
 		$this->addMenu($template);

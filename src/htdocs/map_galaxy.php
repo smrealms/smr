@@ -2,6 +2,7 @@
 
 use Smr\Exceptions\GalaxyNotFound;
 use Smr\Exceptions\SectorNotFound;
+use Smr\Galaxy;
 use Smr\Request;
 
 try {
@@ -30,14 +31,14 @@ try {
 	if (Request::has('sector_id')) {
 		$sectorID = Request::getInt('sector_id');
 		try {
-			$galaxy = SmrGalaxy::getGalaxyContaining($session->getGameID(), $sectorID);
+			$galaxy = Galaxy::getGalaxyContaining($session->getGameID(), $sectorID);
 		} catch (SectorNotFound) {
 			create_error('Invalid sector ID');
 		}
 	} elseif (Request::has('galaxy_id')) {
 		$galaxyID = Request::getInt('galaxy_id');
 		try {
-			$galaxy = SmrGalaxy::getGalaxy($session->getGameID(), $galaxyID);
+			$galaxy = Galaxy::getGalaxy($session->getGameID(), $galaxyID);
 		} catch (GalaxyNotFound) {
 			create_error('Invalid galaxy ID');
 		}
@@ -69,12 +70,12 @@ try {
 	}
 
 	// Get the last sector in the last galaxy for form validation
-	$galaxies = SmrGalaxy::getGameGalaxies($session->getGameID());
+	$galaxies = Galaxy::getGameGalaxies($session->getGameID());
 	$template->assign('GameGalaxies', $galaxies);
 	$template->assign('LastSector', $player->getGame()->getLastSectorID());
 
 	if (!isset($galaxy)) {
-		$galaxy = SmrGalaxy::getGalaxyContaining($player->getGameID(), $player->getSectorID());
+		$galaxy = Galaxy::getGalaxyContaining($player->getGameID(), $player->getSectorID());
 		if ($account->isCenterGalaxyMapOnPlayer()) {
 			$sectorID = $player->getSectorID();
 		}

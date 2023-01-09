@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Game;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Pages\Player\Planet\Main as PlanetMain;
 use Smr\Template;
 use Smr\TurnsLevel;
-use SmrGame;
 
 class CurrentSector extends PlayerPage {
 
@@ -31,7 +31,7 @@ class CurrentSector extends PlayerPage {
 		private readonly bool $showForceRefreshMessage = false
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$sector = $player->getSector();
 
 		// If on a planet, forward to planet_main.php
@@ -92,7 +92,7 @@ class CurrentSector extends PlayerPage {
 		// * Force and other Results
 		// *
 		// *******************************************
-		$game = SmrGame::getGame($player->getGameID());
+		$game = Game::getGame($player->getGameID());
 		if (!$game->hasStarted()) {
 			$turnsMessage = 'The game will start in ' . format_time($game->getStartTime() - Epoch::time()) . '!';
 		} else {
@@ -193,7 +193,7 @@ class CurrentSector extends PlayerPage {
 }
 
 
-function getForceRefreshMessage(AbstractSmrPlayer $player): string {
+function getForceRefreshMessage(AbstractPlayer $player): string {
 	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at > ' . $db->escapeNumber(Epoch::time()) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
 	if ($dbResult->hasRecord()) {
@@ -205,7 +205,7 @@ function getForceRefreshMessage(AbstractSmrPlayer $player): string {
 	return $forceRefreshMessage;
 }
 
-function checkForAttackMessage(string $msg, AbstractSmrPlayer $player): void {
+function checkForAttackMessage(string $msg, AbstractPlayer $player): void {
 	$contains = 0;
 	$msg = str_replace('[ATTACK_RESULTS]', '', $msg, $contains);
 	if ($contains > 0) {

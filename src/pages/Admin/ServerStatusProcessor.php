@@ -3,14 +3,14 @@
 namespace Smr\Pages\Admin;
 
 use Exception;
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class ServerStatusProcessor extends AccountPageProcessor {
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$db = Database::getInstance();
 
 		$action = Request::get('action');

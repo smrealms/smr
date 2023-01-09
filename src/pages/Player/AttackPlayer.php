@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
-use SmrPlayer;
 
 class AttackPlayer extends PlayerPage {
 
@@ -22,11 +22,11 @@ class AttackPlayer extends PlayerPage {
 		$this->skipRedirect = $playerDied;
 	}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('TraderCombatResults', $this->results);
 		$template->assign('MinimalDisplay', false);
 		if ($this->targetAccountID !== null) {
-			$template->assign('Target', SmrPlayer::getPlayer($this->targetAccountID, $player->getGameID()));
+			$template->assign('Target', Player::getPlayer($this->targetAccountID, $player->getGameID()));
 		}
 		$template->assign('OverrideDeath', $player->isDead());
 	}

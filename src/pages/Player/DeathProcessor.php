@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
 
 class DeathProcessor extends PlayerPageProcessor {
@@ -11,7 +11,7 @@ class DeathProcessor extends PlayerPageProcessor {
 		$this->skipRedirect = true;
 	}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$player->setDead(false);
 
 		$player->log(LOG_TYPE_TRADER_COMBAT, 'Player sees death screen');

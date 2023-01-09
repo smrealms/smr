@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+
 ?>
 <p style="width:60%; text-align:justify;">Do you enjoy Space Merchant Realms?
 Would you like to see the game grow? If your answer is yes, then consider

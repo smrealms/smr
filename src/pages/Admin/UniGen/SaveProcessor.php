@@ -3,22 +3,22 @@
 namespace Smr\Pages\Admin\UniGen;
 
 use Exception;
+use Smr\Account;
 use Smr\Exceptions\UserError;
+use Smr\Galaxy;
+use Smr\Location;
 use Smr\Page\AccountPageProcessor;
 use Smr\PlanetTypes\PlanetType;
+use Smr\Port;
 use Smr\Race;
 use Smr\Request;
-use SmrAccount;
-use SmrGalaxy;
-use SmrLocation;
-use SmrPort;
-use SmrSector;
+use Smr\Sector;
 
 /**
- * @param array<int, SmrSector> $sectors
+ * @param array<int, Sector> $sectors
  * @param callable $condition True if sector is valid
  */
-function findValidSector(array $sectors, callable $condition): SmrSector {
+function findValidSector(array $sectors, callable $condition): Sector {
 	if (count($sectors) == 0) {
 		throw new UserError('There are no eligible sectors for this action!');
 	}
@@ -31,7 +31,7 @@ function findValidSector(array $sectors, callable $condition): SmrSector {
 	return $sector;
 }
 
-function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location): bool {
+function checkSectorAllowedForLoc(Sector $sector, Location $location): bool {
 	if ($location->isHQ()) {
 		// Only add HQs to empty sectors
 		return !$sector->hasLocation();
@@ -43,7 +43,7 @@ function checkSectorAllowedForLoc(SmrSector $sector, SmrLocation $location): boo
 	return count($sector->getLocations()) < 4 && !$sector->offersFederalProtection() && !$sector->hasLocation($location->getTypeID());
 }
 
-function addLocationToSector(SmrLocation $location, SmrSector $sector): void {
+function addLocationToSector(Location $location, Sector $sector): void {
 	$sector->addLocation($location); //insert the location
 	if ($location->isHQ()) {
 		//only playable races have extra locations to add
@@ -89,31 +89,31 @@ class SaveProcessor extends AccountPageProcessor {
 		private readonly int $galaxyID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$submit = Request::get('submit');
 
 		if ($submit == 'Redo Connections') {
-			$galaxy = SmrGalaxy::getGalaxy($this->gameID, $this->galaxyID);
+			$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 			$connectivity = Request::getFloat('connect');
 			if (!$galaxy->setConnectivity($connectivity)) {
 				$message = '<span class="red">Error</span> : Regenerating connections failed.';
 			} else {
 				$message = '<span class="green">Success</span> : Regenerated connectivity with ' . $connectivity . '% target.';
 			}
-			SmrSector::saveSectors();
+			Sector::saveSectors();
 		} elseif ($submit == 'Create Locations') {
-			$galSectors = SmrSector::getGalaxySectors($this->gameID, $this->galaxyID);
+			$galSectors = Sector::getGalaxySectors($this->gameID, $this->galaxyID);
 			foreach ($galSectors as $galSector) {
 				$galSector->removeAllLocations();
 			}
-			foreach (SmrLocation::getAllLocations($this->gameID) as $location) {
+			foreach (Location::getAllLocations($this->gameID) as $location) {
 				if (Request::has('loc' . $location->getTypeID())) {
 					$numLoc = Request::getInt('loc' . $location->getTypeID());
 					for ($i = 0; $i < $numLoc; $i++) {
 						//4 per sector max locs and no locations inside fed
 						$randSector = findValidSector(
 							$galSectors,
-							fn(SmrSector $sector): bool => checkSectorAllowedForLoc($sector, $location)
+							fn(Sector $sector): bool => checkSectorAllowedForLoc($sector, $location)
 						);
 						addLocationToSector($location, $randSector);
 					}
@@ -122,7 +122,7 @@ class SaveProcessor extends AccountPageProcessor {
 			$message = '<span class="green">Success</span> : Succesfully added locations.';
 		} elseif ($submit == 'Create Warps') {
 			//get all warp info from all gals, some need to be removed, some need to be added
-			$galaxy = SmrGalaxy::getGalaxy($this->gameID, $this->galaxyID);
+			$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 			$galSectors = $galaxy->getSectors();
 			//get totals
 			foreach ($galSectors as $galSector) {
@@ -131,7 +131,7 @@ class SaveProcessor extends AccountPageProcessor {
 				}
 			}
 			//iterate over all the galaxies
-			$galaxies = SmrGalaxy::getGameGalaxies($this->gameID);
+			$galaxies = Galaxy::getGameGalaxies($this->gameID);
 			foreach ($galaxies as $eachGalaxy) {
 				//do we have a warp to this gal?
 				if (Request::has('warp' . $eachGalaxy->getGalaxyID())) {
@@ -145,23 +145,23 @@ class SaveProcessor extends AccountPageProcessor {
 						//only 1 warp per sector
 						$galSector = findValidSector(
 							$galSectors,
-							fn(SmrSector $sector): bool => !$sector->hasWarp() && !$sector->offersFederalProtection()
+							fn(Sector $sector): bool => !$sector->hasWarp() && !$sector->offersFederalProtection()
 						);
 						//get other side
 						//make sure it does not go to itself
 						$otherSector = findValidSector(
 							$eachGalaxy->getSectors(),
-							fn(SmrSector $sector): bool => !$sector->hasWarp() && !$sector->offersFederalProtection() && !$sector->equals($galSector)
+							fn(Sector $sector): bool => !$sector->hasWarp() && !$sector->offersFederalProtection() && !$sector->equals($galSector)
 						);
 						$galSector->setWarp($otherSector);
 					}
 				}
 			}
-			SmrSector::saveSectors();
+			Sector::saveSectors();
 			$message = '<span class="green">Success</span> : Succesfully added warps.';
 			(new CreateWarps($this->gameID, $this->galaxyID, $message))->go();
 		} elseif ($submit == 'Create Planets') {
-			$galaxy = SmrGalaxy::getGalaxy($this->gameID, $this->galaxyID);
+			$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 			$galSectors = $galaxy->getSectors();
 			foreach ($galSectors as $galSector) {
 				if ($galSector->hasPlanet()) {
@@ -174,7 +174,7 @@ class SaveProcessor extends AccountPageProcessor {
 				for ($i = 1; $i <= $numberOfPlanets; $i++) {
 					$galSector = findValidSector(
 						$galSectors,
-						fn(SmrSector $sector): bool => !$sector->hasPlanet() // 1 per sector
+						fn(Sector $sector): bool => !$sector->hasPlanet() // 1 per sector
 					);
 					$galSector->createPlanet($planetTypeID);
 				}
@@ -182,7 +182,7 @@ class SaveProcessor extends AccountPageProcessor {
 			$message = '<span class="green">Success</span> : Succesfully added planets.';
 		} elseif ($submit == 'Create Ports') {
 			$numLevelPorts = [];
-			$maxPortLevel = SmrPort::getMaxLevelByGame($this->gameID);
+			$maxPortLevel = Port::getMaxLevelByGame($this->gameID);
 			for ($i = 1; $i <= $maxPortLevel; $i++) {
 				$numLevelPorts[$i] = Request::getInt('port' . $i);
 			}
@@ -199,7 +199,7 @@ class SaveProcessor extends AccountPageProcessor {
 			}
 			$assignedPorts = array_sum($numRacePorts);
 			if ($totalRaceDist == 100 || $totalPorts == 0) {
-				$galaxy = SmrGalaxy::getGalaxy($this->gameID, $this->galaxyID);
+				$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 				$galSectors = $galaxy->getSectors();
 				foreach ($galSectors as $galSector) {
 					if ($galSector->hasPort()) {
@@ -219,7 +219,7 @@ class SaveProcessor extends AccountPageProcessor {
 						//get a sector for this port
 						$galSector = findValidSector(
 							$galSectors,
-							fn(SmrSector $sector): bool => !$sector->hasPort() && !$sector->offersFederalProtection()
+							fn(Sector $sector): bool => !$sector->hasPort() && !$sector->offersFederalProtection()
 						);
 
 						$raceID = array_rand($numRacePorts);
@@ -233,7 +233,7 @@ class SaveProcessor extends AccountPageProcessor {
 						$port->setCreditsToDefault();
 					}
 				}
-				SmrPort::savePorts();
+				Port::savePorts();
 				$message = '<span class="green">Success</span> : Succesfully added ports.';
 			} else {
 				$message = '<span class="red">Error: Your port race distribution must equal 100!</span>';

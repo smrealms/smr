@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+
 ?>
 <script src="/js/jquery.hotkeys.js"></script>
 <script src="/js/ajax.js"></script>

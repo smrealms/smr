@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAccount;
 
 class AlbumEdit extends AccountPage {
 
@@ -18,7 +18,7 @@ class AlbumEdit extends AccountPage {
 		private readonly ?string $successMsg = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Edit Photo');
 
 		$db = Database::getInstance();

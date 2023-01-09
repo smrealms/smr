@@ -3,10 +3,10 @@
 namespace Smr\Pages\Admin\UniGen;
 
 use DateTime;
+use Smr\Account;
+use Smr\Game;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
-use SmrGame;
 
 class EditGameProcessor extends AccountPageProcessor {
 
@@ -15,13 +15,13 @@ class EditGameProcessor extends AccountPageProcessor {
 		private readonly int $galaxyID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$join = new DateTime(Request::get('game_join'));
 		$start = empty(Request::get('game_start')) ? $join :
 			new DateTime(Request::get('game_start'));
 		$end = new DateTime(Request::get('game_end'));
 
-		$game = SmrGame::getGame($this->gameID);
+		$game = Game::getGame($this->gameID);
 		$game->setName(Request::get('game_name'));
 		$game->setDescription(Request::get('desc'));
 		$game->setGameTypeID(Request::getInt('game_type'));

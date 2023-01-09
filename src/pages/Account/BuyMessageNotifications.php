@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Messages;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class BuyMessageNotifications extends AccountPage {
 
@@ -15,7 +15,7 @@ class BuyMessageNotifications extends AccountPage {
 		private readonly ?string $message = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('Message', $this->message);
 
 		$template->assign('PageTopic', 'Message Notifications');

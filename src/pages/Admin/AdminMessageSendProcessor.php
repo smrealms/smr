@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\AccountPageProcessor;
+use Smr\Player;
 use Smr\Request;
-use SmrAccount;
-use SmrPlayer;
 
 class AdminMessageSendProcessor extends AccountPageProcessor {
 
@@ -15,7 +15,7 @@ class AdminMessageSendProcessor extends AccountPageProcessor {
 		private readonly int $sendGameID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$message = Request::get('message');
 		$expire = Request::getFloat('expire');
 		$game_id = $this->sendGameID;
@@ -59,7 +59,7 @@ class AdminMessageSendProcessor extends AccountPageProcessor {
 		}
 		// Send the messages
 		foreach ($receivers as $receiver) {
-			SmrPlayer::sendMessageFromAdmin($receiver[0], $receiver[1], $message, $expire);
+			Player::sendMessageFromAdmin($receiver[0], $receiver[1], $message, $expire);
 		}
 		$msg = '<span class="green">SUCCESS: </span>Your message has been sent.';
 

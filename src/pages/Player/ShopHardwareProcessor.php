@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
 use Exception;
+use Smr\AbstractPlayer;
 use Smr\HardwareType;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
@@ -15,7 +15,7 @@ class ShopHardwareProcessor extends PlayerPageProcessor {
 		private readonly int $locationID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$ship = $player->getShip();
 
 		$action = Request::get('action');

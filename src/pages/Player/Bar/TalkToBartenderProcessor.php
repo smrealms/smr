@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Player\Bar;
 
-use AbstractSmrPlayer;
 use Exception;
-use Globals;
+use Smr\AbstractPlayer;
 use Smr\Database;
+use Smr\EnhancedWeaponEvent;
+use Smr\Galaxy;
+use Smr\Globals;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
-use SmrEnhancedWeaponEvent;
-use SmrGalaxy;
 
 class TalkToBartenderProcessor extends PlayerPageProcessor {
 
@@ -17,7 +17,7 @@ class TalkToBartenderProcessor extends PlayerPageProcessor {
 		private readonly int $locationID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$action = Request::get('action');
 
 		if ($action == 'tell') {
@@ -39,7 +39,7 @@ class TalkToBartenderProcessor extends PlayerPageProcessor {
 				$message = 'So you\'re the tight-lipped sort, eh? No matter, no matter...<br /><br /><i>The bartender slowly scans the room with squinted eyes and then leans in close.</i><br /><br />Must be a sensational story you\'ve got there. Don\'t worry, I can keep a secret. What\'s on your mind?';
 			}
 		} elseif ($action == 'tip') {
-			$event = SmrEnhancedWeaponEvent::getLatestEvent($player->getGameID());
+			$event = EnhancedWeaponEvent::getLatestEvent($player->getGameID());
 			$cost = $event->getWeapon()->getCost();
 
 			// Tip needs to be more than a specific fraction of the weapon cost
@@ -49,7 +49,7 @@ class TalkToBartenderProcessor extends PlayerPageProcessor {
 
 			if ($tip > 0.25 * $cost) {
 				$eventSectorID = $event->getSectorID();
-				$eventGalaxy = SmrGalaxy::getGalaxyContaining($player->getGameID(), $eventSectorID);
+				$eventGalaxy = Galaxy::getGalaxyContaining($player->getGameID(), $eventSectorID);
 
 				if ($player->getSector()->getGalaxy()->equals($eventGalaxy)) {
 					$locationHint = 'Sector ' . Globals::getSectorBBLink($eventSectorID);

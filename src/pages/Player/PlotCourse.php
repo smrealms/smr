@@ -2,17 +2,17 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
 use Smr\HardwareType;
+use Smr\Location;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\PlotGroup;
 use Smr\Session;
+use Smr\ShipType;
 use Smr\Template;
-use SmrLocation;
-use SmrShipType;
-use SmrWeaponType;
+use Smr\WeaponType;
 
 class PlotCourse extends PlayerPage {
 
@@ -20,7 +20,7 @@ class PlotCourse extends PlayerPage {
 
 	public string $file = 'course_plot.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$session = Session::getInstance();
 
 		$template->assign('PageTopic', 'Plot A Course');
@@ -56,7 +56,7 @@ class PlotCourse extends PlayerPage {
 				break;
 
 			case PlotGroup::Ships:
-				$ships = SmrShipType::getAll();
+				$ships = ShipType::getAll();
 				foreach ($ships as $ship) {
 					$options[$ship->getTypeID()] = $ship->getName();
 				}
@@ -64,7 +64,7 @@ class PlotCourse extends PlayerPage {
 				break;
 
 			case PlotGroup::Weapons:
-				$weapons = SmrWeaponType::getAllSoldWeaponTypes($player->getGameID());
+				$weapons = WeaponType::getAllSoldWeaponTypes($player->getGameID());
 				foreach ($weapons as $weapon) {
 					$options[$weapon->getWeaponTypeID()] = $weapon->getName();
 				}
@@ -72,7 +72,7 @@ class PlotCourse extends PlayerPage {
 				break;
 
 			case PlotGroup::Locations:
-				$locations = SmrLocation::getAllLocations($player->getGameID());
+				$locations = Location::getAllLocations($player->getGameID());
 				foreach ($locations as $location) {
 					$options[$location->getTypeID()] = $location->getName();
 				}

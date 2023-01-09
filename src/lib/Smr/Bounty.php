@@ -2,9 +2,7 @@
 
 namespace Smr;
 
-use AbstractSmrPlayer;
 use Exception;
-use SmrPlayer;
 
 class Bounty {
 
@@ -28,7 +26,7 @@ class Bounty {
 	 *
 	 * @return array<int, self>
 	 */
-	public static function getPlacedOnPlayer(AbstractSmrPlayer $player): array {
+	public static function getPlacedOnPlayer(AbstractPlayer $player): array {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM bounty WHERE ' . $player->getSQL());
 		$bounties = [];
@@ -44,7 +42,7 @@ class Bounty {
 	 *
 	 * @return array<self>
 	 */
-	public static function getClaimableByPlayer(AbstractSmrPlayer $player, ?BountyType $type = null): array {
+	public static function getClaimableByPlayer(AbstractPlayer $player, ?BountyType $type = null): array {
 		$db = Database::getInstance();
 		$query = 'SELECT * FROM bounty WHERE claimer_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID());
 		$query .= match ($type) {
@@ -140,8 +138,8 @@ class Bounty {
 		$this->setSmrCredits($this->smrCredits + $smrCredits);
 	}
 
-	public function getTargetPlayer(): AbstractSmrPlayer {
-		return SmrPlayer::getPlayer($this->targetID, $this->gameID);
+	public function getTargetPlayer(): AbstractPlayer {
+		return Player::getPlayer($this->targetID, $this->gameID);
 	}
 
 	/**

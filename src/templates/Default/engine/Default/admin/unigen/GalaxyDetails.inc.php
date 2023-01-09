@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Galaxy;
+
 ?>
 <form method="POST" action="<?php echo $Submit['href']; ?>">
 	<table class="standard">
@@ -23,7 +25,7 @@
 				<td><input required <?php if ($GameEnabled) { ?>disabled<?php } ?> class="center" type="number" min="1" max="100" value="<?php echo $gal['Height']; ?>" name="height<?php echo $i; ?>"></td>
 				<td>
 					<select name="type<?php echo $i; ?>"><?php
-					foreach (SmrGalaxy::TYPES as $GalaxyType) { ?>
+					foreach (Galaxy::TYPES as $GalaxyType) { ?>
 						<option value="<?php echo htmlspecialchars($GalaxyType); ?>" <?php if ($GalaxyType == $gal['Type']) { ?>selected<?php } ?>><?php echo $GalaxyType; ?></option><?php
 					} ?>
 					</select>

@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player\BetaFunctions;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 
 class AddMoneyProcessor extends BetaFunctionsPageProcessor {
 
-	public function buildBetaFunctionsProcessor(AbstractSmrPlayer $player): void {
+	public function buildBetaFunctionsProcessor(AbstractPlayer $player): void {
 		$player->setCredits(50000000);
 	}
 

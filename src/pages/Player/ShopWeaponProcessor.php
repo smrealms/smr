@@ -2,21 +2,21 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\BuyerRestriction;
+use Smr\Combat\Weapon\Weapon;
+use Smr\Location;
 use Smr\Page\PlayerPageProcessor;
-use SmrLocation;
-use SmrWeapon;
 
 class ShopWeaponProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly int $locationID,
-		private readonly SmrWeapon $weapon,
+		private readonly Weapon $weapon,
 		private readonly ?int $sellOrderID = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$ship = $player->getShip();
 
 		if (!$player->getSector()->hasLocation($this->locationID)) {
@@ -26,7 +26,7 @@ class ShopWeaponProcessor extends PlayerPageProcessor {
 		$weapon = $this->weapon;
 		if ($this->sellOrderID === null) {
 			// If here, we are buying
-			$location = SmrLocation::getLocation($player->getGameID(), $this->locationID);
+			$location = Location::getLocation($player->getGameID(), $this->locationID);
 			if (!$location->isWeaponSold($weapon->getWeaponTypeID())) {
 				create_error('We do not sell that weapon here!');
 			}

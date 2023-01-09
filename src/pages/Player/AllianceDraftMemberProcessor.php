@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
 use Exception;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Game;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Page\ReusableTrait;
-use SmrGame;
-use SmrPlayer;
+use Smr\Player;
 
 class AllianceDraftMemberProcessor extends PlayerPageProcessor {
 
@@ -19,8 +19,8 @@ class AllianceDraftMemberProcessor extends PlayerPageProcessor {
 		private readonly int $pickedAccountID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
-		if (!$player->getGame()->isGameType(SmrGame::GAME_TYPE_DRAFT)) {
+	public function build(AbstractPlayer $player): never {
+		if (!$player->getGame()->isGameType(Game::GAME_TYPE_DRAFT)) {
 			throw new Exception('This page is only allowed in Draft games!');
 		}
 
@@ -31,7 +31,7 @@ class AllianceDraftMemberProcessor extends PlayerPageProcessor {
 		if (!$teams[$player->getAccountID()]['CanPick']) {
 			create_error('You have to wait for others to pick first.');
 		}
-		$pickedPlayer = SmrPlayer::getPlayer($pickedAccountID, $player->getGameID());
+		$pickedPlayer = Player::getPlayer($pickedAccountID, $player->getGameID());
 
 		if ($pickedPlayer->isDraftLeader()) {
 			create_error('You cannot pick another leader.');

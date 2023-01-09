@@ -3,15 +3,15 @@
 namespace Smr\Pages\Account;
 
 use Exception;
+use Smr\Account;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class InvalidEmail extends AccountPage {
 
 	public string $file = 'invalid_email.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Invalid E-mail Address');
 
 		// This page should only be accessed by players whose accounts

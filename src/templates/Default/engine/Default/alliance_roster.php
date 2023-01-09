@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Alliance;
+
 if ($ShowRoles && $CanChangeRoles) { ?>
 	<form class="standard" method="POST" action="<?php echo $SaveAllianceRolesHREF; ?>"><?php
 } ?>
@@ -129,7 +131,7 @@ if ($Alliance->getAllianceID() == $ThisPlayer->getAllianceID()) { ?>
 
 if ($JoinRestriction === false) { ?>
 	<form class="standard" method="POST" action="<?php echo $JoinHREF; ?>"><?php
-		if ($Alliance->getRecruitType() == SmrAlliance::RECRUIT_OPEN) { ?>
+		if ($Alliance->getRecruitType() == Alliance::RECRUIT_OPEN) { ?>
 			<p>This alliance is accepting all recruits!</p><?php
 		} else { ?>
 			<p>Enter password to join alliance</p>

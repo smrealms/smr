@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\SectorLock;
-use SmrPlayer;
 
 class AttackPlanetProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$account = $player->getAccount();
 		$ship = $player->getShip();
 
@@ -116,10 +116,10 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 		// Send notification to planet owners
 		if ($planetOwner->hasAlliance()) {
 			foreach ($planetOwner->getAlliance()->getMemberIDs() as $allyAccountID) {
-				SmrPlayer::sendMessageFromPlanet($planet->getGameID(), $allyAccountID, $planetAttackMessage);
+				Player::sendMessageFromPlanet($planet->getGameID(), $allyAccountID, $planetAttackMessage);
 			}
 		} else {
-			SmrPlayer::sendMessageFromPlanet($planet->getGameID(), $planetOwner->getAccountID(), $planetAttackMessage);
+			Player::sendMessageFromPlanet($planet->getGameID(), $planetOwner->getAccountID(), $planetAttackMessage);
 		}
 
 		// Update sector messages for attackers

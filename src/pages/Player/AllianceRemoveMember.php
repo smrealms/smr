@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
 use Smr\Epoch;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
@@ -15,7 +15,7 @@ class AllianceRemoveMember extends PlayerPage {
 
 	public string $file = 'alliance_remove_member.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$account = $player->getAccount();
 		$alliance = $player->getAlliance();
 

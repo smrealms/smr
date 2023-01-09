@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
-use SmrPlayer;
 
 class BountyView extends PlayerPage {
 
@@ -15,8 +15,8 @@ class BountyView extends PlayerPage {
 		private readonly int $otherAccountID
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
-		$bountyPlayer = SmrPlayer::getPlayer($this->otherAccountID, $player->getGameID());
+	public function build(AbstractPlayer $player, Template $template): void {
+		$bountyPlayer = Player::getPlayer($this->otherAccountID, $player->getGameID());
 		$template->assign('PageTopic', 'Viewing Bounties');
 		$template->assign('BountyPlayer', $bountyPlayer);
 	}

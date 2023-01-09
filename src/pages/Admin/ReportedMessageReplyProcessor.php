@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Page\AccountPageProcessor;
+use Smr\Player;
 use Smr\Request;
-use SmrAccount;
-use SmrPlayer;
 
 class ReportedMessageReplyProcessor extends AccountPageProcessor {
 
@@ -15,7 +15,7 @@ class ReportedMessageReplyProcessor extends AccountPageProcessor {
 		private readonly int $offendedAccountID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$offenderReply = Request::get('offenderReply');
 		$offenderBanPoints = Request::getInt('offenderBanPoints');
 		$offendedReply = Request::get('offendedReply');
@@ -34,24 +34,24 @@ class ReportedMessageReplyProcessor extends AccountPageProcessor {
 		}
 
 		if ($offenderReply != '') {
-			SmrPlayer::sendMessageFromAdmin($this->gameID, $this->offenderAccountID, $offenderReply);
+			Player::sendMessageFromAdmin($this->gameID, $this->offenderAccountID, $offenderReply);
 
 			//do we have points?
 			if ($offenderBanPoints > 0) {
 				$suspicion = 'Inappropriate In-Game Message';
-				$offenderAccount = SmrAccount::getAccount($this->offenderAccountID);
+				$offenderAccount = Account::getAccount($this->offenderAccountID);
 				$offenderAccount->addPoints($offenderBanPoints, $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
 			}
 		}
 
 		if ($offendedReply != '') {
 			//next message
-			SmrPlayer::sendMessageFromAdmin($this->gameID, $this->offendedAccountID, $offendedReply);
+			Player::sendMessageFromAdmin($this->gameID, $this->offendedAccountID, $offendedReply);
 
 			//do we have points?
 			if ($offendedBanPoints > 0) {
 				$suspicion = 'Inappropriate In-Game Message';
-				$offendedAccount = SmrAccount::getAccount($this->offendedAccountID);
+				$offendedAccount = Account::getAccount($this->offendedAccountID);
 				$offendedAccount->addPoints($offendedBanPoints, $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
 			}
 		}

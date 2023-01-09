@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player\BetaFunctions;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 
 class RemoveWeaponsProcessor extends BetaFunctionsPageProcessor {
 
-	public function buildBetaFunctionsProcessor(AbstractSmrPlayer $player): void {
+	public function buildBetaFunctionsProcessor(AbstractPlayer $player): void {
 		$ship = $player->getShip();
 		$ship->removeAllWeapons();
 	}

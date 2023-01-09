@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Plotter;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Plotter;
+use Smr\Port;
 use Smr\Request;
 use Smr\TradeGood;
 use Smr\TradeGoodTransaction;
 use Smr\TransactionType;
-use SmrPort;
 
 class CargoDumpProcessor extends PlayerPageProcessor {
 
@@ -18,7 +18,7 @@ class CargoDumpProcessor extends PlayerPageProcessor {
 		private readonly ?int $goodAmount = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$ship = $player->getShip();
 		$sector = $player->getSector();
 
@@ -66,7 +66,7 @@ class CargoDumpProcessor extends PlayerPageProcessor {
 			// Don't lose more exp than you have
 			$lost_xp = min(
 				$player->getExperience(),
-				IRound(SmrPort::getBaseExperience($amount, $good_distance))
+				IRound(Port::getBaseExperience($amount, $good_distance))
 			);
 			$player->decreaseExperience($lost_xp);
 			$player->increaseHOF($lost_xp, ['Trade', 'Experience', 'Jettisoned'], HOF_PUBLIC);

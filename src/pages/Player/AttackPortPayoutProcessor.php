@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
 use Smr\PortPayoutType;
 
@@ -12,7 +12,7 @@ class AttackPortPayoutProcessor extends PlayerPageProcessor {
 		private readonly PortPayoutType $payoutType
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$port = $player->getSectorPort();
 		if (!$port->isDestroyed()) {
 			create_error('The port is no longer defenceless!');

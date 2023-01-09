@@ -2,17 +2,17 @@
 
 namespace Smr\Pages\Player\Rankings;
 
-use AbstractSmrPlayer;
-use Menu;
-use Rankings;
+use Smr\AbstractPlayer;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Rankings;
 use Smr\Template;
 
 class PlayerAssists extends PlayerPage {
 
 	public string $file = 'rankings_player_assists.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Assist Rankings');
 
 		Menu::rankings(0, 4);

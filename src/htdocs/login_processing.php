@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Exceptions\AccountNotFound;
@@ -29,7 +30,7 @@ try {
 			}
 
 			try {
-				$account = SmrAccount::getAccountBySocialLogin($socialLogin);
+				$account = Account::getAccountBySocialLogin($socialLogin);
 			} catch (AccountNotFound) {
 				// Let them create an account or link to existing
 				if (session_status() === PHP_SESSION_NONE) {
@@ -53,7 +54,7 @@ try {
 
 			try {
 				// Throw an exception if account isn't found or password is wrong
-				$account = SmrAccount::getAccountByLogin($login);
+				$account = Account::getAccountByLogin($login);
 				if (!$account->checkPassword($password)) {
 					throw new AccountNotFound('Wrong password');
 				}

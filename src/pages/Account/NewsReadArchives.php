@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Account;
 
-use Menu;
+use Smr\Account;
 use Smr\Database;
+use Smr\Menu;
 use Smr\News;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Request;
 use Smr\Template;
-use SmrAccount;
 
 class NewsReadArchives extends AccountPage {
 
@@ -21,7 +21,7 @@ class NewsReadArchives extends AccountPage {
 		private readonly int $gameID
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$gameID = $this->gameID;
 
 		$min_news = Request::getInt('min_news', 1);

@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
-use SmrPlayer;
 
 class CurrentPlayers extends PlayerPage {
 
@@ -16,7 +16,7 @@ class CurrentPlayers extends PlayerPage {
 
 	public string $file = 'current_players.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$inactiveTime = Epoch::time() - TIME_BEFORE_INACTIVE;
 
 		$template->assign('PageTopic', 'Current Players');
@@ -65,7 +65,7 @@ class CurrentPlayers extends PlayerPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$row = [];
 
-			$curr_player = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
+			$curr_player = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 			$row['player'] = $curr_player;
 
 			// How should we style the row for this player?

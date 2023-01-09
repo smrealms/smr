@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class ValidateProcessor extends AccountPageProcessor {
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		if (Request::get('action') == 'resend') {
 			$account->sendValidationEmail();
 			$message = '<span class="green">The validation code has been resent to your e-mail address!</span>';

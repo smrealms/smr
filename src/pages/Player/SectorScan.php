@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Sector;
 use Smr\Template;
-use SmrSector;
 
 class SectorScan extends PlayerPage {
 
@@ -16,7 +16,7 @@ class SectorScan extends PlayerPage {
 		private readonly int $targetSectorID
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$sector = $player->getSector();
 
 		if (!$sector->isLinked($this->targetSectorID) && $sector->getSectorID() != $this->targetSectorID) {
@@ -24,7 +24,7 @@ class SectorScan extends PlayerPage {
 		}
 
 		// initialize vars
-		$scanSector = SmrSector::getSector($player->getGameID(), $this->targetSectorID);
+		$scanSector = Sector::getSector($player->getGameID(), $this->targetSectorID);
 
 		$template->assign('PageTopic', 'Sector Scan of #' . $scanSector->getSectorID() . ' (' . $scanSector->getGalaxy()->getDisplayName() . ')');
 		Menu::navigation($player);

@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class ChangelogAddProcessor extends AccountPageProcessor {
 
@@ -13,7 +13,7 @@ class ChangelogAddProcessor extends AccountPageProcessor {
 		private readonly int $versionID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$change_title = Request::get('change_title');
 		$change_message = Request::get('change_message');
 		$affected_db = Request::get('affected_db');

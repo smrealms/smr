@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player\Bank;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
 use Smr\Database;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Session;
 use Smr\Template;
-use SmrPlayer;
 
 class AnonBankDetail extends PlayerPage {
 
@@ -18,7 +18,7 @@ class AnonBankDetail extends PlayerPage {
 		private readonly int $anonBankID,
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$session = Session::getInstance();
 
 		$account_num = $this->anonBankID;
@@ -71,7 +71,7 @@ class AnonBankDetail extends PlayerPage {
 
 			$transactions = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$transactionPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
+				$transactionPlayer = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 				$transaction = $dbRecord->getString('transaction');
 				$amount = number_format($dbRecord->getInt('amount'));
 				$transactions[$dbRecord->getInt('transaction_id')] = [

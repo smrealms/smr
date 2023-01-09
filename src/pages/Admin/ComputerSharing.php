@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAccount;
 
 class ComputerSharing extends AccountPage {
 
@@ -15,7 +15,7 @@ class ComputerSharing extends AccountPage {
 
 	public string $file = 'admin/comp_share.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Computer Sharing');
 
 		$unusedAfter = 86400 * 365; // 1 year

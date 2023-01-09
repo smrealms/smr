@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class AlbumModerateProcessor extends AccountPageProcessor {
 
@@ -15,7 +15,7 @@ class AlbumModerateProcessor extends AccountPageProcessor {
 		private readonly string $task
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$db = Database::getInstance();
 
 		// get account_id from session
@@ -40,7 +40,7 @@ class AlbumModerateProcessor extends AccountPageProcessor {
 			$db->unlock();
 
 			// get his email address and send the mail
-			$receiver = SmrAccount::getAccount($account_id);
+			$receiver = Account::getAccount($account_id);
 			if (!empty($receiver->getEmail())) {
 				$mail = setupMailer();
 				$mail->Subject = 'SMR Photo Album Notification';

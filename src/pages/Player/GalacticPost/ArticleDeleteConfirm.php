@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPage;
 use Smr\Template;
@@ -15,7 +15,7 @@ class ArticleDeleteConfirm extends PlayerPage {
 		private readonly int $articleID
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$db = Database::getInstance();
 
 		$template->assign('PageTopic', 'Delete Article - Confirm');

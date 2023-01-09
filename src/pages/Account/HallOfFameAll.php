@@ -2,15 +2,15 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Game;
 use Smr\HallOfFame;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
-use SmrAccount;
-use SmrGame;
-use SmrPlayer;
 
 class HallOfFameAll extends AccountPage {
 
@@ -31,13 +31,13 @@ class HallOfFameAll extends AccountPage {
 		return new self($this->gameID, $viewType);
 	}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$game_id = $this->gameID;
 
 		if (empty($game_id)) {
 			$topic = 'All Time Hall of Fame';
 		} else {
-			$topic = 'Hall of Fame: ' . SmrGame::getGame($game_id)->getDisplayName();
+			$topic = 'Hall of Fame: ' . Game::getGame($game_id)->getDisplayName();
 		}
 		$template->assign('PageTopic', $topic);
 
@@ -48,7 +48,7 @@ class HallOfFameAll extends AccountPage {
 		$template->assign('Breadcrumb', $breadcrumb);
 
 		$viewType = $this->viewType;
-		$hofVis = SmrPlayer::getHOFVis();
+		$hofVis = Player::getHOFVis();
 
 		if (!isset($hofVis[$viewType])) {
 			// Not a complete HOF type, so continue to show categories
@@ -68,7 +68,7 @@ class HallOfFameAll extends AccountPage {
 				$dbResult = $db->read('SELECT account_id, SUM(amount) as amount FROM account_donated
 							GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
 			} elseif ($viewType == HOF_TYPE_USER_SCORE) {
-				$statements = SmrAccount::getUserScoreCaseStatement($db);
+				$statements = Account::getUserScoreCaseStatement($db);
 				$query = 'SELECT account_id, ' . $statements['CASE'] . ' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25';
 				$dbResult = $db->read($query);
 			} else {

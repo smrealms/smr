@@ -2,17 +2,17 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class Vote extends AccountPage {
 
 	public string $file = 'vote.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Voting');
 
 		$db = Database::getInstance();

@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player\Headquarters;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
-use SmrPlayer;
 
 class BountyPlaceConfirm extends PlayerPage {
 
@@ -19,13 +19,13 @@ class BountyPlaceConfirm extends PlayerPage {
 		private readonly int $smrCredits
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Place Bounty');
 
 		Menu::headquarters($this->locationID);
 
 		// get this guy from db
-		$bountyPlayer = SmrPlayer::getPlayerByPlayerID($this->otherPlayerID, $player->getGameID());
+		$bountyPlayer = Player::getPlayerByPlayerID($this->otherPlayerID, $player->getGameID());
 
 		$template->assign('Amount', number_format($this->credits));
 		$template->assign('SmrCredits', number_format($this->smrCredits));

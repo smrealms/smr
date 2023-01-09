@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Template;
-use SmrAlliance;
-use SmrTreaty;
+use Smr\Treaty;
 
 class AllianceTreaties extends PlayerPage {
 
@@ -18,7 +18,7 @@ class AllianceTreaties extends PlayerPage {
 		private readonly ?string $message = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$alliance = $player->getAlliance();
 
 		$template->assign('PageTopic', 'Alliance Treaties');
@@ -29,7 +29,7 @@ class AllianceTreaties extends PlayerPage {
 		$dbResult = $db->read('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($player->getAllianceID()) . ' ORDER BY alliance_name');
 		foreach ($dbResult->records() as $dbRecord) {
 			$allianceID = $dbRecord->getInt('alliance_id');
-			$alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID(), false, $dbRecord);
+			$alliance = Alliance::getAlliance($allianceID, $player->getGameID(), false, $dbRecord);
 			$alliances[$allianceID] = $alliance->getAllianceDisplayName();
 		}
 		$template->assign('Alliances', $alliances);
@@ -40,7 +40,7 @@ class AllianceTreaties extends PlayerPage {
 		$dbResult = $db->read('SELECT * FROM alliance_treaties WHERE alliance_id_2 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND official = \'FALSE\'');
 		foreach ($dbResult->records() as $dbRecord) {
 			$offerTerms = [];
-			foreach (array_keys(SmrTreaty::TYPES) as $term) {
+			foreach (array_keys(Treaty::TYPES) as $term) {
 				if ($dbRecord->getBoolean($term)) {
 					$offerTerms[] = $term;
 				}
@@ -52,7 +52,7 @@ class AllianceTreaties extends PlayerPage {
 			$rejectHREF = $container->href();
 
 			$offers[] = [
-				'Alliance' => SmrAlliance::getAlliance($otherAllianceID, $player->getGameID()),
+				'Alliance' => Alliance::getAlliance($otherAllianceID, $player->getGameID()),
 				'Terms' => $offerTerms,
 				'AcceptHREF' => $acceptHREF,
 				'RejectHREF' => $rejectHREF,

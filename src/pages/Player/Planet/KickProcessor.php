@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player\Planet;
 
-use AbstractSmrPlayer;
-use Globals;
+use Smr\AbstractPlayer;
+use Smr\Globals;
 use Smr\Page\PlayerPageProcessor;
-use SmrPlayer;
+use Smr\Player;
 
 class KickProcessor extends PlayerPageProcessor {
 
@@ -13,13 +13,13 @@ class KickProcessor extends PlayerPageProcessor {
 		private readonly int $kickAccountID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		if (!$player->isLandedOnPlanet()) {
 			create_error('You are not on a planet!');
 		}
 		$planet = $player->getSectorPlanet();
 
-		$planetPlayer = SmrPlayer::getPlayer($this->kickAccountID, $player->getGameID());
+		$planetPlayer = Player::getPlayer($this->kickAccountID, $player->getGameID());
 		$owner = $planet->getOwner();
 		if ($owner->getAllianceID() != $player->getAllianceID()) {
 			create_error('You can not kick someone off a planet your alliance does not own!');

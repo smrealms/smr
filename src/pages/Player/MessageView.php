@@ -2,17 +2,17 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Menu;
 use Smr\Messages;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Session;
 use Smr\Template;
-use SmrAccount;
-use SmrPlayer;
 
 class MessageView extends PlayerPage {
 
@@ -26,7 +26,7 @@ class MessageView extends PlayerPage {
 		private readonly bool $showAll = false
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$session = Session::getInstance();
 
 		Menu::messages();
@@ -118,7 +118,7 @@ class MessageView extends PlayerPage {
 /**
  * @param array<string, mixed> $messageBox
  */
-function displayScouts(array &$messageBox, AbstractSmrPlayer $player): void {
+function displayScouts(array &$messageBox, AbstractPlayer $player): void {
 	// Generate the group messages
 	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT player.*, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, sum(msg_read=\'FALSE\') as total_unread
@@ -132,7 +132,7 @@ function displayScouts(array &$messageBox, AbstractSmrPlayer $player): void {
 					ORDER BY last DESC');
 
 	foreach ($dbResult->records() as $dbRecord) {
-		$sender = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
+		$sender = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 		$totalUnread = $dbRecord->getInt('total_unread');
 		$message = 'Your forces have spotted ' . $sender->getBBLink() . ' passing your forces ' . pluralise($dbRecord->getInt('number'), 'time');
 		$message .= ($totalUnread > 0) ? ' (' . $totalUnread . ' unread).' : '.';
@@ -163,7 +163,7 @@ function displayScouts(array &$messageBox, AbstractSmrPlayer $player): void {
 /**
  * @return array<string, mixed>
  */
-function displayGrouped(AbstractSmrPlayer $sender, string $message_text, int $first, int $last, bool $star, SmrAccount $displayAccount): array {
+function displayGrouped(AbstractPlayer $sender, string $message_text, int $first, int $last, bool $star, Account $displayAccount): array {
 	// Define a unique array so we can delete grouped messages
 	$array = [
 		$sender->getAccountID(),
@@ -184,7 +184,7 @@ function displayGrouped(AbstractSmrPlayer $sender, string $message_text, int $fi
 /**
  * @return array<string, mixed>
  */
-function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $game_id, string $message_text, int $send_time, bool $msg_read, int $type, SmrAccount $displayAccount): array {
+function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $game_id, string $message_text, int $send_time, bool $msg_read, int $type, Account $displayAccount): array {
 	$message = [];
 	$message['ID'] = $message_id;
 	$message['Text'] = $message_text;
@@ -194,7 +194,7 @@ function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $
 	// Display the sender (except for scout messages)
 	if ($type != MSG_SCOUT) {
 		$sender = Messages::getMessagePlayer($sender_id, $game_id, $type);
-		if ($sender instanceof AbstractSmrPlayer) {
+		if ($sender instanceof AbstractPlayer) {
 			$message['Sender'] = $sender;
 			$container = new SearchForTraderResult($sender->getPlayerID());
 			$message['SenderDisplayName'] = create_link($container, $sender->getDisplayName());
@@ -216,7 +216,7 @@ function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $
 	}
 
 	if ($type == MSG_SENT) {
-		$receiver = SmrPlayer::getPlayer($receiver_id, $game_id);
+		$receiver = Player::getPlayer($receiver_id, $game_id);
 		$container = new SearchForTraderResult($receiver->getPlayerID());
 		$message['ReceiverDisplayName'] = create_link($container, $receiver->getDisplayName());
 	}

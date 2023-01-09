@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Messages;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class ReportedMessageReply extends AccountPage {
 
@@ -21,7 +21,7 @@ class ReportedMessageReply extends AccountPage {
 		private readonly ?int $offendedBanPoints = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Reply To Reported Messages');
 
 		$container = new ReportedMessageReplyProcessor(

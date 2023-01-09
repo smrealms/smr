@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player\Headquarters;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
 use Smr\Bounty;
 use Smr\BountyType;
+use Smr\Location;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Template;
-use SmrLocation;
 
 class Underground extends PlayerPage {
 
@@ -18,7 +18,7 @@ class Underground extends PlayerPage {
 		private readonly int $locationID
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		if ($player->hasGoodAlignment()) {
 			create_error('You are not allowed to come in here!');
 		}
@@ -26,7 +26,7 @@ class Underground extends PlayerPage {
 		if (!$player->getSector()->hasLocation($this->locationID)) {
 			create_error('That location does not exist in this sector');
 		}
-		$location = SmrLocation::getLocation($player->getGameID(), $this->locationID);
+		$location = Location::getLocation($player->getGameID(), $this->locationID);
 		if (!$location->isUG()) {
 			create_error('There is no underground here.');
 		}

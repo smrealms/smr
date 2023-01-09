@@ -2,7 +2,6 @@
 
 namespace Smr;
 
-use AbstractSmrPlayer;
 use Smr\Container\DiContainer;
 use Smr\Exceptions\UserError;
 use Smr\Page\Page;
@@ -16,8 +15,6 @@ use Smr\Pages\Player\SectorJumpProcessor;
 use Smr\Pages\Player\SectorMoveProcessor;
 use Smr\Pages\Player\SectorScan;
 use Smr\Pages\Player\ShopGoodsProcessor;
-use SmrAccount;
-use SmrPlayer;
 
 class Session {
 
@@ -217,18 +214,18 @@ class Session {
 		return $this->accountID;
 	}
 
-	public function getAccount(): SmrAccount {
-		return SmrAccount::getAccount($this->accountID);
+	public function getAccount(): Account {
+		return Account::getAccount($this->accountID);
 	}
 
-	public function getPlayer(bool $forceUpdate = false): AbstractSmrPlayer {
-		return SmrPlayer::getPlayer($this->accountID, $this->gameID, $forceUpdate);
+	public function getPlayer(bool $forceUpdate = false): AbstractPlayer {
+		return Player::getPlayer($this->accountID, $this->gameID, $forceUpdate);
 	}
 
 	/**
 	 * Sets the `accountID` attribute of this session.
 	 */
-	public function setAccount(SmrAccount $account): void {
+	public function setAccount(Account $account): void {
 		$this->accountID = $account->getAccountID();
 	}
 

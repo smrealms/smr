@@ -3,7 +3,6 @@
 namespace Smr;
 
 use Exception;
-use SmrAlliance;
 
 /**
  * Collection of functions to help prepare Planet List pages.
@@ -28,7 +27,7 @@ class PlanetList {
 		if ($playerOnly) {
 			$template->assign('PageTopic', 'Planet');
 		} else {
-			$alliance = SmrAlliance::getAlliance($allianceId, $player->getGameID());
+			$alliance = Alliance::getAlliance($allianceId, $player->getGameID());
 			$template->assign('Alliance', $alliance);
 			$template->assign('PageTopic', 'Planets : ' . $alliance->getAllianceDisplayName());
 		}

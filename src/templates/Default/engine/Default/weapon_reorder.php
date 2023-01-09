@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+
 if ($ThisShip->hasWeapons()) { ?>
 	<div class="center">
 		<p>To reorder your weapons simply drag and drop them into the desired order.</p>

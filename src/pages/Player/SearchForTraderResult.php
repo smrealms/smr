@@ -2,18 +2,18 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Globals;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
+use Smr\Globals;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Pages\Account\HallOfFamePersonal;
 use Smr\Pages\Account\NewsReadAdvanced;
 use Smr\Pages\Player\Council\ViewCouncil;
+use Smr\Player;
 use Smr\Request;
 use Smr\Template;
-use SmrPlayer;
 
 class SearchForTraderResult extends PlayerPage {
 
@@ -26,7 +26,7 @@ class SearchForTraderResult extends PlayerPage {
 		private ?string $playerName = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$this->playerID ??= Request::getInt('player_id');
 		$player_id = $this->playerID;
 
@@ -40,13 +40,13 @@ class SearchForTraderResult extends PlayerPage {
 
 		if (!empty($player_id)) {
 			try {
-				$resultPlayer = SmrPlayer::getPlayerByPlayerID($player_id, $player->getGameID());
+				$resultPlayer = Player::getPlayerByPlayerID($player_id, $player->getGameID());
 			} catch (PlayerNotFound) {
 				// No player found, we'll return an empty result
 			}
 		} else {
 			try {
-				$resultPlayer = SmrPlayer::getPlayerByPlayerName($player_name, $player->getGameID());
+				$resultPlayer = Player::getPlayerByPlayerName($player_name, $player->getGameID());
 			} catch (PlayerNotFound) {
 				// No exact match, but that's okay
 			}
@@ -59,14 +59,14 @@ class SearchForTraderResult extends PlayerPage {
 						ORDER BY player_name LIMIT 5');
 			$similarPlayers = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$similarPlayers[] = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
+				$similarPlayers[] = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 			}
 		}
 
 		/**
-		 * @return array<string, SmrPlayer|string>
+		 * @return array<string, Player|string>
 		 */
-		$playerLinks = function(SmrPlayer $linkPlayer) use ($player): array {
+		$playerLinks = function(Player $linkPlayer) use ($player): array {
 			$result = ['Player' => $linkPlayer];
 
 			$container = new self($linkPlayer->getPlayerID());

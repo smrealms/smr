@@ -3,16 +3,16 @@
 namespace Smr\Pages\Admin\UniGen;
 
 use Exception;
+use Smr\Account;
 use Smr\Database;
+use Smr\Galaxy;
+use Smr\Game;
+use Smr\Location;
 use Smr\Page\AccountPageProcessor;
+use Smr\Planet;
+use Smr\Port;
 use Smr\Request;
-use SmrAccount;
-use SmrGalaxy;
-use SmrGame;
-use SmrLocation;
-use SmrPlanet;
-use SmrPort;
-use SmrSector;
+use Smr\Sector;
 
 class EditGalaxiesProcessor extends AccountPageProcessor {
 
@@ -21,11 +21,11 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 		private readonly int $galaxyID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$db = Database::getInstance();
 
 		$gameID = $this->gameID;
-		$game = SmrGame::getGame($gameID);
+		$game = Game::getGame($gameID);
 		$galaxies = $game->getGalaxies();
 
 		// Save the original sizes for later processing
@@ -57,7 +57,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 			}
 		}
 		if ($galaxySizesUnchanged) {
-			SmrGalaxy::saveGalaxies();
+			Galaxy::saveGalaxies();
 			$message = '<span class="green">SUCCESS: </span>Edited galaxies (sizes unchanged).';
 			$container = new EditGalaxy($this->gameID, $this->galaxyID, $message);
 			$container->go();
@@ -100,7 +100,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 					} elseif ($oldExists) {
 						$oldID++;
 						// Remove this sector and everything in it
-						$delSector = SmrSector::getSector($gameID, $oldID);
+						$delSector = Sector::getSector($gameID, $oldID);
 						$delSector->removeAllFixtures();
 						$db->write('DELETE FROM sector WHERE ' . $delSector->getSQL());
 					}
@@ -144,7 +144,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 				}
 
 				// Else we are ready to shift from oldID to newID
-				$oldSector = SmrSector::getSector($gameID, $oldID);
+				$oldSector = Sector::getSector($gameID, $oldID);
 				$SQL = 'SET sector_id = ' . $db->escapeNumber($newID) . ' WHERE ' . $oldSector->getSQL();
 
 				if ($oldSector->hasPlanet()) {
@@ -171,24 +171,24 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 		// Clear all the caches, since they are associated with the old IDs.
 		// NOTE: We can't re-initialize the cache here because the sectors
 		// still have the wrong galaxy ID at this point.
-		SmrSector::clearCache();
-		SmrPort::clearCache();
-		SmrPlanet::clearCache();
-		SmrLocation::clearCache();
+		Sector::clearCache();
+		Port::clearCache();
+		Planet::clearCache();
+		Location::clearCache();
 
 		// Create any new sectors that need to be made
 		foreach ($sectorMap as $newID => $oldID) {
 			if ($oldID === false) {
-				SmrSector::createSector($gameID, $newID);
+				Sector::createSector($gameID, $newID);
 			}
 		}
 
 		// Finally, modify sector properties (galaxy ID, links, and warps)
 		foreach ($sectorMap as $newID => $oldID) {
-			$newSector = SmrSector::getSector($gameID, $newID);
+			$newSector = Sector::getSector($gameID, $newID);
 
 			// Update the galaxy ID
-			// NOTE: this must be done before SmrGalaxy::getSectors is called
+			// NOTE: this must be done before Galaxy::getSectors is called
 			foreach ($galaxies as $galaxy) {
 				if ($galaxy->contains($newID)) {
 					$newSector->setGalaxyID($galaxy->getGalaxyID());
@@ -215,12 +215,12 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 				if ($newWarpID === false) {
 					throw new Exception('Warp sector unexpectedly missing from mapping: ' . $oldWarpID);
 				}
-				$newSector->setWarp(SmrSector::getSector($gameID, $newWarpID));
+				$newSector->setWarp(Sector::getSector($gameID, $newWarpID));
 			}
 		}
 
-		SmrGalaxy::saveGalaxies();
-		SmrSector::saveSectors();
+		Galaxy::saveGalaxies();
+		Sector::saveSectors();
 
 		$message = '<span class="green">SUCCESS: </span>Edited galaxies (sizes have changed).';
 		$container = new EditGalaxy($this->gameID, $this->galaxyID, $message);

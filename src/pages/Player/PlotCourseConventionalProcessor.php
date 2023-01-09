@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Plotter;
+use Smr\AbstractPlayer;
 use Smr\Exceptions\SectorNotFound;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Plotter;
 use Smr\Request;
-use SmrSector;
+use Smr\Sector;
 
 class PlotCourseConventionalProcessor extends PlayerPageProcessor {
 
@@ -16,7 +16,7 @@ class PlotCourseConventionalProcessor extends PlayerPageProcessor {
 		private readonly ?int $to = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$start = $this->from ?? Request::getInt('from');
 		$target = $this->to ?? Request::getInt('to');
 
@@ -30,8 +30,8 @@ class PlotCourseConventionalProcessor extends PlayerPageProcessor {
 		}
 
 		try {
-			$startSector = SmrSector::getSector($player->getGameID(), $start);
-			$targetSector = SmrSector::getSector($player->getGameID(), $target);
+			$startSector = Sector::getSector($player->getGameID(), $start);
+			$targetSector = Sector::getSector($player->getGameID(), $target);
 		} catch (SectorNotFound) {
 			create_error('The sectors have to exist!');
 		}

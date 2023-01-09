@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
-use SmrAccount;
-use SmrPlayer;
 
 class AccountEdit extends AccountPage {
 
@@ -19,13 +19,13 @@ class AccountEdit extends AccountPage {
 		private readonly int $editAccountID
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$db = Database::getInstance();
 
 		$template->assign('PageTopic', 'Edit Account');
 
 		$account_id = $this->editAccountID;
-		$curr_account = SmrAccount::getAccount($account_id);
+		$curr_account = Account::getAccount($account_id);
 
 		$template->assign('EditingAccount', $curr_account);
 		$template->assign('EditFormHREF', (new AccountEditProcessor($account_id))->href());
@@ -34,7 +34,7 @@ class AccountEdit extends AccountPage {
 		$editingPlayers = [];
 		$dbResult = $db->read('SELECT * FROM player WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY game_id ASC');
 		foreach ($dbResult->records() as $dbRecord) {
-			$editingPlayers[] = SmrPlayer::getPlayer($curr_account->getAccountID(), $dbRecord->getInt('game_id'), false, $dbRecord);
+			$editingPlayers[] = Player::getPlayer($curr_account->getAccountID(), $dbRecord->getInt('game_id'), false, $dbRecord);
 		}
 		$template->assign('EditingPlayers', $editingPlayers);
 
@@ -57,7 +57,7 @@ class AccountEdit extends AccountPage {
 			// if an admin did it we get his/her name
 			$admin_id = $dbRecord->getInt('admin_id');
 			if ($admin_id > 0) {
-				$admin = SmrAccount::getAccount($admin_id)->getLogin();
+				$admin = Account::getAccount($admin_id)->getLogin();
 			} else {
 				$admin = 'System';
 			}

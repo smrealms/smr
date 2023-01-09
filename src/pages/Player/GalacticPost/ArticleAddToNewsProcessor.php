@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
@@ -13,7 +13,7 @@ class ArticleAddToNewsProcessor extends PlayerPageProcessor {
 		private readonly int $articleID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT text FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($this->articleID));
 		$dbRecord = $dbResult->record();

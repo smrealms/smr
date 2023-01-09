@@ -118,7 +118,7 @@ const MISSIONS = [
 ];
 
 /**
- * Callback for array_walk_recursive in SmrPlayer::rebuildMission.
+ * Callback for array_walk_recursive in Player::rebuildMission.
  * Searches for placeholders in template and replaces them with values
  * derived from the supplied data.
  *

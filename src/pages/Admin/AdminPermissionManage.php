@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\AdminPermissions;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAccount;
 
 class AdminPermissionManage extends AccountPage {
 
@@ -19,7 +19,7 @@ class AdminPermissionManage extends AccountPage {
 		private readonly ?int $adminAccountID = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$admin_id = $this->adminAccountID;
 
 		$template->assign('PageTopic', 'Manage Admin Permissions');
@@ -57,7 +57,7 @@ class AdminPermissionManage extends AccountPage {
 			$template->assign('SelectAdminHREF', (new AdminPermissionManageSelectProcessor())->href());
 		} else {
 			// get the account that we're editing
-			$editAccount = SmrAccount::getAccount($admin_id);
+			$editAccount = Account::getAccount($admin_id);
 			$template->assign('EditAccount', $editAccount);
 
 			$container = new AdminPermissionManageProcessor($admin_id);

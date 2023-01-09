@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
 use Smr\TradeGood;
 
 if (isset($GameID)) { ?>

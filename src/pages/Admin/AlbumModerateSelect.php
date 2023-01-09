@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class AlbumModerateSelect extends AccountPage {
 
 	public string $file = 'admin/album_moderate_select.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Moderate Photo Album');
 
 		require_once(LIB . 'Album/album_functions.php');

@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class ReportedMessageDeleteProcessor extends AccountPageProcessor {
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		if (!Request::has('notify_id')) {
 			create_error('You must choose the messages you want to delete.');
 		}

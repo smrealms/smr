@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\Account;
 use Smr\Container\DiContainer;
 use Smr\Exceptions\UserError;
 use Smr\SectorLock;
@@ -80,7 +81,7 @@ function logException(Throwable $e): void {
 		$session->getAccount()->sendMessageToBox(BOX_BUGS_AUTO, $message);
 	} else {
 		// Will be logged without a game_id or sender_id
-		SmrAccount::doMessageSendingToBox(0, BOX_BUGS_AUTO, $message, 0);
+		Account::doMessageSendingToBox(0, BOX_BUGS_AUTO, $message, 0);
 	}
 
 	// Send error message to e-mail so that we have a permanent record

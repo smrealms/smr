@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\Account;
 use Smr\Exceptions\AccountNotFound;
 use Smr\Request;
 
@@ -23,7 +24,7 @@ try {
 
 	$passwordReset = Request::get('password_reset');
 	try {
-		$account = SmrAccount::getAccountByLogin($login);
+		$account = Account::getAccountByLogin($login);
 		if (empty($passwordReset) || $account->getPasswordReset() != $passwordReset) {
 			throw new AccountNotFound('Wrong password reset code');
 		}

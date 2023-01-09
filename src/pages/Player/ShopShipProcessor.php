@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\BuyerRestriction;
 use Smr\Page\PlayerPageProcessor;
-use SmrShipType;
+use Smr\ShipType;
 
 class ShopShipProcessor extends PlayerPageProcessor {
 
@@ -13,11 +13,11 @@ class ShopShipProcessor extends PlayerPageProcessor {
 		private readonly int $shipTypeID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$ship = $player->getShip();
 
 		$shipTypeID = $this->shipTypeID;
-		$newShipType = SmrShipType::get($shipTypeID);
+		$newShipType = ShipType::get($shipTypeID);
 		$cost = $ship->getCostToUpgrade($shipTypeID);
 
 		$restriction = $newShipType->getRestriction();

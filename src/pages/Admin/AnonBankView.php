@@ -2,17 +2,17 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Session;
 use Smr\Template;
-use SmrAccount;
 
 class AnonBankView extends AccountPage {
 
 	public string $file = 'admin/anon_acc_view.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$session = Session::getInstance();
 
 		//view anon acct activity.

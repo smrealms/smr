@@ -134,7 +134,7 @@ resent, but they are still required to render the page correctly.
 
 ## Abstract vs normal classes
 This initially started out to be used in the "standard" way for NPCs but that idea has since been discarded.
-Now all core/shared "Default" code should be in the abstract version, with the normal class child implementing game type specific functionality/overrides, for instance "lib/Semi Wars/SmrAccount" which is used to make every account appear to be a "vet" account when playing semi wars.
+Now all core/shared "Default" code should be in the abstract version, with the normal class child implementing game type specific functionality/overrides, for instance "lib/Semi Wars/Account" which is used to make every account appear to be a "vet" account when playing semi wars.
 
 ## Unit testing
 SMR uses [PHPUnit](https://phpunit.de/) to run unit tests.

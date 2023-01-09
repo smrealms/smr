@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Game;
 use Smr\Page\AccountPage;
+use Smr\Player;
 use Smr\Template;
-use SmrAccount;
-use SmrGame;
-use SmrPlayer;
 
 class ManageDraftLeaders extends AccountPage {
 
@@ -19,7 +19,7 @@ class ManageDraftLeaders extends AccountPage {
 		private readonly ?string $processingMsg = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Manage Draft Leaders');
 
 		$container = new ManageDraftLeadersSelectProcessor();
@@ -28,7 +28,7 @@ class ManageDraftLeaders extends AccountPage {
 		// Get the list of active Draft games ordered by reverse start date
 		$activeGames = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT game_id, game_name FROM game WHERE game_type=' . $db->escapeNumber(SmrGame::GAME_TYPE_DRAFT) . ' AND join_time < ' . $db->escapeNumber(Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Epoch::time()) . ' ORDER BY start_time DESC');
+		$dbResult = $db->read('SELECT game_id, game_name FROM game WHERE game_type=' . $db->escapeNumber(Game::GAME_TYPE_DRAFT) . ' AND join_time < ' . $db->escapeNumber(Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Epoch::time()) . ' ORDER BY start_time DESC');
 		foreach ($dbResult->records() as $dbRecord) {
 			$activeGames[] = [
 				'game_name' => $dbRecord->getString('game_name'),
@@ -47,7 +47,7 @@ class ManageDraftLeaders extends AccountPage {
 			$dbResult = $db->read('SELECT account_id, home_sector_id FROM draft_leaders WHERE game_id=' . $db->escapeNumber($selectedGameID));
 			foreach ($dbResult->records() as $dbRecord) {
 				$homeSectorID = $dbRecord->getInt('home_sector_id');
-				$leader = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $selectedGameID);
+				$leader = Player::getPlayer($dbRecord->getInt('account_id'), $selectedGameID);
 				$currentLeaders[] = [
 					'Name' => $leader->getDisplayName(),
 					'HomeSectorID' => $homeSectorID === 0 ? 'None' : $homeSectorID,

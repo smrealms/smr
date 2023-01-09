@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class AccountEditSearch extends AccountPage {
 
@@ -16,7 +16,7 @@ class AccountEditSearch extends AccountPage {
 		private readonly ?string $errorMessage = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Edit Account');
 
 		$games = [];

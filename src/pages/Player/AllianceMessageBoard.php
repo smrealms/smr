@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Globals;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
+use Smr\Globals;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
-use SmrAlliance;
-use SmrPlayer;
 
 class AllianceMessageBoard extends PlayerPage {
 
@@ -26,12 +26,12 @@ class AllianceMessageBoard extends PlayerPage {
 		public ?bool $allianceEyesOnly = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$db = Database::getInstance();
 
 		$allianceID = $this->allianceID;
 
-		$alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
+		$alliance = Alliance::getAlliance($allianceID, $player->getGameID());
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 		Menu::alliance($alliance->getAllianceID());
 
@@ -106,7 +106,7 @@ class AllianceMessageBoard extends PlayerPage {
 					$playerName = 'Game Admins';
 				} else {
 					try {
-						$author = SmrPlayer::getPlayer($authorAccountID, $player->getGameID());
+						$author = Player::getPlayer($authorAccountID, $player->getGameID());
 						$playerName = $author->getLinkedDisplayName(false);
 					} catch (PlayerNotFound) {
 						$playerName = 'Unknown'; // default

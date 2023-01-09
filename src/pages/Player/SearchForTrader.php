@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
@@ -17,7 +17,7 @@ class SearchForTrader extends PlayerPage {
 		private readonly bool $emptyResult = false
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Search For Trader');
 		$template->assign('TraderSearchHREF', (new SearchForTraderResult())->href());
 

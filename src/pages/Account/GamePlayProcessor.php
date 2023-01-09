@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Page\AccountPageProcessor;
 use Smr\Pages\Player\CurrentSector;
+use Smr\Player;
 use Smr\SectorLock;
 use Smr\Session;
-use SmrAccount;
-use SmrPlayer;
 
 class GamePlayProcessor extends AccountPageProcessor {
 
@@ -15,11 +15,11 @@ class GamePlayProcessor extends AccountPageProcessor {
 		private readonly int $gameID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		// register game_id
 		Session::getInstance()->updateGame($this->gameID);
 
-		$player = SmrPlayer::getPlayer($account->getAccountID(), $this->gameID);
+		$player = Player::getPlayer($account->getAccountID(), $this->gameID);
 
 		// skip var update in do_voodoo
 		SectorLock::getInstance()->acquireForPlayer($player);

@@ -2,8 +2,8 @@
 
 namespace SmrTest\lib\DefaultGame;
 
-use AbstractSmrPlayer;
 use PHPUnit\Framework\TestCase;
+use Smr\AbstractPlayer;
 use Smr\Container\DiContainer;
 use Smr\Page\Page;
 use Smr\Session;
@@ -50,8 +50,8 @@ class PageIntegrationTest extends TestCase {
 	 *           [false, true, true, true, false, true]
 	 */
 	public function test_showUnderAttack(bool $underAttack1, bool $ajax1, ?bool $underAttack2, bool $ajax2, bool $expected1, bool $expected2): void {
-		$getPlayer = function(bool $underAttack, bool $ajax): AbstractSmrPlayer {
-			$mockPlayer = $this->createMock(AbstractSmrPlayer::class);
+		$getPlayer = function(bool $underAttack, bool $ajax): AbstractPlayer {
+			$mockPlayer = $this->createMock(AbstractPlayer::class);
 			$mockPlayer
 				->method('isUnderAttack')
 				->willReturn($underAttack);

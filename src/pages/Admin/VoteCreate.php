@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class VoteCreate extends AccountPage {
 
@@ -19,7 +19,7 @@ class VoteCreate extends AccountPage {
 		private readonly ?int $voteID = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Create Vote');
 
 		$template->assign('VoteFormHREF', (new VoteCreateProcessor())->href());

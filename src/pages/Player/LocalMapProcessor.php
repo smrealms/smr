@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
 
 class LocalMapProcessor extends PlayerPageProcessor {
@@ -11,7 +11,7 @@ class LocalMapProcessor extends PlayerPageProcessor {
 		private readonly string $zoomDir
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		if ($this->zoomDir == 'Shrink') {
 			$player->decreaseZoom(1);
 		} elseif ($this->zoomDir == 'Expand') {

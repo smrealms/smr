@@ -2,6 +2,7 @@
 
 // Callback script for player voting on external sites
 
+use Smr\Player;
 use Smr\Request;
 use Smr\SectorLock;
 use Smr\VoteLink;
@@ -34,10 +35,10 @@ try {
 
 	// Lock the sector to ensure the player gets the turns
 	// Refresh player after lock is acquired in case any values are stale
-	$player = SmrPlayer::getPlayer($accountId, $gameId);
+	$player = Player::getPlayer($accountId, $gameId);
 	$lock = SectorLock::getInstance();
 	$lock->acquireForPlayer($player);
-	$player = SmrPlayer::getPlayer($accountId, $gameId, true);
+	$player = Player::getPlayer($accountId, $gameId, true);
 
 	//Give turns via added time, no rounding errors.
 	$player->setLastTurnUpdate($player->getLastTurnUpdate() - VOTE_BONUS_TURNS_TIME);

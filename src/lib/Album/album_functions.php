@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\Account;
 use Smr\Database;
 
 function main_page(): void {
@@ -306,7 +307,7 @@ function get_album_nick(int $album_id): string {
 		return 'System';
 	}
 
-	return SmrAccount::getAccount($album_id)->getHofName();
+	return Account::getAccount($album_id)->getHofName();
 }
 
 /*

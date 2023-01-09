@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
 class AllianceLeadershipProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$alliance = $player->getAlliance();
 
 		$leader_id = Request::getInt('leader_id');

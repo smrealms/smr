@@ -2,7 +2,7 @@
 
 namespace SmrTest\lib\DefaultGame;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Bounty;
 use Smr\BountyType;
 use Smr\Database;
@@ -90,7 +90,7 @@ class BountyTest extends BaseIntegrationSpec {
 		$bounty2->update();
 
 		// We should only get $bounty1 if we get bounties on player 1
-		$player1 = $this->createStub(AbstractSmrPlayer::class);
+		$player1 = $this->createStub(AbstractPlayer::class);
 		$player1->method('getSQL')->willReturn('account_id=1 AND game_id=42');
 		$bounties = Bounty::getPlacedOnPlayer($player1);
 		self::assertEquals([7 => $bounty1], $bounties);
@@ -130,7 +130,7 @@ class BountyTest extends BaseIntegrationSpec {
 		$bounty2->update();
 		$bounty3->update();
 
-		$player1 = $this->createStub(AbstractSmrPlayer::class);
+		$player1 = $this->createStub(AbstractPlayer::class);
 		$player1->method('getAccountID')->willReturn(1);
 		$player1->method('getGameID')->willReturn(42);
 

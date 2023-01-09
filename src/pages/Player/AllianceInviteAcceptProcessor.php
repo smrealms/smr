@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
+use Smr\AllianceInvite;
 use Smr\Exceptions\AllianceInvitationNotFound;
 use Smr\Page\PlayerPageProcessor;
-use SmrAlliance;
-use SmrInvitation;
 
 class AllianceInviteAcceptProcessor extends PlayerPageProcessor {
 
@@ -14,16 +14,16 @@ class AllianceInviteAcceptProcessor extends PlayerPageProcessor {
 		private readonly int $allianceID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		// Check that the invitation is registered in the database
 		try {
-			$invite = SmrInvitation::get($this->allianceID, $player->getGameID(), $player->getAccountID());
+			$invite = AllianceInvite::get($this->allianceID, $player->getGameID(), $player->getAccountID());
 		} catch (AllianceInvitationNotFound) {
 			create_error('Your invitation to join this alliance has expired or been canceled!');
 		}
 
 		// Make sure the player can join the new alliance before leaving the current one
-		$newAlliance = SmrAlliance::getAlliance($this->allianceID, $player->getGameID());
+		$newAlliance = Alliance::getAlliance($this->allianceID, $player->getGameID());
 		$joinRestriction = $newAlliance->getJoinRestriction(
 			player: $player,
 			doAllianceCheck: false,

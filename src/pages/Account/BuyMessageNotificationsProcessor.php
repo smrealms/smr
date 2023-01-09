@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Page\AccountPageProcessor;
-use SmrAccount;
 
 class BuyMessageNotificationsProcessor extends AccountPageProcessor {
 
@@ -11,7 +11,7 @@ class BuyMessageNotificationsProcessor extends AccountPageProcessor {
 		private readonly int $messageTypeID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		if ($account->getTotalSmrCredits() < 1) {
 			create_error('You do not have enough SMR credits.');
 		}

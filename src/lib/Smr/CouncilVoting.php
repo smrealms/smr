@@ -2,9 +2,6 @@
 
 namespace Smr;
 
-use SmrPlayer;
-use SmrSector;
-
 /**
  * Collection of functions to help process council voting.
  */
@@ -94,8 +91,8 @@ class CouncilVoting {
 				if ($type == 'WAR') {
 					$currentlyParkedAccountIDs = [];
 					$raceFedSectors = [
-						$race_id_1 => SmrSector::getLocationSectors($gameID, LOCATION_GROUP_RACIAL_BEACONS + $race_id_1),
-						$race_id_2 => SmrSector::getLocationSectors($gameID, LOCATION_GROUP_RACIAL_BEACONS + $race_id_2),
+						$race_id_1 => Sector::getLocationSectors($gameID, LOCATION_GROUP_RACIAL_BEACONS + $race_id_1),
+						$race_id_2 => Sector::getLocationSectors($gameID, LOCATION_GROUP_RACIAL_BEACONS + $race_id_2),
 					];
 					foreach ($raceFedSectors as $raceID => $fedSectors) {
 						$currentlyParkedAccountIDs[$raceID] = []; //initialize
@@ -122,7 +119,7 @@ class CouncilVoting {
 							$message .= ', you have ' . format_time(TIME_FOR_WAR_VOTE_FED_SAFETY) . ' to vacate our federal space, after that time you will no longer be protected (unless you have strong personal relations).';
 							foreach ($accountIDs as $accountID) {
 								$query .= '(' . $db->escapeNumber($accountID) . ',' . $db->escapeNumber($gameID) . ',' . $db->escapeNumber($raceID) . ',' . $db->escapeNumber($expireTime) . ',' . $db->escapeBoolean(true) . '),';
-								SmrPlayer::sendMessageFromRace($raceID, $gameID, $accountID, $message, $expireTime);
+								Player::sendMessageFromRace($raceID, $gameID, $accountID, $message, $expireTime);
 							}
 						}
 						$db->write(substr($query, 0, -1));

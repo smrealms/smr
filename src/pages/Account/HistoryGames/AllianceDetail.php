@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Account\HistoryGames;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Race;
 use Smr\Template;
-use SmrAccount;
 
 class AllianceDetail extends HistoryPage {
 
@@ -19,7 +19,7 @@ class AllianceDetail extends HistoryPage {
 		private readonly Summary|ExtendedStats $previousPage
 	) {}
 
-	protected function buildHistory(SmrAccount $account, Template $template): void {
+	protected function buildHistory(Account $account, Template $template): void {
 		$this->addMenu($template, $this->previousPage::class);
 
 		//offer a back button

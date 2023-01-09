@@ -2,15 +2,15 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class ReopenAccount extends AccountPage {
 
 	public string $file = 'reopen_account.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		// This page should only be accessed by players whose accounts
 		// have been closed at their own request.
 		$disabled = $account->isDisabled();

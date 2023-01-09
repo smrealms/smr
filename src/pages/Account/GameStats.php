@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Account;
 
-use Rankings;
+use Smr\Account;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
+use Smr\Game;
 use Smr\Page\AccountPage;
+use Smr\Player;
+use Smr\Rankings;
 use Smr\Template;
-use SmrAccount;
-use SmrGame;
-use SmrPlayer;
 
 class GameStats extends AccountPage {
 
@@ -19,11 +19,11 @@ class GameStats extends AccountPage {
 		private readonly int $gameID
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		//get game id
 		$gameID = $this->gameID;
 
-		$statsGame = SmrGame::getGame($gameID);
+		$statsGame = Game::getGame($gameID);
 		$template->assign('StatsGame', $statsGame);
 
 		$template->assign('PageTopic', 'Game Stats: ' . $statsGame->getName() . ' (' . $gameID . ')');
@@ -44,7 +44,7 @@ class GameStats extends AccountPage {
 
 		// Get current account's player for this game (if any)
 		try {
-			$player = SmrPlayer::getPlayer($account->getAccountID(), $gameID);
+			$player = Player::getPlayer($account->getAccountID(), $gameID);
 		} catch (PlayerNotFound) {
 			$player = null;
 		}

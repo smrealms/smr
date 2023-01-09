@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Player;
+
 if (!$Planet->hasOwner()) { ?>
 	<p>
 		This planet is unclaimed.<?php
@@ -13,7 +15,7 @@ if (!$Planet->hasOwner()) { ?>
 	</form><?php
 } else {
 	if ($Planet->getOwnerID() != $Player->getAccountID()) { ?>
-		<p><?php echo SmrPlayer::getPlayer($Planet->getOwnerID(), $Planet->getGameID())->getLinkedDisplayName(false); ?> owns this planet.</p>
+		<p><?php echo Player::getPlayer($Planet->getOwnerID(), $Planet->getGameID())->getLinkedDisplayName(false); ?> owns this planet.</p>
 		<p>
 			You can claim the planet when you enter the correct password.<?php
 			if (isset($PlayerPlanet)) { ?>

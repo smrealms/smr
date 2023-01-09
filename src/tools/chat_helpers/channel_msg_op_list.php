@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
+use Smr\AbstractPlayer;
 use Smr\Database;
+use Smr\Player;
 
 /**
  * @return array<string>
  */
-function shared_channel_msg_op_list(AbstractSmrPlayer $player): array {
+function shared_channel_msg_op_list(AbstractPlayer $player): array {
 	// get the op info from db
 	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT 1
@@ -26,7 +28,7 @@ function shared_channel_msg_op_list(AbstractSmrPlayer $player): array {
 				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	foreach ($dbResult->records() as $dbRecord) {
-		$respondingPlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), true);
+		$respondingPlayer = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), true);
 		// check that the player is still in this alliance
 		if (!$player->sameAlliance($respondingPlayer)) {
 			continue;

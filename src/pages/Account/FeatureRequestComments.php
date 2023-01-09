@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Account;
 
-use Globals;
+use Smr\Account;
 use Smr\Database;
+use Smr\Globals;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAccount;
 
 class FeatureRequestComments extends AccountPage {
 
@@ -20,7 +20,7 @@ class FeatureRequestComments extends AccountPage {
 		private readonly FeatureRequest $previousPage
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 
 		if (!Globals::isFeatureRequestOpen()) {
 			create_error('Feature requests are currently not being accepted.');
@@ -56,7 +56,7 @@ class FeatureRequestComments extends AccountPage {
 										'Anonymous' => $dbRecord->getBoolean('anonymous'),
 				];
 				if ($featureModerator || !$dbRecord->getBoolean('anonymous')) {
-					$featureRequestComments[$commentID]['PosterAccount'] = SmrAccount::getAccount($dbRecord->getInt('poster_id'));
+					$featureRequestComments[$commentID]['PosterAccount'] = Account::getAccount($dbRecord->getInt('poster_id'));
 				}
 			}
 			$template->assign('Comments', $featureRequestComments);

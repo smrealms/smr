@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
-use SmrAlliance;
 
 class AllianceTreatiesProcessor extends PlayerPageProcessor {
 
@@ -15,7 +15,7 @@ class AllianceTreatiesProcessor extends PlayerPageProcessor {
 		private readonly bool $allianceBankAccess = false
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		//get the alliances
 		if (!$player->hasAlliance()) {
 			create_error('You are not in an alliance!');
@@ -41,7 +41,7 @@ class AllianceTreatiesProcessor extends PlayerPageProcessor {
 									AND alliance_id = ' . $db->escapeNumber($alliance_id_A));
 					$role_id = $dbResult->record()->getInt('MAX(role_id)') + 1;
 
-					$allianceName = SmrAlliance::getAlliance($alliance_id_B, $player->getGameID())->getAllianceName();
+					$allianceName = Alliance::getAlliance($alliance_id_B, $player->getGameID())->getAllianceName();
 					$db->insert('alliance_has_roles', [
 						'alliance_id' => $db->escapeNumber($alliance_id_A),
 						'game_id' => $db->escapeNumber($player->getGameID()),

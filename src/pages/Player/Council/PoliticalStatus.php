@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player\Council;
 
-use AbstractSmrPlayer;
-use Globals;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Globals;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Race;
@@ -20,7 +20,7 @@ class PoliticalStatus extends PlayerPage {
 		private readonly int $raceID
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$raceID = $this->raceID;
 
 		$template->assign('PageTopic', 'Ruling Council Of ' . Race::getName($raceID));

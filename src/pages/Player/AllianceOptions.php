@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
 use Smr\Database;
+use Smr\Game;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrGame;
 
 class AllianceOptions extends PlayerPage {
 
@@ -16,7 +16,7 @@ class AllianceOptions extends PlayerPage {
 
 	public string $file = 'alliance_option.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$alliance = $player->getAlliance();
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 		Menu::alliance($alliance->getAllianceID());
@@ -24,7 +24,7 @@ class AllianceOptions extends PlayerPage {
 		// Create an array of links with descriptions
 		$links = [];
 
-		$isDraftGame = $player->getGame()->isGameType(SmrGame::GAME_TYPE_DRAFT);
+		$isDraftGame = $player->getGame()->isGameType(Game::GAME_TYPE_DRAFT);
 
 		if ($isDraftGame && $player->isDraftLeader()) {
 			// Draft leaders get to pick members

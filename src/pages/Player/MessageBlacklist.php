@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
 use Smr\Database;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Template;
 
@@ -16,7 +16,7 @@ class MessageBlacklist extends PlayerPage {
 		private readonly ?string $message = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Player Blacklist');
 
 		Menu::messages();

@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+
 ?>
 <span class="yellow">
 	<span id="tod"><?php echo $timeDisplay; ?></span>

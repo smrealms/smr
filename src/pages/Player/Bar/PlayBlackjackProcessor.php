@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player\Bar;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Blackjack\Result;
 use Smr\Blackjack\Table;
 use Smr\Page\PlayerPageProcessor;
@@ -17,7 +17,7 @@ class PlayBlackjackProcessor extends PlayerPageProcessor {
 		private readonly ?int $bet = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$table = $this->table ?? new Table();
 		$bet = $this->bet ?? Request::getInt('bet');
 		$do = $this->action;

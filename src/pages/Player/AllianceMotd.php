@@ -2,15 +2,15 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Globals;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Globals;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAlliance;
 
 class AllianceMotd extends PlayerPage {
 
@@ -22,8 +22,8 @@ class AllianceMotd extends PlayerPage {
 		private readonly int $allianceID
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
-		$alliance = SmrAlliance::getAlliance($this->allianceID, $player->getGameID());
+	public function build(AbstractPlayer $player, Template $template): void {
+		$alliance = Alliance::getAlliance($this->allianceID, $player->getGameID());
 		$template->assign('Alliance', $alliance);
 
 		Globals::canAccessPage('AllianceMOTD', $player, ['AllianceID' => $alliance->getAllianceID()]);

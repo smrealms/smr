@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class LogConsole extends AccountPage {
 
@@ -18,7 +18,7 @@ class LogConsole extends AccountPage {
 		private readonly array $accountIDs = []
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Log Console');
 
 		$loggedAccounts = [];

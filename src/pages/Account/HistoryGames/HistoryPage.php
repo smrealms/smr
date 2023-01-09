@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Account\HistoryGames;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 abstract class HistoryPage extends AccountPage {
 
@@ -15,7 +15,7 @@ abstract class HistoryPage extends AccountPage {
 		protected readonly string $historyGameName
 	) {}
 
-	abstract protected function buildHistory(SmrAccount $account, Template $template): void;
+	abstract protected function buildHistory(Account $account, Template $template): void;
 
 	protected function addMenu(Template $template, ?string $currentClass = null): void {
 		$menuPages = [
@@ -38,7 +38,7 @@ abstract class HistoryPage extends AccountPage {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$this->addMenu($template);
 
 		$db = Database::getInstance();

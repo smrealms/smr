@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player\Bar;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
@@ -14,7 +14,7 @@ class BuyTickerProcessor extends PlayerPageProcessor {
 		private readonly int $locationID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$account = $player->getAccount();
 
 		if ($account->getTotalSmrCredits() < CREDITS_PER_TICKER) {

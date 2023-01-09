@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+
 $this->includeTemplate('includes/ForceFullCombatResults.inc.php'); ?><br />
 <br />
 <div class="center"><?php

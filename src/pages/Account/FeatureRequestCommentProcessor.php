@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class FeatureRequestCommentProcessor extends AccountPageProcessor {
 
@@ -15,7 +15,7 @@ class FeatureRequestCommentProcessor extends AccountPageProcessor {
 		private readonly FeatureRequestComments $previousPage
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$comment = Request::get('comment');
 		if (empty($comment)) {
 			create_error('We need a comment to add!');

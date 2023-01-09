@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Plotter;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
 use Smr\PlotGroup;
+use Smr\Plotter;
 use Smr\Request;
 
 class PlotCourseNearestProcessor extends PlayerPageProcessor {
@@ -14,7 +14,7 @@ class PlotCourseNearestProcessor extends PlayerPageProcessor {
 		private readonly mixed $realX = null // for NPCs only
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$sector = $player->getSector();
 
 		if ($this->realX !== null) {

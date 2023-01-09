@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+
 echo $Message; ?>
 
 <p>What can I do for ya?</p>

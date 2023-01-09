@@ -2,11 +2,11 @@
 
 namespace Smr\Page;
 
+use Smr\Account;
 use Smr\Template;
-use SmrAccount;
 
 abstract class AccountPage extends Page {
 
-	abstract public function build(SmrAccount $account, Template $template): void;
+	abstract public function build(Account $account, Template $template): void;
 
 }

@@ -2,17 +2,17 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Page\AccountPageProcessor;
 use Smr\Page\ReusableTrait;
 use Smr\SectorLock;
 use Smr\Session;
-use SmrAccount;
 
 class LogoffProcessor extends AccountPageProcessor {
 
 	use ReusableTrait;
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$account->log(LOG_TYPE_LOGIN, 'logged off from ' . getIpAddress());
 
 		// Remove the lock if we're holding one (ie logged off from game screen)

@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Globals;
-use Plotter;
+use Smr\AbstractPlayer;
+use Smr\Globals;
 use Smr\MovementType;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Plotter;
 use Smr\Request;
+use Smr\Sector;
 use Smr\SectorLock;
-use SmrSector;
 
 class SectorJumpProcessor extends PlayerPageProcessor {
 
@@ -17,7 +17,7 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 		private readonly ?int $targetSectorID = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$sector = $player->getSector();
 
 		if (!$player->getGame()->hasStarted()) {
@@ -48,7 +48,7 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 			create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*you\'re real smart*cough*');
 		}
 
-		if (!SmrSector::sectorExists($player->getGameID(), $target)) {
+		if (!Sector::sectorExists($player->getGameID(), $target)) {
 			create_error('The target sector doesn\'t exist!');
 		}
 
@@ -67,7 +67,7 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 		}
 
 		// create sector object for target sector
-		$targetSector = SmrSector::getSector($player->getGameID(), $target);
+		$targetSector = Sector::getSector($player->getGameID(), $target);
 
 		$jumpInfo = $player->getJumpInfo($targetSector);
 		$turnsToJump = $jumpInfo['turn_cost'];

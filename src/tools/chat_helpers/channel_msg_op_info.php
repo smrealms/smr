@@ -1,11 +1,12 @@
 <?php declare(strict_types=1);
 
+use Smr\AbstractPlayer;
 use Smr\Database;
 
 /**
  * @return array<string>
  */
-function shared_channel_msg_op_info(AbstractSmrPlayer $player): array {
+function shared_channel_msg_op_info(AbstractPlayer $player): array {
 	// get the op from db
 	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));

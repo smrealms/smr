@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
 use Exception;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Port;
 use Smr\Request;
 use Smr\TradeGood;
 use Smr\TransactionType;
-use SmrPort;
 
 class ShopGoodsProcessor extends PlayerPageProcessor {
 
@@ -21,7 +21,7 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 		private readonly ?int $idealPrice = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$ship = $player->getShip();
 		$sector = $player->getSector();
 
@@ -143,7 +143,7 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 
 			// base xp is the amount you would get for a perfect trade.
 			// this is the absolut max. the real xp can only be smaller.
-			$base_xp = SmrPort::getBaseExperience($amount, $port->getGoodDistance($good_id));
+			$base_xp = Port::getBaseExperience($amount, $port->getGoodDistance($good_id));
 
 			// if offered equals ideal we get a problem (division by zero)
 			if ($stealing) {

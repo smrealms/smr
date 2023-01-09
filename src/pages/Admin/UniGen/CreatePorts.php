@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Account;
+use Smr\Galaxy;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
+use Smr\Port;
 use Smr\Race;
 use Smr\Request;
 use Smr\Template;
-use SmrAccount;
-use SmrGalaxy;
-use SmrPort;
 
 class CreatePorts extends AccountPage {
 
@@ -22,18 +22,18 @@ class CreatePorts extends AccountPage {
 		private ?int $galaxyID = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$this->galaxyID ??= Request::getInt('gal_on');
-		$template->assign('Galaxies', SmrGalaxy::getGameGalaxies($this->gameID));
+		$template->assign('Galaxies', Galaxy::getGameGalaxies($this->gameID));
 
 		$container = new self($this->gameID);
 		$template->assign('JumpGalaxyHREF', $container->href());
 
-		$galaxy = SmrGalaxy::getGalaxy($this->gameID, $this->galaxyID);
+		$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 		$template->assign('Galaxy', $galaxy);
 
 		// initialize totals
-		$totalPorts = array_fill(1, SmrPort::getMaxLevelByGame($this->gameID), 0);
+		$totalPorts = array_fill(1, Port::getMaxLevelByGame($this->gameID), 0);
 		$totalRaces = array_fill_keys(Race::getAllIDs(), 0);
 		$racePercents = $totalRaces;
 

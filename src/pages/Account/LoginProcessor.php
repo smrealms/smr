@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Page\AccountPageProcessor;
-use SmrAccount;
 
 class LoginProcessor extends AccountPageProcessor {
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		// update last login time
 		$account->updateLastLogin();
 

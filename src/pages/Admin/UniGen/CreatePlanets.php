@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Account;
+use Smr\Galaxy;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\PlanetTypes\PlanetType;
 use Smr\Request;
 use Smr\Template;
-use SmrAccount;
-use SmrGalaxy;
 
 class CreatePlanets extends AccountPage {
 
@@ -21,9 +21,9 @@ class CreatePlanets extends AccountPage {
 		private ?int $galaxyID = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$this->galaxyID ??= Request::getInt('gal_on');
-		$template->assign('Galaxies', SmrGalaxy::getGameGalaxies($this->gameID));
+		$template->assign('Galaxies', Galaxy::getGameGalaxies($this->gameID));
 
 		$container = new self($this->gameID);
 		$template->assign('JumpGalaxyHREF', $container->href());
@@ -42,7 +42,7 @@ class CreatePlanets extends AccountPage {
 		}
 
 		// Get the current number of each type of planet
-		$galaxy = SmrGalaxy::getGalaxy($this->gameID, $this->galaxyID);
+		$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 		foreach ($galaxy->getSectors() as $galSector) {
 			if ($galSector->hasPlanet()) {
 				$numberOfPlanets[$galSector->getPlanet()->getTypeID()]++;

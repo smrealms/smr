@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class AlbumDeleteProcessor extends AccountPageProcessor {
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		if (Request::getBool('action')) {
 			$db = Database::getInstance();
 			$db->write('DELETE

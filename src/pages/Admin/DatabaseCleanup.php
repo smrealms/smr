@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class DatabaseCleanup extends AccountPage {
 
@@ -22,7 +22,7 @@ class DatabaseCleanup extends AccountPage {
 		private readonly ?array $endedGames = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Database Cleanup');
 
 		$bytesToMB = function(int $bytes): string {

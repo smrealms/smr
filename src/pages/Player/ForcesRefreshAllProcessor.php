@@ -2,24 +2,24 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Epoch;
+use Smr\Force;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Page\ReusableTrait;
-use SmrForce;
 
 class ForcesRefreshAllProcessor extends PlayerPageProcessor {
 
 	use ReusableTrait;
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		// Note: getSectorForces is cached and also called for sector display,
 		// so it saves time to call it here instead of a new query.
-		$sectorForces = SmrForce::getSectorForces($player->getGameID(), $player->getSectorID());
+		$sectorForces = Force::getSectorForces($player->getGameID(), $player->getSectorID());
 		$time = Epoch::time();
 		foreach ($sectorForces as $sectorForce) {
 			if ($player->sharedForceAlliance($sectorForce->getOwner())) {
-				$time += SmrForce::REFRESH_ALL_TIME_PER_STACK;
+				$time += Force::REFRESH_ALL_TIME_PER_STACK;
 				$sectorForce->updateRefreshAll($player, $time);
 			}
 		}

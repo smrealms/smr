@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player\Bank;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
 use Smr\Database;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Template;
 
@@ -20,7 +20,7 @@ class AllianceBankReport extends PlayerPage {
 		private readonly bool $reportSent = false
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$alliance_id = $this->allianceID;
 
 		//get all transactions

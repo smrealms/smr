@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
+use Smr\AbstractPlayer;
 use Smr\Pages\Player\AttackForcesProcessor;
 use Smr\Pages\Player\CurrentSector;
 use Smr\ShipClass;
 
-function hit_sector_mines(AbstractSmrPlayer $player): void {
+function hit_sector_mines(AbstractPlayer $player): void {
 
 	// Get sector forces sorted by decreasing mines (largest mine stacks first)
 	$sectorForces = $player->getSector()->getForces();

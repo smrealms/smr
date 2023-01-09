@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
+use Smr\Planet;
 use Smr\Template;
-use SmrPlanet;
 
 class AttackPlanet extends PlayerPage {
 
@@ -23,11 +23,11 @@ class AttackPlanet extends PlayerPage {
 		$this->skipRedirect = $playerDied;
 	}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('FullPlanetCombatResults', $this->results);
 		$template->assign('MinimalDisplay', false);
 		$template->assign('OverrideDeath', $player->isDead());
-		$template->assign('Planet', SmrPlanet::getPlanet($player->getGameID(), $this->sectorID));
+		$template->assign('Planet', Planet::getPlanet($player->getGameID(), $this->sectorID));
 	}
 
 }

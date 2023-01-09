@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player\Bar;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Lotto;
@@ -14,7 +14,7 @@ class LottoBuyTicketProcessor extends PlayerPageProcessor {
 		private readonly int $locationID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 
 		if ($player->getCredits() < Lotto::TICKET_COST) {

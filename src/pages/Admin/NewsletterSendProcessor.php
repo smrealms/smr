@@ -3,10 +3,10 @@
 namespace Smr\Pages\Admin;
 
 use PHPMailer\PHPMailer\PHPMailer;
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class NewsletterSendProcessor extends AccountPageProcessor {
 
@@ -15,7 +15,7 @@ class NewsletterSendProcessor extends AccountPageProcessor {
 		private readonly string $newsletterText
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		// mailer
 		$mail = setupMailer();
 		$mail->setFrom('newsletter@smrealms.de', 'SMR Team');

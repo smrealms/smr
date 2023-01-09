@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class EnableGame extends AccountPage {
 
@@ -15,7 +15,7 @@ class EnableGame extends AccountPage {
 		private readonly ?string $processingMessage = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Enable New Games');
 
 		// If we have just forwarded from the processing file, pass its message.

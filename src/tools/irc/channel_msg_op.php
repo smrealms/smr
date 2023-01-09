@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Irc\Message;
 
@@ -33,7 +34,7 @@ function channel_msg_op($fp, Message $msg): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_op_info($fp, Message $msg, AbstractSmrPlayer $player): bool {
+function channel_msg_op_info($fp, Message $msg, AbstractPlayer $player): bool {
 	if ($msg->text == '!op info') {
 
 		$nick = $msg->nick;
@@ -55,7 +56,7 @@ function channel_msg_op_info($fp, Message $msg, AbstractSmrPlayer $player): bool
 /**
  * @param resource $fp
  */
-function channel_msg_op_cancel($fp, Message $msg, AbstractSmrPlayer $player): bool {
+function channel_msg_op_cancel($fp, Message $msg, AbstractPlayer $player): bool {
 
 	if ($msg->text == '!op cancel') {
 
@@ -99,7 +100,7 @@ function channel_msg_op_cancel($fp, Message $msg, AbstractSmrPlayer $player): bo
 /**
  * @param resource $fp
  */
-function channel_msg_op_set($fp, Message $msg, AbstractSmrPlayer $player): bool {
+function channel_msg_op_set($fp, Message $msg, AbstractPlayer $player): bool {
 
 	if (preg_match('/^!op set (.*)$/i', $msg->text, $args)) {
 
@@ -148,7 +149,7 @@ function channel_msg_op_set($fp, Message $msg, AbstractSmrPlayer $player): bool 
 /**
  * @param resource $fp
  */
-function channel_msg_op_turns($fp, Message $msg, AbstractSmrPlayer $player): bool {
+function channel_msg_op_turns($fp, Message $msg, AbstractPlayer $player): bool {
 	if ($msg->text == '!op turns') {
 
 		$nick = $msg->nick;
@@ -175,7 +176,7 @@ function channel_msg_op_turns($fp, Message $msg, AbstractSmrPlayer $player): boo
 /**
  * @param resource $fp
  */
-function channel_msg_op_response($fp, Message $msg, AbstractSmrPlayer $player): bool {
+function channel_msg_op_response($fp, Message $msg, AbstractPlayer $player): bool {
 
 	if (preg_match('/^!op (yes|no|maybe)$/i', $msg->text, $args)) {
 
@@ -214,7 +215,7 @@ function channel_msg_op_response($fp, Message $msg, AbstractSmrPlayer $player): 
 /**
  * @param resource $fp
  */
-function channel_msg_op_list($fp, Message $msg, AbstractSmrPlayer $player): bool {
+function channel_msg_op_list($fp, Message $msg, AbstractPlayer $player): bool {
 	if ($msg->text == '!op list') {
 
 		$nick = $msg->nick;

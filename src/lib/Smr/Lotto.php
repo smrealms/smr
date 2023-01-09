@@ -2,9 +2,6 @@
 
 namespace Smr;
 
-use SmrGame;
-use SmrPlayer;
-
 /**
  * Collection of functions to help with Lotto processing.
  */
@@ -16,7 +13,7 @@ class Lotto {
 	public static function checkForLottoWinner(int $gameID): void {
 
 		// No more lotto winners after the game has ended
-		if (SmrGame::getGame($gameID)->hasEnded()) {
+		if (Game::getGame($gameID)->hasEnded()) {
 			return;
 		}
 
@@ -50,7 +47,7 @@ class Lotto {
 		$db->unlock();
 
 		// create news msg
-		$winner = SmrPlayer::getPlayer($winner_id, $gameID);
+		$winner = Player::getPlayer($winner_id, $gameID);
 		$winner->increaseHOF($lottoInfo['Prize'], ['Bar', 'Lotto', 'Money', 'Winnings'], HOF_PUBLIC);
 		$winner->increaseHOF(1, ['Bar', 'Lotto', 'Results', 'Wins'], HOF_PUBLIC);
 		$news_message = $winner->getBBLink() . ' has won the lotto! The jackpot was ' . number_format($lottoInfo['Prize']) . '. ' . $winner->getBBLink() . ' can report to any bar to claim their prize before the next drawing!';

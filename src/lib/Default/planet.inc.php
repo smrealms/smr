@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Menu;
+
 /**
  * Common code for all the planet display pages
  */

@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
+use Smr\Game;
 use Smr\Messages;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
-use SmrAccount;
-use SmrGame;
-use SmrPlayer;
 
 class MessageBoxView extends AccountPage {
 
@@ -21,7 +21,7 @@ class MessageBoxView extends AccountPage {
 		private readonly ?int $boxTypeID = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$db = Database::getInstance();
 
 		if ($this->boxTypeID === null) {
@@ -55,7 +55,7 @@ class MessageBoxView extends AccountPage {
 				$template->assign('DeleteHREF', $container->href());
 				foreach ($dbResult->records() as $dbRecord) {
 					$gameID = $dbRecord->getInt('game_id');
-					$validGame = $gameID > 0 && SmrGame::gameExists($gameID);
+					$validGame = $gameID > 0 && Game::gameExists($gameID);
 					$messageID = $dbRecord->getInt('message_id');
 					$messages[$messageID] = [
 						'ID' => $messageID,
@@ -65,10 +65,10 @@ class MessageBoxView extends AccountPage {
 					if ($senderID == 0) {
 						$senderName = 'User not logged in';
 					} else {
-						$senderAccount = SmrAccount::getAccount($senderID);
+						$senderAccount = Account::getAccount($senderID);
 						$senderName = $senderAccount->getLogin() . ' (' . $senderID . ')';
 						if ($validGame) {
-							$senderPlayer = SmrPlayer::getPlayer($senderID, $gameID);
+							$senderPlayer = Player::getPlayer($senderID, $gameID);
 							$senderName .= ' a.k.a ' . $senderPlayer->getDisplayName();
 							if ($account->hasPermission(PERMISSION_SEND_ADMIN_MESSAGE)) {
 								$container = new MessageBoxReply(
@@ -87,7 +87,7 @@ class MessageBoxView extends AccountPage {
 					} elseif (!$validGame) {
 						$messages[$messageID]['GameName'] = 'Game no longer exists';
 					} else {
-						$messages[$messageID]['GameName'] = SmrGame::getGame($gameID)->getDisplayName();
+						$messages[$messageID]['GameName'] = Game::getGame($gameID)->getDisplayName();
 					}
 
 					$messages[$messageID]['SendTime'] = date($account->getDateTimeFormat(), $dbRecord->getInt('send_time'));

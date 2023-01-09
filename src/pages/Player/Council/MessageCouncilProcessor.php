@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player\Council;
 
-use AbstractSmrPlayer;
-use Council;
+use Smr\AbstractPlayer;
+use Smr\Council;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Player\CurrentSector;
 use Smr\Request;
@@ -14,7 +14,7 @@ class MessageCouncilProcessor extends PlayerPageProcessor {
 		private readonly int $raceID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$message = htmlentities(Request::get('message'), ENT_COMPAT, 'utf-8');
 
 		if (empty($message)) {

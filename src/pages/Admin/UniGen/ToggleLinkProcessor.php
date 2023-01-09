@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Account;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
-use SmrSector;
+use Smr\Sector;
 
 class ToggleLinkProcessor extends AccountPageProcessor {
 
@@ -14,10 +14,10 @@ class ToggleLinkProcessor extends AccountPageProcessor {
 		private readonly int $galaxyID
 	) {}
 
-	public function build(SmrAccount $account): never {
-		$linkSector = SmrSector::getSector($this->gameID, Request::getInt('SectorID'));
+	public function build(Account $account): never {
+		$linkSector = Sector::getSector($this->gameID, Request::getInt('SectorID'));
 		$linkSector->toggleLink(Request::get('Dir'));
-		SmrSector::saveSectors();
+		Sector::saveSectors();
 
 		$container = new EditGalaxy($this->gameID, $this->galaxyID);
 		$container->go();

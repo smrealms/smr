@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player\Mission;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Player\CurrentSector;
 
@@ -12,7 +12,7 @@ class AcceptProcessor extends PlayerPageProcessor {
 		private readonly int $missionID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		if (count($player->getMissions()) >= 3) {
 			create_error('You can only have up to 3 missions at a time.');
 		}

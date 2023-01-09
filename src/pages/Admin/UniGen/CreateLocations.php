@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Account;
 use Smr\Admin\UniGenLocationCategories;
+use Smr\Galaxy;
+use Smr\Location;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Request;
 use Smr\Template;
-use SmrAccount;
-use SmrGalaxy;
-use SmrLocation;
 
 class CreateLocations extends AccountPage {
 
@@ -22,14 +22,14 @@ class CreateLocations extends AccountPage {
 		private ?int $galaxyID = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$this->galaxyID ??= Request::getInt('gal_on');
-		$template->assign('Galaxies', SmrGalaxy::getGameGalaxies($this->gameID));
+		$template->assign('Galaxies', Galaxy::getGameGalaxies($this->gameID));
 
 		$container = new self($this->gameID);
 		$template->assign('JumpGalaxyHREF', $container->href());
 
-		$locations = SmrLocation::getAllLocations($this->gameID);
+		$locations = Location::getAllLocations($this->gameID);
 
 		// Initialize all location counts to zero
 		$totalLocs = [];
@@ -37,7 +37,7 @@ class CreateLocations extends AccountPage {
 			$totalLocs[$location->getTypeID()] = 0;
 		}
 
-		$galaxy = SmrGalaxy::getGalaxy($this->gameID, $this->galaxyID);
+		$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 		$template->assign('Galaxy', $galaxy);
 
 		// Determine the current amount of each location

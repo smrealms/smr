@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Account;
+use Smr\Location;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
-use SmrLocation;
-use SmrSector;
+use Smr\Sector;
 
 class DragLocationProcessor extends AccountPageProcessor {
 
@@ -15,17 +15,17 @@ class DragLocationProcessor extends AccountPageProcessor {
 		private readonly int $galaxyID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		// Move a location from one sector to another
 		$targetSectorID = Request::getInt('TargetSectorID');
 		$origSectorID = Request::getInt('OrigSectorID');
 		$locationTypeID = Request::getInt('LocationTypeID');
-		$targetSector = SmrSector::getSector($this->gameID, $targetSectorID);
+		$targetSector = Sector::getSector($this->gameID, $targetSectorID);
 
 		// Skip if target sector already has the same location
 		if (!$targetSector->hasLocation($locationTypeID)) {
-			$location = SmrLocation::getLocation($this->gameID, $locationTypeID);
-			SmrLocation::moveSectorLocation($this->gameID, $origSectorID, $targetSectorID, $location);
+			$location = Location::getLocation($this->gameID, $locationTypeID);
+			Location::moveSectorLocation($this->gameID, $origSectorID, $targetSectorID, $location);
 		}
 
 		$container = new EditGalaxy($this->gameID, $this->galaxyID);

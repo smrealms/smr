@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Account;
 
-use Menu;
+use Smr\Account;
 use Smr\Database;
+use Smr\Menu;
 use Smr\News;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAccount;
 
 class NewsReadAdvanced extends AccountPage {
 
@@ -28,7 +28,7 @@ class NewsReadAdvanced extends AccountPage {
 		private readonly ?array $allianceIDs = null,
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$gameID = $this->gameID;
 
 		$db = Database::getInstance();

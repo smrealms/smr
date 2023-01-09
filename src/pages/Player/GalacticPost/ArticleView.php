@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
 use Smr\Database;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
-use SmrPlayer;
 
 class ArticleView extends PlayerPage {
 
@@ -18,7 +18,7 @@ class ArticleView extends PlayerPage {
 		private readonly bool $addedToNews = false
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$db = Database::getInstance();
 
 		$template->assign('PageTopic', 'Viewing Articles');
@@ -29,7 +29,7 @@ class ArticleView extends PlayerPage {
 		$dbResult = $db->read('SELECT * FROM galactic_post_article WHERE article_id NOT IN (SELECT article_id FROM galactic_post_paper_content WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()));
 		foreach ($dbResult->records() as $dbRecord) {
 			$title = $dbRecord->getString('title');
-			$writer = SmrPlayer::getPlayer($dbRecord->getInt('writer_id'), $player->getGameID());
+			$writer = Player::getPlayer($dbRecord->getInt('writer_id'), $player->getGameID());
 			$container = new self($dbRecord->getInt('article_id'));
 			$articles[] = [
 				'title' => $title,

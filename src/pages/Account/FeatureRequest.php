@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Account;
 
-use Globals;
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Globals;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAccount;
 
 class FeatureRequest extends AccountPage {
 
@@ -23,7 +23,7 @@ class FeatureRequest extends AccountPage {
 		private readonly string $category = 'New'
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$db = Database::getInstance();
 
 		if (!Globals::isFeatureRequestOpen()) {
@@ -93,7 +93,7 @@ class FeatureRequest extends AccountPage {
 					'VotedFor' => $featureVotes[$featureRequestID] ?? false,
 				];
 				if ($featureModerator) {
-					$featureRequests[$featureRequestID]['RequestAccount'] = SmrAccount::getAccount($dbRecord->getInt('poster_id'));
+					$featureRequests[$featureRequestID]['RequestAccount'] = Account::getAccount($dbRecord->getInt('poster_id'));
 				}
 
 				if ($canVote) {

@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player\BetaFunctions;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Request;
 
 class SetPoliticalRelationsProcessor extends BetaFunctionsPageProcessor {
 
-	public function buildBetaFunctionsProcessor(AbstractSmrPlayer $player): void {
+	public function buildBetaFunctionsProcessor(AbstractPlayer $player): void {
 		$amount = Request::getInt('amount');
 		$race = Request::getInt('race');
 		if ($player->getRaceID() == $race) {

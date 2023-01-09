@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 use Smr\TradeGood;
@@ -13,7 +13,7 @@ class AttackPortLootProcessor extends PlayerPageProcessor {
 		private readonly int $goodID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$ship = $player->getShip();
 
 		$good_id = $this->goodID;

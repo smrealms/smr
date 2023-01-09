@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player\BetaFunctions;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
-use SmrPort;
+use Smr\Port;
 
 class RevealMapProcessor extends BetaFunctionsPageProcessor {
 
-	public function buildBetaFunctionsProcessor(AbstractSmrPlayer $player): void {
+	public function buildBetaFunctionsProcessor(AbstractPlayer $player): void {
 		$account_id = $player->getAccountID();
 		$game_id = $player->getGameID();
 		// delete all entries from the player_visited_sector/port table
@@ -18,7 +18,7 @@ class RevealMapProcessor extends BetaFunctionsPageProcessor {
 		// add port infos
 		$dbResult = $db->read('SELECT * FROM port WHERE game_id = ' . $db->escapeNumber($game_id));
 		foreach ($dbResult->records() as $dbRecord) {
-			$port = SmrPort::getPort($game_id, $dbRecord->getInt('sector_id'), false, $dbRecord);
+			$port = Port::getPort($game_id, $dbRecord->getInt('sector_id'), false, $dbRecord);
 			$port->addCachePort($account_id);
 		}
 	}

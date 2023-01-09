@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Game;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
-use SmrGame;
 
 class GameDeleteProcessor extends AccountPageProcessor {
 
@@ -15,7 +15,7 @@ class GameDeleteProcessor extends AccountPageProcessor {
 		private readonly int $deleteGameID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$game_id = $this->deleteGameID;
 		create_error('Deleting games is disabled!');
 
@@ -107,7 +107,7 @@ class GameDeleteProcessor extends AccountPageProcessor {
 			$smr_db_sql[] = 'DELETE FROM game_galaxy WHERE game_id = ' . $db->escapeNumber($game_id);
 
 			if ($save) {
-				$game = SmrGame::getGame($game_id);
+				$game = Game::getGame($game_id);
 				// insert into history db
 				$history_db_sql[] = 'INSERT INTO game (game_id, end_date, start_date, game_name, speed, type) VALUES ' .
 										'(' . $db->escapeNumber($game_id) . ', ' . $game->getEndTime() . ', ' . $game->getStartTime() . ', ' . $db->escapeString($game->getName()) . ', ' . $game->getGameSpeed() . ', ' . $db->escapeString($game->getGameType()) . ')';

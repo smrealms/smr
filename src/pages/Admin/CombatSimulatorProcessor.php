@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Admin;
 
-use DummyShip;
+use Smr\Account;
+use Smr\DummyShip;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 /**
- * @param array<int, \AbstractSmrPlayer> $realAttackers
- * @param array<int, \AbstractSmrPlayer> $realDefenders
+ * @param array<int, \Smr\AbstractPlayer> $realAttackers
+ * @param array<int, \Smr\AbstractPlayer> $realDefenders
  * @return array<string, mixed>
  */
 function runAnAttack(array $realAttackers, array $realDefenders): array {
@@ -32,7 +32,7 @@ function runAnAttack(array $realAttackers, array $realDefenders): array {
 
 class CombatSimulatorProcessor extends AccountPageProcessor {
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$usedNames = [];
 
 		$i = 1;

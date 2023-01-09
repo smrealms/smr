@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+use Smr\Port;
+
 $this->includeTemplate('includes/PortFullCombatResults.inc.php'); ?><br />
 <br />
 <div class="center"><?php
@@ -20,7 +23,7 @@ $this->includeTemplate('includes/PortFullCombatResults.inc.php'); ?><br />
 			<a href="<?php echo $Port->getClaimHREF(); ?>" class="buttonA">Claim this port for your race</a><?php
 			if ($Port->getCredits() > 0) { ?>&nbsp;
 				<a href="<?php echo $Port->getLootHREF(); ?>" class="buttonA">Loot the port (100% money)</a>&nbsp;
-				<a href="<?php echo $Port->getRazeHREF(); ?>" class="buttonA">Raze the port (<?php echo IRound(SmrPort::RAZE_PAYOUT * 100); ?>% money, 1 downgrade)</a><?php
+				<a href="<?php echo $Port->getRazeHREF(); ?>" class="buttonA">Raze the port (<?php echo IRound(Port::RAZE_PAYOUT * 100); ?>% money, 1 downgrade)</a><?php
 			} ?>
 		</div><?php
 	} ?>

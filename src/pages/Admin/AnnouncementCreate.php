@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class AnnouncementCreate extends AccountPage {
 
@@ -14,7 +14,7 @@ class AnnouncementCreate extends AccountPage {
 		private readonly ?string $preview = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Create Announcement');
 		$template->assign('AnnouncementCreateFormHref', (new AnnouncementCreateProcessor())->href());
 		if ($this->preview !== null) {
