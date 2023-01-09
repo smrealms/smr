@@ -70,7 +70,8 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 				<th>Action</th>
 			</tr><?php
 			$weapons = $ThisPlanet->getMountedWeapons();
-			for ($i = 0; $i < $ThisPlanet->getMaxMountedWeapons(); ++$i) { ?>
+			$maxWeapons = $ThisPlanet->getMaxMountedWeapons();
+			for ($i = 0; $i < $maxWeapons; ++$i) { ?>
 				<tr class="center">
 					<td><?php echo $i + 1; ?></td>
 					<td><?php

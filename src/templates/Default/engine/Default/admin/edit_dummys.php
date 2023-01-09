@@ -41,7 +41,9 @@
 						} ?>
 					</select><br /><?php
 				}
-				for ($OrderID = $DummyShip->getNumWeapons(); $OrderID < $DummyShip->getHardpoints(); $OrderID++) { ?>
+				$NumWeapons = $DummyShip->getNumWeapons();
+				$NumHardpoints = $DummyShip->getHardpoints();
+				for ($OrderID = $NumWeapons; $OrderID < $NumHardpoints; $OrderID++) { ?>
 					Weapon: <?php echo $OrderID + 1; ?>
 					<select name="weapons[]">
 						<option value="0">None</option><?php
