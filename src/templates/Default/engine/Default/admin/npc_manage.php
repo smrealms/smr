@@ -22,7 +22,7 @@ if (!empty($SelectedGameID)) { ?>
 			<th>Alliance</th>
 			<th>Status</th>
 		</tr><?php
-		foreach ($Npcs as $accountID => $npc) { ?>
+		foreach ($Npcs as $npc) { ?>
 			<tr>
 				<td><?php echo $npc['login']; ?></td>
 				<td class="center">
