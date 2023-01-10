@@ -27,4 +27,4 @@ if ($ThisSector->hasPlanet()) {
 			</td>
 		</tr>
 	</table><br />
-<?php } ?>
+<?php }

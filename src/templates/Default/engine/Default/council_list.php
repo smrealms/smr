@@ -70,4 +70,4 @@ foreach (Smr\Race::getPlayableIDs() as $RaceID) { ?>
 	<span class="smallFont"><?php
 		echo $ThisPlayer->getColouredRaceName($RaceID, true); ?>
 	</span><br /><?php
-} ?>
+}

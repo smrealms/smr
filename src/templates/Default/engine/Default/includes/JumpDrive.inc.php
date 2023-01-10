@@ -13,4 +13,4 @@ if ($ThisShip->hasJump()) { ?>
 			</tr>
 		</table>
 	</form><?php
-} ?>
+}

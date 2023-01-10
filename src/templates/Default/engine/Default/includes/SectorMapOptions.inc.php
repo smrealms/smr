@@ -15,4 +15,3 @@ if (isset($CheckboxFormHREF)) { ?>
 		<input type=hidden name="change_settings" />
 	</form><?php
 }
-?>

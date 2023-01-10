@@ -82,4 +82,3 @@ if (isset($Message)) { ?>
 <?php
 $this->includeTemplate('includes/SectorMap.inc.php');
 $this->addJavascriptSource('/js/uni_gen.js');
-?>

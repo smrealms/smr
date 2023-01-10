@@ -103,4 +103,4 @@ if (isset($Locations)) {
 <?php
 if (!isset($Locations)) {
 	?></form><?php
-} ?>
+}

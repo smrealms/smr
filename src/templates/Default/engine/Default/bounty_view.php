@@ -23,4 +23,4 @@ if ($BountyPlayer->hasBounties()) {
 	}
 } else {
 	echo $BountyPlayer->getDisplayName(); ?> has no bounties<br /><?php
-} ?>
+}

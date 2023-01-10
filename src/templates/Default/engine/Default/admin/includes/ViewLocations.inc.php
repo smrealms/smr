@@ -31,4 +31,4 @@ foreach ($Locations as $Location) { ?>
 		</div>
 	</td>
 </tr><?php
-} ?>
+}

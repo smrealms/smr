@@ -29,4 +29,4 @@ foreach ($AnonLogs as $gameID => $AnonAccounts) { ?>
 			} ?>
 		</table><br /><?php
 	}
-} ?>
+}

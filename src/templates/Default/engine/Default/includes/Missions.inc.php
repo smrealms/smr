@@ -38,5 +38,3 @@ foreach ($ThisPlayer->getActiveMissions() as $MissionID => $Mission) {
 		</div><?php
 	}
 }
-
-?>

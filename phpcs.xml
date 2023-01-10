@@ -127,11 +127,6 @@
         <exclude-pattern>test/*</exclude-pattern>
     </rule>
 
-    <!-- Closing tags used in templates since PHP/HTML are intermixed. -->
-    <rule ref="Zend.Files.ClosingTag">
-        <exclude-pattern>src/templates/*</exclude-pattern>
-    </rule>
-
     <!-- Spryker sniffs do not support nullable typehints in docblocks.
       See https://github.com/spryker/code-sniffer/issues/349. -->
     <rule ref="Spryker.Commenting.DocBlockParamAllowDefaultValue.Default">

@@ -46,5 +46,3 @@ if (empty($ActiveGames)) {
 	}
 
 }
-
-?>

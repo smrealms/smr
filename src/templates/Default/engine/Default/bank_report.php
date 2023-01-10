@@ -10,4 +10,4 @@
 		A statement has been sent to the alliance.<?php
 	} ?>
 </div>
-<?php echo $BankReport; ?>
+<?php echo $BankReport;

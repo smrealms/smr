@@ -64,4 +64,4 @@ if (empty($Forces)) { ?>
 	</table>
 
 	<?php $this->listjsInclude = 'alliance_forces';
-} ?>
+}

@@ -44,4 +44,3 @@ if (count($LoggedAccounts) > 0) { ?>
 } else { ?>
 	There are no log entries at all!<?php
 }
-?>

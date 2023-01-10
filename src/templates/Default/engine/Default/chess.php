@@ -58,4 +58,4 @@ if (isset($NPCList)) {
 	} else { ?>
 		<p>You have challenged every NPC.</p><?php
 	}
-} ?>
+}

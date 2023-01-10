@@ -16,4 +16,4 @@ if (empty($Articles)) { ?>
 			<br /><br /><?php
 		} ?>
 	</ul><?php
-} ?>
+}

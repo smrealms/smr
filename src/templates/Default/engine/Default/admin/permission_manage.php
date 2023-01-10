@@ -44,4 +44,4 @@ if (!isset($EditAccount)) { ?>
 		&nbsp;&nbsp;&nbsp;
 		<input type="submit" name="action" value="Select Another User" />
 	</form><?php
-} ?>
+}

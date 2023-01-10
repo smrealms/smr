@@ -73,4 +73,4 @@ if ($ShareFrom) { ?>
 	</table><?php
 } else { ?>
 	None<?php
-} ?>
+}

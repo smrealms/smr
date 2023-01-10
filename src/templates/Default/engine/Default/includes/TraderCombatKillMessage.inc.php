@@ -10,4 +10,3 @@ if (isset($ShootingPlayer)) {
 	     . '</span> credits that were onboard ' . $TargetPlayer->getDisplayName()
 	     . "'s ship are lost in the wreckage.<br />";
 }
-?>

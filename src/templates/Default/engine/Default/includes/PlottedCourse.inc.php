@@ -37,4 +37,3 @@ if ($ThisPlayer->hasPlottedCourse()) {
 		</tr>
 	</table><?php
 }
-?>

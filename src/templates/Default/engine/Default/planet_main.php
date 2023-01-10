@@ -101,4 +101,3 @@ if (isset($Msg)) {
 <p><a href="<?php echo $LaunchLink; ?>" class="submitStyle">Launch</a></p>
 <?php
 $this->includeTemplate('includes/SectorPlayers.inc.php');
-?>

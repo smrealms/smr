@@ -99,4 +99,4 @@
 <?php
 if (isset($Message)) {
 	echo $Message;
-} ?>
+}

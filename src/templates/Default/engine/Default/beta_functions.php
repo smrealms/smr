@@ -104,4 +104,4 @@ if ($ThisSector->hasPlanet()) { ?>
 	<p><a href="<?php echo $MaxBuildingsHREF; ?>">Set buildings to max</a></p>
 	<p><a href="<?php echo $MaxDefensesHREF; ?>">Set defenses to max</a></p>
 	<p><a href="<?php echo $MaxStockpileHREF; ?>">Set stockpile to max</a></p><?php
-} ?>
+}

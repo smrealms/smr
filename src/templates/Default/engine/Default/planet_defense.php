@@ -128,4 +128,4 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 			} ?>
 		</table>
 	</form><?php
-} ?>
+}

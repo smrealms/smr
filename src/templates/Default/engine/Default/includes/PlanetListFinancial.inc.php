@@ -50,4 +50,4 @@ if (count($Planets) > 0) { ?>
 		</tbody>
 	</table><br/>
 	<?php $this->listjsInclude = 'PlanetListFinancial';
-} ?>
+}

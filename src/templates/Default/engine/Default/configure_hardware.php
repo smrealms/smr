@@ -37,4 +37,4 @@ if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()
 		</form><?php
 	}
 	$this->includeTemplate('includes/JumpDrive.inc.php');
-} ?>
+}

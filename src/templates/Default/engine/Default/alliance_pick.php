@@ -106,5 +106,3 @@ if (count($History) > 0) { ?>
 } else { ?>
 	No picks have been made yet.<?php
 }
-
-?>

@@ -30,4 +30,4 @@ if (isset($ArticleTitle)) { ?>
 		<input type="submit" name="action" value="Yes" />&nbsp;
 		<input type="submit" name="action" value="No" />
 	</form><?php
-} ?>
+}

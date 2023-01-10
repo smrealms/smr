@@ -41,4 +41,4 @@ if ($ThisShip->hasWeapons()) { ?>
 	<?php $this->addJavascriptSource('/js/weapon_reorder.js');
 } else {
 	?>You don't have any weapons!<?php
-} ?>
+}

@@ -10,4 +10,4 @@ if (isset($Ticker)) { ?>
 			?>Nothing to report<?php
 		} ?>
 	</div><br /><?php
-} ?>
+}

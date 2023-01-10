@@ -9,4 +9,4 @@ if (!empty($NewsItems)) { ?>
 	$this->includeTemplate('includes/NewsTable.inc.php');
 } else {
 	?>You have no current news.<?php
-} ?>
+}

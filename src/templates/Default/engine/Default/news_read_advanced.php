@@ -73,4 +73,4 @@ if (!empty($NewsItems)) { ?>
 	$this->includeTemplate('includes/NewsTable.inc.php');
 } else {
 	?>No news to read.<?php
-} ?>
+}

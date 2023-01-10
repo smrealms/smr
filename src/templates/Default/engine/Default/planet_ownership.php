@@ -38,5 +38,3 @@ if (!$Planet->hasOwner()) { ?>
 		</form><?php
 	}
 }
-
-?>

@@ -22,4 +22,4 @@ if ($ThisSector->hasLocation()) { ?>
 			</tr><?php
 			} ?>
 	</table><br /><?php
-} ?>
+}

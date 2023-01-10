@@ -112,4 +112,4 @@ if ($type == 'comp_share') {
 		</form>
 	</center><?php
 
-} ?>
+}

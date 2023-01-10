@@ -22,4 +22,3 @@
 <?php
 $this->includeTemplate('includes/SectorMap.inc.php');
 $this->includeTemplate('includes/SectorMapOptions.inc.php');
-?>

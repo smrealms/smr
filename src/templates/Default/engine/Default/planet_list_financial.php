@@ -7,4 +7,3 @@ if (!$CanViewBonds) { ?>
 } else {
 	$this->includeTemplate('planet_list.inc.php', ['ExtraInclude' => 'includes/PlanetListFinancial.inc.php']);
 }
-?>

@@ -54,4 +54,4 @@ if (isset($Boxes)) { ?>
 	} else {
 		?>There are currently no messages in this box.<?php
 	}
-} ?>
+}

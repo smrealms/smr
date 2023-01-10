@@ -12,4 +12,4 @@ if (isset($Voting)) {
 			<?php if (isset($Vote['TimeRemaining'])) { ?><input type="submit" name="submit" value="Vote!"><br /><?php } ?><br />
 		</form><?php
 	} ?><br /><?php
-} ?>
+}

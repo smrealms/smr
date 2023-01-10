@@ -38,4 +38,4 @@ if (count($Alliances) > 0) { ?>
 	<?php $this->listjsInclude = 'alliance_list';
 } else { ?>
 	<p class="center">Currently there are no alliances.</p><?php
-} ?>
+}

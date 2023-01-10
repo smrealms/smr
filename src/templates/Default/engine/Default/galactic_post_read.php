@@ -19,4 +19,4 @@ if (empty($ArticleLayout)) { ?>
 			</tr><?php
 		} ?>
 	</table><?php
-} ?>
+}

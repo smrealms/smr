@@ -23,4 +23,4 @@ if (isset($AdminPermissions)) { ?>
 		} ?>
 		</ul><?php
 	}
-} ?>
+}

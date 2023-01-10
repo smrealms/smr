@@ -17,4 +17,4 @@ if ($FullForceCombatResults['Forced']) { ?>
 } else { ?>
 	<h1>Defender Results</h1><br />
 	<?php $this->includeTemplate('includes/ForceTraderTeamCombatResults.inc.php', ['TraderTeamCombatResults' => $FullForceCombatResults['Attackers']]);
-} ?>
+}

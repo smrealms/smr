@@ -19,4 +19,4 @@ if (isset($JoinHREF)) { ?>
 	<p class="center">
 		<a href="<?php echo $JoinHREF; ?>" class="submitStyle">Become a smuggler</a>
 	</p><?php
-} ?>
+}

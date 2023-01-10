@@ -29,4 +29,4 @@ if (!empty($Transactions)) { ?>
 	</form><?php
 } else { ?>
 	Nothing to authorize.<?php
-} ?>
+}

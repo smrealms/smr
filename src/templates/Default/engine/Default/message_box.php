@@ -23,4 +23,4 @@
 		} ?>
 	</tbody>
 </table>
-<?php $this->listjsInclude = 'message_box'; ?>
+<?php $this->listjsInclude = 'message_box';

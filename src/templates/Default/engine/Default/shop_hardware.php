@@ -56,4 +56,4 @@ if (isset($HardwareSold)) { ?>
 	}
 } else {
 	?>I have nothing to sell to you. Get out of here!<?php
-} ?>
+}

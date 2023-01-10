@@ -94,4 +94,4 @@ if (isset($CompareShip)) { ?>
 			</td>
 		</tr>
 	</table><?php
-} ?>
+}

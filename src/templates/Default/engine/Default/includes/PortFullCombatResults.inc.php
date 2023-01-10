@@ -19,4 +19,4 @@ if (!$AlreadyDestroyed) {
 		<h1>Port Results</h1><br /><?php
 	}
 	$this->includeTemplate('includes/PortCombatResults.inc.php', ['PortCombatResults' => $FullPortCombatResults['Port'], 'MinimalDisplay' => $MinimalDisplay]);
-} ?>
+}

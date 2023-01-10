@@ -60,4 +60,4 @@ if (isset($ErrorMessage)) { ?>
 }
 if (isset($Message)) { ?>
 	<div class="center"><?php echo $Message; ?></div><?php
-} ?>
+}

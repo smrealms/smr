@@ -29,5 +29,3 @@ if (empty($DisabledGames)) { ?>
 		</table>
 	</form> <?php
 }
-
-?>

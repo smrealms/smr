@@ -140,4 +140,3 @@ if ($JoinRestriction === false) { ?>
 } elseif ($JoinRestriction !== true) { ?>
 	<p><?php echo $JoinRestriction; ?></p><?php
 }
-?>

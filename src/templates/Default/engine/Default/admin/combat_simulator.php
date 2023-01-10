@@ -32,4 +32,4 @@
 if (isset($TraderCombatResults)) {
 	$this->includeTemplate('includes/TraderFullCombatResults.inc.php');
 	?><br /><?php
-} ?>
+}

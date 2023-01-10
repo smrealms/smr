@@ -38,4 +38,4 @@ $this->includeTemplate('changelog_view.php', ['Versions' => [$FirstVersion]]); ?
 </ul>
 
 <?php
-$this->includeTemplate('changelog_view.php'); ?>
+$this->includeTemplate('changelog_view.php');

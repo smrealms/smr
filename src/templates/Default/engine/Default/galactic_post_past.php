@@ -25,4 +25,4 @@ if (empty($PastEditions)) { ?>
 			<li><a href="<?php echo $edition['href']; ?>"><?php echo date('Y/m/d', $edition['online_since']) . ' - ' . $edition['title']; ?></a></li><?php
 		} ?>
 	</ul><?php
-} ?>
+}

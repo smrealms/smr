@@ -142,4 +142,4 @@ This fleet <?php if ($TotalDamage > 0) { ?>hits for a total of <span class="red"
 $Downgrades = $TraderTeamCombatResults['Downgrades'];
 if ($Downgrades != 0) {
 	?>The port has lost <?php echo pluralise($Downgrades, 'level'); ?>.<?php
-} ?>
+}

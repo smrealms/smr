@@ -38,4 +38,4 @@
 <?php
 if (isset($Message)) { ?>
 	<p class="center"><?php echo $Message; ?></p><?php
-} ?>
+}

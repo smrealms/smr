@@ -29,4 +29,4 @@ if (isset($Links)) { ?>
 	} else { ?>
 		<p class="center">We apologize, but this stat does not exist for this game!</p><?php
 	}
-} ?>
+}

@@ -6,4 +6,3 @@ foreach ($Links as $Link) { ?>
 	<?php echo $Link['text']; ?>
 	<br /><br /><?php
 }
-?>

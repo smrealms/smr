@@ -75,4 +75,3 @@
 
 <?php
 $this->addJavascriptSource('/js/chess_play.js');
-?>

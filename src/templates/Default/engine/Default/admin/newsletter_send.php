@@ -41,4 +41,3 @@ if (!isset($NewsletterId)) { ?>
 
 <?php
 }
-?>

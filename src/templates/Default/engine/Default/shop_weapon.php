@@ -60,4 +60,4 @@ if ($ThisShip->hasWeapons()) { ?>
 			</tr><?php
 		} ?>
 	</table><?php
-} ?>
+}

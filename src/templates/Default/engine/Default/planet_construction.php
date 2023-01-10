@@ -68,4 +68,4 @@ if ($ThisPlanet->hasStockpile()) { ?>
 	</ul><?php
 } else { ?>
 	 Nothing!</p><?php
-} ?>
+}

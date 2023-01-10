@@ -37,4 +37,4 @@ if (isset($Categories)) { ?>
 			echo $Row;
 		} ?>
 	</table><?php
-} ?>
+}

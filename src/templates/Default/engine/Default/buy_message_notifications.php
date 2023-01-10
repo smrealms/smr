@@ -32,5 +32,3 @@ if (isset($MessageBoxes)) { ?>
 		} ?>
 	</table><?php
 }
-
-?>

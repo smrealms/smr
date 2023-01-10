@@ -40,4 +40,3 @@ if (isset($GameID)) { ?>
 	<br />
 	<?php
 }
-?>

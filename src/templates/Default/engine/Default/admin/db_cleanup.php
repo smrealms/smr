@@ -33,4 +33,4 @@ if (isset($Results)) { ?>
 	<p><a class="submitStyle" href="<?php echo $PreviewHREF; ?>">Preview</a></p>
 	<p><a class="submitStyle" href="<?php echo $DeleteHREF; ?>">Delete</a></p>
 	<?php
-} ?>
+}

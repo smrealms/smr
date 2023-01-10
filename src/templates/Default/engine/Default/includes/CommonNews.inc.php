@@ -28,4 +28,4 @@ if (isset($LottoNews)) { ?>
 	    </tr>
     </table>
 	<br /><br /><?php
-} ?>
+}

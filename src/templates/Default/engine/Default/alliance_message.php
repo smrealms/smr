@@ -55,4 +55,3 @@ if (isset($CreateNewThreadFormHref)) { ?>
 	<input type="submit" name="action" value="New Thread">&nbsp;<input type="submit" name="action" value="Preview Thread" />
 	</form><?php
 }
-?>

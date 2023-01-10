@@ -30,5 +30,3 @@ if (empty($Goods)) { ?>
 		} ?>
 	</table><?php
 }
-
-?>

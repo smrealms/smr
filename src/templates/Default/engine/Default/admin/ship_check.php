@@ -25,4 +25,4 @@ if (empty($ExcessHardware)) { ?>
 			</tr><?php
 		} ?>
 	</table><?php
-} ?>
+}

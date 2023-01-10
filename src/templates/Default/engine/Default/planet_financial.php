@@ -41,4 +41,4 @@ if ($ThisPlanet->hasOwner()) { ?>
 	<div class="buttonA">
 		<a id="bondFunds" class="buttonA" href="<?php echo $ThisPlanet->getBondConfirmationHREF(); ?>">Bond Funds</a>
 	</div>&nbsp; <?php
-} ?>
+}

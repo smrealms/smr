@@ -62,4 +62,3 @@ if (isset($Thread['CreateThreadReplyFormHref'])) { ?>
 		<input type="submit" name="action" value="Create Reply">&nbsp;<input type="submit" name="action" value="Preview Reply" />
 	</form><?php
 }
-?>
