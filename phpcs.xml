@@ -105,11 +105,6 @@
         <exclude-pattern>src/templates/*</exclude-pattern>
     </rule>
 
-    <!-- Some templates will have no PHP code. -->
-    <rule ref="Internal.NoCodeFound">
-        <exclude-pattern>src/templates/*</exclude-pattern>
-    </rule>
-
     <!-- Temporary until all classes are migrated to the PSR-4 autoloader. -->
     <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
         <severity>0</severity>
