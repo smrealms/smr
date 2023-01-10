@@ -6,23 +6,25 @@ use Smr\ShipClass;
 
 function hit_sector_mines(AbstractSmrPlayer $player): void {
 
+	// Get sector forces sorted by decreasing mines (largest mine stacks first)
 	$sectorForces = $player->getSector()->getForces();
-	Sorter::sortByNumMethod($sectorForces, 'getMines', true);
-	$mine_owner_id = null;
+	uasort($sectorForces, fn($a, $b) => $b->getMines() <=> $a->getMines());
+
+	$forcesHit = false;
 	foreach ($sectorForces as $forces) {
 		if ($forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
-			$mine_owner_id = $forces->getOwnerID();
+			$forcesHit = $forces;
 			break;
 		}
 	}
 
-	if ($mine_owner_id === null) {
+	if ($forcesHit === false) {
 		return;
 	}
 
 	$ship = $player->getShip();
 	if ($player->hasNewbieTurns() || $ship->getClass() === ShipClass::Scout) {
-		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost($ship);
+		$turns = $forcesHit->getBumpTurnCost($ship);
 		$player->takeTurns($turns, $turns);
 		if ($player->hasNewbieTurns()) {
 			$flavor = 'Because of your newbie status you have been spared from the harsh reality of the forces';
@@ -33,7 +35,7 @@ function hit_sector_mines(AbstractSmrPlayer $player): void {
 		$container = new CurrentSector(message: $msg);
 		$container->go();
 	} else {
-		$container = new AttackForcesProcessor($mine_owner_id, bump: true);
+		$container = new AttackForcesProcessor($forcesHit->getOwnerID(), bump: true);
 		$container->go();
 	}
 
