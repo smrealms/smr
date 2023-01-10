@@ -33,55 +33,8 @@ if (isset($XType)) { ?>
 	<form class="standard" id="PlotNearestForm" method="POST" action="<?php echo $PlotNearestFormLink; ?>">
 		<input type="hidden" name="xtype" value="<?php echo $XType->value; ?>" /><br />
 		<select name="X" onchange="this.form.submit()"><?php
-			switch ($XType) {
-				case Smr\PlotGroup::Technology:
-					$Hardwares = Smr\HardwareType::getAll();
-					foreach ($Hardwares as $Hardware) {
-						?><option value="<?php echo $Hardware->typeID; ?>"><?php echo $Hardware->name; ?></option><?php
-					}
-					break;
-				case Smr\PlotGroup::Ships:
-					$Ships = SmrShipType::getAll();
-					Sorter::sortByNumMethod($Ships, 'getName');
-					foreach ($Ships as $Ship) {
-						?><option value="<?php echo $Ship->getTypeID(); ?>"><?php echo $Ship->getName(); ?></option><?php
-					}
-					break;
-				case Smr\PlotGroup::Weapons:
-					$Weapons = SmrWeaponType::getAllSoldWeaponTypes($ThisPlayer->getGameID());
-					Sorter::sortByNumMethod($Weapons, 'getName');
-					foreach ($Weapons as $Weapon) {
-						?><option value="<?php echo $Weapon->getWeaponTypeID(); ?>"><?php echo $Weapon->getName(); ?></option><?php
-					}
-					break;
-				case Smr\PlotGroup::Locations:
-					?><option value="Bank">Any Bank</option>
-					<option value="Bar">Any Bar</option>
-					<option value="SafeFed">Any Safe Fed</option>
-					<option value="HQ">Any Headquarters</option>
-					<option value="UG">Any Underground</option>
-					<option value="Hardware">Any Hardware Shop</option>
-					<option value="Ship">Any Ship Shop</option>
-					<option value="Weapon">Any Weapon Shop</option><?php
-					$Locations = SmrLocation::getAllLocations($ThisPlayer->getGameID());
-					Sorter::sortByNumMethod($Locations, 'getName');
-					foreach ($Locations as $Location) {
-						?><option value="<?php echo $Location->getTypeID(); ?>"><?php echo $Location->getName(); ?></option><?php
-					}
-					break;
-				case Smr\PlotGroup::SellGoods:
-				case Smr\PlotGroup::BuyGoods:
-					$Goods = $ThisPlayer->getVisibleGoods();
-					foreach ($Goods as $GoodID => $Good) {
-						?><option value="<?php echo $GoodID; ?>"><?php echo $Good->name; ?></option><?php
-					}
-					break;
-				case Smr\PlotGroup::Galaxies:
-					foreach ($ThisPlayer->getGame()->getGalaxies() as $Galaxy) {
-						?><option value="<?php echo $Galaxy->getGalaxyID(); ?>"><?php echo $Galaxy->getDisplayName(); ?></option><?php
-					}
-					break;
-				default:
+			foreach ($XTypeOptions as $Value => $Name) { ?>
+				<option value="<?php echo $Value; ?>"><?php echo $Name; ?></option><?php
 			} ?>
 		</select>&nbsp;
 		<input type="submit" value="Go" />
