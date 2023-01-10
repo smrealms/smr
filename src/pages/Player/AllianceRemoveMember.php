@@ -8,7 +8,6 @@ use Smr\Epoch;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use Sorter;
 
 class AllianceRemoveMember extends PlayerPage {
 
@@ -26,8 +25,12 @@ class AllianceRemoveMember extends PlayerPage {
 		$container = new AllianceRemoveMemberProcessor();
 		$template->assign('BanishHREF', $container->href());
 
+		// Get alliance members sorted by most active first
+		$alliancePlayers = $alliance->getMembers();
+		uasort($alliancePlayers, fn($a, $b) => $b->getLastCPLAction() <=> $a->getLastCPLAction());
+
 		$members = [];
-		foreach ($alliance->getMembers() as $alliancePlayer) {
+		foreach ($alliancePlayers as $alliancePlayer) {
 			// You can't remove yourself from the alliance
 			if ($alliancePlayer->equals($player)) {
 				continue;
@@ -38,13 +41,11 @@ class AllianceRemoveMember extends PlayerPage {
 			$lastActiveDate = get_colored_text_range($diff, 864000, date($account->getDateTimeFormat(), $lastActive));
 
 			$members[] = [
-				'sort_order' => $lastActive,
 				'last_active' => $lastActiveDate,
 				'display_name' => $alliancePlayer->getDisplayName(),
 				'account_id' => $alliancePlayer->getAccountID(),
 			];
 		}
-		Sorter::sortByNumElement($members, 'sort_order', true);
 		$template->assign('Members', $members);
 	}
 

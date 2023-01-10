@@ -3,8 +3,10 @@
 ?>
 <div id="sector_forces" class="ajax"><?php
 	if ($ThisSector->hasForces()) {
+		// Display forces by increasing expiration time (soonest to expire first)
 		$Forces = $ThisSector->getForces();
-		Sorter::sortByNumMethod($Forces, 'getExpire');
+		uasort($Forces, fn($a, $b) => $a->getExpire() <=> $b->getExpire());
+
 		$RefreshAny = false; ?>
 		<table class="standard fullwidth csForces">
 			<tbody>
