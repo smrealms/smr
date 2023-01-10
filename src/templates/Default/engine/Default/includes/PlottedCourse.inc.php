@@ -4,7 +4,7 @@ if ($ThisPlayer->hasPlottedCourse()) {
 	$PlottedCourse = $ThisPlayer->getPlottedCourse();
 	$CancelCourseHREF = (new Smr\Pages\Player\PlotCourseCancelProcessor())->href();
 	$ReplotCourseHREF = (new Smr\Pages\Player\PlotCourseConventionalProcessor(to: $PlottedCourse->getEndSectorID(), from: $ThisSector->getSectorID()))->href();
-	$NextSector = SmrSector::getSector($ThisPlayer->getGameID(), $PlottedCourse->getNextOnPath(), $ThisPlayer->getAccountID()); ?>
+	$NextSector = SmrSector::getSector($ThisPlayer->getGameID(), $PlottedCourse->getNextOnPath()); ?>
 	<table class="nobord fullwidth">
 		<tr>
 			<td class="top left">
