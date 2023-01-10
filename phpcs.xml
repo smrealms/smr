@@ -57,6 +57,13 @@
     </rule>
 
     <!-- Add sniffs not included by PSR2R. -->
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+        <properties>
+            <property name="declareOnFirstLine" value="true" />
+            <property name="spacesCountAroundEqualsSign" value="0" />
+        </properties>
+        <exclude-pattern>src/templates/*</exclude-pattern>
+    </rule>
     <rule ref="SlevomatCodingStandard.Variables.UnusedVariable">
         <properties>
             <property name="ignoreUnusedValuesWhenOnlyKeysAreUsedInForeach" value="true" />

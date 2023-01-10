@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 // Callback script for player voting on external sites
 
 use Smr\Request;

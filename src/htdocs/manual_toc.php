@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 try {
 	require_once('../bootstrap.php');
 	require_once(LIB . 'Default/help.inc.php');
