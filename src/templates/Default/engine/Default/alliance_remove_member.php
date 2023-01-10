@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <div class="center"><?php
 	if (empty($Members)) { ?>
 		There is no-one to kick! You are all by yourself!<?php

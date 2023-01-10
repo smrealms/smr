@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <div class="center">
 	So you want to name your ship?  Great!
 

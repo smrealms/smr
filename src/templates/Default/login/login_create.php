@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <div class="centered" style="width: 630px;">
 	<h1>Create Login</h1>
 

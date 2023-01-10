@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <span class="red">WARNING WARNING</span> port assault about to commence!!<br />
 
 <br />

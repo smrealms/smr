@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <h2>Filtered Words</h2><br />
 
 <?php

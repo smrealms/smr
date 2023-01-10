@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <p>Balance: <b><span id="planet_credits"><?php echo number_format($ThisPlanet->getCredits()); ?></span></b><?php if ($ThisPlanet->getCredits() >= MAX_MONEY) { ?> (Account is Full)<?php } ?></p>
 
 <form id="BondForm" method="POST" action="<?php echo $ThisPlanet->getFinancesHREF(); ?>">

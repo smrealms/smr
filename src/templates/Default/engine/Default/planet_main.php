@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($ErrorMsg)) {
 	echo $ErrorMsg; ?><br /><?php
 }

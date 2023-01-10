@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <br />
 <div class="center">
 	Currently <b><?php echo format_time($LottoInfo['TimeRemaining']); ?></b> remain until the winning ticket

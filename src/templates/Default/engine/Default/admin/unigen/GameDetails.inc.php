@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <form method="POST" action="<?php echo $ProcessingHREF; ?>">
 	<table class="standard">
 	<tr>

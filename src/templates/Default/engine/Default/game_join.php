@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 Each Space Merchant Realms round requires you to create a new Trader.<br />
 To do this you must choose a name for yourself and select your race.<br />
 

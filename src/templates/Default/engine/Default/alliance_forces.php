@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (empty($Forces)) { ?>
 	Your alliance has no deployed forces.
 	<a href="<?php echo WIKI_URL; ?>/game-guide/forces" target="_blank">

@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($HardwareSold)) { ?>
 	<h2>Buy Hardware</h2>
 	<table class="standard">

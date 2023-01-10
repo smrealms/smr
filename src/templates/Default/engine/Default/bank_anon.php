@@ -1,4 +1,6 @@
-<?php echo $Message; ?>
+<?php declare(strict_types=1);
+
+echo $Message; ?>
 
 <h2>Access accounts</h2><br />
 <form method="POST" action="<?php echo $AccessHREF; ?>">

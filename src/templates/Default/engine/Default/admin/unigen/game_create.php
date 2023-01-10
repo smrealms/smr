@@ -1,4 +1,6 @@
+<?php declare(strict_types=1);
 
+?>
 <h1>Edit Existing Games</h1>
 <?php
 if (count($EditGames) == 0) { ?>

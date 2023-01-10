@@ -1,4 +1,6 @@
-<?php if ($ThisPlanet->getMaxShields() + $ThisPlanet->getMaxCDs() + $ThisPlanet->getMaxArmour() == 0) { ?>
+<?php declare(strict_types=1);
+
+if ($ThisPlanet->getMaxShields() + $ThisPlanet->getMaxCDs() + $ThisPlanet->getMaxArmour() == 0) { ?>
 	<p>This planet cannot yet store any shields, combat drones, or armour.</p>
 <?php } else { ?>
 

@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <form method="POST" action="<?php echo $SubmitHREF; ?>">
 	Select the player you want to add the bounty to<br />
 	<select name="player_id" required size="1">

@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 Please select the new Leader:
 
 <form method="POST" action="<?php echo $HandoverHREF; ?>">

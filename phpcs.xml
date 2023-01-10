@@ -62,7 +62,6 @@
             <property name="declareOnFirstLine" value="true" />
             <property name="spacesCountAroundEqualsSign" value="0" />
         </properties>
-        <exclude-pattern>src/templates/*</exclude-pattern>
     </rule>
     <rule ref="SlevomatCodingStandard.Variables.UnusedVariable">
         <properties>

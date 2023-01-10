@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <a href="<?php echo $CancelHREF; ?>">&lt;&lt; Back</a><br /><br />
 <form method="POST" action="<?php echo $EditHREF; ?>">
 	<h2>Planet</h2><br />

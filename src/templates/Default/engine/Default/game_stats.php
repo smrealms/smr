@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <h2>Description</h2>
 <?php echo bbifyMessage($StatsGame->getDescription(), $StatsGame->getGameID()); ?>
 <br /><br />

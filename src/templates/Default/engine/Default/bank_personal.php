@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 Hello <?php echo $ThisPlayer->getDisplayName(); ?>
 <br /><br />
 

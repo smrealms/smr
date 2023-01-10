@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($PreviousLogHREF) || isset($NextLogHREF)) { ?>
 	<div class="center"><?php
 	if (isset($PreviousLogHREF)) {

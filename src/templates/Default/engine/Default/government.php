@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <div class="center"><?php
 	if ($WarRaces) { ?>
 		We are at WAR with<br /><br /><?php

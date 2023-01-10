@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <div class="right">
 	SMR <?php echo $Version; ?>&copy;2007-<?php echo $CurrentYear; ?> Page and SMR<br />
 	Kindly Hosted by <a href="http://www.fem.tu-ilmenau.de/" target="fem">FeM</a><br />

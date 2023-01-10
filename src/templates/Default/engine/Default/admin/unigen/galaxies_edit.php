@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <p><span class="red bold">WARNING: </span>You cannot modify galaxy sizes in
 games that have already been enabled! Ports, planets, and locations in
 sectors that are removed will also be removed!

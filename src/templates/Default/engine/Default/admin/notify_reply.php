@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 Leave a message box blank to not reply to that player.<br />
 <br />
 <form name="NotifyReplyForm" method="POST" action="<?php echo $NotifyReplyFormHref; ?>">

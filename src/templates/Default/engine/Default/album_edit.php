@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <p><span style="font-size:80%;">Here you have a chance to add an entry to the Space Merchant Realms - The Photo Album!<br />
 We only accept jpg or gif images to a maximum of 500 x 500 in size.<br />
 Your image will be posted under your <i>Hall Of Fame</i> nick!<br />

@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <h2>Alliance Operation Schedule</h2>
 <?php
 if (!empty($Message)) {

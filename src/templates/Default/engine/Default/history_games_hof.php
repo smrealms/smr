@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($Links)) { ?>
 	<table class="center standard">
 		<tr><th>Categories</th></tr><?php

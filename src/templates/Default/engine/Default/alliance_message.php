@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (count($Threads) > 0) { ?>
 	<table id="topic-list" class="centered standard inset">
 		<thead>

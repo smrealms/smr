@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 foreach ($TraderTeamCombatResults['Traders'] as $TraderResults) {
 	$ShootingPlayer = $TraderResults['Player'];
 	$TotalDamage = $TraderResults['TotalDamage'];

@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 $CombatPort = $PortCombatResults['Port'];
 $TotalDamage = $PortCombatResults['TotalDamage'];
 if ($MinimalDisplay) {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (count($ShipsSold) > 0) { ?>
 	<h2>Available Ships</h2>

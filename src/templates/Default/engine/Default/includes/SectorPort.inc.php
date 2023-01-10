@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <div id="sector_port" class="ajax">
 	<?php if ($ThisSector->hasPort()) {
 		$Port = $ThisSector->getPort(); ?>

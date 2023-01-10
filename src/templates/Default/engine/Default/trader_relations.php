@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <table width="50%" class="standard center">
 	<tr>
 		<th width="31%">Race</th>

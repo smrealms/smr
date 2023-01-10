@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 foreach ($Locations as $Location) { ?>
 <tr>
 	<td><?php echo $Location->getName() ?></td>

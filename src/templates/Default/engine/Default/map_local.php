@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <table class="nobord fullwidth">
 	<tr>
 		<td style="width: 10%" class="top">

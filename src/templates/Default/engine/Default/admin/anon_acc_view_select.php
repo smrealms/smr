@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($Message)) { ?>
 	<p><span class="red"><?php echo $Message; ?></span></p><?php
 } ?>

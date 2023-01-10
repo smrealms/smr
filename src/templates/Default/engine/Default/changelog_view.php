@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($ContinueHREF)) {
 	// Make the login changelog scroll if it is larger than 420px ?>
 	<style>div.login_scroll {height: 420px; overflow-y: auto;}</style>

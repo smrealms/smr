@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <a href="<?php echo $BackHREF; ?>">&lt;&lt;Back</a>
 <p>Transactions from Anonymous Account #<?php echo $AnonID; ?> in Game <?php echo $ViewGameID; ?></p>
 <table class="standard">

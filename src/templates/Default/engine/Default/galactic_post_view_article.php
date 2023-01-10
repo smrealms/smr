@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (empty($Articles)) { ?>
 	<p>All articles have been assigned to a paper.</p><?php
 } else { ?>

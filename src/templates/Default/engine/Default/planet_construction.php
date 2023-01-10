@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 You are currently building: <?php
 	if ($ThisPlanet->hasCurrentlyBuilding()) {
 		$CurrentlyBuilding = $ThisPlanet->getCurrentlyBuilding();

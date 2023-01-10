@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // This var is passed by the processing file if we enabled a game
 if (!empty($ProcessingMsg)) {

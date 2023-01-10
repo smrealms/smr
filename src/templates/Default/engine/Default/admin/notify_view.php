@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (empty($Messages)) { ?>
 	<p>There are no reported Messages.</p><?php
 	return;

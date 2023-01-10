@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <table class="lmt centered"><?php
 	$GalaxyMap = isset($GalaxyMap) && $GalaxyMap;
 	$UniGen = $UniGen ?? false;

@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if ($FullForceCombatResults['Forced']) { ?>
 	<h1>Force Results</h1><br />
 	<?php $this->includeTemplate('includes/ForcesCombatResults.inc.php', ['ForcesCombatResults' => $FullForceCombatResults['Forces']]);

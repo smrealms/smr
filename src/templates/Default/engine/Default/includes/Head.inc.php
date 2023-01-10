@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <title><?php echo PAGE_TITLE; ?><?php if (isset($GameName)) echo ": $GameName"; ?></title>
 <meta http-equiv="pragma" content="no-cache" /><?php

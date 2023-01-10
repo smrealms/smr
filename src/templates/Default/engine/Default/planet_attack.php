@@ -1,4 +1,6 @@
-<?php $this->includeTemplate('includes/PlanetFullCombatResults.inc.php'); ?><br />
+<?php declare(strict_types=1);
+
+$this->includeTemplate('includes/PlanetFullCombatResults.inc.php'); ?><br />
 <br />
 <div class="center"><?php
 if (!$OverrideDeath && !$Planet->isDestroyed()) { ?>

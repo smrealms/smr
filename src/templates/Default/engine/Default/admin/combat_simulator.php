@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <a href="<?php echo $EditDummysLink ?>">Edit Combat Dummys</a><br /><br />
 
 <?php if ($Duplicates) { ?><h1>Do not use duplicate dummy names, they would interfere with each other</h1><?php } ?>

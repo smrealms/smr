@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <table class="fullwidth" style="border:none">
 	<tr>
 		<td class="top nopad"><?php

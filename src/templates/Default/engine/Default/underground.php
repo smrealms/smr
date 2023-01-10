@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <p>The location appears to be abandoned, until a group of
 heavily-armed figures advance from the shadows.</p>
 <p>&nbsp;</p>

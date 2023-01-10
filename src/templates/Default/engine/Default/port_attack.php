@@ -1,4 +1,6 @@
-<?php $this->includeTemplate('includes/PortFullCombatResults.inc.php'); ?><br />
+<?php declare(strict_types=1);
+
+$this->includeTemplate('includes/PortFullCombatResults.inc.php'); ?><br />
 <br />
 <div class="center"><?php
 	if (!$OverrideDeath && !$Port->isDestroyed()) { ?>

@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <span class="bold"><?php echo $PaperTitle; ?></span>
 <br /><br /><?php
 if (empty($Articles)) { ?>

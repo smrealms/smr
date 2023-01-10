@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <p>Are you sure you want to transfer <?php echo $Amount; ?> SMR credits to
 the player with Hall of Fame name <?php echo $HofName; ?>?</p>
 

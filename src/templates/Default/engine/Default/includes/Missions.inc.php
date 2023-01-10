@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Smr\Pages\Player\Mission\AbandonProcessor;
 use Smr\Pages\Player\Mission\AcceptProcessor;

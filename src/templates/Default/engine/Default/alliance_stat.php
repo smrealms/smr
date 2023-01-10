@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <form method="POST" action="<?php echo $FormHREF; ?>">
 <table cellspacing="0" cellpadding="0" class="nobord nohpad">
 

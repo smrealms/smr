@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <div class="center">
 <form method="POST" action="<?php echo $SubmitHREF; ?>">
 	<p>Here are the rankings of alliances vs other alliances.<br />

@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 You have selected the following message:<br /><br />
 <table class="standard">
 	<tr>

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (count($Planets) > 0) { ?>
 	<table id="planet-list" class="standard inset center">

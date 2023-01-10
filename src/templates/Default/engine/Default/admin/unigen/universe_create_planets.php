@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <form method="POST" action="<?php echo $JumpGalaxyHREF; ?>">
 	Working on Galaxy:
 	<select name="gal_on" onchange="this.form.submit()"><?php

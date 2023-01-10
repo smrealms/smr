@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($PrevThread) || isset($NextThread)) { ?>
 	<h2>Switch Topic</h2><br />
 	<table class="nobord fullwidth">

@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 Current database size: <?php echo $DbSizeMB; ?>
 <br /><br />
 

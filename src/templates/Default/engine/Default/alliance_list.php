@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($CreateAllianceHREF)) { ?>
 	<div class="center">
 		<div class="buttonA">

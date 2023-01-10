@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if ($ShowRoles && $CanChangeRoles) { ?>
 	<form class="standard" method="POST" action="<?php echo $SaveAllianceRolesHREF; ?>"><?php

@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (!$MinimalDisplay) { ?>
 	<h1>Attacker Results</h1><br /><?php
 }

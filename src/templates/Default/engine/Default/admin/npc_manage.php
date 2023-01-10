@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <form method="POST" action="<?php echo $SelectGameHREF; ?>">
 	<select name="selected_game_id" onchange="this.form.submit()"><?php
 		foreach ($Games as $Game) { ?>

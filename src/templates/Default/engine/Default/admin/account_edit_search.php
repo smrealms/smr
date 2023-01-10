@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <form name="form_acc" method="POST" action="<?php echo $SearchHREF; ?>">
 	<table cellpadding="3" border="0">
 		<tr>

@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 // Create an array for use later
 $TradeCalcInfo = [
 	$Amount,

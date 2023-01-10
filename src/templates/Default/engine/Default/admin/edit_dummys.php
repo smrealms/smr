@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <a href="<?php echo $CombatSimLink; ?>">Combat Simulator</a><br /><br />
 
 <form action="<?php echo $SelectDummysLink; ?>" method="POST">

@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <form name="FORM" method="POST" action="<?php echo $ValidateFormHref ?>">
 
 <p>

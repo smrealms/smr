@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($Voting)) {
 	?>Please take a couple of seconds to answer the following question(s) for the SMR Admin team. Thanks!<?php
 	foreach ($Voting as $Vote) {

@@ -1,4 +1,6 @@
-<?php $this->includeTemplate('includes/CommonNews.inc.php'); ?>
+<?php declare(strict_types=1);
+
+$this->includeTemplate('includes/CommonNews.inc.php'); ?>
 
 <div class="center">View News entries</div><br />
 <form name="ViewNewsForm" method="POST" action="<?php echo $ViewNewsFormHref; ?>">

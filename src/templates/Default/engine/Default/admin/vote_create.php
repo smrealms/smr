@@ -1,4 +1,6 @@
-<?php if (isset($PreviewVote)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($PreviewVote); ?></td></tr></table><?php } ?>
+<?php declare(strict_types=1);
+
+if (isset($PreviewVote)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($PreviewVote); ?></td></tr></table><?php } ?>
 <form name="VoteForm" method="POST" action="<?php echo $VoteFormHREF; ?>">
 	Question: <input type="text" name="question" required value="<?php if (isset($PreviewVote)) { echo htmlspecialchars($PreviewVote); } ?>" /><br />
 	Days to end: <input type="number" name="days" required value="<?php if (isset($Days)) { echo htmlspecialchars($Days); } ?>" /><br />

@@ -1,4 +1,6 @@
-<?php if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($Preview); ?></td></tr></table><?php } ?>
+<?php declare(strict_types=1);
+
+if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($Preview); ?></td></tr></table><?php } ?>
 <form name="MessageSendForm" method="POST" action="<?php echo $MessageSendFormHref; ?>">
 	<p>
 		<b>From: </b><?php echo $ThisPlayer->getDisplayName(); ?><br />

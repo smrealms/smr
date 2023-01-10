@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 $Moves = $ChessGame->getMoves();
 foreach ($Moves as $MoveNumber => $Move) { ?>
 	<tr>

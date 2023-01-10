@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <div class="centered" style="width: 510px;">
 	<h1><span class="red">ERROR</span></h1>
 

@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($MenuItems) || isset($SubMenuBar)) { ?>
 	<div class="bar1">
 		<div><?php

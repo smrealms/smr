@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <table class="center nobord" style="width:690px; border-spacing:30px;">
 	<tr>
 		<td>

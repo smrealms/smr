@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <h2>Planetary Bond Confirmation</h2>
 
 <p>All credits on the planet at the time of confirmation, along with any

@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 List of Accounts with Permissions:<br />
 <small>Click to select</small>
 

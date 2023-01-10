@@ -1,4 +1,6 @@
-<?php $this->includeTemplate('includes/TraderFullCombatResults.inc.php'); ?><br />
+<?php declare(strict_types=1);
+
+$this->includeTemplate('includes/TraderFullCombatResults.inc.php'); ?><br />
 <br />
 <div class="center"><?php
 	if (isset($Target)) { ?>

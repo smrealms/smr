@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <p style="width:60%; text-align:justify;">Do you enjoy Space Merchant Realms?
 Would you like to see the game grow? If your answer is yes, then consider
 making a donation! Your donation will translate into SMR credits that you can

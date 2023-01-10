@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <div class="centered" style="width: 630px;">
 	<h1>Link To Existing Login</h1>
 	<form action="login_processing.php?social=1" method="POST">
