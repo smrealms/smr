@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 Do you really want to leave this alliance?<br /><br />
 
 <div class="buttonA">

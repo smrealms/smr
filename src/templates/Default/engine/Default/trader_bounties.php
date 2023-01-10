@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 You have the following bounties on your head:<br /><br />
 <table>
 	<tr>

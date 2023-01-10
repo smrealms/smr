@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <a href="<?php echo $BackHREF; ?>">&lt;&lt; Back</a><br /><br />
 <?php if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($Preview); ?></td></tr></table><br /><?php } ?>
 <form name="BoxReplyForm" method="POST" action="<?php echo $BoxReplyFormHref; ?>">

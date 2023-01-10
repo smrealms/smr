@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <p style="width: 60%">Challenge other traders to a round of <i>Faster Than Knight</i>,
 a game of chess played over the super-photonic transponder aboard your ship.</p>
 
@@ -55,4 +58,4 @@ if (isset($NPCList)) {
 	} else { ?>
 		<p>You have challenged every NPC.</p><?php
 	}
-} ?>
+}

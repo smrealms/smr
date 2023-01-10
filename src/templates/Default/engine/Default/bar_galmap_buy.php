@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <div class="center">
 	<p>What galaxy do you want maps for?</p>
 	<form method="POST" action="<?php echo $BuyHREF; ?>">

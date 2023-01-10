@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($Preview)) { ?>
 	<table class="standard">
 		<tr>

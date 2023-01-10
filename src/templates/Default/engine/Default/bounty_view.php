@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if ($BountyPlayer->hasBounties()) {
 	$Bounties = $BountyPlayer->getBounties();
 	foreach ($Bounties as $Bounty) {
@@ -22,4 +23,4 @@ if ($BountyPlayer->hasBounties()) {
 	}
 } else {
 	echo $BountyPlayer->getDisplayName(); ?> has no bounties<br /><?php
-} ?>
+}

@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <p>Your account was closed because we detected that your e-mail address is
 invalid. To re-open your account, please either re-validate your current
 address, or change your address. A new validation code will be sent right

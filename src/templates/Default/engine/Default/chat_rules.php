@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 Chat with your fellow players as you navigate the universe! You may join via IRC or Discord. The purpose of SMR chat is to have a general gathering of all players, newbies and vets, and anyone else who may decide to join. The channel is meant to help anyone with questions or problems they may have regarding the game.
 <br /><br />
 

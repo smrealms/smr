@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 Welcome <?php echo $ThisPlayer->getDisplayName(); ?>, your position is <i>Editor</i><br /><br />
 <b>EDITOR OPTIONS</b>
 <ul>

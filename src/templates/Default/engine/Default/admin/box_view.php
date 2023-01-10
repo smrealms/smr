@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($Boxes)) { ?>
 	<table class="standard">
 		<tr>
@@ -53,4 +54,4 @@ if (isset($Boxes)) { ?>
 	} else {
 		?>There are currently no messages in this box.<?php
 	}
-} ?>
+}

@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($BreakingNews)) {
 	?><b>MAJOR NEWS! - <?php echo date($ThisAccount->getDateTimeFormat(), $BreakingNews['Time']); ?></b><br />
 	<table class="standard">
@@ -27,4 +28,4 @@ if (isset($LottoNews)) { ?>
 	    </tr>
     </table>
 	<br /><br /><?php
-} ?>
+}

@@ -1,4 +1,6 @@
+<?php declare(strict_types=1);
 
+?>
 <h1>Edit Existing Games</h1>
 <?php
 if (count($EditGames) == 0) { ?>
@@ -29,4 +31,4 @@ if (!$CanEditEnabledGames) { ?>
 <br /><br />
 
 <h1>Create New Game</h1>
-<?php $this->includeTemplate('admin/unigen/GameDetails.inc.php', ['ProcessingHREF' => $CreateGalaxiesHREF]); ?>
+<?php $this->includeTemplate('admin/unigen/GameDetails.inc.php', ['ProcessingHREF' => $CreateGalaxiesHREF]);

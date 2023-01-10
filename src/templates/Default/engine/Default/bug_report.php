@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 All information on this page will be sent to the admin team.<br />
 Be as accurate as possible with your bug description.
 <p><i>Thank you for helping to improve the game!</i></p>

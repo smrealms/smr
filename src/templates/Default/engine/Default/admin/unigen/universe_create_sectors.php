@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <table class="center standard">
 	<tr>
 		<th>Galaxy</th>
@@ -79,4 +82,3 @@ if (isset($Message)) { ?>
 <?php
 $this->includeTemplate('includes/SectorMap.inc.php');
 $this->addJavascriptSource('/js/uni_gen.js');
-?>

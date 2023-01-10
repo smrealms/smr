@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (!$AlreadyDestroyed) {
 	if (!$MinimalDisplay) { ?>
 		<h1>Attacker Results</h1><br /><?php
@@ -18,4 +19,4 @@ if (!$AlreadyDestroyed) {
 		<h1>Port Results</h1><br /><?php
 	}
 	$this->includeTemplate('includes/PortCombatResults.inc.php', ['PortCombatResults' => $FullPortCombatResults['Port'], 'MinimalDisplay' => $MinimalDisplay]);
-} ?>
+}

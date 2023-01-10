@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
 	<form name="FORM" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
 		<div class="center">Ignore global messages?&nbsp;&nbsp;

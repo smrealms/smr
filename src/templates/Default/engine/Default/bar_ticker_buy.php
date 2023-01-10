@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 foreach ($Tickers as $Type => $TimeLeft) { ?>
 	You own a <?php echo $Type; ?> for another <?php echo format_time($TimeLeft); ?>.
 	<br /><?php

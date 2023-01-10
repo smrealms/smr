@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <div class="center"><?php
 	if (isset($SendReportHREF)) { ?>
 		<div class="buttonA">
@@ -7,4 +10,4 @@
 		A statement has been sent to the alliance.<?php
 	} ?>
 </div>
-<?php echo $BankReport; ?>
+<?php echo $BankReport;

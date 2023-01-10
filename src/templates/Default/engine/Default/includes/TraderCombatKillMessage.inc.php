@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 echo $TargetPlayer->getDisplayName(); ?> has been <span class="red">DESTROYED</span>, losing <span class="exp"><?php echo number_format($KillResults['DeadExp'])?></span> experience.<br /><?php
 if (isset($ShootingPlayer)) {
 	// Killed by another player
@@ -9,4 +10,3 @@ if (isset($ShootingPlayer)) {
 	     . '</span> credits that were onboard ' . $TargetPlayer->getDisplayName()
 	     . "'s ship are lost in the wreckage.<br />";
 }
-?>

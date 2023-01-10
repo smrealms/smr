@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($CreateAllianceHREF)) { ?>
 	<div class="center">
 		<div class="buttonA">
@@ -37,4 +38,4 @@ if (count($Alliances) > 0) { ?>
 	<?php $this->listjsInclude = 'alliance_list';
 } else { ?>
 	<p class="center">Currently there are no alliances.</p><?php
-} ?>
+}

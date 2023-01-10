@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($Links)) { ?>
 	<table class="center standard">
 		<tr><th>Categories</th></tr><?php
@@ -28,4 +29,4 @@ if (isset($Links)) { ?>
 	} else { ?>
 		<p class="center">We apologize, but this stat does not exist for this game!</p><?php
 	}
-} ?>
+}

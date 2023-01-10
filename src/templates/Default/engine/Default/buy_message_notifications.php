@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($Message)) {
 	echo $Message; ?>
 	<br /><br /><?php
@@ -31,5 +32,3 @@ if (isset($MessageBoxes)) { ?>
 		} ?>
 	</table><?php
 }
-
-?>

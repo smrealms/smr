@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (!$Planet->hasOwner()) { ?>
 	<p>
@@ -38,5 +38,3 @@ if (!$Planet->hasOwner()) { ?>
 		</form><?php
 	}
 }
-
-?>

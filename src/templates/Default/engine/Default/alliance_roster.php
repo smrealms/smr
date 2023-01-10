@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if ($ShowRoles && $CanChangeRoles) { ?>
 	<form class="standard" method="POST" action="<?php echo $SaveAllianceRolesHREF; ?>"><?php
@@ -140,4 +140,3 @@ if ($JoinRestriction === false) { ?>
 } elseif ($JoinRestriction !== true) { ?>
 	<p><?php echo $JoinRestriction; ?></p><?php
 }
-?>

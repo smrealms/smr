@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <a href="<?php echo $BackHREF; ?>">&lt;&lt; Back</a>
 <table class="nobord" cellpadding="5" cellspacing="0">
 	<tr>

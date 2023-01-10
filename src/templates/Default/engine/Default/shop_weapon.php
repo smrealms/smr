@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if ($ThisLocation->isWeaponSold()) { ?>
 	<h2>Buy weapons:</h2><br />
 	<table id="weapon-list" class="center standard">
@@ -59,4 +60,4 @@ if ($ThisShip->hasWeapons()) { ?>
 			</tr><?php
 		} ?>
 	</table><?php
-} ?>
+}

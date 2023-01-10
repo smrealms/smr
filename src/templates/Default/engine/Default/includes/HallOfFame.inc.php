@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <div class="center">
 	Welcome to the Hall of Fame, <?php echo $ThisAccount->getHofDisplayName(); ?>!<br />
 	The Hall of Fame is a comprehensive list of player accomplishments.
@@ -34,4 +37,4 @@ if (isset($Categories)) { ?>
 			echo $Row;
 		} ?>
 	</table><?php
-} ?>
+}

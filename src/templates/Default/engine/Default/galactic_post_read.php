@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (!empty($BackHREF)) { ?>
 	<a href="<?php echo $BackHREF; ?>"><b>&lt;&lt;Back</b></a><?php
 }
@@ -18,4 +19,4 @@ if (empty($ArticleLayout)) { ?>
 			</tr><?php
 		} ?>
 	</table><?php
-} ?>
+}

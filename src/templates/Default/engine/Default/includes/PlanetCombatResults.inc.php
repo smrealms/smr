@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 $CombatPlanet = $PlanetCombatResults['Planet'];
 $TotalDamage = $PlanetCombatResults['TotalDamage'];
 if ($MinimalDisplay) {

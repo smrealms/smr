@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (is_array($TraderTeamCombatResults['Traders'])) {
 	foreach ($TraderTeamCombatResults['Traders'] as $TraderResults) {
 		$ShootingPlayer = $TraderResults['Player'];

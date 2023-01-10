@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($AccountID)) { ?>
 <div class="LeftNavOne noWrap"><?php
 	if (isset($GameID)) {

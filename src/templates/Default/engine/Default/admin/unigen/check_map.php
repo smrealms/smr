@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <a href="<?php echo $BackHREF; ?>" class="submitStyle">&lt;&lt; Back to Map</a>
 <br /><br />
 

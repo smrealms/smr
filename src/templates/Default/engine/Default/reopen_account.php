@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 Welcome back to <b>Space Merchant Realms</b>!
 
 <p>Your account was closed at your own request.

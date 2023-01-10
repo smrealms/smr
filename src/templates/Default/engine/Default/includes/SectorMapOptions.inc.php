@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($CheckboxFormHREF)) { ?>
 	<form method="POST" action="<?php echo $CheckboxFormHREF; ?>">
 		<table>
@@ -14,4 +15,3 @@ if (isset($CheckboxFormHREF)) { ?>
 		<input type=hidden name="change_settings" />
 	</form><?php
 }
-?>

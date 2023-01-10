@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Smr\TradeGood;
 
@@ -74,4 +74,4 @@ if (count($Planets) > 0) { ?>
 		</tbody>
 	</table><br />
 	<?php $this->listjsInclude = 'PlanetList';
-} ?>
+}

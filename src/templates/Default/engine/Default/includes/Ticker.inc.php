@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($Ticker)) { ?>
 	<div id="ticker" class="ajax left" style="overflow:auto;height:8em;border:2px solid #0b8d45;"><?php
 		if (is_array($Ticker)) {
@@ -9,4 +10,4 @@ if (isset($Ticker)) { ?>
 			?>Nothing to report<?php
 		} ?>
 	</div><br /><?php
-} ?>
+}

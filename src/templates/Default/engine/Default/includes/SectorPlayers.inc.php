@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 function getPlayerOptionClass(AbstractSmrPlayer $player, AbstractSmrPlayer $other): string {
 	// Returns the CSS relational class of player "other" relative to "player".
 	return match (true) {

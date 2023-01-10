@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($Reason)) {
 	?><p><span class="big bold red"><?php echo $Reason; ?></span></p><?php
 }
@@ -456,4 +457,4 @@ if (isset($GameID)) { ?>
 	</table>
 </form>
 
-<?php $this->addJavascriptSource('/js/colorpicker.js'); ?>
+<?php $this->addJavascriptSource('/js/colorpicker.js');

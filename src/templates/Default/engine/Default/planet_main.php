@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($ErrorMsg)) {
 	echo $ErrorMsg; ?><br /><?php
 }
@@ -100,4 +101,3 @@ if (isset($Msg)) {
 <p><a href="<?php echo $LaunchLink; ?>" class="submitStyle">Launch</a></p>
 <?php
 $this->includeTemplate('includes/SectorPlayers.inc.php');
-?>

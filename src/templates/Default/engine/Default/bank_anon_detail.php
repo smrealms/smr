@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($Transactions)) { ?>
 	<form method="POST" action="<?php echo $ShowHREF; ?>">
 		<table cellspacing="5" cellpadding="0" class="nobord center">

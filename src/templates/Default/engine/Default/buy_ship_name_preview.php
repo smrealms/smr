@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <div class="center">
 	If you ship is found to use HTML inappropriately you may be banned.
 	Inappropriate HTML includes but is not limited to something that can

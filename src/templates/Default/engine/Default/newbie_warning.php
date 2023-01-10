@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <p>
 	You have received this page because you are almost out of newbie turns.
 	What does this mean? You can now do many things that you couldn't do while in newbie turns.

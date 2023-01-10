@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if ($FullForceCombatResults['Forced']) { ?>
 	<h1>Force Results</h1><br />
 	<?php $this->includeTemplate('includes/ForcesCombatResults.inc.php', ['ForcesCombatResults' => $FullForceCombatResults['Forces']]);
@@ -16,4 +17,4 @@ if ($FullForceCombatResults['Forced']) { ?>
 } else { ?>
 	<h1>Defender Results</h1><br />
 	<?php $this->includeTemplate('includes/ForceTraderTeamCombatResults.inc.php', ['TraderTeamCombatResults' => $FullForceCombatResults['Attackers']]);
-} ?>
+}

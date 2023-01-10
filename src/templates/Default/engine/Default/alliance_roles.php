@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <h2>Current Roles</h2><br /><?php
 foreach ($AllianceRoles as $Role) {
 	$this->includeTemplate('includes/AllianceRole.inc.php', ['Role' => $Role]);

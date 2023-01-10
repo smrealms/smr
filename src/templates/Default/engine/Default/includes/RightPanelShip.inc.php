@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Smr\TradeGood;
 
@@ -91,4 +91,4 @@ if (isset($GameID)) { ?>
 	if (ENABLE_BETA) {
 		?><a href="<?php echo Globals::getBetaFunctionsHREF(); ?>"><span class="bold">Beta Functions</span></a><?php
 	}
-} ?>
+}

@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Results'])) {
 	foreach ($ForcesCombatResults['Results'] as $ForceType => $ForceResults) {
 		$ShotHit = $ForceResults['Hit'];

@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()) {
 	?>You have no configurable hardware installed!<?php
 } else { ?>
@@ -36,4 +37,4 @@ if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()
 		</form><?php
 	}
 	$this->includeTemplate('includes/JumpDrive.inc.php');
-} ?>
+}

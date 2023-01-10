@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (!empty($Message)) { ?>
 	<?php echo $Message; ?><?php
 } ?>
@@ -72,4 +73,4 @@ if ($ShareFrom) { ?>
 	</table><?php
 } else { ?>
 	None<?php
-} ?>
+}

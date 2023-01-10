@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 List of Accounts with Permissions:<br />
 <small>Click to select</small>
 
@@ -41,4 +44,4 @@ if (!isset($EditAccount)) { ?>
 		&nbsp;&nbsp;&nbsp;
 		<input type="submit" name="action" value="Select Another User" />
 	</form><?php
-} ?>
+}

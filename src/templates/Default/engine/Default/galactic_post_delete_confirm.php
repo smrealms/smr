@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($ArticleTitle)) { ?>
 	Are you sure you want to delete the article titled <b><?php echo $ArticleTitle; ?></b>?
 	<br /><br />
@@ -29,4 +30,4 @@ if (isset($ArticleTitle)) { ?>
 		<input type="submit" name="action" value="Yes" />&nbsp;
 		<input type="submit" name="action" value="No" />
 	</form><?php
-} ?>
+}

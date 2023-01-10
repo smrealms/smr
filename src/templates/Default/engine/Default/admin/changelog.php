@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (empty($Versions)) { ?>
 	Must add an initial version in the database first!<?php
 	return;
@@ -37,4 +38,4 @@ $this->includeTemplate('changelog_view.php', ['Versions' => [$FirstVersion]]); ?
 </ul>
 
 <?php
-$this->includeTemplate('changelog_view.php'); ?>
+$this->includeTemplate('changelog_view.php');

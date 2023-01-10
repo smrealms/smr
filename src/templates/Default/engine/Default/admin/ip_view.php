@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <script>
 	function go() {
 		var val = window.document.form_ip.type.value;

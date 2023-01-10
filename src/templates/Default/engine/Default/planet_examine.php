@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <table>
 	<tr>
 		<td class="bold">Planet Name:</td>

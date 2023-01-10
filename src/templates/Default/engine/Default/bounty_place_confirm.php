@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <p>Are you sure you want to place a <span class="creds"><?php echo $Amount; ?></span>
 credit and <span class="yellow"><?php echo $SmrCredits; ?></span>
 SMR credit bounty on <?php echo $BountyPlayer; ?>?</p>

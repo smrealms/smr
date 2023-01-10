@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <table class="standard center inset">
 	<tr>
 		<th class="shrink">Rank</th>

@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($HardwareSold)) { ?>
 	<h2>Buy Hardware</h2>
 	<table class="standard">
@@ -55,4 +56,4 @@ if (isset($HardwareSold)) { ?>
 	}
 } else {
 	?>I have nothing to sell to you. Get out of here!<?php
-} ?>
+}

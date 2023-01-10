@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <form name="AdminMessageChooseGameForm" method="POST" action="<?php echo $AdminMessageChooseGameFormHref; ?>">
 	<p>Please select a game:</p>
 	<select name="SendGameID" size="1">

@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <p><span id="chess_status">
 	<?php if (isset($Winner)) { ?>
 		The game has ended. <?php echo $Winner; ?> has won!<?php
@@ -72,4 +75,3 @@
 
 <?php
 $this->addJavascriptSource('/js/chess_play.js');
-?>

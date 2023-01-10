@@ -1,4 +1,6 @@
+<?php declare(strict_types=1);
 
+?>
 <p>Please use this form to send your feedback or
 questions to the admin team of Space Merchant Realms!</p>
 

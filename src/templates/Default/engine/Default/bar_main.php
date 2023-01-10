@@ -1,4 +1,6 @@
-<?php echo $Message; ?>
+<?php declare(strict_types=1);
+
+echo $Message; ?>
 
 <p>What can I do for ya?</p>
 <div class="buttonA">

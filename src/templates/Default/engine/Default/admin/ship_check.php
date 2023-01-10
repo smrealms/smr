@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (empty($ExcessHardware)) { ?>
 	<p>No overpowered ships!</p><?php
 } else { ?>
@@ -24,4 +25,4 @@ if (empty($ExcessHardware)) { ?>
 			</tr><?php
 		} ?>
 	</table><?php
-} ?>
+}

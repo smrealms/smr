@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (empty($Approved)) { ?>
 	<p>There are no entries that can be moderated at this time.</p><?php
 } else { ?>

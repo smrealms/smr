@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if ($ThisShip->hasJump()) { ?>
 	<br />
 	<form class="standard" id="JumpDriveForm" method="POST" action="<?php echo $JumpDriveFormLink; ?>">
@@ -12,4 +13,4 @@ if ($ThisShip->hasJump()) { ?>
 			</tr>
 		</table>
 	</form><?php
-} ?>
+}

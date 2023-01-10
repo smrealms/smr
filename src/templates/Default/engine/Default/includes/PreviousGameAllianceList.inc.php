@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <div class="center">
 	<a href="<?php echo $BackHREF; ?>"><b>&lt;&lt;Back</b></a>
 

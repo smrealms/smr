@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 You punch the destination sector into your Jump Drive console.
 Within moments, the onboard computer dictates the report in a reassuringly confident voice.
 

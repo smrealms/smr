@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 Select Game:&nbsp;
 <form class="standard" id="SelectGameForm" method="POST" action="<?php echo $SelectGameHREF; ?>">
 	<select name="selected_game_id" onchange="this.form.submit()"><?php
@@ -22,4 +25,4 @@ if (empty($PastEditions)) { ?>
 			<li><a href="<?php echo $edition['href']; ?>"><?php echo date('Y/m/d', $edition['online_since']) . ' - ' . $edition['title']; ?></a></li><?php
 		} ?>
 	</ul><?php
-} ?>
+}

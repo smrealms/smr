@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <p class="big bold"><?php echo $Message; ?></p>
 <br /><br />
 <p>If the error was caused by something you entered, press back and try again.</p>

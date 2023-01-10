@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 Current database size: <?php echo $DbSizeMB; ?>
 <br /><br />
 
@@ -30,4 +33,4 @@ if (isset($Results)) { ?>
 	<p><a class="submitStyle" href="<?php echo $PreviewHREF; ?>">Preview</a></p>
 	<p><a class="submitStyle" href="<?php echo $DeleteHREF; ?>">Delete</a></p>
 	<?php
-} ?>
+}

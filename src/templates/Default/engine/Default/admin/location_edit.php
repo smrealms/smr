@@ -1,4 +1,6 @@
-<?php if (!isset($Locations)) {
+<?php declare(strict_types=1);
+
+if (!isset($Locations)) {
 	?><a href="<?php echo $ViewAllLocationsLink; ?>">View All Locations</a><br /><br />
 	<form action="<?php echo $Location->getEditHREF(); ?>" method="POST"><?php
 } ?>
@@ -101,4 +103,4 @@ if (isset($Locations)) {
 <?php
 if (!isset($Locations)) {
 	?></form><?php
-} ?>
+}

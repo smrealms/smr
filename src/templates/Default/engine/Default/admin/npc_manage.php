@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <form method="POST" action="<?php echo $SelectGameHREF; ?>">
 	<select name="selected_game_id" onchange="this.form.submit()"><?php
 		foreach ($Games as $Game) { ?>
@@ -19,7 +22,7 @@ if (!empty($SelectedGameID)) { ?>
 			<th>Alliance</th>
 			<th>Status</th>
 		</tr><?php
-		foreach ($Npcs as $accountID => $npc) { ?>
+		foreach ($Npcs as $npc) { ?>
 			<tr>
 				<td><?php echo $npc['login']; ?></td>
 				<td class="center">

@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <p>
 	Choose the log files you wish to view or delete!<br />
 	Don't keep unnecessary data!
@@ -41,4 +44,3 @@ if (count($LoggedAccounts) > 0) { ?>
 } else { ?>
 	There are no log entries at all!<?php
 }
-?>

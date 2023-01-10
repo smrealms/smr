@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 Announcements are displayed to all users the next time they log in.<br />
 You may use BBCode in your message, but not HTML.<br /><br />
 <?php if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($Preview); ?></td></tr></table><br /><?php } ?>

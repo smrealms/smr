@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <a href="<?php echo $BackHREF; ?>"><b>&lt; Back</b></a>
 
 <?php
@@ -26,4 +29,4 @@ foreach ($AnonLogs as $gameID => $AnonAccounts) { ?>
 			} ?>
 		</table><br /><?php
 	}
-} ?>
+}

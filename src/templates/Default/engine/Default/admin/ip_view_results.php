@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <a href="<?php echo $BackHREF; ?>">&lt;&lt;Back</a>
 
 <?php
@@ -109,4 +112,4 @@ if ($type == 'comp_share') {
 		</form>
 	</center><?php
 
-} ?>
+}

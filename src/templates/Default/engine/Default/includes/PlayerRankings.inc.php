@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <div class="center">
 	<p>Here are the rankings of players by their <?php echo $RankingStat; ?>.</p>
 	<p>The traders listed in <span class="italic">italics</span> are still ranked as Newbie or Beginner.</p>

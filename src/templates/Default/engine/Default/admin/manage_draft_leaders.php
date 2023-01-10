@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (empty($ActiveGames)) {
 	echo '<p>There are no active Draft games at this time!</p>';
@@ -56,5 +56,3 @@ if (empty($ActiveGames)) {
 	}
 
 }
-
-?>

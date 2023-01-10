@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($Preview, $MessageGameID); ?></td></tr></table><?php } ?>
 <form name="AdminMessageSendForm" method="POST" action="<?php echo $AdminMessageSendFormHref; ?>">
 	<p>

@@ -57,6 +57,12 @@
     </rule>
 
     <!-- Add sniffs not included by PSR2R. -->
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+        <properties>
+            <property name="declareOnFirstLine" value="true" />
+            <property name="spacesCountAroundEqualsSign" value="0" />
+        </properties>
+    </rule>
     <rule ref="SlevomatCodingStandard.Variables.UnusedVariable">
         <properties>
             <property name="ignoreUnusedValuesWhenOnlyKeysAreUsedInForeach" value="true" />
@@ -94,16 +100,6 @@
         <exclude-pattern>src/templates/*</exclude-pattern>
     </rule>
 
-    <!-- Some templates break the parser. -->
-    <rule ref="Internal.Exception">
-        <exclude-pattern>src/templates/*</exclude-pattern>
-    </rule>
-
-    <!-- Some templates will have no PHP code. -->
-    <rule ref="Internal.NoCodeFound">
-        <exclude-pattern>src/templates/*</exclude-pattern>
-    </rule>
-
     <!-- Temporary until all classes are migrated to the PSR-4 autoloader. -->
     <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
         <severity>0</severity>
@@ -129,11 +125,6 @@
     <!-- PHPUnit convention is snake_case for test methods. -->
     <rule ref="PSR1.Methods.CamelCapsMethodName">
         <exclude-pattern>test/*</exclude-pattern>
-    </rule>
-
-    <!-- Closing tags used in templates since PHP/HTML are intermixed. -->
-    <rule ref="Zend.Files.ClosingTag">
-        <exclude-pattern>src/templates/*</exclude-pattern>
     </rule>
 
     <!-- Spryker sniffs do not support nullable typehints in docblocks.

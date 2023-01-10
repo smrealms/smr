@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if ($ThisPlayer->hasPlottedCourse()) {
 	$PlottedCourse = $ThisPlayer->getPlottedCourse();
 	$CancelCourseHREF = (new Smr\Pages\Player\PlotCourseCancelProcessor())->href();
@@ -36,4 +37,3 @@ if ($ThisPlayer->hasPlottedCourse()) {
 		</tr>
 	</table><?php
 }
-?>

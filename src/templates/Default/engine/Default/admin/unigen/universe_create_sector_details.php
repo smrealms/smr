@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <a href="<?php echo $CancelHREF; ?>">&lt;&lt; Back</a><br /><br />
 <form method="POST" action="<?php echo $EditHREF; ?>">
 	<h2>Planet</h2><br />
@@ -16,7 +19,8 @@
 	<h2>Port</h2>
 	<select name="port_level">
 		<option value="0">No Port</option><?php
-		for ($i = 1; $i <= SmrPort::getMaxLevelByGame($EditSector->getGameID()); $i++) { ?>
+		$MaxPortLevel = SmrPort::getMaxLevelByGame($EditSector->getGameID());
+		for ($i = 1; $i <= $MaxPortLevel; $i++) { ?>
 			<option value="<?php echo $i; ?>" <?php echo ($i == $SelectedPortLevel ? 'selected' : ''); ?>>Level <?php echo $i; ?></option><?php
 		} ?>
 	</select>&nbsp;
@@ -95,4 +99,4 @@
 <?php
 if (isset($Message)) {
 	echo $Message;
-} ?>
+}

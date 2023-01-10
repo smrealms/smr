@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (isset($PrevThread) || isset($NextThread)) { ?>
 	<h2>Switch Topic</h2><br />
 	<table class="nobord fullwidth">
@@ -61,4 +62,3 @@ if (isset($Thread['CreateThreadReplyFormHref'])) { ?>
 		<input type="submit" name="action" value="Create Reply">&nbsp;<input type="submit" name="action" value="Preview Reply" />
 	</form><?php
 }
-?>

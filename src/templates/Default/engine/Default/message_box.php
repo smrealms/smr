@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <p>Please choose your Message folder!</p>
 
 <table id="folders" class="standard">
@@ -20,4 +23,4 @@
 		} ?>
 	</tbody>
 </table>
-<?php $this->listjsInclude = 'message_box'; ?>
+<?php $this->listjsInclude = 'message_box';

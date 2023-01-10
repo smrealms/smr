@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 Enter the amount of cargo you wish to jettison.<br />
 Please keep in mind that you will lose experience and one turn!<br /><br />
 
@@ -27,5 +30,3 @@ if (empty($Goods)) { ?>
 		} ?>
 	</table><?php
 }
-
-?>

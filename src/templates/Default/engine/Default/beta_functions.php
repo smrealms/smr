@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <span class="bold red">WARNING! Please be reasonable with the changes you make! For example, do not load more onto a ship than it is supposed to have, don't put yourself in a sector that doesn't exist, etc.</span><br />
 
 <p><a href="<?php echo $MapHREF; ?>">Map all sectors</a></p>
@@ -101,4 +104,4 @@ if ($ThisSector->hasPlanet()) { ?>
 	<p><a href="<?php echo $MaxBuildingsHREF; ?>">Set buildings to max</a></p>
 	<p><a href="<?php echo $MaxDefensesHREF; ?>">Set defenses to max</a></p>
 	<p><a href="<?php echo $MaxStockpileHREF; ?>">Set stockpile to max</a></p><?php
-} ?>
+}

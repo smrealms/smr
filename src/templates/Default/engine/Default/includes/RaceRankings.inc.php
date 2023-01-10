@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <p class="center">Here are the rankings of the races by their <?php echo $RankingStat; ?>.</p>
 <table class="standard center inset">
 	<tr>

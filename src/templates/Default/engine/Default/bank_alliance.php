@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (count($AlliedAllianceBanks) > 0) { ?>
 	<ul><?php
 	foreach ($AlliedAllianceBanks as $AlliedAlliance) { ?>

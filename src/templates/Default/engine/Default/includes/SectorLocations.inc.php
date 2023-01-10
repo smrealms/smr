@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if ($ThisSector->hasLocation()) { ?>
 	<table class="standard csl">
 		<tr>
@@ -21,4 +22,4 @@ if ($ThisSector->hasLocation()) { ?>
 			</tr><?php
 			} ?>
 	</table><br /><?php
-} ?>
+}

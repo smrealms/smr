@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (empty($GoodInfo)) { ?>
 	<p>There are no goods present on your ship or the planet!</p><?php
 	return;

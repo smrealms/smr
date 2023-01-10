@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <table class="standard">
 	<tr>
 		<th>Leader</th>
@@ -103,5 +106,3 @@ if (count($History) > 0) { ?>
 } else { ?>
 	No picks have been made yet.<?php
 }
-
-?>

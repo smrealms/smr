@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 if (count($Threads) > 0) { ?>
 	<table id="topic-list" class="centered standard inset">
 		<thead>
@@ -54,4 +55,3 @@ if (isset($CreateNewThreadFormHref)) { ?>
 	<input type="submit" name="action" value="New Thread">&nbsp;<input type="submit" name="action" value="Preview Thread" />
 	</form><?php
 }
-?>

@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <p><a href="<?php echo $BackHref; ?>">Back</a></p><?php
 if (isset($Comments)) { ?>
 	<table class="standard fullwidth">

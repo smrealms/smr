@@ -1,3 +1,6 @@
+<?php declare(strict_types=1);
+
+?>
 <span class="yellow">
 	<span id="tod"><?php echo $timeDisplay; ?></span>
 </span><br />

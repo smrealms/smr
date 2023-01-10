@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 $this->includeTemplate('includes/CommonNews.inc.php');
 
 if (!empty($NewsItems)) { ?>
@@ -8,4 +9,4 @@ if (!empty($NewsItems)) { ?>
 	$this->includeTemplate('includes/NewsTable.inc.php');
 } else {
 	?>You have no current news.<?php
-} ?>
+}
