@@ -118,7 +118,6 @@ class SearchForTraderResult extends PlayerPage {
 		}
 
 		$template->assign('PageTopic', 'Search For Trader Results');
-		$template->assign('Player', $player);
 	}
 
 }
