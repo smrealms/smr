@@ -21,7 +21,6 @@ class Ownership extends PlayerPage {
 		$template->assign('ProcessingHREF', $container->href());
 
 		$template->assign('Planet', $player->getSectorPlanet());
-		$template->assign('Player', $player);
 
 		// Check if this player already owns a planet
 		$playerPlanet = $player->getPlanet();

@@ -76,9 +76,9 @@ function DisplayResult(array $Links, Player $Player): void { ?>
 }
 
 if (isset($ResultPlayerLinks)) {
-	DisplayResult([$ResultPlayerLinks], $Player);
+	DisplayResult([$ResultPlayerLinks], $ThisPlayer);
 	echo '<br /><br />';
 }
 if (isset($SimilarPlayersLinks)) {
-	DisplayResult($SimilarPlayersLinks, $Player);
+	DisplayResult($SimilarPlayersLinks, $ThisPlayer);
 }
