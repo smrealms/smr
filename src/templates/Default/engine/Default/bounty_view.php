@@ -1,24 +1,22 @@
 <?php declare(strict_types=1);
 
-use Smr\Player;
+use Smr\BountyType;
 
 if ($BountyPlayer->hasBounties()) {
 	$Bounties = $BountyPlayer->getBounties();
-	foreach ($Bounties as $Bounty) {
-		if ($Bounty['Type'] == Smr\BountyType::HQ) { ?>
-			The <span class="green">Federal Government</span> is offering a bounty on <?php echo $BountyPlayer->getDisplayName(); ?> worth <span class="creds"><?php echo number_format($Bounty['Amount']); ?></span> credits and <span class="yellow"><?php echo $Bounty['SmrCredits']; ?></span> SMR credits.<br /><?php
-			if ($Bounty['Claimer'] != 0) { ?>
-				This bounty can be claimed by <?php echo Player::getPlayer($Bounty['Claimer'], $ThisPlayer->getGameID())->getDisplayName(); ?>.<br /><?php
+	foreach (BountyType::cases() as $BountyType) {
+		foreach ($Bounties as $Bounty) {
+			if ($Bounty->type != $BountyType) {
+				continue;
+			}
+			if ($Bounty->type == BountyType::HQ) { ?>
+				The <span class="green">Federal Government</span><?php
+			} elseif ($Bounty->type == BountyType::UG) { ?>
+				The <span class="red">Underground</span><?php
 			} ?>
-			<br /><?php
-		}
-	}
-
-	foreach ($Bounties as $Bounty) {
-		if ($Bounty['Type'] == Smr\BountyType::UG) { ?>
-			The <span class="red">Underground</span> is offering a bounty on <?php echo $BountyPlayer->getDisplayName(); ?> worth <span class="creds"><?php echo number_format($Bounty['Amount']); ?></span> credits and <span class="yellow"><?php echo $Bounty['SmrCredits']; ?></span> SMR credits.<br /><?php
-			if ($Bounty['Claimer'] != 0) {
-				?>This bounty can be claimed by <?php echo Player::getPlayer($Bounty['Claimer'], $ThisPlayer->getGameID())->getDisplayName(); ?>.<br /><?php
+			is offering a bounty on <?php echo $BountyPlayer->getDisplayName(); ?> worth <span class="creds"><?php echo number_format($Bounty->getCredits()); ?></span> credits and <span class="yellow"><?php echo $Bounty->getSmrCredits(); ?></span> SMR credits.<br /><?php
+			if (!$Bounty->isActive()) { ?>
+				This bounty can be claimed by <?php echo $Bounty->getClaimerPlayer()->getDisplayName(); ?>.<br /><?php
 			} ?>
 			<br /><?php
 		}

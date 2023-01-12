@@ -142,6 +142,10 @@ class Bounty {
 		return Player::getPlayer($this->targetID, $this->gameID);
 	}
 
+	public function getClaimerPlayer(): AbstractPlayer {
+		return Player::getPlayer($this->claimerID, $this->gameID);
+	}
+
 	/**
 	 * @return bool Whether or not the database was updated
 	 */
