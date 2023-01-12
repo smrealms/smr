@@ -45,7 +45,7 @@ parameters:
             # because we source them inside Template::includeTemplate. This
             # will require a redesign of the Template class to fix. (Level 1)
             message: '#Variable .* might not be defined#'
-            path: src/template
+            path: src/templates/Default/engine/Default/admin
         -
             # This while loop is needed to reconnect the IRC bot after server
             # timeouts. It could be replaced with Docker daemonization if we
@@ -76,3 +76,12 @@ parameters:
             message: '#Parameter \#1 \$token of method .*::getResourceOwner\(\) expects .*AccessToken, .*AccessTokenInterface given.#'
             path: src/lib/Smr/SocialLogin
             count: 2
+        -
+            # Templates are executed in the context of an Smr\Template method,
+            # so they have access to protected stuff. This needs refactoring.
+            message: '#(Call|Access) to protected (method|property).* Smr\\Template#'
+            path: src/templates
+        -
+            # https://github.com/phpstan/phpstan/issues/6830
+            message: '#Variable \$(Actual|Weapon)Damage might not be defined.#'
+            path: src/templates/Default/engine/Default/*CombatResults.inc.php
