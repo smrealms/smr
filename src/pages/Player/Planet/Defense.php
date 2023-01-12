@@ -3,20 +3,16 @@
 namespace Smr\Pages\Player\Planet;
 
 use Smr\AbstractPlayer;
-use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
 
-class Defense extends PlayerPage {
+class Defense extends PlanetPage {
 
 	use ReusableTrait;
 
 	public string $file = 'planet_defense.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
-		require_once(LIB . 'Default/planet.inc.php');
-		planet_common();
-
+	protected function buildPlanetPage(AbstractPlayer $player, Template $template): void {
 		$container = new DefenseProcessor(HARDWARE_SHIELDS);
 		$template->assign('TransferShieldsHref', $container->href());
 

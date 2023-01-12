@@ -2,6 +2,8 @@
 
 namespace Smr\PlanetTypes;
 
+use Smr\PlanetMenuOption;
+
 class ProtoPlanet extends PlanetType {
 
 	public const STRUCTURES = [
@@ -55,7 +57,7 @@ class ProtoPlanet extends PlanetType {
 		return 5;
 	}
 	public function menuOptions(): array {
-		return self::DEFAULT_MENU_OPTIONS;
+		return PlanetMenuOption::cases();
 	}
 
 }

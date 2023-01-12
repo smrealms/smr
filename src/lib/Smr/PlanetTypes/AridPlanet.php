@@ -2,6 +2,8 @@
 
 namespace Smr\PlanetTypes;
 
+use Smr\PlanetMenuOption;
+
 class AridPlanet extends PlanetType {
 
 	public const STRUCTURES = [
@@ -43,7 +45,12 @@ class AridPlanet extends PlanetType {
 		return 5;
 	}
 	public function menuOptions(): array {
-		return ['CONSTRUCTION', 'DEFENSE', 'STOCKPILE', 'OWNERSHIP'];
+		return [
+			PlanetMenuOption::CONSTRUCTION,
+			PlanetMenuOption::DEFENSE,
+			PlanetMenuOption::STOCKPILE,
+			PlanetMenuOption::OWNERSHIP,
+		];
 	}
 
 }

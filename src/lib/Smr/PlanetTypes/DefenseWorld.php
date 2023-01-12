@@ -2,6 +2,8 @@
 
 namespace Smr\PlanetTypes;
 
+use Smr\PlanetMenuOption;
+
 class DefenseWorld extends PlanetType {
 
 	public const STRUCTURES = [
@@ -49,7 +51,7 @@ class DefenseWorld extends PlanetType {
 		return self::MAX_LANDED_UNLIMITED;
 	}
 	public function menuOptions(): array {
-		return self::DEFAULT_MENU_OPTIONS;
+		return PlanetMenuOption::cases();
 	}
 
 }

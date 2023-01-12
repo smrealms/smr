@@ -796,7 +796,7 @@ class Planet {
 	/**
 	 * Specifies which menu options the planet has.
 	 */
-	public function hasMenuOption(string $option): bool {
+	public function hasMenuOption(PlanetMenuOption $option): bool {
 		// We do not set options that are unavailable
 		return in_array($option, $this->typeInfo->menuOptions());
 	}

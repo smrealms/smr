@@ -27,12 +27,6 @@ use Smr\Pages\Player\Headquarters\Government;
 use Smr\Pages\Player\Headquarters\MilitaryPaymentClaimProcessor;
 use Smr\Pages\Player\Headquarters\Underground;
 use Smr\Pages\Player\NewsReadCurrent;
-use Smr\Pages\Player\Planet\Construction;
-use Smr\Pages\Player\Planet\Defense;
-use Smr\Pages\Player\Planet\Financial;
-use Smr\Pages\Player\Planet\Main;
-use Smr\Pages\Player\Planet\Ownership;
-use Smr\Pages\Player\Planet\Stockpile;
 use Smr\Pages\Player\Rankings\AllianceDeaths;
 use Smr\Pages\Player\Rankings\AllianceExperience;
 use Smr\Pages\Player\Rankings\AllianceKills;
@@ -210,29 +204,6 @@ class Menu {
 						['Link' => Globals::getCouncilHREF($player->getRaceID()), 'Text' => 'Politics'],
 						['Link' => Globals::getTraderRelationsHREF(), 'Text' => 'Relations'],
 						['Link' => Globals::getTraderBountiesHREF(), 'Text' => 'Bounties']]);
-	}
-
-	public static function planet(Planet $planet): void {
-		$menu_array = [];
-		$menu_array[] = ['Link' => (new Main())->href(), 'Text' => 'Planet Main'];
-		if ($planet->hasMenuOption('CONSTRUCTION')) {
-			$menu_array[] = ['Link' => (new Construction())->href(), 'Text' => 'Construction'];
-		}
-		if ($planet->hasMenuOption('DEFENSE')) {
-			$menu_array[] = ['Link' => (new Defense())->href(), 'Text' => 'Defense'];
-		}
-		if ($planet->hasMenuOption('OWNERSHIP')) {
-			$menu_array[] = ['Link' => (new Ownership())->href(), 'Text' => 'Ownership'];
-		}
-		if ($planet->hasMenuOption('STOCKPILE')) {
-			$menu_array[] = ['Link' => (new Stockpile())->href(), 'Text' => 'Stockpile'];
-		}
-		if ($planet->hasMenuOption('FINANCE')) {
-			$menu_array[] = ['Link' => (new Financial())->href(), 'Text' => 'Financial'];
-		}
-
-		$template = Template::getInstance();
-		$template->assign('MenuItems', $menu_array);
 	}
 
 	/*

@@ -2,6 +2,8 @@
 
 namespace Smr\PlanetTypes;
 
+use Smr\PlanetMenuOption;
+
 class DwarfPlanet extends PlanetType {
 
 	public const STRUCTURES = [
@@ -43,7 +45,7 @@ class DwarfPlanet extends PlanetType {
 		return self::MAX_LANDED_UNLIMITED;
 	}
 	public function menuOptions(): array {
-		return self::DEFAULT_MENU_OPTIONS;
+		return PlanetMenuOption::cases();
 	}
 
 }

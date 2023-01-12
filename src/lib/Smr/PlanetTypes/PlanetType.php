@@ -11,7 +11,6 @@ use Smr\PlanetStructureType;
 abstract class PlanetType {
 
 	protected const MAX_LANDED_UNLIMITED = 0;
-	protected const DEFAULT_MENU_OPTIONS = ['CONSTRUCTION', 'DEFENSE', 'STOCKPILE', 'OWNERSHIP', 'FINANCE'];
 
 	/**
 	 * Returns the properties of all the structures this planet type can build.
@@ -31,7 +30,7 @@ abstract class PlanetType {
 	abstract public function maxLanded(): int;
 
 	/**
-	 * @return array<string>
+	 * @return array<\Smr\PlanetMenuOption>
 	 */
 	abstract public function menuOptions(): array;
 

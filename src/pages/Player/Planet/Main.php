@@ -4,11 +4,10 @@ namespace Smr\Pages\Player\Planet;
 
 use Smr\AbstractPlayer;
 use Smr\Database;
-use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
 
-class Main extends PlayerPage {
+class Main extends PlanetPage {
 
 	use ReusableTrait;
 
@@ -19,10 +18,7 @@ class Main extends PlayerPage {
 		private readonly ?string $errorMessage = null
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
-		require_once(LIB . 'Default/planet.inc.php');
-		planet_common();
-
+	protected function buildPlanetPage(AbstractPlayer $player, Template $template): void {
 		$planet = $player->getSectorPlanet();
 
 		//echo the dump cargo message or other message.
