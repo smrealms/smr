@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Force;
+
 ?>
 <div id="sector_forces" class="ajax"><?php
 	if ($ThisSector->hasForces()) {
@@ -83,7 +85,7 @@
 				if ($RefreshAny) { ?>
 					<tr>
 						<td class="center" colspan="6">
-							<div class="buttonA"><a href="<?php echo $Force->getRefreshAllHREF() ?>" class="buttonA">Refresh All</a></div>
+							<div class="buttonA"><a href="<?php echo Force::getRefreshAllHREF() ?>" class="buttonA">Refresh All</a></div>
 						</td>
 					</tr><?php
 				} ?>
