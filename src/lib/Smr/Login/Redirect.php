@@ -2,9 +2,9 @@
 
 namespace Smr\Login;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Session;
-use SmrAccount;
 
 /**
  * Collection of functions to help with login redirection.
@@ -14,7 +14,7 @@ class Redirect {
 	/**
 	 * @return array<string, mixed>|false
 	 */
-	public static function redirectIfDisabled(SmrAccount $account): array|false {
+	public static function redirectIfDisabled(Account $account): array|false {
 		// We skip the redirect for specific disabled reasons, because they are
 		// handled elsewhere.
 		$skipReasons = [
@@ -49,7 +49,7 @@ class Redirect {
 		exit;
 	}
 
-	public static function redirectIfOffline(SmrAccount $account): void {
+	public static function redirectIfOffline(Account $account): void {
 		// Check if the game is offline
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT reason FROM game_disable');

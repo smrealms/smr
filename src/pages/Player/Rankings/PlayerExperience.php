@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player\Rankings;
 
-use AbstractSmrPlayer;
-use Menu;
-use Rankings;
+use Smr\AbstractPlayer;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Rankings;
 use Smr\Template;
 
 class PlayerExperience extends PlayerPage {
@@ -15,7 +15,7 @@ class PlayerExperience extends PlayerPage {
 
 	public string $file = 'rankings_player_experience.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Experience Rankings');
 
 		Menu::rankings(0, 0);

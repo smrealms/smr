@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Page\AccountPageProcessor;
 use Smr\Page\Page;
 use Smr\Page\ReusableTrait;
 use Smr\Session;
-use SmrAccount;
 
 class GameLeaveProcessor extends AccountPageProcessor {
 
@@ -16,7 +16,7 @@ class GameLeaveProcessor extends AccountPageProcessor {
 		private readonly Page $forwardTo
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$session = Session::getInstance();
 
 		// Reset the game ID if necessary

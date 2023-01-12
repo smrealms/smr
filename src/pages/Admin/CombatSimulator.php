@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
-use DummyShip;
+use Smr\Account;
+use Smr\DummyShip;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class CombatSimulator extends AccountPage {
 
@@ -13,8 +13,8 @@ class CombatSimulator extends AccountPage {
 
 	/**
 	 * @param ?array<mixed> $results
-	 * @param array<\AbstractSmrPlayer> $attackers
-	 * @param array<\AbstractSmrPlayer> $defenders
+	 * @param array<\Smr\AbstractPlayer> $attackers
+	 * @param array<\Smr\AbstractPlayer> $defenders
 	 */
 	public function __construct(
 		private readonly ?array $results = null,
@@ -22,7 +22,7 @@ class CombatSimulator extends AccountPage {
 		private readonly array $defenders = []
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Combat Simulator');
 
 		$template->assign('EditDummysLink', (new EditDummies())->href());

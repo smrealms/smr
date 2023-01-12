@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
@@ -19,7 +19,7 @@ class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
 		private readonly ?int $threadID = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 
 		$body = htmlentities(Request::get('body'), ENT_COMPAT, 'utf-8');

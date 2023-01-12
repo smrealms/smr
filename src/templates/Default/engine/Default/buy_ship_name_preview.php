@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+
 ?>
 <div class="center">
 	If you ship is found to use HTML inappropriately you may be banned.

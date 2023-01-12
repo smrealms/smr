@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Exceptions\UserError;
 use Smr\Page\AccountPageProcessor;
+use Smr\Player;
 use Smr\Request;
-use SmrAccount;
-use SmrPlayer;
 
 class AccountEditProcessor extends AccountPageProcessor {
 
@@ -16,11 +16,11 @@ class AccountEditProcessor extends AccountPageProcessor {
 		private readonly int $editAccountID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$db = Database::getInstance();
 
 		$account_id = $this->editAccountID;
-		$curr_account = SmrAccount::getAccount($account_id);
+		$curr_account = Account::getAccount($account_id);
 
 		// request
 		$donation = Request::getInt('donation');
@@ -142,7 +142,7 @@ class AccountEditProcessor extends AccountPageProcessor {
 			if (empty($new_name)) {
 				continue;
 			}
-			$editPlayer = SmrPlayer::getPlayer($account_id, $game_id);
+			$editPlayer = Player::getPlayer($account_id, $game_id);
 
 			try {
 				$editPlayer->changePlayerName($new_name);

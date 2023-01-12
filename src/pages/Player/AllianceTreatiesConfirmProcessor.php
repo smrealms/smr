@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
-use SmrAlliance;
-use SmrPlayer;
+use Smr\Player;
 
 class AllianceTreatiesConfirmProcessor extends PlayerPageProcessor {
 
@@ -18,9 +18,9 @@ class AllianceTreatiesConfirmProcessor extends PlayerPageProcessor {
 		private readonly array $terms
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$alliance1 = $player->getAlliance();
-		$alliance2 = SmrAlliance::getAlliance($this->otherAllianceID, $player->getGameID());
+		$alliance2 = Alliance::getAlliance($this->otherAllianceID, $player->getGameID());
 
 		$alliance_id_1 = $alliance1->getAllianceID();
 		$alliance_id_2 = $alliance2->getAllianceID();
@@ -48,7 +48,7 @@ class AllianceTreatiesConfirmProcessor extends PlayerPageProcessor {
 		$leader2 = $alliance2->getLeaderID();
 		$message = 'An ambassador from ' . $alliance1->getAllianceBBLink() . ' has arrived with a treaty offer.';
 
-		SmrPlayer::sendMessageFromAllianceAmbassador($player->getGameID(), $leader2, $message);
+		Player::sendMessageFromAllianceAmbassador($player->getGameID(), $leader2, $message);
 
 		$container = new AllianceTreaties('The treaty offer has been sent.');
 		$container->go();

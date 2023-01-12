@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class LogConsoleNotesProcessor extends AccountPageProcessor {
 
@@ -18,7 +18,7 @@ class LogConsoleNotesProcessor extends AccountPageProcessor {
 		private readonly array $logTypeIDs
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$db = Database::getInstance();
 
 		foreach ($this->accountIDs as $account_id) {

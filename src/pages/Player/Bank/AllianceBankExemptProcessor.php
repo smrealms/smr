@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player\Bank;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Player\AllianceExemptAuthorize;
@@ -15,7 +15,7 @@ class AllianceBankExemptProcessor extends PlayerPageProcessor {
 		private readonly ?int $maxTransactionID = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 
 		//only if we are coming from the bank screen do we unexempt selection first

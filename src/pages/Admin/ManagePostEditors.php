@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Admin;
 
-use Globals;
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Globals;
 use Smr\Page\AccountPage;
+use Smr\Player;
 use Smr\Template;
-use SmrAccount;
-use SmrPlayer;
 
 class ManagePostEditors extends AccountPage {
 
@@ -19,7 +19,7 @@ class ManagePostEditors extends AccountPage {
 		private readonly ?string $processingMsg = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Manage Galactic Post Editors');
 
 		$container = new ManagePostEditorsSelectProcessor();
@@ -45,7 +45,7 @@ class ManagePostEditors extends AccountPage {
 			// Get the list of current editors for the selected game
 			$currentEditors = [];
 			foreach (Globals::getGalacticPostEditorIDs($selectedGameID) as $editorID) {
-				$editor = SmrPlayer::getPlayer($editorID, $selectedGameID);
+				$editor = Player::getPlayer($editorID, $selectedGameID);
 				$currentEditors[] = $editor->getDisplayName();
 			}
 			$template->assign('CurrentEditors', $currentEditors);

@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player\Planet;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
 use Smr\Template;
 
@@ -10,7 +10,7 @@ class BondConfirm extends PlayerPage {
 
 	public string $file = 'planet_bond_confirmation.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 
 		require_once(LIB . 'Default/planet.inc.php');
 		planet_common();

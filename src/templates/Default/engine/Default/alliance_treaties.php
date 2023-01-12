@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Treaty;
+
 ?>
 <div class="center">
 	<?php
@@ -13,7 +15,7 @@
 		Terms as follows:<br />
 		<ul class="noWrap left" style="display: inline-block"><?php
 			foreach ($Offer['Terms'] as $Term) { ?>
-				<li><?php echo SmrTreaty::TYPES[$Term][0]; ?></li><?php
+				<li><?php echo Treaty::TYPES[$Term][0]; ?></li><?php
 			} ?>
 		</ul>
 		<br />
@@ -39,7 +41,7 @@
 		<br /><br />
 		Choose the treaty terms:<br />
 		<table class="center standard"><?php
-			foreach (SmrTreaty::TYPES as $checkName => $displayInfo) { ?>
+			foreach (Treaty::TYPES as $checkName => $displayInfo) { ?>
 				<tr>
 					<td><input type="checkbox" name="<?php echo $checkName; ?>"></td>
 					<td class="left"><?php echo $displayInfo[0]; ?><br /><small><?php echo $displayInfo[1]; ?></small></td>

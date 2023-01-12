@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Globals;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Force;
+use Smr\Globals;
 use Smr\Page\PlayerPageProcessor;
 use Smr\SectorLock;
-use SmrForce;
 
 class AttackForcesProcessor extends PlayerPageProcessor {
 
@@ -17,10 +17,10 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 		private readonly bool $bump = false
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$ship = $player->getShip();
 
-		$forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $this->ownerAccountID);
+		$forces = Force::getForce($player->getGameID(), $player->getSectorID(), $this->ownerAccountID);
 		$forceOwner = $forces->getOwner();
 
 		if ($player->hasNewbieTurns()) {

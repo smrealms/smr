@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player\Headquarters;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
 
 class MilitaryPaymentClaimProcessor extends PlayerPageProcessor {
@@ -11,7 +11,7 @@ class MilitaryPaymentClaimProcessor extends PlayerPageProcessor {
 		private readonly int $locationID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		if ($player->hasMilitaryPayment()) {
 			$payment = $player->getMilitaryPayment();
 			$player->increaseHOF($payment, ['Military Payment', 'Money', 'Claimed'], HOF_PUBLIC);

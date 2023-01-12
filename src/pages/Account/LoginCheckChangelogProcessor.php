@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
-use SmrAccount;
 
 class LoginCheckChangelogProcessor extends AccountPageProcessor {
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$lastLogin = $account->getLastLogin();
 
 		$db = Database::getInstance();

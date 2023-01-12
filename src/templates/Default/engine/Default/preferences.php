@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+
 if (isset($Reason)) {
 	?><p><span class="big bold red"><?php echo $Reason; ?></span></p><?php
 }

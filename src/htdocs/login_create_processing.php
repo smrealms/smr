@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\Account;
 use Smr\Exceptions\AccountNotFound;
 use Smr\Request;
 
@@ -69,14 +70,14 @@ try {
 	}
 
 	// Sanity check email address
-	SmrAccount::checkEmail($email);
+	Account::checkEmail($email);
 
 	if ($login == $password) {
 		create_error('Your login and password cannot be the same!');
 	}
 
 	try {
-		SmrAccount::getAccountByLogin($login);
+		Account::getAccountByLogin($login);
 		create_error('This login name is already registered.');
 	} catch (AccountNotFound) {
 		// Proceed, login is not yet registered
@@ -88,7 +89,7 @@ try {
 
 	// creates a new user account object
 	try {
-		$account = SmrAccount::createAccount($login, $password, $email, $timez, $referral);
+		$account = Account::createAccount($login, $password, $email, $timez, $referral);
 	} catch (AccountNotFound) {
 		create_error('Invalid referral account ID!');
 	}

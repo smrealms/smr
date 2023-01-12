@@ -2,17 +2,17 @@
 
 namespace Smr\Discord;
 
-use AbstractSmrPlayer;
 use Discord\Parts\Channel\Message;
 use Discord\Parts\Thread\Thread;
+use Smr\AbstractPlayer;
+use Smr\Account;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Exceptions\AccountNotFound;
 use Smr\Exceptions\AllianceNotFound;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Exceptions\UserError;
-use SmrAccount;
-use SmrAlliance;
-use SmrGame;
+use Smr\Game;
 
 /**
  * Holds information linking the received message and the game data
@@ -23,14 +23,14 @@ class PlayerLink {
 	 * Identifies if the message is linked to game data
 	 */
 	public bool $valid = false;
-	public AbstractSmrPlayer $player;
+	public AbstractPlayer $player;
 
 	public function __construct(Message $message) {
 		// force update in case the ID has been changed in-game
 		$user_id = $message->author->id;
 
 		try {
-			$account = SmrAccount::getAccountByDiscordId($user_id, true);
+			$account = Account::getAccountByDiscordId($user_id, true);
 		} catch (AccountNotFound) {
 			throw new UserError("There is no SMR account associated with your Discord User ID. To set this up, go to `Preferences` in-game and set `$user_id` as your `Discord User ID`.");
 		}
@@ -55,7 +55,7 @@ class PlayerLink {
 			// force update in case the ID has been changed in-game
 			$channel_id = $channel->id;
 			try {
-				$alliance = SmrAlliance::getAllianceByDiscordChannel($channel_id, true);
+				$alliance = Alliance::getAllianceByDiscordChannel($channel_id, true);
 			} catch (AllianceNotFound) {
 				throw new UserError("There is no SMR alliance associated with this Discord Channel ID. To set this up (you must have permission to set this for your alliance), go to `Change Alliance Stats` and set `$channel_id` as your `Discord Channel ID`.\n\n-- If this Discord Channel is public, you probably want to choose a different channel for your alliance.\n-- If you are not in an alliance (or if your alliance doesn't want a channel), send your command again in a direct message to me.");
 			}
@@ -64,9 +64,9 @@ class PlayerLink {
 
 		// Get their player associated with this game
 		try {
-			$player = AbstractSmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
+			$player = AbstractPlayer::getPlayer($account->getAccountID(), $game_id, true);
 		} catch (PlayerNotFound) {
-			throw new UserError('You have not joined game `' . SmrGame::getGame($game_id)->getName() . '` yet!');
+			throw new UserError('You have not joined game `' . Game::getGame($game_id)->getName() . '` yet!');
 		}
 
 		// Prevent players from leaking sensitive data in other alliance channels

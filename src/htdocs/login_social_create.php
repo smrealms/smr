@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\Account;
 use Smr\Exceptions\AccountNotFound;
 
 try {
@@ -22,7 +23,7 @@ try {
 	// (Also disable creating a new account because they would just get
 	// an "Email already registered" error anyway.)
 	try {
-		$account = SmrAccount::getAccountByEmail($socialLogin->getEmail());
+		$account = Account::getAccountByEmail($socialLogin->getEmail());
 		$template->assign('MatchingLogin', $account->getLogin());
 	} catch (AccountNotFound) {
 		// Proceed without matching account

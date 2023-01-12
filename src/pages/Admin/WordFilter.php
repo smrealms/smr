@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAccount;
 
 class WordFilter extends AccountPage {
 
@@ -18,7 +18,7 @@ class WordFilter extends AccountPage {
 		private readonly ?string $message = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Word Filter');
 
 		$template->assign('Message', $this->message);

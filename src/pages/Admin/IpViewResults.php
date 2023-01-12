@@ -3,13 +3,13 @@
 namespace Smr\Pages\Admin;
 
 use Exception;
+use Smr\Account;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Session;
 use Smr\Template;
-use SmrAccount;
-use SmrAlliance;
 
 class IpViewResults extends AccountPage {
 
@@ -17,7 +17,7 @@ class IpViewResults extends AccountPage {
 
 	public string $file = 'admin/ip_view_results.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$session = Session::getInstance();
 		$variable = $session->getRequestVar('variable');
 		$type = $session->getRequestVar('type');
@@ -57,7 +57,7 @@ class IpViewResults extends AccountPage {
 				$db_ip = $db_ent['ip'];
 				$host = $db_ent['host'];
 				$account_id = $db_ent['id'];
-				$acc = SmrAccount::getAccount($account_id);
+				$acc = Account::getAccount($account_id);
 				$disabled = $acc->isDisabled();
 				$close_reason = $disabled ? $disabled['Reason'] : '';
 
@@ -122,7 +122,7 @@ class IpViewResults extends AccountPage {
 				$ex = $dbResult->record()->getString('reason');
 				$template->assign('Exception', $ex);
 			}
-			$viewAccount = SmrAccount::getAccount($accountID);
+			$viewAccount = Account::getAccount($accountID);
 			$disabled = $viewAccount->isDisabled();
 			if ($disabled !== false) {
 				$template->assign('CloseReason', $disabled['Reason']);
@@ -161,7 +161,7 @@ class IpViewResults extends AccountPage {
 				}
 				$allianceID = (int)$allianceID;
 				$gameID = (int)$gameID;
-				$name = SmrAlliance::getAlliance($allianceID, $gameID)->getAllianceDisplayName();
+				$name = Alliance::getAlliance($allianceID, $gameID)->getAllianceDisplayName();
 				$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND alliance_id = ' . $db->escapeNumber($allianceID) . ' ORDER BY ip');
 				$summary = 'Listing all IPs for alliance ' . $name . ' in game with ID ' . $gameID;
 
@@ -227,7 +227,7 @@ class IpViewResults extends AccountPage {
 				if ($id === $last_id && $ip === $last_ip) {
 					continue;
 				}
-				$acc = SmrAccount::getAccount($id);
+				$acc = Account::getAccount($id);
 				$disabled = $acc->isDisabled();
 				$close_reason = $disabled ? $disabled['Reason'] : '';
 				$dbResult2 = $db->read('SELECT * FROM player WHERE account_id = ' . $db->escapeNumber($id));

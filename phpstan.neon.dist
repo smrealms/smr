@@ -28,7 +28,7 @@ parameters:
         - SMTP_HOSTNAME
         - TWITTER_CONSUMER_KEY
         # We code in protection against a value of 0
-        - SmrMines::TOTAL_ENEMY_MINES_MODIFIER
+        - Smr\Combat\Weapon\Mines::TOTAL_ENEMY_MINES_MODIFIER
 
     typeAliases:
         WeaponDamageData: 'array{Shield: int, Armour: int, Rollover: bool, Launched?: int, Kamikaze?: int}'

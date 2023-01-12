@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player\Chess;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Chess\ChessGame;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Player\CurrentSector;
@@ -13,7 +13,7 @@ class MatchResignProcessor extends PlayerPageProcessor {
 		private readonly int $chessGameID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$chessGame = ChessGame::getChessGame($this->chessGameID);
 		$result = $chessGame->resign($player->getAccountID());
 

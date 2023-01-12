@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Page\AccountPageProcessor;
+use Smr\Player;
 use Smr\Request;
-use SmrAccount;
-use SmrPlayer;
 
 class MessageBoxReplyProcessor extends AccountPageProcessor {
 
@@ -15,7 +15,7 @@ class MessageBoxReplyProcessor extends AccountPageProcessor {
 		private readonly int $boxTypeID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$message = Request::get('message');
 		$banPoints = Request::getInt('BanPoints');
 		$rewardCredits = Request::getInt('RewardCredits');
@@ -31,9 +31,9 @@ class MessageBoxReplyProcessor extends AccountPageProcessor {
 			$container->go();
 		}
 
-		SmrPlayer::sendMessageFromAdmin($this->gameID, $this->senderAccountID, $message);
+		Player::sendMessageFromAdmin($this->gameID, $this->senderAccountID, $message);
 
-		$senderAccount = SmrAccount::getAccount($this->senderAccountID);
+		$senderAccount = Account::getAccount($this->senderAccountID);
 		$senderAccount->increaseSmrRewardCredits($rewardCredits);
 
 		//do we have points?

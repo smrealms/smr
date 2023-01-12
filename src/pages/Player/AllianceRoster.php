@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAlliance;
 
 class AllianceRoster extends PlayerPage {
 
@@ -21,13 +21,13 @@ class AllianceRoster extends PlayerPage {
 		private readonly bool $showRoles = false
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$db = Database::getInstance();
 		$account = $player->getAccount();
 
 		$allianceID = $this->allianceID ?? $player->getAllianceID();
 
-		$alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
+		$alliance = Alliance::getAlliance($allianceID, $player->getGameID());
 		$template->assign('Alliance', $alliance);
 
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));

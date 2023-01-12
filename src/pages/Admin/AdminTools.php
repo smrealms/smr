@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\AdminPermissions;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class AdminTools extends AccountPage {
 
@@ -16,7 +16,7 @@ class AdminTools extends AccountPage {
 		private readonly ?string $errorMessage = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('ErrorMessage', $this->errorMessage);
 		$template->assign('Message', $this->message);
 

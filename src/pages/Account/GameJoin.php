@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Game;
 use Smr\Page\AccountPage;
 use Smr\Race;
 use Smr\RaceDetails;
 use Smr\Template;
-use SmrAccount;
-use SmrGame;
 
 class GameJoin extends AccountPage {
 
@@ -19,11 +19,11 @@ class GameJoin extends AccountPage {
 		private readonly int $gameID
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
-		$game = SmrGame::getGame($this->gameID);
+	public function build(Account $account, Template $template): void {
+		$game = Game::getGame($this->gameID);
 
 		// Don't allow vets to join Newbie games
-		if ($game->isGameType(SmrGame::GAME_TYPE_NEWBIE) && $account->isVeteran()) {
+		if ($game->isGameType(Game::GAME_TYPE_NEWBIE) && $account->isVeteran()) {
 			create_error('Veteran players are not allowed to join Newbie games!');
 		}
 

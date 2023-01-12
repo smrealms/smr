@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player\Planet;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
@@ -19,7 +19,7 @@ class Main extends PlayerPage {
 		private readonly ?string $errorMessage = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		require_once(LIB . 'Default/planet.inc.php');
 		planet_common();
 

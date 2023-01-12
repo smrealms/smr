@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Treaty;
+
 ?>
 <br />
 <div class="center">
@@ -9,7 +11,7 @@
 	<ul class="noWrap left" style="display: inline-block"><?php
 		foreach ($Terms as $Term => $Offered) {
 			if ($Offered) { ?>
-				<li><?php echo SmrTreaty::TYPES[$Term][0]; ?></li><?php
+				<li><?php echo Treaty::TYPES[$Term][0]; ?></li><?php
 			}
 		} ?>
 	</ul>

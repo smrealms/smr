@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
 use Smr\Page\Page;
 use Smr\Request;
-use SmrAccount;
 
 class VoteProcessor extends AccountPageProcessor {
 
@@ -15,7 +15,7 @@ class VoteProcessor extends AccountPageProcessor {
 		private readonly Page $targetPage
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		if ($account->getAccountID() == ACCOUNT_ID_NHL) {
 			create_error('This account is not allowed to cast a vote!');
 		}

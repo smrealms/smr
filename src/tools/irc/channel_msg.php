@@ -1,16 +1,20 @@
 <?php declare(strict_types=1);
 
+use Smr\AbstractPlayer;
+use Smr\Account;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Exceptions\AccountNotFound;
 use Smr\Exceptions\AllianceNotFound;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Irc\CallbackEvent;
 use Smr\Irc\Message;
+use Smr\Player;
 
 /**
  * @param resource $fp
  */
-function check_for_registration($fp, string $nick, string $channel, Closure $callback, bool $validationMessages = true): AbstractSmrPlayer|false {
+function check_for_registration($fp, string $nick, string $channel, Closure $callback, bool $validationMessages = true): AbstractPlayer|false {
 	$db = Database::getInstance();
 
 	// only registered users are allowed to use this command
@@ -35,7 +39,7 @@ function check_for_registration($fp, string $nick, string $channel, Closure $cal
 
 	// get alliance_id and game_id for this channel
 	try {
-		$alliance = SmrAlliance::getAllianceByIrcChannel($channel, true);
+		$alliance = Alliance::getAllianceByIrcChannel($channel, true);
 	} catch (AllianceNotFound) {
 		if ($validationMessages === true) {
 			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', the channel ' . $channel . ' has not been registered with me.' . EOL);
@@ -45,10 +49,10 @@ function check_for_registration($fp, string $nick, string $channel, Closure $cal
 
 	// get smr account
 	try {
-		$account = SmrAccount::getAccountByIrcNick($nick, true);
+		$account = Account::getAccountByIrcNick($nick, true);
 	} catch (AccountNotFound) {
 		try {
-			$account = SmrAccount::getAccountByIrcNick($registeredNick, true);
+			$account = Account::getAccountByIrcNick($registeredNick, true);
 		} catch (AccountNotFound) {
 			if ($validationMessages === true) {
 				fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
@@ -59,7 +63,7 @@ function check_for_registration($fp, string $nick, string $channel, Closure $cal
 
 	// get smr player
 	try {
-		$player = SmrPlayer::getPlayer($account->getAccountID(), $alliance->getGameID(), true);
+		$player = Player::getPlayer($account->getAccountID(), $alliance->getGameID(), true);
 	} catch (PlayerNotFound) {
 		if ($validationMessages === true) {
 			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have not joined the game that this channel belongs to.' . EOL);
@@ -226,7 +230,7 @@ function channel_msg_seen($fp, Message $msg): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_money($fp, Message $msg, AbstractSmrPlayer $player): bool {
+function channel_msg_money($fp, Message $msg, AbstractPlayer $player): bool {
 
 	if ($msg->text == '!money') {
 
@@ -318,7 +322,7 @@ function channel_msg_8ball($fp, Message $msg): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_forces($fp, Message $msg, AbstractSmrPlayer $player): bool {
+function channel_msg_forces($fp, Message $msg, AbstractPlayer $player): bool {
 	if (preg_match('/^!forces(.*)$/i', $msg->text, $args)) {
 
 		$nick = $msg->nick;

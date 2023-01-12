@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Page\AccountPageProcessor;
+use Smr\Player;
 use Smr\Request;
-use SmrAccount;
-use SmrPlayer;
 
 class ManagePostEditorsProcessor extends AccountPageProcessor {
 
@@ -15,7 +15,7 @@ class ManagePostEditorsProcessor extends AccountPageProcessor {
 		private readonly int $selectedGameID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$db = Database::getInstance();
 
 		// Get the selected game
@@ -26,7 +26,7 @@ class ManagePostEditorsProcessor extends AccountPageProcessor {
 		$action = Request::get('submit');
 
 		try {
-			$selected_player = SmrPlayer::getPlayerByPlayerID($player_id, $game_id);
+			$selected_player = Player::getPlayerByPlayerID($player_id, $game_id);
 		} catch (PlayerNotFound $e) {
 			$msg = "<span class='red'>ERROR: </span>" . $e->getMessage();
 			$container = new ManagePostEditors($this->selectedGameID, $msg);

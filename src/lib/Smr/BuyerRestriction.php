@@ -2,8 +2,6 @@
 
 namespace Smr;
 
-use AbstractSmrPlayer;
-
 /**
  * Enumeration of buyer restrictions for ships and weapons.
  */
@@ -20,7 +18,7 @@ enum BuyerRestriction: int {
 	/**
 	 * Does the player pass the restriction?
 	 */
-	public function passes(AbstractSmrPlayer $player): bool {
+	public function passes(AbstractPlayer $player): bool {
 		return match ($this) {
 			self::None => true, // no restriction, all players pass
 			self::Good => $player->hasGoodAlignment(),

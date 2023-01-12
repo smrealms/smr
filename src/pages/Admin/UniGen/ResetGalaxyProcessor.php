@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Account;
+use Smr\Galaxy;
 use Smr\Page\AccountPageProcessor;
-use SmrAccount;
-use SmrGalaxy;
-use SmrSector;
+use Smr\Sector;
 
 class ResetGalaxyProcessor extends AccountPageProcessor {
 
@@ -14,8 +14,8 @@ class ResetGalaxyProcessor extends AccountPageProcessor {
 		private readonly int $galaxyID
 	) {}
 
-	public function build(SmrAccount $account): never {
-		$galaxy = SmrGalaxy::getGalaxy($this->gameID, $this->galaxyID);
+	public function build(Account $account): never {
+		$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 
 		// Efficiently construct the caches before proceeding
 		$galaxy->getPorts();
@@ -29,7 +29,7 @@ class ResetGalaxyProcessor extends AccountPageProcessor {
 			$galSector->removeAllFixtures();
 		}
 
-		SmrSector::saveSectors();
+		Sector::saveSectors();
 
 		$message = '<span class="green">Success</span> : reset galaxy.';
 		$container = new EditGalaxy($this->gameID, $this->galaxyID, $message);

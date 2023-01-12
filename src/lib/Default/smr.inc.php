@@ -1,10 +1,14 @@
 <?php declare(strict_types=1);
 
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Chess\ChessGame;
 use Smr\Container\DiContainer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Exceptions\UserError;
+use Smr\Game;
+use Smr\Globals;
 use Smr\Messages;
 use Smr\Page\Page;
 use Smr\Pages\Account\AlbumEdit;
@@ -40,9 +44,12 @@ use Smr\Pages\Player\Rankings\PlayerExperience;
 use Smr\Pages\Player\SearchForTrader;
 use Smr\Pages\Player\SearchForTraderResult;
 use Smr\Pages\Player\WeaponReorder;
+use Smr\Player;
 use Smr\Race;
+use Smr\Sector;
 use Smr\SectorLock;
 use Smr\Session;
+use Smr\Ship;
 use Smr\Template;
 use Smr\VoteLink;
 use Smr\VoteSite;
@@ -85,7 +92,7 @@ function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string 
 					return is_numeric($default);
 				}
 				$playerID = (int)$default;
-				$bbPlayer = SmrPlayer::getPlayerByPlayerID($playerID, $overrideGameID);
+				$bbPlayer = Player::getPlayerByPlayerID($playerID, $overrideGameID);
 				$showAlliance = isset($tagParams['showalliance']) ? parseBoolean($tagParams['showalliance']) : false;
 				if ($disableBBLinks === false && $overrideGameID == $session->getGameID()) {
 					return $bbPlayer->getLinkedDisplayName($showAlliance);
@@ -97,7 +104,7 @@ function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string 
 					return is_numeric($default);
 				}
 				$allianceID = (int)$default;
-				$alliance = SmrAlliance::getAlliance($allianceID, $overrideGameID);
+				$alliance = Alliance::getAlliance($allianceID, $overrideGameID);
 				if ($disableBBLinks === false && $overrideGameID == $session->getGameID()) {
 					if ($session->hasGame() && $alliance->getAllianceID() == $session->getPlayer()->getAllianceID()) {
 						$container = new AllianceMotd($alliance->getAllianceID());
@@ -118,7 +125,7 @@ function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string 
 						}
 						$linked = $disableBBLinks === false && $overrideGameID == $session->getGameID();
 						$player = $session->hasGame() ? $session->getPlayer() : null;
-						return AbstractSmrPlayer::getColouredRaceNameOrDefault($raceID, $player, $linked);
+						return AbstractPlayer::getColouredRaceNameOrDefault($raceID, $player, $linked);
 					}
 				}
 				break;
@@ -153,7 +160,7 @@ function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string 
 				if ($disableBBLinks === false
 					&& $session->hasGame()
 					&& $session->getGameID() == $overrideGameID
-					&& SmrSector::sectorExists($overrideGameID, $sectorID)) {
+					&& Sector::sectorExists($overrideGameID, $sectorID)) {
 					return '<a href="' . Globals::getPlotCourseHREF($session->getPlayer()->getSectorID(), $sectorID) . '">' . $sectorTag . '</a>';
 				}
 				return $sectorTag;
@@ -163,7 +170,7 @@ function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string 
 					return is_numeric($default);
 				}
 				$allianceID = (int)$default;
-				$alliance = SmrAlliance::getAlliance($allianceID, $overrideGameID);
+				$alliance = Alliance::getAlliance($allianceID, $overrideGameID);
 				$container = new AllianceInviteAcceptProcessor($allianceID);
 				return '<div class="buttonA"><a class="buttonA" href="' . $container->href() . '">Join ' . $alliance->getAllianceDisplayName() . '</a></div>';
 		}
@@ -447,18 +454,18 @@ function saveAllAndReleaseLock(bool $updateSession = true): void {
 	// Only save if we have a lock.
 	$lock = SectorLock::getInstance();
 	if ($lock->isActive()) {
-		SmrSector::saveSectors();
-		SmrShip::saveShips();
-		SmrPlayer::savePlayers();
+		Sector::saveSectors();
+		Ship::saveShips();
+		Player::savePlayers();
 		// Skip any caching classes that haven't even been loaded yet
-		if (class_exists(SmrForce::class, false)) {
-			SmrForce::saveForces();
+		if (class_exists(Force::class, false)) {
+			Force::saveForces();
 		}
-		if (class_exists(SmrPort::class, false)) {
-			SmrPort::savePorts();
+		if (class_exists(Port::class, false)) {
+			Port::savePorts();
 		}
-		if (class_exists(SmrPlanet::class, false)) {
-			SmrPlanet::savePlanets();
+		if (class_exists(Planet::class, false)) {
+			Planet::savePlanets();
 		}
 		if (class_exists(WeightedRandom::class, false)) {
 			WeightedRandom::saveWeightedRandoms();
@@ -471,7 +478,7 @@ function saveAllAndReleaseLock(bool $updateSession = true): void {
 	}
 }
 
-function doTickerAssigns(Template $template, AbstractSmrPlayer $player, Database $db): void {
+function doTickerAssigns(Template $template, AbstractPlayer $player, Database $db): void {
 	//any ticker news?
 	if ($player->hasTickers()) {
 		$ticker = [];
@@ -549,7 +556,7 @@ function doSkeletonAssigns(Template $template): void {
 
 	if ($session->hasGame()) {
 		$player = $session->getPlayer();
-		$template->assign('GameName', SmrGame::getGame($session->getGameID())->getName());
+		$template->assign('GameName', Game::getGame($session->getGameID())->getName());
 		$template->assign('GameID', $session->getGameID());
 
 		$template->assign('PlotCourseLink', Globals::getPlotCourseHREF());

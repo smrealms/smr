@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
+use Smr\Alliance;
 use Smr\BountyType;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
-use SmrAlliance;
 
 class PreviousGameAllianceDetail extends AccountPage {
 
@@ -17,11 +17,11 @@ class PreviousGameAllianceDetail extends AccountPage {
 		private readonly int $allianceID
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$gameID = $this->gameID;
 		$allianceID = $this->allianceID;
 
-		$alliance = SmrAlliance::getAlliance($allianceID, $gameID);
+		$alliance = Alliance::getAlliance($allianceID, $gameID);
 		$template->assign('Alliance', $alliance);
 
 		$template->assign('PageTopic', 'Alliance Roster: ' . $alliance->getAllianceDisplayName(false, true));

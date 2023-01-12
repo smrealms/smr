@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+
 ?>
 <div id="sector_port" class="ajax">
 	<?php if ($ThisSector->hasPort()) {

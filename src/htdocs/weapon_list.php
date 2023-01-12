@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\Combat\Weapon\Weapon;
 use Smr\Database;
+use Smr\Location;
+use Smr\WeaponType;
 
 try {
 	require_once('../bootstrap.php');
@@ -13,7 +16,7 @@ try {
 	$dbResult = $db->read('SELECT weapon_type_id, location_type.* FROM location_sells_weapons JOIN weapon_type USING (weapon_type_id) JOIN location_type USING (location_type_id) WHERE location_type_id != ' . $db->escapeNumber(RACE_WARS_WEAPONS));
 	foreach ($dbResult->records() as $dbRecord) {
 		$gameID = 0; // doesn't matter for weapon list (yet)
-		$weaponLocs[$dbRecord->getInt('weapon_type_id')][] = SmrLocation::getLocation($gameID, $dbRecord->getInt('location_type_id'), false, $dbRecord)->getName();
+		$weaponLocs[$dbRecord->getInt('weapon_type_id')][] = Location::getLocation($gameID, $dbRecord->getInt('location_type_id'), false, $dbRecord)->getName();
 	}
 
 	// Get a list of all locations that sell weapons
@@ -23,9 +26,9 @@ try {
 
 	// Get all the properties to display for each weapon
 	$weapons = [];
-	foreach (SmrWeaponType::getAllWeaponTypes() as $weapon) {
+	foreach (WeaponType::getAllWeaponTypes() as $weapon) {
 		$restrictions = [$weapon->getBuyerRestriction()->display()];
-		if (SmrWeapon::getWeapon($weapon->getWeaponTypeID())->isUniqueType()) {
+		if (Weapon::getWeapon($weapon->getWeaponTypeID())->isUniqueType()) {
 			$restrictions[] = '<div style="color: #64B9B9">Unique</div>';
 		}
 		$weapons[] = [

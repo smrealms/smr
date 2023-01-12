@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player\Bar;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Template;
 
@@ -15,7 +15,7 @@ class PlayBlackjackBet extends PlayerPage {
 		private readonly int $locationID,
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'BlackJack');
 		Menu::bar($this->locationID);
 

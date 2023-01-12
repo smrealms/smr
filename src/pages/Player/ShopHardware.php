@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
+use Smr\Location;
 use Smr\Page\PlayerPage;
 use Smr\Template;
-use SmrLocation;
 
 class ShopHardware extends PlayerPage {
 
@@ -15,12 +15,12 @@ class ShopHardware extends PlayerPage {
 		private readonly int $locationID
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		if (!$player->getSector()->hasLocation($this->locationID)) {
 			create_error('That location does not exist in this sector');
 		}
 
-		$location = SmrLocation::getLocation($player->getGameID(), $this->locationID);
+		$location = Location::getLocation($player->getGameID(), $this->locationID);
 		$template->assign('PageTopic', $location->getName());
 
 		if ($location->isHardwareSold()) {

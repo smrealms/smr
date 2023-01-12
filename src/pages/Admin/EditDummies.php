@@ -2,25 +2,25 @@
 
 namespace Smr\Pages\Admin;
 
-use DummyShip;
+use Smr\Account;
+use Smr\DummyShip;
 use Smr\Page\AccountPage;
 use Smr\PlayerLevel;
 use Smr\Request;
+use Smr\ShipType;
 use Smr\Template;
-use SmrAccount;
-use SmrShipType;
-use SmrWeaponType;
+use Smr\WeaponType;
 
 class EditDummies extends AccountPage {
 
 	public string $file = 'admin/edit_dummys.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Edit Dummys');
 
 		$template->assign('CombatSimLink', (new CombatSimulator())->href());
-		$template->assign('ShipTypes', SmrShipType::getAll());
-		$template->assign('Weapons', SmrWeaponType::getAllWeaponTypes());
+		$template->assign('ShipTypes', ShipType::getAll());
+		$template->assign('Weapons', WeaponType::getAllWeaponTypes());
 
 		$template->assign('SelectDummysLink', (new self())->href());
 		$template->assign('EditDummysLink', (new EditDummiesProcessor())->href());

@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class LoginAnnouncements extends AccountPage {
 
@@ -15,7 +15,7 @@ class LoginAnnouncements extends AccountPage {
 		private readonly bool $viewAll = false
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$db = Database::getInstance();
 
 		$template->assign('PageTopic', 'Announcements');

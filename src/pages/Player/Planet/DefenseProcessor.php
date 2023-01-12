@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player\Planet;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
@@ -12,7 +12,7 @@ class DefenseProcessor extends PlayerPageProcessor {
 		private readonly int $hardwareTypeID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$ship = $player->getShip();
 
 		if (!$player->isLandedOnPlanet()) {

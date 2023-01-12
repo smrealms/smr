@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
+use Smr\Game;
 use Smr\Page\AccountPage;
 use Smr\Request;
 use Smr\Template;
-use SmrAccount;
-use SmrGame;
 
 class AdminMessageSend extends AccountPage {
 
@@ -22,7 +22,7 @@ class AdminMessageSend extends AccountPage {
 		private readonly int $sendAccountID = 0,
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Send Admin Message');
 
 		$this->sendGameID ??= Request::getInt('SendGameID');
@@ -33,7 +33,7 @@ class AdminMessageSend extends AccountPage {
 		$template->assign('ExpireTime', $this->expireHours);
 
 		if ($gameID != self::ALL_GAMES_ID) {
-			$game = SmrGame::getGame($gameID);
+			$game = Game::getGame($gameID);
 			$gamePlayers = [['AccountID' => 0, 'Name' => 'All Players (' . $game->getName() . ')']];
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id,player_id,player_name FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY player_name');

@@ -2,15 +2,15 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Page\AccountPageProcessor;
 use Smr\Pages\Player\CurrentSector;
 use Smr\Request;
 use Smr\Session;
-use SmrAccount;
 
 class ContactFormProcessor extends AccountPageProcessor {
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$receiver = Request::get('receiver');
 		$subject = Request::get('subject');
 		$msg = Request::get('msg');

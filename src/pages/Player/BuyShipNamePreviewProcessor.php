@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
 
 class BuyShipNamePreviewProcessor extends PlayerPageProcessor {
@@ -12,7 +12,7 @@ class BuyShipNamePreviewProcessor extends PlayerPageProcessor {
 		private readonly int $cost
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$account = $player->getAccount();
 
 		$player->setCustomShipName($this->shipName);

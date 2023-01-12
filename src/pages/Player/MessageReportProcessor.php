@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
@@ -15,7 +15,7 @@ class MessageReportProcessor extends PlayerPageProcessor {
 		private readonly int $messageID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$container = new MessageView($this->folderID);
 
 		if (Request::getBool('action') === false) {

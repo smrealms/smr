@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
 use Exception;
-use Menu;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\HardwareType;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
@@ -17,7 +17,7 @@ class TraderStatus extends PlayerPage {
 
 	public string $file = 'trader_status.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Trader Status');
 
 		Menu::trader();

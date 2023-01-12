@@ -2,18 +2,18 @@
 
 namespace Smr\Pages\Account;
 
-use Globals;
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Game;
+use Smr\Globals;
 use Smr\Page\AccountPage;
 use Smr\Pages\Account\HistoryGames\ExtendedStats;
 use Smr\Pages\Account\HistoryGames\GameNews;
 use Smr\Pages\Account\HistoryGames\HallOfFame;
 use Smr\Pages\Account\HistoryGames\Summary;
+use Smr\Player;
 use Smr\Template;
-use SmrAccount;
-use SmrGame;
-use SmrPlayer;
 
 class GamePlay extends AccountPage {
 
@@ -24,7 +24,7 @@ class GamePlay extends AccountPage {
 		private readonly ?string $errorMessage = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Play Game');
 
 		$template->assign('ErrorMessage', $this->errorMessage);
@@ -51,7 +51,7 @@ class GamePlay extends AccountPage {
 			$game_id = $dbRecord->getInt('game_id');
 			$games['Play'][$game_id]['ID'] = $game_id;
 			$games['Play'][$game_id]['Name'] = $dbRecord->getString('game_name');
-			$games['Play'][$game_id]['Type'] = SmrGame::GAME_TYPES[$dbRecord->getInt('game_type')];
+			$games['Play'][$game_id]['Type'] = Game::GAME_TYPES[$dbRecord->getInt('game_type')];
 			$games['Play'][$game_id]['EndDate'] = date($account->getDateTimeFormatSplit(), $dbRecord->getInt('end_time'));
 			$games['Play'][$game_id]['Speed'] = $dbRecord->getFloat('game_speed');
 
@@ -59,7 +59,7 @@ class GamePlay extends AccountPage {
 			$games['Play'][$game_id]['PlayGameLink'] = $container->href();
 
 			// creates a new player object
-			$curr_player = SmrPlayer::getPlayer($account->getAccountID(), $game_id);
+			$curr_player = Player::getPlayer($account->getAccountID(), $game_id);
 
 			// update turns for this game
 			$curr_player->updateTurns();
@@ -107,7 +107,7 @@ class GamePlay extends AccountPage {
 		// are there any results?
 		foreach ($dbResult->records() as $dbRecord) {
 			$game_id = $dbRecord->getInt('game_id');
-			$game = SmrGame::getGame($game_id);
+			$game = Game::getGame($game_id);
 			$games['Join'][$game_id] = [
 				'ID' => $game_id,
 				'Name' => $game->getName(),
@@ -140,7 +140,7 @@ class GamePlay extends AccountPage {
 			$games['Previous'][$game_id]['Name'] = $dbRecord->getString('game_name');
 			$games['Previous'][$game_id]['StartDate'] = date($account->getDateFormat(), $dbRecord->getInt('start_time'));
 			$games['Previous'][$game_id]['EndDate'] = date($account->getDateFormat(), $dbRecord->getInt('end_time'));
-			$games['Previous'][$game_id]['Type'] = SmrGame::GAME_TYPES[$dbRecord->getInt('game_type')];
+			$games['Previous'][$game_id]['Type'] = Game::GAME_TYPES[$dbRecord->getInt('game_type')];
 			$games['Previous'][$game_id]['Speed'] = $dbRecord->getFloat('game_speed');
 			// create a container that will hold next url and additional variables.
 			$container = new HallOfFameAll($game_id);

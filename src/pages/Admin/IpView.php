@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAccount;
 
 class IpView extends AccountPage {
 
@@ -13,7 +13,7 @@ class IpView extends AccountPage {
 
 	public string $file = 'admin/ip_view.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'IP Search');
 
 		$template->assign('IpFormHref', (new IpViewResults())->href());

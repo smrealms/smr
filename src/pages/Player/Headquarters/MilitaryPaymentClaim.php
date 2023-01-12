@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player\Headquarters;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Template;
 
@@ -16,7 +16,7 @@ class MilitaryPaymentClaim extends PlayerPage {
 		private readonly string $claimText
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Military Payment Center');
 
 		Menu::headquarters($this->locationID);

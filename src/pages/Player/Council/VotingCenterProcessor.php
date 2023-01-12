@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player\Council;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
@@ -14,7 +14,7 @@ class VotingCenterProcessor extends PlayerPageProcessor {
 		private readonly int $otherRaceID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 
 		if (!$player->isOnCouncil()) {

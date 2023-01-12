@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Page\ReusableTrait;
 use Smr\SectorLock;
@@ -12,7 +12,7 @@ class SectorsFileDownloadProcessor extends PlayerPageProcessor {
 
 	use ReusableTrait;
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		// We can release the sector lock now because we know that the following
 		// code is read-only. This will help reduce sector lag and possible abuse.
 		SectorLock::getInstance()->release();

@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class AccountCloseProcessor extends AccountPageProcessor {
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		// Number of banned accounts
 		$amount = 0;
 
@@ -18,7 +18,7 @@ class AccountCloseProcessor extends AccountPageProcessor {
 			$expire_time = 0;
 			foreach (Request::getArray('close') as $key => $value) {
 				$val = 'Match list:' . $value;
-				$bannedAccount = SmrAccount::getAccount($key);
+				$bannedAccount = Account::getAccount($key);
 				$bannedAccount->banAccount($expire_time, $account, BAN_REASON_MULTI, $val);
 				$amount++;
 			}
@@ -29,7 +29,7 @@ class AccountCloseProcessor extends AccountPageProcessor {
 			$val = 'Match list:' . implode(',', $same_ip);
 			foreach ($same_ip as $account_id) {
 				//never expire
-				$bannedAccount = SmrAccount::getAccount($account_id);
+				$bannedAccount = Account::getAccount($account_id);
 				$bannedAccount->banAccount(0, $account, BAN_REASON_MULTI, $val);
 				$amount++;
 			}
@@ -38,7 +38,7 @@ class AccountCloseProcessor extends AccountPageProcessor {
 		// Disabling from the "List all IPs for a specific account" page
 		if (Request::has('second')) {
 			//never expire
-			$bannedAccount = SmrAccount::getAccount(Request::getInt('second'));
+			$bannedAccount = Account::getAccount(Request::getInt('second'));
 			$bannedAccount->banAccount(0, $account, BAN_REASON_MULTI, Request::get('reason'));
 			$amount++;
 		}
@@ -55,7 +55,7 @@ class AccountCloseProcessor extends AccountPageProcessor {
 				}
 
 				//never expire
-				$bannedAccount = SmrAccount::getAccount($id);
+				$bannedAccount = Account::getAccount($id);
 				$bannedAccount->banAccount(0, $account, BAN_REASON_MULTI, $reason);
 				$amount++;
 			}

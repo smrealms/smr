@@ -2,10 +2,10 @@
 
 namespace Smr\Page;
 
-use SmrAccount;
+use Smr\Account;
 
 abstract class AccountPageProcessor extends Page {
 
-	abstract public function build(SmrAccount $account): never;
+	abstract public function build(Account $account): never;
 
 }

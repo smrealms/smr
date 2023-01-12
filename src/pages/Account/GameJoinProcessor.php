@@ -2,15 +2,15 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\DisplayNameValidator;
 use Smr\Epoch;
+use Smr\Game;
 use Smr\Page\AccountPageProcessor;
+use Smr\Player;
 use Smr\Request;
-use SmrAccount;
-use SmrAlliance;
-use SmrGame;
-use SmrPlayer;
 
 class GameJoinProcessor extends AccountPageProcessor {
 
@@ -18,13 +18,13 @@ class GameJoinProcessor extends AccountPageProcessor {
 		private readonly int $gameID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$player_name = Request::get('player_name');
 
 		DisplayNameValidator::validate($player_name);
 
 		$gameID = $this->gameID;
-		$game = SmrGame::getGame($gameID);
+		$game = Game::getGame($gameID);
 
 		$race_id = Request::getInt('race_id');
 		if (!in_array($race_id, $game->getPlayableRaceIDs())) {
@@ -39,7 +39,7 @@ class GameJoinProcessor extends AccountPageProcessor {
 		$account->decreaseTotalSmrCredits($creditsNeeded);
 
 		// Decide whether the player should be "newbie" or "vet"
-		if ($game->isGameType(SmrGame::GAME_TYPE_SEMI_WARS)) {
+		if ($game->isGameType(Game::GAME_TYPE_SEMI_WARS)) {
 			$isNewbie = false; // all players considered vet in Semi Wars
 		} else {
 			$isNewbie = !$account->isVeteran();
@@ -53,7 +53,7 @@ class GameJoinProcessor extends AccountPageProcessor {
 		}
 
 		// insert into player table.
-		$player = SmrPlayer::createPlayer($account->getAccountID(), $gameID, $player_name, $race_id, $isNewbie);
+		$player = Player::createPlayer($account->getAccountID(), $gameID, $player_name, $race_id, $isNewbie);
 
 		// Equip the ship
 		$player->getShip()->giveStarterShip();
@@ -75,7 +75,7 @@ class GameJoinProcessor extends AccountPageProcessor {
 
 		if ($isNewbie || $account->getAccountID() == ACCOUNT_ID_NHL) {
 			// If player is a newb (or NHL), set alliance to be Newbie Help Allaince
-			$NHA = SmrAlliance::getAllianceByName(NHA_ALLIANCE_NAME, $gameID);
+			$NHA = Alliance::getAllianceByName(NHA_ALLIANCE_NAME, $gameID);
 			$player->joinAlliance($NHA->getAllianceID());
 
 			//we need to send them some messages
@@ -83,7 +83,7 @@ class GameJoinProcessor extends AccountPageProcessor {
 			For more tips to help you get started with the game, check out your alliance message boards. These can be reached by clicking the "Alliance" link on the left side of the page, and then clicking the "Message Board" menu link. The <u><a href="' . WIKI_URL . '" target="_blank">SMR Wiki</a></u> also gives detailed information on all aspects of the game.<br />
 			SMR is integrated with both IRC and Discord. These are free chat services where you can talk to other players and coordinate with your alliance. Simply click the "Join Chat" link at the bottom left panel of the page.';
 
-			SmrPlayer::sendMessageFromAdmin($gameID, $account->getAccountID(), $message);
+			Player::sendMessageFromAdmin($gameID, $account->getAccountID(), $message);
 		}
 
 		// We aren't in a game yet, so updates are not done automatically here

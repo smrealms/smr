@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Page\AccountPageProcessor;
+use Smr\Player;
 use Smr\Request;
-use SmrAccount;
-use SmrPlayer;
 
 class ManageDraftLeadersProcessor extends AccountPageProcessor {
 
@@ -15,7 +15,7 @@ class ManageDraftLeadersProcessor extends AccountPageProcessor {
 		private readonly int $selectedGameID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$db = Database::getInstance();
 
 		// Get the selected game
@@ -27,7 +27,7 @@ class ManageDraftLeadersProcessor extends AccountPageProcessor {
 		$action = Request::get('submit');
 
 		try {
-			$selectedPlayer = SmrPlayer::getPlayerByPlayerID($playerId, $gameId);
+			$selectedPlayer = Player::getPlayerByPlayerID($playerId, $gameId);
 		} catch (PlayerNotFound $e) {
 			$msg = "<span class='red'>ERROR: </span>" . $e->getMessage();
 			$container = new ManageDraftLeaders($this->selectedGameID, $msg);

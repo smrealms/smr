@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class AnonBankViewSelect extends AccountPage {
 
@@ -14,7 +14,7 @@ class AnonBankViewSelect extends AccountPage {
 		private readonly ?string $message = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		//view anon acct activity.
 		$template->assign('PageTopic', 'View Anonymous Account Info');
 

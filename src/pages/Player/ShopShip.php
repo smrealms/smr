@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\HardwareType;
+use Smr\Location;
 use Smr\Page\PlayerPage;
 use Smr\ShipClass;
+use Smr\ShipType;
 use Smr\Template;
-use SmrLocation;
-use SmrShipType;
 
 class ShopShip extends PlayerPage {
 
@@ -19,8 +19,8 @@ class ShopShip extends PlayerPage {
 		private readonly ?int $shipTypeID = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
-		$location = SmrLocation::getLocation($player->getGameID(), $this->locationID);
+	public function build(AbstractPlayer $player, Template $template): void {
+		$location = Location::getLocation($player->getGameID(), $this->locationID);
 		$template->assign('PageTopic', $location->getName());
 
 		$shipsSold = $location->getShipsSold();
@@ -50,7 +50,7 @@ class ShopShip extends PlayerPage {
 
 		if ($this->shipTypeID !== null) {
 			$ship = $player->getShip();
-			$compareShip = SmrShipType::get($this->shipTypeID);
+			$compareShip = ShipType::get($this->shipTypeID);
 
 			$shipDiffs = [];
 			foreach (HardwareType::getAll() as $hardwareTypeID => $hardware) {

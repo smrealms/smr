@@ -2,15 +2,15 @@
 
 namespace Smr\Pages\Admin;
 
-use DummyShip;
+use Smr\Account;
+use Smr\Combat\Weapon\Weapon;
+use Smr\DummyShip;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
-use SmrWeapon;
 
 class EditDummiesProcessor extends AccountPageProcessor {
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$name = Request::get('dummy_name');
 		$dummyShip = DummyShip::getCachedDummyShip($name);
 		$dummyPlayer = $dummyShip->getPlayer();
@@ -22,7 +22,7 @@ class EditDummiesProcessor extends AccountPageProcessor {
 		$dummyShip->removeAllWeapons();
 		foreach (Request::getIntArray('weapons', []) as $weaponTypeID) {
 			if ($weaponTypeID != 0) {
-				$dummyShip->addWeapon(SmrWeapon::getWeapon($weaponTypeID));
+				$dummyShip->addWeapon(Weapon::getWeapon($weaponTypeID));
 			}
 		}
 		$dummyShip->cacheDummyShip();

@@ -3,10 +3,10 @@
 namespace Smr\Pages\Account;
 
 use Exception;
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class NewsReadAdvancedProcessor extends AccountPageProcessor {
 
@@ -14,7 +14,7 @@ class NewsReadAdvancedProcessor extends AccountPageProcessor {
 		private readonly int $gameID,
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$submit = Request::get('submit');
 
 		$db = Database::getInstance();

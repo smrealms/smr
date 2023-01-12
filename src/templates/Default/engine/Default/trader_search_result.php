@@ -1,9 +1,12 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+use Smr\Player;
+
 /**
  * @param array<array<string, mixed>> $Links
  */
-function DisplayResult(array $Links, SmrPlayer $Player): void { ?>
+function DisplayResult(array $Links, Player $Player): void { ?>
 	<table class="standard" width="88%">
 		<tr>
 			<th>Name</th>

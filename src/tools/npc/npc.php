@@ -1,8 +1,14 @@
 <?php declare(strict_types=1);
 
+use Smr\AbstractPlayer;
+use Smr\Account;
+use Smr\Combat\Weapon\Weapon;
 use Smr\Container\DiContainer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Force;
+use Smr\Galaxy;
+use Smr\Location;
 use Smr\Npc\Exceptions\FinalAction;
 use Smr\Npc\Exceptions\ForwardAction;
 use Smr\Npc\Exceptions\TradeRouteDrained;
@@ -15,9 +21,14 @@ use Smr\Pages\Player\PlotCourseConventionalProcessor;
 use Smr\Pages\Player\PlotCourseNearestProcessor;
 use Smr\Pages\Player\SectorMoveProcessor;
 use Smr\Pages\Player\ShopGoodsProcessor;
+use Smr\Player;
+use Smr\Plotter;
+use Smr\Port;
 use Smr\Race;
 use Smr\Routes\RouteGenerator;
+use Smr\Sector;
 use Smr\SectorLock;
+use Smr\Ship;
 use Smr\TradeGood;
 use Smr\TransactionType;
 
@@ -164,11 +175,11 @@ function npcDriver(): bool {
 }
 
 function clearCaches(): void {
-	SmrSector::clearCache();
-	SmrPlayer::clearCache();
-	SmrShip::clearCache();
-	SmrForce::clearCache();
-	SmrPort::clearCache();
+	Sector::clearCache();
+	Player::clearCache();
+	Ship::clearCache();
+	Force::clearCache();
+	Port::clearCache();
 }
 
 function debug(string $message, mixed $debugObject = null): void {
@@ -198,7 +209,7 @@ function debug(string $message, mixed $debugObject = null): void {
 /**
  * Determines if a player has enough turns to start taking actions
  */
-function checkStartConditions(AbstractSmrPlayer $player): void {
+function checkStartConditions(AbstractPlayer $player): void {
 	$minTurnsThreshold = rand($player->getMaxTurns() / 2, $player->getMaxTurns());
 	if ($player->getTurns() < $minTurnsThreshold && !$player->canFight()) {
 		debug('We don\'t have enough turns to bother starting trading, and we are protected: ' . $player->getTurns());
@@ -298,7 +309,7 @@ function changeNPCLogin(): void {
 	$npc = array_shift($availableNpcs);
 
 	// Update session info for this chosen NPC
-	$account = SmrAccount::getAccount($npc['account_id']);
+	$account = Account::getAccount($npc['account_id']);
 	$session->setAccount($account);
 	$session->updateGame($npc['game_id']);
 
@@ -306,7 +317,7 @@ function changeNPCLogin(): void {
 	debug('Chosen NPC: login = ' . $account->getLogin() . ', game = ' . $session->getGameID() . ', player = ' . $session->getPlayer()->getPlayerName());
 }
 
-function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port): Page {
+function tradeGoods(int $goodID, AbstractPlayer $player, Port $port): Page {
 	sleepNPC(); //We have an extra sleep at port to make the NPC more vulnerable.
 	$ship = $player->getShip();
 	$relations = $player->getRelation($port->getRaceID());
@@ -336,7 +347,7 @@ function tradeGoods(int $goodID, AbstractSmrPlayer $player, SmrPort $port): Page
 	);
 }
 
-function dumpCargo(AbstractSmrPlayer $player): Page {
+function dumpCargo(AbstractPlayer $player): Page {
 	$ship = $player->getShip();
 	$cargo = $ship->getCargo();
 	debug('Ship Cargo', $cargo);
@@ -348,11 +359,11 @@ function dumpCargo(AbstractSmrPlayer $player): Page {
 	throw new Exception('Called dumpCargo without any cargo!');
 }
 
-function plotToSector(AbstractSmrPlayer $player, int $sectorID): Page {
+function plotToSector(AbstractPlayer $player, int $sectorID): Page {
 	return new PlotCourseConventionalProcessor(from: $player->getSectorID(), to: $sectorID);
 }
 
-function plotToFed(AbstractSmrPlayer $player): Page {
+function plotToFed(AbstractPlayer $player): Page {
 	debug('Plotting To Fed');
 
 	// Always drop illegal goods before heading to fed space
@@ -362,7 +373,7 @@ function plotToFed(AbstractSmrPlayer $player): Page {
 	}
 
 	$fedLocID = $player->getRaceID() + LOCATION_GROUP_RACIAL_BEACONS;
-	$container = plotToNearest($player, SmrLocation::getLocation($player->getGameID(), $fedLocID));
+	$container = plotToNearest($player, Location::getLocation($player->getGameID(), $fedLocID));
 	if ($container === false) {
 		debug('Plotted to fed whilst in fed, switch NPC and wait for turns');
 		throw new FinalAction();
@@ -370,7 +381,7 @@ function plotToFed(AbstractSmrPlayer $player): Page {
 	return $container;
 }
 
-function plotToNearest(AbstractSmrPlayer $player, mixed $realX): Page|false {
+function plotToNearest(AbstractPlayer $player, mixed $realX): Page|false {
 	debug('Plotting To: ', $realX); //TODO: Can we make the debug output a bit nicer?
 
 	if ($player->getSector()->hasX($realX)) { //Check if current sector has what we're looking for before we attempt to plot and get error.
@@ -381,12 +392,12 @@ function plotToNearest(AbstractSmrPlayer $player, mixed $realX): Page|false {
 	return new PlotCourseNearestProcessor($realX);
 }
 
-function moveToSector(AbstractSmrPlayer $player, int $targetSector): Page {
+function moveToSector(AbstractPlayer $player, int $targetSector): Page {
 	debug('Moving from #' . $player->getSectorID() . ' to #' . $targetSector);
 	return new SectorMoveProcessor($targetSector, new CurrentSector());
 }
 
-function checkForShipUpgrade(AbstractSmrPlayer $player): void {
+function checkForShipUpgrade(AbstractPlayer $player): void {
 	foreach (SHIP_UPGRADE_PATH[$player->getRaceID()] as $upgradeShipID) {
 		if ($player->getShipTypeID() == $upgradeShipID) {
 			//We can't upgrade, only downgrade.
@@ -403,7 +414,7 @@ function checkForShipUpgrade(AbstractSmrPlayer $player): void {
 	}
 }
 
-function setupShip(AbstractSmrPlayer $player): void {
+function setupShip(AbstractPlayer $player): void {
 	// Upgrade ships if we can
 	checkForShipUpgrade($player);
 
@@ -423,7 +434,7 @@ function setupShip(AbstractSmrPlayer $player): void {
 	];
 	$ship->removeAllWeapons();
 	while ($ship->hasOpenWeaponSlots()) {
-		$weapon = SmrWeapon::getWeapon(array_shift($weaponIDs));
+		$weapon = Weapon::getWeapon(array_shift($weaponIDs));
 		$ship->addWeapon($weapon);
 	}
 
@@ -444,7 +455,7 @@ function setupShip(AbstractSmrPlayer $player): void {
 /**
  * @return array<Smr\Routes\MultiplePortRoute>
  */
-function findRoutes(AbstractSmrPlayer $player): array {
+function findRoutes(AbstractPlayer $player): array {
 	debug('Finding Routes');
 
 	$tradeGoods = [GOODS_NOTHING => false];
@@ -467,7 +478,7 @@ function findRoutes(AbstractSmrPlayer $player): array {
 	// Trade in all Racial/Neutral galaxies up until the first Planet galaxy
 	$galaxies = [];
 	foreach ($player->getGame()->getGalaxies() as $galaxy) {
-		if ($galaxy->getGalaxyType() == SmrGalaxy::TYPE_PLANET) {
+		if ($galaxy->getGalaxyType() == Galaxy::TYPE_PLANET) {
 			break;
 		}
 		$galaxies[] = $galaxy;
@@ -511,8 +522,8 @@ function findRoutes(AbstractSmrPlayer $player): array {
 		$routesMerged += $routesByMulti; //Merge arrays
 	}
 
-	SmrPort::clearCache();
-	SmrSector::clearCache();
+	Port::clearCache();
+	Sector::clearCache();
 
 	if (count($routesMerged) == 0) {
 		debug('Could not find any routes! Try another NPC.');

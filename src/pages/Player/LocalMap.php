@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
 use Exception;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Request;
@@ -15,7 +15,7 @@ class LocalMap extends PlayerPage {
 
 	public string $file = 'map_local.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		if ($player->isLandedOnPlanet()) {
 			create_error('You are on a planet!');
 		}

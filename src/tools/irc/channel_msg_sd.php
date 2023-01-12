@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\AbstractPlayer;
 use Smr\Irc\Message;
 
 /**
@@ -103,7 +104,7 @@ function channel_msg_sd_del($fp, Message $msg): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_sd_list($fp, Message $msg, AbstractSmrPlayer $player): bool {
+function channel_msg_sd_list($fp, Message $msg, AbstractPlayer $player): bool {
 
 	if ($msg->text == '!sd list') {
 

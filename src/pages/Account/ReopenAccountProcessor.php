@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Page\AccountPageProcessor;
-use SmrAccount;
 
 class ReopenAccountProcessor extends AccountPageProcessor {
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		// The user has requested to reopen their account
 		$account->unbanAccount($account);
 

@@ -2,15 +2,15 @@
 
 namespace Smr\Pages\Player\Bank;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Session;
 use Smr\Template;
-use SmrAlliance;
-use SmrPlayer;
 
 class AllianceBank extends PlayerPage {
 
@@ -20,7 +20,7 @@ class AllianceBank extends PlayerPage {
 		private readonly int $allianceID,
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$session = Session::getInstance();
 
 		// is account validated?
@@ -30,7 +30,7 @@ class AllianceBank extends PlayerPage {
 
 		$allianceID = $this->allianceID;
 
-		$alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
+		$alliance = Alliance::getAlliance($allianceID, $player->getGameID());
 		$template->assign('PageTopic', 'Bank');
 
 		Menu::bank();
@@ -41,8 +41,8 @@ class AllianceBank extends PlayerPage {
 					AND aa_access = 1 AND official = \'TRUE\'');
 		$alliedAllianceBanks = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$alliedAllianceBanks[$dbRecord->getInt('alliance_id_2')] = SmrAlliance::getAlliance($dbRecord->getInt('alliance_id_2'), $alliance->getGameID());
-			$alliedAllianceBanks[$dbRecord->getInt('alliance_id_1')] = SmrAlliance::getAlliance($dbRecord->getInt('alliance_id_1'), $alliance->getGameID());
+			$alliedAllianceBanks[$dbRecord->getInt('alliance_id_2')] = Alliance::getAlliance($dbRecord->getInt('alliance_id_2'), $alliance->getGameID());
+			$alliedAllianceBanks[$dbRecord->getInt('alliance_id_1')] = Alliance::getAlliance($dbRecord->getInt('alliance_id_1'), $alliance->getGameID());
 		}
 		$template->assign('AlliedAllianceBanks', $alliedAllianceBanks);
 
@@ -111,7 +111,7 @@ class AllianceBank extends PlayerPage {
 				$trans = $dbRecord->getString('transaction');
 				$bankTransactions[$dbRecord->getInt('transaction_id')] = [
 					'Time' => $dbRecord->getInt('time'),
-					'Player' => SmrPlayer::getPlayer($dbRecord->getInt('payee_id'), $player->getGameID()),
+					'Player' => Player::getPlayer($dbRecord->getInt('payee_id'), $player->getGameID()),
 					'Reason' => $dbRecord->getString('reason'),
 					'TransactionType' => $trans,
 					'Withdrawal' => $trans == 'Payment' ? number_format($dbRecord->getInt('amount')) : '',

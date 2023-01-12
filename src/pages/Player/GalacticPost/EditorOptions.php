@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use AbstractSmrPlayer;
 use Exception;
-use Menu;
+use Smr\AbstractPlayer;
 use Smr\Database;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Template;
 
@@ -13,7 +13,7 @@ class EditorOptions extends PlayerPage {
 
 	public string $file = 'galactic_post.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		if (!$player->isGPEditor()) {
 			throw new Exception('Only the GP Editor is allowed to view this page!');
 		}

@@ -1,12 +1,15 @@
 <?php declare(strict_types=1);
 
+use Smr\Council;
+use Smr\Player;
+
 ?>
 <div class="center">
 	<a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
 	<h3>President</h3><br/><?php
 	$PresidentID = Council::getPresidentID($ThisPlayer->getGameID(), $RaceID);
 	if ($PresidentID !== false) {
-		$President = SmrPlayer::getPlayer($PresidentID, $ThisPlayer->getGameID()); ?>
+		$President = Player::getPlayer($PresidentID, $ThisPlayer->getGameID()); ?>
 		<table class="center standard" width="75%">
 			<thead>
 				<tr>
@@ -47,7 +50,7 @@
 			</thead>
 			<tbody class="list"><?php
 				foreach ($CouncilMembers as $Ranking => $AccountID) {
-					$CouncilPlayer = SmrPlayer::getPlayer($AccountID, $ThisPlayer->getGameID()); ?>
+					$CouncilPlayer = Player::getPlayer($AccountID, $ThisPlayer->getGameID()); ?>
 					<tr id="player-<?php echo $CouncilPlayer->getPlayerID(); ?>" class="ajax<?php if ($ThisPlayer->equals($CouncilPlayer)) { ?> bold<?php } ?>">
 						<td><?php echo $Ranking; ?></td>
 						<td class="sort_name left" data-name="<?php echo htmlentities($CouncilPlayer->getPlayerName()); ?>"><?php echo $CouncilPlayer->getLevelName(); ?> <?php echo $CouncilPlayer->getLinkedDisplayName(false); ?></td>

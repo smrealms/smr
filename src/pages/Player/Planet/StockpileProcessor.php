@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player\Planet;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Planet;
 use Smr\Request;
 use Smr\TradeGood;
-use SmrPlanet;
 
 class StockpileProcessor extends PlayerPageProcessor {
 
@@ -14,7 +14,7 @@ class StockpileProcessor extends PlayerPageProcessor {
 		private readonly int $goodID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$ship = $player->getShip();
 
 		if (!$player->isLandedOnPlanet()) {
@@ -59,7 +59,7 @@ class StockpileProcessor extends PlayerPageProcessor {
 
 			// do we want to transfer more than the planet can hold?
 			if ($amount > $planet->getRemainingStockpile($goodID)) {
-				create_error('This planet cannot store more than ' . SmrPlanet::MAX_STOCKPILE . ' of each good!');
+				create_error('This planet cannot store more than ' . Planet::MAX_STOCKPILE . ' of each good!');
 			}
 
 			// now transfer

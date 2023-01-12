@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAccount;
 
 class ChangelogView extends AccountPage {
 
@@ -18,7 +18,7 @@ class ChangelogView extends AccountPage {
 		private readonly ?int $lastLogin = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Change Log');
 
 		if ($this->lastLogin !== null) {

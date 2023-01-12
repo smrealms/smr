@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
 use Exception;
+use Smr\AbstractPlayer;
+use Smr\Game;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
-use SmrGame;
-use SmrPlayer;
 
 class AllianceRemoveMemberProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$accountIDs = Request::getIntArray('account_id', []);
 
 		if (empty($accountIDs)) {
@@ -27,14 +27,14 @@ class AllianceRemoveMemberProcessor extends PlayerPageProcessor {
 		}
 
 		foreach ($accountIDs as $accountID) {
-			$currPlayer = SmrPlayer::getPlayer($accountID, $player->getGameID());
+			$currPlayer = Player::getPlayer($accountID, $player->getGameID());
 			if (!$player->sameAlliance($currPlayer)) {
 				throw new Exception('Cannot kick someone from another alliance!');
 			}
 			$currPlayer->leaveAlliance($player);
 
 			// In Draft games, banish the player to sector 1
-			if ($player->getGame()->isGameType(SmrGame::GAME_TYPE_DRAFT)) {
+			if ($player->getGame()->isGameType(Game::GAME_TYPE_DRAFT)) {
 				$currPlayer->setSectorID(1);
 				$currPlayer->setNewbieTurns(max(1, $currPlayer->getNewbieTurns()));
 				$currPlayer->setLandedOnPlanet(false);

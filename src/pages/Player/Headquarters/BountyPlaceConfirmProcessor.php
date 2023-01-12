@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player\Headquarters;
 
-use AbstractSmrPlayer;
 use Exception;
+use Smr\AbstractPlayer;
 use Smr\BountyType;
+use Smr\Location;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
-use SmrLocation;
-use SmrPlayer;
 
 class BountyPlaceConfirmProcessor extends PlayerPageProcessor {
 
@@ -19,12 +19,12 @@ class BountyPlaceConfirmProcessor extends PlayerPageProcessor {
 		private readonly int $smrCredits
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		if (!$player->getSector()->hasLocation($this->locationID)) {
 			create_error('That location does not exist in this sector');
 		}
 
-		$location = SmrLocation::getLocation($player->getGameID(), $this->locationID);
+		$location = Location::getLocation($player->getGameID(), $this->locationID);
 
 		[$type, $body] = match (true) {
 			$location->isHQ() => [BountyType::HQ, Government::class],
@@ -51,7 +51,7 @@ class BountyPlaceConfirmProcessor extends PlayerPageProcessor {
 		$player->increaseHOF($amount, ['Bounties', 'Placed', 'Money'], HOF_PUBLIC);
 		$player->increaseHOF(1, ['Bounties', 'Placed', 'Number'], HOF_PUBLIC);
 
-		$placed = SmrPlayer::getPlayer($account_id, $player->getGameID());
+		$placed = Player::getPlayer($account_id, $player->getGameID());
 		$bounty = $placed->getActiveBounty($type);
 		$bounty->increaseCredits($amount);
 		$bounty->increaseSmrCredits($smrCredits);

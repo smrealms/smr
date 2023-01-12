@@ -2,10 +2,10 @@
 
 namespace Smr\Page;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 
 abstract class PlayerPageProcessor extends Page {
 
-	abstract public function build(AbstractSmrPlayer $player): never;
+	abstract public function build(AbstractPlayer $player): never;
 
 }

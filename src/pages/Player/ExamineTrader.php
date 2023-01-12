@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
-use SmrPlayer;
 
 class ExamineTrader extends PlayerPage {
 
@@ -15,9 +15,9 @@ class ExamineTrader extends PlayerPage {
 		private readonly int $targetAccountID
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		// Get the player we're attacking
-		$targetPlayer = SmrPlayer::getPlayer($this->targetAccountID, $player->getGameID());
+		$targetPlayer = Player::getPlayer($this->targetAccountID, $player->getGameID());
 
 		if ($targetPlayer->isDead()) {
 			$msg = '<span class="red bold">ERROR:</span> Target already dead.';

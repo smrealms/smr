@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
-use SmrPort;
+use Smr\Port;
 
 class AllianceShareMapsProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		// get a list of alliance member (remove current player)
 		$memberIDs = $player->getAlliance()->getMemberIDs();
 		$alliance_ids = array_diff($memberIDs, [$player->getAccountID()]);
@@ -38,7 +38,7 @@ class AllianceShareMapsProcessor extends PlayerPageProcessor {
 		// get a list of all visited ports
 		$dbResult = $db->read('SELECT sector_id FROM player_visited_port WHERE ' . $player->getSQL());
 		foreach ($dbResult->records() as $dbRecord) {
-			$cachedPort = SmrPort::getCachedPort($player->getGameID(), $dbRecord->getInt('sector_id'), $player->getAccountID());
+			$cachedPort = Port::getCachedPort($player->getGameID(), $dbRecord->getInt('sector_id'), $player->getAccountID());
 			$cachedPort->addCachePorts($alliance_ids);
 		}
 

@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAccount;
 
 class Changelog extends AccountPage {
 
@@ -20,7 +20,7 @@ class Changelog extends AccountPage {
 		private readonly string $affectedDb = ''
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Change Log');
 
 		$template->assign('ChangeTitle', $this->changeTitle);

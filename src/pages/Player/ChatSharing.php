@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
+use Smr\Account;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
-use SmrAccount;
-use SmrPlayer;
 
 class ChatSharing extends PlayerPage {
 
@@ -18,7 +18,7 @@ class ChatSharing extends PlayerPage {
 		private readonly ?string $message = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Chat Sharing Settings');
 
 		$template->assign('Message', $this->message);
@@ -30,7 +30,7 @@ class ChatSharing extends PlayerPage {
 			$fromAccountId = $dbRecord->getInt('from_account_id');
 			$gameId = $dbRecord->getInt('game_id');
 			try {
-				$otherPlayer = SmrPlayer::getPlayer($fromAccountId, $player->getGameID());
+				$otherPlayer = Player::getPlayer($fromAccountId, $player->getGameID());
 			} catch (PlayerNotFound) {
 				// Player has not joined this game yet
 				$otherPlayer = null;
@@ -38,7 +38,7 @@ class ChatSharing extends PlayerPage {
 			$shareFrom[$fromAccountId] = [
 				'Player ID' => $otherPlayer == null ? '-' : $otherPlayer->getPlayerID(),
 				'Player Name' => $otherPlayer == null ?
-				                 '<b>Account</b>: ' . SmrAccount::getAccount($fromAccountId)->getHofDisplayName() :
+				                 '<b>Account</b>: ' . Account::getAccount($fromAccountId)->getHofDisplayName() :
 				                 $otherPlayer->getDisplayName(),
 				'All Games' => $gameId == 0 ? '<span class="green">YES</span>' : '<span class="red">NO</span>',
 				'Game ID' => $gameId,
@@ -51,7 +51,7 @@ class ChatSharing extends PlayerPage {
 			$gameId = $dbRecord->getInt('game_id');
 			$toAccountId = $dbRecord->getInt('to_account_id');
 			try {
-				$otherPlayer = SmrPlayer::getPlayer($toAccountId, $player->getGameID());
+				$otherPlayer = Player::getPlayer($toAccountId, $player->getGameID());
 			} catch (PlayerNotFound) {
 				// Player has not joined this game yet
 				$otherPlayer = null;
@@ -59,7 +59,7 @@ class ChatSharing extends PlayerPage {
 			$shareTo[$toAccountId] = [
 				'Player ID' => $otherPlayer == null ? '-' : $otherPlayer->getPlayerID(),
 				'Player Name' => $otherPlayer == null ?
-				                 '<b>Account</b>: ' . SmrAccount::getAccount($toAccountId)->getHofDisplayName() :
+				                 '<b>Account</b>: ' . Account::getAccount($toAccountId)->getHofDisplayName() :
 				                 $otherPlayer->getDisplayName(),
 				'All Games' => $gameId == 0 ? '<span class="green">YES</span>' : '<span class="red">NO</span>',
 				'Game ID' => $gameId,

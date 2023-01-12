@@ -2,7 +2,6 @@
 
 namespace Smr;
 
-use AbstractSmrPlayer;
 use Exception;
 use Smr\Container\DiContainer;
 use Smr\Exceptions\UserError;
@@ -45,7 +44,7 @@ class SectorLock {
 	/**
 	 * Convenience wrapper to acquire a lock for the player in their current sector.
 	 */
-	public function acquireForPlayer(AbstractSmrPlayer $player): bool {
+	public function acquireForPlayer(AbstractPlayer $player): bool {
 		return $this->acquire($player->getGameID(), $player->getAccountID(), $player->getSectorID());
 	}
 

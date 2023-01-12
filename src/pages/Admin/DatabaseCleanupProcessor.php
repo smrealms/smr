@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\AccountPageProcessor;
-use SmrAccount;
 
 class DatabaseCleanupProcessor extends AccountPageProcessor {
 
@@ -13,7 +13,7 @@ class DatabaseCleanupProcessor extends AccountPageProcessor {
 		private readonly string $action
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		// Get initial storage size
 		$db = Database::getInstance();
 		$initialBytes = $db->getDbBytes();

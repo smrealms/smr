@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Location;
+use Smr\Port;
+
 ?>
 <a href="<?php echo $CancelHREF; ?>">&lt;&lt; Back</a><br /><br />
 <form method="POST" action="<?php echo $EditHREF; ?>">
@@ -19,7 +22,7 @@
 	<h2>Port</h2>
 	<select name="port_level">
 		<option value="0">No Port</option><?php
-		$MaxPortLevel = SmrPort::getMaxLevelByGame($EditSector->getGameID());
+		$MaxPortLevel = Port::getMaxLevelByGame($EditSector->getGameID());
 		for ($i = 1; $i <= $MaxPortLevel; $i++) { ?>
 			<option value="<?php echo $i; ?>" <?php echo ($i == $SelectedPortLevel ? 'selected' : ''); ?>>Level <?php echo $i; ?></option><?php
 		} ?>
@@ -75,7 +78,7 @@
 					<b><?php echo ($i + 1); ?>. </b>
 					<select name="loc_type<?php echo $i; ?>">
 						<option value="0">No Location</option><?php
-						foreach (SmrLocation::getAllLocations($EditSector->getGameID()) as $id => $location) { ?>
+						foreach (Location::getAllLocations($EditSector->getGameID()) as $id => $location) { ?>
 							<option value="<?php echo $id ?>" <?php echo ($id == $SectorLocationIDs[$i] ? 'selected' : ''); ?>><?php echo $location->getName(); ?></option><?php
 						} ?>
 					</select>

@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\PlanetStructureType;
+
 foreach ($TraderTeamCombatResults['Traders'] as $TraderResults) {
 	$ShootingPlayer = $TraderResults['Player'];
 	$TotalDamage = $TraderResults['TotalDamage'];
@@ -136,5 +138,5 @@ foreach ($TraderTeamCombatResults['Traders'] as $TraderResults) {
 $TotalDamage = $TraderTeamCombatResults['TotalDamage']; ?>
 This fleet <?php if ($TotalDamage > 0) { ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php } else { ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.<br /><?php
 foreach ($TraderTeamCombatResults['Downgrades'] as $structureID => $numDestroyed) { ?>
-	This team destroys <span class="red"><?php echo pluralise($numDestroyed, (new SmrPlanetStructureType($structureID, []))->name()); ?></span>.<br /><?php
+	This team destroys <span class="red"><?php echo pluralise($numDestroyed, (new PlanetStructureType($structureID, []))->name()); ?></span>.<br /><?php
 }

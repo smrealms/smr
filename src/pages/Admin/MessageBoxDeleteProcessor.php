@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class MessageBoxDeleteProcessor extends AccountPageProcessor {
 
@@ -13,7 +13,7 @@ class MessageBoxDeleteProcessor extends AccountPageProcessor {
 		private readonly int $boxTypeID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$db = Database::getInstance();
 
 		$action = Request::get('action');

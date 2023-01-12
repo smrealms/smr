@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\SectorLock;
-use SmrPlayer;
 
 class AttackPlayerProcessor extends PlayerPageProcessor {
 
@@ -15,7 +15,7 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 		private readonly int $targetAccountID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$account = $player->getAccount();
 		$sector = $player->getSector();
 
@@ -35,7 +35,7 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 			create_error('You are not allowed to fight!');
 		}
 
-		$targetPlayer = SmrPlayer::getPlayer($this->targetAccountID, $player->getGameID());
+		$targetPlayer = Player::getPlayer($this->targetAccountID, $player->getGameID());
 
 		if ($player->traderNAPAlliance($targetPlayer)) {
 			create_error('Your alliance does not allow you to attack this trader.');
@@ -69,7 +69,7 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 		$player->update();
 
 		/**
-		 * @param array<string, array<int, AbstractSmrPlayer>> $fightingPlayers
+		 * @param array<string, array<int, AbstractPlayer>> $fightingPlayers
 		 * @return array<string, mixed>
 		 */
 		$teamAttack = function(array $fightingPlayers, string $attack, string $defend): array {

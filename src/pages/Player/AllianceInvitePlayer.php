@@ -2,20 +2,20 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\AllianceInvite;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
-use SmrInvitation;
-use SmrPlayer;
 
 class AllianceInvitePlayer extends PlayerPage {
 
 	public string $file = 'alliance_invite_player.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$alliance = $player->getAlliance();
 		$game = $player->getGame();
 
@@ -24,7 +24,7 @@ class AllianceInvitePlayer extends PlayerPage {
 
 		// Get list of pending invitations
 		$pendingInvites = [];
-		foreach (SmrInvitation::getAll($player->getAllianceID(), $player->getGameID()) as $invite) {
+		foreach (AllianceInvite::getAll($player->getAllianceID(), $player->getGameID()) as $invite) {
 			$container = new AllianceInviteCancelProcessor($invite);
 
 			$invited = $invite->getReceiver();
@@ -48,7 +48,7 @@ class AllianceInvitePlayer extends PlayerPage {
 			              AND npc = ' . $db->escapeBoolean(false) . '
 			            ORDER BY player_id DESC');
 			foreach ($dbResult->records() as $dbRecord) {
-				$invitePlayer = SmrPlayer::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
+				$invitePlayer = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 				if (array_key_exists($invitePlayer->getAccountID(), $pendingInvites)) {
 					// Don't display players we've already invited
 					continue;

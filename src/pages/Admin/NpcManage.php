@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Game;
 use Smr\Page\AccountPage;
+use Smr\Player;
 use Smr\Template;
-use SmrAccount;
-use SmrGame;
-use SmrPlayer;
 
 class NpcManage extends AccountPage {
 
@@ -18,7 +18,7 @@ class NpcManage extends AccountPage {
 		private readonly ?int $selectedGameID = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Manage NPCs');
 
 		$selectedGameID = $this->selectedGameID;
@@ -35,7 +35,7 @@ class NpcManage extends AccountPage {
 				$selectedGameID = $gameID;
 			}
 			$games[] = [
-				'Name' => SmrGame::getGame($gameID)->getDisplayName(),
+				'Name' => Game::getGame($gameID)->getDisplayName(),
 				'ID' => $gameID,
 				'Selected' => $gameID == $selectedGameID,
 			];
@@ -76,7 +76,7 @@ class NpcManage extends AccountPage {
 		$dbResult = $db->read('SELECT * FROM player WHERE game_id=' . $db->escapeNumber($selectedGameID) . ' AND npc=' . $db->escapeBoolean(true));
 		foreach ($dbResult->records() as $dbRecord) {
 			$accountID = $dbRecord->getInt('account_id');
-			$npcs[$accountID]['player'] = SmrPlayer::getPlayer($accountID, $selectedGameID, false, $dbRecord);
+			$npcs[$accountID]['player'] = Player::getPlayer($accountID, $selectedGameID, false, $dbRecord);
 		}
 
 		$template->assign('Npcs', $npcs);

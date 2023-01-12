@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Exceptions\AllianceNotFound;
+use Smr\Game;
 use Smr\Page\AccountPageProcessor;
+use Smr\Player;
 use Smr\Request;
-use SmrAccount;
-use SmrAlliance;
-use SmrGame;
-use SmrPlayer;
 
 class NpcManageProcessor extends AccountPageProcessor {
 
@@ -19,7 +19,7 @@ class NpcManageProcessor extends AccountPageProcessor {
 		private readonly string $login
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$db = Database::getInstance();
 
 		// Change active status of an NPC
@@ -35,11 +35,11 @@ class NpcManageProcessor extends AccountPageProcessor {
 			$gameID = $this->selectedGameID;
 			$playerName = Request::get('player_name');
 			$raceID = Request::getInt('race_id');
-			$npcPlayer = SmrPlayer::createPlayer($accountID, $gameID, $playerName, $raceID, false, true);
+			$npcPlayer = Player::createPlayer($accountID, $gameID, $playerName, $raceID, false, true);
 
 			$npcPlayer->getShip()->setHardwareToMax();
 			$npcPlayer->giveStartingTurns();
-			$npcPlayer->setCredits(SmrGame::getGame($gameID)->getStartingCredits());
+			$npcPlayer->setCredits(Game::getGame($gameID)->getStartingCredits());
 
 			// Prevent them from triggering the newbie warning page
 			$npcPlayer->setNewbieWarning(false);
@@ -49,9 +49,9 @@ class NpcManageProcessor extends AccountPageProcessor {
 
 			$allianceName = Request::get('player_alliance');
 			try {
-				$alliance = SmrAlliance::getAllianceByName($allianceName, $gameID);
+				$alliance = Alliance::getAllianceByName($allianceName, $gameID);
 			} catch (AllianceNotFound) {
-				$alliance = SmrAlliance::createAlliance($gameID, $allianceName);
+				$alliance = Alliance::createAlliance($gameID, $allianceName);
 				$alliance->setLeaderID($npcPlayer->getAccountID());
 				$alliance->update();
 				$alliance->createDefaultRoles();

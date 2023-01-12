@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player\Council;
 
-use AbstractSmrPlayer;
-use Council;
+use Smr\AbstractPlayer;
+use Smr\Council;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
-use SmrPlayer;
 
 class EmbassyProcessor extends PlayerPageProcessor {
 
@@ -16,7 +16,7 @@ class EmbassyProcessor extends PlayerPageProcessor {
 		private readonly int $otherRaceID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		if (!$player->isPresident()) {
 			create_error('Only the president can view the embassy.');
 		}
@@ -80,7 +80,7 @@ class EmbassyProcessor extends PlayerPageProcessor {
 		foreach ($councilMembers as $accountID) {
 			// don't send to the player who started the vote
 			if ($player->getAccountID() != $accountID) {
-				SmrPlayer::sendMessageFromRace($player->getRaceID(), $player->getGameID(), $accountID, $message, $time);
+				Player::sendMessageFromRace($player->getRaceID(), $player->getGameID(), $accountID, $message, $time);
 			}
 		}
 

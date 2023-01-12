@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
-use Plotter;
+use Smr\Account;
+use Smr\Game;
+use Smr\Location;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
+use Smr\Plotter;
 use Smr\Race;
 use Smr\Routes\RouteGenerator;
 use Smr\Template;
 use Smr\TradeGood;
-use SmrAccount;
-use SmrGame;
-use SmrLocation;
 
 class CheckMap extends AccountPage {
 
@@ -24,8 +24,8 @@ class CheckMap extends AccountPage {
 		private readonly int $galaxyID
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
-		$game = SmrGame::getGame($this->gameID);
+	public function build(Account $account, Template $template): void {
+		$game = Game::getGame($this->gameID);
 		$template->assign('PageTopic', 'Check Map : ' . $game->getDisplayName());
 
 		$container = new EditGalaxy($this->gameID, $this->galaxyID);
@@ -43,12 +43,12 @@ class CheckMap extends AccountPage {
 			}
 		}
 		$missingLocs = array_diff(
-			array_keys(SmrLocation::getAllLocations($this->gameID)),
+			array_keys(Location::getAllLocations($this->gameID)),
 			array_keys($existingLocs)
 		);
 		$missingLocNames = [];
 		foreach ($missingLocs as $locID) {
-			$missingLocNames[] = SmrLocation::getLocation($this->gameID, $locID)->getName();
+			$missingLocNames[] = Location::getLocation($this->gameID, $locID)->getName();
 		}
 		$template->assign('MissingLocNames', $missingLocNames);
 

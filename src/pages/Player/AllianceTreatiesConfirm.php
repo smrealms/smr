@@ -2,20 +2,20 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Request;
 use Smr\Template;
-use SmrAlliance;
-use SmrTreaty;
+use Smr\Treaty;
 
 class AllianceTreatiesConfirm extends PlayerPage {
 
 	public string $file = 'alliance_treaties_confirm.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$alliance_id_1 = $player->getAllianceID();
 		$alliance_id_2 = Request::getInt('proposedAlliance');
 
@@ -27,8 +27,8 @@ class AllianceTreatiesConfirm extends PlayerPage {
 			$container->go();
 		}
 
-		$alliance1 = SmrAlliance::getAlliance($alliance_id_1, $player->getGameID());
-		$alliance2 = SmrAlliance::getAlliance($alliance_id_2, $player->getGameID());
+		$alliance1 = Alliance::getAlliance($alliance_id_1, $player->getGameID());
+		$alliance2 = Alliance::getAlliance($alliance_id_2, $player->getGameID());
 		$template->assign('AllianceName', $alliance2->getAllianceDisplayName());
 
 		$template->assign('PageTopic', 'Alliance Treaty Confirmation');
@@ -36,7 +36,7 @@ class AllianceTreatiesConfirm extends PlayerPage {
 
 		// Get the terms selected for this offer
 		$terms = [];
-		foreach (array_keys(SmrTreaty::TYPES) as $type) {
+		foreach (array_keys(Treaty::TYPES) as $type) {
 			$terms[$type] = Request::has($type);
 		}
 		// A few terms get added automatically if a more restrictive term has

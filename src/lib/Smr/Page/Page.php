@@ -2,7 +2,7 @@
 
 namespace Smr\Page;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Session;
 use Smr\Template;
 
@@ -45,7 +45,7 @@ class Page {
 	 * Determine if we should show the player that they are under attack,
 	 * since it needs to persist across ajax updates.
 	 */
-	public function showUnderAttack(AbstractSmrPlayer $player, bool $ajax): bool {
+	public function showUnderAttack(AbstractPlayer $player, bool $ajax): bool {
 		// Only ever change the stored value from false -> true so that the under
 		// attack warning persists for the lifetime of this Page.
 		if ($player->isUnderAttack()) {

@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class Validate extends AccountPage {
 
@@ -14,7 +14,7 @@ class Validate extends AccountPage {
 		private readonly ?string $message = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('Message', $this->message);
 		$template->assign('PageTopic', 'Validation Reminder');
 		$template->assign('ValidateFormHref', (new ValidateProcessor())->href());

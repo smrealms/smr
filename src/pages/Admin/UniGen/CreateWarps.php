@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Account;
 use Smr\Database;
+use Smr\Galaxy;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
+use Smr\Sector;
 use Smr\Template;
-use SmrAccount;
-use SmrGalaxy;
-use SmrSector;
 
 class CreateWarps extends AccountPage {
 
@@ -22,13 +22,13 @@ class CreateWarps extends AccountPage {
 		private readonly ?string $message = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$db = Database::getInstance();
 
 		$template->assign('Message', $this->message);
 
-		$galaxies = SmrGalaxy::getGameGalaxies($this->gameID);
-		$galaxy = SmrGalaxy::getGalaxy($this->gameID, $this->galaxyID);
+		$galaxies = Galaxy::getGameGalaxies($this->gameID);
+		$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 
 		$template->assign('PageTopic', 'Warps for Galaxy : ' . $galaxy->getDisplayName() . ' (' . $galaxy->getGalaxyID() . ')');
 
@@ -44,8 +44,8 @@ class CreateWarps extends AccountPage {
 		//get totals
 		$dbResult = $db->read('SELECT sector_id, warp FROM sector WHERE warp != 0 AND game_id=' . $db->escapeNumber($this->gameID));
 		foreach ($dbResult->records() as $dbRecord) {
-			$warp1 = SmrSector::getSector($this->gameID, $dbRecord->getInt('sector_id'));
-			$warp2 = SmrSector::getSector($this->gameID, $dbRecord->getInt('warp'));
+			$warp1 = Sector::getSector($this->gameID, $dbRecord->getInt('sector_id'));
+			$warp2 = Sector::getSector($this->gameID, $dbRecord->getInt('warp'));
 			if ($warp1->getGalaxyID() == $warp2->getGalaxyID()) {
 				// For warps within the same galaxy, even though there will be two
 				// sectors with warps, we still consider this as "one warp" (pair).

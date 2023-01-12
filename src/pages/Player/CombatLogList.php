@@ -2,15 +2,15 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Globals;
-use Menu;
+use Smr\AbstractPlayer;
 use Smr\CombatLogType;
 use Smr\Database;
+use Smr\Globals;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
-use SmrPlayer;
 
 class CombatLogList extends PlayerPage {
 
@@ -24,7 +24,7 @@ class CombatLogList extends PlayerPage {
 		private readonly ?string $message = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$db = Database::getInstance();
 
 		$template->assign('PageTopic', 'Combat Logs');
@@ -72,7 +72,7 @@ class CombatLogList extends PlayerPage {
 			if ($accountID == ACCOUNT_ID_PLANET) {
 				return '<span class="yellow">Planetary Defenses</span>';
 			}
-			return SmrPlayer::getPlayer($accountID, $player->getGameID())->getLinkedDisplayName(false);
+			return Player::getPlayer($accountID, $player->getGameID())->getLinkedDisplayName(false);
 		};
 
 		// For display purposes, describe the type of log

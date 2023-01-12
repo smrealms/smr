@@ -4,9 +4,6 @@ namespace Smr;
 
 use Smr\Pages\Account\HallOfFameAll;
 use Smr\Pages\Account\HallOfFamePersonal;
-use SmrAccount;
-use SmrGame;
-use SmrPlayer;
 
 /**
  * Collection of functions to help display the Hall of Fame tables.
@@ -29,7 +26,7 @@ class HallOfFame {
 
 		$categories = [];
 		$subcategories = [];
-		foreach (SmrPlayer::getHOFVis() as $hofType => $hofVis) {
+		foreach (Player::getHOFVis() as $hofType => $hofVis) {
 			if (!in_array($hofVis, $allowedVis)) {
 				// Not allowed to view
 				continue;
@@ -94,8 +91,8 @@ class HallOfFame {
 		$account = $session->getAccount();
 		if (($vis == HOF_PRIVATE && $account->getAccountID() != $accountID) ||
 		    ($vis == HOF_ALLIANCE && isset($gameID) &&
-		     !SmrGame::getGame($gameID)->hasEnded() &&
-		     !SmrPlayer::getPlayer($accountID, $gameID)->sameAlliance($session->getPlayer()))) {
+		     !Game::getGame($gameID)->hasEnded() &&
+		     !Player::getPlayer($accountID, $gameID)->sameAlliance($session->getPlayer()))) {
 			return '-';
 		}
 		return $amount;
@@ -113,10 +110,10 @@ class HallOfFame {
 		if ($viewType == HOF_TYPE_DONATION) {
 			$dbResult = $db->read('SELECT IFNULL(SUM(amount), 0) as amount FROM account_donated WHERE account_id=' . $db->escapeNumber($accountID));
 		} elseif ($viewType == HOF_TYPE_USER_SCORE) {
-			$statements = SmrAccount::getUserScoreCaseStatement($db);
+			$statements = Account::getUserScoreCaseStatement($db);
 			$dbResult = $db->read('SELECT ' . $statements['CASE'] . ' amount FROM (SELECT type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ') AND account_id=' . $db->escapeNumber($accountID) . $gameIDSql . ' GROUP BY account_id,type) x');
 		} else {
-			$hofVis = SmrPlayer::getHOFVis();
+			$hofVis = Player::getHOFVis();
 			if (!isset($hofVis[$viewType])) {
 				return $rank;
 			}
@@ -124,13 +121,13 @@ class HallOfFame {
 		}
 
 		$realAmount = $dbResult->record()->getFloat('amount');
-		$vis = SmrPlayer::getHOFVis()[$viewType];
+		$vis = Player::getHOFVis()[$viewType];
 		$rank['Amount'] = self::applyHofVisibilityMask($realAmount, $vis, $gameID, $accountID);
 
 		if ($viewType == HOF_TYPE_DONATION) {
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM account_donated GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($rank['Amount']) . ') x');
 		} elseif ($viewType == HOF_TYPE_USER_SCORE) {
-			$statements = SmrAccount::getUserScoreCaseStatement($db);
+			$statements = Account::getUserScoreCaseStatement($db);
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id HAVING ' . $statements['CASE'] . '>' . $db->escapeNumber($rank['Amount']) . ') x');
 		} else {
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type=' . $db->escapeString($viewType) . $gameIDSql . ' GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($realAmount) . ') x');
@@ -143,14 +140,14 @@ class HallOfFame {
 
 	public static function displayHOFRow(int $rank, int $accountID, ?int $gameID, float|string $amount): string {
 		$account = Session::getInstance()->getAccount();
-		if ($gameID !== null && SmrGame::gameExists($gameID)) {
+		if ($gameID !== null && Game::gameExists($gameID)) {
 			try {
-				$hofPlayer = SmrPlayer::getPlayer($accountID, $gameID);
+				$hofPlayer = Player::getPlayer($accountID, $gameID);
 			} catch (Exceptions\PlayerNotFound) {
-				$hofAccount = SmrAccount::getAccount($accountID);
+				$hofAccount = Account::getAccount($accountID);
 			}
 		} else {
-			$hofAccount = SmrAccount::getAccount($accountID);
+			$hofAccount = Account::getAccount($accountID);
 		}
 		$bold = '';
 		if ($accountID == $account->getAccountID()) {

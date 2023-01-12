@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Globals;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Globals;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
-use SmrAlliance;
-use SmrPlayer;
 
 class AllianceMessageBoardView extends PlayerPage {
 
@@ -33,10 +33,10 @@ class AllianceMessageBoardView extends PlayerPage {
 		public ?string $preview = null,
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$allianceID = $this->allianceID;
 
-		$alliance = SmrAlliance::getAlliance($allianceID, $player->getGameID());
+		$alliance = Alliance::getAlliance($allianceID, $player->getGameID());
 		$thread_index = $this->threadIndex;
 		$thread_id = $this->threadIDs[$thread_index];
 
@@ -87,7 +87,7 @@ class AllianceMessageBoardView extends PlayerPage {
 						AND alliance_thread.alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND alliance_thread.thread_id = ' . $db->escapeNumber($thread_id));
 		foreach ($dbResult->records() as $dbRecord) {
 			$accountID = $dbRecord->getInt('account_id');
-			$players[$accountID] = SmrPlayer::getPlayer($accountID, $player->getGameID(), false, $dbRecord)->getLinkedDisplayName(false);
+			$players[$accountID] = Player::getPlayer($accountID, $player->getGameID(), false, $dbRecord)->getLinkedDisplayName(false);
 		}
 
 		$dbResult = $db->read('SELECT mb_messages FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . $player->getSQL() . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');

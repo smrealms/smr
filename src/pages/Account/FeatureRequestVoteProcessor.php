@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class FeatureRequestVoteProcessor extends AccountPageProcessor {
 
@@ -14,7 +14,7 @@ class FeatureRequestVoteProcessor extends AccountPageProcessor {
 		private readonly FeatureRequest|FeatureRequestComments $previousPage
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$db = Database::getInstance();
 
 		$action = Request::get('action');

@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 
 use Smr\Database;
+use Smr\Location;
 use Smr\Race;
+use Smr\ShipType;
 
 try {
 	require_once('../bootstrap.php');
@@ -16,7 +18,7 @@ try {
 		$shipTypeID = $dbRecord->getInt('ship_type_id');
 		$locTypeID = $dbRecord->getInt('location_type_id');
 		$gameID = 0; // doesn't matter for ship list (yet)
-		$shipLocs[$shipTypeID][] = SmrLocation::getLocation($gameID, $locTypeID, false, $dbRecord)->getName();
+		$shipLocs[$shipTypeID][] = Location::getLocation($gameID, $locTypeID, false, $dbRecord)->getName();
 	}
 
 	// Get a list of all locations that sell ships
@@ -25,7 +27,7 @@ try {
 	$template->assign('AllLocs', $allLocs);
 
 	$shipArray = [];
-	foreach (SmrShipType::getAll() as $shipType) {
+	foreach (ShipType::getAll() as $shipType) {
 		$shipArray[] = buildShipStats($shipType, $shipLocs[$shipType->getTypeID()] ?? []);
 	}
 	$template->assign('shipArray', $shipArray);
@@ -50,7 +52,7 @@ try {
  * @param array<string> $shipLocs
  * @return array<string, string|int>
  */
-function buildShipStats(SmrShipType $ship, array $shipLocs): array {
+function buildShipStats(ShipType $ship, array $shipLocs): array {
 	// Array key is the td class (sort key), and array value is the data value.
 	// We want to put them all in an array so we dont have to have 15 td rows.
 	$stat = [

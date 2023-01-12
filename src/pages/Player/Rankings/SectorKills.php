@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player\Rankings;
 
-use AbstractSmrPlayer;
-use Menu;
-use Rankings;
+use Smr\AbstractPlayer;
 use Smr\Database;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Rankings;
 use Smr\Template;
 
 class SectorKills extends PlayerPage {
@@ -16,7 +16,7 @@ class SectorKills extends PlayerPage {
 
 	public string $file = 'rankings_sector_kill.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 
 		$template->assign('PageTopic', 'Sector Death Rankings');
 

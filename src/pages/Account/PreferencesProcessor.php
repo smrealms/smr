@@ -3,6 +3,7 @@
 namespace Smr\Pages\Account;
 
 use Exception;
+use Smr\Account;
 use Smr\Database;
 use Smr\DisplayNameValidator;
 use Smr\Exceptions\AccountNotFound;
@@ -10,11 +11,10 @@ use Smr\Page\AccountPageProcessor;
 use Smr\Pages\Player\CurrentSector;
 use Smr\Request;
 use Smr\Session;
-use SmrAccount;
 
 class PreferencesProcessor extends AccountPageProcessor {
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		if (Session::getInstance()->hasGame()) {
 			$nextPage = CurrentSector::class;
 		} else {
@@ -62,7 +62,7 @@ class PreferencesProcessor extends AccountPageProcessor {
 
 			//no duplicates
 			try {
-				$other = SmrAccount::getAccountByHofName($HoF_name);
+				$other = Account::getAccountByHofName($HoF_name);
 				if (!$account->equals($other)) {
 					create_error('Someone is already using that Hall of Fame name!');
 				}
@@ -83,7 +83,7 @@ class PreferencesProcessor extends AccountPageProcessor {
 			} else {
 				// no duplicates
 				try {
-					$other = SmrAccount::getAccountByDiscordId($discordId);
+					$other = Account::getAccountByDiscordId($discordId);
 					if (!$account->equals($other)) {
 						create_error('Someone is already using that Discord User ID!');
 					}
@@ -110,7 +110,7 @@ class PreferencesProcessor extends AccountPageProcessor {
 
 				// no duplicates
 				try {
-					$other = SmrAccount::getAccountByIrcNick($ircNick);
+					$other = Account::getAccountByIrcNick($ircNick);
 					if (!$account->equals($other)) {
 						create_error('Someone is already using that IRC nick!');
 					}
@@ -165,7 +165,7 @@ class PreferencesProcessor extends AccountPageProcessor {
 			$message = '<span class="green">SUCCESS: </span>You have changed your CSS options.';
 
 		} elseif ($action == 'Save Hotkeys') {
-			foreach (SmrAccount::getDefaultHotkeys() as $hotkey => $binding) {
+			foreach (Account::getDefaultHotkeys() as $hotkey => $binding) {
 				$account->setHotkey($hotkey, explode(' ', Request::get($hotkey)));
 			}
 			$message = '<span class="green">SUCCESS: </span>You have saved your hotkeys.';

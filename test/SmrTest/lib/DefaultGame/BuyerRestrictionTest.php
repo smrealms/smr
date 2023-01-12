@@ -2,8 +2,8 @@
 
 namespace SmrTest\lib\DefaultGame;
 
-use AbstractSmrPlayer;
 use PHPUnit\Framework\TestCase;
+use Smr\AbstractPlayer;
 use Smr\BuyerRestriction;
 
 /**
@@ -25,7 +25,7 @@ class BuyerRestrictionTest extends TestCase {
 	}
 
 	public function test_passes(): void {
-		$player = $this->createStub(AbstractSmrPlayer::class);
+		$player = $this->createStub(AbstractPlayer::class);
 
 		// Test None restriction passes by default
 		self::assertTrue(BuyerRestriction::None->passes($player));

@@ -1,11 +1,12 @@
 <?php declare(strict_types=1);
 
+use Smr\AbstractPlayer;
 use Smr\Database;
 
 /**
  * @return array<string>
  */
-function shared_channel_msg_money(AbstractSmrPlayer $player): array {
+function shared_channel_msg_money(AbstractPlayer $player): array {
 	// Insist the player is in an alliance, otherwise this reports data
 	// for ALL allianceless (i.e. alliance=0) players.
 	if (!$player->hasAlliance()) {

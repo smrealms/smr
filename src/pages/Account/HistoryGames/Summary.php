@@ -2,15 +2,15 @@
 
 namespace Smr\Pages\Account\HistoryGames;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Template;
-use SmrAccount;
 
 class Summary extends HistoryPage {
 
 	public string $file = 'history_games.php';
 
-	protected function buildHistory(SmrAccount $account, Template $template): void {
+	protected function buildHistory(Account $account, Template $template): void {
 		//topic
 		$game_name = $this->historyGameName;
 		$game_id = $this->historyGameID;

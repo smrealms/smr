@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 
 use Smr\Database;
+use Smr\Galaxy;
+use Smr\Game;
 use Smr\Request;
+use Smr\Sector;
 
 try {
 	require_once('../bootstrap.php');
@@ -9,11 +12,11 @@ try {
 	$session = Smr\Session::getInstance();
 
 	$gameID = Request::getInt('game');
-	if (!$session->hasAccount() || !SmrGame::gameExists($gameID)) {
+	if (!$session->hasAccount() || !Game::gameExists($gameID)) {
 		header('Location: /login.php');
 		exit;
 	}
-	$game = SmrGame::getGame($gameID);
+	$game = Game::getGame($gameID);
 	$account = $session->getAccount();
 
 	if (!$game->isEnabled() && !$account->hasPermission(PERMISSION_UNI_GEN)) {
@@ -28,7 +31,7 @@ try {
 		$nodes[] = [
 			'name' => $galaxy->getName(),
 			'id' => $galaxy->getGalaxyID(),
-			'group' => array_search($galaxy->getGalaxyType(), SmrGalaxy::TYPES),
+			'group' => array_search($galaxy->getGalaxyType(), Galaxy::TYPES),
 			'size' => $galaxy->getSize(),
 		];
 	}
@@ -37,8 +40,8 @@ try {
 	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT sector_id, warp FROM sector WHERE warp !=0 AND game_id = ' . $db->escapeNumber($gameID));
 	foreach ($dbResult->records() as $dbRecord) {
-		$warp1 = SmrSector::getSector($gameID, $dbRecord->getInt('sector_id'));
-		$warp2 = SmrSector::getSector($gameID, $dbRecord->getInt('warp'));
+		$warp1 = Sector::getSector($gameID, $dbRecord->getInt('sector_id'));
+		$warp2 = Sector::getSector($gameID, $dbRecord->getInt('warp'));
 		$links[] = [
 			'source' => $warp1->getGalaxy()->getName(),
 			'target' => $warp2->getGalaxy()->getName(),

@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
 use Exception;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
-use SmrAlliance;
 
 class AllianceCreateProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		if ($player->getAllianceJoinable() > Epoch::time()) {
 			create_error('You cannot create an alliance for another ' . format_time($player->getAllianceJoinable() - Epoch::time()) . '.');
 		}
@@ -41,7 +41,7 @@ class AllianceCreateProcessor extends PlayerPageProcessor {
 		}
 
 		// create the alliance
-		$alliance = SmrAlliance::createAlliance($player->getGameID(), $name);
+		$alliance = Alliance::createAlliance($player->getGameID(), $name);
 		$alliance->setRecruitType($recruitType, $password);
 		$alliance->setAllianceDescription($description, $player);
 		$alliance->setLeaderID($player->getAccountID());

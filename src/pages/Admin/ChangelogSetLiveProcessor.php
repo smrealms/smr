@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\AccountPageProcessor;
-use SmrAccount;
 
 class ChangelogSetLiveProcessor extends AccountPageProcessor {
 
@@ -13,7 +13,7 @@ class ChangelogSetLiveProcessor extends AccountPageProcessor {
 		private readonly int $versionID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$db = Database::getInstance();
 		$db->write('UPDATE version
 					SET went_live = ' . $db->escapeNumber(Epoch::time()) . '

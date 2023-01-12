@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAlliance;
 
 class AllianceBroadcast extends PlayerPage {
 
@@ -20,8 +20,8 @@ class AllianceBroadcast extends PlayerPage {
 		private readonly ?string $preview = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
-		$alliance = SmrAlliance::getAlliance($this->allianceID, $player->getGameID());
+	public function build(AbstractPlayer $player, Template $template): void {
+		$alliance = Alliance::getAlliance($this->allianceID, $player->getGameID());
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 		Menu::alliance($alliance->getAllianceID());
 

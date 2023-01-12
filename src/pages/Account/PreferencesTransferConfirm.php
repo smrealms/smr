@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Page\AccountPage;
 use Smr\Session;
 use Smr\Template;
-use SmrAccount;
 
 class PreferencesTransferConfirm extends AccountPage {
 
 	public string $file = 'preferences_confirm.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$session = Session::getInstance();
 		$amount = $session->getRequestVarInt('amount');
 		$account_id = $session->getRequestVarInt('account_id');
@@ -25,7 +25,7 @@ class PreferencesTransferConfirm extends AccountPage {
 
 		$template->assign('PageTopic', 'Confirmation');
 		$template->assign('Amount', $amount);
-		$template->assign('HofName', SmrAccount::getAccount($account_id)->getHofDisplayName());
+		$template->assign('HofName', Account::getAccount($account_id)->getHofDisplayName());
 
 		$container = new PreferencesTransferProcessor($amount, $account_id);
 		$template->assign('SubmitHREF', $container->href());

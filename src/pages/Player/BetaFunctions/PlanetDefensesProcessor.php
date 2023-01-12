@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player\BetaFunctions;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 
 class PlanetDefensesProcessor extends BetaFunctionsPageProcessor {
 
-	public function buildBetaFunctionsProcessor(AbstractSmrPlayer $player): void {
+	public function buildBetaFunctionsProcessor(AbstractPlayer $player): void {
 		$planet = $player->getSector()->getPlanet();
 		$planet->setShields($planet->getMaxShields());
 		$planet->setCDs($planet->getMaxCDs());

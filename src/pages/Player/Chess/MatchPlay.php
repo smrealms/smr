@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player\Chess;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Chess\ChessGame;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
-use SmrPlayer;
 
 class MatchPlay extends PlayerPage {
 
@@ -17,7 +17,7 @@ class MatchPlay extends PlayerPage {
 		private readonly string $moveMessage = ''
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$chessGame = ChessGame::getChessGame($this->chessGameID);
 		$template->assign('ChessGame', $chessGame);
 
@@ -32,7 +32,7 @@ class MatchPlay extends PlayerPage {
 
 		// Check if there is a winner
 		if ($chessGame->hasEnded()) {
-			$winningPlayer = SmrPlayer::getPlayer($chessGame->getWinner(), $player->getGameID());
+			$winningPlayer = Player::getPlayer($chessGame->getWinner(), $player->getGameID());
 			$template->assign('Winner', $winningPlayer->getLinkedDisplayName(false));
 		}
 

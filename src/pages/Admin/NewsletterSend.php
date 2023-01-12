@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class NewsletterSend extends AccountPage {
 
 	public string $file = 'admin/newsletter_send.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Newsletter');
 
 		$template->assign('CurrentEmail', $account->getEmail());

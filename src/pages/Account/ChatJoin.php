@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Session;
 use Smr\Template;
-use SmrAccount;
 
 class ChatJoin extends AccountPage {
 
@@ -14,7 +14,7 @@ class ChatJoin extends AccountPage {
 
 	public string $file = 'chat_rules.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$session = Session::getInstance();
 		$player = $session->hasGame() ? $session->getPlayer() : null;
 

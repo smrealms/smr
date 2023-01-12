@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player\BetaFunctions;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\HardwareType;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\ShipType;
 use Smr\Template;
-use SmrShipType;
-use SmrWeaponType;
+use Smr\WeaponType;
 
 class BetaFunctions extends PlayerPage {
 
@@ -16,7 +16,7 @@ class BetaFunctions extends PlayerPage {
 
 	public string $file = 'beta_functions.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		if (!ENABLE_BETA) {
 			create_error('Beta functions are disabled.');
 		}
@@ -37,7 +37,7 @@ class BetaFunctions extends PlayerPage {
 		$container = new SetShipProcessor();
 		$template->assign('ShipHREF', $container->href());
 		$shipList = [];
-		foreach (SmrShipType::getAll() as $shipTypeID => $shipType) {
+		foreach (ShipType::getAll() as $shipTypeID => $shipType) {
 			$shipList[$shipTypeID] = $shipType->getName();
 		}
 		asort($shipList); // sort by name
@@ -47,7 +47,7 @@ class BetaFunctions extends PlayerPage {
 		$container = new AddWeaponsProcessor();
 		$template->assign('AddWeaponHREF', $container->href());
 		$weaponList = [];
-		foreach (SmrWeaponType::getAllWeaponTypes() as $weaponTypeID => $weaponType) {
+		foreach (WeaponType::getAllWeaponTypes() as $weaponTypeID => $weaponType) {
 			$weaponList[$weaponTypeID] = $weaponType->getName();
 		}
 		asort($weaponList); // sort by name

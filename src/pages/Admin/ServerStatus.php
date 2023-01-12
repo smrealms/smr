@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class ServerStatus extends AccountPage {
 
 	public string $file = 'admin/game_status.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$processingHREF = (new ServerStatusProcessor())->href();
 		$template->assign('ProcessingHREF', $processingHREF);
 

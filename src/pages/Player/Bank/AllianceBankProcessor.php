@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player\Bank;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
-use SmrAlliance;
 
 class AllianceBankProcessor extends PlayerPageProcessor {
 
@@ -15,7 +15,7 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 		private readonly int $allianceID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 
 		$alliance_id = $this->allianceID;
@@ -31,7 +31,7 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 			$message = 'No reason specified';
 		}
 
-		$alliance = SmrAlliance::getAlliance($alliance_id, $player->getGameID());
+		$alliance = Alliance::getAlliance($alliance_id, $player->getGameID());
 		$action = Request::get('action');
 		if ($action == 'Deposit') {
 			if ($player->getCredits() < $amount) {

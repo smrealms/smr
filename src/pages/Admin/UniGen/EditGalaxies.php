@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Account;
+use Smr\Game;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
-use SmrGame;
 
 class EditGalaxies extends AccountPage {
 
@@ -16,8 +16,8 @@ class EditGalaxies extends AccountPage {
 		private readonly int $galaxyID
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
-		$game = SmrGame::getGame($this->gameID);
+	public function build(Account $account, Template $template): void {
+		$game = Game::getGame($this->gameID);
 		$template->assign('PageTopic', 'Edit Galaxies : ' . $game->getDisplayName());
 		$template->assign('GameEnabled', $game->isEnabled());
 

@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player\Headquarters;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
+use Smr\Location;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Player\CurrentSector;
-use SmrLocation;
 
 class GovernmentProcessor extends PlayerPageProcessor {
 
@@ -13,9 +13,9 @@ class GovernmentProcessor extends PlayerPageProcessor {
 		private readonly int $locationID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		// Player has selected to become a deputy/smuggler
-		$location = SmrLocation::getLocation($player->getGameID(), $this->locationID);
+		$location = Location::getLocation($player->getGameID(), $this->locationID);
 		if ($location->isHQ()) {
 			$player->setAlignment(150);
 		} elseif ($location->isUG()) {

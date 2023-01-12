@@ -2,15 +2,15 @@
 
 namespace Smr\Pages\Player\Rankings;
 
-use AbstractSmrPlayer;
 use Exception;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Request;
 use Smr\Template;
-use SmrAlliance;
 
 class AllianceVsAlliance extends PlayerPage {
 
@@ -26,7 +26,7 @@ class AllianceVsAlliance extends PlayerPage {
 		private ?array $versusAllianceIDs = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Alliance VS Alliance Rankings');
 
 		Menu::rankings(1, 4);
@@ -42,7 +42,7 @@ class AllianceVsAlliance extends PlayerPage {
 		$dbResult = $db->read('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (alliance_deaths > 0 OR alliance_kills > 0) ORDER BY alliance_kills DESC, alliance_name');
 		foreach ($dbResult->records() as $dbRecord) {
 			$allianceID = $dbRecord->getInt('alliance_id');
-			$activeAlliances[$allianceID] = SmrAlliance::getAlliance($allianceID, $player->getGameID(), false, $dbRecord);
+			$activeAlliances[$allianceID] = Alliance::getAlliance($allianceID, $player->getGameID(), false, $dbRecord);
 		}
 		$template->assign('ActiveAlliances', $activeAlliances);
 
@@ -57,7 +57,7 @@ class AllianceVsAlliance extends PlayerPage {
 
 		$alliance_vs = [];
 		foreach ($alliance_vs_ids as $curr_id) {
-			$curr_alliance = SmrAlliance::getAlliance($curr_id, $player->getGameID());
+			$curr_alliance = Alliance::getAlliance($curr_id, $player->getGameID());
 			$container = new self($curr_id, $this->versusAllianceIDs);
 			$style = '';
 			if (!$curr_alliance->isNone() && $curr_alliance->hasDisbanded()) {
@@ -77,9 +77,9 @@ class AllianceVsAlliance extends PlayerPage {
 
 		$alliance_vs_table = [];
 		foreach ($alliance_vs_ids as $curr_id) {
-			$curr_alliance = SmrAlliance::getAlliance($curr_id, $player->getGameID());
+			$curr_alliance = Alliance::getAlliance($curr_id, $player->getGameID());
 			foreach ($alliance_vs_ids as $id) {
-				$row_alliance = SmrAlliance::getAlliance($id, $player->getGameID());
+				$row_alliance = Alliance::getAlliance($id, $player->getGameID());
 				$showRed = (!$curr_alliance->isNone() && $curr_alliance->hasDisbanded()) ||
 				           (!$row_alliance->isNone() && $row_alliance->hasDisbanded());
 				$showBold = $curr_id == $player->getAllianceID() || $id == $player->getAllianceID();
@@ -114,7 +114,7 @@ class AllianceVsAlliance extends PlayerPage {
 		$template->assign('AllianceVsTable', $alliance_vs_table);
 
 		// Show details for a specific alliance
-		$main_alliance = SmrAlliance::getAlliance($this->detailsAllianceID, $player->getGameID());
+		$main_alliance = Alliance::getAlliance($this->detailsAllianceID, $player->getGameID());
 		$mainName = $main_alliance->isNone() ? 'No Alliance' : $main_alliance->getAllianceDisplayName();
 		$template->assign('DetailsName', $mainName);
 
@@ -125,7 +125,7 @@ class AllianceVsAlliance extends PlayerPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$id = $dbRecord->getInt('alliance_id_2');
 			$alliance_name = match (true) {
-				$id > 0 => SmrAlliance::getAlliance($id, $player->getGameID())->getAllianceDisplayName(),
+				$id > 0 => Alliance::getAlliance($id, $player->getGameID())->getAllianceDisplayName(),
 				$id == 0 => 'No Alliance',
 				$id == ALLIANCE_VS_FORCES => '<span class="yellow">Forces</span>',
 				$id == ALLIANCE_VS_PLANETS => '<span class="yellow">Planets</span>',
@@ -147,7 +147,7 @@ class AllianceVsAlliance extends PlayerPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$id = $dbRecord->getInt('alliance_id_1');
 			$alliance_name = match (true) {
-				$id > 0 => SmrAlliance::getAlliance($id, $player->getGameID())->getAllianceDisplayName(),
+				$id > 0 => Alliance::getAlliance($id, $player->getGameID())->getAllianceDisplayName(),
 				$id == 0 => 'No Alliance',
 				$id == ALLIANCE_VS_FORCES => '<span class="yellow">Forces</span>',
 				$id == ALLIANCE_VS_PLANETS => '<span class="yellow">Planets</span>',

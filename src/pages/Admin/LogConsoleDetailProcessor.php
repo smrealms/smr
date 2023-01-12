@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class LogConsoleDetailProcessor extends AccountPageProcessor {
 
@@ -15,7 +15,7 @@ class LogConsoleDetailProcessor extends AccountPageProcessor {
 		private readonly array $accountIDs
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$logTypeIDs = Request::getIntArray('log_type_ids');
 		(new LogConsoleDetail($this->accountIDs, $logTypeIDs))->go();
 	}

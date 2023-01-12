@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class AdminPermissionManageProcessor extends AccountPageProcessor {
 
@@ -13,10 +13,10 @@ class AdminPermissionManageProcessor extends AccountPageProcessor {
 		private readonly int $adminAccountID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		if (Request::get('action') == 'Change') {
 			// Check to see if admin previously was displaying Admin tag
-			$hadAdminTag = SmrAccount::getAccount($this->adminAccountID)->hasPermission(PERMISSION_DISPLAY_ADMIN_TAG);
+			$hadAdminTag = Account::getAccount($this->adminAccountID)->hasPermission(PERMISSION_DISPLAY_ADMIN_TAG);
 
 			// delete everything first
 			$db = Database::getInstance();

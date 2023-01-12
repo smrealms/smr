@@ -3,10 +3,10 @@
 namespace Smr\Routes;
 
 use Smr\Path;
+use Smr\Port;
 use Smr\Race;
 use Smr\TradeGood;
 use Smr\TransactionType;
-use SmrPort;
 
 class OneWayRoute extends Route {
 
@@ -65,8 +65,8 @@ class OneWayRoute extends Route {
 		$numGoods = 1;
 		$relations = 1000; // assume max relations
 		$supply = TradeGood::get($this->goodId)->maxPortAmount; // assume max supply
-		$buyPrice = SmrPort::idealPrice($this->goodId, TransactionType::Buy, $numGoods, $relations, $supply, $this->buyDi);
-		$sellPrice = SmrPort::idealPrice($this->goodId, TransactionType::Sell, $numGoods, $relations, $supply, $this->sellDi);
+		$buyPrice = Port::idealPrice($this->goodId, TransactionType::Buy, $numGoods, $relations, $supply, $this->buyDi);
+		$sellPrice = Port::idealPrice($this->goodId, TransactionType::Sell, $numGoods, $relations, $supply, $this->sellDi);
 		return $sellPrice - $buyPrice;
 	}
 

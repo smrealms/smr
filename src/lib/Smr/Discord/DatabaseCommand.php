@@ -2,7 +2,7 @@
 
 namespace Smr\Discord;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 
 /**
@@ -13,7 +13,7 @@ abstract class DatabaseCommand extends Command {
 	/**
 	 * Player associated with the Discord user that invoked the command.
 	 */
-	protected AbstractSmrPlayer $player;
+	protected AbstractPlayer $player;
 
 	/**
 	 * Constructs a textual response to a DatabaseCommand invocation.

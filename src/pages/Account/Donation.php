@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAccount;
 
 class Donation extends AccountPage {
 
@@ -15,7 +15,7 @@ class Donation extends AccountPage {
 
 	public string $file = 'donation.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Donations');
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT IFNULL(SUM(amount), 0) as total_donation FROM account_donated WHERE time > ' . $db->escapeNumber(Epoch::time()) . ' - (86400 * 90)');

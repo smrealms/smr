@@ -3,11 +3,11 @@
 namespace Smr\Pages\Account;
 
 use Exception;
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 /**
  * Determine whether a URL is reachable based on HTTP status code class.
@@ -33,7 +33,7 @@ function isUrlReachable(string $url): bool {
 
 class AlbumEditProcessor extends AccountPageProcessor {
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$location = Request::get('location');
 		$email = Request::get('email');
 

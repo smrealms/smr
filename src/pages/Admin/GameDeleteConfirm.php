@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
+use Smr\Game;
 use Smr\Page\AccountPage;
 use Smr\Request;
 use Smr\Template;
-use SmrAccount;
-use SmrGame;
 
 class GameDeleteConfirm extends AccountPage {
 
@@ -16,11 +16,11 @@ class GameDeleteConfirm extends AccountPage {
 		private ?int $deleteGameID = null
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Delete Game - Confirmation');
 
 		$this->deleteGameID ??= Request::getInt('delete_game_id');
-		$template->assign('Game', SmrGame::getGame($this->deleteGameID));
+		$template->assign('Game', Game::getGame($this->deleteGameID));
 
 		$container = new GameDeleteProcessor($this->deleteGameID);
 		$template->assign('ProcessingHREF', $container->href());

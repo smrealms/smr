@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
@@ -13,7 +13,7 @@ class PaperDeleteProcessor extends PlayerPageProcessor {
 		private readonly int $paperID
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 		// Should we delete this paper?
 		if (Request::getBool('action')) {

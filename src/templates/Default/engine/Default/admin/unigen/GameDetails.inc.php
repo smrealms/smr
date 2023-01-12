@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Game;
+
 ?>
 <form method="POST" action="<?php echo $ProcessingHREF; ?>">
 	<table class="standard">
@@ -46,7 +48,7 @@
 		<td class="right">Game Type</td>
 		<td>
 			<select name="game_type"><?php
-			foreach (SmrGame::GAME_TYPES as $GameTypeID => $GameType) {
+			foreach (Game::GAME_TYPES as $GameTypeID => $GameType) {
 				?><option value="<?php echo $GameTypeID; ?>" <?php if ($GameType == $Game['gameType']) echo 'selected'; ?>><?php echo $GameType; ?></option><?php
 			} ?>
 			</select>

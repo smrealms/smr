@@ -2,10 +2,8 @@
 
 namespace Smr;
 
-use SmrShipType;
-
 /**
- * Data storage for the SmrShip::illusionShip property.
+ * Data storage for the Ship::illusionShip property.
  */
 class ShipIllusion {
 
@@ -16,7 +14,7 @@ class ShipIllusion {
 	) {}
 
 	public function getName(): string {
-		return SmrShipType::get($this->shipTypeID)->getName();
+		return ShipType::get($this->shipTypeID)->getName();
 	}
 
 }

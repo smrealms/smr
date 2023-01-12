@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
-use Globals;
+use Smr\Account;
+use Smr\Game;
+use Smr\Globals;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
-use SmrGame;
 
 class EditGame extends AccountPage {
 
@@ -17,7 +17,7 @@ class EditGame extends AccountPage {
 		private readonly int $galaxyID
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Edit Game Details');
 
 		$gameID = $this->gameID;
@@ -25,7 +25,7 @@ class EditGame extends AccountPage {
 		// Use Alskant-Creonti as a proxy for the starting political relations
 		$relations = Globals::getRaceRelations($gameID, RACE_ALSKANT)[RACE_CREONTI];
 
-		$game = SmrGame::getGame($gameID);
+		$game = Game::getGame($gameID);
 		$gameArray = [
 			'name' => $game->getName(),
 			'description' => $game->getDescription(),

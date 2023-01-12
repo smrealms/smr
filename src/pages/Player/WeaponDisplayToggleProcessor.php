@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Page\ReusableTrait;
 use Smr\Session;
@@ -11,7 +11,7 @@ class WeaponDisplayToggleProcessor extends PlayerPageProcessor {
 
 	use ReusableTrait;
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$session = Session::getInstance();
 
 		$player->setDisplayWeapons(!$player->isDisplayWeapons());

@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Globals;
+use Smr\AbstractPlayer;
+use Smr\Force;
+use Smr\Globals;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
-use SmrForce;
 
 class ForcesDropProcessor extends PlayerPageProcessor {
 
@@ -21,7 +21,7 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 		private readonly ?string $referrer = null
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$ship = $player->getShip();
 
 		if ($player->getNewbieTurns() > 0) {
@@ -49,22 +49,22 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 		$change_combat_drones = $drop_combat_drones - $take_combat_drones;
 		$change_scout_drones = $drop_scout_drones - $take_scout_drones;
 
-		$forces = SmrForce::getForce($player->getGameID(), $player->getSectorID(), $this->ownerAccountID);
+		$forces = Force::getForce($player->getGameID(), $player->getSectorID(), $this->ownerAccountID);
 
 		// check max on that stack
 		$at_max = false;
-		if ($forces->getMines() + $change_mines > SmrForce::MAX_MINES) {
-			$change_mines = SmrForce::MAX_MINES - $forces->getMines();
+		if ($forces->getMines() + $change_mines > Force::MAX_MINES) {
+			$change_mines = Force::MAX_MINES - $forces->getMines();
 			$at_max = $change_mines == 0;
 		}
 
-		if ($forces->getCDs() + $change_combat_drones > SmrForce::MAX_CDS) {
-			$change_combat_drones = SmrForce::MAX_CDS - $forces->getCDs();
+		if ($forces->getCDs() + $change_combat_drones > Force::MAX_CDS) {
+			$change_combat_drones = Force::MAX_CDS - $forces->getCDs();
 			$at_max = $change_combat_drones == 0;
 		}
 
-		if ($forces->getSDs() + $change_scout_drones > SmrForce::MAX_SDS) {
-			$change_scout_drones = SmrForce::MAX_SDS - $forces->getSDs();
+		if ($forces->getSDs() + $change_scout_drones > Force::MAX_SDS) {
+			$change_scout_drones = Force::MAX_SDS - $forces->getSDs();
 			$at_max = $change_scout_drones == 0;
 		}
 

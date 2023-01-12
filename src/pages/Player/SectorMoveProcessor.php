@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Globals;
+use Smr\AbstractPlayer;
+use Smr\Globals;
 use Smr\MovementType;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Sector;
 use Smr\SectorLock;
-use SmrSector;
 
 class SectorMoveProcessor extends PlayerPageProcessor {
 
@@ -16,7 +16,7 @@ class SectorMoveProcessor extends PlayerPageProcessor {
 		private readonly CurrentSector|LocalMap $targetPage
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		require_once(LIB . 'Default/sector_mines.inc.php');
 
 		$sector = $player->getSector();
@@ -71,7 +71,7 @@ class SectorMoveProcessor extends PlayerPageProcessor {
 		}
 
 		// log action
-		$targetSector = SmrSector::getSector($player->getGameID(), $this->targetSectorID);
+		$targetSector = Sector::getSector($player->getGameID(), $this->targetSectorID);
 		$player->actionTaken('WalkSector', ['Sector' => $targetSector]);
 
 		// send scout msg

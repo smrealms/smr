@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Account;
 use Smr\Page\AccountPageProcessor;
+use Smr\Port;
 use Smr\Request;
-use SmrAccount;
-use SmrPort;
-use SmrSector;
+use Smr\Sector;
 
 class DragPortProcessor extends AccountPageProcessor {
 
@@ -15,24 +15,24 @@ class DragPortProcessor extends AccountPageProcessor {
 		private readonly int $galaxyID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		// Move a port from one sector to another
 		$targetSectorID = Request::getInt('TargetSectorID');
 		$origSectorID = Request::getInt('OrigSectorID');
-		$targetSector = SmrSector::getSector($this->gameID, $targetSectorID);
+		$targetSector = Sector::getSector($this->gameID, $targetSectorID);
 
 		// Skip if target sector already has a port
 		if (!$targetSector->hasPort()) {
-			$oldPort = SmrPort::getPort($this->gameID, $origSectorID);
+			$oldPort = Port::getPort($this->gameID, $origSectorID);
 
-			$newPort = SmrPort::createPort($this->gameID, $targetSectorID);
+			$newPort = Port::createPort($this->gameID, $targetSectorID);
 			$newPort->setRaceID($oldPort->getRaceID());
 			$newPort->setLevel($oldPort->getLevel());
 			$newPort->setPortGoods($oldPort->getGoodTransactions());
 			$newPort->setCreditsToDefault();
 			$newPort->update();
 
-			SmrPort::removePort($this->gameID, $origSectorID);
+			Port::removePort($this->gameID, $origSectorID);
 		}
 
 		$container = new EditGalaxy($this->gameID, $this->galaxyID);

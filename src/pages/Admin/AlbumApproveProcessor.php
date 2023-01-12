@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
-use SmrAccount;
 
 class AlbumApproveProcessor extends AccountPageProcessor {
 
@@ -13,7 +13,7 @@ class AlbumApproveProcessor extends AccountPageProcessor {
 		private readonly bool $approved
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$approved = $this->approved ? 'YES' : 'NO';
 
 		$db = Database::getInstance();

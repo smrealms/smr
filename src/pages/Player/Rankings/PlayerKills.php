@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player\Rankings;
 
-use AbstractSmrPlayer;
-use Menu;
-use Rankings;
+use Smr\AbstractPlayer;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Rankings;
 use Smr\Template;
 
 class PlayerKills extends PlayerPage {
@@ -15,7 +15,7 @@ class PlayerKills extends PlayerPage {
 
 	public string $file = 'rankings_player_kills.php';
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Kill Rankings');
 
 		Menu::rankings(0, 2);

@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Account\HistoryGames;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Template;
-use SmrAccount;
 
 class HallOfFame extends HistoryPage {
 
@@ -17,7 +17,7 @@ class HallOfFame extends HistoryPage {
 		private readonly ?string $stat = null
 	) {}
 
-	protected function buildHistory(SmrAccount $account, Template $template): void {
+	protected function buildHistory(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Hall of Fame : ' . $this->historyGameName);
 		$this->addMenu($template);
 

@@ -42,7 +42,7 @@ class Race {
 	 * same as `getAllIDs` with the Neutral race excluded.
 	 *
 	 * Note: Some playable races may be excluded on a game-by-game basis
-	 * by omitting racial HQ locations. See SmrGame::getPlayableRaceIDs.
+	 * by omitting racial HQ locations. See Game::getPlayableRaceIDs.
 	 *
 	 * @return array<int>
 	 */
@@ -57,7 +57,7 @@ class Race {
 	 * this is the same as `getAllNames` with the Neutral race excluded.
 	 *
 	 * Note: Some playable races may be excluded on a game-by-game basis
-	 * by omitting racial HQ locations. See SmrGame::getPlayableRaceIDs.
+	 * by omitting racial HQ locations. See Game::getPlayableRaceIDs.
 	 *
 	 * @return array<int, string>
 	 */

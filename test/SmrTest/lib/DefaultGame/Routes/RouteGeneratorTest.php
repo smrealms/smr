@@ -4,11 +4,11 @@ namespace SmrTest\lib\DefaultGame\Routes;
 
 use PHPUnit\Framework\TestCase;
 use Smr\Path;
+use Smr\Port;
 use Smr\Routes\MultiplePortRoute;
 use Smr\Routes\OneWayRoute;
 use Smr\Routes\RouteGenerator;
 use Smr\TransactionType;
-use SmrPort;
 
 /**
  * @covers Smr\Routes\RouteGenerator
@@ -24,9 +24,9 @@ class RouteGeneratorTest extends TestCase {
 	 * @param int $raceID
 	 * @param array<int, array{TransactionType, int}> $goods
 	 */
-	private function createPortStub(int $raceID, array $goods): SmrPort {
+	private function createPortStub(int $raceID, array $goods): Port {
 		// Create a partial mock, only mocking the methods we will use
-		$port = $this->createPartialMock(SmrPort::class, ['getGoodDistance', 'getRaceID']);
+		$port = $this->createPartialMock(Port::class, ['getGoodDistance', 'getRaceID']);
 
 		// Distances are the most important to mock, since they are complicated
 		$getGoodDistanceMap = [];

@@ -3,13 +3,13 @@
 namespace Smr\Pages\Admin\UniGen;
 
 use Exception;
+use Smr\Account;
+use Smr\Galaxy;
+use Smr\Location;
 use Smr\Page\AccountPageProcessor;
+use Smr\Port;
+use Smr\Sector;
 use Smr\TransactionType;
-use SmrAccount;
-use SmrGalaxy;
-use SmrLocation;
-use SmrPort;
-use SmrSector;
 
 class UploadSmrFileProcessor extends AccountPageProcessor {
 
@@ -17,7 +17,7 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 		private readonly int $gameID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		if ($_FILES['smr_file']['error'] !== UPLOAD_ERR_OK) {
 			create_error('Failed to upload SMR file!');
 		}
@@ -51,16 +51,16 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 		// Create the galaxies
 		foreach ($data['Galaxies'] as $galID => $details) {
 			[$width, $height, $type, $name, $maxForceTime] = explode(',', $details);
-			$galaxy = SmrGalaxy::createGalaxy($this->gameID, $galID);
+			$galaxy = Galaxy::createGalaxy($this->gameID, $galID);
 			$galaxy->setWidth(str2int($width));
 			$galaxy->setHeight(str2int($height));
 			$galaxy->setGalaxyType($type);
 			$galaxy->setName($name);
 			$galaxy->setMaxForceTime(str2int($maxForceTime));
 		}
-		// Workaround for SmrGalaxy::getStartSector depending on all other galaxies
-		SmrGalaxy::saveGalaxies();
-		foreach (SmrGalaxy::getGameGalaxies($this->gameID, true) as $galaxy) {
+		// Workaround for Galaxy::getStartSector depending on all other galaxies
+		Galaxy::saveGalaxies();
+		foreach (Galaxy::getGameGalaxies($this->gameID, true) as $galaxy) {
 			$galaxy->generateSectors();
 		}
 
@@ -71,7 +71,7 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 			}
 
 			$sectorID = str2int($matches[1]);
-			$editSector = SmrSector::getSector($this->gameID, $sectorID);
+			$editSector = Sector::getSector($this->gameID, $sectorID);
 
 			// Sector connections (we assume link sectors are correct)
 			foreach (['Up', 'Down', 'Left', 'Right'] as $dir) {
@@ -89,7 +89,7 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 				$port->setLevel(str2int($vals['Port Level']));
 				$port->setCreditsToDefault();
 				// SMR file indicates the port action Buys/Sells,
-				// but SmrPort::addPortGood uses the player action.
+				// but Port::addPortGood uses the player action.
 				if (isset($vals['Buys'])) {
 					foreach (explode(',', $vals['Buys']) as $goodID) {
 						$port->addPortGood(str2int($goodID), TransactionType::Sell);
@@ -103,7 +103,7 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 			}
 
 			// Locations
-			$allLocs = SmrLocation::getAllLocations($this->gameID);
+			$allLocs = Location::getAllLocations($this->gameID);
 			if (isset($vals['Locations'])) {
 				$locNames = explode(',', $vals['Locations']);
 				foreach ($locNames as $locName) {
@@ -124,7 +124,7 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 
 			// Warps
 			if (isset($vals['Warp'])) {
-				$editSector->setWarp(SmrSector::getSector($this->gameID, str2int($vals['Warp'])));
+				$editSector->setWarp(Sector::getSector($this->gameID, str2int($vals['Warp'])));
 			}
 
 			// Planets
@@ -135,8 +135,8 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 
 		// Save so that sector links and ports persist
 		// (otherwise they are overwritten somewhere while forwarding)
-		SmrSector::saveSectors();
-		SmrPort::savePorts();
+		Sector::saveSectors();
+		Port::savePorts();
 
 		$container = new EditGalaxy($this->gameID);
 		$container->go();

@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
-use Menu;
+use Smr\AbstractPlayer;
+use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Sector;
 use Smr\Template;
-use SmrSector;
 
 class SectorJumpCalculate extends PlayerPage {
 
@@ -16,11 +16,11 @@ class SectorJumpCalculate extends PlayerPage {
 		private readonly int $targetSectorID
 	) {}
 
-	public function build(AbstractSmrPlayer $player, Template $template): void {
+	public function build(AbstractPlayer $player, Template $template): void {
 		$template->assign('PageTopic', 'Jump Drive');
 		Menu::navigation($player);
 
-		$targetSector = SmrSector::getSector($player->getGameID(), $this->targetSectorID);
+		$targetSector = Sector::getSector($player->getGameID(), $this->targetSectorID);
 		$jumpInfo = $player->getJumpInfo($targetSector);
 
 		$template->assign('Target', $targetSector->getSectorID());

@@ -2,25 +2,25 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 function get_album_nick(int $album_id): string {
 	if ($album_id == 0) {
 		return 'System';
 	}
 
-	return SmrAccount::getAccount($album_id)->getHofDisplayName();
+	return Account::getAccount($album_id)->getHofDisplayName();
 }
 
 class AlbumApprove extends AccountPage {
 
 	public string $file = 'admin/album_approve.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Approve Album Entries');
 
 		$db = Database::getInstance();

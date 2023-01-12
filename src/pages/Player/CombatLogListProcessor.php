@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use AbstractSmrPlayer;
 use Exception;
+use Smr\AbstractPlayer;
 use Smr\CombatLogType;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
@@ -15,7 +15,7 @@ class CombatLogListProcessor extends PlayerPageProcessor {
 		private readonly CombatLogType $action
 	) {}
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		// If here, we have hit either the 'Save', 'Delete', or 'View' form buttons.
 		// Immediately return to the log list if we haven't selected any logs.
 		$logIDs = array_keys(Request::getArray('id', []));

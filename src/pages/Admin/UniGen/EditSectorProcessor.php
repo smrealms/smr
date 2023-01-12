@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Account;
+use Smr\Location;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use Smr\Sector;
 use Smr\TradeGood;
 use Smr\TransactionType;
-use SmrAccount;
-use SmrLocation;
-use SmrSector;
 
 class EditSectorProcessor extends AccountPageProcessor {
 
@@ -18,8 +18,8 @@ class EditSectorProcessor extends AccountPageProcessor {
 		private readonly int $sectorID
 	) {}
 
-	public function build(SmrAccount $account): never {
-		$editSector = SmrSector::getSector($this->gameID, $this->sectorID);
+	public function build(Account $account): never {
+		$editSector = Sector::getSector($this->gameID, $this->sectorID);
 
 		//update planet
 		$planetTypeID = Request::getInt('plan_type');
@@ -66,7 +66,7 @@ class EditSectorProcessor extends AccountPageProcessor {
 		for ($x = 0; $x < UNI_GEN_LOCATION_SLOTS; $x++) {
 			if (Request::getInt('loc_type' . $x) != 0) {
 				$locationTypeID = Request::getInt('loc_type' . $x);
-				$locationsToAdd[$locationTypeID] = SmrLocation::getLocation($this->gameID, $locationTypeID);
+				$locationsToAdd[$locationTypeID] = Location::getLocation($this->gameID, $locationTypeID);
 			}
 		}
 		$editSector->removeAllLocations();
@@ -84,7 +84,7 @@ class EditSectorProcessor extends AccountPageProcessor {
 		// update warp
 		$warpSectorID = Request::getInt('warp');
 		if ($warpSectorID > 0) {
-			$warp = SmrSector::getSector($this->gameID, $warpSectorID);
+			$warp = Sector::getSector($this->gameID, $warpSectorID);
 			if ($editSector->equals($warp)) {
 				create_error('We do not allow any sector to warp to itself!');
 			}
@@ -95,7 +95,7 @@ class EditSectorProcessor extends AccountPageProcessor {
 		} else {
 			$editSector->removeWarp();
 		}
-		SmrSector::saveSectors();
+		Sector::saveSectors();
 
 		$message = '<span class="green">Success</span> : Succesfully edited sector.';
 		$container = new EditSector($this->gameID, $this->galaxyID, $this->sectorID, $message);

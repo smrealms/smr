@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class ErrorDisplay extends AccountPage {
 
@@ -14,7 +14,7 @@ class ErrorDisplay extends AccountPage {
 		public readonly string $message
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Error');
 		$template->assign('Message', $this->message);
 	}

@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player\Bank;
 
-use AbstractSmrPlayer;
+use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
 
 class PersonalBankProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractSmrPlayer $player): never {
+	public function build(AbstractPlayer $player): never {
 		$amount = Request::getInt('amount');
 		$action = Request::get('action');
 

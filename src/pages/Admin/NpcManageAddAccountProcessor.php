@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-use SmrAccount;
 
 class NpcManageAddAccountProcessor extends AccountPageProcessor {
 
@@ -13,11 +13,11 @@ class NpcManageAddAccountProcessor extends AccountPageProcessor {
 		private readonly int $selectedGameID
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		// Add a new NPC account
 		$login = Request::get('npc_login');
 		$email = $login . '@smrealms.de';
-		$npcAccount = SmrAccount::createAccount($login, '', $email, 0, 0);
+		$npcAccount = Account::createAccount($login, '', $email, 0, 0);
 		$npcAccount->setValidated(true);
 		$npcAccount->update();
 

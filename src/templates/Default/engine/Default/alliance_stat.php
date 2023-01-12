@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Alliance;
+
 ?>
 <form method="POST" action="<?php echo $FormHREF; ?>">
 <table cellspacing="0" cellpadding="0" class="nobord nohpad">
@@ -10,7 +12,7 @@ if ($CanChangePassword) { ?>
 		<td class="top">Recruiting:</td>
 		<td>
 			<select name="recruit_type" onchange="togglePassword(this)"><?php
-				foreach (SmrAlliance::allRecruitTypes() as $type => $text) { ?>
+				foreach (Alliance::allRecruitTypes() as $type => $text) { ?>
 					<option value="<?php echo $type; ?>" <?php if ($Alliance->getRecruitType() == $type) { ?> selected<?php } ?>><?php echo $text; ?></option><?php
 				} ?>
 			</select>

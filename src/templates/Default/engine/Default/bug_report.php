@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Globals;
+
 ?>
 All information on this page will be sent to the admin team.<br />
 Be as accurate as possible with your bug description.

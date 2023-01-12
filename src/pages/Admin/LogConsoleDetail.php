@@ -4,10 +4,10 @@ namespace Smr\Pages\Admin;
 
 use DateTime;
 use Exception;
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Template;
-use SmrAccount;
 
 class LogConsoleDetail extends AccountPage {
 
@@ -22,7 +22,7 @@ class LogConsoleDetail extends AccountPage {
 		private readonly array $logTypeIDs
 	) {}
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Log Console - Detail');
 
 		// get the account_ids from last form

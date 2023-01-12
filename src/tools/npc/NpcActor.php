@@ -2,15 +2,15 @@
 
 namespace Smr\Npc;
 
-use AbstractSmrPlayer;
 use Exception;
+use Smr\AbstractPlayer;
 use Smr\Npc\Exceptions\FinalAction;
 use Smr\Npc\Exceptions\ForwardAction;
 use Smr\Npc\Exceptions\TradeRouteDrained;
 use Smr\Page\Page;
 use Smr\Routes\RouteIterator;
+use Smr\Sector;
 use Smr\TransactionType;
-use SmrSector;
 
 class NpcActor {
 
@@ -49,8 +49,8 @@ class NpcActor {
 		$player->update();
 	}
 
-	private function refreshPlayer(): AbstractSmrPlayer {
-		return AbstractSmrPlayer::getPlayer($this->accountID, $this->gameID, true);
+	private function refreshPlayer(): AbstractPlayer {
+		return AbstractPlayer::getPlayer($this->accountID, $this->gameID, true);
 	}
 
 	public function getNumActions(): int {
@@ -86,7 +86,7 @@ class NpcActor {
 		if ($player->isDead()) {
 			debug('Some evil person killed us, let\'s move on now.');
 			$player->setDead(false); // see death_processing.php
-			$player->setNewbieWarning(false); // undo SmrPlayer::killPlayer setting this to true
+			$player->setNewbieWarning(false); // undo Player::killPlayer setting this to true
 			checkStartConditions($player);
 
 			global $previousContainer;
@@ -96,7 +96,7 @@ class NpcActor {
 		}
 
 		// Do we have a plot that ends in Fed?
-		$hasPlotToFed = $player->hasPlottedCourse() && SmrSector::getSector($player->getGameID(), $player->getPlottedCourse()->getEndSectorID())->offersFederalProtection();
+		$hasPlotToFed = $player->hasPlottedCourse() && Sector::getSector($player->getGameID(), $player->getPlottedCourse()->getEndSectorID())->offersFederalProtection();
 
 		if ($hasPlotToFed) {
 			// We have a route to fed to follow

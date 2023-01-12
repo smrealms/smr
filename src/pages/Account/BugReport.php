@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
-use SmrAccount;
 
 class BugReport extends AccountPage {
 
@@ -13,7 +13,7 @@ class BugReport extends AccountPage {
 
 	public string $file = 'bug_report.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Report a Bug');
 	}
 

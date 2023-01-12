@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Account;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
@@ -9,7 +10,6 @@ use Smr\Pages\Player\ChatSharing;
 use Smr\Pages\Player\PreferencesProcessor as PlayerPreferencesProcessor;
 use Smr\Session;
 use Smr\Template;
-use SmrAccount;
 
 class Preferences extends AccountPage {
 
@@ -17,7 +17,7 @@ class Preferences extends AccountPage {
 
 	public string $file = 'preferences.php';
 
-	public function build(SmrAccount $account, Template $template): void {
+	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Preferences');
 
 		$session = Session::getInstance();

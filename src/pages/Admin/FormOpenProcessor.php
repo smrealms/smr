@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Admin;
 
+use Smr\Account;
 use Smr\Database;
 use Smr\Page\AccountPageProcessor;
-use SmrAccount;
 
 class FormOpenProcessor extends AccountPageProcessor {
 
@@ -13,7 +13,7 @@ class FormOpenProcessor extends AccountPageProcessor {
 		private readonly string $type
 	) {}
 
-	public function build(SmrAccount $account): never {
+	public function build(Account $account): never {
 		$db = Database::getInstance();
 		$db->write('UPDATE open_forms SET open = ' . $db->escapeBoolean(!$this->isOpen) . ' WHERE type=' . $db->escapeString($this->type));
 

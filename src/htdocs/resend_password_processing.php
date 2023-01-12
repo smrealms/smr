@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\Account;
 use Smr\Exceptions\AccountNotFound;
 use Smr\Request;
 
@@ -12,7 +13,7 @@ try {
 
 	// get this user from db
 	try {
-		$account = SmrAccount::getAccountByEmail(Request::get('email'));
+		$account = Account::getAccountByEmail(Request::get('email'));
 	} catch (AccountNotFound) {
 		// unknown user
 		create_error('The specified e-mail address is not registered!');
