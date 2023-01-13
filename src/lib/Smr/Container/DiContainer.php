@@ -67,7 +67,6 @@ class DiContainer {
 		$builder = new ContainerBuilder(ResettableContainer::class);
 		$builder
 			->addDefinitions($this->getDefinitions())
-			->useAnnotations(false)
 			->useAutowiring(true);
 		if ($enableCompilation) {
 			// The CompiledContainer.php will be saved to the /tmp directory on the Docker container once
