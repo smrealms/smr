@@ -492,21 +492,27 @@ class Force {
 
 	/**
 	 * @param WeaponDamageData $damage
-	 * @return array<string, int|bool>
+	 * @return ForceTakenDamageData
 	 */
 	public function takeDamage(array $damage): array {
 		$alreadyDead = !$this->exists();
+		$numMines = 0;
+		$numCDs = 0;
+		$numSDs = 0;
 		$minesDamage = 0;
 		$cdDamage = 0;
 		$sdDamage = 0;
 		if (!$alreadyDead) {
-			$minesDamage = $this->takeDamageToMines($damage['Armour']);
+			$numMines = $this->takeDamageToMines($damage['Armour']);
+			$minesDamage = $numMines * MINE_ARMOUR;
 			if (!$this->hasMines() && ($minesDamage == 0 || $damage['Rollover'])) {
 				$cdMaxDamage = $damage['Armour'] - $minesDamage;
-				$cdDamage = $this->takeDamageToCDs($cdMaxDamage);
+				$numCDs = $this->takeDamageToCDs($cdMaxDamage);
+				$cdDamage = $numCDs * CD_ARMOUR;
 				if (!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover'])) {
 					$sdMaxDamage = $damage['Armour'] - $minesDamage - $cdDamage;
-					$sdDamage = $this->takeDamageToSDs($sdMaxDamage);
+					$numSDs = $this->takeDamageToSDs($sdMaxDamage);
+					$sdDamage = $numSDs * SD_ARMOUR;
 				}
 			}
 		}
@@ -514,34 +520,43 @@ class Force {
 						'KillingShot' => !$alreadyDead && !$this->exists(),
 						'TargetAlreadyDead' => $alreadyDead,
 						'Mines' => $minesDamage,
-						'NumMines' => $minesDamage / MINE_ARMOUR,
+						'NumMines' => $numMines,
 						'HasMines' => $this->hasMines(),
 						'CDs' => $cdDamage,
-						'NumCDs' => $cdDamage / CD_ARMOUR,
+						'NumCDs' => $numCDs,
 						'HasCDs' => $this->hasCDs(),
 						'SDs' => $sdDamage,
-						'NumSDs' => $sdDamage / SD_ARMOUR,
+						'NumSDs' => $numSDs,
 						'HasSDs' => $this->hasSDs(),
 						'TotalDamage' => $minesDamage + $cdDamage + $sdDamage,
 		];
 	}
 
+	/**
+	 * Returns the number of mines destroyed
+	 */
 	protected function takeDamageToMines(int $damage): int {
-		$actualDamage = min($this->getMines(), IFloor($damage / MINE_ARMOUR));
-		$this->takeMines($actualDamage);
-		return $actualDamage * MINE_ARMOUR;
+		$numMines = min($this->getMines(), IFloor($damage / MINE_ARMOUR));
+		$this->takeMines($numMines);
+		return $numMines;
 	}
 
+	/**
+	 * Returns the number of CDs destroyed
+	 */
 	protected function takeDamageToCDs(int $damage): int {
-		$actualDamage = min($this->getCDs(), IFloor($damage / CD_ARMOUR));
-		$this->takeCDs($actualDamage);
-		return $actualDamage * CD_ARMOUR;
+		$numCDs = min($this->getCDs(), IFloor($damage / CD_ARMOUR));
+		$this->takeCDs($numCDs);
+		return $numCDs;
 	}
 
+	/**
+	 * Returns the number of SDs destroyed
+	 */
 	protected function takeDamageToSDs(int $damage): int {
-		$actualDamage = min($this->getSDs(), IFloor($damage / SD_ARMOUR));
-		$this->takeSDs($actualDamage);
-		return $actualDamage * SD_ARMOUR;
+		$numSDs = min($this->getSDs(), IFloor($damage / SD_ARMOUR));
+		$this->takeSDs($numSDs);
+		return $numSDs;
 	}
 
 	/**

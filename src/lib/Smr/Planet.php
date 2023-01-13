@@ -1265,7 +1265,7 @@ class Planet {
 
 	/**
 	 * @param WeaponDamageData $damage
-	 * @return array<string, int|bool>
+	 * @return TakenDamageData
 	 */
 	public function takeDamage(array $damage): array {
 		$alreadyDead = $this->isDestroyed();

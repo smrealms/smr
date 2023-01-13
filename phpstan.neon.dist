@@ -32,6 +32,8 @@ parameters:
 
     typeAliases:
         WeaponDamageData: 'array{Shield: int, Armour: int, Rollover: bool, Launched?: int, Kamikaze?: int}'
+        TakenDamageData: 'array{KillingShot: bool, TargetAlreadyDead: bool, Shield: int, CDs: int, NumCDs: int, HasCDs: bool, Armour: int, TotalDamage: int}'
+        ForceTakenDamageData: 'array{KillingShot: bool, TargetAlreadyDead: bool, Mines: int, NumMines: int, HasMines: bool, CDs: int, NumCDs: int, HasCDs: bool, SDs: int, NumSDs: int, HasSDs: bool, TotalDamage: int}'
 
     #----------------------------------------------
     # Warning suppression (to be fixed eventually!)

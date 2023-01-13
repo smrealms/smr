@@ -901,7 +901,7 @@ class AbstractShip {
 
 	/**
 	 * @param WeaponDamageData $damage
-	 * @return array<string, int|bool>
+	 * @return TakenDamageData
 	 */
 	public function takeDamage(array $damage): array {
 		$alreadyDead = $this->getPlayer()->isDead();
@@ -937,7 +937,7 @@ class AbstractShip {
 
 	/**
 	 * @param WeaponDamageData $damage
-	 * @return array<string, int|bool>
+	 * @return TakenDamageData
 	 */
 	public function takeDamageFromMines(array $damage): array {
 		$alreadyDead = $this->getPlayer()->isDead();
