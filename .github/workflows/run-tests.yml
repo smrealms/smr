@@ -63,7 +63,7 @@ jobs:
         run: composer start:test-services
 
       - name: Run phpunit tests
-        run: composer test
+        run: composer phpunit
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
