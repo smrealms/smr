@@ -80,11 +80,6 @@ parameters:
             path: src/lib/Smr/Container/DiContainer.php
             count: 1
         -
-            # https://github.com/PHP-DI/PHP-DI/pull/827
-            message: '#Call to an undefined method DI\\Container::(initialized|reset)\(\).#'
-            path: test/SmrTest/Container/ResettableContainerTraitTest.php
-            count: 9
-        -
             # https://github.com/discord-php/DiscordPHP/pull/1033
             message: '#Parameter \#2 $callable of closure expects Callable|string, Closure given.#'
             path: src/lib/Smr/Discord/Command.php
