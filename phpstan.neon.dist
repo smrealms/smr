@@ -79,8 +79,3 @@ parameters:
             message: '#Method Smr\\Container\\DiContainer::buildContainer\(\) should return Smr\\Container\\ResettableCompiledContainer|Smr\\Container\\ResettableContainer but returns DI\\Container.#'
             path: src/lib/Smr/Container/DiContainer.php
             count: 1
-        -
-            # https://github.com/discord-php/DiscordPHP/pull/1033
-            message: '#Parameter \#2 $callable of closure expects Callable|string, Closure given.#'
-            path: src/lib/Smr/Discord/Command.php
-            count: 1
