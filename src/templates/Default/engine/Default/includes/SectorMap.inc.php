@@ -72,12 +72,13 @@ use Smr\Globals;
 									} ?>
 								</div><?php
 							}
-							if ((($UniGen || $isCurrentSector) && $Sector->hasPort()) || $Sector->hasCachedPort($MapPlayer)) {
-								if (($UniGen || $isCurrentSector) && $Sector->hasPort()) {
-									$Port = $Sector->getPort();
-								} elseif ($Sector->hasCachedPort($MapPlayer)) {
-									$Port = $Sector->getCachedPort($MapPlayer);
-								} ?>
+							$Port = null;
+							if (($UniGen || $isCurrentSector) && $Sector->hasPort()) {
+								$Port = $Sector->getPort();
+							} elseif ($Sector->hasCachedPort($MapPlayer)) {
+								$Port = $Sector->getCachedPort($MapPlayer);
+							}
+							if ($Port !== null) { ?>
 								<div class="lmport <?php if ($Sector->getLinkLeft()) { ?>a<?php } else { ?>b<?php } ?>
 									"><?php
 									if ($UniGen) { ?>
