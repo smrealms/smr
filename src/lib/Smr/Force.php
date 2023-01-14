@@ -560,7 +560,7 @@ class Force {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{}
 	 */
 	public function killForcesByPlayer(AbstractPlayer $killer): array {
 		return [];

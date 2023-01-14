@@ -2160,7 +2160,7 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{DeadExp: int, KillerExp: int, KillerCredits: int}
 	 */
 	public function killPlayerByPlayer(self $killer): array {
 		$return = [];
@@ -2307,7 +2307,7 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{DeadExp: int, LostCredits: int}
 	 */
 	public function killPlayerByForces(Force $forces): array {
 		$return = [];
@@ -2355,7 +2355,7 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{DeadExp: int, LostCredits: int}
 	 */
 	public function killPlayerByPort(Port $port): array {
 		$return = [];
@@ -2399,7 +2399,7 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{DeadExp: int, LostCredits: int}
 	 */
 	public function killPlayerByPlanet(Planet $planet): array {
 		$return = [];

@@ -1451,7 +1451,7 @@ class Port {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{}
 	 */
 	public function killPortByPlayer(AbstractPlayer $killer): array {
 		// Port is destroyed, so empty the port of all trade goods

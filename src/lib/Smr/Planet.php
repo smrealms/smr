@@ -1329,7 +1329,7 @@ class Planet {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{}
 	 */
 	public function killPlanetByPlayer(AbstractPlayer $killer): array {
 		$this->creditCurrentAttackersForKill();
