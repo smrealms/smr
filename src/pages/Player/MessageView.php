@@ -86,7 +86,6 @@ class MessageView extends PlayerPage {
 					LIMIT ' . ($page * MESSAGES_PER_PAGE) . ', ' . MESSAGES_PER_PAGE);
 
 		$messageBox['NumberMessages'] = $dbResult->getNumRecords();
-		$messageBox['Messages'] = [];
 
 		// Group scout messages if they wouldn't fit on a single page
 		if ($folderID == MSG_SCOUT && !$this->showAll && $messageBox['TotalMessages'] > $player->getScoutMessageGroupLimit()) {
@@ -96,13 +95,17 @@ class MessageView extends PlayerPage {
 			$dispContainer = new self(MSG_SCOUT, showAll: true);
 			$messageBox['ShowAllHref'] = $dispContainer->href();
 
-			displayScouts($messageBox, $player);
+			[$messages, $groupedMessages, $numMessages] = displayScouts($player);
+			$messageBox['GroupedMessages'] = $groupedMessages;
+			$messageBox['NumberMessages'] = $numMessages;
 			$template->unassign('NextPageHREF'); // always displaying all scout messages?
 		} else {
+			$messages = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$messageBox['Messages'][] = displayMessage($dbRecord->getInt('message_id'), $dbRecord->getInt('account_id'), $dbRecord->getInt('sender_id'), $player->getGameID(), $dbRecord->getString('message_text'), $dbRecord->getInt('send_time'), $dbRecord->getBoolean('msg_read'), $folderID, $player->getAccount());
+				$messages[] = displayMessage($dbRecord->getInt('message_id'), $dbRecord->getInt('account_id'), $dbRecord->getInt('sender_id'), $player->getGameID(), $dbRecord->getString('message_text'), $dbRecord->getInt('send_time'), $dbRecord->getBoolean('msg_read'), $folderID, $player->getAccount());
 			}
 		}
+		$messageBox['Messages'] = $messages;
 
 		// This should really be part of a (pre)processing page
 		if ($page == 0 && !$session->ajax) {
@@ -116,9 +119,9 @@ class MessageView extends PlayerPage {
 
 
 /**
- * @param array<string, mixed> $messageBox
+ * @return array{0: array<array{ID: string, Unread: bool, SenderID: int, SendTime: string, Text: string}>, 1: array<int, array<array{ID: int, Text: string, Unread: bool, SendTime: string, Sender?: \Smr\AbstractPlayer, SenderDisplayName?: string, ReportHref?: string, BlacklistHref?: string, ReplyHREF?: string, ReceiverDisplayName?: string}>>, 2: int}
  */
-function displayScouts(array &$messageBox, AbstractPlayer $player): void {
+function displayScouts(AbstractPlayer $player): array {
 	// Generate the group messages
 	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT player.*, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, sum(msg_read=\'FALSE\') as total_unread
@@ -131,12 +134,13 @@ function displayScouts(array &$messageBox, AbstractPlayer $player): void {
 					GROUP BY sender_id
 					ORDER BY last DESC');
 
+	$messages = [];
 	foreach ($dbResult->records() as $dbRecord) {
 		$sender = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 		$totalUnread = $dbRecord->getInt('total_unread');
 		$message = 'Your forces have spotted ' . $sender->getBBLink() . ' passing your forces ' . pluralise($dbRecord->getInt('number'), 'time');
 		$message .= ($totalUnread > 0) ? ' (' . $totalUnread . ' unread).' : '.';
-		$messageBox['Messages'][] = displayGrouped($sender, $message, $dbRecord->getInt('first'), $dbRecord->getInt('last'), $totalUnread > 0, $player->getAccount());
+		$messages[] = displayGrouped($sender, $message, $dbRecord->getInt('first'), $dbRecord->getInt('last'), $totalUnread > 0, $player->getAccount());
 	}
 
 	// Now display individual messages in each group
@@ -148,20 +152,23 @@ function displayScouts(array &$messageBox, AbstractPlayer $player): void {
 					AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT) . '
 					AND receiver_delete = ' . $db->escapeBoolean(false) . '
 					ORDER BY send_time DESC');
+	$groupedMessages = [];
 	foreach ($dbResult->records() as $dbRecord) {
-		$groupBox =& $messageBox['GroupedMessages'][$dbRecord->getInt('sender_id')];
+		$senderID = $dbRecord->getInt('sender_id');
 		// Limit the number of messages in each group
-		if (!isset($groupBox['Messages']) || count($groupBox['Messages']) < MESSAGE_SCOUT_GROUP_LIMIT) {
-			$groupBox['Messages'][] = displayMessage($dbRecord->getInt('message_id'), $dbRecord->getInt('account_id'), $dbRecord->getInt('sender_id'), $player->getGameID(), $dbRecord->getString('message_text'), $dbRecord->getInt('send_time'), $dbRecord->getBoolean('msg_read'), MSG_SCOUT, $player->getAccount());
+		if (!isset($groupedMessages[$senderID]) || count($groupedMessages[$senderID]) < MESSAGE_SCOUT_GROUP_LIMIT) {
+			$groupedMessages[$senderID][] = displayMessage($dbRecord->getInt('message_id'), $dbRecord->getInt('account_id'), $dbRecord->getInt('sender_id'), $player->getGameID(), $dbRecord->getString('message_text'), $dbRecord->getInt('send_time'), $dbRecord->getBoolean('msg_read'), MSG_SCOUT, $player->getAccount());
 		}
 	}
 
 	// In the default view (groups), we're always displaying all messages
-	$messageBox['NumberMessages'] = $dbResult->getNumRecords();
+	$numMessages = $dbResult->getNumRecords();
+
+	return [$messages, $groupedMessages, $numMessages];
 }
 
 /**
- * @return array<string, mixed>
+ * @return array{ID: string, Unread: bool, SenderID: int, SendTime: string, Text: string}
  */
 function displayGrouped(AbstractPlayer $sender, string $message_text, int $first, int $last, bool $star, Account $displayAccount): array {
 	// Define a unique array so we can delete grouped messages
@@ -171,18 +178,17 @@ function displayGrouped(AbstractPlayer $sender, string $message_text, int $first
 		$last,
 	];
 
-	$message = [];
-	$message['ID'] = base64_encode(serialize($array));
-	$message['Unread'] = $star;
-	$message['SenderID'] = $sender->getAccountID();
-	$message['SenderDisplayName'] = $sender->getLinkedDisplayName(false);
-	$message['SendTime'] = date($displayAccount->getDateTimeFormat(), $first) . ' - ' . date($displayAccount->getDateTimeFormat(), $last);
-	$message['Text'] = $message_text;
-	return $message;
+	return [
+		'ID' => base64_encode(serialize($array)),
+		'Unread' => $star,
+		'SenderID' => $sender->getAccountID(),
+		'SendTime' => date($displayAccount->getDateTimeFormat(), $first) . ' - ' . date($displayAccount->getDateTimeFormat(), $last),
+		'Text' => $message_text,
+	];
 }
 
 /**
- * @return array<string, mixed>
+ * @return array{ID: int, Text: string, Unread: bool, SendTime: string, Sender?: \Smr\AbstractPlayer, SenderDisplayName?: string, ReportHref?: string, BlacklistHref?: string, ReplyHREF?: string, ReceiverDisplayName?: string}
  */
 function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $game_id, string $message_text, int $send_time, bool $msg_read, int $type, Account $displayAccount): array {
 	$message = [];

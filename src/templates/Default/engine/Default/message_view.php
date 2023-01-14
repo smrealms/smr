@@ -61,7 +61,7 @@ if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
 					if (isset($MessageBox['GroupedMessages'])) { ?>
 						<tr>
 							<td colspan="3"><?php
-								$SubMessages = $MessageBox['GroupedMessages'][$Message['SenderID']]['Messages']; ?>
+								$SubMessages = $MessageBox['GroupedMessages'][$Message['SenderID']]; ?>
 								<div class="shrink noWrap pointer" id="toggle-recent<?php echo $Message['SenderID']; ?>" onclick="toggleScoutGroup(<?php echo $Message['SenderID']; ?>);">
 									Show/Hide Recent (<?php echo count($SubMessages); ?>)
 								</div>
