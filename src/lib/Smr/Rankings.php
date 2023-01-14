@@ -6,7 +6,7 @@ class Rankings {
 
 	/**
 	 * @param array<int, \Smr\DatabaseRecord> $rankedStats
-	 * @return array<int, array<string, mixed>>
+	 * @return array<int, array{Class: string, SectorID: int, Value: int}>
 	 */
 	public static function collectSectorRankings(array $rankedStats, AbstractPlayer $player, int $minRank = 1, int $maxRank = 10): array {
 		$rankedStats = self::filterRanks($rankedStats, $minRank, $maxRank);
@@ -31,7 +31,7 @@ class Rankings {
 
 	/**
 	 * @param array<int, \Smr\DatabaseRecord> $rankedStats
-	 * @return array<int, array<string, mixed>>
+	 * @return array<int, array{style: string, race_id: int, amount: int, amount_avg: int, num_players: int}>
 	 */
 	public static function collectRaceRankings(array $rankedStats, AbstractPlayer $player): array {
 		$currRank = 1;
@@ -56,7 +56,7 @@ class Rankings {
 
 	/**
 	 * @param array<int, \Smr\DatabaseRecord> $rankedStats
-	 * @return array<int, array<string, mixed>>
+	 * @return array<int, array{Alliance: \Smr\Alliance, Class: string, Value: int}>
 	 */
 	public static function collectAllianceRankings(array $rankedStats, ?AbstractPlayer $player, int $minRank = 1, int $maxRank = 10): array {
 		$rankedStats = self::filterRanks($rankedStats, $minRank, $maxRank);
@@ -84,7 +84,7 @@ class Rankings {
 
 	/**
 	 * @param array<int, \Smr\DatabaseRecord> $rankedStats
-	 * @return array<int, array<string, mixed>>
+	 * @return array<int, array{Player: \Smr\AbstractPlayer, Class: string, Value: int}>
 	 */
 	public static function collectRankings(array $rankedStats, ?AbstractPlayer $player, int $minRank = 1, int $maxRank = 10): array {
 		$rankedStats = self::filterRanks($rankedStats, $minRank, $maxRank);
