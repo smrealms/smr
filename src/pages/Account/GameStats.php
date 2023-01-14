@@ -30,14 +30,12 @@ class GameStats extends AccountPage {
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT count(*) total_players, IFNULL(MAX(experience),0) max_exp, IFNULL(MAX(alignment),0) max_align, IFNULL(MIN(alignment),0) min_alignment, IFNULL(MAX(kills),0) max_kills FROM player WHERE game_id = ' . $gameID . ' ORDER BY experience DESC');
-		if ($dbResult->hasRecord()) {
-			$dbRecord = $dbResult->record();
-			$template->assign('TotalPlayers', $dbRecord->getInt('total_players'));
-			$template->assign('HighestExp', $dbRecord->getInt('max_exp'));
-			$template->assign('HighestAlign', $dbRecord->getInt('max_align'));
-			$template->assign('LowestAlign', $dbRecord->getInt('min_alignment'));
-			$template->assign('HighestKills', $dbRecord->getInt('max_kills'));
-		}
+		$dbRecord = $dbResult->record();
+		$template->assign('TotalPlayers', $dbRecord->getInt('total_players'));
+		$template->assign('HighestExp', $dbRecord->getInt('max_exp'));
+		$template->assign('HighestAlign', $dbRecord->getInt('max_align'));
+		$template->assign('LowestAlign', $dbRecord->getInt('min_alignment'));
+		$template->assign('HighestKills', $dbRecord->getInt('max_kills'));
 
 		$dbResult = $db->read('SELECT count(*) num_alliance FROM alliance WHERE game_id = ' . $gameID);
 		$template->assign('TotalAlliances', $dbResult->record()->getInt('num_alliance'));
