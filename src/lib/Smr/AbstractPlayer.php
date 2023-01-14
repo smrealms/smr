@@ -1885,35 +1885,6 @@ abstract class AbstractPlayer {
 		return $this->getTicker($tickerType) !== false;
 	}
 
-	/**
-	 * @return array<string, mixed>
-	 */
-	public function shootForces(Force $forces): array {
-		return $this->getShip()->shootForces($forces);
-	}
-
-	/**
-	 * @return array<string, mixed>
-	 */
-	public function shootPort(Port $port): array {
-		return $this->getShip()->shootPort($port);
-	}
-
-	/**
-	 * @return array<string, mixed>
-	 */
-	public function shootPlanet(Planet $planet): array {
-		return $this->getShip()->shootPlanet($planet);
-	}
-
-	/**
-	 * @param array<AbstractPlayer> $targetPlayers
-	 * @return array<string, mixed>
-	 */
-	public function shootPlayers(array $targetPlayers): array {
-		return $this->getShip()->shootPlayers($targetPlayers);
-	}
-
 	public function getMilitaryPayment(): int {
 		return $this->militaryPayment;
 	}

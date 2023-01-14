@@ -64,7 +64,7 @@ class AttackPortProcessor extends PlayerPageProcessor {
 
 		$totalShieldDamage = 0;
 		foreach ($attackers as $attacker) {
-			$playerResults = $attacker->shootPort($port);
+			$playerResults = $attacker->getShip()->shootPort($port);
 			$results['Attackers']['Traders'][$attacker->getAccountID()] = $playerResults;
 			$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 			foreach ($playerResults['Weapons'] as $weapon) {

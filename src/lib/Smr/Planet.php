@@ -1199,7 +1199,7 @@ class Planet {
 
 	/**
 	 * @param array<AbstractPlayer> $targetPlayers
-	 * @return array<string, mixed>
+	 * @return array{Planet: self, TotalDamage: int, TotalDamagePerTargetPlayer?: array<int, int>, DeadBeforeShot: bool, Weapons?: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}}
 	 */
 	public function shootPlayers(array $targetPlayers): array {
 		$results = ['Planet' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => []];
@@ -1215,15 +1215,20 @@ class Planet {
 		foreach ($weapons as $orderID => $weapon) {
 			$results['Weapons'][$orderID] = $weapon->shootPlayerAsPlanet($this, array_rand_value($targetPlayers));
 			if ($results['Weapons'][$orderID]['Hit']) {
-				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
-				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['TargetPlayer']->getAccountID()] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+				if (!isset($results['Weapons'][$orderID]['ActualDamage'])) {
+					throw new Exception('Weapon hit without providing ActualDamage!');
+				}
+				$totalDamage = $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+				$results['TotalDamage'] += $totalDamage;
+				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['TargetPlayer']->getAccountID()] += $totalDamage;
 			}
 		}
 		if ($this->hasCDs()) {
 			$thisCDs = new CombatDrones($this->getCDs(), true);
 			$results['Drones'] = $thisCDs->shootPlayerAsPlanet($this, array_rand_value($targetPlayers));
-			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
-			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $results['Drones']['ActualDamage']['TotalDamage'];
+			$totalDamage = $results['Drones']['ActualDamage']['TotalDamage'];
+			$results['TotalDamage'] += $totalDamage;
+			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $totalDamage;
 		}
 		return $results;
 	}

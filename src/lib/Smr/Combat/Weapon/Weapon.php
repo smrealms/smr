@@ -297,7 +297,7 @@ class Weapon extends AbstractWeapon {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{Weapon: parent, TargetPort: \Smr\Port, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{}}
 	 */
 	public function shootPort(AbstractPlayer $weaponPlayer, Port $port): array {
 		$return = ['Weapon' => $this, 'TargetPort' => $port, 'Hit' => false];
@@ -310,7 +310,7 @@ class Weapon extends AbstractWeapon {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{Weapon: parent, TargetPlanet: \Smr\Planet, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{}}
 	 */
 	public function shootPlanet(AbstractPlayer $weaponPlayer, Planet $planet): array {
 		$return = ['Weapon' => $this, 'TargetPlanet' => $planet, 'Hit' => false];
@@ -337,7 +337,7 @@ class Weapon extends AbstractWeapon {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{Weapon: parent, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
 	 */
 	public function shootPlayerAsPort(Port $port, AbstractPlayer $targetPlayer): array {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => false];
@@ -350,7 +350,7 @@ class Weapon extends AbstractWeapon {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{Weapon: parent, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
 	 */
 	public function shootPlayerAsPlanet(Planet $planet, AbstractPlayer $targetPlayer): array {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => false];

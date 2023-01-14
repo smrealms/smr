@@ -79,9 +79,7 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 		// *
 		// ********************************
 
-		$results = ['Attackers' => ['TotalDamage' => 0],
-						'Forces' => [],
-						'Forced' => $bump];
+		$results = ['Forced' => $bump];
 
 		$attackers = $player->getSector()->getFightingTradersAgainstForces($player, $bump);
 
@@ -100,7 +98,7 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 
 		$results['Attackers'] = ['TotalDamage' => 0];
 		foreach ($attackers as $attacker) {
-			$playerResults = $attacker->shootForces($forces);
+			$playerResults = $attacker->getShip()->shootForces($forces);
 			$results['Attackers']['Traders'][$attacker->getAccountID()] = $playerResults;
 			$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 		}

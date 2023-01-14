@@ -756,7 +756,7 @@ class AbstractShip {
 
 	/**
 	 * @param array<AbstractPlayer> $targetPlayers
-	 * @return array<string, mixed>
+	 * @return array{Player: \Smr\AbstractPlayer, TotalDamage: int, TotalDamagePerTargetPlayer?: array<int, int>, DeadBeforeShot: bool, Weapons: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}}
 	 */
 	public function shootPlayers(array $targetPlayers): array {
 		$thisPlayer = $this->getPlayer();
@@ -772,15 +772,20 @@ class AbstractShip {
 		foreach ($this->weapons as $orderID => $weapon) {
 			$results['Weapons'][$orderID] = $weapon->shootPlayer($thisPlayer, array_rand_value($targetPlayers));
 			if ($results['Weapons'][$orderID]['Hit']) {
-				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
-				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['TargetPlayer']->getAccountID()] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+				if (!isset($results['Weapons'][$orderID]['ActualDamage'])) {
+					throw new Exception('Weapon hit without providing ActualDamage!');
+				}
+				$totalDamage = $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+				$results['TotalDamage'] += $totalDamage;
+				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['TargetPlayer']->getAccountID()] += $totalDamage;
 			}
 		}
 		if ($this->hasCDs()) {
 			$thisCDs = new CombatDrones($this->getCDs());
 			$results['Drones'] = $thisCDs->shootPlayer($thisPlayer, array_rand_value($targetPlayers));
-			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
-			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $results['Drones']['ActualDamage']['TotalDamage'];
+			$totalDamage = $results['Drones']['ActualDamage']['TotalDamage'];
+			$results['TotalDamage'] += $totalDamage;
+			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $totalDamage;
 		}
 		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLAYER));
 		$thisPlayer->increaseHOF($results['TotalDamage'], ['Combat', 'Player', 'Damage Done'], HOF_PUBLIC);
@@ -789,7 +794,7 @@ class AbstractShip {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{Player: \Smr\AbstractPlayer, TotalDamage: int, DeadBeforeShot: bool, Weapons: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetForces: \Smr\Force, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: ForceTakenDamageData, KillResults?: array{}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetForces: \Smr\Force, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: ForceTakenDamageData, KillResults?: array{}}}
 	 */
 	public function shootForces(Force $forces): array {
 		$thisPlayer = $this->getPlayer();
@@ -802,7 +807,9 @@ class AbstractShip {
 		foreach ($this->weapons as $orderID => $weapon) {
 			$results['Weapons'][$orderID] = $weapon->shootForces($thisPlayer, $forces);
 			if ($results['Weapons'][$orderID]['Hit']) {
-				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+				if (!isset($results['Weapons'][$orderID]['ActualDamage'])) {
+					throw new Exception('Weapon hit without providing ActualDamage!');
+				}
 				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumMines'], ['Combat', 'Forces', 'Mines', 'Killed'], HOF_PUBLIC);
 				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['Mines'], ['Combat', 'Forces', 'Mines', 'Damage Done'], HOF_PUBLIC);
 				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumCDs'], ['Combat', 'Forces', 'Combat Drones', 'Killed'], HOF_PUBLIC);
@@ -810,6 +817,7 @@ class AbstractShip {
 				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumSDs'], ['Combat', 'Forces', 'Scout Drones', 'Killed'], HOF_PUBLIC);
 				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['SDs'], ['Combat', 'Forces', 'Scout Drones', 'Damage Done'], HOF_PUBLIC);
 				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumMines'] + $results['Weapons'][$orderID]['ActualDamage']['NumCDs'] + $results['Weapons'][$orderID]['ActualDamage']['NumSDs'], ['Combat', 'Forces', 'Killed'], HOF_PUBLIC);
+				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 			}
 		}
 		if ($this->hasCDs()) {
@@ -831,7 +839,7 @@ class AbstractShip {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{Player: \Smr\AbstractPlayer, TotalDamage: int, DeadBeforeShot: bool, Weapons: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPort: \Smr\Port, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPort: \Smr\Port, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{}}}
 	 */
 	public function shootPort(Port $port): array {
 		$thisPlayer = $this->getPlayer();
@@ -844,6 +852,9 @@ class AbstractShip {
 		foreach ($this->weapons as $orderID => $weapon) {
 			$results['Weapons'][$orderID] = $weapon->shootPort($thisPlayer, $port);
 			if ($results['Weapons'][$orderID]['Hit']) {
+				if (!isset($results['Weapons'][$orderID]['ActualDamage'])) {
+					throw new Exception('Weapon hit without providing ActualDamage!');
+				}
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 			}
 		}
@@ -872,7 +883,7 @@ class AbstractShip {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{Player: \Smr\AbstractPlayer, TotalDamage: int, DeadBeforeShot: bool, Weapons: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlanet: \Smr\Planet, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlanet: \Smr\Planet, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{}}}
 	 */
 	public function shootPlanet(Planet $planet): array {
 		$thisPlayer = $this->getPlayer();
@@ -885,6 +896,9 @@ class AbstractShip {
 		foreach ($this->weapons as $orderID => $weapon) {
 			$results['Weapons'][$orderID] = $weapon->shootPlanet($thisPlayer, $planet);
 			if ($results['Weapons'][$orderID]['Hit']) {
+				if (!isset($results['Weapons'][$orderID]['ActualDamage'])) {
+					throw new Exception('Weapon hit without providing ActualDamage!');
+				}
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 			}
 		}
