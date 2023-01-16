@@ -71,7 +71,7 @@ class DiContainer {
 		if ($enableCompilation) {
 			// The CompiledContainer.php will be saved to the /tmp directory on the Docker container once
 			// during its lifecycle (first request)
-			$builder->enableCompilation('/tmp', containerParentClass: ResettableCompiledContainer::class);
+			$builder = $builder->enableCompilation('/tmp', containerParentClass: ResettableCompiledContainer::class);
 		}
 		return $builder->build();
 	}
