@@ -74,8 +74,3 @@ parameters:
             message: '#Parameter \#1 \$token of method .*::getResourceOwner\(\) expects .*AccessToken, .*AccessTokenInterface given.#'
             path: src/lib/Smr/SocialLogin
             count: 2
-        -
-            # https://github.com/PHP-DI/PHP-DI/pull/827
-            message: '#Method Smr\\Container\\DiContainer::buildContainer\(\) should return Smr\\Container\\ResettableCompiledContainer|Smr\\Container\\ResettableContainer but returns DI\\Container.#'
-            path: src/lib/Smr/Container/DiContainer.php
-            count: 1
