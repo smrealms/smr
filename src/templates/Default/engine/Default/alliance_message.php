@@ -24,7 +24,7 @@ if (count($Threads) > 0) { ?>
 					</td>
 					<td class="sort_author noWrap"><?php
 						echo $Thread['Sender'];
-						if ($Thread['CanDelete']) {
+						if (isset($Thread['DeleteHref'])) {
 							?><br /><small><a href="<?php echo $Thread['DeleteHref']; ?>">Delete Thread!</a></small><?php
 						} ?>
 					</td>
