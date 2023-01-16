@@ -41,27 +41,23 @@ if (!$canAttack) {
 	<tr><?php
 		foreach ($fightingPlayers as $fleet) {
 			?><td class="top"><?php
-			if (is_array($fleet)) {
-				foreach ($fleet as $fleetPlayer) {
-					$fleetShip = $fleetPlayer->getShip();
-					if ($fleetPlayer->hasNewbieStatus()) { ?><span class="newbie"><?php }
-					echo $fleetPlayer->getLevelName(); ?><br /><?php
-					echo $fleetPlayer->getDisplayName() ?><br />
-					Race: <?php echo $fleetPlayer->getRaceName() ?><br />
-					Alliance: <?php echo $fleetPlayer->getAllianceDisplayName() ?><br /><br /><?php
-					echo $fleetShip->getName() ?><br />
-					Rating : <?php echo $fleetShip->getDisplayAttackRating() . '/' . $fleetShip->getDisplayDefenseRating() ?><br /><?php
-					if ($ThisShip->hasScanner()) { ?>
-						Shields : <?php echo $fleetShip->getShieldLow() . '-' . $fleetShip->getShieldHigh() ?><br />
-						Armour : <?php echo $fleetShip->getArmourLow() . '-' . $fleetShip->getArmourHigh() ?><br />
-						Hard Points: <?php echo $fleetShip->getNumWeapons() ?><br />
-						Combat Drones: <?php echo $fleetShip->getCDsLow() . '-' . $fleetShip->getCDsHigh() ?><br /><?php
-					}
-					if ($fleetPlayer->hasNewbieStatus()) { ?></span><?php } ?>
-					<br /><br /><?php
+			foreach ($fleet as $fleetPlayer) {
+				$fleetShip = $fleetPlayer->getShip();
+				if ($fleetPlayer->hasNewbieStatus()) { ?><span class="newbie"><?php }
+				echo $fleetPlayer->getLevelName(); ?><br /><?php
+				echo $fleetPlayer->getDisplayName() ?><br />
+				Race: <?php echo $fleetPlayer->getRaceName() ?><br />
+				Alliance: <?php echo $fleetPlayer->getAllianceDisplayName() ?><br /><br /><?php
+				echo $fleetShip->getName() ?><br />
+				Rating : <?php echo $fleetShip->getDisplayAttackRating() . '/' . $fleetShip->getDisplayDefenseRating() ?><br /><?php
+				if ($ThisShip->hasScanner()) { ?>
+					Shields : <?php echo $fleetShip->getShieldLow() . '-' . $fleetShip->getShieldHigh() ?><br />
+					Armour : <?php echo $fleetShip->getArmourLow() . '-' . $fleetShip->getArmourHigh() ?><br />
+					Hard Points: <?php echo $fleetShip->getNumWeapons() ?><br />
+					Combat Drones: <?php echo $fleetShip->getCDsLow() . '-' . $fleetShip->getCDsHigh() ?><br /><?php
 				}
-			} else {
-				?>&nbsp;<?php
+				if ($fleetPlayer->hasNewbieStatus()) { ?></span><?php } ?>
+				<br /><br /><?php
 			} ?>
 			</td><?php
 		} ?>
