@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var int $Amount
+ * @var string $HofName
+ * @var string $SubmitHREF
+ */
+
 ?>
 <p>Are you sure you want to transfer <?php echo $Amount; ?> SMR credits to
 the player with Hall of Fame name <?php echo $HofName; ?>?</p>

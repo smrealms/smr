@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $TraderSearchHREF
+ */
+
 if (!empty($EmptyResult)) { ?>
 	<p><span class="bold red">No trader found that matches your search!</span></p><?php
 } ?>

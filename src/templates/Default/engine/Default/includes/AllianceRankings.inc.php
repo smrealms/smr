@@ -1,5 +1,16 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var string $RankingStat
+ * @var int $MinRank
+ * @var int $MaxRank
+ * @var int $TotalRanks
+ * @var array<int, array{Alliance: Smr\Alliance, Class: string, Value: int}> $Rankings
+ * @var array<int, array{Alliance: Smr\Alliance, Class: string, Value: int}> $FilteredRankings
+ * @var string $FilterRankingsHREF
+ */
+
 ?>
 <div class="center">
 	<p>Here are the rankings of alliances by their <?php echo $RankingStat; ?>.</p><?php

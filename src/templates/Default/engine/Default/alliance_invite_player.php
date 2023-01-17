@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Alliance $ThisAlliance
+ * @var Smr\Game $ThisGame
+ * @var array<Smr\Player> $InvitePlayers
+ * @var string $InviteHREF
+ * @var array<int, array{invited: string, invited_by: string, expires: string, cancelHREF: string}> $PendingInvites
+ */
+
 ?>
 <table class="standard">
 	<tr>

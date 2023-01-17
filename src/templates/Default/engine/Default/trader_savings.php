@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<array{ID: int, Password: string}> $AnonAccounts
+ * @var int $LottoTickets
+ * @var array{Prize: int, TimeRemaining: int} $LottoInfo
+ * @var float $LottoWinChance
+ * @var int $WinningTickets
+ */
+
 ?>
 <div>
 	<h2>Anonymous Accounts</h2>

@@ -2,6 +2,10 @@
 
 use Smr\Alliance;
 
+/**
+ * @var string $CreateHREF
+ */
+
 ?>
 <form method="POST" action="<?php echo $CreateHREF; ?>">
 	<table class="standard">

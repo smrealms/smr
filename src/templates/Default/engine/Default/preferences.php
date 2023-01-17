@@ -2,6 +2,17 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Template $this
+ * @var string $PlayerPreferencesFormHREF
+ * @var string $AccountPreferencesFormHREF
+ * @var string $ChatSharingHREF
+ * @var string $PreferencesConfirmFormHREF
+ * @var array<int, string> $TransferAccounts
+ */
+
 if (isset($Reason)) {
 	?><p><span class="big bold red"><?php echo $Reason; ?></span></p><?php
 }

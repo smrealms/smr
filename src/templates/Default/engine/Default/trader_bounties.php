@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<array<Smr\Bounty>> $AllClaims
+ * @var string $BountyHQ
+ * @var string $BountyUG
+ */
+
 ?>
 You have the following bounties on your head:<br /><br />
 <table>

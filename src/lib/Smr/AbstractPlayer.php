@@ -1885,35 +1885,6 @@ abstract class AbstractPlayer {
 		return $this->getTicker($tickerType) !== false;
 	}
 
-	/**
-	 * @return array<string, mixed>
-	 */
-	public function shootForces(Force $forces): array {
-		return $this->getShip()->shootForces($forces);
-	}
-
-	/**
-	 * @return array<string, mixed>
-	 */
-	public function shootPort(Port $port): array {
-		return $this->getShip()->shootPort($port);
-	}
-
-	/**
-	 * @return array<string, mixed>
-	 */
-	public function shootPlanet(Planet $planet): array {
-		return $this->getShip()->shootPlanet($planet);
-	}
-
-	/**
-	 * @param array<AbstractPlayer> $targetPlayers
-	 * @return array<string, mixed>
-	 */
-	public function shootPlayers(array $targetPlayers): array {
-		return $this->getShip()->shootPlayers($targetPlayers);
-	}
-
 	public function getMilitaryPayment(): int {
 		return $this->militaryPayment;
 	}
@@ -2160,7 +2131,7 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{DeadExp: int, KillerExp: int, KillerCredits: int}
 	 */
 	public function killPlayerByPlayer(self $killer): array {
 		$return = [];
@@ -2307,7 +2278,7 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{DeadExp: int, LostCredits: int}
 	 */
 	public function killPlayerByForces(Force $forces): array {
 		$return = [];
@@ -2355,7 +2326,7 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{DeadExp: int, LostCredits: int}
 	 */
 	public function killPlayerByPort(Port $port): array {
 		$return = [];
@@ -2399,7 +2370,7 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{DeadExp: int, LostCredits: int}
 	 */
 	public function killPlayerByPlanet(Planet $planet): array {
 		$return = [];

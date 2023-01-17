@@ -1,5 +1,17 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Port $Port
+ * @var Smr\Ship $ThisShip
+ * @var array<int, array{HREF: string, Image: string, Name: string, BasePrice: int, PortAmount: int, Amount: int}> $BoughtGoods
+ * @var array<int, array{HREF: string, Image: string, Name: string, BasePrice: int, PortAmount: int, Amount: int}> $SoldGoods
+ * @var bool $SearchedByFeds
+ * @var ?bool $IllegalsFound
+ * @var ?int $TotalFine
+ * @var string $LeavePortHREF
+ */
+
 ?>
 <p>This is a level <?php echo $Port->getLevel(); ?> port run by the <?php echo $ThisPlayer->getColouredRaceName($Port->getRaceID(), true); ?>.<br />
 Your relations with them are <?php echo get_colored_text($ThisPlayer->getRelation($Port->getRaceID())); ?>.</p>

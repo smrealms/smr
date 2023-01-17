@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var int $Max
+ * @var int $Min
+ * @var string $ShowHREF
+ * @var array<array{time: string, news: string}> $Rows
+ */
+
 ?>
 <div class="center">
 	<form method="POST" action="<?php echo $ShowHREF; ?>">

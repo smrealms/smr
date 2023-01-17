@@ -70,7 +70,7 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 
 		$totalShieldDamage = 0;
 		foreach ($attackers as $attacker) {
-			$playerResults = $attacker->shootPlanet($planet);
+			$playerResults = $attacker->getShip()->shootPlanet($planet);
 			$results['Attackers']['Traders'][$attacker->getAccountID()] = $playerResults;
 			$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 			foreach ($playerResults['Weapons'] as $weapon) {

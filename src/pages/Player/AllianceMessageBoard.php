@@ -115,8 +115,8 @@ class AllianceMessageBoard extends PlayerPage {
 				$threads[$i]['Sender'] = $playerName;
 
 				$dbResult2 = $db->read('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . $player->getSQL() . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
-				$threads[$i]['CanDelete'] = $player->getAccountID() == $authorAccountID || $dbResult2->record()->getBoolean('mb_messages');
-				if ($threads[$i]['CanDelete']) {
+				$canDelete = $player->getAccountID() == $authorAccountID || $dbResult2->record()->getBoolean('mb_messages');
+				if ($canDelete) {
 					$container = new AllianceMessageBoardDeleteThreadProcessor($allianceID, $this, $threadID);
 					$threads[$i]['DeleteHref'] = $container->href();
 				}

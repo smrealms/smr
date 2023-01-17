@@ -2,6 +2,13 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Sector $ThisSector
+ * @var Smr\Ship $ThisShip
+ * @var array<string, array{ID: int, Class: string}> $Sectors
+ */
+
 if ($Sectors) { ?>
 	<div class="secNavBox">
 		<div class="<?php if ($ThisShip->hasScanner()) { ?>scan<?php } else { ?>no_scan<?php } ?>">

@@ -2,6 +2,12 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Template $this
+ * @var string $Summary
+ */
+
 ?>
 <br />
 <div class="center">

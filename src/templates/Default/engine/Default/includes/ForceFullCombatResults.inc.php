@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var array<string, mixed> $FullForceCombatResults
+ */
+
 if ($FullForceCombatResults['Forced']) { ?>
 	<h1>Force Results</h1><br />
 	<?php $this->includeTemplate('includes/ForcesCombatResults.inc.php', ['ForcesCombatResults' => $FullForceCombatResults['Forces']]);

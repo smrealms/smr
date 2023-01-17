@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $MessageText
+ * @var string $ProcessingHREF
+ */
+
 ?>
 You have selected the following message:<br /><br />
 <table class="standard">

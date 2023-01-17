@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $ShipNameFormHref
+ * @var array{text: int, html: int, logo: int} $Costs
+ */
+
 ?>
 <div class="center">
 	So you want to name your ship?  Great!

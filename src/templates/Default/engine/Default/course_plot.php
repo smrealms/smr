@@ -1,5 +1,17 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Template $this
+ * @var string $PlotCourseFormLink
+ * @var string $PlotNearestFormLink
+ * @var string $PlotToNearestHREF
+ * @var array<\Smr\PlotGroup> $AllXTypes
+ * @var array<int|string, string> $XTypeOptions
+ * @var array<int, \Smr\StoredDestination> $StoredDestinations
+ * @var string $ManageDestination
+ */
+
 ?>
 <a href="<?php echo WIKI_URL; ?>/game-guide/how-your-ship-works" target="_blank"><img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: How Your Ship Works"/></a>
 <form class="standard" id="PlotCourseForm" method="POST" action="<?php echo $PlotCourseFormLink; ?>">

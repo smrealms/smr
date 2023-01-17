@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<array{last_active: string, display_name: string, account_id: int}> $Members
+ * @var string $BanishHREF
+ */
+
 ?>
 <div class="center"><?php
 	if (empty($Members)) { ?>

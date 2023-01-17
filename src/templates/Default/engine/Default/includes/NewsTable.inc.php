@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<array{Date: string, Message: string}> $NewsItems
+ */
+
 ?>
 <table class="standard fullwidth">
 	<tr>

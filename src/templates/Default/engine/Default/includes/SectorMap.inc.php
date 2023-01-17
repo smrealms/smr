@@ -2,6 +2,18 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Sector $ThisSector
+ * @var Smr\Ship $ThisShip
+ * @var array<array<Smr\Sector>> $MapSectors
+ * @var ?string $DragLocationHREF
+ * @var ?string $DragPlanetHREF
+ * @var ?string $DragPortHREF
+ * @var ?string $DragWarpHREF
+ * @var ?string $ModifySectorHREF
+ */
+
 ?>
 <table class="lmt centered"><?php
 	$GalaxyMap = isset($GalaxyMap) && $GalaxyMap;
@@ -72,12 +84,13 @@ use Smr\Globals;
 									} ?>
 								</div><?php
 							}
-							if ((($UniGen || $isCurrentSector) && $Sector->hasPort()) || $Sector->hasCachedPort($MapPlayer)) {
-								if (($UniGen || $isCurrentSector) && $Sector->hasPort()) {
-									$Port = $Sector->getPort();
-								} elseif ($Sector->hasCachedPort($MapPlayer)) {
-									$Port = $Sector->getCachedPort($MapPlayer);
-								} ?>
+							$Port = null;
+							if (($UniGen || $isCurrentSector) && $Sector->hasPort()) {
+								$Port = $Sector->getPort();
+							} elseif ($Sector->hasCachedPort($MapPlayer)) {
+								$Port = $Sector->getCachedPort($MapPlayer);
+							}
+							if ($Port !== null) { ?>
 								<div class="lmport <?php if ($Sector->getLinkLeft()) { ?>a<?php } else { ?>b<?php } ?>
 									"><?php
 									if ($UniGen) { ?>

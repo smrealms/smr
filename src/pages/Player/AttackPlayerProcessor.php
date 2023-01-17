@@ -68,14 +68,10 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 		$player->takeTurns(TURNS_TO_SHOOT_SHIP);
 		$player->update();
 
-		/**
-		 * @param array<string, array<int, AbstractPlayer>> $fightingPlayers
-		 * @return array<string, mixed>
-		 */
-		$teamAttack = function(array $fightingPlayers, string $attack, string $defend): array {
+		$teamAttack = function(string $attack, string $defend) use ($fightingPlayers): array {
 			$results = ['Traders' => [], 'TotalDamage' => 0];
 			foreach ($fightingPlayers[$attack] as $teamPlayer) {
-				$playerResults = $teamPlayer->shootPlayers($fightingPlayers[$defend]);
+				$playerResults = $teamPlayer->getShip()->shootPlayers($fightingPlayers[$defend]);
 				$results['Traders'][$teamPlayer->getAccountID()] = $playerResults;
 				$results['TotalDamage'] += $playerResults['TotalDamage'];
 
@@ -96,8 +92,8 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 		};
 
 		$results = [
-			'Attackers' => $teamAttack($fightingPlayers, 'Attackers', 'Defenders'),
-			'Defenders' => $teamAttack($fightingPlayers, 'Defenders', 'Attackers'),
+			'Attackers' => $teamAttack('Attackers', 'Defenders'),
+			'Defenders' => $teamAttack('Defenders', 'Attackers'),
 		];
 
 		$account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'] . ' and the other team does ' . $results['Defenders']['TotalDamage'], $sector->getSectorID());

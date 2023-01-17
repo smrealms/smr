@@ -2,6 +2,12 @@
 
 use Smr\Treaty;
 
+/**
+ * @var array<array{Alliance: Smr\Alliance, Terms: array<string>, AcceptHREF: string, RejectHREF: string}> $Offers
+ * @var array<int, string> $Alliances
+ * @var string $SendOfferHREF
+ */
+
 ?>
 <div class="center">
 	<?php

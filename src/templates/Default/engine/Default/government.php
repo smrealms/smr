@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<Smr\Bounty> $AllBounties
+ * @var array<Smr\Bounty> $MyBounties
+ * @var Smr\Template $this
+ * @var array<string> $WarRaces
+ */
+
 ?>
 <div class="center"><?php
 	if ($WarRaces) { ?>

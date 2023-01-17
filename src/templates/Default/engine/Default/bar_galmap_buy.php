@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var string $BuyHREF
+ */
+
 ?>
 <div class="center">
 	<p>What galaxy do you want maps for?</p>

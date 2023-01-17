@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var string $ValidateFormHref
+ * @var string $PreferencesLink
+ */
+
 ?>
 <form name="FORM" method="POST" action="<?php echo $ValidateFormHref ?>">
 

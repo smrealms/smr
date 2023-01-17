@@ -32,6 +32,8 @@ parameters:
 
     typeAliases:
         WeaponDamageData: 'array{Shield: int, Armour: int, Rollover: bool, Launched?: int, Kamikaze?: int}'
+        TakenDamageData: 'array{KillingShot: bool, TargetAlreadyDead: bool, Shield: int, CDs: int, NumCDs: int, HasCDs: bool, Armour: int, TotalDamage: int}'
+        ForceTakenDamageData: 'array{KillingShot: bool, TargetAlreadyDead: bool, Mines: int, NumMines: int, HasMines: bool, CDs: int, NumCDs: int, HasCDs: bool, SDs: int, NumSDs: int, HasSDs: bool, TotalDamage: int}'
 
     #----------------------------------------------
     # Warning suppression (to be fixed eventually!)
@@ -43,7 +45,7 @@ parameters:
             # because we source them inside Template::includeTemplate. This
             # will require a redesign of the Template class to fix. (Level 1)
             message: '#Variable .* might not be defined#'
-            path: src/template
+            path: src/templates/Default/engine/Default/admin
         -
             # This while loop is needed to reconnect the IRC bot after server
             # timeouts. It could be replaced with Docker daemonization if we
@@ -74,3 +76,12 @@ parameters:
             message: '#Parameter \#1 \$token of method .*::getResourceOwner\(\) expects .*AccessToken, .*AccessTokenInterface given.#'
             path: src/lib/Smr/SocialLogin
             count: 2
+        -
+            # Templates are executed in the context of an Smr\Template method,
+            # so they have access to protected stuff. This needs refactoring.
+            message: '#(Call|Access) to protected (method|property).* Smr\\Template#'
+            path: src/templates
+        -
+            # https://github.com/phpstan/phpstan/issues/6830
+            message: '#Variable \$(Actual|Weapon)Damage might not be defined.#'
+            path: src/templates/Default/engine/Default/*CombatResults.inc.php

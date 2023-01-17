@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $BackHref
+ * @var ?bool $FeatureModerator
+ * @var ?int $FeatureRequestId
+ * @var ?string $FeatureRequestStatusFormHREF
+ * @var string $FeatureRequestCommentFormHREF
+ */
+
 ?>
 <p><a href="<?php echo $BackHref; ?>">Back</a></p><?php
 if (isset($Comments)) { ?>

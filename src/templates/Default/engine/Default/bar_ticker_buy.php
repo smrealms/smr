@@ -1,8 +1,15 @@
 <?php declare(strict_types=1);
 
-foreach ($Tickers as $Type => $TimeLeft) { ?>
-	You own a <?php echo $Type; ?> for another <?php echo format_time($TimeLeft); ?>.
-	<br /><?php
+/**
+ * @var string $BuyHREF
+ * @var array<string, int> $Tickers
+ */
+
+if (count($Tickers) > 0) { // to prevent docblock from applying to for-loop
+	foreach ($Tickers as $Type => $TimeLeft) { ?>
+		You own a <?php echo $Type; ?> for another <?php echo format_time($TimeLeft); ?>.
+		<br /><?php
+	}
 } ?>
 
 <br />

@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Force $Forces
+ * @var Smr\Ship $ThisShip
+ * @var string $SubmitHREF
+ */
+
 ?>
 <form method="POST" action="<?php echo $SubmitHREF; ?>">
 	<table class="standard">

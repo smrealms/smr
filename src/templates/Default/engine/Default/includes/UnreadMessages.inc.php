@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<array{href: string, num: int, alt: string, img: string}> $UnreadMessages
+ */
+
 ?>
 <span id="message_area"><?php
 	foreach ($UnreadMessages as $UnreadMessage) { ?>

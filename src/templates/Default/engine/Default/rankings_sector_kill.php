@@ -1,5 +1,14 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var string $SubmitHREF
+ * @var int $MinRank
+ * @var int $MaxRank
+ * @var array<int, array{Class: string, SectorID: int, Value: int}> $TopTen
+ * @var array<int, array{Class: string, SectorID: int, Value: int}> $TopCustom
+ */
+
 ?>
 <div class="center">
 	<p>Here are the most deadly Sectors!</p>

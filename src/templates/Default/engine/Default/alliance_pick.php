@@ -1,5 +1,15 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Template $this
+ * @var array<int, array<string, mixed>> $Teams
+ * @var int $PlayerID
+ * @var bool $CanPick
+ * @var array<array{Player: Smr\Player, HREF: string}> $PickPlayers
+ * @var array<array{Leader: Smr\Player, Player: Smr\Player, Time: int}> $History
+ */
+
 ?>
 <table class="standard">
 	<tr>

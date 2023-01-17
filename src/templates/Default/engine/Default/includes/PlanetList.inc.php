@@ -3,6 +3,12 @@
 use Smr\Globals;
 use Smr\TradeGood;
 
+/**
+ * @var array<Smr\Planet> $Planets
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Template $this
+ */
+
 if (count($Planets) > 0) { ?>
 	<table id="planet-list" class="standard inset left centered">
 		<thead>
@@ -23,7 +29,7 @@ if (count($Planets) > 0) { ?>
 			foreach ($Planets as $Planet) { ?>
 				<tr id="planet-<?php echo $Planet->getSectorID(); ?>" class="ajax">
 					<td class="noWrap">
-						<img src="<?php echo $Planet->getTypeImage(); ?>"  width="16" height="16" alt="" title="<?php echo $Planet->getTypename() . ': ' . $Planet->getTypeDescription(); ?>" /></td>
+						<img src="<?php echo $Planet->getTypeImage(); ?>"  width="16" height="16" alt="" title="<?php echo $Planet->getTypeName() . ': ' . $Planet->getTypeDescription(); ?>" /></td>
 					<td class="sort_name"><?php echo $Planet->getDisplayName(); ?></td>
 					<td class="sort_lvl center"><?php echo number_format($Planet->getLevel(), 2); ?></td>
 					<td class="sort_owner noWrap"><?php echo $Planet->getOwner()->getLinkedDisplayName(false); ?></td>

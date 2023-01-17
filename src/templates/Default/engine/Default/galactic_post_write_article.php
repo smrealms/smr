@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var ?string $PreviewTitle
+ * @var string $SubmitArticleHref
+ */
+
 if (isset($Preview)) { ?>
 	<table class="standard">
 		<tr>

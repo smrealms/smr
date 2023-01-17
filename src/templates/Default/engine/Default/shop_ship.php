@@ -1,5 +1,16 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Ship $ThisShip
+ * @var array<int, Smr\ShipType> $ShipsSold
+ * @var array<int, string> $ShipsSoldHREF
+ * @var array<array{Name: string, TimeUntilUnlock: int}> $ShipsUnavailable
+ * @var ?array<string, array{Old: int, New: int}> $ShipDiffs
+ * @var ?int $TradeInValue
+ * @var ?int $TotalCost
+ * @var ?string $BuyHREF
+ */
+
 if (count($ShipsSold) > 0) { ?>
 	<h2>Available Ships</h2>
 	<table class="standard">

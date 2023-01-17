@@ -2,6 +2,13 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Port $Port
+ * @var Smr\Ship $ThisShip
+ * @var Smr\Template $this
+ * @var string $PortAttackHREF
+ */
+
 ?>
 <span class="red">WARNING WARNING</span> port assault about to commence!!<br />
 

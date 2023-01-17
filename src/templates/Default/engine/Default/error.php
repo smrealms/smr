@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $Message
+ */
+
 ?>
 <p class="big bold"><?php echo $Message; ?></p>
 <br /><br />

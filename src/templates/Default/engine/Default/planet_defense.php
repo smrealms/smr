@@ -1,5 +1,14 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Planet $ThisPlanet
+ * @var Smr\Ship $ThisShip
+ * @var string $TransferShieldsHref
+ * @var string $TransferCDsHref
+ * @var string $TransferArmourHref
+ * @var string $WeaponProcessingHREF
+ */
+
 if ($ThisPlanet->getMaxShields() + $ThisPlanet->getMaxCDs() + $ThisPlanet->getMaxArmour() == 0) { ?>
 	<p>This planet cannot yet store any shields, combat drones, or armour.</p>
 <?php } else { ?>

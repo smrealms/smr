@@ -1,5 +1,16 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Template $this
+ * @var string $LogType
+ * @var int $TotalLogs
+ * @var ?bool $CanSave
+ * @var ?bool $CanDelete
+ * @var ?string $LogFormHREF
+ * @var array<int, array{Attacker: string, Defender: string, Time: int, Sector: int}> $Logs
+ */
+
 if (isset($Message)) {?>
 	<div class="center"><?php echo $Message; ?></div><br /><?php
 } ?>

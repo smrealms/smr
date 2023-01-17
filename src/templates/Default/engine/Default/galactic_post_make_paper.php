@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $SubmitHREF
+ */
+
 ?>
 What is the title of this edition?<br />
 <form method="POST" action="<?php echo $SubmitHREF; ?>">

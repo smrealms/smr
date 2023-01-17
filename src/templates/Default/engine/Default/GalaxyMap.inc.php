@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Galaxy $ThisGalaxy
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Template $this
+ * @var array<int, Smr\Galaxy> $GameGalaxies
+ * @var int $LastSector
+ */
+
 ?>
 <!DOCTYPE html>
 <html>

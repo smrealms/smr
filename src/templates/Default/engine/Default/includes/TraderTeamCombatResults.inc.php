@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Template $this
+ * @var bool $MinimalDisplay
+ * @var array<string, mixed> $TraderTeamCombatResults
+ */
+
 if (is_array($TraderTeamCombatResults['Traders'])) {
 	foreach ($TraderTeamCombatResults['Traders'] as $TraderResults) {
 		$ShootingPlayer = $TraderResults['Player'];

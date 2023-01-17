@@ -3,6 +3,11 @@
 use Smr\Location;
 use Smr\Port;
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Sector $EditSector
+ */
+
 ?>
 <a href="<?php echo $CancelHREF; ?>">&lt;&lt; Back</a><br /><br />
 <form method="POST" action="<?php echo $EditHREF; ?>">

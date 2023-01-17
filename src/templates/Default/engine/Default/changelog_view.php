@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<array{version: string, went_live: string, changes: array<array{title: string, message: string}>}> $Versions
+ */
+
 if (isset($ContinueHREF)) {
 	// Make the login changelog scroll if it is larger than 420px ?>
 	<style>div.login_scroll {height: 420px; overflow-y: auto;}</style>

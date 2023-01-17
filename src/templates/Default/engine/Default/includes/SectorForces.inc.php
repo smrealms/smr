@@ -2,6 +2,13 @@
 
 use Smr\Force;
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Sector $ThisSector
+ * @var Smr\Ship $ThisShip
+ */
+
 ?>
 <div id="sector_forces" class="ajax"><?php
 	if ($ThisSector->hasForces()) {

@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var bool $MinimalDisplay
+ * @var array<string, mixed> $TraderCombatResults
+ * @var ?string $AttackLogLink
+ */
+
 if ($MinimalDisplay) { ?>
 	<h2>Attacker Results</h2><?php
 } else { ?>

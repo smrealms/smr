@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var string $UserRankName
+ * @var string $UserRankingLink
+ * @var string $VotingHref
+ * @var string $OldAnnouncementsLink
+ */
+
 if (isset($ErrorMessage)) {
 	echo $ErrorMessage; ?><br /><br /><?php
 }

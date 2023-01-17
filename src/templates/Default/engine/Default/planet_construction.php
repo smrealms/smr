@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Planet $ThisPlanet
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Ship $ThisShip
+ * @var array<int, Smr\TradeGood> $Goods
+ */
+
 ?>
 You are currently building: <?php
 	if ($ThisPlanet->hasCurrentlyBuilding()) {

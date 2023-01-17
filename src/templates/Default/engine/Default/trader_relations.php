@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<string, int> $PoliticalRelations
+ * @var array<string, int> $PersonalRelations
+ */
+
 ?>
 <table width="50%" class="standard center">
 	<tr>

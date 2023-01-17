@@ -106,9 +106,7 @@ class Mines extends AbstractWeapon {
 
 	public function shootPlayerAsForce(Force $forces, AbstractPlayer $targetPlayer, bool $minesAreAttacker = false): array {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => true];
-		$return = $this->doForceDamageToPlayer($return, $forces, $targetPlayer, $minesAreAttacker);
-		$this->amount -= $return['ActualDamage']['Launched']; // kamikaze
-		return $return;
+		return $this->doForceDamageToPlayer($return, $forces, $targetPlayer, $minesAreAttacker);
 	}
 
 	protected function doForceDamageToPlayer(array $return, Force $forces, AbstractPlayer $targetPlayer, bool $minesAreAttacker = false): array {
@@ -119,7 +117,10 @@ class Mines extends AbstractWeapon {
 		if (!isset($return['WeaponDamage']['Launched'])) {
 			throw new Exception('Mines must report the number launched');
 		}
-		$return['ActualDamage']['Launched'] = ICeil($return['WeaponDamage']['Launched'] * $return['ActualDamage']['TotalDamage'] / $return['WeaponDamage']['Shield']); // assumes mines do the same shield/armour damage
+		$return['WeaponDamage']['Launched'] = ICeil($return['WeaponDamage']['Launched'] * $return['ActualDamage']['TotalDamage'] / $return['WeaponDamage']['Shield']); // assumes mines do the same shield/armour damage
+
+		// Launched mines are lost
+		$this->amount -= $return['WeaponDamage']['Launched'];
 
 		if ($return['ActualDamage']['KillingShot']) {
 			$return['KillResults'] = $targetPlayer->killPlayerByForces($forces);

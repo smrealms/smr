@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<array<string, string>> $Blacklist
+ * @var string $BlacklistDeleteHREF
+ * @var string $BlacklistAddHREF
+ */
+
 if (isset($Message)) {
 	echo $Message; ?><br /><br /><?php
 } ?>

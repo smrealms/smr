@@ -2,6 +2,23 @@
 
 use Smr\Alliance;
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Alliance $Alliance
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Template $this
+ * @var bool $CanChangeRoles
+ * @var bool $ShowRoles
+ * @var ?string $SaveAllianceRolesHREF
+ * @var ?array<int, string> $Roles
+ * @var ?string $ToggleRolesHREF
+ * @var int $AllianceExp
+ * @var int $AllianceAverageExp
+ * @var array<int, Smr\Player> $AlliancePlayers
+ * @var string|bool $JoinRestriction
+ * @var ?string $JoinHREF
+ */
+
 if ($ShowRoles && $CanChangeRoles) { ?>
 	<form class="standard" method="POST" action="<?php echo $SaveAllianceRolesHREF; ?>"><?php
 } ?>

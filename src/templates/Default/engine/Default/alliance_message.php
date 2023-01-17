@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Template $this
+ * @var array<int, array{DeleteHref?: string, Replies: int, Sender: string, SendTime: int, ThreadID: int, Topic: string, Unread: bool, ViewHref: string}> $Threads
+ */
+
 if (count($Threads) > 0) { ?>
 	<table id="topic-list" class="centered standard inset">
 		<thead>
@@ -24,7 +30,7 @@ if (count($Threads) > 0) { ?>
 					</td>
 					<td class="sort_author noWrap"><?php
 						echo $Thread['Sender'];
-						if ($Thread['CanDelete']) {
+						if (isset($Thread['DeleteHref'])) {
 							?><br /><small><a href="<?php echo $Thread['DeleteHref']; ?>">Delete Thread!</a></small><?php
 						} ?>
 					</td>

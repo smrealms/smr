@@ -2,7 +2,15 @@
 
 use Smr\PlanetStructureType;
 
-foreach ($TraderTeamCombatResults['Traders'] as $TraderResults) {
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Template $this
+ * @var bool $MinimalDisplay
+ * @var array<string, mixed> $TraderTeamCombatResults
+ */
+
+$AllTraderResults = $TraderTeamCombatResults['Traders'];
+foreach ($AllTraderResults as $TraderResults) {
 	$ShootingPlayer = $TraderResults['Player'];
 	$TotalDamage = $TraderResults['TotalDamage'];
 	if ($MinimalDisplay && !$ThisPlayer->equals($ShootingPlayer)) {
@@ -37,7 +45,7 @@ foreach ($TraderTeamCombatResults['Traders'] as $TraderResults) {
 							if ($ActualDamage['HasCDs']) {
 								?> which proves ineffective against their combat drones<?php
 							} else {
-								?> which washes harmlessly over their hull<?php
+								?> which proves ineffective against its armour<?php
 							}
 						} elseif ($WeaponDamage['Armour'] > 0) {
 							?> which is deflected by their shields<?php
@@ -95,7 +103,7 @@ foreach ($TraderTeamCombatResults['Traders'] as $TraderResults) {
 							if ($ActualDamage['HasCDs']) {
 								?> which prove ineffective against their combat drones<?php
 							} else {
-								?> which washes harmlessly over their hull<?php
+								?> which prove ineffective against its armour<?php
 							}
 						}
 						if ($ActualDamage['Armour'] > 0) {

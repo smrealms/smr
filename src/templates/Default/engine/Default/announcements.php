@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var array<array{Time: int, Msg: string}> $Announcements
+ * @var string $ContinueHREF
+ */
+
 ?>
 <table class="standard fullwidth">
 	<tr>

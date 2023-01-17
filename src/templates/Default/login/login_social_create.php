@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\SocialLogin\SocialLogin $SocialLogin
+ */
+
 ?>
 <div class="centered" style="width: 630px;">
 	<h1>Link To Existing Login</h1>

@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var array<array{Name: string, HasUnread: bool, MessageCount: int, ViewHref: string, DeleteHref: string}> $MessageBoxes
+ */
+
 ?>
 <p>Please choose your Message folder!</p>
 

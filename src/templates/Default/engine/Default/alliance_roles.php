@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var array<int, array<string, mixed>> $AllianceRoles
+ * @var array<string, mixed> $CreateRole
+ */
+
 ?>
 <h2>Current Roles</h2><br /><?php
 foreach ($AllianceRoles as $Role) {

@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var string $Breadcrumb
+ * @var ?array<string> $Rows
+ */
+
 ?>
 <div class="center">
 	Welcome to the Hall of Fame, <?php echo $ThisAccount->getHofDisplayName(); ?>!<br />

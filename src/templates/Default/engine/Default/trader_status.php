@@ -2,6 +2,24 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Ship $ThisShip
+ * @var ?string $LeaveNewbieHREF
+ * @var string $RelationsHREF
+ * @var string $SavingsHREF
+ * @var string $BountiesHREF
+ * @var int $BountiesClaimable
+ * @var string $HardwareHREF
+ * @var array<string> $Hardware
+ * @var Smr\PlayerLevel $NextLevel
+ * @var string $UserRankingsHREF
+ * @var string $NoteDeleteHREF
+ * @var string $NoteAddHREF
+ * @var array<int, string> $Notes
+ */
+
 ?>
 <table class="standard fullwidth">
 	<tr>

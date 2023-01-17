@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var int $SelectedGame
+ * @var string $SelectGameHREF
+ * @var array<array{game_name: string, game_id: int}> $PublishedGames
+ */
+
 ?>
 Select Game:&nbsp;
 <form class="standard" id="SelectGameForm" method="POST" action="<?php echo $SelectGameHREF; ?>">

@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var int $Target
+ * @var int $TurnCost
+ * @var int $MaxMisjump
+ * @var string $JumpProcessingHREF
+ */
+
 ?>
 You punch the destination sector into your Jump Drive console.
 Within moments, the onboard computer dictates the report in a reassuringly confident voice.

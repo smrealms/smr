@@ -2,6 +2,13 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Player $ThisPlayer
+ * @var array<int, array{HREF: string, Type: string, EndTime: int, For: bool, Against: bool, NoVotes: int, YesVotes: int}> $VoteTreaties
+ * @var array<int, array{HREF: string, Increased: bool, Decreased: bool, Relations: int}> $VoteRelations
+ */
+
 ?>
 <a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
 

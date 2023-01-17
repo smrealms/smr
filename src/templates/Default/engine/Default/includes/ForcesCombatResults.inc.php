@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var array<string, mixed> $ForcesCombatResults
+ */
+
 if (isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Results'])) {
 	foreach ($ForcesCombatResults['Results'] as $ForceType => $ForceResults) {
 		$ShotHit = $ForceResults['Hit'];
@@ -7,7 +12,7 @@ if (isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Res
 		$WeaponDamage = $ForceResults['WeaponDamage'];
 		$TargetPlayer = $ForceResults['TargetPlayer'];
 		?>
-		<span class="cds"><?php echo $ActualDamage['Launched'] ?? $WeaponDamage['Launched']; ?></span><?php
+		<span class="cds"><?php echo $WeaponDamage['Launched']; ?></span><?php
 		if ($ForceType == 'Mines') {
 			?> mines kamikaze themselves against <?php
 		} elseif ($ForceType == 'Drones') {

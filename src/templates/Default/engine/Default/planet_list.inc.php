@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Alliance $Alliance
+ * @var Smr\Template $this
+ * @var array<Smr\Planet> $AllPlanets
+ * @var bool $PlayerOnly
+ * @var string $ExtraInclude
+ */
+
 ?>
 <div class="center">
 	<?php

@@ -10,8 +10,16 @@ function getPlayerOptionClass(AbstractPlayer $player, AbstractPlayer $other): st
 		default => 'neutral',
 	};
 }
-?>
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Planet $ThisPlanet
+ * @var Smr\Player $ThisPlayer
+ * @var array<Smr\Player> $VisiblePlayers
+ * @var string $SectorPlayersLabel
+ */
+
+?>
 <div id="players_cs" class="ajax"><?php
 	if (count($VisiblePlayers) > 0) { ?>
 		<table class="standard fullwidth csShips">

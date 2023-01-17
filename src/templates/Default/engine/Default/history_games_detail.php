@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $SelfHREF
+ * @var ?array<string> $Headers
+ */
+
 ?>
 <div class="center"><?php
 	if (empty($Rankings)) { ?>

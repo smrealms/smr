@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Template $this
+ */
+
 if (empty($Forces)) { ?>
 	You have no deployed forces.
 	<a href="<?php echo WIKI_URL; ?>/game-guide/forces" target="_blank">

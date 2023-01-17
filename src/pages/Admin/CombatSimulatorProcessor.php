@@ -18,12 +18,12 @@ function runAnAttack(array $realAttackers, array $realDefenders): array {
 		'Defenders' => ['Traders' => [], 'TotalDamage' => 0],
 	];
 	foreach ($realAttackers as $teamPlayer) {
-		$playerResults = $teamPlayer->shootPlayers($realDefenders);
+		$playerResults = $teamPlayer->getShip()->shootPlayers($realDefenders);
 		$results['Attackers']['Traders'][] = $playerResults;
 		$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 	}
 	foreach ($realDefenders as $teamPlayer) {
-		$playerResults = $teamPlayer->shootPlayers($realAttackers);
+		$playerResults = $teamPlayer->getShip()->shootPlayers($realAttackers);
 		$results['Defenders']['Traders'][] = $playerResults;
 		$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
 	}

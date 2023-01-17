@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Template $this
+ * @var array{Mines: int, CDs: int, SDs: int} $Total
+ * @var array{Mines: int, CDs: int, SDs: int} $TotalCost
+ */
+
 if (empty($Forces)) { ?>
 	Your alliance has no deployed forces.
 	<a href="<?php echo WIKI_URL; ?>/game-guide/forces" target="_blank">

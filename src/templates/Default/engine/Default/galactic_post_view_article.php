@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var ?string $MakePaperHREF
+ * @var ?string $AddToNewsHREF
+ * @var ?bool $AddedToNews
+ */
+
 if (empty($Articles)) { ?>
 	<p>All articles have been assigned to a paper.</p><?php
 } else { ?>

@@ -2,6 +2,7 @@
 
 namespace Smr\Combat\Weapon;
 
+use Exception;
 use Smr\AbstractPlayer;
 use Smr\Force;
 use Smr\Planet;
@@ -199,9 +200,15 @@ class CombatDrones extends AbstractWeapon {
 		return $damage;
 	}
 
+	/**
+	 * @return array{Weapon: parent, TargetForces: \Smr\Force, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: ForceTakenDamageData, KillResults?: array{}}
+	 */
 	public function shootForces(AbstractPlayer $weaponPlayer, Force $forces): array {
 		$return = ['Weapon' => $this, 'TargetForces' => $forces, 'Hit' => true];
 		$return = $this->doPlayerDamageToForce($return, $weaponPlayer, $forces);
+		if (!isset($return['WeaponDamage']['Kamikaze'])) {
+			throw new Exception('CombatDrone WeaponDamage against Force must include Kamikaze field!');
+		}
 		if ($return['WeaponDamage']['Kamikaze'] > 0) {
 			$weaponPlayer->getShip()->decreaseCDs($return['WeaponDamage']['Kamikaze']);
 		}
@@ -209,7 +216,7 @@ class CombatDrones extends AbstractWeapon {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{Weapon: parent, TargetPort: \Smr\Port, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{}}
 	 */
 	public function shootPort(AbstractPlayer $weaponPlayer, Port $port): array {
 		$return = ['Weapon' => $this, 'TargetPort' => $port, 'Hit' => true];
@@ -217,13 +224,16 @@ class CombatDrones extends AbstractWeapon {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{Weapon: parent, TargetPlanet: \Smr\Planet, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{}}
 	 */
 	public function shootPlanet(AbstractPlayer $weaponPlayer, Planet $planet): array {
 		$return = ['Weapon' => $this, 'TargetPlanet' => $planet, 'Hit' => true];
 		return $this->doPlayerDamageToPlanet($return, $weaponPlayer, $planet);
 	}
 
+	/**
+	 * @return array{Weapon: parent, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}
+	 */
 	public function shootPlayer(AbstractPlayer $weaponPlayer, AbstractPlayer $targetPlayer): array {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => true];
 		return $this->doPlayerDamageToPlayer($return, $weaponPlayer, $targetPlayer);
@@ -235,7 +245,7 @@ class CombatDrones extends AbstractWeapon {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{Weapon: parent, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
 	 */
 	public function shootPlayerAsPort(Port $forces, AbstractPlayer $targetPlayer): array {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => true];
@@ -243,7 +253,7 @@ class CombatDrones extends AbstractWeapon {
 	}
 
 	/**
-	 * @return array<string, mixed>
+	 * @return array{Weapon: parent, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
 	 */
 	public function shootPlayerAsPlanet(Planet $forces, AbstractPlayer $targetPlayer): array {
 		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => true];

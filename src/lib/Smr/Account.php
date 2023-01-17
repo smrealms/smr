@@ -1059,7 +1059,7 @@ class Account {
 	}
 
 	/**
-	 * @return array<string>|array<string, array<string>>
+	 * @return ($hotkeyType is null ? array<string, array<string>> : array<string>)
 	 */
 	public function getHotkeys(string $hotkeyType = null): array {
 		if ($hotkeyType !== null) {

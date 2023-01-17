@@ -1,5 +1,30 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Sector $ThisSector
+ * @var string $MapHREF
+ * @var string $MoneyHREF
+ * @var string $UnoHREF
+ * @var string $RemoveWeaponsHREF
+ * @var string $AddWeaponHREF
+ * @var array<int, string> $WeaponList
+ * @var string $ShipHREF
+ * @var array<int, string> $ShipList
+ * @var string $HardwareHREF
+ * @var array<int, string> $Hardware
+ * @var string $WarpHREF
+ * @var string $TurnsHREF
+ * @var string $ExperienceHREF
+ * @var string $AlignmentHREF
+ * @var string $PersonalRelationsHREF
+ * @var string $RaceRelationsHREF
+ * @var string $ChangeRaceHREF
+ * @var ?string $MaxBuildingsHREF
+ * @var ?string $MaxDefensesHREF
+ * @var ?string $MaxStockpileHREF
+ */
+
 ?>
 <span class="bold red">WARNING! Please be reasonable with the changes you make! For example, do not load more onto a ship than it is supposed to have, don't put yourself in a sector that doesn't exist, etc.</span><br />
 

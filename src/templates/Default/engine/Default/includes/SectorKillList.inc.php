@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<int, array{Class: string, SectorID: int, Value: int}> $Rankings
+ */
+
 ?>
 <table class="standard center" width="45%">
 	<tr>

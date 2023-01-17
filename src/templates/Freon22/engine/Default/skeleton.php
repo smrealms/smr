@@ -2,6 +2,13 @@
 
 use Smr\Globals;
 
+/**
+ * @var Smr\Template $this
+ * @var int $timeDisplay
+ * @var string $PlayerNameLink
+ * @var string $TemplateBody
+ */
+
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">

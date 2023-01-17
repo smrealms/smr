@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $ExemptHREF
+ */
+
 ?>
 <h2>Exemption Requests</h2>
 <br /><?php

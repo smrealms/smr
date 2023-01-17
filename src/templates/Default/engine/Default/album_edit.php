@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var string $AlbumEditHref
+ * @var string $AlbumDeleteHref
+ */
+
 ?>
 <p><span style="font-size:80%;">Here you have a chance to add an entry to the Space Merchant Realms - The Photo Album!<br />
 We only accept jpg or gif images to a maximum of 500 x 500 in size.<br />

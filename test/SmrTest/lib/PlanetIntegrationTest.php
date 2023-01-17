@@ -361,7 +361,7 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 	 * @dataProvider dataProvider_takeDamage
 	 *
 	 * @param WeaponDamageData $damage
-	 * @param array<string, int|bool> $expected
+	 * @param TakenDamageData $expected
 	 */
 	public function test_takeDamage(string $case, array $damage, array $expected, int $shields, int $cds, int $armour): void {
 		// Set up a port with a fixed amount of defenses
@@ -378,7 +378,7 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 	}
 
 	/**
-	 * @return array<array{0: string, 1: WeaponDamageData, 2: array<string, int|bool>, 3: int, 4: int, 5: int}>
+	 * @return array<array{0: string, 1: WeaponDamageData, 2: TakenDamageData, 3: int, 4: int, 5: int}>
 	 */
 	public function dataProvider_takeDamage(): array {
 		return [

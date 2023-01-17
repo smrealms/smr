@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $PaperTitle
+ */
+
 ?>
 <span class="bold"><?php echo $PaperTitle; ?></span>
 <br /><br /><?php

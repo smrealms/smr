@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Account $ThisAccount
+ * @var Smr\Game $Game
+ * @var array<int, array{Name: string, ShortDescription: string, LongDescription: string, NumberOfPlayers: int, Selected: bool}> $Races
+ * @var int $SelectedRaceID
+ */
+
 ?>
 Each Space Merchant Realms round requires you to create a new Trader.<br />
 To do this you must choose a name for yourself and select your race.<br />

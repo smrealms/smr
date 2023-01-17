@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $ReturnHREF
+ * @var string $BondDuration
+ */
+
 ?>
 <h2>Planetary Bond Confirmation</h2>
 

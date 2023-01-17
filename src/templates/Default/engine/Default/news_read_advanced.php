@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Template $this
+ * @var array<int, string> $NewsAlliances
+ * @var string $AdvancedNewsFormHref
+ */
+
 ?>
 <div class="center">
 	<table class="standardnobord fullwidth">

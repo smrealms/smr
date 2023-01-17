@@ -2,6 +2,10 @@
 
 use Smr\Globals;
 
+/**
+ * @var array<int, string> $PlayerList
+ */
+
 ?>
 <p style="width: 60%">Challenge other traders to a round of <i>Faster Than Knight</i>,
 a game of chess played over the super-photonic transponder aboard your ship.</p>

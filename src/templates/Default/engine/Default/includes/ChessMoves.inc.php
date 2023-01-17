@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Chess\ChessGame $ChessGame
+ */
+
 $Moves = $ChessGame->getMoves();
 foreach ($Moves as $MoveNumber => $Move) { ?>
 	<tr>

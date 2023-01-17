@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var ?bool $HideAlliedForces
+ * @var ?bool $ShowSeedlistSectors
+ */
+
 if (isset($CheckboxFormHREF)) { ?>
 	<form method="POST" action="<?php echo $CheckboxFormHREF; ?>">
 		<table>

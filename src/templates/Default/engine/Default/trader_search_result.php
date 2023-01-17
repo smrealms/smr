@@ -75,6 +75,10 @@ function DisplayResult(array $Links, Player $Player): void { ?>
 	</table><?php
 }
 
+/**
+ * @var Smr\Player $ThisPlayer
+ */
+
 if (isset($ResultPlayerLinks)) {
 	DisplayResult([$ResultPlayerLinks], $ThisPlayer);
 	echo '<br /><br />';

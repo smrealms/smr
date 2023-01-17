@@ -64,7 +64,7 @@ class Lotto {
 	}
 
 	/**
-	 * @return array<string, int>
+	 * @return array{Prize: int, TimeRemaining: int}
 	 */
 	public static function getLottoInfo(int $gameID): array {
 		$amount = self::TICKET_COST; // pot starts with 1 ticket value

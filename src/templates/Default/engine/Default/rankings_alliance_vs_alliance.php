@@ -1,5 +1,15 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $SubmitHREF
+ * @var array<array{ID: int, DetailsHREF: string, Name: string, Style: string}> $AllianceVs
+ * @var string $DetailsName
+ * @var array<int, array<int, array{Value: string|int, Style: string}>> $AllianceVsTable
+ * @var array<array{Name: string, Kills: int}> $Kills
+ * @var array<array{Name: string, Deaths: int}> $Deaths
+ * @var array<int, Smr\Alliance> $ActiveAlliances
+ */
+
 ?>
 <div class="center">
 <form method="POST" action="<?php echo $SubmitHREF; ?>">

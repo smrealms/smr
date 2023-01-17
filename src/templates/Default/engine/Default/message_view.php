@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var ?string $PreferencesFormHREF
+ * @var array<string, mixed> $MessageBox
+ */
+
 if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
 	<form name="FORM" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
 		<div class="center">Ignore global messages?&nbsp;&nbsp;
@@ -61,7 +67,7 @@ if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
 					if (isset($MessageBox['GroupedMessages'])) { ?>
 						<tr>
 							<td colspan="3"><?php
-								$SubMessages = $MessageBox['GroupedMessages'][$Message['SenderID']]['Messages']; ?>
+								$SubMessages = $MessageBox['GroupedMessages'][$Message['SenderID']]; ?>
 								<div class="shrink noWrap pointer" id="toggle-recent<?php echo $Message['SenderID']; ?>" onclick="toggleScoutGroup(<?php echo $Message['SenderID']; ?>);">
 									Show/Hide Recent (<?php echo count($SubMessages); ?>)
 								</div>

@@ -2,6 +2,12 @@
 
 use Smr\Player;
 
+/**
+ * @var Smr\Planet $Planet
+ * @var Smr\Player $ThisPlayer
+ * @var string $ProcessingHREF
+ */
+
 if (!$Planet->hasOwner()) { ?>
 	<p>
 		This planet is unclaimed.<?php

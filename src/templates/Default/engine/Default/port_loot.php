@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Player $ThisPlayer
+ * @var Smr\Port $ThisPort
+ * @var Smr\Ship $ThisShip
+ */
+
 ?>
 <table class="center standard">
 	<tr>

@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $MaxBetMsg
+ * @var string $PlayHREF
+ * @var int $MaxBet
+ */
+
 if (isset($Message)) {
 	echo $Message;
 	return;

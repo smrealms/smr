@@ -2,6 +2,13 @@
 
 use Smr\Treaty;
 
+/**
+ * @var string $YesHREF
+ * @var string $NoHREF
+ * @var string $AllianceName
+ * @var array<string, bool> $Terms
+ */
+
 ?>
 <br />
 <div class="center">
