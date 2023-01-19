@@ -7,9 +7,12 @@ use Smr\Database;
 use Smr\Epoch;
 use Smr\Game;
 use Smr\Page\AccountPage;
+use Smr\Page\ReusableTrait;
 use Smr\Template;
 
 class CreateGame extends AccountPage {
+
+	use ReusableTrait;
 
 	public string $file = 'admin/unigen/game_create.php';
 
