@@ -3,7 +3,6 @@
 namespace Smr;
 
 use Smr\Container\DiContainer;
-use Smr\Exceptions\UserError;
 use Smr\Page\Page;
 use Smr\Pages\Player\AttackPlayerProcessor;
 use Smr\Pages\Player\ExamineTrader;
@@ -143,12 +142,6 @@ class Session {
 				// If we're manually refreshing the page (F5), but the SN is not
 				// reusable, it is safe to use the previous displayed page.
 				$this->currentPage = $lastPage;
-			}
-
-			// If SN changes during an ajax update, it is an error unless user is
-			// requesting a page that is allowed to be executed in an ajax call.
-			if ($this->ajax && $this->hasChangedSN() && !$this->currentPage->allowAjax) {
-				throw new UserError('The previous page failed to auto-refresh properly!');
 			}
 
 			if (!$ajaxRefresh) { // since form pages don't ajax refresh properly

@@ -37,9 +37,20 @@ try {
 
 	// do we have such a container object in the db?
 	if ($session->hasCurrentVar() === false) {
-		create_error('Please avoid using the back button!');
+		if ($session->ajax) {
+			exit;
+		} else {
+			create_error('This page is not available after using the back button!');
+		}
 	}
 	$var = $session->getCurrentVar();
+
+	// If SN changes during an ajax update, it is either a) an internal error,
+	// b) the user hit the back button, or c) the user is requesting a page that
+	// is allowed to be executed in an ajax call. Only c) should continue.
+	if ($session->ajax && $session->hasChangedSN() && !$var->allowAjax) {
+		exit;
+	}
 
 	$account = $session->getAccount();
 	// get reason for disabled user

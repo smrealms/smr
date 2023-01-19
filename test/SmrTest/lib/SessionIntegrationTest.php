@@ -4,7 +4,6 @@ namespace SmrTest\lib;
 
 use Smr\Account;
 use Smr\Container\DiContainer;
-use Smr\Exceptions\UserError;
 use Smr\Page\Page;
 use Smr\Session;
 use SmrTest\BaseIntegrationSpec;
@@ -99,40 +98,6 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertTrue(DiContainer::make(Session::class)->ajax);
 		$_REQUEST['ajax'] = 'anything other than 1';
 		self::assertFalse(DiContainer::make(Session::class)->ajax);
-	}
-
-	/**
-	 * @testWith [true]
-	 *           [false]
-	 */
-	public function test_ajax_var(bool $varAjax): void {
-		// Set the current var to an arbitrary page
-		$page1 = new Page();
-		$this->session->setCurrentVar($page1);
-
-		// Add a link to another page
-		$page2 = new Page();
-		$page2->allowAjax = $varAjax;
-		$sn = $this->session->addLink($page2);
-		$this->session->update();
-
-		// Now pretend we're making an ajax call with the second page
-		$_REQUEST = [
-			'sn' => $sn,
-			'ajax' => '1',
-		];
-		$_COOKIE['session_id'] = $this->session->getSessionID();
-		if ($varAjax) {
-			// If the container allows ajax, this is a valid operation
-			$session = DiContainer::make(Session::class);
-			self::assertTrue($session->ajax);
-			self::assertSame($sn, $session->getSN());
-		} else {
-			// Otherwise, this should be a page refresh, but SN changes
-			$this->expectException(UserError::class);
-			$this->expectExceptionMessage('The previous page failed to auto-refresh properly!');
-			DiContainer::make(Session::class);
-		}
 	}
 
 	public function test_current_var(): void {
