@@ -10,6 +10,7 @@ parameters:
     # Stricter analysis
     polluteScopeWithLoopInitialAssignments: false
     polluteScopeWithAlwaysIterableForeach: false
+    checkAlwaysTrueCheckTypeFunctionCall: true
     checkFunctionNameCase: true
     checkInternalClassCaseSensitivity: true
     checkTooWideReturnTypesInProtectedAndPublicMethods: true

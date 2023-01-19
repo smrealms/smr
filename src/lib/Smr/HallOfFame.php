@@ -158,9 +158,9 @@ class HallOfFame {
 
 		$container = new HallOfFamePersonal($accountID, $gameID);
 
-		if (isset($hofPlayer) && is_object($hofPlayer)) {
+		if (isset($hofPlayer)) {
 			$return .= ('<td ' . $bold . '>' . create_link($container, htmlentities($hofPlayer->getPlayerName())) . '</td>');
-		} elseif (isset($hofAccount) && is_object($hofAccount)) {
+		} elseif (isset($hofAccount)) {
 			$return .= ('<td ' . $bold . '>' . create_link($container, $hofAccount->getHofDisplayName()) . '</td>');
 		} else {
 			$return .= ('<td ' . $bold . '>Unknown</td>');

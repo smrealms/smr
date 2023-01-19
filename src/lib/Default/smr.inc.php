@@ -607,7 +607,7 @@ function doSkeletonAssigns(Template $template): void {
 		$container = new SearchForTraderResult($player->getPlayerID());
 		$template->assign('PlayerNameLink', $container->href());
 
-		if (is_array(Globals::getHiddenPlayers()) && in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+		if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 			$template->assign('PlayerInvisible', true);
 		}
 
