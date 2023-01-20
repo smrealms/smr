@@ -11,9 +11,16 @@ parameters:
     polluteScopeWithLoopInitialAssignments: false
     polluteScopeWithAlwaysIterableForeach: false
     checkAlwaysTrueCheckTypeFunctionCall: true
+    checkAlwaysTrueInstanceof: true
+    checkAlwaysTrueStrictComparison: true
+    checkExplicitMixedMissingReturn: true
     checkFunctionNameCase: true
     checkInternalClassCaseSensitivity: true
+    reportMaybesInMethodSignatures: true
+    reportMaybesInPropertyPhpDocTypes: true
+    reportStaticMethodSignatures: true
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
+    checkDynamicProperties: true
 
     dynamicConstantNames:
         - BUG_REPORT_TO_ADDRESSES
@@ -25,6 +32,7 @@ parameters:
         - GOOGLE_CLIENT_ID
         - IRC_BOT_VERBOSE_PING
         - NPC_LOG_TO_DATABASE
+        - OVERRIDE_FORWARD
         - RECAPTCHA_PRIVATE
         - SMTP_HOSTNAME
         - TWITTER_CONSUMER_KEY
