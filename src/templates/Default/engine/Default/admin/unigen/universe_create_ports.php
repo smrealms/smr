@@ -75,7 +75,7 @@
 			<td colspan="3" class="center">
 				<input type="submit" name="submit" value="Create Ports" />
 				<br /><br />
-				<input type="submit" name="submit" value="Cancel" />
+				<a href="<?php echo $CancelHREF; ?>" class="submitStyle">Cancel</a>
 			</td>
 		</tr>
 	</table>

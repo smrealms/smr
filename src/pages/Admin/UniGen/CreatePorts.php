@@ -53,11 +53,15 @@ class CreatePorts extends AccountPage {
 		$template->assign('RacePercents', $racePercents);
 		$template->assign('TotalPercent', array_sum($racePercents));
 
+		$template->assign('TotalPorts', $totalPorts);
+		$template->assign('Total', array_sum($totalPorts));
+
 		$container = new SaveProcessor($this->gameID, $this->galaxyID);
 		$template->assign('CreateHREF', $container->href());
 
-		$template->assign('TotalPorts', $totalPorts);
-		$template->assign('Total', array_sum($totalPorts));
+		// HREF to cancel and return to the previous page
+		$container = new EditGalaxy($this->gameID, $this->galaxyID);
+		$template->assign('CancelHREF', $container->href());
 	}
 
 }
