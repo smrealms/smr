@@ -6,11 +6,11 @@ use Smr\Exceptions\UserError;
 use Smr\SectorLock;
 use Smr\Session;
 
-function logException(Throwable $e): void {
+function logException(Throwable $err): void {
 	$message = '';
 	$delim = "\n\n-----------\n\n";
 
-	$message .= 'Error Message: ' . $e . $delim;
+	$message .= 'Error Message: ' . $err . $delim;
 
 	if (DiContainer::initialized(Session::class)) {
 		$session = Session::getInstance();
@@ -88,7 +88,7 @@ function logException(Throwable $e): void {
 	if (!empty(BUG_REPORT_TO_ADDRESSES)) {
 		$mail = setupMailer();
 		$mail->Subject = (defined('PAGE_PREFIX') ? PAGE_PREFIX : '??? ') .
-		                 'Automatic Bug Report';
+		                 'Automatic Bug Report: ' . $err->getMessage();
 		$mail->setFrom('bugs@smrealms.de');
 		$mail->Body = $message;
 		foreach (BUG_REPORT_TO_ADDRESSES as $toAddress) {
