@@ -95,10 +95,7 @@ class NpcActor {
 			$this->changeRoute();
 		}
 
-		// Do we have a plot that ends in Fed?
-		$hasPlotToFed = $player->hasPlottedCourse() && Sector::getSector($player->getGameID(), $player->getPlottedCourse()->getEndSectorID())->offersFederalProtection();
-
-		if ($hasPlotToFed) {
+		if ($player->hasPlottedCourse() && Sector::getSector($player->getGameID(), $player->getPlottedCourse()->getEndSectorID())->offersFederalProtection()) {
 			// We have a route to fed to follow
 			debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
 			return moveToSector($player, $player->getPlottedCourse()->getNextOnPath());
