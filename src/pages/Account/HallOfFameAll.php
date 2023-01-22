@@ -50,7 +50,7 @@ class HallOfFameAll extends AccountPage {
 		$viewType = $this->viewType;
 		$hofVis = Player::getHOFVis();
 
-		if (!isset($hofVis[$viewType])) {
+		if ($viewType === null || !isset($hofVis[$viewType])) {
 			// Not a complete HOF type, so continue to show categories
 			$allowedVis = [HOF_PUBLIC, HOF_ALLIANCE];
 			$categories = HallOfFame::getHofCategories($this, $allowedVis, $game_id, $account->getAccountID());
