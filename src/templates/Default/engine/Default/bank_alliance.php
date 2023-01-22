@@ -35,7 +35,7 @@ if (isset($UnlimitedWithdrawal) && $UnlimitedWithdrawal === true) {
 	?>You can withdraw an unlimited amount from this account.<?php
 } elseif (isset($PositiveWithdrawal)) {
 	?>You can only withdraw <?php echo number_format($PositiveWithdrawal); ?> more credits based on your deposits.<?php
-} else { ?>
+} elseif (isset($WithdrawalPerDay) && isset($TotalWithdrawn) && isset($RemainingWithdrawal)) { ?>
 	You can withdraw up to <?php echo number_format($WithdrawalPerDay); ?> credits per 24 hours.<br />
 	So far you have withdrawn <?php echo number_format($TotalWithdrawn); ?> credits in the past 24 hours. You can withdraw <?php echo number_format($RemainingWithdrawal); ?> more credits.<?php
 } ?>

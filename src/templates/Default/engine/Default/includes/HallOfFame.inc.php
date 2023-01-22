@@ -4,6 +4,7 @@
  * @var Smr\Account $ThisAccount
  * @var string $Breadcrumb
  * @var ?array<string> $Rows
+ * @var ?array<array{link: string, subcategories: string}> $Categories
  */
 
 ?>
@@ -32,7 +33,7 @@ if (isset($Categories)) { ?>
 			</tr><?php
 		} ?>
 	</table><?php
-} else { ?>
+} elseif (isset($Rows)) { ?>
 	<table class="standard center">
 		<tr>
 			<th>Rank</th>
