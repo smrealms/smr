@@ -9,7 +9,6 @@ use Smr\TransactionType;
  * @var array<int, array{HREF: string, Image: string, Name: string, BasePrice: int, PortAmount: int, Amount: int}> $BoughtGoods
  * @var array<int, array{HREF: string, Image: string, Name: string, BasePrice: int, PortAmount: int, Amount: int}> $SoldGoods
  * @var bool $SearchedByFeds
- * @var ?bool $IllegalsFound
  * @var ?int $TotalFine
  * @var string $LeavePortHREF
  */
@@ -25,7 +24,7 @@ if (!empty($TradeMsg)) { ?>
 
 if ($SearchedByFeds) { ?>
 	<p><?php
-		if ($IllegalsFound) { ?>
+		if (isset($TotalFine)) { ?>
 			<span class="red">
 				The Federation searched your ship and illegal goods were found!<br />
 				All illegal goods have been removed from your ship and you have been fined <?php echo number_format($TotalFine); ?> credits.

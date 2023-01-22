@@ -59,7 +59,6 @@ class ShopGoods extends PlayerPage {
 				$searchedByFeds = true;
 				$player->increaseHOF(1, ['Trade', 'Search', 'Total'], HOF_PUBLIC);
 				if ($ship->hasIllegalGoods()) {
-					$template->assign('IllegalsFound', true);
 					$player->increaseHOF(1, ['Trade', 'Search', 'Caught', 'Number Of Times'], HOF_PUBLIC);
 					//find the fine
 					//get base for ports that dont happen to trade that good
@@ -95,7 +94,6 @@ class ShopGoods extends PlayerPage {
 					$player->log(LOG_TYPE_TRADING, 'Player gets caught with illegals');
 
 				} else {
-					$template->assign('IllegalsFound', false);
 					$player->increaseHOF(1, ['Trade', 'Search', 'Times Found Innocent'], HOF_PUBLIC);
 					$player->increaseAlignment(1);
 					$player->log(LOG_TYPE_TRADING, 'Player gains alignment at port');
