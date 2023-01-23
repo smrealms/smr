@@ -7,11 +7,11 @@
  * @var string $Type
  * @var float $Speed
  * @var int $NumAlliances
- * @var ?int $NumPlayers
- * @var ?int $MaxExp
- * @var ?int $MaxAlign
- * @var ?int $MinAlign
- * @var ?int $MaxKills
+ * @var int $NumPlayers
+ * @var int $MaxExp
+ * @var int $MaxAlign
+ * @var int $MinAlign
+ * @var int $MaxKills
  * @var array<array{bold: string, exp: int, name: string}> $PlayerExp
  * @var array<array{bold: string, kills: int, name: string}> $PlayerKills
  * @var array<array{bold: string, exp: int, link: string}> $AllianceExp
