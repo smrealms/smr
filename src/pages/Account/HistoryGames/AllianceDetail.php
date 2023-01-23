@@ -16,7 +16,7 @@ class AllianceDetail extends HistoryPage {
 		protected readonly int $historyGameID,
 		protected readonly string $historyGameName,
 		private readonly int $allianceID,
-		private readonly Summary|ExtendedStats $previousPage
+		private readonly Summary|ExtendedStatsDetail $previousPage
 	) {}
 
 	protected function buildHistory(Account $account, Template $template): void {
