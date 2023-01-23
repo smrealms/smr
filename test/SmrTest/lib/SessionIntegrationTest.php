@@ -2,6 +2,7 @@
 
 namespace SmrTest\lib;
 
+use Exception;
 use Smr\Account;
 use Smr\Container\DiContainer;
 use Smr\Page\Page;
@@ -98,6 +99,12 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertTrue(DiContainer::make(Session::class)->ajax);
 		$_REQUEST['ajax'] = 'anything other than 1';
 		self::assertFalse(DiContainer::make(Session::class)->ajax);
+	}
+
+	public function test_getCurrentVar_throws(): void {
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The session has no current page!');
+		$this->session->getCurrentVar();
 	}
 
 	public function test_current_var(): void {

@@ -2,6 +2,7 @@
 
 namespace Smr;
 
+use Exception;
 use Smr\Container\DiContainer;
 use Smr\Page\Page;
 use Smr\Pages\Player\AttackPlayerProcessor;
@@ -272,6 +273,9 @@ class Session {
 	 * Returns the session var associated with the current SN.
 	 */
 	public function getCurrentVar(): Page {
+		if ($this->currentPage === null) {
+			throw new Exception('The session has no current page!');
+		}
 		return $this->currentPage;
 	}
 
