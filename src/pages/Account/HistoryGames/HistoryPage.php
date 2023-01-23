@@ -39,8 +39,6 @@ abstract class HistoryPage extends AccountPage {
 	}
 
 	public function build(Account $account, Template $template): void {
-		$this->addMenu($template);
-
 		$db = Database::getInstance();
 		$db->switchDatabases($this->historyDatabase);
 
