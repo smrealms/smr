@@ -80,7 +80,7 @@
 	},
 	"require-dev": {
 		"fig-r/psr2r-sniffer": "1.4.0",
-		"overtrue/phplint": "5.5.0",
+		"overtrue/phplint": "6.1.0",
 		"phpstan/phpstan": "1.9.14",
 		"phpunit/phpunit": "9.5.28",
 		"phpunit/php-code-coverage": "9.2.20",
