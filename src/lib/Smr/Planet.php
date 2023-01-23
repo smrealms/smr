@@ -129,7 +129,6 @@ class Planet {
 		//kick everyone from planet
 		$db->write('UPDATE player SET land_on_planet = \'FALSE\' WHERE ' . $SQL);
 
-		self::$CACHE_PLANETS[$gameID][$sectorID] = null;
 		unset(self::$CACHE_PLANETS[$gameID][$sectorID]);
 	}
 
