@@ -7,6 +7,7 @@ use Smr\Container\DiContainer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Exceptions\UserError;
+use Smr\Force;
 use Smr\Game;
 use Smr\Globals;
 use Smr\Messages;
@@ -44,7 +45,9 @@ use Smr\Pages\Player\Rankings\PlayerExperience;
 use Smr\Pages\Player\SearchForTrader;
 use Smr\Pages\Player\SearchForTraderResult;
 use Smr\Pages\Player\WeaponReorder;
+use Smr\Planet;
 use Smr\Player;
+use Smr\Port;
 use Smr\Race;
 use Smr\Sector;
 use Smr\SectorLock;
@@ -53,6 +56,7 @@ use Smr\Ship;
 use Smr\Template;
 use Smr\VoteLink;
 use Smr\VoteSite;
+use Smr\WeightedRandom;
 
 function parseBoolean(mixed $check): bool {
 	// Only negative strings are not implicitly converted to the correct bool
@@ -457,19 +461,10 @@ function saveAllAndReleaseLock(bool $updateSession = true): void {
 		Sector::saveSectors();
 		Ship::saveShips();
 		Player::savePlayers();
-		// Skip any caching classes that haven't even been loaded yet
-		if (class_exists(Force::class, false)) {
-			Force::saveForces();
-		}
-		if (class_exists(Port::class, false)) {
-			Port::savePorts();
-		}
-		if (class_exists(Planet::class, false)) {
-			Planet::savePlanets();
-		}
-		if (class_exists(WeightedRandom::class, false)) {
-			WeightedRandom::saveWeightedRandoms();
-		}
+		Force::saveForces();
+		Port::savePorts();
+		Planet::savePlanets();
+		WeightedRandom::saveWeightedRandoms();
 		if ($updateSession) {
 			//Update session here to make sure current page $var is up to date before releasing lock.
 			Session::getInstance()->update();
