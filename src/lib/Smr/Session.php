@@ -327,7 +327,7 @@ class Session {
 	public function addLink(Page $container): string {
 		// If we already had a link to this exact page, use the existing SN for it.
 		foreach ($this->links as $sn => $link) {
-			if ($container == $link) { // loose equality to compare contents
+			if (objects_equal($link, $container)) {
 				return $sn;
 			}
 		}

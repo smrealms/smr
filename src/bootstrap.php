@@ -231,6 +231,18 @@ function array_rand_value(array $arr): mixed {
 	return $arr[array_rand($arr)];
 }
 
+/**
+ * Check if two objects are strictly equal, without requiring that they are
+ * same object (or any of their properties are the same object). This fills
+ * the gap between == (loose equality of all object properties) and ===
+ * (reference the same object).
+ */
+function objects_equal(object $obj1, object $obj2): bool {
+	// Return early if the objects are different classes, to avoid the expense
+	// of serialization.
+	return get_class($obj1) === get_class($obj2) && serialize($obj1) === serialize($obj2);
+}
+
 // Defines all constants
 require_once('config.php');
 
