@@ -13,6 +13,7 @@ abstract class SocialLogin {
 	private ?string $userID = null;
 	private ?string $email = null;
 	private bool $valid = false;
+	protected ?string $errorMessage = null;
 
 	/**
 	 * Provides the canonical name of the platform to use in string comparison.
@@ -80,6 +81,13 @@ abstract class SocialLogin {
 
 	public function getEmail(): ?string {
 		return $this->email;
+	}
+
+	/**
+	 * Returns the authentication error message, if one has been set.
+	 */
+	public function getErrorMessage(): ?string {
+		return $this->errorMessage;
 	}
 
 }

@@ -24,7 +24,8 @@ try {
 		if (Request::has('loginType')) {
 			$socialLogin = SocialLogin::get(Request::get('loginType'))->login();
 			if (!$socialLogin->isValid()) {
-				$msg = 'Error validating ' . $socialLogin->getLoginType() . ' login. Please try logging in again.';
+				$msg = 'Error validating ' . $socialLogin->getLoginType() . ' login. ';
+				$msg .= $socialLogin->getErrorMessage() ?? 'Please try logging in again.';
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				exit;
 			}
