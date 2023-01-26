@@ -11,23 +11,14 @@ use Smr\Request;
 
 class PlotCourseNearestProcessor extends PlayerPageProcessor {
 
-	public function __construct(
-		private readonly mixed $realX = null // for NPCs only
-	) {}
-
 	public function build(AbstractPlayer $player): never {
 		$sector = $player->getSector();
 
-		if ($this->realX !== null) {
-			// This is only used by NPC's
-			$realX = $this->realX;
-		} else {
-			$xType = PlotGroup::from(Request::get('xtype'));
-			$X = Request::get('X');
-			$realX = Plotter::getX($xType, $X, $player->getGameID(), $player);
+		$xType = PlotGroup::from(Request::get('xtype'));
+		$X = Request::get('X');
+		$realX = Plotter::getX($xType, $X, $player->getGameID(), $player);
 
-			$player->log(LOG_TYPE_MOVEMENT, 'Player plots to nearest ' . $xType->value . ': ' . $X . '.');
-		}
+		$player->log(LOG_TYPE_MOVEMENT, 'Player plots to nearest ' . $xType->value . ': ' . $X . '.');
 
 		if ($sector->hasX($realX, $player)) {
 			create_error('Current sector has what you\'re looking for!');

@@ -103,7 +103,7 @@ class NpcActor {
 		if ($player->isUnderAttack()) {
 			// We're under attack and need to plot course to fed.
 			debug('Under Attack');
-			return plotToFed($player);
+			plotToFed($player);
 		}
 		if ($player->getTurns() < NPC_LOW_TURNS) {
 			// We're low on turns or have been under attack and need to plot course to fed
@@ -112,7 +112,7 @@ class NpcActor {
 				throw new FinalAction();
 			}
 			debug('Low Turns:' . $player->getTurns());
-			return plotToFed($player);
+			plotToFed($player);
 		}
 		if ($player->hasPlottedCourse()) {
 			// We have a route to follow
@@ -157,7 +157,7 @@ class NpcActor {
 			}
 		}
 		debug('No valid actions to take');
-		return plotToFed($player);
+		plotToFed($player);
 		/*
 		//Otherwise let's run around at random.
 		$moveTo = array_rand_value($player->getSector()->getLinks());
