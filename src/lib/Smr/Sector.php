@@ -1009,7 +1009,10 @@ class Sector {
 			return $x->contains($this);
 		}
 		if ($x instanceof TradeGoodTransaction) {
-			return $this->hasPort() && $this->getPort()->hasGood($x->goodID, $x->transactionType);
+			if ($player === null) {
+				return $this->hasPort() && $this->getPort()->hasGood($x->goodID, $x->transactionType);
+			}
+			return $this->hasCachedPort($player) && $this->getCachedPort($player)->hasGood($x->goodID, $x->transactionType);
 		}
 
 		//Check if it's possible for location to have X, hacky but nice performance gains
