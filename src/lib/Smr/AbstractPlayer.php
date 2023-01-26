@@ -86,7 +86,7 @@ abstract class AbstractPlayer {
 	protected bool $forceDropMessages;
 	protected ScoutMessageGroupType $scoutMessageGroupType;
 	protected bool $ignoreGlobals;
-	protected ?Path $plottedCourse;
+	protected Path|false $plottedCourse;
 	protected bool $nameChanged;
 	protected bool $raceChanged;
 	protected bool $combatDronesKamikazeOnMines;
@@ -1686,7 +1686,7 @@ abstract class AbstractPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getPlottedCourse(): ?Path {
+	public function getPlottedCourse(): Path|false {
 		if (!isset($this->plottedCourse)) {
 			// check if we have a course plotted
 			$dbResult = $this->db->read('SELECT course FROM player_plotted_course WHERE ' . $this->SQL);
@@ -1695,12 +1695,12 @@ abstract class AbstractPlayer {
 				// get the course back
 				$this->plottedCourse = $dbResult->record()->getObject('course');
 			} else {
-				$this->plottedCourse = null;
+				$this->plottedCourse = false;
 			}
 		}
 
 		// Update the plotted course if we have moved since the last query
-		if ($this->plottedCourse !== null && $this->plottedCourse->getStartSectorID() != $this->getSectorID()) {
+		if ($this->plottedCourse !== false && $this->plottedCourse->getStartSectorID() != $this->getSectorID()) {
 			if ($this->plottedCourse->getEndSectorID() == $this->getSectorID()) {
 				// We have reached our destination
 				$this->deletePlottedCourse();
@@ -1726,16 +1726,19 @@ abstract class AbstractPlayer {
 		]);
 	}
 
+	/**
+	 * @phpstan-assert-if-true !false $this->getPlottedCourse()
+	 */
 	public function hasPlottedCourse(): bool {
-		return $this->getPlottedCourse() !== null;
+		return $this->getPlottedCourse() !== false;
 	}
 
 	public function isPartOfCourse(Sector $sector): bool {
-		return $this->getPlottedCourse()?->isInPath($sector->getSectorID()) === true;
+		return $this->hasPlottedCourse() && $this->getPlottedCourse()->isInPath($sector->getSectorID());
 	}
 
 	public function deletePlottedCourse(): void {
-		$this->plottedCourse = null;
+		$this->plottedCourse = false;
 		$this->db->write('DELETE FROM player_plotted_course WHERE ' . $this->SQL);
 	}
 
