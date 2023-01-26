@@ -6,6 +6,7 @@ use Exception;
 use Smr\Combat\Weapon\CombatDrones;
 use Smr\Combat\Weapon\Weapon;
 use Smr\Exceptions\CachedPortNotFound;
+use Smr\Exceptions\PathNotFound;
 use Smr\Page\Page;
 use Smr\Pages\Player\AttackPortClaimProcessor;
 use Smr\Pages\Player\AttackPortConfirm;
@@ -323,11 +324,12 @@ class Port {
 				goodID: $goodID,
 				transactionType: $this->getGoodTransaction($goodID)->opposite(),
 			);
-			$di = Plotter::findDistanceToX($x, $this->getSector(), true);
-			if (is_object($di)) {
-				$di = $di->getDistance();
+			try {
+				$distance = Plotter::findDistanceToX($x, $this->getSector(), true)->getDistance();
+			} catch (PathNotFound) {
+				$distance = 0;
 			}
-			$this->goodDistances[$goodID] = max(1, $di);
+			$this->goodDistances[$goodID] = $distance;
 		}
 		return $this->goodDistances[$goodID];
 	}
@@ -1045,6 +1047,9 @@ class Port {
 		$good = TradeGood::get($goodID);
 		$base = $good->basePrice * $numGoods;
 		$maxSupply = $good->maxPortAmount;
+
+		// Handle distance 0 case (good has no matching trade anywhere)
+		$dist = max(1, $dist);
 
 		$distFactor = pow($dist, 1.3);
 		if ($transactionType === TransactionType::Sell) {

@@ -3,6 +3,7 @@
 namespace Smr\Pages\Player;
 
 use Smr\AbstractPlayer;
+use Smr\Exceptions\PathNotFound;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Plotter;
 use Smr\Port;
@@ -57,11 +58,11 @@ class CargoDumpProcessor extends PlayerPageProcessor {
 				goodID: $good_id,
 				transactionType: TransactionType::Sell,
 			);
-			$good_distance = Plotter::findDistanceToX($x, $sector, true);
-			if (is_object($good_distance)) {
-				$good_distance = $good_distance->getDistance();
+			try {
+				$good_distance = Plotter::findDistanceToX($x, $sector, true)->getDistance();
+			} catch (PathNotFound) {
+				$good_distance = 0;
 			}
-			$good_distance = max(1, $good_distance);
 
 			// Don't lose more exp than you have
 			$lost_xp = min(

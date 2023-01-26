@@ -3,6 +3,7 @@
 namespace Smr\Pages\Player;
 
 use Smr\AbstractPlayer;
+use Smr\Exceptions\PathNotFound;
 use Smr\Exceptions\SectorNotFound;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Plotter;
@@ -38,7 +39,11 @@ class PlotCourseConventionalProcessor extends PlayerPageProcessor {
 
 		$player->log(LOG_TYPE_MOVEMENT, 'Player plots to ' . $target . '.');
 
-		$path = Plotter::findReversiblePathToX($targetSector, $startSector);
+		try {
+			$path = Plotter::findReversiblePathToX($targetSector, $startSector);
+		} catch (PathNotFound) {
+			create_error('Unable to plot from ' . $startSector->getSectorID() . ' to ' . $targetSector->getSectorID());
+		}
 
 		require_once(LIB . 'Default/course_plot.inc.php');
 		course_plot_forward($player, $path);

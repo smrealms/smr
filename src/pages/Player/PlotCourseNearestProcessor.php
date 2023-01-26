@@ -3,6 +3,7 @@
 namespace Smr\Pages\Player;
 
 use Smr\AbstractPlayer;
+use Smr\Exceptions\PathNotFound;
 use Smr\Page\PlayerPageProcessor;
 use Smr\PlotGroup;
 use Smr\Plotter;
@@ -32,7 +33,11 @@ class PlotCourseNearestProcessor extends PlayerPageProcessor {
 			create_error('Current sector has what you\'re looking for!');
 		}
 
-		$path = Plotter::findReversiblePathToX($realX, $sector, $player, $player);
+		try {
+			$path = Plotter::findReversiblePathToX($realX, $sector, $player, $player);
+		} catch (PathNotFound) {
+			create_error('Unable to find what you\'re looking for! It either hasn\'t been added to this game or you haven\'t explored it yet.');
+		}
 
 		require_once(LIB . 'Default/course_plot.inc.php');
 		course_plot_forward($player, $path);

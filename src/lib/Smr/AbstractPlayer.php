@@ -6,6 +6,7 @@ require_once(LIB . 'Default/missions.inc.php');
 
 use Exception;
 use Smr\Exceptions\AccountNotFound;
+use Smr\Exceptions\PathNotFound;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Exceptions\UserError;
 use Smr\Pages\Player\ExamineTrader;
@@ -1741,13 +1742,11 @@ abstract class AbstractPlayer {
 	/**
 	 * Computes the turn cost and max misjump between current and target sector
 	 *
+	 * @throws \Smr\Exceptions\PathNotFound
 	 * @return array<string, int>
 	 */
 	public function getJumpInfo(Sector $targetSector): array {
 		$path = Plotter::findDistanceToX($targetSector, $this->getSector(), true);
-		if ($path === false) {
-			throw new UserError('Unable to plot from ' . $this->getSectorID() . ' to ' . $targetSector->getSectorID() . '.');
-		}
 		$distance = $path->getDistance();
 
 		$turnCost = max(TURNS_JUMP_MINIMUM, IRound($distance * TURNS_PER_JUMP_DISTANCE));
@@ -2683,8 +2682,9 @@ abstract class AbstractPlayer {
 		$step = MISSIONS[$missionID]['Steps'][$stepID];
 		if (isset($step['PickSector'])) {
 			$realX = Plotter::getX($step['PickSector']['Type'], $step['PickSector']['X'], $this->getGameID());
-			$path = Plotter::findDistanceToX($realX, $this->getSector(), true, null, $this);
-			if ($path === false) {
+			try {
+				$path = Plotter::findDistanceToX($realX, $this->getSector(), true, null, $this);
+			} catch (PathNotFound) {
 				// Abandon the mission if it cannot be completed due to a
 				// sector that does not exist or cannot be reached.
 				// (Probably shouldn't bestow this mission in the first place)
