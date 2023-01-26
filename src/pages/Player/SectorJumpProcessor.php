@@ -3,6 +3,7 @@
 namespace Smr\Pages\Player;
 
 use Smr\AbstractPlayer;
+use Smr\Exceptions\PathNotFound;
 use Smr\Globals;
 use Smr\MovementType;
 use Smr\Page\PlayerPageProcessor;
@@ -69,7 +70,11 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 		// create sector object for target sector
 		$targetSector = Sector::getSector($player->getGameID(), $target);
 
-		$jumpInfo = $player->getJumpInfo($targetSector);
+		try {
+			$jumpInfo = $player->getJumpInfo($targetSector);
+		} catch (PathNotFound) {
+			create_error('Unable to plot from ' . $player->getSectorID() . ' to ' . $targetSector->getSectorID());
+		}
 		$turnsToJump = $jumpInfo['turn_cost'];
 		$maxMisjump = $jumpInfo['max_misjump'];
 

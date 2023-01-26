@@ -6,6 +6,7 @@ require_once(LIB . 'Default/missions.inc.php');
 
 use Exception;
 use Smr\Exceptions\AccountNotFound;
+use Smr\Exceptions\PathNotFound;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Exceptions\UserError;
 use Smr\Pages\Player\ExamineTrader;
@@ -85,7 +86,7 @@ abstract class AbstractPlayer {
 	protected bool $forceDropMessages;
 	protected ScoutMessageGroupType $scoutMessageGroupType;
 	protected bool $ignoreGlobals;
-	protected ?Path $plottedCourse;
+	protected Path|false $plottedCourse;
 	protected bool $nameChanged;
 	protected bool $raceChanged;
 	protected bool $combatDronesKamikazeOnMines;
@@ -1685,7 +1686,7 @@ abstract class AbstractPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getPlottedCourse(): ?Path {
+	public function getPlottedCourse(): Path|false {
 		if (!isset($this->plottedCourse)) {
 			// check if we have a course plotted
 			$dbResult = $this->db->read('SELECT course FROM player_plotted_course WHERE ' . $this->SQL);
@@ -1694,12 +1695,12 @@ abstract class AbstractPlayer {
 				// get the course back
 				$this->plottedCourse = $dbResult->record()->getObject('course');
 			} else {
-				$this->plottedCourse = null;
+				$this->plottedCourse = false;
 			}
 		}
 
 		// Update the plotted course if we have moved since the last query
-		if ($this->plottedCourse !== null && $this->plottedCourse->getStartSectorID() != $this->getSectorID()) {
+		if ($this->plottedCourse !== false && $this->plottedCourse->getStartSectorID() != $this->getSectorID()) {
 			if ($this->plottedCourse->getEndSectorID() == $this->getSectorID()) {
 				// We have reached our destination
 				$this->deletePlottedCourse();
@@ -1725,29 +1726,30 @@ abstract class AbstractPlayer {
 		]);
 	}
 
+	/**
+	 * @phpstan-assert-if-true !false $this->getPlottedCourse()
+	 */
 	public function hasPlottedCourse(): bool {
-		return $this->getPlottedCourse() !== null;
+		return $this->getPlottedCourse() !== false;
 	}
 
 	public function isPartOfCourse(Sector $sector): bool {
-		return $this->getPlottedCourse()?->isInPath($sector->getSectorID()) === true;
+		return $this->hasPlottedCourse() && $this->getPlottedCourse()->isInPath($sector->getSectorID());
 	}
 
 	public function deletePlottedCourse(): void {
-		$this->plottedCourse = null;
+		$this->plottedCourse = false;
 		$this->db->write('DELETE FROM player_plotted_course WHERE ' . $this->SQL);
 	}
 
 	/**
 	 * Computes the turn cost and max misjump between current and target sector
 	 *
+	 * @throws \Smr\Exceptions\PathNotFound
 	 * @return array<string, int>
 	 */
 	public function getJumpInfo(Sector $targetSector): array {
 		$path = Plotter::findDistanceToX($targetSector, $this->getSector(), true);
-		if ($path === false) {
-			throw new UserError('Unable to plot from ' . $this->getSectorID() . ' to ' . $targetSector->getSectorID() . '.');
-		}
 		$distance = $path->getDistance();
 
 		$turnCost = max(TURNS_JUMP_MINIMUM, IRound($distance * TURNS_PER_JUMP_DISTANCE));
@@ -2683,8 +2685,9 @@ abstract class AbstractPlayer {
 		$step = MISSIONS[$missionID]['Steps'][$stepID];
 		if (isset($step['PickSector'])) {
 			$realX = Plotter::getX($step['PickSector']['Type'], $step['PickSector']['X'], $this->getGameID());
-			$path = Plotter::findDistanceToX($realX, $this->getSector(), true, null, $this);
-			if ($path === false) {
+			try {
+				$path = Plotter::findDistanceToX($realX, $this->getSector(), true, null, $this);
+			} catch (PathNotFound) {
 				// Abandon the mission if it cannot be completed due to a
 				// sector that does not exist or cannot be reached.
 				// (Probably shouldn't bestow this mission in the first place)

@@ -6,6 +6,7 @@ use Smr\Combat\Weapon\Weapon;
 use Smr\Container\DiContainer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Exceptions\PathNotFound;
 use Smr\Force;
 use Smr\Galaxy;
 use Smr\Location;
@@ -18,7 +19,6 @@ use Smr\Pages\Account\ErrorDisplay;
 use Smr\Pages\Player\CargoDumpProcessor;
 use Smr\Pages\Player\CurrentSector;
 use Smr\Pages\Player\PlotCourseConventionalProcessor;
-use Smr\Pages\Player\PlotCourseNearestProcessor;
 use Smr\Pages\Player\SectorMoveProcessor;
 use Smr\Pages\Player\ShopGoodsProcessor;
 use Smr\Player;
@@ -363,7 +363,7 @@ function plotToSector(AbstractPlayer $player, int $sectorID): Page {
 	return new PlotCourseConventionalProcessor(from: $player->getSectorID(), to: $sectorID);
 }
 
-function plotToFed(AbstractPlayer $player): Page {
+function plotToFed(AbstractPlayer $player): never {
 	debug('Plotting To Fed');
 
 	// Always drop illegal goods before heading to fed space
@@ -373,23 +373,42 @@ function plotToFed(AbstractPlayer $player): Page {
 	}
 
 	$fedLocID = $player->getRaceID() + LOCATION_GROUP_RACIAL_BEACONS;
-	$container = plotToNearest($player, Location::getLocation($player->getGameID(), $fedLocID));
-	if ($container === false) {
+	try {
+		$needToMove = plotToNearest($player, Location::getLocation($player->getGameID(), $fedLocID));
+	} catch (PathNotFound) {
+		debug('Racial Beacon not found, trying any safe fed');
+		$needToMove = plotToNearest($player, 'SafeFed');
+	}
+	if ($needToMove === false) {
 		debug('Plotted to fed whilst in fed, switch NPC and wait for turns');
 		throw new FinalAction();
 	}
-	return $container;
+	throw new ForwardAction();
 }
 
-function plotToNearest(AbstractPlayer $player, mixed $realX): Page|false {
+/**
+ * Sets the player's plotted course to the nearest $realX location.
+ *
+ * @raises \Smr\Exceptions\PathNotFound
+ * @return bool True if location is in another sector, false if in current sector.
+ */
+function plotToNearest(AbstractPlayer $player, mixed $realX): bool {
 	debug('Plotting To: ', $realX); //TODO: Can we make the debug output a bit nicer?
 
-	if ($player->getSector()->hasX($realX)) { //Check if current sector has what we're looking for before we attempt to plot and get error.
+	if ($player->getSector()->hasX($realX, $player)) {
 		debug('Already available in sector');
 		return false;
 	}
 
-	return new PlotCourseNearestProcessor($realX);
+	$path = Plotter::findDistanceToX(
+		x: $realX,
+		sector: $player->getSector(),
+		useFirst: true,
+		needsToHaveBeenExploredBy: null, // NPCs have full vision
+		player: $player,
+	);
+	$player->setPlottedCourse($path);
+	return true;
 }
 
 function moveToSector(AbstractPlayer $player, int $targetSector): Page {

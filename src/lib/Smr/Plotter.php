@@ -3,7 +3,7 @@
 namespace Smr;
 
 use Exception;
-use Smr\Exceptions\UserError;
+use Smr\Exceptions\PathNotFound;
 
 class Plotter {
 
@@ -48,6 +48,8 @@ class Plotter {
 	 * The path is guaranteed reversible ($x -> $sector == $sector -> $x), which
 	 * is not true for findDistanceToX. If $x is not a Sector, then this
 	 * function does 2x the work.
+	 *
+	 * @throws \Smr\Exceptions\PathNotFound
 	 */
 	public static function findReversiblePathToX(mixed $x, Sector $sector, AbstractPlayer $needsToHaveBeenExploredBy = null, AbstractPlayer $player = null): Path {
 		if ($x instanceof Sector) {
@@ -62,9 +64,7 @@ class Plotter {
 				$end = $x;
 			}
 			$path = self::findDistanceToX($end, $start, true, $needsToHaveBeenExploredBy, $player);
-			if ($path === false) {
-				throw new UserError('Unable to plot from ' . $sector->getSectorID() . ' to ' . $x->getSectorID() . '.');
-			}
+
 			// Reverse if we plotted $x -> $sector (since we want $sector -> $x)
 			if ($reverse) {
 				$path->reversePath();
@@ -74,17 +74,12 @@ class Plotter {
 
 			// At this point we don't know what sector $x will be at
 			$path = self::findDistanceToX($x, $sector, true, $needsToHaveBeenExploredBy, $player);
-			if ($path === false) {
-				throw new UserError('Unable to find what you\'re looking for, it either hasn\'t been added to this game or you haven\'t explored it yet.');
-			}
+
 			// Now that we know where $x is, make sure path is reversible
 			// (i.e. start sector < end sector)
 			if ($path->getEndSectorID() < $sector->getSectorID()) {
 				$endSector = Sector::getSector($sector->getGameID(), $path->getEndSectorID());
 				$path = self::findDistanceToX($sector, $endSector, true);
-				if ($path === false) {
-					throw new Exception('Unable to find reverse path');
-				}
 				$path->reversePath();
 			}
 
@@ -101,9 +96,10 @@ class Plotter {
 	 *                 be returned. Otherwise, must be a type implemented by Sector::hasX,
 	 *                 and will only return distances to sectors for which hasX returns true.
 	 *
-	 * @return ($useFirst is true ? Path|false : array<int, Path>)
+	 * @throws \Smr\Exceptions\PathNotFound
+	 * @return ($useFirst is true ? Path : array<int, Path>)
 	 */
-	public static function findDistanceToX(mixed $x, Sector $sector, bool $useFirst, AbstractPlayer $needsToHaveBeenExploredBy = null, AbstractPlayer $player = null, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): array|Path|false {
+	public static function findDistanceToX(mixed $x, Sector $sector, bool $useFirst, AbstractPlayer $needsToHaveBeenExploredBy = null, AbstractPlayer $player = null, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): array|Path {
 		$warpAddIndex = TURNS_WARP_SECTOR_EQUIVALENCE - 1;
 
 		$checkSector = $sector;
@@ -177,7 +173,7 @@ class Plotter {
 			}
 		}
 		if ($useFirst === true) {
-			return false;
+			throw new PathNotFound();
 		}
 		return $distances;
 	}

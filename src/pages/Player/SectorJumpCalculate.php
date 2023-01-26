@@ -3,6 +3,7 @@
 namespace Smr\Pages\Player;
 
 use Smr\AbstractPlayer;
+use Smr\Exceptions\PathNotFound;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Sector;
@@ -21,7 +22,11 @@ class SectorJumpCalculate extends PlayerPage {
 		Menu::navigation($player);
 
 		$targetSector = Sector::getSector($player->getGameID(), $this->targetSectorID);
-		$jumpInfo = $player->getJumpInfo($targetSector);
+		try {
+			$jumpInfo = $player->getJumpInfo($targetSector);
+		} catch (PathNotFound) {
+			create_error('Unable to plot from ' . $player->getSectorID() . ' to ' . $targetSector->getSectorID());
+		}
 
 		$template->assign('Target', $targetSector->getSectorID());
 		$template->assign('TurnCost', $jumpInfo['turn_cost']);
