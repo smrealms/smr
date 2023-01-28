@@ -313,23 +313,20 @@ function get_colored_text(float $value, string $text = null): string {
 }
 
 function word_filter(string $string): string {
-	static $words;
+	static $search, $replace;
 
-	if (!is_array($words)) {
+	if (!is_array($search) && !is_array($replace)) {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT word_value, word_replacement FROM word_filter');
-		$words = [];
+		$search = [];
+		$replace = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$row = $dbRecord->getRow();
-			$words[] = ['word_value' => '/' . str_replace('/', '\/', $row['word_value']) . '/i', 'word_replacement' => $row['word_replacement']];
+			$search[] = $dbRecord->getString('word_value');
+			$replace[] = $dbRecord->getString('word_replacement');
 		}
 	}
 
-	foreach ($words as $word) {
-		$string = preg_replace($word['word_value'], $word['word_replacement'], $string);
-	}
-
-	return $string;
+	return str_ireplace($search, $replace, $string);
 }
 
 // choose correct pluralization based on amount
