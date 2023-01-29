@@ -28,6 +28,9 @@ x-smr-common: &smr-common
     depends_on:
         - mysql
         - smtp
+    environment:
+        - XDEBUG_MODE
+        - DISABLE_PHPDI_COMPILATION
 
 # Base configuration for the SMR command line tools
 x-smr-cli: &smr-cli
@@ -86,8 +89,6 @@ services:
         volumes:
             - ./vol_upload:/smr/src/htdocs/upload:rw
             - ./config:/smr/config:ro
-        environment:
-            - XDEBUG_MODE
 
     smr-dev:
         <<: *smr-common
@@ -98,9 +99,6 @@ services:
             - ./src:/smr/src:ro
             # Directory for Xdebug profiler output
             - ./vol_xdebug:/tmp/xdebug:rw
-        environment:
-            - XDEBUG_MODE
-            - DISABLE_PHPDI_COMPILATION=true
 
     smtp:
         image: mwader/postfix-relay
