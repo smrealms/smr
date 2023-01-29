@@ -168,6 +168,7 @@ class ChessGame {
 			$this->board = new Board();
 			$mate = false;
 			foreach ($dbResult->records() as $dbRecord) {
+				$forColour = $this->board->getCurrentTurnColour();
 				$promotionPieceID = $dbRecord->getNullableInt('promote_piece_id');
 				$startX = $dbRecord->getInt('start_x');
 				$startY = $dbRecord->getInt('start_y');
@@ -189,7 +190,7 @@ class ChessGame {
 					endY: $endY,
 					pieceTaken: $moveInfo['PieceTaken']?->pieceID,
 					checking: $dbRecord->getNullableString('checked'),
-					playerColour: $this->board->getCurrentTurnColour(),
+					playerColour: $forColour,
 					castling: $moveInfo['Castling'],
 					enPassant: $moveInfo['EnPassant'],
 					promotionPieceID: $promotionPieceID,
