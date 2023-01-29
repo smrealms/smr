@@ -142,4 +142,10 @@
         <exclude-pattern>src/tools/irc/irc\.php</exclude-pattern>
         <exclude-pattern>src/tools/npc/npc\.php</exclude-pattern>
     </rule>
+
+    <!-- Ignore bug in PSR12. Will be fixed in PHP_CodeSniffer 3.7.2.
+      See https://github.com/squizlabs/PHP_CodeSniffer/pull/3653. -->
+    <rule ref="PSR12.Operators.OperatorSpacing">
+        <exclude-pattern>src/lib/Smr/Chess/ChessPiece\.php</exclude-pattern>
+    </rule>
 </ruleset>
