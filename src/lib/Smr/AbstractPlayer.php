@@ -863,13 +863,13 @@ abstract class AbstractPlayer {
 		self::doMessageSending(ACCOUNT_ID_ALLIANCE_AMBASSADOR, $receiverID, $gameID, MSG_ALLIANCE, $message, $expires);
 	}
 
-	public static function sendMessageFromCasino(int $gameID, int $receiverID, string $message, int $expires = null): void {
+	public function sendMessageFromCasino(string $message, int $expires = null): void {
 		//get expire time
 		if ($expires === null) {
 			$expires = Epoch::time() + 86400 * 7;
 		}
 		// send him the message
-		self::doMessageSending(ACCOUNT_ID_CASINO, $receiverID, $gameID, MSG_CASINO, $message, $expires);
+		self::doMessageSending(ACCOUNT_ID_CASINO, $this->getAccountID(), $this->getGameID(), MSG_CASINO, $message, $expires);
 	}
 
 	public static function sendMessageFromRace(int $raceID, int $gameID, int $receiverID, string $message, int $expires = null): void {

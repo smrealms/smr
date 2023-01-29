@@ -232,6 +232,21 @@ function array_rand_value(array $arr): mixed {
 }
 
 /**
+ * Remove an element from an array by value.
+ *
+ * @template T
+ * @param array<T> $arr
+ * @param T $valueToRemove
+ */
+function array_remove_value(array &$arr, mixed $valueToRemove): void {
+	foreach ($arr as $key => $value) {
+		if ($value === $valueToRemove) {
+			unset($arr[$key]);
+		}
+	}
+}
+
+/**
  * Check if two objects are strictly equal, without requiring that they are
  * same object (or any of their properties are the same object). This fills
  * the gap between == (loose equality of all object properties) and ===

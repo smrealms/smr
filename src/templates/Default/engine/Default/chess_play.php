@@ -26,11 +26,11 @@
 				<table class="chess chessFont"><?php
 					foreach ($Board as $Y => $Row) { ?>
 						<tr>
-							<td class="chessOutline"><?php echo 8 - $Y; ?></td><?php
-							foreach ($Row as $X => $Cell) { ?>
-								<td id="c<?php echo $X . $Y; ?>" data-x="<?php echo $X; ?>" data-y="<?php echo $Y; ?>" class="ajax<?php if (($X + $Y) % 2 == 0) { ?> whiteSquare<?php } else { ?> blackSquare<?php } ?>" onClick="highlightMoves.call(this)">
+							<td class="chessOutline"><?php echo $Y + 1; ?></td><?php
+							foreach ($Row as $X => $Piece) { ?>
+								<td id="c<?php echo $X . $Y; ?>" data-x="<?php echo $X; ?>" data-y="<?php echo $Y; ?>" class="ajax<?php if (($X + $Y) % 2 != 0) { ?> whiteSquare<?php } else { ?> blackSquare<?php } ?>" onClick="highlightMoves.call(this)">
 									<div<?php if ($ChessGame->isLastMoveSquare($X, $Y)) { ?> class="lastMove"<?php } ?>><?php
-										if ($Cell !== null) { ?><span class="pointer lastMove"><?php echo $Cell->getPieceSymbol(); ?></span><?php } ?>
+										if ($Piece !== null) { ?><span class="pointer lastMove"><?php echo $Piece->getPieceSymbol(); ?></span><?php } ?>
 									</div>
 								</td><?php
 							} ?>
@@ -67,17 +67,12 @@
 	$AvailableMoves = array_pad([], count($Board), []);
 	if ($ChessGame->isCurrentTurn($ThisAccount->getAccountID())) {
 		$Colour = $ChessGame->getColourForAccountID($ThisAccount->getAccountID());
-		foreach ($Board as $Y => $Row) {
-			foreach ($Row as $X => $Cell) {
-				$AvailableMoves[$Y][$X] = [];
-				if ($Cell != null) {
-					$Moves = $Cell->getPossibleMoves($Board, $ChessGame->getHasMoved(), $Colour);
-					foreach ($Moves as $Move) {
-						$AvailableMoves[$Y][$X][] = '#c' . $Move[0] . $Move[1];
-					}
-					$AvailableMoves[$Y][$X] = implode(',', $AvailableMoves[$Y][$X]);
-				}
+		foreach ($ChessGame->getBoard()->getPieces($Colour) as $Piece) {
+			$Moves = [];
+			foreach ($Piece->getPossibleMoves($ChessGame->getBoard()) as $Move) {
+				$Moves[] = '#c' . $Move[0] . $Move[1];
 			}
+			$AvailableMoves[$Piece->y][$Piece->x] = implode(',', $Moves);
 		}
 	} ?>
 	var submitMoveHREF = <?php echo $this->addJavascriptForAjax('submitMoveHREF', $ChessMoveHREF); ?>;
