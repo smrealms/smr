@@ -76,7 +76,7 @@ class Port {
 	protected bool $cacheIsValid = true;
 
 	protected bool $hasChanged = false;
-	protected bool $isNew = false;
+	protected bool $isNew;
 
 	public static function clearCache(): void {
 		self::$CACHE_PORTS = [];
@@ -156,9 +156,9 @@ class Port {
 				$dbRecord = $dbResult->record();
 			}
 		}
-		$this->isNew = $dbRecord === null;
 
-		if (!$this->isNew) {
+		if ($dbRecord !== null) {
+			$this->isNew = false;
 			$this->shields = $dbRecord->getInt('shields');
 			$this->combatDrones = $dbRecord->getInt('combat_drones');
 			$this->armour = $dbRecord->getInt('armour');
@@ -174,6 +174,7 @@ class Port {
 			$this->getGoods();
 			$this->checkForUpgrade();
 		} else {
+			$this->isNew = true;
 			$this->shields = 0;
 			$this->combatDrones = 0;
 			$this->armour = 0;
