@@ -10,11 +10,10 @@ const WWW = ROOT . 'src/htdocs/';
 const UPLOAD = WWW . 'upload/';
 const ADMIN = ROOT . 'src/admin/';
 const TOOLS = ROOT . 'src/tools/';
-const CONFIG = ROOT . 'config/';
 const TEMPLATES = ROOT . 'src/templates/';
 
 // Define server-specific constants
-require_once(CONFIG . 'config.specific.php');
+require_once(ROOT . 'config/config.specific.php');
 
 if (ENABLE_BETA && !ENABLE_DEBUG) {
 	// Everything raises an exception in beta mode (for e-mail notifications).

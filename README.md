@@ -17,7 +17,7 @@ To run unit tests on your machine:
 First, you will need to clone this repository. Then inside the clone, you
 will need to create installation-specific copies of the following files:
 
-* `config/env.sample` &rarr; `config/env`
+* `.env.sample` &rarr; `.env`
 * `config/config.specific.sample.php` &rarr; `config/config.specific.php`
 
 The sample versions have sensible defaults, but update the copies as necessary.

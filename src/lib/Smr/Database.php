@@ -56,10 +56,10 @@ class Database {
 			throw new RuntimeException('Failed to enable mysqli error reporting');
 		}
 		$mysql = new mysqli(
-			$dbProperties->getHost(),
-			$dbProperties->getUser(),
-			$dbProperties->getPassword(),
-			$dbProperties->getDatabaseName()
+			$dbProperties->host,
+			$dbProperties->user,
+			$dbProperties->password,
+			$dbProperties->database,
 		);
 		$charset = $mysql->character_set_name();
 		if ($charset != 'utf8') {

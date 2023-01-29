@@ -11,7 +11,7 @@
 /.settings/
 
 # /config/
-/config/env
+/.env
 /config/config.specific.php
 
 # /htdocs/

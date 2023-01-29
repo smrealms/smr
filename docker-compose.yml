@@ -9,18 +9,26 @@ networks:
         name: backend-test
         external: false
 
-# Builds a local smr image for use in other services
-x-smr-builder: &smr-builder
+# Base configuration for services that use the local smr image
+x-smr-base: &smr-base
     build:
         context: .
         args:
             - NO_DEV
     image: local/smr
     pull_policy: never
+    environment: &smr-base-env
+        MYSQL_HOST:
+        MYSQL_USER:
+        MYSQL_DATABASE:
+        MYSQL_PASSWORD_FILE: /run/secrets/mysql-password
+    secrets:
+        - source: mysql-password
+          mode: 0444
 
-# Base configuration for `smr` (production) and `smr-dev` (testing).
-x-smr-common: &smr-common
-    <<: *smr-builder
+# Web configuration for `smr` (production) and `smr-dev` (testing).
+x-smr-web: &smr-web
+    <<: *smr-base
     container_name: ${SMR_HOST}
     networks:
         - frontend
@@ -32,12 +40,13 @@ x-smr-common: &smr-common
         - mysql
         - smtp
     environment:
-        - XDEBUG_MODE
-        - DISABLE_PHPDI_COMPILATION
+        <<: *smr-base-env
+        XDEBUG_MODE:
+        DISABLE_PHPDI_COMPILATION:
 
 # Base configuration for the SMR command line tools
 x-smr-cli: &smr-cli
-    <<: *smr-builder
+    <<: *smr-base
     networks:
         - backend
     depends_on:
@@ -50,16 +59,16 @@ x-smr-cli: &smr-cli
 
 # Base configuration for SMR testing tools
 x-smr-test: &smr-test
-    <<: *smr-builder
+    <<: *smr-base
     # Allow the process to be interruptible with SIGINT.
     # Note that this may corrupt the test database and require a reset.
     # (see https://github.com/docker-library/php/issues/505)
     init: true
     environment:
-        - XDEBUG_MODE=off
+        <<: *smr-base-env
+        XDEBUG_MODE: "off"
     volumes:
         - ./config/config.specific.sample.php:/smr/config/config.specific.php:ro
-        - ./test/env:/smr/config/env:ro
         - ./phpunit.xml:/smr/phpunit.xml:ro
         - ./phpstan.neon.dist:/smr/phpstan.neon.dist:ro
         - ./phpcs.xml:/smr/phpcs.xml:ro
@@ -70,13 +79,14 @@ x-smr-test: &smr-test
 x-mysql-common: &mysql-common
     image: mysql:8.0
     container_name: ${MYSQL_HOST}
-    # By using the default image, we must expose the secrets in
-    # the runtime environment (because we can't specify build args).
     environment:
-        - MYSQL_ROOT_PASSWORD
         - MYSQL_USER
-        - MYSQL_PASSWORD
         - MYSQL_DATABASE
+        - MYSQL_PASSWORD_FILE=/run/secrets/mysql-password
+        - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
+    secrets:
+        - mysql-password
+        - mysql-root-password
     # The mysql:5.7+ docker default sql mode uses STRICT_TRANS_TABLES,
     # which is incompatible with the way the SMR database is used.
     # Therefore, we override CMD to omit this sql mode.
@@ -86,13 +96,13 @@ x-mysql-common: &mysql-common
 
 services:
     smr:
-        <<: *smr-common
+        <<: *smr-web
         volumes:
             - ./vol_upload:/smr/src/htdocs/upload:rw
             - ./config:/smr/config:ro
 
     smr-dev:
-        <<: *smr-common
+        <<: *smr-web
         volumes:
             - ./vol_upload:/smr/src/htdocs/upload:rw
             - ./config:/smr/config:ro
@@ -153,7 +163,8 @@ services:
         networks:
             - backend-test
         environment:
-            - XDEBUG_MODE=coverage
+            <<: *smr-base-env
+            XDEBUG_MODE: coverage
         depends_on:
             - mysql-test
 
@@ -254,3 +265,9 @@ services:
             - ./vol_xdebug:/tmp:rw
             # Files mapped under /host will be available for code lookup
             - ./src:/host/smr/src:ro
+
+secrets:
+    mysql-password:
+        environment: "MYSQL_PASSWORD"
+    mysql-root-password:
+        environment: "MYSQL_ROOT_PASSWORD"
