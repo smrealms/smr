@@ -114,7 +114,12 @@ services:
     flyway: &flyway-common
         image: flyway/flyway:latest-alpine
         # Allow retries in case the mysql service is still spinning up
-        command: ["-connectRetries=20", "-url=jdbc:mysql://${MYSQL_HOST}/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true&useSSL=false", "-user=${MYSQL_USER}", "-password=${MYSQL_PASSWORD}", "migrate"]
+        command: migrate
+        environment:
+            FLYWAY_CONNECT_RETRIES: 20
+            FLYWAY_PASSWORD: ${MYSQL_PASSWORD}
+            FLYWAY_URL: "jdbc:mysql://${MYSQL_HOST}/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true&useSSL=false"
+            FLYWAY_USER: ${MYSQL_USER}
         networks:
             - backend
         depends_on:
