@@ -5,6 +5,9 @@ networks:
     backend:
         name: backend
         external: false
+    backend-test:
+        name: backend-test
+        external: false
 
 # Builds a local smr image for use in other services
 x-smr-builder: &smr-builder
@@ -67,8 +70,6 @@ x-smr-test: &smr-test
 x-mysql-common: &mysql-common
     image: mysql:8.0
     container_name: ${MYSQL_HOST}
-    networks:
-        - backend
     # By using the default image, we must expose the secrets in
     # the runtime environment (because we can't specify build args).
     environment:
@@ -123,23 +124,29 @@ services:
 
     flyway-test:
         <<: *flyway-common
+        networks:
+            - backend-test
         depends_on:
             - mysql-test
 
     mysql:
         <<: *mysql-common
+        networks:
+            - backend
         volumes:
             - ./vol_db:/var/lib/mysql:rw
 
     # MySQL container with no volumes mounted for testing
     mysql-test:
         <<: *mysql-common
+        networks:
+            - backend-test
 
     phpunit:
         <<: *smr-test
         entrypoint: vendor/bin/phpunit
         networks:
-            - backend
+            - backend-test
         environment:
             - XDEBUG_MODE=coverage
         depends_on:
