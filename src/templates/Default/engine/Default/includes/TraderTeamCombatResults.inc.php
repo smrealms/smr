@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @var Smr\Player $ThisPlayer
+ * @var ?Smr\Player $ThisPlayer
  * @var Smr\Template $this
  * @var bool $MinimalDisplay
  * @var array<string, mixed> $TraderTeamCombatResults
@@ -152,11 +152,12 @@ $TotalDamage = $TraderTeamCombatResults['TotalDamage'];
 $TotalDamageToThisPlayer = 0;
 foreach ($TraderTeamCombatResults['Traders'] as $TraderResults) {
 	// Check if ThisPlayer was a target in this round of combat
-	if (!isset($TraderResults['TotalDamagePerTargetPlayer'][$ThisPlayer->getAccountID()])) {
+	$ThisAccountID = $ThisPlayer?->getAccountID();
+	if (!isset($TraderResults['TotalDamagePerTargetPlayer'][$ThisAccountID])) {
 		$TotalDamageToThisPlayer = null;
 		break;
 	}
-	$TotalDamageToThisPlayer += $TraderResults['TotalDamagePerTargetPlayer'][$ThisPlayer->getAccountID()];
+	$TotalDamageToThisPlayer += $TraderResults['TotalDamagePerTargetPlayer'][$ThisAccountID];
 } ?>
 
 This fleet <?php
