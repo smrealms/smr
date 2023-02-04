@@ -256,7 +256,7 @@ function array_remove_value(array &$arr, mixed $valueToRemove): void {
 function objects_equal(object $obj1, object $obj2): bool {
 	// Return early if the objects are different classes, to avoid the expense
 	// of serialization.
-	return get_class($obj1) === get_class($obj2) && serialize($obj1) === serialize($obj2);
+	return $obj1::class === $obj2::class && serialize($obj1) === serialize($obj2);
 }
 
 // Defines all constants
