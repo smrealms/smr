@@ -33,7 +33,6 @@ if ($Sectors) { ?>
 				}
 			}
 
-
 			if ($Sectors['Left']['ID'] != 0) { ?>
 				<div class="move_left move_text move_hover" id="moveLeft">
 					<a href="<?php echo Globals::getCurrentSectorMoveHREF($ThisPlayer, $Sectors['Left']['ID']); ?>" class="<?php echo $Sectors['Left']['Class']; ?>">
@@ -86,7 +85,6 @@ if ($Sectors) { ?>
 				}
 			}
 
-
 			if ($Sectors['Down']['ID'] != 0) { ?>
 				<div class="move_down move_text move_hover" id="moveDown">
 					<a href="<?php echo Globals::getCurrentSectorMoveHREF($ThisPlayer, $Sectors['Down']['ID']); ?>" class="<?php echo $Sectors['Down']['Class']; ?>">
@@ -106,7 +104,6 @@ if ($Sectors) { ?>
 					?><div class="scan_down scan_hover scan_text_hor"></div><?php
 				}
 			}
-
 
 			if ($Sectors['Warp']['ID'] != 0) { ?>
 				<div class="move_warp move_text move_hover" id="moveWarp">

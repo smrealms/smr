@@ -174,8 +174,6 @@ class AbstractShip {
 	public function getCDsLow(): int { return IFloor($this->getCDs() / 100) * 100; }
 	public function getCDsHigh(): int { return $this->getCDsLow() + 100; }
 
-
-
 	public function addWeapon(Weapon $weapon): Weapon|false {
 		if ($this->hasOpenWeaponSlots() && $this->checkPowerAvailable($weapon->getPowerLevel())) {
 			$this->weapons[] = $weapon;

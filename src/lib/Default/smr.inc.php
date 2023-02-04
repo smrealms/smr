@@ -768,7 +768,6 @@ function number_colour_format(float $number, bool $justSign = false): string {
 	return $formatted;
 }
 
-
 /**
  * Randomly choose an array key weighted by the array values.
  * Probabilities are relative to the total weight. For example:

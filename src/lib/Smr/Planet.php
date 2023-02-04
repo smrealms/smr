@@ -562,7 +562,6 @@ class Planet {
 		$this->swapMountedWeapons($orderID + 1, $orderID);
 	}
 
-
 	public function isDestroyed(): bool {
 		return !$this->hasCDs() && !$this->hasShields() && !$this->hasArmour();
 	}
@@ -1129,7 +1128,6 @@ class Planet {
 			}
 		}
 	}
-
 
 	/**
 	 * @return array<int, Player>

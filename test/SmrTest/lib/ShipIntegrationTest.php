@@ -36,7 +36,6 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 			->willReturn(SHIP_TYPE_DEMONICA);
 	}
 
-
 	public function test_getShip(): void {
 		// Get the ship associated with this player
 		$original = Ship::getShip($this->player);
@@ -56,7 +55,6 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		// but it is still the same ship
 		self::assertEquals($original, $ship);
 	}
-
 
 	public function test_updateHardware(): void {
 		$original = Ship::getShip($this->player);
@@ -90,7 +88,6 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		self::assertEquals($original, $ship);
 	}
 
-
 	public function test_updateWeapons(): void {
 		$original = Ship::getShip($this->player);
 
@@ -123,7 +120,6 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 	}
-
 
 	public function test_updateCargo(): void {
 		$original = Ship::getShip($this->player);
@@ -160,7 +156,6 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		self::assertEquals($original, $ship);
 	}
 
-
 	public function test_updateCloak(): void {
 		$original = Ship::getShip($this->player);
 		$original->setHardwareToMax();
@@ -183,7 +178,6 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 	}
-
 
 	public function test_updateIllusion(): void {
 		$original = Ship::getShip($this->player);

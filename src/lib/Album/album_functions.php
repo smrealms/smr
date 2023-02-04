@@ -301,8 +301,6 @@ function create_link_list(): void {
 	echo('<hr class="center">');
 }
 
-
-
 function get_album_nick(int $album_id): string {
 	if ($album_id == 0) {
 		return 'System';

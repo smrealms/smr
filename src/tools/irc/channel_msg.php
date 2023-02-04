@@ -155,7 +155,6 @@ function channel_msg_with_registration($fp, Message $msg): bool {
 	return false;
 }
 
-
 /**
  * @param resource $fp
  */

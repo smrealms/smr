@@ -93,7 +93,6 @@ class Template {
 		echo $output;
 	}
 
-
 	protected function getTemplateLocation(string $templateName): string {
 		if (isset($this->data['ThisAccount'])) {
 			$templateDir = $this->data['ThisAccount']->getTemplate() . '/';

@@ -81,7 +81,6 @@ function addLocationToSector(Location $location, Sector $sector): void {
 	}
 }
 
-
 class SaveProcessor extends AccountPageProcessor {
 
 	public function __construct(

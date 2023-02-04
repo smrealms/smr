@@ -25,9 +25,6 @@
         <!-- Erroneous sniff. Static and self are not interchangeable. -->
         <exclude name="PSR2R.PHP.PreferStaticOverSelf" />
 
-        <!-- Multiple empty lines can be useful for readability. -->
-        <exclude name="PSR2R.WhiteSpace.EmptyLines" />
-
         <!-- Personal preference for parentheses around require/echo. -->
         <exclude name="PSR2R.WhiteSpace.LanguageConstructSpacing" />
 

@@ -117,7 +117,6 @@ const SHIP_UPGRADE_PATH = [
 	],
 ];
 
-
 try {
 	while (npcDriver() === false) {
 		// No actions taken, try another NPC
@@ -127,7 +126,6 @@ try {
 }
 // Try to shut down cleanly
 exitNPC();
-
 
 /**
  * @return bool If the NPC performed any actions

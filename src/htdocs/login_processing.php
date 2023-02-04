@@ -191,7 +191,6 @@ try {
 	//now we update their cookie with the newest info
 	setcookie('Session_Info', $new, Epoch::time() + 157680000);
 
-
 	//get rid of expired messages
 	$db->write('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < ' . $db->escapeNumber(Epoch::time()) . ' AND expire_time != 0');
 	// Mark message as read if it was sent to self as a mass mail.

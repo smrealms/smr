@@ -117,7 +117,6 @@ class MessageView extends PlayerPage {
 
 }
 
-
 /**
  * @return array{0: array<array{ID: string, Unread: bool, SenderID: int, SendTime: string, Text: string}>, 1: array<int, array<array{ID: int, Text: string, Unread: bool, SendTime: string, Sender?: \Smr\AbstractPlayer, SenderDisplayName?: string, ReportHref?: string, BlacklistHref?: string, ReplyHREF?: string, ReceiverDisplayName?: string}>>, 2: int}
  */
