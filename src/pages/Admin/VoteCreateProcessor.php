@@ -15,14 +15,14 @@ class VoteCreateProcessor extends AccountPageProcessor {
 		if ($action == 'Preview Vote') {
 			$container = new VoteCreate(
 				previewVote: Request::get('question'),
-				days: Request::getInt('days')
+				days: Request::getInt('days'),
 			);
 			$container->go();
 		}
 		if ($action == 'Preview Option') {
 			$container = new VoteCreate(
 				previewOption: Request::get('option'),
-				voteID: Request::getInt('vote')
+				voteID: Request::getInt('vote'),
 			);
 			$container->go();
 		}

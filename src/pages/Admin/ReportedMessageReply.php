@@ -27,7 +27,7 @@ class ReportedMessageReply extends AccountPage {
 		$container = new ReportedMessageReplyProcessor(
 			gameID: $this->gameID,
 			offenderAccountID: $this->offenderAccountID,
-			offendedAccountID: $this->offendedAccountID
+			offendedAccountID: $this->offendedAccountID,
 		);
 		$template->assign('NotifyReplyFormHref', $container->href());
 

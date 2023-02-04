@@ -23,7 +23,7 @@ class Turns extends DatabaseCommand {
 		// turns only update when the player is active, so calculate current turns
 		$turns = min(
 			$player->getTurns() + $player->getTurnsGained(time(), true),
-			$player->getMaxTurns()
+			$player->getMaxTurns(),
 		);
 		$msg = $player->getPlayerName() . " has $turns/" . $player->getMaxTurns() . ' turns.';
 

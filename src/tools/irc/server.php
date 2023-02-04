@@ -106,7 +106,7 @@ function server_msg_318($fp, string $rdata): bool {
 						nick: $event->nick,
 						callback: $event->callback,
 						time: time(),
-						validate: $event->validate
+						validate: $event->validate,
 					));
 				} elseif ($event->validate) {
 					fwrite($fp, 'PRIVMSG ' . $event->channel . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);

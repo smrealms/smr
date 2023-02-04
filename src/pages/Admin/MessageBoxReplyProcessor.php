@@ -26,7 +26,7 @@ class MessageBoxReplyProcessor extends AccountPageProcessor {
 				gameID: $this->gameID,
 				preview: $message,
 				banPoints: $banPoints,
-				rewardCredits: $rewardCredits
+				rewardCredits: $rewardCredits,
 			);
 			$container->go();
 		}

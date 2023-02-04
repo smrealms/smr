@@ -111,7 +111,7 @@ class ShipType {
 				- $this->speed * 5
 				+ $this->hardpoints * 5
 				+ $this->maxHardware[HARDWARE_COMBAT] / 5
-			)
+			),
 		));
 	}
 

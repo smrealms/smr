@@ -54,7 +54,7 @@ class NewsletterSendProcessor extends AccountPageProcessor {
 			$mail,
 			$this->newsletterHtml,
 			$this->newsletterText,
-			Request::get('salutation')
+			Request::get('salutation'),
 		);
 
 		if (Request::get('to_email') == '*') {

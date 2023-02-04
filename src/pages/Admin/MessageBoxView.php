@@ -74,7 +74,7 @@ class MessageBoxView extends AccountPage {
 								$container = new MessageBoxReply(
 									boxTypeID: $this->boxTypeID,
 									senderAccountID: $senderID,
-									gameID: $gameID
+									gameID: $gameID,
 								);
 								$messages[$messageID]['ReplyHREF'] = $container->href();
 							}

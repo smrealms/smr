@@ -67,7 +67,7 @@ class CargoDumpProcessor extends PlayerPageProcessor {
 			// Don't lose more exp than you have
 			$lost_xp = min(
 				$player->getExperience(),
-				IRound(Port::getBaseExperience($amount, $good_distance))
+				IRound(Port::getBaseExperience($amount, $good_distance)),
 			);
 			$player->decreaseExperience($lost_xp);
 			$player->increaseHOF($lost_xp, ['Trade', 'Experience', 'Jettisoned'], HOF_PUBLIC);

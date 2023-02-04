@@ -87,7 +87,7 @@ class SearchForTraderResult extends PlayerPage {
 			$container = new NewsReadAdvanced(
 				gameID: $linkPlayer->getGameID(),
 				submit: 'Search For Player',
-				accountIDs: [$linkPlayer->getAccountID()]
+				accountIDs: [$linkPlayer->getAccountID()],
 			);
 			$result['NewsHREF'] = $container->href();
 

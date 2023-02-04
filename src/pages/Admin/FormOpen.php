@@ -19,7 +19,7 @@ class FormOpen extends AccountPage {
 
 		$container = new FormOpenProcessor(
 			isOpen: Globals::isFeatureRequestOpen(),
-			type: 'FEATURE'
+			type: 'FEATURE',
 		);
 		$template->assign('ToggleHREF', $container->href());
 

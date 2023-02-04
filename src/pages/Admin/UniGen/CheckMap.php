@@ -44,7 +44,7 @@ class CheckMap extends AccountPage {
 		}
 		$missingLocs = array_diff(
 			array_keys(Location::getAllLocations($this->gameID)),
-			array_keys($existingLocs)
+			array_keys($existingLocs),
 		);
 		$missingLocNames = [];
 		foreach ($missingLocs as $locID) {

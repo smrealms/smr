@@ -47,7 +47,7 @@ class ShopGoodsNegotiate extends PlayerPage {
 			bargainNumber: $this->bargainNumber + 1,
 			bargainPrice: null,
 			offeredPrice: $this->offeredPrice,
-			idealPrice: $this->idealPrice
+			idealPrice: $this->idealPrice,
 		);
 		$template->assign('BargainHREF', $container->href());
 

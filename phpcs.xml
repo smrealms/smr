@@ -37,9 +37,6 @@
         <!-- Jump statements on a single line can help keep code compact. -->
         <exclude name="SlevomatCodingStandard.ControlStructures.JumpStatementsSpacing" />
 
-        <!-- Trailing comma in multi-line function calls can be misleading. -->
-        <exclude name="SlevomatCodingStandard.Functions.RequireTrailingCommaInCall" />
-
         <!-- Erroneous sniff. Disables a real language feature. -->
         <exclude name="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue" />
 

@@ -20,7 +20,7 @@ class Twitter extends SocialLogin {
 			TWITTER_CONSUMER_KEY,
 			TWITTER_CONSUMER_SECRET,
 			$token['oauth_token'] ?? null,
-			$token['oauth_token_secret'] ?? null
+			$token['oauth_token_secret'] ?? null,
 		);
 	}
 
@@ -43,7 +43,7 @@ class Twitter extends SocialLogin {
 		$helper = self::getTwitterObj($_SESSION['TwitterToken']);
 		$accessToken = $helper->oauth(
 			'oauth/access_token',
-			['oauth_verifier' => Request::get('oauth_verifier')]
+			['oauth_verifier' => Request::get('oauth_verifier')],
 		);
 		$auth = self::getTwitterObj($accessToken);
 		/** @var \stdClass $userInfo */

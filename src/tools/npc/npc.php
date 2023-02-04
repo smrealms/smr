@@ -344,7 +344,7 @@ function tradeGoods(int $goodID, AbstractPlayer $player, Port $port): Page {
 		goodID: $goodID,
 		amount: $amount,
 		bargainNumber: 1,
-		bargainPrice: $offeredPrice // take the offered price
+		bargainPrice: $offeredPrice, // take the offered price
 	);
 }
 

@@ -29,7 +29,7 @@ try {
 		// Was there a reCAPTCHA response?
 		$resp = $reCaptcha->verify(
 			Request::get('g-recaptcha-response', ''),
-			$_SERVER['REMOTE_ADDR']
+			$_SERVER['REMOTE_ADDR'],
 		);
 
 		if (!$resp->isSuccess()) {
@@ -99,7 +99,7 @@ try {
 	if ($socialLogin) {
 		$account->addAuthMethod(
 			$_SESSION['socialLogin']->getLoginType(),
-			$_SESSION['socialLogin']->getUserID()
+			$_SESSION['socialLogin']->getUserID(),
 		);
 		if ($validatedBySocial) {
 			$account->setValidated(true);

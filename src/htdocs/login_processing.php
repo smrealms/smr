@@ -85,7 +85,7 @@ try {
 		}
 		$account->addAuthMethod(
 			$_SESSION['socialLogin']->getLoginType(),
-			$_SESSION['socialLogin']->getUserID()
+			$_SESSION['socialLogin']->getUserID(),
 		);
 		session_destroy();
 	}

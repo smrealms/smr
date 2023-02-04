@@ -35,7 +35,7 @@ class BountyPlaceConfirm extends PlayerPage {
 			locationID: $this->locationID,
 			otherAccountID: $bountyPlayer->getAccountID(),
 			credits: $this->credits,
-			smrCredits: $this->smrCredits
+			smrCredits: $this->smrCredits,
 		);
 		$template->assign('ProcessingHREF', $container->href());
 	}

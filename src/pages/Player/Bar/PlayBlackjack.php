@@ -117,7 +117,7 @@ class PlayBlackjack extends PlayerPage {
 			$container = new PlayBlackjackProcessor(
 				locationID: $this->locationID,
 				action: 'new game',
-				bet: $this->bet
+				bet: $this->bet,
 			);
 			$template->assign('Winnings', $this->winningsMsg);
 			$template->assign('BetHREF', $container->href());
@@ -127,7 +127,7 @@ class PlayBlackjack extends PlayerPage {
 				locationID: $this->locationID,
 				action: 'HIT',
 				table: $table,
-				bet: $this->bet
+				bet: $this->bet,
 			);
 			$template->assign('HitHREF', $container->href());
 
@@ -135,7 +135,7 @@ class PlayBlackjack extends PlayerPage {
 				locationID: $this->locationID,
 				action: 'STAY',
 				table: $table,
-				bet: $this->bet
+				bet: $this->bet,
 			);
 			$template->assign('StayHREF', $container->href());
 		}

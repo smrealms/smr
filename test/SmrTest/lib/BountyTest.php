@@ -113,7 +113,7 @@ class BountyTest extends BaseIntegrationSpec {
 			type: BountyType::HQ,
 			time: 0,
 			credits: 1,
-			claimerID: 1
+			claimerID: 1,
 		);
 		// Same as bounty1, except claimable by player 1 and for the UG
 		$bounty3 = new Bounty(

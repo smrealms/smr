@@ -1193,7 +1193,7 @@ class Planet {
 		return array_pad(
 			$weapons,
 			count($weapons) + $this->getBuilding(PLANET_TURRET),
-			Weapon::getWeapon(WEAPON_PLANET_TURRET)
+			Weapon::getWeapon(WEAPON_PLANET_TURRET),
 		);
 	}
 

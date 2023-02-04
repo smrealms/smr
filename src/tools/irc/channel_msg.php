@@ -29,7 +29,7 @@ function check_for_registration($fp, string $nick, string $channel, Closure $cal
 			nick: $nick,
 			callback: $callback,
 			time: time(),
-			validate: $validationMessages
+			validate: $validationMessages,
 		));
 
 		return false;

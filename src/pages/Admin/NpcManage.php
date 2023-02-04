@@ -55,7 +55,7 @@ class NpcManage extends AccountPage {
 			$container = new NpcManageProcessor(
 				selectedGameID: $selectedGameID,
 				login: $login,
-				accountID: $accountID
+				accountID: $accountID,
 			);
 
 			$npcs[$accountID] = [

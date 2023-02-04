@@ -29,7 +29,7 @@ class CheatingShipCheck extends AccountPage {
 				accountID: $dbRecord->getInt('account_id'),
 				hardwareTypeID: $dbRecord->getInt('hardware_type_id'),
 				gameID: $dbRecord->getInt('game_id'),
-				maxAmount: $dbRecord->getInt('max_amount')
+				maxAmount: $dbRecord->getInt('max_amount'),
 			);
 
 			$excessHardware[] = [
