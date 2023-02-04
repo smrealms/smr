@@ -1,9 +1,11 @@
 <?php declare(strict_types=1);
 
+use Smr\Template;
+
 try {
 	require_once('../bootstrap.php');
 
-	$template = Smr\Template::getInstance();
+	$template = Template::getInstance();
 	$template->assign('Body', 'login/reset_password.php');
 	$template->display('login/skeleton.php');
 

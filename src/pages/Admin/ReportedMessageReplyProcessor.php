@@ -28,7 +28,7 @@ class ReportedMessageReplyProcessor extends AccountPageProcessor {
 				offenderPreview: $offenderReply,
 				offenderBanPoints: $offenderBanPoints,
 				offendedPreview: $offendedReply,
-				offendedBanPoints: $offendedBanPoints
+				offendedBanPoints: $offendedBanPoints,
 			);
 			$container->go();
 		}

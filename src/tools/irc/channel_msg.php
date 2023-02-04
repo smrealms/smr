@@ -29,7 +29,7 @@ function check_for_registration($fp, string $nick, string $channel, Closure $cal
 			nick: $nick,
 			callback: $callback,
 			time: time(),
-			validate: $validationMessages
+			validate: $validationMessages,
 		));
 
 		return false;
@@ -154,7 +154,6 @@ function channel_msg_with_registration($fp, Message $msg): bool {
 
 	return false;
 }
-
 
 /**
  * @param resource $fp

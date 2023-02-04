@@ -2,6 +2,7 @@
 
 use Smr\Council;
 use Smr\Player;
+use Smr\Race;
 
 /**
  * @var Smr\Player $ThisPlayer
@@ -39,7 +40,7 @@ use Smr\Player;
 	} ?>
 	<br /><br />
 
-	<img src="<?php echo Smr\Race::getImage($RaceID); ?>" width="212" height="270" /><br /><br />
+	<img src="<?php echo Race::getImage($RaceID); ?>" width="212" height="270" /><br /><br />
 
 	<h3>Council Members</h3><br /><?php
 	$CouncilMembers = Council::getRaceCouncil($ThisPlayer->getGameID(), $RaceID);
@@ -75,7 +76,7 @@ use Smr\Player;
 <br /><br />
 
 <b>View Council For:</b><br /><?php
-foreach (Smr\Race::getPlayableIDs() as $RaceID) { ?>
+foreach (Race::getPlayableIDs() as $RaceID) { ?>
 	<span class="smallFont"><?php
 		echo $ThisPlayer->getColouredRaceName($RaceID, true); ?>
 	</span><br /><?php

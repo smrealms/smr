@@ -119,14 +119,14 @@ class Request {
 	 * Note that this does not save the result in $var (see Smr\Session).
 	 */
 	public static function getVar(string $index, string $default = null): string {
-		return self::getVarX($index, $default, [self::class, 'get']);
+		return self::getVarX($index, $default, self::get(...));
 	}
 
 	/**
 	 * Like getVar, but returns an int instead of a string.
 	 */
 	public static function getVarInt(string $index, int $default = null): int {
-		return self::getVarX($index, $default, [self::class, 'getInt']);
+		return self::getVarX($index, $default, self::getInt(...));
 	}
 
 	/**
@@ -136,7 +136,7 @@ class Request {
 	 * @return array<int>
 	 */
 	public static function getVarIntArray(string $index, array $default = null): array {
-		return self::getVarX($index, $default, [self::class, 'getIntArray']);
+		return self::getVarX($index, $default, self::getIntArray(...));
 	}
 
 	/**

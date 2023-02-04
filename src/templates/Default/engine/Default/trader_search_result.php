@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\Epoch;
 use Smr\Globals;
 use Smr\Player;
 
@@ -39,7 +40,7 @@ function DisplayResult(array $Links, Player $Player): void { ?>
 				} else { ?>
 					<td width="10%" class="center red">NO</td><?php
 				}
-				if ($Link['Player']->getLastCPLAction() > Smr\Epoch::time() - 600) { ?>
+				if ($Link['Player']->getLastCPLAction() > Epoch::time() - 600) { ?>
 					<td width="10%" class="center dgreen">YES</td><?php
 				} else { ?>
 					<td width="10%" class="center red">NO</td><?php

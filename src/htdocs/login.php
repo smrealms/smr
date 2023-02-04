@@ -3,6 +3,8 @@
 use Smr\Database;
 use Smr\Pages\Account\LoginCheckValidatedProcessor;
 use Smr\Request;
+use Smr\Session;
+use Smr\Template;
 
 try {
 
@@ -14,7 +16,7 @@ try {
 	// *
 	// ********************************
 
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 	if ($session->hasAccount()) {
 		$href = (new LoginCheckValidatedProcessor())->href(true);
 		$session->update();
@@ -23,7 +25,7 @@ try {
 		exit;
 	}
 
-	$template = Smr\Template::getInstance();
+	$template = Template::getInstance();
 	if (Request::has('msg')) {
 		$template->assign('Message', htmlentities(Request::get('msg'), ENT_COMPAT, 'utf-8'));
 	} elseif (Request::has('status')) {

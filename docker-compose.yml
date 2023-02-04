@@ -72,6 +72,7 @@ x-smr-test: &smr-test
         - ./phpunit.xml:/smr/phpunit.xml:ro
         - ./phpstan.neon.dist:/smr/phpstan.neon.dist:ro
         - ./phpcs.xml:/smr/phpcs.xml:ro
+        - ./rector.php:/smr/rector.php:ro
         # Mount the source code instead of copying it.
         - ./src:/smr/src:rw
         - ./test:/smr/test:rw
@@ -179,6 +180,10 @@ services:
     phpcbf:
         <<: *smr-test
         entrypoint: vendor/bin/phpcbf
+
+    rector:
+        <<: *smr-test
+        entrypoint: vendor/bin/rector process
 
     pma:
         image: phpmyadmin/phpmyadmin

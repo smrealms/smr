@@ -31,7 +31,7 @@ class ReportedMessageView extends AccountPage {
 			$container = new ReportedMessageReply(
 				offenderAccountID: $dbRecord->getInt('from_id'),
 				offendedAccountID: $dbRecord->getInt('to_id'),
-				gameID: $gameID
+				gameID: $gameID,
 			);
 
 			$getName = function(Player|string $messagePlayer) use ($container, $account): string {

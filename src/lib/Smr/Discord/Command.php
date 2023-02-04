@@ -87,7 +87,7 @@ abstract class Command {
 			[
 				'description' => $this->description(),
 				'usage' => $usage,
-			]
+			],
 		);
 	}
 

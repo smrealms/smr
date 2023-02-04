@@ -4,12 +4,13 @@ use Smr\Database;
 use Smr\Epoch;
 use Smr\Pages\Admin\AlbumModerate;
 use Smr\Request;
+use Smr\Session;
 
 try {
 	require_once('../../bootstrap.php');
 	require_once(LIB . 'Album/album_functions.php');
 
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 
 	if (!$session->hasAccount()) {
 		create_error('You need to be logged in to post comments!');

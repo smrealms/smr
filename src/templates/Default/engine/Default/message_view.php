@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\ScoutMessageGroupType;
+
 /**
  * @var Smr\Player $ThisPlayer
  * @var ?string $PreferencesFormHREF
@@ -17,7 +19,7 @@ if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
 	<form name="FORM" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
 		<div class="center">
 			Group scout messages?&nbsp;&nbsp;<?php
-			foreach (Smr\ScoutMessageGroupType::cases() as $groupType) { ?>
+			foreach (ScoutMessageGroupType::cases() as $groupType) { ?>
 				<button type="submit" name="group_scouts" value="<?php echo $groupType->value; ?>" <?php if ($ThisPlayer->getScoutMessageGroupType() === $groupType) { ?> style="background-color:green;" <?php } ?>><?php echo $groupType->name; ?></button>&nbsp;<?php
 			} ?>
 		</div>

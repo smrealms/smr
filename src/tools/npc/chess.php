@@ -27,7 +27,7 @@ function debug(string $message, mixed $debugObject = null): void {
 
 try {
 	// global config
-	require_once(realpath(dirname(__FILE__)) . '/../../bootstrap.php');
+	require_once(realpath(__DIR__) . '/../../bootstrap.php');
 
 	debug('Script started');
 

@@ -28,6 +28,7 @@ use Smr\Race;
 use Smr\Routes\RouteGenerator;
 use Smr\Sector;
 use Smr\SectorLock;
+use Smr\Session;
 use Smr\Ship;
 use Smr\TradeGood;
 use Smr\TransactionType;
@@ -48,7 +49,7 @@ function overrideForward(Page $container): never {
 const OVERRIDE_FORWARD = true;
 
 // global config
-require_once(realpath(dirname(__FILE__)) . '/../../bootstrap.php');
+require_once(realpath(__DIR__) . '/../../bootstrap.php');
 
 // Enable NPC-specific conditions
 DiContainer::getContainer()->set('NPC_SCRIPT', true);
@@ -116,7 +117,6 @@ const SHIP_UPGRADE_PATH = [
 	],
 ];
 
-
 try {
 	while (npcDriver() === false) {
 		// No actions taken, try another NPC
@@ -127,14 +127,13 @@ try {
 // Try to shut down cleanly
 exitNPC();
 
-
 /**
  * @return bool If the NPC performed any actions
  */
 function npcDriver(): bool {
 	global $previousContainer;
 
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 	$session->setCurrentVar(new Page()); // initialize fake var
 
 	// Load the first available NPC
@@ -185,7 +184,7 @@ function clearCaches(): void {
 function debug(string $message, mixed $debugObject = null): void {
 	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ? EOL . var_export($debugObject, true) : '') . EOL;
 	if (NPC_LOG_TO_DATABASE) {
-		$session = Smr\Session::getInstance();
+		$session = Session::getInstance();
 		$accountID = $session->getAccountID();
 		$var = $session->getCurrentVar();
 		$db = Database::getInstance();
@@ -219,7 +218,7 @@ function checkStartConditions(AbstractPlayer $player): void {
 
 function processContainer(Page $container): never {
 	global $forwardedContainer, $previousContainer;
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 	$player = $session->getPlayer();
 	if ($container == $previousContainer && $forwardedContainer->file != 'forces_attack.php') {
 		debug('We are executing the same container twice?', ['ForwardedContainer' => $forwardedContainer, 'Container' => $container]);
@@ -246,7 +245,7 @@ function sleepNPC(): void {
 
 // Releases an NPC when it is done working
 function releaseNPC(): void {
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 	if (!$session->hasAccount()) {
 		debug('releaseNPC: no NPC to release');
 		return;
@@ -280,7 +279,7 @@ function changeNPCLogin(): void {
 	static $availableNpcs = null;
 
 	$db = Database::getInstance();
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 
 	if ($availableNpcs === null) {
 		// Make sure NPC's have been set up in the database
@@ -343,7 +342,7 @@ function tradeGoods(int $goodID, AbstractPlayer $player, Port $port): Page {
 		goodID: $goodID,
 		amount: $amount,
 		bargainNumber: 1,
-		bargainPrice: $offeredPrice // take the offered price
+		bargainPrice: $offeredPrice, // take the offered price
 	);
 }
 

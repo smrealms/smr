@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\TransactionType;
+
 /**
  * @var Smr\Player $ThisPlayer
  * @var Smr\Port $Port
@@ -56,9 +58,9 @@ if ($BoughtGoods) { ?>
 				<td><input form="form<?php echo $goodID; ?>" type="number" name="amount" value="<?php echo $good['Amount']; ?>" required min="1" size="4" class="center"></td>
 				<td>
 					<form id="form<?php echo $goodID; ?>" method="POST" action="<?php echo $good['HREF']; ?>">
-						<input type="submit" name="action" value="<?php echo Smr\TransactionType::Buy->value; ?>"><?php
+						<input type="submit" name="action" value="<?php echo TransactionType::Buy->value; ?>"><?php
 						if ($ThisShip->isUnderground()) { ?>
-							<input type="submit" name="action" value="<?php echo Smr\TransactionType::STEAL; ?>"><?php
+							<input type="submit" name="action" value="<?php echo TransactionType::STEAL; ?>"><?php
 						} ?>
 					</form>
 				</td>
@@ -88,7 +90,7 @@ if ($SoldGoods) { ?>
 				<td><input form="form<?php echo $goodID; ?>" type="number" name="amount" value="<?php echo $good['Amount']; ?>" required min="1" size="4" class="center"></td>
 				<td>
 					<form id="form<?php echo $goodID; ?>" method="POST" action="<?php echo $good['HREF']; ?>">
-						<input type="submit" name="action" value="<?php echo Smr\TransactionType::Sell->value; ?>">
+						<input type="submit" name="action" value="<?php echo TransactionType::Sell->value; ?>">
 					</form>
 				</td>
 			</tr><?php

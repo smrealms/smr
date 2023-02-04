@@ -2,8 +2,10 @@
 
 namespace Smr\Exceptions;
 
+use Exception;
+
 /**
  * Exception thrown when an alliance invitation cannot be found in the database
  */
-class AllianceInvitationNotFound extends \Exception {
+class AllianceInvitationNotFound extends Exception {
 }

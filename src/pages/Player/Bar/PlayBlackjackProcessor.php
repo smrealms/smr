@@ -79,7 +79,7 @@ class PlayBlackjackProcessor extends PlayerPageProcessor {
 			table: $table,
 			gameEnded: $gameEnded,
 			bet: $bet,
-			winningsMsg: $winningsMsg
+			winningsMsg: $winningsMsg,
 		);
 		$container->go();
 	}

@@ -154,7 +154,7 @@ class DatabaseIntegrationTest extends TestCase {
 		$this->expectExceptionMessage("Table 'account' was not locked with LOCK TABLES");
 		try {
 			$db->read('SELECT 1 FROM account LIMIT 1');
-		} catch (\RuntimeException $err) {
+		} catch (RuntimeException $err) {
 			// Avoid leaving database in a locked state
 			$db->unlock();
 			throw $err;

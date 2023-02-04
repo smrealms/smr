@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Discord\Discord;
+use Discord\DiscordCommandClient;
+use Discord\Parts\User\Activity;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Smr\Database;
@@ -24,10 +27,10 @@ error_reporting(E_ALL);
 $logger = new Logger('discord');
 $logger->pushHandler(new StreamHandler('php://stdout', DISCORD_LOGGER_LEVEL));
 
-$discord = new Discord\DiscordCommandClient([
+$discord = new DiscordCommandClient([
 	'token' => DISCORD_TOKEN,
 	'prefix' => DISCORD_COMMAND_PREFIX,
-	'description' => 'Your automated co-pilot in the Space Merchant Realms universe. Made with DiscordPHP ' . Discord\Discord::VERSION . '.',
+	'description' => 'Your automated co-pilot in the Space Merchant Realms universe. Made with DiscordPHP ' . Discord::VERSION . '.',
 	'caseInsensitiveCommands' => true,
 	'discordOptions' => [
 		'logger' => $logger,
@@ -36,9 +39,9 @@ $discord = new Discord\DiscordCommandClient([
 
 // Set bot presence to "Listening to <help command>"
 $discord->on('ready', function($discord) {
-	$activity = $discord->factory(Discord\Parts\User\Activity::class, [
+	$activity = $discord->factory(Activity::class, [
 		'name' => DISCORD_COMMAND_PREFIX . 'help',
-		'type' => Discord\Parts\User\Activity::TYPE_LISTENING,
+		'type' => Activity::TYPE_LISTENING,
 	]);
 	$discord->updatePresence($activity);
 });

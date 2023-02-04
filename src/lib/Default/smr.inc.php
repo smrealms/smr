@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Nbbc\BBCode;
 use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Chess\ChessGame;
@@ -79,20 +80,20 @@ function linkCombatLog(int $logID): string {
  *
  * @param array<string, string> $tagParams
  */
-function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string $default, array $tagParams, string $tagContent): bool|string {
+function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $default, array $tagParams, string $tagContent): bool|string {
 	global $overrideGameID, $disableBBLinks;
 	$session = Session::getInstance();
 	try {
 		switch ($tagName) {
 			case 'combatlog':
-				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
+				if ($action == BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
 				}
 				$logID = (int)$default;
 				return linkCombatLog($logID);
 
 			case 'player':
-				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
+				if ($action == BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
 				}
 				$playerID = (int)$default;
@@ -104,7 +105,7 @@ function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string 
 				return $bbPlayer->getDisplayName($showAlliance);
 
 			case 'alliance':
-				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
+				if ($action == BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
 				}
 				$allianceID = (int)$default;
@@ -124,7 +125,7 @@ function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string 
 				foreach (Race::getAllNames() as $raceID => $raceName) {
 					if ((is_numeric($raceNameID) && $raceNameID == $raceID)
 						|| $raceNameID == $raceName) {
-						if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
+						if ($action == BBCode::BBCODE_CHECK) {
 							return true;
 						}
 						$linked = $disableBBLinks === false && $overrideGameID == $session->getGameID();
@@ -135,7 +136,7 @@ function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string 
 				break;
 
 			case 'servertimetouser':
-				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
+				if ($action == BBCode::BBCODE_CHECK) {
 					return true;
 				}
 				$time = strtotime($default);
@@ -146,7 +147,7 @@ function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string 
 				break;
 
 			case 'chess':
-				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
+				if ($action == BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
 				}
 				$chessGameID = (int)$default;
@@ -154,7 +155,7 @@ function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string 
 				return '<a href="' . $chessGame->getPlayGameHREF() . '">chess game (' . $chessGame->getChessGameID() . ')</a>';
 
 			case 'sector':
-				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
+				if ($action == BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
 				}
 
@@ -170,7 +171,7 @@ function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string 
 				return $sectorTag;
 
 			case 'join_alliance':
-				if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
+				if ($action == BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
 				}
 				$allianceID = (int)$default;
@@ -181,7 +182,7 @@ function smrBBCode(\Nbbc\BBCode $bbParser, int $action, string $tagName, string 
 	} catch (Throwable) {
 		// If there's an error, we will silently display the original text
 	}
-	if ($action == \Nbbc\BBCode::BBCODE_CHECK) {
+	if ($action == BBCode::BBCODE_CHECK) {
 		return false;
 	}
 	return htmlspecialchars($tagParams['_tag']) . $tagContent . htmlspecialchars($tagParams['_endtag']);
@@ -194,7 +195,7 @@ function inify(string $text): string {
 function bbifyMessage(string $message, int $gameID = null, bool $noLinks = false): string {
 	static $bbParser;
 	if (!isset($bbParser)) {
-		$bbParser = new \Nbbc\BBCode();
+		$bbParser = new BBCode();
 		$bbParser->setEnableSmileys(false);
 		$bbParser->removeRule('wiki');
 		$bbParser->removeRule('img');
@@ -202,12 +203,12 @@ function bbifyMessage(string $message, int $gameID = null, bool $noLinks = false
 		$bbParser->setURLTargetable('override');
 		$bbParser->setEscapeContent(false); // don't escape HTML, needed for News etc.
 		$smrRule = [
-				'mode' => \Nbbc\BBCode::BBCODE_MODE_CALLBACK,
+				'mode' => BBCode::BBCODE_MODE_CALLBACK,
 				'method' => 'smrBBCode',
 				'class' => 'link',
 				'allow_in' => ['listitem', 'block', 'columns', 'inline'],
-				'end_tag' => \Nbbc\BBCode::BBCODE_PROHIBIT,
-				'content' => \Nbbc\BBCode::BBCODE_PROHIBIT,
+				'end_tag' => BBCode::BBCODE_PROHIBIT,
+				'content' => BBCode::BBCODE_PROHIBIT,
 			];
 		$bbParser->addRule('combatlog', $smrRule);
 		$bbParser->addRule('player', $smrRule);
@@ -266,7 +267,7 @@ function handleUserError(string $message): never {
 		$errorHREF = $container->href();
 		// json_encode the HREF as a safety precaution
 		$template = Template::getInstance();
-		$template->addJavascriptForAjax('EVAL', 'location.href = ' . json_encode($errorHREF));
+		$template->addJavascriptForAjax('EVAL', 'location.href = ' . json_encode($errorHREF, JSON_THROW_ON_ERROR));
 	}
 	$container->go();
 }
@@ -766,7 +767,6 @@ function number_colour_format(float $number, bool $justSign = false): string {
 	$formatted .= '</span>';
 	return $formatted;
 }
-
 
 /**
  * Randomly choose an array key weighted by the array values.

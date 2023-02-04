@@ -5,11 +5,13 @@ use Smr\Galaxy;
 use Smr\Game;
 use Smr\Request;
 use Smr\Sector;
+use Smr\Session;
+use Smr\Template;
 
 try {
 	require_once('../bootstrap.php');
 
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 
 	$gameID = Request::getInt('game');
 	if (!$session->hasAccount() || !Game::gameExists($gameID)) {
@@ -52,9 +54,9 @@ try {
 	$data = json_encode([
 		'nodes' => $nodes,
 		'links' => $links,
-	]);
+	], JSON_THROW_ON_ERROR);
 
-	$template = Smr\Template::getInstance();
+	$template = Template::getInstance();
 	$template->assign('GameName', $game->getName());
 	$template->assign('GraphData', $data);
 	$template->display('map_warps.php');

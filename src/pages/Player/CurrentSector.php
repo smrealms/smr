@@ -192,7 +192,6 @@ class CurrentSector extends PlayerPage {
 
 }
 
-
 function getForceRefreshMessage(AbstractPlayer $player): string {
 	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at > ' . $db->escapeNumber(Epoch::time()) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');

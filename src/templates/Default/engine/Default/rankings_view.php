@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Session;
+use Smr\UserRanking;
+
 /**
  * @var Smr\Account $ThisAccount
  * @var Smr\Player $ThisPlayer
@@ -14,7 +17,7 @@ You are ranked as a <span style="font-size: 125%; color: greenyellow;"><?php ech
 		<th>Points Required</th>
 	</tr>
 	<?php
-	foreach (Smr\UserRanking::cases() as $rank) { ?>
+	foreach (UserRanking::cases() as $rank) { ?>
 		<tr>
 			<td><?php echo $rank->name; ?></td>
 			<td class="center"><?php echo $rank->getMinScore(); ?></td>
@@ -29,7 +32,7 @@ foreach ($ThisAccount->getIndividualScores() as $statScore) {
 	echo implode(' - ', $statScore['Stat']); ?>, has a stat of <?php echo number_format($ThisAccount->getHOF($statScore['Stat'])); ?> and a score of <span class="green"><?php echo number_format(round($statScore['Score'])); ?></span><br /><?php
 }
 
-if (Smr\Session::getInstance()->hasGame()) { ?>
+if (Session::getInstance()->hasGame()) { ?>
 	<br />
 	<b>Current Game Extended Stats</b>
 	<br /><?php

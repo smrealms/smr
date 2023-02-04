@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\Epoch;
 use Smr\Globals;
 
 /**
@@ -65,6 +66,6 @@ Are you sure you want to attack this port?<br /><br />
 if ($Port->isUnderAttack()) { ?>
 	The port is under attack and has activated its distress beacon!<br />
 	Federal reinforcements will arrive to defend the port in
-	<?php echo format_time($Port->getReinforceTime() - Smr\Epoch::time()) . '.';
+	<?php echo format_time($Port->getReinforceTime() - Epoch::time()) . '.';
 }
 ?></span>

@@ -93,7 +93,7 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 				bargainNumber: $this->bargainNumber,
 				bargainPrice: $offered_price,
 				offeredPrice: $offered_price,
-				idealPrice: $ideal_price
+				idealPrice: $ideal_price,
 			);
 			$container->go();
 		}
@@ -260,7 +260,7 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 				bargainNumber: $this->bargainNumber,
 				bargainPrice: $bargain_price,
 				offeredPrice: $offered_price,
-				idealPrice: $ideal_price
+				idealPrice: $ideal_price,
 			);
 		}
 

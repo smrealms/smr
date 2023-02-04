@@ -4,6 +4,8 @@ use Smr\Exceptions\GalaxyNotFound;
 use Smr\Exceptions\SectorNotFound;
 use Smr\Galaxy;
 use Smr\Request;
+use Smr\Session;
+use Smr\Template;
 
 try {
 	require_once('../bootstrap.php');
@@ -22,7 +24,7 @@ try {
 	// ********************************
 
 	// do we have a session?
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 	if (!$session->hasAccount() || !$session->hasGame()) {
 		header('Location: /login.php');
 		exit;
@@ -54,7 +56,7 @@ try {
 	}
 
 	// Initialize the template
-	$template = Smr\Template::getInstance();
+	$template = Template::getInstance();
 
 	// Set temporary options
 	if ($player->hasAlliance()) {

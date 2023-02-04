@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
+use Smr\Pages\Admin\AdminMessageSend;
+
 if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($Preview, $MessageGameID); ?></td></tr></table><?php } ?>
 <form name="AdminMessageSendForm" method="POST" action="<?php echo $AdminMessageSendFormHref; ?>">
 	<p>
 	<b>From: </b><span class="admin">Administrator</span><br />
 	<b>To: </b><?php
-		if ($MessageGameID != Smr\Pages\Admin\AdminMessageSend::ALL_GAMES_ID) { ?>
+		if ($MessageGameID != AdminMessageSend::ALL_GAMES_ID) { ?>
 			<select name="account_id" required size="1"><?php
 				foreach ($GamePlayers as $GamePlayer) {
 					?><option <?php if ($SelectedAccountID === $GamePlayer['AccountID']) { echo 'selected'; } ?> value="<?php echo $GamePlayer['AccountID']; ?>"><?php echo $GamePlayer['Name']; ?></option><?php

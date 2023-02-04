@@ -5,6 +5,7 @@ use Smr\Pages\Account\InvalidEmail;
 use Smr\Pages\Account\InvalidEmailProcessor;
 use Smr\Pages\Account\ReopenAccount;
 use Smr\Pages\Account\ReopenAccountProcessor;
+use Smr\Session;
 
 try {
 	require_once('../bootstrap.php');
@@ -24,7 +25,7 @@ try {
 	// ********************************
 
 	// do we have a session?
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 	if (!$session->hasAccount()) {
 		header('Location: /login.php');
 		exit;

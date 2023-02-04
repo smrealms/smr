@@ -22,7 +22,7 @@ class ChangelogAddProcessor extends AccountPageProcessor {
 			$container = new Changelog(
 				changeTitle: $change_title,
 				changeMessage: $change_message,
-				affectedDb: $affected_db
+				affectedDb: $affected_db,
 			);
 			$container->go();
 		}

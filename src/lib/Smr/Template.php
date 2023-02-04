@@ -93,7 +93,6 @@ class Template {
 		echo $output;
 	}
 
-
 	protected function getTemplateLocation(string $templateName): string {
 		if (isset($this->data['ThisAccount'])) {
 			$templateDir = $this->data['ThisAccount']->getTemplate() . '/';
@@ -170,10 +169,7 @@ class Template {
 		if (isset($this->ajaxJS[$varName])) {
 			throw new Exception('Trying to set javascript val twice: ' . $varName);
 		}
-		$json = json_encode($obj);
-		if ($json === false) {
-			throw new Exception('Failed to encode to json: ' . $varName);
-		}
+		$json = json_encode($obj, JSON_THROW_ON_ERROR);
 		return $this->ajaxJS[$varName] = $json;
 	}
 
@@ -275,7 +271,7 @@ class Template {
 			}
 		}
 		if ($returnXml && count($this->jsAlerts) > 0) {
-			$js = '<ALERT>' . json_encode($this->jsAlerts) . '</ALERT>';
+			$js = '<ALERT>' . json_encode($this->jsAlerts, JSON_THROW_ON_ERROR) . '</ALERT>';
 		}
 		if (strlen($js) > 0) {
 			$xml .= '<JS>' . $js . '</JS>';

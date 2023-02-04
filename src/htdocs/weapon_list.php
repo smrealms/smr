@@ -3,12 +3,13 @@
 use Smr\Combat\Weapon\Weapon;
 use Smr\Database;
 use Smr\Location;
+use Smr\Template;
 use Smr\WeaponType;
 
 try {
 	require_once('../bootstrap.php');
 
-	$template = Smr\Template::getInstance();
+	$template = Template::getInstance();
 
 	// Get a list of all the shops that sell each weapon
 	$weaponLocs = [];

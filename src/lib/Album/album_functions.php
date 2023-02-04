@@ -2,10 +2,11 @@
 
 use Smr\Account;
 use Smr\Database;
+use Smr\Session;
 
 function main_page(): void {
 	$db = Database::getInstance();
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 
 	// list of all first letter nicks
 	create_link_list();
@@ -63,7 +64,7 @@ function main_page(): void {
 
 function album_entry(int $album_id): void {
 	$db = Database::getInstance();
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 
 	// list of all first letter nicks
 	create_link_list();
@@ -299,8 +300,6 @@ function create_link_list(): void {
 	echo('<a href="?nick=Z">Z</a> ]</div>');
 	echo('<hr class="center">');
 }
-
-
 
 function get_album_nick(int $album_id): string {
 	if ($album_id == 0) {

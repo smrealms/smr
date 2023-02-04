@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Epoch;
 use Smr\Globals;
+use Smr\Race;
 
 /**
  * @var Smr\Account $ThisAccount
@@ -81,7 +83,7 @@ if (isset($GameID)) { ?>
 					<td>
 						<select name="race_id"><?php
 							foreach ($ThisPlayer->getGame()->getPlayableRaceIDs() as $RaceID) {
-								?><option value="<?php echo $RaceID; ?>" <?php if ($RaceID == $ThisPlayer->getRaceID()) { ?> selected<?php } ?>><?php echo Smr\Race::getName($RaceID); ?></option><?php
+								?><option value="<?php echo $RaceID; ?>" <?php if ($RaceID == $ThisPlayer->getRaceID()) { ?> selected<?php } ?>><?php echo Race::getName($RaceID); ?></option><?php
 							} ?>
 						</select>
 						<br />
@@ -248,7 +250,7 @@ if (isset($GameID)) { ?>
 			<td>Timezone:</td>
 			<td>
 				<select name="timez"><?php
-				$time = Smr\Epoch::time();
+				$time = Epoch::time();
 				$offset = $ThisAccount->getOffset();
 				for ($i = -12; $i <= 11; $i++) {
 					?><option value="<?php echo $i; ?>"<?php if ($offset == $i) { ?> selected="selected"<?php } ?>><?php echo date($ThisAccount->getTimeFormat(), $time + $i * 3600); ?></option><?php

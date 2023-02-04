@@ -28,7 +28,7 @@ class MessageBoxReply extends AccountPage {
 		$container = new MessageBoxReplyProcessor(
 			senderAccountID: $this->senderAccountID,
 			gameID: $this->gameID,
-			boxTypeID: $this->boxTypeID
+			boxTypeID: $this->boxTypeID,
 		);
 		$template->assign('BoxReplyFormHref', $container->href());
 		$template->assign('Sender', Player::getPlayer($this->senderAccountID, $this->gameID));

@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use PHPMailer\PHPMailer\PHPMailer;
 use Smr\Account;
 use Smr\Container\DiContainer;
 use Smr\Exceptions\UserError;
@@ -139,8 +140,8 @@ function exception_error_handler(int $errno, string $errstr, string $errfile, in
 	throw new ErrorException($errstr, $errno, E_ERROR, $errfile, $errline);
 }
 
-function setupMailer(): \PHPMailer\PHPMailer\PHPMailer {
-	$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+function setupMailer(): PHPMailer {
+	$mail = new PHPMailer(true);
 	if (!empty(SMTP_HOSTNAME)) {
 		$mail->isSMTP();
 		$mail->Host = SMTP_HOSTNAME;
@@ -255,7 +256,7 @@ function array_remove_value(array &$arr, mixed $valueToRemove): void {
 function objects_equal(object $obj1, object $obj2): bool {
 	// Return early if the objects are different classes, to avoid the expense
 	// of serialization.
-	return get_class($obj1) === get_class($obj2) && serialize($obj1) === serialize($obj2);
+	return $obj1::class === $obj2::class && serialize($obj1) === serialize($obj2);
 }
 
 // Defines all constants

@@ -11,6 +11,7 @@ use Smr\SectorLock;
 use Smr\Session;
 use Smr\Template;
 use function DI\autowire;
+use function DI\get;
 
 /**
  * A wrapper around the DI\Container functionality that will allow
@@ -52,7 +53,7 @@ class DiContainer {
 			Epoch::class => autowire(),
 			DatabaseProperties::class => autowire(),
 			Database::class => autowire()
-				->constructorParameter('dbName', \DI\get('DatabaseName')),
+				->constructorParameter('dbName', get('DatabaseName')),
 			SectorLock::class => autowire(),
 			Session::class => autowire(),
 			Template::class => autowire(),

@@ -54,7 +54,7 @@ class EditSector extends AccountPage {
 		$sectorLocationIDs = array_pad(
 			array_keys($editSector->getLocations()),
 			UNI_GEN_LOCATION_SLOTS,
-			0
+			0,
 		);
 		$template->assign('SectorLocationIDs', $sectorLocationIDs);
 

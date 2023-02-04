@@ -7,6 +7,7 @@ use Smr\Exceptions\AccountNotFound;
 use Smr\Login\Redirect;
 use Smr\Pages\Account\LoginCheckValidatedProcessor;
 use Smr\Request;
+use Smr\Session;
 use Smr\SocialLogin\SocialLogin;
 
 try {
@@ -19,7 +20,7 @@ try {
 	// *
 	// ********************************
 
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 	if (!$session->hasAccount()) {
 		if (Request::has('loginType')) {
 			$socialLogin = SocialLogin::get(Request::get('loginType'))->login();
@@ -84,7 +85,7 @@ try {
 		}
 		$account->addAuthMethod(
 			$_SESSION['socialLogin']->getLoginType(),
-			$_SESSION['socialLogin']->getUserID()
+			$_SESSION['socialLogin']->getUserID(),
 		);
 		session_destroy();
 	}
@@ -189,7 +190,6 @@ try {
 	]);
 	//now we update their cookie with the newest info
 	setcookie('Session_Info', $new, Epoch::time() + 157680000);
-
 
 	//get rid of expired messages
 	$db->write('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < ' . $db->escapeNumber(Epoch::time()) . ' AND expire_time != 0');

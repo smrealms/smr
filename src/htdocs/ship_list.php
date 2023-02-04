@@ -4,11 +4,12 @@ use Smr\Database;
 use Smr\Location;
 use Smr\Race;
 use Smr\ShipType;
+use Smr\Template;
 
 try {
 	require_once('../bootstrap.php');
 
-	$template = Smr\Template::getInstance();
+	$template = Template::getInstance();
 
 	// Get a list of all the shops that sell each ship
 	$shipLocs = [];
