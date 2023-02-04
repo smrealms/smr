@@ -3,7 +3,6 @@
 namespace Smr\Container;
 
 use DI\ContainerBuilder;
-use Dotenv\Dotenv;
 use mysqli;
 use Smr\Database;
 use Smr\DatabaseProperties;
@@ -44,11 +43,8 @@ class DiContainer {
 			mysqli::class => function(DatabaseProperties $dbProperties): mysqli {
 				return Database::mysqliFactory($dbProperties);
 			},
-			Dotenv::class => function(): Dotenv {
-				return Dotenv::createArrayBacked(CONFIG, 'env');
-			},
 			'DatabaseName' => function(DatabaseProperties $dbProperties): string {
-				return $dbProperties->getDatabaseName();
+				return $dbProperties->database;
 			},
 			'NPC_SCRIPT' => false,
 			// Explicitly name all classes that are autowired, so we can take advantage of

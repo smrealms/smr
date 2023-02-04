@@ -2,53 +2,45 @@
 
 namespace Smr;
 
-use Dotenv\Dotenv;
+use Exception;
 
+/**
+ * Expects the following environment variables to be set by the OS:
+ *
+ *  MYSQL_HOST
+ *  MYSQL_USER
+ *  MYSQL_DATABASE
+ *  MYSQL_PASSWORD_FILE
+ */
 class DatabaseProperties {
 
-	private const CONFIG_HOST = 'MYSQL_HOST';
-	private const CONFIG_USER = 'MYSQL_USER';
-	private const CONFIG_PASSWORD = 'MYSQL_PASSWORD';
-	private const CONFIG_DATABASE = 'MYSQL_DATABASE';
-	private string $host;
-	private string $user;
-	private string $password;
-	private string $databaseName;
+	public readonly string $host;
+	public readonly string $user;
+	public readonly string $password;
+	public readonly string $database;
 
-	public function __construct(Dotenv $config) {
-		$array = $config->load();
-		self::validateConfig($config);
-		[
-			self::CONFIG_HOST => $this->host,
-			self::CONFIG_USER => $this->user,
-			self::CONFIG_PASSWORD => $this->password,
-			self::CONFIG_DATABASE => $this->databaseName,
-		] = $array;
+	public function __construct() {
+		$this->host = $this->getFromEnv('MYSQL_HOST');
+		$this->user = $this->getFromEnv('MYSQL_USER');
+		$this->database = $this->getFromEnv('MYSQL_DATABASE');
+		$passwordFile = $this->getFromEnv('MYSQL_PASSWORD_FILE');
+		$this->password = $this->getFromFile($passwordFile);
 	}
 
-	private static function validateConfig(Dotenv $config): void {
-		$config->required([
-			self::CONFIG_HOST,
-			self::CONFIG_USER,
-			self::CONFIG_PASSWORD,
-			self::CONFIG_DATABASE,
-		])->notEmpty();
+	private function getFromEnv(string $name): string {
+		$value = getenv($name, local_only: true);
+		if ($value === false) {
+			throw new Exception('Database environment variable is missing: ' . $name);
+		}
+		return $value;
 	}
 
-	public function getHost(): string {
-		return $this->host;
-	}
-
-	public function getUser(): string {
-		return $this->user;
-	}
-
-	public function getPassword(): string {
-		return $this->password;
-	}
-
-	public function getDatabaseName(): string {
-		return $this->databaseName;
+	private function getFromFile(string $file): string {
+		$value = file_get_contents($file);
+		if ($value === false) {
+			throw new Exception('Failed to read content from file: ' . $file);
+		}
+		return $value;
 	}
 
 }
