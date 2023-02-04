@@ -17,7 +17,7 @@ use Smr\Globals;
 ?>
 <table class="lmt centered"><?php
 	$GalaxyMap = isset($GalaxyMap) && $GalaxyMap;
-	$UniGen = $UniGen ?? false;
+	$UniGen ??= false;
 	$MapPlayer = $UniGen ? null : $ThisPlayer;
 	$MovementTypes = ['Up', 'Left', 'Right', 'Down'];
 	foreach ($MapSectors as $MapSector) { ?>
