@@ -37,7 +37,6 @@ abstract class AbstractPlayer {
 	/** @var array<int, array<int, Player>> */
 	protected static array $CACHE_PLAYERS = [];
 
-	protected Database $db;
 	protected readonly string $SQL;
 
 	protected string $playerName;
@@ -250,11 +249,11 @@ abstract class AbstractPlayer {
 		protected readonly int $accountID,
 		DatabaseRecord $dbRecord = null
 	) {
-		$this->db = Database::getInstance();
-		$this->SQL = 'account_id = ' . $this->db->escapeNumber($accountID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
+		$db = Database::getInstance();
+		$this->SQL = 'account_id = ' . $db->escapeNumber($accountID) . ' AND game_id = ' . $db->escapeNumber($gameID);
 
 		if ($dbRecord === null) {
-			$dbResult = $this->db->read('SELECT * FROM player WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT * FROM player WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -361,7 +360,8 @@ abstract class AbstractPlayer {
 
 		// Get other players who are sharing info for this game.
 		// NOTE: game_id=0 means that player shares info for all games.
-		$dbResult = $this->db->read('SELECT from_account_id FROM account_shares_info WHERE to_account_id=' . $this->db->escapeNumber($this->getAccountID()) . ' AND (game_id=0 OR game_id=' . $this->db->escapeNumber($this->getGameID()) . ')');
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT from_account_id FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber($this->getAccountID()) . ' AND (game_id=0 OR game_id=' . $db->escapeNumber($this->getGameID()) . ')');
 		foreach ($dbResult->records() as $dbRecord) {
 			try {
 				$otherPlayer = self::getPlayer($dbRecord->getInt('from_account_id'), $this->getGameID(), $forceUpdate);
@@ -494,7 +494,8 @@ abstract class AbstractPlayer {
 
 	public function getCustomShipName(): string|false {
 		if (!isset($this->customShipName)) {
-			$dbResult = $this->db->read('SELECT * FROM ship_has_name WHERE ' . $this->SQL);
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT * FROM ship_has_name WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
 				$this->customShipName = $dbResult->record()->getString('ship_name');
 			} else {
@@ -505,10 +506,11 @@ abstract class AbstractPlayer {
 	}
 
 	public function setCustomShipName(string $name): void {
-		$this->db->replace('ship_has_name', [
-			'game_id' => $this->db->escapeNumber($this->getGameID()),
-			'account_id' => $this->db->escapeNumber($this->getAccountID()),
-			'ship_name' => $this->db->escapeString($name),
+		$db = Database::getInstance();
+		$db->replace('ship_has_name', [
+			'game_id' => $db->escapeNumber($this->getGameID()),
+			'account_id' => $db->escapeNumber($this->getAccountID()),
+			'ship_name' => $db->escapeString($name),
 		]);
 	}
 
@@ -517,7 +519,8 @@ abstract class AbstractPlayer {
 	 * Returns null if this player does not own a planet.
 	 */
 	public function getPlanet(): ?Planet {
-		$dbResult = $this->db->read('SELECT * FROM planet WHERE game_id=' . $this->db->escapeNumber($this->getGameID()) . ' AND owner_id=' . $this->db->escapeNumber($this->getAccountID()));
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT * FROM planet WHERE game_id=' . $db->escapeNumber($this->getGameID()) . ' AND owner_id=' . $db->escapeNumber($this->getAccountID()));
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			return Planet::getPlanet($this->getGameID(), $dbRecord->getInt('sector_id'), false, $dbRecord);
@@ -575,7 +578,8 @@ abstract class AbstractPlayer {
 		// Draft games may have customized home sectors
 		if ($this->getGame()->isGameType(Game::GAME_TYPE_DRAFT) && $this->hasAlliance()) {
 			$leaderID = $this->getAlliance()->getLeaderID();
-			$dbResult = $this->db->read('SELECT home_sector_id FROM draft_leaders WHERE account_id = ' . $this->db->escapeNumber($leaderID) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT home_sector_id FROM draft_leaders WHERE account_id = ' . $db->escapeNumber($leaderID) . ' AND game_id = ' . $db->escapeNumber($this->getGameID()));
 			if ($dbResult->hasRecord()) {
 				return $dbResult->record()->getInt('home_sector_id');
 			}
@@ -636,7 +640,8 @@ abstract class AbstractPlayer {
 
 	public function isDraftLeader(): bool {
 		if (!isset($this->draftLeader)) {
-			$dbResult = $this->db->read('SELECT 1 FROM draft_leaders WHERE ' . $this->SQL);
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT 1 FROM draft_leaders WHERE ' . $this->SQL);
 			$this->draftLeader = $dbResult->hasRecord();
 		}
 		return $this->draftLeader;
@@ -645,7 +650,8 @@ abstract class AbstractPlayer {
 	public function getGPWriter(): string|false {
 		if (!isset($this->gpWriter)) {
 			$this->gpWriter = false;
-			$dbResult = $this->db->read('SELECT position FROM galactic_post_writer WHERE ' . $this->SQL);
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT position FROM galactic_post_writer WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
 				$this->gpWriter = $dbResult->record()->getString('position');
 			}
@@ -780,7 +786,8 @@ abstract class AbstractPlayer {
 				throw new UserError('You are currently banned from sending messages');
 			}
 			// Don't send messages to players ignoring us
-			$dbResult = $this->db->read('SELECT 1 FROM message_blacklist WHERE account_id=' . $this->db->escapeNumber($receiverID) . ' AND blacklisted_id=' . $this->db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT 1 FROM message_blacklist WHERE account_id=' . $db->escapeNumber($receiverID) . ' AND blacklisted_id=' . $db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
 			if ($dbResult->hasRecord()) {
 				return false;
 			}
@@ -882,10 +889,11 @@ abstract class AbstractPlayer {
 	}
 
 	public function setMessagesRead(int $messageTypeID): void {
-		$this->db->write('DELETE FROM player_has_unread_messages
-							WHERE ' . $this->SQL . ' AND message_type_id = ' . $this->db->escapeNumber($messageTypeID));
-		$this->db->write('UPDATE message SET msg_read = ' . $this->db->escapeBoolean(true) . '
-				WHERE message_type_id = ' . $this->db->escapeNumber($messageTypeID) . ' AND ' . $this->SQL);
+		$db = Database::getInstance();
+		$db->write('DELETE FROM player_has_unread_messages
+							WHERE ' . $this->SQL . ' AND message_type_id = ' . $db->escapeNumber($messageTypeID));
+		$db->write('UPDATE message SET msg_read = ' . $db->escapeBoolean(true) . '
+				WHERE message_type_id = ' . $db->escapeNumber($messageTypeID) . ' AND ' . $this->SQL);
 	}
 
 	public function getSafeAttackRating(): int {
@@ -920,8 +928,9 @@ abstract class AbstractPlayer {
 			foreach (Race::getAllIDs() as $raceID2) {
 				$this->canFed[$raceID2] = $this->getRelation($raceID2) >= ALIGN_FED_PROTECTION;
 			}
-			$dbResult = $this->db->read('SELECT race_id, allowed FROM player_can_fed
-								WHERE ' . $this->SQL . ' AND expiry > ' . $this->db->escapeNumber(Epoch::time()));
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT race_id, allowed FROM player_can_fed
+								WHERE ' . $this->SQL . ' AND expiry > ' . $db->escapeNumber(Epoch::time()));
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->canFed[$dbRecord->getInt('race_id')] = $dbRecord->getBoolean('allowed');
 			}
@@ -1389,8 +1398,9 @@ abstract class AbstractPlayer {
 		$this->allianceID = $ID;
 		if ($this->allianceID != 0) {
 			$status = $this->hasNewbieStatus() ? 'NEWBIE' : 'VETERAN';
-			$this->db->write('INSERT IGNORE INTO player_joined_alliance (account_id,game_id,alliance_id,status) ' .
-				'VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ',' . $this->db->escapeString($status) . ')');
+			$db = Database::getInstance();
+			$db->write('INSERT IGNORE INTO player_joined_alliance (account_id,game_id,alliance_id,status) ' .
+				'VALUES (' . $db->escapeNumber($this->getAccountID()) . ',' . $db->escapeNumber($this->getGameID()) . ',' . $db->escapeNumber($this->getAllianceID()) . ',' . $db->escapeString($status) . ')');
 		}
 		$this->hasChanged = true;
 	}
@@ -1412,10 +1422,11 @@ abstract class AbstractPlayer {
 		}
 		if (!isset($this->allianceRoles[$allianceID])) {
 			$this->allianceRoles[$allianceID] = 0;
-			$dbResult = $this->db->read('SELECT role_id
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT role_id
 						FROM player_has_alliance_role
 						WHERE ' . $this->SQL . '
-						AND alliance_id=' . $this->db->escapeNumber($allianceID));
+						AND alliance_id=' . $db->escapeNumber($allianceID));
 			if ($dbResult->hasRecord()) {
 				$this->allianceRoles[$allianceID] = $dbResult->record()->getInt('role_id');
 			}
@@ -1445,7 +1456,8 @@ abstract class AbstractPlayer {
 		}
 
 		$this->setAllianceID(0);
-		$this->db->write('DELETE FROM player_has_alliance_role WHERE ' . $this->SQL);
+		$db = Database::getInstance();
+		$db->write('DELETE FROM player_has_alliance_role WHERE ' . $this->SQL);
 
 		// Update the alliance cache
 		unset(self::$CACHE_ALLIANCE_PLAYERS[$this->gameID][$alliance->getAllianceID()][$this->accountID]);
@@ -1472,11 +1484,12 @@ abstract class AbstractPlayer {
 		} else {
 			$roleID = ALLIANCE_ROLE_LEADER;
 		}
-		$this->db->insert('player_has_alliance_role', [
-			'game_id' => $this->db->escapeNumber($this->getGameID()),
-			'account_id' => $this->db->escapeNumber($this->getAccountID()),
-			'role_id' => $this->db->escapeNumber($roleID),
-			'alliance_id' => $this->db->escapeNumber($this->getAllianceID()),
+		$db = Database::getInstance();
+		$db->insert('player_has_alliance_role', [
+			'game_id' => $db->escapeNumber($this->getGameID()),
+			'account_id' => $db->escapeNumber($this->getAccountID()),
+			'role_id' => $db->escapeNumber($roleID),
+			'alliance_id' => $db->escapeNumber($this->getAllianceID()),
 		]);
 
 		$this->actionTaken('JoinAlliance', ['Alliance' => $alliance]);
@@ -1525,7 +1538,8 @@ abstract class AbstractPlayer {
 			foreach (Race::getAllIDs() as $raceID) {
 				$this->personalRelations[$raceID] = 0;
 			}
-			$dbResult = $this->db->read('SELECT race_id,relation FROM player_has_relation WHERE ' . $this->SQL);
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT race_id,relation FROM player_has_relation WHERE ' . $this->SQL);
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->personalRelations[$dbRecord->getInt('race_id')] = $dbRecord->getInt('relation');
 			}
@@ -1638,11 +1652,12 @@ abstract class AbstractPlayer {
 		$relationsDiff = IRound($relations - $this->personalRelations[$raceID]);
 		$this->personalRelations[$raceID] = $relations;
 		$this->relations[$raceID] += $relationsDiff;
-		$this->db->replace('player_has_relation', [
-			'account_id' => $this->db->escapeNumber($this->getAccountID()),
-			'game_id' => $this->db->escapeNumber($this->getGameID()),
-			'race_id' => $this->db->escapeNumber($raceID),
-			'relation' => $this->db->escapeNumber($this->personalRelations[$raceID]),
+		$db = Database::getInstance();
+		$db->replace('player_has_relation', [
+			'account_id' => $db->escapeNumber($this->getAccountID()),
+			'game_id' => $db->escapeNumber($this->getGameID()),
+			'race_id' => $db->escapeNumber($raceID),
+			'relation' => $db->escapeNumber($this->personalRelations[$raceID]),
 		]);
 	}
 
@@ -1689,7 +1704,8 @@ abstract class AbstractPlayer {
 	public function getPlottedCourse(): Path|false {
 		if (!isset($this->plottedCourse)) {
 			// check if we have a course plotted
-			$dbResult = $this->db->read('SELECT course FROM player_plotted_course WHERE ' . $this->SQL);
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT course FROM player_plotted_course WHERE ' . $this->SQL);
 
 			if ($dbResult->hasRecord()) {
 				// get the course back
@@ -1719,10 +1735,11 @@ abstract class AbstractPlayer {
 
 	public function setPlottedCourse(Path $plottedCourse): void {
 		$this->plottedCourse = $plottedCourse;
-		$this->db->replace('player_plotted_course', [
-			'account_id' => $this->db->escapeNumber($this->getAccountID()),
-			'game_id' => $this->db->escapeNumber($this->getGameID()),
-			'course' => $this->db->escapeObject($this->plottedCourse),
+		$db = Database::getInstance();
+		$db->replace('player_plotted_course', [
+			'account_id' => $db->escapeNumber($this->getAccountID()),
+			'game_id' => $db->escapeNumber($this->getGameID()),
+			'course' => $db->escapeObject($this->plottedCourse),
 		]);
 	}
 
@@ -1739,7 +1756,8 @@ abstract class AbstractPlayer {
 
 	public function deletePlottedCourse(): void {
 		$this->plottedCourse = false;
-		$this->db->write('DELETE FROM player_plotted_course WHERE ' . $this->SQL);
+		$db = Database::getInstance();
+		$db->write('DELETE FROM player_plotted_course WHERE ' . $this->SQL);
 	}
 
 	/**
@@ -1767,7 +1785,8 @@ abstract class AbstractPlayer {
 	public function getStoredDestinations(): array {
 		if (!isset($this->storedDestinations)) {
 			$this->storedDestinations = [];
-			$dbResult = $this->db->read('SELECT * FROM player_stored_sector WHERE ' . $this->SQL);
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT * FROM player_stored_sector WHERE ' . $this->SQL);
 			foreach ($dbResult->records() as $dbRecord) {
 				$sectorID = $dbRecord->getInt('sector_id');
 				$this->storedDestinations[$sectorID] = new StoredDestination(
@@ -1799,10 +1818,11 @@ abstract class AbstractPlayer {
 			offsetTop: $offsetTop,
 			offsetLeft: $offsetLeft,
 		);
-		$this->db->write('
+		$db = Database::getInstance();
+		$db->write('
 			UPDATE player_stored_sector
-				SET offset_left = ' . $this->db->escapeNumber($offsetLeft) . ', offset_top=' . $this->db->escapeNumber($offsetTop) . '
-			WHERE ' . $this->SQL . ' AND sector_id = ' . $this->db->escapeNumber($sectorID));
+				SET offset_left = ' . $db->escapeNumber($offsetLeft) . ', offset_top=' . $db->escapeNumber($offsetTop) . '
+			WHERE ' . $this->SQL . ' AND sector_id = ' . $db->escapeNumber($sectorID));
 	}
 
 	public function addDestinationButton(int $sectorID, string $label): void {
@@ -1824,11 +1844,12 @@ abstract class AbstractPlayer {
 			offsetLeft: 1,
 		);
 
-		$this->db->insert('player_stored_sector', [
-			'account_id' => $this->db->escapeNumber($this->getAccountID()),
-			'game_id' => $this->db->escapeNumber($this->getGameID()),
-			'sector_id' => $this->db->escapeNumber($sectorID),
-			'label' => $this->db->escapeString($label),
+		$db = Database::getInstance();
+		$db->insert('player_stored_sector', [
+			'account_id' => $db->escapeNumber($this->getAccountID()),
+			'game_id' => $db->escapeNumber($this->getGameID()),
+			'sector_id' => $db->escapeNumber($sectorID),
+			'label' => $db->escapeString($label),
 			'offset_top' => 1,
 			'offset_left' => 1,
 		]);
@@ -1841,10 +1862,11 @@ abstract class AbstractPlayer {
 			throw new Exception('Could not find stored destination');
 		}
 
-		$this->db->write('
+		$db = Database::getInstance();
+		$db->write('
 			DELETE FROM player_stored_sector
 			WHERE ' . $this->SQL . '
-			AND sector_id = ' . $this->db->escapeNumber($sectorID));
+			AND sector_id = ' . $db->escapeNumber($sectorID));
 		unset($this->storedDestinations[$sectorID]);
 	}
 
@@ -1855,7 +1877,8 @@ abstract class AbstractPlayer {
 		if (!isset($this->tickers)) {
 			$this->tickers = [];
 			//get ticker info
-			$dbResult = $this->db->read('SELECT type,time,expires,recent FROM player_has_ticker WHERE ' . $this->SQL . ' AND expires > ' . $this->db->escapeNumber(Epoch::time()));
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT type,time,expires,recent FROM player_has_ticker WHERE ' . $this->SQL . ' AND expires > ' . $db->escapeNumber(Epoch::time()));
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->tickers[$dbRecord->getString('type')] = [
 					'Type' => $dbRecord->getString('type'),
@@ -1991,7 +2014,8 @@ abstract class AbstractPlayer {
 	protected function getHOFData(): void {
 		if (!isset($this->HOF)) {
 			//Get Player HOF
-			$dbResult = $this->db->read('SELECT type,amount FROM player_hof WHERE ' . $this->SQL);
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT type,amount FROM player_hof WHERE ' . $this->SQL);
 			$this->HOF = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->HOF[$dbRecord->getString('type')] = $dbRecord->getFloat('amount');
@@ -2106,8 +2130,9 @@ abstract class AbstractPlayer {
 
 		// if we are in an alliance we increase their deaths
 		if ($this->hasAlliance()) {
-			$this->db->write('UPDATE alliance SET alliance_deaths = alliance_deaths + 1
-							WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND alliance_id = ' . $this->db->escapeNumber($this->getAllianceID()));
+			$db = Database::getInstance();
+			$db->write('UPDATE alliance SET alliance_deaths = alliance_deaths + 1
+							WHERE game_id = ' . $db->escapeNumber($this->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($this->getAllianceID()));
 		}
 
 		// record death stat
@@ -2150,14 +2175,15 @@ abstract class AbstractPlayer {
 		}
 		$msg .= ' in Sector&nbsp;' . Globals::getSectorBBLink($this->getSectorID());
 		$this->getSector()->increaseBattles(1);
-		$this->db->insert('news', [
-			'game_id' => $this->db->escapeNumber($this->getGameID()),
-			'time' => $this->db->escapeNumber(Epoch::time()),
-			'news_message' => $this->db->escapeString($msg),
-			'killer_id' => $this->db->escapeNumber($killer->getAccountID()),
-			'killer_alliance' => $this->db->escapeNumber($killer->getAllianceID()),
-			'dead_id' => $this->db->escapeNumber($this->getAccountID()),
-			'dead_alliance' => $this->db->escapeNumber($this->getAllianceID()),
+		$db = Database::getInstance();
+		$db->insert('news', [
+			'game_id' => $db->escapeNumber($this->getGameID()),
+			'time' => $db->escapeNumber(Epoch::time()),
+			'news_message' => $db->escapeString($msg),
+			'killer_id' => $db->escapeNumber($killer->getAccountID()),
+			'killer_alliance' => $db->escapeNumber($killer->getAllianceID()),
+			'dead_id' => $db->escapeNumber($this->getAccountID()),
+			'dead_alliance' => $db->escapeNumber($this->getAllianceID()),
 		]);
 
 		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by ' . $killer->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()));
@@ -2197,13 +2223,13 @@ abstract class AbstractPlayer {
 		}
 
 		//check for federal bounty being offered for current port raiders;
-		$this->db->write('DELETE FROM player_attacks_port WHERE time < ' . $this->db->escapeNumber(Epoch::time() - self::TIME_FOR_FEDERAL_BOUNTY_ON_PR));
+		$db->write('DELETE FROM player_attacks_port WHERE time < ' . $db->escapeNumber(Epoch::time() - self::TIME_FOR_FEDERAL_BOUNTY_ON_PR));
 		$query = 'SELECT 1
 					FROM player_attacks_port
 					JOIN port USING(game_id, sector_id)
 					JOIN player USING(game_id, account_id)
 					WHERE armour > 0 AND ' . $this->SQL . ' LIMIT 1';
-		$dbResult = $this->db->read($query);
+		$dbResult = $db->read($query);
 		if ($dbResult->hasRecord()) {
 			$bounty = IFloor(DEFEND_PORT_BOUNTY_PER_LEVEL * $this->getLevelID());
 			$this->getActiveBounty(BountyType::HQ)->increaseCredits($bounty);
@@ -2256,7 +2282,7 @@ abstract class AbstractPlayer {
 			$killer->increaseHOF(1, ['Killing', 'Kills'], HOF_PUBLIC);
 
 			if ($killer->hasAlliance()) {
-				$this->db->write('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($killer->getGameID()));
+				$db->write('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $db->escapeNumber($killer->getAllianceID()) . ' AND game_id=' . $db->escapeNumber($killer->getGameID()));
 			}
 
 			// alliance vs. alliance stats
@@ -2296,14 +2322,15 @@ abstract class AbstractPlayer {
 		}
 		$news_message .= ' was destroyed by ' . $owner->getBBLink() . '\'s forces in sector ' . Globals::getSectorBBLink($forces->getSectorID());
 		// insert the news entry
-		$this->db->insert('news', [
-			'game_id' => $this->db->escapeNumber($this->getGameID()),
-			'time' => $this->db->escapeNumber(Epoch::time()),
-			'news_message' => $this->db->escapeString($news_message),
-			'killer_id' => $this->db->escapeNumber($owner->getAccountID()),
-			'killer_alliance' => $this->db->escapeNumber($owner->getAllianceID()),
-			'dead_id' => $this->db->escapeNumber($this->getAccountID()),
-			'dead_alliance' => $this->db->escapeNumber($this->getAllianceID()),
+		$db = Database::getInstance();
+		$db->insert('news', [
+			'game_id' => $db->escapeNumber($this->getGameID()),
+			'time' => $db->escapeNumber(Epoch::time()),
+			'news_message' => $db->escapeString($news_message),
+			'killer_id' => $db->escapeNumber($owner->getAccountID()),
+			'killer_alliance' => $db->escapeNumber($owner->getAllianceID()),
+			'dead_id' => $db->escapeNumber($this->getAccountID()),
+			'dead_alliance' => $db->escapeNumber($this->getAllianceID()),
 		]);
 
 		// Player loses 15% experience
@@ -2342,13 +2369,14 @@ abstract class AbstractPlayer {
 		}
 		$news_message .= ' was destroyed while invading ' . $port->getDisplayName() . '.';
 		// insert the news entry
-		$this->db->insert('news', [
-			'game_id' => $this->db->escapeNumber($this->getGameID()),
-			'time' => $this->db->escapeNumber(Epoch::time()),
-			'news_message' => $this->db->escapeString($news_message),
-			'killer_id' => $this->db->escapeNumber(ACCOUNT_ID_PORT),
-			'dead_id' => $this->db->escapeNumber($this->getAccountID()),
-			'dead_alliance' => $this->db->escapeNumber($this->getAllianceID()),
+		$db = Database::getInstance();
+		$db->insert('news', [
+			'game_id' => $db->escapeNumber($this->getGameID()),
+			'time' => $db->escapeNumber(Epoch::time()),
+			'news_message' => $db->escapeString($news_message),
+			'killer_id' => $db->escapeNumber(ACCOUNT_ID_PORT),
+			'dead_id' => $db->escapeNumber($this->getAccountID()),
+			'dead_alliance' => $db->escapeNumber($this->getAllianceID()),
 		]);
 
 		// Player loses between 15% and 20% experience
@@ -2388,14 +2416,15 @@ abstract class AbstractPlayer {
 		}
 		$news_message .= ' was destroyed by ' . $planet->getCombatName() . '\'s planetary defenses in sector ' . Globals::getSectorBBLink($planet->getSectorID()) . '.';
 		// insert the news entry
-		$this->db->insert('news', [
-			'game_id' => $this->db->escapeNumber($this->getGameID()),
-			'time' => $this->db->escapeNumber(Epoch::time()),
-			'news_message' => $this->db->escapeString($news_message),
-			'killer_id' => $this->db->escapeNumber($planetOwner->getAccountID()),
-			'killer_alliance' => $this->db->escapeNumber($planetOwner->getAllianceID()),
-			'dead_id' => $this->db->escapeNumber($this->getAccountID()),
-			'dead_alliance' => $this->db->escapeNumber($this->getAllianceID()),
+		$db = Database::getInstance();
+		$db->insert('news', [
+			'game_id' => $db->escapeNumber($this->getGameID()),
+			'time' => $db->escapeNumber(Epoch::time()),
+			'news_message' => $db->escapeString($news_message),
+			'killer_id' => $db->escapeNumber($planetOwner->getAccountID()),
+			'killer_alliance' => $db->escapeNumber($planetOwner->getAllianceID()),
+			'dead_id' => $db->escapeNumber($this->getAccountID()),
+			'dead_alliance' => $db->escapeNumber($this->getAllianceID()),
 		]);
 
 		// Player loses between 15% and 20% experience
@@ -2421,12 +2450,14 @@ abstract class AbstractPlayer {
 
 	public function incrementAllianceVsKills(int $otherID): void {
 		$values = [$this->getGameID(), $this->getAllianceID(), $otherID, 1];
-		$this->db->write('INSERT INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) VALUES (' . $this->db->escapeArray($values) . ') ON DUPLICATE KEY UPDATE kills = kills + 1');
+		$db = Database::getInstance();
+		$db->write('INSERT INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) VALUES (' . $db->escapeArray($values) . ') ON DUPLICATE KEY UPDATE kills = kills + 1');
 	}
 
 	public function incrementAllianceVsDeaths(int $otherID): void {
 		$values = [$this->getGameID(), $otherID, $this->getAllianceID(), 1];
-		$this->db->write('INSERT INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) VALUES (' . $this->db->escapeArray($values) . ') ON DUPLICATE KEY UPDATE kills = kills + 1');
+		$db = Database::getInstance();
+		$db->write('INSERT INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) VALUES (' . $db->escapeArray($values) . ') ON DUPLICATE KEY UPDATE kills = kills + 1');
 	}
 
 	public function getTurnsLevel(): TurnsLevel {
@@ -2612,7 +2643,8 @@ abstract class AbstractPlayer {
 	 */
 	public function getMissions(): array {
 		if (!isset($this->missions)) {
-			$dbResult = $this->db->read('SELECT * FROM player_has_mission WHERE ' . $this->SQL);
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT * FROM player_has_mission WHERE ' . $this->SQL);
 			$this->missions = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$missionID = $dbRecord->getInt('mission_id');
@@ -2662,15 +2694,16 @@ abstract class AbstractPlayer {
 		$this->getMissions();
 		if (isset($this->missions[$missionID])) {
 			$mission = $this->missions[$missionID];
-			$this->db->write('
+			$db = Database::getInstance();
+			$db->write('
 				UPDATE player_has_mission
-				SET on_step = ' . $this->db->escapeNumber($mission['On Step']) . ',
-					progress = ' . $this->db->escapeNumber($mission['Progress']) . ',
-					unread = ' . $this->db->escapeBoolean($mission['Unread']) . ',
-					starting_sector = ' . $this->db->escapeNumber($mission['Starting Sector']) . ',
-					mission_sector = ' . $this->db->escapeNumber($mission['Sector']) . ',
-					step_fails = ' . $this->db->escapeNumber($mission['Expires']) . '
-				WHERE ' . $this->SQL . ' AND mission_id = ' . $this->db->escapeNumber($missionID));
+				SET on_step = ' . $db->escapeNumber($mission['On Step']) . ',
+					progress = ' . $db->escapeNumber($mission['Progress']) . ',
+					unread = ' . $db->escapeBoolean($mission['Unread']) . ',
+					starting_sector = ' . $db->escapeNumber($mission['Starting Sector']) . ',
+					mission_sector = ' . $db->escapeNumber($mission['Sector']) . ',
+					step_fails = ' . $db->escapeNumber($mission['Expires']) . '
+				WHERE ' . $this->SQL . ' AND mission_id = ' . $db->escapeNumber($missionID));
 			return true;
 		}
 		return false;
@@ -2725,16 +2758,17 @@ abstract class AbstractPlayer {
 		$this->setupMissionStep($missionID);
 		$this->rebuildMission($missionID);
 
-		$this->db->replace('player_has_mission', [
-			'game_id' => $this->db->escapeNumber($this->gameID),
-			'account_id' => $this->db->escapeNumber($this->accountID),
-			'mission_id' => $this->db->escapeNumber($missionID),
-			'on_step' => $this->db->escapeNumber($mission['On Step']),
-			'progress' => $this->db->escapeNumber($mission['Progress']),
-			'unread' => $this->db->escapeBoolean($mission['Unread']),
-			'starting_sector' => $this->db->escapeNumber($mission['Starting Sector']),
-			'mission_sector' => $this->db->escapeNumber($mission['Sector']),
-			'step_fails' => $this->db->escapeNumber($mission['Expires']),
+		$db = Database::getInstance();
+		$db->replace('player_has_mission', [
+			'game_id' => $db->escapeNumber($this->gameID),
+			'account_id' => $db->escapeNumber($this->accountID),
+			'mission_id' => $db->escapeNumber($missionID),
+			'on_step' => $db->escapeNumber($mission['On Step']),
+			'progress' => $db->escapeNumber($mission['Progress']),
+			'unread' => $db->escapeBoolean($mission['Unread']),
+			'starting_sector' => $db->escapeNumber($mission['Starting Sector']),
+			'mission_sector' => $db->escapeNumber($mission['Sector']),
+			'step_fails' => $db->escapeNumber($mission['Expires']),
 		]);
 	}
 
@@ -2757,7 +2791,8 @@ abstract class AbstractPlayer {
 		$this->getMissions();
 		if (isset($this->missions[$missionID])) {
 			unset($this->missions[$missionID]);
-			$this->db->write('DELETE FROM player_has_mission WHERE ' . $this->SQL . ' AND mission_id = ' . $this->db->escapeNumber($missionID));
+			$db = Database::getInstance();
+			$db->write('DELETE FROM player_has_mission WHERE ' . $this->SQL . ' AND mission_id = ' . $db->escapeNumber($missionID));
 			return;
 		}
 		throw new Exception('Mission with ID not found: ' . $missionID);
@@ -2984,7 +3019,8 @@ abstract class AbstractPlayer {
 		if (!isset($this->unvisitedSectors)) {
 			$this->unvisitedSectors = [];
 			// Note that this table actually has entries for the *unvisited* sectors!
-			$dbResult = $this->db->read('SELECT sector_id FROM player_visited_sector WHERE ' . $this->SQL);
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT sector_id FROM player_visited_sector WHERE ' . $this->SQL);
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->unvisitedSectors[] = $dbRecord->getInt('sector_id');
 			}
@@ -3047,7 +3083,8 @@ abstract class AbstractPlayer {
 			return;
 		}
 		$this->displayWeapons = $bool;
-		$this->db->write('UPDATE player SET display_weapons=' . $this->db->escapeBoolean($this->displayWeapons) . ' WHERE ' . $this->SQL);
+		$db = Database::getInstance();
+		$db->write('UPDATE player SET display_weapons=' . $db->escapeBoolean($this->displayWeapons) . ' WHERE ' . $this->SQL);
 	}
 
 	public function update(): void {
@@ -3056,43 +3093,44 @@ abstract class AbstractPlayer {
 
 	public function save(): void {
 		if ($this->hasChanged === true) {
-			$this->db->write('UPDATE player SET player_name=' . $this->db->escapeString($this->playerName) .
-				', player_id=' . $this->db->escapeNumber($this->playerID) .
-				', sector_id=' . $this->db->escapeNumber($this->sectorID) .
-				', last_sector_id=' . $this->db->escapeNumber($this->lastSectorID) .
-				', turns=' . $this->db->escapeNumber($this->turns) .
-				', last_turn_update=' . $this->db->escapeNumber($this->lastTurnUpdate) .
-				', newbie_turns=' . $this->db->escapeNumber($this->newbieTurns) .
-				', last_news_update=' . $this->db->escapeNumber($this->lastNewsUpdate) .
-				', attack_warning=' . $this->db->escapeString($this->attackColour) .
-				', dead=' . $this->db->escapeBoolean($this->dead) .
-				', newbie_status=' . $this->db->escapeBoolean($this->newbieStatus) .
-				', land_on_planet=' . $this->db->escapeBoolean($this->landedOnPlanet) .
-				', last_active=' . $this->db->escapeNumber($this->lastActive) .
-				', last_cpl_action=' . $this->db->escapeNumber($this->lastCPLAction) .
-				', race_id=' . $this->db->escapeNumber($this->raceID) .
-				', credits=' . $this->db->escapeNumber($this->credits) .
-				', experience=' . $this->db->escapeNumber($this->experience) .
-				', alignment=' . $this->db->escapeNumber($this->alignment) .
-				', military_payment=' . $this->db->escapeNumber($this->militaryPayment) .
-				', alliance_id=' . $this->db->escapeNumber($this->allianceID) .
-				', alliance_join=' . $this->db->escapeNumber($this->allianceJoinable) .
-				', ship_type_id=' . $this->db->escapeNumber($this->shipID) .
-				', kills=' . $this->db->escapeNumber($this->kills) .
-				', deaths=' . $this->db->escapeNumber($this->deaths) .
-				', assists=' . $this->db->escapeNumber($this->assists) .
-				', last_port=' . $this->db->escapeNumber($this->lastPort) .
-				', bank=' . $this->db->escapeNumber($this->bank) .
-				', zoom=' . $this->db->escapeNumber($this->zoom) .
-				', display_missions=' . $this->db->escapeBoolean($this->displayMissions) .
-				', force_drop_messages=' . $this->db->escapeBoolean($this->forceDropMessages) .
-				', group_scout_messages=' . $this->db->escapeString($this->scoutMessageGroupType->value) .
-				', ignore_globals=' . $this->db->escapeBoolean($this->ignoreGlobals) .
-				', newbie_warning = ' . $this->db->escapeBoolean($this->newbieWarning) .
-				', name_changed = ' . $this->db->escapeBoolean($this->nameChanged) .
-				', race_changed = ' . $this->db->escapeBoolean($this->raceChanged) .
-				', combat_drones_kamikaze_on_mines = ' . $this->db->escapeBoolean($this->combatDronesKamikazeOnMines) .
-				', under_attack = ' . $this->db->escapeBoolean($this->underAttack) .
+			$db = Database::getInstance();
+			$db->write('UPDATE player SET player_name=' . $db->escapeString($this->playerName) .
+				', player_id=' . $db->escapeNumber($this->playerID) .
+				', sector_id=' . $db->escapeNumber($this->sectorID) .
+				', last_sector_id=' . $db->escapeNumber($this->lastSectorID) .
+				', turns=' . $db->escapeNumber($this->turns) .
+				', last_turn_update=' . $db->escapeNumber($this->lastTurnUpdate) .
+				', newbie_turns=' . $db->escapeNumber($this->newbieTurns) .
+				', last_news_update=' . $db->escapeNumber($this->lastNewsUpdate) .
+				', attack_warning=' . $db->escapeString($this->attackColour) .
+				', dead=' . $db->escapeBoolean($this->dead) .
+				', newbie_status=' . $db->escapeBoolean($this->newbieStatus) .
+				', land_on_planet=' . $db->escapeBoolean($this->landedOnPlanet) .
+				', last_active=' . $db->escapeNumber($this->lastActive) .
+				', last_cpl_action=' . $db->escapeNumber($this->lastCPLAction) .
+				', race_id=' . $db->escapeNumber($this->raceID) .
+				', credits=' . $db->escapeNumber($this->credits) .
+				', experience=' . $db->escapeNumber($this->experience) .
+				', alignment=' . $db->escapeNumber($this->alignment) .
+				', military_payment=' . $db->escapeNumber($this->militaryPayment) .
+				', alliance_id=' . $db->escapeNumber($this->allianceID) .
+				', alliance_join=' . $db->escapeNumber($this->allianceJoinable) .
+				', ship_type_id=' . $db->escapeNumber($this->shipID) .
+				', kills=' . $db->escapeNumber($this->kills) .
+				', deaths=' . $db->escapeNumber($this->deaths) .
+				', assists=' . $db->escapeNumber($this->assists) .
+				', last_port=' . $db->escapeNumber($this->lastPort) .
+				', bank=' . $db->escapeNumber($this->bank) .
+				', zoom=' . $db->escapeNumber($this->zoom) .
+				', display_missions=' . $db->escapeBoolean($this->displayMissions) .
+				', force_drop_messages=' . $db->escapeBoolean($this->forceDropMessages) .
+				', group_scout_messages=' . $db->escapeString($this->scoutMessageGroupType->value) .
+				', ignore_globals=' . $db->escapeBoolean($this->ignoreGlobals) .
+				', newbie_warning = ' . $db->escapeBoolean($this->newbieWarning) .
+				', name_changed = ' . $db->escapeBoolean($this->nameChanged) .
+				', race_changed = ' . $db->escapeBoolean($this->raceChanged) .
+				', combat_drones_kamikaze_on_mines = ' . $db->escapeBoolean($this->combatDronesKamikazeOnMines) .
+				', under_attack = ' . $db->escapeBoolean($this->underAttack) .
 				' WHERE ' . $this->SQL);
 			$this->hasChanged = false;
 		}
@@ -3104,14 +3142,15 @@ abstract class AbstractPlayer {
 	}
 
 	public function saveHOF(): void {
+		$db = Database::getInstance();
 		foreach (self::$hasHOFVisChanged as $hofType => $changeType) {
 			if ($changeType == self::HOF_NEW) {
-				$this->db->insert('hof_visibility', [
-					'type' => $this->db->escapeString($hofType),
-					'visibility' => $this->db->escapeString(self::$HOFVis[$hofType]),
+				$db->insert('hof_visibility', [
+					'type' => $db->escapeString($hofType),
+					'visibility' => $db->escapeString(self::$HOFVis[$hofType]),
 				]);
 			} else {
-				$this->db->write('UPDATE hof_visibility SET visibility = ' . $this->db->escapeString(self::$HOFVis[$hofType]) . ' WHERE type = ' . $this->db->escapeString($hofType));
+				$db->write('UPDATE hof_visibility SET visibility = ' . $db->escapeString(self::$HOFVis[$hofType]) . ' WHERE type = ' . $db->escapeString($hofType));
 			}
 			unset(self::$hasHOFVisChanged[$hofType]);
 		}
@@ -3120,17 +3159,17 @@ abstract class AbstractPlayer {
 			$amount = $this->HOF[$hofType];
 			if ($changeType === self::HOF_NEW) {
 				if ($amount > 0) {
-					$this->db->insert('player_hof', [
-						'account_id' => $this->db->escapeNumber($this->getAccountID()),
-						'game_id' => $this->db->escapeNumber($this->getGameID()),
-						'type' => $this->db->escapeString($hofType),
-						'amount' => $this->db->escapeNumber($amount),
+					$db->insert('player_hof', [
+						'account_id' => $db->escapeNumber($this->getAccountID()),
+						'game_id' => $db->escapeNumber($this->getGameID()),
+						'type' => $db->escapeString($hofType),
+						'amount' => $db->escapeNumber($amount),
 					]);
 				}
 			} elseif ($changeType === self::HOF_CHANGED) {
-				$this->db->write('UPDATE player_hof
-					SET amount=' . $this->db->escapeNumber($amount) . '
-					WHERE ' . $this->SQL . ' AND type = ' . $this->db->escapeString($hofType));
+				$db->write('UPDATE player_hof
+					SET amount=' . $db->escapeNumber($amount) . '
+					WHERE ' . $this->SQL . ' AND type = ' . $db->escapeString($hofType));
 			}
 			unset($this->hasHOFChanged[$hofType]);
 		}

@@ -10,8 +10,6 @@ class Game {
 	/** @var array<int, self> */
 	protected static array $CACHE_GAMES = [];
 
-	protected Database $db;
-
 	protected string $name;
 	protected string $description;
 	protected int $joinTime;
@@ -91,9 +89,9 @@ class Game {
 		protected readonly int $gameID,
 		bool $create = false
 	) {
-		$this->db = Database::getInstance();
+		$db = Database::getInstance();
 
-		$dbResult = $this->db->read('SELECT * FROM game WHERE game_id = ' . $this->db->escapeNumber($gameID));
+		$dbResult = $db->read('SELECT * FROM game WHERE game_id = ' . $db->escapeNumber($gameID));
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$this->name = $dbRecord->getString('game_name');
@@ -120,44 +118,45 @@ class Game {
 	}
 
 	public function save(): void {
+		$db = Database::getInstance();
 		if ($this->isNew) {
-			$this->db->insert('game', [
-				'game_id' => $this->db->escapeNumber($this->getGameID()),
-				'game_name' => $this->db->escapeString($this->getName()),
-				'game_description' => $this->db->escapeString($this->getDescription()),
-				'join_time' => $this->db->escapeNumber($this->getJoinTime()),
-				'start_time' => $this->db->escapeNumber($this->getStartTime()),
-				'end_time' => $this->db->escapeNumber($this->getEndTime()),
-				'max_players' => $this->db->escapeNumber($this->getMaxPlayers()),
-				'max_turns' => $this->db->escapeNumber($this->getMaxTurns()),
-				'start_turns' => $this->db->escapeNumber($this->getStartTurnHours()),
-				'game_type' => $this->db->escapeNumber($this->gameTypeID),
-				'credits_needed' => $this->db->escapeNumber($this->getCreditsNeeded()),
-				'game_speed' => $this->db->escapeNumber($this->getGameSpeed()),
-				'enabled' => $this->db->escapeBoolean($this->isEnabled()),
-				'ignore_stats' => $this->db->escapeBoolean($this->isIgnoreStats()),
-				'alliance_max_players' => $this->db->escapeNumber($this->getAllianceMaxPlayers()),
-				'alliance_max_vets' => $this->db->escapeNumber($this->getAllianceMaxVets()),
-				'starting_credits' => $this->db->escapeNumber($this->getStartingCredits()),
+			$db->insert('game', [
+				'game_id' => $db->escapeNumber($this->getGameID()),
+				'game_name' => $db->escapeString($this->getName()),
+				'game_description' => $db->escapeString($this->getDescription()),
+				'join_time' => $db->escapeNumber($this->getJoinTime()),
+				'start_time' => $db->escapeNumber($this->getStartTime()),
+				'end_time' => $db->escapeNumber($this->getEndTime()),
+				'max_players' => $db->escapeNumber($this->getMaxPlayers()),
+				'max_turns' => $db->escapeNumber($this->getMaxTurns()),
+				'start_turns' => $db->escapeNumber($this->getStartTurnHours()),
+				'game_type' => $db->escapeNumber($this->gameTypeID),
+				'credits_needed' => $db->escapeNumber($this->getCreditsNeeded()),
+				'game_speed' => $db->escapeNumber($this->getGameSpeed()),
+				'enabled' => $db->escapeBoolean($this->isEnabled()),
+				'ignore_stats' => $db->escapeBoolean($this->isIgnoreStats()),
+				'alliance_max_players' => $db->escapeNumber($this->getAllianceMaxPlayers()),
+				'alliance_max_vets' => $db->escapeNumber($this->getAllianceMaxVets()),
+				'starting_credits' => $db->escapeNumber($this->getStartingCredits()),
 			]);
 		} elseif ($this->hasChanged) {
-			$this->db->write('UPDATE game SET game_name = ' . $this->db->escapeString($this->getName()) .
-										', game_description = ' . $this->db->escapeString($this->getDescription()) .
-										', join_time = ' . $this->db->escapeNumber($this->getJoinTime()) .
-										', start_time = ' . $this->db->escapeNumber($this->getStartTime()) .
-										', end_time = ' . $this->db->escapeNumber($this->getEndTime()) .
-										', max_players = ' . $this->db->escapeNumber($this->getMaxPlayers()) .
-										', max_turns = ' . $this->db->escapeNumber($this->getMaxTurns()) .
-										', start_turns = ' . $this->db->escapeNumber($this->getStartTurnHours()) .
-										', game_type = ' . $this->db->escapeNumber($this->gameTypeID) .
-										', credits_needed = ' . $this->db->escapeNumber($this->getCreditsNeeded()) .
-										', game_speed = ' . $this->db->escapeNumber($this->getGameSpeed()) .
-										', enabled = ' . $this->db->escapeBoolean($this->isEnabled()) .
-										', ignore_stats = ' . $this->db->escapeBoolean($this->isIgnoreStats()) .
-										', alliance_max_players = ' . $this->db->escapeNumber($this->getAllianceMaxPlayers()) .
-										', alliance_max_vets = ' . $this->db->escapeNumber($this->getAllianceMaxVets()) .
-										', starting_credits = ' . $this->db->escapeNumber($this->getStartingCredits()) .
-									' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()));
+			$db->write('UPDATE game SET game_name = ' . $db->escapeString($this->getName()) .
+										', game_description = ' . $db->escapeString($this->getDescription()) .
+										', join_time = ' . $db->escapeNumber($this->getJoinTime()) .
+										', start_time = ' . $db->escapeNumber($this->getStartTime()) .
+										', end_time = ' . $db->escapeNumber($this->getEndTime()) .
+										', max_players = ' . $db->escapeNumber($this->getMaxPlayers()) .
+										', max_turns = ' . $db->escapeNumber($this->getMaxTurns()) .
+										', start_turns = ' . $db->escapeNumber($this->getStartTurnHours()) .
+										', game_type = ' . $db->escapeNumber($this->gameTypeID) .
+										', credits_needed = ' . $db->escapeNumber($this->getCreditsNeeded()) .
+										', game_speed = ' . $db->escapeNumber($this->getGameSpeed()) .
+										', enabled = ' . $db->escapeBoolean($this->isEnabled()) .
+										', ignore_stats = ' . $db->escapeBoolean($this->isIgnoreStats()) .
+										', alliance_max_players = ' . $db->escapeNumber($this->getAllianceMaxPlayers()) .
+										', alliance_max_vets = ' . $db->escapeNumber($this->getAllianceMaxVets()) .
+										', starting_credits = ' . $db->escapeNumber($this->getStartingCredits()) .
+									' WHERE game_id = ' . $db->escapeNumber($this->getGameID()));
 		}
 		$this->isNew = false;
 		$this->hasChanged = false;
@@ -383,7 +382,8 @@ class Game {
 
 	public function getTotalPlayers(): int {
 		if (!isset($this->totalPlayers)) {
-			$dbResult = $this->db->read('SELECT count(*) FROM player WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()));
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT count(*) FROM player WHERE game_id = ' . $db->escapeNumber($this->getGameID()));
 			$this->totalPlayers = $dbResult->record()->getInt('count(*)');
 		}
 		return $this->totalPlayers;
@@ -424,6 +424,7 @@ class Game {
 		if ($relations < MIN_GLOBAL_RELATIONS || $relations > MAX_GLOBAL_RELATIONS) {
 			throw new Exception('Invalid relations: ' . $relations);
 		}
+		$db = Database::getInstance();
 		foreach (Race::getAllIDs() as $raceID1) {
 			foreach (Race::getAllIDs() as $raceID2) {
 				if ($raceID1 == $raceID2) {
@@ -434,11 +435,11 @@ class Game {
 				} else {
 					$amount = $relations;
 				}
-				$this->db->replace('race_has_relation', [
-					'game_id' => $this->db->escapeNumber($this->getGameID()),
-					'race_id_1' => $this->db->escapeNumber($raceID1),
-					'race_id_2' => $this->db->escapeNumber($raceID2),
-					'relation' => $this->db->escapeNumber($amount),
+				$db->replace('race_has_relation', [
+					'game_id' => $db->escapeNumber($this->getGameID()),
+					'race_id_1' => $db->escapeNumber($raceID1),
+					'race_id_2' => $db->escapeNumber($raceID2),
+					'relation' => $db->escapeNumber($amount),
 				]);
 			}
 		}
@@ -453,11 +454,12 @@ class Game {
 	public function getPlayableRaceIDs(): array {
 		if (!isset($this->playableRaceIDs)) {
 			// Get a unique set of HQ's available in game
-			$dbResult = $this->db->read('SELECT DISTINCT location_type_id
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT DISTINCT location_type_id
 				FROM location
-				WHERE location_type_id > ' . $this->db->escapeNumber(UNDERGROUND) . '
-					AND location_type_id < ' . $this->db->escapeNumber(FED) . '
-					AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+				WHERE location_type_id > ' . $db->escapeNumber(UNDERGROUND) . '
+					AND location_type_id < ' . $db->escapeNumber(FED) . '
+					AND game_id = ' . $db->escapeNumber($this->getGameID()) . '
 				ORDER BY location_type_id');
 			$this->playableRaceIDs = [];
 			foreach ($dbResult->records() as $dbRecord) {

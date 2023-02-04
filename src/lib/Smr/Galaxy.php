@@ -16,7 +16,6 @@ class Galaxy {
 	public const TYPE_PLANET = 'Planet';
 	public const TYPES = [self::TYPE_RACIAL, self::TYPE_NEUTRAL, self::TYPE_PLANET];
 
-	protected Database $db;
 	protected readonly string $SQL;
 
 	protected string $name;
@@ -82,12 +81,12 @@ class Galaxy {
 		bool $create = false,
 		DatabaseRecord $dbRecord = null
 	) {
-		$this->db = Database::getInstance();
-		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . '
-		              AND galaxy_id = ' . $this->db->escapeNumber($galaxyID);
+		$db = Database::getInstance();
+		$this->SQL = 'game_id = ' . $db->escapeNumber($gameID) . '
+		              AND galaxy_id = ' . $db->escapeNumber($galaxyID);
 
 		if ($dbRecord === null) {
-			$dbResult = $this->db->read('SELECT * FROM game_galaxy WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT * FROM game_galaxy WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -106,22 +105,23 @@ class Galaxy {
 	}
 
 	public function save(): void {
+		$db = Database::getInstance();
 		if ($this->isNew) {
-			$this->db->insert('game_galaxy', [
-				'game_id' => $this->db->escapeNumber($this->getGameID()),
-				'galaxy_id' => $this->db->escapeNumber($this->getGalaxyID()),
-				'galaxy_name' => $this->db->escapeString($this->getName()),
-				'width' => $this->db->escapeNumber($this->getWidth()),
-				'height' => $this->db->escapeNumber($this->getHeight()),
-				'galaxy_type' => $this->db->escapeString($this->getGalaxyType()),
-				'max_force_time' => $this->db->escapeNumber($this->getMaxForceTime()),
+			$db->insert('game_galaxy', [
+				'game_id' => $db->escapeNumber($this->getGameID()),
+				'galaxy_id' => $db->escapeNumber($this->getGalaxyID()),
+				'galaxy_name' => $db->escapeString($this->getName()),
+				'width' => $db->escapeNumber($this->getWidth()),
+				'height' => $db->escapeNumber($this->getHeight()),
+				'galaxy_type' => $db->escapeString($this->getGalaxyType()),
+				'max_force_time' => $db->escapeNumber($this->getMaxForceTime()),
 			]);
 		} elseif ($this->hasChanged) {
-			$this->db->write('UPDATE game_galaxy SET galaxy_name = ' . $this->db->escapeString($this->getName()) .
-										', width = ' . $this->db->escapeNumber($this->getWidth()) .
-										', height = ' . $this->db->escapeNumber($this->getHeight()) .
-										', galaxy_type = ' . $this->db->escapeString($this->getGalaxyType()) .
-										', max_force_time = ' . $this->db->escapeNumber($this->getMaxForceTime()) .
+			$db->write('UPDATE game_galaxy SET galaxy_name = ' . $db->escapeString($this->getName()) .
+										', width = ' . $db->escapeNumber($this->getWidth()) .
+										', height = ' . $db->escapeNumber($this->getHeight()) .
+										', galaxy_type = ' . $db->escapeString($this->getGalaxyType()) .
+										', max_force_time = ' . $db->escapeNumber($this->getMaxForceTime()) .
 									' WHERE ' . $this->SQL);
 		}
 		$this->isNew = false;
