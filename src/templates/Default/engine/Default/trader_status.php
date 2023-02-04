@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\BountyType;
+use Smr\Epoch;
 use Smr\Globals;
+use Smr\Race;
 
 /**
  * @var Smr\Account $ThisAccount
@@ -50,7 +53,7 @@ use Smr\Globals;
 			</a>
 
 			<br /><?php
-			foreach (Smr\Race::getAllNames() as $raceID => $raceName) {
+			foreach (Race::getAllNames() as $raceID => $raceName) {
 				if ($ThisPlayer->getPersonalRelation($raceID) != 0) {
 					echo $raceName . ' : ' . get_colored_text($ThisPlayer->getPersonalRelation($raceID)) . '<br />';
 				}
@@ -109,10 +112,10 @@ use Smr\Globals;
 			<br />You can claim <span class="yellow"><?php echo $BountiesClaimable; ?></span> bounties.
 
 			<?php
-			if ($ThisPlayer->hasActiveBounty(Smr\BountyType::HQ)) { ?>
+			if ($ThisPlayer->hasActiveBounty(BountyType::HQ)) { ?>
 				<br />You are <span class="red">wanted</span> by the <span class="green">Federal Government</span>!<?php
 			}
-			if ($ThisPlayer->hasActiveBounty(Smr\BountyType::UG)) { ?>
+			if ($ThisPlayer->hasActiveBounty(BountyType::UG)) { ?>
 				<br />You are <span class="red">wanted</span> by the <span class="red">Underground</span>!<?php
 			} ?>
 
@@ -125,7 +128,7 @@ use Smr\Globals;
 			<br />Name: <?php echo $ThisShip->getName(); ?>
 			<br />Speed: <?php echo $ThisShip->getRealSpeed(); ?> turns/hour
 			<br />Max: <?php echo $ThisPlayer->getMaxTurns(); ?> turns
-			<br />At max turns <span id="max_turns"><?php echo in_time_or_now($ThisPlayer->getTimeUntilMaxTurns(Smr\Epoch::time()), true); ?></span>.
+			<br />At max turns <span id="max_turns"><?php echo in_time_or_now($ThisPlayer->getTimeUntilMaxTurns(Epoch::time()), true); ?></span>.
 			Next turn in <span id="next_turn"><?php echo format_time($ThisPlayer->getTimeUntilNextTurn(), true); ?></span>.
 			<br /><br />
 

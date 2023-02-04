@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\Globals;
+use Smr\Race;
 
 /**
  * @var Smr\Account $ThisAccount
@@ -76,7 +77,7 @@ if (!$VoteTreaties) { ?>
 		<tr>
 			<td>
 				<a href="<?php echo Globals::getCouncilHREF($RaceID); ?>">
-					<img src="<?php echo Smr\Race::getHeadImage($RaceID); ?>" width="60" height="64" /><br /><?php
+					<img src="<?php echo Race::getHeadImage($RaceID); ?>" width="60" height="64" /><br /><?php
 					echo $ThisPlayer->getColouredRaceName($RaceID); ?>
 				</a>
 			</td>

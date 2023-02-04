@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Race;
+
 ?>
 <form method="POST" action="<?php echo $SelectGameHREF; ?>">
 	<select name="selected_game_id" onchange="this.form.submit()"><?php
@@ -37,8 +39,8 @@ if (!empty($SelectedGameID)) { ?>
 						<td><input required name="player_name" value="<?php echo $npc['default_player_name']; ?>" /></td>
 						<td>
 							<select name="race_id"><?php
-								foreach (Smr\Race::getPlayableIDs() as $raceID) { ?>
-									<option value="<?php echo $raceID; ?>"><?php echo Smr\Race::getName($raceID); ?></option><?php
+								foreach (Race::getPlayableIDs() as $raceID) { ?>
+									<option value="<?php echo $raceID; ?>"><?php echo Race::getName($raceID); ?></option><?php
 								} ?>
 							</select>
 						</td>

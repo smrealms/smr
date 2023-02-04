@@ -7,6 +7,7 @@ use Smr\Exceptions\AccountNotFound;
 use Smr\Login\Redirect;
 use Smr\Pages\Account\LoginCheckValidatedProcessor;
 use Smr\Request;
+use Smr\Session;
 use Smr\SocialLogin\SocialLogin;
 
 try {
@@ -19,7 +20,7 @@ try {
 	// *
 	// ********************************
 
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 	if (!$session->hasAccount()) {
 		if (Request::has('loginType')) {
 			$socialLogin = SocialLogin::get(Request::get('loginType'))->login();

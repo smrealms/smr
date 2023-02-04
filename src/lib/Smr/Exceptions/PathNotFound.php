@@ -2,8 +2,10 @@
 
 namespace Smr\Exceptions;
 
+use Exception;
+
 /**
  * Exception thrown when Plotter cannot find a Path
  */
-class PathNotFound extends \Exception {
+class PathNotFound extends Exception {
 }

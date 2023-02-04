@@ -1,14 +1,16 @@
 <?php declare(strict_types=1);
 
+use ReCaptcha\ReCaptcha;
 use Smr\Account;
 use Smr\Exceptions\AccountNotFound;
 use Smr\Request;
+use Smr\Session;
 
 try {
 
 	require_once('../bootstrap.php');
 
-	$session = Smr\Session::getInstance();
+	$session = Session::getInstance();
 
 	if ($session->hasAccount()) {
 		create_error('You\'re already logged in! Creating multis is against the rules!');
@@ -23,7 +25,7 @@ try {
 
 	//Check the captcha if it's a standard registration.
 	if (!$socialLogin && !empty(RECAPTCHA_PRIVATE)) {
-		$reCaptcha = new \ReCaptcha\ReCaptcha(RECAPTCHA_PRIVATE);
+		$reCaptcha = new ReCaptcha(RECAPTCHA_PRIVATE);
 		// Was there a reCAPTCHA response?
 		$resp = $reCaptcha->verify(
 			Request::get('g-recaptcha-response', ''),

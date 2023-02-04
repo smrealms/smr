@@ -8,5 +8,6 @@ return static function (RectorConfig $rectorConfig): void {
 		__DIR__ . '/test',
 		__DIR__ . '/src',
 	]);
+	$rectorConfig->importNames(true, false);
 	$rectorConfig->rule(FirstClassCallableRector::class);
 };

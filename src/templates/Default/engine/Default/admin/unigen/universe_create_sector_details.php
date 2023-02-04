@@ -1,7 +1,11 @@
 <?php declare(strict_types=1);
 
 use Smr\Location;
+use Smr\PlanetTypes\PlanetType;
 use Smr\Port;
+use Smr\Race;
+use Smr\TradeGood;
+use Smr\TransactionType;
 
 /**
  * @var Smr\Account $ThisAccount
@@ -15,8 +19,8 @@ use Smr\Port;
 	<b>Type: </b>
 	<select name="plan_type">
 		<option value="0">No Planet</option><?php
-		foreach (array_keys(Smr\PlanetTypes\PlanetType::PLANET_TYPES) as $type) { ?>
-			<option value="<?php echo $type; ?>" <?php echo ($type == $SelectedPlanetType ? 'selected' : ''); ?>><?php echo Smr\PlanetTypes\PlanetType::getTypeInfo($type)->name(); ?></option><?php
+		foreach (array_keys(PlanetType::PLANET_TYPES) as $type) { ?>
+			<option value="<?php echo $type; ?>" <?php echo ($type == $SelectedPlanetType ? 'selected' : ''); ?>><?php echo PlanetType::getTypeInfo($type)->name(); ?></option><?php
 		} ?>
 	</select><br /><?php
 	if ($SelectedPlanetType) { ?>
@@ -34,7 +38,7 @@ use Smr\Port;
 	</select>&nbsp;
 
 	<select name="port_race"><?php
-		foreach (Smr\Race::getAllNames() as $raceID => $raceName) { ?>
+		foreach (Race::getAllNames() as $raceID => $raceName) { ?>
 		<option value="<?php echo $raceID; ?>" <?php echo ($raceID == $SelectedPortRaceID ? 'selected' : ''); ?>><?php echo $raceName; ?></option><?php
 	} ?>
 	</select>
@@ -50,14 +54,14 @@ use Smr\Port;
 				foreach ([1, 2, 3] as $class) { ?>
 					<td class="top">
 					<table class="nobord"><?php
-						foreach (Smr\TradeGood::getAll() as $goodID => $good) {
+						foreach (TradeGood::getAll() as $goodID => $good) {
 							if ($good->class == $class) { ?>
 								<tr>
 								<td>
 									<?php echo $good->getImageHTML(); ?>&nbsp;
 									<select name="good<?php echo $goodID; ?>">
 										<option value="None">--</option><?php
-										foreach (Smr\TransactionType::cases() as $trans) { ?>
+										foreach (TransactionType::cases() as $trans) { ?>
 											<option <?php if ($Port->hasGood($goodID, $trans)) { ?> selected <?php } ?> value="<?php echo $trans->value; ?>"><?php echo $trans->value; ?></option><?php
 										} ?>
 									</select>

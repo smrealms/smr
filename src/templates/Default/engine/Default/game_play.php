@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Epoch;
+
 /**
  * @var Smr\Template $this
  * @var string $UserRankName
@@ -69,7 +71,7 @@ You are ranked as <?php echo $this->doAn($UserRankName); ?> <a style="font-size:
 			foreach ($Games['Join'] as $Game) { ?>
 				<tr>
 					<td class="center">
-						<div class="buttonA"><a id="game_join_<?php echo $Game['ID']; ?>" class="buttonA" href="<?php echo $Game['JoinGameLink']; ?>"><?php if (Smr\Epoch::time() < $Game['JoinTime']) {?>View Info<?php } else { ?>Join Game<?php } ?></a></div>
+						<div class="buttonA"><a id="game_join_<?php echo $Game['ID']; ?>" class="buttonA" href="<?php echo $Game['JoinGameLink']; ?>"><?php if (Epoch::time() < $Game['JoinTime']) {?>View Info<?php } else { ?>Join Game<?php } ?></a></div>
 					</td>
 					<td width="35%"><?php echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)</td>
 					<td class="noWrap"><?php echo $Game['StartDate']; ?></td>

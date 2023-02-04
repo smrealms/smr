@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\AdminPermissions;
+
 ?>
 List of Accounts with Permissions:<br />
 <small>Click to select</small>
@@ -30,7 +32,7 @@ if (!isset($EditAccount)) { ?>
 	Change permissions for the Account of <u><?php echo $EditAccount->getLogin(); ?></u>!
 	<form method="POST" action="<?php echo $ProcessingHREF; ?>"><?php
 		foreach ($PermissionCategories as $categoryID => $permissions) { ?>
-			<br /><h2><?php echo Smr\AdminPermissions::getCategoryName($categoryID); ?></h2>
+			<br /><h2><?php echo AdminPermissions::getCategoryName($categoryID); ?></h2>
 			<div style="padding-left:20px;"><?php
 				foreach ($permissions as $permissionID => $permissionName) {
 					$checked = $EditAccount->hasPermission($permissionID) ? 'checked' : ''; ?>

@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Epoch;
 use Smr\Globals;
+use Smr\PlanetMenuOption;
 
 /**
  * @var array<Smr\Planet> $Planets
@@ -37,13 +39,13 @@ if (count($Planets) > 0) { ?>
 					<td class="sort_sector"><a href="<?php echo Globals::getPlotCourseHREF($ThisPlayer->getSectorID(), $Planet->getSectorID()); ?>"><?php echo $Planet->getSectorID(); ?></a>&nbsp;(<a href="<?php echo $Planet->getGalaxy()->getGalaxyMapHREF(); ?>" target="gal_map"><?php echo $Planet->getGalaxy()->getDisplayName(); ?></a>)</td>
 
 					<?php
-					if ($Planet->hasMenuOption(Smr\PlanetMenuOption::FINANCE)) { ?>
+					if ($Planet->hasMenuOption(PlanetMenuOption::FINANCE)) { ?>
 						<td class="sort_credits"><?php echo number_format($Planet->getCredits()); ?></td>
 						<td class="sort_bonds"><?php echo number_format($Planet->getBonds()); ?></td>
 						<td class="sort_interest"><?php echo $Planet->getInterestRate() * 100; ?>%</td>
 						<?php
 						if ($Planet->getBonds() > 0) {
-							$matureTime = $Planet->getMaturity() - Smr\Epoch::time(); ?>
+							$matureTime = $Planet->getMaturity() - Epoch::time(); ?>
 							<td class="sort_mature noWrap" data-sort_mature="<?php echo $matureTime; ?>">
 								<?php echo format_time($matureTime, true); ?>
 							</td><?php

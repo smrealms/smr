@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Race;
+
 /**
  * @var Smr\Player $ThisPlayer
  * @var array<int, string> $VoteRaceHrefs
@@ -21,7 +23,7 @@
 
 	foreach ($VoteRaceHrefs as $RaceID => $FormHref) { ?>
 		<tr>
-			<td><img src="<?php echo Smr\Race::getHeadImage($RaceID); ?>" width="60" height="64" /><br /><?php echo $ThisPlayer->getColouredRaceName($RaceID, true); ?></td>
+			<td><img src="<?php echo Race::getHeadImage($RaceID); ?>" width="60" height="64" /><br /><?php echo $ThisPlayer->getColouredRaceName($RaceID, true); ?></td>
 			<td>
 				<form method="POST" action="<?php echo $FormHref; ?>">
 					<input type="submit" name="action" value="Peace" />

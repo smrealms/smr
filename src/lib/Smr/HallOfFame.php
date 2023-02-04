@@ -2,6 +2,7 @@
 
 namespace Smr;
 
+use Smr\Exceptions\PlayerNotFound;
 use Smr\Pages\Account\HallOfFameAll;
 use Smr\Pages\Account\HallOfFamePersonal;
 
@@ -143,7 +144,7 @@ class HallOfFame {
 		if ($gameID !== null && Game::gameExists($gameID)) {
 			try {
 				$hofPlayer = Player::getPlayer($accountID, $gameID);
-			} catch (Exceptions\PlayerNotFound) {
+			} catch (PlayerNotFound) {
 				$hofAccount = Account::getAccount($accountID);
 			}
 		} else {

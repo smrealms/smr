@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use PHPMailer\PHPMailer\PHPMailer;
 use Smr\Account;
 use Smr\Container\DiContainer;
 use Smr\Exceptions\UserError;
@@ -139,8 +140,8 @@ function exception_error_handler(int $errno, string $errstr, string $errfile, in
 	throw new ErrorException($errstr, $errno, E_ERROR, $errfile, $errline);
 }
 
-function setupMailer(): \PHPMailer\PHPMailer\PHPMailer {
-	$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+function setupMailer(): PHPMailer {
+	$mail = new PHPMailer(true);
 	if (!empty(SMTP_HOSTNAME)) {
 		$mail->isSMTP();
 		$mail->Host = SMTP_HOSTNAME;

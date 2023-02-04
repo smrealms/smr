@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Race;
+
 /**
  * @var Smr\Player $ThisPlayer
  * @var Smr\Sector $ThisSector
@@ -92,7 +94,7 @@
 <form method="POST" action="<?php echo $PersonalRelationsHREF; ?>">
 	<input type="number" name="amount" value="0" style="width:75px" />&nbsp;
 	<select name="race"><?php
-		foreach (Smr\Race::getAllNames() as $raceID => $raceName) { ?>
+		foreach (Race::getAllNames() as $raceID => $raceName) { ?>
 			<option value="<?php echo $raceID; ?>"><?php echo $raceName; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
@@ -103,7 +105,7 @@
 <form method="POST" action="<?php echo $RaceRelationsHREF; ?>">
 	<input type="number" name="amount" value="0" min="<?php echo MIN_GLOBAL_RELATIONS; ?>" max="<?php echo MAX_GLOBAL_RELATIONS; ?>" style="width:75px" />&nbsp;
 	<select name="race"><?php
-		foreach (Smr\Race::getPlayableNames() as $raceID => $raceName) {
+		foreach (Race::getPlayableNames() as $raceID => $raceName) {
 			if ($raceID == $ThisPlayer->getRaceID()) continue; ?>
 			<option value="<?php echo $raceID; ?>"><?php echo $raceName; ?></option><?php
 		} ?>
@@ -114,7 +116,7 @@
 
 <form method="POST" action="<?php echo $ChangeRaceHREF; ?>">
 	<select name="race"><?php
-		foreach (Smr\Race::getPlayableNames() as $raceID => $raceName) {
+		foreach (Race::getPlayableNames() as $raceID => $raceName) {
 			if ($raceID == $ThisPlayer->getRaceID()) continue; ?>
 			<option value="<?php echo $raceID; ?>"><?php echo $raceName; ?></option><?php
 		} ?>

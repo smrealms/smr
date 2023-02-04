@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Race;
+
 /**
  * @var array<int> $PowerLevels
  * @var array<string> $AllLocs
@@ -32,7 +34,7 @@
 	<body onload="resetBoxes()">
 		<div id="container">
 			<form id="raceform" name="raceform" style="text-align:center;"><?php
-				foreach (Smr\Race::getAllNames() as $raceID => $raceName) { ?>
+				foreach (Race::getAllNames() as $raceID => $raceName) { ?>
 					<input type="checkbox" id="race<?php echo $raceID; ?>" name="races" value="<?php echo $raceName; ?>" onClick="raceToggle()">
 					<label for="race<?php echo $raceID; ?>" class="race<?php echo $raceID; ?>"><?php echo $raceName; ?></label>&thinsp;<?php
 				} ?>
@@ -48,7 +50,7 @@
 							<span class="sort" data-sort="race">Race</span><br />
 							<select onchange="filterSelect(this)">
 								<option>All</option><?php
-								foreach (Smr\Race::getAllNames() as $raceId => $raceName) { ?>
+								foreach (Race::getAllNames() as $raceId => $raceName) { ?>
 									<option class="race<?php echo $raceId; ?>"><?php echo $raceName; ?></option><?php
 								} ?>
 							</select>

@@ -34,7 +34,7 @@ class TemplateTest extends TestCase {
 		$this->expectExceptionMessage('Cannot re-assign template variable \'foo\'!');
 		try {
 			$template->assign('foo', 'barbar');
-		} catch (\Exception $err) {
+		} catch (Exception $err) {
 			$template->unassign('foo'); // avoid destructor warning
 			throw $err;
 		}

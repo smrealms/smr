@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\AdminPermissions;
+
 if (isset($ErrorMessage)) {
 	echo $ErrorMessage; ?><br /><br /><?php
 }
@@ -10,7 +12,7 @@ if (isset($AdminPermissions)) { ?>
 	<h1>Admin Tools</h1>
 	<br /><?php
 	foreach ($AdminPermissions as $CategoryID => $Permissions) { ?>
-		<h2><?php echo Smr\AdminPermissions::getCategoryName($CategoryID); ?></h2>
+		<h2><?php echo AdminPermissions::getCategoryName($CategoryID); ?></h2>
 		<ul><?php
 		foreach ($Permissions as $Permission) { ?>
 			<li><?php

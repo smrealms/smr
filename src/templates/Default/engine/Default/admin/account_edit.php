@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Epoch;
+
 /**
  * @var Smr\Account $EditingAccount
  * @var Smr\Account $ThisAccount
@@ -192,7 +194,7 @@
 			<td>
 				Current mail ban: <?php
 				if ($EditingAccount->isMailBanned()) { ?>
-					<span class="red">For <?php echo format_time($EditingAccount->getMailBanned() - Smr\Epoch::time()); ?></span><?php
+					<span class="red">For <?php echo format_time($EditingAccount->getMailBanned() - Epoch::time()); ?></span><?php
 				} else { ?>
 					<span class="green">None</span><?php
 				} ?>

@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Epoch;
+
 /**
  * @var Smr\Planet $ThisPlanet
  */
@@ -34,7 +36,7 @@ if (!$ThisPlanet->hasOwner()) {
 	if ($ThisPlanet->getBonds() > 0) { ?>
 		Right now there are <?php echo number_format($ThisPlanet->getBonds()); ?> credits bonded<?php
 		if ($ThisPlanet->getMaturity() > 0) { ?>
-			and will come to maturity in <?php echo format_time($ThisPlanet->getMaturity() - Smr\Epoch::time()); ?>.
+			and will come to maturity in <?php echo format_time($ThisPlanet->getMaturity() - Epoch::time()); ?>.
 			<br /><br /> <?php
 		}
 	} ?>

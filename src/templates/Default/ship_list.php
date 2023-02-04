@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Race;
+use Smr\ShipClass;
+
 /**
  * @var array<int> $Speeds
  * @var array<int> $Hardpoints
@@ -44,7 +47,7 @@
 							<span class="sort" data-sort="race">Race</span><br />
 							<select onchange="filterSelect(this)">
 								<option>All</option><?php
-								foreach (Smr\Race::getAllNames() as $raceId => $raceName) { ?>
+								foreach (Race::getAllNames() as $raceId => $raceName) { ?>
 									<option class="race<?php echo $raceId; ?>"><?php echo $raceName; ?></option><?php
 								} ?>
 							</select>
@@ -53,7 +56,7 @@
 							<span class="sort" data-sort="class_">Class</span><br />
 							<select onchange="filterSelect(this)">
 								<option value="All">All</option><?php
-								foreach (Smr\ShipClass::cases() as $shipClass) { ?>
+								foreach (ShipClass::cases() as $shipClass) { ?>
 									<option><?php echo $shipClass->name; ?></option><?php
 								} ?>
 							</select>

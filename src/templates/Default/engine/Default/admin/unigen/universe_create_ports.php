@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Race;
+
 ?>
 <form method="POST" action="<?php echo $JumpGalaxyHREF; ?>">
 	Working on Galaxy:
@@ -49,7 +51,7 @@
 						<th>Port Race</th>
 						<th>% Distribution</th>
 					</tr><?php
-					foreach (Smr\Race::getAllNames() as $raceID => $raceName) { ?>
+					foreach (Race::getAllNames() as $raceID => $raceName) { ?>
 						<tr>
 							<td class="right"><?php echo $raceName; ?></td>
 							<td><input class="center" type="number" size="5" name="race<?php echo $raceID; ?>" value="<?php echo $RacePercents[$raceID]; ?>" onInput="raceCalc();" /></td>

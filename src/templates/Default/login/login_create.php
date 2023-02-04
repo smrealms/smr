@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 
+use Smr\Epoch;
+use Smr\Request;
+
 ?>
 <div class="centered" style="width: 630px;">
 	<h1>Create Login</h1>
@@ -46,7 +49,7 @@
 				<td width='27%'>Local Time:</td>
 				<td width='73%'>
 					<select name="timez" class="InputFields"><?php
-						$time = Smr\Epoch::time();
+						$time = Epoch::time();
 						for ($i = -12; $i <= 11; $i++) {
 							?><option value="<?php echo $i; ?>"><?php echo date(DEFAULT_TIME_FORMAT, $time + $i * 3600); ?></option><?php
 						} ?>
@@ -55,7 +58,7 @@
 			</tr>
 			<tr>
 				<td width='27%'>Referral ID (Optional):</td>
-				<td width='73%'><input type='number' name='referral_id' size='10' maxlength='20' class="InputFields" <?php if (Smr\Request::has('ref')) { echo 'value="' . Smr\Request::getInt('ref') . '"'; }?>></td>
+				<td width='73%'><input type='number' name='referral_id' size='10' maxlength='20' class="InputFields" <?php if (Request::has('ref')) { echo 'value="' . Request::getInt('ref') . '"'; }?>></td>
 			</tr>
 		</table>
 		<br />

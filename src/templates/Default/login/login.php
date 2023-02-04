@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+use Smr\SocialLogin\Facebook;
+use Smr\SocialLogin\Google;
+use Smr\SocialLogin\Twitter;
+
 ?>
 <table class="center nobord" style="width:690px; border-spacing:30px;">
 	<tr>
@@ -64,13 +68,13 @@
 			<span style="font-size: 14px;">Or register &amp; login with:</span>
 			<br />
 			<span>
-				<a class="btn-social" href="login_social_processing.php?type=<?php echo Smr\SocialLogin\Facebook::getLoginType(); ?>">
+				<a class="btn-social" href="login_social_processing.php?type=<?php echo Facebook::getLoginType(); ?>">
 					<img alt="Facebook" title="Facebook" src="images/login/facebook.svg" width="32" height="32">
 				</a>
-				<a class="btn-social" href="login_social_processing.php?type=<?php echo Smr\SocialLogin\Twitter::getLoginType(); ?>">
+				<a class="btn-social" href="login_social_processing.php?type=<?php echo Twitter::getLoginType(); ?>">
 					<img alt="Twitter" title="Twitter" src="images/login/twitter.svg" width="32" height="32">
 				</a>
-				<a class="btn-social" href="login_social_processing.php?type=<?php echo Smr\SocialLogin\Google::getLoginType(); ?>">
+				<a class="btn-social" href="login_social_processing.php?type=<?php echo Google::getLoginType(); ?>">
 					<img alt="Google" title="Google" src="images/login/google.svg" width="32" height="32">
 				</a>
 			</span>
