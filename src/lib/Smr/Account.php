@@ -3,6 +3,7 @@
 namespace Smr;
 
 use Exception;
+use SensitiveParameter;
 use Smr\Exceptions\AccountNotFound;
 use Smr\Exceptions\UserError;
 use Smr\Pages\Account\HallOfFamePersonal;
@@ -185,7 +186,7 @@ class Account {
 		throw new AccountNotFound('Account social login not found.');
 	}
 
-	public static function createAccount(string $login, string $password, string $email, int $timez, int $referral): self {
+	public static function createAccount(string $login, #[SensitiveParameter] string $password, string $email, int $timez, int $referral): self {
 		if ($referral != 0) {
 			// Will throw if referral account doesn't exist
 			self::getAccount($referral);
@@ -970,7 +971,7 @@ class Account {
 	 * Check if the given (plain-text) password is correct.
 	 * Updates the password hash if necessary.
 	 */
-	public function checkPassword(string $password): bool {
+	public function checkPassword(#[SensitiveParameter] string $password): bool {
 		// New (safe) password hashes will start with a $, but accounts logging
 		// in for the first time since the transition from md5 will still have
 		// hex-only hashes.
@@ -993,7 +994,7 @@ class Account {
 	/**
 	 * Set the (plain-text) password for this account.
 	 */
-	public function setPassword(string $password): void {
+	public function setPassword(#[SensitiveParameter] string $password): void {
 		$hash = password_hash($password, PASSWORD_DEFAULT);
 		if ($this->passwordHash === $hash) {
 			return;

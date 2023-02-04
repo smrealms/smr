@@ -125,6 +125,11 @@
         <severity>0</severity>
     </rule>
 
+    <!-- Conflicts with PSR2R.Namespaces.NoInlineFullyQualifiedClassName.Signature -->
+    <rule ref="Spryker.Commenting.Attributes.ExpectedFQCN">
+        <severity>0</severity>
+    </rule>
+
     <!-- Allow assignment in else-if where it is really needed. -->
     <rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition">
         <exclude-pattern>src/templates/Default/engine/Default/alliance_roster\.php</exclude-pattern>

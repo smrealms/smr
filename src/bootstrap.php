@@ -36,8 +36,17 @@ function logException(Throwable $err): void {
 	}
 
 	// Don't display passwords input by users in the log message!
-	if (isset($_REQUEST['password'])) {
-		$_REQUEST['password'] = '*****';
+	$sensitiveRequestFields = [
+		'password',
+		'pass_verify',
+		'old_password',
+		'new_password',
+		'retype_password',
+	];
+	foreach ($sensitiveRequestFields as $field) {
+		if (isset($_REQUEST[$field])) {
+			$_REQUEST[$field] = '*****';
+		}
 	}
 	$message .= '$_REQUEST: ' . var_export($_REQUEST, true);
 	$message .= $delim;
