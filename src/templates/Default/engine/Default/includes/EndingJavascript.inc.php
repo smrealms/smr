@@ -18,7 +18,7 @@ foreach ($this->jsSources as $src) { ?>
 }
 
 foreach ($this->jsAlerts as $string) {
-	?>alert(<?php echo json_encode($string); ?>);<?php
+	?>alert(<?php echo json_encode($string, JSON_THROW_ON_ERROR); ?>);<?php
 }
 
 if (!empty($this->listjsInclude)) { ?>

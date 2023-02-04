@@ -54,7 +54,7 @@ try {
 	$data = json_encode([
 		'nodes' => $nodes,
 		'links' => $links,
-	]);
+	], JSON_THROW_ON_ERROR);
 
 	$template = Template::getInstance();
 	$template->assign('GameName', $game->getName());
