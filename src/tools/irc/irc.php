@@ -8,7 +8,7 @@ function echo_r(string $message): void {
 }
 
 // config file
-require_once(realpath(dirname(__FILE__)) . '/../../bootstrap.php');
+require_once(realpath(__DIR__) . '/../../bootstrap.php');
 
 // timer events
 $events = [];

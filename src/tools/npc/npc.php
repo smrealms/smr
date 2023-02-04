@@ -49,7 +49,7 @@ function overrideForward(Page $container): never {
 const OVERRIDE_FORWARD = true;
 
 // global config
-require_once(realpath(dirname(__FILE__)) . '/../../bootstrap.php');
+require_once(realpath(__DIR__) . '/../../bootstrap.php');
 
 // Enable NPC-specific conditions
 DiContainer::getContainer()->set('NPC_SCRIPT', true);
