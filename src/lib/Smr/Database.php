@@ -191,10 +191,14 @@ class Database {
 		};
 	}
 
-	public function escapeString(?string $string, bool $nullable = false): string {
-		if ($nullable === true && ($string === null || $string === '')) {
+	public function escapeNullableString(?string $string): string {
+		if ($string === null || $string === '') {
 			return 'NULL';
 		}
+		return $this->escapeString($string);
+	}
+
+	public function escapeString(string $string): string {
 		return '\'' . $this->dbConn->real_escape_string($string) . '\'';
 	}
 

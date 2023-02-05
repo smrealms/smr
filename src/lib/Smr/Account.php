@@ -335,16 +335,16 @@ class Account {
 			', logging = ' . $db->escapeBoolean($this->logging) .
 			', time_format = ' . $db->escapeString($this->timeFormat) .
 			', date_format = ' . $db->escapeString($this->dateFormat) .
-			', discord_id = ' . $db->escapeString($this->discordId, true) .
-			', irc_nick = ' . $db->escapeString($this->ircNick, true) .
+			', discord_id = ' . $db->escapeNullableString($this->discordId) .
+			', irc_nick = ' . $db->escapeNullableString($this->ircNick) .
 			', hof_name = ' . $db->escapeString($this->hofName) .
 			', template = ' . $db->escapeString($this->template) .
 			', colour_scheme = ' . $db->escapeString($this->colourScheme) .
 			', fontsize = ' . $db->escapeNumber($this->fontSize) .
-			', css_link = ' . $db->escapeString($this->cssLink, true) .
-			', friendly_colour = ' . $db->escapeString($this->friendlyColour, true) .
-			', neutral_colour = ' . $db->escapeString($this->neutralColour, true) .
-			', enemy_colour = ' . $db->escapeString($this->enemyColour, true) .
+			', css_link = ' . $db->escapeNullableString($this->cssLink) .
+			', friendly_colour = ' . $db->escapeNullableString($this->friendlyColour) .
+			', neutral_colour = ' . $db->escapeNullableString($this->neutralColour) .
+			', enemy_colour = ' . $db->escapeNullableString($this->enemyColour) .
 			' WHERE ' . $this->SQL);
 		$this->hasChanged = false;
 	}
