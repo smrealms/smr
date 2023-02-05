@@ -16,7 +16,6 @@ class Sector {
 	/** @var array<int, array<int, array<int, self>>> */
 	protected static array $CACHE_LOCATION_SECTORS = [];
 
-	protected Database $db;
 	protected readonly string $SQL;
 
 	protected int $battles;
@@ -122,12 +121,12 @@ class Sector {
 		bool $create = false,
 		DatabaseRecord $dbRecord = null
 	) {
-		$this->db = Database::getInstance();
-		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
+		$db = Database::getInstance();
+		$this->SQL = 'game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID);
 
 		// Do we already have a database record for this sector?
 		if ($dbRecord === null) {
-			$dbResult = $this->db->read('SELECT * FROM sector WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT * FROM sector WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -155,25 +154,26 @@ class Sector {
 	}
 
 	public function update(): void {
+		$db = Database::getInstance();
 		if ($this->isNew) {
-			$this->db->insert('sector', [
-				'sector_id' => $this->db->escapeNumber($this->getSectorID()),
-				'game_id' => $this->db->escapeNumber($this->getGameID()),
-				'galaxy_id' => $this->db->escapeNumber($this->getGalaxyID()),
-				'link_up' => $this->db->escapeNumber($this->getLinkUp()),
-				'link_down' => $this->db->escapeNumber($this->getLinkDown()),
-				'link_left' => $this->db->escapeNumber($this->getLinkLeft()),
-				'link_right' => $this->db->escapeNumber($this->getLinkRight()),
-				'warp' => $this->db->escapeNumber($this->getWarp()),
+			$db->insert('sector', [
+				'sector_id' => $db->escapeNumber($this->getSectorID()),
+				'game_id' => $db->escapeNumber($this->getGameID()),
+				'galaxy_id' => $db->escapeNumber($this->getGalaxyID()),
+				'link_up' => $db->escapeNumber($this->getLinkUp()),
+				'link_down' => $db->escapeNumber($this->getLinkDown()),
+				'link_left' => $db->escapeNumber($this->getLinkLeft()),
+				'link_right' => $db->escapeNumber($this->getLinkRight()),
+				'warp' => $db->escapeNumber($this->getWarp()),
 			]);
 		} elseif ($this->hasChanged) {
-			$this->db->write('UPDATE sector SET battles = ' . $this->db->escapeNumber($this->getBattles()) .
-									', galaxy_id=' . $this->db->escapeNumber($this->getGalaxyID()) .
-									', link_up=' . $this->db->escapeNumber($this->getLinkUp()) .
-									', link_right=' . $this->db->escapeNumber($this->getLinkRight()) .
-									', link_down=' . $this->db->escapeNumber($this->getLinkDown()) .
-									', link_left=' . $this->db->escapeNumber($this->getLinkLeft()) .
-									', warp=' . $this->db->escapeNumber($this->getWarp()) .
+			$db->write('UPDATE sector SET battles = ' . $db->escapeNumber($this->getBattles()) .
+									', galaxy_id=' . $db->escapeNumber($this->getGalaxyID()) .
+									', link_up=' . $db->escapeNumber($this->getLinkUp()) .
+									', link_right=' . $db->escapeNumber($this->getLinkRight()) .
+									', link_down=' . $db->escapeNumber($this->getLinkDown()) .
+									', link_left=' . $db->escapeNumber($this->getLinkLeft()) .
+									', warp=' . $db->escapeNumber($this->getWarp()) .
 								' WHERE ' . $this->SQL);
 		}
 		$this->isNew = false;
@@ -187,8 +187,9 @@ class Sector {
 
 		//now delete the entry from visited
 		if (!$this->isVisited($player)) {
-			$this->db->write('DELETE FROM player_visited_sector WHERE ' . $this->SQL . '
-								 AND account_id = ' . $this->db->escapeNumber($player->getAccountID()));
+			$db = Database::getInstance();
+			$db->write('DELETE FROM player_visited_sector WHERE ' . $this->SQL . '
+								 AND account_id = ' . $db->escapeNumber($player->getAccountID()));
 		}
 		$this->visited[$player->getAccountID()] = true;
 	}
@@ -245,8 +246,9 @@ class Sector {
 		foreach ($this->getForces() as $force) {
 			$force->ping($message, $player);
 		}
-		$this->db->write('UPDATE sector_has_forces SET refresher = 0 WHERE ' . $this->SQL . '
-								AND refresher = ' . $this->db->escapeNumber($player->getAccountID()));
+		$db = Database::getInstance();
+		$db->write('UPDATE sector_has_forces SET refresher = 0 WHERE ' . $this->SQL . '
+								AND refresher = ' . $db->escapeNumber($player->getAccountID()));
 	}
 
 	public function diedHere(AbstractPlayer $player): void {
@@ -970,7 +972,8 @@ class Sector {
 			return true;
 		}
 		if (!isset($this->visited[$player->getAccountID()])) {
-			$dbResult = $this->db->read('SELECT 1 FROM player_visited_sector WHERE ' . $this->SQL . ' AND account_id=' . $this->db->escapeNumber($player->getAccountID()));
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT 1 FROM player_visited_sector WHERE ' . $this->SQL . ' AND account_id=' . $db->escapeNumber($player->getAccountID()));
 			$this->visited[$player->getAccountID()] = !$dbResult->hasRecord();
 		}
 		return $this->visited[$player->getAccountID()];

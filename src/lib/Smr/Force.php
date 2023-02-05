@@ -32,7 +32,6 @@ class Force {
 	public const MAX_CDS = 50;
 	public const MAX_SDS = 5;
 
-	protected Database $db;
 	protected readonly string $SQL;
 
 	protected int $combatDrones = 0;
@@ -127,13 +126,13 @@ class Force {
 		protected readonly int $ownerID,
 		DatabaseRecord $dbRecord = null
 	) {
-		$this->db = Database::getInstance();
-		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . '
-		              AND sector_id = ' . $this->db->escapeNumber($sectorID) . '
-		              AND owner_id = ' . $this->db->escapeNumber($ownerID);
+		$db = Database::getInstance();
+		$this->SQL = 'game_id = ' . $db->escapeNumber($gameID) . '
+		              AND sector_id = ' . $db->escapeNumber($sectorID) . '
+		              AND owner_id = ' . $db->escapeNumber($ownerID);
 
 		if ($dbRecord === null) {
-			$dbResult = $this->db->read('SELECT * FROM sector_has_forces WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT * FROM sector_has_forces WHERE ' . $this->SQL);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -372,22 +371,23 @@ class Force {
 	}
 
 	public function update(): void {
+		$db = Database::getInstance();
 		if (!$this->isNew) {
 			if (!$this->exists()) {
-				$this->db->write('DELETE FROM sector_has_forces WHERE ' . $this->SQL);
+				$db->write('DELETE FROM sector_has_forces WHERE ' . $this->SQL);
 				$this->isNew = true;
 			} elseif ($this->hasChanged) {
-				$this->db->write('UPDATE sector_has_forces SET combat_drones = ' . $this->db->escapeNumber($this->combatDrones) . ', scout_drones = ' . $this->db->escapeNumber($this->scoutDrones) . ', mines = ' . $this->db->escapeNumber($this->mines) . ', expire_time = ' . $this->db->escapeNumber($this->expire) . ' WHERE ' . $this->SQL);
+				$db->write('UPDATE sector_has_forces SET combat_drones = ' . $db->escapeNumber($this->combatDrones) . ', scout_drones = ' . $db->escapeNumber($this->scoutDrones) . ', mines = ' . $db->escapeNumber($this->mines) . ', expire_time = ' . $db->escapeNumber($this->expire) . ' WHERE ' . $this->SQL);
 			}
 		} elseif ($this->exists()) {
-			$this->db->insert('sector_has_forces', [
-				'game_id' => $this->db->escapeNumber($this->gameID),
-				'sector_id' => $this->db->escapeNumber($this->sectorID),
-				'owner_id' => $this->db->escapeNumber($this->ownerID),
-				'combat_drones' => $this->db->escapeNumber($this->combatDrones),
-				'scout_drones' => $this->db->escapeNumber($this->scoutDrones),
-				'mines' => $this->db->escapeNumber($this->mines),
-				'expire_time' => $this->db->escapeNumber($this->expire),
+			$db->insert('sector_has_forces', [
+				'game_id' => $db->escapeNumber($this->gameID),
+				'sector_id' => $db->escapeNumber($this->sectorID),
+				'owner_id' => $db->escapeNumber($this->ownerID),
+				'combat_drones' => $db->escapeNumber($this->combatDrones),
+				'scout_drones' => $db->escapeNumber($this->scoutDrones),
+				'mines' => $db->escapeNumber($this->mines),
+				'expire_time' => $db->escapeNumber($this->expire),
 			]);
 			$this->isNew = false;
 		}
@@ -399,7 +399,8 @@ class Force {
 	 * Update the table fields associated with using Refresh All
 	 */
 	public function updateRefreshAll(AbstractPlayer $player, int $refreshTime): void {
-		$this->db->write('UPDATE sector_has_forces SET refresh_at=' . $this->db->escapeNumber($refreshTime) . ', refresher=' . $this->db->escapeNumber($player->getAccountID()) . ' WHERE ' . $this->SQL);
+		$db = Database::getInstance();
+		$db->write('UPDATE sector_has_forces SET refresh_at=' . $db->escapeNumber($refreshTime) . ', refresher=' . $db->escapeNumber($player->getAccountID()) . ' WHERE ' . $this->SQL);
 	}
 
 	public function getExamineDropForcesHREF(): string {
