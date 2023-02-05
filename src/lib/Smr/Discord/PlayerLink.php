@@ -4,6 +4,7 @@ namespace Smr\Discord;
 
 use Discord\Parts\Channel\Message;
 use Discord\Parts\Thread\Thread;
+use Exception;
 use Smr\AbstractPlayer;
 use Smr\Account;
 use Smr\Alliance;
@@ -27,7 +28,10 @@ class PlayerLink {
 
 	public function __construct(Message $message) {
 		// force update in case the ID has been changed in-game
-		$user_id = $message->author->id;
+		$user_id = $message->author?->id;
+		if ($user_id === null) {
+			throw new Exception('This message does not have an author somehow!');
+		}
 
 		try {
 			$account = Account::getAccountByDiscordId($user_id, true);

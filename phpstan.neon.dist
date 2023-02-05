@@ -94,3 +94,8 @@ parameters:
             # https://github.com/phpstan/phpstan/issues/6830
             message: '#Variable \$(Actual|Weapon)Damage might not be defined.#'
             path: src/templates/Default/engine/Default/*CombatResults.inc.php
+        -
+            # https://github.com/discord-php/DiscordPHP/pull/1056
+            message: '#Cannot access property .* on Discord\\Parts\\Channel\\Channel|null.#'
+            path: src/lib/Smr/Discord/PlayerLink.php
+            count: 2
