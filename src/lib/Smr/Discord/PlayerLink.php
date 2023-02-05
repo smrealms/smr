@@ -20,11 +20,7 @@ use Smr\Game;
  */
 class PlayerLink {
 
-	/**
-	 * Identifies if the message is linked to game data
-	 */
-	public bool $valid = false;
-	public AbstractPlayer $player;
+	public readonly AbstractPlayer $player;
 
 	public function __construct(Message $message) {
 		// force update in case the ID has been changed in-game
@@ -80,7 +76,6 @@ class PlayerLink {
 
 		// If here, we did not trigger one of the error messages
 		$this->player = $player;
-		$this->valid = true;
 	}
 
 }
