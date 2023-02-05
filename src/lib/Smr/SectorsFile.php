@@ -130,12 +130,13 @@ class SectorsFile {
 				if ($sector->hasWarp()) {
 					$file .= 'Warp=' . $sector->getWarp() . EOL;
 				}
-				if (($adminCreate !== false && $sector->hasPort()) || $sector->hasCachedPort($player)) {
-					if ($adminCreate !== false) {
-						$port = $sector->getPort();
-					} else {
-						$port = $sector->getCachedPort($player);
-					}
+				$port = null;
+				if ($adminCreate && $sector->hasPort()) {
+					$port = $sector->getPort();
+				} elseif ($sector->hasCachedPort($player)) {
+					$port = $sector->getCachedPort($player);
+				}
+				if ($port !== null) {
 					$file .= 'Port Level=' . $port->getLevel() . EOL;
 					$file .= 'Port Race=' . $port->getRaceID() . EOL;
 					if (!empty($port->getSellGoodIDs())) {
