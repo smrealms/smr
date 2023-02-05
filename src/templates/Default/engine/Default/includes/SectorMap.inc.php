@@ -25,7 +25,7 @@ use Smr\Globals;
 			foreach ($MapSector as $Sector) {
 				$isCurrentSector = !$UniGen && $ThisSector->equals($Sector);
 				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector);
-				$isSeedlistSector = !$UniGen && isset($ShowSeedlistSectors) && $ShowSeedlistSectors && $MapPlayer->getAlliance()->isInSeedlist($Sector);
+				$isSeedlistSector = isset($ShowSeedlistSectors) && $ShowSeedlistSectors && $MapPlayer?->getAlliance()->isInSeedlist($Sector) === true;
 				$isVisited = $Sector->isVisited($MapPlayer); ?>
 				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax">
 					<div class="lm_sector galaxy<?php echo $Sector->getGalaxyID();
@@ -119,9 +119,9 @@ use Smr\Globals;
 								</div><?php
 							}
 						}
-						if (($isVisited && $Sector->hasWarp()) || (!$UniGen && $MapPlayer->isPartOfCourse($Sector))) { ?>
+						if (($isVisited && $Sector->hasWarp()) || ($MapPlayer?->isPartOfCourse($Sector) === true)) { ?>
 							<div class="lmp"><?php
-								if (!$UniGen && $MapPlayer->isPartOfCourse($Sector)) {
+								if ($MapPlayer?->isPartOfCourse($Sector) === true) {
 									?><img title="Course" alt="Course" src="images/plot_icon.gif" width="16" height="16"/><?php
 								}
 								if ($isVisited) {
@@ -141,7 +141,7 @@ use Smr\Globals;
 								} ?>
 							</div><?php
 						}
-						if (!$UniGen) {
+						if ($MapPlayer !== null) { // skip in UniGen
 							$CanScanSector = ($ThisShip->hasScanner() && $isLinkedSector) || $isCurrentSector;
 							$ShowFriendlyForces = isset($HideAlliedForces) && $HideAlliedForces ?
 							                      $Sector->hasPlayerForces($MapPlayer) : $Sector->hasFriendlyForces($MapPlayer);
