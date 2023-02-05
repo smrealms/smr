@@ -581,6 +581,9 @@ class Sector {
 		Port::removePort($this->getGameID(), $this->getSectorID());
 	}
 
+	/**
+	 * @phpstan-assert-if-true =AbstractPlayer $player
+	 */
 	public function hasCachedPort(AbstractPlayer $player = null): bool {
 		if ($player === null) {
 			return false;
@@ -715,8 +718,11 @@ class Sector {
 		return false;
 	}
 
+	/**
+	 * @phpstan-assert-if-true =AbstractPlayer $player
+	 */
 	public function hasFriendlyForces(AbstractPlayer $player = null): bool {
-		if ($player == null || !$this->hasForces()) {
+		if ($player === null || !$this->hasForces()) {
 			return false;
 		}
 		foreach ($this->getForces() as $force) {
