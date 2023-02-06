@@ -40,6 +40,8 @@ class NpcManage extends AccountPage {
 				'Selected' => $gameID == $selectedGameID,
 			];
 		}
+		$selectedGameID ??= 0; // no valid games found
+
 		$template->assign('Games', $games);
 		$template->assign('SelectedGameID', $selectedGameID);
 
