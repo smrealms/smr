@@ -99,3 +99,8 @@ parameters:
             message: '#Cannot access property .* on Discord\\Parts\\Channel\\Channel|null.#'
             path: src/lib/Smr/Discord/PlayerLink.php
             count: 2
+        -
+            # https://github.com/phpstan/phpstan/issues/8837
+            message: '#Cannot call method saveHTML() on DOMDocument|null.#'
+            path: src/lib/Smr/Template.php
+            count: 1

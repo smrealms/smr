@@ -4,7 +4,6 @@ namespace Smr;
 
 use DOMDocument;
 use DOMElement;
-use DOMNode;
 use DOMXPath;
 use Exception;
 use Smr\Container\DiContainer;
@@ -194,10 +193,11 @@ class Template {
 
 		$session = Session::getInstance();
 
-		$getInnerHTML = function(DOMNode $node): string {
+		$getInnerHTML = function(DOMElement $node): string {
 			$innerHTML = '';
+			$document = $node->ownerDocument;
 			foreach ($node->childNodes as $child) {
-				$innerHTML .= $child->ownerDocument->saveHTML($child);
+				$innerHTML .= $document->saveHTML($child);
 			}
 			return $innerHTML;
 		};
