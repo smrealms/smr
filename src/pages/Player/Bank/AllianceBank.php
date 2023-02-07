@@ -129,7 +129,7 @@ class AllianceBank extends PlayerPage {
 			$container = new AllianceBankExemptProcessor($minValue, $maxValue);
 			$template->assign('ExemptTransactionsFormHREF', $container->href());
 
-			$template->assign('Alliance', $alliance);
+			$template->assign('EndingBalance', number_format($alliance->getBank()));
 		}
 
 		$container = new AllianceBankReport($allianceID);
