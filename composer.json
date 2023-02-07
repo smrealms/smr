@@ -11,7 +11,7 @@
 		"league/oauth2-facebook": "2.2.0",
 		"league/oauth2-google": "4.0.0",
 		"php": "^8.2",
-		"php-di/php-di": "7.0.1",
+		"php-di/php-di": "7.0.2",
 		"phpmailer/phpmailer": "6.7.1",
 		"team-reflex/discord-php": "7.3.4",
 		"vanilla/nbbc": "2.4.0"
