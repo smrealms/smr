@@ -12,14 +12,10 @@ class DatabaseCleanup extends AccountPage {
 	public string $file = 'admin/db_cleanup.php';
 
 	/**
-	 * @param ?array<mixed> $results
-	 * @param ?array<int> $endedGames
+	 * @param ?array{action: string, rowsDeleted: array<string, int>, diffBytes: int, endedGameIDs: array<int>} $results
 	 */
 	public function __construct(
-		private readonly ?string $action = null,
 		private readonly ?array $results = null,
-		private readonly ?int $diffBytes = null,
-		private readonly ?array $endedGames = null
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -34,10 +30,10 @@ class DatabaseCleanup extends AccountPage {
 
 		if ($this->results !== null) {
 			// Display the results
-			$template->assign('Results', $this->results);
-			$template->assign('DiffMB', $bytesToMB($this->diffBytes));
-			$template->assign('Action', $this->action);
-			$template->assign('EndedGames', $this->endedGames);
+			$template->assign('Results', $this->results['rowsDeleted']);
+			$template->assign('DiffMB', $bytesToMB($this->results['diffBytes']));
+			$template->assign('Action', $this->results['action']);
+			$template->assign('EndedGames', $this->results['endedGameIDs']);
 			$container = new self();
 			$template->assign('BackHREF', $container->href());
 		} else {

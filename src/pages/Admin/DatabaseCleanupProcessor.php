@@ -57,7 +57,13 @@ class DatabaseCleanupProcessor extends AccountPageProcessor {
 		// Get difference in storage size
 		$diffBytes = $initialBytes - $db->getDbBytes();
 
-		$container = new DatabaseCleanup($this->action, $rowsDeleted, $diffBytes, $endedGameIDs);
+		$results = [
+			'action' => $this->action,
+			'rowsDeleted' => $rowsDeleted,
+			'diffBytes' => $diffBytes,
+			'endedGameIDs' => $endedGameIDs,
+		];
+		$container = new DatabaseCleanup($results);
 		$container->go();
 	}
 
