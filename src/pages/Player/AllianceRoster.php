@@ -33,9 +33,7 @@ class AllianceRoster extends PlayerPage {
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
 		Menu::alliance($alliance->getAllianceID());
 
-		$showRoles = $this->showRoles;
-		$template->assign('ShowRoles', $showRoles);
-		if ($showRoles) {
+		if ($this->showRoles) {
 			// initialize with text
 			$roles = [];
 
@@ -82,7 +80,7 @@ class AllianceRoster extends PlayerPage {
 		if ($alliance->getAllianceID() == $player->getAllianceID()) {
 			// Alliance members get to see active/inactive status of members
 			$template->assign('ActiveIDs', $alliance->getActiveIDs());
-			$container = new self($this->allianceID, !$showRoles);
+			$container = new self($this->allianceID, !$this->showRoles);
 			$template->assign('ToggleRolesHREF', $container->href());
 		}
 
