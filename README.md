@@ -1,6 +1,6 @@
 [![Run Tests](https://github.com/smrealms/smr/actions/workflows/run-tests.yml/badge.svg?branch=main)](https://github.com/smrealms/smr/actions/workflows/run-tests.yml?query=branch%3Amain)
 [![Test Coverage](https://codecov.io/gh/smrealms/smr/branch/main/graph/badge.svg)](https://codecov.io/gh/smrealms/smr)
-[![PHPStan Level](https://img.shields.io/badge/PHPStan-level%207-brightgreen.svg)](https://github.com/smrealms/smr/blob/main/phpstan.neon.dist)
+[![PHPStan Level](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg)](https://github.com/smrealms/smr/blob/main/phpstan.neon.dist)
 [![Build Live](https://github.com/smrealms/smr/actions/workflows/build-live.yml/badge.svg?branch=live)](https://hub.docker.com/repository/docker/smrealms/smr)
 
 # Installation

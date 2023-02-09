@@ -11,7 +11,7 @@ use Smr\Globals;
  * @var ?int $WithdrawalPerDay
  * @var ?int $RemainingWithdrawal
  * @var ?array<int, array{Time: int, Player: Smr\AbstractPlayer, Reason: string, TransactionType: string, Withdrawal: string, Deposit: string, Exempt: bool}> $BankTransactions
- * @var ?Smr\Alliance $Alliance
+ * @var ?string $EndingBalance
  * @var ?int $MinValue
  * @var ?int $MaxValue
  * @var ?string $FilterTransactionsFormHREF
@@ -35,7 +35,7 @@ if (isset($UnlimitedWithdrawal) && $UnlimitedWithdrawal === true) {
 	?>You can withdraw an unlimited amount from this account.<?php
 } elseif (isset($PositiveWithdrawal)) {
 	?>You can only withdraw <?php echo number_format($PositiveWithdrawal); ?> more credits based on your deposits.<?php
-} else { ?>
+} elseif (isset($WithdrawalPerDay) && isset($TotalWithdrawn) && isset($RemainingWithdrawal)) { ?>
 	You can withdraw up to <?php echo number_format($WithdrawalPerDay); ?> credits per 24 hours.<br />
 	So far you have withdrawn <?php echo number_format($TotalWithdrawn); ?> credits in the past 24 hours. You can withdraw <?php echo number_format($RemainingWithdrawal); ?> more credits.<?php
 } ?>
@@ -95,7 +95,7 @@ if (!empty($BankTransactions)) { ?>
 				} ?>
 				<tr>
 					<th colspan="5" class="right">Ending Balance</th>
-					<td class="bold right"><?php echo number_format($Alliance->getBank()); ?></td><?php
+					<td class="bold right"><?php echo $EndingBalance; ?></td><?php
 					if ($CanExempt) {
 						?><td><input type="submit" name="action" value="Make Exempt"></td><?php
 					} ?>

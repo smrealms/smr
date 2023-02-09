@@ -57,6 +57,9 @@ function readFromStream($fp): bool {
 		return false;
 	}
 	$rdata = preg_replace('/\s+/', ' ', $rdata);
+	if ($rdata === null) {
+		throw new Exception('An error occurred in preg_replace!');
+	}
 
 	// required!!! otherwise timeout!
 	if (server_ping($fp, $rdata)) {

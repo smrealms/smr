@@ -9,7 +9,6 @@ use RuntimeException;
 use Smr\Container\DiContainer;
 use Smr\Database;
 use Smr\DatabaseProperties;
-use TypeError;
 
 /**
  * This is an integration test, but does not need to extend BaseIntegrationTest since we are not writing any data.
@@ -86,18 +85,18 @@ class DatabaseIntegrationTest extends TestCase {
 		$db = Database::getInstance();
 		// Test the empty string
 		self::assertSame("''", $db->escapeString(''));
-		self::assertSame('NULL', $db->escapeString('', true)); // nullable
-		// Test null
-		self::assertSame('NULL', $db->escapeString(null, true)); // nullable
 		// Test a normal string
 		self::assertSame("'bla'", $db->escapeString('bla'));
-		self::assertSame("'bla'", $db->escapeString('bla', true)); // nullable
 	}
 
-	public function test_escapeString_null_throws(): void {
+	public function test_escapeNullableString(): void {
 		$db = Database::getInstance();
-		$this->expectException(TypeError::class);
-		$db->escapeString(null);
+		// Test the empty string
+		self::assertSame('NULL', $db->escapeNullableString(''));
+		// Test null
+		self::assertSame('NULL', $db->escapeNullableString(null));
+		// Test a normal string
+		self::assertSame("'bla'", $db->escapeString('bla'));
 	}
 
 	public function test_escapeArray(): void {
@@ -183,9 +182,9 @@ class DatabaseIntegrationTest extends TestCase {
 			[3, 'escapeNumber', 'getInt', 'assertSame', []],
 			[3.14, 'escapeNumber', 'getFloat', 'assertSame', []],
 			['hello', 'escapeString', 'getString', 'assertSame', []],
-			['hello', 'escapeString', 'getNullableString', 'assertSame', []],
+			['hello', 'escapeNullableString', 'getNullableString', 'assertSame', []],
 			// Test nullable objects
-			[null, 'escapeString', 'getNullableString', 'assertSame', [true]],
+			[null, 'escapeNullableString', 'getNullableString', 'assertSame', []],
 			[null, 'escapeObject', 'getObject', 'assertSame', [false, true]],
 			// Test object with compression
 			[[1, 2, 3], 'escapeObject', 'getObject', 'assertSame', [true]],

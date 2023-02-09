@@ -24,7 +24,7 @@ class NewsletterSendProcessor extends AccountPageProcessor {
 
 		$mail->Subject = Request::get('subject');
 
-		$set_mail_body = function(PHPMailer $mail, ?string $newsletterHtml, ?string $newsletterText, ?string $salutation): void {
+		$set_mail_body = function(PHPMailer $mail, string $newsletterHtml, string $newsletterText, string $salutation): void {
 			// Prepend the salutation if one is given
 			if ($salutation) {
 				if (!empty($newsletterHtml)) {

@@ -499,13 +499,13 @@ class Alliance {
 								alliance_password = ' . $db->escapeString($this->password) . ',
 								recruiting = ' . $db->escapeBoolean($this->recruiting) . ',
 								alliance_account = ' . $db->escapeNumber($this->bank) . ',
-								alliance_description = ' . $db->escapeString($this->description, true) . ',
+								alliance_description = ' . $db->escapeNullableString($this->description) . ',
 								`mod` = ' . $db->escapeString($this->motd) . ',
 								img_src = ' . $db->escapeString($this->imgSrc) . ',
 								alliance_kills = ' . $db->escapeNumber($this->kills) . ',
 								alliance_deaths = ' . $db->escapeNumber($this->deaths) . ',
-								discord_server = ' . $db->escapeString($this->discordServer, true) . ',
-								discord_channel = ' . $db->escapeString($this->discordChannel, true) . ',
+								discord_server = ' . $db->escapeNullableString($this->discordServer) . ',
+								discord_channel = ' . $db->escapeNullableString($this->discordChannel) . ',
 								flagship_id = ' . $db->escapeNumber($this->flagshipID) . ',
 								leader_id = ' . $db->escapeNumber($this->leaderID) . '
 							WHERE ' . $this->SQL);

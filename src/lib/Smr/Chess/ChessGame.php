@@ -427,9 +427,9 @@ class ChessGame {
 			'start_y' => $db->escapeNumber($y),
 			'end_x' => $db->escapeNumber($toX),
 			'end_y' => $db->escapeNumber($toY),
-			'checked' => $db->escapeString($checking, true),
+			'checked' => $db->escapeNullableString($checking),
 			'piece_taken' => $moveInfo['PieceTaken'] === null ? 'NULL' : $db->escapeNumber($moveInfo['PieceTaken']->pieceID),
-			'castling' => $db->escapeString($moveInfo['Castling']?->value, true),
+			'castling' => $db->escapeNullableString($moveInfo['Castling']?->value),
 			'en_passant' => $db->escapeBoolean($moveInfo['EnPassant']),
 			'promote_piece_id' => $promotionPieceID ?? 'NULL',
 		]);

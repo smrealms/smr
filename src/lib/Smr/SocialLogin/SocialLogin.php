@@ -12,7 +12,6 @@ abstract class SocialLogin {
 
 	private ?string $userID = null;
 	private ?string $email = null;
-	private bool $valid = false;
 	protected ?string $errorMessage = null;
 
 	/**
@@ -47,7 +46,6 @@ abstract class SocialLogin {
 	protected function setCredentials(?string $userID, ?string $email): void {
 		$this->userID = $userID;
 		$this->email = $email;
-		$this->valid = !empty($userID);
 	}
 
 	/**
@@ -70,9 +68,12 @@ abstract class SocialLogin {
 
 	/**
 	 * Returns true if the authentication was successful.
+	 *
+	 * @phpstan-assert-if-true non-empty-string $this->getUserID()
+	 * @phpstan-assert-if-true non-empty-string $this->getEmail()
 	 */
 	public function isValid(): bool {
-		return $this->valid;
+		return !empty($this->userID) && !empty($this->email);
 	}
 
 	public function getUserID(): ?string {

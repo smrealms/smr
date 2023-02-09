@@ -27,7 +27,7 @@ class Galaxy {
 	protected int $startSector;
 
 	protected bool $hasChanged = false;
-	protected bool $isNew;
+	protected bool $isNew = true;
 
 	public static function clearCache(): void {
 		self::$CACHE_GALAXIES = [];
@@ -91,9 +91,9 @@ class Galaxy {
 				$dbRecord = $dbResult->record();
 			}
 		}
-		$this->isNew = $dbRecord === null;
 
-		if (!$this->isNew) {
+		if ($dbRecord !== null) {
+			$this->isNew = false;
 			$this->name = $dbRecord->getString('galaxy_name');
 			$this->width = $dbRecord->getInt('width');
 			$this->height = $dbRecord->getInt('height');

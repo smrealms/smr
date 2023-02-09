@@ -27,7 +27,7 @@ class Planet {
 
 	protected readonly string $SQL;
 
-	protected bool $exists;
+	protected bool $exists = false;
 	protected string $planetName;
 	protected int $ownerID;
 	protected string $password;
@@ -58,7 +58,6 @@ class Planet {
 	protected array $hasChangedBuildings = [];
 	/** @var array<int> */
 	protected array $hasStoppedBuilding = [];
-	protected bool $isNew = false;
 
 	public function __sleep() {
 		return ['sectorID', 'gameID', 'planetName', 'ownerID', 'typeID'];
@@ -129,7 +128,6 @@ class Planet {
 		//kick everyone from planet
 		$db->write('UPDATE player SET land_on_planet = \'FALSE\' WHERE ' . $SQL);
 
-		self::$CACHE_PLANETS[$gameID][$sectorID] = null;
 		unset(self::$CACHE_PLANETS[$gameID][$sectorID]);
 	}
 
@@ -147,9 +145,9 @@ class Planet {
 				$dbRecord = $dbResult->record();
 			}
 		}
-		$this->exists = $dbRecord !== null;
 
-		if ($this->exists) {
+		if ($dbRecord !== null) {
+			$this->exists = true;
 			$this->planetName = $dbRecord->getString('planet_name');
 			$this->ownerID = $dbRecord->getInt('owner_id');
 			$this->password = $dbRecord->getString('password');

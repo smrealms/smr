@@ -17,15 +17,15 @@ class NewsReadAdvanced extends AccountPage {
 	public string $file = 'news_read_advanced.php';
 
 	/**
-	 * @param ?array<int> $accountIDs
-	 * @param ?array<int> $allianceIDs
+	 * @param array<int> $accountIDs
+	 * @param array<int> $allianceIDs
 	 */
 	public function __construct(
 		private readonly int $gameID,
 		private readonly ?string $submit = null,
 		private readonly ?string $label = null,
-		private readonly ?array $accountIDs = null,
-		private readonly ?array $allianceIDs = null,
+		private readonly array $accountIDs = [],
+		private readonly array $allianceIDs = [],
 	) {}
 
 	public function build(Account $account, Template $template): void {

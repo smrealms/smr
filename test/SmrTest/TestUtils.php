@@ -2,6 +2,7 @@
 
 namespace SmrTest;
 
+use Exception;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -40,6 +41,9 @@ class TestUtils {
 	public static function constructPrivateClass(string $name, ...$args): object {
 		$class = new ReflectionClass($name);
 		$constructor = $class->getConstructor();
+		if ($constructor === null) {
+			throw new Exception('Class does not have a constructor: ' . $name);
+		}
 		$constructor->setAccessible(true);
 		$object = $class->newInstanceWithoutConstructor();
 		$constructor->invoke($object, ...$args);

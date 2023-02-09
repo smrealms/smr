@@ -14,7 +14,7 @@ use Smr\Epoch;
 <div class="center">
 
 <?php
-if (isset($OpTime)) { ?>
+if (isset($OpTime) && isset($ResponseInputs)) { ?>
 	<table class="center nobord opResponse">
 		<tr><th>ENCRYPTED ALLIANCE TELEGRAM</th></tr>
 		<tr><td>Your leader has scheduled an important alliance operation for <?php echo date($ThisAccount->getDateTimeFormat(), $OpTime); ?></td></tr>

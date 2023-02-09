@@ -28,9 +28,6 @@ abstract class DatabaseCommand extends Command {
 	final public function response(string ...$args): array {
 		try {
 			$link = new PlayerLink($this->message);
-			if (!$link->valid) {
-				return [];
-			}
 			$this->player = $link->player;
 			return $this->databaseResponse(...$args);
 		} finally {

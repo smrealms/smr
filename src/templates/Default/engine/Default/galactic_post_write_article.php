@@ -2,10 +2,11 @@
 
 /**
  * @var ?string $PreviewTitle
+ * @var ?string $Preview
  * @var string $SubmitArticleHref
  */
 
-if (isset($Preview)) { ?>
+if (isset($PreviewTitle) && isset($Preview)) { ?>
 	<table class="standard">
 		<tr>
 			<td>Title:</td>

@@ -4,7 +4,6 @@ namespace Smr;
 
 use DOMDocument;
 use DOMElement;
-use DOMNode;
 use DOMXPath;
 use Exception;
 use Smr\Container\DiContainer;
@@ -194,10 +193,11 @@ class Template {
 
 		$session = Session::getInstance();
 
-		$getInnerHTML = function(DOMNode $node): string {
+		$getInnerHTML = function(DOMElement $node): string {
 			$innerHTML = '';
+			$document = $node->ownerDocument;
 			foreach ($node->childNodes as $child) {
-				$innerHTML .= $child->ownerDocument->saveHTML($child);
+				$innerHTML .= $document->saveHTML($child);
 			}
 			return $innerHTML;
 		};
@@ -236,12 +236,9 @@ class Template {
 
 		// Determine if we should do ajax updates on the middle panel div
 		$mid = $dom->getElementById('middle_panel');
-		$doAjaxMiddle = true;
-		if ($mid === null) {
-			// Skip if there is no middle_panel.
-			$doAjaxMiddle = false;
-		} else {
+		if ($mid !== null) {
 			// Skip if middle_panel has ajax-enabled children.
+			$doAjaxMiddle = true;
 			foreach ($ajaxSelectors as $selector) {
 				$matchNodes = $xpath->query($selector, $mid);
 				if ($matchNodes === false) {
@@ -252,14 +249,13 @@ class Template {
 					break;
 				}
 			}
-		}
-
-		if ($doAjaxMiddle) {
-			$inner = $getInnerHTML($mid);
-			if (!$this->checkDisableAJAX($inner)) {
-				$id = $mid->getAttribute('id');
-				if (!$session->addAjaxReturns($id, $inner) && $returnXml) {
-					$xml .= $xmlify($id, $inner);
+			if ($doAjaxMiddle) {
+				$inner = $getInnerHTML($mid);
+				if (!$this->checkDisableAJAX($inner)) {
+					$id = $mid->getAttribute('id');
+					if (!$session->addAjaxReturns($id, $inner) && $returnXml) {
+						$xml .= $xmlify($id, $inner);
+					}
 				}
 			}
 		}

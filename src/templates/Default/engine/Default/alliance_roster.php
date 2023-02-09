@@ -8,7 +8,6 @@ use Smr\Alliance;
  * @var Smr\Player $ThisPlayer
  * @var Smr\Template $this
  * @var bool $CanChangeRoles
- * @var bool $ShowRoles
  * @var ?string $SaveAllianceRolesHREF
  * @var ?array<int, string> $Roles
  * @var ?string $ToggleRolesHREF
@@ -19,11 +18,7 @@ use Smr\Alliance;
  * @var ?string $JoinHREF
  */
 
-if ($ShowRoles && $CanChangeRoles) { ?>
-	<form class="standard" method="POST" action="<?php echo $SaveAllianceRolesHREF; ?>"><?php
-} ?>
-
-
+?>
 <div class="center">
 	<div id="alliance-desc" class="ajax"><?php
 		echo bbifyMessage($Alliance->getDescription()); ?>
@@ -61,7 +56,7 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 				<th class="sort" data-sort="sort_name">Trader Name</th>
 				<th class="sort" data-sort="sort_race">Race</th>
 				<th class="sort" data-sort="sort_experience">Experience</th><?php
-				if ($ShowRoles) { ?>
+				if (isset($Roles)) { ?>
 					<th class="sort shrink" data-sort="sort_role">Role</th><?php
 				}
 				if (isset($ActiveIDs)) { ?>
@@ -94,11 +89,11 @@ if ($ShowRoles && $CanChangeRoles) { ?>
 					<td class="sort_experience"><?php
 						echo number_format($AlliancePlayer->getExperience()); ?>
 					</td><?php
-					if ($ShowRoles) { ?>
+					if (isset($Roles)) { ?>
 						<td class="sort_role"><?php
 							$PlayerRole = $AlliancePlayer->getAllianceRole();
 							if ($CanChangeRoles && !$AlliancePlayer->isAllianceLeader()) { ?>
-								<select name="role[<?php echo $AlliancePlayer->getAccountID(); ?>]"><?php
+								<select form="roles" name="role[<?php echo $AlliancePlayer->getAccountID(); ?>]"><?php
 									foreach ($Roles as $RoleID => $Role) { ?>
 										<option value="<?php echo $RoleID; ?>"<?php
 										if ($RoleID == $PlayerRole) { ?>
@@ -136,12 +131,13 @@ if ($Alliance->getAllianceID() == $ThisPlayer->getAllianceID()) { ?>
 	<br /><h2>Options</h2><br />
 	<div class="buttonA">
 		<a class="buttonA" href="<?php echo $ToggleRolesHREF; ?>"><?php
-			if ($ShowRoles) { ?>Hide Alliance Roles<?php } else { ?>Show Alliance Roles<?php } ?>
+			if (isset($Roles)) { ?>Hide Alliance Roles<?php } else { ?>Show Alliance Roles<?php } ?>
 		</a>
 	</div><?php
-	if ($ShowRoles && $CanChangeRoles) { ?>
+	if (isset($Roles) && $CanChangeRoles) { ?>
 		&nbsp;&nbsp;
-		<input type="submit" name="action" value="Save Alliance Roles">
+		<form id="roles" style="display: inline;" method="POST" action="<?php echo $SaveAllianceRolesHREF; ?>">
+			<input type="submit" name="action" value="Save Alliance Roles">
 		</form><?php
 	}
 }

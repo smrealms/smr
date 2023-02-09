@@ -51,7 +51,7 @@ if (count($ShipsSold) > 0) { ?>
 	?>We've got nothing for you here! Get outta here!<br /><?php
 }
 ?><br /><?php
-if (isset($CompareShip)) { ?>
+if (isset($CompareShip) && isset($ShipDiffs) && isset($TradeInValue) && isset($TotalCost)) { ?>
 	<h2>Details</h2>
 	<table class="standard">
 		<tr>

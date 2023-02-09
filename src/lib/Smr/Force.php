@@ -39,7 +39,7 @@ class Force {
 	protected int $mines = 0;
 	protected int $expire = 0;
 
-	protected bool $isNew;
+	protected bool $isNew = true;
 	protected bool $hasChanged = false;
 
 	public function __sleep() {
@@ -137,9 +137,9 @@ class Force {
 				$dbRecord = $dbResult->record();
 			}
 		}
-		$this->isNew = $dbRecord === null;
 
-		if (!$this->isNew) {
+		if ($dbRecord !== null) {
+			$this->isNew = false;
 			$this->combatDrones = $dbRecord->getInt('combat_drones');
 			$this->scoutDrones = $dbRecord->getInt('scout_drones');
 			$this->mines = $dbRecord->getInt('mines');

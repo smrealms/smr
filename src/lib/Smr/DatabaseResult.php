@@ -33,7 +33,11 @@ class DatabaseResult {
 		if ($this->getNumRecords() != 1) {
 			throw new RuntimeException('One record required, but found ' . $this->getNumRecords());
 		}
-		return new DatabaseRecord($this->dbResult->fetch_assoc());
+		$record = $this->dbResult->fetch_assoc();
+		if ($record === null) {
+			throw new Exception('Do not call record twice on the same result');
+		}
+		return new DatabaseRecord($record);
 	}
 
 	public function getNumRecords(): int {

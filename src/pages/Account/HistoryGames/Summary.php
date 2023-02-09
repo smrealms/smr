@@ -27,15 +27,14 @@ class Summary extends HistoryPage {
 		$template->assign('Type', $dbRecord->getString('type'));
 		$template->assign('Speed', $dbRecord->getFloat('speed'));
 
-		$dbResult = $db->read('SELECT count(*), max(experience), max(alignment), min(alignment), max(kills) FROM player WHERE game_id = ' . $db->escapeNumber($game_id));
-		if ($dbResult->hasRecord()) {
-			$dbRecord = $dbResult->record();
-			$template->assign('NumPlayers', $dbRecord->getInt('count(*)'));
-			$template->assign('MaxExp', $dbRecord->getInt('max(experience)'));
-			$template->assign('MaxAlign', $dbRecord->getInt('max(alignment)'));
-			$template->assign('MinAlign', $dbRecord->getInt('min(alignment)'));
-			$template->assign('MaxKills', $dbRecord->getInt('max(kills)'));
-		}
+		$dbResult = $db->read('SELECT count(*) total_players, IFNULL(max(experience),0) max_exp, IFNULL(max(alignment),0) max_align, IFNULL(min(alignment),0) min_align, IFNULL(max(kills),0) max_kills FROM player WHERE game_id = ' . $db->escapeNumber($game_id));
+		$dbRecord = $dbResult->record();
+		$template->assign('NumPlayers', $dbRecord->getInt('total_players'));
+		$template->assign('MaxExp', $dbRecord->getInt('max_exp'));
+		$template->assign('MaxAlign', $dbRecord->getInt('max_align'));
+		$template->assign('MinAlign', $dbRecord->getInt('min_align'));
+		$template->assign('MaxKills', $dbRecord->getInt('max_kills'));
+
 		$dbResult = $db->read('SELECT count(*) FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id));
 		$template->assign('NumAlliances', $dbResult->record()->getInt('count(*)'));
 
