@@ -2,14 +2,13 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use Smr\Alliance;
 use SmrTest\BaseIntegrationSpec;
 
 require_once(LIB . 'Default/nha.inc.php');
 
-/**
- * @covers ::createNHA
- */
+#[CoversFunction('createNHA')]
 class CreateNHATest extends BaseIntegrationSpec {
 
 	protected function tablesToTruncate(): array {

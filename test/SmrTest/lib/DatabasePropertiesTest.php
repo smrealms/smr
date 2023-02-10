@@ -3,12 +3,12 @@
 namespace SmrTest\lib;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\DatabaseProperties;
 
-/**
- * @covers \Smr\DatabaseProperties
- */
+#[CoversClass(DatabaseProperties::class)]
 class DatabasePropertiesTest extends TestCase {
 
 	private const MYSQL_PASSWORD_FILE = '/tmp/phpunit_dummy_mysql_password';
@@ -72,12 +72,10 @@ class DatabasePropertiesTest extends TestCase {
 		self::assertEquals('database', $dbProperties->database);
 	}
 
-	/**
-	 * @testWith ["MYSQL_HOST"]
-	 *           ["MYSQL_USER"]
-	 *           ["MYSQL_DATABASE"]
-	 *           ["MYSQL_PASSWORD_FILE"]
-	 */
+	#[TestWith(['MYSQL_HOST'])]
+	#[TestWith(['MYSQL_USER'])]
+	#[TestWith(['MYSQL_DATABASE'])]
+	#[TestWith(['MYSQL_PASSWORD_FILE'])]
 	public function test_missing_environment_variable(string $name): void {
 		// Unset one of the required environment variables
 		putenv($name);

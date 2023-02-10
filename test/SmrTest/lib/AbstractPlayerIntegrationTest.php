@@ -2,15 +2,15 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Smr\AbstractPlayer;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Exceptions\UserError;
 use Smr\Game;
 use SmrTest\BaseIntegrationSpec;
 
-/**
- * @covers Smr\AbstractPlayer
- */
+#[CoversClass(AbstractPlayer::class)]
 class AbstractPlayerIntegrationTest extends BaseIntegrationSpec {
 
 	private static int $gameID = 42;
@@ -134,9 +134,7 @@ class AbstractPlayerIntegrationTest extends BaseIntegrationSpec {
 		self::assertTrue($player->isNameChanged());
 	}
 
-	/**
-	 * @dataProvider dataProvider_alignment
-	 */
+	#[DataProvider('dataProvider_alignment')]
 	public function test_alignment(int $alignment, bool $isGood, bool $isEvil, bool $isNeutral): void {
 		// Create a player with a specific alignment
 		$player = AbstractPlayer::createPlayer(1, self::$gameID, 'test', RACE_HUMAN, false);
@@ -152,7 +150,7 @@ class AbstractPlayerIntegrationTest extends BaseIntegrationSpec {
 	/**
 	 * @return array<array{int, bool, bool, bool}>
 	 */
-	public function dataProvider_alignment(): array {
+	public static function dataProvider_alignment(): array {
 		// Test at, above, and below alignment thresholds
 		return [
 			[0, false, false, true],

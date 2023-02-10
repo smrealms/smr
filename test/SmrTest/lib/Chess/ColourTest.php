@@ -2,12 +2,11 @@
 
 namespace SmrTest\lib\Chess;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Chess\Colour;
 
-/**
- * @covers Smr\Chess\Colour
- */
+#[CoversClass(Colour::class)]
 class ColourTest extends TestCase {
 
 	public function test_opposite(): void {

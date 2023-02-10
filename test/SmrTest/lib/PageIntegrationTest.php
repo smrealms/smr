@@ -2,6 +2,8 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\AbstractPlayer;
 use Smr\Container\DiContainer;
@@ -11,9 +13,8 @@ use Smr\Session;
 /**
  * This is an integration test, but does not need to extend BaseIntegrationTest
  * since we are not (or should not be!) writing any data.
- *
- * @covers Smr\Page\Page
  */
+#[CoversClass(Page::class)]
 class PageIntegrationTest extends TestCase {
 
 	protected function setUp(): void {
@@ -42,13 +43,12 @@ class PageIntegrationTest extends TestCase {
 	 * Tests the showUnderAttack method in a variety of scenarios. We test
 	 * consecutive page loads to ensure that a positive result persists
 	 * across page loads (both ajax and non-ajax).
-	 *
-	 * @testWith [true, true, null, false, true, true]
-	 *           [true, false, null, true, true, true]
-	 *           [true, true, null, true, true, true]
-	 *           [false, false, true, true, false, true]
-	 *           [false, true, true, true, false, true]
 	 */
+	#[TestWith([true, true, null, false, true, true])]
+	#[TestWith([true, false, null, true, true, true])]
+	#[TestWith([true, true, null, true, true, true])]
+	#[TestWith([false, false, true, true, false, true])]
+	#[TestWith([false, true, true, true, false, true])]
 	public function test_showUnderAttack(bool $underAttack1, bool $ajax1, ?bool $underAttack2, bool $ajax2, bool $expected1, bool $expected2): void {
 		$getPlayer = function(bool $underAttack, bool $ajax): AbstractPlayer {
 			$mockPlayer = $this->createMock(AbstractPlayer::class);

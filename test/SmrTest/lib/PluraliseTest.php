@@ -2,33 +2,22 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers ::pluralise
- */
+#[CoversFunction('pluralise')]
 class PluraliseTest extends TestCase {
 
-	/**
-	 * @dataProvider pluralise_provider
-	 */
+	#[TestWith([3, true, '3 tests'])]
+	#[TestWith([1, true, '1 test'])]
+	#[TestWith([0, true, '0 tests'])]
+	#[TestWith([0.5, true, '0.5 tests'])]
+	#[TestWith([3, false, 'tests'])]
+	#[TestWith([1, false, 'test'])]
 	public function test_pluralise(float|int $amount, bool $includeAmount, string $expect): void {
 		$result = pluralise($amount, 'test', $includeAmount);
 		$this->assertSame($expect, $result);
-	}
-
-	/**
-	 * @return array<array{float|int, bool, string}>
-	 */
-	public function pluralise_provider(): array {
-		return [
-			[3, true, '3 tests'],
-			[1, true, '1 test'],
-			[0, true, '0 tests'],
-			[0.5, true, '0.5 tests'],
-			[3, false, 'tests'],
-			[1, false, 'test'],
-		];
 	}
 
 }

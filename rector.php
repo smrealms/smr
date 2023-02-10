@@ -6,6 +6,7 @@ use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\Php74\Rector\Assign\NullCoalescingOperatorRector;
 use Rector\Php80\Rector\FuncCall\ClassOnObjectRector;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
+use Rector\PHPUnit\Set\PHPUnitSetList;
 
 return static function (RectorConfig $rectorConfig): void {
 	$rectorConfig->paths([
@@ -13,9 +14,14 @@ return static function (RectorConfig $rectorConfig): void {
 		__DIR__ . '/src',
 	]);
 	$rectorConfig->importNames(true, false);
+
 	$rectorConfig->rule(DirNameFileConstantToDirConstantRector::class);
 	$rectorConfig->rule(JsonThrowOnErrorRector::class);
 	$rectorConfig->rule(NullCoalescingOperatorRector::class);
 	$rectorConfig->rule(ClassOnObjectRector::class);
 	$rectorConfig->rule(FirstClassCallableRector::class);
+
+	$rectorConfig->sets([
+		PHPUnitSetList::PHPUNIT_100,
+	]);
 };

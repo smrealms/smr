@@ -3,12 +3,12 @@
 namespace SmrTest\lib;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\PlayerLevel;
 
-/**
- * @covers Smr\PlayerLevel
- */
+#[CoversClass(PlayerLevel::class)]
 class PlayerLevelTest extends TestCase {
 
 	public static function setUpBeforeClass(): void {
@@ -39,11 +39,9 @@ class PlayerLevelTest extends TestCase {
 		self::assertSame(50, PlayerLevel::getMax());
 	}
 
-	/**
-	 * @testWith [1, 2]
-	 *           [49, 50]
-	 *           [50, 50]
-	 */
+	#[TestWith([1, 2])]
+	#[TestWith([49, 50])]
+	#[TestWith([50, 50])]
 	public function test_next(int $levelID, int $nextLevelID): void {
 		$level = new PlayerLevel($levelID, '', 0);
 		self::assertSame($nextLevelID, $level->next()->id);

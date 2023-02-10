@@ -3,12 +3,12 @@
 namespace SmrTest\lib;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\Location;
 
-/**
- * @covers Smr\Location
- */
+#[CoversClass(Location::class)]
 class LocationTest extends TestCase {
 
 	public function test_getLocation_and_basic_properties(): void {
@@ -26,104 +26,49 @@ class LocationTest extends TestCase {
 		Location::getLocation(gameID: 0, locationTypeID: 999);
 	}
 
-	/**
-	 * @dataProvider provider_isFed
-	 */
+	#[TestWith([UNDERGROUND, false])]
+	#[TestWith([LOCATION_TYPE_FEDERAL_BEACON, true])]
+	#[TestWith([LOCATION_TYPE_FEDERAL_HQ, false])]
+	#[TestWith([LOCATION_TYPE_FEDERAL_MINT, false])]
 	public function test_isFed(int $typeID, bool $expected): void {
 		$loc = Location::getLocation(gameID: 0, locationTypeID: $typeID);
 		self::assertSame($expected, $loc->isFed());
 	}
 
-	/**
-	 * @return array<array{int, bool}>
-	 */
-	public function provider_isFed(): array {
-		return [
-			[UNDERGROUND, false],
-			[LOCATION_TYPE_FEDERAL_BEACON, true],
-			[LOCATION_TYPE_FEDERAL_HQ, false],
-			[LOCATION_TYPE_FEDERAL_MINT, false],
-		];
-	}
-
-	/**
-	 * @dataProvider provider_isHQ
-	 */
+	#[TestWith([UNDERGROUND, false])]
+	#[TestWith([LOCATION_TYPE_FEDERAL_BEACON, false])]
+	#[TestWith([LOCATION_TYPE_FEDERAL_HQ, true])]
+	#[TestWith([LOCATION_TYPE_FEDERAL_MINT, false])]
 	public function test_isHQ(int $typeID, bool $expected): void {
 		$loc = Location::getLocation(gameID: 0, locationTypeID: $typeID);
 		self::assertSame($expected, $loc->isHQ());
 	}
 
-	/**
-	 * @return array<array{int, bool}>
-	 */
-	public function provider_isHQ(): array {
-		return [
-			[UNDERGROUND, false],
-			[LOCATION_TYPE_FEDERAL_BEACON, false],
-			[LOCATION_TYPE_FEDERAL_HQ, true],
-			[LOCATION_TYPE_FEDERAL_MINT, false],
-		];
-	}
-
-	/**
-	 * @dataProvider provider_isBank
-	 */
+	#[TestWith([UNDERGROUND, false])]
+	#[TestWith([LOCATION_TYPE_FEDERAL_BEACON, false])]
+	#[TestWith([LOCATION_TYPE_FEDERAL_HQ, false])]
+	#[TestWith([LOCATION_TYPE_FEDERAL_MINT, true])]
 	public function test_isBank(int $typeID, bool $expected): void {
 		$loc = Location::getLocation(gameID: 0, locationTypeID: $typeID);
 		self::assertSame($expected, $loc->isBank());
 	}
 
-	/**
-	 * @return array<array{int, bool}>
-	 */
-	public function provider_isBank(): array {
-		return [
-			[UNDERGROUND, false],
-			[LOCATION_TYPE_FEDERAL_BEACON, false],
-			[LOCATION_TYPE_FEDERAL_HQ, false],
-			[LOCATION_TYPE_FEDERAL_MINT, true],
-		];
-	}
-
-	/**
-	 * @dataProvider provider_isUG
-	 */
+	#[TestWith([UNDERGROUND, true])]
+	#[TestWith([LOCATION_TYPE_FEDERAL_BEACON, false])]
+	#[TestWith([LOCATION_TYPE_FEDERAL_HQ, false])]
+	#[TestWith([LOCATION_TYPE_FEDERAL_MINT, false])]
 	public function test_isUG(int $typeID, bool $expected): void {
 		$loc = Location::getLocation(gameID: 0, locationTypeID: $typeID);
 		self::assertSame($expected, $loc->isUG());
 	}
 
-	/**
-	 * @return array<array{int, bool}>
-	 */
-	public function provider_isUG(): array {
-		return [
-			[UNDERGROUND, true],
-			[LOCATION_TYPE_FEDERAL_BEACON, false],
-			[LOCATION_TYPE_FEDERAL_HQ, false],
-			[LOCATION_TYPE_FEDERAL_MINT, false],
-		];
-	}
-
-	/**
-	 * @dataProvider provider_hasAction
-	 */
+	#[TestWith([UNDERGROUND, true])]
+	#[TestWith([LOCATION_TYPE_FEDERAL_BEACON, false])]
+	#[TestWith([LOCATION_TYPE_FEDERAL_HQ, true])]
+	#[TestWith([LOCATION_TYPE_FEDERAL_MINT, true])]
 	public function test_hasAction(int $typeID, bool $expected): void {
 		$loc = Location::getLocation(gameID: 0, locationTypeID: $typeID);
 		self::assertSame($expected, $loc->hasAction());
-	}
-
-	/**
-	 * @return array<array{int, bool}>
-	 */
-	public function provider_hasAction(): array {
-		return [
-			[UNDERGROUND, true],
-			[LOCATION_TYPE_FEDERAL_BEACON, false],
-			[LOCATION_TYPE_FEDERAL_HQ, true],
-			[LOCATION_TYPE_FEDERAL_MINT, true],
-		];
 	}
 
 	public function test_isShipSold(): void {

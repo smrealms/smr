@@ -2,12 +2,11 @@
 
 namespace SmrTest\lib\Combat\Weapon;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Combat\Weapon\Mines;
 
-/**
- * @covers Smr\Combat\Weapon\Mines
- */
+#[CoversClass(Mines::class)]
 class MinesTest extends TestCase {
 
 	public function test_getAmount(): void {

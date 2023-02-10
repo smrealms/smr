@@ -5,6 +5,9 @@ namespace SmrTest;
 use Exception;
 use mysqli;
 use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\AfterClass;
+use PHPUnit\Framework\Attributes\BeforeClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
 
@@ -24,9 +27,8 @@ abstract class BaseIntegrationSpec extends TestCase {
 
 	/**
 	 * Get checksums for the initial state of the database tables.
-	 *
-	 * @beforeClass
 	 */
+	#[BeforeClass]
 	final public static function initializeTableRowCounts(): void {
 		if (!isset(self::$conn)) {
 			self::$conn = DiContainer::make(mysqli::class);
@@ -38,9 +40,8 @@ abstract class BaseIntegrationSpec extends TestCase {
 	 * Any table that is modified during a test class should be declared in the
 	 * `tablesToTruncate()` method, and those tables will be reset after each
 	 * test method.
-	 *
-	 * @after
 	 */
+	#[After]
 	final protected function truncateTables(): void {
 		foreach ($this->tablesToTruncate() as $name) {
 			// Include hard-coded test database name as a safety precaution
@@ -52,9 +53,8 @@ abstract class BaseIntegrationSpec extends TestCase {
 	 * All modified tables should be reset after each test, but here we perform
 	 * a final sanity check to make sure that no tables have changed checksums.
 	 * This is only done once per class because it is expensive!
-	 *
-	 * @afterClass
 	 */
+	#[AfterClass]
 	final public static function checkTables(): void {
 		$checksums = self::getChecksums();
 		$errors = [];

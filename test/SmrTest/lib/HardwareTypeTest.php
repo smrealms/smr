@@ -2,12 +2,11 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\HardwareType;
 
-/**
- * @covers Smr\HardwareType
- */
+#[CoversClass(HardwareType::class)]
 class HardwareTypeTest extends TestCase {
 
 	public static function setUpBeforeClass(): void {

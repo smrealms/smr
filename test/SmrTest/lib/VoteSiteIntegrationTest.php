@@ -3,14 +3,13 @@
 namespace SmrTest\lib;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Smr\VoteLink;
 use Smr\VoteSite;
 use SmrTest\BaseIntegrationSpec;
 
-/**
- * @covers Smr\VoteLink
- * @covers Smr\VoteSite
- */
+#[CoversClass(VoteLink::class)]
+#[CoversClass(VoteSite::class)]
 class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 
 	protected function tablesToTruncate(): array {

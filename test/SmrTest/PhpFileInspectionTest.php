@@ -3,11 +3,10 @@
 namespace SmrTest;
 
 use Overtrue\PHPLint\Linter;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversNothing
- */
+#[CoversNothing]
 class PhpFileInspectionTest extends TestCase {
 
 	public function test_all_files_pass_phplint(): void {

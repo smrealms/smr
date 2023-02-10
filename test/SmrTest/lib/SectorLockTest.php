@@ -3,14 +3,13 @@
 namespace SmrTest\lib;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Smr\Container\DiContainer;
 use Smr\Exceptions\UserError;
 use Smr\SectorLock;
 use SmrTest\BaseIntegrationSpec;
 
-/**
- * @covers Smr\SectorLock
- */
+#[CoversClass(SectorLock::class)]
 class SectorLockTest extends BaseIntegrationSpec {
 
 	protected function tablesToTruncate(): array {

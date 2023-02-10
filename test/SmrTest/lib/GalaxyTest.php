@@ -2,14 +2,13 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Smr\Exceptions\GalaxyNotFound;
 use Smr\Galaxy;
 use Smr\Sector;
 use SmrTest\BaseIntegrationSpec;
 
-/**
- * @covers Smr\Galaxy
- */
+#[CoversClass(Galaxy::class)]
 class GalaxyTest extends BaseIntegrationSpec {
 
 	protected function tablesToTruncate(): array {

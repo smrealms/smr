@@ -2,12 +2,11 @@
 
 namespace SmrTest\lib\Combat\Weapon;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Combat\Weapon\ScoutDrones;
 
-/**
- * @covers Smr\Combat\Weapon\ScoutDrones
- */
+#[CoversClass(ScoutDrones::class)]
 class ScoutDronesTest extends TestCase {
 
 	public function test_getAmount(): void {

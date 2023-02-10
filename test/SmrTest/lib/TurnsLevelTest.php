@@ -2,12 +2,11 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\TurnsLevel;
 
-/**
- * @covers Smr\TurnsLevel
- */
+#[CoversClass(TurnsLevel::class)]
 class TurnsLevelTest extends TestCase {
 
 	private static bool $original_libxml_use_internal_errors;

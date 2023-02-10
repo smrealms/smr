@@ -3,13 +3,12 @@
 namespace SmrTest\lib;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
 use Smr\Epoch;
 
-/**
- * @covers Smr\Epoch
- */
+#[CoversClass(Epoch::class)]
 class EpochTest extends TestCase {
 
 	protected function tearDown(): void {

@@ -2,13 +2,12 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\AdminPermissions;
 use Smr\Pages\Admin\EnableGame;
 
-/**
- * @covers Smr\AdminPermissions
- */
+#[CoversClass(AdminPermissions::class)]
 class AdminPermissionsTest extends TestCase {
 
 	public function test_getPermissionInfo(): void {

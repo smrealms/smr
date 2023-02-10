@@ -3,12 +3,11 @@
 namespace SmrTest\lib\Blackjack;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Blackjack\Deck;
 
-/**
- * @covers Smr\Blackjack\Deck
- */
+#[CoversClass(Deck::class)]
 class DeckTest extends TestCase {
 
 	public function test_drawCard(): void {

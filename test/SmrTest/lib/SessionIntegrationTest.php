@@ -3,15 +3,14 @@
 namespace SmrTest\lib;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Smr\Account;
 use Smr\Container\DiContainer;
 use Smr\Page\Page;
 use Smr\Session;
 use SmrTest\BaseIntegrationSpec;
 
-/**
- * @covers Smr\Session
- */
+#[CoversClass(Session::class)]
 class SessionIntegrationTest extends BaseIntegrationSpec {
 
 	private Session $session;

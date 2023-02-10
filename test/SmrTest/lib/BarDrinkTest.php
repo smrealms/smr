@@ -2,12 +2,11 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\BarDrink;
 
-/**
- * @covers Smr\BarDrink
- */
+#[CoversClass(BarDrink::class)]
 class BarDrinkTest extends TestCase {
 
 	public function test_getAll(): void {

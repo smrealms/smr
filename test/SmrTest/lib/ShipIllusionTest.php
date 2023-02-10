@@ -2,12 +2,11 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\ShipIllusion;
 
-/**
- * @covers Smr\ShipIllusion
- */
+#[CoversClass(ShipIllusion::class)]
 class ShipIllusionTest extends TestCase {
 
 	public function test_getName(): void {

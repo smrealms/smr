@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.4/phpunit.xsd"
-	beStrictAboutTodoAnnotatedTests="true"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd"
+	beStrictAboutChangesToGlobalState="true"
 	bootstrap="src/bootstrap.php"
-	cacheResultFile=".phpunit.cache/test-results"
+	cacheDirectory=".phpunit.cache"
 	colors="true"
-	convertDeprecationsToExceptions="true"
+	displayDetailsOnTestsThatTriggerDeprecations="true"
+	displayDetailsOnTestsThatTriggerErrors="true"
+	displayDetailsOnTestsThatTriggerNotices="true"
+	displayDetailsOnTestsThatTriggerWarnings="true"
 	executionOrder="depends,defects"
 	failOnRisky="true"
 	failOnWarning="true"
-	forceCoversAnnotation="true"
-	verbose="true">
+	requireCoverageMetadata="true">
 	<testsuites>
 		<testsuite name="default">
 			<directory suffix="Test.php">test</directory>
@@ -20,16 +22,17 @@
 	<php>
 		<env name="DISABLE_PHPDI_COMPILATION" value="true" force="true" />
 	</php>
-	<coverage
-		cacheDirectory=".phpunit.cache/code-coverage"
-		includeUncoveredFiles="true">
+	<coverage includeUncoveredFiles="true">
 		<include>
 			<directory suffix=".php">src/lib</directory>
 		</include>
 		<report>
 			<clover outputFile="test/coverage/clover.xml" />
 			<text outputFile="php://stdout" showOnlySummary="true" />
-			<html outputDirectory="test/coverage/html" />
+			<html
+				outputDirectory="test/coverage/html"
+				customCssFile="test/coverage-report.css"
+			/>
 		</report>
 	</coverage>
 </phpunit>

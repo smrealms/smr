@@ -2,13 +2,13 @@
 
 namespace SmrTest\Container;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
 use Smr\DatabaseProperties;
 
-/**
- * @covers \Smr\Container\DiContainer
- */
+#[CoversClass(DiContainer::class)]
 class DiContainerTest extends TestCase {
 
 	private const PHPDI_COMPILED_CONTAINER_FILE = '/tmp/CompiledContainer.php';
@@ -60,9 +60,7 @@ class DiContainerTest extends TestCase {
 		self::assertSame($dbName, 'smr_live_test');
 	}
 
-	/**
-	 * @runInSeparateProcess
-	 */
+	#[RunInSeparateProcess]
 	public function test_initialized(): void {
 		// Note that we need to run in a separate process since this is the
 		// only way to ensure that the DiContainer is not yet initialized

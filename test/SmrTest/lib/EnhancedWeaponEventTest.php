@@ -2,6 +2,7 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClassConstant;
 use Smr\Container\DiContainer;
 use Smr\EnhancedWeaponEvent;
@@ -9,9 +10,7 @@ use Smr\Epoch;
 use Smr\Location;
 use SmrTest\BaseIntegrationSpec;
 
-/**
- * @covers Smr\EnhancedWeaponEvent
- */
+#[CoversClass(EnhancedWeaponEvent::class)]
 class EnhancedWeaponEventTest extends BaseIntegrationSpec {
 
 	protected function tablesToTruncate(): array {

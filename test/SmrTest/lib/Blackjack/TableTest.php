@@ -2,14 +2,14 @@
 
 namespace SmrTest\lib\Blackjack;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\Blackjack\Card;
 use Smr\Blackjack\Result;
 use Smr\Blackjack\Table;
 
-/**
- * @covers Smr\Blackjack\Table
- */
+#[CoversClass(Table::class)]
 class TableTest extends TestCase {
 
 	public function test_initial_state(): void {
@@ -59,11 +59,13 @@ class TableTest extends TestCase {
 	}
 
 	/**
-	 * @dataProvider provider_gameOver
-	 *
 	 * @param array<int> $playerCardIDs
 	 * @param array<int> $dealerCardIDs
 	 */
+	#[TestWith([[12, 13], [], true])] // player 21, dealer 0
+	#[TestWith([[], [12, 13], true])] // player 0, dealer 21
+	#[TestWith([[12, 13], [12, 13], true])] // player 21, dealer 21
+	#[TestWith([[12, 12], [12, 12], false])] // player 20, dealer 20
 	public function test_gameOver(array $playerCardIDs, array $dealerCardIDs, bool $expected): void {
 		$table = new Table(false);
 		foreach ($playerCardIDs as $cardID) {
@@ -76,23 +78,17 @@ class TableTest extends TestCase {
 	}
 
 	/**
-	 * @return array<array{array<int>, array<int>, bool}>
-	 */
-	public function provider_gameOver(): array {
-		return [
-			[[12, 13], [], true], // player 21, dealer 0
-			[[], [12, 13], true], // player 0, dealer 21
-			[[12, 13], [12, 13], true], // player 21, dealer 21
-			[[12, 12], [12, 12], false], // player 20, dealer 20
-		];
-	}
-
-	/**
-	 * @dataProvider provider_getPlayerResult
-	 *
 	 * @param array<int> $playerCardIDs
 	 * @param array<int> $dealerCardIDs
 	 */
+	#[TestWith([[12, 13], [], Result::Blackjack])] // player has blackjack
+	#[TestWith([[12, 13], [12, 13], Result::Blackjack])] // both blackjack, player takes precedence
+	#[TestWith([[12], [12], Result::Tie])] // equal score, no one busted
+	#[TestWith([[12, 12, 12], [], Result::Lose])] // player busts, dealer does not
+	#[TestWith([[], [12, 12, 12], Result::Win])] // dealer busts, player does not
+	#[TestWith([[12, 12, 12], [12, 12, 12], Result::Lose])] // both bust, player takes precedence
+	#[TestWith([[13], [12], Result::Win])] // player higher score, no one busted
+	#[TestWith([[12], [13], Result::Lose])] // dealer higher score, no one busted
 	public function test_getPlayerResult(array $playerCardIDs, array $dealerCardIDs, Result $expected): void {
 		$table = new Table(false);
 		foreach ($playerCardIDs as $cardID) {
@@ -102,22 +98,6 @@ class TableTest extends TestCase {
 			$table->dealerHand->addCard(new Card($cardID));
 		}
 		self::assertSame($expected, $table->getPlayerResult());
-	}
-
-	/**
-	 * @return array<array{array<int>, array<int>, Result}>
-	 */
-	public function provider_getPlayerResult(): array {
-		return [
-			[[12, 13], [], Result::Blackjack], // player has blackjack
-			[[12, 13], [12, 13], Result::Blackjack], // both blackjack, player takes precedence
-			[[12], [12], Result::Tie], // equal score, no one busted
-			[[12, 12, 12], [], Result::Lose], // player busts, dealer does not
-			[[], [12, 12, 12], Result::Win], // dealer busts, player does not
-			[[12, 12, 12], [12, 12, 12], Result::Lose], // both bust, player takes precedence
-			[[13], [12], Result::Win], // player higher score, no one busted
-			[[12], [13], Result::Lose], // dealer higher score, no one busted
-		];
 	}
 
 }

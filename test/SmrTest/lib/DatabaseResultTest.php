@@ -2,14 +2,13 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Smr\Database;
 use Smr\DatabaseResult;
 
-/**
- * @covers \Smr\DatabaseResult
- */
+#[CoversClass(DatabaseResult::class)]
 class DatabaseResultTest extends TestCase {
 
 	/**

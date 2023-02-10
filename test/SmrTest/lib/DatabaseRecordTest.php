@@ -4,13 +4,13 @@ namespace SmrTest\lib;
 
 use ArrayObject;
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\DatabaseRecord;
 use TypeError;
 
-/**
- * @covers \Smr\DatabaseRecord
- */
+#[CoversClass(DatabaseRecord::class)]
 class DatabaseRecordTest extends TestCase {
 
 	public function test_getNullableString(): void {
@@ -79,25 +79,14 @@ class DatabaseRecordTest extends TestCase {
 		self::assertSame(3, $record->getInt('name'));
 	}
 
-	/**
-	 * @dataProvider provider_getInt_with_non_int_field
-	 */
+	#[TestWith(['1a', 'Failed to convert \'1a\' to int'])]
+	#[TestWith(['3.14', 'Failed to convert \'3.14\' to int'])]
+	#[TestWith([null, 'Failed to convert NULL to int'])]
 	public function test_getInt_with_non_int_field(mixed $value, string $error): void {
 		$record = new DatabaseRecord(['name' => $value]);
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage($error);
 		$record->getInt('name');
-	}
-
-	/**
-	 * @return array<array{?string, string}>
-	 */
-	public function provider_getInt_with_non_int_field(): array {
-		return [
-			['1a', 'Failed to convert \'1a\' to int'],
-			['3.14', 'Failed to convert \'3.14\' to int'],
-			[null, 'Failed to convert NULL to int'],
-		];
 	}
 
 	//------------------------------------------------------------------------
@@ -107,24 +96,13 @@ class DatabaseRecordTest extends TestCase {
 		self::assertSame(3.14, $record->getFloat('name'));
 	}
 
-	/**
-	 * @dataProvider provider_getFloat_with_non_float_field
-	 */
+	#[TestWith(['1a', 'Failed to convert \'1a\' to float'])]
+	#[TestWith([null, 'Failed to convert NULL to float'])]
 	public function test_getFloat_with_non_float_field(mixed $value, string $error): void {
 		$record = new DatabaseRecord(['name' => $value]);
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage($error);
 		$record->getFloat('name');
-	}
-
-	/**
-	 * @return array<array{?string, string}>
-	 */
-	public function provider_getFloat_with_non_float_field(): array {
-		return [
-			['1a', 'Failed to convert \'1a\' to float'],
-			[null, 'Failed to convert NULL to float'],
-		];
 	}
 
 	//------------------------------------------------------------------------

@@ -3,12 +3,11 @@
 namespace SmrTest\lib;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Path;
 
-/**
- * @covers Smr\Path
- */
+#[CoversClass(Path::class)]
 class PathTest extends TestCase {
 
 	private static function make_complex_path(): Path {
