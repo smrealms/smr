@@ -3,12 +3,11 @@
 namespace SmrTest\lib;
 
 use DOMDocument;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\TradeGood;
 
-/**
- * @covers Smr\TradeGood
- */
+#[CoversClass(TradeGood::class)]
 class TradeGoodTest extends TestCase {
 
 	private static bool $original_libxml_use_internal_errors;

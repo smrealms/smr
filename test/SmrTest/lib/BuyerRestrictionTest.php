@@ -2,13 +2,12 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\AbstractPlayer;
 use Smr\BuyerRestriction;
 
-/**
- * @covers Smr\BuyerRestriction
- */
+#[CoversClass(BuyerRestriction::class)]
 class BuyerRestrictionTest extends TestCase {
 
 	private static bool $original_libxml_use_internal_errors;

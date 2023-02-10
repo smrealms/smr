@@ -2,14 +2,13 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Smr\Account;
 use Smr\Exceptions\AccountNotFound;
 use Smr\SocialLogin\Facebook;
 use SmrTest\BaseIntegrationSpec;
 
-/**
- * @covers Smr\Account
- */
+#[CoversClass(Account::class)]
 class AccountTest extends BaseIntegrationSpec {
 
 	protected function tablesToTruncate(): array {

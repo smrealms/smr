@@ -2,18 +2,16 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Smr\DisplayNameValidator;
 use Smr\Exceptions\UserError;
 
-/**
- * @covers Smr\DisplayNameValidator
- */
+#[CoversClass(DisplayNameValidator::class)]
 class DisplayNameValidatorTest extends TestCase {
 
-	/**
-	 * @dataProvider invalid_name_provider
-	 */
+	#[DataProvider('invalid_name_provider')]
 	public function test_invalid_name(string $name, string $exception): void {
 		$this->expectException(UserError::class);
 		$this->expectExceptionMessage($exception);
@@ -23,7 +21,7 @@ class DisplayNameValidatorTest extends TestCase {
 	/**
 	 * @return array<array{string, string}>
 	 */
-	public function invalid_name_provider(): array {
+	public static function invalid_name_provider(): array {
 		return [
 			// empty string
 			['', 'You must enter a name!'],
@@ -43,9 +41,7 @@ class DisplayNameValidatorTest extends TestCase {
 		];
 	}
 
-	/**
-	 * @dataProvider valid_name_provider
-	 */
+	#[DataProvider('valid_name_provider')]
 	public function test_valid_name(string $name): void {
 		// test that an exception is not thrown
 		DisplayNameValidator::validate($name);
@@ -55,7 +51,7 @@ class DisplayNameValidatorTest extends TestCase {
 	/**
 	 * @return array<array<string>>
 	 */
-	public function valid_name_provider(): array {
+	public static function valid_name_provider(): array {
 		return [
 			// normal alphanumeric
 			['aBc123'],

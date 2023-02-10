@@ -2,12 +2,11 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\TransactionType;
 
-/**
- * @covers Smr\TransactionType
- */
+#[CoversClass(TransactionType::class)]
 class TransactionTypeTest extends TestCase {
 
 	public function test_opposite(): void {

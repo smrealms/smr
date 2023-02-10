@@ -2,12 +2,11 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Race;
 
-/**
- * @covers Smr\Race
- */
+#[CoversClass(Race::class)]
 class RaceTest extends TestCase {
 
 	public function test_getPlayableIDs(): void {

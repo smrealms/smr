@@ -1,0 +1,65 @@
+:root {
+	--text-color: #c7c7c7;
+}
+body {
+	background-color: #22272e;
+	color: var(--text-color);
+}
+a {
+	color: deepskyblue;
+}
+
+/* Header (breadcrumb) */
+.breadcrumb {
+	background-color: dimgrey !important;
+}
+.breadcrumb-item, .breadcrumb-item::before {
+	color: white !important;
+}
+
+/* Code colors */
+span.default, span.keyword {
+	color: var(--text-color) !important;
+}
+span.comment {
+	color: #727272 !important;
+	font-style: italic;
+}
+
+/* Coverage colors */
+.danger {
+	background-color: #260000 !important;
+}
+.success, .covered-by-large-tests {
+	background-color: #013c01 !important;
+	color: var(--text-color);
+}
+.warning {
+	background-color: #7b5916 !important;
+}
+
+/* Table */
+table {
+	color: var(--text-color) !important;
+}
+.table-bordered td, .table-bordered th {
+	border: 1px solid black;
+}
+.progress {
+	background-color: black;
+}
+
+/* Tooltip */
+.popover {
+	--tooltip-bg-color: #0d0d0d;
+}
+.popover-header {
+	border-bottom: 0px var(--tooltip-bg-color) !important;
+}
+.popover, .popover-header {
+	background-color: var(--tooltip-bg-color);
+}
+.arrow::after {
+	border-top-color: var(--tooltip-bg-color) !important;
+	border-bottom-color: var(--tooltip-bg-color) !important;
+}

@@ -3,6 +3,8 @@
 namespace SmrTest\lib;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Smr\AbstractPlayer;
@@ -12,9 +14,8 @@ use Smr\ShipIllusion;
 
 /**
  * This test is expected to not make any changes to the database.
- *
- * @covers Smr\AbstractShip
  */
+#[CoversClass(AbstractShip::class)]
 class AbstractShipTest extends TestCase {
 
 	private AbstractPlayer&MockObject $player; // will be mocked
@@ -185,11 +186,10 @@ class AbstractShipTest extends TestCase {
 	}
 
 	/**
-	 * @dataProvider dataProvider_takeDamage
-	 *
 	 * @param WeaponDamageData $damage
 	 * @param TakenDamageData $expected
 	 */
+	#[DataProvider('dataProvider_takeDamage')]
 	public function test_takeDamage(string $case, array $damage, array $expected, int $shields, int $cds, int $armour): void {
 		// Set up a ship with a fixed amount of defenses
 		$this->player
@@ -207,7 +207,7 @@ class AbstractShipTest extends TestCase {
 	/**
 	 * @return array<array{0: string, 1: WeaponDamageData, 2: TakenDamageData, 3: int, 4: int, 5: int}>
 	 */
-	public function dataProvider_takeDamage(): array {
+	public static function dataProvider_takeDamage(): array {
 		return [
 			[
 				'Do overkill damage (e.g. 1000 drone damage)',
@@ -365,10 +365,9 @@ class AbstractShipTest extends TestCase {
 	}
 
 	/**
-	 * @dataProvider dataProvider_takeDamageFromMines
-	 *
 	 * @param TakenDamageData $expected
 	 */
+	#[DataProvider('dataProvider_takeDamageFromMines')]
 	public function test_takeDamageFromMines(string $case, int $damage, array $expected, int $shields, int $cds, int $armour): void {
 		// Set up a ship with a fixed amount of defenses
 		$this->player
@@ -391,7 +390,7 @@ class AbstractShipTest extends TestCase {
 	/**
 	 * @return array<array{0: string, 1: int, 2: TakenDamageData, 3: int, 4: int, 5: int}>
 	 */
-	public function dataProvider_takeDamageFromMines(): array {
+	public static function dataProvider_takeDamageFromMines(): array {
 		return [
 			[
 				'Do overkill damage (e.g. 1000 mine damage)',

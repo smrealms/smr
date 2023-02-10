@@ -2,15 +2,14 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Smr\AbstractPlayer;
 use Smr\Bounty;
 use Smr\BountyType;
 use Smr\Database;
 use SmrTest\BaseIntegrationSpec;
 
-/**
- * @covers Smr\Bounty
- */
+#[CoversClass(Bounty::class)]
 class BountyTest extends BaseIntegrationSpec {
 
 	protected function tablesToTruncate(): array {

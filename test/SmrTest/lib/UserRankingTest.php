@@ -2,12 +2,11 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\UserRanking;
 
-/**
- * @covers Smr\UserRanking
- */
+#[CoversClass(UserRanking::class)]
 class UserRankingTest extends TestCase {
 
 	public function test_rank_limits(): void {

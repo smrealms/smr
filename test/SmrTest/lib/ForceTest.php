@@ -2,15 +2,16 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\AbstractShip;
 use Smr\Force;
 use Smr\Galaxy;
 use SmrTest\TestUtils;
 
-/**
- * @covers Smr\Force
- */
+#[CoversClass(Force::class)]
 class ForceTest extends TestCase {
 
 	private Force $force;
@@ -27,9 +28,14 @@ class ForceTest extends TestCase {
 		self::assertSame(3, $this->force->getOwnerID());
 	}
 
-	/**
-	 * @dataProvider provider_getBumpTurnCost
-	 */
+	#[TestWith([0, false, 0])]
+	#[TestWith([0, true, 0])]
+	#[TestWith([9, false, 1])]
+	#[TestWith([9, true, 0])]
+	#[TestWith([24, false, 2])]
+	#[TestWith([24, true, 1])]
+	#[TestWith([25, false, 3])]
+	#[TestWith([25, true, 2])]
 	public function test_getBumpTurnCost(int $mines, bool $hasDCS, int $expected): void {
 		$this->force->setMines($mines);
 		$ship = $this->createPartialMock(AbstractShip::class, ['hasDCS', 'isFederal']);
@@ -38,40 +44,13 @@ class ForceTest extends TestCase {
 		self::assertSame($expected, $this->force->getBumpTurnCost($ship));
 	}
 
-	/**
-	 * @return array<array{int, bool, int}>
-	 */
-	public function provider_getBumpTurnCost(): array {
-		return [
-			[0, false, 0],
-			[0, true, 0],
-			[9, false, 1],
-			[9, true, 0],
-			[24, false, 2],
-			[24, true, 1],
-			[25, false, 3],
-			[25, true, 2],
-		];
-	}
-
-	/**
-	 * @dataProvider provider_getAttackTurnCost
-	 */
+	#[TestWith([false, 3])]
+	#[TestWith([true, 2])]
 	public function test_getAttackTurnCost(bool $hasDCS, int $expected): void {
 		$ship = $this->createPartialMock(AbstractShip::class, ['hasDCS', 'isFederal']);
 		$ship->method('hasDCS')->willReturn($hasDCS);
 		$ship->method('isFederal')->willReturn(false); // redundant with hasDCS
 		self::assertSame($expected, $this->force->getAttackTurnCost($ship));
-	}
-
-	/**
-	 * @return array<array{bool, int}>
-	 */
-	public function provider_getAttackTurnCost(): array {
-		return [
-			[false, 3],
-			[true, 2],
-		];
 	}
 
 	public function test_add_and_take_SDs(): void {
@@ -114,11 +93,10 @@ class ForceTest extends TestCase {
 	}
 
 	/**
-	 * @dataProvider dataProvider_takeDamage
-	 *
 	 * @param WeaponDamageData $damage
 	 * @param ForceTakenDamageData $expected
 	 */
+	#[DataProvider('dataProvider_takeDamage')]
 	public function test_takeDamage(string $case, array $damage, array $expected, int $mines, int $cds, int $sds): void {
 		// Set up an unexpired stack with a specific number of forces
 		$force = $this->createPartialMock($this->force::class, ['hasExpired']);
@@ -134,7 +112,7 @@ class ForceTest extends TestCase {
 	/**
 	 * @return array<array{0: string, 1: WeaponDamageData, 2: ForceTakenDamageData, 3: int, 4: int, 5: int}>
 	 */
-	public function dataProvider_takeDamage(): array {
+	public static function dataProvider_takeDamage(): array {
 		return [
 			[
 				'Do overkill damage (e.g. 1000 drone damage)',
@@ -300,9 +278,7 @@ class ForceTest extends TestCase {
 		];
 	}
 
-	/**
-	 * @dataProvider dataProvider_getMaxExpireTime
-	 */
+	#[DataProvider('dataProvider_getMaxExpireTime')]
 	public function test_getMaxExpireTime(int $sds, int $cds, int $mines, int $galMaxForceTime, int $expected): void {
 		// Stub the galaxy that this force is inside
 		$galaxy = $this->createStub(Galaxy::class);
@@ -322,7 +298,7 @@ class ForceTest extends TestCase {
 	/**
 	 * @return array<array<int>>
 	 */
-	public function dataProvider_getMaxExpireTime(): array {
+	public static function dataProvider_getMaxExpireTime(): array {
 		$above = Force::LOWEST_MAX_EXPIRE_SCOUTS_ONLY + 1;
 		$below = Force::LOWEST_MAX_EXPIRE_SCOUTS_ONLY - 1;
 		return [

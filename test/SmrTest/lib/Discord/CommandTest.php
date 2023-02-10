@@ -6,14 +6,14 @@ use Discord\CommandClient\Command as DiscordCommand;
 use Discord\DiscordCommandClient;
 use Discord\Parts\Channel\Message;
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use React\Promise\ExtendedPromiseInterface;
+use Smr\Discord\Command;
 use Smr\Discord\Commands\MagicEightBall;
 use Smr\Exceptions\UserError;
 
-/**
- * @covers Smr\Discord\Command
- */
+#[CoversClass(Command::class)]
 class CommandTest extends TestCase {
 
 	public function test_callback_happy_path(): void {

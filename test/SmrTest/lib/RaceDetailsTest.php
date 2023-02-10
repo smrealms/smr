@@ -2,13 +2,12 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Race;
 use Smr\RaceDetails;
 
-/**
- * @covers Smr\RaceDetails
- */
+#[CoversClass(RaceDetails::class)]
 class RaceDetailsTest extends TestCase {
 
 	public function test_getShortDescription(): void {

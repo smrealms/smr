@@ -2,14 +2,13 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\BuyerRestriction;
 use Smr\ShipClass;
 use Smr\ShipType;
 
-/**
- * @covers Smr\ShipType
- */
+#[CoversClass(ShipType::class)]
 class ShipTypeTest extends TestCase {
 
 	public static function setUpBeforeClass(): void {

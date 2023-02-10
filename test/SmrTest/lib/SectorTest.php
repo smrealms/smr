@@ -3,12 +3,11 @@
 namespace SmrTest\lib;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Sector;
 
-/**
- * @covers Smr\Sector
- */
+#[CoversClass(Sector::class)]
 class SectorTest extends TestCase {
 
 	protected function setUp(): void {

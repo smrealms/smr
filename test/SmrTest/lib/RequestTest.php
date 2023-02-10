@@ -3,14 +3,14 @@
 namespace SmrTest\lib;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
 use Smr\Request;
 use Smr\Session;
 
-/**
- * @covers Smr\Request
- */
+#[CoversClass(Request::class)]
 class RequestTest extends TestCase {
 
 	public static function setUpBeforeClass(): void {
@@ -80,16 +80,14 @@ class RequestTest extends TestCase {
 		Request::getBool('int');
 	}
 
-	/**
-	 * @testWith ["yes", true]
-	 *           [1, true]
-	 *           ["TRUE", true]
-	 *           ["on", true]
-	 *           ["no", false]
-	 *           [0, false]
-	 *           ["FALSE", false]
-	 *           ["off", false]
-	 */
+	#[TestWith(['yes', true])]
+	#[TestWith([1, true])]
+	#[TestWith(['TRUE', true])]
+	#[TestWith(['on', true])]
+	#[TestWith(['no', false])]
+	#[TestWith([0, false])]
+	#[TestWith(['FALSE', false])]
+	#[TestWith(['off', false])]
 	public function test_getBool_aliases(string|int $input, bool $expected): void {
 		$_REQUEST['bool_alias'] = $input;
 		self::assertSame($expected, Request::getBool('bool_alias'));

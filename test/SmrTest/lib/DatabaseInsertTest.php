@@ -2,6 +2,7 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Database;
 
@@ -9,9 +10,8 @@ use Smr\Database;
  * This is an extension of DatabaseIntegrationTest. It is separate due to the
  * need for specific setUp and tearDown functions (which we do not want to use
  * for every other DatabaseIntegrationTest method).
- *
- * @covers \Smr\Database
  */
+#[CoversClass(Database::class)]
 class DatabaseInsertTest extends TestCase {
 
 	protected function setUp(): void {

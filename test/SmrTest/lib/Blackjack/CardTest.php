@@ -2,12 +2,12 @@
 
 namespace SmrTest\lib\Blackjack;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Smr\Blackjack\Card;
 
-/**
- * @covers Smr\Blackjack\Card
- */
+#[CoversClass(Card::class)]
 class CardTest extends TestCase {
 
 	public function test_getCardID(): void {
@@ -34,9 +34,7 @@ class CardTest extends TestCase {
 		}
 	}
 
-	/**
-	 * @dataProvider card_details_provider
-	 */
+	#[DataProvider('card_details_provider')]
 	public function test_card_details(int $cardID, string $rankName, string $suitName, int $value): void {
 		// check various details of a card
 		$card = new Card($cardID);
@@ -48,7 +46,7 @@ class CardTest extends TestCase {
 	/**
 	 * @return array<array{int, string, string, int}>
 	 */
-	public function card_details_provider(): array {
+	public static function card_details_provider(): array {
 		// spot check a handful of cards
 		return [
 			[0, 'A', 'hearts', 11],

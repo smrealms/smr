@@ -2,6 +2,7 @@
 
 namespace SmrTest\lib\Routes;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Path;
 use Smr\Routes\MultiplePortRoute;
@@ -9,9 +10,7 @@ use Smr\Routes\OneWayRoute;
 use Smr\Routes\RouteIterator;
 use Smr\TransactionType;
 
-/**
- * @covers Smr\Routes\RouteIterator
- */
+#[CoversClass(RouteIterator::class)]
 class RouteIteratorTest extends TestCase {
 
 	public function test_iterator_states(): void {

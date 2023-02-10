@@ -2,14 +2,13 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Smr\AbstractPlayer;
 use Smr\Combat\Weapon\Weapon;
 use Smr\Ship;
 use SmrTest\BaseIntegrationSpec;
 
-/**
- * @covers Smr\Ship
- */
+#[CoversClass(Ship::class)]
 class ShipIntegrationTest extends BaseIntegrationSpec {
 
 	private AbstractPlayer $player; // will be mocked

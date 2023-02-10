@@ -2,14 +2,13 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Smr\Alliance;
 use Smr\Exceptions\AllianceNotFound;
 use Smr\Exceptions\UserError;
 use SmrTest\BaseIntegrationSpec;
 
-/**
- * @covers Smr\Alliance
- */
+#[CoversClass(Alliance::class)]
 class AllianceIntegrationTest extends BaseIntegrationSpec {
 
 	protected function tablesToTruncate(): array {

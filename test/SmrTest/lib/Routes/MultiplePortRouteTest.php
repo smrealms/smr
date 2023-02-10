@@ -2,15 +2,15 @@
 
 namespace SmrTest\lib\Routes;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Path;
 use Smr\Routes\MultiplePortRoute;
 use Smr\Routes\OneWayRoute;
+use Smr\Routes\Route;
 
-/**
- * @covers Smr\Routes\MultiplePortRoute
- * @covers Smr\Routes\Route
- */
+#[CoversClass(MultiplePortRoute::class)]
+#[CoversClass(Route::class)]
 class MultiplePortRouteTest extends TestCase {
 
 	public function test_three_port_routes(): void {

@@ -4,6 +4,7 @@ namespace SmrTest\lib;
 
 use Error;
 use mysqli;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Smr\Container\DiContainer;
@@ -12,9 +13,8 @@ use Smr\DatabaseProperties;
 
 /**
  * This is an integration test, but does not need to extend BaseIntegrationTest since we are not writing any data.
- *
- * @covers \Smr\Database
  */
+#[CoversClass(Database::class)]
 class DatabaseIntegrationTest extends TestCase {
 
 	protected function setUp(): void {

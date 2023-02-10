@@ -2,12 +2,12 @@
 
 namespace SmrTest\Container;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Container\ResettableContainer;
+use Smr\Container\ResettableContainerTrait;
 
-/**
- * @covers \Smr\Container\ResettableContainerTrait
- */
+#[CoversClass(ResettableContainerTrait::class)]
 class ResettableContainerTraitTest extends TestCase {
 
 	public function test_not_initialized_by_definition(): void {

@@ -3,14 +3,14 @@
 namespace SmrTest\lib;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
 use Smr\Template;
 use SmrTest\TestUtils;
 
-/**
- * @covers Smr\Template
- */
+#[CoversClass(Template::class)]
 class TemplateTest extends TestCase {
 
 	protected function setUp(): void {
@@ -51,9 +51,7 @@ class TemplateTest extends TestCase {
 		$this->assertSame('an', $method->invoke($template, 'apple'));
 	}
 
-	/**
-	 * @dataProvider checkDisableAJAX_provider
-	 */
+	#[DataProvider('checkDisableAJAX_provider')]
 	public function test_checkDisableAJAX(string $html, bool $expected): void {
 		$template = Template::getInstance();
 		$method = TestUtils::getPrivateMethod($template, 'checkDisableAJAX');
@@ -63,7 +61,7 @@ class TemplateTest extends TestCase {
 	/**
 	 * @return array<array{string, bool}>
 	 */
-	public function checkDisableAJAX_provider(): array {
+	public static function checkDisableAJAX_provider(): array {
 		return [
 			// Special input types that do not disable ajax
 			['<input type="submit">', false],
@@ -77,9 +75,7 @@ class TemplateTest extends TestCase {
 		];
 	}
 
-	/**
-	 * @dataProvider convertHtmlToAjaxXml_provider
-	 */
+	#[DataProvider('convertHtmlToAjaxXml_provider')]
 	public function test_convertHtmlToAjaxXml(string $html, string $expected): void {
 		$template = Template::getInstance();
 		$method = TestUtils::getPrivateMethod($template, 'convertHtmlToAjaxXml');
@@ -89,7 +85,7 @@ class TemplateTest extends TestCase {
 	/**
 	 * @return array<array{string, string}>
 	 */
-	public function convertHtmlToAjaxXml_provider(): array {
+	public static function convertHtmlToAjaxXml_provider(): array {
 		return [
 			// Span with an id
 			['<span id="foo">Test</span>', '<foo>Test</foo>'],

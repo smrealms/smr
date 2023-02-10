@@ -2,13 +2,13 @@
 
 namespace SmrTest\lib\Routes;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\Path;
 use Smr\Routes\OneWayRoute;
 
-/**
- * @covers Smr\Routes\OneWayRoute
- */
+#[CoversClass(OneWayRoute::class)]
 class OneWayRouteTest extends TestCase {
 
 	private Path $path;
@@ -36,40 +36,18 @@ class OneWayRouteTest extends TestCase {
 		self::assertSame(3, $route->getExpMultiplierSum());
 	}
 
-	/**
-	 * @dataProvider dataProvider_getMoneyMultiplierSum
-	 */
+	#[TestWith([GOODS_NOTHING, 0])]
+	#[TestWith([GOODS_ORE, 54])]
 	public function test_getMoneyMultiplierSum(int $goodID, int $expected): void {
 		$route = new OneWayRoute(1, 3, RACE_HUMAN, RACE_NEUTRAL, 1, 2, $this->path, $goodID);
 		self::assertSame($expected, $route->getMoneyMultiplierSum());
 	}
 
-	/**
-	 * @return array<array{int, int}>
-	 */
-	public function dataProvider_getMoneyMultiplierSum(): array {
-		return [
-			[GOODS_NOTHING, 0],
-			[GOODS_ORE, 54],
-		];
-	}
-
-	/**
-	 * @dataProvider dataProvider_getTurnsForRoute
-	 */
+	#[TestWith([GOODS_NOTHING, 0])]
+	#[TestWith([GOODS_ORE, 2])]
 	public function test_getTurnsForRoute(int $goodID, int $expected): void {
 		$route = new OneWayRoute(1, 3, RACE_HUMAN, RACE_NEUTRAL, 0, 0, $this->path, $goodID);
 		self::assertSame($this->path->getTurns() + $expected, $route->getTurnsForRoute());
-	}
-
-	/**
-	 * @return array<array{int, int}>
-	 */
-	public function dataProvider_getTurnsForRoute(): array {
-		return [
-			[GOODS_NOTHING, 0],
-			[GOODS_ORE, 2],
-		];
 	}
 
 	public function test_getPortSectorIDs(): void {

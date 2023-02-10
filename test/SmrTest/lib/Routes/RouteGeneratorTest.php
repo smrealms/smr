@@ -2,6 +2,7 @@
 
 namespace SmrTest\lib\Routes;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Path;
 use Smr\Port;
@@ -10,9 +11,7 @@ use Smr\Routes\OneWayRoute;
 use Smr\Routes\RouteGenerator;
 use Smr\TransactionType;
 
-/**
- * @covers Smr\Routes\RouteGenerator
- */
+#[CoversClass(RouteGenerator::class)]
 class RouteGeneratorTest extends TestCase {
 
 	private const EMPTY_ROUTES = [

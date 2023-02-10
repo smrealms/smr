@@ -2,18 +2,16 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\StoredDestination;
 
-/**
- * @covers Smr\StoredDestination
- */
+#[CoversClass(StoredDestination::class)]
 class StoredDestinationTest extends TestCase {
 
-	/**
-	 * @testWith ["foo", "#42 - foo"]
-	 *           ["", "#42"]
-	 */
+	#[TestWith(['foo', '#42 - foo'])]
+	#[TestWith(['', '#42'])]
 	public function test_getDisplayName(string $label, string $expected): void {
 		$dest = new StoredDestination(
 			sectorID: 42,

@@ -2,13 +2,12 @@
 
 namespace SmrTest\lib\Blackjack;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Blackjack\Card;
 use Smr\Blackjack\Hand;
 
-/**
- * @covers Smr\Blackjack\Hand
- */
+#[CoversClass(Hand::class)]
 class HandTest extends TestCase {
 
 	public function test_getValue(): void {

@@ -3,6 +3,9 @@
 namespace SmrTest\lib;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\Bounty;
 use Smr\BountyType;
@@ -14,9 +17,7 @@ use Smr\Port;
 use Smr\Sector;
 use Smr\TransactionType;
 
-/**
- * @covers Smr\Port
- */
+#[CoversClass(Port::class)]
 class PortTest extends TestCase {
 
 	protected function tearDown(): void {
@@ -64,12 +65,11 @@ class PortTest extends TestCase {
 	}
 
 	/**
-	 * @dataProvider provider_removePortGood
-	 *
 	 * @param array<int> $removeGoodIDs
 	 * @param array<int> $sellRemain
 	 * @param array<int> $buyRemain
 	 */
+	#[DataProvider('provider_removePortGood')]
 	public function test_removePortGood(array $removeGoodIDs, array $sellRemain, array $buyRemain): void {
 		// Set up a port with a couple goods
 		$port = Port::createPort(1, 1);
@@ -86,7 +86,7 @@ class PortTest extends TestCase {
 	/**
 	 * @return array<array<array<int>>>
 	 */
-	public function provider_removePortGood(): array {
+	public static function provider_removePortGood(): array {
 		return [
 			// Remove a good that the port doesn't have
 			[[GOODS_CIRCUITRY], [GOODS_WOOD], [GOODS_ORE]],
@@ -99,20 +99,12 @@ class PortTest extends TestCase {
 		];
 	}
 
-	/**
-	 * @dataProvider provider_getGoodTransaction
-	 */
+	#[TestWith([TransactionType::Buy])]
+	#[TestWith([TransactionType::Sell])]
 	public function test_getGoodTransaction(TransactionType $transaction): void {
 		$port = Port::createPort(1, 1);
 		$port->addPortGood(GOODS_ORE, $transaction);
 		self::assertSame($transaction, $port->getGoodTransaction(GOODS_ORE));
-	}
-
-	/**
-	 * @return array<array<TransactionType>>
-	 */
-	public function provider_getGoodTransaction(): array {
-		return [[TransactionType::Buy], [TransactionType::Sell]];
 	}
 
 	public function test_getGoodTransaction_throws_if_port_does_not_have_good(): void {
@@ -207,11 +199,10 @@ class PortTest extends TestCase {
 	}
 
 	/**
-	 * @dataProvider dataProvider_takeDamage
-	 *
 	 * @param WeaponDamageData $damage
 	 * @param TakenDamageData $expected
 	 */
+	#[DataProvider('dataProvider_takeDamage')]
 	public function test_takeDamage(string $case, array $damage, array $expected, int $shields, int $cds, int $armour): void {
 		// Set up a port with a fixed amount of defenses
 		$port = Port::createPort(1, 1);
@@ -226,7 +217,7 @@ class PortTest extends TestCase {
 	/**
 	 * @return array<array{0: string, 1: WeaponDamageData, 2: TakenDamageData, 3: int, 4: int, 5: int}>
 	 */
-	public function dataProvider_takeDamage(): array {
+	public static function dataProvider_takeDamage(): array {
 		return [
 			[
 				'Do overkill damage (e.g. 1000 drone damage)',

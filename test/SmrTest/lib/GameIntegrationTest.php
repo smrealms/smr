@@ -2,14 +2,13 @@
 
 namespace SmrTest\lib;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Smr\Game;
 use Smr\Globals;
 use Smr\Race;
 use SmrTest\BaseIntegrationSpec;
 
-/**
- * @covers Smr\Game
- */
+#[CoversClass(Game::class)]
 class GameIntegrationTest extends BaseIntegrationSpec {
 
 	protected function tablesToTruncate(): array {

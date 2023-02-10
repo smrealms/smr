@@ -3,6 +3,8 @@
 namespace SmrTest\lib\Chess;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\Chess\Board;
 use Smr\Chess\Castling;
@@ -10,9 +12,7 @@ use Smr\Chess\ChessGame;
 use Smr\Chess\ChessPiece;
 use Smr\Chess\Colour;
 
-/**
- * @covers Smr\Chess\Board
- */
+#[CoversClass(Board::class)]
 class BoardTest extends TestCase {
 
 	public function test_getFEN(): void {
@@ -34,14 +34,12 @@ class BoardTest extends TestCase {
 		self::assertSame(Colour::Black, $board->getCurrentTurnColour());
 	}
 
-	/**
-	 * @testWith [0, 0, true]
-	 *           [7, 7, true]
-	 *           [-1, 0, false]
-	 *           [0, -1, false]
-	 *           [8, 0, false]
-	 *           [0, 8, false]
-	 */
+	#[TestWith([0, 0, true])]
+	#[TestWith([7, 7, true])]
+	#[TestWith([-1, 0, false])]
+	#[TestWith([0, -1, false])]
+	#[TestWith([8, 0, false])]
+	#[TestWith([0, 8, false])]
 	public function test_isValidCoord(int $x, int $y, bool $valid): void {
 		self::assertSame($valid, Board::isValidCoord($x, $y));
 	}
@@ -113,9 +111,8 @@ class BoardTest extends TestCase {
 		}
 	}
 
-	/**
-	 * @dataProvider dataProvider_canCastle_move_rook
-	 */
+	#[TestWith([Castling::Kingside])]
+	#[TestWith([Castling::Queenside])]
 	public function test_canCastle_move_rook(Castling $type): void {
 		// Moving Rook disables castling only on that side
 		$board = new Board();
@@ -135,16 +132,6 @@ class BoardTest extends TestCase {
 			self::assertFalse($board->canCastle($colour, $type));
 			self::assertTrue($board->canCastle($colour, $otherType));
 		}
-	}
-
-	/**
-	 * @return array<array{0: Castling}>
-	 */
-	public function dataProvider_canCastle_move_rook(): array {
-		return [
-			[Castling::Kingside],
-			[Castling::Queenside],
-		];
 	}
 
 	public function test_getEnPassantPawn(): void {

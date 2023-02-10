@@ -3,13 +3,13 @@
 namespace SmrTest\lib;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Smr\Planet;
 use Smr\TradeGood;
 use SmrTest\BaseIntegrationSpec;
 
-/**
- * @covers Smr\Planet
- */
+#[CoversClass(Planet::class)]
 class PlanetIntegrationTest extends BaseIntegrationSpec {
 
 	protected function tablesToTruncate(): array {
@@ -323,11 +323,10 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 	}
 
 	/**
-	 * @dataProvider provider_getMaxBuildings
-	 *
 	 * @param int $planetType
 	 * @param array<int, int> $expected
 	 */
+	#[DataProvider('provider_getMaxBuildings')]
 	public function test_getMaxBuildings(int $planetType, array $expected): void {
 		$planet = Planet::createPlanet(1, 1, $planetType, 1);
 		self::assertSame($expected, $planet->getMaxBuildings());
@@ -336,7 +335,7 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 	/**
 	 * @return array<array{int, array<int, int>}>
 	 */
-	public function provider_getMaxBuildings(): array {
+	public static function provider_getMaxBuildings(): array {
 		return [
 			[
 				1,
@@ -358,11 +357,10 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 	}
 
 	/**
-	 * @dataProvider dataProvider_takeDamage
-	 *
 	 * @param WeaponDamageData $damage
 	 * @param TakenDamageData $expected
 	 */
+	#[DataProvider('dataProvider_takeDamage')]
 	public function test_takeDamage(string $case, array $damage, array $expected, int $shields, int $cds, int $armour): void {
 		// Set up a port with a fixed amount of defenses
 		$planet = Planet::createPlanet(1, 1, 4, 1);
@@ -380,7 +378,7 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 	/**
 	 * @return array<array{0: string, 1: WeaponDamageData, 2: TakenDamageData, 3: int, 4: int, 5: int}>
 	 */
-	public function dataProvider_takeDamage(): array {
+	public static function dataProvider_takeDamage(): array {
 		return [
 			[
 				'Do overkill damage (e.g. 1000 drone damage)',
