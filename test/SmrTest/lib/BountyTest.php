@@ -7,7 +7,11 @@ use Smr\AbstractPlayer;
 use Smr\Bounty;
 use Smr\BountyType;
 use Smr\Database;
+use Smr\DatabaseRecord;
+use Smr\Player;
+use Smr\ScoutMessageGroupType;
 use SmrTest\BaseIntegrationSpec;
+use SmrTest\TestUtils;
 
 #[CoversClass(Bounty::class)]
 class BountyTest extends BaseIntegrationSpec {
@@ -88,9 +92,17 @@ class BountyTest extends BaseIntegrationSpec {
 		$bounty1->update();
 		$bounty2->update();
 
+		// Stub player (can't use default mock for enums)
+		$dbRecord = $this->createStub(DatabaseRecord::class);
+		$dbRecord->method('getStringEnum')->willReturn(ScoutMessageGroupType::Auto);
+		$player1 = TestUtils::constructPrivateClass(
+			name: Player::class,
+			gameID: 42,
+			accountID: 1,
+			dbRecord: $dbRecord,
+		);
+
 		// We should only get $bounty1 if we get bounties on player 1
-		$player1 = $this->createStub(AbstractPlayer::class);
-		$player1->method('getSQL')->willReturn('account_id=1 AND game_id=42');
 		$bounties = Bounty::getPlacedOnPlayer($player1);
 		self::assertEquals([7 => $bounty1], $bounties);
 	}

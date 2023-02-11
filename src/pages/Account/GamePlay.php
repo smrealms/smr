@@ -43,10 +43,13 @@ class GamePlay extends AccountPage {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT end_time, game_id, game_name, game_speed, game_type
 					FROM game JOIN player USING (game_id)
-					WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . '
+					WHERE account_id = :account_id
 						AND enabled = \'TRUE\'
-						AND end_time >= ' . $db->escapeNumber(Epoch::time()) . '
-					ORDER BY start_time, game_id DESC');
+						AND end_time >= :now
+					ORDER BY start_time, game_id DESC', [
+			'account_id' => $db->escapeNumber($account->getAccountID()),
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$game_id = $dbRecord->getInt('game_id');
 			$games['Play'][$game_id]['ID'] = $game_id;
@@ -69,8 +72,11 @@ class GamePlay extends AccountPage {
 
 			$result2 = $db->read('SELECT count(*) as num_playing
 							FROM player
-							WHERE last_cpl_action >= ' . $db->escapeNumber(Epoch::time() - TIME_BEFORE_INACTIVE) . '
-								AND game_id = ' . $db->escapeNumber($game_id));
+							WHERE last_cpl_action >= :inactive_time
+								AND game_id = :game_id', [
+				'inactive_time' => $db->escapeNumber(Epoch::time() - TIME_BEFORE_INACTIVE),
+				'game_id' => $db->escapeNumber($game_id),
+			]);
 			$games['Play'][$game_id]['NumberPlaying'] = $result2->record()->getInt('num_playing');
 
 			// create a container that will hold next url and additional variables.
@@ -92,16 +98,23 @@ class GamePlay extends AccountPage {
 		if (count($game_id_list) > 0) {
 			$dbResult = $db->read('SELECT game_id
 						FROM game
-						WHERE game_id NOT IN (' . $db->escapeArray($game_id_list) . ')
-							AND end_time >= ' . $db->escapeNumber(Epoch::time()) . '
-							AND enabled = ' . $db->escapeBoolean(true) . '
-						ORDER BY start_time DESC');
+						WHERE game_id NOT IN (:game_ids)
+							AND end_time >= :now
+							AND enabled = :enabled
+						ORDER BY start_time DESC', [
+				'now' => $db->escapeNumber(Epoch::time()),
+				'enabled' => $db->escapeBoolean(true),
+				'game_ids' => $db->escapeArray($game_id_list),
+			]);
 		} else {
 			$dbResult = $db->read('SELECT game_id
 						FROM game
-						WHERE end_time >= ' . $db->escapeNumber(Epoch::time()) . '
-							AND enabled = ' . $db->escapeBoolean(true) . '
-						ORDER BY start_time DESC');
+						WHERE end_time >= :now
+							AND enabled = :enabled
+						ORDER BY start_time DESC', [
+				'now' => $db->escapeNumber(Epoch::time()),
+				'enabled' => $db->escapeBoolean(true),
+			]);
 		}
 
 		// are there any results?
@@ -133,7 +146,9 @@ class GamePlay extends AccountPage {
 
 		//New previous games
 		$dbResult = $db->read('SELECT start_time, end_time, game_name, game_type, game_speed, game_id ' .
-				'FROM game WHERE enabled = \'TRUE\' AND end_time < ' . $db->escapeNumber(Epoch::time()) . ' ORDER BY game_id DESC');
+				'FROM game WHERE enabled = \'TRUE\' AND end_time < :now ORDER BY game_id DESC', [
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$game_id = $dbRecord->getInt('game_id');
 			$games['Previous'][$game_id]['ID'] = $game_id;
@@ -187,10 +202,14 @@ class GamePlay extends AccountPage {
 		$container = new Vote();
 		$template->assign('VotingHref', $container->href());
 
-		$dbResult = $db->read('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(Epoch::time()) . ' ORDER BY end DESC');
+		$dbResult = $db->read('SELECT * FROM voting WHERE end > :now ORDER BY end DESC', [
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 		if ($dbResult->hasRecord()) {
 			$votedFor = [];
-			$dbResult2 = $db->read('SELECT * FROM voting_results WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
+			$dbResult2 = $db->read('SELECT * FROM voting_results WHERE account_id = :account_id', [
+				'account_id' => $db->escapeNumber($account->getAccountID()),
+			]);
 			foreach ($dbResult2->records() as $dbRecord2) {
 				$votedFor[$dbRecord2->getInt('vote_id')] = $dbRecord2->getInt('option_id');
 			}
@@ -203,7 +222,9 @@ class GamePlay extends AccountPage {
 				$voting[$voteID]['Question'] = $dbRecord->getString('question');
 				$voting[$voteID]['TimeRemaining'] = format_time($dbRecord->getInt('end') - Epoch::time(), true);
 				$voting[$voteID]['Options'] = [];
-				$dbResult2 = $db->read('SELECT option_id,text,count(account_id) FROM voting_options LEFT OUTER JOIN voting_results USING(vote_id,option_id) WHERE vote_id = ' . $db->escapeNumber($dbRecord->getInt('vote_id')) . ' GROUP BY option_id');
+				$dbResult2 = $db->read('SELECT option_id,text,count(account_id) FROM voting_options LEFT OUTER JOIN voting_results USING(vote_id,option_id) WHERE vote_id = :vote_id GROUP BY option_id', [
+					'vote_id' => $db->escapeNumber($dbRecord->getInt('vote_id')),
+				]);
 				foreach ($dbResult2->records() as $dbRecord2) {
 					$voting[$voteID]['Options'][$dbRecord2->getInt('option_id')]['ID'] = $dbRecord2->getInt('option_id');
 					$voting[$voteID]['Options'][$dbRecord2->getInt('option_id')]['Text'] = $dbRecord2->getString('text');

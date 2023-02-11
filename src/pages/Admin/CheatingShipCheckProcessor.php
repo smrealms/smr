@@ -24,11 +24,16 @@ class CheatingShipCheckProcessor extends AccountPageProcessor {
 
 		//update it so they arent cheating
 		$db = Database::getInstance();
-		$db->write('UPDATE ship_has_hardware ' .
-				   'SET amount = ' . $db->escapeNumber($max_amount) . ' ' .
-				   'WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND ' .
-						 'account_id = ' . $db->escapeNumber($account_id) . ' AND ' .
-						 'hardware_type_id = ' . $db->escapeNumber($hardware_id));
+		$db->write('UPDATE ship_has_hardware
+					SET amount = :amount
+					WHERE game_id = :game_id AND
+						account_id = :account_id AND
+						hardware_type_id = :hardware_type_id', [
+			'amount' => $db->escapeNumber($max_amount),
+			'game_id' => $db->escapeNumber($game_id),
+			'account_id' => $db->escapeNumber($account_id),
+			'hardware_type_id' => $db->escapeNumber($hardware_id),
+		]);
 
 		//now erdirect back to page
 		$container = new CheatingShipCheck();

@@ -42,10 +42,14 @@ class AllianceMessageBoard extends PlayerPage {
 				$in_alliance = false;
 			}
 			$dbResult = $db->read('SELECT 1 FROM alliance_treaties
-						WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' OR alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ')
-						AND (alliance_id_2 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')
-						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND mb_write = 1 AND official = \'TRUE\' LIMIT 1');
+						WHERE (alliance_id_1 = :alliance_id OR alliance_id_1 = :player_alliance_id)
+						AND (alliance_id_2 = :alliance_id OR alliance_id_2 = :player_alliance_id)
+						AND game_id = :game_id
+						AND mb_write = 1 AND official = \'TRUE\' LIMIT 1', [
+				'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
+				'player_alliance_id' => $db->escapeNumber($player->getAllianceID()),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+			]);
 			$mbWrite = $dbResult->hasRecord();
 		}
 
@@ -57,9 +61,12 @@ class AllianceMessageBoard extends PlayerPage {
 				t1 AS (
 					SELECT * FROM alliance_thread_topic
 						JOIN alliance_thread USING(game_id, alliance_id, thread_id)
-					WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
-						AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) .
-						($in_alliance ? '' : ' AND alliance_only = ' . $db->escapeBoolean(false)) . '
+					WHERE game_id = :game_id
+						AND alliance_id = :alliance_id
+						AND (
+							:in_alliance = \'TRUE\'
+							OR alliance_only = \'FALSE\'
+						)
 				),
 				t2 AS (
 					SELECT t1.*,
@@ -69,7 +76,11 @@ class AllianceMessageBoard extends PlayerPage {
 			SELECT alliance_only, topic, thread_id, MAX(time) as sendtime, COUNT(reply_id) as num_replies, author_account_id
 			FROM t2
 			GROUP BY thread_id ORDER BY sendtime DESC
-		');
+		', [
+			'in_alliance' => $db->escapeBoolean($in_alliance),
+			'game_id' => $db->escapeNumber($alliance->getGameID()),
+			'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
+		]);
 		$threads = [];
 		if ($dbResult->hasRecord()) {
 
@@ -90,10 +101,15 @@ class AllianceMessageBoard extends PlayerPage {
 
 				$dbResult2 = $db->read('SELECT time
 							FROM player_read_thread
-							WHERE ' . $player->getSQL() . '
-							AND alliance_id =' . $db->escapeNumber($alliance->getAllianceID()) . '
-							AND thread_id=' . $db->escapeNumber($threadID) . '
-							AND time>' . $db->escapeNumber($dbRecord->getInt('sendtime')) . ' LIMIT 1');
+							WHERE ' . AbstractPlayer::SQL . '
+							AND alliance_id = :alliance_id
+							AND thread_id = :thread_id
+							AND time > :sendtime LIMIT 1', [
+					...$player->SQLID,
+					'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
+					'thread_id' => $db->escapeNumber($threadID),
+					'sendtime' => $db->escapeNumber($dbRecord->getInt('sendtime')),
+				]);
 				$threads[$i]['Unread'] = !$dbResult2->hasRecord();
 
 				// Determine the thread author display name
@@ -114,7 +130,10 @@ class AllianceMessageBoard extends PlayerPage {
 				}
 				$threads[$i]['Sender'] = $playerName;
 
-				$dbResult2 = $db->read('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . $player->getSQL() . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
+				$dbResult2 = $db->read('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . AbstractPlayer::SQL . ' AND alliance_id = :alliance_id LIMIT 1', [
+					...$player->SQLID,
+					'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
+				]);
 				$canDelete = $player->getAccountID() == $authorAccountID || $dbResult2->record()->getBoolean('mb_messages');
 				if ($canDelete) {
 					$container = new AllianceMessageBoardDeleteThreadProcessor($allianceID, $this, $threadID);

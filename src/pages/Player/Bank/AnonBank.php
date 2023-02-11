@@ -34,8 +34,11 @@ class AnonBank extends PlayerPage {
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM anon_bank
-					WHERE owner_id=' . $db->escapeNumber($player->getAccountID()) . '
-					AND game_id=' . $db->escapeNumber($player->getGameID()));
+					WHERE owner_id = :owner_id
+					AND game_id = :game_id', [
+			'owner_id' => $db->escapeNumber($player->getAccountID()),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 
 		$ownedAnon = [];
 		foreach ($dbResult->records() as $dbRecord) {
@@ -45,8 +48,11 @@ class AnonBank extends PlayerPage {
 			$anon['amount'] = $dbRecord->getInt('amount');
 
 			$dbResult2 = $db->read('SELECT MAX(time) FROM anon_bank_transactions
-						WHERE game_id=' . $db->escapeNumber($player->getGameID()) . '
-						AND anon_id=' . $db->escapeNumber($dbRecord->getInt('anon_id')) . ' GROUP BY anon_id');
+						WHERE game_id = :game_id
+						AND anon_id = :anon_id GROUP BY anon_id', [
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'anon_id' => $db->escapeNumber($dbRecord->getInt('anon_id')),
+			]);
 			if ($dbResult2->hasRecord()) {
 				$anon['last_transaction'] = date($account->getDateTimeFormat(), $dbResult2->record()->getInt('MAX(time)'));
 			} else {

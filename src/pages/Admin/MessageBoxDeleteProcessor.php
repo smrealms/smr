@@ -23,10 +23,14 @@ class MessageBoxDeleteProcessor extends AccountPageProcessor {
 			}
 
 			foreach (Request::getIntArray('message_id') as $id) {
-				$db->write('DELETE FROM message_boxes WHERE message_id = ' . $db->escapeNumber($id));
+				$db->write('DELETE FROM message_boxes WHERE message_id = :message_id', [
+					'message_id' => $db->escapeNumber($id),
+				]);
 			}
 		} elseif ($action == 'All Messages') {
-			$db->write('DELETE FROM message_boxes WHERE box_type_id = ' . $db->escapeNumber($this->boxTypeID));
+			$db->write('DELETE FROM message_boxes WHERE box_type_id = :box_type_id', [
+				'box_type_id' => $db->escapeNumber($this->boxTypeID),
+			]);
 		}
 
 		(new MessageBoxView())->go();

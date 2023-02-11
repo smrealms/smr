@@ -25,7 +25,10 @@ class ChatSharing extends PlayerPage {
 
 		$shareFrom = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND (game_id=0 OR game_id=' . $db->escapeNumber($player->getGameID()) . ')');
+		$dbResult = $db->read('SELECT * FROM account_shares_info WHERE to_account_id = :to_account_id AND (game_id=0 OR game_id = :game_id)', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'to_account_id' => $db->escapeNumber($player->getAccountID()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$fromAccountId = $dbRecord->getInt('from_account_id');
 			$gameId = $dbRecord->getInt('game_id');
@@ -46,7 +49,10 @@ class ChatSharing extends PlayerPage {
 		}
 
 		$shareTo = [];
-		$dbResult = $db->read('SELECT * FROM account_shares_info WHERE from_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND (game_id=0 OR game_id=' . $db->escapeNumber($player->getGameID()) . ')');
+		$dbResult = $db->read('SELECT * FROM account_shares_info WHERE from_account_id = :from_account_id AND (game_id=0 OR game_id = :game_id)', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'from_account_id' => $db->escapeNumber($player->getAccountID()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$gameId = $dbRecord->getInt('game_id');
 			$toAccountId = $dbRecord->getInt('to_account_id');

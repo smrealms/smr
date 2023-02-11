@@ -70,8 +70,10 @@ while (true) {
 			$dbResult = $db->read('SELECT channel
 						FROM irc_alliance_has_channel
 						JOIN game USING (game_id)
-						WHERE join_time < ' . time() . '
-							AND end_time > ' . time());
+						WHERE join_time < :now
+							AND end_time > :now', [
+				'now' => time(),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$joinChannels[] = $dbRecord->getString('channel');
 			}

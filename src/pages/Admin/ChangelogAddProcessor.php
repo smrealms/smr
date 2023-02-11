@@ -32,7 +32,9 @@ class ChangelogAddProcessor extends AccountPageProcessor {
 
 		$dbResult = $db->read('SELECT IFNULL(MAX(changelog_id)+1, 0) AS next_changelog_id
 					FROM changelog
-					WHERE version_id = ' . $db->escapeNumber($this->versionID));
+					WHERE version_id = :version_id', [
+			'version_id' => $db->escapeNumber($this->versionID),
+		]);
 		$changelog_id = $dbResult->record()->getInt('next_changelog_id');
 
 		$db->insert('changelog', [

@@ -15,8 +15,11 @@ class AnonBankProcessor extends PlayerPageProcessor {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT password
 			FROM anon_bank
-			WHERE anon_id=' . $db->escapeNumber($account_num) . '
-			AND game_id=' . $db->escapeNumber($player->getGameID()));
+			WHERE anon_id = :anon_id
+			AND game_id = :game_id', [
+			'anon_id' => $db->escapeNumber($account_num),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		if (!$dbResult->hasRecord()) {
 			create_error('This anonymous account does not exist!');
 		}

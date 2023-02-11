@@ -63,7 +63,10 @@ class CurrentSector extends PlayerPage {
 		$unvisited = [];
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeArray($linkSectorIDs) . ') AND ' . $player->getSQL());
+		$dbResult = $db->read('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (:sector_ids) AND ' . AbstractPlayer::SQL, [
+			...$player->SQLID,
+			'sector_ids' => $db->escapeArray($linkSectorIDs),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$unvisited[$dbRecord->getInt('sector_id')] = true;
 		}
@@ -127,10 +130,10 @@ class CurrentSector extends PlayerPage {
 		//enableProtectionDependantRefresh($template,$player);
 
 		// Do we have an unseen attack message to store in this var?
-		$dbResult = $db->read('SELECT * FROM sector_message WHERE ' . $player->getSQL());
+		$dbResult = $db->read('SELECT * FROM sector_message WHERE ' . AbstractPlayer::SQL, $player->SQLID);
 		if ($dbResult->hasRecord()) {
 			$this->attackMessage = $dbResult->record()->getString('message');
-			$db->write('DELETE FROM sector_message WHERE ' . $player->getSQL());
+			$db->write('DELETE FROM sector_message WHERE ' . AbstractPlayer::SQL, $player->SQLID);
 		}
 
 		if ($this->attackMessage !== null) {
@@ -196,7 +199,11 @@ class CurrentSector extends PlayerPage {
 
 function getForceRefreshMessage(AbstractPlayer $player): string {
 	$db = Database::getInstance();
-	$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at > ' . $db->escapeNumber(Epoch::time()) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
+	$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at > :now AND sector_id = :sector_id AND game_id = :game_id AND refresher = :account_id ORDER BY refresh_at DESC LIMIT 1', [
+		'now' => $db->escapeNumber(Epoch::time()),
+		'sector_id' => $db->escapeNumber($player->getSectorID()),
+		...$player->SQLID,
+	]);
 	if ($dbResult->hasRecord()) {
 		$remainingTime = $dbResult->record()->getInt('refresh_at') - Epoch::time();
 		$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in ' . $remainingTime . ' seconds.';
@@ -215,7 +222,9 @@ function checkForAttackMessage(string $msg, AbstractPlayer $player): void {
 
 		$template = Template::getInstance();
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($logID) . ' LIMIT 1');
+		$dbResult = $db->read('SELECT sector_id,result,type FROM combat_logs WHERE log_id = :log_id LIMIT 1', [
+			'log_id' => $db->escapeNumber($logID),
+		]);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			if ($player->getSectorID() == $dbRecord->getInt('sector_id')) {

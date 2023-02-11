@@ -21,17 +21,25 @@ class CurrentPlayers extends PlayerPage {
 
 		$template->assign('PageTopic', 'Current Players');
 		$db = Database::getInstance();
-		$db->write('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . $db->escapeNumber(Epoch::time()));
+		$db->write('DELETE FROM cpl_tag WHERE expires > 0 AND expires < :now', [
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 
 		$dbResult = $db->read('SELECT count(*) count FROM active_session
-					WHERE last_accessed >= ' . $db->escapeNumber($inactiveTime) . ' AND
-						game_id = ' . $db->escapeNumber($player->getGameID()));
+					WHERE last_accessed >= :inactive_time AND
+						game_id = :game_id', [
+			'inactive_time' => $db->escapeNumber($inactiveTime),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		$count_active = $dbResult->record()->getInt('count');
 
 		$dbResult = $db->read('SELECT * FROM player
-				WHERE last_cpl_action >= ' . $db->escapeNumber($inactiveTime) . '
-					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-				ORDER BY experience DESC, player_name DESC');
+				WHERE last_cpl_action >= :inactive_time
+					AND game_id = :game_id
+				ORDER BY experience DESC, player_name DESC', [
+			'inactive_time' => $db->escapeNumber($inactiveTime),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		$count_moving = $dbResult->getNumRecords();
 
 		// fix it if some1 is using the logoff button
@@ -84,7 +92,9 @@ class CurrentPlayers extends PlayerPage {
 			// What should the player name be displayed as?
 			$container = new SearchForTraderResult($curr_player->getPlayerID());
 			$name = $curr_player->getLevelName() . ' ' . $curr_player->getDisplayName();
-			$dbResult2 = $db->read('SELECT * FROM cpl_tag WHERE account_id = ' . $db->escapeNumber($curr_player->getAccountID()) . ' ORDER BY custom DESC');
+			$dbResult2 = $db->read('SELECT * FROM cpl_tag WHERE account_id = :account_id ORDER BY custom DESC', [
+				'account_id' => $db->escapeNumber($curr_player->getAccountID()),
+			]);
 			foreach ($dbResult2->records() as $dbRecord2) {
 				$customRank = $dbRecord2->getString('custom_rank');
 				$tag = $dbRecord2->getString('tag');

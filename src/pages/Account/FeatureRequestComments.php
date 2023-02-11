@@ -34,8 +34,10 @@ class FeatureRequestComments extends AccountPage {
 		$dbResult = $db->read('SELECT *
 					FROM feature_request
 					JOIN feature_request_comments USING(feature_request_id)
-					WHERE feature_request_id = ' . $db->escapeNumber($this->featureRequestID) . '
-					ORDER BY comment_id ASC');
+					WHERE feature_request_id = :feature_request_id
+					ORDER BY comment_id ASC', [
+			'feature_request_id' => $db->escapeNumber($this->featureRequestID),
+		]);
 		if ($dbResult->hasRecord()) {
 			$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
 			$template->assign('FeatureModerator', $featureModerator);

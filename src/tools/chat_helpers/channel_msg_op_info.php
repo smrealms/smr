@@ -9,7 +9,10 @@ use Smr\Database;
 function shared_channel_msg_op_info(AbstractPlayer $player): array {
 	// get the op from db
 	$db = Database::getInstance();
-	$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+	$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id = :alliance_id AND game_id = :game_id', [
+		'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+		'game_id' => $db->escapeNumber($player->getGameID()),
+	]);
 	if (!$dbResult->hasRecord()) {
 		return ['Your leader has not scheduled an operation.'];
 	}
@@ -24,7 +27,10 @@ function shared_channel_msg_op_info(AbstractPlayer $player): array {
 	$getOpInfoMessage = function(AbstractPlayer $player) use ($opTime): string {
 		// have we signed up?
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT response FROM alliance_has_op_response WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL());
+		$dbResult = $db->read('SELECT response FROM alliance_has_op_response WHERE alliance_id = :alliance_id AND ' . AbstractPlayer::SQL, [
+			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+			...$player->SQLID,
+		]);
 		if ($dbResult->hasRecord()) {
 			$msg = $player->getPlayerName() . ' is on the ' . $dbResult->record()->getString('response') . ' list.';
 		} else {

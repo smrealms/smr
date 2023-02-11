@@ -25,12 +25,16 @@ class Council {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id, alignment
 								FROM player
-								WHERE game_id = ' . $db->escapeNumber($gameID) . '
-									AND race_id = ' . $db->escapeNumber($raceID) . '
+								WHERE game_id = :game_id
+									AND race_id = :race_id
 									AND npc = \'FALSE\'
 									AND experience > 0
 								ORDER by experience DESC
-								LIMIT ' . MAX_COUNCIL_MEMBERS);
+								LIMIT :limit', [
+				'game_id' => $db->escapeNumber($gameID),
+				'race_id' => $db->escapeNumber($raceID),
+				'limit' => MAX_COUNCIL_MEMBERS,
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				// Add this player to the council
 				self::$COUNCILS[$gameID][$raceID][$i++] = $dbRecord->getInt('account_id');

@@ -33,9 +33,13 @@ class MessageSendProcessor extends PlayerPageProcessor {
 		if ($this->allianceID !== null) {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM player
-						WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND alliance_id = ' . $this->allianceID . '
-						AND account_id != ' . $db->escapeNumber($player->getAccountID())); //No limit in case they are over limit - ie NHA
+						WHERE game_id = :game_id
+						AND alliance_id = :alliance_id
+						AND account_id != :account_id', [ //No limit in case they are over limit - ie NHA
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'alliance_id' => $this->allianceID,
+				'account_id' => $db->escapeNumber($player->getAccountID()),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$player->sendMessage($dbRecord->getInt('account_id'), MSG_ALLIANCE, $message, false);
 			}

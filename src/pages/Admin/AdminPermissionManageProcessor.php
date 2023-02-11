@@ -22,7 +22,9 @@ class AdminPermissionManageProcessor extends AccountPageProcessor {
 			$db = Database::getInstance();
 			$db->write('DELETE
 						FROM account_has_permission
-						WHERE account_id = ' . $db->escapeNumber($this->adminAccountID));
+						WHERE account_id = :account_id', [
+				'account_id' => $db->escapeNumber($this->adminAccountID),
+			]);
 
 			// Grant permissions
 			$permissions = Request::getIntArray('permission_ids', []);
@@ -45,7 +47,9 @@ class AdminPermissionManageProcessor extends AccountPageProcessor {
 			} elseif ($hadAdminTag) {
 				// Only delete the tag if they previously had an admin tag;
 				// otherwise we might accidentally delete an unrelated tag.
-				$db->write('DELETE FROM cpl_tag WHERE custom=0 AND account_id=' . $db->escapeNumber($this->adminAccountID));
+				$db->write('DELETE FROM cpl_tag WHERE custom=0 AND account_id = :account_id', [
+					'account_id' => $db->escapeNumber($this->adminAccountID),
+				]);
 			}
 		}
 

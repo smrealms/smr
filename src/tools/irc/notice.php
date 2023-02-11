@@ -18,13 +18,18 @@ function notice_nickserv_registered_user($fp, string $rdata): bool {
 
 		$db = Database::getInstance();
 
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
+		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick', [
+			'nick' => $db->escapeString($nick),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$seen_id = $dbRecord->getInt('seen_id');
 
 			$db->write('UPDATE irc_seen SET
-						registered_nick = ' . $db->escapeString($registeredNick) . '
-						WHERE seen_id = ' . $seen_id);
+						registered_nick = :registered_nick
+						WHERE seen_id = :seen_id', [
+				'registered_nick' => $db->escapeString($registeredNick),
+				'seen_id' => $db->escapeNumber($seen_id),
+			]);
 		}
 
 		foreach (CallbackEvent::getAll() as $event) {

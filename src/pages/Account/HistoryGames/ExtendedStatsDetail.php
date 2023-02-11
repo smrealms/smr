@@ -35,7 +35,9 @@ class ExtendedStatsDetail extends HistoryPage {
 				'Top Mined Sectors' => ['mines', 'Mines'],
 				'Most Dangerous Sectors' => ['kills', 'Kills'],
 			};
-			$dbResult = $db->read('SELECT ' . $sql . ' as val, sector_id FROM sector WHERE game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY val DESC LIMIT 25');
+			$dbResult = $db->read('SELECT ' . $sql . ' as val, sector_id FROM sector WHERE game_id = :game_id ORDER BY val DESC LIMIT 25', [
+				'game_id' => $db->escapeNumber($game_id),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$rankings[] = [
 					'bold' => '',
@@ -52,10 +54,15 @@ class ExtendedStatsDetail extends HistoryPage {
 				'Top Alliance Deaths' => ['deaths', 'Deaths'],
 			};
 			// Determine which alliance this account was in
-			$dbResult = $db->read('SELECT alliance_id FROM player WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND account_id = ' . $db->escapeNumber($oldAccountID));
+			$dbResult = $db->read('SELECT alliance_id FROM player WHERE game_id = :game_id AND account_id = :account_id', [
+				'game_id' => $db->escapeNumber($game_id),
+				'account_id' => $db->escapeNumber($oldAccountID),
+			]);
 			$oldAllianceID = $dbResult->hasRecord() ? $dbResult->record()->getInt('alliance_id') : 0;
 			// Get the top 25 alliance ordered by the requested stat
-			$dbResult = $db->read('SELECT alliance_name, alliance_id, ' . $sql . ' as val FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND alliance_id > 0 GROUP BY alliance_id ORDER BY val DESC, alliance_id LIMIT 25');
+			$dbResult = $db->read('SELECT alliance_name, alliance_id, ' . $sql . ' as val FROM alliance WHERE game_id = :game_id AND alliance_id > 0 GROUP BY alliance_id ORDER BY val DESC, alliance_id LIMIT 25', [
+				'game_id' => $db->escapeNumber($game_id),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$allianceID = $dbRecord->getInt('alliance_id');
 				$name = htmlentities($dbRecord->getString('alliance_name'));
@@ -70,7 +77,9 @@ class ExtendedStatsDetail extends HistoryPage {
 			}
 			$headers = ['Alliance', $header];
 		} elseif ($this->category == 'Top Planets') {
-			$dbResult = $db->read('SELECT sector_id, owner_id, IFNULL(player_name, \'Unclaimed\') as player_name, IFNULL(alliance_name, \'None\') as alliance_name, IFNULL(player.alliance_id, 0) as alliance_id, ROUND((turrets + hangers + generators) / 3, 2) as level FROM planet LEFT JOIN player ON planet.owner_id = player.account_id AND planet.game_id = player.game_id LEFT JOIN alliance ON player.alliance_id = alliance.alliance_id AND planet.game_id = alliance.game_id WHERE planet.game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY level DESC LIMIT 25');
+			$dbResult = $db->read('SELECT sector_id, owner_id, IFNULL(player_name, \'Unclaimed\') as player_name, IFNULL(alliance_name, \'None\') as alliance_name, IFNULL(player.alliance_id, 0) as alliance_id, ROUND((turrets + hangers + generators) / 3, 2) as level FROM planet LEFT JOIN player ON planet.owner_id = player.account_id AND planet.game_id = player.game_id LEFT JOIN alliance ON player.alliance_id = alliance.alliance_id AND planet.game_id = alliance.game_id WHERE planet.game_id = :game_id ORDER BY level DESC LIMIT 25', [
+				'game_id' => $db->escapeNumber($game_id),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$ownerID = $dbRecord->getInt('owner_id');
 				$allianceID = $dbRecord->getInt('alliance_id');

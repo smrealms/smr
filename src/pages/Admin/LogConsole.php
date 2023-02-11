@@ -38,7 +38,9 @@ class LogConsole extends AccountPage {
 				'Notes' => '',
 			];
 
-			$dbResult2 = $db->read('SELECT notes FROM log_has_notes WHERE account_id = ' . $db->escapeNumber($accountID));
+			$dbResult2 = $db->read('SELECT notes FROM log_has_notes WHERE account_id = :account_id', [
+				'account_id' => $db->escapeNumber($accountID),
+			]);
 			if ($dbResult2->hasRecord()) {
 				$loggedAccounts[$accountID]['Notes'] = nl2br($dbResult2->record()->getString('notes'));
 			}

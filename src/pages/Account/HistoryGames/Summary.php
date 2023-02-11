@@ -18,8 +18,10 @@ class Summary extends HistoryPage {
 		$this->addMenu($template);
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT start_date, type, end_date, game_name, speed, game_id ' .
-			'FROM game WHERE game_id = ' . $db->escapeNumber($game_id));
+		$dbResult = $db->read('SELECT start_date, type, end_date, game_name, speed, game_id
+			FROM game WHERE game_id = :game_id', [
+			'game_id' => $db->escapeNumber($game_id),
+		]);
 		$dbRecord = $dbResult->record();
 		$template->assign('GameName', $game_name);
 		$template->assign('Start', date($account->getDateFormat(), $dbRecord->getInt('start_date')));
@@ -27,7 +29,9 @@ class Summary extends HistoryPage {
 		$template->assign('Type', $dbRecord->getString('type'));
 		$template->assign('Speed', $dbRecord->getFloat('speed'));
 
-		$dbResult = $db->read('SELECT count(*) total_players, IFNULL(max(experience),0) max_exp, IFNULL(max(alignment),0) max_align, IFNULL(min(alignment),0) min_align, IFNULL(max(kills),0) max_kills FROM player WHERE game_id = ' . $db->escapeNumber($game_id));
+		$dbResult = $db->read('SELECT count(*) total_players, IFNULL(max(experience),0) max_exp, IFNULL(max(alignment),0) max_align, IFNULL(min(alignment),0) min_align, IFNULL(max(kills),0) max_kills FROM player WHERE game_id = :game_id', [
+			'game_id' => $db->escapeNumber($game_id),
+		]);
 		$dbRecord = $dbResult->record();
 		$template->assign('NumPlayers', $dbRecord->getInt('total_players'));
 		$template->assign('MaxExp', $dbRecord->getInt('max_exp'));
@@ -35,16 +39,23 @@ class Summary extends HistoryPage {
 		$template->assign('MinAlign', $dbRecord->getInt('min_align'));
 		$template->assign('MaxKills', $dbRecord->getInt('max_kills'));
 
-		$dbResult = $db->read('SELECT count(*) FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id));
+		$dbResult = $db->read('SELECT count(*) FROM alliance WHERE game_id = :game_id', [
+			'game_id' => $db->escapeNumber($game_id),
+		]);
 		$template->assign('NumAlliances', $dbResult->record()->getInt('count(*)'));
 
 		// Get linked player information, if available
 		$oldAccountID = $account->getOldAccountID($this->historyDatabase);
-		$dbResult = $db->read('SELECT alliance_id FROM player WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND account_id = ' . $db->escapeNumber($oldAccountID));
+		$dbResult = $db->read('SELECT alliance_id FROM player WHERE game_id = :game_id AND account_id = :account_id', [
+			'game_id' => $db->escapeNumber($game_id),
+			'account_id' => $db->escapeNumber($oldAccountID),
+		]);
 		$oldAllianceID = $dbResult->hasRecord() ? $dbResult->record()->getInt('alliance_id') : 0;
 
 		$playerExp = [];
-		$dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY experience DESC LIMIT 10');
+		$dbResult = $db->read('SELECT * FROM player WHERE game_id = :game_id ORDER BY experience DESC LIMIT 10', [
+			'game_id' => $db->escapeNumber($game_id),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$playerExp[] = [
 				'bold' => $dbRecord->getInt('account_id') == $oldAccountID ? 'class="bold"' : '',
@@ -55,7 +66,9 @@ class Summary extends HistoryPage {
 		$template->assign('PlayerExp', $playerExp);
 
 		$playerKills = [];
-		$dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY kills DESC LIMIT 10');
+		$dbResult = $db->read('SELECT * FROM player WHERE game_id = :game_id ORDER BY kills DESC LIMIT 10', [
+			'game_id' => $db->escapeNumber($game_id),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$playerKills[] = [
 				'bold' => $dbRecord->getInt('account_id') == $oldAccountID ? 'class="bold"' : '',
@@ -69,7 +82,9 @@ class Summary extends HistoryPage {
 		$allianceExp = [];
 		$dbResult = $db->read('SELECT SUM(experience) as exp, alliance_name, alliance_id
 					FROM player JOIN alliance USING (game_id, alliance_id)
-					WHERE game_id = ' . $db->escapeNumber($game_id) . ' GROUP BY alliance_id ORDER BY exp DESC LIMIT 10');
+					WHERE game_id = :game_id GROUP BY alliance_id ORDER BY exp DESC LIMIT 10', [
+			'game_id' => $db->escapeNumber($game_id),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$alliance = htmlentities($dbRecord->getString('alliance_name'));
 			$id = $dbRecord->getInt('alliance_id');
@@ -83,7 +98,9 @@ class Summary extends HistoryPage {
 		$template->assign('AllianceExp', $allianceExp);
 
 		$allianceKills = [];
-		$dbResult = $db->read('SELECT kills, alliance_name, alliance_id FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY kills DESC LIMIT 10');
+		$dbResult = $db->read('SELECT kills, alliance_name, alliance_id FROM alliance WHERE game_id = :game_id ORDER BY kills DESC LIMIT 10', [
+			'game_id' => $db->escapeNumber($game_id),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$alliance = htmlentities($dbRecord->getString('alliance_name'));
 			$id = $dbRecord->getInt('alliance_id');

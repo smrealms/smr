@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Irc\Message;
 
@@ -71,12 +72,13 @@ function channel_msg_op_cancel($fp, Message $msg, AbstractPlayer $player): bool 
 			return true;
 		}
 
+		$alliance = $player->getAlliance();
+
 		// get the op from db
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT 1
 					FROM alliance_has_op
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID());
+					WHERE ' . Alliance::SQL, $alliance->SQLID);
 		if (!$dbResult->hasRecord()) {
 			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
 			return true;
@@ -84,11 +86,9 @@ function channel_msg_op_cancel($fp, Message $msg, AbstractPlayer $player): bool 
 
 		// just get rid of op
 		$db->write('DELETE FROM alliance_has_op
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID());
+					WHERE ' . Alliance::SQL, $alliance->SQLID);
 		$db->write('DELETE FROM alliance_has_op_response
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID());
+					WHERE ' . Alliance::SQL, $alliance->SQLID);
 
 		fwrite($fp, 'PRIVMSG ' . $channel . ' :The OP has been canceled.' . EOL);
 		return true;
@@ -119,8 +119,11 @@ function channel_msg_op_set($fp, Message $msg, AbstractPlayer $player): bool {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT 1
 					FROM alliance_has_op
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND  game_id = ' . $player->getGameID());
+					WHERE alliance_id = :alliance_id
+						AND  game_id = :game_id', [
+			'alliance_id' => $player->getAllianceID(),
+			'game_id' => $player->getGameID(),
+		]);
 		if ($dbResult->hasRecord()) {
 			fwrite($fp, 'PRIVMSG ' . $channel . ' :There is already an OP scheduled. Cancel it first!' . EOL);
 			return true;
@@ -190,8 +193,11 @@ function channel_msg_op_response($fp, Message $msg, AbstractPlayer $player): boo
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT 1
 					FROM alliance_has_op
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID());
+					WHERE alliance_id = :alliance_id
+						AND game_id = :game_id', [
+			'alliance_id' => $player->getAllianceID(),
+			'game_id' => $player->getGameID(),
+		]);
 		if (!$dbResult->hasRecord()) {
 			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
 			return true;
@@ -252,18 +258,26 @@ function channel_op_notification($fp, string $rdata, string $nick, string $chann
 	// check if there is an upcoming op
 	$dbResult = $db->read('SELECT 1
 				FROM alliance_has_op
-				WHERE alliance_id = ' . $player->getAllianceID() . '
-					AND game_id = ' . $player->getGameID() . '
-					AND time > ' . time());
+				WHERE alliance_id = :alliance_id
+					AND game_id = :game_id
+					AND time > :now', [
+		'alliance_id' => $player->getAllianceID(),
+		'game_id' => $player->getGameID(),
+		'now' => time(),
+	]);
 	if (!$dbResult->hasRecord()) {
 		return true;
 	}
 
 	$dbResult = $db->read('SELECT 1
 				FROM alliance_has_op_response
-				WHERE alliance_id = ' . $player->getAllianceID() . '
-					AND game_id = ' . $player->getGameID() . '
-					AND account_id = ' . $player->getAccountID());
+				WHERE alliance_id = :alliance_id
+					AND game_id = :game_id
+					AND account_id = :account_id', [
+		'alliance_id' => $player->getAllianceID(),
+		'game_id' => $player->getGameID(),
+		'account_id' => $player->getAccountID(),
+	]);
 	if (!$dbResult->hasRecord()) {
 		fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your alliance leader has scheduled an OP, which you have not signed up yet. Please use the !op yes/no/maybe command to do so.' . EOL);
 	}

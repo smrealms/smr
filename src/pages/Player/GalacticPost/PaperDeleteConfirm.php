@@ -19,11 +19,17 @@ class PaperDeleteConfirm extends PlayerPage {
 		$db = Database::getInstance();
 
 		$template->assign('PageTopic', 'Delete Paper - Confirm');
-		$dbResult = $db->read('SELECT title FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND paper_id = ' . $db->escapeNumber($this->paperID));
+		$dbResult = $db->read('SELECT title FROM galactic_post_paper WHERE game_id = :game_id AND paper_id = :paper_id', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'paper_id' => $db->escapeNumber($this->paperID),
+		]);
 		$template->assign('PaperTitle', $dbResult->record()->getString('title'));
 
 		$articles = [];
-		$dbResult = $db->read('SELECT title FROM galactic_post_paper_content JOIN galactic_post_article USING (game_id, article_id) WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND paper_id = ' . $db->escapeNumber($this->paperID));
+		$dbResult = $db->read('SELECT title FROM galactic_post_paper_content JOIN galactic_post_article USING (game_id, article_id) WHERE game_id = :game_id AND paper_id = :paper_id', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'paper_id' => $db->escapeNumber($this->paperID),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$articles[] = bbifyMessage($dbRecord->getString('title'));
 		}

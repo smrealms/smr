@@ -30,7 +30,7 @@ class TestUtils {
 
 	/**
 	 * Construct an instance of a class with a protected constructor for test
-	 * purposes. Note that this function should only beused as a last resort!
+	 * purposes. Note that this function should only be used as a last resort!
 	 * Its use indicates that the input class is a candidate for refactoring.
 	 *
 	 * @template T of object

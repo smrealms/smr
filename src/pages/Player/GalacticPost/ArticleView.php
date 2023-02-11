@@ -26,7 +26,9 @@ class ArticleView extends PlayerPage {
 
 		// Get the articles that are not already in a paper
 		$articles = [];
-		$dbResult = $db->read('SELECT * FROM galactic_post_article WHERE article_id NOT IN (SELECT article_id FROM galactic_post_paper_content WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()));
+		$dbResult = $db->read('SELECT * FROM galactic_post_article WHERE article_id NOT IN (SELECT article_id FROM galactic_post_paper_content WHERE game_id = :game_id) AND game_id = :game_id', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$title = $dbRecord->getString('title');
 			$writer = Player::getPlayer($dbRecord->getInt('writer_id'), $player->getGameID());
@@ -41,7 +43,10 @@ class ArticleView extends PlayerPage {
 
 		// Details about a selected article
 		if ($this->articleID !== null) {
-			$dbResult = $db->read('SELECT * FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($this->articleID));
+			$dbResult = $db->read('SELECT * FROM galactic_post_article WHERE game_id = :game_id AND article_id = :article_id', [
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'article_id' => $db->escapeNumber($this->articleID),
+			]);
 			$dbRecord = $dbResult->record();
 
 			$container = new ArticleWrite($this->articleID);
@@ -59,7 +64,9 @@ class ArticleView extends PlayerPage {
 			$template->assign('SelectedArticle', $selectedArticle);
 
 			$papers = [];
-			$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
+			$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE game_id = :game_id', [
+				'game_id' => $db->escapeNumber($player->getGameID()),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$container = new ArticleAddToPaperProcessor($dbRecord->getInt('paper_id'), $this->articleID);
 				$papers[] = [

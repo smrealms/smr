@@ -17,7 +17,9 @@ class AnonBankCreateProcessor extends PlayerPageProcessor {
 		}
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT IFNULL(MAX(anon_id), 0) as max_id FROM anon_bank WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
+		$dbResult = $db->read('SELECT IFNULL(MAX(anon_id), 0) as max_id FROM anon_bank WHERE game_id = :game_id', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		$nextID = $dbResult->record()->getInt('max_id') + 1;
 
 		$db->insert('anon_bank', [

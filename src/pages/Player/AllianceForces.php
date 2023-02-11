@@ -37,9 +37,13 @@ class AllianceForces extends PlayerPage {
 			IFNULL(sum(combat_drones), 0) as tot_cds,
 			IFNULL(sum(scout_drones), 0) as tot_sds
 		FROM sector_has_forces JOIN player ON player.game_id=sector_has_forces.game_id AND sector_has_forces.owner_id=player.account_id
-		WHERE player.game_id=' . $db->escapeNumber($alliance->getGameID()) . '
-			AND player.alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
-			AND expire_time >= ' . $db->escapeNumber(Epoch::time()));
+		WHERE player.game_id = :game_id
+			AND player.alliance_id = :alliance_id
+			AND expire_time >= :now', [
+			'game_id' => $db->escapeNumber($alliance->getGameID()),
+			'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 		$dbRecord = $dbResult->record();
 
 		// Get total number of forces
@@ -62,10 +66,14 @@ class AllianceForces extends PlayerPage {
 		SELECT sector_has_forces.*
 		FROM player
 		JOIN sector_has_forces ON player.game_id = sector_has_forces.game_id AND player.account_id = sector_has_forces.owner_id
-		WHERE player.game_id=' . $db->escapeNumber($alliance->getGameID()) . '
-		AND player.alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
-		AND expire_time >= ' . $db->escapeNumber(Epoch::time()) . '
-		ORDER BY sector_id ASC');
+		WHERE player.game_id = :game_id
+		AND player.alliance_id = :alliance_id
+		AND expire_time >= :now
+		ORDER BY sector_id ASC', [
+			'game_id' => $db->escapeNumber($alliance->getGameID()),
+			'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 
 		$forces = [];
 		foreach ($dbResult->records() as $dbRecord) {

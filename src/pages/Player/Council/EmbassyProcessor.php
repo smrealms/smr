@@ -27,15 +27,22 @@ class EmbassyProcessor extends PlayerPageProcessor {
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT count(*) FROM race_has_voting
-					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()));
+					WHERE game_id = :game_id
+					AND race_id_1 = :race_id_1', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'race_id_1' => $db->escapeNumber($player->getRaceID()),
+		]);
 		if ($dbResult->record()->getInt('count(*)') > 2) {
 			create_error('You can\'t initiate more than 3 votes at a time!');
 		}
 
 		if ($type == 'PEACE') {
 			$dbResult = $db->read('SELECT 1 FROM race_has_voting
-						WHERE race_id_1=' . $db->escapeNumber($race_id) . ' AND race_id_2=' . $db->escapeNumber($player->getRaceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+						WHERE race_id_1 = :race_id_1 AND race_id_2 = :race_id_2 AND game_id = :game_id', [
+				'race_id_1' => $db->escapeNumber($race_id),
+				'race_id_2' => $db->escapeNumber($player->getRaceID()),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+			]);
 			if ($dbResult->hasRecord()) {
 				create_error('You cannot start a vote with that race.');
 			}

@@ -34,27 +34,37 @@ class MessageView extends PlayerPage {
 		$folderID = $this->folderID;
 
 		$db = Database::getInstance();
-		$whereClause = 'WHERE game_id = ' . $db->escapeNumber($player->getGameID());
-		if ($folderID == MSG_SENT) {
-			$whereClause .= ' AND sender_id = ' . $db->escapeNumber($player->getAccountID()) . '
-							AND message_type_id = ' . $db->escapeNumber(MSG_PLAYER) . '
-							AND sender_delete = ' . $db->escapeBoolean(false);
-		} else {
-			$whereClause .= ' AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
-							AND message_type_id = ' . $db->escapeNumber($folderID) . '
-							AND receiver_delete = ' . $db->escapeBoolean(false);
-		}
 
 		$messageBox = [];
 		if ($folderID == MSG_SENT) {
+			$whereClause = 'game_id = :game_id
+							AND sender_id = :sender_id
+							AND message_type_id = :message_type_id
+							AND sender_delete = :sender_delete';
+			$whereParams = [
+				'sender_id' => $db->escapeNumber($player->getAccountID()),
+				'message_type_id' => $db->escapeNumber(MSG_PLAYER),
+				'sender_delete' => $db->escapeBoolean(false),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+			];
 			$messageBox['UnreadMessages'] = 0;
 		} else {
+			$whereClause = 'game_id = :game_id
+							AND account_id = :account_id
+							AND message_type_id = :message_type_id
+							AND receiver_delete = :receiver_delete';
+			$whereParams = [
+				'account_id' => $db->escapeNumber($player->getAccountID()),
+				'message_type_id' => $db->escapeNumber($folderID),
+				'receiver_delete' => $db->escapeBoolean(false),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+			];
 			$dbResult = $db->read('SELECT count(*) as count
-						FROM message ' . $whereClause . '
-							AND msg_read = ' . $db->escapeBoolean(false));
+						FROM message WHERE ' . $whereClause . '
+							AND msg_read = \'FALSE\'', $whereParams);
 			$messageBox['UnreadMessages'] = $dbResult->record()->getInt('count');
 		}
-		$dbResult = $db->read('SELECT count(*) as count FROM message ' . $whereClause);
+		$dbResult = $db->read('SELECT count(*) as count FROM message WHERE ' . $whereClause, $whereParams);
 		$messageBox['TotalMessages'] = $dbResult->record()->getInt('count');
 		$messageBox['Type'] = $folderID;
 
@@ -80,17 +90,24 @@ class MessageView extends PlayerPage {
 		$container = new MessageDeleteProcessor($folderID);
 		$messageBox['DeleteFormHref'] = $container->href();
 
-		$dbResult = $db->read('SELECT * FROM message ' .
+		$dbResult = $db->read('SELECT * FROM message WHERE ' .
 					$whereClause . '
 					ORDER BY send_time DESC
-					LIMIT ' . ($page * MESSAGES_PER_PAGE) . ', ' . MESSAGES_PER_PAGE);
+					LIMIT :limit_offset, :limit_count', [
+			...$whereParams,
+			'limit_offset' => $page * MESSAGES_PER_PAGE,
+			'limit_count' => MESSAGES_PER_PAGE,
+		]);
 
 		$messageBox['NumberMessages'] = $dbResult->getNumRecords();
 
 		// Group scout messages if they wouldn't fit on a single page
 		if ($folderID == MSG_SCOUT && !$this->showAll && $messageBox['TotalMessages'] > $player->getScoutMessageGroupLimit()) {
 			// get rid of all old scout messages (>48h)
-			$db->write('DELETE FROM message WHERE expire_time < ' . $db->escapeNumber(Epoch::time()) . ' AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT));
+			$db->write('DELETE FROM message WHERE expire_time < :now AND message_type_id = :message_type_id', [
+				'now' => $db->escapeNumber(Epoch::time()),
+				'message_type_id' => $db->escapeNumber(MSG_SCOUT),
+			]);
 
 			$dispContainer = new self(MSG_SCOUT, showAll: true);
 			$messageBox['ShowAllHref'] = $dispContainer->href();
@@ -126,12 +143,17 @@ function displayScouts(AbstractPlayer $player): array {
 	$dbResult = $db->read('SELECT player.*, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, sum(msg_read=\'FALSE\') as total_unread
 					FROM message
 					JOIN player ON player.account_id = message.sender_id AND message.game_id = player.game_id
-					WHERE message.account_id = ' . $db->escapeNumber($player->getAccountID()) . '
-					AND player.game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT) . '
-					AND receiver_delete = ' . $db->escapeBoolean(false) . '
+					WHERE message.account_id = :account_id
+					AND player.game_id = :game_id
+					AND message_type_id = :message_type_id
+					AND receiver_delete = :receiver_delete
 					GROUP BY sender_id
-					ORDER BY last DESC');
+					ORDER BY last DESC', [
+		'account_id' => $db->escapeNumber($player->getAccountID()),
+		'game_id' => $db->escapeNumber($player->getGameID()),
+		'message_type_id' => $db->escapeNumber(MSG_SCOUT),
+		'receiver_delete' => $db->escapeBoolean(false),
+	]);
 
 	$messages = [];
 	foreach ($dbResult->records() as $dbRecord) {
@@ -146,11 +168,16 @@ function displayScouts(AbstractPlayer $player): array {
 	// Perform a single query to minimize query overhead
 	$dbResult = $db->read('SELECT message_id, account_id, sender_id, message_text, send_time, msg_read
 					FROM message
-					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
-					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT) . '
-					AND receiver_delete = ' . $db->escapeBoolean(false) . '
-					ORDER BY send_time DESC');
+					WHERE account_id = :account_id
+					AND game_id = :game_id
+					AND message_type_id = :message_type_id
+					AND receiver_delete = :receiver_delete
+					ORDER BY send_time DESC', [
+		'account_id' => $db->escapeNumber($player->getAccountID()),
+		'game_id' => $db->escapeNumber($player->getGameID()),
+		'message_type_id' => $db->escapeNumber(MSG_SCOUT),
+		'receiver_delete' => $db->escapeBoolean(false),
+	]);
 	$groupedMessages = [];
 	foreach ($dbResult->records() as $dbRecord) {
 		$senderID = $dbRecord->getInt('sender_id');

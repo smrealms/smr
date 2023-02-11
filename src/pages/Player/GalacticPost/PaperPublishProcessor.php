@@ -16,13 +16,20 @@ class PaperPublishProcessor extends PlayerPageProcessor {
 	public function build(AbstractPlayer $player): never {
 		// Make sure this paper hasn't been published before
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND paper_id = ' . $db->escapeNumber($this->paperID));
+		$dbResult = $db->read('SELECT 1 FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id = :game_id AND paper_id = :paper_id', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'paper_id' => $db->escapeNumber($this->paperID),
+		]);
 		if ($dbResult->hasRecord()) {
 			create_error('Cannot publish a paper that has previously been published!');
 		}
 
 		// Update the online_since column
-		$db->write('UPDATE galactic_post_paper SET online_since=' . $db->escapeNumber(Epoch::time()) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND paper_id = ' . $db->escapeNumber($this->paperID));
+		$db->write('UPDATE galactic_post_paper SET online_since = :now WHERE game_id = :game_id AND paper_id = :paper_id', [
+			'now' => $db->escapeNumber(Epoch::time()),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'paper_id' => $db->escapeNumber($this->paperID),
+		]);
 
 		//all done lets send back to the main GP page.
 		$container = new EditorOptions();

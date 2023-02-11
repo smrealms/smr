@@ -28,8 +28,11 @@ class AnonBankDetail extends PlayerPage {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT *
 					FROM anon_bank
-					WHERE anon_id=' . $db->escapeNumber($account_num) . '
-					AND game_id=' . $db->escapeNumber($player->getGameID()));
+					WHERE anon_id = :anon_id
+					AND game_id = :game_id', [
+			'anon_id' => $db->escapeNumber($account_num),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		$dbRecord = $dbResult->record();
 
 		$balance = $dbRecord->getInt('amount');
@@ -37,8 +40,11 @@ class AnonBankDetail extends PlayerPage {
 
 		if ($maxValue <= 0) {
 			$dbResult = $db->read('SELECT IFNULL(MAX(transaction_id), 5) as max_transaction_id FROM anon_bank_transactions
-						WHERE game_id=' . $db->escapeNumber($player->getGameID()) . '
-						AND anon_id=' . $db->escapeNumber($account_num));
+						WHERE game_id = :game_id
+						AND anon_id = :anon_id', [
+				'anon_id' => $db->escapeNumber($account_num),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+			]);
 			$maxValue = $dbResult->record()->getInt('max_transaction_id');
 		}
 
@@ -49,18 +55,27 @@ class AnonBankDetail extends PlayerPage {
 		$query = 'SELECT *
 					FROM player
 					JOIN anon_bank_transactions USING (game_id, account_id)
-					WHERE player.game_id=' . $db->escapeNumber($player->getGameID()) . '
-					AND anon_bank_transactions.anon_id=' . $db->escapeNumber($account_num);
+					WHERE player.game_id = :game_id
+					AND anon_bank_transactions.anon_id = :anon_id';
+		$sqlParams = [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'anon_id' => $db->escapeNumber($account_num),
+		];
 
 		if ($maxValue > 0) {
-			$query .= ' AND transaction_id>=' . $db->escapeNumber($minValue) . '
-						AND transaction_id<=' . $db->escapeNumber($maxValue) . '
-						ORDER BY time LIMIT ' . (1 + $maxValue - $minValue);
+			$query .= ' AND transaction_id >= :min_transaction_id
+						AND transaction_id <= :max_transaction_id
+						ORDER BY time LIMIT :limit';
+			$dbResult = $db->read($query, [
+				...$sqlParams,
+				'min_transaction_id' => $db->escapeNumber($minValue),
+				'max_transaction_id' => $db->escapeNumber($maxValue),
+				'limit' => $db->escapeNumber(1 + $maxValue - $minValue),
+			]);
 		} else {
 			$query .= ' ORDER BY time LIMIT 10';
+			$dbResult = $db->read($query, $sqlParams);
 		}
-
-		$dbResult = $db->read($query);
 
 		// only if we have at least one result
 		if ($dbResult->hasRecord()) {

@@ -42,7 +42,9 @@ class Account {
 		'AttackTrader' => ['f'],
 	];
 
-	protected readonly string $SQL;
+	public const SQL = 'account_id = :account_id';
+	/** @var array{account_id: int} */
+	protected readonly array $SQLID;
 
 	protected string $login;
 	protected string $passwordHash;
@@ -115,7 +117,9 @@ class Account {
 	public static function getAccountByLogin(string $login, bool $forceUpdate = false): self {
 		if (!empty($login)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM account WHERE login = ' . $db->escapeString($login));
+			$dbResult = $db->read('SELECT account_id FROM account WHERE login = :login', [
+				'login' => $db->escapeString($login),
+			]);
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -127,7 +131,9 @@ class Account {
 	public static function getAccountByHofName(string $hofName, bool $forceUpdate = false): self {
 		if (!empty($hofName)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM account WHERE hof_name = ' . $db->escapeString($hofName));
+			$dbResult = $db->read('SELECT account_id FROM account WHERE hof_name = :hof_name', [
+				'hof_name' => $db->escapeString($hofName),
+			]);
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -139,7 +145,9 @@ class Account {
 	public static function getAccountByEmail(?string $email, bool $forceUpdate = false): self {
 		if (!empty($email)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM account WHERE email = ' . $db->escapeString($email));
+			$dbResult = $db->read('SELECT account_id FROM account WHERE email = :email', [
+				'email' => $db->escapeString($email),
+			]);
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -151,7 +159,9 @@ class Account {
 	public static function getAccountByDiscordId(?string $id, bool $forceUpdate = false): self {
 		if (!empty($id)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM account where discord_id = ' . $db->escapeString($id));
+			$dbResult = $db->read('SELECT account_id FROM account where discord_id = :discord_id', [
+				'discord_id' => $db->escapeString($id),
+			]);
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -163,7 +173,9 @@ class Account {
 	public static function getAccountByIrcNick(?string $nick, bool $forceUpdate = false): self {
 		if (!empty($nick)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM account WHERE irc_nick = ' . $db->escapeString($nick));
+			$dbResult = $db->read('SELECT account_id FROM account WHERE irc_nick = :irc_nick', [
+				'irc_nick' => $db->escapeString($nick),
+			]);
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -176,8 +188,11 @@ class Account {
 		if ($social->isValid()) {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account JOIN account_auth USING(account_id)
-				WHERE login_type = ' . $db->escapeString($social->getLoginType()) . '
-				AND auth_key = ' . $db->escapeString($social->getUserID()));
+				WHERE login_type = :login_type
+				AND auth_key = :auth_key', [
+				'login_type' => $db->escapeString($social->getLoginType()),
+				'auth_key' => $db->escapeString($social->getUserID()),
+			]);
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -224,8 +239,8 @@ class Account {
 
 	protected function __construct(protected readonly int $accountID) {
 		$db = Database::getInstance();
-		$this->SQL = 'account_id = ' . $db->escapeNumber($accountID);
-		$dbResult = $db->read('SELECT * FROM account WHERE ' . $this->SQL);
+		$this->SQLID = ['account_id' => $db->escapeNumber($accountID)];
+		$dbResult = $db->read('SELECT * FROM account WHERE ' . self::SQL, $this->SQLID);
 
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
@@ -295,7 +310,7 @@ class Account {
 	 */
 	public function isDisabled(): array|false {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE ' . $this->SQL);
+		$dbResult = $db->read('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE ' . self::SQL, $this->SQLID);
 		if (!$dbResult->hasRecord()) {
 			return false;
 		}
@@ -318,34 +333,63 @@ class Account {
 
 	public function update(): void {
 		$db = Database::getInstance();
-		$db->write('UPDATE account SET email = ' . $db->escapeString($this->email) .
-			', validation_code = ' . $db->escapeString($this->validation_code) .
-			', validated = ' . $db->escapeBoolean($this->validated) .
-			', password = ' . $db->escapeString($this->passwordHash) .
-			', images = ' . $db->escapeBoolean($this->images) .
-			', password_reset = ' . $db->escapeString($this->passwordReset) .
-			', use_ajax=' . $db->escapeBoolean($this->useAJAX) .
-			', mail_banned=' . $db->escapeNumber($this->mailBanned) .
-			', max_rank_achieved=' . $db->escapeNumber($this->maxRankAchieved) .
-			', default_css_enabled=' . $db->escapeBoolean($this->defaultCSSEnabled) .
-			', center_galaxy_map_on_player=' . $db->escapeBoolean($this->centerGalaxyMapOnPlayer) .
-			', message_notifications=' . $db->escapeNullableObject($this->messageNotifications) .
-			', hotkeys=' . $db->escapeObject($this->hotkeys) .
-			', last_login = ' . $db->escapeNumber($this->last_login) .
-			', logging = ' . $db->escapeBoolean($this->logging) .
-			', time_format = ' . $db->escapeString($this->timeFormat) .
-			', date_format = ' . $db->escapeString($this->dateFormat) .
-			', discord_id = ' . $db->escapeNullableString($this->discordId) .
-			', irc_nick = ' . $db->escapeNullableString($this->ircNick) .
-			', hof_name = ' . $db->escapeString($this->hofName) .
-			', template = ' . $db->escapeString($this->template) .
-			', colour_scheme = ' . $db->escapeString($this->colourScheme) .
-			', fontsize = ' . $db->escapeNumber($this->fontSize) .
-			', css_link = ' . $db->escapeNullableString($this->cssLink) .
-			', friendly_colour = ' . $db->escapeNullableString($this->friendlyColour) .
-			', neutral_colour = ' . $db->escapeNullableString($this->neutralColour) .
-			', enemy_colour = ' . $db->escapeNullableString($this->enemyColour) .
-			' WHERE ' . $this->SQL);
+		$db->write('UPDATE account SET email = :email,
+			validation_code = :validation_code,
+			validated = :validated,
+			password = :password,
+			images = :images,
+			password_reset = :password_reset,
+			use_ajax = :use_ajax,
+			mail_banned = :mail_banned,
+			max_rank_achieved = :max_rank_achieved,
+			default_css_enabled = :default_css_enabled,
+			center_galaxy_map_on_player = :center_galaxy_map_on_player,
+			message_notifications = :message_notifications,
+			hotkeys = :hotkeys,
+			last_login = :last_login,
+			logging = :logging,
+			time_format = :time_format,
+			date_format = :date_format,
+			discord_id = :discord_id,
+			irc_nick = :irc_nick,
+			hof_name = :hof_name,
+			template = :template,
+			colour_scheme = :colour_scheme,
+			fontsize = :fontsize,
+			css_link = :css_link,
+			friendly_colour = :friendly_colour,
+			neutral_colour = :neutral_colour,
+			enemy_colour = :enemy_colour
+			WHERE ' . self::SQL, [
+			'email' => $db->escapeString($this->email),
+			'validation_code' => $db->escapeString($this->validation_code),
+			'validated' => $db->escapeBoolean($this->validated),
+			'password' => $db->escapeString($this->passwordHash),
+			'images' => $db->escapeBoolean($this->images),
+			'password_reset' => $db->escapeString($this->passwordReset),
+			'use_ajax' => $db->escapeBoolean($this->useAJAX),
+			'mail_banned' => $db->escapeNumber($this->mailBanned),
+			'max_rank_achieved' => $db->escapeNumber($this->maxRankAchieved),
+			'default_css_enabled' => $db->escapeBoolean($this->defaultCSSEnabled),
+			'center_galaxy_map_on_player' => $db->escapeBoolean($this->centerGalaxyMapOnPlayer),
+			'message_notifications' => $db->escapeNullableObject($this->messageNotifications),
+			'hotkeys' => $db->escapeObject($this->hotkeys),
+			'last_login' => $db->escapeNumber($this->last_login),
+			'logging' => $db->escapeBoolean($this->logging),
+			'time_format' => $db->escapeString($this->timeFormat),
+			'date_format' => $db->escapeString($this->dateFormat),
+			'discord_id' => $db->escapeNullableString($this->discordId),
+			'irc_nick' => $db->escapeNullableString($this->ircNick),
+			'hof_name' => $db->escapeString($this->hofName),
+			'template' => $db->escapeString($this->template),
+			'colour_scheme' => $db->escapeString($this->colourScheme),
+			'fontsize' => $db->escapeNumber($this->fontSize),
+			'css_link' => $db->escapeNullableString($this->cssLink),
+			'friendly_colour' => $db->escapeNullableString($this->friendlyColour),
+			'neutral_colour' => $db->escapeNullableString($this->neutralColour),
+			'enemy_colour' => $db->escapeNullableString($this->enemyColour),
+			...$this->SQLID,
+		]);
 		$this->hasChanged = false;
 	}
 
@@ -356,16 +400,20 @@ class Account {
 		// more than 50 elements in it?
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT time,ip FROM account_has_ip WHERE ' . $this->SQL . ' ORDER BY time ASC');
+		$dbResult = $db->read('SELECT time,ip FROM account_has_ip WHERE ' . self::SQL . ' ORDER BY time ASC', $this->SQLID);
 		if ($dbResult->getNumRecords() > 50) {
 			$dbRecord = $dbResult->records()->current();
 			$delete_time = $dbRecord->getInt('time');
 			$delete_ip = $dbRecord->getString('ip');
 
 			$db->write('DELETE FROM account_has_ip
-				WHERE ' . $this->SQL . ' AND
-				time = ' . $db->escapeNumber($delete_time) . ' AND
-				ip = ' . $db->escapeString($delete_ip));
+				WHERE ' . self::SQL . ' AND
+				time = :time AND
+				ip = :ip', [
+				...$this->SQLID,
+				'time' => $db->escapeNumber($delete_time),
+				'ip' => $db->escapeString($delete_ip),
+			]);
 		}
 
 		// Determine host from IP address
@@ -425,7 +473,9 @@ class Account {
 	public function isNPC(): bool {
 		if (!isset($this->npc)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT 1 FROM npc_logins WHERE login = ' . $db->escapeString($this->getLogin()));
+			$dbResult = $db->read('SELECT 1 FROM npc_logins WHERE login = :login', [
+				'login' => $db->escapeString($this->getLogin()),
+			]);
 			$this->npc = $dbResult->hasRecord();
 		}
 		return $this->npc;
@@ -435,7 +485,7 @@ class Account {
 		if (!isset($this->HOF)) {
 			//Get Player HOF
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT type,sum(amount) as amount FROM player_hof WHERE ' . $this->SQL . ' AND game_id IN (SELECT game_id FROM game WHERE ignore_stats = \'FALSE\') GROUP BY type');
+			$dbResult = $db->read('SELECT type,sum(amount) as amount FROM player_hof WHERE ' . self::SQL . ' AND game_id IN (SELECT game_id FROM game WHERE ignore_stats = \'FALSE\') GROUP BY type', $this->SQLID);
 			$this->HOF = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->HOF[$dbRecord->getString('type')] = $dbRecord->getFloat('amount');
@@ -538,7 +588,7 @@ class Account {
 			$this->credits = 0;
 			$this->rewardCredits = 0;
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM account_has_credits WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT * FROM account_has_credits WHERE ' . self::SQL, $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 				$this->credits = $dbRecord->getInt('credits_left');
@@ -572,12 +622,16 @@ class Account {
 		$db = Database::getInstance();
 		if ($this->credits == 0 && $this->rewardCredits == 0) {
 			$db->replace('account_has_credits', [
-				'account_id' => $db->escapeNumber($this->getAccountID()),
+				...$this->SQLID,
 				'credits_left' => $db->escapeNumber($credits),
 				'reward_credits' => $db->escapeNumber($rewardCredits),
 			]);
 		} else {
-			$db->write('UPDATE account_has_credits SET credits_left=' . $db->escapeNumber($credits) . ', reward_credits=' . $db->escapeNumber($rewardCredits) . ' WHERE ' . $this->SQL);
+			$db->write('UPDATE account_has_credits SET credits_left = :credits_left, reward_credits = :reward_credits WHERE ' . self::SQL, [
+				'credits_left' => $db->escapeNumber($credits),
+				'reward_credits' => $db->escapeNumber($rewardCredits),
+				...$this->SQLID,
+			]);
 		}
 		$this->credits = $credits;
 		$this->rewardCredits = $rewardCredits;
@@ -604,7 +658,10 @@ class Account {
 				'credits_left' => $db->escapeNumber($credits),
 			]);
 		} else {
-			$db->write('UPDATE account_has_credits SET credits_left=' . $db->escapeNumber($credits) . ' WHERE ' . $this->SQL);
+			$db->write('UPDATE account_has_credits SET credits_left = :credits_left WHERE ' . self::SQL, [
+				'credits_left' => $db->escapeNumber($credits),
+				...$this->SQLID,
+			]);
 		}
 		$this->credits = $credits;
 	}
@@ -643,7 +700,10 @@ class Account {
 				'reward_credits' => $db->escapeNumber($credits),
 			]);
 		} else {
-			$db->write('UPDATE account_has_credits SET reward_credits=' . $db->escapeNumber($credits) . ' WHERE ' . $this->SQL);
+			$db->write('UPDATE account_has_credits SET reward_credits = :reward_credits WHERE ' . self::SQL, [
+				'reward_credits' => $db->escapeNumber($credits),
+				...$this->SQLID,
+			]);
 		}
 		$this->rewardCredits = $credits;
 	}
@@ -963,7 +1023,10 @@ class Account {
 
 	public function isActive(): bool {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM active_session WHERE account_id = ' . $db->escapeNumber($this->getAccountID()) . ' AND last_accessed >= ' . $db->escapeNumber(Epoch::time() - TIME_BEFORE_INACTIVE) . ' LIMIT 1');
+		$dbResult = $db->read('SELECT 1 FROM active_session WHERE ' . self::SQL . ' AND last_accessed >= :inactive_time LIMIT 1', [
+			...$this->SQLID,
+			'inactive_time' => $db->escapeNumber(Epoch::time() - TIME_BEFORE_INACTIVE),
+		]);
 		return $dbResult->hasRecord();
 	}
 
@@ -1006,7 +1069,11 @@ class Account {
 
 	public function addAuthMethod(string $loginType, string $authKey): void {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT account_id FROM account_auth WHERE login_type=' . $db->escapeString($loginType) . ' AND auth_key = ' . $db->escapeString($authKey) . ';');
+		$params = [
+			'login_type' => $db->escapeString($loginType),
+			'auth_key' => $db->escapeString($authKey),
+		];
+		$dbResult = $db->read('SELECT account_id FROM account_auth WHERE login_type = :login_type AND auth_key = :auth_key', $params);
 		if ($dbResult->hasRecord()) {
 			if ($dbResult->record()->getInt('account_id') != $this->getAccountID()) {
 				throw new Exception('Another account already uses this form of auth.');
@@ -1015,8 +1082,7 @@ class Account {
 		}
 		$db->insert('account_auth', [
 			'account_id' => $db->escapeNumber($this->getAccountID()),
-			'login_type' => $db->escapeString($loginType),
-			'auth_key' => $db->escapeString($authKey),
+			...$params,
 		]);
 	}
 
@@ -1169,7 +1235,7 @@ class Account {
 		if (!isset($this->permissions)) {
 			$this->permissions = [];
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT permission_id FROM account_has_permission WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT permission_id FROM account_has_permission WHERE ' . self::SQL, $this->SQLID);
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->permissions[$dbRecord->getInt('permission_id')] = true;
 			}
@@ -1190,7 +1256,7 @@ class Account {
 			$this->points = 0;
 			$db = Database::getInstance();
 			$db->lockTable('account_has_points');
-			$dbResult = $db->read('SELECT * FROM account_has_points WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT * FROM account_has_points WHERE ' . self::SQL, $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 				$this->points = $dbRecord->getInt('points');
@@ -1218,14 +1284,17 @@ class Account {
 		$db = Database::getInstance();
 		if ($this->points == 0) {
 			$db->insert('account_has_points', [
-				'account_id' => $db->escapeNumber($this->getAccountID()),
+				...$this->SQLID,
 				'points' => $db->escapeNumber($numPoints),
 				'last_update' => $db->escapeNumber($lastUpdate ?? Epoch::time()),
 			]);
 		} elseif ($numPoints <= 0) {
-			$db->write('DELETE FROM account_has_points WHERE ' . $this->SQL);
+			$db->write('DELETE FROM account_has_points WHERE ' . self::SQL, $this->SQLID);
 		} else {
-			$db->write('UPDATE account_has_points SET points = ' . $db->escapeNumber($numPoints) . (isset($lastUpdate) ? ', last_update = ' . $db->escapeNumber(Epoch::time()) : '') . ' WHERE ' . $this->SQL);
+			$db->write('UPDATE account_has_points SET points = :points' . (isset($lastUpdate) ? ', last_update = ' . $db->escapeNumber(Epoch::time()) : '') . ' WHERE ' . self::SQL, [
+				...$this->SQLID,
+				'points' => $db->escapeNumber($numPoints),
+			]);
 		}
 		$this->points = $numPoints;
 	}
@@ -1299,27 +1368,30 @@ class Account {
 	public function banAccount(int $expireTime, self $admin, int $reasonID, string $suspicion, bool $removeExceptions = false): void {
 		$db = Database::getInstance();
 		$db->replace('account_is_closed', [
-			'account_id' => $db->escapeNumber($this->getAccountID()),
+			...$this->SQLID,
 			'reason_id' => $db->escapeNumber($reasonID),
 			'suspicion' => $db->escapeString($suspicion),
 			'expires' => $db->escapeNumber($expireTime),
 		]);
-		$db->write('DELETE FROM active_session WHERE ' . $this->SQL . ' LIMIT 1');
+		$db->write('DELETE FROM active_session WHERE ' . self::SQL . ' LIMIT 1', $this->SQLID);
 
 		$db->insert('account_has_closing_history', [
-			'account_id' => $db->escapeNumber($this->getAccountID()),
+			...$this->SQLID,
 			'time' => $db->escapeNumber(Epoch::time()),
 			'admin_id' => $db->escapeNumber($admin->getAccountID()),
 			'action' => $db->escapeString('Closed'),
 		]);
 		$db->write('UPDATE player SET newbie_turns = 1
-						WHERE ' . $this->SQL . '
+						WHERE ' . self::SQL . '
 						AND newbie_turns = 0
-						AND land_on_planet = ' . $db->escapeBoolean(false));
+						AND land_on_planet = \'FALSE\'', $this->SQLID);
 
 		$dbResult = $db->read('SELECT game_id FROM game JOIN player USING (game_id)
-						WHERE ' . $this->SQL . '
-						AND end_time >= ' . $db->escapeNumber(Epoch::time()));
+						WHERE ' . self::SQL . '
+						AND end_time >= :now', [
+			...$this->SQLID,
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$player = Player::getPlayer($this->getAccountID(), $dbRecord->getInt('game_id'));
 			$player->updateTurns();
@@ -1327,7 +1399,7 @@ class Account {
 		}
 		$this->log(LOG_TYPE_ACCOUNT_CHANGES, 'Account closed by ' . $admin->getLogin() . '.');
 		if ($removeExceptions !== false) {
-			$db->write('DELETE FROM account_exceptions WHERE ' . $this->SQL);
+			$db->write('DELETE FROM account_exceptions WHERE ' . self::SQL, $this->SQLID);
 		}
 	}
 
@@ -1337,14 +1409,17 @@ class Account {
 			$adminID = $admin->getAccountID();
 		}
 		$db = Database::getInstance();
-		$db->write('DELETE FROM account_is_closed WHERE ' . $this->SQL);
+		$db->write('DELETE FROM account_is_closed WHERE ' . self::SQL, $this->SQLID);
 		$db->insert('account_has_closing_history', [
-			'account_id' => $db->escapeNumber($this->getAccountID()),
+			...$this->SQLID,
 			'time' => $db->escapeNumber(Epoch::time()),
 			'admin_id' => $db->escapeNumber($adminID),
 			'action' => $db->escapeString('Opened'),
 		]);
-		$db->write('UPDATE player SET last_turn_update = GREATEST(' . $db->escapeNumber(Epoch::time()) . ', last_turn_update) WHERE ' . $this->SQL);
+		$db->write('UPDATE player SET last_turn_update = GREATEST(:now, last_turn_update) WHERE ' . self::SQL, [
+			'now' => $db->escapeNumber(Epoch::time()),
+			...$this->SQLID,
+		]);
 		if ($admin !== null) {
 			$this->log(LOG_TYPE_ACCOUNT_CHANGES, 'Account reopened by ' . $admin->getLogin() . '.');
 		} else {
@@ -1352,7 +1427,7 @@ class Account {
 		}
 		if ($currException !== null) {
 			$db->replace('account_exceptions', [
-				'account_id' => $db->escapeNumber($this->getAccountID()),
+				...$this->SQLID,
 				'reason' => $db->escapeString($currException),
 			]);
 		}

@@ -27,7 +27,9 @@ class CombatLogViewer extends PlayerPage {
 		// Set properties for the current display page
 		$display_id = $this->logIDs[$this->currentLog];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT timestamp,sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($display_id) . ' LIMIT 1');
+		$dbResult = $db->read('SELECT timestamp,sector_id,result,type FROM combat_logs WHERE log_id = :log_id LIMIT 1', [
+			'log_id' => $db->escapeNumber($display_id),
+		]);
 
 		$dbRecord = $dbResult->record();
 		$template->assign('CombatLogSector', $dbRecord->getInt('sector_id'));

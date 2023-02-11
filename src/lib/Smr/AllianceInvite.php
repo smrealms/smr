@@ -36,9 +36,14 @@ class AllianceInvite {
 	public static function getAll(int $allianceID, int $gameID): array {
 		// Remove any expired invitations
 		$db = Database::getInstance();
-		$db->write('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(Epoch::time()));
+		$db->write('DELETE FROM alliance_invites_player WHERE expires < :now', [
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 
-		$dbResult = $db->read('SELECT * FROM alliance_invites_player WHERE alliance_id=' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID));
+		$dbResult = $db->read('SELECT * FROM alliance_invites_player WHERE alliance_id = :alliance_id AND game_id = :game_id', [
+			'alliance_id' => $db->escapeNumber($allianceID),
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 		$invites = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$invites[] = new self($dbRecord);
@@ -52,9 +57,15 @@ class AllianceInvite {
 	public static function get(int $allianceID, int $gameID, int $receiverAccountID): self {
 		// Remove any expired invitations
 		$db = Database::getInstance();
-		$db->write('DELETE FROM alliance_invites_player WHERE expires < ' . $db->escapeNumber(Epoch::time()));
+		$db->write('DELETE FROM alliance_invites_player WHERE expires < :now', [
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 
-		$dbResult = $db->read('SELECT * FROM alliance_invites_player WHERE alliance_id=' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND account_id=' . $db->escapeNumber($receiverAccountID));
+		$dbResult = $db->read('SELECT * FROM alliance_invites_player WHERE alliance_id = :alliance_id AND game_id = :game_id AND account_id = :account_id', [
+			'alliance_id' => $db->escapeNumber($allianceID),
+			'game_id' => $db->escapeNumber($gameID),
+			'account_id' => $db->escapeNumber($receiverAccountID),
+		]);
 		if ($dbResult->hasRecord()) {
 			return new self($dbResult->record());
 		}
@@ -72,8 +83,14 @@ class AllianceInvite {
 
 	public function delete(): void {
 		$db = Database::getInstance();
-		$db->write('DELETE FROM alliance_invites_player WHERE alliance_id=' . $db->escapeNumber($this->allianceID) . ' AND game_id=' . $db->escapeNumber($this->gameID) . ' AND account_id=' . $db->escapeNumber($this->receiverAccountID));
-		$db->write('DELETE FROM message WHERE message_id=' . $db->escapeNumber($this->messageID));
+		$db->write('DELETE FROM alliance_invites_player WHERE alliance_id = :alliance_id AND game_id = :game_id AND account_id = :account_id', [
+			'alliance_id' => $db->escapeNumber($this->allianceID),
+			'game_id' => $db->escapeNumber($this->gameID),
+			'account_id' => $db->escapeNumber($this->receiverAccountID),
+		]);
+		$db->write('DELETE FROM message WHERE message_id = :message_id', [
+			'message_id' => $db->escapeNumber($this->messageID),
+		]);
 	}
 
 	public function getSender(): AbstractPlayer {

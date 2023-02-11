@@ -26,7 +26,10 @@ class NpcManageProcessor extends AccountPageProcessor {
 		if (Request::has('active-submit')) {
 			// Toggle the activity of this NPC
 			$active = Request::has('active');
-			$db->write('UPDATE npc_logins SET active=' . $db->escapeBoolean($active) . ' WHERE login=' . $db->escapeString($this->login));
+			$db->write('UPDATE npc_logins SET active = :active WHERE login = :login', [
+				'active' => $db->escapeBoolean($active),
+				'login' => $db->escapeString($this->login),
+			]);
 		}
 
 		// Create a new NPC player in a selected game

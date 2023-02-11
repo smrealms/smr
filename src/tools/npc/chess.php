@@ -21,7 +21,9 @@ function debug(string $message, mixed $debugObject = null): void {
 	// On the first call to debug, we need to update the script_id retroactively
 	if (!defined('SCRIPT_ID')) {
 		define('SCRIPT_ID', $logID);
-		$db->write('UPDATE npc_logs SET script_id=' . SCRIPT_ID . ' WHERE log_id=' . SCRIPT_ID);
+		$db->write('UPDATE npc_logs SET script_id = :script_id WHERE log_id = :script_id', [
+			'script_id' => SCRIPT_ID,
+		]);
 	}
 }
 

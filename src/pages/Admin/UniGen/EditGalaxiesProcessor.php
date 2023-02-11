@@ -102,7 +102,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 						// Remove this sector and everything in it
 						$delSector = Sector::getSector($gameID, $oldID);
 						$delSector->removeAllFixtures();
-						$db->write('DELETE FROM sector WHERE ' . $delSector->getSQL());
+						$db->write('DELETE FROM sector WHERE ' . Sector::SQL, $delSector->SQLID);
 					}
 				}
 			}
@@ -118,7 +118,9 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 				}
 			}
 		}
-		$db->write('UPDATE sector SET warp = 0 WHERE game_id = ' . $db->escapeNumber($gameID));
+		$db->write('UPDATE sector SET warp = 0 WHERE game_id = :game_id', [
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 
 		// Many sectors will have their IDs shifted up or down, so we need to modify
 		// the primary keys for the sector table as well as planets, ports, etc.
@@ -145,25 +147,29 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 
 				// Else we are ready to shift from oldID to newID
 				$oldSector = Sector::getSector($gameID, $oldID);
-				$SQL = 'SET sector_id = ' . $db->escapeNumber($newID) . ' WHERE ' . $oldSector->getSQL();
+				$SQL = 'SET sector_id = :new_sector_id WHERE ' . Sector::SQL;
+				$params = [
+					'new_sector_id' => $db->escapeNumber($newID),
+					...$oldSector->SQLID,
+				];
 
 				if ($oldSector->hasPlanet()) {
-					$db->write('UPDATE planet ' . $SQL);
-					$db->write('UPDATE planet_has_building ' . $SQL);
-					$db->write('UPDATE planet_has_cargo ' . $SQL);
-					$db->write('UPDATE planet_has_weapon ' . $SQL);
+					$db->write('UPDATE planet ' . $SQL, $params);
+					$db->write('UPDATE planet_has_building ' . $SQL, $params);
+					$db->write('UPDATE planet_has_cargo ' . $SQL, $params);
+					$db->write('UPDATE planet_has_weapon ' . $SQL, $params);
 				}
 
 				if ($oldSector->hasPort()) {
-					$db->write('UPDATE port ' . $SQL);
-					$db->write('UPDATE port_has_goods ' . $SQL);
+					$db->write('UPDATE port ' . $SQL, $params);
+					$db->write('UPDATE port_has_goods ' . $SQL, $params);
 				}
 
 				if ($oldSector->hasLocation()) {
-					$db->write('UPDATE location ' . $SQL);
+					$db->write('UPDATE location ' . $SQL, $params);
 				}
 
-				$db->write('UPDATE sector ' . $SQL);
+				$db->write('UPDATE sector ' . $SQL, $params);
 				unset($needsUpdate[$newID]);
 			}
 		}

@@ -53,7 +53,9 @@ try {
 	// check if we have comments for this album already
 	$db->lockTable('album_has_comments');
 
-	$dbResult = $db->read('SELECT IFNULL(MAX(comment_id)+1, 0) AS next_comment_id FROM album_has_comments WHERE album_id = ' . $db->escapeNumber($album_id));
+	$dbResult = $db->read('SELECT IFNULL(MAX(comment_id)+1, 0) AS next_comment_id FROM album_has_comments WHERE album_id = :album_id', [
+		'album_id' => $db->escapeNumber($album_id),
+	]);
 	$comment_id = $dbResult->record()->getInt('next_comment_id');
 
 	$db->insert('album_has_comments', [

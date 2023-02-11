@@ -42,7 +42,9 @@ class CreateWarps extends AccountPage {
 		}
 
 		//get totals
-		$dbResult = $db->read('SELECT sector_id, warp FROM sector WHERE warp != 0 AND game_id=' . $db->escapeNumber($this->gameID));
+		$dbResult = $db->read('SELECT sector_id, warp FROM sector WHERE warp != 0 AND game_id = :game_id', [
+			'game_id' => $db->escapeNumber($this->gameID),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$warp1 = Sector::getSector($this->gameID, $dbRecord->getInt('sector_id'));
 			$warp2 = Sector::getSector($this->gameID, $dbRecord->getInt('warp'));

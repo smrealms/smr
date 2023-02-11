@@ -67,8 +67,11 @@ class GameJoinProcessor extends AccountPageProcessor {
 		// all sectors are visited (the majority of the game), the table is empty.
 		$db = Database::getInstance();
 		$db->write('INSERT INTO player_visited_sector (account_id, game_id, sector_id)
-		            SELECT ' . $db->escapeNumber($account->getAccountID()) . ', game_id, sector_id
-		              FROM sector WHERE game_id = ' . $db->escapeNumber($gameID));
+		            SELECT :account_id, game_id, sector_id
+		              FROM sector WHERE game_id = :game_id', [
+			'account_id' => $db->escapeNumber($account->getAccountID()),
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 
 		// Mark the player's start sector as visited
 		$player->getSector()->markVisited($player);

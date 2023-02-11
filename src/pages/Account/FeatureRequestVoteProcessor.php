@@ -23,11 +23,13 @@ class FeatureRequestVoteProcessor extends AccountPageProcessor {
 				create_error('This account is not allowed to cast a vote!');
 			}
 			if (Request::has('vote')) {
-				$query = 'REPLACE INTO account_votes_for_feature VALUES ';
 				foreach (Request::getArray('vote') as $requestID => $vote) {
-					$query .= '(' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($requestID) . ',' . $db->escapeString($vote) . '),';
+					$db->replace('account_votes_for_feature', [
+						'account_id' => $db->escapeNumber($account->getAccountID()),
+						'feature_request_id' => $db->escapeNumber($requestID),
+						'vote_type' => $db->escapeString($vote),
+					]);
 				}
-				$db->write(substr($query, 0, -1));
 			}
 			if (Request::has('favourite')) {
 				$db->replace('account_votes_for_feature', [
@@ -50,26 +52,32 @@ class FeatureRequestVoteProcessor extends AccountPageProcessor {
 			}
 			$setStatusIDs = Request::getIntArray('set_status_ids');
 
-			$db->write('UPDATE feature_request fr SET status = ' . $db->escapeString($status) . '
+			$db->write('UPDATE feature_request fr SET status = :status
 					, fav = (
 						SELECT COUNT(feature_request_id)
 						FROM account_votes_for_feature
 						WHERE feature_request_id=fr.feature_request_id
-							AND vote_type=' . $db->escapeString('FAVOURITE') . '
+							AND vote_type = :favorite
 					)
 					, yes = (
 						SELECT COUNT(feature_request_id)
 						FROM account_votes_for_feature
 						WHERE feature_request_id=fr.feature_request_id
-							AND vote_type IN (' . $db->escapeString('YES') . ',' . $db->escapeString('FAVOURITE') . ')
+							AND vote_type IN (:yes, :favorite)
 					)
 					, no = (
 						SELECT COUNT(feature_request_id)
 						FROM account_votes_for_feature
 						WHERE feature_request_id=fr.feature_request_id
-							AND vote_type=' . $db->escapeString('NO') . '
+							AND vote_type = :no
 					)
-					WHERE feature_request_id IN (' . $db->escapeArray($setStatusIDs) . ')');
+					WHERE feature_request_id IN (:feature_request_ids)', [
+				'status' => $db->escapeString($status),
+				'favorite' => $db->escapeString('FAVOURITE'),
+				'yes' => $db->escapeString('YES'),
+				'no' => $db->escapeString('NO'),
+				'feature_request_ids' => $db->escapeArray($setStatusIDs),
+			]);
 			foreach ($setStatusIDs as $featureID) {
 				$db->insert('feature_request_comments', [
 					'feature_request_id' => $db->escapeNumber($featureID),

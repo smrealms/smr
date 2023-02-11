@@ -13,7 +13,9 @@ class CurrentEditionProcessor extends PlayerPageProcessor {
 
 	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY online_since DESC LIMIT 1');
+		$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id = :game_id ORDER BY online_since DESC LIMIT 1', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		if ($dbResult->hasRecord()) {
 			$paper_id = $dbResult->record()->getInt('paper_id');
 		} else {

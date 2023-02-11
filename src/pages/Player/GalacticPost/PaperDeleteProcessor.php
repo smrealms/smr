@@ -17,18 +17,26 @@ class PaperDeleteProcessor extends PlayerPageProcessor {
 		$db = Database::getInstance();
 		// Should we delete this paper?
 		if (Request::getBool('action')) {
+			$sql = 'game_id = :game_id AND paper_id = :paper_id';
+			$sqlParams = [
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'paper_id' => $db->escapeNumber($this->paperID),
+			];
 
 			// Should the articles associated with the paper be deleted as well?
 			if (Request::getBool('delete_articles')) {
-				$dbResult = $db->read('SELECT * FROM galactic_post_paper_content WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND paper_id = ' . $db->escapeNumber($this->paperID));
+				$dbResult = $db->read('SELECT * FROM galactic_post_paper_content WHERE ' . $sql, $sqlParams);
 				foreach ($dbResult->records() as $dbRecord) {
-					$db->write('DELETE FROM galactic_post_article WHERE article_id = ' . $db->escapeNumber($dbRecord->getInt('article_id')) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+					$db->write('DELETE FROM galactic_post_article WHERE article_id = :article_id AND game_id = :game_id', [
+						'article_id' => $db->escapeNumber($dbRecord->getInt('article_id')),
+						'game_id' => $db->escapeNumber($player->getGameID()),
+					]);
 				}
 			}
 
 			// Delete the paper and the article associations
-			$db->write('DELETE FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND paper_id = ' . $db->escapeNumber($this->paperID));
-			$db->write('DELETE FROM galactic_post_paper_content WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND paper_id = ' . $db->escapeNumber($this->paperID));
+			$db->write('DELETE FROM galactic_post_paper WHERE ' . $sql, $sqlParams);
+			$db->write('DELETE FROM galactic_post_paper_content WHERE ' . $sql, $sqlParams);
 		}
 
 		$container = new EditorOptions();

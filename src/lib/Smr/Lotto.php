@@ -29,15 +29,21 @@ class Lotto {
 		}
 
 		//we need to pick a winner
-		$dbResult = $db->read('SELECT * FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > 0 ORDER BY rand() LIMIT 1');
+		$dbResult = $db->read('SELECT * FROM player_has_ticket WHERE game_id = :game_id AND time > 0 ORDER BY rand() LIMIT 1', [
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 		$winner_id = $dbResult->record()->getInt('account_id');
 
 		// Any unclaimed prizes get merged into this prize
-		$dbResult = $db->read('SELECT IFNULL(SUM(prize), 0) AS total_prize FROM player_has_ticket WHERE time = 0 AND game_id = ' . $db->escapeNumber($gameID));
+		$dbResult = $db->read('SELECT IFNULL(SUM(prize), 0) AS total_prize FROM player_has_ticket WHERE time = 0 AND game_id = :game_id', [
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 		$lottoInfo['Prize'] += $dbResult->record()->getInt('total_prize');
 
 		// Delete all tickets and re-insert the winning ticket
-		$db->write('DELETE FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($gameID));
+		$db->write('DELETE FROM player_has_ticket WHERE game_id = :game_id', [
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 		$db->insert('player_has_ticket', [
 			'game_id' => $db->escapeNumber($gameID),
 			'account_id' => $db->escapeNumber($winner_id),
@@ -52,7 +58,9 @@ class Lotto {
 		$winner->increaseHOF(1, ['Bar', 'Lotto', 'Results', 'Wins'], HOF_PUBLIC);
 		$news_message = $winner->getBBLink() . ' has won the lotto! The jackpot was ' . number_format($lottoInfo['Prize']) . '. ' . $winner->getBBLink() . ' can report to any bar to claim their prize before the next drawing!';
 		// insert the news entry
-		$db->write('DELETE FROM news WHERE type = \'lotto\' AND game_id = ' . $db->escapeNumber($gameID));
+		$db->write('DELETE FROM news WHERE type = \'lotto\' AND game_id = :game_id', [
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 		$db->insert('news', [
 			'game_id' => $db->escapeNumber($gameID),
 			'time' => $db->escapeNumber(Epoch::time()),
@@ -72,7 +80,9 @@ class Lotto {
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT count(*) as num, min(time) as time FROM player_has_ticket
-				WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > 0');
+				WHERE game_id = :game_id AND time > 0', [
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 		$dbRecord = $dbResult->record();
 		if ($dbRecord->getInt('num') > 0) {
 			$amount += $dbRecord->getInt('num') * IFloor(self::TICKET_COST * self::WIN_FRAC);

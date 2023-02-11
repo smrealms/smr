@@ -26,7 +26,9 @@ class VoteCreate extends AccountPage {
 
 		$voting = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(Epoch::time()));
+		$dbResult = $db->read('SELECT * FROM voting WHERE end > :now', [
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$voteID = $dbRecord->getInt('vote_id');
 			$voting[$voteID]['ID'] = $voteID;

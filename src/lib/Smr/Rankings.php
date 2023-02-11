@@ -127,12 +127,15 @@ class Rankings {
 	/**
 	 * Get stats from the player table grouped by race and sorted by $stat (high to low).
 	 *
+	 * @param 'experience'|'kills'|'deaths' $stat
 	 * @return array<int, \Smr\DatabaseRecord>
 	 */
 	public static function raceStats(string $stat, int $gameID): array {
 		$db = Database::getInstance();
 		$raceStats = [];
-		$dbResult = $db->read('SELECT race_id, COALESCE(SUM(' . $stat . '), 0) as amount, count(*) as num_players FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' GROUP BY race_id ORDER BY amount DESC');
+		$dbResult = $db->read('SELECT race_id, COALESCE(SUM(' . $stat . '), 0) as amount, count(*) as num_players FROM player WHERE game_id = :game_id GROUP BY race_id ORDER BY amount DESC', [
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$raceStats[$dbRecord->getInt('race_id')] = $dbRecord;
 		}
@@ -142,16 +145,19 @@ class Rankings {
 	/**
 	 * Get stats from the player table sorted by $stat (high to low).
 	 *
+	 * @param 'experience'|'kills'|'deaths'|'assists' $stat
 	 * @return array<int, \Smr\DatabaseRecord>
 	 */
 	public static function playerStats(string $stat, int $gameID, ?int $limit = null): array {
 		$db = Database::getInstance();
 		$playerStats = [];
-		$query = 'SELECT player.*, ' . $stat . ' AS amount FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY amount DESC, player_name';
+		$query = 'SELECT player.*, ' . $stat . ' AS amount FROM player WHERE game_id = :game_id ORDER BY amount DESC, player_name';
 		if ($limit !== null) {
 			$query .= ' LIMIT ' . $limit;
 		}
-		$dbResult = $db->read($query);
+		$dbResult = $db->read($query, [
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$playerStats[$dbRecord->getInt('player_id')] = $dbRecord;
 		}
@@ -167,7 +173,10 @@ class Rankings {
 	public static function playerStatsFromHOF(array $category, int $gameID): array {
 		$db = Database::getInstance();
 		$playerStats = [];
-		$dbResult = $db->read('SELECT p.*, COALESCE(ph.amount,0) amount FROM player p LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = ' . $db->escapeString(implode(':', $category)) . ' WHERE p.game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY amount DESC, player_name');
+		$dbResult = $db->read('SELECT p.*, COALESCE(ph.amount,0) amount FROM player p LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = :hof_type WHERE p.game_id = :game_id ORDER BY amount DESC, player_name', [
+			'hof_type' => $db->escapeString(implode(':', $category)),
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$playerStats[$dbRecord->getInt('player_id')] = $dbRecord;
 		}
@@ -186,10 +195,13 @@ class Rankings {
 		$dbResult = $db->read('SELECT alliance.*, COALESCE(SUM(amount), 0) amount
 			FROM alliance
 			LEFT JOIN player p USING (game_id, alliance_id)
-			LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = ' . $db->escapeString(implode(':', $category)) . '
-			WHERE p.game_id = ' . $db->escapeNumber($gameID) . '
+			LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = :hof_type
+			WHERE p.game_id = :game_id
 			GROUP BY alliance_id
-			ORDER BY amount DESC, alliance_name');
+			ORDER BY amount DESC, alliance_name', [
+			'hof_type' => $db->escapeString(implode(':', $category)),
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$allianceStats[$dbRecord->getInt('alliance_id')] = $dbRecord;
 		}

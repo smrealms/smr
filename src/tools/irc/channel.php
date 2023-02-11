@@ -19,7 +19,10 @@ function channel_join($fp, string $rdata): bool {
 		$db = Database::getInstance();
 
 		// check if we have seen this user before
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND channel = ' . $db->escapeString($channel));
+		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND channel = :channel', [
+			'nick' => $db->escapeString($nick),
+			'channel' => $db->escapeString($channel),
+		]);
 
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
@@ -36,14 +39,19 @@ function channel_join($fp, string $rdata): bool {
 			}
 
 			$db->write('UPDATE irc_seen
-						SET signed_on = ' . $db->escapeNumber(time()) . ',
+						SET signed_on = :now,
 							signed_off = 0,
-							user = ' . $db->escapeString($user) . ',
-							host = ' . $db->escapeString($host) . ',
+							user = :user,
+							host = :host,
 							seen_count = 0,
 							seen_by = NULL,
 							registered = NULL
-						WHERE seen_id = ' . $db->escapeNumber($seen_id));
+						WHERE seen_id = :seen_id', [
+				'now' => $db->escapeNumber(time()),
+				'user' => $db->escapeString($user),
+				'host' => $db->escapeString($host),
+				'seen_id' => $db->escapeNumber($seen_id),
+			]);
 
 		} else {
 			// new nick?
@@ -88,14 +96,20 @@ function channel_part($fp, string $rdata): bool {
 		// database object
 		$db = Database::getInstance();
 
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND channel = ' . $db->escapeString($channel));
+		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND channel = :channel', [
+			'nick' => $db->escapeString($nick),
+			'channel' => $db->escapeString($channel),
+		]);
 
 		// exiting nick?
 		if ($dbResult->hasRecord()) {
 
 			$seen_id = $dbResult->record()->getInt('seen_id');
 
-			$db->write('UPDATE irc_seen SET signed_off = ' . time() . ' WHERE seen_id = ' . $seen_id);
+			$db->write('UPDATE irc_seen SET signed_off = :now WHERE seen_id = :seen_id', [
+				'now' => time(),
+				'seen_id' => $seen_id,
+			]);
 
 		} else {
 			// we don't know this one, but who cares? he just left anyway...

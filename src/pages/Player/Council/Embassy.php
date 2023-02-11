@@ -33,9 +33,13 @@ class Embassy extends PlayerPage {
 				continue;
 			}
 			$dbResult = $db->read('SELECT 1 FROM race_has_voting
-						WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . '
-						AND race_id_2 = ' . $db->escapeNumber($raceID));
+						WHERE game_id = :game_id
+						AND race_id_1 = :race_id_1
+						AND race_id_2 = :race_id_2', [
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'race_id_1' => $db->escapeNumber($player->getRaceID()),
+				'race_id_2' => $db->escapeNumber($raceID),
+			]);
 			if ($dbResult->hasRecord()) {
 				continue;
 			}

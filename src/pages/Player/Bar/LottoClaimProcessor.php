@@ -17,17 +17,26 @@ class LottoClaimProcessor extends PlayerPageProcessor {
 		$message = '';
 		//check if we really are a winner
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0');
+		$dbResult = $db->read('SELECT * FROM player_has_ticket WHERE ' . AbstractPlayer::SQL . ' AND time = 0', $player->SQLID);
 		if ($dbResult->hasRecord()) {
 			$prize = $dbResult->record()->getInt('prize');
 			$NHLAmount = IFloor(($prize - Lotto::TICKET_COST) * (1 - Lotto::WIN_FRAC)); // NHL gets leftover after winner's cut
-			$db->write('UPDATE player SET bank = bank + ' . $db->escapeNumber($NHLAmount) . ' WHERE account_id = ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+			$db->write('UPDATE player SET bank = bank + :nhl_amount WHERE account_id = :nhl_id AND game_id = :game_id', [
+				'nhl_amount' => $db->escapeNumber($NHLAmount),
+				'nhl_id' => $db->escapeNumber(ACCOUNT_ID_NHL),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+			]);
 			$player->increaseCredits($prize);
 			$player->increaseHOF($prize, ['Bar', 'Lotto', 'Money', 'Claimed'], HOF_PUBLIC);
 			$player->increaseHOF(1, ['Bar', 'Lotto', 'Results', 'Claims'], HOF_PUBLIC);
 			$message .= '<div class="center">You have claimed <span class="red">$' . number_format($prize) . '</span>!<br /></div><br />';
-			$db->write('DELETE FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND prize = ' . $db->escapeNumber($prize) . ' AND time = 0');
-			$db->write('DELETE FROM news WHERE type = \'lotto\' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+			$db->write('DELETE FROM player_has_ticket WHERE ' . AbstractPlayer::SQL . ' AND prize = :prize AND time = 0', [
+				...$player->SQLID,
+				'prize' => $db->escapeNumber($prize),
+			]);
+			$db->write('DELETE FROM news WHERE type = \'lotto\' AND game_id = :game_id', [
+				'game_id' => $db->escapeNumber($player->getGameID()),
+			]);
 		}
 		//offer another drink and such
 		$container = new BarMain($this->locationID, $message);

@@ -200,7 +200,9 @@ function debug(string $message, mixed $debugObject = null): void {
 		// On the first call to debug, we need to update the script_id retroactively
 		if (!defined('SCRIPT_ID')) {
 			define('SCRIPT_ID', $logID);
-			$db->write('UPDATE npc_logs SET script_id=' . SCRIPT_ID . ' WHERE log_id=' . SCRIPT_ID);
+			$db->write('UPDATE npc_logs SET script_id = :script_id WHERE log_id = :script_id', [
+				'script_id' => SCRIPT_ID,
+			]);
 		}
 	}
 }
@@ -252,8 +254,11 @@ function releaseNPC(): void {
 	}
 	$login = $session->getAccount()->getLogin();
 	$db = Database::getInstance();
-	$db->write('UPDATE npc_logins SET working=' . $db->escapeBoolean(false) . ' WHERE login=' . $db->escapeString($login));
-	if ($db->getChangedRows() > 0) {
+	$changedRows = $db->write('UPDATE npc_logins SET working = :working WHERE login = :login', [
+		'working' => $db->escapeBoolean(false),
+		'login' => $db->escapeString($login),
+	]);
+	if ($changedRows > 0) {
 		debug('Released NPC: ' . $login);
 	} else {
 		debug('Failed to release NPC: ' . $login);
@@ -290,7 +295,9 @@ function changeNPCLogin(): void {
 		}
 
 		// Make sure to select NPCs from active games only
-		$dbResult = $db->read('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < ' . $db->escapeNumber(Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Epoch::time()) . ' ORDER BY last_turn_update ASC');
+		$dbResult = $db->read('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < :now AND end_time > :now ORDER BY last_turn_update ASC', [
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$availableNpcs[] = [
 				'account_id' => $dbRecord->getInt('account_id'),
@@ -312,7 +319,10 @@ function changeNPCLogin(): void {
 	$session->setAccount($account);
 	$session->updateGame($npc['game_id']);
 
-	$db->write('UPDATE npc_logins SET working=' . $db->escapeBoolean(true) . ' WHERE login=' . $db->escapeString($account->getLogin()));
+	$db->write('UPDATE npc_logins SET working = :working WHERE login = :login', [
+		'working' => $db->escapeBoolean(true),
+		'login' => $db->escapeString($account->getLogin()),
+	]);
 	debug('Chosen NPC: login = ' . $account->getLogin() . ', game = ' . $session->getGameID() . ', player = ' . $session->getPlayer()->getPlayerName());
 }
 
@@ -516,7 +526,16 @@ function findRoutes(AbstractPlayer $player): array {
 	$maxDistance = 15;
 
 	$db = Database::getInstance();
-	$dbResult = $db->read('SELECT routes FROM route_cache WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND max_ports=' . $db->escapeNumber($maxNumberOfPorts) . ' AND goods_allowed=' . $db->escapeObject($tradeGoods) . ' AND races_allowed=' . $db->escapeObject($tradeRaces) . ' AND start_sector_id=' . $db->escapeNumber($startSectorID) . ' AND end_sector_id=' . $db->escapeNumber($endSectorID) . ' AND routes_for_port=' . $db->escapeNumber($routesForPort) . ' AND max_distance=' . $db->escapeNumber($maxDistance));
+	$dbResult = $db->read('SELECT routes FROM route_cache WHERE game_id = :game_id AND max_ports = :max_ports AND goods_allowed = :goods_allowed AND races_allowed = :races_allowed AND start_sector_id = :start_sector_id AND end_sector_id = :end_sector_id AND routes_for_port = :routes_for_port AND max_distance = :max_distance', [
+		'game_id' => $db->escapeNumber($player->getGameID()),
+		'max_ports' => $db->escapeNumber($maxNumberOfPorts),
+		'goods_allowed' => $db->escapeObject($tradeGoods),
+		'races_allowed' => $db->escapeObject($tradeRaces),
+		'start_sector_id' => $db->escapeNumber($startSectorID),
+		'end_sector_id' => $db->escapeNumber($endSectorID),
+		'routes_for_port' => $db->escapeNumber($routesForPort),
+		'max_distance' => $db->escapeNumber($maxDistance),
+	]);
 	if ($dbResult->hasRecord()) {
 		$routes = $dbResult->record()->getObject('routes', true);
 		debug('Using Cached Routes: #' . count($routes));

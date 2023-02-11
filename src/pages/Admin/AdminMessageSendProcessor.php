@@ -43,7 +43,9 @@ class AdminMessageSendProcessor extends AccountPageProcessor {
 			$account_id = Request::getInt('account_id');
 			if ($account_id == 0) {
 				// Send to all players in the requested game
-				$dbResult = $db->read('SELECT account_id FROM player WHERE game_id = ' . $db->escapeNumber($game_id));
+				$dbResult = $db->read('SELECT account_id FROM player WHERE game_id = :game_id', [
+					'game_id' => $db->escapeNumber($game_id),
+				]);
 				foreach ($dbResult->records() as $dbRecord) {
 					$receivers[] = [$game_id, $dbRecord->getInt('account_id')];
 				}
@@ -52,7 +54,9 @@ class AdminMessageSendProcessor extends AccountPageProcessor {
 			}
 		} else {
 			//send to all players in games that haven't ended yet
-			$dbResult = $db->read('SELECT game_id,account_id FROM player JOIN game USING(game_id) WHERE end_time > ' . $db->escapeNumber(Epoch::time()));
+			$dbResult = $db->read('SELECT game_id,account_id FROM player JOIN game USING(game_id) WHERE end_time > :now', [
+				'now' => $db->escapeNumber(Epoch::time()),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$receivers[] = [$dbRecord->getInt('game_id'), $dbRecord->getInt('account_id')];
 			}

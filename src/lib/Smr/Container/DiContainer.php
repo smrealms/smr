@@ -3,7 +3,7 @@
 namespace Smr\Container;
 
 use DI\ContainerBuilder;
-use mysqli;
+use Doctrine\DBAL\Connection;
 use Smr\Database;
 use Smr\DatabaseProperties;
 use Smr\Epoch;
@@ -31,18 +31,8 @@ class DiContainer {
 	 */
 	private function getDefinitions(): array {
 		return [
-			/*
-			 * mysqli is a 3rd party library, and we do not have control over its constructor.
-			 * In order for PHP-DI to construct an instance of a class, each constructor argument must
-			 * be able to be constructed.
-			 * PHP-DI cannot construct mysqli by itself, because all of its arguments are primitive types.
-			 * Therefore, we need to declare a provider factory for the container to use when constructing new instances.
-			 *
-			 * The factories themselves are able to use dependency injection as well, so we can provide the DatabaseProperties
-			 * typehint to make sure the container constructs an instance and provides it to the factory.
-			 */
-			mysqli::class => function(DatabaseProperties $dbProperties): mysqli {
-				return Database::mysqliFactory($dbProperties);
+			Connection::class => function(DatabaseProperties $dbProperties): Connection {
+				return Database::connectionFactory($dbProperties);
 			},
 			'DatabaseName' => function(DatabaseProperties $dbProperties): string {
 				return $dbProperties->database;

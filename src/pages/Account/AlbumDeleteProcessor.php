@@ -14,11 +14,15 @@ class AlbumDeleteProcessor extends AccountPageProcessor {
 			$db = Database::getInstance();
 			$db->write('DELETE
 						FROM album
-						WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
+						WHERE account_id = :account_id', [
+				'account_id' => $db->escapeNumber($account->getAccountID()),
+			]);
 
 			$db->write('DELETE
 						FROM album_has_comments
-						WHERE album_id = ' . $db->escapeNumber($account->getAccountID()));
+						WHERE album_id = :album_id', [
+				'album_id' => $db->escapeNumber($account->getAccountID()),
+			]);
 		}
 
 		$container = new AlbumEdit();

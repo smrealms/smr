@@ -2,9 +2,9 @@
 
 namespace Smr;
 
+use Doctrine\DBAL\Result;
 use Exception;
 use Generator;
-use mysqli_result;
 use RuntimeException;
 
 /**
@@ -13,7 +13,7 @@ use RuntimeException;
 class DatabaseResult {
 
 	public function __construct(
-		private readonly mysqli_result $dbResult
+		private readonly Result $dbResult
 	) {}
 
 	/**
@@ -21,7 +21,7 @@ class DatabaseResult {
 	 * @return \Generator<DatabaseRecord>
 	 */
 	public function records(): Generator {
-		foreach ($this->dbResult as $dbRecord) {
+		foreach ($this->dbResult->iterateAssociative() as $dbRecord) {
 			yield new DatabaseRecord($dbRecord);
 		}
 	}
@@ -33,19 +33,15 @@ class DatabaseResult {
 		if ($this->getNumRecords() != 1) {
 			throw new RuntimeException('One record required, but found ' . $this->getNumRecords());
 		}
-		$record = $this->dbResult->fetch_assoc();
-		if ($record === null) {
+		$record = $this->dbResult->fetchAssociative();
+		if ($record === false) {
 			throw new Exception('Do not call record twice on the same result');
 		}
 		return new DatabaseRecord($record);
 	}
 
 	public function getNumRecords(): int {
-		$numRows = $this->dbResult->num_rows;
-		if (is_string($numRows)) {
-			throw new Exception('Number of rows is too large to represent as an int: ' . $numRows);
-		}
-		return $numRows;
+		return $this->dbResult->rowCount();
 	}
 
 	public function hasRecord(): bool {

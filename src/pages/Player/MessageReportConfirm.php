@@ -22,7 +22,9 @@ class MessageReportConfirm extends PlayerPage {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT message_text
 					FROM message
-					WHERE message_id = ' . $db->escapeNumber($this->messageID));
+					WHERE message_id = :message_id', [
+			'message_id' => $db->escapeNumber($this->messageID),
+		]);
 		if (!$dbResult->hasRecord()) {
 			create_error('Could not find the message you selected!');
 		}

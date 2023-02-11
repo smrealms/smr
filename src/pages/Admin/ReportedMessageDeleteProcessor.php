@@ -15,7 +15,9 @@ class ReportedMessageDeleteProcessor extends AccountPageProcessor {
 		}
 
 		$db = Database::getInstance();
-		$db->write('DELETE FROM message_notify WHERE notify_id IN (' . $db->escapeArray(Request::getIntArray('notify_id')) . ')');
+		$db->write('DELETE FROM message_notify WHERE notify_id IN (:notify_ids)', [
+			'notify_ids' => $db->escapeArray(Request::getIntArray('notify_id')),
+		]);
 
 		(new ReportedMessageView())->go();
 	}

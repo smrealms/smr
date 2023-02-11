@@ -23,7 +23,11 @@ class GameNews extends HistoryPage {
 		$template->assign('ShowHREF', $this->href());
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($this->historyGameID) . ' AND news_id >= ' . $db->escapeNumber($min) . ' AND news_id <= ' . $db->escapeNumber($max));
+		$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND news_id >= :min_news_id AND news_id <= :max_news_id', [
+			'game_id' => $db->escapeNumber($this->historyGameID),
+			'min_news_id' => $db->escapeNumber($min),
+			'max_news_id' => $db->escapeNumber($max),
+		]);
 		$rows = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$rows[] = [

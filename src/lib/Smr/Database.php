@@ -2,9 +2,11 @@
 
 namespace Smr;
 
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\ParameterType;
 use Exception;
-use mysqli;
-use RuntimeException;
 use Smr\Container\DiContainer;
 
 /**
@@ -27,56 +29,46 @@ class Database {
 	 * (such as Dicord/IRC clients) to prevent connection timeouts between
 	 * callbacks.
 	 *
-	 * Closes the underlying database connection and resets the state of the
-	 * DI container so that a new Database and mysqli instance will be made
-	 * the next time Database::getInstance() is called. Existing instances of
-	 * this class will no longer be valid, and will throw when attempting to
-	 * perform database operations.
+	 * Closes the underlying connection and removes it, along with the Database
+	 * instance that wraps it, from the DI container. A new Database instance
+	 * will be made, along with a fresh database connection, the next time that
+	 * Database::getInstance() is called.
 	 *
 	 * This function is safe to use even if the DI container or the Database
 	 * instances have not been initialized yet.
 	 */
 	public static function resetInstance(): void {
-		if (DiContainer::initialized(mysqli::class)) {
+		if (DiContainer::initialized(Connection::class)) {
 			$container = DiContainer::getContainer();
 			if (DiContainer::initialized(self::class)) {
 				self::getInstance()->dbConn->close();
 				$container->reset(self::class);
 			}
-			$container->reset(mysqli::class);
+			$container->reset(Connection::class);
 		}
 	}
 
 	/**
-	 * Used by the DI container to construct a mysqli instance.
+	 * Used by the DI container to construct the underlying connection object.
 	 * Not intended to be used outside the DI context.
 	 */
-	public static function mysqliFactory(DatabaseProperties $dbProperties): mysqli {
-		if (!mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT)) {
-			throw new RuntimeException('Failed to enable mysqli error reporting');
-		}
-		$mysql = new mysqli(
-			$dbProperties->host,
-			$dbProperties->user,
-			$dbProperties->password,
-			$dbProperties->database,
-		);
-		$charset = $mysql->character_set_name();
-		if ($charset != 'utf8') {
-			throw new RuntimeException('Unexpected charset: ' . $charset);
-		}
-		return $mysql;
+	public static function connectionFactory(DatabaseProperties $dbProperties): Connection {
+		return DriverManager::getConnection([
+			'dbname' => $dbProperties->database,
+			'user' => $dbProperties->user,
+			'password' => $dbProperties->password,
+			'host' => $dbProperties->host,
+			'driver' => 'pdo_mysql',
+			'charset' => 'utf8',
+		]);
 	}
 
 	/**
 	 * Not intended to be constructed by hand. If you need an instance of Database,
 	 * use Database::getInstance();
-	 *
-	 * @param \mysqli $dbConn The mysqli instance
-	 * @param string $dbName The name of the database that was used to construct the mysqli instance
 	 */
 	public function __construct(
-		private readonly mysqli $dbConn,
+		private readonly Connection $dbConn,
 		private readonly string $dbName,
 	) {}
 
@@ -87,7 +79,7 @@ class Database {
 	 * @param string $databaseName The name of the database to switch to
 	 */
 	public function switchDatabases(string $databaseName): void {
-		$this->dbConn->select_db($databaseName);
+		$this->write('USE ' . $databaseName);
 	}
 
 	/**
@@ -108,24 +100,53 @@ class Database {
 	/**
 	 * Perform a write-only query on the database.
 	 * Used for UPDATE, DELETE, REPLACE and INSERT queries, for example.
+	 *
+	 * @param array<mixed> $params
+	 * @return int Number of affected rows
 	 */
-	public function write(string $query): void {
-		$result = $this->dbConn->query($query);
-		if ($result !== true) {
-			throw new RuntimeException('Wrong query type or query failed');
+	public function write(string $query, array $params = []): int {
+		if (str_starts_with($query, 'SELECT')) {
+			throw new Exception('Wrong query type');
 		}
+		$types = self::getParamTypes($params);
+		return (int)$this->dbConn->executeStatement($query, $params, $types);
 	}
 
 	/**
 	 * Perform a read-only query on the database.
 	 * Used for SELECT queries, for example.
+	 *
+	 * @param array<mixed> $params
 	 */
-	public function read(string $query): DatabaseResult {
-		$result = $this->dbConn->query($query);
-		if (is_bool($result)) {
-			throw new RuntimeException('Wrong query type or query failed');
-		}
+	public function read(string $query, array $params = []): DatabaseResult {
+		$types = self::getParamTypes($params);
+		$result = $this->dbConn->executeQuery($query, $params, $types);
 		return new DatabaseResult($result);
+	}
+
+	/**
+	 * Determine Doctrine\DBAL types automatically based on the passed in type.
+	 *
+	 * @param array<mixed> $params
+	 * @return array<string, int>
+	 */
+	private static function getParamTypes(array $params): array {
+		// Default is ParameterType::STRING for any unspecified fields
+		$types = [];
+		foreach ($params as $field => $value) {
+			// Handle ints explicitly for cases where a string is not valid,
+			// such as in a LIMIT condition, since int types won't get quoted.
+			if (is_int($value)) {
+				$types[$field] = ParameterType::INTEGER;
+			} elseif (is_array($value)) {
+				if (count($value) > 0 && is_int($value[array_key_first($value)])) {
+					$types[$field] = ArrayParameterType::INTEGER;
+				} else {
+					$types[$field] = ArrayParameterType::STRING;
+				}
+			}
+		}
+		return $types;
 	}
 
 	/**
@@ -136,9 +157,7 @@ class Database {
 	 * @return int Insert ID of auto-incrementing column, if applicable
 	 */
 	public function insert(string $table, array $fields): int {
-		$query = 'INSERT INTO ' . $table . ' (' . implode(', ', array_keys($fields))
-			. ') VALUES (' . implode(', ', array_values($fields)) . ')';
-		$this->write($query);
+		$this->dbConn->insert($table, $fields);
 		return $this->getInsertID();
 	}
 
@@ -151,8 +170,8 @@ class Database {
 	 */
 	public function replace(string $table, array $fields): int {
 		$query = 'REPLACE INTO ' . $table . ' (' . implode(', ', array_keys($fields))
-			. ') VALUES (' . implode(', ', array_values($fields)) . ')';
-		$this->write($query);
+			. ') VALUES (' . implode(', ', array_fill(0, count($fields), '?')) . ')';
+		$this->write($query, array_values($fields));
 		return $this->getInsertID();
 	}
 
@@ -164,49 +183,32 @@ class Database {
 		$this->write('UNLOCK TABLES');
 	}
 
-	public function getChangedRows(): int {
-		$affectedRows = $this->dbConn->affected_rows;
-		if (is_string($affectedRows)) {
-			throw new Exception('Number of rows is too large to represent as an int: ' . $affectedRows);
-		}
-		return $affectedRows;
-	}
-
 	public function getInsertID(): int {
-		$insertID = $this->dbConn->insert_id;
-		if (is_string($insertID)) {
-			throw new Exception('Number of rows is too large to represent as an int: ' . $insertID);
+		$insertID = $this->dbConn->lastInsertId();
+		if ($insertID === false) {
+			throw new Exception('Failed to get the last insert ID');
 		}
-		return $insertID;
+		return (int)$insertID;
 	}
 
-	public function escape(mixed $escape): mixed {
-		return match (true) {
-			is_bool($escape) => $this->escapeBoolean($escape),
-			is_float($escape) || is_int($escape) => $this->escapeNumber($escape),
-			is_string($escape) => $this->escapeString($escape),
-			is_array($escape) => $this->escapeArray($escape),
-			is_object($escape) => $this->escapeObject($escape),
-			default => throw new Exception('Unhandled value: ' . $escape)
-		};
-	}
-
-	public function escapeNullableString(?string $string): string {
-		if ($string === null || $string === '') {
-			return 'NULL';
+	public function escapeNullableString(?string $string): ?string {
+		if ($string === '') {
+			return null;
 		}
-		return $this->escapeString($string);
+		return $string;
 	}
 
 	public function escapeString(string $string): string {
-		return '\'' . $this->dbConn->real_escape_string($string) . '\'';
+		return $string;
 	}
 
 	/**
-	 * @param array<int>|array<string> $array
+	 * @template T of array<int>|array<string> $array
+	 * @param T $array
+	 * @return T
 	 */
-	public function escapeArray(array $array): string {
-		return implode(',', array_map(fn($item) => $this->escape($item), $array));
+	public function escapeArray(array $array): array {
+		return $array;
 	}
 
 	/**
@@ -215,22 +217,20 @@ class Database {
 	 * @return T
 	 */
 	public function escapeNumber(int|float $num): int|float {
-		// Numbers need not be quoted in MySQL queries, so if we know $num is
-		// numeric, we can simply return its value (no quoting or escaping).
 		return $num;
 	}
 
 	public function escapeBoolean(bool $bool): string {
 		// We store booleans as an enum
-		return $bool ? '\'TRUE\'' : '\'FALSE\'';
+		return $bool ? 'TRUE' : 'FALSE';
 	}
 
 	/**
 	 * @param object|array<mixed>|string|null $object
 	 */
-	public function escapeNullableObject(object|array|string|null $object, bool $compress = false): string {
+	public function escapeNullableObject(object|array|string|null $object, bool $compress = false): ?string {
 		if ($object === null) {
-			return 'NULL';
+			return null;
 		}
 		return $this->escapeObject($object, $compress);
 	}
@@ -246,7 +246,7 @@ class Database {
 				throw new Exception('An error occurred while compressing the object');
 			}
 		}
-		return $this->escapeString($objectStr);
+		return $objectStr;
 	}
 
 }

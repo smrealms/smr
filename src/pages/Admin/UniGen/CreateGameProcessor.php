@@ -15,7 +15,9 @@ class CreateGameProcessor extends AccountPageProcessor {
 		$db = Database::getInstance();
 
 		//first create the game
-		$dbResult = $db->read('SELECT 1 FROM game WHERE game_name=' . $db->escapeString(Request::get('game_name')));
+		$dbResult = $db->read('SELECT 1 FROM game WHERE game_name = :game_name', [
+			'game_name' => $db->escapeString(Request::get('game_name')),
+		]);
 		if ($dbResult->hasRecord()) {
 			create_error('That game name is already taken.');
 		}

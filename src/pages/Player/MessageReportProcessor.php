@@ -24,13 +24,17 @@ class MessageReportProcessor extends PlayerPageProcessor {
 
 		// get next id
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT IFNULL(max(notify_id)+1, 0) as next_notify_id FROM message_notify WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY notify_id DESC');
+		$dbResult = $db->read('SELECT IFNULL(max(notify_id)+1, 0) as next_notify_id FROM message_notify WHERE game_id = :game_id ORDER BY notify_id DESC', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		$notify_id = $dbResult->record()->getInt('next_notify_id');
 
 		// get message form db
 		$dbResult = $db->read('SELECT account_id, sender_id, message_text
 					FROM message
-					WHERE message_id = ' . $this->messageID . ' AND receiver_delete = \'FALSE\'');
+					WHERE message_id = :message_id AND receiver_delete = \'FALSE\'', [
+			'message_id' => $this->messageID,
+		]);
 		if (!$dbResult->hasRecord()) {
 			create_error('Could not find the message you selected!');
 		}

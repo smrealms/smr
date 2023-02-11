@@ -72,7 +72,7 @@ class PreferencesProcessor extends PlayerPageProcessor {
 			$player->setRaceChanged(true);
 
 			// Reset relations
-			$db->write('DELETE FROM player_has_relation WHERE ' . $player->getSQL());
+			$db->write('DELETE FROM player_has_relation WHERE ' . AbstractPlayer::SQL, $player->SQLID);
 			$player->giveStartingRelations();
 
 			// Move them to their new race HQ and reset sector lock

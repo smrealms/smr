@@ -29,13 +29,18 @@ class EditorOptions extends PlayerPage {
 		$container = new PaperMake();
 		$template->assign('MakePaperHREF', $container->href());
 
-		$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
+		$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE game_id = :game_id', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		$papers = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$paper_id = $dbRecord->getInt('paper_id');
 			$published = $dbRecord->getNullableInt('online_since') !== null;
 
-			$dbResult2 = $db->read('SELECT count(*) FROM galactic_post_paper_content WHERE paper_id = ' . $db->escapeNumber($paper_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+			$dbResult2 = $db->read('SELECT count(*) FROM galactic_post_paper_content WHERE paper_id = :paper_id AND game_id = :game_id', [
+				'paper_id' => $db->escapeNumber($paper_id),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+			]);
 			$numArticles = $dbResult2->record()->getInt('count(*)');
 			$hasEnoughArticles = $numArticles > 2 && $numArticles < 9;
 

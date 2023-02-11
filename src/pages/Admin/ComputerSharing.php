@@ -47,7 +47,10 @@ class ComputerSharing extends AccountPage {
 			}
 
 			if ($rows > 1) {
-				$dbResult2 = $db->read('SELECT login FROM account WHERE account_id =' . $db->escapeNumber($currTabAccId) . ' AND last_login > ' . $db->escapeNumber(Epoch::time() - $unusedAfter));
+				$dbResult2 = $db->read('SELECT login FROM account WHERE account_id = :account_id AND last_login > :unused_time', [
+					'account_id' => $db->escapeNumber($currTabAccId),
+					'unused_time' => $db->escapeNumber(Epoch::time() - $unusedAfter),
+				]);
 				if (!$dbResult2->hasRecord()) {
 					continue;
 				}
@@ -55,7 +58,10 @@ class ComputerSharing extends AccountPage {
 				$rows = [];
 				foreach ($accountIDs as $currLinkAccId) {
 					$currLinkAccId = (int)$currLinkAccId;
-					$dbResult2 = $db->read('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = ' . $db->escapeNumber($currLinkAccId) . ' AND last_login > ' . $db->escapeNumber(Epoch::time() - $unusedAfter));
+					$dbResult2 = $db->read('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = :account_id AND last_login > :unused_time', [
+						'account_id' => $db->escapeNumber($currLinkAccId),
+						'unused_time' => $db->escapeNumber(Epoch::time() - $unusedAfter),
+					]);
 					if (!$dbResult2->hasRecord()) {
 						continue;
 					}
@@ -68,7 +74,9 @@ class ComputerSharing extends AccountPage {
 					$common_ip = $dbRecord2->getString('common_ip');
 					$last_login = date($account->getDateTimeFormat(), $dbRecord2->getInt('last_login'));
 
-					$dbResult2 = $db->read('SELECT * FROM account_is_closed WHERE account_id = ' . $db->escapeNumber($currLinkAccId));
+					$dbResult2 = $db->read('SELECT * FROM account_is_closed WHERE account_id = :account_id', [
+						'account_id' => $db->escapeNumber($currLinkAccId),
+					]);
 					$isDisabled = $dbResult2->hasRecord();
 					if ($isDisabled) {
 						$suspicion = $dbResult2->record()->getString('suspicion');
@@ -76,7 +84,9 @@ class ComputerSharing extends AccountPage {
 						$suspicion = '';
 					}
 
-					$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($currLinkAccId));
+					$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = :account_id', [
+						'account_id' => $db->escapeNumber($currLinkAccId),
+					]);
 					if ($dbResult2->hasRecord()) {
 						$exception = $dbResult2->record()->getString('reason');
 					} else {

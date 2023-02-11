@@ -53,7 +53,12 @@ class WeightedRandom {
 		protected readonly int $typeID
 	) {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT weighting FROM weighted_random WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND account_id = ' . $db->escapeNumber($accountID) . ' AND type = ' . $db->escapeString($type) . ' AND type_id = ' . $db->escapeNumber($typeID));
+		$dbResult = $db->read('SELECT weighting FROM weighted_random WHERE game_id = :game_id AND account_id = :account_id AND type = :type AND type_id = :type_id', [
+			'game_id' => $db->escapeNumber($gameID),
+			'account_id' => $db->escapeNumber($accountID),
+			'type' => $db->escapeString($type),
+			'type_id' => $db->escapeNumber($typeID),
+		]);
 		if ($dbResult->hasRecord()) {
 			$this->weighting = $dbResult->record()->getInt('weighting');
 		} else {

@@ -46,7 +46,9 @@ class HallOfFame extends HistoryPage {
 
 			// Rankings display
 			$oldAccountId = $account->getOldAccountID($this->historyDatabase);
-			$dbResult = $db->read('SELECT * FROM player_has_stats JOIN player USING(account_id, game_id) WHERE game_id=' . $db->escapeNumber($this->historyGameID) . ' ORDER BY player_has_stats.' . $this->stat . ' DESC LIMIT 25');
+			$dbResult = $db->read('SELECT * FROM player_has_stats JOIN player USING(account_id, game_id) WHERE game_id = :game_id ORDER BY player_has_stats.' . $this->stat . ' DESC LIMIT 25', [
+				'game_id' => $db->escapeNumber($this->historyGameID),
+			]);
 			$rankings = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$rankings[] = [

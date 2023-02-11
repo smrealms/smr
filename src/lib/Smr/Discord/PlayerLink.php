@@ -45,7 +45,10 @@ class PlayerLink {
 		if ($channel->is_private) {
 			// Get the most recent enabled game, since there is no other way to determine the game ID
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT MAX(game_id) FROM game WHERE enabled=' . $db->escapeBoolean(true) . ' AND end_time > ' . $db->escapeNumber(time()) . ' GROUP BY enabled');
+			$dbResult = $db->read('SELECT MAX(game_id) FROM game WHERE enabled = :enabled AND end_time > :now GROUP BY enabled', [
+				'enabled' => $db->escapeBoolean(true),
+				'now' => $db->escapeNumber(time()),
+			]);
 			if (!$dbResult->hasRecord()) {
 				throw new UserError('Could not find any games!');
 			}

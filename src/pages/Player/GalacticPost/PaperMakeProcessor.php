@@ -11,7 +11,9 @@ class PaperMakeProcessor extends PlayerPageProcessor {
 
 	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY paper_id DESC');
+		$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE game_id = :game_id ORDER BY paper_id DESC', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		if ($dbResult->hasRecord()) {
 			$num = $dbResult->record()->getInt('paper_id') + 1;
 		} else {

@@ -28,7 +28,10 @@ class ArticleWrite extends PlayerPage {
 			$template->assign('PageTopic', 'Editing An Article');
 			if ($this->previewText === null) {
 				$db = Database::getInstance();
-				$dbResult = $db->read('SELECT title, text FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($this->articleID));
+				$dbResult = $db->read('SELECT title, text FROM galactic_post_article WHERE game_id = :game_id AND article_id = :article_id', [
+					'game_id' => $db->escapeNumber($player->getGameID()),
+					'article_id' => $db->escapeNumber($this->articleID),
+				]);
 				if ($dbResult->hasRecord()) {
 					$dbRecord = $dbResult->record();
 					$title = $dbRecord->getString('title');

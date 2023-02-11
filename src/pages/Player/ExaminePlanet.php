@@ -33,11 +33,16 @@ class ExaminePlanet extends PlayerPage {
 			$dbResult = $db->read('
 				SELECT 1
 				FROM alliance_treaties
-				WHERE (alliance_id_1 = ' . $db->escapeNumber($ownerAllianceID) . ' OR alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ')
-				AND (alliance_id_2 = ' . $db->escapeNumber($ownerAllianceID) . ' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')
-				AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+				WHERE (alliance_id_1 = :owner_alliance_id OR alliance_id_1 = :player_alliance_id)
+				AND (alliance_id_2 = :owner_alliance_id OR alliance_id_2 = :player_alliance_id)
+				AND game_id = :game_id
 				AND planet_land = 1
-				AND official = ' . $db->escapeBoolean(true));
+				AND official = :official', [
+				'owner_alliance_id' => $db->escapeNumber($ownerAllianceID),
+				'player_alliance_id' => $db->escapeNumber($player->getAllianceID()),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'official' => $db->escapeBoolean(true),
+			]);
 			$planetLand = $dbResult->hasRecord();
 		}
 		$template->assign('PlanetLand', $planetLand);

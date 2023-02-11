@@ -24,10 +24,13 @@ class AllianceRoles extends PlayerPage {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT *
 		FROM alliance_has_roles
-		WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
-		AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
+		WHERE game_id = :game_id
+		AND alliance_id = :alliance_id
 		ORDER BY role_id
-		');
+		', [
+			'game_id' => $db->escapeNumber($alliance->getGameID()),
+			'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
+		]);
 		$allianceRoles = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$roleID = $dbRecord->getInt('role_id');

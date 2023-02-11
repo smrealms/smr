@@ -26,7 +26,10 @@ class AllianceTreaties extends PlayerPage {
 
 		$alliances = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($player->getAllianceID()) . ' ORDER BY alliance_name');
+		$dbResult = $db->read('SELECT * FROM alliance WHERE game_id = :game_id AND alliance_id != :alliance_id ORDER BY alliance_name', [
+			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$allianceID = $dbRecord->getInt('alliance_id');
 			$alliance = Alliance::getAlliance($allianceID, $player->getGameID(), false, $dbRecord);
@@ -37,7 +40,10 @@ class AllianceTreaties extends PlayerPage {
 		$template->assign('Message', $this->message);
 
 		$offers = [];
-		$dbResult = $db->read('SELECT * FROM alliance_treaties WHERE alliance_id_2 = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND official = \'FALSE\'');
+		$dbResult = $db->read('SELECT * FROM alliance_treaties WHERE alliance_id_2 = :alliance_id AND game_id = :game_id AND official = \'FALSE\'', [
+			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$offerTerms = [];
 			foreach (array_keys(Treaty::TYPES) as $term) {

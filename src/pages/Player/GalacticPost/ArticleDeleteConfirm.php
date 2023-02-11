@@ -19,7 +19,10 @@ class ArticleDeleteConfirm extends PlayerPage {
 		$db = Database::getInstance();
 
 		$template->assign('PageTopic', 'Delete Article - Confirm');
-		$dbResult = $db->read('SELECT title FROM galactic_post_article WHERE article_id = ' . $db->escapeNumber($this->articleID) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+		$dbResult = $db->read('SELECT title FROM galactic_post_article WHERE article_id = :article_id AND game_id = :game_id', [
+			'article_id' => $db->escapeNumber($this->articleID),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		$template->assign('ArticleTitle', $dbResult->record()->getString('title'));
 
 		$container = new ArticleDeleteProcessor($this->articleID);

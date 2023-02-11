@@ -62,7 +62,9 @@ class AccountEditProcessor extends AccountPageProcessor {
 		if (Request::has('special_close')) {
 			$specialClose = Request::get('special_close');
 			// Make sure the special closing reason exists
-			$dbResult = $db->read('SELECT reason_id FROM closing_reason WHERE reason=' . $db->escapeString($specialClose));
+			$dbResult = $db->read('SELECT reason_id FROM closing_reason WHERE reason = :reason', [
+				'reason' => $db->escapeString($specialClose),
+			]);
 			if ($dbResult->hasRecord()) {
 				$reasonID = $dbResult->record()->getInt('reason_id');
 			} else {
@@ -121,7 +123,10 @@ class AccountEditProcessor extends AccountPageProcessor {
 		}
 
 		if ($veteran_status != $curr_account->isVeteranForced()) {
-			$db->write('UPDATE account SET veteran = ' . $db->escapeBoolean($veteran_status) . ' WHERE account_id = ' . $db->escapeNumber($account_id));
+			$db->write('UPDATE account SET veteran = :veteran WHERE account_id = :account_id', [
+				'veteran' => $db->escapeBoolean($veteran_status),
+				'account_id' => $db->escapeNumber($account_id),
+			]);
 			$actions[] = 'set the veteran status to ' . $db->escapeBoolean($veteran_status);
 		}
 
@@ -170,17 +175,24 @@ class AccountEditProcessor extends AccountPageProcessor {
 			foreach ($delete as $game_id => $value) {
 				if ($value == 'TRUE') {
 					// Check for bank transactions into the alliance account
-					$dbResult = $db->read('SELECT 1 FROM alliance_bank_transactions WHERE payee_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id) . ' LIMIT 1');
+					$dbResult = $db->read('SELECT 1 FROM alliance_bank_transactions WHERE payee_id = :payee_id AND game_id = :game_id LIMIT 1', [
+						'payee_id' => $db->escapeNumber($account_id),
+						'game_id' => $db->escapeNumber($game_id),
+					]);
 					if ($dbResult->hasRecord()) {
 						// Can't delete
 						$actions[] = 'player has made alliance transaction';
 						continue;
 					}
 
-					$sql = 'account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id);
+					$sql = 'account_id = :account_id AND game_id = :game_id';
+					$sqlParams = [
+						'account_id' => $db->escapeNumber($account_id),
+						'game_id' => $db->escapeNumber($game_id),
+					];
 
 					// Check anon accounts for transactions
-					$dbResult = $db->read('SELECT 1 FROM anon_bank_transactions WHERE ' . $sql . ' LIMIT 1');
+					$dbResult = $db->read('SELECT 1 FROM anon_bank_transactions WHERE ' . $sql . ' LIMIT 1', $sqlParams);
 					if ($dbResult->hasRecord()) {
 						// Can't delete
 						$actions[] = 'player has made anonymous transaction';
@@ -188,39 +200,39 @@ class AccountEditProcessor extends AccountPageProcessor {
 					}
 
 					$db->write('DELETE FROM alliance_thread
-								WHERE sender_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-					$db->write('DELETE FROM bounty WHERE ' . $sql);
-					$db->write('DELETE FROM galactic_post_applications WHERE ' . $sql);
+								WHERE sender_id = :account_id AND game_id = :game_id', $sqlParams);
+					$db->write('DELETE FROM bounty WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM galactic_post_applications WHERE ' . $sql, $sqlParams);
 					$db->write('DELETE FROM galactic_post_article
-								WHERE writer_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-					$db->write('DELETE FROM galactic_post_writer WHERE ' . $sql);
-					$db->write('DELETE FROM message WHERE ' . $sql);
+								WHERE writer_id = :account_id AND game_id = :game_id', $sqlParams);
+					$db->write('DELETE FROM galactic_post_writer WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM message WHERE ' . $sql, $sqlParams);
 					$db->write('DELETE FROM message_notify
-								WHERE (from_id=' . $db->escapeNumber($account_id) . ' OR to_id=' . $db->escapeNumber($account_id) . ') AND game_id=' . $db->escapeNumber($game_id));
+								WHERE (from_id = :account_id OR to_id = :account_id) AND game_id = :game_id', $sqlParams);
 					$db->write('UPDATE planet SET owner_id=0,planet_name=\'\',password=\'\',shields=0,drones=0,credits=0,bonds=0
-								WHERE owner_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-					$db->write('DELETE FROM player_attacks_planet WHERE ' . $sql);
-					$db->write('DELETE FROM player_attacks_port WHERE ' . $sql);
-					$db->write('DELETE FROM player_has_alliance_role WHERE ' . $sql);
-					$db->write('DELETE FROM player_has_drinks WHERE ' . $sql);
-					$db->write('DELETE FROM player_has_relation WHERE ' . $sql);
-					$db->write('DELETE FROM player_has_ticker WHERE ' . $sql);
-					$db->write('DELETE FROM player_has_ticket WHERE ' . $sql);
-					$db->write('DELETE FROM player_has_unread_messages WHERE ' . $sql);
-					$db->write('DELETE FROM player_plotted_course WHERE ' . $sql);
-					$db->write('DELETE FROM player_read_thread WHERE ' . $sql);
-					$db->write('DELETE FROM player_visited_port WHERE ' . $sql);
-					$db->write('DELETE FROM player_visited_sector WHERE ' . $sql);
-					$db->write('DELETE FROM player_votes_pact WHERE ' . $sql);
-					$db->write('DELETE FROM player_votes_relation WHERE ' . $sql);
-					$db->write('DELETE FROM ship_has_cargo WHERE ' . $sql);
-					$db->write('DELETE FROM ship_has_hardware WHERE ' . $sql);
-					$db->write('DELETE FROM ship_has_illusion WHERE ' . $sql);
-					$db->write('DELETE FROM ship_has_weapon WHERE ' . $sql);
-					$db->write('DELETE FROM ship_is_cloaked WHERE ' . $sql);
-					$db->write('DELETE FROM player WHERE ' . $sql);
+								WHERE owner_id = :account_id AND game_id = :game_id', $sqlParams);
+					$db->write('DELETE FROM player_attacks_planet WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM player_attacks_port WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM player_has_alliance_role WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM player_has_drinks WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM player_has_relation WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM player_has_ticker WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM player_has_ticket WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM player_has_unread_messages WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM player_plotted_course WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM player_read_thread WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM player_visited_port WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM player_visited_sector WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM player_votes_pact WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM player_votes_relation WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM ship_has_cargo WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM ship_has_hardware WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM ship_has_illusion WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM ship_has_weapon WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM ship_is_cloaked WHERE ' . $sql, $sqlParams);
+					$db->write('DELETE FROM player WHERE ' . $sql, $sqlParams);
 
-					$db->write('UPDATE active_session SET game_id=0 WHERE ' . $sql . ' LIMIT 1');
+					$db->write('UPDATE active_session SET game_id=0 WHERE ' . $sql . ' LIMIT 1', $sqlParams);
 
 					$actions[] = 'deleted player from game ' . $game_id;
 				}

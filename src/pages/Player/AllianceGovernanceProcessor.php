@@ -59,7 +59,11 @@ class AllianceGovernanceProcessor extends PlayerPageProcessor {
 			} else {
 				// no duplicates in a given game
 				$db = Database::getInstance();
-				$dbResult = $db->read('SELECT 1 FROM alliance WHERE discord_channel =' . $db->escapeString($discordChannel) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND alliance_id != ' . $db->escapeNumber($alliance->getAllianceID()) . ' LIMIT 1');
+				$dbResult = $db->read('SELECT 1 FROM alliance WHERE discord_channel = :discord_channel AND game_id = :game_id AND alliance_id != :alliance_id LIMIT 1', [
+					'discord_channel' => $db->escapeString($discordChannel),
+					'game_id' => $db->escapeNumber($alliance->getGameID()),
+					'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
+				]);
 				if ($dbResult->hasRecord()) {
 					create_error('Another alliance is already using that Discord Channel ID!');
 				}

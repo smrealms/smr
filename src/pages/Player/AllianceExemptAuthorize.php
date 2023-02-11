@@ -23,8 +23,11 @@ class AllianceExemptAuthorize extends PlayerPage {
 		$db = Database::getInstance();
 		$db->write('UPDATE alliance_bank_transactions SET request_exempt = 0 WHERE exempt = 1');
 
-		$dbResult = $db->read('SELECT * FROM alliance_bank_transactions WHERE request_exempt = 1 ' .
-					'AND alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND exempt = 0');
+		$dbResult = $db->read('SELECT * FROM alliance_bank_transactions WHERE request_exempt = 1
+					AND alliance_id = :alliance_id AND game_id = :game_id AND exempt = 0', [
+			'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
+			'game_id' => $db->escapeNumber($alliance->getGameID()),
+		]);
 		$transactions = [];
 		if ($dbResult->hasRecord()) {
 			$container = new AllianceBankExemptProcessor();

@@ -20,8 +20,12 @@ class LogConsoleProcessor extends AccountPageProcessor {
 		$action = Request::get('action');
 		if ($action == 'Delete') {
 			// get rid of all entries
-			$db->write('DELETE FROM account_has_logs WHERE account_id IN (' . $db->escapeArray($accountIDs) . ')');
-			$db->write('DELETE FROM log_has_notes WHERE account_id IN (' . $db->escapeArray($accountIDs) . ')');
+			$db->write('DELETE FROM account_has_logs WHERE account_id IN (:account_ids)', [
+				'account_ids' => $db->escapeArray($accountIDs),
+			]);
+			$db->write('DELETE FROM log_has_notes WHERE account_id IN (:account_ids)', [
+				'account_ids' => $db->escapeArray($accountIDs),
+			]);
 			$container = new LogConsole();
 		} else {
 			$logTypes = [];

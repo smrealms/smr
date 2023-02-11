@@ -30,7 +30,10 @@ class AnonBankDetailProcessor extends PlayerPageProcessor {
 
 		// Get the next transaction ID for this anon bank
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT IFNULL(MAX(transaction_id), 0) AS max_id FROM anon_bank_transactions WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
+		$dbResult = $db->read('SELECT IFNULL(MAX(transaction_id), 0) AS max_id FROM anon_bank_transactions WHERE game_id = :game_id AND anon_id = :anon_id', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'anon_id' => $db->escapeNumber($account_num),
+		]);
 		$trans_id = $dbResult->record()->getInt('max_id') + 1;
 
 		// Update the credit amounts for the player and the bank
@@ -41,15 +44,26 @@ class AnonBankDetailProcessor extends PlayerPageProcessor {
 
 			// Does not handle overflow!
 			$player->decreaseCredits($amount);
-			$db->write('UPDATE anon_bank SET amount = amount + ' . $db->escapeNumber($amount) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
+			$db->write('UPDATE anon_bank SET amount = amount + :amount WHERE game_id = :game_id AND anon_id = :anon_id', [
+				'amount' => $db->escapeNumber($amount),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'anon_id' => $db->escapeNumber($account_num),
+			]);
 		} else {
-			$dbResult = $db->read('SELECT * FROM anon_bank WHERE anon_id = ' . $db->escapeNumber($account_num) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+			$dbResult = $db->read('SELECT * FROM anon_bank WHERE anon_id = :anon_id AND game_id = :game_id', [
+				'anon_id' => $db->escapeNumber($account_num),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+			]);
 			if ($dbResult->record()->getInt('amount') < $amount) {
 				create_error('You don\'t have that much money on your account!');
 			}
 
 			$amount = $player->increaseCredits($amount); // handles overflow
-			$db->write('UPDATE anon_bank SET amount = amount - ' . $db->escapeNumber($amount) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
+			$db->write('UPDATE anon_bank SET amount = amount - :amount WHERE game_id = :game_id AND anon_id = :anon_id', [
+				'amount' => $db->escapeNumber($amount),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'anon_id' => $db->escapeNumber($account_num),
+			]);
 		}
 
 		$player->update();

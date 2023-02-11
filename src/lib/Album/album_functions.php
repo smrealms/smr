@@ -72,14 +72,18 @@ function album_entry(int $album_id): void {
 	if ($session->hasAccount() && $album_id != $session->getAccountID()) {
 		$db->write('UPDATE album
 				SET page_views = page_views + 1
-				WHERE account_id = ' . $db->escapeNumber($album_id) . ' AND
-					approved = \'YES\'');
+				WHERE account_id = :account_id AND
+					approved = \'YES\'', [
+			'account_id' => $db->escapeNumber($album_id),
+		]);
 	}
 
 	$dbResult = $db->read('SELECT *
 				FROM album
-				WHERE account_id = ' . $db->escapeNumber($album_id) . ' AND
-					approved = \'YES\'');
+				WHERE account_id = :account_id AND
+					approved = \'YES\'', [
+		'account_id' => $db->escapeNumber($album_id),
+	]);
 	if ($dbResult->hasRecord()) {
 		$dbRecord = $dbResult->record();
 		$location = $dbRecord->getNullableString('location');
@@ -109,10 +113,12 @@ function album_entry(int $album_id): void {
 
 	$dbResult = $db->read('SELECT hof_name
 				FROM album JOIN account USING(account_id)
-				WHERE hof_name < ' . $db->escapeString($nick) . ' AND
+				WHERE hof_name < :hof_name AND
 					approved = \'YES\'
 				ORDER BY hof_name DESC
-				LIMIT 1');
+				LIMIT 1', [
+		'hof_name' => $db->escapeString($nick),
+	]);
 	echo '<td class="center" style="width: 30%" valign="middle">';
 	if ($dbResult->hasRecord()) {
 		$priv_nick = $dbResult->record()->getString('hof_name');
@@ -123,10 +129,12 @@ function album_entry(int $album_id): void {
 
 	$dbResult = $db->read('SELECT hof_name
 				FROM album JOIN account USING(account_id)
-				WHERE hof_name > ' . $db->escapeString($nick) . ' AND
+				WHERE hof_name > :hof_name AND
 					approved = \'YES\'
 				ORDER BY hof_name
-				LIMIT 1');
+				LIMIT 1', [
+		'hof_name' => $db->escapeString($nick),
+	]);
 	echo '<td class="center" style="width: 30%" valign="middle">';
 	if ($dbResult->hasRecord()) {
 		$next_nick = $dbResult->record()->getString('hof_name');
@@ -201,7 +209,9 @@ function album_entry(int $album_id): void {
 	$dateFormat = $session->hasAccount() ? $session->getAccount()->getDateTimeFormat() : DEFAULT_DATE_TIME_FORMAT;
 	$dbResult = $db->read('SELECT *
 				FROM album_has_comments
-				WHERE album_id = ' . $db->escapeNumber($album_id));
+				WHERE album_id = :album_id', [
+		'album_id' => $db->escapeNumber($album_id),
+	]);
 	foreach ($dbResult->records() as $dbRecord) {
 		$time = $dbRecord->getInt('time');
 		$postee = get_album_nick($dbRecord->getInt('post_id'));
@@ -220,8 +230,11 @@ function album_entry(int $album_id): void {
 		echo('<td style="color:green; font-size:70%;"><br /><input type="submit" name="action" value="Send"></td>');
 		$dbResult = $db->read('SELECT 1
 					FROM account_has_permission
-					WHERE account_id = ' . $db->escapeNumber($session->getAccountID()) . ' AND
-						permission_id = ' . $db->escapeNumber(PERMISSION_MODERATE_PHOTO_ALBUM));
+					WHERE account_id = :account_id AND
+						permission_id = :permission_id', [
+			'account_id' => $db->escapeNumber($session->getAccountID()),
+			'permission_id' => $db->escapeNumber(PERMISSION_MODERATE_PHOTO_ALBUM),
+		]);
 		if ($dbResult->hasRecord()) {
 			echo('<td style="color:green; font-size:70%;"><br /><input type="submit" name="action" value="Moderate"></td>');
 		}

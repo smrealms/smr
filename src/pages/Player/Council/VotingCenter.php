@@ -29,8 +29,11 @@ class VotingCenter extends PlayerPage {
 		// determine for what we voted
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM player_votes_relation
-					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
-						AND game_id = ' . $db->escapeNumber($player->getGameID()));
+					WHERE account_id = :account_id
+						AND game_id = :game_id', [
+			'account_id' => $db->escapeNumber($player->getAccountID()),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		$votedForRace = null;
 		$votedFor = null;
 		if ($dbResult->hasRecord()) {
@@ -57,9 +60,13 @@ class VotingCenter extends PlayerPage {
 
 		$voteTreaties = [];
 		$dbResult = $db->read('SELECT * FROM race_has_voting
-					WHERE ' . $db->escapeNumber(Epoch::time()) . ' < end_time
-					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()));
+					WHERE :now < end_time
+					AND game_id = :game_id
+					AND race_id_1 = :race_id_1', [
+			'now' => $db->escapeNumber(Epoch::time()),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'race_id_1' => $db->escapeNumber($player->getRaceID()),
+		]);
 
 		foreach ($dbResult->records() as $dbRecord) {
 			$otherRaceID = $dbRecord->getInt('race_id_2');
@@ -67,25 +74,38 @@ class VotingCenter extends PlayerPage {
 
 			// get 'yes' votes
 			$dbResult2 = $db->read('SELECT count(*) FROM player_votes_pact
-						WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-							AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . '
-							AND race_id_2 = ' . $db->escapeNumber($otherRaceID) . '
-							AND vote = \'YES\'');
+						WHERE game_id = :game_id
+							AND race_id_1 = :race_id_1
+							AND race_id_2 = :race_id_2
+							AND vote = \'YES\'', [
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'race_id_1' => $db->escapeNumber($player->getRaceID()),
+				'race_id_2' => $db->escapeNumber($otherRaceID),
+			]);
 			$yesVotes = $dbResult2->record()->getInt('count(*)');
 
 			// get 'no' votes
 			$dbResult2 = $db->read('SELECT count(*) FROM player_votes_pact
-						WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-							AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . '
-							AND race_id_2 = ' . $db->escapeNumber($otherRaceID) . '
-							AND vote = \'NO\'');
+						WHERE game_id = :game_id
+							AND race_id_1 = :race_id_1
+							AND race_id_2 = :race_id_2
+							AND vote = \'NO\'', [
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'race_id_1' => $db->escapeNumber($player->getRaceID()),
+				'race_id_2' => $db->escapeNumber($otherRaceID),
+			]);
 			$noVotes = $dbResult2->record()->getInt('count(*)');
 
 			$dbResult2 = $db->read('SELECT vote FROM player_votes_pact
-						WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
-							AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-							AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . '
-							AND race_id_2 = ' . $db->escapeNumber($otherRaceID));
+						WHERE account_id = :account_id
+							AND game_id = :game_id
+							AND race_id_1 = :race_id_1
+							AND race_id_2 = :race_id_2', [
+				'account_id' => $db->escapeNumber($player->getAccountID()),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'race_id_1' => $db->escapeNumber($player->getRaceID()),
+				'race_id_2' => $db->escapeNumber($otherRaceID),
+			]);
 			$votedFor = '';
 			if ($dbResult2->hasRecord()) {
 				$votedFor = $dbResult2->record()->getString('vote'); // this should be a boolean

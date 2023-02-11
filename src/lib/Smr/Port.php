@@ -48,7 +48,9 @@ class Port {
 	public const RAZE_PAYOUT = 0.75; // fraction of base payout for razing
 	public const KILLER_RELATIONS_LOSS = 45; // relations lost by killer in PR
 
-	protected readonly string $SQL;
+	public const SQL = 'sector_id = :sector_id AND game_id = :game_id';
+	/** @var array{sector_id: int, game_id: int} */
+	public readonly array $SQLID;
 
 	protected int $shields;
 	protected int $combatDrones;
@@ -89,7 +91,10 @@ class Port {
 	public static function getGalaxyPorts(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		$db = Database::getInstance();
 		// Use a left join so that we populate the cache for every sector
-		$dbResult = $db->read('SELECT port.* FROM port LEFT JOIN sector USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$dbResult = $db->read('SELECT port.* FROM port LEFT JOIN sector USING(game_id, sector_id) WHERE game_id = :game_id AND galaxy_id = :galaxy_id', [
+			'game_id' => $db->escapeNumber($gameID),
+			'galaxy_id' => $db->escapeNumber($galaxyID),
+		]);
 		$galaxyPorts = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$sectorID = $dbRecord->getInt('sector_id');
@@ -111,13 +116,15 @@ class Port {
 
 	public static function removePort(int $gameID, int $sectorID): void {
 		$db = Database::getInstance();
-		$SQL = 'game_id = ' . $db->escapeNumber($gameID) . '
-		        AND sector_id = ' . $db->escapeNumber($sectorID);
-		$db->write('DELETE FROM port WHERE ' . $SQL);
-		$db->write('DELETE FROM port_has_goods WHERE ' . $SQL);
-		$db->write('DELETE FROM player_visited_port WHERE ' . $SQL);
-		$db->write('DELETE FROM player_attacks_port WHERE ' . $SQL);
-		$db->write('DELETE FROM port_info_cache WHERE ' . $SQL);
+		$SQLID = [
+			'game_id' => $db->escapeNumber($gameID),
+			'sector_id' => $db->escapeNumber($sectorID),
+		];
+		$db->write('DELETE FROM port WHERE ' . self::SQL, $SQLID);
+		$db->write('DELETE FROM port_has_goods WHERE ' . self::SQL, $SQLID);
+		$db->write('DELETE FROM player_visited_port WHERE ' . self::SQL, $SQLID);
+		$db->write('DELETE FROM player_attacks_port WHERE ' . self::SQL, $SQLID);
+		$db->write('DELETE FROM port_info_cache WHERE ' . self::SQL, $SQLID);
 		unset(self::$CACHE_PORTS[$gameID][$sectorID]);
 	}
 
@@ -148,10 +155,13 @@ class Port {
 	) {
 		$this->cachedTime = Epoch::time();
 		$db = Database::getInstance();
-		$this->SQL = 'sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id = ' . $db->escapeNumber($gameID);
+		$this->SQLID = [
+			'sector_id' => $db->escapeNumber($sectorID),
+			'game_id' => $db->escapeNumber($gameID),
+		];
 
 		if ($dbRecord === null) {
-			$dbResult = $db->read('SELECT * FROM port WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT * FROM port WHERE ' . self::SQL, $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -215,7 +225,7 @@ class Port {
 				$this->setCreditsToDefault();
 			}
 			$db = Database::getInstance();
-			$db->write('DELETE FROM player_attacks_port WHERE ' . $this->SQL);
+			$db->write('DELETE FROM player_attacks_port WHERE ' . self::SQL, $this->SQLID);
 		}
 	}
 
@@ -248,7 +258,7 @@ class Port {
 		}
 		if (!isset($this->goodAmounts)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM port_has_goods WHERE ' . $this->SQL . ' ORDER BY good_id ASC');
+			$dbResult = $db->read('SELECT * FROM port_has_goods WHERE ' . self::SQL . ' ORDER BY good_id ASC', $this->SQLID);
 			foreach ($dbResult->records() as $dbRecord) {
 				$goodID = $dbRecord->getInt('good_id');
 				$this->goodTransactions[$goodID] = $dbRecord->getStringEnum('transaction_type', TransactionType::class);
@@ -1176,10 +1186,21 @@ class Port {
 
 			$db->write('INSERT IGNORE INTO port_info_cache
 						(game_id, sector_id, port_info_hash, port_info)
-						VALUES (' . $db->escapeNumber($this->getGameID()) . ', ' . $db->escapeNumber($this->getSectorID()) . ', ' . $cacheHash . ', ' . $cache . ')');
+						VALUES (:game_id, :sector_id, :hash, :cache)', [
+				...$this->SQLID,
+				'hash' => $cacheHash,
+				'cache' => $cache,
+			]);
 
 			// We can't use the SQL member here because CachePorts don't have it
-			$db->write('UPDATE player_visited_port SET visited=' . $db->escapeNumber($this->getCachedTime()) . ', port_info_hash=' . $cacheHash . ' WHERE visited<=' . $db->escapeNumber($this->getCachedTime()) . ' AND account_id IN (' . $db->escapeArray($accountIDs) . ') AND sector_id=' . $db->escapeNumber($this->getSectorID()) . ' AND game_id=' . $db->escapeNumber($this->getGameID()) . ' LIMIT ' . count($accountIDs));
+			$db->write('UPDATE player_visited_port SET visited = :cached_time, port_info_hash = :port_info_hash WHERE visited <= :cached_time AND account_id IN (:account_ids) AND sector_id = :sector_id AND game_id = :game_id LIMIT :limit', [
+				'cached_time' => $db->escapeNumber($this->getCachedTime()),
+				'port_info_hash' => $cacheHash,
+				'sector_id' => $db->escapeNumber($this->getSectorID()),
+				'game_id' => $db->escapeNumber($this->getGameID()),
+				'account_ids' => $db->escapeArray($accountIDs),
+				'limit' => count($accountIDs),
+			]);
 
 			unset($cache);
 			return true;
@@ -1196,9 +1217,13 @@ class Port {
 			$dbResult = $db->read('SELECT visited, port_info
 						FROM player_visited_port
 						JOIN port_info_cache USING (game_id,sector_id,port_info_hash)
-						WHERE account_id = ' . $db->escapeNumber($accountID) . '
-							AND game_id = ' . $db->escapeNumber($gameID) . '
-							AND sector_id = ' . $db->escapeNumber($sectorID) . ' LIMIT 1');
+						WHERE account_id = :account_id
+							AND game_id = :game_id
+							AND sector_id = :sector_id LIMIT 1', [
+				'account_id' => $db->escapeNumber($accountID),
+				'game_id' => $db->escapeNumber($gameID),
+				'sector_id' => $db->escapeNumber($sectorID),
+			]);
 
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
@@ -1241,38 +1266,40 @@ class Port {
 		if (!$this->cacheIsValid) {
 			$this->updateSectorPlayersCache();
 			// route_cache tells NPC's where they can trade
-			$db->write('DELETE FROM route_cache WHERE game_id=' . $db->escapeNumber($this->getGameID()));
+			$db->write('DELETE FROM route_cache WHERE game_id = :game_id', [
+				'game_id' => $db->escapeNumber($this->getGameID()),
+			]);
 		}
 
 		// If any fields in the `port` table have changed, update table
 		if ($this->hasChanged) {
+			$params = [
+				...$this->SQLID,
+				'experience' => $db->escapeNumber($this->getExperience()),
+				'shields' => $db->escapeNumber($this->getShields()),
+				'armour' => $db->escapeNumber($this->getArmour()),
+				'combat_drones' => $db->escapeNumber($this->getCDs()),
+				'level' => $db->escapeNumber($this->getLevel()),
+				'credits' => $db->escapeNumber($this->getCredits()),
+				'upgrade' => $db->escapeNumber($this->getUpgrade()),
+				'reinforce_time' => $db->escapeNumber($this->getReinforceTime()),
+				'attack_started' => $db->escapeNumber($this->getAttackStarted()),
+				'race_id' => $db->escapeNumber($this->getRaceID()),
+			];
 			if ($this->isNew === false) {
-				$db->write('UPDATE port SET experience = ' . $db->escapeNumber($this->getExperience()) .
-								', shields = ' . $db->escapeNumber($this->getShields()) .
-								', armour = ' . $db->escapeNumber($this->getArmour()) .
-								', combat_drones = ' . $db->escapeNumber($this->getCDs()) .
-								', level = ' . $db->escapeNumber($this->getLevel()) .
-								', credits = ' . $db->escapeNumber($this->getCredits()) .
-								', upgrade = ' . $db->escapeNumber($this->getUpgrade()) .
-								', reinforce_time = ' . $db->escapeNumber($this->getReinforceTime()) .
-								', attack_started = ' . $db->escapeNumber($this->getAttackStarted()) .
-								', race_id = ' . $db->escapeNumber($this->getRaceID()) . '
-								WHERE ' . $this->SQL);
+				$db->write('UPDATE port SET experience = :experience,
+								shields = :shields,
+								armour = :armour,
+								combat_drones = :combat_drones,
+								level = :level,
+								credits = :credits,
+								upgrade = :upgrade,
+								reinforce_time = :reinforce_time,
+								attack_started = :attack_started,
+								race_id = :race_id
+								WHERE ' . self::SQL, $params);
 			} else {
-				$db->insert('port', [
-					'game_id' => $db->escapeNumber($this->getGameID()),
-					'sector_id' => $db->escapeNumber($this->getSectorID()),
-					'experience' => $db->escapeNumber($this->getExperience()),
-					'shields' => $db->escapeNumber($this->getShields()),
-					'armour' => $db->escapeNumber($this->getArmour()),
-					'combat_drones' => $db->escapeNumber($this->getCDs()),
-					'level' => $db->escapeNumber($this->getLevel()),
-					'credits' => $db->escapeNumber($this->getCredits()),
-					'upgrade' => $db->escapeNumber($this->getUpgrade()),
-					'reinforce_time' => $db->escapeNumber($this->getReinforceTime()),
-					'attack_started' => $db->escapeNumber($this->getAttackStarted()),
-					'race_id' => $db->escapeNumber($this->getRaceID()),
-				]);
+				$db->insert('port', $params);
 				$this->isNew = false;
 			}
 			$this->hasChanged = false;
@@ -1285,7 +1312,12 @@ class Port {
 				continue;
 			}
 			$amount = $this->getGoodAmount($goodID);
-			$db->write('UPDATE port_has_goods SET amount = ' . $db->escapeNumber($amount) . ', last_update = ' . $db->escapeNumber(Epoch::time()) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $db->escapeNumber($goodID));
+			$db->write('UPDATE port_has_goods SET amount = :amount, last_update = :last_update WHERE ' . self::SQL . ' AND good_id = :good_id', [
+				...$this->SQLID,
+				'good_id' => $db->escapeNumber($goodID),
+				'amount' => $db->escapeNumber($amount),
+				'last_update' => $db->escapeNumber(Epoch::time()),
+			]);
 			unset($this->goodAmountsChanged[$goodID]);
 		}
 
@@ -1294,8 +1326,7 @@ class Port {
 			if ($status === true) {
 				// add the good
 				$db->replace('port_has_goods', [
-					'game_id' => $db->escapeNumber($this->getGameID()),
-					'sector_id' => $db->escapeNumber($this->getSectorID()),
+					...$this->SQLID,
 					'good_id' => $db->escapeNumber($goodID),
 					'transaction_type' => $db->escapeString($this->getGoodTransaction($goodID)->value),
 					'amount' => $db->escapeNumber($this->getGoodAmount($goodID)),
@@ -1303,7 +1334,10 @@ class Port {
 				]);
 			} else {
 				// remove the good
-				$db->write('DELETE FROM port_has_goods WHERE ' . $this->SQL . ' AND good_id=' . $db->escapeNumber($goodID) . ';');
+				$db->write('DELETE FROM port_has_goods WHERE ' . self::SQL . ' AND good_id = :good_id', [
+					...$this->SQLID,
+					'good_id' => $db->escapeNumber($goodID),
+				]);
 			}
 			unset($this->goodTransactionsChanged[$goodID]);
 		}
@@ -1412,7 +1446,10 @@ class Port {
 		//get all players involved for HoF
 		$attackers = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT player.* FROM player_attacks_port JOIN player USING (game_id, account_id) WHERE game_id = ' . $db->escapeNumber($this->gameID) . ' AND player_attacks_port.sector_id = ' . $db->escapeNumber($this->sectorID) . ' AND time > ' . $db->escapeNumber(Epoch::time() - self::TIME_TO_CREDIT_RAID));
+		$dbResult = $db->read('SELECT player.* FROM player_attacks_port JOIN player USING (game_id, account_id) WHERE game_id = :game_id AND player_attacks_port.sector_id = :sector_id AND time > :credit_time', [
+			...$this->SQLID,
+			'credit_time' => $db->escapeNumber(Epoch::time() - self::TIME_TO_CREDIT_RAID),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$attackers[] = Player::getPlayer($dbRecord->getInt('account_id'), $this->getGameID(), false, $dbRecord);
 		}

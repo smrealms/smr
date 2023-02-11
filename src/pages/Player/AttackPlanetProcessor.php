@@ -103,7 +103,10 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 		]);
 
 		if ($planet->isDestroyed()) {
-			$db->write('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = ' . $db->escapeNumber($planet->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+			$db->write('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = :sector_id AND game_id = :game_id', [
+				'sector_id' => $db->escapeNumber($planet->getSectorID()),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+			]);
 			$planet->removeOwner();
 			$planet->removePassword();
 

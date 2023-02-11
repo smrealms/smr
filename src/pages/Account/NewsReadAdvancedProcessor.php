@@ -20,7 +20,10 @@ class NewsReadAdvancedProcessor extends AccountPageProcessor {
 		$db = Database::getInstance();
 		if ($submit == 'Search For Player') {
 			$playerName = Request::get('playerName');
-			$dbResult = $db->read('SELECT account_id FROM player WHERE player_name LIKE ' . $db->escapeString('%' . $playerName . '%') . ' AND game_id = ' . $db->escapeNumber($this->gameID));
+			$dbResult = $db->read('SELECT account_id FROM player WHERE player_name LIKE :player_name_like AND game_id = :game_id', [
+				'player_name_like' => $db->escapeString('%' . $playerName . '%'),
+				'game_id' => $db->escapeNumber($this->gameID),
+			]);
 			$IDs = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$IDs[] = $dbRecord->getInt('account_id');
@@ -29,7 +32,11 @@ class NewsReadAdvancedProcessor extends AccountPageProcessor {
 		} elseif ($submit == 'Search For Players') {
 			$playerName1 = Request::get('player1');
 			$playerName2 = Request::get('player2');
-			$dbResult = $db->read('SELECT account_id FROM player WHERE (player_name LIKE ' . $db->escapeString('%' . $playerName1 . '%') . ' OR player_name LIKE ' . $db->escapeString('%' . $playerName2 . '%') . ') AND game_id = ' . $db->escapeNumber($this->gameID));
+			$dbResult = $db->read('SELECT account_id FROM player WHERE (player_name LIKE :player_name_like_1 OR player_name LIKE :player_name_like_2) AND game_id = :game_id', [
+				'player_name_like_1' => $db->escapeString('%' . $playerName1 . '%'),
+				'player_name_like_2' => $db->escapeString('%' . $playerName2 . '%'),
+				'game_id' => $db->escapeNumber($this->gameID),
+			]);
 			$IDs = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$IDs[] = $dbRecord->getInt('account_id');

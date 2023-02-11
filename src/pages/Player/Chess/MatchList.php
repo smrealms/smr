@@ -28,7 +28,12 @@ class MatchList extends PlayerPage {
 
 		$players = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT player_id, player.player_name FROM player JOIN account USING(account_id) WHERE npc = ' . $db->escapeBoolean(false) . ' AND validated = ' . $db->escapeBoolean(true) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id NOT IN (' . $db->escapeArray(array_keys($playersChallenged)) . ') ORDER BY player_name');
+		$dbResult = $db->read('SELECT player_id, player.player_name FROM player JOIN account USING(account_id) WHERE npc = :npc AND validated = :validated AND game_id = :game_id AND account_id NOT IN (:account_ids) ORDER BY player_name', [
+			'npc' => $db->escapeBoolean(false),
+			'validated' => $db->escapeBoolean(true),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'account_ids' => $db->escapeArray(array_keys($playersChallenged)),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$players[$dbRecord->getInt('player_id')] = htmlentities($dbRecord->getString('player_name'));
 		}
@@ -36,7 +41,11 @@ class MatchList extends PlayerPage {
 
 		if (ENABLE_NPCS_CHESS) {
 			$npcs = [];
-			$dbResult = $db->read('SELECT player_id, player.player_name FROM player WHERE npc = ' . $db->escapeBoolean(true) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id NOT IN (' . $db->escapeArray(array_keys($playersChallenged)) . ') ORDER BY player_name');
+			$dbResult = $db->read('SELECT player_id, player.player_name FROM player WHERE npc = :npc AND game_id = :game_id AND account_id NOT IN (:account_ids) ORDER BY player_name', [
+				'npc' => $db->escapeBoolean(true),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'account_ids' => $db->escapeArray(array_keys($playersChallenged)),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$npcs[$dbRecord->getInt('player_id')] = htmlentities($dbRecord->getString('player_name'));
 			}

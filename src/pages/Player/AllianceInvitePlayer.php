@@ -43,10 +43,14 @@ class AllianceInvitePlayer extends PlayerPage {
 		if ($alliance->getNumMembers() < $game->getAllianceMaxPlayers()) {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM player
-			            WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-			              AND alliance_id != ' . $db->escapeNumber($alliance->getAllianceID()) . '
-			              AND npc = ' . $db->escapeBoolean(false) . '
-			            ORDER BY player_id DESC');
+			            WHERE game_id = :game_id
+			              AND alliance_id != :alliance_id
+			              AND npc = :npc
+			            ORDER BY player_id DESC', [
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
+				'npc' => $db->escapeBoolean(false),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$invitePlayer = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 				if (array_key_exists($invitePlayer->getAccountID(), $pendingInvites)) {

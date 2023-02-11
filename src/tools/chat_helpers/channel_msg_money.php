@@ -20,7 +20,10 @@ function shared_channel_msg_money(AbstractPlayer $player): array {
 
 	// get money on ships and personal bank accounts
 	$db = Database::getInstance();
-	$dbResult = $db->read('SELECT sum(credits) as total_onship, sum(bank) as total_onbank FROM player WHERE alliance_id = ' . $player->getAllianceID() . ' AND game_id = ' . $player->getGameID());
+	$dbResult = $db->read('SELECT sum(credits) as total_onship, sum(bank) as total_onbank FROM player WHERE alliance_id = :alliance_id AND game_id = :game_id', [
+		'alliance_id' => $player->getAllianceID(),
+		'game_id' => $player->getGameID(),
+	]);
 
 	if ($dbResult->hasRecord()) {
 		$dbRecord = $dbResult->record();
@@ -29,7 +32,10 @@ function shared_channel_msg_money(AbstractPlayer $player): array {
 	}
 
 	// get money on planets
-	$dbResult = $db->read('SELECT SUM(credits) AS total_credits, SUM(bonds) AS total_bonds FROM planet WHERE game_id = ' . $player->getGameID() . ' AND owner_id IN (SELECT account_id FROM player WHERE alliance_id = ' . $player->getAllianceID() . ' AND game_id = ' . $player->getGameID() . ')');
+	$dbResult = $db->read('SELECT SUM(credits) AS total_credits, SUM(bonds) AS total_bonds FROM planet WHERE game_id = :game_id AND owner_id IN (SELECT account_id FROM player WHERE alliance_id = :alliance_id AND game_id = :game_id)', [
+		'alliance_id' => $player->getAllianceID(),
+		'game_id' => $player->getGameID(),
+	]);
 	if ($dbResult->hasRecord()) {
 		$dbRecord = $dbResult->record();
 		$result[] = 'There is a total of ' . number_format($dbRecord->getInt('total_credits')) . ' credits on the planets';

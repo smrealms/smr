@@ -28,9 +28,12 @@ class AnonBankView extends AccountPage {
 		$dbResult = $db->read('SELECT *
 					FROM anon_bank_transactions
 					JOIN player USING(account_id, game_id)
-					WHERE anon_id = ' . $db->escapeNumber($anonID) . '
-						AND game_id = ' . $db->escapeNumber($gameID) . '
-					ORDER BY transaction_id');
+					WHERE anon_id = :anon_id
+						AND game_id = :game_id
+					ORDER BY transaction_id', [
+			'anon_id' => $db->escapeNumber($anonID),
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 		$rows = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$rows[] = [

@@ -2,8 +2,7 @@
 
 namespace SmrTest;
 
-use Exception;
-use mysqli;
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\AfterClass;
@@ -21,7 +20,7 @@ abstract class BaseIntegrationSpec extends TestCase {
 	 */
 	abstract protected function tablesToTruncate(): array;
 
-	private static mysqli $conn;
+	private static Connection $conn;
 	/** @var array<string, int> */
 	private static array $checksums;
 
@@ -31,7 +30,7 @@ abstract class BaseIntegrationSpec extends TestCase {
 	#[BeforeClass]
 	final public static function initializeTableRowCounts(): void {
 		if (!isset(self::$conn)) {
-			self::$conn = DiContainer::make(mysqli::class);
+			self::$conn = DiContainer::make(Connection::class);
 			self::$checksums = self::getChecksums();
 		}
 	}
@@ -45,7 +44,7 @@ abstract class BaseIntegrationSpec extends TestCase {
 	final protected function truncateTables(): void {
 		foreach ($this->tablesToTruncate() as $name) {
 			// Include hard-coded test database name as a safety precaution
-			self::$conn->query('TRUNCATE TABLE smr_live_test.`' . $name . '`');
+			self::$conn->executeStatement('TRUNCATE TABLE smr_live_test.`' . $name . '`');
 		}
 	}
 
@@ -66,7 +65,7 @@ abstract class BaseIntegrationSpec extends TestCase {
 				if ($expected === 0) {
 					// For convenience, we truncate this table now to avoid
 					// issues with rerunning tests.
-					self::$conn->query('TRUNCATE TABLE ' . $table);
+					self::$conn->executeStatement('TRUNCATE TABLE ' . $table);
 				}
 			}
 		}
@@ -78,35 +77,15 @@ abstract class BaseIntegrationSpec extends TestCase {
 	 */
 	private static function getTableNames(): array {
 		$query = 'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=\'smr_live_test\'';
-		$result = self::$conn->query($query); // expect a mysqli_result
-		if (is_bool($result)) {
-			throw new Exception('Failed to get table names with query: ' . $query);
-		}
-		$tables = [];
-		foreach ($result as $record) {
-			$tables[] = $record['TABLE_NAME'];
-		}
-		return $tables;
+		return self::$conn->fetchFirstColumn($query);
 	}
 
 	/**
-	 * @return array<string, int>
+	 * @return array<int>
 	 */
 	private static function getChecksums(): array {
 		$query = 'CHECKSUM TABLE ' . implode(', ', self::getTableNames());
-		$result = self::$conn->query($query); // expect a mysqli_result
-		if (is_bool($result)) {
-			throw new Exception('Failed to get table checksums with query: ' . $query);
-		}
-		$checksums = [];
-		foreach ($result as $record) {
-			$table = $record['Table'];
-			if (!is_string($table)) {
-				throw new Exception('Expected string table names, got : ' . $table);
-			}
-			$checksums[$table] = (int)$record['Checksum'];
-		}
-		return $checksums;
+		return self::$conn->fetchAllKeyValue($query);
 	}
 
 }

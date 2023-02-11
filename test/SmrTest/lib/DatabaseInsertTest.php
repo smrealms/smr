@@ -43,7 +43,9 @@ class DatabaseInsertTest extends TestCase {
 		$logID = $db->insert('test2', [
 			'var' => $db->escapeString('foo'),
 		]);
-		$result = $db->read('SELECT * FROM test2 WHERE id = ' . $logID);
+		$result = $db->read('SELECT * FROM test2 WHERE id = :id', [
+			'id' => $logID,
+		]);
 		$record = $result->record();
 		self::assertSame('foo', $record->getString('var'));
 	}
@@ -67,7 +69,9 @@ class DatabaseInsertTest extends TestCase {
 		self::assertSame(2, $logID);
 
 		// Non-empty fields are successfully recovered
-		$result = $db->read('SELECT * FROM test2 WHERE id = ' . $logID);
+		$result = $db->read('SELECT * FROM test2 WHERE id = :id', [
+			'id' => $logID,
+		]);
 		$record = $result->record();
 		self::assertSame('foo', $record->getString('var'));
 	}
