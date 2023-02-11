@@ -1,11 +1,20 @@
 # Distributed PHPStan config
+includes:
+    - phpstan-dba.neon
+
 parameters:
     level: 8
     paths:
         - src
         - test
+    excludePaths:
+        analyse:
+            # These PHPStan fixture files intentionally contain invalid code.
+            # PHPUnit's PHPStan test harness analyzes them with expected errors.
+            - test/SmrTest/PHPStanExtensionTests/fixtures
     bootstrapFiles:
         - src/config.php
+        - test/phpstan-dba-bootstrap.php
 
     # Stricter analysis
     polluteScopeWithLoopInitialAssignments: false

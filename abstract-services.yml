@@ -70,6 +70,7 @@ services:
             - ./config/config.specific.sample.php:/smr/config/config.specific.php:ro
             - ./phpunit.xml:/smr/phpunit.xml:ro
             - ./phpstan.neon.dist:/smr/phpstan.neon.dist:ro
+            - ./phpstan-dba.neon:/smr/phpstan-dba.neon:ro
             - ./phpcs.xml:/smr/phpcs.xml:ro
             # Mount the source code instead of copying it (read+write for rector)
             - ./rector.php:/smr/rector.php:rw
