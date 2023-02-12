@@ -42,7 +42,7 @@ class ChatSharingProcessor extends PlayerPageProcessor {
 				error_on_page('You are already sharing with this player!');
 			}
 
-			$gameId = Request::has('all_games') ? '0' : $player->getGameID();
+			$gameId = Request::has('all_games') ? 0 : $player->getGameID();
 			$db->insert('account_shares_info', [
 				'to_account_id' => $db->escapeNumber($accountId),
 				'from_account_id' => $db->escapeNumber($player->getAccountID()),

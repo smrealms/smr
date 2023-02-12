@@ -63,13 +63,20 @@ class Request {
 	}
 
 	/**
-	 * Returns index value as an array of strings.
+	 * Returns index value as an array of strings with integer keys.
 	 *
-	 * @param ?array<mixed> $default
-	 * @return array<mixed>
+	 * @param ?array<int, string> $default
+	 * @return array<int, string>
 	 */
 	public static function getArray(string $index, array $default = null): array {
 		if (self::has($index)) {
+			foreach ($_REQUEST[$index] as $key => $value) {
+				// String keys are legal HTML, but we do not allow them
+				if (!is_int($key)) {
+					throw new Exception('Array key must be an int: ' . $key);
+				}
+			}
+			// Request array values are always strings, no need to check
 			return $_REQUEST[$index];
 		}
 		if ($default !== null) {
@@ -79,15 +86,19 @@ class Request {
 	}
 
 	/**
-	 * Returns index value as an array of integers.
+	 * Returns index value as an array of integers with integer keys.
 	 *
-	 * @param ?array<int> $default
-	 * @return array<int>
+	 * @param ?array<int, int> $default
+	 * @return array<int, int>
 	 */
 	public static function getIntArray(string $index, array $default = null): array {
 		if (self::has($index)) {
 			$result = [];
 			foreach ($_REQUEST[$index] as $key => $value) {
+				// String keys are legal HTML, but we do not allow them
+				if (!is_int($key)) {
+					throw new Exception('Array key must be an int: ' . $key);
+				}
 				$result[$key] = (int)$value;
 			}
 			return $result;
@@ -132,8 +143,8 @@ class Request {
 	/**
 	 * Like getVar, but returns an array of ints instead of a string.
 	 *
-	 * @param ?array<int> $default
-	 * @return array<int>
+	 * @param ?array<int, int> $default
+	 * @return array<int, int>
 	 */
 	public static function getVarIntArray(string $index, array $default = null): array {
 		return self::getVarX($index, $default, self::getIntArray(...));

@@ -106,7 +106,6 @@ function channel_msg_op_set($fp, Message $msg, AbstractPlayer $player): bool {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
-		$op_time = $args[1];
 
 		echo_r('[OP_SET] by ' . $nick . ' in ' . $channel);
 
@@ -127,7 +126,8 @@ function channel_msg_op_set($fp, Message $msg, AbstractPlayer $player): bool {
 			return true;
 		}
 
-		if (!is_numeric($op_time)) {
+		$op_time = filter_var($args[1], FILTER_VALIDATE_INT);
+		if ($op_time === false) {
 			fwrite($fp, 'PRIVMSG ' . $channel . ' :The <time> needs to be a unix timestamp. See http://www.epochconverter.com for a converter.' . EOL);
 			return true;
 		}

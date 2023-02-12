@@ -183,7 +183,7 @@ class Database {
 	public function escape(mixed $escape): mixed {
 		return match (true) {
 			is_bool($escape) => $this->escapeBoolean($escape),
-			is_numeric($escape) => $this->escapeNumber($escape),
+			is_float($escape) || is_int($escape) => $this->escapeNumber($escape),
 			is_string($escape) => $this->escapeString($escape),
 			is_array($escape) => $this->escapeArray($escape),
 			is_object($escape) => $this->escapeObject($escape),
@@ -216,12 +216,9 @@ class Database {
 		return implode(',', array_map(fn($item) => $this->escape($item), $array));
 	}
 
-	public function escapeNumber(mixed $num): mixed {
+	public function escapeNumber(int|float $num): int|float {
 		// Numbers need not be quoted in MySQL queries, so if we know $num is
 		// numeric, we can simply return its value (no quoting or escaping).
-		if (!is_numeric($num)) {
-			throw new RuntimeException('Not a number: ' . $num);
-		}
 		return $num;
 	}
 

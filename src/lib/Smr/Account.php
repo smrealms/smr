@@ -291,7 +291,7 @@ class Account {
 	/**
 	 * Check if the account is disabled.
 	 *
-	 * @return array<string, mixed>|false
+	 * @return array{Time: int, Reason: string, ReasonID: int}|false
 	 */
 	public function isDisabled(): array|false {
 		$db = Database::getInstance();

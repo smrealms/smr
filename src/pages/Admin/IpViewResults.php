@@ -110,14 +110,14 @@ class IpViewResults extends AccountPage {
 			//=========================================================
 			// List all IPs for a specific account (id)
 			//=========================================================
-			if (!is_numeric($variable)) {
+			$accountID = filter_var($variable, FILTER_VALIDATE_INT);
+			if ($accountID === false) {
 				create_error('Account id must be numeric.');
 			}
-			$accountID = (int)$variable;
 			$template->assign('BanAccountID', $accountID);
 			$summary = 'Account ' . $accountID . ' has had the following IPs at the following times.';
 			$template->assign('Summary', $summary);
-			$dbResult = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($variable));
+			$dbResult = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($accountID));
 			if ($dbResult->hasRecord()) {
 				$ex = $dbResult->record()->getString('reason');
 				$template->assign('Exception', $ex);
@@ -128,7 +128,7 @@ class IpViewResults extends AccountPage {
 				$template->assign('CloseReason', $disabled['Reason']);
 			}
 			$rows = [];
-			$dbResult = $db->read('SELECT * FROM account_has_ip WHERE account_id = ' . $db->escapeNumber($variable) . ' ORDER BY time');
+			$dbResult = $db->read('SELECT * FROM account_has_ip WHERE account_id = ' . $db->escapeNumber($accountID) . ' ORDER BY time');
 			foreach ($dbResult->records() as $dbRecord) {
 				$rows[] = [
 					'ip' => $dbRecord->getString('ip'),
