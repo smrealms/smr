@@ -97,7 +97,6 @@ class ChessGame {
 		$db->write('UPDATE chess_game
 					SET end_time = NULL, winner_id = 0
 					WHERE chess_game_id=' . $db->escapeNumber($this->chessGameID) . ';');
-		$db->write('DELETE FROM chess_game_pieces WHERE chess_game_id = ' . $db->escapeNumber($this->chessGameID) . ';');
 
 		$dbResult = $db->read('SELECT * FROM chess_game_moves WHERE chess_game_id = ' . $db->escapeNumber($this->chessGameID) . ' ORDER BY move_id;');
 		$db->write('DELETE FROM chess_game_moves WHERE chess_game_id = ' . $db->escapeNumber($this->chessGameID) . ';');
