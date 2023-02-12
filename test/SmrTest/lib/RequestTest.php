@@ -24,6 +24,7 @@ class RequestTest extends TestCase {
 			'array_empty' => [],
 			'array_str' => ['a', 'b', 'c'],
 			'array_int' => ['1', '2', '3'],
+			'array_str_keys' => ['a' => 1, 'b' => 2, 'c' => 3],
 		];
 	}
 
@@ -140,11 +141,18 @@ class RequestTest extends TestCase {
 		$this->assertSame(['a'], Request::getArray('noexist', ['a']));
 	}
 
-	public function test_getArray_exception(): void {
+	public function test_getArray_missing(): void {
 		// An index that doesn't exist, no default
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No request variable "noexist"');
 		Request::getArray('noexist');
+	}
+
+	public function test_getArray_wrong_key_type(): void {
+		// If the array has non-integer keys
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Array key must be an int');
+		Request::getArray('array_str_keys');
 	}
 
 	//------------------------------------------------------------------------
@@ -158,11 +166,18 @@ class RequestTest extends TestCase {
 		$this->assertSame([1], Request::getIntArray('noexist', [1]));
 	}
 
-	public function test_getIntArray_exception(): void {
+	public function test_getIntArray_missing(): void {
 		// An index that doesn't exist, no default
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No request variable "noexist"');
 		Request::getIntArray('noexist');
+	}
+
+	public function test_getIntArray_wrong_key_type(): void {
+		// If the array has non-integer keys
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Array key must be an int');
+		Request::getIntArray('array_str_keys');
 	}
 
 	//------------------------------------------------------------------------

@@ -305,8 +305,8 @@ class Session {
 	}
 
 	/**
-	 * @param ?array<int> $default
-	 * @return array<int>
+	 * @param ?array<int, int> $default
+	 * @return array<int, int>
 	 */
 	public function getRequestVarIntArray(string $varName, array $default = null): array {
 		$result = Request::getVarIntArray($varName, $default);
