@@ -16,6 +16,10 @@ use Smr\Pages\Player\SearchForTraderResult;
 use Smr\Pages\Player\WeaponDisplayToggleProcessor;
 use Smr\Traits\RaceID;
 
+/**
+ * @phpstan-type TickerData array{Type: string, Time: int, Expires: int, Recent: string}
+ * @phpstan-type MissionData array{'On Step': int, Progress: int, Unread: bool, Expires: int, Sector: int, 'Starting Sector': int, Task: mixed}
+ */
 abstract class AbstractPlayer {
 
 	use RaceID;
@@ -68,10 +72,10 @@ abstract class AbstractPlayer {
 	protected array $bounties;
 	protected int $turns;
 	protected int $lastCPLAction;
-	/** @var array<int, array<string, mixed>> */
+	/** @var array<int, MissionData> */
 	protected array $missions;
 
-	/** @var array<string, array<string, mixed>> */
+	/** @var array<string, TickerData> */
 	protected array $tickers;
 	protected int $lastTurnUpdate;
 	protected int $lastNewsUpdate;
@@ -1871,7 +1875,7 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<string, array<string, mixed>>
+	 * @return array<string, TickerData>
 	 */
 	public function getTickers(): array {
 		if (!isset($this->tickers)) {
@@ -1896,14 +1900,11 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<string, mixed>|false
+	 * @return TickerData|false
 	 */
 	public function getTicker(string $tickerType): array|false {
 		$tickers = $this->getTickers();
-		if (isset($tickers[$tickerType])) {
-			return $tickers[$tickerType];
-		}
-		return false;
+		return $tickers[$tickerType] ?? false;
 	}
 
 	public function hasTicker(string $tickerType): bool {
@@ -2639,7 +2640,7 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<int, array<string, mixed>>
+	 * @return array<int, MissionData>
 	 */
 	public function getMissions(): array {
 		if (!isset($this->missions)) {
@@ -2655,6 +2656,7 @@ abstract class AbstractPlayer {
 					'Expires' => $dbRecord->getInt('step_fails'),
 					'Sector' => $dbRecord->getInt('mission_sector'),
 					'Starting Sector' => $dbRecord->getInt('starting_sector'),
+					'Task' => false,
 				];
 				$this->rebuildMission($missionID);
 			}
@@ -2663,7 +2665,7 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<int, array<string, mixed>>
+	 * @return array<int, MissionData>
 	 */
 	public function getActiveMissions(): array {
 		$missions = $this->getMissions();
@@ -2676,14 +2678,11 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<string, mixed>|false
+	 * @return MissionData|false
 	 */
 	protected function getMission(int $missionID): array|false {
 		$missions = $this->getMissions();
-		if (isset($missions[$missionID])) {
-			return $missions[$missionID];
-		}
-		return false;
+		return $missions[$missionID] ?? false;
 	}
 
 	protected function hasMission(int $missionID): bool {
@@ -2752,6 +2751,7 @@ abstract class AbstractPlayer {
 			'Expires' => (Epoch::time() + 86400),
 			'Sector' => 0,
 			'Starting Sector' => $this->getSectorID(),
+			'Task' => false,
 		];
 
 		$this->missions[$missionID] =& $mission;
