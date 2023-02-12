@@ -115,15 +115,6 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertSame(42, $db->escapeNumber(42));
 		// Test float
 		self::assertSame(0.21, $db->escapeNumber(0.21));
-		// Test numeric string
-		self::assertSame('42', $db->escapeNumber('42'));
-	}
-
-	public function test_escapeNumber_nonnumeric_throws(): void {
-		$db = Database::getInstance();
-		$this->expectException(RuntimeException::class);
-		$this->expectExceptionMessage('Not a number');
-		$db->escapeNumber('bla');
 	}
 
 	public function test_escapeObject(): void {

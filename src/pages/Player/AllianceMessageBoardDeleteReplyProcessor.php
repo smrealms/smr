@@ -12,7 +12,7 @@ class AllianceMessageBoardDeleteReplyProcessor extends PlayerPageProcessor {
 		private readonly int $allianceID,
 		private readonly AllianceMessageBoardView $lastPage,
 		private readonly int $threadID,
-		private readonly ?int $replyID
+		private readonly int $replyID
 	) {}
 
 	public function build(AbstractPlayer $player): never {

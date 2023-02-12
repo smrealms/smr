@@ -21,7 +21,7 @@ function shared_channel_msg_op_info(AbstractPlayer $player): array {
 	}
 
 	// function to return op info message for each player
-	$getOpInfoMessage = function($player) use ($opTime) {
+	$getOpInfoMessage = function(AbstractPlayer $player) use ($opTime): string {
 		// have we signed up?
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT response FROM alliance_has_op_response WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND ' . $player->getSQL());

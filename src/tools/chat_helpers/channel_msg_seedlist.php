@@ -48,13 +48,6 @@ function shared_channel_msg_seedlist_add(AbstractPlayer $player, ?array $sectors
 		return ['You must specify sectors to add.'];
 	}
 
-	// see if the sectors are numeric
-	foreach ($sectors as $sector) {
-		if (!is_numeric($sector)) {
-			return ["The specified sector '$sector' is not numeric."];
-		}
-	}
-
 	$result = [];
 
 	// Get the initial seedlist
@@ -62,7 +55,12 @@ function shared_channel_msg_seedlist_add(AbstractPlayer $player, ?array $sectors
 	$initSizeSeedlist = count($currentSeedlist);
 
 	$db = Database::getInstance();
-	foreach ($sectors as $sector) {
+	foreach ($sectors as $sectorString) {
+		$sector = filter_var($sectorString, FILTER_VALIDATE_INT);
+		if ($sector === false) {
+			return ['The specified sector is not valid: ' . $sectorString];
+		}
+
 		// check if the sector is a part of the game
 		$dbResult = $db->read('SELECT 1
 					FROM sector

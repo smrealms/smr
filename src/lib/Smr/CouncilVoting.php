@@ -2,6 +2,8 @@
 
 namespace Smr;
 
+use Exception;
+
 /**
  * Collection of functions to help process council voting.
  */
@@ -11,6 +13,9 @@ class CouncilVoting {
 
 		// Process any votes that ended prior to the start of today
 		$endtime = strtotime(date('Y-m-d'));
+		if ($endtime === false) {
+			throw new Exception('Failed to convert date to time');
+		}
 
 		$db = Database::getInstance();
 

@@ -115,6 +115,9 @@ class SectorLock {
 		throw new Exception('Sector lock acquisition timed out!');
 	}
 
+	/**
+	 * @phpstan-assert-if-true !null $this->lockID
+	 */
 	public function isActive(): bool {
 		return $this->lockID !== null;
 	}
