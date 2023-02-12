@@ -8,7 +8,10 @@ if ($json === false) {
 }
 $data = json_decode($json);
 $contact = $data->imprintContact;
-$board = $data->boardOfDirectors;
+$board = array_map(
+	fn(stdClass $member): string => $member->role->en . ': ' . $member->name,
+	$data->boardOfDirectors,
+);
 $lastUpdated = date(DateTimeInterface::RFC7231, strtotime($data->lastUpdate));
 
 ?>
@@ -54,9 +57,7 @@ $lastUpdated = date(DateTimeInterface::RFC7231, strtotime($data->lastUpdate));
 
 								<h2>Board of Directors</h2>
 								<p><?php
-									foreach ($board as $member) {
-										echo $member->role->en . ': ' . $member->name; ?><br /><?php
-									} ?>
+									echo implode('<br />', $board); ?><br />
 									Register court: <?php echo $data->registerCourt; ?><br/>
 									Registration number: <?php echo $data->registrationNumber; ?>
 								</p>
