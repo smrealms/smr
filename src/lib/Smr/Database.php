@@ -216,6 +216,11 @@ class Database {
 		return implode(',', array_map(fn($item) => $this->escape($item), $array));
 	}
 
+	/**
+	 * @template T of int|float
+	 * @param T $num
+	 * @return T
+	 */
 	public function escapeNumber(int|float $num): int|float {
 		// Numbers need not be quoted in MySQL queries, so if we know $num is
 		// numeric, we can simply return its value (no quoting or escaping).

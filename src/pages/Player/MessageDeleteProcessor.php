@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Player;
 
+use Exception;
 use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
@@ -39,6 +40,9 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 		// Delete any scout message groups
 		foreach (Request::getArray('group_id', []) as $groupID) {
 			[$senderID, $minTime, $maxTime] = unserialize(base64_decode($groupID));
+			if (!is_int($senderID) || !is_int($minTime) || !is_int($maxTime)) {
+				throw new Exception('Unexpected deserialized types: ' . $groupID);
+			}
 			$db->write('UPDATE message SET receiver_delete = ' . $db->escapeBoolean(true) . '
 						WHERE sender_id = ' . $db->escapeNumber($senderID) . '
 						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
