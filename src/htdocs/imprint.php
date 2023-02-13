@@ -1,6 +1,19 @@
 <?php declare(strict_types=1);
 
 require_once('../bootstrap.php');
+
+$json = file_get_contents('https://gitlab.fem-net.de/vorstand/fem-impressum/-/raw/main/imprint.json');
+if ($json === false) {
+	throw new Exception('Failed to fetch JSON imprint');
+}
+$data = json_decode($json);
+$contact = $data->imprintContact;
+$board = array_map(
+	fn(stdClass $member): string => $member->role->en . ': ' . $member->name,
+	$data->boardOfDirectors,
+);
+$lastUpdated = date(DateTimeInterface::RFC7231, strtotime($data->lastUpdate));
+
 ?>
 <!DOCTYPE html>
 
@@ -34,21 +47,19 @@ require_once('../bootstrap.php');
 
 								<h2>Contact</h2>
 								<p>
-									Forschungsgemeinschaft elektronische Medien e.V.<br />
-									Max-Planck-Ring 6d<br />
-									98693 Ilmenau, Germany<br />
-									email: info@fem.tu-ilmenau.de<br />
-									Tel./Fax: +49 3677 691929<br />
-									Internet: <a href='http://www.fem.tu-ilmenau.de' target='_blank'>www.fem.tu-ilmenau.de</a>
+									<?php echo $contact->name; ?><br />
+									<?php echo $contact->address; ?><br />
+									<?php echo $contact->postcode; ?> <?php echo $contact->city; ?>, <?php echo $contact->country->en; ?><br />
+									Email: <a href="mailto:<?php echo $contact->email; ?>"><?php echo $contact->email; ?></a><br />
+									Tel./Fax: <?php echo $contact->phone; ?><br />
+									Internet: <a href="<?php echo $contact->homepage; ?>" target="_blank"><?php echo $contact->homepage; ?></a>
 								</p>
 
 								<h2>Board of Directors</h2>
-								<p>
-									President: Charly Schmidt<br/>
-									Vice President: Franca Bittner<br/>
-									Treasurer: Markus Blank<br/>
-									Register court: Amtsgericht Ilmenau<br/>
-									Registration number: 120483 (former: 483)
+								<p><?php
+									echo implode('<br />', $board); ?><br />
+									Register court: <?php echo $data->registerCourt; ?><br/>
+									Registration number: <?php echo $data->registrationNumber; ?>
 								</p>
 
 								<h2>Responsible for Contents</h2>
@@ -56,6 +67,7 @@ require_once('../bootstrap.php');
 									through &sect; 55 Abs. 2 RStV: Michael Kunze
 								</p>
 
+								Last updated: <?php echo $lastUpdated; ?>
 							</td>
 						</tr>
 					</table>
