@@ -2,6 +2,7 @@
 
 namespace SmrTest;
 
+use Exception;
 use Overtrue\PHPLint\Command\LintCommand;
 use Overtrue\PHPLint\Configuration\ConsoleOptionsResolver;
 use Overtrue\PHPLint\Event\EventDispatcher;
@@ -31,6 +32,12 @@ class PhpFileInspectionTest extends TestCase {
 		$finder = new Finder($configResolver);
 		$linter = new Linter($configResolver, $dispatcher);
 		$results = $linter->lintFiles($finder->getFiles());
+
+		// PHPLint doesn't do its own sanity checking, so we must do it here.
+		// https://github.com/overtrue/phplint/issues/183
+		if (count($results) === 0) {
+			throw new Exception('Failed to find any files to lint.');
+		}
 
 		$errors = $results->getFailures();
 		$this->assertEmpty($errors, print_r($errors, true));
