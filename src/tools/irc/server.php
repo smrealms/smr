@@ -197,9 +197,8 @@ function server_msg_401($fp, string $rdata): bool {
 
 			// maybe he left without us noticing, so we fix this now
 			$db->write('UPDATE irc_seen SET ' .
-					   'signed_off = ' . time() . ', ' .
-					   'WHERE seen_id = ' . $seen_id);
-
+					   'signed_off = ' . time() .
+					   ' WHERE seen_id = ' . $seen_id);
 		}
 
 		return true;
