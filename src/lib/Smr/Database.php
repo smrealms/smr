@@ -202,10 +202,6 @@ class Database {
 		return '\'' . $this->dbConn->real_escape_string($string) . '\'';
 	}
 
-	public function escapeBinary(string $binary): string {
-		return '0x' . bin2hex($binary);
-	}
-
 	/**
 	 * @param array<int>|array<string> $array
 	 */
@@ -235,11 +231,10 @@ class Database {
 		}
 		$objectStr = serialize($object);
 		if ($compress === true) {
-			$objectBin = gzcompress($objectStr);
-			if ($objectBin === false) {
+			$objectStr = gzcompress($objectStr);
+			if ($objectStr === false) {
 				throw new Exception('An error occurred while compressing the object');
 			}
-			return $this->escapeBinary($objectBin);
 		}
 		return $this->escapeString($objectStr);
 	}
