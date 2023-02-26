@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Exception;
 use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
@@ -17,16 +16,11 @@ class TraderNoteAddProcessor extends PlayerPageProcessor {
 			create_error('Note cannot be longer than 1000 characters.');
 		}
 
-		$note = htmlentities($note, ENT_QUOTES, 'utf-8');
-		$note = gzcompress(nl2br($note));
-		if ($note === false) {
-			throw new Exception('An error occurred while compressing note');
-		}
 		$db = Database::getInstance();
 		$db->insert('player_has_notes', [
 			'account_id' => $db->escapeNumber($player->getAccountID()),
 			'game_id' => $db->escapeNumber($player->getGameID()),
-			'note' => $db->escapeBinary($note),
+			'note' => $db->escapeObject($note, true),
 		]);
 
 		(new TraderStatus())->go();
