@@ -207,10 +207,7 @@ class Database {
 	}
 
 	/**
-	 * Warning: If escaping a nested array, beware that the escaped array is
-	 * flattened!
-	 *
-	 * @param array<mixed> $array
+	 * @param array<int>|array<string> $array
 	 */
 	public function escapeArray(array $array): string {
 		return implode(',', array_map(fn($item) => $this->escape($item), $array));

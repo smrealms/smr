@@ -52,34 +52,36 @@ class CurrentSector extends PlayerPage {
 		// *******************************************
 
 		// Sector links
-		$links = [];
-		$links['Up'] = ['ID' => $sector->getLinkUp()];
-		$links['Right'] = ['ID' => $sector->getLinkRight()];
-		$links['Down'] = ['ID' => $sector->getLinkDown()];
-		$links['Left'] = ['ID' => $sector->getLinkLeft()];
-		$links['Warp'] = ['ID' => $sector->getWarp()];
+		$linkSectorIDs = [
+			'Up' => $sector->getLinkUp(),
+			'Right' => $sector->getLinkRight(),
+			'Down' => $sector->getLinkDown(),
+			'Left' => $sector->getLinkLeft(),
+			'Warp' => $sector->getWarp(),
+		];
 
 		$unvisited = [];
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeArray($links) . ') AND ' . $player->getSQL());
+		$dbResult = $db->read('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeArray($linkSectorIDs) . ') AND ' . $player->getSQL());
 		foreach ($dbResult->records() as $dbRecord) {
 			$unvisited[$dbRecord->getInt('sector_id')] = true;
 		}
 
-		foreach ($links as $key => $linkArray) {
-			if ($linkArray['ID'] > 0 && $linkArray['ID'] != $player->getSectorID()) {
-				if ($player->getLastSectorID() == $linkArray['ID']) {
+		$links = [];
+		foreach ($linkSectorIDs as $dir => $linkSectorID) {
+			$links[$dir]['ID'] = $linkSectorID;
+			if ($linkSectorID > 0 && $linkSectorID != $player->getSectorID()) {
+				if ($player->getLastSectorID() == $linkSectorID) {
 					$class = 'lastVisited';
-				} elseif (isset($unvisited[$linkArray['ID']])) {
+				} elseif (isset($unvisited[$linkSectorID])) {
 					$class = 'unvisited';
 				} else {
 					$class = 'visited';
 				}
-				$links[$key]['Class'] = $class;
+				$links[$dir]['Class'] = $class;
 			}
 		}
-
 		$template->assign('Sectors', $links);
 
 		doTickerAssigns($template, $player, $db);

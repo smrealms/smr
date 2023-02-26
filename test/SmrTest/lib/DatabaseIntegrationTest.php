@@ -101,11 +101,10 @@ class DatabaseIntegrationTest extends TestCase {
 
 	public function test_escapeArray(): void {
 		$db = Database::getInstance();
-		// Test a mixed array
-		self::assertSame("'a',2,'c'", $db->escapeArray(['a', 2, 'c']));
-		// Test nested arrays
-		// Warning: The array is flattened, which may be unexpected!
-		self::assertSame("'a','x',9,2", $db->escapeArray(['a', ['x', 9], 2]));
+		// Test a string array
+		self::assertSame("'a','b','c'", $db->escapeArray(['a', 'b', 'c']));
+		// Test an int array
+		self::assertSame('1,2,3', $db->escapeArray([1, 2, 3]));
 	}
 
 	public function test_escapeNumber(): void {
