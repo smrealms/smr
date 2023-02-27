@@ -118,14 +118,16 @@ class DatabaseIntegrationTest extends TestCase {
 
 	public function test_escapeObject(): void {
 		$db = Database::getInstance();
-		// Test null
-		self::assertSame('NULL', $db->escapeObject(null, false, true));
 		// Test empty array
 		self::assertSame("'a:0:{}'", $db->escapeObject([]));
 		// Test empty string
 		self::assertSame('\'s:0:\"\";\'', $db->escapeObject(''));
-		// Test zero
-		self::assertSame("'i:0;'", $db->escapeObject(0));
+	}
+
+	public function test_escapeNullableObject(): void {
+		$db = Database::getInstance();
+		// Test null
+		self::assertSame('NULL', $db->escapeNullableObject(null));
 	}
 
 	public function test_write_throws_on_wrong_query_type(): void {
@@ -175,7 +177,7 @@ class DatabaseIntegrationTest extends TestCase {
 			['hello', 'escapeNullableString', 'getNullableString', 'assertSame', []],
 			// Test nullable objects
 			[null, 'escapeNullableString', 'getNullableString', 'assertSame', []],
-			[null, 'escapeObject', 'getObject', 'assertSame', [false, true]],
+			[null, 'escapeNullableObject', 'getNullableObject', 'assertSame', []],
 			// Test object with compression
 			[[1, 2, 3], 'escapeObject', 'getObject', 'assertSame', [true]],
 			// Test object without compression

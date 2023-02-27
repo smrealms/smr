@@ -255,7 +255,7 @@ class Account {
 			$this->defaultCSSEnabled = $dbRecord->getBoolean('default_css_enabled');
 			$this->centerGalaxyMapOnPlayer = $dbRecord->getBoolean('center_galaxy_map_on_player');
 
-			$this->messageNotifications = $dbRecord->getObject('message_notifications', false, true);
+			$this->messageNotifications = $dbRecord->getNullableObject('message_notifications');
 			$this->hotkeys = $dbRecord->getObject('hotkeys');
 			foreach (self::DEFAULT_HOTKEYS as $hotkey => $binding) {
 				if (!isset($this->hotkeys[$hotkey])) {
@@ -329,7 +329,7 @@ class Account {
 			', max_rank_achieved=' . $db->escapeNumber($this->maxRankAchieved) .
 			', default_css_enabled=' . $db->escapeBoolean($this->defaultCSSEnabled) .
 			', center_galaxy_map_on_player=' . $db->escapeBoolean($this->centerGalaxyMapOnPlayer) .
-			', message_notifications=' . $db->escapeObject($this->messageNotifications, false, true) .
+			', message_notifications=' . $db->escapeNullableObject($this->messageNotifications) .
 			', hotkeys=' . $db->escapeObject($this->hotkeys) .
 			', last_login = ' . $db->escapeNumber($this->last_login) .
 			', logging = ' . $db->escapeBoolean($this->logging) .

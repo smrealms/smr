@@ -125,7 +125,7 @@ class Session {
 			$this->lastAccessed = $dbRecord->getFloat('last_accessed');
 			$this->lastSN = $dbRecord->getString('last_sn');
 			// We may not have ajax_returns if ajax was disabled
-			$this->previousAjaxReturns = $dbRecord->getObject('ajax_returns', true, true);
+			$this->previousAjaxReturns = $dbRecord->getNullableObject('ajax_returns', true);
 
 			[$this->links, $lastPage, $lastRequestData] = $dbRecord->getObject('session_var', true);
 

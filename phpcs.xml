@@ -147,4 +147,9 @@
     <rule ref="PSR12.Operators.OperatorSpacing">
         <exclude-pattern>src/lib/Smr/Chess/ChessPiece\.php</exclude-pattern>
     </rule>
+
+    <!-- Ignore bug in Spryker. See https://github.com/spryker/code-sniffer/issues/368. -->
+    <rule ref="Spryker.Commenting.DocBlockParamAllowDefaultValue.WrongNullable">
+        <exclude-pattern>src/lib/Smr/Database\.php</exclude-pattern>
+    </rule>
 </ruleset>

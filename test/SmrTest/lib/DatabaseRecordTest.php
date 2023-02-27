@@ -111,14 +111,17 @@ class DatabaseRecordTest extends TestCase {
 		// Construct a record with various types of objects
 		$record = new DatabaseRecord([
 			'name' => serialize(new ArrayObject(['a' => 1, 'b' => 2])),
-			'name_null' => null,
 			'name_compressed' => gzcompress(serialize(['c', 'd'])),
 		]);
 		// Class objects must be compared here with Equals instead of Same
 		// since the two objects will not be the same instance.
 		self::assertEquals(new ArrayObject(['a' => 1, 'b' => 2]), $record->getObject('name'));
-		self::assertSame(null, $record->getObject('name_null', nullable: true));
 		self::assertSame(['c', 'd'], $record->getObject('name_compressed', compressed: true));
+	}
+
+	public function test_getNullableObject(): void {
+		$record = new DatabaseRecord(['name' => null]);
+		self::assertSame(null, $record->getNullableObject('name'));
 	}
 
 	//------------------------------------------------------------------------

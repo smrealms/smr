@@ -225,10 +225,20 @@ class Database {
 		return $bool ? '\'TRUE\'' : '\'FALSE\'';
 	}
 
-	public function escapeObject(mixed $object, bool $compress = false, bool $nullable = false): string {
-		if ($nullable === true && $object === null) {
+	/**
+	 * @param object|array<mixed>|string|null $object
+	 */
+	public function escapeNullableObject(object|array|string|null $object, bool $compress = false): string {
+		if ($object === null) {
 			return 'NULL';
 		}
+		return $this->escapeObject($object, $compress);
+	}
+
+	/**
+	 * @param object|array<mixed>|string $object
+	 */
+	public function escapeObject(object|array|string $object, bool $compress = false): string {
 		$objectStr = serialize($object);
 		if ($compress === true) {
 			$objectStr = gzcompress($objectStr);

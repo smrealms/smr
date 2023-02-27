@@ -52,11 +52,15 @@ class DatabaseRecord {
 		return $result;
 	}
 
-	public function getObject(string $name, bool $compressed = false, bool $nullable = false): mixed {
-		$object = $this->dbRecord[$name];
-		if ($nullable === true && $object === null) {
+	public function getNullableObject(string $name, bool $compressed = false): mixed {
+		if ($this->dbRecord[$name] === null) {
 			return null;
 		}
+		return $this->getObject($name);
+	}
+
+	public function getObject(string $name, bool $compressed = false): mixed {
+		$object = $this->dbRecord[$name];
 		if ($compressed === true) {
 			$object = gzuncompress($object);
 		}
