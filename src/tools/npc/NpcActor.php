@@ -37,6 +37,10 @@ class NpcActor {
 		// since this could cause it to get stuck in a loop in Fed.
 		$player->setUnderAttack(false);
 
+		// Forget any previously plotted course. There should be none,
+		// but this ensures a clean startup even if shutdown was unclean.
+		$player->deletePlottedCourse();
+
 		// Initialize the trade route for this NPC
 		$this->allTradeRoutes = findRoutes($player);
 		shuffle($this->allTradeRoutes); // randomize
