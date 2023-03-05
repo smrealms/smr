@@ -56,7 +56,7 @@ class DatabaseRecord {
 		if ($this->dbRecord[$name] === null) {
 			return null;
 		}
-		return $this->getObject($name);
+		return $this->getObject($name, $compressed);
 	}
 
 	public function getObject(string $name, bool $compressed = false): mixed {

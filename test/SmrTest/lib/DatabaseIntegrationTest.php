@@ -180,8 +180,10 @@ class DatabaseIntegrationTest extends TestCase {
 			[null, 'escapeNullableObject', 'getNullableObject', 'assertSame', []],
 			// Test object with compression
 			[[1, 2, 3], 'escapeObject', 'getObject', 'assertSame', [true]],
+			[[1, 2, 3], 'escapeNullableObject', 'getNullableObject', 'assertSame', [true]],
 			// Test object without compression
 			[[1, 2, 3], 'escapeObject', 'getObject', 'assertSame', []],
+			[[1, 2, 3], 'escapeNullableObject', 'getNullableObject', 'assertSame', []],
 		];
 		foreach ($params as [$value, $escaper, $getter, $cmp, $args]) {
 			$result = $db->read('SELECT ' . $db->$escaper($value, ...$args) . ' AS val');
