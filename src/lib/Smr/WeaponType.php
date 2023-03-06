@@ -76,7 +76,7 @@ class WeaponType {
 		$this->armourDamage = $dbRecord->getInt('armour_damage');
 		$this->accuracy = $dbRecord->getInt('accuracy');
 		$this->powerLevel = $dbRecord->getInt('power_level');
-		$this->buyerRestriction = BuyerRestriction::from($dbRecord->getInt('buyer_restriction'));
+		$this->buyerRestriction = $dbRecord->getIntEnum('buyer_restriction', BuyerRestriction::class);
 	}
 
 	public function getWeaponTypeID(): int {

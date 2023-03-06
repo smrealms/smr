@@ -2,6 +2,7 @@
 
 namespace Smr;
 
+use BackedEnum;
 use Exception;
 
 class DatabaseRecord {
@@ -65,6 +66,24 @@ class DatabaseRecord {
 			$object = gzuncompress($object);
 		}
 		return unserialize($object);
+	}
+
+	/**
+	 * @template T of BackedEnum
+	 * @param class-string<T> $enum
+	 * @return T
+	 */
+	public function getIntEnum(string $name, string $enum): BackedEnum {
+		return $enum::from($this->getInt($name));
+	}
+
+	/**
+	 * @template T of BackedEnum
+	 * @param class-string<T> $enum
+	 * @return T
+	 */
+	public function getStringEnum(string $name, string $enum): BackedEnum {
+		return $enum::from($this->getString($name));
 	}
 
 	/**

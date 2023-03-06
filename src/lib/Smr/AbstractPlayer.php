@@ -298,7 +298,7 @@ abstract class AbstractPlayer {
 		$this->displayMissions = $dbRecord->getBoolean('display_missions');
 		$this->displayWeapons = $dbRecord->getBoolean('display_weapons');
 		$this->forceDropMessages = $dbRecord->getBoolean('force_drop_messages');
-		$this->scoutMessageGroupType = ScoutMessageGroupType::from($dbRecord->getString('group_scout_messages'));
+		$this->scoutMessageGroupType = $dbRecord->getStringEnum('group_scout_messages', ScoutMessageGroupType::class);
 		$this->ignoreGlobals = $dbRecord->getBoolean('ignore_globals');
 		$this->newbieWarning = $dbRecord->getBoolean('newbie_warning');
 		$this->nameChanged = $dbRecord->getBoolean('name_changed');

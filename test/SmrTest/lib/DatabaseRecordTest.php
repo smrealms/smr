@@ -7,7 +7,9 @@ use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
+use Smr\BountyType;
 use Smr\DatabaseRecord;
+use Smr\ShipClass;
 use TypeError;
 
 #[CoversClass(DatabaseRecord::class)]
@@ -122,6 +124,22 @@ class DatabaseRecordTest extends TestCase {
 	public function test_getNullableObject(): void {
 		$record = new DatabaseRecord(['name' => null]);
 		self::assertSame(null, $record->getNullableObject('name'));
+	}
+
+	//------------------------------------------------------------------------
+
+	public function test_getIntEnum(): void {
+		$record = new DatabaseRecord([
+			'ship_class' => 2,
+		]);
+		self::assertSame(ShipClass::Trader, $record->getIntEnum('ship_class', ShipClass::class));
+	}
+
+	public function test_getStringEnum(): void {
+		$record = new DatabaseRecord([
+			'bounty_type' => 'HQ',
+		]);
+		self::assertSame(BountyType::HQ, $record->getStringEnum('bounty_type', BountyType::class));
 	}
 
 	//------------------------------------------------------------------------

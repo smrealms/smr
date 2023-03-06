@@ -62,12 +62,12 @@ class ShipType {
 	protected function __construct(DatabaseRecord $dbRecord) {
 		$this->name = $dbRecord->getString('ship_name');
 		$this->typeID = $dbRecord->getInt('ship_type_id');
-		$this->class = ShipClass::from($dbRecord->getInt('ship_class_id'));
+		$this->class = $dbRecord->getIntEnum('ship_class_id', ShipClass::class);
 		$this->raceID = $dbRecord->getInt('race_id');
 		$this->hardpoints = $dbRecord->getInt('hardpoint');
 		$this->speed = $dbRecord->getInt('speed');
 		$this->cost = $dbRecord->getInt('cost');
-		$this->restriction = BuyerRestriction::from($dbRecord->getInt('buyer_restriction'));
+		$this->restriction = $dbRecord->getIntEnum('buyer_restriction', BuyerRestriction::class);
 
 		// Power is calculated by summing the allotment for each hardpoint.
 		// P5x1, P4x2, P3x3, P2x4, P1x(infinity)

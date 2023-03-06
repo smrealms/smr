@@ -62,7 +62,7 @@ class Bounty {
 			targetID: $record->getInt('account_id'),
 			bountyID: $record->getInt('bounty_id'),
 			gameID: $record->getInt('game_id'),
-			type: BountyType::from($record->getString('type')),
+			type: $record->getStringEnum('type', BountyType::class),
 			time: $record->getInt('time'),
 			claimerID: $record->getInt('claimer_id'),
 			credits: $record->getInt('amount'),

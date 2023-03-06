@@ -251,7 +251,7 @@ class Port {
 			$dbResult = $db->read('SELECT * FROM port_has_goods WHERE ' . $this->SQL . ' ORDER BY good_id ASC');
 			foreach ($dbResult->records() as $dbRecord) {
 				$goodID = $dbRecord->getInt('good_id');
-				$this->goodTransactions[$goodID] = TransactionType::from($dbRecord->getString('transaction_type'));
+				$this->goodTransactions[$goodID] = $dbRecord->getStringEnum('transaction_type', TransactionType::class);
 				$this->goodAmounts[$goodID] = $dbRecord->getInt('amount');
 
 				$secondsSinceLastUpdate = Epoch::time() - $dbRecord->getInt('last_update');
