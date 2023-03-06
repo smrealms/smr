@@ -2,6 +2,7 @@
 
 namespace SmrTest\lib;
 
+use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -53,6 +54,14 @@ class DatabaseResultTest extends TestCase {
 	public function test_hasRecord_no_rows(): void {
 		$result = $this->runQuery(0);
 		self::assertFalse($result->hasRecord());
+	}
+
+	public function test_record_called_twice(): void {
+		$result = $this->runQuery(1);
+		$result->record();
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Do not call record twice on the same result');
+		$result->record();
 	}
 
 	public function test_hasRecord_with_rows(): void {
