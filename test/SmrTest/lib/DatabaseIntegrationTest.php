@@ -5,6 +5,7 @@ namespace SmrTest\lib;
 use Error;
 use mysqli;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Smr\Container\DiContainer;
@@ -165,30 +166,28 @@ class DatabaseIntegrationTest extends TestCase {
 		$db->read('SELECT 1 FROM account LIMIT 1');
 	}
 
-	public function test_inversion_of_escape_and_get(): void {
+	/**
+	 * @param array<mixed> $args Extra arguments to pass to the escaper/getter.
+	 */
+	#[TestWith([true, 'escapeBoolean', 'getBoolean'])]
+	#[TestWith([false, 'escapeBoolean', 'getBoolean'])]
+	#[TestWith([3, 'escapeNumber', 'getInt'])]
+	#[TestWith([3.14, 'escapeNumber', 'getFloat'])]
+	#[TestWith(['hello', 'escapeString', 'getString'])]
+	#[TestWith(['hello', 'escapeNullableString', 'getNullableString'])]
+	// Test nullable objects
+	#[TestWith([null, 'escapeNullableString', 'getNullableString'])]
+	#[TestWith([null, 'escapeNullableObject', 'getNullableObject'])]
+	// Test object with compression
+	#[TestWith([[1, 2, 3], 'escapeObject', 'getObject', [true]])]
+	#[TestWith([[1, 2, 3], 'escapeNullableObject', 'getNullableObject', [true]])]
+	// Test object without compression
+	#[TestWith([[1, 2, 3], 'escapeObject', 'getObject'])]
+	#[TestWith([[1, 2, 3], 'escapeNullableObject', 'getNullableObject'])]
+	public function test_inversion_of_escape_and_get(mixed $value, string $escaper, string $getter, array $args = []): void {
 		$db = Database::getInstance();
-		// [value, escape function, getter, comparator, extra args]
-		$params = [
-			[true, 'escapeBoolean', 'getBoolean', 'assertSame', []],
-			[false, 'escapeBoolean', 'getBoolean', 'assertSame', []],
-			[3, 'escapeNumber', 'getInt', 'assertSame', []],
-			[3.14, 'escapeNumber', 'getFloat', 'assertSame', []],
-			['hello', 'escapeString', 'getString', 'assertSame', []],
-			['hello', 'escapeNullableString', 'getNullableString', 'assertSame', []],
-			// Test nullable objects
-			[null, 'escapeNullableString', 'getNullableString', 'assertSame', []],
-			[null, 'escapeNullableObject', 'getNullableObject', 'assertSame', []],
-			// Test object with compression
-			[[1, 2, 3], 'escapeObject', 'getObject', 'assertSame', [true]],
-			[[1, 2, 3], 'escapeNullableObject', 'getNullableObject', 'assertSame', [true]],
-			// Test object without compression
-			[[1, 2, 3], 'escapeObject', 'getObject', 'assertSame', []],
-			[[1, 2, 3], 'escapeNullableObject', 'getNullableObject', 'assertSame', []],
-		];
-		foreach ($params as [$value, $escaper, $getter, $cmp, $args]) {
-			$result = $db->read('SELECT ' . $db->$escaper($value, ...$args) . ' AS val');
-			self::$cmp($value, $result->record()->$getter('val', ...$args));
-		}
+		$result = $db->read('SELECT ' . $db->$escaper($value, ...$args) . ' AS val');
+		self::assertSame($value, $result->record()->$getter('val', ...$args));
 	}
 
 }
