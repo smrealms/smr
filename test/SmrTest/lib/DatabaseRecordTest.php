@@ -122,8 +122,12 @@ class DatabaseRecordTest extends TestCase {
 	}
 
 	public function test_getNullableObject(): void {
-		$record = new DatabaseRecord(['name' => null]);
-		self::assertSame(null, $record->getNullableObject('name'));
+		$record = new DatabaseRecord([
+			'null' => null,
+			'not_null' => serialize([1, 2]),
+		]);
+		self::assertSame(null, $record->getNullableObject('null'));
+		self::assertSame([1, 2], $record->getNullableObject('not_null'));
 	}
 
 	//------------------------------------------------------------------------
