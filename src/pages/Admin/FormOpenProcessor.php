@@ -15,10 +15,11 @@ class FormOpenProcessor extends AccountPageProcessor {
 
 	public function build(Account $account): never {
 		$db = Database::getInstance();
-		$db->write('UPDATE open_forms SET open = :open WHERE type = :type', [
-			'open' => $db->escapeBoolean(!$this->isOpen),
-			'type' => $db->escapeString($this->type),
-		]);
+		$db->update(
+			'open_forms',
+			['open' => $db->escapeBoolean(!$this->isOpen)],
+			['type' => $db->escapeString($this->type)],
+		);
 
 		(new FormOpen())->go();
 	}

@@ -938,12 +938,14 @@ abstract class AbstractPlayer {
 			'message_type_id' => $db->escapeNumber($messageTypeID),
 			...$this->SQLID,
 		]);
-		$db->write('UPDATE message SET msg_read = :msg_read
-				WHERE message_type_id = :message_type_id AND ' . self::SQL, [
-			'msg_read' => $db->escapeBoolean(true),
-			'message_type_id' => $db->escapeNumber($messageTypeID),
-			...$this->SQLID,
-		]);
+		$db->update(
+			'message',
+			['msg_read' => $db->escapeBoolean(true)],
+			[
+				'message_type_id' => $db->escapeNumber($messageTypeID),
+				...$this->SQLID,
+			],
+		);
 	}
 
 	public function getSafeAttackRating(): int {
@@ -1877,15 +1879,17 @@ abstract class AbstractPlayer {
 			offsetLeft: $offsetLeft,
 		);
 		$db = Database::getInstance();
-		$db->write('
-			UPDATE player_stored_sector
-				SET offset_left = :offset_left, offset_top = :offset_top
-			WHERE ' . self::SQL . ' AND sector_id = :sector_id', [
-			'offset_left' => $db->escapeNumber($offsetLeft),
-			'offset_top' => $db->escapeNumber($offsetTop),
-			'sector_id' => $db->escapeNumber($sectorID),
-			...$this->SQLID,
-		]);
+		$db->update(
+			'player_stored_sector',
+			[
+				'offset_left' => $db->escapeNumber($offsetLeft),
+				'offset_top' => $db->escapeNumber($offsetTop),
+			],
+			[
+				'sector_id' => $db->escapeNumber($sectorID),
+				...$this->SQLID,
+			],
+		);
 	}
 
 	public function addDestinationButton(int $sectorID, string $label): void {
@@ -2771,24 +2775,21 @@ abstract class AbstractPlayer {
 		if (isset($this->missions[$missionID])) {
 			$mission = $this->missions[$missionID];
 			$db = Database::getInstance();
-			$db->write('
-				UPDATE player_has_mission
-				SET on_step = :on_step,
-					progress = :progress,
-					unread = :unread,
-					starting_sector = :starting_sector,
-					mission_sector = :mission_sector,
-					step_fails = :step_fails
-				WHERE ' . self::SQL . ' AND mission_id = :mission_id', [
-				'on_step' => $db->escapeNumber($mission['On Step']),
-				'progress' => $db->escapeNumber($mission['Progress']),
-				'unread' => $db->escapeBoolean($mission['Unread']),
-				'starting_sector' => $db->escapeNumber($mission['Starting Sector']),
-				'mission_sector' => $db->escapeNumber($mission['Sector']),
-				'step_fails' => $db->escapeNumber($mission['Expires']),
-				'mission_id' => $db->escapeNumber($missionID),
-				...$this->SQLID,
-			]);
+			$db->update(
+				'player_has_mission',
+				[
+					'on_step' => $db->escapeNumber($mission['On Step']),
+					'progress' => $db->escapeNumber($mission['Progress']),
+					'unread' => $db->escapeBoolean($mission['Unread']),
+					'starting_sector' => $db->escapeNumber($mission['Starting Sector']),
+					'mission_sector' => $db->escapeNumber($mission['Sector']),
+					'step_fails' => $db->escapeNumber($mission['Expires']),
+				],
+				[
+					'mission_id' => $db->escapeNumber($missionID),
+					...$this->SQLID,
+				],
+			);
 			return true;
 		}
 		return false;
@@ -3172,10 +3173,11 @@ abstract class AbstractPlayer {
 		}
 		$this->displayWeapons = $bool;
 		$db = Database::getInstance();
-		$db->write('UPDATE player SET display_weapons = :display_weapons WHERE ' . self::SQL, [
-			'display_weapons' => $db->escapeBoolean($this->displayWeapons),
-			...$this->SQLID,
-		]);
+		$db->update(
+			'player',
+			['display_weapons' => $db->escapeBoolean($this->displayWeapons)],
+			$this->SQLID,
+		);
 	}
 
 	public function update(): void {
@@ -3185,83 +3187,49 @@ abstract class AbstractPlayer {
 	public function save(): void {
 		if ($this->hasChanged === true) {
 			$db = Database::getInstance();
-			$db->write('UPDATE player SET player_name = :player_name,
-				player_id = :player_id,
-				sector_id = :sector_id,
-				last_sector_id = :last_sector_id,
-				turns = :turns,
-				last_turn_update = :last_turn_update,
-				newbie_turns = :newbie_turns,
-				last_news_update = :last_news_update,
-				attack_warning = :attack_warning,
-				dead = :dead,
-				newbie_status = :newbie_status,
-				land_on_planet = :land_on_planet,
-				last_active = :last_active,
-				last_cpl_action = :last_cpl_action,
-				race_id = :race_id,
-				credits = :credits,
-				experience = :experience,
-				alignment = :alignment,
-				military_payment = :military_payment,
-				alliance_id = :alliance_id,
-				alliance_join = :alliance_join,
-				ship_type_id = :ship_type_id,
-				kills = :kills,
-				deaths = :deaths,
-				assists = :assists,
-				last_port = :last_port,
-				bank = :bank,
-				zoom = :zoom,
-				display_missions = :display_missions,
-				force_drop_messages = :force_drop_messages,
-				group_scout_messages = :group_scout_messages,
-				ignore_globals = :ignore_globals,
-				newbie_warning = :newbie_warning,
-				name_changed = :name_changed,
-				race_changed = :race_changed,
-				combat_drones_kamikaze_on_mines = :combat_drones_kamikaze_on_mines,
-				under_attack = :under_attack
-				WHERE ' . self::SQL, [
-				'player_name' => $db->escapeString($this->playerName),
-				'player_id' => $db->escapeNumber($this->playerID),
-				'sector_id' => $db->escapeNumber($this->sectorID),
-				'last_sector_id' => $db->escapeNumber($this->lastSectorID),
-				'turns' => $db->escapeNumber($this->turns),
-				'last_turn_update' => $db->escapeNumber($this->lastTurnUpdate),
-				'newbie_turns' => $db->escapeNumber($this->newbieTurns),
-				'last_news_update' => $db->escapeNumber($this->lastNewsUpdate),
-				'attack_warning' => $db->escapeString($this->attackColour),
-				'dead' => $db->escapeBoolean($this->dead),
-				'newbie_status' => $db->escapeBoolean($this->newbieStatus),
-				'land_on_planet' => $db->escapeBoolean($this->landedOnPlanet),
-				'last_active' => $db->escapeNumber($this->lastActive),
-				'last_cpl_action' => $db->escapeNumber($this->lastCPLAction),
-				'race_id' => $db->escapeNumber($this->raceID),
-				'credits' => $db->escapeNumber($this->credits),
-				'experience' => $db->escapeNumber($this->experience),
-				'alignment' => $db->escapeNumber($this->alignment),
-				'military_payment' => $db->escapeNumber($this->militaryPayment),
-				'alliance_id' => $db->escapeNumber($this->allianceID),
-				'alliance_join' => $db->escapeNumber($this->allianceJoinable),
-				'ship_type_id' => $db->escapeNumber($this->shipID),
-				'kills' => $db->escapeNumber($this->kills),
-				'deaths' => $db->escapeNumber($this->deaths),
-				'assists' => $db->escapeNumber($this->assists),
-				'last_port' => $db->escapeNumber($this->lastPort),
-				'bank' => $db->escapeNumber($this->bank),
-				'zoom' => $db->escapeNumber($this->zoom),
-				'display_missions' => $db->escapeBoolean($this->displayMissions),
-				'force_drop_messages' => $db->escapeBoolean($this->forceDropMessages),
-				'group_scout_messages' => $db->escapeString($this->scoutMessageGroupType->value),
-				'ignore_globals' => $db->escapeBoolean($this->ignoreGlobals),
-				'newbie_warning' => $db->escapeBoolean($this->newbieWarning),
-				'name_changed' => $db->escapeBoolean($this->nameChanged),
-				'race_changed' => $db->escapeBoolean($this->raceChanged),
-				'combat_drones_kamikaze_on_mines' => $db->escapeBoolean($this->combatDronesKamikazeOnMines),
-				'under_attack' => $db->escapeBoolean($this->underAttack),
-				...$this->SQLID,
-			]);
+			$db->update(
+				'player',
+				[
+					'player_name' => $db->escapeString($this->playerName),
+					'player_id' => $db->escapeNumber($this->playerID),
+					'sector_id' => $db->escapeNumber($this->sectorID),
+					'last_sector_id' => $db->escapeNumber($this->lastSectorID),
+					'turns' => $db->escapeNumber($this->turns),
+					'last_turn_update' => $db->escapeNumber($this->lastTurnUpdate),
+					'newbie_turns' => $db->escapeNumber($this->newbieTurns),
+					'last_news_update' => $db->escapeNumber($this->lastNewsUpdate),
+					'attack_warning' => $db->escapeString($this->attackColour),
+					'dead' => $db->escapeBoolean($this->dead),
+					'newbie_status' => $db->escapeBoolean($this->newbieStatus),
+					'land_on_planet' => $db->escapeBoolean($this->landedOnPlanet),
+					'last_active' => $db->escapeNumber($this->lastActive),
+					'last_cpl_action' => $db->escapeNumber($this->lastCPLAction),
+					'race_id' => $db->escapeNumber($this->raceID),
+					'credits' => $db->escapeNumber($this->credits),
+					'experience' => $db->escapeNumber($this->experience),
+					'alignment' => $db->escapeNumber($this->alignment),
+					'military_payment' => $db->escapeNumber($this->militaryPayment),
+					'alliance_id' => $db->escapeNumber($this->allianceID),
+					'alliance_join' => $db->escapeNumber($this->allianceJoinable),
+					'ship_type_id' => $db->escapeNumber($this->shipID),
+					'kills' => $db->escapeNumber($this->kills),
+					'deaths' => $db->escapeNumber($this->deaths),
+					'assists' => $db->escapeNumber($this->assists),
+					'last_port' => $db->escapeNumber($this->lastPort),
+					'bank' => $db->escapeNumber($this->bank),
+					'zoom' => $db->escapeNumber($this->zoom),
+					'display_missions' => $db->escapeBoolean($this->displayMissions),
+					'force_drop_messages' => $db->escapeBoolean($this->forceDropMessages),
+					'group_scout_messages' => $db->escapeString($this->scoutMessageGroupType->value),
+					'ignore_globals' => $db->escapeBoolean($this->ignoreGlobals),
+					'newbie_warning' => $db->escapeBoolean($this->newbieWarning),
+					'name_changed' => $db->escapeBoolean($this->nameChanged),
+					'race_changed' => $db->escapeBoolean($this->raceChanged),
+					'combat_drones_kamikaze_on_mines' => $db->escapeBoolean($this->combatDronesKamikazeOnMines),
+					'under_attack' => $db->escapeBoolean($this->underAttack),
+				],
+				$this->SQLID,
+			);
 			$this->hasChanged = false;
 		}
 		$bounties = $this->bounties ?? []; // no need to fetch if unset
@@ -3280,10 +3248,11 @@ abstract class AbstractPlayer {
 					'visibility' => $db->escapeString(self::$HOFVis[$hofType]),
 				]);
 			} else {
-				$db->write('UPDATE hof_visibility SET visibility = :visibility WHERE type = :type', [
-					'visibility' => $db->escapeString(self::$HOFVis[$hofType]),
-					'type' => $db->escapeString($hofType),
-				]);
+				$db->update(
+					'hof_visibility',
+					['visibility' => $db->escapeString(self::$HOFVis[$hofType])],
+					['type' => $db->escapeString($hofType)],
+				);
 			}
 			unset(self::$hasHOFVisChanged[$hofType]);
 		}
@@ -3299,13 +3268,14 @@ abstract class AbstractPlayer {
 					]);
 				}
 			} elseif ($changeType === self::HOF_CHANGED) {
-				$db->write('UPDATE player_hof
-					SET amount = :amount
-					WHERE ' . self::SQL . ' AND type = :type', [
-					...$this->SQLID,
-					'type' => $db->escapeString($hofType),
-					'amount' => $db->escapeNumber($amount),
-				]);
+				$db->update(
+					'player_hof',
+					['amount' => $db->escapeNumber($amount)],
+					[
+						...$this->SQLID,
+						'type' => $db->escapeString($hofType),
+					],
+				);
 			}
 			unset($this->hasHOFChanged[$hofType]);
 		}

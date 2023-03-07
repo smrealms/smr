@@ -118,11 +118,19 @@ class VoteLink {
 	 */
 	public function setFreeTurnsAwarded(): bool {
 		$db = Database::getInstance();
-		$changedRows = $db->write('UPDATE vote_links SET timeout = :now, turns_claimed = \'TRUE\' WHERE account_id = :account_id AND link_id = :link_id AND timeout = 0 AND turns_claimed = \'FALSE\'', [
-			'now' => Epoch::time(),
-			'account_id' => $db->escapeNumber($this->accountID),
-			'link_id' => $db->escapeNumber($this->site->value),
-		]);
+		$changedRows = $db->update(
+			'vote_links',
+			[
+				'timeout' => Epoch::time(),
+				'turns_claimed' => 'TRUE',
+			],
+			[
+				'account_id' => $db->escapeNumber($this->accountID),
+				'link_id' => $db->escapeNumber($this->site->value),
+				'timeout' => 0,
+				'turns_claimed' => 'FALSE',
+			],
+		);
 		return $changedRows === 1;
 	}
 

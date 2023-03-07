@@ -25,11 +25,14 @@ class PaperPublishProcessor extends PlayerPageProcessor {
 		}
 
 		// Update the online_since column
-		$db->write('UPDATE galactic_post_paper SET online_since = :now WHERE game_id = :game_id AND paper_id = :paper_id', [
-			'now' => $db->escapeNumber(Epoch::time()),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'paper_id' => $db->escapeNumber($this->paperID),
-		]);
+		$db->update(
+			'galactic_post_paper',
+			['online_since' => $db->escapeNumber(Epoch::time())],
+			[
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'paper_id' => $db->escapeNumber($this->paperID),
+			],
+		);
 
 		//all done lets send back to the main GP page.
 		$container = new EditorOptions();

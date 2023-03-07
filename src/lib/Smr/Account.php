@@ -333,63 +333,39 @@ class Account {
 
 	public function update(): void {
 		$db = Database::getInstance();
-		$db->write('UPDATE account SET email = :email,
-			validation_code = :validation_code,
-			validated = :validated,
-			password = :password,
-			images = :images,
-			password_reset = :password_reset,
-			use_ajax = :use_ajax,
-			mail_banned = :mail_banned,
-			max_rank_achieved = :max_rank_achieved,
-			default_css_enabled = :default_css_enabled,
-			center_galaxy_map_on_player = :center_galaxy_map_on_player,
-			message_notifications = :message_notifications,
-			hotkeys = :hotkeys,
-			last_login = :last_login,
-			logging = :logging,
-			time_format = :time_format,
-			date_format = :date_format,
-			discord_id = :discord_id,
-			irc_nick = :irc_nick,
-			hof_name = :hof_name,
-			template = :template,
-			colour_scheme = :colour_scheme,
-			fontsize = :fontsize,
-			css_link = :css_link,
-			friendly_colour = :friendly_colour,
-			neutral_colour = :neutral_colour,
-			enemy_colour = :enemy_colour
-			WHERE ' . self::SQL, [
-			'email' => $db->escapeString($this->email),
-			'validation_code' => $db->escapeString($this->validation_code),
-			'validated' => $db->escapeBoolean($this->validated),
-			'password' => $db->escapeString($this->passwordHash),
-			'images' => $db->escapeBoolean($this->images),
-			'password_reset' => $db->escapeString($this->passwordReset),
-			'use_ajax' => $db->escapeBoolean($this->useAJAX),
-			'mail_banned' => $db->escapeNumber($this->mailBanned),
-			'max_rank_achieved' => $db->escapeNumber($this->maxRankAchieved),
-			'default_css_enabled' => $db->escapeBoolean($this->defaultCSSEnabled),
-			'center_galaxy_map_on_player' => $db->escapeBoolean($this->centerGalaxyMapOnPlayer),
-			'message_notifications' => $db->escapeNullableObject($this->messageNotifications),
-			'hotkeys' => $db->escapeObject($this->hotkeys),
-			'last_login' => $db->escapeNumber($this->last_login),
-			'logging' => $db->escapeBoolean($this->logging),
-			'time_format' => $db->escapeString($this->timeFormat),
-			'date_format' => $db->escapeString($this->dateFormat),
-			'discord_id' => $db->escapeNullableString($this->discordId),
-			'irc_nick' => $db->escapeNullableString($this->ircNick),
-			'hof_name' => $db->escapeString($this->hofName),
-			'template' => $db->escapeString($this->template),
-			'colour_scheme' => $db->escapeString($this->colourScheme),
-			'fontsize' => $db->escapeNumber($this->fontSize),
-			'css_link' => $db->escapeNullableString($this->cssLink),
-			'friendly_colour' => $db->escapeNullableString($this->friendlyColour),
-			'neutral_colour' => $db->escapeNullableString($this->neutralColour),
-			'enemy_colour' => $db->escapeNullableString($this->enemyColour),
-			...$this->SQLID,
-		]);
+		$db->update(
+			'account',
+			[
+				'email' => $db->escapeString($this->email),
+				'validation_code' => $db->escapeString($this->validation_code),
+				'validated' => $db->escapeBoolean($this->validated),
+				'password' => $db->escapeString($this->passwordHash),
+				'images' => $db->escapeBoolean($this->images),
+				'password_reset' => $db->escapeString($this->passwordReset),
+				'use_ajax' => $db->escapeBoolean($this->useAJAX),
+				'mail_banned' => $db->escapeNumber($this->mailBanned),
+				'max_rank_achieved' => $db->escapeNumber($this->maxRankAchieved),
+				'default_css_enabled' => $db->escapeBoolean($this->defaultCSSEnabled),
+				'center_galaxy_map_on_player' => $db->escapeBoolean($this->centerGalaxyMapOnPlayer),
+				'message_notifications' => $db->escapeNullableObject($this->messageNotifications),
+				'hotkeys' => $db->escapeObject($this->hotkeys),
+				'last_login' => $db->escapeNumber($this->last_login),
+				'logging' => $db->escapeBoolean($this->logging),
+				'time_format' => $db->escapeString($this->timeFormat),
+				'date_format' => $db->escapeString($this->dateFormat),
+				'discord_id' => $db->escapeNullableString($this->discordId),
+				'irc_nick' => $db->escapeNullableString($this->ircNick),
+				'hof_name' => $db->escapeString($this->hofName),
+				'template' => $db->escapeString($this->template),
+				'colour_scheme' => $db->escapeString($this->colourScheme),
+				'fontsize' => $db->escapeNumber($this->fontSize),
+				'css_link' => $db->escapeNullableString($this->cssLink),
+				'friendly_colour' => $db->escapeNullableString($this->friendlyColour),
+				'neutral_colour' => $db->escapeNullableString($this->neutralColour),
+				'enemy_colour' => $db->escapeNullableString($this->enemyColour),
+			],
+			$this->SQLID,
+		);
 		$this->hasChanged = false;
 	}
 
@@ -624,11 +600,14 @@ class Account {
 				'reward_credits' => $db->escapeNumber($rewardCredits),
 			]);
 		} else {
-			$db->write('UPDATE account_has_credits SET credits_left = :credits_left, reward_credits = :reward_credits WHERE ' . self::SQL, [
-				'credits_left' => $db->escapeNumber($credits),
-				'reward_credits' => $db->escapeNumber($rewardCredits),
-				...$this->SQLID,
-			]);
+			$db->update(
+				'account_has_credits',
+				[
+					'credits_left' => $db->escapeNumber($credits),
+					'reward_credits' => $db->escapeNumber($rewardCredits),
+				],
+				$this->SQLID,
+			);
 		}
 		$this->credits = $credits;
 		$this->rewardCredits = $rewardCredits;
@@ -655,10 +634,11 @@ class Account {
 				'credits_left' => $db->escapeNumber($credits),
 			]);
 		} else {
-			$db->write('UPDATE account_has_credits SET credits_left = :credits_left WHERE ' . self::SQL, [
-				'credits_left' => $db->escapeNumber($credits),
-				...$this->SQLID,
-			]);
+			$db->update(
+				'account_has_credits',
+				['credits_left' => $db->escapeNumber($credits)],
+				$this->SQLID,
+			);
 		}
 		$this->credits = $credits;
 	}
@@ -697,10 +677,11 @@ class Account {
 				'reward_credits' => $db->escapeNumber($credits),
 			]);
 		} else {
-			$db->write('UPDATE account_has_credits SET reward_credits = :reward_credits WHERE ' . self::SQL, [
-				'reward_credits' => $db->escapeNumber($credits),
-				...$this->SQLID,
-			]);
+			$db->update(
+				'account_has_credits',
+				['reward_credits' => $db->escapeNumber($credits)],
+				$this->SQLID,
+			);
 		}
 		$this->rewardCredits = $credits;
 	}
@@ -1288,10 +1269,11 @@ class Account {
 		} elseif ($numPoints <= 0) {
 			$db->delete('account_has_points', $this->SQLID);
 		} else {
-			$db->write('UPDATE account_has_points SET points = :points' . (isset($lastUpdate) ? ', last_update = ' . $db->escapeNumber(Epoch::time()) : '') . ' WHERE ' . self::SQL, [
-				...$this->SQLID,
-				'points' => $db->escapeNumber($numPoints),
-			]);
+			$data = ['points' => $db->escapeNumber($numPoints)];
+			if ($lastUpdate !== null) {
+				$data['last_update'] = $db->escapeNumber(Epoch::time());
+			}
+			$db->update('account_has_points', $data, $this->SQLID);
 		}
 		$this->points = $numPoints;
 	}
@@ -1378,10 +1360,15 @@ class Account {
 			'admin_id' => $db->escapeNumber($admin->getAccountID()),
 			'action' => $db->escapeString('Closed'),
 		]);
-		$db->write('UPDATE player SET newbie_turns = 1
-						WHERE ' . self::SQL . '
-						AND newbie_turns = 0
-						AND land_on_planet = \'FALSE\'', $this->SQLID);
+		$db->update(
+			'player',
+			['newbie_turns' => 1],
+			[
+				...$this->SQLID,
+				'newbie_turns' => 0,
+				'land_on_planet' => 'FALSE',
+			],
+		);
 
 		$dbResult = $db->read('SELECT game_id FROM game JOIN player USING (game_id)
 						WHERE ' . self::SQL . '

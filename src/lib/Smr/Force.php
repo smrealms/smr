@@ -400,13 +400,16 @@ class Force {
 				$db->delete('sector_has_forces', $this->SQLID);
 				$this->isNew = true;
 			} elseif ($this->hasChanged) {
-				$db->write('UPDATE sector_has_forces SET combat_drones = :combat_drones, scout_drones = :scout_drones, mines = :mines, expire_time = :expire_time WHERE ' . self::SQL, [
-					...$this->SQLID,
-					'combat_drones' => $db->escapeNumber($this->combatDrones),
-					'scout_drones' => $db->escapeNumber($this->scoutDrones),
-					'mines' => $db->escapeNumber($this->mines),
-					'expire_time' => $db->escapeNumber($this->expire),
-				]);
+				$db->update(
+					'sector_has_forces',
+					[
+						'combat_drones' => $db->escapeNumber($this->combatDrones),
+						'scout_drones' => $db->escapeNumber($this->scoutDrones),
+						'mines' => $db->escapeNumber($this->mines),
+						'expire_time' => $db->escapeNumber($this->expire),
+					],
+					$this->SQLID,
+				);
 			}
 		} elseif ($this->exists()) {
 			$db->insert('sector_has_forces', [
@@ -427,11 +430,14 @@ class Force {
 	 */
 	public function updateRefreshAll(AbstractPlayer $player, int $refreshTime): void {
 		$db = Database::getInstance();
-		$db->write('UPDATE sector_has_forces SET refresh_at = :refresh_at, refresher = :refresher WHERE ' . self::SQL, [
-			'refresh_at' => $db->escapeNumber($refreshTime),
-			'refresher' => $db->escapeNumber($player->getAccountID()),
-			...$this->SQLID,
-		]);
+		$db->update(
+			'sector_has_forces',
+			[
+				'refresh_at' => $db->escapeNumber($refreshTime),
+				'refresher' => $db->escapeNumber($player->getAccountID()),
+			],
+			$this->SQLID,
+		);
 	}
 
 	public function getExamineDropForcesHREF(): string {

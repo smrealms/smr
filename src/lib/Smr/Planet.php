@@ -134,7 +134,7 @@ class Planet {
 		$db->delete('planet_has_building', $SQLID);
 		$db->delete('planet_is_building', $SQLID);
 		//kick everyone from planet
-		$db->write('UPDATE player SET land_on_planet = \'FALSE\' WHERE ' . self::SQL, $SQLID);
+		$db->update('player', ['land_on_planet' => 'FALSE'], $SQLID);
 
 		unset(self::$CACHE_PLANETS[$gameID][$sectorID]);
 	}
@@ -757,10 +757,11 @@ class Planet {
 		}
 		$this->typeID = $num;
 		$db = Database::getInstance();
-		$db->write('UPDATE planet SET planet_type_id = :planet_type_id WHERE ' . self::SQL, [
-			'planet_type_id' => $db->escapeNumber($num),
-			...$this->SQLID,
-		]);
+		$db->update(
+			'planet',
+			['planet_type_id' => $db->escapeNumber($num)],
+			$this->SQLID,
+		);
 		$this->typeInfo = PlanetType::getTypeInfo($this->getTypeID());
 
 		//trim buildings first
@@ -822,22 +823,18 @@ class Planet {
 		}
 		$db = Database::getInstance();
 		if ($this->hasChanged) {
-			$db->write('UPDATE planet SET
-									owner_id = :owner_id,
-									password = :password,
-									planet_name = :planet_name,
-									shields = :shields,
-									armour = :armour,
-									drones = :drones
-								WHERE ' . self::SQL, [
-				'owner_id' => $db->escapeNumber($this->ownerID),
-				'password' => $db->escapeString($this->password),
-				'planet_name' => $db->escapeString($this->planetName),
-				'shields' => $db->escapeNumber($this->shields),
-				'armour' => $db->escapeNumber($this->armour),
-				'drones' => $db->escapeNumber($this->drones),
-				...$this->SQLID,
-			]);
+			$db->update(
+				'planet',
+				[
+					'owner_id' => $db->escapeNumber($this->ownerID),
+					'password' => $db->escapeString($this->password),
+					'planet_name' => $db->escapeString($this->planetName),
+					'shields' => $db->escapeNumber($this->shields),
+					'armour' => $db->escapeNumber($this->armour),
+					'drones' => $db->escapeNumber($this->drones),
+				],
+				$this->SQLID,
+			);
 			$this->hasChanged = false;
 		}
 
@@ -845,16 +842,15 @@ class Planet {
 		// at the planet list (i.e. you might not have sector lock and could
 		// cause a race condition with events happening in the planet sector).
 		if ($this->hasChangedFinancial) {
-			$db->write('UPDATE planet SET
-									credits = :credits,
-									bonds = :bonds,
-									maturity = :maturity
-								WHERE ' . self::SQL, [
-				'credits' => $db->escapeNumber($this->credits),
-				'bonds' => $db->escapeNumber($this->bonds),
-				'maturity' => $db->escapeNumber($this->maturity),
-				...$this->SQLID,
-			]);
+			$db->update(
+				'planet',
+				[
+					'credits' => $db->escapeNumber($this->credits),
+					'bonds' => $db->escapeNumber($this->bonds),
+					'maturity' => $db->escapeNumber($this->maturity),
+				],
+				$this->SQLID,
+			);
 			$this->hasChangedFinancial = false;
 		}
 
@@ -1387,7 +1383,7 @@ class Planet {
 
 		//kick everyone from planet
 		$db = Database::getInstance();
-		$db->write('UPDATE player SET land_on_planet = \'FALSE\' WHERE ' . self::SQL, $this->SQLID);
+		$db->update('player', ['land_on_planet' => 'FALSE'], $this->SQLID);
 		$this->removeOwner();
 		$this->removePassword();
 		return [];

@@ -127,10 +127,11 @@ class PreferencesProcessor extends AccountPageProcessor {
 			$timez = Request::getInt('timez');
 
 			$db = Database::getInstance();
-			$db->write('UPDATE account SET offset = :offset WHERE account_id = :account_id', [
-				'offset' => $db->escapeNumber($timez),
-				'account_id' => $db->escapeNumber($account->getAccountID()),
-			]);
+			$db->update(
+				'account',
+				['offset' => $db->escapeNumber($timez)],
+				['account_id' => $db->escapeNumber($account->getAccountID())],
+			);
 			$message = '<span class="green">SUCCESS: </span>You have changed your time offset.';
 
 		} elseif ($action == 'Change Date Formats') {

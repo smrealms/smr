@@ -15,12 +15,11 @@ class ChangelogSetLiveProcessor extends AccountPageProcessor {
 
 	public function build(Account $account): never {
 		$db = Database::getInstance();
-		$db->write('UPDATE version
-					SET went_live = :now
-					WHERE version_id = :version_id', [
-			'now' => $db->escapeNumber(Epoch::time()),
-			'version_id' => $db->escapeNumber($this->versionID),
-		]);
+		$db->update(
+			'version',
+			['went_live' => $db->escapeNumber(Epoch::time())],
+			['version_id' => $db->escapeNumber($this->versionID)],
+		);
 
 		// Initialize the next version (since the version set live is not always the
 		// last one, we INSERT IGNORE to skip this step in this case).

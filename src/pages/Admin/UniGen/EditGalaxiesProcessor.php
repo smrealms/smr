@@ -118,9 +118,11 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 				}
 			}
 		}
-		$db->write('UPDATE sector SET warp = 0 WHERE game_id = :game_id', [
-			'game_id' => $db->escapeNumber($gameID),
-		]);
+		$db->update(
+			'sector',
+			['warp' => 0],
+			['game_id' => $db->escapeNumber($gameID)],
+		);
 
 		// Many sectors will have their IDs shifted up or down, so we need to modify
 		// the primary keys for the sector table as well as planets, ports, etc.
@@ -147,29 +149,27 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 
 				// Else we are ready to shift from oldID to newID
 				$oldSector = Sector::getSector($gameID, $oldID);
-				$SQL = 'SET sector_id = :new_sector_id WHERE ' . Sector::SQL;
-				$params = [
-					'new_sector_id' => $db->escapeNumber($newID),
-					...$oldSector->SQLID,
+				$data = [
+					'sector_id' => $db->escapeNumber($newID),
 				];
 
 				if ($oldSector->hasPlanet()) {
-					$db->write('UPDATE planet ' . $SQL, $params);
-					$db->write('UPDATE planet_has_building ' . $SQL, $params);
-					$db->write('UPDATE planet_has_cargo ' . $SQL, $params);
-					$db->write('UPDATE planet_has_weapon ' . $SQL, $params);
+					$db->update('planet', $data, $oldSector->SQLID);
+					$db->update('planet_has_building', $data, $oldSector->SQLID);
+					$db->update('planet_has_cargo', $data, $oldSector->SQLID);
+					$db->update('planet_has_weapon', $data, $oldSector->SQLID);
 				}
 
 				if ($oldSector->hasPort()) {
-					$db->write('UPDATE port ' . $SQL, $params);
-					$db->write('UPDATE port_has_goods ' . $SQL, $params);
+					$db->update('port', $data, $oldSector->SQLID);
+					$db->update('port_has_goods', $data, $oldSector->SQLID);
 				}
 
 				if ($oldSector->hasLocation()) {
-					$db->write('UPDATE location ' . $SQL, $params);
+					$db->update('location', $data, $oldSector->SQLID);
 				}
 
-				$db->write('UPDATE sector ' . $SQL, $params);
+				$db->update('sector', $data, $oldSector->SQLID);
 				unset($needsUpdate[$newID]);
 			}
 		}

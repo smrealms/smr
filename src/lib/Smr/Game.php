@@ -142,41 +142,28 @@ class Game {
 				'starting_credits' => $db->escapeNumber($this->getStartingCredits()),
 			]);
 		} elseif ($this->hasChanged) {
-			$db->write('UPDATE game SET game_name = :game_name,
-										game_description = :game_description,
-										join_time = :join_time,
-										start_time = :start_time,
-										end_time = :end_time,
-										max_players = :max_players,
-										max_turns = :max_turns,
-										start_turns = :start_turns,
-										game_type = :game_type,
-										credits_needed = :credits_needed,
-										game_speed = :game_speed,
-										enabled = :enabled,
-										ignore_stats = :ignore_stats,
-										alliance_max_players = :alliance_max_players,
-										alliance_max_vets = :alliance_max_vets,
-										starting_credits = :starting_credits
-									WHERE game_id = :game_id', [
-				'game_id' => $db->escapeNumber($this->getGameID()),
-				'game_name' => $db->escapeString($this->getName()),
-				'game_description' => $db->escapeString($this->getDescription()),
-				'join_time' => $db->escapeNumber($this->getJoinTime()),
-				'start_time' => $db->escapeNumber($this->getStartTime()),
-				'end_time' => $db->escapeNumber($this->getEndTime()),
-				'max_players' => $db->escapeNumber($this->getMaxPlayers()),
-				'max_turns' => $db->escapeNumber($this->getMaxTurns()),
-				'start_turns' => $db->escapeNumber($this->getStartTurnHours()),
-				'game_type' => $db->escapeNumber($this->gameTypeID),
-				'credits_needed' => $db->escapeNumber($this->getCreditsNeeded()),
-				'game_speed' => $db->escapeNumber($this->getGameSpeed()),
-				'enabled' => $db->escapeBoolean($this->isEnabled()),
-				'ignore_stats' => $db->escapeBoolean($this->isIgnoreStats()),
-				'alliance_max_players' => $db->escapeNumber($this->getAllianceMaxPlayers()),
-				'alliance_max_vets' => $db->escapeNumber($this->getAllianceMaxVets()),
-				'starting_credits' => $db->escapeNumber($this->getStartingCredits()),
-			]);
+			$db->update(
+				'game',
+				[
+					'game_name' => $db->escapeString($this->getName()),
+					'game_description' => $db->escapeString($this->getDescription()),
+					'join_time' => $db->escapeNumber($this->getJoinTime()),
+					'start_time' => $db->escapeNumber($this->getStartTime()),
+					'end_time' => $db->escapeNumber($this->getEndTime()),
+					'max_players' => $db->escapeNumber($this->getMaxPlayers()),
+					'max_turns' => $db->escapeNumber($this->getMaxTurns()),
+					'start_turns' => $db->escapeNumber($this->getStartTurnHours()),
+					'game_type' => $db->escapeNumber($this->gameTypeID),
+					'credits_needed' => $db->escapeNumber($this->getCreditsNeeded()),
+					'game_speed' => $db->escapeNumber($this->getGameSpeed()),
+					'enabled' => $db->escapeBoolean($this->isEnabled()),
+					'ignore_stats' => $db->escapeBoolean($this->isIgnoreStats()),
+					'alliance_max_players' => $db->escapeNumber($this->getAllianceMaxPlayers()),
+					'alliance_max_vets' => $db->escapeNumber($this->getAllianceMaxVets()),
+					'starting_credits' => $db->escapeNumber($this->getStartingCredits()),
+				],
+				['game_id' => $db->escapeNumber($this->getGameID())],
+			);
 		}
 		$this->isNew = false;
 		$this->hasChanged = false;

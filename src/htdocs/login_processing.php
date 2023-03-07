@@ -110,9 +110,14 @@ try {
 		'newbie_turn_time' => $db->escapeNumber(Epoch::time() - TIME_BEFORE_NEWBIE_TIME),
 	]);
 	if (!$dbResult->hasRecord()) {
-		$db->write('UPDATE player SET newbie_turns = 1
-					WHERE newbie_turns = 0 AND
-						  land_on_planet = \'FALSE\'');
+		$db->update(
+			'player',
+			['newbie_turns' => 1],
+			[
+				'newbie_turns' => 0,
+				'land_on_planet' => 'FALSE',
+			],
+		);
 	}
 
 	// ******************************************

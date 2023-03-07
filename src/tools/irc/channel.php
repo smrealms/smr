@@ -38,20 +38,19 @@ function channel_join($fp, string $rdata): bool {
 				fwrite($fp, 'PRIVMSG ' . $channel . ' :Welcome back ' . $nick . '. While being away ' . $seen_by . ' was looking for you.' . EOL);
 			}
 
-			$db->write('UPDATE irc_seen
-						SET signed_on = :now,
-							signed_off = 0,
-							user = :user,
-							host = :host,
-							seen_count = 0,
-							seen_by = NULL,
-							registered = NULL
-						WHERE seen_id = :seen_id', [
-				'now' => $db->escapeNumber(time()),
-				'user' => $db->escapeString($user),
-				'host' => $db->escapeString($host),
-				'seen_id' => $db->escapeNumber($seen_id),
-			]);
+			$db->update(
+				'irc_seen',
+				[
+					'signed_on' => $db->escapeNumber(time()),
+					'signed_off' => 0,
+					'user' => $db->escapeString($user),
+					'host' => $db->escapeString($host),
+					'seen_count' => 0,
+					'seen_by' => null,
+					'registered' => null,
+				],
+				['seen_id' => $db->escapeNumber($seen_id)],
+			);
 
 		} else {
 			// new nick?
@@ -106,10 +105,11 @@ function channel_part($fp, string $rdata): bool {
 
 			$seen_id = $dbResult->record()->getInt('seen_id');
 
-			$db->write('UPDATE irc_seen SET signed_off = :now WHERE seen_id = :seen_id', [
-				'now' => time(),
-				'seen_id' => $seen_id,
-			]);
+			$db->update(
+				'irc_seen',
+				['signed_off' => time()],
+				['seen_id' => $seen_id],
+			);
 
 		} else {
 			// we don't know this one, but who cares? he just left anyway...

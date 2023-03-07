@@ -15,19 +15,24 @@ class SetPoliticalRelationsProcessor extends BetaFunctionsPageProcessor {
 			create_error('You cannot change race relations with your own race.');
 		}
 		$db = Database::getInstance();
-		$query = 'UPDATE race_has_relation SET relation = :relation WHERE race_id_1 = :race_id_1 AND race_id_2 = :race_id_2 AND game_id = :game_id';
-		$db->write($query, [
-			'relation' => $db->escapeNumber($amount),
-			'race_id_1' => $db->escapeNumber($player->getRaceID()),
-			'race_id_2' => $db->escapeNumber($race),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-		]);
-		$db->write($query, [
-			'relation' => $db->escapeNumber($amount),
-			'race_id_1' => $db->escapeNumber($race),
-			'race_id_2' => $db->escapeNumber($player->getRaceID()),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-		]);
+		$db->update(
+			'race_has_relation',
+			['relation' => $db->escapeNumber($amount)],
+			[
+				'race_id_1' => $db->escapeNumber($player->getRaceID()),
+				'race_id_2' => $db->escapeNumber($race),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+			],
+		);
+		$db->update(
+			'race_has_relation',
+			['relation' => $db->escapeNumber($amount)],
+			[
+				'race_id_1' => $db->escapeNumber($race),
+				'race_id_2' => $db->escapeNumber($player->getRaceID()),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+			],
+		);
 	}
 
 }

@@ -168,17 +168,21 @@ class Session {
 		$sessionVar = [$this->links, $this->currentPage, $this->requestData];
 		$db = Database::getInstance();
 		if (!$this->generate) {
-			$db->write('UPDATE active_session SET account_id = :account_id, game_id = :game_id' . (!$this->ajax ? ',last_accessed=' . $db->escapeNumber(Epoch::microtime()) : '') . ', session_var = :session_var,
-					last_sn = :sn
-					WHERE session_id = :session_id AND (:ajax = \'FALSE\' OR last_sn = :last_sn)', [
+			$data = [
 				'account_id' => $db->escapeNumber($this->accountID),
 				'game_id' => $db->escapeNumber($this->gameID),
 				'session_var' => $db->escapeObject($sessionVar, true),
-				'sn' => $db->escapeString($this->SN),
+				'last_sn' => $db->escapeString($this->SN),
+			];
+			$conditions = [
 				'session_id' => $db->escapeString($this->sessionID),
-				'last_sn' => $db->escapeString($this->lastSN),
-				'ajax' => $db->escapeBoolean($this->ajax),
-			]);
+			];
+			if ($this->ajax) {
+				$conditions['last_sn'] = $db->escapeString($this->lastSN);
+			} else {
+				$data['last_accessed'] = $db->escapeNumber(Epoch::microtime());
+			}
+			$db->update('active_session', $data, $conditions);
 		} else {
 			$db->delete('active_session', [
 				'account_id' => $db->escapeNumber($this->accountID),
@@ -253,10 +257,11 @@ class Session {
 			'account_id' => $db->escapeNumber($this->accountID),
 			'game_id' => $db->escapeNumber($this->gameID),
 		]);
-		$db->write('UPDATE active_session SET game_id = :game_id WHERE session_id = :session_id', [
-			'game_id' => $db->escapeNumber($this->gameID),
-			'session_id' => $db->escapeString($this->sessionID),
-		]);
+		$db->update(
+			'active_session',
+			['game_id' => $db->escapeNumber($this->gameID)],
+			['session_id' => $db->escapeString($this->sessionID)],
+		);
 	}
 
 	/**
@@ -381,10 +386,11 @@ class Session {
 			return;
 		}
 		$db = Database::getInstance();
-		$db->write('UPDATE active_session SET ajax_returns = :ajax_returns WHERE session_id = :session_id', [
-			'ajax_returns' => $db->escapeObject($this->ajaxReturns, true),
-			'session_id' => $db->escapeString($this->sessionID),
-		]);
+		$db->update(
+			'active_session',
+			['ajax_returns' => $db->escapeObject($this->ajaxReturns, true)],
+			['session_id' => $db->escapeString($this->sessionID)],
+		);
 	}
 
 }

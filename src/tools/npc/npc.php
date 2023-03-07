@@ -200,9 +200,11 @@ function debug(string $message, mixed $debugObject = null): void {
 		// On the first call to debug, we need to update the script_id retroactively
 		if (!defined('SCRIPT_ID')) {
 			define('SCRIPT_ID', $logID);
-			$db->write('UPDATE npc_logs SET script_id = :script_id WHERE log_id = :script_id', [
-				'script_id' => SCRIPT_ID,
-			]);
+			$db->update(
+				'npc_logs',
+				['script_id' => SCRIPT_ID],
+				['log_id' => SCRIPT_ID],
+			);
 		}
 	}
 }
@@ -254,10 +256,11 @@ function releaseNPC(): void {
 	}
 	$login = $session->getAccount()->getLogin();
 	$db = Database::getInstance();
-	$changedRows = $db->write('UPDATE npc_logins SET working = :working WHERE login = :login', [
-		'working' => $db->escapeBoolean(false),
-		'login' => $db->escapeString($login),
-	]);
+	$changedRows = $db->update(
+		'npc_logins',
+		['working' => $db->escapeBoolean(false)],
+		['login' => $db->escapeString($login)],
+	);
 	if ($changedRows > 0) {
 		debug('Released NPC: ' . $login);
 	} else {
@@ -319,10 +322,11 @@ function changeNPCLogin(): void {
 	$session->setAccount($account);
 	$session->updateGame($npc['game_id']);
 
-	$db->write('UPDATE npc_logins SET working = :working WHERE login = :login', [
-		'working' => $db->escapeBoolean(true),
-		'login' => $db->escapeString($account->getLogin()),
-	]);
+	$db->update(
+		'npc_logins',
+		['working' => $db->escapeBoolean(true)],
+		['login' => $db->escapeString($account->getLogin())],
+	);
 	debug('Chosen NPC: login = ' . $account->getLogin() . ', game = ' . $session->getGameID() . ', player = ' . $session->getPlayer()->getPlayerName());
 }
 

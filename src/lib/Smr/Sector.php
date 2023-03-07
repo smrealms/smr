@@ -177,23 +177,19 @@ class Sector {
 				'warp' => $db->escapeNumber($this->getWarp()),
 			]);
 		} elseif ($this->hasChanged) {
-			$db->write('UPDATE sector SET battles = :battles,
-									galaxy_id = :galaxy_id,
-									link_up = :link_up,
-									link_right = :link_right,
-									link_down = :link_down,
-									link_left = :link_left,
-									warp = :warp
-								WHERE ' . self::SQL, [
-				'battles' => $db->escapeNumber($this->getBattles()),
-				'galaxy_id' => $db->escapeNumber($this->getGalaxyID()),
-				'link_up' => $db->escapeNumber($this->getLinkUp()),
-				'link_right' => $db->escapeNumber($this->getLinkRight()),
-				'link_down' => $db->escapeNumber($this->getLinkDown()),
-				'link_left' => $db->escapeNumber($this->getLinkLeft()),
-				'warp' => $db->escapeNumber($this->getWarp()),
-				...$this->SQLID,
-			]);
+			$db->update(
+				'sector',
+				[
+					'battles' => $db->escapeNumber($this->getBattles()),
+					'galaxy_id' => $db->escapeNumber($this->getGalaxyID()),
+					'link_up' => $db->escapeNumber($this->getLinkUp()),
+					'link_right' => $db->escapeNumber($this->getLinkRight()),
+					'link_down' => $db->escapeNumber($this->getLinkDown()),
+					'link_left' => $db->escapeNumber($this->getLinkLeft()),
+					'warp' => $db->escapeNumber($this->getWarp()),
+				],
+				$this->SQLID,
+			);
 		}
 		$this->isNew = false;
 		$this->hasChanged = false;
@@ -268,11 +264,14 @@ class Sector {
 			$force->ping($message, $player);
 		}
 		$db = Database::getInstance();
-		$db->write('UPDATE sector_has_forces SET refresher = 0 WHERE ' . self::SQL . '
-								AND refresher = :refresher', [
-			...$this->SQLID,
-			'refresher' => $db->escapeNumber($player->getAccountID()),
-		]);
+		$db->update(
+			'sector_has_forces',
+			['refresher' => 0],
+			[
+				...$this->SQLID,
+				'refresher' => $db->escapeNumber($player->getAccountID()),
+			],
+		);
 	}
 
 	public function diedHere(AbstractPlayer $player): void {

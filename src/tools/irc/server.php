@@ -53,11 +53,11 @@ function server_msg_307($fp, string $rdata): bool {
 		foreach ($dbResult->records() as $dbRecord) {
 			$seen_id = $dbRecord->getInt('seen_id');
 
-			$db->write('UPDATE irc_seen SET ' .
-						'registered = 1 ' .
-						'WHERE seen_id = :seen_id', [
-				'seen_id' => $seen_id,
-			]);
+			$db->update(
+				'irc_seen',
+				['registered' => 1],
+				['seen_id' => $seen_id],
+			);
 		}
 
 		return true;
@@ -89,11 +89,11 @@ function server_msg_318($fp, string $rdata): bool {
 		foreach ($dbResult->records() as $dbRecord) {
 			$seen_id = $dbRecord->getInt('seen_id');
 
-			$db->write('UPDATE irc_seen SET ' .
-						'registered = 0 ' .
-						'WHERE seen_id = :seen_id', [
-				'seen_id' => $seen_id,
-			]);
+			$db->update(
+				'irc_seen',
+				['registered' => 0],
+				['seen_id' => $seen_id],
+			);
 		}
 
 		foreach (CallbackEvent::getAll() as $event) {
@@ -162,18 +162,17 @@ function server_msg_352($fp, string $rdata): bool {
 			// exiting nick?
 			$seen_id = $dbResult->record()->getInt('seen_id');
 
-			$db->write('UPDATE irc_seen SET
-					signed_on = :now,
-					signed_off = 0,
-					user = :user,
-					host = :host,
-					registered = NULL
-					WHERE seen_id = :seen_id', [
-				'now' => time(),
-				'user' => $db->escapeString($user),
-				'host' => $db->escapeString($host),
-				'seen_id' => $db->escapeNumber($seen_id),
-			]);
+			$db->update(
+				'irc_seen',
+				[
+					'signed_on' => time(),
+					'signed_off' => 0,
+					'user' => $db->escapeString($user),
+					'host' => $db->escapeString($host),
+					'registered' => null,
+				],
+				['seen_id' => $db->escapeNumber($seen_id)],
+			);
 
 		} else {
 			// new nick?
@@ -217,12 +216,11 @@ function server_msg_401($fp, string $rdata): bool {
 			$seen_id = $dbResult->record()->getInt('seen_id');
 
 			// maybe he left without us noticing, so we fix this now
-			$db->write('UPDATE irc_seen SET
-					signed_off = :now
-					WHERE seen_id = :seen_id', [
-				'now' => time(),
-				'seen_id' => $seen_id,
-			]);
+			$db->update(
+				'irc_seen',
+				['signed_off' => time()],
+				['seen_id' => $seen_id],
+			);
 		}
 
 		return true;

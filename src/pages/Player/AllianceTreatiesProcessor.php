@@ -25,11 +25,15 @@ class AllianceTreatiesProcessor extends PlayerPageProcessor {
 
 		$db = Database::getInstance();
 		if ($this->accept) {
-			$db->write('UPDATE alliance_treaties SET official = \'TRUE\' WHERE alliance_id_1 = :alliance_id_1 AND alliance_id_2 = :alliance_id_2 AND game_id = :game_id', [
-				'alliance_id_1' => $db->escapeNumber($alliance_id_1),
-				'alliance_id_2' => $db->escapeNumber($alliance_id_2),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-			]);
+			$db->update(
+				'alliance_treaties',
+				['official' => 'TRUE'],
+				[
+					'alliance_id_1' => $db->escapeNumber($alliance_id_1),
+					'alliance_id_2' => $db->escapeNumber($alliance_id_2),
+					'game_id' => $db->escapeNumber($player->getGameID()),
+				],
+			);
 
 			if ($this->allianceBankAccess) {
 				//make an AA role for both alliances, use treaty_created column

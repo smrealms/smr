@@ -150,6 +150,17 @@ class Database {
 	}
 
 	/**
+	 * UPDATE $fields in $table for rows that meet $criteria.
+	 *
+	 * @param array<string, mixed> $fields
+	 * @param array<string, mixed> $criteria
+	 * @return int Number of updated rows
+	 */
+	public function update(string $table, array $fields, array $criteria) {
+		return (int)$this->dbConn->update($table, $fields, $criteria);
+	}
+
+	/**
 	 * DELETE row(s) from $table that meet $criteria.
 	 *
 	 * @param array<string, mixed> $criteria

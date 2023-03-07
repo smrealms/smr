@@ -99,40 +99,29 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 				]);
 			} else {
 				// otherwise we update it
-				$db->write('UPDATE alliance_has_roles
-							SET role = :role,
-							with_per_day = :with_per_day,
-							positive_balance = :positive_balance,
-							remove_member = :remove_member,
-							change_pass = :change_pass,
-							change_mod = :change_mod,
-							change_roles = :change_roles,
-							planet_access = :planet_access,
-							exempt_with = :exempt_with,
-							mb_messages = :mb_messages,
-							send_alliance_msg = :send_alliance_msg,
-							op_leader = :op_leader,
-							view_bonds = :view_bonds
-							WHERE game_id = :game_id
-								AND alliance_id = :alliance_id
-								AND role_id = :role_id', [
-					'alliance_id' => $db->escapeNumber($alliance_id),
-					'game_id' => $db->escapeNumber($player->getGameID()),
-					'role_id' => $db->escapeNumber($this->roleID),
-					'role' => $db->escapeString($roleName),
-					'with_per_day' => $db->escapeNumber($withPerDay),
-					'positive_balance' => $db->escapeBoolean($positiveBalance),
-					'remove_member' => $db->escapeBoolean($removeMember),
-					'change_pass' => $db->escapeBoolean($changePass),
-					'change_mod' => $db->escapeBoolean($changeMOD),
-					'change_roles' => $db->escapeBoolean($changeRoles),
-					'planet_access' => $db->escapeBoolean($planetAccess),
-					'exempt_with' => $db->escapeBoolean($exemptWith),
-					'mb_messages' => $db->escapeBoolean($mbMessages),
-					'send_alliance_msg' => $db->escapeBoolean($sendAllMsg),
-					'op_leader' => $db->escapeBoolean($opLeader),
-					'view_bonds' => $db->escapeBoolean($viewBonds),
-				]);
+				$db->update(
+					'alliance_has_roles',
+					[
+						'role' => $db->escapeString($roleName),
+						'with_per_day' => $db->escapeNumber($withPerDay),
+						'positive_balance' => $db->escapeBoolean($positiveBalance),
+						'remove_member' => $db->escapeBoolean($removeMember),
+						'change_pass' => $db->escapeBoolean($changePass),
+						'change_mod' => $db->escapeBoolean($changeMOD),
+						'change_roles' => $db->escapeBoolean($changeRoles),
+						'planet_access' => $db->escapeBoolean($planetAccess),
+						'exempt_with' => $db->escapeBoolean($exemptWith),
+						'mb_messages' => $db->escapeBoolean($mbMessages),
+						'send_alliance_msg' => $db->escapeBoolean($sendAllMsg),
+						'op_leader' => $db->escapeBoolean($opLeader),
+						'view_bonds' => $db->escapeBoolean($viewBonds),
+					],
+					[
+						'alliance_id' => $db->escapeNumber($alliance_id),
+						'game_id' => $db->escapeNumber($player->getGameID()),
+						'role_id' => $db->escapeNumber($this->roleID),
+					],
+				);
 			}
 
 		}

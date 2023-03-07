@@ -122,19 +122,17 @@ class Galaxy {
 				'max_force_time' => $db->escapeNumber($this->getMaxForceTime()),
 			]);
 		} elseif ($this->hasChanged) {
-			$db->write('UPDATE game_galaxy SET galaxy_name = :galaxy_name,
-										width = :width,
-										height = :height,
-										galaxy_type = :galaxy_type,
-										max_force_time = :max_force_time
-									WHERE ' . self::SQL, [
-				...$this->SQLID,
-				'galaxy_name' => $db->escapeString($this->getName()),
-				'width' => $db->escapeNumber($this->getWidth()),
-				'height' => $db->escapeNumber($this->getHeight()),
-				'galaxy_type' => $db->escapeString($this->getGalaxyType()),
-				'max_force_time' => $db->escapeNumber($this->getMaxForceTime()),
-			]);
+			$db->update(
+				'game_galaxy',
+				[
+					'galaxy_name' => $db->escapeString($this->getName()),
+					'width' => $db->escapeNumber($this->getWidth()),
+					'height' => $db->escapeNumber($this->getHeight()),
+					'galaxy_type' => $db->escapeString($this->getGalaxyType()),
+					'max_force_time' => $db->escapeNumber($this->getMaxForceTime()),
+				],
+				$this->SQLID,
+			);
 		}
 		$this->isNew = false;
 		$this->hasChanged = false;

@@ -123,10 +123,11 @@ class AccountEditProcessor extends AccountPageProcessor {
 		}
 
 		if ($veteran_status != $curr_account->isVeteranForced()) {
-			$db->write('UPDATE account SET veteran = :veteran WHERE account_id = :account_id', [
-				'veteran' => $db->escapeBoolean($veteran_status),
-				'account_id' => $db->escapeNumber($account_id),
-			]);
+			$db->update(
+				'account',
+				['veteran' => $db->escapeBoolean($veteran_status)],
+				['account_id' => $db->escapeNumber($account_id)],
+			);
 			$actions[] = 'set the veteran status to ' . $db->escapeBoolean($veteran_status);
 		}
 
@@ -213,8 +214,22 @@ class AccountEditProcessor extends AccountPageProcessor {
 					$db->delete('message', $sqlParams);
 					$db->write('DELETE FROM message_notify
 								WHERE (from_id = :account_id OR to_id = :account_id) AND game_id = :game_id', $sqlParams);
-					$db->write('UPDATE planet SET owner_id=0,planet_name=\'\',password=\'\',shields=0,drones=0,credits=0,bonds=0
-								WHERE owner_id = :account_id AND game_id = :game_id', $sqlParams);
+					$db->update(
+						'planet',
+						[
+							'owner_id' => 0,
+							'planet_name' => '',
+							'password' => '',
+							'shields' => 0,
+							'drones' => 0,
+							'credits' => 0,
+							'bonds' => 0,
+						],
+						[
+							'owner_id' => $db->escapeNumber($account_id),
+							'game_id' => $db->escapeNumber($game_id),
+						],
+					);
 					$db->delete('player_attacks_planet', $sqlParams);
 					$db->delete('player_attacks_port', $sqlParams);
 					$db->delete('player_has_alliance_role', $sqlParams);
@@ -236,7 +251,7 @@ class AccountEditProcessor extends AccountPageProcessor {
 					$db->delete('ship_is_cloaked', $sqlParams);
 					$db->delete('player', $sqlParams);
 
-					$db->write('UPDATE active_session SET game_id=0 WHERE ' . $sql . ' LIMIT 1', $sqlParams);
+					$db->update('active_session', ['game_id' => 0], $sqlParams);
 
 					$actions[] = 'deleted player from game ' . $game_id;
 				}

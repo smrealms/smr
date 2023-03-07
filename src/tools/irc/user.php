@@ -26,10 +26,11 @@ function user_quit(string $rdata): bool {
 
 			$seen_id = $dbRecord->getInt('seen_id');
 
-			$db->write('UPDATE irc_seen SET signed_off = :now WHERE seen_id = :seen_id', [
-				'now' => time(),
-				'seen_id' => $seen_id,
-			]);
+			$db->update(
+				'irc_seen',
+				['signed_off' => time()],
+				['seen_id' => $seen_id],
+			);
 
 		}
 
@@ -71,10 +72,11 @@ function user_nick(string $rdata): bool {
 			// remember channels where this nick was active
 			$channel_list[] = $dbRecord->getString('channel');
 
-			$db->write('UPDATE irc_seen SET signed_off = :now WHERE seen_id = :seen_id', [
-				'now' => time(),
-				'seen_id' => $seen_id,
-			]);
+			$db->update(
+				'irc_seen',
+				['signed_off' => time()],
+				['seen_id' => $seen_id],
+			);
 
 		}
 
@@ -91,18 +93,17 @@ function user_nick(string $rdata): bool {
 				// exiting nick?
 				$seen_id = $dbResult->record()->getInt('seen_id');
 
-				$db->write('UPDATE irc_seen SET
-						signed_on = :now,
-						signed_off = 0,
-						user = :user,
-						host = :host,
-						registered = NULL
-						WHERE seen_id = :seen_id', [
-					'now' => time(),
-					'user' => $db->escapeString($user),
-					'host' => $db->escapeString($host),
-					'seen_id' => $db->escapeNumber($seen_id),
-				]);
+				$db->update(
+					'irc_seen',
+					[
+						'signed_on' => time(),
+						'signed_off' => 0,
+						'user' => $db->escapeString($user),
+						'host' => $db->escapeString($host),
+						'registered' => null,
+					],
+					['seen_id' => $db->escapeNumber($seen_id)],
+				);
 
 			} else {
 				// new nick?

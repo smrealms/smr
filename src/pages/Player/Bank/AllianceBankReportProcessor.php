@@ -29,13 +29,19 @@ class AllianceBankReportProcessor extends PlayerPageProcessor {
 		if ($dbResult->hasRecord()) {
 			// Update the existing "Bank Statement" thread
 			$thread_id = $dbResult->record()->getInt('thread_id');
-			$db->write('UPDATE alliance_thread SET time = :now, text = :text WHERE thread_id = :thread_id AND alliance_id = :alliance_id AND game_id = :game_id AND reply_id = 1', [
-				'now' => $db->escapeNumber(Epoch::time()),
-				'text' => $db->escapeString($text),
-				'thread_id' => $db->escapeNumber($thread_id),
-				'alliance_id' => $db->escapeNumber($alliance_id),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-			]);
+			$db->update(
+				'alliance_thread',
+				[
+					'time' => $db->escapeNumber(Epoch::time()),
+					'text' => $db->escapeString($text),
+				],
+				[
+					'thread_id' => $db->escapeNumber($thread_id),
+					'alliance_id' => $db->escapeNumber($alliance_id),
+					'game_id' => $db->escapeNumber($player->getGameID()),
+					'reply_id' => 1,
+				],
+			);
 			$db->delete('player_read_thread', [
 				'thread_id' => $db->escapeNumber($thread_id),
 				'game_id' => $db->escapeNumber($player->getGameID()),

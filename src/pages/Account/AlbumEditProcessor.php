@@ -98,28 +98,22 @@ class AlbumEditProcessor extends AccountPageProcessor {
 			}
 
 			// change album entry
-			$db->write('UPDATE album
-						SET location = :location,
-							email = :email,
-							website = :website,
-							day = :day,
-							month = :month,
-							year = :year,
-							other = :other,
-							last_changed = :last_changed,
-							approved = \'TBC\',
-							disabled = \'FALSE\'
-						WHERE account_id = :account_id', [
-				'account_id' => $db->escapeNumber($account->getAccountID()),
-				'location' => $db->escapeString($location),
-				'email' => $db->escapeString($email),
-				'website' => $db->escapeString($website),
-				'day' => $db->escapeNumber($day),
-				'month' => $db->escapeNumber($month),
-				'year' => $db->escapeNumber($year),
-				'other' => $db->escapeString($other),
-				'last_changed' => $db->escapeNumber(Epoch::time()),
-			]);
+			$db->update(
+				'album',
+				[
+					'approved' => 'TBC',
+					'disabled' => 'FALSE',
+					'location' => $db->escapeString($location),
+					'email' => $db->escapeString($email),
+					'website' => $db->escapeString($website),
+					'day' => $db->escapeNumber($day),
+					'month' => $db->escapeNumber($month),
+					'year' => $db->escapeNumber($year),
+					'other' => $db->escapeString($other),
+					'last_changed' => $db->escapeNumber(Epoch::time()),
+				],
+				['account_id' => $db->escapeNumber($account->getAccountID())],
+			);
 		} else {
 			// if he didn't upload a picture before
 			// we kick him out here

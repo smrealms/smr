@@ -20,13 +20,14 @@ class AlbumModerateProcessor extends AccountPageProcessor {
 
 		// get account_id from session
 		$account_id = $this->albumAccountID;
+		$sqlCondition = [
+			'account_id' => $db->escapeNumber($account_id),
+		];
 
 		// check for each task
 		if ($this->task == 'reset_image') {
 			$email_txt = Request::get('email_txt');
-			$db->write('UPDATE album SET disabled = \'TRUE\' WHERE account_id = :account_id', [
-				'account_id' => $db->escapeNumber($account_id),
-			]);
+			$db->update('album', ['disabled' => 'TRUE'], $sqlCondition);
 
 			$db->lockTable('album_has_comments');
 			$dbResult = $db->read('SELECT IFNULL(MAX(comment_id)+1, 0) as next_comment_id FROM album_has_comments WHERE album_id = :album_id', [
@@ -55,25 +56,23 @@ class AlbumModerateProcessor extends AccountPageProcessor {
 			}
 
 		} elseif ($this->task == 'reset_location') {
-			$db->write('UPDATE album SET location = \'\' WHERE account_id = :account_id', [
-				'account_id' => $db->escapeNumber($account_id),
-			]);
+			$db->update('album', ['location' => ''], $sqlCondition);
 		} elseif ($this->task == 'reset_email') {
-			$db->write('UPDATE album SET email = \'\' WHERE account_id = :account_id', [
-				'account_id' => $db->escapeNumber($account_id),
-			]);
+			$db->update('album', ['email' => ''], $sqlCondition);
 		} elseif ($this->task == 'reset_website') {
-			$db->write('UPDATE album SET website = \'\' WHERE account_id = :account_id', [
-				'account_id' => $db->escapeNumber($account_id),
-			]);
+			$db->update('album', ['website' => ''], $sqlCondition);
 		} elseif ($this->task == 'reset_birthdate') {
-			$db->write('UPDATE album SET day = 0, month = 0, year = 0 WHERE account_id = :account_id', [
-				'account_id' => $db->escapeNumber($account_id),
-			]);
+			$db->update(
+				'album',
+				[
+					'day' => 0,
+					'month' => 0,
+					'year' => 0,
+				],
+				$sqlCondition,
+			);
 		} elseif ($this->task == 'reset_other') {
-			$db->write('UPDATE album SET other = \'\' WHERE account_id = :account_id', [
-				'account_id' => $db->escapeNumber($account_id),
-			]);
+			$db->update('album', ['other' => ''], $sqlCondition);
 		} elseif ($this->task == 'delete_comment') {
 			// we just ignore if nothing was set
 			if (Request::has('comment_ids')) {

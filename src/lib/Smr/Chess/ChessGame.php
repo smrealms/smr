@@ -102,11 +102,14 @@ class ChessGame {
 	public function rerunGame(bool $debugInfo = false): void {
 		$db = Database::getInstance();
 
-		$db->write('UPDATE chess_game
-					SET end_time = NULL, winner_id = 0
-					WHERE chess_game_id = :chess_game_id', [
-			'chess_game_id' => $db->escapeNumber($this->chessGameID),
-		]);
+		$db->update(
+			'chess_game',
+			[
+				'end_time' => null,
+				'winner_id' => 0,
+			],
+			['chess_game_id' => $db->escapeNumber($this->chessGameID)],
+		);
 
 		$dbResult = $db->read('SELECT * FROM chess_game_moves WHERE chess_game_id = :chess_game_id ORDER BY move_id', [
 			'chess_game_id' => $db->escapeNumber($this->chessGameID),
@@ -548,13 +551,14 @@ class ChessGame {
 		$this->winner = $accountID;
 		$this->endDate = Epoch::time();
 		$db = Database::getInstance();
-		$db->write('UPDATE chess_game
-						SET end_time = :now, winner_id = :winner_id
-						WHERE chess_game_id = :chess_game_id', [
-			'now' => $db->escapeNumber(Epoch::time()),
-			'winner_id' => $db->escapeNumber($this->winner),
-			'chess_game_id' => $db->escapeNumber($this->chessGameID),
-		]);
+		$db->update(
+			'chess_game',
+			[
+				'end_time' => $db->escapeNumber(Epoch::time()),
+				'winner_id' => $db->escapeNumber($this->winner),
+			],
+			['chess_game_id' => $db->escapeNumber($this->chessGameID)],
+		);
 		$winnerColour = $this->getColourForAccountID($accountID);
 		$winningPlayer = $this->getColourPlayer($winnerColour);
 		$losingPlayer = $this->getColourPlayer($winnerColour->opposite());
@@ -611,12 +615,11 @@ class ChessGame {
 		if (count($this->getMoves()) < 2) {
 			$this->endDate = Epoch::time();
 			$db = Database::getInstance();
-			$db->write('UPDATE chess_game
-							SET end_time = :now
-							WHERE chess_game_id = :chess_game_id', [
-				'now' => $db->escapeNumber(Epoch::time()),
-				'chess_game_id' => $db->escapeNumber($this->chessGameID),
-			]);
+			$db->update(
+				'chess_game',
+				['end_time' => $db->escapeNumber(Epoch::time())],
+				['chess_game_id' => $db->escapeNumber($this->chessGameID)],
+			);
 			return self::END_CANCEL;
 		}
 

@@ -513,34 +513,24 @@ class Alliance {
 
 	public function update(): void {
 		$db = Database::getInstance();
-		$db->write('UPDATE alliance SET
-								alliance_password = :alliance_password,
-								recruiting = :recruiting,
-								alliance_account = :alliance_account,
-								alliance_description = :alliance_description,
-								`mod` = :motd,
-								img_src = :img_src,
-								alliance_kills = :alliance_kills,
-								alliance_deaths = :alliance_deaths,
-								discord_server = :discord_server,
-								discord_channel = :discord_channel,
-								flagship_id = :flagship_id,
-								leader_id = :leader_id
-							WHERE ' . self::SQL, [
-			'alliance_password' => $db->escapeString($this->password),
-			'recruiting' => $db->escapeBoolean($this->recruiting),
-			'alliance_account' => $db->escapeNumber($this->bank),
-			'alliance_description' => $db->escapeNullableString($this->description),
-			'motd' => $db->escapeString($this->motd),
-			'img_src' => $db->escapeString($this->imgSrc),
-			'alliance_kills' => $db->escapeNumber($this->kills),
-			'alliance_deaths' => $db->escapeNumber($this->deaths),
-			'discord_server' => $db->escapeNullableString($this->discordServer),
-			'discord_channel' => $db->escapeNullableString($this->discordChannel),
-			'flagship_id' => $db->escapeNumber($this->flagshipID),
-			'leader_id' => $db->escapeNumber($this->leaderID),
-			...$this->SQLID,
-		]);
+		$db->update(
+			'alliance',
+			[
+				'alliance_password' => $db->escapeString($this->password),
+				'recruiting' => $db->escapeBoolean($this->recruiting),
+				'alliance_account' => $db->escapeNumber($this->bank),
+				'alliance_description' => $db->escapeNullableString($this->description),
+				'`mod`' => $db->escapeString($this->motd),
+				'img_src' => $db->escapeString($this->imgSrc),
+				'alliance_kills' => $db->escapeNumber($this->kills),
+				'alliance_deaths' => $db->escapeNumber($this->deaths),
+				'discord_server' => $db->escapeNullableString($this->discordServer),
+				'discord_channel' => $db->escapeNullableString($this->discordChannel),
+				'flagship_id' => $db->escapeNumber($this->flagshipID),
+				'leader_id' => $db->escapeNumber($this->leaderID),
+			],
+			$this->SQLID,
+		);
 	}
 
 	/**

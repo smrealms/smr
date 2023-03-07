@@ -21,7 +21,11 @@ class AllianceExemptAuthorize extends PlayerPage {
 
 		//get rid of already approved entries
 		$db = Database::getInstance();
-		$db->write('UPDATE alliance_bank_transactions SET request_exempt = 0 WHERE exempt = 1');
+		$db->update(
+			'alliance_bank_transactions',
+			['request_exempt' => 0],
+			['exempt' => 1],
+		);
 
 		$dbResult = $db->read('SELECT * FROM alliance_bank_transactions WHERE request_exempt = 1
 					AND alliance_id = :alliance_id AND game_id = :game_id AND exempt = 0', [

@@ -1274,7 +1274,6 @@ class Port {
 		// If any fields in the `port` table have changed, update table
 		if ($this->hasChanged) {
 			$params = [
-				...$this->SQLID,
 				'experience' => $db->escapeNumber($this->getExperience()),
 				'shields' => $db->escapeNumber($this->getShields()),
 				'armour' => $db->escapeNumber($this->getArmour()),
@@ -1287,19 +1286,9 @@ class Port {
 				'race_id' => $db->escapeNumber($this->getRaceID()),
 			];
 			if ($this->isNew === false) {
-				$db->write('UPDATE port SET experience = :experience,
-								shields = :shields,
-								armour = :armour,
-								combat_drones = :combat_drones,
-								level = :level,
-								credits = :credits,
-								upgrade = :upgrade,
-								reinforce_time = :reinforce_time,
-								attack_started = :attack_started,
-								race_id = :race_id
-								WHERE ' . self::SQL, $params);
+				$db->update('port', $params, $this->SQLID);
 			} else {
-				$db->insert('port', $params);
+				$db->insert('port', [...$params, ...$this->SQLID]);
 				$this->isNew = false;
 			}
 			$this->hasChanged = false;
@@ -1312,12 +1301,17 @@ class Port {
 				continue;
 			}
 			$amount = $this->getGoodAmount($goodID);
-			$db->write('UPDATE port_has_goods SET amount = :amount, last_update = :last_update WHERE ' . self::SQL . ' AND good_id = :good_id', [
-				...$this->SQLID,
-				'good_id' => $db->escapeNumber($goodID),
-				'amount' => $db->escapeNumber($amount),
-				'last_update' => $db->escapeNumber(Epoch::time()),
-			]);
+			$db->update(
+				'port_has_goods',
+				[
+					'amount' => $db->escapeNumber($amount),
+					'last_update' => $db->escapeNumber(Epoch::time()),
+				],
+				[
+					...$this->SQLID,
+					'good_id' => $db->escapeNumber($goodID),
+				],
+			);
 			unset($this->goodAmountsChanged[$goodID]);
 		}
 

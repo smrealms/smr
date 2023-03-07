@@ -33,13 +33,18 @@ class ArticleWriteProcessor extends PlayerPageProcessor {
 		$db = Database::getInstance();
 		if ($this->articleID !== null) {
 			// Editing an article
-			$db->write('UPDATE galactic_post_article SET last_modified = :now, text = :text, title = :title WHERE game_id = :game_id AND article_id = :article_id', [
-				'now' => $db->escapeNumber(Epoch::time()),
-				'text' => $db->escapeString($message),
-				'title' => $db->escapeString($title),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'article_id' => $db->escapeNumber($this->articleID),
-			]);
+			$db->update(
+				'galactic_post_article',
+				[
+					'last_modified' => $db->escapeNumber(Epoch::time()),
+					'text' => $db->escapeString($message),
+					'title' => $db->escapeString($title),
+				],
+				[
+					'game_id' => $db->escapeNumber($player->getGameID()),
+					'article_id' => $db->escapeNumber($this->articleID),
+				],
+			);
 			(new ArticleView($this->articleID))->go();
 		} else {
 			// Adding a new article
@@ -63,10 +68,11 @@ class ArticleWriteProcessor extends PlayerPageProcessor {
 				'text' => $db->escapeString($message),
 				'last_modified' => $db->escapeNumber(Epoch::time()),
 			]);
-			$db->write('UPDATE galactic_post_writer SET last_wrote = :now WHERE account_id = :account_id', [
-				'now' => $db->escapeNumber(Epoch::time()),
-				'account_id' => $db->escapeNumber($player->getAccountID()),
-			]);
+			$db->update(
+				'galactic_post_writer',
+				['last_wrote' => $db->escapeNumber(Epoch::time())],
+				['account_id' => $db->escapeNumber($player->getAccountID())],
+			);
 			$msg = '<span class="green">SUCCESS</span>: Your article has been submitted.';
 			$container = new CurrentSector(message: $msg);
 			$container->go();

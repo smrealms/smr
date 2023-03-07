@@ -127,12 +127,15 @@ class Location {
 		self::getSectorLocations($gameID, $newSectorID);
 
 		$db = Database::getInstance();
-		$db->write('UPDATE location SET sector_id = :new_sector_id WHERE game_id = :game_id AND sector_id = :old_sector_id AND ' . self::SQL, [
-			'new_sector_id' => $db->escapeNumber($newSectorID),
-			'game_id' => $db->escapeNumber($gameID),
-			'old_sector_id' => $db->escapeNumber($oldSectorID),
-			...$location->SQLID,
-		]);
+		$db->update(
+			'location',
+			['sector_id' => $db->escapeNumber($newSectorID)],
+			[
+				'game_id' => $db->escapeNumber($gameID),
+				'sector_id' => $db->escapeNumber($oldSectorID),
+				...$location->SQLID,
+			],
+		);
 		unset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$oldSectorID][$location->getTypeID()]);
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$newSectorID][$location->getTypeID()] = $location;
 
@@ -210,10 +213,11 @@ class Location {
 		}
 		$this->name = $name;
 		$db = Database::getInstance();
-		$db->write('UPDATE location_type SET location_name = :location_name WHERE ' . self::SQL, [
-			'location_name' => $db->escapeString($this->name),
-			...$this->SQLID,
-		]);
+		$db->update(
+			'location_type',
+			['location_name' => $db->escapeString($this->name)],
+			$this->SQLID,
+		);
 	}
 
 	public function hasAction(): bool {
