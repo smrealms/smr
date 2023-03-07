@@ -25,10 +25,10 @@ class AllianceLeaveProcessor extends PlayerPageProcessor {
 				'alliance_id' => $db->escapeNumber($player->getAllianceID()),
 				'game_id' => $db->escapeNumber($player->getGameID()),
 			];
-			$db->write('DELETE FROM alliance_bank_transactions WHERE ' . $sql, $sqlParams);
-			$db->write('DELETE FROM alliance_thread WHERE ' . $sql, $sqlParams);
-			$db->write('DELETE FROM alliance_thread_topic WHERE ' . $sql, $sqlParams);
-			$db->write('DELETE FROM alliance_has_roles WHERE ' . $sql, $sqlParams);
+			$db->delete('alliance_bank_transactions', $sqlParams);
+			$db->delete('alliance_thread', $sqlParams);
+			$db->delete('alliance_thread_topic', $sqlParams);
+			$db->delete('alliance_has_roles', $sqlParams);
 			$db->write('UPDATE alliance SET leader_id = 0, discord_channel = NULL
 			            WHERE ' . $sql, $sqlParams);
 		}

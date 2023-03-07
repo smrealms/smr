@@ -55,22 +55,15 @@ class VotingCenterProcessor extends PlayerPageProcessor {
 				'race_id_1' => $db->escapeNumber($player->getRaceID()),
 				'race_id_2' => $db->escapeNumber($race_id),
 			];
-			$db->write('DELETE FROM race_has_voting
-					WHERE game_id = :game_id
-						AND race_id_1 = :race_id_1
-						AND race_id_2 = :race_id_2', $sqlParams);
-			$db->write('DELETE FROM player_votes_pact
-					WHERE game_id = :game_id
-						AND race_id_1 = :race_id_1
-						AND race_id_2 = :race_id_2', $sqlParams);
-			$db->write('DELETE FROM race_has_voting
-					WHERE game_id = :game_id
-						AND race_id_1 = :race_id_2
-						AND race_id_2 = :race_id_1', $sqlParams);
-			$db->write('DELETE FROM player_votes_pact
-					WHERE game_id = :game_id
-						AND race_id_1 = :race_id_2
-						AND race_id_2 = :race_id_1', $sqlParams);
+			$db->delete('race_has_voting', $sqlParams);
+			$db->delete('player_votes_pact', $sqlParams);
+			$sqlParams2 = [
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'race_id_1' => $db->escapeNumber($race_id),
+				'race_id_2' => $db->escapeNumber($player->getRaceID()),
+			];
+			$db->delete('race_has_voting', $sqlParams2);
+			$db->delete('player_votes_pact', $sqlParams2);
 		}
 
 		(new VotingCenter())->go();

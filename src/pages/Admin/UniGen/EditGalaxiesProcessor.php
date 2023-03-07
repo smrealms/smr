@@ -102,7 +102,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 						// Remove this sector and everything in it
 						$delSector = Sector::getSector($gameID, $oldID);
 						$delSector->removeAllFixtures();
-						$db->write('DELETE FROM sector WHERE ' . Sector::SQL, $delSector->SQLID);
+						$db->delete('sector', $delSector->SQLID);
 					}
 				}
 			}

@@ -142,7 +142,7 @@ class Location {
 
 	public static function removeSectorLocations(int $gameID, int $sectorID): void {
 		$db = Database::getInstance();
-		$db->write('DELETE FROM location WHERE game_id = :game_id AND sector_id = :sector_id', [
+		$db->delete('location', [
 			'game_id' => $db->escapeNumber($gameID),
 			'sector_id' => $db->escapeNumber($sectorID),
 		]);
@@ -245,7 +245,7 @@ class Location {
 		if ($bool) {
 			$db->write('INSERT IGNORE INTO location_is_fed (location_type_id) values (:location_type_id)', $this->SQLID);
 		} else {
-			$db->write('DELETE FROM location_is_fed WHERE ' . self::SQL, $this->SQLID);
+			$db->delete('location_is_fed', $this->SQLID);
 		}
 		$this->fed = $bool;
 	}
@@ -267,7 +267,7 @@ class Location {
 		if ($bool) {
 			$db->insert('location_is_bank', $this->SQLID);
 		} else {
-			$db->write('DELETE FROM location_is_bank WHERE ' . self::SQL, $this->SQLID);
+			$db->delete('location_is_bank', $this->SQLID);
 		}
 		$this->bank = $bool;
 	}
@@ -289,7 +289,7 @@ class Location {
 		if ($bool) {
 			$db->write('INSERT IGNORE INTO location_is_bar (location_type_id) values (:location_type_id)', $this->SQLID);
 		} else {
-			$db->write('DELETE FROM location_is_bar WHERE ' . self::SQL, $this->SQLID);
+			$db->delete('location_is_bar', $this->SQLID);
 		}
 		$this->bar = $bool;
 	}
@@ -311,7 +311,7 @@ class Location {
 		if ($bool) {
 			$db->write('INSERT IGNORE INTO location_is_hq (location_type_id) values (:location_type_id)', $this->SQLID);
 		} else {
-			$db->write('DELETE FROM location_is_hq WHERE ' . self::SQL, $this->SQLID);
+			$db->delete('location_is_hq', $this->SQLID);
 		}
 		$this->HQ = $bool;
 	}
@@ -333,7 +333,7 @@ class Location {
 		if ($bool) {
 			$db->insert('location_is_ug', $this->SQLID);
 		} else {
-			$db->write('DELETE FROM location_is_ug WHERE ' . self::SQL, $this->SQLID);
+			$db->delete('location_is_ug', $this->SQLID);
 		}
 		$this->UG = $bool;
 	}
@@ -385,7 +385,7 @@ class Location {
 			return;
 		}
 		$db = Database::getInstance();
-		$db->write('DELETE FROM location_sells_hardware WHERE ' . self::SQL . ' AND hardware_type_id = :hardware_type_id', [
+		$db->delete('location_sells_hardware', [
 			...$this->SQLID,
 			'hardware_type_id' => $db->escapeNumber($hardwareTypeID),
 		]);
@@ -444,7 +444,7 @@ class Location {
 			return;
 		}
 		$db = Database::getInstance();
-		$db->write('DELETE FROM location_sells_ships WHERE ' . self::SQL . ' AND ship_type_id = :ship_type_id', [
+		$db->delete('location_sells_ships', [
 			...$this->SQLID,
 			'ship_type_id' => $db->escapeNumber($shipTypeID),
 		]);
@@ -493,7 +493,7 @@ class Location {
 			return;
 		}
 		$db = Database::getInstance();
-		$db->write('DELETE FROM location_sells_weapons WHERE ' . self::SQL . ' AND weapon_type_id = :weapon_type_id', [
+		$db->delete('location_sells_weapons', [
 			...$this->SQLID,
 			'weapon_type_id' => $db->escapeNumber($weaponTypeID),
 		]);

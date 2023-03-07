@@ -111,7 +111,7 @@ class ChessGame {
 		$dbResult = $db->read('SELECT * FROM chess_game_moves WHERE chess_game_id = :chess_game_id ORDER BY move_id', [
 			'chess_game_id' => $db->escapeNumber($this->chessGameID),
 		]);
-		$db->write('DELETE FROM chess_game_moves WHERE chess_game_id = :chess_game_id', [
+		$db->delete('chess_game_moves', [
 			'chess_game_id' => $db->escapeNumber($this->chessGameID),
 		]);
 		$this->moves = [];

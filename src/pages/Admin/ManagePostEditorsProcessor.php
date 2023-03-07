@@ -47,7 +47,7 @@ class ManagePostEditorsProcessor extends AccountPageProcessor {
 			if (!$selected_player->isGPEditor()) {
 				$msg = "<span class='red'>ERROR: </span>$name is not an editor in game $game!";
 			} else {
-				$db->write('DELETE FROM galactic_post_writer WHERE ' . Player::SQL, $selected_player->SQLID);
+				$db->delete('galactic_post_writer', $selected_player->SQLID);
 			}
 		} else {
 			$msg = "<span class='red'>ERROR: </span>Do not know action '$action'!";

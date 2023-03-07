@@ -85,10 +85,8 @@ function channel_msg_op_cancel($fp, Message $msg, AbstractPlayer $player): bool 
 		}
 
 		// just get rid of op
-		$db->write('DELETE FROM alliance_has_op
-					WHERE ' . Alliance::SQL, $alliance->SQLID);
-		$db->write('DELETE FROM alliance_has_op_response
-					WHERE ' . Alliance::SQL, $alliance->SQLID);
+		$db->delete('alliance_has_op', $alliance->SQLID);
+		$db->delete('alliance_has_op_response', $alliance->SQLID);
 
 		fwrite($fp, 'PRIVMSG ' . $channel . ' :The OP has been canceled.' . EOL);
 		return true;

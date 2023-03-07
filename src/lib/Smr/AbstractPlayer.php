@@ -934,8 +934,7 @@ abstract class AbstractPlayer {
 
 	public function setMessagesRead(int $messageTypeID): void {
 		$db = Database::getInstance();
-		$db->write('DELETE FROM player_has_unread_messages
-							WHERE ' . self::SQL . ' AND message_type_id = :message_type_id', [
+		$db->delete('player_has_unread_messages', [
 			'message_type_id' => $db->escapeNumber($messageTypeID),
 			...$this->SQLID,
 		]);
@@ -1519,7 +1518,7 @@ abstract class AbstractPlayer {
 
 		$this->setAllianceID(0);
 		$db = Database::getInstance();
-		$db->write('DELETE FROM player_has_alliance_role WHERE ' . self::SQL, $this->SQLID);
+		$db->delete('player_has_alliance_role', $this->SQLID);
 
 		// Update the alliance cache
 		unset(self::$CACHE_ALLIANCE_PLAYERS[$this->gameID][$alliance->getAllianceID()][$this->accountID]);
@@ -1816,7 +1815,7 @@ abstract class AbstractPlayer {
 	public function deletePlottedCourse(): void {
 		$this->plottedCourse = false;
 		$db = Database::getInstance();
-		$db->write('DELETE FROM player_plotted_course WHERE ' . self::SQL, $this->SQLID);
+		$db->delete('player_plotted_course', $this->SQLID);
 	}
 
 	/**
@@ -1926,10 +1925,7 @@ abstract class AbstractPlayer {
 		}
 
 		$db = Database::getInstance();
-		$db->write('
-			DELETE FROM player_stored_sector
-			WHERE ' . self::SQL . '
-			AND sector_id = :sector_id', [
+		$db->delete('player_stored_sector', [
 			'sector_id' => $db->escapeNumber($sectorID),
 			...$this->SQLID,
 		]);
@@ -2881,7 +2877,7 @@ abstract class AbstractPlayer {
 		if (isset($this->missions[$missionID])) {
 			unset($this->missions[$missionID]);
 			$db = Database::getInstance();
-			$db->write('DELETE FROM player_has_mission WHERE ' . self::SQL . ' AND mission_id = :mission_id', [
+			$db->delete('player_has_mission', [
 				'mission_id' => $db->escapeNumber($missionID),
 				...$this->SQLID,
 			]);

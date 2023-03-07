@@ -19,11 +19,11 @@ class AllianceSetOpProcessor extends PlayerPageProcessor {
 
 		if ($this->cancel) {
 			// just get rid of op
-			$db->write('DELETE FROM alliance_has_op WHERE alliance_id = :alliance_id AND game_id = :game_id', [
+			$db->delete('alliance_has_op', [
 				'alliance_id' => $db->escapeNumber($player->getAllianceID()),
 				'game_id' => $db->escapeNumber($player->getGameID()),
 			]);
-			$db->write('DELETE FROM alliance_has_op_response WHERE alliance_id = :alliance_id AND game_id = :game_id', [
+			$db->delete('alliance_has_op_response', [
 				'alliance_id' => $db->escapeNumber($player->getAllianceID()),
 				'game_id' => $db->escapeNumber($player->getGameID()),
 			]);

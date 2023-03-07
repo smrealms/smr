@@ -59,7 +59,7 @@ class AllianceTreatiesProcessor extends PlayerPageProcessor {
 				}
 			}
 		} else {
-			$db->write('DELETE FROM alliance_treaties WHERE alliance_id_1 = :alliance_id_1 AND alliance_id_2 = :alliance_id_2 AND game_id = :game_id', [
+			$db->delete('alliance_treaties', [
 				'alliance_id_1' => $db->escapeNumber($alliance_id_1),
 				'alliance_id_2' => $db->escapeNumber($alliance_id_2),
 				'game_id' => $db->escapeNumber($player->getGameID()),

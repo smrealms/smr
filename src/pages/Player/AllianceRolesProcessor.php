@@ -92,10 +92,7 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 				} elseif ($this->roleID === ALLIANCE_ROLE_NEW_MEMBER) {
 					create_error('You cannot delete the new member role.');
 				}
-				$db->write('DELETE FROM alliance_has_roles
-							WHERE game_id = :game_id
-							AND alliance_id = :alliance_id
-							AND role_id = :role_id', [
+				$db->delete('alliance_has_roles', [
 					'game_id' => $db->escapeNumber($player->getGameID()),
 					'alliance_id' => $db->escapeNumber($alliance_id),
 					'role_id' => $db->escapeNumber($this->roleID),

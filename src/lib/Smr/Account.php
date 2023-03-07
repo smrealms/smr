@@ -406,10 +406,7 @@ class Account {
 			$delete_time = $dbRecord->getInt('time');
 			$delete_ip = $dbRecord->getString('ip');
 
-			$db->write('DELETE FROM account_has_ip
-				WHERE ' . self::SQL . ' AND
-				time = :time AND
-				ip = :ip', [
+			$db->delete('account_has_ip', [
 				...$this->SQLID,
 				'time' => $db->escapeNumber($delete_time),
 				'ip' => $db->escapeString($delete_ip),
@@ -1289,7 +1286,7 @@ class Account {
 				'last_update' => $db->escapeNumber($lastUpdate ?? Epoch::time()),
 			]);
 		} elseif ($numPoints <= 0) {
-			$db->write('DELETE FROM account_has_points WHERE ' . self::SQL, $this->SQLID);
+			$db->delete('account_has_points', $this->SQLID);
 		} else {
 			$db->write('UPDATE account_has_points SET points = :points' . (isset($lastUpdate) ? ', last_update = ' . $db->escapeNumber(Epoch::time()) : '') . ' WHERE ' . self::SQL, [
 				...$this->SQLID,
@@ -1373,7 +1370,7 @@ class Account {
 			'suspicion' => $db->escapeString($suspicion),
 			'expires' => $db->escapeNumber($expireTime),
 		]);
-		$db->write('DELETE FROM active_session WHERE ' . self::SQL . ' LIMIT 1', $this->SQLID);
+		$db->delete('active_session', $this->SQLID);
 
 		$db->insert('account_has_closing_history', [
 			...$this->SQLID,
@@ -1399,7 +1396,7 @@ class Account {
 		}
 		$this->log(LOG_TYPE_ACCOUNT_CHANGES, 'Account closed by ' . $admin->getLogin() . '.');
 		if ($removeExceptions !== false) {
-			$db->write('DELETE FROM account_exceptions WHERE ' . self::SQL, $this->SQLID);
+			$db->delete('account_exceptions', $this->SQLID);
 		}
 	}
 
@@ -1409,7 +1406,7 @@ class Account {
 			$adminID = $admin->getAccountID();
 		}
 		$db = Database::getInstance();
-		$db->write('DELETE FROM account_is_closed WHERE ' . self::SQL, $this->SQLID);
+		$db->delete('account_is_closed', $this->SQLID);
 		$db->insert('account_has_closing_history', [
 			...$this->SQLID,
 			'time' => $db->escapeNumber(Epoch::time()),

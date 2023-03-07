@@ -70,9 +70,7 @@ class CouncilVoting {
 				'race_id_2' => $db->escapeNumber($race_id_2),
 			]);
 
-			$db->write('DELETE FROM player_votes_relation
-					WHERE account_id = :account_id
-						AND game_id = :game_id', [
+			$db->delete('player_votes_relation', [
 				'account_id' => $db->escapeNumber($account_id),
 				'game_id' => $db->escapeNumber($gameID),
 			]);
@@ -241,23 +239,16 @@ class CouncilVoting {
 				'race_id_1' => $db->escapeNumber($race_id_1),
 				'race_id_2' => $db->escapeNumber($race_id_2),
 			];
-			$db->write('DELETE FROM race_has_voting
-					WHERE game_id = :game_id
-						AND race_id_1 = :race_id_1
-						AND race_id_2 = :race_id_2', $sqlParams);
-			$db->write('DELETE FROM player_votes_pact
-					WHERE game_id = :game_id
-						AND race_id_1 = :race_id_1
-						AND race_id_2 = :race_id_2', $sqlParams);
+			$db->delete('race_has_voting', $sqlParams);
+			$db->delete('player_votes_pact', $sqlParams);
 			// delete vote and user votes
-			$db->write('DELETE FROM race_has_voting
-					WHERE game_id = :game_id
-						AND race_id_1 = :race_id_2
-						AND race_id_2 = :race_id_1', $sqlParams);
-			$db->write('DELETE FROM player_votes_pact
-					WHERE game_id = :game_id
-						AND race_id_1 = :race_id_2
-						AND race_id_2 = :race_id_1', $sqlParams);
+			$sqlParams2 = [
+				'game_id' => $db->escapeNumber($gameID),
+				'race_id_1' => $db->escapeNumber($race_id_2),
+				'race_id_2' => $db->escapeNumber($race_id_1),
+			];
+			$db->delete('race_has_voting', $sqlParams2);
+			$db->delete('player_votes_pact', $sqlParams2);
 		}
 	}
 

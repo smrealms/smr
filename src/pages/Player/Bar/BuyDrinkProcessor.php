@@ -95,7 +95,7 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 			$player->increaseHOF(1, ['Bar', 'Robbed', 'Number Of Times'], HOF_PUBLIC);
 			$player->increaseHOF($lostCredits, ['Bar', 'Robbed', 'Money Lost'], HOF_PUBLIC);
 
-			$db->write('DELETE FROM player_has_drinks WHERE ' . AbstractPlayer::SQL, $player->SQLID);
+			$db->delete('player_has_drinks', $player->SQLID);
 
 		}
 		$player->increaseHOF(1, ['Bar', 'Drinks', 'Total'], HOF_PUBLIC);

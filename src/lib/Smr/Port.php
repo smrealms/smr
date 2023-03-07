@@ -120,11 +120,11 @@ class Port {
 			'game_id' => $db->escapeNumber($gameID),
 			'sector_id' => $db->escapeNumber($sectorID),
 		];
-		$db->write('DELETE FROM port WHERE ' . self::SQL, $SQLID);
-		$db->write('DELETE FROM port_has_goods WHERE ' . self::SQL, $SQLID);
-		$db->write('DELETE FROM player_visited_port WHERE ' . self::SQL, $SQLID);
-		$db->write('DELETE FROM player_attacks_port WHERE ' . self::SQL, $SQLID);
-		$db->write('DELETE FROM port_info_cache WHERE ' . self::SQL, $SQLID);
+		$db->delete('port', $SQLID);
+		$db->delete('port_has_goods', $SQLID);
+		$db->delete('player_visited_port', $SQLID);
+		$db->delete('player_attacks_port', $SQLID);
+		$db->delete('port_info_cache', $SQLID);
 		unset(self::$CACHE_PORTS[$gameID][$sectorID]);
 	}
 
@@ -225,7 +225,7 @@ class Port {
 				$this->setCreditsToDefault();
 			}
 			$db = Database::getInstance();
-			$db->write('DELETE FROM player_attacks_port WHERE ' . self::SQL, $this->SQLID);
+			$db->delete('player_attacks_port', $this->SQLID);
 		}
 	}
 
@@ -1266,7 +1266,7 @@ class Port {
 		if (!$this->cacheIsValid) {
 			$this->updateSectorPlayersCache();
 			// route_cache tells NPC's where they can trade
-			$db->write('DELETE FROM route_cache WHERE game_id = :game_id', [
+			$db->delete('route_cache', [
 				'game_id' => $db->escapeNumber($this->getGameID()),
 			]);
 		}
@@ -1334,7 +1334,7 @@ class Port {
 				]);
 			} else {
 				// remove the good
-				$db->write('DELETE FROM port_has_goods WHERE ' . self::SQL . ' AND good_id = :good_id', [
+				$db->delete('port_has_goods', [
 					...$this->SQLID,
 					'good_id' => $db->escapeNumber($goodID),
 				]);

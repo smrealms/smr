@@ -180,7 +180,7 @@ class Session {
 				'ajax' => $db->escapeBoolean($this->ajax),
 			]);
 		} else {
-			$db->write('DELETE FROM active_session WHERE account_id = :account_id  AND game_id = :game_id', [
+			$db->delete('active_session', [
 				'account_id' => $db->escapeNumber($this->accountID),
 				'game_id' => $db->escapeNumber($this->gameID),
 			]);
@@ -249,7 +249,7 @@ class Session {
 		}
 		$this->gameID = $gameID;
 		$db = Database::getInstance();
-		$db->write('DELETE FROM active_session WHERE account_id = :account_id AND game_id = :game_id', [
+		$db->delete('active_session', [
 			'account_id' => $db->escapeNumber($this->accountID),
 			'game_id' => $db->escapeNumber($this->gameID),
 		]);
@@ -275,7 +275,7 @@ class Session {
 
 	public function destroy(): void {
 		$db = Database::getInstance();
-		$db->write('DELETE FROM active_session WHERE session_id = :session_id', [
+		$db->delete('active_session', [
 			'session_id' => $db->escapeString($this->sessionID),
 		]);
 		unset($this->sessionID);

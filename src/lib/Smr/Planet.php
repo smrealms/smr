@@ -128,11 +128,11 @@ class Planet {
 			'game_id' => $db->escapeNumber($gameID),
 			'sector_id' => $db->escapeNumber($sectorID),
 		];
-		$db->write('DELETE FROM planet WHERE ' . self::SQL, $SQLID);
-		$db->write('DELETE FROM planet_has_weapon WHERE ' . self::SQL, $SQLID);
-		$db->write('DELETE FROM planet_has_cargo WHERE ' . self::SQL, $SQLID);
-		$db->write('DELETE FROM planet_has_building WHERE ' . self::SQL, $SQLID);
-		$db->write('DELETE FROM planet_is_building WHERE ' . self::SQL, $SQLID);
+		$db->delete('planet', $SQLID);
+		$db->delete('planet_has_weapon', $SQLID);
+		$db->delete('planet_has_cargo', $SQLID);
+		$db->delete('planet_has_building', $SQLID);
+		$db->delete('planet_is_building', $SQLID);
 		//kick everyone from planet
 		$db->write('UPDATE player SET land_on_planet = \'FALSE\' WHERE ' . self::SQL, $SQLID);
 
@@ -868,8 +868,7 @@ class Planet {
 						'amount' => $db->escapeNumber($amount),
 					]);
 				} else {
-					$db->write('DELETE FROM planet_has_cargo WHERE ' . self::SQL . '
-										AND good_id = :good_id', [
+					$db->delete('planet_has_cargo', [
 						...$this->SQLID,
 						'good_id' => $db->escapeNumber($id),
 					]);
@@ -888,7 +887,7 @@ class Planet {
 						'bonus_damage' => $db->escapeBoolean($this->mountedWeapons[$orderID]->hasBonusDamage()),
 					]);
 				} else {
-					$db->write('DELETE FROM planet_has_weapon WHERE ' . self::SQL . ' AND order_id = :order_id', [
+					$db->delete('planet_has_weapon', [
 						...$this->SQLID,
 						'order_id' => $db->escapeNumber($orderID),
 					]);
@@ -916,8 +915,7 @@ class Planet {
 						'amount' => $db->escapeNumber($this->getBuilding($id)),
 					]);
 				} else {
-					$db->write('DELETE FROM planet_has_building WHERE ' . self::SQL . '
-										AND construction_id = :construction_id', [
+					$db->delete('planet_has_building', [
 						...$this->SQLID,
 						'construction_id' => $db->escapeNumber($id),
 					]);
@@ -1378,7 +1376,7 @@ class Planet {
 			$currPlayer->increaseHOF($dbRecord->getFloat('level'), ['Combat', 'Planet', 'Levels'], HOF_PUBLIC);
 			$currPlayer->increaseHOF(1, ['Combat', 'Planet', 'Completed'], HOF_PUBLIC);
 		}
-		$db->write('DELETE FROM player_attacks_planet WHERE ' . self::SQL, $this->SQLID);
+		$db->delete('player_attacks_planet', $this->SQLID);
 	}
 
 	/**

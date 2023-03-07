@@ -150,6 +150,16 @@ class Database {
 	}
 
 	/**
+	 * DELETE row(s) from $table that meet $criteria.
+	 *
+	 * @param array<string, mixed> $criteria
+	 * @return int Number of deleted rows
+	 */
+	public function delete(string $table, array $criteria): int {
+		return (int)$this->dbConn->delete($table, $criteria);
+	}
+
+	/**
 	 * INSERT a row into $table.
 	 *
 	 * @param string $table

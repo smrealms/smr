@@ -207,8 +207,7 @@ class Sector {
 		//now delete the entry from visited
 		if (!$this->isVisited($player)) {
 			$db = Database::getInstance();
-			$db->write('DELETE FROM player_visited_sector WHERE ' . self::SQL . '
-								 AND account_id = :account_id', [
+			$db->delete('player_visited_sector', [
 				...$this->SQLID,
 				'account_id' => $db->escapeNumber($player->getAccountID()),
 			]);

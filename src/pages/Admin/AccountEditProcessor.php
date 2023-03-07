@@ -199,38 +199,42 @@ class AccountEditProcessor extends AccountPageProcessor {
 						continue;
 					}
 
-					$db->write('DELETE FROM alliance_thread
-								WHERE sender_id = :account_id AND game_id = :game_id', $sqlParams);
-					$db->write('DELETE FROM bounty WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM galactic_post_applications WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM galactic_post_article
-								WHERE writer_id = :account_id AND game_id = :game_id', $sqlParams);
-					$db->write('DELETE FROM galactic_post_writer WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM message WHERE ' . $sql, $sqlParams);
+					$db->delete('alliance_thread', [
+						'sender_id' => $db->escapeNumber($account_id),
+						'game_id' => $db->escapeNumber($game_id),
+					]);
+					$db->delete('bounty', $sqlParams);
+					$db->delete('galactic_post_applications', $sqlParams);
+					$db->delete('galactic_post_article', [
+						'writer_id' => $db->escapeNumber($account_id),
+						'game_id' => $db->escapeNumber($game_id),
+					]);
+					$db->delete('galactic_post_writer', $sqlParams);
+					$db->delete('message', $sqlParams);
 					$db->write('DELETE FROM message_notify
 								WHERE (from_id = :account_id OR to_id = :account_id) AND game_id = :game_id', $sqlParams);
 					$db->write('UPDATE planet SET owner_id=0,planet_name=\'\',password=\'\',shields=0,drones=0,credits=0,bonds=0
 								WHERE owner_id = :account_id AND game_id = :game_id', $sqlParams);
-					$db->write('DELETE FROM player_attacks_planet WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM player_attacks_port WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM player_has_alliance_role WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM player_has_drinks WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM player_has_relation WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM player_has_ticker WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM player_has_ticket WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM player_has_unread_messages WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM player_plotted_course WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM player_read_thread WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM player_visited_port WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM player_visited_sector WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM player_votes_pact WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM player_votes_relation WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM ship_has_cargo WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM ship_has_hardware WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM ship_has_illusion WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM ship_has_weapon WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM ship_is_cloaked WHERE ' . $sql, $sqlParams);
-					$db->write('DELETE FROM player WHERE ' . $sql, $sqlParams);
+					$db->delete('player_attacks_planet', $sqlParams);
+					$db->delete('player_attacks_port', $sqlParams);
+					$db->delete('player_has_alliance_role', $sqlParams);
+					$db->delete('player_has_drinks', $sqlParams);
+					$db->delete('player_has_relation', $sqlParams);
+					$db->delete('player_has_ticker', $sqlParams);
+					$db->delete('player_has_ticket', $sqlParams);
+					$db->delete('player_has_unread_messages', $sqlParams);
+					$db->delete('player_plotted_course', $sqlParams);
+					$db->delete('player_read_thread', $sqlParams);
+					$db->delete('player_visited_port', $sqlParams);
+					$db->delete('player_visited_sector', $sqlParams);
+					$db->delete('player_votes_pact', $sqlParams);
+					$db->delete('player_votes_relation', $sqlParams);
+					$db->delete('ship_has_cargo', $sqlParams);
+					$db->delete('ship_has_hardware', $sqlParams);
+					$db->delete('ship_has_illusion', $sqlParams);
+					$db->delete('ship_has_weapon', $sqlParams);
+					$db->delete('ship_is_cloaked', $sqlParams);
+					$db->delete('player', $sqlParams);
 
 					$db->write('UPDATE active_session SET game_id=0 WHERE ' . $sql . ' LIMIT 1', $sqlParams);
 

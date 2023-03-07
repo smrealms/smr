@@ -397,7 +397,7 @@ class Force {
 		$db = Database::getInstance();
 		if (!$this->isNew) {
 			if (!$this->exists()) {
-				$db->write('DELETE FROM sector_has_forces WHERE ' . self::SQL, $this->SQLID);
+				$db->delete('sector_has_forces', $this->SQLID);
 				$this->isNew = true;
 			} elseif ($this->hasChanged) {
 				$db->write('UPDATE sector_has_forces SET combat_drones = :combat_drones, scout_drones = :scout_drones, mines = :mines, expire_time = :expire_time WHERE ' . self::SQL, [

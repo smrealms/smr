@@ -286,7 +286,7 @@ class Alliance {
 				'game_id' => $db->escapeNumber($this->getGameID()),
 			]);
 		} else {
-			$db->write('DELETE FROM irc_alliance_has_channel WHERE ' . self::SQL, $this->SQLID);
+			$db->delete('irc_alliance_has_channel', $this->SQLID);
 		}
 		$this->ircChannel = $ircChannel;
 	}

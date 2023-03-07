@@ -15,7 +15,7 @@ class PaperEditProcessor extends PlayerPageProcessor {
 
 	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
-		$db->write('DELETE FROM galactic_post_paper_content WHERE game_id = :game_id AND article_id = :article_id AND paper_id = :paper_id', [
+		$db->delete('galactic_post_paper_content', [
 			'game_id' => $db->escapeNumber($player->getGameID()),
 			'article_id' => $db->escapeNumber($this->articleID),
 			'paper_id' => $db->escapeNumber($this->paperID),

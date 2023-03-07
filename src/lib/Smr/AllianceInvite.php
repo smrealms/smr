@@ -83,12 +83,12 @@ class AllianceInvite {
 
 	public function delete(): void {
 		$db = Database::getInstance();
-		$db->write('DELETE FROM alliance_invites_player WHERE alliance_id = :alliance_id AND game_id = :game_id AND account_id = :account_id', [
+		$db->delete('alliance_invites_player', [
 			'alliance_id' => $db->escapeNumber($this->allianceID),
 			'game_id' => $db->escapeNumber($this->gameID),
 			'account_id' => $db->escapeNumber($this->receiverAccountID),
 		]);
-		$db->write('DELETE FROM message WHERE message_id = :message_id', [
+		$db->delete('message', [
 			'message_id' => $db->escapeNumber($this->messageID),
 		]);
 	}

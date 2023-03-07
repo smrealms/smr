@@ -52,7 +52,7 @@ class ChatSharingProcessor extends PlayerPageProcessor {
 
 		// Process removing a "share to" account
 		if (Request::has('remove_share_to')) {
-			$db->write('DELETE FROM account_shares_info WHERE to_account_id = :to_account_id AND from_account_id = :from_account_id AND game_id = :game_id', [
+			$db->delete('account_shares_info', [
 				'to_account_id' => $db->escapeNumber(Request::getInt('remove_share_to')),
 				'from_account_id' => $db->escapeNumber($player->getAccountID()),
 				'game_id' => $db->escapeNumber(Request::getInt('game_id')),
@@ -61,7 +61,7 @@ class ChatSharingProcessor extends PlayerPageProcessor {
 
 		// Process removing a "share from" account
 		if (Request::has('remove_share_from')) {
-			$db->write('DELETE FROM account_shares_info WHERE to_account_id = :to_account_id AND from_account_id = :from_account_id AND game_id = :game_id', [
+			$db->delete('account_shares_info', [
 				'to_account_id' => $db->escapeNumber($player->getAccountID()),
 				'from_account_id' => $db->escapeNumber(Request::getInt('remove_share_from')),
 				'game_id' => $db->escapeNumber(Request::getInt('game_id')),

@@ -30,11 +30,13 @@ class LottoClaimProcessor extends PlayerPageProcessor {
 			$player->increaseHOF($prize, ['Bar', 'Lotto', 'Money', 'Claimed'], HOF_PUBLIC);
 			$player->increaseHOF(1, ['Bar', 'Lotto', 'Results', 'Claims'], HOF_PUBLIC);
 			$message .= '<div class="center">You have claimed <span class="red">$' . number_format($prize) . '</span>!<br /></div><br />';
-			$db->write('DELETE FROM player_has_ticket WHERE ' . AbstractPlayer::SQL . ' AND prize = :prize AND time = 0', [
+			$db->delete('player_has_ticket', [
 				...$player->SQLID,
 				'prize' => $db->escapeNumber($prize),
+				'time' => 0,
 			]);
-			$db->write('DELETE FROM news WHERE type = \'lotto\' AND game_id = :game_id', [
+			$db->delete('news', [
+				'type' => 'lotto',
 				'game_id' => $db->escapeNumber($player->getGameID()),
 			]);
 		}

@@ -41,7 +41,7 @@ class Lotto {
 		$lottoInfo['Prize'] += $dbResult->record()->getInt('total_prize');
 
 		// Delete all tickets and re-insert the winning ticket
-		$db->write('DELETE FROM player_has_ticket WHERE game_id = :game_id', [
+		$db->delete('player_has_ticket', [
 			'game_id' => $db->escapeNumber($gameID),
 		]);
 		$db->insert('player_has_ticket', [
@@ -58,7 +58,8 @@ class Lotto {
 		$winner->increaseHOF(1, ['Bar', 'Lotto', 'Results', 'Wins'], HOF_PUBLIC);
 		$news_message = $winner->getBBLink() . ' has won the lotto! The jackpot was ' . number_format($lottoInfo['Prize']) . '. ' . $winner->getBBLink() . ' can report to any bar to claim their prize before the next drawing!';
 		// insert the news entry
-		$db->write('DELETE FROM news WHERE type = \'lotto\' AND game_id = :game_id', [
+		$db->delete('news', [
+			'type' => 'lotto',
 			'game_id' => $db->escapeNumber($gameID),
 		]);
 		$db->insert('news', [

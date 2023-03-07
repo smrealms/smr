@@ -32,7 +32,9 @@ while (true) {
 	// delete all seen stats that appear to be on (we do not want to take
 	// something for granted that happend while we were away)
 	$db = Database::getInstance();
-	$db->write('DELETE from irc_seen WHERE signed_off = 0');
+	$db->delete('irc_seen', [
+		'signed_off' => 0,
+	]);
 
 	// Reset last ping each time we try connecting.
 	$last_ping = time();

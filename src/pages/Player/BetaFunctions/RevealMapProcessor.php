@@ -13,7 +13,7 @@ class RevealMapProcessor extends BetaFunctionsPageProcessor {
 		$game_id = $player->getGameID();
 		// delete all entries from the player_visited_sector/port table
 		$db = Database::getInstance();
-		$db->write('DELETE FROM player_visited_sector WHERE ' . AbstractPlayer::SQL, $player->SQLID);
+		$db->delete('player_visited_sector', $player->SQLID);
 
 		// add port infos
 		$dbResult = $db->read('SELECT * FROM port WHERE game_id = :game_id', [

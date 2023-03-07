@@ -133,7 +133,7 @@ class CurrentSector extends PlayerPage {
 		$dbResult = $db->read('SELECT * FROM sector_message WHERE ' . AbstractPlayer::SQL, $player->SQLID);
 		if ($dbResult->hasRecord()) {
 			$this->attackMessage = $dbResult->record()->getString('message');
-			$db->write('DELETE FROM sector_message WHERE ' . AbstractPlayer::SQL, $player->SQLID);
+			$db->delete('sector_message', $player->SQLID);
 		}
 
 		if ($this->attackMessage !== null) {

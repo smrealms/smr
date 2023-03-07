@@ -16,7 +16,7 @@ class ArticleDeleteProcessor extends PlayerPageProcessor {
 	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 		if (Request::getBool('action')) {
-			$db->write('DELETE FROM galactic_post_article WHERE game_id = :game_id AND article_id = :article_id', [
+			$db->delete('galactic_post_article', [
 				'game_id' => $db->escapeNumber($player->getGameID()),
 				'article_id' => $db->escapeNumber($this->articleID),
 			]);

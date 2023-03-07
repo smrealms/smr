@@ -51,7 +51,7 @@ class ManageDraftLeadersProcessor extends AccountPageProcessor {
 			if (!$selectedPlayer->isDraftLeader()) {
 				$msg = "<span class='red'>ERROR: </span>$name is not a draft leader in game $game!";
 			} else {
-				$db->write('DELETE FROM draft_leaders WHERE ' . Player::SQL, $selectedPlayer->SQLID);
+				$db->delete('draft_leaders', $selectedPlayer->SQLID);
 			}
 		} else {
 			$msg = "<span class='red'>ERROR: </span>Do not know action '$action'!";

@@ -135,7 +135,7 @@ class Ship extends AbstractShip {
 					'amount' => $db->escapeNumber($amount),
 				]);
 			} else {
-				$db->write('DELETE FROM ship_has_cargo WHERE ' . self::SQL . ' AND good_id = :good_id', [
+				$db->delete('ship_has_cargo', [
 					...$this->SQLID,
 					'good_id' => $db->escapeNumber($id),
 				]);
@@ -162,7 +162,7 @@ class Ship extends AbstractShip {
 					'amount' => $db->escapeNumber($amount),
 				]);
 			} else {
-				$db->write('DELETE FROM ship_has_hardware WHERE ' . self::SQL . ' AND hardware_type_id = :hardware_type_id', [
+				$db->delete('ship_has_hardware', [
 					...$this->SQLID,
 					'hardware_type_id' => $db->escapeNumber($hardwareTypeID),
 				]);
@@ -177,7 +177,7 @@ class Ship extends AbstractShip {
 		}
 		// write weapon info
 		$db = Database::getInstance();
-		$db->write('DELETE FROM ship_has_weapon WHERE ' . self::SQL, $this->SQLID);
+		$db->delete('ship_has_weapon', $this->SQLID);
 		foreach ($this->weapons as $orderID => $weapon) {
 			$db->insert('ship_has_weapon', [
 				...$this->SQLID,
@@ -206,7 +206,7 @@ class Ship extends AbstractShip {
 		}
 		$db = Database::getInstance();
 		if ($this->isCloaked === false) {
-			$db->write('DELETE FROM ship_is_cloaked WHERE ' . self::SQL, $this->SQLID);
+			$db->delete('ship_is_cloaked', $this->SQLID);
 		} else {
 			$db->insert('ship_is_cloaked', $this->SQLID);
 		}
@@ -236,7 +236,7 @@ class Ship extends AbstractShip {
 		}
 		$db = Database::getInstance();
 		if ($this->illusionShip === false) {
-			$db->write('DELETE FROM ship_has_illusion WHERE ' . self::SQL, $this->SQLID);
+			$db->delete('ship_has_illusion', $this->SQLID);
 		} else {
 			$db->replace('ship_has_illusion', [
 				...$this->SQLID,

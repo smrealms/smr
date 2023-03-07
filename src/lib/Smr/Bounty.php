@@ -174,7 +174,7 @@ class Bounty {
 				'smr_credits' => $db->escapeNumber($this->smrCredits),
 			]);
 		} else {
-			$db->write('DELETE FROM bounty WHERE bounty_id = :bounty_id AND account_id = :account_id AND game_id = :game_id', [
+			$db->delete('bounty', [
 				'bounty_id' => $db->escapeNumber($this->bountyID),
 				'account_id' => $db->escapeNumber($this->targetID),
 				'game_id' => $db->escapeNumber($this->gameID),

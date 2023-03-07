@@ -209,7 +209,7 @@ try {
 		'message_type_ids' => $db->escapeArray([MSG_ALLIANCE, MSG_GLOBAL, MSG_POLITICAL]),
 	]);
 	//check to see if we need to remove player_has_unread
-	$db->write('DELETE FROM player_has_unread_messages WHERE account_id = :account_id', [
+	$db->delete('player_has_unread_messages', [
 		'account_id' => $db->escapeNumber($account->getAccountID()),
 	]);
 	$db->write('

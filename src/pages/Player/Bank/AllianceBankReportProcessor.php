@@ -36,7 +36,7 @@ class AllianceBankReportProcessor extends PlayerPageProcessor {
 				'alliance_id' => $db->escapeNumber($alliance_id),
 				'game_id' => $db->escapeNumber($player->getGameID()),
 			]);
-			$db->write('DELETE FROM player_read_thread WHERE thread_id = :thread_id AND game_id = :game_id AND alliance_id = :alliance_id', [
+			$db->delete('player_read_thread', [
 				'thread_id' => $db->escapeNumber($thread_id),
 				'game_id' => $db->escapeNumber($player->getGameID()),
 				'alliance_id' => $db->escapeNumber($alliance_id),
