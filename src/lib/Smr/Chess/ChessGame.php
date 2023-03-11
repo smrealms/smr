@@ -271,7 +271,7 @@ class ChessGame {
 		$db = Database::getInstance();
 		$db->insert('chess_game', [
 			'start_time' => $db->escapeNumber($startDate),
-			'end_time' => $endDate === null ? 'NULL' : $db->escapeNumber($endDate),
+			'end_time' => $endDate,
 			'white_id' => $db->escapeNumber($whitePlayer->getAccountID()),
 			'black_id' => $db->escapeNumber($blackPlayer->getAccountID()),
 			'game_id' => $db->escapeNumber($whitePlayer->getGameID()),
@@ -443,10 +443,10 @@ class ChessGame {
 			'end_x' => $db->escapeNumber($toX),
 			'end_y' => $db->escapeNumber($toY),
 			'checked' => $db->escapeNullableString($checking),
-			'piece_taken' => $moveInfo['PieceTaken'] === null ? 'NULL' : $db->escapeNumber($moveInfo['PieceTaken']->pieceID),
+			'piece_taken' => $moveInfo['PieceTaken']?->pieceID,
 			'castling' => $db->escapeNullableString($moveInfo['Castling']?->value),
 			'en_passant' => $db->escapeBoolean($moveInfo['EnPassant']),
-			'promote_piece_id' => $promotionPieceID ?? 'NULL',
+			'promote_piece_id' => $promotionPieceID,
 		]);
 
 		$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Total Taken'], HOF_PUBLIC);
