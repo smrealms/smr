@@ -35,9 +35,9 @@ class LottoBuyTicketProcessor extends PlayerPageProcessor {
 		}
 
 		$db->insert('player_has_ticket', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'account_id' => $db->escapeNumber($player->getAccountID()),
-			'time' => $db->escapeNumber($time),
+			'game_id' => $player->getGameID(),
+			'account_id' => $player->getAccountID(),
+			'time' => $time,
 		]);
 		$player->decreaseCredits(Lotto::TICKET_COST);
 		$player->increaseHOF(Lotto::TICKET_COST, ['Bar', 'Lotto', 'Money', 'Spent'], HOF_PUBLIC);

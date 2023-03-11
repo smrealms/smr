@@ -41,9 +41,9 @@ class AccountEditProcessor extends AccountPageProcessor {
 		if (!empty($donation)) {
 			// add entry to account donated table
 			$db->insert('account_donated', [
-				'account_id' => $db->escapeNumber($account_id),
-				'time' => $db->escapeNumber(Epoch::time()),
-				'amount' => $db->escapeNumber($donation),
+				'account_id' => $account_id,
+				'time' => Epoch::time(),
+				'amount' => $donation,
 			]);
 
 			// add the credits to the players account - if requested
@@ -69,7 +69,7 @@ class AccountEditProcessor extends AccountPageProcessor {
 				$reasonID = $dbResult->record()->getInt('reason_id');
 			} else {
 				$reasonID = $db->insert('closing_reason', [
-					'reason' => $db->escapeString($specialClose),
+					'reason' => $specialClose,
 				]);
 			}
 
@@ -90,7 +90,7 @@ class AccountEditProcessor extends AccountPageProcessor {
 		} elseif ($points > 0) {
 			if ($choise == 'individual') {
 				$reason_id = $db->insert('closing_reason', [
-					'reason' => $db->escapeString($reason_msg),
+					'reason' => $reason_msg,
 				]);
 			} else {
 				$reason_id = $reason_pre_select;
@@ -126,7 +126,7 @@ class AccountEditProcessor extends AccountPageProcessor {
 			$db->update(
 				'account',
 				['veteran' => $db->escapeBoolean($veteran_status)],
-				['account_id' => $db->escapeNumber($account_id)],
+				['account_id' => $account_id],
 			);
 			$actions[] = 'set the veteran status to ' . $db->escapeBoolean($veteran_status);
 		}
@@ -138,8 +138,8 @@ class AccountEditProcessor extends AccountPageProcessor {
 
 		if ($except != '') {
 			$db->insert('account_exceptions', [
-				'account_id' => $db->escapeNumber($account_id),
-				'reason' => $db->escapeString($except),
+				'account_id' => $account_id,
+				'reason' => $except,
 			]);
 			$actions[] = 'added the exception ' . $except;
 		}
@@ -164,11 +164,11 @@ class AccountEditProcessor extends AccountPageProcessor {
 			$news = 'Please be advised that player ' . $editPlayer->getPlayerID() . ' has had their name changed to ' . $editPlayer->getBBLink();
 
 			$db->insert('news', [
-				'time' => $db->escapeNumber(Epoch::time()),
-				'news_message' => $db->escapeString($news),
-				'game_id' => $db->escapeNumber($game_id),
-				'type' => $db->escapeString('admin'),
-				'killer_id' => $db->escapeNumber($account_id),
+				'time' => Epoch::time(),
+				'news_message' => $news,
+				'game_id' => $game_id,
+				'type' => 'admin',
+				'killer_id' => $account_id,
 			]);
 		}
 
@@ -201,14 +201,14 @@ class AccountEditProcessor extends AccountPageProcessor {
 					}
 
 					$db->delete('alliance_thread', [
-						'sender_id' => $db->escapeNumber($account_id),
-						'game_id' => $db->escapeNumber($game_id),
+						'sender_id' => $account_id,
+						'game_id' => $game_id,
 					]);
 					$db->delete('bounty', $sqlParams);
 					$db->delete('galactic_post_applications', $sqlParams);
 					$db->delete('galactic_post_article', [
-						'writer_id' => $db->escapeNumber($account_id),
-						'game_id' => $db->escapeNumber($game_id),
+						'writer_id' => $account_id,
+						'game_id' => $game_id,
 					]);
 					$db->delete('galactic_post_writer', $sqlParams);
 					$db->delete('message', $sqlParams);
@@ -226,8 +226,8 @@ class AccountEditProcessor extends AccountPageProcessor {
 							'bonds' => 0,
 						],
 						[
-							'owner_id' => $db->escapeNumber($account_id),
-							'game_id' => $db->escapeNumber($game_id),
+							'owner_id' => $account_id,
+							'game_id' => $game_id,
 						],
 					);
 					$db->delete('player_attacks_planet', $sqlParams);

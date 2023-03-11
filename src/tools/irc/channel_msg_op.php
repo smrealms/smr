@@ -135,9 +135,9 @@ function channel_msg_op_set($fp, Message $msg, AbstractPlayer $player): bool {
 
 		// add op to db
 		$db->insert('alliance_has_op', [
-			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'time' => $db->escapeNumber($op_time),
+			'alliance_id' => $player->getAllianceID(),
+			'game_id' => $player->getGameID(),
+			'time' => $op_time,
 		]);
 
 		fwrite($fp, 'PRIVMSG ' . $channel . ' :The OP has been scheduled.' . EOL);
@@ -202,10 +202,10 @@ function channel_msg_op_response($fp, Message $msg, AbstractPlayer $player): boo
 		}
 
 		$db->replace('alliance_has_op_response', [
-			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'account_id' => $db->escapeNumber($player->getAccountID()),
-			'response' => $db->escapeString($response),
+			'alliance_id' => $player->getAllianceID(),
+			'game_id' => $player->getGameID(),
+			'account_id' => $player->getAccountID(),
+			'response' => $response,
 		]);
 
 		fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have been added to the ' . $response . ' list.' . EOL);

@@ -50,21 +50,21 @@ class EmbassyProcessor extends PlayerPageProcessor {
 
 		// Create the vote for the player's race
 		$db->replace('race_has_voting', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'race_id_1' => $db->escapeNumber($player->getRaceID()),
-			'race_id_2' => $db->escapeNumber($race_id),
-			'type' => $db->escapeString($type),
-			'end_time' => $db->escapeNumber($time),
+			'game_id' => $player->getGameID(),
+			'race_id_1' => $player->getRaceID(),
+			'race_id_2' => $race_id,
+			'type' => $type,
+			'end_time' => $time,
 		]);
 
 		// If voting for peace, the other race also has to vote
 		if ($type == 'PEACE') {
 			$db->replace('race_has_voting', [
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'race_id_1' => $db->escapeNumber($race_id),
-				'race_id_2' => $db->escapeNumber($player->getRaceID()),
-				'type' => $db->escapeString($type),
-				'end_time' => $db->escapeNumber($time),
+				'game_id' => $player->getGameID(),
+				'race_id_1' => $race_id,
+				'race_id_2' => $player->getRaceID(),
+				'type' => $type,
+				'end_time' => $time,
 			]);
 		}
 

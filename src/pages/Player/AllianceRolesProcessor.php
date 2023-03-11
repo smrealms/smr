@@ -66,11 +66,11 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 			$role_id = $dbResult->record()->getInt('MAX(role_id)') + 1;
 
 			$db->insert('alliance_has_roles', [
-				'alliance_id' => $db->escapeNumber($alliance_id),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'role_id' => $db->escapeNumber($role_id),
-				'role' => $db->escapeString($roleName),
-				'with_per_day' => $db->escapeNumber($withPerDay),
+				'alliance_id' => $alliance_id,
+				'game_id' => $player->getGameID(),
+				'role_id' => $role_id,
+				'role' => $roleName,
+				'with_per_day' => $withPerDay,
 				'positive_balance' => $db->escapeBoolean($positiveBalance),
 				'remove_member' => $db->escapeBoolean($removeMember),
 				'change_pass' => $db->escapeBoolean($changePass),
@@ -93,17 +93,17 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 					create_error('You cannot delete the new member role.');
 				}
 				$db->delete('alliance_has_roles', [
-					'game_id' => $db->escapeNumber($player->getGameID()),
-					'alliance_id' => $db->escapeNumber($alliance_id),
-					'role_id' => $db->escapeNumber($this->roleID),
+					'game_id' => $player->getGameID(),
+					'alliance_id' => $alliance_id,
+					'role_id' => $this->roleID,
 				]);
 			} else {
 				// otherwise we update it
 				$db->update(
 					'alliance_has_roles',
 					[
-						'role' => $db->escapeString($roleName),
-						'with_per_day' => $db->escapeNumber($withPerDay),
+						'role' => $roleName,
+						'with_per_day' => $withPerDay,
 						'positive_balance' => $db->escapeBoolean($positiveBalance),
 						'remove_member' => $db->escapeBoolean($removeMember),
 						'change_pass' => $db->escapeBoolean($changePass),
@@ -117,9 +117,9 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 						'view_bonds' => $db->escapeBoolean($viewBonds),
 					],
 					[
-						'alliance_id' => $db->escapeNumber($alliance_id),
-						'game_id' => $db->escapeNumber($player->getGameID()),
-						'role_id' => $db->escapeNumber($this->roleID),
+						'alliance_id' => $alliance_id,
+						'game_id' => $player->getGameID(),
+						'role_id' => $this->roleID,
 					],
 				);
 			}

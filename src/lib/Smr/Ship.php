@@ -131,13 +131,13 @@ class Ship extends AbstractShip {
 			if ($amount > 0) {
 				$db->replace('ship_has_cargo', [
 					...$this->SQLID,
-					'good_id' => $db->escapeNumber($id),
-					'amount' => $db->escapeNumber($amount),
+					'good_id' => $id,
+					'amount' => $amount,
 				]);
 			} else {
 				$db->delete('ship_has_cargo', [
 					...$this->SQLID,
-					'good_id' => $db->escapeNumber($id),
+					'good_id' => $id,
 				]);
 				// Unset now to omit displaying this good with 0 amount
 				// before the next page is loaded.
@@ -158,13 +158,13 @@ class Ship extends AbstractShip {
 			if ($amount > 0) {
 				$db->replace('ship_has_hardware', [
 					...$this->SQLID,
-					'hardware_type_id' => $db->escapeNumber($hardwareTypeID),
-					'amount' => $db->escapeNumber($amount),
+					'hardware_type_id' => $hardwareTypeID,
+					'amount' => $amount,
 				]);
 			} else {
 				$db->delete('ship_has_hardware', [
 					...$this->SQLID,
-					'hardware_type_id' => $db->escapeNumber($hardwareTypeID),
+					'hardware_type_id' => $hardwareTypeID,
 				]);
 			}
 		}
@@ -181,8 +181,8 @@ class Ship extends AbstractShip {
 		foreach ($this->weapons as $orderID => $weapon) {
 			$db->insert('ship_has_weapon', [
 				...$this->SQLID,
-				'order_id' => $db->escapeNumber($orderID),
-				'weapon_type_id' => $db->escapeNumber($weapon->getWeaponTypeID()),
+				'order_id' => $orderID,
+				'weapon_type_id' => $weapon->getWeaponTypeID(),
 				'bonus_accuracy' => $db->escapeBoolean($weapon->hasBonusAccuracy()),
 				'bonus_damage' => $db->escapeBoolean($weapon->hasBonusDamage()),
 			]);
@@ -240,9 +240,9 @@ class Ship extends AbstractShip {
 		} else {
 			$db->replace('ship_has_illusion', [
 				...$this->SQLID,
-				'ship_type_id' => $db->escapeNumber($this->illusionShip->shipTypeID),
-				'attack' => $db->escapeNumber($this->illusionShip->attackRating),
-				'defense' => $db->escapeNumber($this->illusionShip->defenseRating),
+				'ship_type_id' => $this->illusionShip->shipTypeID,
+				'attack' => $this->illusionShip->attackRating,
+				'defense' => $this->illusionShip->defenseRating,
 			]);
 		}
 		$this->hasChangedIllusion = false;

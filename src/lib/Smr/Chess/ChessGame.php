@@ -108,14 +108,14 @@ class ChessGame {
 				'end_time' => null,
 				'winner_id' => 0,
 			],
-			['chess_game_id' => $db->escapeNumber($this->chessGameID)],
+			['chess_game_id' => $this->chessGameID],
 		);
 
 		$dbResult = $db->read('SELECT * FROM chess_game_moves WHERE chess_game_id = :chess_game_id ORDER BY move_id', [
 			'chess_game_id' => $db->escapeNumber($this->chessGameID),
 		]);
 		$db->delete('chess_game_moves', [
-			'chess_game_id' => $db->escapeNumber($this->chessGameID),
+			'chess_game_id' => $this->chessGameID,
 		]);
 		$this->moves = [];
 		$this->board = new Board();
@@ -273,11 +273,11 @@ class ChessGame {
 	public static function insertNewGame(int $startDate, ?int $endDate, AbstractPlayer $whitePlayer, AbstractPlayer $blackPlayer): void {
 		$db = Database::getInstance();
 		$db->insert('chess_game', [
-			'start_time' => $db->escapeNumber($startDate),
+			'start_time' => $startDate,
 			'end_time' => $endDate,
-			'white_id' => $db->escapeNumber($whitePlayer->getAccountID()),
-			'black_id' => $db->escapeNumber($blackPlayer->getAccountID()),
-			'game_id' => $db->escapeNumber($whitePlayer->getGameID()),
+			'white_id' => $whitePlayer->getAccountID(),
+			'black_id' => $blackPlayer->getAccountID(),
+			'game_id' => $whitePlayer->getGameID(),
 		]);
 	}
 
@@ -439,15 +439,15 @@ class ChessGame {
 
 		$db = Database::getInstance();
 		$db->insert('chess_game_moves', [
-			'chess_game_id' => $db->escapeNumber($this->chessGameID),
-			'piece_id' => $db->escapeNumber($pieceID),
-			'start_x' => $db->escapeNumber($x),
-			'start_y' => $db->escapeNumber($y),
-			'end_x' => $db->escapeNumber($toX),
-			'end_y' => $db->escapeNumber($toY),
-			'checked' => $db->escapeNullableString($checking),
+			'chess_game_id' => $this->chessGameID,
+			'piece_id' => $pieceID,
+			'start_x' => $x,
+			'start_y' => $y,
+			'end_x' => $toX,
+			'end_y' => $toY,
+			'checked' => $checking,
 			'piece_taken' => $moveInfo['PieceTaken']?->pieceID,
-			'castling' => $db->escapeNullableString($moveInfo['Castling']?->value),
+			'castling' => $moveInfo['Castling']?->value,
 			'en_passant' => $db->escapeBoolean($moveInfo['EnPassant']),
 			'promote_piece_id' => $promotionPieceID,
 		]);
@@ -554,10 +554,10 @@ class ChessGame {
 		$db->update(
 			'chess_game',
 			[
-				'end_time' => $db->escapeNumber(Epoch::time()),
-				'winner_id' => $db->escapeNumber($this->winner),
+				'end_time' => Epoch::time(),
+				'winner_id' => $this->winner,
 			],
-			['chess_game_id' => $db->escapeNumber($this->chessGameID)],
+			['chess_game_id' => $this->chessGameID],
 		);
 		$winnerColour = $this->getColourForAccountID($accountID);
 		$winningPlayer = $this->getColourPlayer($winnerColour);
@@ -617,8 +617,8 @@ class ChessGame {
 			$db = Database::getInstance();
 			$db->update(
 				'chess_game',
-				['end_time' => $db->escapeNumber(Epoch::time())],
-				['chess_game_id' => $db->escapeNumber($this->chessGameID)],
+				['end_time' => Epoch::time()],
+				['chess_game_id' => $this->chessGameID],
 			);
 			return self::END_CANCEL;
 		}

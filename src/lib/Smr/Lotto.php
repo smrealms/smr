@@ -42,13 +42,13 @@ class Lotto {
 
 		// Delete all tickets and re-insert the winning ticket
 		$db->delete('player_has_ticket', [
-			'game_id' => $db->escapeNumber($gameID),
+			'game_id' => $gameID,
 		]);
 		$db->insert('player_has_ticket', [
-			'game_id' => $db->escapeNumber($gameID),
-			'account_id' => $db->escapeNumber($winner_id),
+			'game_id' => $gameID,
+			'account_id' => $winner_id,
 			'time' => 0,
-			'prize' => $db->escapeNumber($lottoInfo['Prize']),
+			'prize' => $lottoInfo['Prize'],
 		]);
 		$db->unlock();
 
@@ -60,15 +60,15 @@ class Lotto {
 		// insert the news entry
 		$db->delete('news', [
 			'type' => 'lotto',
-			'game_id' => $db->escapeNumber($gameID),
+			'game_id' => $gameID,
 		]);
 		$db->insert('news', [
-			'game_id' => $db->escapeNumber($gameID),
-			'time' => $db->escapeNumber(Epoch::time()),
-			'news_message' => $db->escapeString($news_message),
-			'type' => $db->escapeString('lotto'),
-			'dead_id' => $db->escapeNumber($winner->getAccountID()),
-			'dead_alliance' => $db->escapeNumber($winner->getAllianceID()),
+			'game_id' => $gameID,
+			'time' => Epoch::time(),
+			'news_message' => $news_message,
+			'type' => 'lotto',
+			'dead_id' => $winner->getAccountID(),
+			'dead_alliance' => $winner->getAllianceID(),
 		]);
 	}
 

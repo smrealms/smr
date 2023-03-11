@@ -25,17 +25,17 @@ class FeatureRequestVoteProcessor extends AccountPageProcessor {
 			if (Request::has('vote')) {
 				foreach (Request::getArray('vote') as $requestID => $vote) {
 					$db->replace('account_votes_for_feature', [
-						'account_id' => $db->escapeNumber($account->getAccountID()),
-						'feature_request_id' => $db->escapeNumber($requestID),
-						'vote_type' => $db->escapeString($vote),
+						'account_id' => $account->getAccountID(),
+						'feature_request_id' => $requestID,
+						'vote_type' => $vote,
 					]);
 				}
 			}
 			if (Request::has('favourite')) {
 				$db->replace('account_votes_for_feature', [
-					'account_id' => $db->escapeNumber($account->getAccountID()),
-					'feature_request_id' => $db->escapeNumber(Request::getInt('favourite')),
-					'vote_type' => $db->escapeString('FAVOURITE'),
+					'account_id' => $account->getAccountID(),
+					'feature_request_id' => Request::getInt('favourite'),
+					'vote_type' => 'FAVOURITE',
 				]);
 			}
 
@@ -80,11 +80,11 @@ class FeatureRequestVoteProcessor extends AccountPageProcessor {
 			]);
 			foreach ($setStatusIDs as $featureID) {
 				$db->insert('feature_request_comments', [
-					'feature_request_id' => $db->escapeNumber($featureID),
-					'poster_id' => $db->escapeNumber($account->getAccountID()),
-					'posting_time' => $db->escapeNumber(Epoch::time()),
+					'feature_request_id' => $featureID,
+					'poster_id' => $account->getAccountID(),
+					'posting_time' => Epoch::time(),
 					'anonymous' => $db->escapeBoolean(false),
-					'text' => $db->escapeString($status),
+					'text' => $status,
 				]);
 			}
 		}

@@ -17,10 +17,10 @@ class AllianceRolesSaveProcessor extends PlayerPageProcessor {
 		foreach (Request::getIntArray('role', []) as $accountID => $roleID) {
 			$db = Database::getInstance();
 			$db->replace('player_has_alliance_role', [
-				'account_id' => $db->escapeNumber($accountID),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'role_id' => $db->escapeNumber($roleID),
-				'alliance_id' => $db->escapeNumber($this->allianceID),
+				'account_id' => $accountID,
+				'game_id' => $player->getGameID(),
+				'role_id' => $roleID,
+				'alliance_id' => $this->allianceID,
 			]);
 		}
 

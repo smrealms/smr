@@ -59,11 +59,11 @@ try {
 	$comment_id = $dbResult->record()->getInt('next_comment_id');
 
 	$db->insert('album_has_comments', [
-		'album_id' => $db->escapeNumber($album_id),
-		'comment_id' => $db->escapeNumber($comment_id),
-		'time' => $db->escapeNumber($curr_time),
-		'post_id' => $db->escapeNumber($account->getAccountID()),
-		'msg' => $db->escapeString($comment),
+		'album_id' => $album_id,
+		'comment_id' => $comment_id,
+		'time' => $curr_time,
+		'post_id' => $account->getAccountID(),
+		'msg' => $comment,
 	]);
 	$db->unlock();
 

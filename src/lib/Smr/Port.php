@@ -681,11 +681,11 @@ class Port {
 		foreach ($attackers as $attacker) {
 			$attacker->increaseHOF(1, ['Combat', 'Port', 'Number Of Attacks'], HOF_PUBLIC);
 			$db->replace('player_attacks_port', [
-				'game_id' => $db->escapeNumber($this->getGameID()),
-				'account_id' => $db->escapeNumber($attacker->getAccountID()),
-				'sector_id' => $db->escapeNumber($this->getSectorID()),
-				'time' => $db->escapeNumber(Epoch::time()),
-				'level' => $db->escapeNumber($this->getLevel()),
+				'game_id' => $this->getGameID(),
+				'account_id' => $attacker->getAccountID(),
+				'sector_id' => $this->getSectorID(),
+				'time' => Epoch::time(),
+				'level' => $this->getLevel(),
 			]);
 		}
 		if (!$this->isUnderAttack()) {
@@ -714,12 +714,12 @@ class Port {
 			$newsMessage .= ' prior to the destruction of the port, or until federal forces arrive to defend the port.';
 
 			$db->insert('news', [
-				'game_id' => $db->escapeNumber($this->getGameID()),
-				'time' => $db->escapeNumber(Epoch::time()),
-				'news_message' => $db->escapeString($newsMessage),
-				'killer_id' => $db->escapeNumber($trigger->getAccountID()),
-				'killer_alliance' => $db->escapeNumber($trigger->getAllianceID()),
-				'dead_id' => $db->escapeNumber(ACCOUNT_ID_PORT),
+				'game_id' => $this->getGameID(),
+				'time' => Epoch::time(),
+				'news_message' => $newsMessage,
+				'killer_id' => $trigger->getAccountID(),
+				'killer_alliance' => $trigger->getAllianceID(),
+				'dead_id' => ACCOUNT_ID_PORT,
 			]);
 		}
 	}
@@ -1267,23 +1267,23 @@ class Port {
 			$this->updateSectorPlayersCache();
 			// route_cache tells NPC's where they can trade
 			$db->delete('route_cache', [
-				'game_id' => $db->escapeNumber($this->getGameID()),
+				'game_id' => $this->getGameID(),
 			]);
 		}
 
 		// If any fields in the `port` table have changed, update table
 		if ($this->hasChanged) {
 			$params = [
-				'experience' => $db->escapeNumber($this->getExperience()),
-				'shields' => $db->escapeNumber($this->getShields()),
-				'armour' => $db->escapeNumber($this->getArmour()),
-				'combat_drones' => $db->escapeNumber($this->getCDs()),
-				'level' => $db->escapeNumber($this->getLevel()),
-				'credits' => $db->escapeNumber($this->getCredits()),
-				'upgrade' => $db->escapeNumber($this->getUpgrade()),
-				'reinforce_time' => $db->escapeNumber($this->getReinforceTime()),
-				'attack_started' => $db->escapeNumber($this->getAttackStarted()),
-				'race_id' => $db->escapeNumber($this->getRaceID()),
+				'experience' => $this->getExperience(),
+				'shields' => $this->getShields(),
+				'armour' => $this->getArmour(),
+				'combat_drones' => $this->getCDs(),
+				'level' => $this->getLevel(),
+				'credits' => $this->getCredits(),
+				'upgrade' => $this->getUpgrade(),
+				'reinforce_time' => $this->getReinforceTime(),
+				'attack_started' => $this->getAttackStarted(),
+				'race_id' => $this->getRaceID(),
 			];
 			if ($this->isNew === false) {
 				$db->update('port', $params, $this->SQLID);
@@ -1304,12 +1304,12 @@ class Port {
 			$db->update(
 				'port_has_goods',
 				[
-					'amount' => $db->escapeNumber($amount),
-					'last_update' => $db->escapeNumber(Epoch::time()),
+					'amount' => $amount,
+					'last_update' => Epoch::time(),
 				],
 				[
 					...$this->SQLID,
-					'good_id' => $db->escapeNumber($goodID),
+					'good_id' => $goodID,
 				],
 			);
 			unset($this->goodAmountsChanged[$goodID]);
@@ -1321,16 +1321,16 @@ class Port {
 				// add the good
 				$db->replace('port_has_goods', [
 					...$this->SQLID,
-					'good_id' => $db->escapeNumber($goodID),
-					'transaction_type' => $db->escapeString($this->getGoodTransaction($goodID)->value),
-					'amount' => $db->escapeNumber($this->getGoodAmount($goodID)),
-					'last_update' => $db->escapeNumber(Epoch::time()),
+					'good_id' => $goodID,
+					'transaction_type' => $this->getGoodTransaction($goodID)->value,
+					'amount' => $this->getGoodAmount($goodID),
+					'last_update' => Epoch::time(),
 				]);
 			} else {
 				// remove the good
 				$db->delete('port_has_goods', [
 					...$this->SQLID,
-					'good_id' => $db->escapeNumber($goodID),
+					'good_id' => $goodID,
 				]);
 			}
 			unset($this->goodTransactionsChanged[$goodID]);
@@ -1515,12 +1515,12 @@ class Port {
 		}
 		$db = Database::getInstance();
 		$db->insert('news', [
-			'game_id' => $db->escapeNumber($this->getGameID()),
-			'time' => $db->escapeNumber(Epoch::time()),
-			'news_message' => $db->escapeString($news),
-			'killer_id' => $db->escapeNumber($killer->getAccountID()),
-			'killer_alliance' => $db->escapeNumber($killer->getAllianceID()),
-			'dead_id' => $db->escapeNumber(ACCOUNT_ID_PORT),
+			'game_id' => $this->getGameID(),
+			'time' => Epoch::time(),
+			'news_message' => $news,
+			'killer_id' => $killer->getAccountID(),
+			'killer_alliance' => $killer->getAllianceID(),
+			'dead_id' => ACCOUNT_ID_PORT,
 		]);
 
 		// Killer gets a relations change and a bounty if port is taken

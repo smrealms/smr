@@ -30,7 +30,7 @@ class ValidateProcessor extends AccountPageProcessor {
 			$db = Database::getInstance();
 			$db->delete('notification', [
 				'notification_type' => 'validation_code',
-				'account_id' => $db->escapeNumber($account->getAccountID()),
+				'account_id' => $account->getAccountID(),
 			]);
 		}
 

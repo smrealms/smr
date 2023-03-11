@@ -96,11 +96,11 @@ class GameJoinProcessor extends AccountPageProcessor {
 		// Announce the player joining in the news
 		$news = '[player=' . $player->getPlayerID() . '] has joined the game!';
 		$db->insert('news', [
-			'time' => $db->escapeNumber(Epoch::time()),
-			'news_message' => $db->escapeString($news),
-			'game_id' => $db->escapeNumber($gameID),
-			'type' => $db->escapeString('admin'),
-			'killer_id' => $db->escapeNumber($player->getAccountID()),
+			'time' => Epoch::time(),
+			'news_message' => $news,
+			'game_id' => $gameID,
+			'type' => 'admin',
+			'killer_id' => $player->getAccountID(),
 		]);
 
 		// Send the player directly into the game

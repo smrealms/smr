@@ -164,20 +164,20 @@ class Bounty {
 		$db = Database::getInstance();
 		if ($this->credits > 0 || $this->smrCredits > 0) {
 			$db->replace('bounty', [
-				'account_id' => $db->escapeNumber($this->targetID),
-				'bounty_id' => $db->escapeNumber($this->bountyID),
-				'game_id' => $db->escapeNumber($this->gameID),
-				'type' => $db->escapeString($this->type->value),
-				'time' => $db->escapeNumber($this->time),
-				'claimer_id' => $db->escapeNumber($this->claimerID),
-				'amount' => $db->escapeNumber($this->credits),
-				'smr_credits' => $db->escapeNumber($this->smrCredits),
+				'account_id' => $this->targetID,
+				'bounty_id' => $this->bountyID,
+				'game_id' => $this->gameID,
+				'type' => $this->type->value,
+				'time' => $this->time,
+				'claimer_id' => $this->claimerID,
+				'amount' => $this->credits,
+				'smr_credits' => $this->smrCredits,
 			]);
 		} else {
 			$db->delete('bounty', [
-				'bounty_id' => $db->escapeNumber($this->bountyID),
-				'account_id' => $db->escapeNumber($this->targetID),
-				'game_id' => $db->escapeNumber($this->gameID),
+				'bounty_id' => $this->bountyID,
+				'account_id' => $this->targetID,
+				'game_id' => $this->gameID,
 			]);
 		}
 		$this->hasChanged = false;

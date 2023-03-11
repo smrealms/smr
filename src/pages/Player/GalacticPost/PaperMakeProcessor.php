@@ -21,9 +21,9 @@ class PaperMakeProcessor extends PlayerPageProcessor {
 		}
 		$title = Request::get('title');
 		$db->insert('galactic_post_paper', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'paper_id' => $db->escapeNumber($num),
-			'title' => $db->escapeString($title),
+			'game_id' => $player->getGameID(),
+			'paper_id' => $num,
+			'title' => $title,
 		]);
 		//send em back
 		$container = new ArticleView();

@@ -18,7 +18,7 @@ class FormOpenProcessor extends AccountPageProcessor {
 		$db->update(
 			'open_forms',
 			['open' => $db->escapeBoolean(!$this->isOpen)],
-			['type' => $db->escapeString($this->type)],
+			['type' => $this->type],
 		);
 
 		(new FormOpen())->go();

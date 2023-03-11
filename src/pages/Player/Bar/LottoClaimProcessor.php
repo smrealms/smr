@@ -32,12 +32,12 @@ class LottoClaimProcessor extends PlayerPageProcessor {
 			$message .= '<div class="center">You have claimed <span class="red">$' . number_format($prize) . '</span>!<br /></div><br />';
 			$db->delete('player_has_ticket', [
 				...$player->SQLID,
-				'prize' => $db->escapeNumber($prize),
+				'prize' => $prize,
 				'time' => 0,
 			]);
 			$db->delete('news', [
 				'type' => 'lotto',
-				'game_id' => $db->escapeNumber($player->getGameID()),
+				'game_id' => $player->getGameID(),
 			]);
 		}
 		//offer another drink and such

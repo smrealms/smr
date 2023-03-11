@@ -18,10 +18,10 @@ class AllianceMessageBoardDeleteReplyProcessor extends PlayerPageProcessor {
 	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 		$db->delete('alliance_thread', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'alliance_id' => $db->escapeNumber($this->allianceID),
-			'thread_id' => $db->escapeNumber($this->threadID),
-			'reply_id' => $db->escapeNumber($this->replyID),
+			'game_id' => $player->getGameID(),
+			'alliance_id' => $this->allianceID,
+			'thread_id' => $this->threadID,
+			'reply_id' => $this->replyID,
 		]);
 		$this->lastPage->go();
 	}

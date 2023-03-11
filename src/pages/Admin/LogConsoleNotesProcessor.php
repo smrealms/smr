@@ -24,12 +24,12 @@ class LogConsoleNotesProcessor extends AccountPageProcessor {
 		foreach ($this->accountIDs as $account_id) {
 			if (empty(Request::get('notes'))) {
 				$db->delete('log_has_notes', [
-					'account_id' => $db->escapeNumber($account_id),
+					'account_id' => $account_id,
 				]);
 			} else {
 				$db->replace('log_has_notes', [
-					'account_id' => $db->escapeNumber($account_id),
-					'notes' => $db->escapeString(Request::get('notes')),
+					'account_id' => $account_id,
+					'notes' => Request::get('notes'),
 				]);
 			}
 		}

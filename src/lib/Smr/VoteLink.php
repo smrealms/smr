@@ -101,9 +101,9 @@ class VoteLink {
 
 			// Don't start the timeout until the vote actually goes through.
 			$db->replace('vote_links', [
-				'account_id' => $db->escapeNumber($this->accountID),
-				'link_id' => $db->escapeNumber($this->site->value),
-				'timeout' => $db->escapeNumber(0),
+				'account_id' => $this->accountID,
+				'link_id' => $this->site->value,
+				'timeout' => 0,
 				'turns_claimed' => $db->escapeBoolean(false),
 			]);
 		} finally {
@@ -125,8 +125,8 @@ class VoteLink {
 				'turns_claimed' => 'TRUE',
 			],
 			[
-				'account_id' => $db->escapeNumber($this->accountID),
-				'link_id' => $db->escapeNumber($this->site->value),
+				'account_id' => $this->accountID,
+				'link_id' => $this->site->value,
 				'timeout' => 0,
 				'turns_claimed' => 'FALSE',
 			],

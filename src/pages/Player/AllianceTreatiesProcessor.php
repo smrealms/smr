@@ -29,9 +29,9 @@ class AllianceTreatiesProcessor extends PlayerPageProcessor {
 				'alliance_treaties',
 				['official' => 'TRUE'],
 				[
-					'alliance_id_1' => $db->escapeNumber($alliance_id_1),
-					'alliance_id_2' => $db->escapeNumber($alliance_id_2),
-					'game_id' => $db->escapeNumber($player->getGameID()),
+					'alliance_id_1' => $alliance_id_1,
+					'alliance_id_2' => $alliance_id_2,
+					'game_id' => $player->getGameID(),
 				],
 			);
 
@@ -54,19 +54,19 @@ class AllianceTreatiesProcessor extends PlayerPageProcessor {
 
 					$allianceName = Alliance::getAlliance($alliance_id_B, $player->getGameID())->getAllianceName();
 					$db->insert('alliance_has_roles', [
-						'alliance_id' => $db->escapeNumber($alliance_id_A),
-						'game_id' => $db->escapeNumber($player->getGameID()),
-						'role_id' => $db->escapeNumber($role_id),
-						'role' => $db->escapeString($allianceName),
+						'alliance_id' => $alliance_id_A,
+						'game_id' => $player->getGameID(),
+						'role_id' => $role_id,
+						'role' => $allianceName,
 						'treaty_created' => 1,
 					]);
 				}
 			}
 		} else {
 			$db->delete('alliance_treaties', [
-				'alliance_id_1' => $db->escapeNumber($alliance_id_1),
-				'alliance_id_2' => $db->escapeNumber($alliance_id_2),
-				'game_id' => $db->escapeNumber($player->getGameID()),
+				'alliance_id_1' => $alliance_id_1,
+				'alliance_id_2' => $alliance_id_2,
+				'game_id' => $player->getGameID(),
 			]);
 		}
 

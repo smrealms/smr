@@ -114,10 +114,10 @@ class Planet {
 		// insert planet into db
 		$db = Database::getInstance();
 		$db->insert('planet', [
-			'game_id' => $db->escapeNumber($gameID),
-			'sector_id' => $db->escapeNumber($sectorID),
-			'inhabitable_time' => $db->escapeNumber($inhabitableTime),
-			'planet_type_id' => $db->escapeNumber($typeID),
+			'game_id' => $gameID,
+			'sector_id' => $sectorID,
+			'inhabitable_time' => $inhabitableTime,
+			'planet_type_id' => $typeID,
 		]);
 		return self::getPlanet($gameID, $sectorID, true);
 	}
@@ -759,7 +759,7 @@ class Planet {
 		$db = Database::getInstance();
 		$db->update(
 			'planet',
-			['planet_type_id' => $db->escapeNumber($num)],
+			['planet_type_id' => $num],
 			$this->SQLID,
 		);
 		$this->typeInfo = PlanetType::getTypeInfo($this->getTypeID());
@@ -826,12 +826,12 @@ class Planet {
 			$db->update(
 				'planet',
 				[
-					'owner_id' => $db->escapeNumber($this->ownerID),
-					'password' => $db->escapeString($this->password),
-					'planet_name' => $db->escapeString($this->planetName),
-					'shields' => $db->escapeNumber($this->shields),
-					'armour' => $db->escapeNumber($this->armour),
-					'drones' => $db->escapeNumber($this->drones),
+					'owner_id' => $this->ownerID,
+					'password' => $this->password,
+					'planet_name' => $this->planetName,
+					'shields' => $this->shields,
+					'armour' => $this->armour,
+					'drones' => $this->drones,
 				],
 				$this->SQLID,
 			);
@@ -845,9 +845,9 @@ class Planet {
 			$db->update(
 				'planet',
 				[
-					'credits' => $db->escapeNumber($this->credits),
-					'bonds' => $db->escapeNumber($this->bonds),
-					'maturity' => $db->escapeNumber($this->maturity),
+					'credits' => $this->credits,
+					'bonds' => $this->bonds,
+					'maturity' => $this->maturity,
 				],
 				$this->SQLID,
 			);
@@ -860,13 +860,13 @@ class Planet {
 				if ($amount != 0) {
 					$db->replace('planet_has_cargo', [
 						...$this->SQLID,
-						'good_id' => $db->escapeNumber($id),
-						'amount' => $db->escapeNumber($amount),
+						'good_id' => $id,
+						'amount' => $amount,
 					]);
 				} else {
 					$db->delete('planet_has_cargo', [
 						...$this->SQLID,
-						'good_id' => $db->escapeNumber($id),
+						'good_id' => $id,
 					]);
 				}
 			}
@@ -877,15 +877,15 @@ class Planet {
 				if (isset($this->mountedWeapons[$orderID])) {
 					$db->replace('planet_has_weapon', [
 						...$this->SQLID,
-						'order_id' => $db->escapeNumber($orderID),
-						'weapon_type_id' => $db->escapeNumber($this->mountedWeapons[$orderID]->getWeaponTypeID()),
+						'order_id' => $orderID,
+						'weapon_type_id' => $this->mountedWeapons[$orderID]->getWeaponTypeID(),
 						'bonus_accuracy' => $db->escapeBoolean($this->mountedWeapons[$orderID]->hasBonusAccuracy()),
 						'bonus_damage' => $db->escapeBoolean($this->mountedWeapons[$orderID]->hasBonusDamage()),
 					]);
 				} else {
 					$db->delete('planet_has_weapon', [
 						...$this->SQLID,
-						'order_id' => $db->escapeNumber($orderID),
+						'order_id' => $orderID,
 					]);
 				}
 			}
@@ -907,13 +907,13 @@ class Planet {
 				if ($this->hasBuilding($id)) {
 					$db->replace('planet_has_building', [
 						...$this->SQLID,
-						'construction_id' => $db->escapeNumber($id),
-						'amount' => $db->escapeNumber($this->getBuilding($id)),
+						'construction_id' => $id,
+						'amount' => $this->getBuilding($id),
 					]);
 				} else {
 					$db->delete('planet_has_building', [
 						...$this->SQLID,
-						'construction_id' => $db->escapeNumber($id),
+						'construction_id' => $id,
 					]);
 				}
 				$this->hasChangedBuildings[$id] = false;
@@ -1019,11 +1019,11 @@ class Planet {
 		$timeComplete = Epoch::time() + $this->getConstructionTime($constructionID);
 		$db = Database::getInstance();
 		$insertID = $db->insert('planet_is_building', [
-			'game_id' => $db->escapeNumber($this->getGameID()),
-			'sector_id' => $db->escapeNumber($this->getSectorID()),
-			'construction_id' => $db->escapeNumber($constructionID),
-			'constructor_id' => $db->escapeNumber($constructor->getAccountID()),
-			'time_complete' => $db->escapeNumber($timeComplete),
+			'game_id' => $this->getGameID(),
+			'sector_id' => $this->getSectorID(),
+			'construction_id' => $constructionID,
+			'constructor_id' => $constructor->getAccountID(),
+			'time_complete' => $timeComplete,
 		]);
 
 		$this->currentlyBuilding[$insertID] = [
@@ -1131,11 +1131,11 @@ class Planet {
 		foreach ($attackers as $attacker) {
 			$attacker->increaseHOF(1, ['Combat', 'Planet', 'Number Of Attacks'], HOF_PUBLIC);
 			$db->replace('player_attacks_planet', [
-				'game_id' => $db->escapeNumber($this->getGameID()),
-				'account_id' => $db->escapeNumber($attacker->getAccountID()),
-				'sector_id' => $db->escapeNumber($this->getSectorID()),
-				'time' => $db->escapeNumber(Epoch::time()),
-				'level' => $db->escapeNumber($this->getLevel()),
+				'game_id' => $this->getGameID(),
+				'account_id' => $attacker->getAccountID(),
+				'sector_id' => $this->getSectorID(),
+				'time' => Epoch::time(),
+				'level' => $this->getLevel(),
 			]);
 		}
 
@@ -1156,14 +1156,14 @@ class Planet {
 				}
 				$text .= '.';
 				$db->insert('news', [
-					'game_id' => $db->escapeNumber($this->getGameID()),
-					'time' => $db->escapeNumber(Epoch::time()),
-					'news_message' => $db->escapeString($text),
-					'type' => $db->escapeString('breaking'),
-					'killer_id' => $db->escapeNumber($trigger->getAccountID()),
-					'killer_alliance' => $db->escapeNumber($trigger->getAllianceID()),
-					'dead_id' => $db->escapeNumber($owner->getAccountID()),
-					'dead_alliance' => $db->escapeNumber($owner->getAllianceID()),
+					'game_id' => $this->getGameID(),
+					'time' => Epoch::time(),
+					'news_message' => $text,
+					'type' => 'breaking',
+					'killer_id' => $trigger->getAccountID(),
+					'killer_alliance' => $trigger->getAllianceID(),
+					'dead_id' => $owner->getAccountID(),
+					'dead_alliance' => $owner->getAllianceID(),
 				]);
 			}
 		}

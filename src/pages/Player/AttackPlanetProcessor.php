@@ -91,14 +91,14 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 		// Add this log to the `combat_logs` database table
 		$db = Database::getInstance();
 		$logId = $db->insert('combat_logs', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'type' => $db->escapeString('PLANET'),
-			'sector_id' => $db->escapeNumber($planet->getSectorID()),
-			'timestamp' => $db->escapeNumber(Epoch::time()),
-			'attacker_id' => $db->escapeNumber($player->getAccountID()),
-			'attacker_alliance_id' => $db->escapeNumber($player->getAllianceID()),
-			'defender_id' => $db->escapeNumber($planetOwner->getAccountID()),
-			'defender_alliance_id' => $db->escapeNumber($planetOwner->getAllianceID()),
+			'game_id' => $player->getGameID(),
+			'type' => 'PLANET',
+			'sector_id' => $planet->getSectorID(),
+			'timestamp' => Epoch::time(),
+			'attacker_id' => $player->getAccountID(),
+			'attacker_alliance_id' => $player->getAllianceID(),
+			'defender_id' => $planetOwner->getAccountID(),
+			'defender_alliance_id' => $planetOwner->getAllianceID(),
 			'result' => $db->escapeObject($results, true),
 		]);
 
@@ -107,8 +107,8 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 				'player',
 				['land_on_planet' => 'FALSE'],
 				[
-					'sector_id' => $db->escapeNumber($planet->getSectorID()),
-					'game_id' => $db->escapeNumber($player->getGameID()),
+					'sector_id' => $planet->getSectorID(),
+					'game_id' => $player->getGameID(),
 				],
 			);
 			$planet->removeOwner();
@@ -133,9 +133,9 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 		foreach ($attackers as $attacker) {
 			if (!$player->equals($attacker)) {
 				$db->replace('sector_message', [
-					'account_id' => $db->escapeNumber($attacker->getAccountID()),
-					'game_id' => $db->escapeNumber($attacker->getGameID()),
-					'message' => $db->escapeString('[ATTACK_RESULTS]' . $logId),
+					'account_id' => $attacker->getAccountID(),
+					'game_id' => $attacker->getGameID(),
+					'message' => '[ATTACK_RESULTS]' . $logId,
 				]);
 			}
 		}

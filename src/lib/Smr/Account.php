@@ -209,14 +209,14 @@ class Account {
 		$db = Database::getInstance();
 		$passwordHash = password_hash($password, PASSWORD_DEFAULT);
 		$db->insert('account', [
-			'login' => $db->escapeString($login),
-			'password' => $db->escapeString($passwordHash),
-			'email' => $db->escapeString($email),
-			'validation_code' => $db->escapeString(random_string(10)),
-			'last_login' => $db->escapeNumber(Epoch::time()),
-			'offset' => $db->escapeNumber($timez),
-			'referral_id' => $db->escapeNumber($referral),
-			'hof_name' => $db->escapeString($login),
+			'login' => $login,
+			'password' => $passwordHash,
+			'email' => $email,
+			'validation_code' => random_string(10),
+			'last_login' => Epoch::time(),
+			'offset' => $timez,
+			'referral_id' => $referral,
+			'hof_name' => $login,
 			'hotkeys' => $db->escapeObject([]),
 		]);
 		return self::getAccountByLogin($login);
@@ -336,33 +336,33 @@ class Account {
 		$db->update(
 			'account',
 			[
-				'email' => $db->escapeString($this->email),
-				'validation_code' => $db->escapeString($this->validation_code),
+				'email' => $this->email,
+				'validation_code' => $this->validation_code,
 				'validated' => $db->escapeBoolean($this->validated),
-				'password' => $db->escapeString($this->passwordHash),
+				'password' => $this->passwordHash,
 				'images' => $db->escapeBoolean($this->images),
-				'password_reset' => $db->escapeString($this->passwordReset),
+				'password_reset' => $this->passwordReset,
 				'use_ajax' => $db->escapeBoolean($this->useAJAX),
-				'mail_banned' => $db->escapeNumber($this->mailBanned),
-				'max_rank_achieved' => $db->escapeNumber($this->maxRankAchieved),
+				'mail_banned' => $this->mailBanned,
+				'max_rank_achieved' => $this->maxRankAchieved,
 				'default_css_enabled' => $db->escapeBoolean($this->defaultCSSEnabled),
 				'center_galaxy_map_on_player' => $db->escapeBoolean($this->centerGalaxyMapOnPlayer),
 				'message_notifications' => $db->escapeNullableObject($this->messageNotifications),
 				'hotkeys' => $db->escapeObject($this->hotkeys),
-				'last_login' => $db->escapeNumber($this->last_login),
+				'last_login' => $this->last_login,
 				'logging' => $db->escapeBoolean($this->logging),
-				'time_format' => $db->escapeString($this->timeFormat),
-				'date_format' => $db->escapeString($this->dateFormat),
-				'discord_id' => $db->escapeNullableString($this->discordId),
-				'irc_nick' => $db->escapeNullableString($this->ircNick),
-				'hof_name' => $db->escapeString($this->hofName),
-				'template' => $db->escapeString($this->template),
-				'colour_scheme' => $db->escapeString($this->colourScheme),
-				'fontsize' => $db->escapeNumber($this->fontSize),
-				'css_link' => $db->escapeNullableString($this->cssLink),
-				'friendly_colour' => $db->escapeNullableString($this->friendlyColour),
-				'neutral_colour' => $db->escapeNullableString($this->neutralColour),
-				'enemy_colour' => $db->escapeNullableString($this->enemyColour),
+				'time_format' => $this->timeFormat,
+				'date_format' => $this->dateFormat,
+				'discord_id' => $this->discordId,
+				'irc_nick' => $this->ircNick,
+				'hof_name' => $this->hofName,
+				'template' => $this->template,
+				'colour_scheme' => $this->colourScheme,
+				'fontsize' => $this->fontSize,
+				'css_link' => $this->cssLink,
+				'friendly_colour' => $this->friendlyColour,
+				'neutral_colour' => $this->neutralColour,
+				'enemy_colour' => $this->enemyColour,
 			],
 			$this->SQLID,
 		);
@@ -384,8 +384,8 @@ class Account {
 
 			$db->delete('account_has_ip', [
 				...$this->SQLID,
-				'time' => $db->escapeNumber($delete_time),
-				'ip' => $db->escapeString($delete_ip),
+				'time' => $delete_time,
+				'ip' => $delete_ip,
 			]);
 		}
 
@@ -401,10 +401,10 @@ class Account {
 		// save...first make sure there isn't one for these keys (someone could double click and get error)
 		$db = Database::getInstance();
 		$db->replace('account_has_ip', [
-			'account_id' => $db->escapeNumber($this->accountID),
-			'time' => $db->escapeNumber(Epoch::time()),
-			'ip' => $db->escapeString($curr_ip),
-			'host' => $db->escapeString($host),
+			'account_id' => $this->accountID,
+			'time' => Epoch::time(),
+			'ip' => $curr_ip,
+			'host' => $host,
 		]);
 	}
 
@@ -547,11 +547,11 @@ class Account {
 		if ($this->isLoggingEnabled()) {
 			$db = Database::getInstance();
 			$db->insert('account_has_logs', [
-				'account_id' => $db->escapeNumber($this->accountID),
-				'microtime' => $db->escapeNumber(Epoch::microtime()),
-				'log_type_id' => $db->escapeNumber($log_type_id),
-				'message' => $db->escapeString($msg),
-				'sector_id' => $db->escapeNumber($sector_id),
+				'account_id' => $this->accountID,
+				'microtime' => Epoch::microtime(),
+				'log_type_id' => $log_type_id,
+				'message' => $msg,
+				'sector_id' => $sector_id,
 			]);
 		}
 	}
@@ -596,15 +596,15 @@ class Account {
 		if ($this->credits == 0 && $this->rewardCredits == 0) {
 			$db->replace('account_has_credits', [
 				...$this->SQLID,
-				'credits_left' => $db->escapeNumber($credits),
-				'reward_credits' => $db->escapeNumber($rewardCredits),
+				'credits_left' => $credits,
+				'reward_credits' => $rewardCredits,
 			]);
 		} else {
 			$db->update(
 				'account_has_credits',
 				[
-					'credits_left' => $db->escapeNumber($credits),
-					'reward_credits' => $db->escapeNumber($rewardCredits),
+					'credits_left' => $credits,
+					'reward_credits' => $rewardCredits,
 				],
 				$this->SQLID,
 			);
@@ -630,13 +630,13 @@ class Account {
 		$db = Database::getInstance();
 		if ($this->credits == 0 && $this->rewardCredits == 0) {
 			$db->replace('account_has_credits', [
-				'account_id' => $db->escapeNumber($this->getAccountID()),
-				'credits_left' => $db->escapeNumber($credits),
+				'account_id' => $this->getAccountID(),
+				'credits_left' => $credits,
 			]);
 		} else {
 			$db->update(
 				'account_has_credits',
-				['credits_left' => $db->escapeNumber($credits)],
+				['credits_left' => $credits],
 				$this->SQLID,
 			);
 		}
@@ -673,13 +673,13 @@ class Account {
 		$db = Database::getInstance();
 		if ($this->credits == 0 && $this->rewardCredits == 0) {
 			$db->replace('account_has_credits', [
-				'account_id' => $db->escapeNumber($this->getAccountID()),
-				'reward_credits' => $db->escapeNumber($credits),
+				'account_id' => $this->getAccountID(),
+				'reward_credits' => $credits,
 			]);
 		} else {
 			$db->update(
 				'account_has_credits',
-				['reward_credits' => $db->escapeNumber($credits)],
+				['reward_credits' => $credits],
 				$this->SQLID,
 			);
 		}
@@ -704,11 +704,11 @@ class Account {
 	public static function doMessageSendingToBox(int $senderID, int $boxTypeID, string $message, int $gameID = 0): void {
 		$db = Database::getInstance();
 		$db->insert('message_boxes', [
-			'box_type_id' => $db->escapeNumber($boxTypeID),
-			'game_id' => $db->escapeNumber($gameID),
-			'message_text' => $db->escapeString($message),
-			'sender_id' => $db->escapeNumber($senderID),
-			'send_time' => $db->escapeNumber(Epoch::time()),
+			'box_type_id' => $boxTypeID,
+			'game_id' => $gameID,
+			'message_text' => $message,
+			'sender_id' => $senderID,
+			'send_time' => Epoch::time(),
 		]);
 	}
 
@@ -796,9 +796,9 @@ class Account {
 		// remember when we sent validation code
 		$db = Database::getInstance();
 		$db->replace('notification', [
-			'notification_type' => $db->escapeString('validation_code'),
-			'account_id' => $db->escapeNumber($this->getAccountID()),
-			'time' => $db->escapeNumber(Epoch::time()),
+			'notification_type' => 'validation_code',
+			'account_id' => $this->getAccountID(),
+			'time' => Epoch::time(),
 		]);
 
 		$emailMessage =
@@ -1059,7 +1059,7 @@ class Account {
 			return;
 		}
 		$db->insert('account_auth', [
-			'account_id' => $db->escapeNumber($this->getAccountID()),
+			'account_id' => $this->getAccountID(),
 			...$params,
 		]);
 	}
@@ -1263,15 +1263,15 @@ class Account {
 		if ($this->points == 0) {
 			$db->insert('account_has_points', [
 				...$this->SQLID,
-				'points' => $db->escapeNumber($numPoints),
-				'last_update' => $db->escapeNumber($lastUpdate ?? Epoch::time()),
+				'points' => $numPoints,
+				'last_update' => $lastUpdate ?? Epoch::time(),
 			]);
 		} elseif ($numPoints <= 0) {
 			$db->delete('account_has_points', $this->SQLID);
 		} else {
-			$data = ['points' => $db->escapeNumber($numPoints)];
+			$data = ['points' => $numPoints];
 			if ($lastUpdate !== null) {
-				$data['last_update'] = $db->escapeNumber(Epoch::time());
+				$data['last_update'] = Epoch::time();
 			}
 			$db->update('account_has_points', $data, $this->SQLID);
 		}
@@ -1348,17 +1348,17 @@ class Account {
 		$db = Database::getInstance();
 		$db->replace('account_is_closed', [
 			...$this->SQLID,
-			'reason_id' => $db->escapeNumber($reasonID),
-			'suspicion' => $db->escapeString($suspicion),
-			'expires' => $db->escapeNumber($expireTime),
+			'reason_id' => $reasonID,
+			'suspicion' => $suspicion,
+			'expires' => $expireTime,
 		]);
 		$db->delete('active_session', $this->SQLID);
 
 		$db->insert('account_has_closing_history', [
 			...$this->SQLID,
-			'time' => $db->escapeNumber(Epoch::time()),
-			'admin_id' => $db->escapeNumber($admin->getAccountID()),
-			'action' => $db->escapeString('Closed'),
+			'time' => Epoch::time(),
+			'admin_id' => $admin->getAccountID(),
+			'action' => 'Closed',
 		]);
 		$db->update(
 			'player',
@@ -1396,9 +1396,9 @@ class Account {
 		$db->delete('account_is_closed', $this->SQLID);
 		$db->insert('account_has_closing_history', [
 			...$this->SQLID,
-			'time' => $db->escapeNumber(Epoch::time()),
-			'admin_id' => $db->escapeNumber($adminID),
-			'action' => $db->escapeString('Opened'),
+			'time' => Epoch::time(),
+			'admin_id' => $adminID,
+			'action' => 'Opened',
 		]);
 		$db->write('UPDATE player SET last_turn_update = GREATEST(:now, last_turn_update) WHERE ' . self::SQL, [
 			'now' => $db->escapeNumber(Epoch::time()),
@@ -1412,7 +1412,7 @@ class Account {
 		if ($currException !== null) {
 			$db->replace('account_exceptions', [
 				...$this->SQLID,
-				'reason' => $db->escapeString($currException),
+				'reason' => $currException,
 			]);
 		}
 	}

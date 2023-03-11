@@ -26,11 +26,11 @@ class CheatingShipCheckProcessor extends AccountPageProcessor {
 		$db = Database::getInstance();
 		$db->update(
 			'ship_has_hardware',
-			['amount' => $db->escapeNumber($max_amount)],
+			['amount' => $max_amount],
 			[
-				'game_id' => $db->escapeNumber($game_id),
-				'account_id' => $db->escapeNumber($account_id),
-				'hardware_type_id' => $db->escapeNumber($hardware_id),
+				'game_id' => $game_id,
+				'account_id' => $account_id,
+				'hardware_type_id' => $hardware_id,
 			],
 		);
 

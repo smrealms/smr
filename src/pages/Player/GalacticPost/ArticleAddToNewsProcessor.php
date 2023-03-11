@@ -23,10 +23,10 @@ class ArticleAddToNewsProcessor extends PlayerPageProcessor {
 		$newsMessage = $dbRecord->getString('text');
 
 		$db->insert('news', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'time' => $db->escapeNumber(Epoch::time()),
-			'news_message' => $db->escapeString($newsMessage),
-			'type' => $db->escapeString('breaking'),
+			'game_id' => $player->getGameID(),
+			'time' => Epoch::time(),
+			'news_message' => $newsMessage,
+			'type' => 'breaking',
 		]);
 
 		$container = new ArticleView($this->articleID, addedToNews: true);

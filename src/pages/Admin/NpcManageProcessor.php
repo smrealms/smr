@@ -29,7 +29,7 @@ class NpcManageProcessor extends AccountPageProcessor {
 			$db->update(
 				'npc_logins',
 				['active' => $db->escapeBoolean($active)],
-				['login' => $db->escapeString($this->login)],
+				['login' => $this->login],
 			);
 		}
 

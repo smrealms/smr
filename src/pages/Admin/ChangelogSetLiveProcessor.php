@@ -17,8 +17,8 @@ class ChangelogSetLiveProcessor extends AccountPageProcessor {
 		$db = Database::getInstance();
 		$db->update(
 			'version',
-			['went_live' => $db->escapeNumber(Epoch::time())],
-			['version_id' => $db->escapeNumber($this->versionID)],
+			['went_live' => Epoch::time()],
+			['version_id' => $this->versionID],
 		);
 
 		// Initialize the next version (since the version set live is not always the

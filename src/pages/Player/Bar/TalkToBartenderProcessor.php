@@ -30,9 +30,9 @@ class TalkToBartenderProcessor extends PlayerPageProcessor {
 				$messageID = $dbResult->record()->getInt('next_message_id');
 
 				$db->insert('bar_tender', [
-					'game_id' => $db->escapeNumber($player->getGameID()),
-					'message_id' => $db->escapeNumber($messageID),
-					'message' => $db->escapeString($gossip),
+					'game_id' => $player->getGameID(),
+					'message_id' => $messageID,
+					'message' => $gossip,
 				]);
 				$player->sendMessageToBox(BOX_BARTENDER, $gossip);
 

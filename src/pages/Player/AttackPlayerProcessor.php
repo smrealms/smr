@@ -100,14 +100,14 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 
 		$db = Database::getInstance();
 		$logId = $db->insert('combat_logs', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'type' => $db->escapeString('PLAYER'),
-			'sector_id' => $db->escapeNumber($sector->getSectorID()),
-			'timestamp' => $db->escapeNumber(Epoch::time()),
-			'attacker_id' => $db->escapeNumber($player->getAccountID()),
-			'attacker_alliance_id' => $db->escapeNumber($player->getAllianceID()),
-			'defender_id' => $db->escapeNumber($this->targetAccountID),
-			'defender_alliance_id' => $db->escapeNumber($targetPlayer->getAllianceID()),
+			'game_id' => $player->getGameID(),
+			'type' => 'PLAYER',
+			'sector_id' => $sector->getSectorID(),
+			'timestamp' => Epoch::time(),
+			'attacker_id' => $player->getAccountID(),
+			'attacker_alliance_id' => $player->getAllianceID(),
+			'defender_id' => $this->targetAccountID,
+			'defender_alliance_id' => $targetPlayer->getAllianceID(),
 			'result' => $db->escapeObject($results, true),
 		]);
 
@@ -116,9 +116,9 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 			foreach ($teamPlayers as $teamPlayer) {
 				if (!$player->equals($teamPlayer)) {
 					$db->replace('sector_message', [
-						'account_id' => $db->escapeNumber($teamPlayer->getAccountID()),
-						'game_id' => $db->escapeNumber($teamPlayer->getGameID()),
-						'message' => $db->escapeString('[ATTACK_RESULTS]' . $logId),
+						'account_id' => $teamPlayer->getAccountID(),
+						'game_id' => $teamPlayer->getGameID(),
+						'message' => '[ATTACK_RESULTS]' . $logId,
 					]);
 				}
 			}

@@ -56,10 +56,10 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 
 			$curr_drink_id++;
 			$db->insert('player_has_drinks', [
-				'account_id' => $db->escapeNumber($player->getAccountID()),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'drink_id' => $db->escapeNumber($curr_drink_id),
-				'time' => $db->escapeNumber(Epoch::time()),
+				'account_id' => $player->getAccountID(),
+				'game_id' => $player->getGameID(),
+				'drink_id' => $curr_drink_id,
+				'time' => Epoch::time(),
 			]);
 
 			if (!BarDrink::isSpecial($drinkName)) {

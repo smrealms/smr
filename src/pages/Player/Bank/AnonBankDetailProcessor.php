@@ -70,13 +70,13 @@ class AnonBankDetailProcessor extends PlayerPageProcessor {
 
 		// Log the bank transaction
 		$db->insert('anon_bank_transactions', [
-			'account_id' => $db->escapeNumber($player->getAccountID()),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'anon_id' => $db->escapeNumber($account_num),
-			'transaction_id' => $db->escapeNumber($trans_id),
-			'transaction' => $db->escapeString($action),
-			'amount' => $db->escapeNumber($amount),
-			'time' => $db->escapeNumber(Epoch::time()),
+			'account_id' => $player->getAccountID(),
+			'game_id' => $player->getGameID(),
+			'anon_id' => $account_num,
+			'transaction_id' => $trans_id,
+			'transaction' => $action,
+			'amount' => $amount,
+			'time' => Epoch::time(),
 		]);
 
 		// Log the player action

@@ -36,11 +36,11 @@ class AlbumModerateProcessor extends AccountPageProcessor {
 			$comment_id = $dbResult->record()->getInt('next_comment_id');
 
 			$db->insert('album_has_comments', [
-				'album_id' => $db->escapeNumber($account_id),
-				'comment_id' => $db->escapeNumber($comment_id),
-				'time' => $db->escapeNumber(Epoch::time()),
+				'album_id' => $account_id,
+				'comment_id' => $comment_id,
+				'time' => Epoch::time(),
 				'post_id' => 0,
-				'msg' => $db->escapeString('<span class="green">*** Picture disabled by an admin</span>'),
+				'msg' => '<span class="green">*** Picture disabled by an admin</span>',
 			]);
 			$db->unlock();
 

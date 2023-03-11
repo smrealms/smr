@@ -115,21 +115,21 @@ class Galaxy {
 		if ($this->isNew) {
 			$db->insert('game_galaxy', [
 				...$this->SQLID,
-				'galaxy_name' => $db->escapeString($this->getName()),
-				'width' => $db->escapeNumber($this->getWidth()),
-				'height' => $db->escapeNumber($this->getHeight()),
-				'galaxy_type' => $db->escapeString($this->getGalaxyType()),
-				'max_force_time' => $db->escapeNumber($this->getMaxForceTime()),
+				'galaxy_name' => $this->getName(),
+				'width' => $this->getWidth(),
+				'height' => $this->getHeight(),
+				'galaxy_type' => $this->getGalaxyType(),
+				'max_force_time' => $this->getMaxForceTime(),
 			]);
 		} elseif ($this->hasChanged) {
 			$db->update(
 				'game_galaxy',
 				[
-					'galaxy_name' => $db->escapeString($this->getName()),
-					'width' => $db->escapeNumber($this->getWidth()),
-					'height' => $db->escapeNumber($this->getHeight()),
-					'galaxy_type' => $db->escapeString($this->getGalaxyType()),
-					'max_force_time' => $db->escapeNumber($this->getMaxForceTime()),
+					'galaxy_name' => $this->getName(),
+					'width' => $this->getWidth(),
+					'height' => $this->getHeight(),
+					'galaxy_type' => $this->getGalaxyType(),
+					'max_force_time' => $this->getMaxForceTime(),
 				],
 				$this->SQLID,
 			);

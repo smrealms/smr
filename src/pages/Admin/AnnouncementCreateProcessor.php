@@ -20,9 +20,9 @@ class AnnouncementCreateProcessor extends AccountPageProcessor {
 		// put the msg into the database
 		$db = Database::getInstance();
 		$db->insert('announcement', [
-			'time' => $db->escapeNumber(Epoch::time()),
-			'admin_id' => $db->escapeNumber($account->getAccountID()),
-			'msg' => $db->escapeString($message),
+			'time' => Epoch::time(),
+			'admin_id' => $account->getAccountID(),
+			'msg' => $message,
 		]);
 
 		(new AdminTools())->go();

@@ -32,20 +32,20 @@ class AllianceBankReportProcessor extends PlayerPageProcessor {
 			$db->update(
 				'alliance_thread',
 				[
-					'time' => $db->escapeNumber(Epoch::time()),
-					'text' => $db->escapeString($text),
+					'time' => Epoch::time(),
+					'text' => $text,
 				],
 				[
-					'thread_id' => $db->escapeNumber($thread_id),
-					'alliance_id' => $db->escapeNumber($alliance_id),
-					'game_id' => $db->escapeNumber($player->getGameID()),
+					'thread_id' => $thread_id,
+					'alliance_id' => $alliance_id,
+					'game_id' => $player->getGameID(),
 					'reply_id' => 1,
 				],
 			);
 			$db->delete('player_read_thread', [
-				'thread_id' => $db->escapeNumber($thread_id),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'alliance_id' => $db->escapeNumber($alliance_id),
+				'thread_id' => $thread_id,
+				'game_id' => $player->getGameID(),
+				'alliance_id' => $alliance_id,
 			]);
 		} else {
 			// There is no "Bank Statement" thread yet
@@ -55,19 +55,19 @@ class AllianceBankReportProcessor extends PlayerPageProcessor {
 			]);
 			$thread_id = $dbResult->record()->getInt('next_id');
 			$db->insert('alliance_thread_topic', [
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'alliance_id' => $db->escapeNumber($alliance_id),
-				'thread_id' => $db->escapeNumber($thread_id),
-				'topic' => $db->escapeString('Bank Statement'),
+				'game_id' => $player->getGameID(),
+				'alliance_id' => $alliance_id,
+				'thread_id' => $thread_id,
+				'topic' => 'Bank Statement',
 			]);
 			$db->insert('alliance_thread', [
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'alliance_id' => $db->escapeNumber($alliance_id),
-				'thread_id' => $db->escapeNumber($thread_id),
+				'game_id' => $player->getGameID(),
+				'alliance_id' => $alliance_id,
+				'thread_id' => $thread_id,
 				'reply_id' => 1,
-				'text' => $db->escapeString($text),
-				'sender_id' => $db->escapeNumber(ACCOUNT_ID_BANK_REPORTER),
-				'time' => $db->escapeNumber(Epoch::time()),
+				'text' => $text,
+				'sender_id' => ACCOUNT_ID_BANK_REPORTER,
+				'time' => Epoch::time(),
 			]);
 		}
 

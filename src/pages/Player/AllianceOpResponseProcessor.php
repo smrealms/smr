@@ -18,10 +18,10 @@ class AllianceOpResponseProcessor extends PlayerPageProcessor {
 
 		$db = Database::getInstance();
 		$db->replace('alliance_has_op_response', [
-			'alliance_id' => $db->escapeNumber($this->allianceID),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'account_id' => $db->escapeNumber($player->getAccountID()),
-			'response' => $db->escapeString($response),
+			'alliance_id' => $this->allianceID,
+			'game_id' => $player->getGameID(),
+			'account_id' => $player->getAccountID(),
+			'response' => $response,
 		]);
 
 		(new AllianceMotd($this->allianceID))->go();

@@ -366,14 +366,14 @@ abstract class AbstractPlayer {
 
 		$startSectorID = 0; // Temporarily put player into non-existent sector
 		$db->insert('player', [
-			'account_id' => $db->escapeNumber($accountID),
-			'game_id' => $db->escapeNumber($gameID),
-			'player_id' => $db->escapeNumber($playerID),
-			'player_name' => $db->escapeString($playerName),
-			'race_id' => $db->escapeNumber($raceID),
-			'sector_id' => $db->escapeNumber($startSectorID),
-			'last_cpl_action' => $db->escapeNumber($time),
-			'last_active' => $db->escapeNumber($time),
+			'account_id' => $accountID,
+			'game_id' => $gameID,
+			'player_id' => $playerID,
+			'player_name' => $playerName,
+			'race_id' => $raceID,
+			'sector_id' => $startSectorID,
+			'last_cpl_action' => $time,
+			'last_active' => $time,
 			'npc' => $db->escapeBoolean($npc),
 			'newbie_status' => $db->escapeBoolean($isNewbie),
 		]);
@@ -545,7 +545,7 @@ abstract class AbstractPlayer {
 		$db = Database::getInstance();
 		$db->replace('ship_has_name', [
 			...$this->SQLID,
-			'ship_name' => $db->escapeString($name),
+			'ship_name' => $name,
 		]);
 	}
 
@@ -741,22 +741,22 @@ abstract class AbstractPlayer {
 		$db = Database::getInstance();
 		// Keep track of the message_id so it can be returned
 		$insertID = $db->insert('message', [
-			'account_id' => $db->escapeNumber($receiverID),
-			'game_id' => $db->escapeNumber($gameID),
-			'message_type_id' => $db->escapeNumber($messageTypeID),
-			'message_text' => $db->escapeString($message),
-			'sender_id' => $db->escapeNumber($senderID),
-			'send_time' => $db->escapeNumber(Epoch::time()),
-			'expire_time' => $db->escapeNumber($expires),
+			'account_id' => $receiverID,
+			'game_id' => $gameID,
+			'message_type_id' => $messageTypeID,
+			'message_text' => $message,
+			'sender_id' => $senderID,
+			'send_time' => Epoch::time(),
+			'expire_time' => $expires,
 			'sender_delete' => $db->escapeBoolean($senderDelete),
 		]);
 
 		if ($unread === true) {
 			// give him the message icon
 			$db->replace('player_has_unread_messages', [
-				'game_id' => $db->escapeNumber($gameID),
-				'account_id' => $db->escapeNumber($receiverID),
-				'message_type_id' => $db->escapeNumber($messageTypeID),
+				'game_id' => $gameID,
+				'account_id' => $receiverID,
+				'message_type_id' => $messageTypeID,
 			]);
 		}
 
@@ -935,14 +935,14 @@ abstract class AbstractPlayer {
 	public function setMessagesRead(int $messageTypeID): void {
 		$db = Database::getInstance();
 		$db->delete('player_has_unread_messages', [
-			'message_type_id' => $db->escapeNumber($messageTypeID),
+			'message_type_id' => $messageTypeID,
 			...$this->SQLID,
 		]);
 		$db->update(
 			'message',
 			['msg_read' => $db->escapeBoolean(true)],
 			[
-				'message_type_id' => $db->escapeNumber($messageTypeID),
+				'message_type_id' => $messageTypeID,
 				...$this->SQLID,
 			],
 		);
@@ -1550,8 +1550,8 @@ abstract class AbstractPlayer {
 		$db = Database::getInstance();
 		$db->insert('player_has_alliance_role', [
 			...$this->SQLID,
-			'role_id' => $db->escapeNumber($roleID),
-			'alliance_id' => $db->escapeNumber($this->getAllianceID()),
+			'role_id' => $roleID,
+			'alliance_id' => $this->getAllianceID(),
 		]);
 
 		$this->actionTaken('JoinAlliance', ['Alliance' => $alliance]);
@@ -1717,8 +1717,8 @@ abstract class AbstractPlayer {
 		$db = Database::getInstance();
 		$db->replace('player_has_relation', [
 			...$this->SQLID,
-			'race_id' => $db->escapeNumber($raceID),
-			'relation' => $db->escapeNumber($this->personalRelations[$raceID]),
+			'race_id' => $raceID,
+			'relation' => $this->personalRelations[$raceID],
 		]);
 	}
 
@@ -1882,11 +1882,11 @@ abstract class AbstractPlayer {
 		$db->update(
 			'player_stored_sector',
 			[
-				'offset_left' => $db->escapeNumber($offsetLeft),
-				'offset_top' => $db->escapeNumber($offsetTop),
+				'offset_left' => $offsetLeft,
+				'offset_top' => $offsetTop,
 			],
 			[
-				'sector_id' => $db->escapeNumber($sectorID),
+				'sector_id' => $sectorID,
 				...$this->SQLID,
 			],
 		);
@@ -1914,8 +1914,8 @@ abstract class AbstractPlayer {
 		$db = Database::getInstance();
 		$db->insert('player_stored_sector', [
 			...$this->SQLID,
-			'sector_id' => $db->escapeNumber($sectorID),
-			'label' => $db->escapeString($label),
+			'sector_id' => $sectorID,
+			'label' => $label,
 			'offset_top' => 1,
 			'offset_left' => 1,
 		]);
@@ -1930,7 +1930,7 @@ abstract class AbstractPlayer {
 
 		$db = Database::getInstance();
 		$db->delete('player_stored_sector', [
-			'sector_id' => $db->escapeNumber($sectorID),
+			'sector_id' => $sectorID,
 			...$this->SQLID,
 		]);
 		unset($this->storedDestinations[$sectorID]);
@@ -2246,13 +2246,13 @@ abstract class AbstractPlayer {
 		$this->getSector()->increaseBattles(1);
 		$db = Database::getInstance();
 		$db->insert('news', [
-			'game_id' => $db->escapeNumber($this->getGameID()),
-			'time' => $db->escapeNumber(Epoch::time()),
-			'news_message' => $db->escapeString($msg),
-			'killer_id' => $db->escapeNumber($killer->getAccountID()),
-			'killer_alliance' => $db->escapeNumber($killer->getAllianceID()),
-			'dead_id' => $db->escapeNumber($this->getAccountID()),
-			'dead_alliance' => $db->escapeNumber($this->getAllianceID()),
+			'game_id' => $this->getGameID(),
+			'time' => Epoch::time(),
+			'news_message' => $msg,
+			'killer_id' => $killer->getAccountID(),
+			'killer_alliance' => $killer->getAllianceID(),
+			'dead_id' => $this->getAccountID(),
+			'dead_alliance' => $this->getAllianceID(),
 		]);
 
 		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by ' . $killer->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()));
@@ -2398,13 +2398,13 @@ abstract class AbstractPlayer {
 		// insert the news entry
 		$db = Database::getInstance();
 		$db->insert('news', [
-			'game_id' => $db->escapeNumber($this->getGameID()),
-			'time' => $db->escapeNumber(Epoch::time()),
-			'news_message' => $db->escapeString($news_message),
-			'killer_id' => $db->escapeNumber($owner->getAccountID()),
-			'killer_alliance' => $db->escapeNumber($owner->getAllianceID()),
-			'dead_id' => $db->escapeNumber($this->getAccountID()),
-			'dead_alliance' => $db->escapeNumber($this->getAllianceID()),
+			'game_id' => $this->getGameID(),
+			'time' => Epoch::time(),
+			'news_message' => $news_message,
+			'killer_id' => $owner->getAccountID(),
+			'killer_alliance' => $owner->getAllianceID(),
+			'dead_id' => $this->getAccountID(),
+			'dead_alliance' => $this->getAllianceID(),
 		]);
 
 		// Player loses 15% experience
@@ -2445,12 +2445,12 @@ abstract class AbstractPlayer {
 		// insert the news entry
 		$db = Database::getInstance();
 		$db->insert('news', [
-			'game_id' => $db->escapeNumber($this->getGameID()),
-			'time' => $db->escapeNumber(Epoch::time()),
-			'news_message' => $db->escapeString($news_message),
-			'killer_id' => $db->escapeNumber(ACCOUNT_ID_PORT),
-			'dead_id' => $db->escapeNumber($this->getAccountID()),
-			'dead_alliance' => $db->escapeNumber($this->getAllianceID()),
+			'game_id' => $this->getGameID(),
+			'time' => Epoch::time(),
+			'news_message' => $news_message,
+			'killer_id' => ACCOUNT_ID_PORT,
+			'dead_id' => $this->getAccountID(),
+			'dead_alliance' => $this->getAllianceID(),
 		]);
 
 		// Player loses between 15% and 20% experience
@@ -2492,13 +2492,13 @@ abstract class AbstractPlayer {
 		// insert the news entry
 		$db = Database::getInstance();
 		$db->insert('news', [
-			'game_id' => $db->escapeNumber($this->getGameID()),
-			'time' => $db->escapeNumber(Epoch::time()),
-			'news_message' => $db->escapeString($news_message),
-			'killer_id' => $db->escapeNumber($planetOwner->getAccountID()),
-			'killer_alliance' => $db->escapeNumber($planetOwner->getAllianceID()),
-			'dead_id' => $db->escapeNumber($this->getAccountID()),
-			'dead_alliance' => $db->escapeNumber($this->getAllianceID()),
+			'game_id' => $this->getGameID(),
+			'time' => Epoch::time(),
+			'news_message' => $news_message,
+			'killer_id' => $planetOwner->getAccountID(),
+			'killer_alliance' => $planetOwner->getAllianceID(),
+			'dead_id' => $this->getAccountID(),
+			'dead_alliance' => $this->getAllianceID(),
 		]);
 
 		// Player loses between 15% and 20% experience
@@ -2778,15 +2778,15 @@ abstract class AbstractPlayer {
 			$db->update(
 				'player_has_mission',
 				[
-					'on_step' => $db->escapeNumber($mission['On Step']),
-					'progress' => $db->escapeNumber($mission['Progress']),
+					'on_step' => $mission['On Step'],
+					'progress' => $mission['Progress'],
 					'unread' => $db->escapeBoolean($mission['Unread']),
-					'starting_sector' => $db->escapeNumber($mission['Starting Sector']),
-					'mission_sector' => $db->escapeNumber($mission['Sector']),
-					'step_fails' => $db->escapeNumber($mission['Expires']),
+					'starting_sector' => $mission['Starting Sector'],
+					'mission_sector' => $mission['Sector'],
+					'step_fails' => $mission['Expires'],
 				],
 				[
-					'mission_id' => $db->escapeNumber($missionID),
+					'mission_id' => $missionID,
 					...$this->SQLID,
 				],
 			);
@@ -2848,13 +2848,13 @@ abstract class AbstractPlayer {
 		$db = Database::getInstance();
 		$db->replace('player_has_mission', [
 			...$this->SQLID,
-			'mission_id' => $db->escapeNumber($missionID),
-			'on_step' => $db->escapeNumber($mission['On Step']),
-			'progress' => $db->escapeNumber($mission['Progress']),
+			'mission_id' => $missionID,
+			'on_step' => $mission['On Step'],
+			'progress' => $mission['Progress'],
 			'unread' => $db->escapeBoolean($mission['Unread']),
-			'starting_sector' => $db->escapeNumber($mission['Starting Sector']),
-			'mission_sector' => $db->escapeNumber($mission['Sector']),
-			'step_fails' => $db->escapeNumber($mission['Expires']),
+			'starting_sector' => $mission['Starting Sector'],
+			'mission_sector' => $mission['Sector'],
+			'step_fails' => $mission['Expires'],
 		]);
 	}
 
@@ -2879,7 +2879,7 @@ abstract class AbstractPlayer {
 			unset($this->missions[$missionID]);
 			$db = Database::getInstance();
 			$db->delete('player_has_mission', [
-				'mission_id' => $db->escapeNumber($missionID),
+				'mission_id' => $missionID,
 				...$this->SQLID,
 			]);
 			return;
@@ -3190,37 +3190,37 @@ abstract class AbstractPlayer {
 			$db->update(
 				'player',
 				[
-					'player_name' => $db->escapeString($this->playerName),
-					'player_id' => $db->escapeNumber($this->playerID),
-					'sector_id' => $db->escapeNumber($this->sectorID),
-					'last_sector_id' => $db->escapeNumber($this->lastSectorID),
-					'turns' => $db->escapeNumber($this->turns),
-					'last_turn_update' => $db->escapeNumber($this->lastTurnUpdate),
-					'newbie_turns' => $db->escapeNumber($this->newbieTurns),
-					'last_news_update' => $db->escapeNumber($this->lastNewsUpdate),
-					'attack_warning' => $db->escapeString($this->attackColour),
+					'player_name' => $this->playerName,
+					'player_id' => $this->playerID,
+					'sector_id' => $this->sectorID,
+					'last_sector_id' => $this->lastSectorID,
+					'turns' => $this->turns,
+					'last_turn_update' => $this->lastTurnUpdate,
+					'newbie_turns' => $this->newbieTurns,
+					'last_news_update' => $this->lastNewsUpdate,
+					'attack_warning' => $this->attackColour,
 					'dead' => $db->escapeBoolean($this->dead),
 					'newbie_status' => $db->escapeBoolean($this->newbieStatus),
 					'land_on_planet' => $db->escapeBoolean($this->landedOnPlanet),
-					'last_active' => $db->escapeNumber($this->lastActive),
-					'last_cpl_action' => $db->escapeNumber($this->lastCPLAction),
-					'race_id' => $db->escapeNumber($this->raceID),
-					'credits' => $db->escapeNumber($this->credits),
-					'experience' => $db->escapeNumber($this->experience),
-					'alignment' => $db->escapeNumber($this->alignment),
-					'military_payment' => $db->escapeNumber($this->militaryPayment),
-					'alliance_id' => $db->escapeNumber($this->allianceID),
-					'alliance_join' => $db->escapeNumber($this->allianceJoinable),
-					'ship_type_id' => $db->escapeNumber($this->shipID),
-					'kills' => $db->escapeNumber($this->kills),
-					'deaths' => $db->escapeNumber($this->deaths),
-					'assists' => $db->escapeNumber($this->assists),
-					'last_port' => $db->escapeNumber($this->lastPort),
-					'bank' => $db->escapeNumber($this->bank),
-					'zoom' => $db->escapeNumber($this->zoom),
+					'last_active' => $this->lastActive,
+					'last_cpl_action' => $this->lastCPLAction,
+					'race_id' => $this->raceID,
+					'credits' => $this->credits,
+					'experience' => $this->experience,
+					'alignment' => $this->alignment,
+					'military_payment' => $this->militaryPayment,
+					'alliance_id' => $this->allianceID,
+					'alliance_join' => $this->allianceJoinable,
+					'ship_type_id' => $this->shipID,
+					'kills' => $this->kills,
+					'deaths' => $this->deaths,
+					'assists' => $this->assists,
+					'last_port' => $this->lastPort,
+					'bank' => $this->bank,
+					'zoom' => $this->zoom,
 					'display_missions' => $db->escapeBoolean($this->displayMissions),
 					'force_drop_messages' => $db->escapeBoolean($this->forceDropMessages),
-					'group_scout_messages' => $db->escapeString($this->scoutMessageGroupType->value),
+					'group_scout_messages' => $this->scoutMessageGroupType->value,
 					'ignore_globals' => $db->escapeBoolean($this->ignoreGlobals),
 					'newbie_warning' => $db->escapeBoolean($this->newbieWarning),
 					'name_changed' => $db->escapeBoolean($this->nameChanged),
@@ -3244,14 +3244,14 @@ abstract class AbstractPlayer {
 		foreach (self::$hasHOFVisChanged as $hofType => $changeType) {
 			if ($changeType == self::HOF_NEW) {
 				$db->insert('hof_visibility', [
-					'type' => $db->escapeString($hofType),
-					'visibility' => $db->escapeString(self::$HOFVis[$hofType]),
+					'type' => $hofType,
+					'visibility' => self::$HOFVis[$hofType],
 				]);
 			} else {
 				$db->update(
 					'hof_visibility',
-					['visibility' => $db->escapeString(self::$HOFVis[$hofType])],
-					['type' => $db->escapeString($hofType)],
+					['visibility' => self::$HOFVis[$hofType]],
+					['type' => $hofType],
 				);
 			}
 			unset(self::$hasHOFVisChanged[$hofType]);
@@ -3263,17 +3263,17 @@ abstract class AbstractPlayer {
 				if ($amount > 0) {
 					$db->insert('player_hof', [
 						...$this->SQLID,
-						'type' => $db->escapeString($hofType),
-						'amount' => $db->escapeNumber($amount),
+						'type' => $hofType,
+						'amount' => $amount,
 					]);
 				}
 			} elseif ($changeType === self::HOF_CHANGED) {
 				$db->update(
 					'player_hof',
-					['amount' => $db->escapeNumber($amount)],
+					['amount' => $amount],
 					[
 						...$this->SQLID,
-						'type' => $db->escapeString($hofType),
+						'type' => $hofType,
 					],
 				);
 			}

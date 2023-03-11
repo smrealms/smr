@@ -42,13 +42,13 @@ class MessageReportProcessor extends PlayerPageProcessor {
 
 		// insert
 		$db->insert('message_notify', [
-			'notify_id' => $db->escapeNumber($notify_id),
-			'game_id' => $db->escapeNumber($player->getGameID()),
+			'notify_id' => $notify_id,
+			'game_id' => $player->getGameID(),
 			'from_id' => $dbRecord->getInt('sender_id'),
 			'to_id' => $dbRecord->getInt('account_id'),
-			'text' => $db->escapeString($dbRecord->getString('message_text')),
-			'sent_time' => $db->escapeNumber($dbRecord->getInt('send_time')),
-			'notify_time' => $db->escapeNumber(Epoch::time()),
+			'text' => $dbRecord->getString('message_text'),
+			'sent_time' => $dbRecord->getInt('send_time'),
+			'notify_time' => Epoch::time(),
 		]);
 
 		$container->go();

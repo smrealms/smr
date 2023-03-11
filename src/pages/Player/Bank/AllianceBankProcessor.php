@@ -119,15 +119,15 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 		// save log
 		$requestExempt = Request::has('requestExempt') ? 1 : 0;
 		$db->insert('alliance_bank_transactions', [
-			'alliance_id' => $db->escapeNumber($alliance_id),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'transaction_id' => $db->escapeNumber($next_id),
-			'time' => $db->escapeNumber(Epoch::time()),
-			'payee_id' => $db->escapeNumber($player->getAccountID()),
-			'reason' => $db->escapeString($message),
-			'transaction' => $db->escapeString($action),
-			'amount' => $db->escapeNumber($amount),
-			'request_exempt' => $db->escapeNumber($requestExempt),
+			'alliance_id' => $alliance_id,
+			'game_id' => $player->getGameID(),
+			'transaction_id' => $next_id,
+			'time' => Epoch::time(),
+			'payee_id' => $player->getAccountID(),
+			'reason' => $message,
+			'transaction' => $action,
+			'amount' => $amount,
+			'request_exempt' => $requestExempt,
 		]);
 
 		// update player credits

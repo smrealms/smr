@@ -20,9 +20,9 @@ class AllianceMessageBoardDeleteThreadProcessor extends PlayerPageProcessor {
 	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 		$sqlParams = [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'alliance_id' => $db->escapeNumber($this->allianceID),
-			'thread_id' => $db->escapeNumber($this->threadID),
+			'game_id' => $player->getGameID(),
+			'alliance_id' => $this->allianceID,
+			'thread_id' => $this->threadID,
 		];
 		$db->delete('alliance_thread', $sqlParams);
 		$db->delete('alliance_thread_topic', $sqlParams);

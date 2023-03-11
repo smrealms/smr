@@ -113,11 +113,11 @@ class WeightedRandom {
 		if ($this->hasChanged === true) {
 			$db = Database::getInstance();
 			$db->replace('weighted_random', [
-				'game_id' => $db->escapeNumber($this->getGameID()),
-				'account_id' => $db->escapeNumber($this->getAccountID()),
-				'type' => $db->escapeString($this->getType()),
-				'type_id' => $db->escapeNumber($this->getTypeID()),
-				'weighting' => $db->escapeNumber($this->getWeighting()),
+				'game_id' => $this->getGameID(),
+				'account_id' => $this->getAccountID(),
+				'type' => $this->getType(),
+				'type_id' => $this->getTypeID(),
+				'weighting' => $this->getWeighting(),
 			]);
 			$this->hasChanged = false;
 		}

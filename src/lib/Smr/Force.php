@@ -403,10 +403,10 @@ class Force {
 				$db->update(
 					'sector_has_forces',
 					[
-						'combat_drones' => $db->escapeNumber($this->combatDrones),
-						'scout_drones' => $db->escapeNumber($this->scoutDrones),
-						'mines' => $db->escapeNumber($this->mines),
-						'expire_time' => $db->escapeNumber($this->expire),
+						'combat_drones' => $this->combatDrones,
+						'scout_drones' => $this->scoutDrones,
+						'mines' => $this->mines,
+						'expire_time' => $this->expire,
 					],
 					$this->SQLID,
 				);
@@ -414,10 +414,10 @@ class Force {
 		} elseif ($this->exists()) {
 			$db->insert('sector_has_forces', [
 				...$this->SQLID,
-				'combat_drones' => $db->escapeNumber($this->combatDrones),
-				'scout_drones' => $db->escapeNumber($this->scoutDrones),
-				'mines' => $db->escapeNumber($this->mines),
-				'expire_time' => $db->escapeNumber($this->expire),
+				'combat_drones' => $this->combatDrones,
+				'scout_drones' => $this->scoutDrones,
+				'mines' => $this->mines,
+				'expire_time' => $this->expire,
 			]);
 			$this->isNew = false;
 		}
@@ -433,8 +433,8 @@ class Force {
 		$db->update(
 			'sector_has_forces',
 			[
-				'refresh_at' => $db->escapeNumber($refreshTime),
-				'refresher' => $db->escapeNumber($player->getAccountID()),
+				'refresh_at' => $refreshTime,
+				'refresher' => $player->getAccountID(),
 			],
 			$this->SQLID,
 		);

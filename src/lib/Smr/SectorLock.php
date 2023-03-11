@@ -75,10 +75,10 @@ class SectorLock {
 		// Insert ourselves into the queue.
 		$db = Database::getInstance();
 		$this->lockID = $db->insert('locks_queue', [
-			'game_id' => $db->escapeNumber($gameID),
-			'account_id' => $db->escapeNumber($accountID),
-			'sector_id' => $db->escapeNumber($sectorID),
-			'timestamp' => $db->escapeNumber(Epoch::time()),
+			'game_id' => $gameID,
+			'account_id' => $accountID,
+			'sector_id' => $sectorID,
+			'timestamp' => Epoch::time(),
 		]);
 
 		// Return once we are next in the queue.

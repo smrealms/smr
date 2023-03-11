@@ -19,12 +19,12 @@ class AllianceInvite {
 	public static function send(int $allianceID, int $gameID, int $receiverAccountID, int $senderAccountID, int $messageID, int $expires): void {
 		$db = Database::getInstance();
 		$db->insert('alliance_invites_player', [
-			'game_id' => $db->escapeNumber($gameID),
-			'account_id' => $db->escapeNumber($receiverAccountID),
-			'alliance_id' => $db->escapeNumber($allianceID),
-			'invited_by_id' => $db->escapeNumber($senderAccountID),
-			'expires' => $db->escapeNumber($expires),
-			'message_id' => $db->escapeNumber($messageID),
+			'game_id' => $gameID,
+			'account_id' => $receiverAccountID,
+			'alliance_id' => $allianceID,
+			'invited_by_id' => $senderAccountID,
+			'expires' => $expires,
+			'message_id' => $messageID,
 		]);
 	}
 
@@ -84,12 +84,12 @@ class AllianceInvite {
 	public function delete(): void {
 		$db = Database::getInstance();
 		$db->delete('alliance_invites_player', [
-			'alliance_id' => $db->escapeNumber($this->allianceID),
-			'game_id' => $db->escapeNumber($this->gameID),
-			'account_id' => $db->escapeNumber($this->receiverAccountID),
+			'alliance_id' => $this->allianceID,
+			'game_id' => $this->gameID,
+			'account_id' => $this->receiverAccountID,
 		]);
 		$db->delete('message', [
-			'message_id' => $db->escapeNumber($this->messageID),
+			'message_id' => $this->messageID,
 		]);
 	}
 

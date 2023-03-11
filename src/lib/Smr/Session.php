@@ -109,9 +109,9 @@ class Session {
 			}
 			if (ENABLE_DEBUG) {
 				$db->insert('debug', [
-					'debug_type' => $db->escapeString('Delay: ' . $file),
-					'account_id' => $db->escapeNumber($this->accountID),
-					'value' => $db->escapeNumber($timeBetweenLoads),
+					'debug_type' => 'Delay: ' . $file,
+					'account_id' => $this->accountID,
+					'value' => $timeBetweenLoads,
 				]);
 			}
 		}
@@ -169,30 +169,30 @@ class Session {
 		$db = Database::getInstance();
 		if (!$this->generate) {
 			$data = [
-				'account_id' => $db->escapeNumber($this->accountID),
-				'game_id' => $db->escapeNumber($this->gameID),
+				'account_id' => $this->accountID,
+				'game_id' => $this->gameID,
 				'session_var' => $db->escapeObject($sessionVar, true),
-				'last_sn' => $db->escapeString($this->SN),
+				'last_sn' => $this->SN,
 			];
 			$conditions = [
-				'session_id' => $db->escapeString($this->sessionID),
+				'session_id' => $this->sessionID,
 			];
 			if ($this->ajax) {
-				$conditions['last_sn'] = $db->escapeString($this->lastSN);
+				$conditions['last_sn'] = $this->lastSN;
 			} else {
-				$data['last_accessed'] = $db->escapeNumber(Epoch::microtime());
+				$data['last_accessed'] = Epoch::microtime();
 			}
 			$db->update('active_session', $data, $conditions);
 		} else {
 			$db->delete('active_session', [
-				'account_id' => $db->escapeNumber($this->accountID),
-				'game_id' => $db->escapeNumber($this->gameID),
+				'account_id' => $this->accountID,
+				'game_id' => $this->gameID,
 			]);
 			$db->insert('active_session', [
-				'session_id' => $db->escapeString($this->sessionID),
-				'account_id' => $db->escapeNumber($this->accountID),
-				'game_id' => $db->escapeNumber($this->gameID),
-				'last_accessed' => $db->escapeNumber(Epoch::microtime()),
+				'session_id' => $this->sessionID,
+				'account_id' => $this->accountID,
+				'game_id' => $this->gameID,
+				'last_accessed' => Epoch::microtime(),
 				'session_var' => $db->escapeObject($sessionVar, true),
 			]);
 			$this->generate = false;
@@ -254,13 +254,13 @@ class Session {
 		$this->gameID = $gameID;
 		$db = Database::getInstance();
 		$db->delete('active_session', [
-			'account_id' => $db->escapeNumber($this->accountID),
-			'game_id' => $db->escapeNumber($this->gameID),
+			'account_id' => $this->accountID,
+			'game_id' => $this->gameID,
 		]);
 		$db->update(
 			'active_session',
-			['game_id' => $db->escapeNumber($this->gameID)],
-			['session_id' => $db->escapeString($this->sessionID)],
+			['game_id' => $this->gameID],
+			['session_id' => $this->sessionID],
 		);
 	}
 
@@ -281,7 +281,7 @@ class Session {
 	public function destroy(): void {
 		$db = Database::getInstance();
 		$db->delete('active_session', [
-			'session_id' => $db->escapeString($this->sessionID),
+			'session_id' => $this->sessionID,
 		]);
 		unset($this->sessionID);
 		unset($this->accountID);
@@ -389,7 +389,7 @@ class Session {
 		$db->update(
 			'active_session',
 			['ajax_returns' => $db->escapeObject($this->ajaxReturns, true)],
-			['session_id' => $db->escapeString($this->sessionID)],
+			['session_id' => $this->sessionID],
 		);
 	}
 

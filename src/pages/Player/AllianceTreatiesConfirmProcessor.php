@@ -27,9 +27,9 @@ class AllianceTreatiesConfirmProcessor extends PlayerPageProcessor {
 
 		$db = Database::getInstance();
 		$db->insert('alliance_treaties', [
-			'alliance_id_1' => $db->escapeNumber($alliance_id_1),
-			'alliance_id_2' => $db->escapeNumber($alliance_id_2),
-			'game_id' => $db->escapeNumber($player->getGameID()),
+			'alliance_id_1' => $alliance_id_1,
+			'alliance_id_2' => $alliance_id_2,
+			'game_id' => $player->getGameID(),
 			'trader_assist' => $db->escapeBoolean($this->terms['trader_assist']),
 			'trader_defend' => $db->escapeBoolean($this->terms['trader_defend']),
 			'trader_nap' => $db->escapeBoolean($this->terms['trader_nap']),

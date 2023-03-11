@@ -31,8 +31,8 @@ class OwnershipProcessor extends PlayerPageProcessor {
 					'password' => null,
 				],
 				[
-					'owner_id' => $db->escapeNumber($player->getAccountID()),
-					'game_id' => $db->escapeNumber($player->getGameID()),
+					'owner_id' => $player->getAccountID(),
+					'game_id' => $player->getGameID(),
 				],
 			);
 

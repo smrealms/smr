@@ -157,10 +157,10 @@ class Alliance {
 
 		// actually create the alliance here
 		$db->insert('alliance', [
-			'alliance_id' => $db->escapeNumber($allianceID),
-			'game_id' => $db->escapeNumber($gameID),
-			'alliance_name' => $db->escapeString($name),
-			'alliance_password' => $db->escapeString(''),
+			'alliance_id' => $allianceID,
+			'game_id' => $gameID,
+			'alliance_name' => $name,
+			'alliance_password' => '',
 			'recruiting' => $db->escapeBoolean(false),
 		]);
 		$db->unlock();
@@ -281,9 +281,9 @@ class Alliance {
 			}
 
 			$db->replace('irc_alliance_has_channel', [
-				'channel' => $db->escapeString($ircChannel),
-				'alliance_id' => $db->escapeNumber($this->getAllianceID()),
-				'game_id' => $db->escapeNumber($this->getGameID()),
+				'channel' => $ircChannel,
+				'alliance_id' => $this->getAllianceID(),
+				'game_id' => $this->getGameID(),
 			]);
 		} else {
 			$db->delete('irc_alliance_has_channel', $this->SQLID);
@@ -516,18 +516,18 @@ class Alliance {
 		$db->update(
 			'alliance',
 			[
-				'alliance_password' => $db->escapeString($this->password),
+				'alliance_password' => $this->password,
 				'recruiting' => $db->escapeBoolean($this->recruiting),
-				'alliance_account' => $db->escapeNumber($this->bank),
-				'alliance_description' => $db->escapeNullableString($this->description),
-				'`mod`' => $db->escapeString($this->motd),
-				'img_src' => $db->escapeString($this->imgSrc),
-				'alliance_kills' => $db->escapeNumber($this->kills),
-				'alliance_deaths' => $db->escapeNumber($this->deaths),
-				'discord_server' => $db->escapeNullableString($this->discordServer),
-				'discord_channel' => $db->escapeNullableString($this->discordChannel),
-				'flagship_id' => $db->escapeNumber($this->flagshipID),
-				'leader_id' => $db->escapeNumber($this->leaderID),
+				'alliance_account' => $this->bank,
+				'alliance_description' => $this->description,
+				'`mod`' => $this->motd,
+				'img_src' => $this->imgSrc,
+				'alliance_kills' => $this->kills,
+				'alliance_deaths' => $this->deaths,
+				'discord_server' => $this->discordServer,
+				'discord_channel' => $this->discordChannel,
+				'flagship_id' => $this->flagshipID,
+				'leader_id' => $this->leaderID,
 			],
 			$this->SQLID,
 		);
@@ -645,11 +645,11 @@ class Alliance {
 		$viewBonds = true;
 		$db = Database::getInstance();
 		$db->insert('alliance_has_roles', [
-			'alliance_id' => $db->escapeNumber($this->getAllianceID()),
-			'game_id' => $db->escapeNumber($this->getGameID()),
-			'role_id' => $db->escapeNumber(ALLIANCE_ROLE_LEADER),
-			'role' => $db->escapeString('Leader'),
-			'with_per_day' => $db->escapeNumber($withPerDay),
+			'alliance_id' => $this->getAllianceID(),
+			'game_id' => $this->getGameID(),
+			'role_id' => ALLIANCE_ROLE_LEADER,
+			'role' => 'Leader',
+			'with_per_day' => $withPerDay,
 			'remove_member' => $db->escapeBoolean($removeMember),
 			'change_pass' => $db->escapeBoolean($changePass),
 			'change_mod' => $db->escapeBoolean($changeMOD),
@@ -695,11 +695,11 @@ class Alliance {
 				break;
 		}
 		$db->insert('alliance_has_roles', [
-			'alliance_id' => $db->escapeNumber($this->getAllianceID()),
-			'game_id' => $db->escapeNumber($this->getGameID()),
-			'role_id' => $db->escapeNumber(ALLIANCE_ROLE_NEW_MEMBER),
-			'role' => $db->escapeString('New Member'),
-			'with_per_day' => $db->escapeNumber($withPerDay),
+			'alliance_id' => $this->getAllianceID(),
+			'game_id' => $this->getGameID(),
+			'role_id' => ALLIANCE_ROLE_NEW_MEMBER,
+			'role' => 'New Member',
+			'with_per_day' => $withPerDay,
 			'remove_member' => $db->escapeBoolean($removeMember),
 			'change_pass' => $db->escapeBoolean($changePass),
 			'change_mod' => $db->escapeBoolean($changeMOD),

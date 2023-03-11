@@ -21,8 +21,8 @@ class WordFilterAddProcessor extends AccountPageProcessor {
 			$msg = '<span class="red bold">ERROR: </span>This word is already filtered!';
 		} else {
 			$db->insert('word_filter', [
-				'word_value' => $db->escapeString($word),
-				'word_replacement' => $db->escapeString($word_replacement),
+				'word_value' => $word,
+				'word_replacement' => $word_replacement,
 			]);
 			$msg = '<span class="yellow">' . $word . '</span> will now be replaced with <span class="yellow">' . $word_replacement . '</span>.';
 		}

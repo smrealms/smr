@@ -167,21 +167,21 @@ function server_msg_352($fp, string $rdata): bool {
 				[
 					'signed_on' => time(),
 					'signed_off' => 0,
-					'user' => $db->escapeString($user),
-					'host' => $db->escapeString($host),
+					'user' => $user,
+					'host' => $host,
 					'registered' => null,
 				],
-				['seen_id' => $db->escapeNumber($seen_id)],
+				['seen_id' => $seen_id],
 			);
 
 		} else {
 			// new nick?
 			$db->insert('irc_seen', [
-				'nick' => $db->escapeString($nick),
-				'user' => $db->escapeString($user),
-				'host' => $db->escapeString($host),
-				'channel' => $db->escapeString($channel),
-				'signed_on' => $db->escapeNumber(time()),
+				'nick' => $nick,
+				'user' => $user,
+				'host' => $host,
+				'channel' => $channel,
+				'signed_on' => time(),
 			]);
 		}
 

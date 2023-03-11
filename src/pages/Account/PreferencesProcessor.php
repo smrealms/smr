@@ -129,8 +129,8 @@ class PreferencesProcessor extends AccountPageProcessor {
 			$db = Database::getInstance();
 			$db->update(
 				'account',
-				['offset' => $db->escapeNumber($timez)],
-				['account_id' => $db->escapeNumber($account->getAccountID())],
+				['offset' => $timez],
+				['account_id' => $account->getAccountID()],
 			);
 			$message = '<span class="green">SUCCESS: </span>You have changed your time offset.';
 

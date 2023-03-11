@@ -36,13 +36,13 @@ class ArticleWriteProcessor extends PlayerPageProcessor {
 			$db->update(
 				'galactic_post_article',
 				[
-					'last_modified' => $db->escapeNumber(Epoch::time()),
-					'text' => $db->escapeString($message),
-					'title' => $db->escapeString($title),
+					'last_modified' => Epoch::time(),
+					'text' => $message,
+					'title' => $title,
 				],
 				[
-					'game_id' => $db->escapeNumber($player->getGameID()),
-					'article_id' => $db->escapeNumber($this->articleID),
+					'game_id' => $player->getGameID(),
+					'article_id' => $this->articleID,
 				],
 			);
 			(new ArticleView($this->articleID))->go();
@@ -61,17 +61,17 @@ class ArticleWriteProcessor extends PlayerPageProcessor {
 			$num = $dbResult->record()->getInt('next_article_id');
 
 			$db->insert('galactic_post_article', [
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'article_id' => $db->escapeNumber($num),
-				'writer_id' => $db->escapeNumber($player->getAccountID()),
-				'title' => $db->escapeString($title),
-				'text' => $db->escapeString($message),
-				'last_modified' => $db->escapeNumber(Epoch::time()),
+				'game_id' => $player->getGameID(),
+				'article_id' => $num,
+				'writer_id' => $player->getAccountID(),
+				'title' => $title,
+				'text' => $message,
+				'last_modified' => Epoch::time(),
 			]);
 			$db->update(
 				'galactic_post_writer',
-				['last_wrote' => $db->escapeNumber(Epoch::time())],
-				['account_id' => $db->escapeNumber($player->getAccountID())],
+				['last_wrote' => Epoch::time()],
+				['account_id' => $player->getAccountID()],
 			);
 			$msg = '<span class="green">SUCCESS</span>: Your article has been submitted.';
 			$container = new CurrentSector(message: $msg);

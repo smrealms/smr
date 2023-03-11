@@ -169,24 +169,24 @@ class Sector {
 		if ($this->isNew) {
 			$db->insert('sector', [
 				...$this->SQLID,
-				'galaxy_id' => $db->escapeNumber($this->getGalaxyID()),
-				'link_up' => $db->escapeNumber($this->getLinkUp()),
-				'link_down' => $db->escapeNumber($this->getLinkDown()),
-				'link_left' => $db->escapeNumber($this->getLinkLeft()),
-				'link_right' => $db->escapeNumber($this->getLinkRight()),
-				'warp' => $db->escapeNumber($this->getWarp()),
+				'galaxy_id' => $this->getGalaxyID(),
+				'link_up' => $this->getLinkUp(),
+				'link_down' => $this->getLinkDown(),
+				'link_left' => $this->getLinkLeft(),
+				'link_right' => $this->getLinkRight(),
+				'warp' => $this->getWarp(),
 			]);
 		} elseif ($this->hasChanged) {
 			$db->update(
 				'sector',
 				[
-					'battles' => $db->escapeNumber($this->getBattles()),
-					'galaxy_id' => $db->escapeNumber($this->getGalaxyID()),
-					'link_up' => $db->escapeNumber($this->getLinkUp()),
-					'link_right' => $db->escapeNumber($this->getLinkRight()),
-					'link_down' => $db->escapeNumber($this->getLinkDown()),
-					'link_left' => $db->escapeNumber($this->getLinkLeft()),
-					'warp' => $db->escapeNumber($this->getWarp()),
+					'battles' => $this->getBattles(),
+					'galaxy_id' => $this->getGalaxyID(),
+					'link_up' => $this->getLinkUp(),
+					'link_right' => $this->getLinkRight(),
+					'link_down' => $this->getLinkDown(),
+					'link_left' => $this->getLinkLeft(),
+					'warp' => $this->getWarp(),
 				],
 				$this->SQLID,
 			);
@@ -205,7 +205,7 @@ class Sector {
 			$db = Database::getInstance();
 			$db->delete('player_visited_sector', [
 				...$this->SQLID,
-				'account_id' => $db->escapeNumber($player->getAccountID()),
+				'account_id' => $player->getAccountID(),
 			]);
 		}
 		$this->visited[$player->getAccountID()] = true;
@@ -269,7 +269,7 @@ class Sector {
 			['refresher' => 0],
 			[
 				...$this->SQLID,
-				'refresher' => $db->escapeNumber($player->getAccountID()),
+				'refresher' => $player->getAccountID(),
 			],
 		);
 	}

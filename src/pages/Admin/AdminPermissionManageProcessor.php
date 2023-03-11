@@ -21,15 +21,15 @@ class AdminPermissionManageProcessor extends AccountPageProcessor {
 			// delete everything first
 			$db = Database::getInstance();
 			$db->delete('account_has_permission', [
-				'account_id' => $db->escapeNumber($this->adminAccountID),
+				'account_id' => $this->adminAccountID,
 			]);
 
 			// Grant permissions
 			$permissions = Request::getIntArray('permission_ids', []);
 			foreach ($permissions as $permission_id) {
 				$db->replace('account_has_permission', [
-					'account_id' => $db->escapeNumber($this->adminAccountID),
-					'permission_id' => $db->escapeNumber($permission_id),
+					'account_id' => $this->adminAccountID,
+					'permission_id' => $permission_id,
 				]);
 			}
 
@@ -38,8 +38,8 @@ class AdminPermissionManageProcessor extends AccountPageProcessor {
 				// This might overwrite an existing unrelated tag.
 				$tag = '<span class="blue">Admin</span>';
 				$db->replace('cpl_tag', [
-					'account_id' => $db->escapeNumber($this->adminAccountID),
-					'tag' => $db->escapeString($tag),
+					'account_id' => $this->adminAccountID,
+					'tag' => $tag,
 					'custom' => 0,
 				]);
 			} elseif ($hadAdminTag) {
@@ -47,7 +47,7 @@ class AdminPermissionManageProcessor extends AccountPageProcessor {
 				// otherwise we might accidentally delete an unrelated tag.
 				$db->delete('cpl_tag', [
 					'custom' => 0,
-					'account_id' => $db->escapeNumber($this->adminAccountID),
+					'account_id' => $this->adminAccountID,
 				]);
 			}
 		}

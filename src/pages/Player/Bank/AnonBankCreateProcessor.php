@@ -23,10 +23,10 @@ class AnonBankCreateProcessor extends PlayerPageProcessor {
 		$nextID = $dbResult->record()->getInt('max_id') + 1;
 
 		$db->insert('anon_bank', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'anon_id' => $db->escapeNumber($nextID),
-			'owner_id' => $db->escapeNumber($player->getAccountID()),
-			'password' => $db->escapeString($password),
+			'game_id' => $player->getGameID(),
+			'anon_id' => $nextID,
+			'owner_id' => $player->getAccountID(),
+			'password' => $password,
 			'amount' => 0,
 		]);
 

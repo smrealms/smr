@@ -121,7 +121,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 		$db->update(
 			'sector',
 			['warp' => 0],
-			['game_id' => $db->escapeNumber($gameID)],
+			['game_id' => $gameID],
 		);
 
 		// Many sectors will have their IDs shifted up or down, so we need to modify

@@ -71,8 +71,8 @@ class CouncilVoting {
 			]);
 
 			$db->delete('player_votes_relation', [
-				'account_id' => $db->escapeNumber($account_id),
-				'game_id' => $db->escapeNumber($gameID),
+				'account_id' => $account_id,
+				'game_id' => $gameID,
 			]);
 		}
 	}
@@ -175,9 +175,9 @@ class CouncilVoting {
 					// get news message
 					$news = 'The [race=' . $race_id_1 . '] have declared <span class="red">WAR</span> on the [race=' . $race_id_2 . ']';
 					$db->insert('news', [
-						'game_id' => $db->escapeNumber($gameID),
-						'time' => $db->escapeNumber(Epoch::time()),
-						'news_message' => $db->escapeString($news),
+						'game_id' => $gameID,
+						'time' => Epoch::time(),
+						'news_message' => $news,
 					]);
 				} elseif ($type == 'PEACE') {
 					// get 'yes' votes
@@ -225,9 +225,9 @@ class CouncilVoting {
 						//get news message
 						$news = 'The [race=' . $race_id_1 . '] have signed a <span class="dgreen">PEACE</span> treaty with the [race=' . $race_id_2 . ']';
 						$db->insert('news', [
-							'game_id' => $db->escapeNumber($gameID),
-							'time' => $db->escapeNumber(Epoch::time()),
-							'news_message' => $db->escapeString($news),
+							'game_id' => $gameID,
+							'time' => Epoch::time(),
+							'news_message' => $news,
 						]);
 					}
 				}

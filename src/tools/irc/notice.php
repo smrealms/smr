@@ -26,8 +26,8 @@ function notice_nickserv_registered_user($fp, string $rdata): bool {
 
 			$db->update(
 				'irc_seen',
-				['registered_nick' => $db->escapeString($registeredNick)],
-				['seen_id' => $db->escapeNumber($seen_id)],
+				['registered_nick' => $registeredNick],
+				['seen_id' => $seen_id],
 			);
 		}
 

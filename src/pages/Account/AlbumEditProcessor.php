@@ -103,16 +103,16 @@ class AlbumEditProcessor extends AccountPageProcessor {
 				[
 					'approved' => 'TBC',
 					'disabled' => 'FALSE',
-					'location' => $db->escapeString($location),
-					'email' => $db->escapeString($email),
-					'website' => $db->escapeString($website),
-					'day' => $db->escapeNumber($day),
-					'month' => $db->escapeNumber($month),
-					'year' => $db->escapeNumber($year),
-					'other' => $db->escapeString($other),
-					'last_changed' => $db->escapeNumber(Epoch::time()),
+					'location' => $location,
+					'email' => $email,
+					'website' => $website,
+					'day' => $day,
+					'month' => $month,
+					'year' => $year,
+					'other' => $other,
+					'last_changed' => Epoch::time(),
 				],
-				['account_id' => $db->escapeNumber($account->getAccountID())],
+				['account_id' => $account->getAccountID()],
 			);
 		} else {
 			// if he didn't upload a picture before
@@ -125,17 +125,17 @@ class AlbumEditProcessor extends AccountPageProcessor {
 
 			// add album entry
 			$db->insert('album', [
-				'account_id' => $db->escapeNumber($account->getAccountID()),
-				'location' => $db->escapeString($location),
-				'email' => $db->escapeString($email),
-				'website' => $db->escapeString($website),
-				'day' => $db->escapeNumber($day),
-				'month' => $db->escapeNumber($month),
-				'year' => $db->escapeNumber($year),
-				'other' => $db->escapeString($other),
-				'created' => $db->escapeNumber(Epoch::time()),
-				'last_changed' => $db->escapeNumber(Epoch::time()),
-				'approved' => $db->escapeString('TBC'),
+				'account_id' => $account->getAccountID(),
+				'location' => $location,
+				'email' => $email,
+				'website' => $website,
+				'day' => $day,
+				'month' => $month,
+				'year' => $year,
+				'other' => $other,
+				'created' => Epoch::time(),
+				'last_changed' => Epoch::time(),
+				'approved' => 'TBC',
 			]);
 		}
 
@@ -149,11 +149,11 @@ class AlbumEditProcessor extends AccountPageProcessor {
 			$comment_id = $dbResult->record()->getInt('next_comment_id');
 
 			$db->insert('album_has_comments', [
-				'album_id' => $db->escapeNumber($account->getAccountID()),
-				'comment_id' => $db->escapeNumber($comment_id),
-				'time' => $db->escapeNumber(Epoch::time()),
+				'album_id' => $account->getAccountID(),
+				'comment_id' => $comment_id,
+				'time' => Epoch::time(),
 				'post_id' => 0,
-				'msg' => $db->escapeString($comment),
+				'msg' => $comment,
 			]);
 			$db->unlock();
 		}

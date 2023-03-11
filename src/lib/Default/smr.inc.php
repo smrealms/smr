@@ -371,8 +371,8 @@ function do_voodoo(): never {
 					if (ENABLE_DEBUG) {
 						$db = Database::getInstance();
 						$db->insert('debug', [
-							'debug_type' => $db->escapeString('SPAM'),
-							'account_id' => $db->escapeNumber($account->getAccountID()),
+							'debug_type' => 'SPAM',
+							'account_id' => $account->getAccountID(),
 							'value' => 0,
 							'value_2' => 0,
 						]);

@@ -24,9 +24,9 @@ class ArticleAddToPaperProcessor extends PlayerPageProcessor {
 			create_error('You can only have 8 articles per paper.');
 		}
 		$db->insert('galactic_post_paper_content', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'paper_id' => $db->escapeNumber($this->paperID),
-			'article_id' => $db->escapeNumber($this->articleID),
+			'game_id' => $player->getGameID(),
+			'paper_id' => $this->paperID,
+			'article_id' => $this->articleID,
 		]);
 		//we now have that article in the paper
 		$container = new ArticleView();

@@ -197,9 +197,9 @@ try {
 		}
 	}
 	$db->replace('multi_checking_cookie', [
-		'account_id' => $db->escapeNumber($account->getAccountID()),
-		'array' => $db->escapeString($new),
-		'`use`' => $db->escapeString($use),
+		'account_id' => $account->getAccountID(),
+		'array' => $new,
+		'`use`' => $use,
 	]);
 	//now we update their cookie with the newest info
 	setcookie('Session_Info', $new, Epoch::time() + 157680000);
@@ -215,7 +215,7 @@ try {
 	]);
 	//check to see if we need to remove player_has_unread
 	$db->delete('player_has_unread_messages', [
-		'account_id' => $db->escapeNumber($account->getAccountID()),
+		'account_id' => $account->getAccountID(),
 	]);
 	$db->write('
 		INSERT INTO player_has_unread_messages (game_id, account_id, message_type_id)

@@ -190,11 +190,11 @@ function debug(string $message, mixed $debugObject = null): void {
 		$db = Database::getInstance();
 		$logID = $db->insert('npc_logs', [
 			'script_id' => defined('SCRIPT_ID') ? SCRIPT_ID : 0,
-			'npc_id' => $db->escapeNumber($accountID),
+			'npc_id' => $accountID,
 			'time' => 'NOW()',
-			'message' => $db->escapeString($message),
-			'debug_info' => $db->escapeString(var_export($debugObject, true)),
-			'var' => $db->escapeString(var_export($var, true)),
+			'message' => $message,
+			'debug_info' => var_export($debugObject, true),
+			'var' => var_export($var, true),
 		]);
 
 		// On the first call to debug, we need to update the script_id retroactively
@@ -259,7 +259,7 @@ function releaseNPC(): void {
 	$changedRows = $db->update(
 		'npc_logins',
 		['working' => $db->escapeBoolean(false)],
-		['login' => $db->escapeString($login)],
+		['login' => $login],
 	);
 	if ($changedRows > 0) {
 		debug('Released NPC: ' . $login);
@@ -325,7 +325,7 @@ function changeNPCLogin(): void {
 	$db->update(
 		'npc_logins',
 		['working' => $db->escapeBoolean(true)],
-		['login' => $db->escapeString($account->getLogin())],
+		['login' => $account->getLogin()],
 	);
 	debug('Chosen NPC: login = ' . $account->getLogin() . ', game = ' . $session->getGameID() . ', player = ' . $session->getPlayer()->getPlayerName());
 }
@@ -572,14 +572,14 @@ function findRoutes(AbstractPlayer $player): array {
 	}
 
 	$db->insert('route_cache', [
-		'game_id' => $db->escapeNumber($player->getGameID()),
-		'max_ports' => $db->escapeNumber($maxNumberOfPorts),
+		'game_id' => $player->getGameID(),
+		'max_ports' => $maxNumberOfPorts,
 		'goods_allowed' => $db->escapeObject($tradeGoods),
 		'races_allowed' => $db->escapeObject($tradeRaces),
-		'start_sector_id' => $db->escapeNumber($startSectorID),
-		'end_sector_id' => $db->escapeNumber($endSectorID),
-		'routes_for_port' => $db->escapeNumber($routesForPort),
-		'max_distance' => $db->escapeNumber($maxDistance),
+		'start_sector_id' => $startSectorID,
+		'end_sector_id' => $endSectorID,
+		'routes_for_port' => $routesForPort,
+		'max_distance' => $maxDistance,
 		'routes' => $db->escapeObject($routesMerged, true),
 	]);
 	debug('Found Routes: #' . count($routesMerged));

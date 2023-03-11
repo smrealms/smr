@@ -27,10 +27,10 @@ class PaperPublishProcessor extends PlayerPageProcessor {
 		// Update the online_since column
 		$db->update(
 			'galactic_post_paper',
-			['online_since' => $db->escapeNumber(Epoch::time())],
+			['online_since' => Epoch::time()],
 			[
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'paper_id' => $db->escapeNumber($this->paperID),
+				'game_id' => $player->getGameID(),
+				'paper_id' => $this->paperID,
 			],
 		);
 

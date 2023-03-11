@@ -44,7 +44,7 @@ class ManageDraftLeadersProcessor extends AccountPageProcessor {
 			} else {
 				$db->insert('draft_leaders', [
 					...$selectedPlayer->SQLID,
-					'home_sector_id' => $db->escapeNumber($homeSectorID),
+					'home_sector_id' => $homeSectorID,
 				]);
 			}
 		} elseif ($action == 'Remove') {

@@ -46,9 +46,9 @@ class AllianceMessageBoardView extends PlayerPage {
 		$db = Database::getInstance();
 		$db->replace('player_read_thread', [
 			...$player->SQLID,
-			'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
-			'thread_id' => $db->escapeNumber($thread_id),
-			'time' => $db->escapeNumber(Epoch::time() + 2),
+			'alliance_id' => $alliance->getAllianceID(),
+			'thread_id' => $thread_id,
+			'time' => Epoch::time() + 2,
 		]);
 
 		$mbWrite = true;

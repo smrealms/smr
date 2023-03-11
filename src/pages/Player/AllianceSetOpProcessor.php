@@ -20,12 +20,12 @@ class AllianceSetOpProcessor extends PlayerPageProcessor {
 		if ($this->cancel) {
 			// just get rid of op
 			$db->delete('alliance_has_op', [
-				'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-				'game_id' => $db->escapeNumber($player->getGameID()),
+				'alliance_id' => $player->getAllianceID(),
+				'game_id' => $player->getGameID(),
 			]);
 			$db->delete('alliance_has_op_response', [
-				'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-				'game_id' => $db->escapeNumber($player->getGameID()),
+				'alliance_id' => $player->getAllianceID(),
+				'game_id' => $player->getGameID(),
 			]);
 
 			// Delete the announcement from alliance members message boxes
@@ -51,9 +51,9 @@ class AllianceSetOpProcessor extends PlayerPageProcessor {
 
 			// add op to db
 			$db->insert('alliance_has_op', [
-				'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'time' => $db->escapeNumber($time),
+				'alliance_id' => $player->getAllianceID(),
+				'game_id' => $player->getGameID(),
+				'time' => $time,
 			]);
 
 			// Send an alliance message that expires at the time of the op.

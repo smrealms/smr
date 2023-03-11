@@ -17,20 +17,20 @@ class SetPoliticalRelationsProcessor extends BetaFunctionsPageProcessor {
 		$db = Database::getInstance();
 		$db->update(
 			'race_has_relation',
-			['relation' => $db->escapeNumber($amount)],
+			['relation' => $amount],
 			[
-				'race_id_1' => $db->escapeNumber($player->getRaceID()),
-				'race_id_2' => $db->escapeNumber($race),
-				'game_id' => $db->escapeNumber($player->getGameID()),
+				'race_id_1' => $player->getRaceID(),
+				'race_id_2' => $race,
+				'game_id' => $player->getGameID(),
 			],
 		);
 		$db->update(
 			'race_has_relation',
-			['relation' => $db->escapeNumber($amount)],
+			['relation' => $amount],
 			[
-				'race_id_1' => $db->escapeNumber($race),
-				'race_id_2' => $db->escapeNumber($player->getRaceID()),
-				'game_id' => $db->escapeNumber($player->getGameID()),
+				'race_id_1' => $race,
+				'race_id_2' => $player->getRaceID(),
+				'game_id' => $player->getGameID(),
 			],
 		);
 	}

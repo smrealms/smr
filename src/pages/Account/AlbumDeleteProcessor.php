@@ -13,11 +13,11 @@ class AlbumDeleteProcessor extends AccountPageProcessor {
 		if (Request::getBool('action')) {
 			$db = Database::getInstance();
 			$db->delete('album', [
-				'account_id' => $db->escapeNumber($account->getAccountID()),
+				'account_id' => $account->getAccountID(),
 			]);
 
 			$db->delete('album_has_comments', [
-				'album_id' => $db->escapeNumber($account->getAccountID()),
+				'album_id' => $account->getAccountID(),
 			]);
 		}
 

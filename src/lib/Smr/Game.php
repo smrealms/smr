@@ -123,46 +123,46 @@ class Game {
 		$db = Database::getInstance();
 		if ($this->isNew) {
 			$db->insert('game', [
-				'game_id' => $db->escapeNumber($this->getGameID()),
-				'game_name' => $db->escapeString($this->getName()),
-				'game_description' => $db->escapeString($this->getDescription()),
-				'join_time' => $db->escapeNumber($this->getJoinTime()),
-				'start_time' => $db->escapeNumber($this->getStartTime()),
-				'end_time' => $db->escapeNumber($this->getEndTime()),
-				'max_players' => $db->escapeNumber($this->getMaxPlayers()),
-				'max_turns' => $db->escapeNumber($this->getMaxTurns()),
-				'start_turns' => $db->escapeNumber($this->getStartTurnHours()),
-				'game_type' => $db->escapeNumber($this->gameTypeID),
-				'credits_needed' => $db->escapeNumber($this->getCreditsNeeded()),
-				'game_speed' => $db->escapeNumber($this->getGameSpeed()),
+				'game_id' => $this->getGameID(),
+				'game_name' => $this->getName(),
+				'game_description' => $this->getDescription(),
+				'join_time' => $this->getJoinTime(),
+				'start_time' => $this->getStartTime(),
+				'end_time' => $this->getEndTime(),
+				'max_players' => $this->getMaxPlayers(),
+				'max_turns' => $this->getMaxTurns(),
+				'start_turns' => $this->getStartTurnHours(),
+				'game_type' => $this->gameTypeID,
+				'credits_needed' => $this->getCreditsNeeded(),
+				'game_speed' => $this->getGameSpeed(),
 				'enabled' => $db->escapeBoolean($this->isEnabled()),
 				'ignore_stats' => $db->escapeBoolean($this->isIgnoreStats()),
-				'alliance_max_players' => $db->escapeNumber($this->getAllianceMaxPlayers()),
-				'alliance_max_vets' => $db->escapeNumber($this->getAllianceMaxVets()),
-				'starting_credits' => $db->escapeNumber($this->getStartingCredits()),
+				'alliance_max_players' => $this->getAllianceMaxPlayers(),
+				'alliance_max_vets' => $this->getAllianceMaxVets(),
+				'starting_credits' => $this->getStartingCredits(),
 			]);
 		} elseif ($this->hasChanged) {
 			$db->update(
 				'game',
 				[
-					'game_name' => $db->escapeString($this->getName()),
-					'game_description' => $db->escapeString($this->getDescription()),
-					'join_time' => $db->escapeNumber($this->getJoinTime()),
-					'start_time' => $db->escapeNumber($this->getStartTime()),
-					'end_time' => $db->escapeNumber($this->getEndTime()),
-					'max_players' => $db->escapeNumber($this->getMaxPlayers()),
-					'max_turns' => $db->escapeNumber($this->getMaxTurns()),
-					'start_turns' => $db->escapeNumber($this->getStartTurnHours()),
-					'game_type' => $db->escapeNumber($this->gameTypeID),
-					'credits_needed' => $db->escapeNumber($this->getCreditsNeeded()),
-					'game_speed' => $db->escapeNumber($this->getGameSpeed()),
+					'game_name' => $this->getName(),
+					'game_description' => $this->getDescription(),
+					'join_time' => $this->getJoinTime(),
+					'start_time' => $this->getStartTime(),
+					'end_time' => $this->getEndTime(),
+					'max_players' => $this->getMaxPlayers(),
+					'max_turns' => $this->getMaxTurns(),
+					'start_turns' => $this->getStartTurnHours(),
+					'game_type' => $this->gameTypeID,
+					'credits_needed' => $this->getCreditsNeeded(),
+					'game_speed' => $this->getGameSpeed(),
 					'enabled' => $db->escapeBoolean($this->isEnabled()),
 					'ignore_stats' => $db->escapeBoolean($this->isIgnoreStats()),
-					'alliance_max_players' => $db->escapeNumber($this->getAllianceMaxPlayers()),
-					'alliance_max_vets' => $db->escapeNumber($this->getAllianceMaxVets()),
-					'starting_credits' => $db->escapeNumber($this->getStartingCredits()),
+					'alliance_max_players' => $this->getAllianceMaxPlayers(),
+					'alliance_max_vets' => $this->getAllianceMaxVets(),
+					'starting_credits' => $this->getStartingCredits(),
 				],
-				['game_id' => $db->escapeNumber($this->getGameID())],
+				['game_id' => $this->getGameID()],
 			);
 		}
 		$this->isNew = false;
@@ -445,10 +445,10 @@ class Game {
 					$amount = $relations;
 				}
 				$db->replace('race_has_relation', [
-					'game_id' => $db->escapeNumber($this->getGameID()),
-					'race_id_1' => $db->escapeNumber($raceID1),
-					'race_id_2' => $db->escapeNumber($raceID2),
-					'relation' => $db->escapeNumber($amount),
+					'game_id' => $this->getGameID(),
+					'race_id_1' => $raceID1,
+					'race_id_2' => $raceID2,
+					'relation' => $amount,
 				]);
 			}
 		}

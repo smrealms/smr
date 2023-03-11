@@ -110,8 +110,8 @@ class Location {
 		self::getSectorLocations($gameID, $sectorID); // make sure cache is populated
 		$db = Database::getInstance();
 		$db->insert('location', [
-			'game_id' => $db->escapeNumber($gameID),
-			'sector_id' => $db->escapeNumber($sectorID),
+			'game_id' => $gameID,
+			'sector_id' => $sectorID,
 			...$location->SQLID,
 		]);
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID][$location->getTypeID()] = $location;
@@ -129,10 +129,10 @@ class Location {
 		$db = Database::getInstance();
 		$db->update(
 			'location',
-			['sector_id' => $db->escapeNumber($newSectorID)],
+			['sector_id' => $newSectorID],
 			[
-				'game_id' => $db->escapeNumber($gameID),
-				'sector_id' => $db->escapeNumber($oldSectorID),
+				'game_id' => $gameID,
+				'sector_id' => $oldSectorID,
 				...$location->SQLID,
 			],
 		);
@@ -146,8 +146,8 @@ class Location {
 	public static function removeSectorLocations(int $gameID, int $sectorID): void {
 		$db = Database::getInstance();
 		$db->delete('location', [
-			'game_id' => $db->escapeNumber($gameID),
-			'sector_id' => $db->escapeNumber($sectorID),
+			'game_id' => $gameID,
+			'sector_id' => $sectorID,
 		]);
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] = [];
 	}
@@ -215,7 +215,7 @@ class Location {
 		$db = Database::getInstance();
 		$db->update(
 			'location_type',
-			['location_name' => $db->escapeString($this->name)],
+			['location_name' => $this->name],
 			$this->SQLID,
 		);
 	}
@@ -379,7 +379,7 @@ class Location {
 		}
 		$db->insert('location_sells_hardware', [
 			...$this->SQLID,
-			'hardware_type_id' => $db->escapeNumber($hardwareTypeID),
+			'hardware_type_id' => $hardwareTypeID,
 		]);
 		$this->hardwareSold[$hardwareTypeID] = HardwareType::get($hardwareTypeID);
 	}
@@ -391,7 +391,7 @@ class Location {
 		$db = Database::getInstance();
 		$db->delete('location_sells_hardware', [
 			...$this->SQLID,
-			'hardware_type_id' => $db->escapeNumber($hardwareTypeID),
+			'hardware_type_id' => $hardwareTypeID,
 		]);
 		unset($this->hardwareSold[$hardwareTypeID]);
 	}
@@ -438,7 +438,7 @@ class Location {
 		$db = Database::getInstance();
 		$db->insert('location_sells_ships', [
 			...$this->SQLID,
-			'ship_type_id' => $db->escapeNumber($shipTypeID),
+			'ship_type_id' => $shipTypeID,
 		]);
 		$this->shipsSold[$shipTypeID] = $ship;
 	}
@@ -450,7 +450,7 @@ class Location {
 		$db = Database::getInstance();
 		$db->delete('location_sells_ships', [
 			...$this->SQLID,
-			'ship_type_id' => $db->escapeNumber($shipTypeID),
+			'ship_type_id' => $shipTypeID,
 		]);
 		unset($this->shipsSold[$shipTypeID]);
 	}
@@ -487,7 +487,7 @@ class Location {
 		$db = Database::getInstance();
 		$db->insert('location_sells_weapons', [
 			...$this->SQLID,
-			'weapon_type_id' => $db->escapeNumber($weaponTypeID),
+			'weapon_type_id' => $weaponTypeID,
 		]);
 		$this->weaponsSold[$weaponTypeID] = $weapon;
 	}
@@ -499,7 +499,7 @@ class Location {
 		$db = Database::getInstance();
 		$db->delete('location_sells_weapons', [
 			...$this->SQLID,
-			'weapon_type_id' => $db->escapeNumber($weaponTypeID),
+			'weapon_type_id' => $weaponTypeID,
 		]);
 		unset($this->weaponsSold[$weaponTypeID]);
 	}

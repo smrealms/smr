@@ -21,8 +21,8 @@ class DummyShip extends AbstractShip {
 	public function cacheDummyShip(): void {
 		$db = Database::getInstance();
 		$db->replace('cached_dummys', [
-			'type' => $db->escapeString('DummyShip'),
-			'id' => $db->escapeString($this->getPlayer()->getPlayerName()),
+			'type' => 'DummyShip',
+			'id' => $this->getPlayer()->getPlayerName(),
 			'info' => $db->escapeObject($this),
 		]);
 	}
