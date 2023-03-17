@@ -43,14 +43,14 @@ class AllianceTreatiesProcessor extends PlayerPageProcessor {
 				];
 				foreach ($pairs as $alliance_id_A => $alliance_id_B) {
 					// get last id
-					$dbResult = $db->read('SELECT MAX(role_id)
+					$dbResult = $db->read('SELECT IFNULL(MAX(role_id), 0) as max_role_id
 								FROM alliance_has_roles
 								WHERE game_id = :game_id
 									AND alliance_id = :alliance_id', [
 						'game_id' => $db->escapeNumber($player->getGameID()),
 						'alliance_id' => $db->escapeNumber($alliance_id_A),
 					]);
-					$role_id = $dbResult->record()->getInt('MAX(role_id)') + 1;
+					$role_id = $dbResult->record()->getInt('max_role_id') + 1;
 
 					$allianceName = Alliance::getAlliance($alliance_id_B, $player->getGameID())->getAllianceName();
 					$db->insert('alliance_has_roles', [

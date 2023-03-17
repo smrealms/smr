@@ -55,15 +55,15 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 
 			$db->lockTable('alliance_has_roles');
 
-			// get last id (always has one, since some roles are auto-bestowed)
-			$dbResult = $db->read('SELECT MAX(role_id)
+			// get last id
+			$dbResult = $db->read('SELECT IFNULL(MAX(role_id), 0) as max_role_id
 						FROM alliance_has_roles
 						WHERE game_id = :game_id
 							AND alliance_id = :alliance_id', [
 				'game_id' => $db->escapeNumber($player->getGameID()),
 				'alliance_id' => $db->escapeNumber($alliance_id),
 			]);
-			$role_id = $dbResult->record()->getInt('MAX(role_id)') + 1;
+			$role_id = $dbResult->record()->getInt('max_role_id') + 1;
 
 			$db->insert('alliance_has_roles', [
 				'alliance_id' => $alliance_id,
