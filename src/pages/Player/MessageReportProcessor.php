@@ -30,7 +30,7 @@ class MessageReportProcessor extends PlayerPageProcessor {
 		$notify_id = $dbResult->record()->getInt('next_notify_id');
 
 		// get message form db
-		$dbResult = $db->read('SELECT account_id, sender_id, message_text
+		$dbResult = $db->read('SELECT account_id, sender_id, message_text, send_time
 					FROM message
 					WHERE message_id = :message_id AND receiver_delete = \'FALSE\'', [
 			'message_id' => $this->messageID,
