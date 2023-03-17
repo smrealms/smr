@@ -28,7 +28,7 @@ class OwnershipProcessor extends PlayerPageProcessor {
 				'planet',
 				[
 					'owner_id' => 0,
-					'password' => null,
+					'password' => '',
 				],
 				[
 					'owner_id' => $player->getAccountID(),
