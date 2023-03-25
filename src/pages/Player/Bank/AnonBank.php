@@ -49,12 +49,13 @@ class AnonBank extends PlayerPage {
 
 			$dbResult2 = $db->read('SELECT MAX(time) FROM anon_bank_transactions
 						WHERE game_id = :game_id
-						AND anon_id = :anon_id GROUP BY anon_id', [
+						AND anon_id = :anon_id', [
 				'game_id' => $db->escapeNumber($player->getGameID()),
 				'anon_id' => $db->escapeNumber($dbRecord->getInt('anon_id')),
 			]);
-			if ($dbResult2->hasRecord()) {
-				$anon['last_transaction'] = date($account->getDateTimeFormat(), $dbResult2->record()->getInt('MAX(time)'));
+			$lastTransactionTime = $dbResult2->record()->getNullableInt('MAX(time)');
+			if ($lastTransactionTime !== null) {
+				$anon['last_transaction'] = date($account->getDateTimeFormat(), $lastTransactionTime);
 			} else {
 				$anon['last_transaction'] = 'No transactions';
 			}
