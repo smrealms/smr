@@ -58,7 +58,7 @@ class AllianceTreatiesProcessor extends PlayerPageProcessor {
 						'game_id' => $player->getGameID(),
 						'role_id' => $role_id,
 						'role' => $allianceName,
-						'treaty_created' => 1,
+						'treaty_created' => $db->escapeBoolean(true),
 					]);
 				}
 			}
