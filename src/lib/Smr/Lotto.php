@@ -76,19 +76,17 @@ class Lotto {
 	 * @return array{Prize: int, TimeRemaining: int}
 	 */
 	public static function getLottoInfo(int $gameID): array {
-		$amount = self::TICKET_COST; // pot starts with 1 ticket value
-		$firstBuy = Epoch::time();
-
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT count(*) as num, min(time) as time FROM player_has_ticket
 				WHERE game_id = :game_id AND time > 0', [
 			'game_id' => $db->escapeNumber($gameID),
 		]);
 		$dbRecord = $dbResult->record();
-		if ($dbRecord->getInt('num') > 0) {
-			$amount += $dbRecord->getInt('num') * IFloor(self::TICKET_COST * self::WIN_FRAC);
-			$firstBuy = $dbRecord->getInt('time');
-		}
+
+		// pot starts with 1 ticket value
+		$amount = self::TICKET_COST + $dbRecord->getInt('num') * IFloor(self::TICKET_COST * self::WIN_FRAC);
+		$firstBuy = $dbRecord->getNullableInt('time') ?? Epoch::time();
+
 		//find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
 		return ['Prize' => $amount, 'TimeRemaining' => $firstBuy + TIME_LOTTO - Epoch::time()];
 	}
