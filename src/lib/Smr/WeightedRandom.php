@@ -60,7 +60,7 @@ class WeightedRandom {
 			'type_id' => $db->escapeNumber($typeID),
 		]);
 		if ($dbResult->hasRecord()) {
-			$this->weighting = $dbResult->record()->getInt('weighting');
+			$this->weighting = $dbResult->record()->getFloat('weighting');
 		} else {
 			$this->weighting = 0;
 		}
