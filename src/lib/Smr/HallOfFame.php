@@ -105,7 +105,11 @@ class HallOfFame {
 	public static function getHofRank(string $viewType, int $accountID, ?int $gameID): array {
 		$db = Database::getInstance();
 		// If no game specified, show total amount from completed games only
-		$gameIDSql = ' AND game_id ' . (isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE end_time < ' . Epoch::time() . ' AND ignore_stats = \'FALSE\')');
+		$gameIDSql = ' AND IF(:game_id IS NULL, game_id IN (SELECT game_id FROM game WHERE end_time < :now AND ignore_stats = \'FALSE\'), game_id = :game_id)';
+		$gameIDParams = [
+			'game_id' => $gameID,
+			'now' => Epoch::time(),
+		];
 
 		$rank = ['Amount' => 0, 'Rank' => 0];
 		if ($viewType == HOF_TYPE_DONATION) {
@@ -117,6 +121,7 @@ class HallOfFame {
 			$dbResult = $db->read('SELECT ' . $statements['CASE'] . ' amount FROM (SELECT type, SUM(amount) amount FROM player_hof WHERE type IN (:hof_types) AND account_id = :account_id' . $gameIDSql . ' GROUP BY account_id,type) x', [
 				'hof_types' => $db->escapeArray($statements['IN']),
 				'account_id' => $db->escapeNumber($accountID),
+				...$gameIDParams,
 			]);
 		} else {
 			$hofVis = Player::getHOFVis();
@@ -126,6 +131,7 @@ class HallOfFame {
 			$dbResult = $db->read('SELECT IFNULL(SUM(amount), 0) amount FROM player_hof WHERE type = :hof_type AND account_id = :account_id' . $gameIDSql, [
 				'account_id' => $db->escapeNumber($accountID),
 				'hof_type' => $db->escapeString($viewType),
+				...$gameIDParams,
 			]);
 		}
 
@@ -142,11 +148,13 @@ class HallOfFame {
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type IN (:hof_types)' . $gameIDSql . ' GROUP BY account_id HAVING ' . $statements['CASE'] . ' > :amount) x', [
 				'hof_types' => $db->escapeArray($statements['IN']),
 				'amount' => $db->escapeNumber($realAmount),
+				...$gameIDParams,
 			]);
 		} else {
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type = :hof_type' . $gameIDSql . ' GROUP BY account_id HAVING SUM(amount) > :amount) x', [
 				'amount' => $db->escapeNumber($realAmount),
 				'hof_type' => $db->escapeString($viewType),
+				...$gameIDParams,
 			]);
 		}
 		if ($dbResult->hasRecord()) {
