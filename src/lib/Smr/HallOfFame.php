@@ -113,9 +113,9 @@ class HallOfFame {
 				'account_id' => $db->escapeNumber($accountID),
 			]);
 		} elseif ($viewType == HOF_TYPE_USER_SCORE) {
-			$statements = Account::getUserScoreCaseStatement($db);
+			$statements = Account::getUserScoreCaseStatement();
 			$dbResult = $db->read('SELECT ' . $statements['CASE'] . ' amount FROM (SELECT type, SUM(amount) amount FROM player_hof WHERE type IN (:hof_types) AND account_id = :account_id' . $gameIDSql . ' GROUP BY account_id,type) x', [
-				'hof_types' => $statements['IN'],
+				'hof_types' => $db->escapeArray($statements['IN']),
 				'account_id' => $db->escapeNumber($accountID),
 			]);
 		} else {
@@ -138,9 +138,9 @@ class HallOfFame {
 				'amount' => $db->escapeNumber($realAmount),
 			]);
 		} elseif ($viewType == HOF_TYPE_USER_SCORE) {
-			$statements = Account::getUserScoreCaseStatement($db);
+			$statements = Account::getUserScoreCaseStatement();
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type IN (:hof_types)' . $gameIDSql . ' GROUP BY account_id HAVING ' . $statements['CASE'] . ' > :amount) x', [
-				'hof_types' => $statements['IN'],
+				'hof_types' => $db->escapeArray($statements['IN']),
 				'amount' => $db->escapeNumber($realAmount),
 			]);
 		} else {

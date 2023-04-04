@@ -223,18 +223,21 @@ class Account {
 	}
 
 	/**
-	 * @return array<string, string>
+	 * @return array{CASE: string, IN: array<string>}
 	 */
-	public static function getUserScoreCaseStatement(Database $db): array {
+	public static function getUserScoreCaseStatement(): array {
 		$userRankingTypes = [];
 		$case = 'IFNULL(FLOOR(SUM(CASE type ';
 		foreach (self::USER_RANKINGS_SCORE as [$stat, $a, $b]) {
-			$userRankingType = $db->escapeString(implode(':', $stat));
+			$userRankingType = implode(':', $stat);
 			$userRankingTypes[] = $userRankingType;
-			$case .= ' WHEN ' . $userRankingType . ' THEN POW(amount*' . $a . ',' . self::USER_RANKINGS_EACH_STAT_POW . ')*' . $b;
+			$case .= ' WHEN \'' . $userRankingType . '\' THEN POW(amount*' . $a . ',' . self::USER_RANKINGS_EACH_STAT_POW . ')*' . $b;
 		}
 		$case .= ' END)), 0)';
-		return ['CASE' => $case, 'IN' => implode(',', $userRankingTypes)];
+		return [
+			'CASE' => $case,
+			'IN' => $userRankingTypes,
+		];
 	}
 
 	protected function __construct(protected readonly int $accountID) {

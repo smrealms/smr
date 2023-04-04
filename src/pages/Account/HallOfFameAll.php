@@ -68,10 +68,10 @@ class HallOfFameAll extends AccountPage {
 				$dbResult = $db->read('SELECT account_id, SUM(amount) as amount FROM account_donated
 							GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
 			} elseif ($viewType == HOF_TYPE_USER_SCORE) {
-				$statements = Account::getUserScoreCaseStatement($db);
+				$statements = Account::getUserScoreCaseStatement();
 				$query = 'SELECT account_id, ' . $statements['CASE'] . ' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN (:hof_types)' . $gameIDSql . ' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25';
 				$dbResult = $db->read($query, [
-					'hof_types' => $statements['IN'],
+					'hof_types' => $db->escapeArray($statements['IN']),
 				]);
 			} else {
 				$dbResult = $db->read('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type = :hof_type ' . $gameIDSql . ' GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25', [
