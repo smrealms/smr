@@ -11,6 +11,8 @@
 	displayDetailsOnTestsThatTriggerNotices="true"
 	displayDetailsOnTestsThatTriggerWarnings="true"
 	executionOrder="depends,defects"
+	failOnDeprecation="true"
+	failOnNotice="true"
 	failOnRisky="true"
 	failOnWarning="true"
 	requireCoverageMetadata="true">
