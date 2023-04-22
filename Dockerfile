@@ -16,7 +16,7 @@ RUN rm -rf node_modules
 
 #---------------------------
 
-FROM php:8.2.3-apache
+FROM php:8.2.5-apache
 RUN apt-get --quiet=2 update \
 	&& apt-get --quiet=2 install zip unzip \
 	&& rm -rf /var/lib/apt/lists/* \
@@ -33,7 +33,7 @@ RUN MODE=$([ "$NO_DEV" = "0" ] && echo "development" || echo "production") \
 RUN if [ "$NO_DEV" = "0" ]; \
 	then \
 		docker-php-ext-install pcntl \
-		&& pecl install xdebug-3.2.0 > /dev/null \
+		&& pecl install xdebug-3.2.1 > /dev/null \
 		&& docker-php-ext-enable xdebug \
 		&& echo "xdebug.output_dir = /tmp/xdebug" > "$PHP_INI_DIR/conf.d/xdebug.ini" \
 		&& mkdir /tmp/xdebug; \
@@ -48,7 +48,7 @@ RUN sed -i 's/AllowOverride All/AllowOverride None/g' /etc/apache2/conf-enabled/
 WORKDIR /smr/
 
 RUN curl -sS https://getcomposer.org/installer | \
-	php -- --install-dir=/usr/local/bin --filename=composer --version=2.5.2
+	php -- --install-dir=/usr/local/bin --filename=composer --version=2.5.5
 
 COPY composer.json .
 RUN COMPOSER_NO_DEV=$NO_DEV composer update --no-interaction
