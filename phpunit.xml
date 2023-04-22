@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd"
 	beStrictAboutChangesToGlobalState="true"
 	bootstrap="src/bootstrap.php"
 	cacheDirectory=".phpunit.cache"
@@ -23,9 +23,6 @@
 		<env name="DISABLE_PHPDI_COMPILATION" value="true" force="true" />
 	</php>
 	<coverage includeUncoveredFiles="true">
-		<include>
-			<directory suffix=".php">src/lib</directory>
-		</include>
 		<report>
 			<clover outputFile="test/coverage/clover.xml" />
 			<text outputFile="php://stdout" showOnlySummary="true" />
@@ -35,4 +32,9 @@
 			/>
 		</report>
 	</coverage>
+	<source>
+		<include>
+			<directory suffix=".php">src/lib</directory>
+		</include>
+	</source>
 </phpunit>
