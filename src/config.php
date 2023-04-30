@@ -69,7 +69,7 @@ const MAX_IMAGE_HEIGHT = 30;
 const MULTI_CHECKING_COOKIE_VERSION = 'v3';
 const SMR_FILE_VERSION = '1.07';
 
-const JQUERY_URL = 'https://code.jquery.com/jquery-3.6.3.min.js';
+const JQUERY_URL = 'https://code.jquery.com/jquery-3.6.4.min.js';
 const JQUERYUI_URL = 'https://code.jquery.com/ui/1.13.2/jquery-ui.min.js';
 const LISTJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js';
 const WIKI_URL = 'https://wiki.smrealms.de';
