@@ -99,52 +99,6 @@ class ChessGame {
 		$this->winner = $dbRecord->getInt('winner_id');
 	}
 
-	public function rerunGame(bool $debugInfo = false): void {
-		$db = Database::getInstance();
-
-		$db->update(
-			'chess_game',
-			[
-				'end_time' => null,
-				'winner_id' => 0,
-			],
-			['chess_game_id' => $this->chessGameID],
-		);
-
-		$dbResult = $db->read('SELECT * FROM chess_game_moves WHERE chess_game_id = :chess_game_id ORDER BY move_id', [
-			'chess_game_id' => $db->escapeNumber($this->chessGameID),
-		]);
-		$db->delete('chess_game_moves', [
-			'chess_game_id' => $this->chessGameID,
-		]);
-		$this->moves = [];
-		$this->board = new Board();
-		unset($this->endDate);
-		$this->winner = 0;
-
-		try {
-			foreach ($dbResult->records() as $dbRecord) {
-				$start_x = $dbRecord->getInt('start_x');
-				$start_y = $dbRecord->getInt('start_y');
-				$end_x = $dbRecord->getInt('end_x');
-				$end_y = $dbRecord->getInt('end_y');
-				$colour = $dbRecord->getInt('move_id') % 2 == 1 ? Colour::White : Colour::Black;
-				$promotePieceID = $dbRecord->getInt('promote_piece_id');
-				if ($debugInfo === true) {
-					echo 'x=', $start_x, ', y=', $start_y, ', endX=', $end_x, ', endY=', $end_y, ', colour=', $colour->name, EOL;
-				}
-				if ($this->tryMove($start_x, $start_y, $end_x, $end_y, $colour, $promotePieceID) != 0) {
-					break;
-				}
-			}
-		} catch (Exception $e) {
-			if ($debugInfo === true) {
-				echo $e->getMessage() . EOL . $e->getTraceAsString() . EOL;
-			}
-			// We probably tried an invalid move - move on.
-		}
-	}
-
 	public function getBoard(): Board {
 		if (!isset($this->board)) {
 			$this->getMoves();
