@@ -38,7 +38,12 @@ class BuyGalaxyMapProcessor extends PlayerPageProcessor {
 
 		// Have they already got this map? (Are there any unexplored sectors?
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM player_visited_sector WHERE sector_id >= ' . $db->escapeNumber($low) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND ' . $player->getSQL() . ' LIMIT 1');
+		$params = [
+			'low' => $db->escapeNumber($low),
+			'high' => $db->escapeNumber($high),
+			...$player->SQLID,
+		];
+		$dbResult = $db->read('SELECT 1 FROM player_visited_sector WHERE sector_id >= :low AND sector_id <= :high AND ' . AbstractPlayer::SQL . ' LIMIT 1', $params);
 		if (!$dbResult->hasRecord()) {
 			create_error('You already have maps of this galaxy!');
 		}
@@ -49,7 +54,7 @@ class BuyGalaxyMapProcessor extends PlayerPageProcessor {
 		//now give maps
 
 		// delete all entries from the player_visited_sector/port table
-		$db->write('DELETE FROM player_visited_sector WHERE sector_id >= ' . $db->escapeNumber($low) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND ' . $player->getSQL());
+		$db->write('DELETE FROM player_visited_sector WHERE sector_id >= :low AND sector_id <= :high AND ' . AbstractPlayer::SQL, $params);
 		//start section
 
 		// add port infos

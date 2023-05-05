@@ -23,7 +23,7 @@ class TraderSavings extends PlayerPage {
 
 		$anonAccounts = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM anon_bank WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+		$dbResult = $db->read('SELECT * FROM anon_bank WHERE owner_id = :account_id AND game_id = :game_id', $player->SQLID);
 		foreach ($dbResult->records() as $dbRecord) {
 			$anonAccounts[] = [
 				'ID' => $dbRecord->getInt('anon_id'),
@@ -36,12 +36,14 @@ class TraderSavings extends PlayerPage {
 		$template->assign('LottoInfo', Lotto::getLottoInfo($player->getGameID()));
 
 		// Number of active lotto tickets this player has
-		$dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time > 0');
+		$dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE ' . AbstractPlayer::SQL . ' AND time > 0', $player->SQLID);
 		$tickets = $dbResult->record()->getInt('count(*)');
 		$template->assign('LottoTickets', $tickets);
 
 		// Number of active lotto tickets all players have
-		$dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND time > 0');
+		$dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE game_id = :game_id AND time > 0', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		$tickets_tot = $dbResult->record()->getInt('count(*)');
 		if ($tickets == 0) {
 			$win_chance = 0;
@@ -51,7 +53,7 @@ class TraderSavings extends PlayerPage {
 		$template->assign('LottoWinChance', $win_chance);
 
 		// Number of winning lotto tickets this player has to claim
-		$dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE ' . $player->getSQL() . ' AND time = 0');
+		$dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE ' . AbstractPlayer::SQL . ' AND time = 0', $player->SQLID);
 		$template->assign('WinningTickets', $dbResult->record()->getInt('count(*)'));
 	}
 

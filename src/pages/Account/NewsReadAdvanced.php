@@ -34,7 +34,9 @@ class NewsReadAdvanced extends AccountPage {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT alliance_id, alliance_name
 					FROM alliance
-					WHERE game_id = ' . $db->escapeNumber($gameID));
+					WHERE game_id = :game_id', [
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 
 		$newsAlliances = [0 => 'None'];
 		foreach ($dbResult->records() as $dbRecord) {
@@ -49,31 +51,47 @@ class NewsReadAdvanced extends AccountPage {
 
 		if ($submit_value == 'Search For Player') {
 			$template->assign('ResultsFor', $this->label);
-			$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND (killer_id IN (' . $db->escapeArray($this->accountIDs) . ') OR dead_id IN (' . $db->escapeArray($this->accountIDs) . ')) ORDER BY news_id DESC');
+			$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND (killer_id IN (:account_ids) OR dead_id IN (:account_ids)) ORDER BY news_id DESC', [
+				'game_id' => $db->escapeNumber($gameID),
+				'account_ids' => $db->escapeArray($this->accountIDs),
+			]);
 		} elseif ($submit_value == 'Search For Alliance') {
 			$allianceID = $this->allianceIDs[0];
 			$template->assign('ResultsFor', $newsAlliances[$allianceID]);
-			$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND ((killer_alliance = ' . $db->escapeNumber($allianceID) . ' AND killer_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ') OR (dead_alliance = ' . $db->escapeNumber($allianceID) . ' AND dead_id != ' . $db->escapeNumber(ACCOUNT_ID_PORT) . ')) ORDER BY news_id DESC');
+			$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND ((killer_alliance = :alliance_id AND killer_id != :account_id_port) OR (dead_alliance = :alliance_id AND dead_id != :account_id_port)) ORDER BY news_id DESC', [
+				'game_id' => $db->escapeNumber($gameID),
+				'account_id_port' => $db->escapeNumber(ACCOUNT_ID_PORT),
+				'alliance_id' => $db->escapeNumber($allianceID),
+			]);
 		} elseif ($submit_value == 'Search For Players') {
 			$template->assign('ResultsFor', $this->label);
 			$dbResult = $db->read('SELECT * FROM news
-						WHERE game_id = ' . $db->escapeNumber($gameID) . '
+						WHERE game_id = :game_id
 							AND (
-								killer_id IN (' . $db->escapeArray($this->accountIDs) . ') AND dead_id IN (' . $db->escapeArray($this->accountIDs) . ')
-							) ORDER BY news_id DESC');
+								killer_id IN (:account_ids) AND dead_id IN (:account_ids)
+							) ORDER BY news_id DESC', [
+				'game_id' => $db->escapeNumber($gameID),
+				'account_ids' => $db->escapeArray($this->accountIDs),
+			]);
 		} elseif ($submit_value == 'Search For Alliances') {
 			$allianceID1 = $this->allianceIDs[0];
 			$allianceID2 = $this->allianceIDs[1];
 			$template->assign('ResultsFor', $newsAlliances[$allianceID1] . ' vs. ' . $newsAlliances[$allianceID2]);
 			$dbResult = $db->read('SELECT * FROM news
-						WHERE game_id = ' . $db->escapeNumber($gameID) . '
+						WHERE game_id = :game_id
 							AND (
-								(killer_alliance = ' . $db->escapeNumber($allianceID1) . ' AND dead_alliance = ' . $db->escapeNumber($allianceID2) . ')
+								(killer_alliance = :alliance_id_1 AND dead_alliance = :alliance_id_2)
 								OR
-								(killer_alliance = ' . $db->escapeNumber($allianceID2) . ' AND dead_alliance = ' . $db->escapeNumber($allianceID1) . ')
-							) ORDER BY news_id DESC');
+								(killer_alliance = :alliance_id_2 AND dead_alliance = :alliance_id_1)
+							) ORDER BY news_id DESC', [
+				'game_id' => $db->escapeNumber($gameID),
+				'alliance_id_1' => $db->escapeNumber($allianceID1),
+				'alliance_id_2' => $db->escapeNumber($allianceID2),
+			]);
 		} else {
-			$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY news_id DESC LIMIT 50');
+			$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id ORDER BY news_id DESC LIMIT 50', [
+				'game_id' => $db->escapeNumber($gameID),
+			]);
 		}
 
 		$template->assign('NewsItems', News::getNewsItems($dbResult));

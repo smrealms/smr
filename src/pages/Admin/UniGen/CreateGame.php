@@ -54,7 +54,9 @@ class CreateGame extends AccountPage {
 		if ($canEditEnabledGames) {
 			$dbResult = $db->read('SELECT game_id FROM game ORDER BY game_id DESC');
 		} else {
-			$dbResult = $db->read('SELECT game_id FROM game WHERE enabled=' . $db->escapeBoolean(false) . ' ORDER BY game_id DESC');
+			$dbResult = $db->read('SELECT game_id FROM game WHERE enabled = :enabled ORDER BY game_id DESC', [
+				'enabled' => $db->escapeBoolean(false),
+			]);
 		}
 		foreach ($dbResult->records() as $dbRecord) {
 			$games[] = Game::getGame($dbRecord->getInt('game_id'));

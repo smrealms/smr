@@ -5,10 +5,12 @@ namespace SmrTest\lib;
 use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionClassConstant;
 use Smr\Container\DiContainer;
+use Smr\DatabaseRecord;
 use Smr\EnhancedWeaponEvent;
 use Smr\Epoch;
 use Smr\Location;
 use SmrTest\BaseIntegrationSpec;
+use SmrTest\TestUtils;
 
 #[CoversClass(EnhancedWeaponEvent::class)]
 class EnhancedWeaponEventTest extends BaseIntegrationSpec {
@@ -32,8 +34,12 @@ class EnhancedWeaponEventTest extends BaseIntegrationSpec {
 
 		// We need to insert at least one location into the database, since
 		// the class doesn't have a very modular design.
-		$location = $this->createPartialMock(Location::class, ['getTypeID']);
-		$location->method('getTypeID')->willReturn($locTypePPL);
+		$location = TestUtils::constructPrivateClass(
+			name: Location::class,
+			gameID: $gameID,
+			typeID: $locTypePPL,
+			dbRecord: $this->createStub(DatabaseRecord::class),
+		);
 		Location::addSectorLocation($gameID, $sectorID, $location);
 
 		// Set an initial t=0

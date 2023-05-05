@@ -13,15 +13,19 @@ function debug(string $message, mixed $debugObject = null): void {
 		'script_id' => defined('SCRIPT_ID') ? SCRIPT_ID : 0,
 		'npc_id' => 0,
 		'time' => 'NOW()',
-		'message' => $db->escapeString($message),
-		'debug_info' => $db->escapeString(var_export($debugObject, true)),
-		'var' => $db->escapeString(''),
+		'message' => $message,
+		'debug_info' => var_export($debugObject, true),
+		'var' => '',
 	]);
 
 	// On the first call to debug, we need to update the script_id retroactively
 	if (!defined('SCRIPT_ID')) {
 		define('SCRIPT_ID', $logID);
-		$db->write('UPDATE npc_logs SET script_id=' . SCRIPT_ID . ' WHERE log_id=' . SCRIPT_ID);
+		$db->update(
+			'npc_logs',
+			['script_id' => SCRIPT_ID],
+			['log_id' => SCRIPT_ID],
+		);
 	}
 }
 

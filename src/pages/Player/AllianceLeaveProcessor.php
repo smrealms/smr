@@ -20,21 +20,22 @@ class AllianceLeaveProcessor extends PlayerPageProcessor {
 		if ($alliance->getNumMembers() == 1 && !$alliance->isNHA()) {
 			// Retain the alliance, but delete some auxilliary info
 			$db = Database::getInstance();
-			$db->write('DELETE FROM alliance_bank_transactions
-			            WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
-			            AND game_id = ' . $db->escapeNumber($player->getGameID()));
-			$db->write('DELETE FROM alliance_thread
-			            WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
-			            AND game_id = ' . $db->escapeNumber($player->getGameID()));
-			$db->write('DELETE FROM alliance_thread_topic
-			            WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
-			            AND game_id = ' . $db->escapeNumber($player->getGameID()));
-			$db->write('DELETE FROM alliance_has_roles
-			            WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
-			            AND game_id = ' . $db->escapeNumber($player->getGameID()));
-			$db->write('UPDATE alliance SET leader_id = 0, discord_channel = NULL
-			            WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
-			            AND game_id = ' . $db->escapeNumber($player->getGameID()));
+			$sqlParams = [
+				'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+			];
+			$db->delete('alliance_bank_transactions', $sqlParams);
+			$db->delete('alliance_thread', $sqlParams);
+			$db->delete('alliance_thread_topic', $sqlParams);
+			$db->delete('alliance_has_roles', $sqlParams);
+			$db->update(
+				'alliance',
+				[
+					'leader_id' => 0,
+					'discord_channel' => null,
+				],
+				$sqlParams,
+			);
 		}
 
 		// now leave the alliance

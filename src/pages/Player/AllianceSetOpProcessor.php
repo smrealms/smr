@@ -19,11 +19,21 @@ class AllianceSetOpProcessor extends PlayerPageProcessor {
 
 		if ($this->cancel) {
 			// just get rid of op
-			$db->write('DELETE FROM alliance_has_op WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()));
-			$db->write('DELETE FROM alliance_has_op_response WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()));
+			$db->delete('alliance_has_op', [
+				'alliance_id' => $player->getAllianceID(),
+				'game_id' => $player->getGameID(),
+			]);
+			$db->delete('alliance_has_op_response', [
+				'alliance_id' => $player->getAllianceID(),
+				'game_id' => $player->getGameID(),
+			]);
 
 			// Delete the announcement from alliance members message boxes
-			$db->write('DELETE FROM message WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND sender_id=' . $db->escapeNumber(ACCOUNT_ID_OP_ANNOUNCE) . ' AND account_id IN (' . $db->escapeArray($player->getAlliance()->getMemberIDs()) . ')');
+			$db->write('DELETE FROM message WHERE game_id = :game_id AND sender_id = :sender_id AND account_id IN (:account_ids)', [
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'sender_id' => $db->escapeNumber(ACCOUNT_ID_OP_ANNOUNCE),
+				'account_ids' => $db->escapeArray($player->getAlliance()->getMemberIDs()),
+			]);
 
 			// NOTE: for simplicity we don't touch `player_has_unread_messages` here,
 			// so they may get an errant alliance message icon if logged in.
@@ -41,9 +51,9 @@ class AllianceSetOpProcessor extends PlayerPageProcessor {
 
 			// add op to db
 			$db->insert('alliance_has_op', [
-				'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'time' => $db->escapeNumber($time),
+				'alliance_id' => $player->getAllianceID(),
+				'game_id' => $player->getGameID(),
+				'time' => $time,
 			]);
 
 			// Send an alliance message that expires at the time of the op.

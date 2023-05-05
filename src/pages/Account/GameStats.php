@@ -29,7 +29,9 @@ class GameStats extends AccountPage {
 		$template->assign('PageTopic', 'Game Stats: ' . $statsGame->getName() . ' (' . $gameID . ')');
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT count(*) total_players, IFNULL(MAX(experience),0) max_exp, IFNULL(MAX(alignment),0) max_align, IFNULL(MIN(alignment),0) min_align, IFNULL(MAX(kills),0) max_kills FROM player WHERE game_id = ' . $gameID);
+		$dbResult = $db->read('SELECT count(*) total_players, IFNULL(MAX(experience),0) max_exp, IFNULL(MAX(alignment),0) max_align, IFNULL(MIN(alignment),0) min_align, IFNULL(MAX(kills),0) max_kills FROM player WHERE game_id = :game_id', [
+			'game_id' => $gameID,
+		]);
 		$dbRecord = $dbResult->record();
 		$template->assign('TotalPlayers', $dbRecord->getInt('total_players'));
 		$template->assign('HighestExp', $dbRecord->getInt('max_exp'));
@@ -37,7 +39,9 @@ class GameStats extends AccountPage {
 		$template->assign('LowestAlign', $dbRecord->getInt('min_align'));
 		$template->assign('HighestKills', $dbRecord->getInt('max_kills'));
 
-		$dbResult = $db->read('SELECT count(*) num_alliance FROM alliance WHERE game_id = ' . $gameID);
+		$dbResult = $db->read('SELECT count(*) num_alliance FROM alliance WHERE game_id = :game_id', [
+			'game_id' => $gameID,
+		]);
 		$template->assign('TotalAlliances', $dbResult->record()->getInt('num_alliance'));
 
 		// Get current account's player for this game (if any)

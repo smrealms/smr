@@ -45,7 +45,9 @@ class LogConsoleDetail extends AccountPage {
 			// assign it a color
 			$color = $avail_colors[$i % count($avail_colors)];
 
-			$dbResult = $db->read('SELECT login FROM account WHERE account_id = ' . $db->escapeNumber($id));
+			$dbResult = $db->read('SELECT login FROM account WHERE account_id = :account_id', [
+				'account_id' => $db->escapeNumber($id),
+			]);
 			if ($dbResult->hasRecord()) {
 				$colors[$id] = [
 					'name' => $dbResult->record()->getString('login'),
@@ -84,7 +86,9 @@ class LogConsoleDetail extends AccountPage {
 
 		// get notes from db
 		$log_notes = [];
-		$dbResult = $db->read('SELECT * FROM log_has_notes WHERE account_id IN (' . $account_list . ')');
+		$dbResult = $db->read('SELECT * FROM log_has_notes WHERE account_id IN (:account_ids)', [
+			'account_ids' => $account_list,
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$log_notes[] = $dbRecord->getString('notes');
 		}
@@ -100,7 +104,10 @@ class LogConsoleDetail extends AccountPage {
 		// * L o g   T a b l e
 		// *********************************
 		$logs = [];
-		$dbResult = $db->read('SELECT * FROM account_has_logs WHERE account_id IN (' . $account_list . ') AND log_type_id IN (' . $db->escapeArray($log_type_id_list) . ') ORDER BY microtime DESC');
+		$dbResult = $db->read('SELECT * FROM account_has_logs WHERE account_id IN (:account_ids) AND log_type_id IN (:log_type_ids) ORDER BY microtime DESC', [
+			'account_ids' => $account_list,
+			'log_type_ids' => $db->escapeArray($log_type_id_list),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$account_id = $dbRecord->getInt('account_id');
 			$microtime = $dbRecord->getFloat('microtime');

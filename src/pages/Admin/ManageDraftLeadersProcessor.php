@@ -35,7 +35,6 @@ class ManageDraftLeadersProcessor extends AccountPageProcessor {
 		}
 
 		$name = $selectedPlayer->getDisplayName();
-		$accountId = $selectedPlayer->getAccountID();
 		$game = $selectedPlayer->getGame()->getDisplayName();
 
 		$msg = null; // by default, clear any messages from prior processing
@@ -44,16 +43,15 @@ class ManageDraftLeadersProcessor extends AccountPageProcessor {
 				$msg = "<span class='red'>ERROR: </span>$name is already a draft leader in game $game!";
 			} else {
 				$db->insert('draft_leaders', [
-					'account_id' => $db->escapeNumber($accountId),
-					'game_id' => $db->escapeNumber($gameId),
-					'home_sector_id' => $db->escapeNumber($homeSectorID),
+					...$selectedPlayer->SQLID,
+					'home_sector_id' => $homeSectorID,
 				]);
 			}
 		} elseif ($action == 'Remove') {
 			if (!$selectedPlayer->isDraftLeader()) {
 				$msg = "<span class='red'>ERROR: </span>$name is not a draft leader in game $game!";
 			} else {
-				$db->write('DELETE FROM draft_leaders WHERE ' . $selectedPlayer->getSQL());
+				$db->delete('draft_leaders', $selectedPlayer->SQLID);
 			}
 		} else {
 			$msg = "<span class='red'>ERROR: </span>Do not know action '$action'!";

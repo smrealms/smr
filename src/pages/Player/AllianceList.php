@@ -35,9 +35,11 @@ class AllianceList extends PlayerPage {
 		FROM player
 		JOIN alliance USING (game_id, alliance_id)
 		WHERE leader_id > 0
-		AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+		AND game_id = :game_id
 		GROUP BY alliance_id
-		ORDER BY alliance_name ASC');
+		ORDER BY alliance_name ASC', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 
 		$alliances = [];
 		foreach ($dbResult->records() as $dbRecord) {

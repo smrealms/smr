@@ -41,11 +41,11 @@ class PreferencesProcessor extends PlayerPageProcessor {
 
 			$news = 'Please be advised that ' . $old_name . ' has changed their name to ' . $player->getBBLink();
 			$db->insert('news', [
-				'time' => $db->escapeNumber(Epoch::time()),
-				'news_message' => $db->escapeString($news),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'type' => $db->escapeString('admin'),
-				'killer_id' => $db->escapeNumber($player->getAccountID()),
+				'time' => Epoch::time(),
+				'news_message' => $news,
+				'game_id' => $player->getGameID(),
+				'type' => 'admin',
+				'killer_id' => $player->getAccountID(),
 			]);
 			$message = '<span class="green">SUCCESS: </span>You have changed your player name.';
 
@@ -72,7 +72,7 @@ class PreferencesProcessor extends PlayerPageProcessor {
 			$player->setRaceChanged(true);
 
 			// Reset relations
-			$db->write('DELETE FROM player_has_relation WHERE ' . $player->getSQL());
+			$db->delete('player_has_relation', $player->SQLID);
 			$player->giveStartingRelations();
 
 			// Move them to their new race HQ and reset sector lock
@@ -85,11 +85,11 @@ class PreferencesProcessor extends PlayerPageProcessor {
 
 			$news = 'Please be advised that ' . $player->getBBLink() . ' has changed their race from [race=' . $oldRaceID . '] to [race=' . $player->getRaceID() . ']';
 			$db->insert('news', [
-				'time' => $db->escapeNumber(Epoch::time()),
-				'news_message' => $db->escapeString($news),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'type' => $db->escapeString('admin'),
-				'killer_id' => $db->escapeNumber($player->getAccountID()),
+				'time' => Epoch::time(),
+				'news_message' => $news,
+				'game_id' => $player->getGameID(),
+				'type' => 'admin',
+				'killer_id' => $player->getAccountID(),
 			]);
 			$message = '<span class="green">SUCCESS: </span>You have changed your player race.';
 		} else {

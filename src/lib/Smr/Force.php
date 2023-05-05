@@ -32,7 +32,9 @@ class Force {
 	public const MAX_CDS = 50;
 	public const MAX_SDS = 5;
 
-	protected readonly string $SQL;
+	public const SQL = 'game_id = :game_id AND sector_id = :sector_id AND owner_id = :owner_id';
+	/** @var array{game_id: int, sector_id: int, owner_id: int} */
+	protected readonly array $SQLID;
 
 	protected int $combatDrones = 0;
 	protected int $scoutDrones = 0;
@@ -66,7 +68,10 @@ class Force {
 	 */
 	public static function getGalaxyForces(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT sector_has_forces.* FROM sector_has_forces LEFT JOIN sector USING(game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$dbResult = $db->read('SELECT sector_has_forces.* FROM sector_has_forces LEFT JOIN sector USING(game_id, sector_id) WHERE game_id = :game_id AND galaxy_id = :galaxy_id', [
+			'game_id' => $db->escapeNumber($gameID),
+			'galaxy_id' => $db->escapeNumber($galaxyID),
+		]);
 		$galaxyForces = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$sectorID = $dbRecord->getInt('sector_id');
@@ -85,7 +90,10 @@ class Force {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_FORCES[$gameID][$sectorID])) {
 			self::tidyUpForces(Galaxy::getGalaxyContaining($gameID, $sectorID));
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM sector_has_forces WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY expire_time ASC');
+			$dbResult = $db->read('SELECT * FROM sector_has_forces WHERE sector_id = :sector_id AND game_id = :game_id ORDER BY expire_time ASC', [
+				'sector_id' => $db->escapeNumber($sectorID),
+				'game_id' => $db->escapeNumber($gameID),
+			]);
 			$forces = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$ownerID = $dbRecord->getInt('owner_id');
@@ -112,11 +120,24 @@ class Force {
 			$db->write('UPDATE sector_has_forces
 						SET refresher=0,
 							expire_time = (refresh_at + if(combat_drones+mines=0,
-															LEAST(' . $db->escapeNumber(self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY) . ', scout_drones*' . $db->escapeNumber(self::TIME_PER_SCOUT_ONLY) . '),
-															LEAST(' . $db->escapeNumber($galaxyToTidy->getMaxForceTime()) . ', (combat_drones*' . $db->escapeNumber(self::TIME_PERCENT_PER_COMBAT) . '+scout_drones*' . $db->escapeNumber(self::TIME_PERCENT_PER_SCOUT) . '+mines*' . $db->escapeNumber(self::TIME_PERCENT_PER_MINE) . ')*' . $db->escapeNumber($galaxyToTidy->getMaxForceTime()) . ')
-														))
-						WHERE game_id = ' . $db->escapeNumber($galaxyToTidy->getGameID()) . ' AND sector_id >= ' . $db->escapeNumber($galaxyToTidy->getStartSector()) . ' AND sector_id <= ' . $db->escapeNumber($galaxyToTidy->getEndSector()) . ' AND refresher != 0 AND refresh_at <= ' . $db->escapeNumber(Epoch::time()));
-			$db->write('DELETE FROM sector_has_forces WHERE expire_time < ' . $db->escapeNumber(Epoch::time()));
+								LEAST(:scout_expire_lowest, scout_drones * :time_per_scout_only),
+								LEAST(:max_force_time, (combat_drones * :frac_per_cd + scout_drones * :frac_per_scout + mines * :frac_per_mine) * :max_force_time)
+							))
+						WHERE game_id = :game_id AND sector_id >= :start_sector AND sector_id <= :end_sector AND refresher != 0 AND refresh_at <= :now', [
+				'scout_expire_lowest' => $db->escapeNumber(self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY),
+				'time_per_scout_only' => $db->escapeNumber(self::TIME_PER_SCOUT_ONLY),
+				'max_force_time' => $db->escapeNumber($galaxyToTidy->getMaxForceTime()),
+				'frac_per_cd' => $db->escapeNumber(self::TIME_PERCENT_PER_COMBAT),
+				'frac_per_scout' => $db->escapeNumber(self::TIME_PERCENT_PER_SCOUT),
+				'frac_per_mine' => $db->escapeNumber(self::TIME_PERCENT_PER_MINE),
+				'game_id' => $db->escapeNumber($galaxyToTidy->getGameID()),
+				'start_sector' => $db->escapeNumber($galaxyToTidy->getStartSector()),
+				'end_sector' => $db->escapeNumber($galaxyToTidy->getEndSector()),
+				'now' => $db->escapeNumber(Epoch::time()),
+			]);
+			$db->write('DELETE FROM sector_has_forces WHERE expire_time < :now', [
+				'now' => $db->escapeNumber(Epoch::time()),
+			]);
 		}
 	}
 
@@ -127,12 +148,14 @@ class Force {
 		DatabaseRecord $dbRecord = null
 	) {
 		$db = Database::getInstance();
-		$this->SQL = 'game_id = ' . $db->escapeNumber($gameID) . '
-		              AND sector_id = ' . $db->escapeNumber($sectorID) . '
-		              AND owner_id = ' . $db->escapeNumber($ownerID);
+		$this->SQLID = [
+			'game_id' => $db->escapeNumber($gameID),
+			'sector_id' => $db->escapeNumber($sectorID),
+			'owner_id' => $db->escapeNumber($ownerID),
+		];
 
 		if ($dbRecord === null) {
-			$dbResult = $db->read('SELECT * FROM sector_has_forces WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT * FROM sector_has_forces WHERE ' . self::SQL, $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -374,20 +397,27 @@ class Force {
 		$db = Database::getInstance();
 		if (!$this->isNew) {
 			if (!$this->exists()) {
-				$db->write('DELETE FROM sector_has_forces WHERE ' . $this->SQL);
+				$db->delete('sector_has_forces', $this->SQLID);
 				$this->isNew = true;
 			} elseif ($this->hasChanged) {
-				$db->write('UPDATE sector_has_forces SET combat_drones = ' . $db->escapeNumber($this->combatDrones) . ', scout_drones = ' . $db->escapeNumber($this->scoutDrones) . ', mines = ' . $db->escapeNumber($this->mines) . ', expire_time = ' . $db->escapeNumber($this->expire) . ' WHERE ' . $this->SQL);
+				$db->update(
+					'sector_has_forces',
+					[
+						'combat_drones' => $this->combatDrones,
+						'scout_drones' => $this->scoutDrones,
+						'mines' => $this->mines,
+						'expire_time' => $this->expire,
+					],
+					$this->SQLID,
+				);
 			}
 		} elseif ($this->exists()) {
 			$db->insert('sector_has_forces', [
-				'game_id' => $db->escapeNumber($this->gameID),
-				'sector_id' => $db->escapeNumber($this->sectorID),
-				'owner_id' => $db->escapeNumber($this->ownerID),
-				'combat_drones' => $db->escapeNumber($this->combatDrones),
-				'scout_drones' => $db->escapeNumber($this->scoutDrones),
-				'mines' => $db->escapeNumber($this->mines),
-				'expire_time' => $db->escapeNumber($this->expire),
+				...$this->SQLID,
+				'combat_drones' => $this->combatDrones,
+				'scout_drones' => $this->scoutDrones,
+				'mines' => $this->mines,
+				'expire_time' => $this->expire,
 			]);
 			$this->isNew = false;
 		}
@@ -400,7 +430,14 @@ class Force {
 	 */
 	public function updateRefreshAll(AbstractPlayer $player, int $refreshTime): void {
 		$db = Database::getInstance();
-		$db->write('UPDATE sector_has_forces SET refresh_at=' . $db->escapeNumber($refreshTime) . ', refresher=' . $db->escapeNumber($player->getAccountID()) . ' WHERE ' . $this->SQL);
+		$db->update(
+			'sector_has_forces',
+			[
+				'refresh_at' => $refreshTime,
+				'refresher' => $player->getAccountID(),
+			],
+			$this->SQLID,
+		);
 	}
 
 	public function getExamineDropForcesHREF(): string {

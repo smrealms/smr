@@ -25,7 +25,9 @@ class Planet {
 	protected const TIME_ATTACK_NEWS_COOLDOWN = 3600; // 1 hour
 	public const MAX_STOCKPILE = 600;
 
-	protected readonly string $SQL;
+	public const SQL = 'game_id = :game_id AND sector_id = :sector_id';
+	/** @var array{game_id: int, sector_id: int} */
+	public readonly array $SQLID;
 
 	protected bool $exists = false;
 	protected string $planetName;
@@ -80,7 +82,10 @@ class Planet {
 	 */
 	public static function getGalaxyPlanets(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT planet.* FROM planet LEFT JOIN sector USING (game_id, sector_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$dbResult = $db->read('SELECT planet.* FROM planet LEFT JOIN sector USING (game_id, sector_id) WHERE game_id = :game_id AND galaxy_id = :galaxy_id', [
+			'game_id' => $db->escapeNumber($gameID),
+			'galaxy_id' => $db->escapeNumber($galaxyID),
+		]);
 		$galaxyPlanets = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$sectorID = $dbRecord->getInt('sector_id');
@@ -109,24 +114,27 @@ class Planet {
 		// insert planet into db
 		$db = Database::getInstance();
 		$db->insert('planet', [
-			'game_id' => $db->escapeNumber($gameID),
-			'sector_id' => $db->escapeNumber($sectorID),
-			'inhabitable_time' => $db->escapeNumber($inhabitableTime),
-			'planet_type_id' => $db->escapeNumber($typeID),
+			'game_id' => $gameID,
+			'sector_id' => $sectorID,
+			'inhabitable_time' => $inhabitableTime,
+			'planet_type_id' => $typeID,
 		]);
 		return self::getPlanet($gameID, $sectorID, true);
 	}
 
 	public static function removePlanet(int $gameID, int $sectorID): void {
 		$db = Database::getInstance();
-		$SQL = 'game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID);
-		$db->write('DELETE FROM planet WHERE ' . $SQL);
-		$db->write('DELETE FROM planet_has_weapon WHERE ' . $SQL);
-		$db->write('DELETE FROM planet_has_cargo WHERE ' . $SQL);
-		$db->write('DELETE FROM planet_has_building WHERE ' . $SQL);
-		$db->write('DELETE FROM planet_is_building WHERE ' . $SQL);
+		$SQLID = [
+			'game_id' => $db->escapeNumber($gameID),
+			'sector_id' => $db->escapeNumber($sectorID),
+		];
+		$db->delete('planet', $SQLID);
+		$db->delete('planet_has_weapon', $SQLID);
+		$db->delete('planet_has_cargo', $SQLID);
+		$db->delete('planet_has_building', $SQLID);
+		$db->delete('planet_is_building', $SQLID);
 		//kick everyone from planet
-		$db->write('UPDATE player SET land_on_planet = \'FALSE\' WHERE ' . $SQL);
+		$db->update('player', ['land_on_planet' => 'FALSE'], $SQLID);
 
 		unset(self::$CACHE_PLANETS[$gameID][$sectorID]);
 	}
@@ -137,10 +145,13 @@ class Planet {
 		DatabaseRecord $dbRecord = null
 	) {
 		$db = Database::getInstance();
-		$this->SQL = 'game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID);
+		$this->SQLID = [
+			'game_id' => $db->escapeNumber($gameID),
+			'sector_id' => $db->escapeNumber($sectorID),
+		];
 
 		if ($dbRecord === null) {
-			$dbResult = $db->read('SELECT * FROM planet WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT * FROM planet WHERE ' . self::SQL, $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -496,7 +507,7 @@ class Planet {
 			$this->mountedWeapons = [];
 			if ($this->hasBuilding(PLANET_WEAPON_MOUNT)) {
 				$db = Database::getInstance();
-				$dbResult = $db->read('SELECT * FROM planet_has_weapon JOIN weapon_type USING (weapon_type_id) WHERE ' . $this->SQL);
+				$dbResult = $db->read('SELECT * FROM planet_has_weapon JOIN weapon_type USING (weapon_type_id) WHERE ' . self::SQL, $this->SQLID);
 				foreach ($dbResult->records() as $dbRecord) {
 					$weaponTypeID = $dbRecord->getInt('weapon_type_id');
 					$orderID = $dbRecord->getInt('order_id');
@@ -577,7 +588,7 @@ class Planet {
 			$this->stockpile = [];
 			// get supplies from db
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT good_id, amount FROM planet_has_cargo WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT good_id, amount FROM planet_has_cargo WHERE ' . self::SQL, $this->SQLID);
 			// adding cargo and amount to array
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->stockpile[$dbRecord->getInt('good_id')] = $dbRecord->getInt('amount');
@@ -634,7 +645,7 @@ class Planet {
 
 			// get buildingss from db
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT construction_id, amount FROM planet_has_building WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT construction_id, amount FROM planet_has_building WHERE ' . self::SQL, $this->SQLID);
 			// adding building and amount to array
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->buildings[$dbRecord->getInt('construction_id')] = $dbRecord->getInt('amount');
@@ -686,7 +697,7 @@ class Planet {
 			$this->currentlyBuilding = [];
 
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM planet_is_building WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT * FROM planet_is_building WHERE ' . self::SQL, $this->SQLID);
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->currentlyBuilding[$dbRecord->getInt('building_slot_id')] = [
 					'BuildingSlotID' => $dbRecord->getInt('building_slot_id'),
@@ -746,7 +757,11 @@ class Planet {
 		}
 		$this->typeID = $num;
 		$db = Database::getInstance();
-		$db->write('UPDATE planet SET planet_type_id = ' . $db->escapeNumber($num) . ' WHERE ' . $this->SQL);
+		$db->update(
+			'planet',
+			['planet_type_id' => $num],
+			$this->SQLID,
+		);
 		$this->typeInfo = PlanetType::getTypeInfo($this->getTypeID());
 
 		//trim buildings first
@@ -808,14 +823,18 @@ class Planet {
 		}
 		$db = Database::getInstance();
 		if ($this->hasChanged) {
-			$db->write('UPDATE planet SET
-									owner_id = ' . $db->escapeNumber($this->ownerID) . ',
-									password = ' . $db->escapeString($this->password) . ',
-									planet_name = ' . $db->escapeString($this->planetName) . ',
-									shields = ' . $db->escapeNumber($this->shields) . ',
-									armour = ' . $db->escapeNumber($this->armour) . ',
-									drones = ' . $db->escapeNumber($this->drones) . '
-								WHERE ' . $this->SQL);
+			$db->update(
+				'planet',
+				[
+					'owner_id' => $this->ownerID,
+					'password' => $this->password,
+					'planet_name' => $this->planetName,
+					'shields' => $this->shields,
+					'armour' => $this->armour,
+					'drones' => $this->drones,
+				],
+				$this->SQLID,
+			);
 			$this->hasChanged = false;
 		}
 
@@ -823,11 +842,15 @@ class Planet {
 		// at the planet list (i.e. you might not have sector lock and could
 		// cause a race condition with events happening in the planet sector).
 		if ($this->hasChangedFinancial) {
-			$db->write('UPDATE planet SET
-									credits = ' . $db->escapeNumber($this->credits) . ',
-									bonds = ' . $db->escapeNumber($this->bonds) . ',
-									maturity = ' . $db->escapeNumber($this->maturity) . '
-								WHERE ' . $this->SQL);
+			$db->update(
+				'planet',
+				[
+					'credits' => $this->credits,
+					'bonds' => $this->bonds,
+					'maturity' => $this->maturity,
+				],
+				$this->SQLID,
+			);
 			$this->hasChangedFinancial = false;
 		}
 
@@ -836,14 +859,15 @@ class Planet {
 			foreach ($this->getStockpile() as $id => $amount) {
 				if ($amount != 0) {
 					$db->replace('planet_has_cargo', [
-						'game_id' => $db->escapeNumber($this->getGameID()),
-						'sector_id' => $db->escapeNumber($this->getSectorID()),
-						'good_id' => $db->escapeNumber($id),
-						'amount' => $db->escapeNumber($amount),
+						...$this->SQLID,
+						'good_id' => $id,
+						'amount' => $amount,
 					]);
 				} else {
-					$db->write('DELETE FROM planet_has_cargo WHERE ' . $this->SQL . '
-										AND good_id = ' . $db->escapeNumber($id));
+					$db->delete('planet_has_cargo', [
+						...$this->SQLID,
+						'good_id' => $id,
+					]);
 				}
 			}
 		}
@@ -852,23 +876,29 @@ class Planet {
 			foreach (array_keys($this->hasChangedWeapons) as $orderID) {
 				if (isset($this->mountedWeapons[$orderID])) {
 					$db->replace('planet_has_weapon', [
-						'game_id' => $db->escapeNumber($this->getGameID()),
-						'sector_id' => $db->escapeNumber($this->getSectorID()),
-						'order_id' => $db->escapeNumber($orderID),
-						'weapon_type_id' => $db->escapeNumber($this->mountedWeapons[$orderID]->getWeaponTypeID()),
+						...$this->SQLID,
+						'order_id' => $orderID,
+						'weapon_type_id' => $this->mountedWeapons[$orderID]->getWeaponTypeID(),
 						'bonus_accuracy' => $db->escapeBoolean($this->mountedWeapons[$orderID]->hasBonusAccuracy()),
 						'bonus_damage' => $db->escapeBoolean($this->mountedWeapons[$orderID]->hasBonusDamage()),
 					]);
 				} else {
-					$db->write('DELETE FROM planet_has_weapon WHERE ' . $this->SQL . ' AND order_id=' . $db->escapeNumber($orderID));
+					$db->delete('planet_has_weapon', [
+						...$this->SQLID,
+						'order_id' => $orderID,
+					]);
 				}
 			}
 			$this->hasChangedWeapons = [];
 		}
 
 		if (count($this->hasStoppedBuilding) > 0) {
-			$db->write('DELETE FROM planet_is_building WHERE ' . $this->SQL . '
-								AND building_slot_id IN (' . $db->escapeArray($this->hasStoppedBuilding) . ') LIMIT ' . count($this->hasStoppedBuilding));
+			$db->write('DELETE FROM planet_is_building WHERE ' . self::SQL . '
+						AND building_slot_id IN (:building_slot_ids) LIMIT :limit', [
+				...$this->SQLID,
+				'building_slot_ids' => $db->escapeArray($this->hasStoppedBuilding),
+				'limit' => count($this->hasStoppedBuilding),
+			]);
 			$this->hasStoppedBuilding = [];
 		}
 		// write building info
@@ -876,14 +906,15 @@ class Planet {
 			if ($hasChanged === true) {
 				if ($this->hasBuilding($id)) {
 					$db->replace('planet_has_building', [
-						'game_id' => $db->escapeNumber($this->gameID),
-						'sector_id' => $db->escapeNumber($this->sectorID),
-						'construction_id' => $db->escapeNumber($id),
-						'amount' => $db->escapeNumber($this->getBuilding($id)),
+						...$this->SQLID,
+						'construction_id' => $id,
+						'amount' => $this->getBuilding($id),
 					]);
 				} else {
-					$db->write('DELETE FROM planet_has_building WHERE ' . $this->SQL . '
-										AND construction_id = ' . $db->escapeNumber($id));
+					$db->delete('planet_has_building', [
+						...$this->SQLID,
+						'construction_id' => $id,
+					]);
 				}
 				$this->hasChangedBuildings[$id] = false;
 			}
@@ -988,11 +1019,11 @@ class Planet {
 		$timeComplete = Epoch::time() + $this->getConstructionTime($constructionID);
 		$db = Database::getInstance();
 		$insertID = $db->insert('planet_is_building', [
-			'game_id' => $db->escapeNumber($this->getGameID()),
-			'sector_id' => $db->escapeNumber($this->getSectorID()),
-			'construction_id' => $db->escapeNumber($constructionID),
-			'constructor_id' => $db->escapeNumber($constructor->getAccountID()),
-			'time_complete' => $db->escapeNumber($timeComplete),
+			'game_id' => $this->getGameID(),
+			'sector_id' => $this->getSectorID(),
+			'construction_id' => $constructionID,
+			'constructor_id' => $constructor->getAccountID(),
+			'time_complete' => $timeComplete,
 		]);
 
 		$this->currentlyBuilding[$insertID] = [
@@ -1100,18 +1131,22 @@ class Planet {
 		foreach ($attackers as $attacker) {
 			$attacker->increaseHOF(1, ['Combat', 'Planet', 'Number Of Attacks'], HOF_PUBLIC);
 			$db->replace('player_attacks_planet', [
-				'game_id' => $db->escapeNumber($this->getGameID()),
-				'account_id' => $db->escapeNumber($attacker->getAccountID()),
-				'sector_id' => $db->escapeNumber($this->getSectorID()),
-				'time' => $db->escapeNumber(Epoch::time()),
-				'level' => $db->escapeNumber($this->getLevel()),
+				'game_id' => $this->getGameID(),
+				'account_id' => $attacker->getAccountID(),
+				'sector_id' => $this->getSectorID(),
+				'time' => Epoch::time(),
+				'level' => $this->getLevel(),
 			]);
 		}
 
 		// Add each unique attack to news unless it was already added recently.
 		// Note: Attack uniqueness determined by planet owner.
 		$owner = $this->getOwner();
-		$dbResult = $db->read('SELECT 1 FROM news WHERE type = \'BREAKING\' AND game_id = ' . $db->escapeNumber($trigger->getGameID()) . ' AND dead_id=' . $db->escapeNumber($owner->getAccountID()) . ' AND time > ' . $db->escapeNumber(Epoch::time() - self::TIME_ATTACK_NEWS_COOLDOWN) . ' LIMIT 1');
+		$dbResult = $db->read('SELECT 1 FROM news WHERE type = \'BREAKING\' AND game_id = :game_id AND dead_id = :dead_id AND time > :news_time LIMIT 1', [
+			'game_id' => $db->escapeNumber($trigger->getGameID()),
+			'dead_id' => $db->escapeNumber($owner->getAccountID()),
+			'news_time' => $db->escapeNumber(Epoch::time() - self::TIME_ATTACK_NEWS_COOLDOWN),
+		]);
 		if (!$dbResult->hasRecord()) {
 			if (count($attackers) >= 5) {
 				$text = count($attackers) . ' members of ' . $trigger->getAllianceBBLink() . ' have been spotted attacking ' .
@@ -1121,14 +1156,14 @@ class Planet {
 				}
 				$text .= '.';
 				$db->insert('news', [
-					'game_id' => $db->escapeNumber($this->getGameID()),
-					'time' => $db->escapeNumber(Epoch::time()),
-					'news_message' => $db->escapeString($text),
-					'type' => $db->escapeString('breaking'),
-					'killer_id' => $db->escapeNumber($trigger->getAccountID()),
-					'killer_alliance' => $db->escapeNumber($trigger->getAllianceID()),
-					'dead_id' => $db->escapeNumber($owner->getAccountID()),
-					'dead_alliance' => $db->escapeNumber($owner->getAllianceID()),
+					'game_id' => $this->getGameID(),
+					'time' => Epoch::time(),
+					'news_message' => $text,
+					'type' => 'breaking',
+					'killer_id' => $trigger->getAccountID(),
+					'killer_alliance' => $trigger->getAllianceID(),
+					'dead_id' => $owner->getAccountID(),
+					'dead_alliance' => $owner->getAllianceID(),
 				]);
 			}
 		}
@@ -1328,13 +1363,16 @@ class Planet {
 	public function creditCurrentAttackersForKill(): void {
 		//get all players involved for HoF
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT account_id,level FROM player_attacks_planet WHERE ' . $this->SQL . ' AND time > ' . $db->escapeNumber(Epoch::time() - self::TIME_TO_CREDIT_BUST));
+		$dbResult = $db->read('SELECT account_id,level FROM player_attacks_planet WHERE ' . self::SQL . ' AND time > :credit_time', [
+			...$this->SQLID,
+			'credit_time' => $db->escapeNumber(Epoch::time() - self::TIME_TO_CREDIT_BUST),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$currPlayer = Player::getPlayer($dbRecord->getInt('account_id'), $this->getGameID());
 			$currPlayer->increaseHOF($dbRecord->getFloat('level'), ['Combat', 'Planet', 'Levels'], HOF_PUBLIC);
 			$currPlayer->increaseHOF(1, ['Combat', 'Planet', 'Completed'], HOF_PUBLIC);
 		}
-		$db->write('DELETE FROM player_attacks_planet WHERE ' . $this->SQL);
+		$db->delete('player_attacks_planet', $this->SQLID);
 	}
 
 	/**
@@ -1345,7 +1383,7 @@ class Planet {
 
 		//kick everyone from planet
 		$db = Database::getInstance();
-		$db->write('UPDATE player SET land_on_planet = \'FALSE\' WHERE ' . $this->SQL);
+		$db->update('player', ['land_on_planet' => 'FALSE'], $this->SQLID);
 		$this->removeOwner();
 		$this->removePassword();
 		return [];

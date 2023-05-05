@@ -36,7 +36,9 @@ class ShipType {
 		if (!isset(self::$CACHE_SHIP_TYPES[$shipTypeID])) {
 			if ($dbRecord === null) {
 				$db = Database::getInstance();
-				$dbResult = $db->read('SELECT * FROM ship_type WHERE ship_type_id = ' . $db->escapeNumber($shipTypeID));
+				$dbResult = $db->read('SELECT * FROM ship_type WHERE ship_type_id = :ship_type_id', [
+					'ship_type_id' => $db->escapeNumber($shipTypeID),
+				]);
 				$dbRecord = $dbResult->record();
 			} elseif ($shipTypeID !== $dbRecord->getInt('ship_type_id')) {
 				throw new Exception('Database result mismatch');
@@ -88,8 +90,10 @@ class ShipType {
 
 		// get supported hardware from db
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT hardware_type_id, max_amount FROM ship_type_support_hardware ' .
-			'WHERE ship_type_id = ' . $db->escapeNumber($this->typeID) . ' ORDER BY hardware_type_id');
+		$dbResult = $db->read('SELECT hardware_type_id, max_amount FROM ship_type_support_hardware
+			WHERE ship_type_id = :ship_type_id ORDER BY hardware_type_id', [
+			'ship_type_id' => $db->escapeNumber($this->typeID),
+		]);
 
 		$maxHardware = [];
 		foreach ($dbResult->records() as $dbRecord2) {

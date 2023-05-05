@@ -21,7 +21,9 @@ class AdminMessageSendSelect extends AccountPage {
 		// Get a list of all games that have not yet ended
 		$activeGames = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT game_id FROM game WHERE end_time > ' . $db->escapeNumber(Epoch::time()) . ' ORDER BY end_time DESC');
+		$dbResult = $db->read('SELECT game_id FROM game WHERE end_time > :now ORDER BY end_time DESC', [
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$activeGames[] = Game::getGame($dbRecord->getInt('game_id'));
 		}

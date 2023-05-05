@@ -371,8 +371,8 @@ function do_voodoo(): never {
 					if (ENABLE_DEBUG) {
 						$db = Database::getInstance();
 						$db->insert('debug', [
-							'debug_type' => $db->escapeString('SPAM'),
-							'account_id' => $db->escapeNumber($account->getAccountID()),
+							'debug_type' => 'SPAM',
+							'account_id' => $account->getAccountID(),
 							'value' => 0,
 							'value_2' => 0,
 						]);
@@ -479,7 +479,10 @@ function doTickerAssigns(Template $template, AbstractPlayer $player, Database $d
 		$dateFormat = $player->getAccount()->getDateTimeFormat();
 		if ($player->hasTicker('NEWS')) {
 			//get recent news (5 mins)
-			$dbResult = $db->read('SELECT time,news_message FROM news WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND time >= ' . $max . ' ORDER BY time DESC LIMIT 4');
+			$dbResult = $db->read('SELECT time,news_message FROM news WHERE game_id = :game_id AND time >= :max_time ORDER BY time DESC LIMIT 4', [
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'max_time' => $db->escapeNumber($max),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$ticker[] = [
 					'Time' => date($dateFormat, $dbRecord->getInt('time')),
@@ -489,13 +492,18 @@ function doTickerAssigns(Template $template, AbstractPlayer $player, Database $d
 		}
 		if ($player->hasTicker('SCOUT')) {
 			$dbResult = $db->read('SELECT message_text,send_time FROM message
-						WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . '
-						AND game_id=' . $db->escapeNumber($player->getGameID()) . '
-						AND message_type_id=' . $db->escapeNumber(MSG_SCOUT) . '
-						AND send_time>=' . $db->escapeNumber($max) . '
-						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type=' . $db->escapeString('BLOCK') . ' AND expires > ' . $db->escapeNumber(Epoch::time()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ') AND receiver_delete = \'FALSE\'
+						WHERE ' . AbstractPlayer::SQL . '
+						AND message_type_id = :message_type_id
+						AND send_time >= :max_time
+						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type = :type AND expires > :now AND game_id = :game_id) AND receiver_delete = \'FALSE\'
 						ORDER BY send_time DESC
-						LIMIT 4');
+						LIMIT 4', [
+				...$player->SQLID,
+				'message_type_id' => $db->escapeNumber(MSG_SCOUT),
+				'max_time' => $db->escapeNumber($max),
+				'type' => $db->escapeString('BLOCK'),
+				'now' => $db->escapeNumber(Epoch::time()),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$ticker[] = [
 					'Time' => date($dateFormat, $dbRecord->getInt('send_time')),
@@ -584,7 +592,7 @@ function doSkeletonAssigns(Template $template): void {
 		$template->assign('CurrentHallOfFameLink', $container->href());
 
 		$unreadMessages = [];
-		$dbResult = $db->read('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . $player->getSQL() . ' GROUP BY message_type_id');
+		$dbResult = $db->read('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . AbstractPlayer::SQL . ' GROUP BY message_type_id', $player->SQLID);
 		foreach ($dbResult->records() as $dbRecord) {
 			$messageTypeID = $dbRecord->getInt('message_type_id');
 			$container = new MessageView($messageTypeID);

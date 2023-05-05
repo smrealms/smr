@@ -18,7 +18,10 @@ function check_for_registration($fp, string $nick, string $channel, Closure $cal
 	$db = Database::getInstance();
 
 	// only registered users are allowed to use this command
-	$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
+	$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND registered = 1 AND channel = :channel', [
+		'nick' => $db->escapeString($nick),
+		'channel' => $db->escapeString($channel),
+	]);
 	if (!$dbResult->hasRecord()) {
 
 		// execute a whois and continue here on whois
@@ -186,9 +189,15 @@ function channel_msg_seen($fp, Message $msg): bool {
 
 		// if user provided more than 3 letters we do a wildcard search
 		if (strlen($seennick) > 3) {
-			$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick LIKE ' . $db->escapeString('%' . $seennick . '%') . ' AND channel = ' . $db->escapeString($channel) . ' ORDER BY signed_on DESC');
+			$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick LIKE :pattern AND channel = :channel ORDER BY signed_on DESC', [
+				'pattern' => $db->escapeString('%' . $seennick . '%'),
+				'channel' => $db->escapeString($channel),
+			]);
 		} else {
-			$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($seennick) . ' AND channel = ' . $db->escapeString($channel));
+			$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND channel = :channel', [
+				'nick' => $db->escapeString($seennick),
+				'channel' => $db->escapeString($channel),
+			]);
 		}
 
 		// get only one result. shouldn't match more than one
@@ -208,8 +217,11 @@ function channel_msg_seen($fp, Message $msg): bool {
 				// remember who did the !seen command
 				$db->write('UPDATE irc_seen
 							SET seen_count = seen_count + 1,
-								seen_by = ' . $db->escapeString($nick) . '
-							WHERE seen_id = ' . $seen_id);
+								seen_by = :seen_by
+							WHERE seen_id = :seen_id', [
+					'seen_by' => $db->escapeString($nick),
+					'seen_id' => $db->escapeNumber($seen_id),
+				]);
 
 				fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', ' . $seennick . ' (' . $seenuser . '@' . $seenhost . ') was last seen quitting ' . $channel . ' ' . format_time(time() - $signed_off) . ' ago after spending ' . format_time($signed_off - $signed_on) . ' there.' . EOL);
 			} else {

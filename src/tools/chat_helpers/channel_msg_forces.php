@@ -13,13 +13,16 @@ function shared_channel_msg_forces(AbstractPlayer $player, ?string $option = nul
 	if (empty($option)) {
 		$dbResult = $db->read('SELECT sector_has_forces.sector_id AS sector, expire_time
 			FROM sector_has_forces
-			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+			WHERE game_id = :game_id
 				AND owner_id IN (
 					SELECT account_id FROM player
-					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
+					WHERE game_id = :game_id
+					AND alliance_id = :alliance_id
 				)
-			ORDER BY expire_time ASC LIMIT 1');
+			ORDER BY expire_time ASC LIMIT 1', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+		]);
 	} elseif ($option == 'seedlist') {
 		// are we restricting to the seedlist?
 		$seedlist = get_seedlist($player);
@@ -28,17 +31,24 @@ function shared_channel_msg_forces(AbstractPlayer $player, ?string $option = nul
 		}
 		$dbResult = $db->read('SELECT sector_has_forces.sector_id AS sector, expire_time
 			FROM sector_has_forces
-			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-				AND sector_id IN (' . $db->escapeArray($seedlist) . ')
+			WHERE game_id = :game_id
+				AND sector_id IN (:sector_ids)
 				AND owner_id IN (
 					SELECT account_id FROM player
-					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
+					WHERE game_id = :game_id
+					AND alliance_id = :alliance_id
 				)
-			ORDER BY expire_time ASC LIMIT 1');
+			ORDER BY expire_time ASC LIMIT 1', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+			'sector_ids' => $db->escapeArray($seedlist),
+		]);
 	} else {
 		// did we get a galaxy name?
-		$dbResult = $db->read('SELECT galaxy_id FROM game_galaxy WHERE galaxy_name = ' . $db->escapeString($option) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+		$dbResult = $db->read('SELECT galaxy_id FROM game_galaxy WHERE galaxy_name = :galaxy_name AND game_id = :game_id', [
+			'galaxy_name' => $db->escapeString($option),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		if (!$dbResult->hasRecord()) {
 			return ["Could not find a galaxy named '$option'."];
 		}
@@ -46,14 +56,18 @@ function shared_channel_msg_forces(AbstractPlayer $player, ?string $option = nul
 		$dbResult = $db->read('SELECT sector_has_forces.sector_id AS sector, expire_time
 					FROM sector_has_forces
 					LEFT JOIN sector USING (sector_id, game_id)
-					WHERE sector_has_forces.game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND galaxy_id = ' . $db->escapeNumber($galaxyId) . '
+					WHERE sector_has_forces.game_id = :game_id
+						AND galaxy_id = :galaxy_id
 						AND owner_id IN (
 							SELECT account_id FROM player
-							WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-								AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
+							WHERE game_id = :game_id
+								AND alliance_id = :alliance_id
 						)
-					ORDER BY expire_time ASC LIMIT 1');
+					ORDER BY expire_time ASC LIMIT 1', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'galaxy_id' => $db->escapeNumber($galaxyId),
+			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+		]);
 	}
 
 	if (!$dbResult->hasRecord()) {

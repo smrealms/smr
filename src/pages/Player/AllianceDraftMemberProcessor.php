@@ -59,10 +59,10 @@ class AllianceDraftMemberProcessor extends PlayerPageProcessor {
 		// Update the draft history
 		$db = Database::getInstance();
 		$db->insert('draft_history', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'leader_account_id' => $db->escapeNumber($player->getAccountID()),
-			'picked_account_id' => $db->escapeNumber($pickedPlayer->getAccountID()),
-			'time' => $db->escapeNumber(Epoch::time()),
+			'game_id' => $player->getGameID(),
+			'leader_account_id' => $player->getAccountID(),
+			'picked_account_id' => $pickedPlayer->getAccountID(),
+			'time' => Epoch::time(),
 		]);
 
 		(new AllianceDraftMember())->go();

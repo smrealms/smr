@@ -50,7 +50,11 @@ class AllianceDraftMember extends PlayerPage {
 
 		// Get a list of players still in the pick pool
 		$players = [];
-		$dbResult = $db->read('SELECT * FROM player WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND (alliance_id=0 OR alliance_id=' . $db->escapeNumber($NHAID) . ') AND account_id NOT IN (SELECT account_id FROM draft_leaders WHERE draft_leaders.game_id=player.game_id) AND account_id NOT IN (SELECT picked_account_id FROM draft_history WHERE draft_history.game_id=player.game_id) AND account_id != ' . $db->escapeNumber(ACCOUNT_ID_NHL) . ';');
+		$dbResult = $db->read('SELECT * FROM player WHERE game_id = :game_id AND (alliance_id=0 OR alliance_id = :nha_alliance_id) AND account_id NOT IN (SELECT account_id FROM draft_leaders WHERE draft_leaders.game_id=player.game_id) AND account_id NOT IN (SELECT picked_account_id FROM draft_history WHERE draft_history.game_id=player.game_id) AND account_id != :nhl_account_id', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'nha_alliance_id' => $db->escapeNumber($NHAID),
+			'nhl_account_id' => $db->escapeNumber(ACCOUNT_ID_NHL),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$pickPlayer = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 			$players[] = [
@@ -63,7 +67,9 @@ class AllianceDraftMember extends PlayerPage {
 
 		// Get the draft history
 		$history = [];
-		$dbResult = $db->read('SELECT * FROM draft_history WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' ORDER BY draft_id');
+		$dbResult = $db->read('SELECT * FROM draft_history WHERE game_id = :game_id ORDER BY draft_id', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$leader = Player::getPlayer($dbRecord->getInt('leader_account_id'), $player->getGameID());
 			$pickedPlayer = Player::getPlayer($dbRecord->getInt('picked_account_id'), $player->getGameID());

@@ -41,9 +41,11 @@ class DatabaseInsertTest extends TestCase {
 
 		// Non-empty fields are successfully recovered
 		$logID = $db->insert('test2', [
-			'var' => $db->escapeString('foo'),
+			'var' => 'foo',
 		]);
-		$result = $db->read('SELECT * FROM test2 WHERE id = ' . $logID);
+		$result = $db->read('SELECT * FROM test2 WHERE id = :id', [
+			'id' => $logID,
+		]);
 		$record = $result->record();
 		self::assertSame('foo', $record->getString('var'));
 	}
@@ -62,12 +64,14 @@ class DatabaseInsertTest extends TestCase {
 		// Replacing an existing row returns that row as the insert ID
 		$logID = $db->replace('test2', [
 			'id' => 2,
-			'var' => $db->escapeString('foo'),
+			'var' => 'foo',
 		]);
 		self::assertSame(2, $logID);
 
 		// Non-empty fields are successfully recovered
-		$result = $db->read('SELECT * FROM test2 WHERE id = ' . $logID);
+		$result = $db->read('SELECT * FROM test2 WHERE id = :id', [
+			'id' => $logID,
+		]);
 		$record = $result->record();
 		self::assertSame('foo', $record->getString('var'));
 	}

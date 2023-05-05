@@ -53,9 +53,14 @@ class WeightedRandom {
 		protected readonly int $typeID
 	) {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT weighting FROM weighted_random WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND account_id = ' . $db->escapeNumber($accountID) . ' AND type = ' . $db->escapeString($type) . ' AND type_id = ' . $db->escapeNumber($typeID));
+		$dbResult = $db->read('SELECT weighting FROM weighted_random WHERE game_id = :game_id AND account_id = :account_id AND type = :type AND type_id = :type_id', [
+			'game_id' => $db->escapeNumber($gameID),
+			'account_id' => $db->escapeNumber($accountID),
+			'type' => $db->escapeString($type),
+			'type_id' => $db->escapeNumber($typeID),
+		]);
 		if ($dbResult->hasRecord()) {
-			$this->weighting = $dbResult->record()->getInt('weighting');
+			$this->weighting = $dbResult->record()->getFloat('weighting');
 		} else {
 			$this->weighting = 0;
 		}
@@ -108,11 +113,11 @@ class WeightedRandom {
 		if ($this->hasChanged === true) {
 			$db = Database::getInstance();
 			$db->replace('weighted_random', [
-				'game_id' => $db->escapeNumber($this->getGameID()),
-				'account_id' => $db->escapeNumber($this->getAccountID()),
-				'type' => $db->escapeString($this->getType()),
-				'type_id' => $db->escapeNumber($this->getTypeID()),
-				'weighting' => $db->escapeNumber($this->getWeighting()),
+				'game_id' => $this->getGameID(),
+				'account_id' => $this->getAccountID(),
+				'type' => $this->getType(),
+				'type_id' => $this->getTypeID(),
+				'weighting' => $this->getWeighting(),
 			]);
 			$this->hasChanged = false;
 		}

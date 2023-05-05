@@ -80,7 +80,9 @@ class IpViewResults extends AccountPage {
 				$row['matches'] = $matches;
 
 				if ($matches) {
-					$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($account_id));
+					$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = :account_id', [
+						'account_id' => $db->escapeNumber($account_id),
+					]);
 					if ($dbResult2->hasRecord()) {
 						$ex = $dbResult2->record()->getString('reason');
 					} else {
@@ -117,7 +119,9 @@ class IpViewResults extends AccountPage {
 			$template->assign('BanAccountID', $accountID);
 			$summary = 'Account ' . $accountID . ' has had the following IPs at the following times.';
 			$template->assign('Summary', $summary);
-			$dbResult = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($accountID));
+			$dbResult = $db->read('SELECT * FROM account_exceptions WHERE account_id = :account_id', [
+				'account_id' => $db->escapeNumber($accountID),
+			]);
 			if ($dbResult->hasRecord()) {
 				$ex = $dbResult->record()->getString('reason');
 				$template->assign('Exception', $ex);
@@ -128,7 +132,9 @@ class IpViewResults extends AccountPage {
 				$template->assign('CloseReason', $disabled['Reason']);
 			}
 			$rows = [];
-			$dbResult = $db->read('SELECT * FROM account_has_ip WHERE account_id = ' . $db->escapeNumber($accountID) . ' ORDER BY time');
+			$dbResult = $db->read('SELECT * FROM account_has_ip WHERE account_id = :account_id ORDER BY time', [
+				'account_id' => $db->escapeNumber($accountID),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$rows[] = [
 					'ip' => $dbRecord->getString('ip'),
@@ -149,7 +155,9 @@ class IpViewResults extends AccountPage {
 					$host = 'unknown';
 				}
 				$summary = 'The following accounts have the IP address ' . $ip . ' (' . $host . ')';
-				$dbResult = $db->read('SELECT * FROM account_has_ip WHERE ip = ' . $db->escapeString($ip) . ' ORDER BY account_id');
+				$dbResult = $db->read('SELECT * FROM account_has_ip WHERE ip = :ip ORDER BY account_id', [
+					'ip' => $db->escapeString($ip),
+				]);
 
 			} elseif ($type == 'alliance_ips') {
 				//=========================================================
@@ -162,21 +170,28 @@ class IpViewResults extends AccountPage {
 				$allianceID = (int)$allianceID;
 				$gameID = (int)$gameID;
 				$name = Alliance::getAlliance($allianceID, $gameID)->getAllianceDisplayName();
-				$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND alliance_id = ' . $db->escapeNumber($allianceID) . ' ORDER BY ip');
+				$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE game_id = :game_id AND alliance_id = :alliance_id ORDER BY ip', [
+					'game_id' => $db->escapeNumber($gameID),
+					'alliance_id' => $db->escapeNumber($allianceID),
+				]);
 				$summary = 'Listing all IPs for alliance ' . $name . ' in game with ID ' . $gameID;
 
 			} elseif ($type == 'wild_log') {
 				//=========================================================
 				// List all IPs for a wildcard login name
 				//=========================================================
-				$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN account USING(account_id) WHERE login LIKE ' . $db->escapeString($variable) . ' ORDER BY login, ip');
+				$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN account USING(account_id) WHERE login LIKE :login_like ORDER BY login, ip', [
+					'login_like' => $db->escapeString($variable),
+				]);
 				$summary = 'Listing all IPs for login names LIKE ' . $variable;
 
 			} elseif ($type == 'wild_in') {
 				//=========================================================
 				// List all IPs for a wildcard ingame name
 				//=========================================================
-				$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE player_name LIKE ' . $db->escapeString($variable) . ' ORDER BY player_name, ip');
+				$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE player_name LIKE :player_name_like ORDER BY player_name, ip', [
+					'player_name_like' => $db->escapeString($variable),
+				]);
 				$summary = 'Listing all IPs for ingame names LIKE ' . $variable;
 
 			} elseif ($type == 'compare') {
@@ -184,7 +199,9 @@ class IpViewResults extends AccountPage {
 				// List all IPs for specified players
 				//=========================================================
 				$list = array_map(trim(...), explode(',', $variable));
-				$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE player_name IN (' . $db->escapeArray($list) . ') ORDER BY ip');
+				$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE player_name IN (:player_names) ORDER BY ip', [
+					'player_names' => $db->escapeArray($list),
+				]);
 				$summary = 'Listing all IPs for ingame names ' . $variable;
 
 			} elseif ($type == 'compare_log') {
@@ -192,21 +209,27 @@ class IpViewResults extends AccountPage {
 				// List all IPs for specified logins
 				//=========================================================
 				$list = array_map(trim(...), explode(',', $variable));
-				$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN account USING(account_id) WHERE login IN (' . $db->escapeArray($list) . ') ORDER BY ip');
+				$dbResult = $db->read('SELECT ip.* FROM account_has_ip ip JOIN account USING(account_id) WHERE login IN (:logins) ORDER BY ip', [
+					'logins' => $db->escapeArray($list),
+				]);
 				$summary = 'Listing all IPs for logins ' . $variable;
 
 			} elseif ($type == 'wild_ip') {
 				//=========================================================
 				// Wildcard IP search
 				//=========================================================
-				$dbResult = $db->read('SELECT * FROM account_has_ip WHERE ip LIKE ' . $db->escapeString($variable) . ' GROUP BY account_id, ip ORDER BY time DESC, ip');
+				$dbResult = $db->read('SELECT * FROM account_has_ip WHERE ip LIKE :ip_like GROUP BY account_id, ip ORDER BY time DESC, ip', [
+					'ip_like' => $db->escapeString($variable),
+				]);
 				$summary = 'Listing all IPs LIKE ' . $variable;
 
 			} elseif ($type == 'wild_host') {
 				//=========================================================
 				// Wildcard host search
 				//=========================================================
-				$dbResult = $db->read('SELECT * FROM account_has_ip WHERE host LIKE ' . $db->escapeString($variable) . ' GROUP BY account_id, ip ORDER BY time, ip');
+				$dbResult = $db->read('SELECT * FROM account_has_ip WHERE host LIKE :host_like GROUP BY account_id, ip ORDER BY time, ip', [
+					'host_like' => $db->escapeString($variable),
+				]);
 				$summary = 'Listing all hosts LIKE ' . $variable;
 			} else {
 				throw new Exception('Unknown type: ' . $type);
@@ -230,12 +253,16 @@ class IpViewResults extends AccountPage {
 				$acc = Account::getAccount($id);
 				$disabled = $acc->isDisabled();
 				$close_reason = $disabled ? $disabled['Reason'] : '';
-				$dbResult2 = $db->read('SELECT * FROM player WHERE account_id = ' . $db->escapeNumber($id));
+				$dbResult2 = $db->read('SELECT * FROM player WHERE account_id = :account_id', [
+					'account_id' => $db->escapeNumber($id),
+				]);
 				$names = [];
 				foreach ($dbResult2->records() as $dbRecord2) {
 					$names[] = $dbRecord2->getString('player_name');
 				}
-				$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $db->escapeNumber($id));
+				$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = :account_id', [
+					'account_id' => $db->escapeNumber($id),
+				]);
 				if ($dbResult2->hasRecord()) {
 					$ex = $dbResult2->record()->getString('reason');
 				} else {

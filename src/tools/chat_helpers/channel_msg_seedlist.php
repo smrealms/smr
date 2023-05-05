@@ -10,8 +10,11 @@ function get_seedlist(AbstractPlayer $player): array {
 	// Return the seedlist
 	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT sector_id FROM alliance_has_seedlist
-						WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
-							AND game_id = ' . $db->escapeNumber($player->getGameID()));
+						WHERE alliance_id = :alliance_id
+							AND game_id = :game_id', [
+		'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+		'game_id' => $db->escapeNumber($player->getGameID()),
+	]);
 	$seedlist = [];
 	foreach ($dbResult->records() as $dbRecord) {
 		$seedlist[] = $dbRecord->getInt('sector_id');
@@ -64,8 +67,11 @@ function shared_channel_msg_seedlist_add(AbstractPlayer $player, ?array $sectors
 		// check if the sector is a part of the game
 		$dbResult = $db->read('SELECT 1
 					FROM sector
-					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND  sector_id = ' . $db->escapeNumber($sector));
+					WHERE game_id = :game_id
+						AND sector_id = :sector_id', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'sector_id' => $db->escapeNumber($sector),
+		]);
 		if (!$dbResult->hasRecord()) {
 			$result[] = "WARNING: The sector '$sector' does not exist in the current game.";
 			continue;
@@ -79,9 +85,9 @@ function shared_channel_msg_seedlist_add(AbstractPlayer $player, ?array $sectors
 
 		// add sector to db (and the current seedlist)
 		$db->insert('alliance_has_seedlist', [
-			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'sector_id' => $db->escapeNumber($sector),
+			'alliance_id' => $player->getAllianceID(),
+			'game_id' => $player->getGameID(),
+			'sector_id' => $sector,
 		]);
 		$currentSeedlist[] = $sector;
 	}
@@ -122,9 +128,13 @@ function shared_channel_msg_seedlist_del(AbstractPlayer $player, ?array $sectors
 	// remove sectors from the db
 	$db = Database::getInstance();
 	$db->write('DELETE FROM alliance_has_seedlist
-				WHERE alliance_id = ' . $player->getAllianceID() . '
-					AND game_id = ' . $player->getGameID() . '
-					AND sector_id IN (' . $db->escapeArray($sectors) . ')');
+				WHERE alliance_id = :alliance_id
+					AND game_id = :game_id
+					AND sector_id IN (:sector_ids)', [
+		'alliance_id' => $player->getAllianceID(),
+		'game_id' => $player->getGameID(),
+		'sector_ids' => $db->escapeArray($sectors),
+	]);
 
 	return ['The following sectors have been removed from the seedlist: ' . implode(' ', $sectors)];
 }

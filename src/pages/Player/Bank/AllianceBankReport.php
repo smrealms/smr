@@ -25,7 +25,10 @@ class AllianceBankReport extends PlayerPage {
 
 		//get all transactions
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM alliance_bank_transactions WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+		$dbResult = $db->read('SELECT * FROM alliance_bank_transactions WHERE alliance_id = :alliance_id AND game_id = :game_id', [
+			'alliance_id' => $db->escapeNumber($alliance_id),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		if (!$dbResult->hasRecord()) {
 			create_error('Your alliance has no recorded transactions.');
 		}
@@ -47,7 +50,10 @@ class AllianceBankReport extends PlayerPage {
 			$totals[$accId] = $transArray[self::DEPOSIT] - $transArray[self::WITHDRAW];
 		}
 		arsort($totals, SORT_NUMERIC);
-		$dbResult = $db->read('SELECT * FROM player WHERE account_id IN (' . $db->escapeArray($playerIDs) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY player_name');
+		$dbResult = $db->read('SELECT * FROM player WHERE account_id IN (:account_ids) AND game_id = :game_id ORDER BY player_name', [
+			'account_ids' => $db->escapeArray($playerIDs),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		$players = [0 => 'Alliance Funds'];
 		foreach ($dbResult->records() as $dbRecord) {
 			$players[$dbRecord->getInt('account_id')] = htmlentities($dbRecord->getString('player_name'));

@@ -111,14 +111,14 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 		// Add this log to the `combat_logs` database table
 		$db = Database::getInstance();
 		$logId = $db->insert('combat_logs', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'type' => $db->escapeString('FORCE'),
-			'sector_id' => $db->escapeNumber($forces->getSectorID()),
-			'timestamp' => $db->escapeNumber(Epoch::time()),
-			'attacker_id' => $db->escapeNumber($player->getAccountID()),
-			'attacker_alliance_id' => $db->escapeNumber($player->getAllianceID()),
-			'defender_id' => $db->escapeNumber($forceOwner->getAccountID()),
-			'defender_alliance_id' => $db->escapeNumber($forceOwner->getAllianceID()),
+			'game_id' => $player->getGameID(),
+			'type' => 'FORCE',
+			'sector_id' => $forces->getSectorID(),
+			'timestamp' => Epoch::time(),
+			'attacker_id' => $player->getAccountID(),
+			'attacker_alliance_id' => $player->getAllianceID(),
+			'defender_id' => $forceOwner->getAccountID(),
+			'defender_alliance_id' => $forceOwner->getAllianceID(),
 			'result' => $db->escapeObject($results, true),
 		]);
 

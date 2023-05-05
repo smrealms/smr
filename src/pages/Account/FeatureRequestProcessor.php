@@ -23,18 +23,18 @@ class FeatureRequestProcessor extends AccountPageProcessor {
 		$db = Database::getInstance();
 		$featureRequestID = $db->insert('feature_request', []);
 		$db->insert('feature_request_comments', [
-			'feature_request_id' => $db->escapeNumber($featureRequestID),
-			'poster_id' => $db->escapeNumber($account->getAccountID()),
-			'posting_time' => $db->escapeNumber(Epoch::time()),
+			'feature_request_id' => $featureRequestID,
+			'poster_id' => $account->getAccountID(),
+			'posting_time' => Epoch::time(),
 			'anonymous' => $db->escapeBoolean(Request::has('anon')),
-			'text' => $db->escapeString(word_filter($feature)),
+			'text' => word_filter($feature),
 		]);
 
 		// vote for this feature
 		$db->insert('account_votes_for_feature', [
-			'account_id' => $db->escapeNumber($account->getAccountID()),
-			'feature_request_id' => $db->escapeNumber($featureRequestID),
-			'vote_type' => $db->escapeString('YES'),
+			'account_id' => $account->getAccountID(),
+			'feature_request_id' => $featureRequestID,
+			'vote_type' => 'YES',
 		]);
 
 		(new FeatureRequest())->go();

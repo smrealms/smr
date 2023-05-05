@@ -25,18 +25,24 @@ class AllianceShareMapsProcessor extends PlayerPageProcessor {
 		$db = Database::getInstance();
 		$query = 'DELETE
 					FROM player_visited_sector
-					WHERE account_id IN (' . $db->escapeArray($alliance_ids) . ')
-						AND game_id = ' . $db->escapeNumber($player->getGameID());
+					WHERE account_id IN (:account_ids)
+						AND game_id = :game_id';
+		$sqlParams = [
+			'account_ids' => $db->escapeArray($alliance_ids),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		];
 		if (count($unvisitedSectors) > 0) {
-			$query .= ' AND sector_id NOT IN (' . $db->escapeArray($unvisitedSectors) . ')';
+			$sqlParams['sector_ids'] = $db->escapeArray($unvisitedSectors);
+			$db->write($query . ' AND sector_id NOT IN (:sector_ids)', $sqlParams);
+		} else {
+			$db->write($query, $sqlParams);
 		}
-		$db->write($query);
 
 		// free some memory
 		unset($unvisitedSectors);
 
 		// get a list of all visited ports
-		$dbResult = $db->read('SELECT sector_id FROM player_visited_port WHERE ' . $player->getSQL());
+		$dbResult = $db->read('SELECT sector_id FROM player_visited_port WHERE ' . AbstractPlayer::SQL, $player->SQLID);
 		foreach ($dbResult->records() as $dbRecord) {
 			$cachedPort = Port::getCachedPort($player->getGameID(), $dbRecord->getInt('sector_id'), $player->getAccountID());
 			$cachedPort->addCachePorts($alliance_ids);

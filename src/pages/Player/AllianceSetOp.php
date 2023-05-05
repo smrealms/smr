@@ -31,7 +31,10 @@ class AllianceSetOp extends PlayerPage {
 
 		// get the op from db
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' AND  game_id=' . $db->escapeNumber($player->getGameID()));
+		$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id = :alliance_id AND game_id = :game_id', [
+			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 
 		if ($dbResult->hasRecord()) {
 			// An op is already scheduled, so get the time

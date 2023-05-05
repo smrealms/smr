@@ -19,7 +19,9 @@ class DatabaseCleanupProcessor extends AccountPageProcessor {
 		$initialBytes = $db->getDbBytes();
 
 		$endedGameIDs = [];
-		$dbResult = $db->read('SELECT game_id FROM game WHERE end_time < ' . $db->escapeNumber(Epoch::time()));
+		$dbResult = $db->read('SELECT game_id FROM game WHERE end_time < :now', [
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$endedGameIDs[] = $dbRecord->getInt('game_id');
 		}
@@ -47,12 +49,14 @@ class DatabaseCleanupProcessor extends AccountPageProcessor {
 
 		$rowsDeleted = [];
 		foreach ($tablesToClean as $table) {
-			$db->$method($action . ' FROM ' . $table . ' WHERE game_id IN (' . $db->escapeArray($endedGameIDs) . ')');
-			$rowsDeleted[$table] = $db->getChangedRows();
+			$result = $db->$method($action . ' FROM ' . $table . ' WHERE game_id IN (:game_ids)', [
+				'game_ids' => $db->escapeArray($endedGameIDs),
+			]);
+			$rowsDeleted[$table] = $method === 'write' ? $result : 0;
 		}
 
-		$db->$method($action . ' FROM npc_logs');
-		$rowsDeleted['npc_logs'] = $db->getChangedRows();
+		$result = $db->$method($action . ' FROM npc_logs');
+		$rowsDeleted['npc_logs'] = $method === 'write' ? $result : 0;
 
 		// Get difference in storage size
 		$diffBytes = $initialBytes - $db->getDbBytes();

@@ -17,11 +17,12 @@ class AllianceMessageBoardDeleteReplyProcessor extends PlayerPageProcessor {
 
 	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
-		$db->write('DELETE FROM alliance_thread
-					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND alliance_id = ' . $db->escapeNumber($this->allianceID) . '
-					AND thread_id = ' . $db->escapeNumber($this->threadID) . '
-					AND reply_id = ' . $db->escapeNumber($this->replyID));
+		$db->delete('alliance_thread', [
+			'game_id' => $player->getGameID(),
+			'alliance_id' => $this->allianceID,
+			'thread_id' => $this->threadID,
+			'reply_id' => $this->replyID,
+		]);
 		$this->lastPage->go();
 	}
 

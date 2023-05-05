@@ -22,8 +22,11 @@ class AllianceInvitePlayerProcessor extends PlayerPageProcessor {
 		// If sender is mail banned or blacklisted by receiver, omit the custom message
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT 1 FROM message_blacklist
-		            WHERE account_id=' . $db->escapeNumber($receiverID) . '
-		              AND blacklisted_id=' . $db->escapeNumber($player->getAccountID()));
+		            WHERE account_id = :account_id
+		              AND blacklisted_id = :blacklisted_id', [
+			'account_id' => $db->escapeNumber($receiverID),
+			'blacklisted_id' => $db->escapeNumber($player->getAccountID()),
+		]);
 		if ($dbResult->hasRecord() || $account->isMailBanned()) {
 			$addMessage = '';
 		}

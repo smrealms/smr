@@ -17,7 +17,10 @@ class MessageBlacklistDeleteProcessor extends PlayerPageProcessor {
 		}
 
 		$db = Database::getInstance();
-		$db->write('DELETE FROM message_blacklist WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND entry_id IN (' . $db->escapeArray($entry_ids) . ')');
+		$db->write('DELETE FROM message_blacklist WHERE account_id = :account_id AND entry_id IN (:entry_ids)', [
+			'account_id' => $db->escapeNumber($player->getAccountID()),
+			'entry_ids' => $db->escapeArray($entry_ids),
+		]);
 		$container = new MessageBlacklist();
 		$container->go();
 	}

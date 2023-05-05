@@ -22,7 +22,12 @@ class EnhancedWeaponEvent {
 	public static function getShopEvents(int $gameID, int $sectorID, int $locationID): array {
 		$events = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM location_sells_special WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND location_type_id = ' . $db->escapeNumber($locationID) . ' AND game_id = ' . $db->escapeNumber($gameID) . ' AND expires > ' . $db->escapeNumber(Epoch::time()));
+		$dbResult = $db->read('SELECT * FROM location_sells_special WHERE sector_id = :sector_id AND location_type_id = :location_type_id AND game_id = :game_id AND expires > :now', [
+			'sector_id' => $db->escapeNumber($sectorID),
+			'location_type_id' => $db->escapeNumber($locationID),
+			'game_id' => $db->escapeNumber($gameID),
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$events[] = self::getEventFromDatabase($dbRecord);
 		}
@@ -38,11 +43,15 @@ class EnhancedWeaponEvent {
 	public static function getLatestEvent(int $gameID): self {
 		// First, remove any expired events from the database
 		$db = Database::getInstance();
-		$db->write('DELETE FROM location_sells_special WHERE expires < ' . $db->escapeNumber(Epoch::time()));
+		$db->write('DELETE FROM location_sells_special WHERE expires < :now', [
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 
 		// Next, check if an existing event can be advertised
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM location_sells_special WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY expires DESC LIMIT 1');
+		$dbResult = $db->read('SELECT * FROM location_sells_special WHERE game_id = :game_id ORDER BY expires DESC LIMIT 1', [
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 		if ($dbResult->hasRecord()) {
 			$event = self::getEventFromDatabase($dbResult->record());
 			// Don't advertise if the event expires within one GRACE_PERIOD
@@ -66,7 +75,10 @@ class EnhancedWeaponEvent {
 		$weaponTypeID = array_rand(WeaponType::getAllSoldWeaponTypes($gameID));
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT location_type_id, sector_id FROM location JOIN location_sells_weapons USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND weapon_type_id = ' . $db->escapeNumber($weaponTypeID) . ' ORDER BY RAND() LIMIT 1');
+		$dbResult = $db->read('SELECT location_type_id, sector_id FROM location JOIN location_sells_weapons USING (location_type_id) WHERE game_id = :game_id AND weapon_type_id = :weapon_type_id ORDER BY RAND() LIMIT 1', [
+			'game_id' => $db->escapeNumber($gameID),
+			'weapon_type_id' => $db->escapeNumber($weaponTypeID),
+		]);
 		$dbRecord = $dbResult->record();
 		$locationTypeID = $dbRecord->getInt('location_type_id');
 		$sectorID = $dbRecord->getInt('sector_id');
@@ -89,11 +101,11 @@ class EnhancedWeaponEvent {
 		// We replace instead of insert in the very unlikely case that we have
 		// selected the same configuration twice in a row.
 		$db->replace('location_sells_special', [
-			'game_id' => $db->escapeNumber($gameID),
-			'sector_id' => $db->escapeNumber($sectorID),
-			'location_type_id' => $db->escapeNumber($locationTypeID),
-			'weapon_type_id' => $db->escapeNumber($weaponTypeID),
-			'expires' => $db->escapeNumber($expires),
+			'game_id' => $gameID,
+			'sector_id' => $sectorID,
+			'location_type_id' => $locationTypeID,
+			'weapon_type_id' => $weaponTypeID,
+			'expires' => $expires,
 			'bonus_accuracy' => $db->escapeBoolean($bonusAccuracy),
 			'bonus_damage' => $db->escapeBoolean($bonusDamage),
 		]);

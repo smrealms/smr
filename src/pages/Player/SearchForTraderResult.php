@@ -53,10 +53,14 @@ class SearchForTraderResult extends PlayerPage {
 
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM player
-						WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-							AND player_name LIKE ' . $db->escapeString('%' . $player_name . '%') . '
-							AND player_name != ' . $db->escapeString($player_name) . '
-						ORDER BY player_name LIMIT 5');
+						WHERE game_id = :game_id
+							AND player_name LIKE :player_name_like
+							AND player_name != :player_name
+						ORDER BY player_name LIMIT 5', [
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'player_name_like' => $db->escapeString('%' . $player_name . '%'),
+				'player_name' => $db->escapeString($player_name),
+			]);
 			$similarPlayers = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$similarPlayers[] = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);

@@ -14,13 +14,15 @@ class WordFilterAddProcessor extends AccountPageProcessor {
 		$word_replacement = strtoupper(Request::get('WordReplacement'));
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM word_filter WHERE word_value=' . $db->escapeString($word) . ' LIMIT 1');
+		$dbResult = $db->read('SELECT 1 FROM word_filter WHERE word_value = :word_value LIMIT 1', [
+			'word_value' => $db->escapeString($word),
+		]);
 		if ($dbResult->hasRecord()) {
 			$msg = '<span class="red bold">ERROR: </span>This word is already filtered!';
 		} else {
 			$db->insert('word_filter', [
-				'word_value' => $db->escapeString($word),
-				'word_replacement' => $db->escapeString($word_replacement),
+				'word_value' => $word,
+				'word_replacement' => $word_replacement,
 			]);
 			$msg = '<span class="yellow">' . $word . '</span> will now be replaced with <span class="yellow">' . $word_replacement . '</span>.';
 		}

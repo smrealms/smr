@@ -20,21 +20,23 @@ function shared_channel_msg_money(AbstractPlayer $player): array {
 
 	// get money on ships and personal bank accounts
 	$db = Database::getInstance();
-	$dbResult = $db->read('SELECT sum(credits) as total_onship, sum(bank) as total_onbank FROM player WHERE alliance_id = ' . $player->getAllianceID() . ' AND game_id = ' . $player->getGameID());
+	$dbResult = $db->read('SELECT IFNULL(SUM(credits), 0) as total_onship, IFNULL(SUM(bank), 0) as total_onbank FROM player WHERE alliance_id = :alliance_id AND game_id = :game_id', [
+		'alliance_id' => $player->getAllianceID(),
+		'game_id' => $player->getGameID(),
+	]);
 
-	if ($dbResult->hasRecord()) {
-		$dbRecord = $dbResult->record();
-		$result[] = 'Alliance members carry a total of ' . number_format($dbRecord->getInt('total_onship')) . ' credits with them';
-		$result[] = 'and keep a total of ' . number_format($dbRecord->getInt('total_onbank')) . ' credits in their personal bank accounts.';
-	}
+	$dbRecord = $dbResult->record();
+	$result[] = 'Alliance members carry a total of ' . number_format($dbRecord->getInt('total_onship')) . ' credits with them';
+	$result[] = 'and keep a total of ' . number_format($dbRecord->getInt('total_onbank')) . ' credits in their personal bank accounts.';
 
 	// get money on planets
-	$dbResult = $db->read('SELECT SUM(credits) AS total_credits, SUM(bonds) AS total_bonds FROM planet WHERE game_id = ' . $player->getGameID() . ' AND owner_id IN (SELECT account_id FROM player WHERE alliance_id = ' . $player->getAllianceID() . ' AND game_id = ' . $player->getGameID() . ')');
-	if ($dbResult->hasRecord()) {
-		$dbRecord = $dbResult->record();
-		$result[] = 'There is a total of ' . number_format($dbRecord->getInt('total_credits')) . ' credits on the planets';
-		$result[] = 'and ' . number_format($dbRecord->getInt('total_bonds')) . ' credits in bonds.';
-	}
+	$dbResult = $db->read('SELECT IFNULL(SUM(credits), 0) AS total_credits, IFNULL(SUM(bonds), 0) AS total_bonds FROM planet WHERE game_id = :game_id AND owner_id IN (SELECT account_id FROM player WHERE alliance_id = :alliance_id AND game_id = :game_id)', [
+		'alliance_id' => $player->getAllianceID(),
+		'game_id' => $player->getGameID(),
+	]);
+	$dbRecord = $dbResult->record();
+	$result[] = 'There is a total of ' . number_format($dbRecord->getInt('total_credits')) . ' credits on the planets';
+	$result[] = 'and ' . number_format($dbRecord->getInt('total_bonds')) . ' credits in bonds.';
 
 	return $result;
 }

@@ -76,7 +76,9 @@ class Session {
 			// create a new session id
 			do {
 				$this->sessionID = random_string($idLength);
-				$dbResult = $db->read('SELECT 1 FROM active_session WHERE session_id = ' . $db->escapeString($this->sessionID));
+				$dbResult = $db->read('SELECT 1 FROM active_session WHERE session_id = :session_id', [
+					'session_id' => $db->escapeString($this->sessionID),
+				]);
 			} while ($dbResult->hasRecord()); //Make sure we haven't somehow clashed with someone else's session.
 
 			// This is a minor hack to make sure that setcookie is not called
@@ -87,7 +89,9 @@ class Session {
 		}
 
 		// Delete any expired sessions
-		$db->write('DELETE FROM active_session WHERE last_accessed < ' . $db->escapeNumber(time() - self::TIME_BEFORE_EXPIRY));
+		$db->write('DELETE FROM active_session WHERE last_accessed < :expire_time', [
+			'expire_time' => $db->escapeNumber(time() - self::TIME_BEFORE_EXPIRY),
+		]);
 
 		// try to get current session
 		$this->ajax = Request::getInt('ajax', 0) === 1;
@@ -105,9 +109,9 @@ class Session {
 			}
 			if (ENABLE_DEBUG) {
 				$db->insert('debug', [
-					'debug_type' => $db->escapeString('Delay: ' . $file),
-					'account_id' => $db->escapeNumber($this->accountID),
-					'value' => $db->escapeNumber($timeBetweenLoads),
+					'debug_type' => 'Delay: ' . $file,
+					'account_id' => $this->accountID,
+					'value' => $timeBetweenLoads,
 				]);
 			}
 		}
@@ -115,7 +119,9 @@ class Session {
 
 	public function fetchVarInfo(): void {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM active_session WHERE session_id = ' . $db->escapeString($this->sessionID));
+		$dbResult = $db->read('SELECT * FROM active_session WHERE session_id = :session_id', [
+			'session_id' => $db->escapeString($this->sessionID),
+		]);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$this->generate = false;
@@ -162,16 +168,31 @@ class Session {
 		$sessionVar = [$this->links, $this->currentPage, $this->requestData];
 		$db = Database::getInstance();
 		if (!$this->generate) {
-			$db->write('UPDATE active_session SET account_id=' . $db->escapeNumber($this->accountID) . ',game_id=' . $db->escapeNumber($this->gameID) . (!$this->ajax ? ',last_accessed=' . $db->escapeNumber(Epoch::microtime()) : '') . ',session_var=' . $db->escapeObject($sessionVar, true) .
-					',last_sn=' . $db->escapeString($this->SN) .
-					' WHERE session_id=' . $db->escapeString($this->sessionID) . ($this->ajax ? ' AND last_sn=' . $db->escapeString($this->lastSN) : ''));
+			$data = [
+				'account_id' => $this->accountID,
+				'game_id' => $this->gameID,
+				'session_var' => $db->escapeObject($sessionVar, true),
+				'last_sn' => $this->SN,
+			];
+			$conditions = [
+				'session_id' => $this->sessionID,
+			];
+			if ($this->ajax) {
+				$conditions['last_sn'] = $this->lastSN;
+			} else {
+				$data['last_accessed'] = Epoch::microtime();
+			}
+			$db->update('active_session', $data, $conditions);
 		} else {
-			$db->write('DELETE FROM active_session WHERE account_id = ' . $db->escapeNumber($this->accountID) . ' AND game_id = ' . $db->escapeNumber($this->gameID));
+			$db->delete('active_session', [
+				'account_id' => $this->accountID,
+				'game_id' => $this->gameID,
+			]);
 			$db->insert('active_session', [
-				'session_id' => $db->escapeString($this->sessionID),
-				'account_id' => $db->escapeNumber($this->accountID),
-				'game_id' => $db->escapeNumber($this->gameID),
-				'last_accessed' => $db->escapeNumber(Epoch::microtime()),
+				'session_id' => $this->sessionID,
+				'account_id' => $this->accountID,
+				'game_id' => $this->gameID,
+				'last_accessed' => Epoch::microtime(),
 				'session_var' => $db->escapeObject($sessionVar, true),
 			]);
 			$this->generate = false;
@@ -232,8 +253,15 @@ class Session {
 		}
 		$this->gameID = $gameID;
 		$db = Database::getInstance();
-		$db->write('DELETE FROM active_session WHERE account_id = ' . $db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->gameID);
-		$db->write('UPDATE active_session SET game_id=' . $db->escapeNumber($this->gameID) . ' WHERE session_id=' . $db->escapeString($this->sessionID));
+		$db->delete('active_session', [
+			'account_id' => $this->accountID,
+			'game_id' => $this->gameID,
+		]);
+		$db->update(
+			'active_session',
+			['game_id' => $this->gameID],
+			['session_id' => $this->sessionID],
+		);
 	}
 
 	/**
@@ -252,7 +280,9 @@ class Session {
 
 	public function destroy(): void {
 		$db = Database::getInstance();
-		$db->write('DELETE FROM active_session WHERE session_id = ' . $db->escapeString($this->sessionID));
+		$db->delete('active_session', [
+			'session_id' => $this->sessionID,
+		]);
 		unset($this->sessionID);
 		unset($this->accountID);
 		unset($this->gameID);
@@ -356,8 +386,11 @@ class Session {
 			return;
 		}
 		$db = Database::getInstance();
-		$db->write('UPDATE active_session SET ajax_returns=' . $db->escapeObject($this->ajaxReturns, true) .
-				' WHERE session_id=' . $db->escapeString($this->sessionID));
+		$db->update(
+			'active_session',
+			['ajax_returns' => $db->escapeObject($this->ajaxReturns, true)],
+			['session_id' => $this->sessionID],
+		);
 	}
 
 }

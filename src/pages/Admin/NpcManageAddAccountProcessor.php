@@ -23,9 +23,9 @@ class NpcManageAddAccountProcessor extends AccountPageProcessor {
 
 		$db = Database::getInstance();
 		$db->insert('npc_logins', [
-			'login' => $db->escapeString($login),
-			'player_name' => $db->escapeString(Request::get('default_player_name')),
-			'alliance_name' => $db->escapeString(Request::get('default_alliance')),
+			'login' => $login,
+			'player_name' => Request::get('default_player_name'),
+			'alliance_name' => Request::get('default_alliance'),
 		]);
 
 		$container = new NpcManage($this->selectedGameID);

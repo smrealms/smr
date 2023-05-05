@@ -20,9 +20,13 @@ class CouncilVoting {
 		$db = Database::getInstance();
 
 		$dbResult = $db->read('SELECT * FROM player_votes_relation
-				WHERE time < ' . $db->escapeNumber($endtime) . '
-					AND game_id = ' . $db->escapeNumber($gameID) . '
-					AND race_id_1 = ' . $db->escapeNumber($race_id_1));
+				WHERE time < :end_time
+					AND game_id = :game_id
+					AND race_id_1 = :race_id_1', [
+			'end_time' => $db->escapeNumber($endtime),
+			'game_id' => $db->escapeNumber($gameID),
+			'race_id_1' => $db->escapeNumber($race_id_1),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$account_id = $dbRecord->getInt('account_id');
 			$race_id_2 = $dbRecord->getInt('race_id_2');
@@ -34,10 +38,14 @@ class CouncilVoting {
 				$relation_modifier = -RELATIONS_VOTE_CHANGE;
 			}
 
-			$dbResult2 = $db->read('SELECT * FROM race_has_relation ' .
-					'WHERE race_id_1 = ' . $db->escapeNumber($race_id_1) . '
-						AND race_id_2 = ' . $db->escapeNumber($race_id_2) . '
-						AND game_id = ' . $db->escapeNumber($gameID));
+			$dbResult2 = $db->read('SELECT * FROM race_has_relation
+					WHERE race_id_1 = :race_id_1
+						AND race_id_2 = :race_id_2
+						AND game_id = :game_id', [
+				'race_id_1' => $db->escapeNumber($race_id_1),
+				'race_id_2' => $db->escapeNumber($race_id_2),
+				'game_id' => $db->escapeNumber($gameID),
+			]);
 			$relation = $dbResult2->record()->getInt('relation') + $relation_modifier;
 
 			if ($relation < MIN_GLOBAL_RELATIONS) {
@@ -47,19 +55,25 @@ class CouncilVoting {
 			}
 
 			$db->write('UPDATE race_has_relation
-					SET relation = ' . $db->escapeNumber($relation) . '
-					WHERE game_id = ' . $db->escapeNumber($gameID) . '
+					SET relation = :relation
+					WHERE game_id = :game_id
 						AND (
-								race_id_1 = ' . $db->escapeNumber($race_id_1) . '
-								AND race_id_2 = ' . $db->escapeNumber($race_id_2) . '
+								race_id_1 = :race_id_1
+								AND race_id_2 = :race_id_2
 							OR
-								race_id_1 = ' . $db->escapeNumber($race_id_2) . '
-								AND race_id_2 = ' . $db->escapeNumber($race_id_1) . '
-						)');
+								race_id_1 = :race_id_2
+								AND race_id_2 = :race_id_1
+						)', [
+				'relation' => $db->escapeNumber($relation),
+				'game_id' => $db->escapeNumber($gameID),
+				'race_id_1' => $db->escapeNumber($race_id_1),
+				'race_id_2' => $db->escapeNumber($race_id_2),
+			]);
 
-			$db->write('DELETE FROM player_votes_relation
-					WHERE account_id = ' . $db->escapeNumber($account_id) . '
-						AND game_id = ' . $db->escapeNumber($gameID));
+			$db->delete('player_votes_relation', [
+				'account_id' => $account_id,
+				'game_id' => $gameID,
+			]);
 		}
 	}
 
@@ -68,27 +82,39 @@ class CouncilVoting {
 		$db = Database::getInstance();
 
 		$dbResult = $db->read('SELECT * FROM race_has_voting
-				WHERE end_time < ' . $db->escapeNumber(Epoch::time()) . '
-					AND game_id = ' . $db->escapeNumber($gameID) . '
-					AND race_id_1 = ' . $db->escapeNumber($race_id_1));
+				WHERE end_time < :now
+					AND game_id = :game_id
+					AND race_id_1 = :race_id_1', [
+			'now' => $db->escapeNumber(Epoch::time()),
+			'game_id' => $db->escapeNumber($gameID),
+			'race_id_1' => $db->escapeNumber($race_id_1),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$race_id_2 = $dbRecord->getInt('race_id_2');
 			$type = $dbRecord->getString('type');
 
 			// get 'yes' votes
 			$dbResult2 = $db->read('SELECT 1 FROM player_votes_pact
-					WHERE game_id = ' . $db->escapeNumber($gameID) . '
-						AND race_id_1 = ' . $db->escapeNumber($race_id_1) . '
-						AND race_id_2 = ' . $db->escapeNumber($race_id_2) . '
-						AND vote = \'YES\'');
+					WHERE game_id = :game_id
+						AND race_id_1 = :race_id_1
+						AND race_id_2 = :race_id_2
+						AND vote = \'YES\'', [
+				'game_id' => $db->escapeNumber($gameID),
+				'race_id_1' => $db->escapeNumber($race_id_1),
+				'race_id_2' => $db->escapeNumber($race_id_2),
+			]);
 			$yes_votes = $dbResult2->getNumRecords();
 
 			// get 'no' votes
 			$dbResult2 = $db->read('SELECT 1 FROM player_votes_pact
-					WHERE game_id = ' . $db->escapeNumber($gameID) . '
-						AND race_id_1 = ' . $db->escapeNumber($race_id_1) . '
-						AND race_id_2 = ' . $db->escapeNumber($race_id_2) . '
-						AND vote = \'NO\'');
+					WHERE game_id = :game_id
+						AND race_id_1 = :race_id_1
+						AND race_id_2 = :race_id_2
+						AND vote = \'NO\'', [
+				'game_id' => $db->escapeNumber($gameID),
+				'race_id_1' => $db->escapeNumber($race_id_1),
+				'race_id_2' => $db->escapeNumber($race_id_2),
+			]);
 			$no_votes = $dbResult2->getNumRecords();
 
 			// more yes than no?
@@ -131,82 +157,98 @@ class CouncilVoting {
 					}
 
 					$db->write('UPDATE race_has_relation
-							SET relation = LEAST(relation,' . $db->escapeNumber(RELATIONS_VOTE_WAR) . ')
-							WHERE game_id = ' . $db->escapeNumber($gameID) . '
+							SET relation = LEAST(relation, :relations_war)
+							WHERE game_id = :game_id
 								AND (
-										race_id_1 = ' . $db->escapeNumber($race_id_1) . '
-										AND race_id_2 = ' . $db->escapeNumber($race_id_2) . '
+										race_id_1 = :race_id_1
+										AND race_id_2 = :race_id_2
 									OR
-										race_id_1 = ' . $db->escapeNumber($race_id_2) . '
-										AND race_id_2 = ' . $db->escapeNumber($race_id_1) . '
-								)');
+										race_id_1 = :race_id_2
+										AND race_id_2 = :race_id_1
+								)', [
+						'relations_war' => $db->escapeNumber(RELATIONS_VOTE_WAR),
+						'game_id' => $db->escapeNumber($gameID),
+						'race_id_1' => $db->escapeNumber($race_id_1),
+						'race_id_2' => $db->escapeNumber($race_id_2),
+					]);
 
 					// get news message
 					$news = 'The [race=' . $race_id_1 . '] have declared <span class="red">WAR</span> on the [race=' . $race_id_2 . ']';
 					$db->insert('news', [
-						'game_id' => $db->escapeNumber($gameID),
-						'time' => $db->escapeNumber(Epoch::time()),
-						'news_message' => $db->escapeString($news),
+						'game_id' => $gameID,
+						'time' => Epoch::time(),
+						'news_message' => $news,
 					]);
 				} elseif ($type == 'PEACE') {
 					// get 'yes' votes
 					$dbResult2 = $db->read('SELECT 1 FROM player_votes_pact
-							WHERE game_id = ' . $db->escapeNumber($gameID) . '
-								AND race_id_1 = ' . $db->escapeNumber($race_id_2) . '
-								AND race_id_2 = ' . $db->escapeNumber($race_id_1) . '
-								AND vote = \'YES\'');
+							WHERE game_id = :game_id
+								AND race_id_1 = :race_id_1
+								AND race_id_2 = :race_id_2
+								AND vote = \'YES\'', [
+						'game_id' => $db->escapeNumber($gameID),
+						'race_id_1' => $db->escapeNumber($race_id_2),
+						'race_id_2' => $db->escapeNumber($race_id_1),
+					]);
 					$rev_yes_votes = $dbResult2->getNumRecords();
 
 					// get 'no' votes
 					$dbResult2 = $db->read('SELECT 1 FROM player_votes_pact
-							WHERE game_id = ' . $db->escapeNumber($gameID) . '
-								AND race_id_1 = ' . $db->escapeNumber($race_id_2) . '
-								AND race_id_2 = ' . $db->escapeNumber($race_id_1) . '
-								AND vote = \'NO\'');
+							WHERE game_id = :game_id
+								AND race_id_1 = :race_id_1
+								AND race_id_2 = :race_id_2
+								AND vote = \'NO\'', [
+						'game_id' => $db->escapeNumber($gameID),
+						'race_id_1' => $db->escapeNumber($race_id_2),
+						'race_id_2' => $db->escapeNumber($race_id_1),
+					]);
 					$rev_no_votes = $dbResult2->getNumRecords();
 
 					// more yes than no?
 					if ($rev_yes_votes > $rev_no_votes) {
 						$db->write('UPDATE race_has_relation
-								SET relation = GREATEST(relation,' . $db->escapeNumber(RELATIONS_VOTE_PEACE) . ')
-								WHERE game_id = ' . $db->escapeNumber($gameID) . '
+								SET relation = GREATEST(relation, :relations_peace)
+								WHERE game_id = :game_id
 									AND (
-											race_id_1 = ' . $db->escapeNumber($race_id_1) . '
-											AND race_id_2 = ' . $db->escapeNumber($race_id_2) . '
+											race_id_1 = :race_id_1
+											AND race_id_2 = :race_id_2
 										OR
-											race_id_1 = ' . $db->escapeNumber($race_id_2) . '
-											AND race_id_2 = ' . $db->escapeNumber($race_id_1) . '
-									)');
+											race_id_1 = :race_id_2
+											AND race_id_2 = :race_id_1
+									)', [
+							'relations_peace' => $db->escapeNumber(RELATIONS_VOTE_PEACE),
+							'game_id' => $db->escapeNumber($gameID),
+							'race_id_1' => $db->escapeNumber($race_id_1),
+							'race_id_2' => $db->escapeNumber($race_id_2),
+						]);
 
 						//get news message
 						$news = 'The [race=' . $race_id_1 . '] have signed a <span class="dgreen">PEACE</span> treaty with the [race=' . $race_id_2 . ']';
 						$db->insert('news', [
-							'game_id' => $db->escapeNumber($gameID),
-							'time' => $db->escapeNumber(Epoch::time()),
-							'news_message' => $db->escapeString($news),
+							'game_id' => $gameID,
+							'time' => Epoch::time(),
+							'news_message' => $news,
 						]);
 					}
 				}
 			}
 
 			// delete vote and user votes
-			$db->write('DELETE FROM race_has_voting
-					WHERE game_id = ' . $db->escapeNumber($gameID) . '
-						AND race_id_1 = ' . $db->escapeNumber($race_id_1) . '
-						AND race_id_2 = ' . $db->escapeNumber($race_id_2));
-			$db->write('DELETE FROM player_votes_pact
-					WHERE game_id = ' . $db->escapeNumber($gameID) . '
-						AND race_id_1 = ' . $db->escapeNumber($race_id_1) . '
-						AND race_id_2 = ' . $db->escapeNumber($race_id_2));
+			$sqlParams = [
+				'game_id' => $db->escapeNumber($gameID),
+				'race_id_1' => $db->escapeNumber($race_id_1),
+				'race_id_2' => $db->escapeNumber($race_id_2),
+			];
+			$db->delete('race_has_voting', $sqlParams);
+			$db->delete('player_votes_pact', $sqlParams);
 			// delete vote and user votes
-			$db->write('DELETE FROM race_has_voting
-					WHERE game_id = ' . $db->escapeNumber($gameID) . '
-						AND race_id_1 = ' . $db->escapeNumber($race_id_2) . '
-						AND race_id_2 = ' . $db->escapeNumber($race_id_1));
-			$db->write('DELETE FROM player_votes_pact
-					WHERE game_id = ' . $db->escapeNumber($gameID) . '
-						AND race_id_1 = ' . $db->escapeNumber($race_id_2) . '
-						AND race_id_2 = ' . $db->escapeNumber($race_id_1));
+			$sqlParams2 = [
+				'game_id' => $db->escapeNumber($gameID),
+				'race_id_1' => $db->escapeNumber($race_id_2),
+				'race_id_2' => $db->escapeNumber($race_id_1),
+			];
+			$db->delete('race_has_voting', $sqlParams2);
+			$db->delete('player_votes_pact', $sqlParams2);
 		}
 	}
 

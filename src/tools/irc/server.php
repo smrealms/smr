@@ -47,13 +47,17 @@ function server_msg_307($fp, string $rdata): bool {
 		echo_r('[SERVER_307] ' . $server . ' said that ' . $nick . ' is registered');
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick));
+		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick', [
+			'nick' => $db->escapeString($nick),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$seen_id = $dbRecord->getInt('seen_id');
 
-			$db->write('UPDATE irc_seen SET ' .
-						'registered = 1 ' .
-						'WHERE seen_id = ' . $seen_id);
+			$db->update(
+				'irc_seen',
+				['registered' => 1],
+				['seen_id' => $seen_id],
+			);
 		}
 
 		return true;
@@ -79,13 +83,17 @@ function server_msg_318($fp, string $rdata): bool {
 
 		$db = Database::getInstance();
 
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered IS NULL');
+		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND registered IS NULL', [
+			'nick' => $db->escapeString($nick),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$seen_id = $dbRecord->getInt('seen_id');
 
-			$db->write('UPDATE irc_seen SET ' .
-						'registered = 0 ' .
-						'WHERE seen_id = ' . $seen_id);
+			$db->update(
+				'irc_seen',
+				['registered' => 0],
+				['seen_id' => $seen_id],
+			);
 		}
 
 		foreach (CallbackEvent::getAll() as $event) {
@@ -96,7 +104,10 @@ function server_msg_318($fp, string $rdata): bool {
 				CallbackEvent::remove($event);
 
 				// so we should do a callback but need to check first if the guy has registered
-				$dbResult = $db->read('SELECT 1 FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($event->channel));
+				$dbResult = $db->read('SELECT 1 FROM irc_seen WHERE nick = :nick AND registered = 1 AND channel = :channel', [
+					'nick' => $db->escapeString($nick),
+					'channel' => $db->escapeString($event->channel),
+				]);
 				if ($dbResult->hasRecord()) {
 					//Forward to a NICKSERV INFO call.
 					fwrite($fp, 'NICKSERV INFO ' . $nick . EOL);
@@ -142,28 +153,35 @@ function server_msg_352($fp, string $rdata): bool {
 		$db = Database::getInstance();
 
 		// check if we have seen this user before
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND channel = ' . $db->escapeString($channel));
+		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND channel = :channel', [
+			'nick' => $db->escapeString($nick),
+			'channel' => $db->escapeString($channel),
+		]);
 
 		if ($dbResult->hasRecord()) {
 			// exiting nick?
 			$seen_id = $dbResult->record()->getInt('seen_id');
 
-			$db->write('UPDATE irc_seen SET ' .
-					   'signed_on = ' . time() . ', ' .
-					   'signed_off = 0, ' .
-					   'user = ' . $db->escapeString($user) . ', ' .
-					   'host = ' . $db->escapeString($host) . ', ' .
-					   'registered = NULL ' .
-					   'WHERE seen_id = ' . $seen_id);
+			$db->update(
+				'irc_seen',
+				[
+					'signed_on' => time(),
+					'signed_off' => 0,
+					'user' => $user,
+					'host' => $host,
+					'registered' => null,
+				],
+				['seen_id' => $seen_id],
+			);
 
 		} else {
 			// new nick?
 			$db->insert('irc_seen', [
-				'nick' => $db->escapeString($nick),
-				'user' => $db->escapeString($user),
-				'host' => $db->escapeString($host),
-				'channel' => $db->escapeString($channel),
-				'signed_on' => $db->escapeNumber(time()),
+				'nick' => $nick,
+				'user' => $user,
+				'host' => $host,
+				'channel' => $channel,
+				'signed_on' => time(),
 			]);
 		}
 
@@ -191,14 +209,18 @@ function server_msg_401($fp, string $rdata): bool {
 		$db = Database::getInstance();
 
 		// get the user in question
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND signed_off = 0');
+		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND signed_off = 0', [
+			'nick' => $db->escapeString($nick),
+		]);
 		if ($dbResult->hasRecord()) {
 			$seen_id = $dbResult->record()->getInt('seen_id');
 
 			// maybe he left without us noticing, so we fix this now
-			$db->write('UPDATE irc_seen SET ' .
-					   'signed_off = ' . time() .
-					   ' WHERE seen_id = ' . $seen_id);
+			$db->update(
+				'irc_seen',
+				['signed_off' => time()],
+				['seen_id' => $seen_id],
+			);
 		}
 
 		return true;

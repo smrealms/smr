@@ -19,7 +19,10 @@ function channel_join($fp, string $rdata): bool {
 		$db = Database::getInstance();
 
 		// check if we have seen this user before
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND channel = ' . $db->escapeString($channel));
+		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND channel = :channel', [
+			'nick' => $db->escapeString($nick),
+			'channel' => $db->escapeString($channel),
+		]);
 
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
@@ -35,24 +38,28 @@ function channel_join($fp, string $rdata): bool {
 				fwrite($fp, 'PRIVMSG ' . $channel . ' :Welcome back ' . $nick . '. While being away ' . $seen_by . ' was looking for you.' . EOL);
 			}
 
-			$db->write('UPDATE irc_seen
-						SET signed_on = ' . $db->escapeNumber(time()) . ',
-							signed_off = 0,
-							user = ' . $db->escapeString($user) . ',
-							host = ' . $db->escapeString($host) . ',
-							seen_count = 0,
-							seen_by = NULL,
-							registered = NULL
-						WHERE seen_id = ' . $db->escapeNumber($seen_id));
+			$db->update(
+				'irc_seen',
+				[
+					'signed_on' => time(),
+					'signed_off' => 0,
+					'user' => $user,
+					'host' => $host,
+					'seen_count' => 0,
+					'seen_by' => null,
+					'registered' => null,
+				],
+				['seen_id' => $seen_id],
+			);
 
 		} else {
 			// new nick?
 			$db->insert('irc_seen', [
-				'nick' => $db->escapeString($nick),
-				'user' => $db->escapeString($user),
-				'host' => $db->escapeString($host),
-				'channel' => $db->escapeString($channel),
-				'signed_on' => $db->escapeNumber(time()),
+				'nick' => $nick,
+				'user' => $user,
+				'host' => $host,
+				'channel' => $channel,
+				'signed_on' => time(),
 			]);
 
 			if ($nick != IRC_BOT_NICK) {
@@ -88,14 +95,21 @@ function channel_part($fp, string $rdata): bool {
 		// database object
 		$db = Database::getInstance();
 
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND channel = ' . $db->escapeString($channel));
+		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND channel = :channel', [
+			'nick' => $db->escapeString($nick),
+			'channel' => $db->escapeString($channel),
+		]);
 
 		// exiting nick?
 		if ($dbResult->hasRecord()) {
 
 			$seen_id = $dbResult->record()->getInt('seen_id');
 
-			$db->write('UPDATE irc_seen SET signed_off = ' . time() . ' WHERE seen_id = ' . $seen_id);
+			$db->update(
+				'irc_seen',
+				['signed_off' => time()],
+				['seen_id' => $seen_id],
+			);
 
 		} else {
 			// we don't know this one, but who cares? he just left anyway...

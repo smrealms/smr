@@ -32,7 +32,9 @@ while (true) {
 	// delete all seen stats that appear to be on (we do not want to take
 	// something for granted that happend while we were away)
 	$db = Database::getInstance();
-	$db->write('DELETE from irc_seen WHERE signed_off = 0');
+	$db->delete('irc_seen', [
+		'signed_off' => 0,
+	]);
 
 	// Reset last ping each time we try connecting.
 	$last_ping = time();
@@ -70,8 +72,10 @@ while (true) {
 			$dbResult = $db->read('SELECT channel
 						FROM irc_alliance_has_channel
 						JOIN game USING (game_id)
-						WHERE join_time < ' . time() . '
-							AND end_time > ' . time());
+						WHERE join_time < :now
+							AND end_time > :now', [
+				'now' => time(),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$joinChannels[] = $dbRecord->getString('channel');
 			}

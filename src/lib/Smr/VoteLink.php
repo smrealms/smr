@@ -70,7 +70,9 @@ class VoteLink {
 		if ($forceUpdate || !isset(self::$CACHE_TIMEOUTS)) {
 			self::$CACHE_TIMEOUTS = []; // ensure this is set
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT link_id, timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($this->accountID));
+			$dbResult = $db->read('SELECT link_id, timeout FROM vote_links WHERE account_id = :account_id', [
+				'account_id' => $db->escapeNumber($this->accountID),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				// 'timeout' is the last time the player claimed free turns (or 0, if unclaimed)
 				self::$CACHE_TIMEOUTS[$dbRecord->getInt('link_id')] = $dbRecord->getInt('timeout');
@@ -99,9 +101,9 @@ class VoteLink {
 
 			// Don't start the timeout until the vote actually goes through.
 			$db->replace('vote_links', [
-				'account_id' => $db->escapeNumber($this->accountID),
-				'link_id' => $db->escapeNumber($this->site->value),
-				'timeout' => $db->escapeNumber(0),
+				'account_id' => $this->accountID,
+				'link_id' => $this->site->value,
+				'timeout' => 0,
 				'turns_claimed' => $db->escapeBoolean(false),
 			]);
 		} finally {
@@ -116,8 +118,20 @@ class VoteLink {
 	 */
 	public function setFreeTurnsAwarded(): bool {
 		$db = Database::getInstance();
-		$db->write('UPDATE vote_links SET timeout = ' . Epoch::time() . ', turns_claimed = ' . $db->escapeBoolean(true) . ' WHERE account_id = ' . $db->escapeNumber($this->accountID) . ' AND link_id = ' . $db->escapeNumber($this->site->value) . ' AND timeout = 0 AND turns_claimed = ' . $db->escapeBoolean(false));
-		return $db->getChangedRows() === 1;
+		$changedRows = $db->update(
+			'vote_links',
+			[
+				'timeout' => Epoch::time(),
+				'turns_claimed' => 'TRUE',
+			],
+			[
+				'account_id' => $this->accountID,
+				'link_id' => $this->site->value,
+				'timeout' => 0,
+				'turns_claimed' => 'FALSE',
+			],
+		);
+		return $changedRows === 1;
 	}
 
 	/**

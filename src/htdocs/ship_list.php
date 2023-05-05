@@ -14,7 +14,9 @@ try {
 	// Get a list of all the shops that sell each ship
 	$shipLocs = [];
 	$db = Database::getInstance();
-	$dbResult = $db->read('SELECT ship_type_id, location_type.* FROM location_sells_ships JOIN ship_type USING (ship_type_id) JOIN location_type USING (location_type_id) WHERE location_type_id NOT IN (' . $db->escapeArray([RACE_WARS_SHIPS, LOCATION_TYPE_TEST_SHIPYARD]) . ')');
+	$dbResult = $db->read('SELECT ship_type_id, location_type.* FROM location_sells_ships JOIN ship_type USING (ship_type_id) JOIN location_type USING (location_type_id) WHERE location_type_id NOT IN (:location_type_ids)', [
+		'location_type_ids' => $db->escapeArray([RACE_WARS_SHIPS, LOCATION_TYPE_TEST_SHIPYARD]),
+	]);
 	foreach ($dbResult->records() as $dbRecord) {
 		$shipTypeID = $dbRecord->getInt('ship_type_id');
 		$locTypeID = $dbRecord->getInt('location_type_id');

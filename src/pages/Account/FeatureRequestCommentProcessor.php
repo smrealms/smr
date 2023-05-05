@@ -24,11 +24,11 @@ class FeatureRequestCommentProcessor extends AccountPageProcessor {
 		// add this feature comment
 		$db = Database::getInstance();
 		$db->insert('feature_request_comments', [
-			'feature_request_id' => $db->escapeNumber($this->featureRequestID),
-			'poster_id' => $db->escapeNumber($account->getAccountID()),
-			'posting_time' => $db->escapeNumber(Epoch::time()),
+			'feature_request_id' => $this->featureRequestID,
+			'poster_id' => $account->getAccountID(),
+			'posting_time' => Epoch::time(),
 			'anonymous' => $db->escapeBoolean(Request::has('anon')),
-			'text' => $db->escapeString(word_filter($comment)),
+			'text' => word_filter($comment),
 		]);
 
 		$this->previousPage->go();

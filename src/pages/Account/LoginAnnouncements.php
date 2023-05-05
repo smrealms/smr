@@ -23,8 +23,10 @@ class LoginAnnouncements extends AccountPage {
 		if (!$this->viewAll) {
 			$dbResult = $db->read('SELECT time, msg
 						FROM announcement
-						WHERE time > ' . $db->escapeNumber($account->getLastLogin()) . '
-						ORDER BY time DESC');
+						WHERE time > :last_login
+						ORDER BY time DESC', [
+				'last_login' => $db->escapeNumber($account->getLastLogin()),
+			]);
 			$container = new LoginCheckChangelogProcessor();
 		} else {
 			$dbResult = $db->read('SELECT time, msg

@@ -8,14 +8,18 @@ function get_seed_message(AbstractPlayer $player): string {
 	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT sector_id
 		FROM alliance_has_seedlist
-		WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
-			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+		WHERE alliance_id = :alliance_id
+			AND game_id = :game_id
 			AND sector_id NOT IN (
 				SELECT sector_id
 				FROM sector_has_forces
-				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND owner_id = ' . $db->escapeNumber($player->getAccountID()) . '
-			)');
+				WHERE game_id = :game_id
+					AND owner_id = :owner_id
+			)', [
+		'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+		'game_id' => $db->escapeNumber($player->getGameID()),
+		'owner_id' => $db->escapeNumber($player->getAccountID()),
+	]);
 
 	$missingSeeds = [];
 	foreach ($dbResult->records() as $dbRecord) {
@@ -36,8 +40,11 @@ function shared_channel_msg_seed(AbstractPlayer $player): array {
 	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT count(*)
 		FROM alliance_has_seedlist
-		WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
-			AND game_id = ' . $db->escapeNumber($player->getGameID()));
+		WHERE alliance_id = :alliance_id
+			AND game_id = :game_id', [
+		'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+		'game_id' => $db->escapeNumber($player->getGameID()),
+	]);
 	$numSectors = $dbResult->record()->getInt('count(*)');
 
 	if ($numSectors == 0) {

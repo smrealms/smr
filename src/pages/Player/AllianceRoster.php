@@ -40,9 +40,12 @@ class AllianceRoster extends PlayerPage {
 			// get all roles from db for faster access later
 			$dbResult = $db->read('SELECT role_id, role
 						FROM alliance_has_roles
-						WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
-						AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
-						ORDER BY role_id');
+						WHERE game_id = :game_id
+						AND alliance_id = :alliance_id
+						ORDER BY role_id', [
+				'game_id' => $db->escapeNumber($alliance->getGameID()),
+				'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$roles[$dbRecord->getInt('role_id')] = $dbRecord->getString('role');
 			}
@@ -56,9 +59,12 @@ class AllianceRoster extends PlayerPage {
 			SUM(experience) AS alliance_xp,
 			FLOOR(AVG(experience)) AS alliance_avg
 			FROM player
-			WHERE alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
-			AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
-			GROUP BY alliance_id');
+			WHERE alliance_id = :alliance_id
+			AND game_id = :game_id
+			GROUP BY alliance_id', [
+			'game_id' => $db->escapeNumber($alliance->getGameID()),
+			'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
+		]);
 		$dbRecord = $dbResult->record();
 
 		$template->assign('AllianceExp', $dbRecord->getInt('alliance_xp'));
@@ -69,8 +75,12 @@ class AllianceRoster extends PlayerPage {
 			$template->assign('EditAllianceDescriptionHREF', $container->href());
 		}
 
-		$dbResult = $db->read('SELECT 1 FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
-					AND role_id = ' . $db->escapeNumber($player->getAllianceRole()) . ' AND change_roles = \'TRUE\'');
+		$dbResult = $db->read('SELECT 1 FROM alliance_has_roles WHERE alliance_id = :alliance_id AND game_id = :game_id
+					AND role_id = :role_id AND change_roles = \'TRUE\'', [
+			'game_id' => $db->escapeNumber($alliance->getGameID()),
+			'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
+			'role_id' => $db->escapeNumber($player->getAllianceRole()),
+		]);
 		$allowed = $dbResult->hasRecord();
 		$template->assign('CanChangeRoles', $allowed);
 

@@ -22,7 +22,9 @@ class AlbumEdit extends AccountPage {
 		$template->assign('PageTopic', 'Edit Photo');
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
+		$dbResult = $db->read('SELECT * FROM album WHERE account_id = :account_id', [
+			'account_id' => $db->escapeNumber($account->getAccountID()),
+		]);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$day = $dbRecord->getInt('day');

@@ -32,7 +32,9 @@ class AccountEdit extends AccountPage {
 		$template->assign('ResetFormHREF', (new AccountEditSearch())->href());
 
 		$editingPlayers = [];
-		$dbResult = $db->read('SELECT * FROM player WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY game_id ASC');
+		$dbResult = $db->read('SELECT * FROM player WHERE account_id = :account_id ORDER BY game_id ASC', [
+			'account_id' => $db->escapeNumber($curr_account->getAccountID()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$editingPlayers[] = Player::getPlayer($curr_account->getAccountID(), $dbRecord->getInt('game_id'), false, $dbRecord);
 		}
@@ -52,7 +54,9 @@ class AccountEdit extends AccountPage {
 		$template->assign('BanReasons', $banReasons);
 
 		$closingHistory = [];
-		$dbResult = $db->read('SELECT * FROM account_has_closing_history WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY time DESC');
+		$dbResult = $db->read('SELECT * FROM account_has_closing_history WHERE account_id = :account_id ORDER BY time DESC', [
+			'account_id' => $db->escapeNumber($curr_account->getAccountID()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			// if an admin did it we get his/her name
 			$admin_id = $dbRecord->getInt('admin_id');
@@ -69,13 +73,17 @@ class AccountEdit extends AccountPage {
 		}
 		$template->assign('ClosingHistory', $closingHistory);
 
-		$dbResult = $db->read('SELECT * FROM account_exceptions WHERE account_id = ' . $curr_account->getAccountID());
+		$dbResult = $db->read('SELECT * FROM account_exceptions WHERE account_id = :account_id', [
+			'account_id' => $curr_account->getAccountID(),
+		]);
 		if ($dbResult->hasRecord()) {
 			$template->assign('Exception', $dbResult->record()->getString('reason'));
 		}
 
 		$recentIPs = [];
-		$dbResult = $db->read('SELECT ip, time, host FROM account_has_ip WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY time DESC');
+		$dbResult = $db->read('SELECT ip, time, host FROM account_has_ip WHERE account_id = :account_id ORDER BY time DESC', [
+			'account_id' => $db->escapeNumber($curr_account->getAccountID()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$recentIPs[] = [
 				'IP' => $dbRecord->getString('ip'),

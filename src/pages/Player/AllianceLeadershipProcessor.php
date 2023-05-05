@@ -17,8 +17,23 @@ class AllianceLeadershipProcessor extends PlayerPageProcessor {
 		$alliance->update();
 
 		$db = Database::getInstance();
-		$db->write('UPDATE player_has_alliance_role SET role_id = ' . $db->escapeNumber(ALLIANCE_ROLE_NEW_MEMBER) . ' WHERE ' . $player->getSQL() . ' AND alliance_id=' . $db->escapeNumber($player->getAllianceID()));
-		$db->write('UPDATE player_has_alliance_role SET role_id = ' . $db->escapeNumber(ALLIANCE_ROLE_LEADER) . ' WHERE account_id = ' . $db->escapeNumber($leader_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id=' . $db->escapeNumber($player->getAllianceID()));
+		$db->update(
+			'player_has_alliance_role',
+			['role_id' => ALLIANCE_ROLE_NEW_MEMBER],
+			[
+				...$player->SQLID,
+				'alliance_id' => $player->getAllianceID(),
+			],
+		);
+		$db->update(
+			'player_has_alliance_role',
+			['role_id' => ALLIANCE_ROLE_LEADER],
+			[
+				'account_id' => $leader_id,
+				'game_id' => $player->getGameID(),
+				'alliance_id' => $player->getAllianceID(),
+			],
+		);
 
 		// Notify the new leader
 		$playerMessage = 'You are now the leader of ' . $alliance->getAllianceBBLink() . '!';

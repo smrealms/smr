@@ -31,7 +31,9 @@ class Preferences extends AccountPage {
 
 		$transferAccounts = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT account_id,hof_name FROM account WHERE validated = ' . $db->escapeBoolean(true) . ' ORDER BY hof_name');
+		$dbResult = $db->read('SELECT account_id,hof_name FROM account WHERE validated = :validated ORDER BY hof_name', [
+			'validated' => $db->escapeBoolean(true),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$transferAccounts[$dbRecord->getInt('account_id')] = htmlspecialchars($dbRecord->getString('hof_name'));
 		}

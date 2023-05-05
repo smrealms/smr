@@ -25,7 +25,15 @@ class AllianceTreatiesProcessor extends PlayerPageProcessor {
 
 		$db = Database::getInstance();
 		if ($this->accept) {
-			$db->write('UPDATE alliance_treaties SET official = \'TRUE\' WHERE alliance_id_1 = ' . $db->escapeNumber($alliance_id_1) . ' AND alliance_id_2 = ' . $db->escapeNumber($alliance_id_2) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+			$db->update(
+				'alliance_treaties',
+				['official' => 'TRUE'],
+				[
+					'alliance_id_1' => $alliance_id_1,
+					'alliance_id_2' => $alliance_id_2,
+					'game_id' => $player->getGameID(),
+				],
+			);
 
 			if ($this->allianceBankAccess) {
 				//make an AA role for both alliances, use treaty_created column
@@ -35,24 +43,31 @@ class AllianceTreatiesProcessor extends PlayerPageProcessor {
 				];
 				foreach ($pairs as $alliance_id_A => $alliance_id_B) {
 					// get last id
-					$dbResult = $db->read('SELECT MAX(role_id)
+					$dbResult = $db->read('SELECT IFNULL(MAX(role_id), 0) as max_role_id
 								FROM alliance_has_roles
-								WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-									AND alliance_id = ' . $db->escapeNumber($alliance_id_A));
-					$role_id = $dbResult->record()->getInt('MAX(role_id)') + 1;
+								WHERE game_id = :game_id
+									AND alliance_id = :alliance_id', [
+						'game_id' => $db->escapeNumber($player->getGameID()),
+						'alliance_id' => $db->escapeNumber($alliance_id_A),
+					]);
+					$role_id = $dbResult->record()->getInt('max_role_id') + 1;
 
 					$allianceName = Alliance::getAlliance($alliance_id_B, $player->getGameID())->getAllianceName();
 					$db->insert('alliance_has_roles', [
-						'alliance_id' => $db->escapeNumber($alliance_id_A),
-						'game_id' => $db->escapeNumber($player->getGameID()),
-						'role_id' => $db->escapeNumber($role_id),
-						'role' => $db->escapeString($allianceName),
-						'treaty_created' => 1,
+						'alliance_id' => $alliance_id_A,
+						'game_id' => $player->getGameID(),
+						'role_id' => $role_id,
+						'role' => $allianceName,
+						'treaty_created' => $db->escapeBoolean(true),
 					]);
 				}
 			}
 		} else {
-			$db->write('DELETE FROM alliance_treaties WHERE alliance_id_1 = ' . $db->escapeNumber($alliance_id_1) . ' AND alliance_id_2 = ' . $db->escapeNumber($alliance_id_2) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+			$db->delete('alliance_treaties', [
+				'alliance_id_1' => $alliance_id_1,
+				'alliance_id_2' => $alliance_id_2,
+				'game_id' => $player->getGameID(),
+			]);
 		}
 
 		$container = new AllianceTreaties();

@@ -48,16 +48,20 @@ try {
 
 		$dbResult = $db->read('SELECT account_id as album_id
 					FROM album JOIN account USING(account_id)
-					WHERE hof_name LIKE ' . $db->escapeString($query . '%') . ' AND
+					WHERE hof_name LIKE :hof_name_like AND
 						  approved = \'YES\'
-					ORDER BY hof_name');
+					ORDER BY hof_name', [
+			'hof_name_like' => $db->escapeString($query . '%'),
+		]);
 
 		if ($dbResult->getNumRecords() > 1) {
 			$dbResult2 = $db->read('SELECT account_id as album_id
 					FROM album JOIN account USING(account_id)
-					WHERE hof_name = ' . $db->escapeString($query) . ' AND
+					WHERE hof_name = :hof_name AND
 						  approved = \'YES\'
-					ORDER BY hof_name');
+					ORDER BY hof_name', [
+				'hof_name' => $db->escapeString($query),
+			]);
 
 			if ($dbResult2->hasRecord()) {
 				album_entry($dbResult2->record()->getInt('album_id'));

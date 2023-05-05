@@ -31,9 +31,15 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 		$message_id_list = Request::getIntArray('message_id', []);
 		if (!empty($message_id_list)) {
 			if ($this->folderID == MSG_SENT) {
-				$db->write('UPDATE message SET sender_delete = ' . $db->escapeBoolean(true) . ' WHERE message_id IN (' . $db->escapeArray($message_id_list) . ')');
+				$db->write('UPDATE message SET sender_delete = :sender_delete WHERE message_id IN (:message_ids)', [
+					'sender_delete' => $db->escapeBoolean(true),
+					'message_ids' => $db->escapeArray($message_id_list),
+				]);
 			} else {
-				$db->write('UPDATE message SET receiver_delete = ' . $db->escapeBoolean(true) . ' WHERE message_id IN (' . $db->escapeArray($message_id_list) . ')');
+				$db->write('UPDATE message SET receiver_delete = :receiver_delete WHERE message_id IN (:message_ids)', [
+					'receiver_delete' => $db->escapeBoolean(true),
+					'message_ids' => $db->escapeArray($message_id_list),
+				]);
 			}
 		}
 
@@ -43,14 +49,21 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 			if (!is_int($senderID) || !is_int($minTime) || !is_int($maxTime)) {
 				throw new Exception('Unexpected deserialized types: ' . $groupID);
 			}
-			$db->write('UPDATE message SET receiver_delete = ' . $db->escapeBoolean(true) . '
-						WHERE sender_id = ' . $db->escapeNumber($senderID) . '
-						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND send_time >= ' . $db->escapeNumber($minTime) . '
-						AND send_time <= ' . $db->escapeNumber($maxTime) . '
-						AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
-						AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT) . '
-						AND receiver_delete = ' . $db->escapeBoolean(false));
+			$db->write('UPDATE message SET receiver_delete = :receiver_delete_new
+						WHERE sender_id = :sender_id
+						AND ' . AbstractPlayer::SQL . '
+						AND send_time >= :min_time
+						AND send_time <= :max_time
+						AND message_type_id = :message_type_id
+						AND receiver_delete = :receiver_delete_old', [
+				'receiver_delete_new' => $db->escapeBoolean(true),
+				'sender_id' => $db->escapeNumber($senderID),
+				...$player->SQLID,
+				'min_time' => $db->escapeNumber($minTime),
+				'max_time' => $db->escapeNumber($maxTime),
+				'message_type_id' => $db->escapeNumber(MSG_SCOUT),
+				'receiver_delete_old' => $db->escapeBoolean(false),
+			]);
 		}
 
 		$container = new MessageView($this->folderID);

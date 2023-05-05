@@ -30,10 +30,10 @@ class BuyTickerProcessor extends PlayerPageProcessor {
 
 		$db = Database::getInstance();
 		$db->replace('player_has_ticker', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'account_id' => $db->escapeNumber($player->getAccountID()),
-			'type' => $db->escapeString($type),
-			'expires' => $db->escapeNumber($expires),
+			'game_id' => $player->getGameID(),
+			'account_id' => $player->getAccountID(),
+			'type' => $type,
+			'expires' => $expires,
 		]);
 
 		//take credits

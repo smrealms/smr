@@ -71,7 +71,7 @@ class TraderStatus extends PlayerPage {
 
 		$notes = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM player_has_notes WHERE ' . $player->getSQL() . ' ORDER BY note_id DESC');
+		$dbResult = $db->read('SELECT * FROM player_has_notes WHERE ' . AbstractPlayer::SQL . ' ORDER BY note_id DESC', $player->SQLID);
 		foreach ($dbResult->records() as $dbRecord) {
 			$note = $dbRecord->getObject('note', true);
 			$notes[$dbRecord->getInt('note_id')] = htmlentities($note);

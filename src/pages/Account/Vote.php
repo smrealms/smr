@@ -19,7 +19,9 @@ class Vote extends AccountPage {
 		$dbResult = $db->read('SELECT * FROM voting ORDER BY end DESC');
 		if ($dbResult->hasRecord()) {
 			$votedFor = [];
-			$dbResult2 = $db->read('SELECT * FROM voting_results WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
+			$dbResult2 = $db->read('SELECT * FROM voting_results WHERE account_id = :account_id', [
+				'account_id' => $db->escapeNumber($account->getAccountID()),
+			]);
 			foreach ($dbResult2->records() as $dbRecord2) {
 				$votedFor[$dbRecord2->getInt('vote_id')] = $dbRecord2->getInt('option_id');
 			}
@@ -38,7 +40,9 @@ class Vote extends AccountPage {
 				}
 
 				$voting[$voteID]['Options'] = [];
-				$dbResult2 = $db->read('SELECT option_id,text,count(account_id) FROM voting_options LEFT OUTER JOIN voting_results USING(vote_id,option_id) WHERE vote_id = ' . $db->escapeNumber($dbRecord->getInt('vote_id')) . ' GROUP BY option_id');
+				$dbResult2 = $db->read('SELECT option_id,text,count(account_id) FROM voting_options LEFT OUTER JOIN voting_results USING(vote_id,option_id) WHERE vote_id = :vote_id GROUP BY option_id', [
+					'vote_id' => $db->escapeNumber($dbRecord->getInt('vote_id')),
+				]);
 				foreach ($dbResult2->records() as $dbRecord2) {
 					$voting[$voteID]['Options'][$dbRecord2->getInt('option_id')]['ID'] = $dbRecord2->getInt('option_id');
 					$voting[$voteID]['Options'][$dbRecord2->getInt('option_id')]['Text'] = $dbRecord2->getString('text');

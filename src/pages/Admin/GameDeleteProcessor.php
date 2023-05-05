@@ -29,22 +29,30 @@ class GameDeleteProcessor extends AccountPageProcessor {
 
 		if ($delete) {
 			if ($save) {
-				$dbResult = $db->read('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($game_id));
+				$dbResult = $db->read('SELECT * FROM alliance WHERE game_id = :game_id', [
+					'game_id' => $db->escapeNumber($game_id),
+				]);
 
 				foreach ($dbResult->records() as $dbRecord) {
 					$id = $dbRecord->getInt('alliance_id');
 					//we need info for forces
 					//populate alliance list
 					$dbResult2 = $db->read('SELECT * FROM player
-								WHERE alliance_id = ' . $db->escapeNumber($id) . '
-									AND game_id = ' . $db->escapeNumber($game_id));
+								WHERE alliance_id = :alliance_id
+									AND game_id = :game_id', [
+						'alliance_id' => $db->escapeNumber($id),
+						'game_id' => $db->escapeNumber($game_id),
+					]);
 					$list = [0];
 					foreach ($dbResult2->records() as $dbRecord2) {
 						$list[] = $dbRecord2->getInt('account_id');
 					}
 					$dbResult2 = $db->read('SELECT sum(mines) as sum_m, sum(combat_drones) as cds, sum(scout_drones) as sds
 								FROM sector_has_forces
-								WHERE owner_id IN (' . $db->escapeArray($list) . ') AND game_id = ' . $db->escapeNumber($game_id));
+								WHERE owner_id IN (:owner_ids) AND game_id = :game_id', [
+						'owner_ids' => $db->escapeArray($list),
+						'game_id' => $db->escapeNumber($game_id),
+					]);
 					if ($dbResult2->hasRecord()) {
 						$dbRecord2 = $dbResult2->record();
 						$mines = $dbRecord2->getInt('sum_m');
@@ -81,7 +89,9 @@ class GameDeleteProcessor extends AccountPageProcessor {
 
 			if ($save) {
 
-				$dbResult = $db->read('SELECT * FROM alliance_vs_alliance WHERE game_id = ' . $db->escapeNumber($game_id));
+				$dbResult = $db->read('SELECT * FROM alliance_vs_alliance WHERE game_id = :game_id', [
+					'game_id' => $db->escapeNumber($game_id),
+				]);
 				foreach ($dbResult->records() as $dbRecord) {
 
 					$alliance_1 = $dbRecord->getInt('alliance_id_1');
@@ -120,7 +130,9 @@ class GameDeleteProcessor extends AccountPageProcessor {
 
 			if ($save) {
 
-				$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $game_id . ' AND type = \'regular\'');
+				$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND type = \'regular\'', [
+					'game_id' => $game_id,
+				]);
 				$id = 1;
 
 				foreach ($dbResult->records() as $dbRecord) {
@@ -140,7 +152,9 @@ class GameDeleteProcessor extends AccountPageProcessor {
 
 			if ($save) {
 
-				$dbResult = $db->read('SELECT * FROM planet WHERE game_id = ' . $db->escapeNumber($game_id));
+				$dbResult = $db->read('SELECT * FROM planet WHERE game_id = :game_id', [
+					'game_id' => $db->escapeNumber($game_id),
+				]);
 
 				foreach ($dbResult->records() as $dbRecord) {
 
@@ -148,21 +162,30 @@ class GameDeleteProcessor extends AccountPageProcessor {
 					$sector = $dbRecord->getInt('sector_id');
 					$owner = $dbRecord->getInt('owner_id');
 
-					$dbResult2 = $db->read('SELECT * FROM planet_has_building WHERE game_id = ' . $game_id . ' AND sector_id = ' . $sector . ' AND construction_id = 1');
+					$dbResult2 = $db->read('SELECT * FROM planet_has_building WHERE game_id = :game_id AND sector_id = :sector_id AND construction_id = 1', [
+						'game_id' => $game_id,
+						'sector_id' => $sector,
+					]);
 					if ($dbResult2->hasRecord()) {
 						$gens = $dbResult2->record()->getInt('amount');
 					} else {
 						$gens = 0;
 					}
 
-					$dbResult2 = $db->read('SELECT * FROM planet_has_building WHERE game_id = ' . $game_id . ' AND sector_id = ' . $sector . ' AND construction_id = 2');
+					$dbResult2 = $db->read('SELECT * FROM planet_has_building WHERE game_id = :game_id AND sector_id = :sector_id AND construction_id = 2', [
+						'game_id' => $game_id,
+						'sector_id' => $sector,
+					]);
 					if ($dbResult2->hasRecord()) {
 						$hangs = $dbResult2->record()->getInt('amount');
 					} else {
 						$hangs = 0;
 					}
 
-					$dbResult2 = $db->read('SELECT * FROM planet_has_building WHERE game_id = ' . $game_id . ' AND sector_id = ' . $sector . ' AND construction_id = 3');
+					$dbResult2 = $db->read('SELECT * FROM planet_has_building WHERE game_id = :game_id AND sector_id = :sector_id AND construction_id = 3', [
+						'game_id' => $game_id,
+						'sector_id' => $sector,
+					]);
 					if ($dbResult2->hasRecord()) {
 						$turs = $dbResult2->record()->getInt('amount');
 					} else {
@@ -184,7 +207,9 @@ class GameDeleteProcessor extends AccountPageProcessor {
 
 			if ($save) {
 
-				$dbResult = $db->read('SELECT * FROM player WHERE game_id = ' . $game_id);
+				$dbResult = $db->read('SELECT * FROM player WHERE game_id = :game_id', [
+					'game_id' => $game_id,
+				]);
 
 				foreach ($dbResult->records() as $dbRecord) {
 
@@ -202,14 +227,20 @@ class GameDeleteProcessor extends AccountPageProcessor {
 
 					$amount = 0;
 					$smrCredits = 0;
-					$dbResult2 = $db->read('SELECT sum(amount) as bounty_am, sum(smr_credits) as bounty_cred FROM bounty WHERE game_id = ' . $game_id . ' AND account_id = ' . $acc_id . ' AND claimer_id = 0');
+					$dbResult2 = $db->read('SELECT sum(amount) as bounty_am, sum(smr_credits) as bounty_cred FROM bounty WHERE game_id = :game_id AND account_id = :account_id AND claimer_id = 0', [
+						'game_id' => $game_id,
+						'account_id' => $acc_id,
+					]);
 					if ($dbResult2->hasRecord()) {
 						$dbRecord2 = $dbResult2->record();
 						$amount = $dbRecord2->getInt('bounty_am');
 						$smrCredits = $dbRecord2->getInt('bounty_cred');
 					}
 
-					$dbResult2 = $db->read('SELECT * FROM ship_has_name WHERE game_id = ' . $game_id . ' AND account_id = ' . $acc_id);
+					$dbResult2 = $db->read('SELECT * FROM ship_has_name WHERE game_id = :game_id AND account_id = :account_id', [
+						'game_id' => $game_id,
+						'account_id' => $acc_id,
+					]);
 					if ($dbResult2->hasRecord()) {
 						$ship_name = $dbResult2->record()->getString('ship_name');
 					} else {
@@ -245,7 +276,9 @@ class GameDeleteProcessor extends AccountPageProcessor {
 
 			if ($save) {
 
-				$dbResult = $db->read('SELECT * FROM sector WHERE game_id = ' . $game_id);
+				$dbResult = $db->read('SELECT * FROM sector WHERE game_id = :game_id', [
+					'game_id' => $game_id,
+				]);
 
 				foreach ($dbResult->records() as $dbRecord) {
 
@@ -255,7 +288,10 @@ class GameDeleteProcessor extends AccountPageProcessor {
 					$gal_id = $dbRecord->getInt('galaxy_id');
 
 					$dbResult2 = $db->read('SELECT sum(mines) as sum_mines, sum(combat_drones) as cds, sum(scout_drones) as sds FROM sector_has_forces ' .
-								'WHERE sector_id = ' . $sector . ' AND game_id = ' . $game_id . ' GROUP BY sector_id');
+								'WHERE sector_id = :sector_id AND game_id = :game_id GROUP BY sector_id', [
+						'sector_id' => $sector,
+						'game_id' => $game_id,
+					]);
 					if ($dbResult2->hasRecord()) {
 
 						$dbRecord2 = $dbResult2->record();

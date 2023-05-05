@@ -33,39 +33,37 @@ class VotingCenterProcessor extends PlayerPageProcessor {
 
 		if ($action == 'INC' || $action == 'DEC') {
 			$db->replace('player_votes_relation', [
-				'account_id' => $db->escapeNumber($player->getAccountID()),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'race_id_1' => $db->escapeNumber($player->getRaceID()),
-				'race_id_2' => $db->escapeNumber($race_id),
-				'action' => $db->escapeString($action),
-				'time' => $db->escapeNumber(Epoch::time()),
+				'account_id' => $player->getAccountID(),
+				'game_id' => $player->getGameID(),
+				'race_id_1' => $player->getRaceID(),
+				'race_id_2' => $race_id,
+				'action' => $action,
+				'time' => Epoch::time(),
 			]);
 		} elseif ($action == 'YES' || $action == 'NO') {
 			$db->replace('player_votes_pact', [
-				'account_id' => $db->escapeNumber($player->getAccountID()),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'race_id_1' => $db->escapeNumber($player->getRaceID()),
-				'race_id_2' => $db->escapeNumber($race_id),
-				'vote' => $db->escapeString($action),
+				'account_id' => $player->getAccountID(),
+				'game_id' => $player->getGameID(),
+				'race_id_1' => $player->getRaceID(),
+				'race_id_2' => $race_id,
+				'vote' => $action,
 			]);
 		} elseif ($action == 'VETO') {
 			// try to cancel both votings
-			$db->write('DELETE FROM race_has_voting ' .
-					'WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . '
-						AND race_id_2 = ' . $db->escapeNumber($race_id));
-			$db->write('DELETE FROM player_votes_pact ' .
-					'WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . '
-						AND race_id_2 = ' . $db->escapeNumber($race_id));
-			$db->write('DELETE FROM race_has_voting ' .
-					'WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND race_id_1 = ' . $db->escapeNumber($race_id) . '
-						AND race_id_2 = ' . $db->escapeNumber($player->getRaceID()));
-			$db->write('DELETE FROM player_votes_pact ' .
-					'WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND race_id_1 = ' . $db->escapeNumber($race_id) . '
-						AND race_id_2 = ' . $db->escapeNumber($player->getRaceID()));
+			$sqlParams = [
+				'game_id' => $player->getGameID(),
+				'race_id_1' => $player->getRaceID(),
+				'race_id_2' => $race_id,
+			];
+			$db->delete('race_has_voting', $sqlParams);
+			$db->delete('player_votes_pact', $sqlParams);
+			$sqlParams2 = [
+				'game_id' => $player->getGameID(),
+				'race_id_1' => $race_id,
+				'race_id_2' => $player->getRaceID(),
+			];
+			$db->delete('race_has_voting', $sqlParams2);
+			$db->delete('player_votes_pact', $sqlParams2);
 		}
 
 		(new VotingCenter())->go();

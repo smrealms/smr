@@ -48,7 +48,9 @@ class MessageBoxView extends AccountPage {
 			$template->assign('PageTopic', 'Viewing ' . $boxName);
 
 			$template->assign('BackHREF', (new self())->href());
-			$dbResult = $db->read('SELECT * FROM message_boxes WHERE box_type_id=' . $db->escapeNumber($this->boxTypeID) . ' ORDER BY send_time DESC');
+			$dbResult = $db->read('SELECT * FROM message_boxes WHERE box_type_id = :box_type_id ORDER BY send_time DESC', [
+				'box_type_id' => $db->escapeNumber($this->boxTypeID),
+			]);
 			$messages = [];
 			if ($dbResult->hasRecord()) {
 				$container = new MessageBoxDeleteProcessor($this->boxTypeID);

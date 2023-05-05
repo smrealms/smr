@@ -89,25 +89,31 @@ class AlbumEditProcessor extends AccountPageProcessor {
 
 		// check if we had a album entry so far
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM album WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
+		$dbResult = $db->read('SELECT 1 FROM album WHERE account_id = :account_id', [
+			'account_id' => $db->escapeNumber($account->getAccountID()),
+		]);
 		if ($dbResult->hasRecord()) {
 			if (!$noPicture) {
 				$comment = '<span class="green">*** Picture changed</span>';
 			}
 
 			// change album entry
-			$db->write('UPDATE album
-						SET location = ' . $db->escapeString($location) . ',
-							email = ' . $db->escapeString($email) . ',
-							website= ' . $db->escapeString($website) . ',
-							day = ' . $db->escapeNumber($day) . ',
-							month = ' . $db->escapeNumber($month) . ',
-							year = ' . $db->escapeNumber($year) . ',
-							other = ' . $db->escapeString($other) . ',
-							last_changed = ' . $db->escapeNumber(Epoch::time()) . ',
-							approved = \'TBC\',
-							disabled = \'FALSE\'
-						WHERE account_id = ' . $db->escapeNumber($account->getAccountID()));
+			$db->update(
+				'album',
+				[
+					'approved' => 'TBC',
+					'disabled' => 'FALSE',
+					'location' => $location,
+					'email' => $email,
+					'website' => $website,
+					'day' => $day,
+					'month' => $month,
+					'year' => $year,
+					'other' => $other,
+					'last_changed' => Epoch::time(),
+				],
+				['account_id' => $account->getAccountID()],
+			);
 		} else {
 			// if he didn't upload a picture before
 			// we kick him out here
@@ -119,17 +125,17 @@ class AlbumEditProcessor extends AccountPageProcessor {
 
 			// add album entry
 			$db->insert('album', [
-				'account_id' => $db->escapeNumber($account->getAccountID()),
-				'location' => $db->escapeString($location),
-				'email' => $db->escapeString($email),
-				'website' => $db->escapeString($website),
-				'day' => $db->escapeNumber($day),
-				'month' => $db->escapeNumber($month),
-				'year' => $db->escapeNumber($year),
-				'other' => $db->escapeString($other),
-				'created' => $db->escapeNumber(Epoch::time()),
-				'last_changed' => $db->escapeNumber(Epoch::time()),
-				'approved' => $db->escapeString('TBC'),
+				'account_id' => $account->getAccountID(),
+				'location' => $location,
+				'email' => $email,
+				'website' => $website,
+				'day' => $day,
+				'month' => $month,
+				'year' => $year,
+				'other' => $other,
+				'created' => Epoch::time(),
+				'last_changed' => Epoch::time(),
+				'approved' => 'TBC',
 			]);
 		}
 
@@ -137,15 +143,17 @@ class AlbumEditProcessor extends AccountPageProcessor {
 			// check if we have comments for this album already
 			$db->lockTable('album_has_comments');
 
-			$dbResult = $db->read('SELECT IFNULL(MAX(comment_id)+1, 0) AS next_comment_id FROM album_has_comments WHERE album_id = ' . $db->escapeNumber($account->getAccountID()));
+			$dbResult = $db->read('SELECT IFNULL(MAX(comment_id)+1, 0) AS next_comment_id FROM album_has_comments WHERE album_id = :album_id', [
+				'album_id' => $db->escapeNumber($account->getAccountID()),
+			]);
 			$comment_id = $dbResult->record()->getInt('next_comment_id');
 
 			$db->insert('album_has_comments', [
-				'album_id' => $db->escapeNumber($account->getAccountID()),
-				'comment_id' => $db->escapeNumber($comment_id),
-				'time' => $db->escapeNumber(Epoch::time()),
+				'album_id' => $account->getAccountID(),
+				'comment_id' => $comment_id,
+				'time' => Epoch::time(),
 				'post_id' => 0,
-				'msg' => $db->escapeString($comment),
+				'msg' => $comment,
 			]);
 			$db->unlock();
 		}

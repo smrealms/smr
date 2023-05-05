@@ -34,7 +34,10 @@ class NewsReadCurrent extends PlayerPage {
 		}
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND time > ' . $db->escapeNumber($this->lastNewsUpdate) . ' AND type != \'lotto\' ORDER BY news_id DESC');
+		$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND time > :last_news_update AND type != \'lotto\' ORDER BY news_id DESC', [
+			'game_id' => $db->escapeNumber($gameID),
+			'last_news_update' => $db->escapeNumber($this->lastNewsUpdate),
+		]);
 		$template->assign('NewsItems', News::getNewsItems($dbResult));
 
 		$player->updateLastNewsUpdate();

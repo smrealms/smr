@@ -19,13 +19,19 @@ class CombatLogViewerVerifyProcessor extends PlayerPageProcessor {
 	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 
-		$query = 'SELECT 1 FROM combat_logs WHERE log_id=' . $db->escapeNumber($this->logID) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' AND ';
+		$query = 'SELECT 1 FROM combat_logs WHERE log_id = :log_id AND game_id = :game_id AND ';
+		$params = [
+			'log_id' => $db->escapeNumber($this->logID),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		];
 		if ($player->hasAlliance()) {
-			$query .= '(attacker_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' OR defender_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ')';
+			$query .= '(attacker_alliance_id = :alliance_id OR defender_alliance_id = :alliance_id)';
+			$params['alliance_id'] = $db->escapeNumber($player->getAllianceID());
 		} else {
-			$query .= '(attacker_id=' . $db->escapeNumber($player->getAccountID()) . ' OR defender_id=' . $db->escapeNumber($player->getAccountID()) . ')';
+			$query .= '(attacker_id = :account_id OR defender_id = :account_id)';
+			$params['account_id'] = $db->escapeNumber($player->getAccountID());
 		}
-		$dbResult = $db->read($query . ' LIMIT 1');
+		$dbResult = $db->read($query . ' LIMIT 1', $params);
 
 		// Error if qualifications are not met
 		if (!$dbResult->hasRecord()) {

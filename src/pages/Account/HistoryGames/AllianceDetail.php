@@ -29,14 +29,20 @@ class AllianceDetail extends HistoryPage {
 		$id = $this->allianceID;
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT alliance_name, leader_id FROM alliance WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($game_id));
+		$dbResult = $db->read('SELECT alliance_name, leader_id FROM alliance WHERE alliance_id = :alliance_id AND game_id = :game_id', [
+			'alliance_id' => $db->escapeNumber($id),
+			'game_id' => $db->escapeNumber($game_id),
+		]);
 		$dbRecord = $dbResult->record();
 		$leaderID = $dbRecord->getInt('leader_id');
 		$template->assign('PageTopic', 'Alliance Roster: ' . htmlentities($dbRecord->getString('alliance_name')));
 
 		//get alliance members
 		$oldAccountID = $account->getOldAccountID($this->historyDatabase);
-		$dbResult = $db->read('SELECT * FROM player WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY experience DESC');
+		$dbResult = $db->read('SELECT * FROM player WHERE alliance_id = :alliance_id AND game_id = :game_id ORDER BY experience DESC', [
+			'alliance_id' => $db->escapeNumber($id),
+			'game_id' => $db->escapeNumber($game_id),
+		]);
 		$players = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$memberAccountID = $dbRecord->getInt('account_id');

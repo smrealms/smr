@@ -18,7 +18,9 @@ class Donation extends AccountPage {
 	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Donations');
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT IFNULL(SUM(amount), 0) as total_donation FROM account_donated WHERE time > ' . $db->escapeNumber(Epoch::time()) . ' - (86400 * 90)');
+		$dbResult = $db->read('SELECT IFNULL(SUM(amount), 0) as total_donation FROM account_donated WHERE time > :hide_donation_time', [
+			'hide_donation_time' => $db->escapeNumber(Epoch::time() - (86400 * 90)), // 90 days
+		]);
 		$template->assign('TotalDonation', $dbResult->record()->getInt('total_donation'));
 	}
 

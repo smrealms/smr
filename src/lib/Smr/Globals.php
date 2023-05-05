@@ -94,7 +94,9 @@ class Globals {
 	public static function getGalacticPostEditorIDs(int $gameID): array {
 		$editorIDs = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT account_id FROM galactic_post_writer WHERE position=\'editor\' AND game_id=' . $db->escapeNumber($gameID));
+		$dbResult = $db->read('SELECT account_id FROM galactic_post_writer WHERE position=\'editor\' AND game_id = :game_id', [
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$editorIDs[] = $dbRecord->getInt('account_id');
 		}
@@ -136,7 +138,10 @@ class Globals {
 				self::$RACE_RELATIONS[$gameID][$raceID][$otherRaceID] = 0;
 			}
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1=' . $db->escapeNumber($raceID) . ' AND game_id=' . $db->escapeNumber($gameID));
+			$dbResult = $db->read('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1 = :race_id_1 AND game_id = :game_id', [
+				'race_id_1' => $db->escapeNumber($raceID),
+				'game_id' => $db->escapeNumber($gameID),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				self::$RACE_RELATIONS[$gameID][$raceID][$dbRecord->getInt('race_id_2')] = $dbRecord->getInt('relation');
 			}

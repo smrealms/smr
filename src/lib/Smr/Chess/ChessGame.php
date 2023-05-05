@@ -43,7 +43,9 @@ class ChessGame {
 					FROM npc_logins
 					JOIN account USING(login)
 					JOIN chess_game ON account_id = black_id OR account_id = white_id
-					WHERE end_time > ' . Epoch::time() . ' OR end_time IS NULL;');
+					WHERE end_time > :now OR end_time IS NULL', [
+			'now' => Epoch::time(),
+		]);
 		$games = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$game = self::getChessGame($dbRecord->getInt('chess_game_id'), $forceUpdate);
@@ -59,7 +61,11 @@ class ChessGame {
 	 */
 	public static function getOngoingPlayerGames(AbstractPlayer $player): array {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT chess_game_id FROM chess_game WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (black_id = ' . $db->escapeNumber($player->getAccountID()) . ' OR white_id = ' . $db->escapeNumber($player->getAccountID()) . ') AND (end_time > ' . Epoch::time() . ' OR end_time IS NULL);');
+		$dbResult = $db->read('SELECT chess_game_id FROM chess_game WHERE game_id = :game_id AND (black_id = :account_id OR white_id = :account_id) AND (end_time > :now OR end_time IS NULL)', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'account_id' => $db->escapeNumber($player->getAccountID()),
+			'now' => Epoch::time(),
+		]);
 		$games = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$games[] = self::getChessGame($dbRecord->getInt('chess_game_id'));
@@ -78,7 +84,9 @@ class ChessGame {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT *
 						FROM chess_game
-						WHERE chess_game_id=' . $db->escapeNumber($chessGameID));
+						WHERE chess_game_id = :chess_game_id', [
+			'chess_game_id' => $db->escapeNumber($chessGameID),
+		]);
 		if (!$dbResult->hasRecord()) {
 			throw new Exception('Chess game not found: ' . $chessGameID);
 		}
@@ -94,12 +102,21 @@ class ChessGame {
 	public function rerunGame(bool $debugInfo = false): void {
 		$db = Database::getInstance();
 
-		$db->write('UPDATE chess_game
-					SET end_time = NULL, winner_id = 0
-					WHERE chess_game_id=' . $db->escapeNumber($this->chessGameID) . ';');
+		$db->update(
+			'chess_game',
+			[
+				'end_time' => null,
+				'winner_id' => 0,
+			],
+			['chess_game_id' => $this->chessGameID],
+		);
 
-		$dbResult = $db->read('SELECT * FROM chess_game_moves WHERE chess_game_id = ' . $db->escapeNumber($this->chessGameID) . ' ORDER BY move_id;');
-		$db->write('DELETE FROM chess_game_moves WHERE chess_game_id = ' . $db->escapeNumber($this->chessGameID) . ';');
+		$dbResult = $db->read('SELECT * FROM chess_game_moves WHERE chess_game_id = :chess_game_id ORDER BY move_id', [
+			'chess_game_id' => $db->escapeNumber($this->chessGameID),
+		]);
+		$db->delete('chess_game_moves', [
+			'chess_game_id' => $this->chessGameID,
+		]);
 		$this->moves = [];
 		$this->board = new Board();
 		unset($this->endDate);
@@ -161,7 +178,9 @@ class ChessGame {
 	public function getMoves(): array {
 		if (!isset($this->moves)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM chess_game_moves WHERE chess_game_id = ' . $db->escapeNumber($this->chessGameID) . ' ORDER BY move_id;');
+			$dbResult = $db->read('SELECT * FROM chess_game_moves WHERE chess_game_id = :chess_game_id ORDER BY move_id', [
+				'chess_game_id' => $db->escapeNumber($this->chessGameID),
+			]);
 			$this->moves = [];
 			$this->board = new Board();
 			$mate = false;
@@ -254,11 +273,11 @@ class ChessGame {
 	public static function insertNewGame(int $startDate, ?int $endDate, AbstractPlayer $whitePlayer, AbstractPlayer $blackPlayer): void {
 		$db = Database::getInstance();
 		$db->insert('chess_game', [
-			'start_time' => $db->escapeNumber($startDate),
-			'end_time' => $endDate === null ? 'NULL' : $db->escapeNumber($endDate),
-			'white_id' => $db->escapeNumber($whitePlayer->getAccountID()),
-			'black_id' => $db->escapeNumber($blackPlayer->getAccountID()),
-			'game_id' => $db->escapeNumber($whitePlayer->getGameID()),
+			'start_time' => $startDate,
+			'end_time' => $endDate,
+			'white_id' => $whitePlayer->getAccountID(),
+			'black_id' => $blackPlayer->getAccountID(),
+			'game_id' => $whitePlayer->getGameID(),
 		]);
 	}
 
@@ -420,17 +439,17 @@ class ChessGame {
 
 		$db = Database::getInstance();
 		$db->insert('chess_game_moves', [
-			'chess_game_id' => $db->escapeNumber($this->chessGameID),
-			'piece_id' => $db->escapeNumber($pieceID),
-			'start_x' => $db->escapeNumber($x),
-			'start_y' => $db->escapeNumber($y),
-			'end_x' => $db->escapeNumber($toX),
-			'end_y' => $db->escapeNumber($toY),
-			'checked' => $db->escapeNullableString($checking),
-			'piece_taken' => $moveInfo['PieceTaken'] === null ? 'NULL' : $db->escapeNumber($moveInfo['PieceTaken']->pieceID),
-			'castling' => $db->escapeNullableString($moveInfo['Castling']?->value),
+			'chess_game_id' => $this->chessGameID,
+			'piece_id' => $pieceID,
+			'start_x' => $x,
+			'start_y' => $y,
+			'end_x' => $toX,
+			'end_y' => $toY,
+			'checked' => $checking,
+			'piece_taken' => $moveInfo['PieceTaken']?->pieceID,
+			'castling' => $moveInfo['Castling']?->value,
 			'en_passant' => $db->escapeBoolean($moveInfo['EnPassant']),
-			'promote_piece_id' => $promotionPieceID ?? 'NULL',
+			'promote_piece_id' => $promotionPieceID,
 		]);
 
 		$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Total Taken'], HOF_PUBLIC);
@@ -532,9 +551,14 @@ class ChessGame {
 		$this->winner = $accountID;
 		$this->endDate = Epoch::time();
 		$db = Database::getInstance();
-		$db->write('UPDATE chess_game
-						SET end_time=' . $db->escapeNumber(Epoch::time()) . ', winner_id=' . $db->escapeNumber($this->winner) . '
-						WHERE chess_game_id=' . $db->escapeNumber($this->chessGameID) . ';');
+		$db->update(
+			'chess_game',
+			[
+				'end_time' => Epoch::time(),
+				'winner_id' => $this->winner,
+			],
+			['chess_game_id' => $this->chessGameID],
+		);
 		$winnerColour = $this->getColourForAccountID($accountID);
 		$winningPlayer = $this->getColourPlayer($winnerColour);
 		$losingPlayer = $this->getColourPlayer($winnerColour->opposite());
@@ -591,9 +615,11 @@ class ChessGame {
 		if (count($this->getMoves()) < 2) {
 			$this->endDate = Epoch::time();
 			$db = Database::getInstance();
-			$db->write('UPDATE chess_game
-							SET end_time=' . $db->escapeNumber(Epoch::time()) . '
-							WHERE chess_game_id=' . $db->escapeNumber($this->chessGameID) . ';');
+			$db->update(
+				'chess_game',
+				['end_time' => Epoch::time()],
+				['chess_game_id' => $this->chessGameID],
+			);
 			return self::END_CANCEL;
 		}
 

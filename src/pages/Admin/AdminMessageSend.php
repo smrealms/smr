@@ -36,7 +36,9 @@ class AdminMessageSend extends AccountPage {
 			$game = Game::getGame($gameID);
 			$gamePlayers = [['AccountID' => 0, 'Name' => 'All Players (' . $game->getName() . ')']];
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT account_id,player_id,player_name FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY player_name');
+			$dbResult = $db->read('SELECT account_id,player_id,player_name FROM player WHERE game_id = :game_id ORDER BY player_name', [
+				'game_id' => $db->escapeNumber($gameID),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$gamePlayers[] = [
 					'AccountID' => $dbRecord->getInt('account_id'),

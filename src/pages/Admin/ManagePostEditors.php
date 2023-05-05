@@ -28,7 +28,9 @@ class ManagePostEditors extends AccountPage {
 		// Get the list of active games ordered by reverse start date
 		$activeGames = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT game_id, game_name FROM game WHERE join_time < ' . $db->escapeNumber(Epoch::time()) . ' AND end_time > ' . $db->escapeNumber(Epoch::time()) . ' ORDER BY start_time DESC');
+		$dbResult = $db->read('SELECT game_id, game_name FROM game WHERE join_time < :now AND end_time > :now ORDER BY start_time DESC', [
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$activeGames[] = [
 				'game_name' => $dbRecord->getString('game_name'),

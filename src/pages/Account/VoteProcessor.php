@@ -22,9 +22,9 @@ class VoteProcessor extends AccountPageProcessor {
 
 		$db = Database::getInstance();
 		$db->replace('voting_results', [
-			'account_id' => $db->escapeNumber($account->getAccountID()),
-			'vote_id' => $db->escapeNumber($this->voteID),
-			'option_id' => $db->escapeNumber(Request::getInt('vote')),
+			'account_id' => $account->getAccountID(),
+			'vote_id' => $this->voteID,
+			'option_id' => Request::getInt('vote'),
 		]);
 
 		$this->targetPage->go();

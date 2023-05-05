@@ -12,8 +12,11 @@ function shared_channel_msg_op_turns(AbstractPlayer $player): array {
 	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT 1
 				FROM alliance_has_op
-				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
-					AND game_id = ' . $db->escapeNumber($player->getGameID()));
+				WHERE alliance_id = :alliance_id
+					AND game_id = :game_id', [
+		'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+		'game_id' => $db->escapeNumber($player->getGameID()),
+	]);
 	if (!$dbResult->hasRecord()) {
 		return ['There is no op scheduled.'];
 	}
@@ -21,9 +24,12 @@ function shared_channel_msg_op_turns(AbstractPlayer $player): array {
 	$oppers = [];
 	$dbResult = $db->read('SELECT account_id
 				FROM alliance_has_op_response
-				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
-					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND response = \'YES\'');
+				WHERE alliance_id = :alliance_id
+					AND game_id = :game_id
+					AND response = \'YES\'', [
+		'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+		'game_id' => $db->escapeNumber($player->getGameID()),
+	]);
 	foreach ($dbResult->records() as $dbRecord) {
 		$attendeePlayer = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), true);
 		// check that the player is still in this alliance

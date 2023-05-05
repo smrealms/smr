@@ -52,8 +52,11 @@ class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
 		if ($this->threadID === null) {
 			// get one
 			$dbResult = $db->read('SELECT IFNULL(max(thread_id)+1, 0) AS next_thread_id FROM alliance_thread
-						WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND alliance_id = ' . $db->escapeNumber($alliance_id));
+						WHERE game_id = :game_id
+						AND alliance_id = :alliance_id', [
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'alliance_id' => $db->escapeNumber($alliance_id),
+			]);
 			$thread_id = $dbResult->record()->getInt('next_thread_id');
 		} else {
 			$thread_id = $this->threadID;
@@ -61,9 +64,13 @@ class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
 
 		// now get the next reply id
 		$dbResult = $db->read('SELECT IFNULL(max(reply_id)+1, 0) AS next_reply_id FROM alliance_thread
-					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND alliance_id = ' . $db->escapeNumber($alliance_id) . '
-					AND thread_id = ' . $db->escapeNumber($thread_id));
+					WHERE game_id = :game_id
+					AND alliance_id = :alliance_id
+					AND thread_id = :thread_id', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'alliance_id' => $db->escapeNumber($alliance_id),
+			'thread_id' => $db->escapeNumber($thread_id),
+		]);
 		$reply_id = $dbResult->record()->getInt('next_reply_id');
 
 		// only add the topic if it's the first reply
@@ -78,38 +85,42 @@ class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
 
 			// test if this topic already exists
 			$dbResult = $db->read('SELECT 1 FROM alliance_thread_topic
-						WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND alliance_id = ' . $db->escapeNumber($alliance_id) . '
-						AND topic = ' . $db->escapeString($topic));
+						WHERE game_id = :game_id
+						AND alliance_id = :alliance_id
+						AND topic = :topic', [
+				'game_id' => $db->escapeNumber($player->getGameID()),
+				'alliance_id' => $db->escapeNumber($alliance_id),
+				'topic' => $db->escapeString($topic),
+			]);
 			if ($dbResult->hasRecord()) {
 				create_error('This topic exists already!');
 			}
 
 			$db->insert('alliance_thread_topic', [
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'alliance_id' => $db->escapeNumber($alliance_id),
-				'thread_id' => $db->escapeNumber($thread_id),
-				'topic' => $db->escapeString($topic),
+				'game_id' => $player->getGameID(),
+				'alliance_id' => $alliance_id,
+				'thread_id' => $thread_id,
+				'topic' => $topic,
 				'alliance_only' => $db->escapeBoolean($allEyesOnly),
 			]);
 		}
 
 		// and the body
 		$db->insert('alliance_thread', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'alliance_id' => $db->escapeNumber($alliance_id),
-			'thread_id' => $db->escapeNumber($thread_id),
-			'reply_id' => $db->escapeNumber($reply_id),
-			'text' => $db->escapeString($body),
-			'sender_id' => $db->escapeNumber($player->getAccountID()),
-			'time' => $db->escapeNumber(Epoch::time()),
+			'game_id' => $player->getGameID(),
+			'alliance_id' => $alliance_id,
+			'thread_id' => $thread_id,
+			'reply_id' => $reply_id,
+			'text' => $body,
+			'sender_id' => $player->getAccountID(),
+			'time' => Epoch::time(),
 		]);
 		$db->replace('player_read_thread', [
-			'account_id' => $db->escapeNumber($player->getAccountID()),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'alliance_id' => $db->escapeNumber($alliance_id),
-			'thread_id' => $db->escapeNumber($thread_id),
-			'time' => $db->escapeNumber(Epoch::time() + 2),
+			'account_id' => $player->getAccountID(),
+			'game_id' => $player->getGameID(),
+			'alliance_id' => $alliance_id,
+			'thread_id' => $thread_id,
+			'time' => Epoch::time() + 2,
 		]);
 
 		$this->lastPage->go();

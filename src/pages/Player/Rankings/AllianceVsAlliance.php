@@ -39,7 +39,9 @@ class AllianceVsAlliance extends PlayerPage {
 
 		// Get list of alliances that have kills or deaths
 		$activeAlliances = [];
-		$dbResult = $db->read('SELECT * FROM alliance WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND (alliance_deaths > 0 OR alliance_kills > 0) ORDER BY alliance_kills DESC, alliance_name');
+		$dbResult = $db->read('SELECT * FROM alliance WHERE game_id = :game_id AND (alliance_deaths > 0 OR alliance_kills > 0) ORDER BY alliance_kills DESC, alliance_name', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$allianceID = $dbRecord->getInt('alliance_id');
 			$activeAlliances[$allianceID] = Alliance::getAlliance($allianceID, $player->getGameID(), false, $dbRecord);
@@ -93,9 +95,13 @@ class AllianceVsAlliance extends PlayerPage {
 					}
 				} else {
 					$dbResult = $db->read('SELECT kills FROM alliance_vs_alliance
-								WHERE alliance_id_2 = ' . $db->escapeNumber($curr_id) . '
-									AND alliance_id_1 = ' . $db->escapeNumber($id) . '
-									AND game_id = ' . $db->escapeNumber($player->getGameID()));
+								WHERE alliance_id_2 = :alliance_id_2
+									AND alliance_id_1 = :alliance_id_1
+									AND game_id = :game_id', [
+						'alliance_id_1' => $db->escapeNumber($id),
+						'alliance_id_2' => $db->escapeNumber($curr_id),
+						'game_id' => $db->escapeNumber($player->getGameID()),
+					]);
 					$value = $dbResult->hasRecord() ? $dbResult->record()->getInt('kills') : 0;
 					if ($showRed && $showBold) {
 						$style = 'class="bold red"';
@@ -120,8 +126,11 @@ class AllianceVsAlliance extends PlayerPage {
 
 		$kills = [];
 		$dbResult = $db->read('SELECT * FROM alliance_vs_alliance
-					WHERE alliance_id_1 = ' . $db->escapeNumber($this->detailsAllianceID) . '
-						AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY kills DESC');
+					WHERE alliance_id_1 = :alliance_id_1
+						AND game_id = :game_id ORDER BY kills DESC', [
+			'alliance_id_1' => $db->escapeNumber($this->detailsAllianceID),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$id = $dbRecord->getInt('alliance_id_2');
 			$alliance_name = match (true) {
@@ -142,8 +151,11 @@ class AllianceVsAlliance extends PlayerPage {
 
 		$deaths = [];
 		$dbResult = $db->read('SELECT * FROM alliance_vs_alliance
-					WHERE alliance_id_2 = ' . $db->escapeNumber($this->detailsAllianceID) . '
-						AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY kills DESC');
+					WHERE alliance_id_2 = :alliance_id_2
+						AND game_id = :game_id ORDER BY kills DESC', [
+			'alliance_id_2' => $db->escapeNumber($this->detailsAllianceID),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$id = $dbRecord->getInt('alliance_id_1');
 			$alliance_name = match (true) {

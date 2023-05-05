@@ -42,7 +42,11 @@ class NewsReadArchives extends AccountPage {
 		$template->assign('ViewNewsFormHref', (new self($this->gameID))->href());
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type != \'lotto\' ORDER BY news_id DESC LIMIT ' . ($min_news - 1) . ', ' . ($max_news - $min_news + 1));
+		$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND type != \'lotto\' ORDER BY news_id DESC LIMIT :limit_offset, :limit_count', [
+			'game_id' => $db->escapeNumber($gameID),
+			'limit_count' => $max_news - $min_news + 1,
+			'limit_offset' => $min_news - 1,
+		]);
 		$template->assign('NewsItems', News::getNewsItems($dbResult));
 	}
 

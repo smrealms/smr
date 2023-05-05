@@ -30,8 +30,10 @@ class ChangelogView extends AccountPage {
 
 		$dbResult = $db->read('SELECT *
 					FROM version
-					WHERE went_live > ' . $db->escapeNumber($this->lastLogin ?? 0) . '
-					ORDER BY version_id DESC');
+					WHERE went_live > :last_login
+					ORDER BY version_id DESC', [
+			'last_login' => $db->escapeNumber($this->lastLogin ?? 0),
+		]);
 
 		$versions = [];
 		foreach ($dbResult->records() as $dbRecord) {
@@ -48,8 +50,10 @@ class ChangelogView extends AccountPage {
 
 			$dbResult2 = $db->read('SELECT *
 						FROM changelog
-						WHERE version_id = ' . $db->escapeNumber($version_id) . '
-						ORDER BY changelog_id');
+						WHERE version_id = :version_id
+						ORDER BY changelog_id', [
+				'version_id' => $db->escapeNumber($version_id),
+			]);
 			$changes = [];
 			foreach ($dbResult2->records() as $dbRecord2) {
 				$changes[] = [

@@ -221,19 +221,19 @@ function createNHA(int $gameID): void {
 	$threadID = 1;
 	foreach ($threads as $topic => $text) {
 		$db->replace('alliance_thread_topic', [
-			'game_id' => $db->escapeNumber($gameID),
-			'alliance_id' => $db->escapeNumber($allianceID),
-			'thread_id' => $db->escapeNumber($threadID),
-		'topic' => $db->escapeString($topic),
+			'game_id' => $gameID,
+			'alliance_id' => $allianceID,
+			'thread_id' => $threadID,
+			'topic' => $topic,
 		]);
 		$db->replace('alliance_thread', [
-			'game_id' => $db->escapeNumber($gameID),
-			'alliance_id' => $db->escapeNumber($allianceID),
-			'thread_id' => $db->escapeNumber($threadID),
+			'game_id' => $gameID,
+			'alliance_id' => $allianceID,
+			'thread_id' => $threadID,
 			'reply_id' => 1,
-			'text' => $db->escapeString($text),
-			'sender_id' => $db->escapeNumber(ACCOUNT_ID_NHL),
-			'time' => $db->escapeNumber(Epoch::time()),
+			'text' => $text,
+			'sender_id' => ACCOUNT_ID_NHL,
+			'time' => Epoch::time(),
 		]);
 		$threadID++;
 	}

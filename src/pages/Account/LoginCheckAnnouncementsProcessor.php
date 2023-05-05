@@ -12,7 +12,9 @@ class LoginCheckAnnouncementsProcessor extends AccountPageProcessor {
 		$lastLogin = $account->getLastLogin();
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM announcement WHERE time >= ' . $db->escapeNumber($lastLogin) . ' LIMIT 1');
+		$dbResult = $db->read('SELECT 1 FROM announcement WHERE time >= :last_login LIMIT 1', [
+			'last_login' => $db->escapeNumber($lastLogin),
+		]);
 		// do we have announcements?
 		if ($dbResult->hasRecord()) {
 			(new LoginAnnouncements())->go();

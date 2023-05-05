@@ -67,8 +67,11 @@ class GameJoinProcessor extends AccountPageProcessor {
 		// all sectors are visited (the majority of the game), the table is empty.
 		$db = Database::getInstance();
 		$db->write('INSERT INTO player_visited_sector (account_id, game_id, sector_id)
-		            SELECT ' . $db->escapeNumber($account->getAccountID()) . ', game_id, sector_id
-		              FROM sector WHERE game_id = ' . $db->escapeNumber($gameID));
+		            SELECT :account_id, game_id, sector_id
+		              FROM sector WHERE game_id = :game_id', [
+			'account_id' => $db->escapeNumber($account->getAccountID()),
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 
 		// Mark the player's start sector as visited
 		$player->getSector()->markVisited($player);
@@ -93,11 +96,11 @@ class GameJoinProcessor extends AccountPageProcessor {
 		// Announce the player joining in the news
 		$news = '[player=' . $player->getPlayerID() . '] has joined the game!';
 		$db->insert('news', [
-			'time' => $db->escapeNumber(Epoch::time()),
-			'news_message' => $db->escapeString($news),
-			'game_id' => $db->escapeNumber($gameID),
-			'type' => $db->escapeString('admin'),
-			'killer_id' => $db->escapeNumber($player->getAccountID()),
+			'time' => Epoch::time(),
+			'news_message' => $news,
+			'game_id' => $gameID,
+			'type' => 'admin',
+			'killer_id' => $player->getAccountID(),
 		]);
 
 		// Send the player directly into the game

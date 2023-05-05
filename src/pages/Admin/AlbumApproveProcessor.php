@@ -17,9 +17,11 @@ class AlbumApproveProcessor extends AccountPageProcessor {
 		$approved = $this->approved ? 'YES' : 'NO';
 
 		$db = Database::getInstance();
-		$db->write('UPDATE album
-					SET approved = ' . $db->escapeString($approved) . '
-					WHERE account_id = ' . $db->escapeNumber($this->albumAccountID));
+		$db->update(
+			'album',
+			['approved' => $approved],
+			['account_id' => $this->albumAccountID],
+		);
 
 		(new AlbumApprove())->go();
 	}

@@ -20,7 +20,11 @@ class AllianceTreatiesConfirm extends PlayerPage {
 		$alliance_id_2 = Request::getInt('proposedAlliance');
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM alliance_treaties WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_1 = ' . $alliance_id_2 . ') AND (alliance_id_2 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_2 = ' . $db->escapeNumber($alliance_id_2) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()));
+		$dbResult = $db->read('SELECT 1 FROM alliance_treaties WHERE (alliance_id_1 = :alliance_id_1 OR alliance_id_1 = :alliance_id_2) AND (alliance_id_2 = :alliance_id_1 OR alliance_id_2 = :alliance_id_2) AND game_id = :game_id', [
+			'alliance_id_1' => $db->escapeNumber($alliance_id_1),
+			'alliance_id_2' => $db->escapeNumber($alliance_id_2),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		if ($dbResult->hasRecord()) {
 			$message = '<span class="red bold">ERROR:</span> There is already an outstanding treaty with that alliance.';
 			$container = new AllianceTreaties($message);

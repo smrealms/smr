@@ -34,7 +34,7 @@ class DatabaseResultTest extends TestCase {
 	}
 
 	public function test_record_one_row(): void {
-		self::assertSame([1 => '1'], $this->runQuery(1)->record()->getRow());
+		self::assertSame([1 => 1], $this->runQuery(1)->record()->getRow());
 	}
 
 	public function test_record_too_many_rows(): void {
@@ -81,7 +81,7 @@ class DatabaseResultTest extends TestCase {
 		$result = $this->runQuery(3);
 		foreach ($result->records() as $index => $record) {
 			$row = $index + 1;
-			self::assertSame([1 => (string)$row], $record->getRow());
+			self::assertSame([1 => $row], $record->getRow());
 			$numRecords++;
 		}
 		self::assertSame(3, $numRecords);

@@ -26,7 +26,9 @@ class WeaponType {
 		if (!isset(self::$CACHE_WEAPON_TYPES[$weaponTypeID])) {
 			if ($dbRecord === null) {
 				$db = Database::getInstance();
-				$dbResult = $db->read('SELECT * FROM weapon_type WHERE weapon_type_id = ' . $db->escapeNumber($weaponTypeID));
+				$dbResult = $db->read('SELECT * FROM weapon_type WHERE weapon_type_id = :weapon_type_id', [
+					'weapon_type_id' => $db->escapeNumber($weaponTypeID),
+				]);
 				$dbRecord = $dbResult->record();
 			}
 			$weapon = new self($weaponTypeID, $dbRecord);
@@ -56,7 +58,9 @@ class WeaponType {
 	 */
 	public static function getAllSoldWeaponTypes(int $gameID): array {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT DISTINCT weapon_type.* FROM weapon_type JOIN location_sells_weapons USING (weapon_type_id) JOIN location USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID));
+		$dbResult = $db->read('SELECT DISTINCT weapon_type.* FROM weapon_type JOIN location_sells_weapons USING (weapon_type_id) JOIN location USING (location_type_id) WHERE game_id = :game_id', [
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 		$weapons = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$weaponTypeID = $dbRecord->getInt('weapon_type_id');

@@ -32,15 +32,15 @@ class VoteCreateProcessor extends AccountPageProcessor {
 			$question = Request::get('question');
 			$end = Epoch::time() + 86400 * Request::getInt('days');
 			$db->insert('voting', [
-				'question' => $db->escapeString($question),
-				'end' => $db->escapeNumber($end),
+				'question' => $question,
+				'end' => $end,
 			]);
 		} elseif ($action == 'Add Option') {
 			$option = Request::get('option');
 			$voteID = Request::getInt('vote');
 			$db->insert('voting_options', [
-				'vote_id' => $db->escapeNumber($voteID),
-				'text' => $db->escapeString($option),
+				'vote_id' => $voteID,
+				'text' => $option,
 			]);
 		}
 		(new VoteCreate())->go();

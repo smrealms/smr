@@ -13,7 +13,10 @@ class Bounty {
 	 */
 	public static function getMostWanted(BountyType $type, int $gameID): array {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM bounty WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type =' . $db->escapeString($type->value) . ' AND claimer_id = 0 ORDER BY amount DESC');
+		$dbResult = $db->read('SELECT * FROM bounty WHERE game_id = :game_id AND type = :type AND claimer_id = 0 ORDER BY amount DESC', [
+			'game_id' => $db->escapeNumber($gameID),
+			'type' => $db->escapeString($type->value),
+		]);
 		$bounties = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$bounties[] = self::getFromRecord($dbRecord);
@@ -28,7 +31,7 @@ class Bounty {
 	 */
 	public static function getPlacedOnPlayer(AbstractPlayer $player): array {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM bounty WHERE ' . $player->getSQL());
+		$dbResult = $db->read('SELECT * FROM bounty WHERE ' . AbstractPlayer::SQL, $player->SQLID);
 		$bounties = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			// Recall that bounty_id is only unique to a given player
@@ -44,12 +47,17 @@ class Bounty {
 	 */
 	public static function getClaimableByPlayer(AbstractPlayer $player, ?BountyType $type = null): array {
 		$db = Database::getInstance();
-		$query = 'SELECT * FROM bounty WHERE claimer_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID());
-		$query .= match ($type) {
-			null => '',
-			default => ' AND type=' . $db->escapeString($type->value),
-		};
-		$dbResult = $db->read($query);
+		$query = 'SELECT * FROM bounty WHERE claimer_id = :claimer_id AND game_id = :game_id';
+		$sqlParams = [
+			'claimer_id' => $db->escapeNumber($player->getAccountID()),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		];
+		if ($type === null) {
+			$dbResult = $db->read($query, $sqlParams);
+		} else {
+			$sqlParams['type'] = $db->escapeString($type->value);
+			$dbResult = $db->read($query . ' AND type = :type', $sqlParams);
+		}
 		$bounties = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$bounties[] = self::getFromRecord($dbRecord);
@@ -156,17 +164,21 @@ class Bounty {
 		$db = Database::getInstance();
 		if ($this->credits > 0 || $this->smrCredits > 0) {
 			$db->replace('bounty', [
-				'account_id' => $db->escapeNumber($this->targetID),
-				'bounty_id' => $db->escapeNumber($this->bountyID),
-				'game_id' => $db->escapeNumber($this->gameID),
-				'type' => $db->escapeString($this->type->value),
-				'time' => $db->escapeNumber($this->time),
-				'claimer_id' => $db->escapeNumber($this->claimerID),
-				'amount' => $db->escapeNumber($this->credits),
-				'smr_credits' => $db->escapeNumber($this->smrCredits),
+				'account_id' => $this->targetID,
+				'bounty_id' => $this->bountyID,
+				'game_id' => $this->gameID,
+				'type' => $this->type->value,
+				'time' => $this->time,
+				'claimer_id' => $this->claimerID,
+				'amount' => $this->credits,
+				'smr_credits' => $this->smrCredits,
 			]);
 		} else {
-			$db->write('DELETE FROM bounty WHERE bounty_id=' . $db->escapeNumber($this->bountyID) . ' AND account_id=' . $db->escapeNumber($this->targetID) . ' AND game_id=' . $db->escapeNumber($this->gameID));
+			$db->delete('bounty', [
+				'bounty_id' => $this->bountyID,
+				'account_id' => $this->targetID,
+				'game_id' => $this->gameID,
+			]);
 		}
 		$this->hasChanged = false;
 		return true;

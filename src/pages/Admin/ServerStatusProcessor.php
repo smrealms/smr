@@ -17,7 +17,7 @@ class ServerStatusProcessor extends AccountPageProcessor {
 		if ($action == 'Close') {
 			$reason = Request::get('close_reason');
 			$db->replace('game_disable', [
-				'reason' => $db->escapeString($reason),
+				'reason' => $reason,
 			]);
 			$db->write('DELETE FROM active_session;');
 			$msg = '<span class="green">SUCCESS: </span>You have closed the server. You will now be logged out!';

@@ -75,10 +75,10 @@ class SectorLock {
 		// Insert ourselves into the queue.
 		$db = Database::getInstance();
 		$this->lockID = $db->insert('locks_queue', [
-			'game_id' => $db->escapeNumber($gameID),
-			'account_id' => $db->escapeNumber($accountID),
-			'sector_id' => $db->escapeNumber($sectorID),
-			'timestamp' => $db->escapeNumber(Epoch::time()),
+			'game_id' => $gameID,
+			'account_id' => $accountID,
+			'sector_id' => $sectorID,
+			'timestamp' => Epoch::time(),
 		]);
 
 		// Return once we are next in the queue.
@@ -88,20 +88,31 @@ class SectorLock {
 			}
 
 			$staleLockEpoch = Epoch::time() - self::LOCK_DURATION;
-			$query = 'SELECT COUNT(*) FROM locks_queue WHERE'
-				. ' sector_id=' . $db->escapeNumber($sectorID)
-				. ' AND game_id=' . $db->escapeNumber($gameID)
-				. ' AND timestamp > ' . $db->escapeNumber($staleLockEpoch);
+			$query = 'SELECT COUNT(*) FROM locks_queue WHERE
+				sector_id = :sector_id
+				AND game_id = :game_id
+				AND timestamp > :stale_time';
+			$sqlParams = [
+				'sector_id' => $db->escapeNumber($sectorID),
+				'game_id' => $db->escapeNumber($gameID),
+				'stale_time' => $db->escapeNumber($staleLockEpoch),
+			];
 
 			// If there is someone else before us in the queue we sleep for a while
-			$dbResult = $db->read($query . ' AND lock_id < ' . $db->escapeNumber($this->lockID));
+			$dbResult = $db->read($query . ' AND lock_id < :lock_id', [
+				...$sqlParams,
+				'lock_id' => $db->escapeNumber($this->lockID),
+			]);
 			$locksInQueue = $dbResult->record()->getInt('COUNT(*)');
 			if ($locksInQueue == 0) {
 				return true;
 			}
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
-			$dbResult = $db->read($query . ' AND account_id=' . $db->escapeNumber($accountID));
+			$dbResult = $db->read($query . ' AND account_id = :account_id', [
+				...$sqlParams,
+				'account_id' => $db->escapeNumber($accountID),
+			]);
 			if ($dbResult->record()->getInt('COUNT(*)') > 1) {
 				$this->setFailed();
 				throw new UserError('Multiple actions cannot be performed at the same time!');
@@ -140,7 +151,10 @@ class SectorLock {
 		}
 		// Delete this lock (and any stale locks)
 		$db = Database::getInstance();
-		$db->write('DELETE from locks_queue WHERE lock_id=' . $db->escapeNumber($this->lockID) . ' OR timestamp<' . $db->escapeNumber(Epoch::time() - self::LOCK_DURATION));
+		$db->write('DELETE from locks_queue WHERE lock_id = :lock_id OR timestamp < :lock_time', [
+			'lock_id' => $db->escapeNumber($this->lockID),
+			'lock_time' => $db->escapeNumber(Epoch::time() - self::LOCK_DURATION),
+		]);
 
 		$this->lockID = null;
 		return true;

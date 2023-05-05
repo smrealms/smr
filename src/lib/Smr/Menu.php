@@ -106,10 +106,14 @@ class Menu {
 		// Check if player has permissions through an alliance treaty
 		if (!$in_alliance) {
 			$dbResult = $db->read('SELECT mb_read, mod_read, planet_land FROM alliance_treaties
-							WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance_id) . ' OR alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ')
-							AND (alliance_id_2 = ' . $db->escapeNumber($alliance_id) . ' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')
-							AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-							AND (mb_read = 1 OR mod_read = 1 OR planet_land = 1) AND official = \'TRUE\'');
+							WHERE (alliance_id_1 = :alliance_id OR alliance_id_1 = :player_alliance_id)
+							AND (alliance_id_2 = :alliance_id OR alliance_id_2 = :player_alliance_id)
+							AND game_id = :game_id
+							AND (mb_read = 1 OR mod_read = 1 OR planet_land = 1) AND official = \'TRUE\'', [
+				'alliance_id' => $db->escapeNumber($alliance_id),
+				'player_alliance_id' => $db->escapeNumber($player->getAllianceID()),
+				'game_id' => $db->escapeNumber($player->getGameID()),
+			]);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 				$canReadMb = $dbRecord->getBoolean('mb_read');
@@ -119,7 +123,11 @@ class Menu {
 		}
 
 		$role_id = $player->getAllianceRole($alliance_id);
-		$dbResult = $db->read('SELECT send_alliance_msg FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
+		$dbResult = $db->read('SELECT send_alliance_msg FROM alliance_has_roles WHERE alliance_id = :alliance_id AND game_id = :game_id AND role_id = :role_id', [
+			'alliance_id' => $db->escapeNumber($alliance_id),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'role_id' => $db->escapeNumber($role_id),
+		]);
 		if ($dbResult->hasRecord()) {
 			$send_alliance_msg = $dbResult->record()->getBoolean('send_alliance_msg');
 		} else {

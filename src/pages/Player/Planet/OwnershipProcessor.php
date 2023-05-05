@@ -24,9 +24,17 @@ class OwnershipProcessor extends PlayerPageProcessor {
 
 			// delete all previous ownerships
 			$db = Database::getInstance();
-			$db->write('UPDATE planet SET owner_id = 0, password = NULL
-						WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . '
-						AND game_id = ' . $db->escapeNumber($player->getGameID()));
+			$db->update(
+				'planet',
+				[
+					'owner_id' => 0,
+					'password' => '',
+				],
+				[
+					'owner_id' => $player->getAccountID(),
+					'game_id' => $player->getGameID(),
+				],
+			);
 
 			// set ownership
 			$planet->setOwnerID($player->getAccountID());

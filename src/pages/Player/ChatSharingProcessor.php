@@ -44,20 +44,28 @@ class ChatSharingProcessor extends PlayerPageProcessor {
 
 			$gameId = Request::has('all_games') ? 0 : $player->getGameID();
 			$db->insert('account_shares_info', [
-				'to_account_id' => $db->escapeNumber($accountId),
-				'from_account_id' => $db->escapeNumber($player->getAccountID()),
-				'game_id' => $db->escapeNumber($gameId),
+				'to_account_id' => $accountId,
+				'from_account_id' => $player->getAccountID(),
+				'game_id' => $gameId,
 			]);
 		}
 
 		// Process removing a "share to" account
 		if (Request::has('remove_share_to')) {
-			$db->write('DELETE FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber(Request::getInt('remove_share_to')) . ' AND from_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber(Request::getInt('game_id')));
+			$db->delete('account_shares_info', [
+				'to_account_id' => Request::getInt('remove_share_to'),
+				'from_account_id' => $player->getAccountID(),
+				'game_id' => Request::getInt('game_id'),
+			]);
 		}
 
 		// Process removing a "share from" account
 		if (Request::has('remove_share_from')) {
-			$db->write('DELETE FROM account_shares_info WHERE to_account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND from_account_id=' . $db->escapeNumber(Request::getInt('remove_share_from')) . ' AND game_id=' . $db->escapeNumber(Request::getInt('game_id')));
+			$db->delete('account_shares_info', [
+				'to_account_id' => $player->getAccountID(),
+				'from_account_id' => Request::getInt('remove_share_from'),
+				'game_id' => Request::getInt('game_id'),
+			]);
 		}
 
 		(new ChatSharing())->go();

@@ -35,7 +35,10 @@ class News {
 
 	public static function doBreakingNewsAssign(int $gameID): void {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type = \'breaking\' AND time > ' . $db->escapeNumber(Epoch::time() - TIME_FOR_BREAKING_NEWS) . ' ORDER BY time DESC LIMIT 1');
+		$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND type = \'breaking\' AND time > :breaking_news_time  ORDER BY time DESC LIMIT 1', [
+			'game_id' => $db->escapeNumber($gameID),
+			'breaking_news_time' => $db->escapeNumber(Epoch::time() - TIME_FOR_BREAKING_NEWS),
+		]);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$template = Template::getInstance();
@@ -49,7 +52,9 @@ class News {
 	public static function doLottoNewsAssign(int $gameID): void {
 		Lotto::checkForLottoWinner($gameID);
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM news WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND type = \'lotto\' ORDER BY time DESC LIMIT 1');
+		$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND type = \'lotto\' ORDER BY time DESC LIMIT 1', [
+			'game_id' => $db->escapeNumber($gameID),
+		]);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$template = Template::getInstance();

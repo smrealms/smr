@@ -28,7 +28,10 @@ class NpcManage extends AccountPage {
 
 		$games = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT game_id FROM game WHERE end_time > ' . $db->escapeNumber(Epoch::time()) . ' AND enabled = ' . $db->escapeBoolean(true) . ' ORDER BY game_id DESC');
+		$dbResult = $db->read('SELECT game_id FROM game WHERE end_time > :now AND enabled = :enabled ORDER BY game_id DESC', [
+			'now' => $db->escapeNumber(Epoch::time()),
+			'enabled' => $db->escapeBoolean(true),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$gameID = $dbRecord->getInt('game_id');
 			if (empty($selectedGameID)) {
@@ -75,7 +78,10 @@ class NpcManage extends AccountPage {
 		$template->assign('NextLogin', 'npc' . $nextNpcID);
 
 		// Get the existing NPC players for the selected game
-		$dbResult = $db->read('SELECT * FROM player WHERE game_id=' . $db->escapeNumber($selectedGameID) . ' AND npc=' . $db->escapeBoolean(true));
+		$dbResult = $db->read('SELECT * FROM player WHERE game_id = :game_id AND npc = :npc', [
+			'game_id' => $db->escapeNumber($selectedGameID),
+			'npc' => $db->escapeBoolean(true),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$accountID = $dbRecord->getInt('account_id');
 			$npcs[$accountID]['player'] = Player::getPlayer($accountID, $selectedGameID, false, $dbRecord);

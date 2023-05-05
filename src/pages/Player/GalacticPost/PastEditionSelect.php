@@ -29,7 +29,9 @@ class PastEditionSelect extends PlayerPage {
 		// Get the list of games with published papers
 		// Add the current game to this list no matter what
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT game_name, game_id FROM game WHERE game_id IN (SELECT DISTINCT game_id FROM galactic_post_paper WHERE online_since IS NOT NULL) OR game_id=' . $db->escapeNumber($player->getGameID()) . ' ORDER BY game_id DESC');
+		$dbResult = $db->read('SELECT game_name, game_id FROM game WHERE game_id IN (SELECT DISTINCT game_id FROM galactic_post_paper WHERE online_since IS NOT NULL) OR game_id = :game_id ORDER BY game_id DESC', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		$publishedGames = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$publishedGames[] = [
@@ -40,7 +42,9 @@ class PastEditionSelect extends PlayerPage {
 		$template->assign('PublishedGames', $publishedGames);
 
 		// Get the list of published papers for the selected game
-		$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id=' . $db->escapeNumber($this->gameID));
+		$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id = :game_id', [
+			'game_id' => $db->escapeNumber($this->gameID),
+		]);
 		$pastEditions = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$container = new EditionRead($this->gameID, $dbRecord->getInt('paper_id'), true);

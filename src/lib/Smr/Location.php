@@ -22,7 +22,9 @@ class Location {
 	/** @var array<int, array<int, array<int, self>>> */
 	protected static array $CACHE_SECTOR_LOCATIONS = [];
 
-	protected readonly string $SQL;
+	public const SQL = 'location_type_id = :location_type_id';
+	/** @var array{location_type_id: int} */
+	public readonly array $SQLID;
 
 	protected string $name;
 	protected ?string $processor;
@@ -69,7 +71,10 @@ class Location {
 	 */
 	public static function getGalaxyLocations(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT location_type.*, sector_id FROM location LEFT JOIN sector USING(game_id, sector_id) LEFT JOIN location_type USING (location_type_id) WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND galaxy_id = ' . $db->escapeNumber($galaxyID));
+		$dbResult = $db->read('SELECT location_type.*, sector_id FROM location LEFT JOIN sector USING(game_id, sector_id) LEFT JOIN location_type USING (location_type_id) WHERE game_id = :game_id AND galaxy_id = :galaxy_id', [
+			'game_id' => $db->escapeNumber($gameID),
+			'galaxy_id' => $db->escapeNumber($galaxyID),
+		]);
 		$galaxyLocations = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$sectorID = $dbRecord->getInt('sector_id');
@@ -87,7 +92,10 @@ class Location {
 	public static function getSectorLocations(int $gameID, int $sectorID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID])) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM location LEFT JOIN location_type USING (location_type_id) WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID));
+			$dbResult = $db->read('SELECT * FROM location LEFT JOIN location_type USING (location_type_id) WHERE sector_id = :sector_id AND game_id = :game_id', [
+				'sector_id' => $db->escapeNumber($sectorID),
+				'game_id' => $db->escapeNumber($gameID),
+			]);
 			$locations = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$locationTypeID = $dbRecord->getInt('location_type_id');
@@ -102,9 +110,9 @@ class Location {
 		self::getSectorLocations($gameID, $sectorID); // make sure cache is populated
 		$db = Database::getInstance();
 		$db->insert('location', [
-			'game_id' => $db->escapeNumber($gameID),
-			'sector_id' => $db->escapeNumber($sectorID),
-			'location_type_id' => $db->escapeNumber($location->getTypeID()),
+			'game_id' => $gameID,
+			'sector_id' => $sectorID,
+			...$location->SQLID,
 		]);
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID][$location->getTypeID()] = $location;
 	}
@@ -119,7 +127,15 @@ class Location {
 		self::getSectorLocations($gameID, $newSectorID);
 
 		$db = Database::getInstance();
-		$db->write('UPDATE location SET sector_id = ' . $db->escapeNumber($newSectorID) . ' WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($oldSectorID) . ' AND location_type_id = ' . $location->getTypeID());
+		$db->update(
+			'location',
+			['sector_id' => $newSectorID],
+			[
+				'game_id' => $gameID,
+				'sector_id' => $oldSectorID,
+				...$location->SQLID,
+			],
+		);
 		unset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$oldSectorID][$location->getTypeID()]);
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$newSectorID][$location->getTypeID()] = $location;
 
@@ -129,7 +145,10 @@ class Location {
 
 	public static function removeSectorLocations(int $gameID, int $sectorID): void {
 		$db = Database::getInstance();
-		$db->write('DELETE FROM location WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
+		$db->delete('location', [
+			'game_id' => $gameID,
+			'sector_id' => $sectorID,
+		]);
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] = [];
 	}
 
@@ -146,10 +165,10 @@ class Location {
 		DatabaseRecord $dbRecord = null
 	) {
 		$db = Database::getInstance();
-		$this->SQL = 'location_type_id = ' . $db->escapeNumber($typeID);
+		$this->SQLID = ['location_type_id' => $db->escapeNumber($typeID)];
 
 		if ($dbRecord === null) {
-			$dbResult = $db->read('SELECT * FROM location_type WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT * FROM location_type WHERE ' . self::SQL, $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -194,7 +213,11 @@ class Location {
 		}
 		$this->name = $name;
 		$db = Database::getInstance();
-		$db->write('UPDATE location_type SET location_name=' . $db->escapeString($this->name) . ' WHERE ' . $this->SQL);
+		$db->update(
+			'location_type',
+			['location_name' => $this->name],
+			$this->SQLID,
+		);
 	}
 
 	public function hasAction(): bool {
@@ -212,7 +235,7 @@ class Location {
 	public function isFed(): bool {
 		if (!isset($this->fed)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT 1 FROM location_is_fed WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT 1 FROM location_is_fed WHERE ' . self::SQL, $this->SQLID);
 			$this->fed = $dbResult->hasRecord();
 		}
 		return $this->fed;
@@ -224,9 +247,9 @@ class Location {
 		}
 		$db = Database::getInstance();
 		if ($bool) {
-			$db->write('INSERT IGNORE INTO location_is_fed (location_type_id) values (' . $db->escapeNumber($this->getTypeID()) . ')');
+			$db->write('INSERT IGNORE INTO location_is_fed (location_type_id) values (:location_type_id)', $this->SQLID);
 		} else {
-			$db->write('DELETE FROM location_is_fed WHERE ' . $this->SQL);
+			$db->delete('location_is_fed', $this->SQLID);
 		}
 		$this->fed = $bool;
 	}
@@ -234,7 +257,7 @@ class Location {
 	public function isBank(): bool {
 		if (!isset($this->bank)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT 1 FROM location_is_bank WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT 1 FROM location_is_bank WHERE ' . self::SQL, $this->SQLID);
 			$this->bank = $dbResult->hasRecord();
 		}
 		return $this->bank;
@@ -246,11 +269,9 @@ class Location {
 		}
 		$db = Database::getInstance();
 		if ($bool) {
-			$db->insert('location_is_bank', [
-				'location_type_id' => $db->escapeNumber($this->getTypeID()),
-			]);
+			$db->insert('location_is_bank', $this->SQLID);
 		} else {
-			$db->write('DELETE FROM location_is_bank WHERE ' . $this->SQL);
+			$db->delete('location_is_bank', $this->SQLID);
 		}
 		$this->bank = $bool;
 	}
@@ -258,7 +279,7 @@ class Location {
 	public function isBar(): bool {
 		if (!isset($this->bar)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT 1 FROM location_is_bar WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT 1 FROM location_is_bar WHERE ' . self::SQL, $this->SQLID);
 			$this->bar = $dbResult->hasRecord();
 		}
 		return $this->bar;
@@ -270,9 +291,9 @@ class Location {
 		}
 		$db = Database::getInstance();
 		if ($bool) {
-			$db->write('INSERT IGNORE INTO location_is_bar (location_type_id) values (' . $db->escapeNumber($this->getTypeID()) . ')');
+			$db->write('INSERT IGNORE INTO location_is_bar (location_type_id) values (:location_type_id)', $this->SQLID);
 		} else {
-			$db->write('DELETE FROM location_is_bar WHERE ' . $this->SQL);
+			$db->delete('location_is_bar', $this->SQLID);
 		}
 		$this->bar = $bool;
 	}
@@ -280,7 +301,7 @@ class Location {
 	public function isHQ(): bool {
 		if (!isset($this->HQ)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT 1 FROM location_is_hq WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT 1 FROM location_is_hq WHERE ' . self::SQL, $this->SQLID);
 			$this->HQ = $dbResult->hasRecord();
 		}
 		return $this->HQ;
@@ -292,9 +313,9 @@ class Location {
 		}
 		$db = Database::getInstance();
 		if ($bool) {
-			$db->write('INSERT IGNORE INTO location_is_hq (location_type_id) values (' . $db->escapeNumber($this->getTypeID()) . ')');
+			$db->write('INSERT IGNORE INTO location_is_hq (location_type_id) values (:location_type_id)', $this->SQLID);
 		} else {
-			$db->write('DELETE FROM location_is_hq WHERE ' . $this->SQL);
+			$db->delete('location_is_hq', $this->SQLID);
 		}
 		$this->HQ = $bool;
 	}
@@ -302,7 +323,7 @@ class Location {
 	public function isUG(): bool {
 		if (!isset($this->UG)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT 1 FROM location_is_ug WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT 1 FROM location_is_ug WHERE ' . self::SQL, $this->SQLID);
 			$this->UG = $dbResult->hasRecord();
 		}
 		return $this->UG;
@@ -314,11 +335,9 @@ class Location {
 		}
 		$db = Database::getInstance();
 		if ($bool) {
-			$db->insert('location_is_ug', [
-				'location_type_id' => $db->escapeNumber($this->getTypeID()),
-			]);
+			$db->insert('location_is_ug', $this->SQLID);
 		} else {
-			$db->write('DELETE FROM location_is_ug WHERE ' . $this->SQL);
+			$db->delete('location_is_ug', $this->SQLID);
 		}
 		$this->UG = $bool;
 	}
@@ -330,7 +349,7 @@ class Location {
 		if (!isset($this->hardwareSold)) {
 			$this->hardwareSold = [];
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT hardware_type_id FROM location_sells_hardware WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT hardware_type_id FROM location_sells_hardware WHERE ' . self::SQL, $this->SQLID);
 			foreach ($dbResult->records() as $dbRecord) {
 				$hardwareTypeID = $dbRecord->getInt('hardware_type_id');
 				$this->hardwareSold[$hardwareTypeID] = HardwareType::get($hardwareTypeID);
@@ -352,13 +371,15 @@ class Location {
 			return;
 		}
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM hardware_type WHERE hardware_type_id = ' . $db->escapeNumber($hardwareTypeID));
+		$dbResult = $db->read('SELECT 1 FROM hardware_type WHERE hardware_type_id = :hardware_type_id', [
+			'hardware_type_id' => $db->escapeNumber($hardwareTypeID),
+		]);
 		if (!$dbResult->hasRecord()) {
 			throw new Exception('Invalid hardware type id given');
 		}
 		$db->insert('location_sells_hardware', [
-			'location_type_id' => $db->escapeNumber($this->getTypeID()),
-			'hardware_type_id' => $db->escapeNumber($hardwareTypeID),
+			...$this->SQLID,
+			'hardware_type_id' => $hardwareTypeID,
 		]);
 		$this->hardwareSold[$hardwareTypeID] = HardwareType::get($hardwareTypeID);
 	}
@@ -368,7 +389,10 @@ class Location {
 			return;
 		}
 		$db = Database::getInstance();
-		$db->write('DELETE FROM location_sells_hardware WHERE ' . $this->SQL . ' AND hardware_type_id = ' . $db->escapeNumber($hardwareTypeID));
+		$db->delete('location_sells_hardware', [
+			...$this->SQLID,
+			'hardware_type_id' => $hardwareTypeID,
+		]);
 		unset($this->hardwareSold[$hardwareTypeID]);
 	}
 
@@ -379,7 +403,7 @@ class Location {
 		if (!isset($this->shipsSold)) {
 			$this->shipsSold = [];
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM location_sells_ships JOIN ship_type USING (ship_type_id) WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT * FROM location_sells_ships JOIN ship_type USING (ship_type_id) WHERE ' . self::SQL, $this->SQLID);
 			foreach ($dbResult->records() as $dbRecord) {
 				$shipTypeID = $dbRecord->getInt('ship_type_id');
 				$this->shipsSold[$shipTypeID] = ShipType::get($shipTypeID, $dbRecord);
@@ -413,8 +437,8 @@ class Location {
 		$ship = ShipType::get($shipTypeID);
 		$db = Database::getInstance();
 		$db->insert('location_sells_ships', [
-			'location_type_id' => $db->escapeNumber($this->getTypeID()),
-			'ship_type_id' => $db->escapeNumber($shipTypeID),
+			...$this->SQLID,
+			'ship_type_id' => $shipTypeID,
 		]);
 		$this->shipsSold[$shipTypeID] = $ship;
 	}
@@ -424,7 +448,10 @@ class Location {
 			return;
 		}
 		$db = Database::getInstance();
-		$db->write('DELETE FROM location_sells_ships WHERE ' . $this->SQL . ' AND ship_type_id = ' . $db->escapeNumber($shipTypeID));
+		$db->delete('location_sells_ships', [
+			...$this->SQLID,
+			'ship_type_id' => $shipTypeID,
+		]);
 		unset($this->shipsSold[$shipTypeID]);
 	}
 
@@ -435,7 +462,7 @@ class Location {
 		if (!isset($this->weaponsSold)) {
 			$this->weaponsSold = [];
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM location_sells_weapons JOIN weapon_type USING (weapon_type_id) WHERE ' . $this->SQL);
+			$dbResult = $db->read('SELECT * FROM location_sells_weapons JOIN weapon_type USING (weapon_type_id) WHERE ' . self::SQL, $this->SQLID);
 			foreach ($dbResult->records() as $dbRecord) {
 				$weaponTypeID = $dbRecord->getInt('weapon_type_id');
 				$this->weaponsSold[$weaponTypeID] = Weapon::getWeapon($weaponTypeID, $dbRecord);
@@ -459,8 +486,8 @@ class Location {
 		$weapon = Weapon::getWeapon($weaponTypeID);
 		$db = Database::getInstance();
 		$db->insert('location_sells_weapons', [
-			'location_type_id' => $db->escapeNumber($this->getTypeID()),
-			'weapon_type_id' => $db->escapeNumber($weaponTypeID),
+			...$this->SQLID,
+			'weapon_type_id' => $weaponTypeID,
 		]);
 		$this->weaponsSold[$weaponTypeID] = $weapon;
 	}
@@ -470,7 +497,10 @@ class Location {
 			return;
 		}
 		$db = Database::getInstance();
-		$db->write('DELETE FROM location_sells_weapons WHERE ' . $this->SQL . ' AND weapon_type_id = ' . $db->escapeNumber($weaponTypeID));
+		$db->delete('location_sells_weapons', [
+			...$this->SQLID,
+			'weapon_type_id' => $weaponTypeID,
+		]);
 		unset($this->weaponsSold[$weaponTypeID]);
 	}
 

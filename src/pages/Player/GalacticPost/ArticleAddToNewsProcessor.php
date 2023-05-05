@@ -15,15 +15,18 @@ class ArticleAddToNewsProcessor extends PlayerPageProcessor {
 
 	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT text FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($this->articleID));
+		$dbResult = $db->read('SELECT text FROM galactic_post_article WHERE game_id = :game_id AND article_id = :article_id', [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'article_id' => $db->escapeNumber($this->articleID),
+		]);
 		$dbRecord = $dbResult->record();
 		$newsMessage = $dbRecord->getString('text');
 
 		$db->insert('news', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'time' => $db->escapeNumber(Epoch::time()),
-			'news_message' => $db->escapeString($newsMessage),
-			'type' => $db->escapeString('breaking'),
+			'game_id' => $player->getGameID(),
+			'time' => Epoch::time(),
+			'news_message' => $newsMessage,
+			'type' => 'breaking',
 		]);
 
 		$container = new ArticleView($this->articleID, addedToNews: true);

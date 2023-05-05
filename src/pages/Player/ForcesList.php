@@ -22,10 +22,14 @@ class ForcesList extends PlayerPage {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT *
 					FROM sector_has_forces
-					WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . '
-					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND expire_time >= ' . $db->escapeNumber(Epoch::time()) . '
-					ORDER BY sector_id ASC');
+					WHERE owner_id = :owner_id
+					AND game_id = :game_id
+					AND expire_time >= :now
+					ORDER BY sector_id ASC', [
+			'owner_id' => $db->escapeNumber($player->getAccountID()),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
 
 		$forces = [];
 		foreach ($dbResult->records() as $dbRecord) {

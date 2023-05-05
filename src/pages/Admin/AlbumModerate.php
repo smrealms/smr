@@ -27,7 +27,9 @@ class AlbumModerate extends AccountPage {
 
 		// check if the given account really has an entry
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber($account_id) . ' AND Approved = \'YES\'');
+		$dbResult = $db->read('SELECT * FROM album WHERE account_id = :account_id AND Approved = \'YES\'', [
+			'account_id' => $db->escapeNumber($account_id),
+		]);
 		$dbRecord = $dbResult->record();
 
 		$disabled = $dbRecord->getBoolean('disabled');
@@ -89,7 +91,9 @@ class AlbumModerate extends AccountPage {
 
 		$dbResult = $db->read('SELECT *
 					FROM album_has_comments
-					WHERE album_id = ' . $db->escapeNumber($account_id));
+					WHERE album_id = :album_id', [
+			'album_id' => $db->escapeNumber($account_id),
+		]);
 		$comments = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$comments[] = [

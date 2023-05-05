@@ -32,30 +32,41 @@ class CombatLogListProcessor extends PlayerPageProcessor {
 			if ($submitAction == 'Save') {
 				//save the logs we checked
 				// Query means people can only save logs that they are allowd to view.
-				$db->write('INSERT IGNORE INTO player_saved_combat_logs (account_id, game_id, log_id)
-							SELECT ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', log_id
+				$changedRows = $db->write('INSERT IGNORE INTO player_saved_combat_logs (account_id, game_id, log_id)
+							SELECT :account_id, :game_id, log_id
 							FROM combat_logs
-							WHERE log_id IN (' . $db->escapeArray($logIDs) . ')
-								AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+							WHERE log_id IN (:log_ids)
+								AND game_id = :game_id
 								AND (
-									attacker_id = ' . $db->escapeNumber($player->getAccountID()) . '
-									OR defender_id = ' . $db->escapeNumber($player->getAccountID()) .
-									($player->hasAlliance() ? '
-										OR attacker_alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
-										OR defender_alliance_id = ' . $db->escapeNumber($player->getAllianceID())
-									: '') . '
+									attacker_id = :account_id
+									OR defender_id = :account_id
+									OR (:alliance_id > 0 AND (
+										attacker_alliance_id = :alliance_id
+										OR defender_alliance_id = :alliance_id
+									))
 								)
-							LIMIT ' . count($logIDs));
+							LIMIT :limit', [
+					'account_id' => $db->escapeNumber($player->getAccountID()),
+					'game_id' => $db->escapeNumber($player->getGameID()),
+					'alliance_id' => $db->escapeNumber($player->getAllianceID()),
+					'log_ids' => $db->escapeArray($logIDs),
+					'limit' => count($logIDs),
+				]);
 			} else { // $submitAction == 'Delete'
-				$db->write('DELETE FROM player_saved_combat_logs
-							WHERE log_id IN (' . $db->escapeArray($logIDs) . ')
-								AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
-								AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-							LIMIT ' . count($logIDs));
+				$changedRows = $db->write('DELETE FROM player_saved_combat_logs
+							WHERE log_id IN (:log_ids)
+								AND account_id = :account_id
+								AND game_id = :game_id
+							LIMIT :limit', [
+					'log_ids' => $db->escapeArray($logIDs),
+					'account_id' => $db->escapeNumber($player->getAccountID()),
+					'game_id' => $db->escapeNumber($player->getGameID()),
+					'limit' => count($logIDs),
+				]);
 			}
 
 			// Now that the logs have been saved/deleted, go back to the log list
-			$message = $submitAction . 'd ' . $db->getChangedRows() . ' new logs.';
+			$message = $submitAction . 'd ' . $changedRows . ' new logs.';
 			$container = new CombatLogList($this->action, message: $message);
 			$container->go();
 		} elseif ($submitAction == 'View') {

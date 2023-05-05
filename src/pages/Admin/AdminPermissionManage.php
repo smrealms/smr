@@ -44,8 +44,10 @@ class AdminPermissionManage extends AccountPage {
 			$validatedAccounts = [];
 			$dbResult = $db->read('SELECT account_id, login
 						FROM account
-						WHERE validated = ' . $db->escapeBoolean(true) . '
-						ORDER BY login');
+						WHERE validated = :validated
+						ORDER BY login', [
+				'validated' => $db->escapeBoolean(true),
+			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$accountID = $dbRecord->getInt('account_id');
 				if (!array_key_exists($accountID, $adminLinks)) {

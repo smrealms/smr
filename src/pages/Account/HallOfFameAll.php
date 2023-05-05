@@ -59,7 +59,11 @@ class HallOfFameAll extends AccountPage {
 		} else {
 			// Rankings page
 			$db = Database::getInstance();
-			$gameIDSql = ' AND game_id ' . (isset($game_id) ? '= ' . $db->escapeNumber($game_id) : 'IN (SELECT game_id FROM game WHERE end_time < ' . Epoch::time() . ' AND ignore_stats = ' . $db->escapeBoolean(false) . ')');
+			$gameIDSql = ' AND IF(:game_id IS NULL, game_id IN (SELECT game_id FROM game WHERE end_time < :now AND ignore_stats = \'FALSE\'), game_id = :game_id)';
+			$gameIDParams = [
+				'game_id' => $game_id,
+				'now' => Epoch::time(),
+			];
 
 			$rank = 1;
 			$foundMe = false;
@@ -68,11 +72,17 @@ class HallOfFameAll extends AccountPage {
 				$dbResult = $db->read('SELECT account_id, SUM(amount) as amount FROM account_donated
 							GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
 			} elseif ($viewType == HOF_TYPE_USER_SCORE) {
-				$statements = Account::getUserScoreCaseStatement($db);
-				$query = 'SELECT account_id, ' . $statements['CASE'] . ' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN (' . $statements['IN'] . ')' . $gameIDSql . ' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25';
-				$dbResult = $db->read($query);
+				$statements = Account::getUserScoreCaseStatement();
+				$query = 'SELECT account_id, ' . $statements['CASE'] . ' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN (:hof_types)' . $gameIDSql . ' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25';
+				$dbResult = $db->read($query, [
+					'hof_types' => $db->escapeArray($statements['IN']),
+					...$gameIDParams,
+				]);
 			} else {
-				$dbResult = $db->read('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type=' . $db->escapeString($viewType) . $gameIDSql . ' GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
+				$dbResult = $db->read('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type = :hof_type ' . $gameIDSql . ' GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25', [
+					'hof_type' => $db->escapeString($viewType),
+					...$gameIDParams,
+				]);
 			}
 			$rows = [];
 			foreach ($dbResult->records() as $dbRecord) {
