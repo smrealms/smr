@@ -167,13 +167,13 @@ class Session {
 	public function update(): void {
 		$sessionVar = [$this->links, $this->currentPage, $this->requestData];
 		$db = Database::getInstance();
+		$data = [
+			'account_id' => $this->accountID,
+			'game_id' => $this->gameID,
+			'session_var' => $db->escapeObject($sessionVar, true),
+			'last_sn' => $this->SN,
+		];
 		if (!$this->generate) {
-			$data = [
-				'account_id' => $this->accountID,
-				'game_id' => $this->gameID,
-				'session_var' => $db->escapeObject($sessionVar, true),
-				'last_sn' => $this->SN,
-			];
 			$conditions = [
 				'session_id' => $this->sessionID,
 			];
@@ -189,11 +189,9 @@ class Session {
 				'game_id' => $this->gameID,
 			]);
 			$db->insert('active_session', [
+				...$data,
 				'session_id' => $this->sessionID,
-				'account_id' => $this->accountID,
-				'game_id' => $this->gameID,
 				'last_accessed' => Epoch::microtime(),
-				'session_var' => $db->escapeObject($sessionVar, true),
 			]);
 			$this->generate = false;
 		}
