@@ -144,7 +144,7 @@ class IpViewResults extends AccountPage {
 			}
 			$template->assign('Rows', $rows);
 
-		} elseif (in_array($type, ['search', 'alliance_ips', 'wild_log', 'wild_in', 'compare', 'compare_log', 'wild_ip', 'wild_host'], true)) {
+		} else {
 			if ($type === 'search') {
 				//=========================================================
 				// Search for a specific IP
