@@ -747,6 +747,7 @@ abstract class AbstractPlayer {
 			'message_text' => $message,
 			'sender_id' => $senderID,
 			'send_time' => Epoch::time(),
+			'msg_read' => $db->escapeBoolean(!$unread),
 			'expire_time' => $expires,
 			'sender_delete' => $db->escapeBoolean($senderDelete),
 		]);

@@ -208,12 +208,7 @@ try {
 	$db->write('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < :now AND expire_time != 0', [
 		'now' => $db->escapeNumber(Epoch::time()),
 	]);
-	// Mark message as read if it was sent to self as a mass mail.
-	$db->write('UPDATE message SET msg_read = \'TRUE\' WHERE account_id = :account_id AND account_id = sender_id AND message_type_id IN (:message_type_ids)', [
-		'account_id' => $db->escapeNumber($account->getAccountID()),
-		'message_type_ids' => $db->escapeArray([MSG_ALLIANCE, MSG_GLOBAL, MSG_POLITICAL]),
-	]);
-	//check to see if we need to remove player_has_unread
+	//update unread message status (in case changed by expired messages)
 	$db->delete('player_has_unread_messages', [
 		'account_id' => $account->getAccountID(),
 	]);
