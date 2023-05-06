@@ -27,7 +27,7 @@ class GameJoinProcessor extends AccountPageProcessor {
 		$game = Game::getGame($gameID);
 
 		$race_id = Request::getInt('race_id');
-		if (!in_array($race_id, $game->getPlayableRaceIDs())) {
+		if (!in_array($race_id, $game->getPlayableRaceIDs(), true)) {
 			create_error('Please choose a race!');
 		}
 

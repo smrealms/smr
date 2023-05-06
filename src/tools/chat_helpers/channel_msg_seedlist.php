@@ -78,7 +78,7 @@ function shared_channel_msg_seedlist_add(AbstractPlayer $player, ?array $sectors
 		}
 
 		// check if the sector is already in the seedlist
-		if (in_array($sector, $currentSeedlist)) {
+		if (in_array($sector, $currentSeedlist, true)) {
 			$result[] = "WARNING: The sector '$sector' is already in the seedlist.";
 			continue;
 		}

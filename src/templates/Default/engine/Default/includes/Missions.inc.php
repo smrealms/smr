@@ -27,7 +27,7 @@ foreach ($ThisPlayer->getAvailableMissions() as $MissionID => $Mission) { ?>
 }
 
 foreach ($ThisPlayer->getActiveMissions() as $MissionID => $Mission) {
-	if (in_array($MissionID, $UnreadMissions)) { ?>
+	if (in_array($MissionID, $UnreadMissions, true)) { ?>
 		<span class="green">Task Complete: </span><?php
 		echo bbifyMessage($Mission['Task']['Text']); ?><br /><?php
 	}

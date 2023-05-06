@@ -22,7 +22,7 @@ function checkShipLogo(string $filename): void {
 
 	// check if we really have a jpg
 	$allowed_types = [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG];
-	if (!in_array($size[2], $allowed_types)) {
+	if (!in_array($size[2], $allowed_types, true)) {
 		create_error('Only gif, jpg or png-image allowed! s = ' . $size[2]);
 	}
 
@@ -51,7 +51,7 @@ function checkTextShipName(string $name, int $max_len): void {
 
 	// disallow certain ascii chars
 	foreach (str_split($name) as $char) {
-		if (!ctype_print($char) || in_array(ord($char), [37, 39, 59, 92, 63, 42])) {
+		if (!ctype_print($char) || in_array(ord($char), [37, 39, 59, 92, 63, 42], true)) {
 			create_error('The ship name contains invalid characters! ' . $char);
 		}
 	}

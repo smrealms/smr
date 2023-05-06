@@ -34,7 +34,7 @@ class AdminPermissionManageProcessor extends AccountPageProcessor {
 			}
 
 			// Process adding/removing the Admin tag
-			if (in_array(PERMISSION_DISPLAY_ADMIN_TAG, $permissions)) {
+			if (in_array(PERMISSION_DISPLAY_ADMIN_TAG, $permissions, true)) {
 				// This might overwrite an existing unrelated tag.
 				$tag = '<span class="blue">Admin</span>';
 				$db->replace('cpl_tag', [

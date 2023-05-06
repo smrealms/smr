@@ -852,7 +852,7 @@ class Account {
 		if ($this->template === $template) {
 			return;
 		}
-		if (!in_array($template, Globals::getAvailableTemplates())) {
+		if (!in_array($template, Globals::getAvailableTemplates(), true)) {
 			throw new Exception('Template not allowed: ' . $template);
 		}
 		$this->template = $template;
@@ -867,7 +867,7 @@ class Account {
 		if ($this->colourScheme === $colourScheme) {
 			return;
 		}
-		if (!in_array($colourScheme, Globals::getAvailableColourSchemes($this->getTemplate()))) {
+		if (!in_array($colourScheme, Globals::getAvailableColourSchemes($this->getTemplate()), true)) {
 			throw new Exception('Colour scheme not allowed: ' . $colourScheme);
 		}
 		$this->colourScheme = $colourScheme;

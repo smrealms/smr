@@ -28,7 +28,7 @@ class UniGenLocationCategories {
 	}
 
 	public function added(int $locID): bool {
-		return in_array($locID, $this->locAdded);
+		return in_array($locID, $this->locAdded, true);
 	}
 
 }

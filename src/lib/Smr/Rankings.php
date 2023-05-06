@@ -2,6 +2,8 @@
 
 namespace Smr;
 
+use Exception;
+
 class Rankings {
 
 	/**
@@ -244,7 +246,11 @@ class Rankings {
 	 * @param array<int, \Smr\DatabaseRecord> $rankedStats
 	 */
 	public static function ourRank(array $rankedStats, int $ourID): int {
-		return array_search($ourID, array_keys($rankedStats)) + 1;
+		$ourIndex = array_search($ourID, array_keys($rankedStats), true);
+		if ($ourIndex === false) {
+			throw new Exception('Could not find ID in array');
+		}
+		return $ourIndex + 1;
 	}
 
 	/**

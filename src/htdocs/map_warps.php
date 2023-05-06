@@ -33,7 +33,7 @@ try {
 		$nodes[] = [
 			'name' => $galaxy->getName(),
 			'id' => $galaxy->getGalaxyID(),
-			'group' => array_search($galaxy->getGalaxyType(), Galaxy::TYPES),
+			'group' => array_search($galaxy->getGalaxyType(), Galaxy::TYPES, true),
 			'size' => $galaxy->getSize(),
 		];
 	}

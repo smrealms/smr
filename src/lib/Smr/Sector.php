@@ -366,7 +366,7 @@ class Sector {
 		if ($sectorID === $this->getSectorID()) {
 			return 'Current';
 		}
-		$dir = array_search($sectorID, $this->getLinks());
+		$dir = array_search($sectorID, $this->getLinks(), true);
 		if ($dir !== false) {
 			return $dir;
 		}
@@ -388,7 +388,7 @@ class Sector {
 	}
 
 	public function isLinked(int $sectorID): bool {
-		return in_array($sectorID, $this->links) || $sectorID === $this->getWarp();
+		return in_array($sectorID, $this->links, true) || $sectorID === $this->getWarp();
 	}
 
 	public function getLink(string $name): int {

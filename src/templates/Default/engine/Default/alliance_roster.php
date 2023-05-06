@@ -110,7 +110,7 @@ use Smr\Alliance;
 					}
 					if (isset($ActiveIDs)) { ?>
 						<td class="sort_status center"><?php
-							if (in_array($AlliancePlayer->getAccountID(), $ActiveIDs)) { ?>
+							if (in_array($AlliancePlayer->getAccountID(), $ActiveIDs, true)) { ?>
 								<span class="green">Online</span><?php
 							} elseif ($ThisPlayer->isAllianceLeader() && $Disabled = $AlliancePlayer->getAccount()->isDisabled()) { ?>
 								<span class="red">Banned Until:<br/><?php echo date($ThisAccount->getDateTimeFormatSplit(), $Disabled['Time']); ?></span><?php

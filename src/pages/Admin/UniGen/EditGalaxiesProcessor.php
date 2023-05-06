@@ -143,7 +143,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 
 				// If the oldID still exists, then we have to defer shifting until
 				// this destination has been vacated.
-				if (array_search($newID, $needsUpdate)) {
+				if (array_search($newID, $needsUpdate, true)) {
 					continue;
 				}
 
@@ -217,7 +217,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 			// Update the warp
 			if ($oldID !== false && isset($oldWarps[$oldID])) {
 				$oldWarpID = $oldWarps[$oldID];
-				$newWarpID = array_search($oldWarpID, $sectorMap);
+				$newWarpID = array_search($oldWarpID, $sectorMap, true);
 				if ($newWarpID === false) {
 					throw new Exception('Warp sector unexpectedly missing from mapping: ' . $oldWarpID);
 				}

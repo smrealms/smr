@@ -83,14 +83,14 @@ class Path {
 
 	public function followPath(): void {
 		$nextSectorID = $this->getNextOnPath();
-		if (in_array($nextSectorID, $this->warpMap)) {
+		if (in_array($nextSectorID, $this->warpMap, true)) {
 			$this->numWarps--;
 		}
 		array_shift($this->path);
 	}
 
 	public function isInPath(int $sectorID): bool {
-		return in_array($sectorID, $this->getPath());
+		return in_array($sectorID, $this->path, true);
 	}
 
 	/**
@@ -98,7 +98,7 @@ class Path {
 	 * of the path that comes after the given sector.
 	 */
 	public function skipToSector(int $sectorID): self {
-		$position = array_search($sectorID, $this->path);
+		$position = array_search($sectorID, $this->path, true);
 		if ($position === false) {
 			throw new Exception('Cannot skip to sector not in path!');
 		}

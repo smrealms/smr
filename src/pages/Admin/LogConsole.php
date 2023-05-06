@@ -34,7 +34,7 @@ class LogConsole extends AccountPage {
 				'AccountID' => $accountID,
 				'Login' => $dbRecord->getString('login'),
 				'TotalEntries' => $dbRecord->getInt('number_of_entries'),
-				'Checked' => in_array($accountID, $this->accountIDs),
+				'Checked' => in_array($accountID, $this->accountIDs, true),
 				'Notes' => '',
 			];
 

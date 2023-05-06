@@ -814,7 +814,7 @@ class Planet {
 	 */
 	public function hasMenuOption(PlanetMenuOption $option): bool {
 		// We do not set options that are unavailable
-		return in_array($option, $this->typeInfo->menuOptions());
+		return in_array($option, $this->typeInfo->menuOptions(), true);
 	}
 
 	public function update(): void {

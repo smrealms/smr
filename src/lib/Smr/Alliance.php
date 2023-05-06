@@ -623,7 +623,7 @@ class Alliance {
 	 * Is the given sector in the alliance seedlist?
 	 */
 	public function isInSeedlist(Sector $sector): bool {
-		return in_array($sector->getSectorID(), $this->getSeedlist());
+		return in_array($sector->getSectorID(), $this->getSeedlist(), true);
 	}
 
 	/**

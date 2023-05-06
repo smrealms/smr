@@ -76,7 +76,7 @@ if ($type === 'comp_share') {
 		</form>
 	</center><?php
 
-} elseif (in_array($type, ['search', 'alliance_ips', 'wild_log', 'wild_in', 'compare', 'compare_log', 'wild_ip', 'wild_host'])) { ?>
+} elseif (in_array($type, ['search', 'alliance_ips', 'wild_log', 'wild_in', 'compare', 'compare_log', 'wild_ip', 'wild_host'], true)) { ?>
 
 	<center>
 		<?php echo $Summary; ?><br /><br />

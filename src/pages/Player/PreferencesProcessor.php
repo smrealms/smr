@@ -54,7 +54,7 @@ class PreferencesProcessor extends PlayerPageProcessor {
 				throw new Exception('Player is not allowed to change their race!');
 			}
 			$newRaceID = Request::getInt('race_id');
-			if (!in_array($newRaceID, $player->getGame()->getPlayableRaceIDs())) {
+			if (!in_array($newRaceID, $player->getGame()->getPlayableRaceIDs(), true)) {
 				throw new Exception('Invalid race ID selected!');
 			}
 			if ($newRaceID === $player->getRaceID()) {

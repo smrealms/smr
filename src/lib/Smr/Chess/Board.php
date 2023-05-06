@@ -186,7 +186,7 @@ class Board {
 	}
 
 	public function canCastle(Colour $colour, Castling $type): bool {
-		return in_array($type, $this->canCastle[$colour->value]);
+		return in_array($type, $this->canCastle[$colour->value], true);
 	}
 
 	/**

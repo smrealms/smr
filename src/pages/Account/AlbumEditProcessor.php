@@ -68,7 +68,7 @@ class AlbumEditProcessor extends AccountPageProcessor {
 			}
 
 			$allowed_types = [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG];
-			if (!in_array($size[2], $allowed_types)) {
+			if (!in_array($size[2], $allowed_types, true)) {
 				create_error('Only gif, jpg or png-image allowed!');
 			}
 

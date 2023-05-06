@@ -28,7 +28,7 @@ class HallOfFame {
 		$categories = [];
 		$subcategories = [];
 		foreach (Player::getHOFVis() as $hofType => $hofVis) {
-			if (!in_array($hofVis, $allowedVis)) {
+			if (!in_array($hofVis, $allowedVis, true)) {
 				// Not allowed to view
 				continue;
 			}

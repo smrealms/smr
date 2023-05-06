@@ -144,7 +144,7 @@ abstract class AbstractPlayer {
 	public static function getSectorPlayersByAlliances(int $gameID, int $sectorID, array $allianceIDs, bool $forceUpdate = false): array {
 		$players = self::getSectorPlayers($gameID, $sectorID, $forceUpdate); // Don't use & as we do an unset
 		foreach ($players as $accountID => $player) {
-			if (!in_array($player->getAllianceID(), $allianceIDs)) {
+			if (!in_array($player->getAllianceID(), $allianceIDs, true)) {
 				unset($players[$accountID]);
 			}
 		}
@@ -2969,7 +2969,7 @@ abstract class AbstractPlayer {
 	 * @param array<string, mixed> $values
 	 */
 	public function actionTaken(string $actionID, array $values): void {
-		if (!in_array($actionID, MISSION_ACTIONS)) {
+		if (!in_array($actionID, MISSION_ACTIONS, true)) {
 			throw new Exception('Unknown action: ' . $actionID);
 		}
 		// TODO: Reenable this once tested.     if($this->getAccount()->isLoggingEnabled())
@@ -3130,7 +3130,7 @@ abstract class AbstractPlayer {
 	 * Note that this populates the list of *all* unvisited sectors!
 	 */
 	public function hasVisitedSector(int $sectorID): bool {
-		return !in_array($sectorID, $this->getUnvisitedSectors());
+		return !in_array($sectorID, $this->getUnvisitedSectors(), true);
 	}
 
 	public function getLeaveNewbieProtectionHREF(): string {

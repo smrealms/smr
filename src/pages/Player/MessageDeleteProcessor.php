@@ -45,9 +45,13 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 
 		// Delete any scout message groups
 		foreach (Request::getArray('group_id', []) as $groupID) {
-			[$senderID, $minTime, $maxTime] = unserialize(base64_decode($groupID));
+			$decoded = base64_decode($groupID, true);
+			if ($decoded === false) {
+				throw new Exception('Unexpected encoded group ID: ' . $groupID);
+			}
+			[$senderID, $minTime, $maxTime] = unserialize($decoded);
 			if (!is_int($senderID) || !is_int($minTime) || !is_int($maxTime)) {
-				throw new Exception('Unexpected deserialized types: ' . $groupID);
+				throw new Exception('Unexpected deserialized types: ' . $decoded);
 			}
 			$db->write('UPDATE message SET receiver_delete = :receiver_delete_new
 						WHERE sender_id = :sender_id

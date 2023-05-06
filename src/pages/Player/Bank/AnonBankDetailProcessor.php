@@ -17,7 +17,7 @@ class AnonBankDetailProcessor extends PlayerPageProcessor {
 
 	public function build(AbstractPlayer $player): never {
 		$action = Request::get('action');
-		if (!in_array($action, ['Deposit', 'Payment'])) {
+		if (!in_array($action, ['Deposit', 'Payment'], true)) {
 			throw new Exception('Invalid action submitted: ' . $action);
 		}
 

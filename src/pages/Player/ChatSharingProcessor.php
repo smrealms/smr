@@ -38,7 +38,7 @@ class ChatSharingProcessor extends PlayerPageProcessor {
 				error_on_page($e->getMessage());
 			}
 
-			if (in_array($accountId, $this->shareAccountIDs)) {
+			if (in_array($accountId, $this->shareAccountIDs, true)) {
 				error_on_page('You are already sharing with this player!');
 			}
 

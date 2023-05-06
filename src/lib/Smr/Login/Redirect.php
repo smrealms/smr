@@ -23,7 +23,7 @@ class Redirect {
 		];
 
 		$disabled = $account->isDisabled();
-		if ($disabled === false || in_array($disabled['Reason'], $skipReasons)) {
+		if ($disabled === false || in_array($disabled['Reason'], $skipReasons, true)) {
 			return $disabled;
 		}
 

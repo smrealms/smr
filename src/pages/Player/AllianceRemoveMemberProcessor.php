@@ -18,11 +18,11 @@ class AllianceRemoveMemberProcessor extends PlayerPageProcessor {
 			create_error('You have to choose someone to remove them!');
 		}
 
-		if (in_array($player->getAlliance()->getLeaderID(), $accountIDs)) {
+		if (in_array($player->getAlliance()->getLeaderID(), $accountIDs, true)) {
 			create_error('You can\'t kick the leader!');
 		}
 
-		if (in_array($player->getAccountID(), $accountIDs)) {
+		if (in_array($player->getAccountID(), $accountIDs, true)) {
 			create_error('You can\'t kick yourself!');
 		}
 
