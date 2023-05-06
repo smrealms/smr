@@ -17,7 +17,7 @@ class MessageBoxDeleteProcessor extends AccountPageProcessor {
 		$db = Database::getInstance();
 
 		$action = Request::get('action');
-		if ($action == 'Marked Messages') {
+		if ($action === 'Marked Messages') {
 			if (!Request::has('message_id')) {
 				create_error('You must choose the messages you want to delete.');
 			}
@@ -27,7 +27,7 @@ class MessageBoxDeleteProcessor extends AccountPageProcessor {
 					'message_id' => $id,
 				]);
 			}
-		} elseif ($action == 'All Messages') {
+		} elseif ($action === 'All Messages') {
 			$db->delete('message_boxes', [
 				'box_type_id' => $this->boxTypeID,
 			]);

@@ -36,7 +36,7 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 		$good_name = $portGood->name;
 
 		// do we have enough turns?
-		if ($player->getTurns() == 0) {
+		if ($player->getTurns() === 0) {
 			create_error('You don\'t have enough turns to trade.');
 		}
 
@@ -80,7 +80,7 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 		$offered_price = $this->offeredPrice ?? $port->getOfferPrice($ideal_price, $relations, $transaction);
 
 		// nothing should happen here but just to avoid / by 0
-		if ($ideal_price == 0 || $offered_price == 0) {
+		if ($ideal_price === 0 || $offered_price === 0) {
 			create_error('Port calculation error...buy more goods.');
 		}
 
@@ -214,7 +214,7 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 				$tradeMessage .= '<br />Your ' . $qualifier . ' ' . $skill . ' skills have earned you <span class="exp">' . $gained_exp . ' </span> ' . pluralise($gained_exp, 'experience point', false) . '!';
 			}
 
-			if ($ship->getEmptyHolds() == 0) {
+			if ($ship->getEmptyHolds() === 0) {
 				$container = new CurrentSector(tradeMessage: $tradeMessage);
 			} else {
 				$container = new ShopGoods($tradeMessage);

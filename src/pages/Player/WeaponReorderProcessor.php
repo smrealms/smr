@@ -16,15 +16,15 @@ class WeaponReorderProcessor extends PlayerPageProcessor {
 	public function build(AbstractPlayer $player): never {
 		$ship = $player->getShip();
 
-		if ($this->direction == 'Up') {
+		if ($this->direction === 'Up') {
 			$ship->moveWeaponUp($this->weaponOrderID);
 		}
 
-		if ($this->direction == 'Down') {
+		if ($this->direction === 'Down') {
 			$ship->moveWeaponDown($this->weaponOrderID);
 		}
 
-		if ($this->direction == 'Form') {
+		if ($this->direction === 'Form') {
 			$ship->setWeaponLocations(Request::getIntArray('weapon_reorder'));
 		}
 

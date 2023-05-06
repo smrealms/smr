@@ -34,7 +34,7 @@ class PoliticalStatus extends PlayerPage {
 		$neutralRaces = [];
 		$warRaces = [];
 		foreach (Race::getPlayableIDs() as $otherRaceID) {
-			if ($raceID != $otherRaceID) {
+			if ($raceID !== $otherRaceID) {
 				if ($raceRelations[$otherRaceID] >= RELATIONS_PEACE) {
 					$peaceRaces[] = $otherRaceID;
 				} elseif ($raceRelations[$otherRaceID] <= RELATIONS_WAR) {

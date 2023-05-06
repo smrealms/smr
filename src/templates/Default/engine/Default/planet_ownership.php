@@ -20,7 +20,7 @@ if (!$Planet->hasOwner()) { ?>
 		<input type="submit" name="action" value="Take Ownership" />
 	</form><?php
 } else {
-	if ($Planet->getOwnerID() != $ThisPlayer->getAccountID()) { ?>
+	if ($Planet->getOwnerID() !== $ThisPlayer->getAccountID()) { ?>
 		<p><?php echo Player::getPlayer($Planet->getOwnerID(), $Planet->getGameID())->getLinkedDisplayName(false); ?> owns this planet.</p>
 		<p>
 			You can claim the planet when you enter the correct password.<?php

@@ -34,7 +34,7 @@ class AttackPortLootProcessor extends PlayerPageProcessor {
 		}
 
 		// do we have enough turns?
-		if ($player->getTurns() == 0) {
+		if ($player->getTurns() === 0) {
 			create_error('You don\'t have enough turns to loot.');
 		}
 

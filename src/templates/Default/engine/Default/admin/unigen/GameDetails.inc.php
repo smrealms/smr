@@ -49,7 +49,7 @@ use Smr\Game;
 		<td>
 			<select name="game_type"><?php
 			foreach (Game::GAME_TYPES as $GameTypeID => $GameType) {
-				?><option value="<?php echo $GameTypeID; ?>" <?php if ($GameType == $Game['gameType']) echo 'selected'; ?>><?php echo $GameType; ?></option><?php
+				?><option value="<?php echo $GameTypeID; ?>" <?php if ($GameType === $Game['gameType']) echo 'selected'; ?>><?php echo $GameType; ?></option><?php
 			} ?>
 			</select>
 		</td>

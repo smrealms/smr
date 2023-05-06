@@ -49,7 +49,7 @@ class RouteIterator {
 	 * Advance to the next action on the route
 	 */
 	public function next(): void {
-		if ($this->transaction == TransactionType::Sell) {
+		if ($this->transaction === TransactionType::Sell) {
 			$this->routeIterator->next();
 		}
 		$this->transaction = $this->transaction->opposite();

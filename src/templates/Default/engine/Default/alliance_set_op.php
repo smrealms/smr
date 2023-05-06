@@ -47,7 +47,7 @@ if (!empty($OpDate)) { ?>
 		<option value="0">-- None --</option>
 		<?php
 		foreach ($AlliancePlayers as $alliancePlayer) {
-			$selected = $alliancePlayer->getAccountID() == $FlagshipID ? 'selected' : '';
+			$selected = $alliancePlayer->getAccountID() === $FlagshipID ? 'selected' : '';
 			?>
 			<option value="<?php echo $alliancePlayer->getAccountID(); ?>" <?php echo $selected; ?>>
 				<?php echo $alliancePlayer->getDisplayName(); ?>

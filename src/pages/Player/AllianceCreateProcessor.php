@@ -32,11 +32,11 @@ class AllianceCreateProcessor extends PlayerPageProcessor {
 		$perms = Request::get('Perms');
 
 		$name2 = strtolower($name);
-		if ($name2 == 'none' || $name2 == '(none)' || $name2 == '( none )' || $name2 == 'no alliance') {
+		if ($name2 === 'none' || $name2 === '(none)' || $name2 === '( none )' || $name2 === 'no alliance') {
 			create_error('That is not a valid alliance name!');
 		}
 		$filteredName = word_filter($name);
-		if ($name != $filteredName) {
+		if ($name !== $filteredName) {
 			create_error('The alliance name contains one or more filtered words, please reconsider the name.');
 		}
 

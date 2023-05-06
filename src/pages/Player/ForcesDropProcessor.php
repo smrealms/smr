@@ -55,21 +55,21 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 		$at_max = false;
 		if ($forces->getMines() + $change_mines > Force::MAX_MINES) {
 			$change_mines = Force::MAX_MINES - $forces->getMines();
-			$at_max = $change_mines == 0;
+			$at_max = $change_mines === 0;
 		}
 
 		if ($forces->getCDs() + $change_combat_drones > Force::MAX_CDS) {
 			$change_combat_drones = Force::MAX_CDS - $forces->getCDs();
-			$at_max = $change_combat_drones == 0;
+			$at_max = $change_combat_drones === 0;
 		}
 
 		if ($forces->getSDs() + $change_scout_drones > Force::MAX_SDS) {
 			$change_scout_drones = Force::MAX_SDS - $forces->getSDs();
-			$at_max = $change_scout_drones == 0;
+			$at_max = $change_scout_drones === 0;
 		}
 
 		// Check if the delta is 0 after applying the caps, in case by applying the caps we actually changed it to 0.
-		if ($change_mines == 0 && $change_combat_drones == 0 && $change_scout_drones == 0) {
+		if ($change_mines === 0 && $change_combat_drones === 0 && $change_scout_drones === 0) {
 			if ($at_max) {
 				// If no forces added only because the stack is full
 				create_error('This stack can\'t hold any more of those forces!');
@@ -88,7 +88,7 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 		// because those functions are used to remove forces via combat (which isn't
 		// supposed to update the expire time).
 
-		if ($change_combat_drones != 0) {
+		if ($change_combat_drones !== 0) {
 			// we can't take more forces than are in sector
 			if ($forces->getCDs() + $change_combat_drones < 0) {
 				create_error('You can\'t take more combat drones than are on this stack!');
@@ -103,7 +103,7 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 			}
 		}
 
-		if ($change_scout_drones != 0) {
+		if ($change_scout_drones !== 0) {
 			// we can't take more forces than are in sector
 			if ($forces->getSDs() + $change_scout_drones < 0) {
 				create_error('You can\'t take more scout drones than are on this stack!');
@@ -118,7 +118,7 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 			}
 		}
 
-		if ($change_mines != 0) {
+		if ($change_mines !== 0) {
 			// we can't take more forces than are in sector
 			if ($forces->getMines() + $change_mines < 0) {
 				create_error('You can\'t take more mines than are on this stack!');
@@ -135,7 +135,7 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 
 		// All error checking is done, so now update the ship/force
 
-		if ($change_combat_drones != 0) {
+		if ($change_combat_drones !== 0) {
 			if ($change_combat_drones > 0) {
 				$ship->decreaseCDs($change_combat_drones);
 				$forces->addCDs($change_combat_drones);
@@ -145,7 +145,7 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 			}
 		}
 
-		if ($change_scout_drones != 0) {
+		if ($change_scout_drones !== 0) {
 			if ($change_scout_drones > 0) {
 				$ship->decreaseSDs($change_scout_drones);
 				$forces->addSDs($change_scout_drones);
@@ -155,7 +155,7 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 			}
 		}
 
-		if ($change_mines != 0) {
+		if ($change_mines !== 0) {
 			if ($change_mines > 0) {
 				$ship->decreaseMines($change_mines);
 				$forces->addMines($change_mines);
@@ -170,7 +170,7 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 		}
 
 		// message to send out
-		if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isForceDropMessages()) {
+		if ($forces->getOwnerID() !== $player->getAccountID() && $forces->getOwner()->isForceDropMessages()) {
 			$mines_message = '';
 			if ($change_mines > 0) {
 				$mines_message = 'added ' . pluralise($change_mines, 'mine');

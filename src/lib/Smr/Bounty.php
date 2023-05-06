@@ -100,7 +100,7 @@ class Bounty {
 	}
 
 	public function isActive(): bool {
-		return $this->claimerID == 0;
+		return $this->claimerID === 0;
 	}
 
 	public function setClaimable(int $claimerID): void {
@@ -117,7 +117,7 @@ class Bounty {
 	}
 
 	private function setCredits(int $credits): void {
-		if ($this->credits == $credits) {
+		if ($this->credits === $credits) {
 			return;
 		}
 		$this->credits = $credits;
@@ -125,7 +125,7 @@ class Bounty {
 	}
 
 	private function setSmrCredits(int $smrCredits): void {
-		if ($this->smrCredits == $smrCredits) {
+		if ($this->smrCredits === $smrCredits) {
 			return;
 		}
 		$this->smrCredits = $smrCredits;

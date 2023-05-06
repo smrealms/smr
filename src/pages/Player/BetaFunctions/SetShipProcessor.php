@@ -10,7 +10,7 @@ class SetShipProcessor extends BetaFunctionsPageProcessor {
 	public function buildBetaFunctionsProcessor(AbstractPlayer $player): void {
 		$ship = $player->getShip();
 		$shipTypeID = Request::getInt('ship_type_id');
-		if ($shipTypeID <= 75 && $shipTypeID != 68) {
+		if ($shipTypeID <= 75 && $shipTypeID !== 68) {
 			// assign the new ship
 			$ship->decloak();
 			$ship->disableIllusion();

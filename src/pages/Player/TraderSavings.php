@@ -45,7 +45,7 @@ class TraderSavings extends PlayerPage {
 			'game_id' => $db->escapeNumber($player->getGameID()),
 		]);
 		$tickets_tot = $dbResult->record()->getInt('count(*)');
-		if ($tickets == 0) {
+		if ($tickets === 0) {
 			$win_chance = 0;
 		} else {
 			$win_chance = round(100 * $tickets / $tickets_tot, 2);

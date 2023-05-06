@@ -39,7 +39,7 @@ class Facebook extends SocialLogin {
 		if (!Request::has('code') || !Request::has('state')) {
 			throw new UserError(Request::get('error_message', ''));
 		}
-		if ($_SESSION['FacebookToken'] != Request::get('state')) {
+		if ($_SESSION['FacebookToken'] !== Request::get('state')) {
 			throw new Exception('Unexpected token received from Facebook');
 		}
 		$provider = $this->getFacebookObj();

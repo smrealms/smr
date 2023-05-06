@@ -51,7 +51,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 		// Early return if no galaxy dimensions are modified
 		$galaxySizesUnchanged = true;
 		foreach ($galaxies as $i => $galaxy) {
-			if ($galaxy->getWidth() != $origGals[$i]['Width'] || $galaxy->getHeight() != $origGals[$i]['Height']) {
+			if ($galaxy->getWidth() !== $origGals[$i]['Width'] || $galaxy->getHeight() !== $origGals[$i]['Height']) {
 				$galaxySizesUnchanged = false;
 				break;
 			}
@@ -136,7 +136,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 		while ($needsUpdate) {
 			foreach ($needsUpdate as $newID => $oldID) {
 				// If sector is new or has the same ID, then no shifting is necessary
-				if ($oldID === false || $oldID == $newID) {
+				if ($oldID === false || $oldID === $newID) {
 					unset($needsUpdate[$newID]);
 					continue;
 				}

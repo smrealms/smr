@@ -43,7 +43,7 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 					if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 						if (!$ShotHit) {
 							?> and misses<?php
-						} elseif ($ActualDamage['TotalDamage'] == 0) {
+						} elseif ($ActualDamage['TotalDamage'] === 0) {
 							if ($WeaponDamage['Shield'] > 0) {
 								if ($ActualDamage['HasCDs']) {
 									?> which proves ineffective against their combat drones<?php
@@ -92,7 +92,7 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 				if ($ActualDamage['Armour'] > 0) { $DamageTypes = $DamageTypes + 1; }
 
 				echo $ShootingPlayer->getDisplayName();
-				if ($WeaponDamage['Launched'] == 0) {
+				if ($WeaponDamage['Launched'] === 0) {
 					?> fails to launch their combat drones<?php
 				} else {
 					?> launches <span class="cds"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at <?php
@@ -101,7 +101,7 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 					}
 					echo $TargetPlayer->getDisplayName();
 					if (!$ActualDamage['TargetAlreadyDead']) {
-						if ($ActualDamage['TotalDamage'] == 0) {
+						if ($ActualDamage['TotalDamage'] === 0) {
 							if ($WeaponDamage['Shield'] > 0) {
 								if ($ActualDamage['HasCDs']) {
 									?> which prove ineffective against their combat drones<?php

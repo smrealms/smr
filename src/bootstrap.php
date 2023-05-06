@@ -209,7 +209,7 @@ function str2int(string $val): int {
  */
 function random_string(int $length): string {
 	$numBytes = (int)($length / 2);
-	if ($numBytes < 1 || $length % 2 != 0) {
+	if ($numBytes < 1 || $length % 2 !== 0) {
 		throw new Exception('Length must be an even number >= 2!');
 	}
 	return bin2hex(random_bytes($numBytes));

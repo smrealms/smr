@@ -96,7 +96,7 @@ class Menu {
 		$db = Database::getInstance();
 		$player = Session::getInstance()->getPlayer();
 
-		$in_alliance = ($alliance_id == $player->getAllianceID() || in_array($player->getAccountID(), Globals::getHiddenPlayers()));
+		$in_alliance = ($alliance_id === $player->getAllianceID() || in_array($player->getAccountID(), Globals::getHiddenPlayers()));
 
 		// Some pages are visible to all alliance members
 		$canReadMb = $in_alliance;
@@ -318,7 +318,7 @@ class Menu {
 			'Text' => 'Send Message',
 		];
 
-		if ($player->getRaceID() == $race_id) {
+		if ($player->getRaceID() === $race_id) {
 			if ($player->isOnCouncil()) {
 				$container = new VotingCenter();
 				$menu_items[] = [
@@ -352,7 +352,7 @@ class Menu {
 		$session = Session::getInstance();
 
 		$menuItems = [];
-		if ($session->getGameID() == $gameID) {
+		if ($session->getGameID() === $gameID) {
 			$menuItems[] = [
 				'Link' => (new NewsReadCurrent())->href(),
 				'Text' => 'Read Current News',
@@ -398,7 +398,7 @@ function create_sub_menu(array $menu, int $active_level1, int $active_level2): v
 		}
 
 		// if this is the active entry we mark it
-		if ($number == $active_level1) {
+		if ($number === $active_level1) {
 			$active = ' class="bold"';
 		} else {
 			$active = '';
@@ -413,14 +413,14 @@ function create_sub_menu(array $menu, int $active_level1, int $active_level2): v
 	$return .= ('<tr>');
 	foreach ($menu as $number => $entry) {
 		// if this entry has a submenu and is the active one
-		if (isset($entry['submenu']) && $number == $active_level1) {
+		if (isset($entry['submenu']) && $number === $active_level1) {
 			$return .= ('<td><small>');
 			foreach ($entry['submenu'] as $sub_number => $sub_entry) {
 				if ($sub_number > 0) {
 					$return .= (' | ');
 				}
 
-				if ($sub_number == $active_level2) {
+				if ($sub_number === $active_level2) {
 					$return .= ('<span class="bold">' . $sub_entry . '</span>');
 				} else {
 					$return .= ($sub_entry);

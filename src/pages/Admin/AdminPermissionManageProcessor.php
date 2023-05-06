@@ -14,7 +14,7 @@ class AdminPermissionManageProcessor extends AccountPageProcessor {
 	) {}
 
 	public function build(Account $account): never {
-		if (Request::get('action') == 'Change') {
+		if (Request::get('action') === 'Change') {
 			// Check to see if admin previously was displaying Admin tag
 			$hadAdminTag = Account::getAccount($this->adminAccountID)->hasPermission(PERMISSION_DISPLAY_ADMIN_TAG);
 

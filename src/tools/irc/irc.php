@@ -18,7 +18,7 @@ $sds = [];
 
 $debugging = false;
 foreach ($argv as $arg) {
-	if ($arg == '-debug') {
+	if ($arg === '-debug') {
 		$debugging = true;
 	}
 }

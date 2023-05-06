@@ -33,7 +33,7 @@ if (isset($PortCombatResults['Weapons']) && is_array($PortCombatResults['Weapons
 		if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 			if (!$ShotHit) {
 				?> and misses<?php
-			} elseif ($ActualDamage['TotalDamage'] == 0) {
+			} elseif ($ActualDamage['TotalDamage'] === 0) {
 				if ($WeaponDamage['Shield'] > 0) {
 					if ($ActualDamage['HasCDs']) {
 						?> which proves ineffective against their combat drones<?php
@@ -78,12 +78,12 @@ if (isset($PortCombatResults['Drones'])) {
 	$TargetPlayer = $Drones['TargetPlayer'];
 
 	echo $CombatPort->getDisplayName();
-	if ($WeaponDamage['Launched'] == 0) {
+	if ($WeaponDamage['Launched'] === 0) {
 		?> fails to launch it's combat drones<?php
 	} else {
 		?> launches <span class="cds"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at <?php if ($ActualDamage['TargetAlreadyDead']) { ?>the debris that was once <?php } echo $TargetPlayer->getDisplayName();
 		if (!$ActualDamage['TargetAlreadyDead']) {
-			if ($ActualDamage['TotalDamage'] == 0) {
+			if ($ActualDamage['TotalDamage'] === 0) {
 				if ($WeaponDamage['Shield'] > 0) {
 					if ($ActualDamage['HasCDs']) {
 						?> which prove ineffective against their combat drones<?php

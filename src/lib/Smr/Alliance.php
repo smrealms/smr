@@ -94,7 +94,7 @@ class Alliance {
 		protected readonly int $gameID,
 		DatabaseRecord $dbRecord = null
 	) {
-		if ($allianceID != 0) {
+		if ($allianceID !== 0) {
 			$db = Database::getInstance();
 			$this->SQLID = [
 				'alliance_id' => $db->escapeNumber($allianceID),
@@ -172,7 +172,7 @@ class Alliance {
 	 * Returns true if the alliance ID is associated with allianceless players.
 	 */
 	public function isNone(): bool {
-		return $this->allianceID == 0;
+		return $this->allianceID === 0;
 	}
 
 	/**
@@ -222,7 +222,7 @@ class Alliance {
 	}
 
 	public function hasLeader(): bool {
-		return $this->getLeaderID() != 0;
+		return $this->getLeaderID() !== 0;
 	}
 
 	public function getLeaderID(): int {
@@ -268,15 +268,15 @@ class Alliance {
 
 	public function setIrcChannel(string $ircChannel): void {
 		$this->getIrcChannel(); // to populate the class attribute
-		if ($this->ircChannel == $ircChannel) {
+		if ($this->ircChannel === $ircChannel) {
 			return;
 		}
 		$db = Database::getInstance();
-		if (strlen($ircChannel) > 0 && $ircChannel != '#') {
-			if ($ircChannel[0] != '#') {
+		if (strlen($ircChannel) > 0 && $ircChannel !== '#') {
+			if ($ircChannel[0] !== '#') {
 				$ircChannel = '#' . $ircChannel;
 			}
-			if ($ircChannel == '#smr' || $ircChannel == '#smr-bar') {
+			if ($ircChannel === '#smr' || $ircChannel === '#smr-bar') {
 				throw new UserError('Please enter a valid irc channel for your alliance.');
 			}
 
@@ -292,7 +292,7 @@ class Alliance {
 	}
 
 	public function hasImageURL(): bool {
-		return strlen($this->imgSrc) && $this->imgSrc != 'http://';
+		return strlen($this->imgSrc) && $this->imgSrc !== 'http://';
 	}
 
 	public function getImageURL(): string {
@@ -357,13 +357,13 @@ class Alliance {
 	 * The input $password is ignored except for the "password" $type.
 	 */
 	public function setRecruitType(string $type, string $password): void {
-		if ($type == self::RECRUIT_CLOSED) {
+		if ($type === self::RECRUIT_CLOSED) {
 			$this->recruiting = false;
 			$this->password = '';
-		} elseif ($type == self::RECRUIT_OPEN) {
+		} elseif ($type === self::RECRUIT_OPEN) {
 			$this->recruiting = true;
 			$this->password = '';
-		} elseif ($type == self::RECRUIT_PASSWORD) {
+		} elseif ($type === self::RECRUIT_PASSWORD) {
 			if (empty($password)) {
 				throw new Exception('Password must not be empty here');
 			}
@@ -417,7 +417,7 @@ class Alliance {
 
 	public function setAllianceDescription(string $description, AbstractPlayer $player = null): void {
 		$description = word_filter($description);
-		if ($description == $this->description) {
+		if ($description === $this->description) {
 			return;
 		}
 		if ($player !== null) {
@@ -428,7 +428,7 @@ class Alliance {
 	}
 
 	public function hasFlagship(): bool {
-		return $this->flagshipID != 0;
+		return $this->flagshipID !== 0;
 	}
 
 	/**
@@ -443,7 +443,7 @@ class Alliance {
 	 * Designate a player as the alliance flagship by their account ID.
 	 */
 	public function setFlagshipID(int $accountID): void {
-		if ($this->flagshipID == $accountID) {
+		if ($this->flagshipID === $accountID) {
 			return;
 		}
 		$this->flagshipID = $accountID;
@@ -482,7 +482,7 @@ class Alliance {
 				...$this->SQLID,
 			]);
 			if ($dbResult->hasRecord()) {
-				if ($dbResult->record()->getString('status') == 'NEWBIE') {
+				if ($dbResult->record()->getString('status') === 'NEWBIE') {
 					return false;
 				}
 			}

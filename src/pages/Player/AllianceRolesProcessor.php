@@ -38,10 +38,10 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 		} else {
 			$withPerDay = Request::getInt('maxWith');
 		}
-		if ($withPerDay < 0 && $withPerDay != ALLIANCE_BANK_UNLIMITED) {
+		if ($withPerDay < 0 && $withPerDay !== ALLIANCE_BANK_UNLIMITED) {
 			create_error('You must enter a number for max withdrawals per 24 hours.');
 		}
-		if ($withPerDay == ALLIANCE_BANK_UNLIMITED && $positiveBalance) {
+		if ($withPerDay === ALLIANCE_BANK_UNLIMITED && $positiveBalance) {
 			create_error('You cannot have both unlimited withdrawals and a positive balance limit.');
 		}
 

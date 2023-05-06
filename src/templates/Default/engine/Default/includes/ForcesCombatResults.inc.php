@@ -13,11 +13,11 @@ if (isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Res
 		$TargetPlayer = $ForceResults['TargetPlayer'];
 		?>
 		<span class="cds"><?php echo $WeaponDamage['Launched']; ?></span><?php
-		if ($ForceType == 'Mines') {
+		if ($ForceType === 'Mines') {
 			?> mines kamikaze themselves against <?php
-		} elseif ($ForceType == 'Drones') {
+		} elseif ($ForceType === 'Drones') {
 			?> combat drones launch at <?php
-		} elseif ($ForceType == 'Scouts') {
+		} elseif ($ForceType === 'Scouts') {
 			?> scout drones kamikaze themselves against <?php
 		}
 
@@ -26,7 +26,7 @@ if (isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Res
 		if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 			if (!$ShotHit) {
 				?> and misses<?php
-			} elseif ($ActualDamage['TotalDamage'] == 0) {
+			} elseif ($ActualDamage['TotalDamage'] === 0) {
 				if ($WeaponDamage['Shield'] > 0) {
 					if ($ActualDamage['HasCDs']) {
 						?> which proves ineffective against their combat drones<?php

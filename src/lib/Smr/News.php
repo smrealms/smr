@@ -22,7 +22,7 @@ class News {
 				$dbRecord->getString('news_message'),
 				$dbRecord->getInt('game_id'),
 			);
-			if ($dbRecord->getString('type') == 'admin') {
+			if ($dbRecord->getString('type') === 'admin') {
 				$message = '<span class="admin">ADMIN </span>' . $message;
 			}
 			$newsItems[] = [

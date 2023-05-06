@@ -29,15 +29,15 @@ class EditLocations extends AccountPage {
 			$location = Location::getLocation($gameID, $this->locationTypeID);
 			if (Request::has('save')) {
 				$addShipID = Request::getInt('add_ship_id');
-				if ($addShipID != 0) {
+				if ($addShipID !== 0) {
 					$location->addShipSold($addShipID);
 				}
 				$addWeaponID = Request::getInt('add_weapon_id');
-				if ($addWeaponID != 0) {
+				if ($addWeaponID !== 0) {
 					$location->addWeaponSold($addWeaponID);
 				}
 				$addHardwareID = Request::getInt('add_hardware_id');
-				if ($addHardwareID != 0) {
+				if ($addHardwareID !== 0) {
 					$location->addHardwareSold($addHardwareID);
 				}
 

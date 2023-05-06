@@ -10,7 +10,7 @@ use Smr\Path;
  */
 function course_plot_forward(AbstractPlayer $player, Path $path): never {
 
-	if ($player->getSectorID() == $path->getStartSectorID()) {
+	if ($player->getSectorID() === $path->getStartSectorID()) {
 		$player->setPlottedCourse($path);
 
 		if (!$player->isLandedOnPlanet()) {

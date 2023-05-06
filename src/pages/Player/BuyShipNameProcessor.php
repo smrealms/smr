@@ -10,7 +10,7 @@ use Smr\Request;
 
 function checkShipLogo(string $filename): void {
 	// check if we have an image
-	if ($_FILES['photo']['error'] != UPLOAD_ERR_OK) {
+	if ($_FILES['photo']['error'] !== UPLOAD_ERR_OK) {
 		create_error('Error while uploading');
 	}
 
@@ -70,7 +70,7 @@ function checkHtmlShipName(string $name): void {
 	foreach ($bad as $check) {
 		if (stristr($name, $check)) {
 			$check .= '*>';
-			if ($check != '<h*>') {
+			if ($check !== '<h*>') {
 				create_error(htmlentities($check, ENT_NOQUOTES, 'utf-8') . ' tag is not allowed in ship names.<br /><small>If you believe the name is appropriate please contact an admin.</small>');
 			} else {
 				create_error('Either you used the ' . htmlentities($check, ENT_NOQUOTES, 'utf-8') . ' tag which is not allowed or the ' . htmlentities('<html>', ENT_NOQUOTES, 'utf-8') . ' tag which is not needed.');
@@ -96,7 +96,7 @@ function checkHtmlShipName(string $name): void {
 	preg_match_all('|</([^>]+)>|', $name, $closing_matches);
 	sort($opening_matches[1]);
 	sort($closing_matches[1]);
-	if ($opening_matches[1] != $closing_matches[1]) {
+	if ($opening_matches[1] !== $closing_matches[1]) {
 		create_error('You must close all HTML tags.  (i.e a &lt;font color="red"&gt; tag must have a &lt;/font&gt; tag somewhere after it).<br /><small>If you think you received this message in error please contact an admin.</small>');
 	}
 }
@@ -115,17 +115,17 @@ class BuyShipNameProcessor extends PlayerPageProcessor {
 			create_error('You don\'t have enough SMR Credits. These can be earned by donating to SMR!');
 		}
 
-		if ($action == 'logo') {
+		if ($action === 'logo') {
 			$filename = $player->getAccountID() . 'logo' . $player->getGameID();
 			checkShipLogo($filename);
 			$name = '<img style="padding:3px;" src="upload/' . $filename . '">';
 		} else {
 			// Player submitted a text or HTML ship name
 			$name = Request::get('ship_name');
-			if ($action == 'text') {
+			if ($action === 'text') {
 				checkTextShipName($name, 48);
 				$name = htmlentities($name, ENT_NOQUOTES, 'utf-8');
-			} elseif ($action == 'html') {
+			} elseif ($action === 'html') {
 				checkTextShipName($name, 128);
 				checkHtmlShipName($name);
 				$container = new BuyShipNamePreview($name, $cred_cost);

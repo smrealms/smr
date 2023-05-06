@@ -26,7 +26,7 @@ use Smr\Galaxy;
 				<td>
 					<select name="type<?php echo $i; ?>"><?php
 					foreach (Galaxy::TYPES as $GalaxyType) { ?>
-						<option value="<?php echo htmlspecialchars($GalaxyType); ?>" <?php if ($GalaxyType == $gal['Type']) { ?>selected<?php } ?>><?php echo $GalaxyType; ?></option><?php
+						<option value="<?php echo htmlspecialchars($GalaxyType); ?>" <?php if ($GalaxyType === $gal['Type']) { ?>selected<?php } ?>><?php echo $GalaxyType; ?></option><?php
 					} ?>
 					</select>
 				</td>

@@ -43,7 +43,7 @@ class PlayerLevel {
 
 	public static function getMax(): int {
 		$levels = self::getAll();
-		if (count($levels) == 0) {
+		if (count($levels) === 0) {
 			throw new Exception('Cannot get the max level, no levels were found');
 		}
 		return max(array_keys($levels));

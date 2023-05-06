@@ -18,7 +18,7 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 		$db = Database::getInstance();
 
 		// If not deleting marked messages, we are deleting entire folders
-		if (Request::get('action') == 'All Messages') {
+		if (Request::get('action') === 'All Messages') {
 			$container = new MessageBoxDeleteProcessor($this->folderID);
 			$container->go();
 		}
@@ -30,7 +30,7 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 		// Delete any individually selected messages
 		$message_id_list = Request::getIntArray('message_id', []);
 		if (!empty($message_id_list)) {
-			if ($this->folderID == MSG_SENT) {
+			if ($this->folderID === MSG_SENT) {
 				$db->write('UPDATE message SET sender_delete = :sender_delete WHERE message_id IN (:message_ids)', [
 					'sender_delete' => $db->escapeBoolean(true),
 					'message_ids' => $db->escapeArray($message_id_list),

@@ -37,7 +37,7 @@ class AnonBankDetailProcessor extends PlayerPageProcessor {
 		$trans_id = $dbResult->record()->getInt('max_id') + 1;
 
 		// Update the credit amounts for the player and the bank
-		if ($action == 'Deposit') {
+		if ($action === 'Deposit') {
 			if ($player->getCredits() < $amount) {
 				create_error('You don\'t own that much money!');
 			}

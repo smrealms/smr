@@ -91,8 +91,8 @@ class AnonBankDetail extends PlayerPage {
 				$amount = number_format($dbRecord->getInt('amount'));
 				$transactions[$dbRecord->getInt('transaction_id')] = [
 					'date' => date($player->getAccount()->getDateTimeFormatSplit(), $dbRecord->getInt('time')),
-					'payment' => $transaction == 'Payment' ? $amount : '',
-					'deposit' => $transaction == 'Deposit' ? $amount : '',
+					'payment' => $transaction === 'Payment' ? $amount : '',
+					'deposit' => $transaction === 'Deposit' ? $amount : '',
 					'link' => $transactionPlayer->getLinkedDisplayName(),
 				];
 			}

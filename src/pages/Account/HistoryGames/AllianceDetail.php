@@ -47,8 +47,8 @@ class AllianceDetail extends HistoryPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$memberAccountID = $dbRecord->getInt('account_id');
 			$players[] = [
-				'leader' => $memberAccountID == $leaderID ? '*' : '',
-				'bold' => $memberAccountID == $oldAccountID ? 'class="bold"' : '',
+				'leader' => $memberAccountID === $leaderID ? '*' : '',
+				'bold' => $memberAccountID === $oldAccountID ? 'class="bold"' : '',
 				'player_name' => htmlentities($dbRecord->getString('player_name')),
 				'experience' => $dbRecord->getInt('experience'),
 				'alignment' => $dbRecord->getInt('alignment'),

@@ -65,7 +65,7 @@ class AllianceVsAlliance extends PlayerPage {
 			if (!$curr_alliance->isNone() && $curr_alliance->hasDisbanded()) {
 				$style = 'class="red"';
 			}
-			if ($player->getAllianceID() == $curr_id) {
+			if ($player->getAllianceID() === $curr_id) {
 				$style = 'class="bold"';
 			}
 			$alliance_vs[] = [
@@ -84,9 +84,9 @@ class AllianceVsAlliance extends PlayerPage {
 				$row_alliance = Alliance::getAlliance($id, $player->getGameID());
 				$showRed = (!$curr_alliance->isNone() && $curr_alliance->hasDisbanded()) ||
 				           (!$row_alliance->isNone() && $row_alliance->hasDisbanded());
-				$showBold = $curr_id == $player->getAllianceID() || $id == $player->getAllianceID();
+				$showBold = $curr_id === $player->getAllianceID() || $id === $player->getAllianceID();
 				$style = '';
-				if ($curr_id == $id && !$row_alliance->isNone()) {
+				if ($curr_id === $id && !$row_alliance->isNone()) {
 					$value = '--';
 					if ($showRed) {
 						$style = 'class="red"';
@@ -135,10 +135,10 @@ class AllianceVsAlliance extends PlayerPage {
 			$id = $dbRecord->getInt('alliance_id_2');
 			$alliance_name = match (true) {
 				$id > 0 => Alliance::getAlliance($id, $player->getGameID())->getAllianceDisplayName(),
-				$id == 0 => 'No Alliance',
-				$id == ALLIANCE_VS_FORCES => '<span class="yellow">Forces</span>',
-				$id == ALLIANCE_VS_PLANETS => '<span class="yellow">Planets</span>',
-				$id == ALLIANCE_VS_PORTS => '<span class="yellow">Ports</span>',
+				$id === 0 => 'No Alliance',
+				$id === ALLIANCE_VS_FORCES => '<span class="yellow">Forces</span>',
+				$id === ALLIANCE_VS_PLANETS => '<span class="yellow">Planets</span>',
+				$id === ALLIANCE_VS_PORTS => '<span class="yellow">Ports</span>',
 				default => throw new Exception('Unknown alliance ID: ' . $id),
 			};
 
@@ -160,10 +160,10 @@ class AllianceVsAlliance extends PlayerPage {
 			$id = $dbRecord->getInt('alliance_id_1');
 			$alliance_name = match (true) {
 				$id > 0 => Alliance::getAlliance($id, $player->getGameID())->getAllianceDisplayName(),
-				$id == 0 => 'No Alliance',
-				$id == ALLIANCE_VS_FORCES => '<span class="yellow">Forces</span>',
-				$id == ALLIANCE_VS_PLANETS => '<span class="yellow">Planets</span>',
-				$id == ALLIANCE_VS_PORTS => '<span class="yellow">Ports</span>',
+				$id === 0 => 'No Alliance',
+				$id === ALLIANCE_VS_FORCES => '<span class="yellow">Forces</span>',
+				$id === ALLIANCE_VS_PLANETS => '<span class="yellow">Planets</span>',
+				$id === ALLIANCE_VS_PORTS => '<span class="yellow">Ports</span>',
 				default => throw new Exception('Unknown alliance ID: ' . $id),
 			};
 

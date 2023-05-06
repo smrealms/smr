@@ -31,7 +31,7 @@ foreach ($ThisPlayer->getActiveMissions() as $MissionID => $Mission) {
 		<span class="green">Task Complete: </span><?php
 		echo bbifyMessage($Mission['Task']['Text']); ?><br /><?php
 	}
-	if ($Mission['Task']['Step'] == 'Claim') { ?>
+	if ($Mission['Task']['Step'] === 'Claim') { ?>
 		<div class="buttonA">
 			<p><a href="<?php echo (new ClaimProcessor($MissionID))->href(); ?>" class="buttonA">Claim Reward</a></p>
 		</div><?php

@@ -26,7 +26,7 @@ class PlotCourseConventionalProcessor extends PlayerPageProcessor {
 			create_error('Where do you want to go today?');
 		}
 
-		if ($start == $target) {
+		if ($start === $target) {
 			create_error('Hmmmm...if ' . $start . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*you\'re real smart*cough*');
 		}
 

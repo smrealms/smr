@@ -73,7 +73,7 @@ class PlayerLink {
 		}
 
 		// Prevent players from leaking sensitive data in other alliance channels
-		if (isset($alliance) && $player->getAllianceID() != $alliance->getAllianceID()) {
+		if (isset($alliance) && $player->getAllianceID() !== $alliance->getAllianceID()) {
 			throw new UserError('Player `' . $player->getPlayerName() . '` is not a member of alliance `' . $alliance->getAllianceName() . '`');
 		}
 

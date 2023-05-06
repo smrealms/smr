@@ -38,7 +38,7 @@ class Google extends SocialLogin {
 		if (!Request::has('code') || !Request::has('state')) {
 			throw new UserError(Request::get('error_message', ''));
 		}
-		if ($_SESSION['GoogleToken'] != Request::get('state')) {
+		if ($_SESSION['GoogleToken'] !== Request::get('state')) {
 			throw new Exception('Unexpected token received from Google');
 		}
 		$provider = $this->getGoogleObj();

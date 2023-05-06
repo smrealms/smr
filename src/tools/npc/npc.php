@@ -224,7 +224,7 @@ function processContainer(Page $container): never {
 	global $forwardedContainer, $previousContainer;
 	$session = Session::getInstance();
 	$player = $session->getPlayer();
-	if ($container == $previousContainer && $forwardedContainer->file != 'forces_attack.php') {
+	if ($container === $previousContainer && $forwardedContainer->file !== 'forces_attack.php') {
 		debug('We are executing the same container twice?', ['ForwardedContainer' => $forwardedContainer, 'Container' => $container]);
 		if (!$player->canFight()) {
 			// Only throw the exception if we have protection, otherwise let's hope that the NPC will be able to find its way to safety rather than dying in the open.
@@ -431,7 +431,7 @@ function moveToSector(AbstractPlayer $player, int $targetSector): Page {
 
 function checkForShipUpgrade(AbstractPlayer $player): void {
 	foreach (SHIP_UPGRADE_PATH[$player->getRaceID()] as $upgradeShipID) {
-		if ($player->getShipTypeID() == $upgradeShipID) {
+		if ($player->getShipTypeID() === $upgradeShipID) {
 			//We can't upgrade, only downgrade.
 			return;
 		}
@@ -510,13 +510,13 @@ function findRoutes(AbstractPlayer $player): array {
 	// Trade in all Racial/Neutral galaxies up until the first Planet galaxy
 	$galaxies = [];
 	foreach ($player->getGame()->getGalaxies() as $galaxy) {
-		if ($galaxy->getGalaxyType() == Galaxy::TYPE_PLANET) {
+		if ($galaxy->getGalaxyType() === Galaxy::TYPE_PLANET) {
 			break;
 		}
 		$galaxies[] = $galaxy;
 	}
 	// Fallback to current galaxy in case this has selected no galaxies
-	if (count($galaxies) == 0) {
+	if (count($galaxies) === 0) {
 		$galaxies[] = $player->getSector()->getGalaxy();
 	}
 
@@ -566,7 +566,7 @@ function findRoutes(AbstractPlayer $player): array {
 	Port::clearCache();
 	Sector::clearCache();
 
-	if (count($routesMerged) == 0) {
+	if (count($routesMerged) === 0) {
 		debug('Could not find any routes! Try another NPC.');
 		throw new FinalAction();
 	}

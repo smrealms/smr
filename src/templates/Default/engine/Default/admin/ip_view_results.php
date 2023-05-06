@@ -6,10 +6,10 @@
 <?php
 
 //another script for comp share
-if ($type == 'comp_share') {
+if ($type === 'comp_share') {
 	$this->includeTemplate('admin/comp_share.php');
 
-} elseif ($type == 'list') { ?>
+} elseif ($type === 'list') { ?>
 	<form method="POST" action="<?php echo $CloseHREF; ?>">
 		<table class="standard">
 			<tr>
@@ -43,7 +43,7 @@ if ($type == 'comp_share') {
 		<input type="submit" name="action" value="Disable" />
 	</form><?php
 
-} elseif ($type == 'account_ips') { ?>
+} elseif ($type === 'account_ips') { ?>
 	<center><?php
 		echo $Summary;
 		if (!empty($Exception)) { ?>

@@ -25,7 +25,7 @@ class ArticleWriteProcessor extends PlayerPageProcessor {
 			$message = htmlentities($message, ENT_COMPAT, 'utf-8');
 		}
 
-		if (Request::get('action') == 'Preview article') {
+		if (Request::get('action') === 'Preview article') {
 			$container = new ArticleWrite($this->articleID, $title, $message);
 			$container->go();
 		}
@@ -50,7 +50,7 @@ class ArticleWriteProcessor extends PlayerPageProcessor {
 			// Adding a new article
 			$editorMsg = 'Dear Galactic Post editors,<br /><br />[player=' . $player->getPlayerID() . '] has just submitted an article to the Galactic Post!';
 			foreach (Globals::getGalacticPostEditorIDs($player->getGameID()) as $editorID) {
-				if ($editorID != $player->getAccountID()) {
+				if ($editorID !== $player->getAccountID()) {
 					Player::sendMessageFromAdmin($player->getGameID(), $editorID, $editorMsg);
 				}
 			}

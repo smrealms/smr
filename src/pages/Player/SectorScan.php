@@ -19,7 +19,7 @@ class SectorScan extends PlayerPage {
 	public function build(AbstractPlayer $player, Template $template): void {
 		$sector = $player->getSector();
 
-		if (!$sector->isLinked($this->targetSectorID) && $sector->getSectorID() != $this->targetSectorID) {
+		if (!$sector->isLinked($this->targetSectorID) && $sector->getSectorID() !== $this->targetSectorID) {
 			create_error('You cannot scan a sector you are not linked to.');
 		}
 
@@ -61,7 +61,7 @@ class SectorScan extends PlayerPage {
 		$template->assign('EnemyForces', $enemy_forces);
 
 		// is it a warp or a normal move?
-		if ($sector->getWarp() == $this->targetSectorID) {
+		if ($sector->getWarp() === $this->targetSectorID) {
 			$turns = TURNS_PER_WARP;
 		} else {
 			$turns = TURNS_PER_SECTOR;

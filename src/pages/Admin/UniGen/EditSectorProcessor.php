@@ -23,7 +23,7 @@ class EditSectorProcessor extends AccountPageProcessor {
 
 		//update planet
 		$planetTypeID = Request::getInt('plan_type');
-		if ($planetTypeID == 0) {
+		if ($planetTypeID === 0) {
 			$editSector->removePlanet();
 		} elseif (!$editSector->hasPlanet()) {
 			$editSector->createPlanet($planetTypeID);
@@ -40,7 +40,7 @@ class EditSectorProcessor extends AccountPageProcessor {
 				$port = $editSector->getPort();
 			}
 			$port->setRaceID(Request::getInt('port_race'));
-			if ($port->getLevel() != $portLevel) {
+			if ($port->getLevel() !== $portLevel) {
 				$port->upgradeToLevel($portLevel);
 				$port->setCreditsToDefault();
 			} elseif (Request::has('select_goods')) {
@@ -48,7 +48,7 @@ class EditSectorProcessor extends AccountPageProcessor {
 				$goodTransactions = [];
 				foreach (TradeGood::getAllIDs() as $goodID) {
 					$trans = Request::get('good' . $goodID);
-					if ($trans != 'None') {
+					if ($trans !== 'None') {
 						$goodTransactions[$goodID] = TransactionType::from($trans);
 					}
 				}
@@ -64,7 +64,7 @@ class EditSectorProcessor extends AccountPageProcessor {
 		//update locations
 		$locationsToAdd = [];
 		for ($x = 0; $x < UNI_GEN_LOCATION_SLOTS; $x++) {
-			if (Request::getInt('loc_type' . $x) != 0) {
+			if (Request::getInt('loc_type' . $x) !== 0) {
 				$locationTypeID = Request::getInt('loc_type' . $x);
 				$locationsToAdd[$locationTypeID] = Location::getLocation($this->gameID, $locationTypeID);
 			}

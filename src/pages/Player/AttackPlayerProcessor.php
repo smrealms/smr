@@ -41,7 +41,7 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 			create_error('Your alliance does not allow you to attack this trader.');
 		} elseif ($targetPlayer->isDead()) {
 			create_error('Target is already dead.');
-		} elseif ($targetPlayer->getSectorID() != $player->getSectorID()) {
+		} elseif ($targetPlayer->getSectorID() !== $player->getSectorID()) {
 			create_error('Target is no longer in this sector.');
 		} elseif ($targetPlayer->hasNewbieTurns()) {
 			create_error('Target is under newbie protection.');

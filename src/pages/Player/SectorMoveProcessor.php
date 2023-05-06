@@ -25,11 +25,11 @@ class SectorMoveProcessor extends PlayerPageProcessor {
 			create_error('You cannot move until the game has started!');
 		}
 
-		if ($this->targetSectorID == $player->getSectorID()) {
+		if ($this->targetSectorID === $player->getSectorID()) {
 			$this->targetPage->go();
 		}
 
-		if ($sector->getWarp() == $this->targetSectorID) {
+		if ($sector->getWarp() === $this->targetSectorID) {
 			$movement = MovementType::Warp;
 			$turns = TURNS_PER_WARP;
 		} else {
@@ -64,7 +64,7 @@ class SectorMoveProcessor extends PlayerPageProcessor {
 		}
 
 		// If not moving to your "green sector", you might hit mines...
-		if ($player->getLastSectorID() != $this->targetSectorID) {
+		if ($player->getLastSectorID() !== $this->targetSectorID) {
 			// Update the "green sector"
 			$player->setLastSectorID($this->targetSectorID);
 			hit_sector_mines($player);

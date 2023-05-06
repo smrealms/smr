@@ -19,7 +19,7 @@ class MessageBoxReplyProcessor extends AccountPageProcessor {
 		$message = Request::get('message');
 		$banPoints = Request::getInt('BanPoints');
 		$rewardCredits = Request::getInt('RewardCredits');
-		if (Request::get('action') == 'Preview message') {
+		if (Request::get('action') === 'Preview message') {
 			$container = new MessageBoxReply(
 				boxTypeID: $this->boxTypeID,
 				senderAccountID: $this->senderAccountID,

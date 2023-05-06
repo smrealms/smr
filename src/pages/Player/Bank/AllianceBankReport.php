@@ -34,7 +34,7 @@ class AllianceBankReport extends PlayerPage {
 		}
 		$trans = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$transType = ($dbRecord->getString('transaction') == 'Payment') ? self::WITHDRAW : self::DEPOSIT;
+			$transType = ($dbRecord->getString('transaction') === 'Payment') ? self::WITHDRAW : self::DEPOSIT;
 			$payeeId = ($dbRecord->getInt('exempt')) ? 0 : $dbRecord->getInt('payee_id');
 			// initialize payee if necessary
 			if (!isset($trans[$payeeId])) {

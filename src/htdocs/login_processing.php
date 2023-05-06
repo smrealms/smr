@@ -143,7 +143,7 @@ try {
 			//convert to array
 			$old = explode('-', $dbResult->record()->getString('array'));
 			//get rid of old version cookie since it isn't optimal.
-			if ($old[0] != MULTI_CHECKING_COOKIE_VERSION) {
+			if ($old[0] !== MULTI_CHECKING_COOKIE_VERSION) {
 				$old = [];
 			}
 		} else {
@@ -159,7 +159,7 @@ try {
 		//break cookie into array
 		$cookie = explode('-', $_COOKIE['Session_Info']);
 		//check for current version
-		if ($cookie[0] != MULTI_CHECKING_COOKIE_VERSION) {
+		if ($cookie[0] !== MULTI_CHECKING_COOKIE_VERSION) {
 			$cookie = [];
 		}
 		$cookie[0] = MULTI_CHECKING_COOKIE_VERSION;
@@ -174,7 +174,7 @@ try {
 		if ($dbResult->hasRecord()) {
 			//convert to array
 			$old = explode('-', $dbResult->record()->getString('array'));
-			if ($old[0] != MULTI_CHECKING_COOKIE_VERSION) {
+			if ($old[0] !== MULTI_CHECKING_COOKIE_VERSION) {
 				$old = [];
 			}
 		} else {

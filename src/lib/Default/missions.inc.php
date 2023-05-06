@@ -139,7 +139,7 @@ function replaceMissionTemplate(string|int|PlotGroup &$template, string $key, ar
  */
 function checkMissionRequirements(array $values, array $requirements): bool {
 	foreach ($requirements as $reqName => $reqValue) {
-		if ($values[$reqName] != $reqValue) {
+		if ($values[$reqName] !== $reqValue) {
 			return false;
 		}
 	}

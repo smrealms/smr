@@ -106,7 +106,7 @@ use Smr\Race;
 	<input type="number" name="amount" value="0" min="<?php echo MIN_GLOBAL_RELATIONS; ?>" max="<?php echo MAX_GLOBAL_RELATIONS; ?>" style="width:75px" />&nbsp;
 	<select name="race"><?php
 		foreach (Race::getPlayableNames() as $raceID => $raceName) {
-			if ($raceID == $ThisPlayer->getRaceID()) continue; ?>
+			if ($raceID === $ThisPlayer->getRaceID()) continue; ?>
 			<option value="<?php echo $raceID; ?>"><?php echo $raceName; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
@@ -117,7 +117,7 @@ use Smr\Race;
 <form method="POST" action="<?php echo $ChangeRaceHREF; ?>">
 	<select name="race"><?php
 		foreach (Race::getPlayableNames() as $raceID => $raceName) {
-			if ($raceID == $ThisPlayer->getRaceID()) continue; ?>
+			if ($raceID === $ThisPlayer->getRaceID()) continue; ?>
 			<option value="<?php echo $raceID; ?>"><?php echo $raceName; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;

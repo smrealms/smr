@@ -17,7 +17,7 @@
 				<td><input type="number" name="maxWith" value="<?php echo max($Role['WithdrawalLimit'], 0); ?>"></td>
 			</tr>
 			<tr>
-				<td>Unlimited:<input type="checkbox" name="unlimited"<?php if ($Role['WithdrawalLimit'] == ALLIANCE_BANK_UNLIMITED) { ?> checked="checked"<?php } ?>></td>
+				<td>Unlimited:<input type="checkbox" name="unlimited"<?php if ($Role['WithdrawalLimit'] === ALLIANCE_BANK_UNLIMITED) { ?> checked="checked"<?php } ?>></td>
 			</tr>
 			<tr>
 				<td>Positive Balance:<input type="checkbox" name="positive" title="Members must deposit more than they withdraw"<?php if ($Role['PositiveBalance']) { ?> checked="checked"<?php } ?>></td>

@@ -8,14 +8,14 @@ use Smr\ScoutMessageGroupType;
  * @var array<string, mixed> $MessageBox
  */
 
-if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
+if ($MessageBox['Type'] === MSG_GLOBAL) { ?>
 	<form name="FORM" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
 		<div class="center">Ignore global messages?&nbsp;&nbsp;
 			<input type="submit" name="ignore_globals" value="Yes" <?php if ($ThisPlayer->isIgnoreGlobals()) { ?> style="background-color:green;"<?php } ?> />&nbsp;
 			<input type="submit" name="ignore_globals" value="No" <?php if (!$ThisPlayer->isIgnoreGlobals()) { ?> style="background-color:green;"<?php } ?> />
 		</div>
 	</form><?php
-} elseif ($MessageBox['Type'] == MSG_SCOUT) { ?>
+} elseif ($MessageBox['Type'] === MSG_SCOUT) { ?>
 	<form name="FORM" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
 		<div class="center">
 			Group scout messages?&nbsp;&nbsp;<?php
@@ -39,7 +39,7 @@ if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
 					<option>Marked Messages</option>
 					<option>All Messages</option>
 				</select>
-				<p>You have <span class="yellow"><?php echo $MessageBox['TotalMessages']; ?></span> <?php echo pluralise($MessageBox['TotalMessages'], 'message', false); if ($MessageBox['TotalMessages'] != $MessageBox['NumberMessages']) { ?> (<?php echo $MessageBox['NumberMessages']; ?> displayed)<?php } ?>.</p>
+				<p>You have <span class="yellow"><?php echo $MessageBox['TotalMessages']; ?></span> <?php echo pluralise($MessageBox['TotalMessages'], 'message', false); if ($MessageBox['TotalMessages'] !== $MessageBox['NumberMessages']) { ?> (<?php echo $MessageBox['NumberMessages']; ?> displayed)<?php } ?>.</p>
 			</td>
 			<td style="width: 30%" valign="middle"><?php
 				if (isset($NextPageHREF)) {
@@ -55,7 +55,7 @@ if ($MessageBox['Type'] == MSG_GLOBAL) { ?>
 	<table class="standard fullwidth"><?php
 		if (isset($MessageBox['Messages'])) {
 			foreach ($MessageBox['Messages'] as $Message) {
-				if ($MessageBox['Type'] == MSG_SCOUT) {
+				if ($MessageBox['Type'] === MSG_SCOUT) {
 					if (isset($MessageBox['GroupedMessages'])) {
 						$InputName = 'group_id[]';
 					} else {

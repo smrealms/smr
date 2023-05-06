@@ -14,14 +14,14 @@ class ServerStatusProcessor extends AccountPageProcessor {
 		$db = Database::getInstance();
 
 		$action = Request::get('action');
-		if ($action == 'Close') {
+		if ($action === 'Close') {
 			$reason = Request::get('close_reason');
 			$db->replace('game_disable', [
 				'reason' => $reason,
 			]);
 			$db->write('DELETE FROM active_session;');
 			$msg = '<span class="green">SUCCESS: </span>You have closed the server. You will now be logged out!';
-		} elseif ($action == 'Open') {
+		} elseif ($action === 'Open') {
 			$db->write('DELETE FROM game_disable;');
 			$msg = '<span class="green">SUCCESS: </span>You have opened the server.';
 		} else {

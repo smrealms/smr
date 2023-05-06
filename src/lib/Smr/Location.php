@@ -193,10 +193,10 @@ class Location {
 	}
 
 	public function getRaceID(): int {
-		if ($this->isFed() && $this->getTypeID() != LOCATION_TYPE_FEDERAL_BEACON) {
+		if ($this->isFed() && $this->getTypeID() !== LOCATION_TYPE_FEDERAL_BEACON) {
 			return $this->getTypeID() - LOCATION_GROUP_RACIAL_BEACONS;
 		}
-		if ($this->isHQ() && $this->getTypeID() != LOCATION_TYPE_FEDERAL_HQ) {
+		if ($this->isHQ() && $this->getTypeID() !== LOCATION_TYPE_FEDERAL_HQ) {
 			return $this->getTypeID() - LOCATION_GROUP_RACIAL_HQS;
 		}
 		return RACE_NEUTRAL;
@@ -361,7 +361,7 @@ class Location {
 	public function isHardwareSold(int $hardwareTypeID = null): bool {
 		$hardware = $this->getHardwareSold();
 		if ($hardwareTypeID === null) {
-			return count($hardware) != 0;
+			return count($hardware) !== 0;
 		}
 		return isset($hardware[$hardwareTypeID]);
 	}
@@ -425,7 +425,7 @@ class Location {
 	public function isShipSold(int $shipTypeID = null): bool {
 		$ships = $this->getShipsSold();
 		if ($shipTypeID === null) {
-			return count($ships) != 0;
+			return count($ships) !== 0;
 		}
 		return isset($ships[$shipTypeID]);
 	}
@@ -474,7 +474,7 @@ class Location {
 	public function isWeaponSold(int $weaponTypeID = null): bool {
 		$weapons = $this->getWeaponsSold();
 		if ($weaponTypeID === null) {
-			return count($weapons) != 0;
+			return count($weapons) !== 0;
 		}
 		return isset($weapons[$weaponTypeID]);
 	}
@@ -510,7 +510,7 @@ class Location {
 	public function getLinkedLocations(): array {
 		$linkedLocations = [];
 		if ($this->isHQ()) {
-			if ($this->getTypeID() == LOCATION_TYPE_FEDERAL_HQ) {
+			if ($this->getTypeID() === LOCATION_TYPE_FEDERAL_HQ) {
 				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_TYPE_FEDERAL_BEACON);
 				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_TYPE_FEDERAL_MINT);
 			} else {
@@ -544,7 +544,7 @@ class Location {
 	}
 
 	public function equals(Location $otherLocation): bool {
-		return $this->getTypeID() == $otherLocation->getTypeID();
+		return $this->getTypeID() === $otherLocation->getTypeID();
 	}
 
 	public function hasX(mixed $x, AbstractPlayer $player = null): bool {
@@ -558,31 +558,31 @@ class Location {
 			return $this->isHardwareSold($x->typeID);
 		}
 		if (is_string($x)) {
-			if ($x == 'Bank') {
+			if ($x === 'Bank') {
 				return $this->isBank();
 			}
-			if ($x == 'Bar') {
+			if ($x === 'Bar') {
 				return $this->isBar();
 			}
-			if ($x == 'Fed') {
+			if ($x === 'Fed') {
 				return $this->isFed();
 			}
-			if ($x == 'SafeFed') {
-				return $player != null && $this->isFed() && $player->canBeProtectedByRace($this->getRaceID());
+			if ($x === 'SafeFed') {
+				return $player !== null && $this->isFed() && $player->canBeProtectedByRace($this->getRaceID());
 			}
-			if ($x == 'HQ') {
+			if ($x === 'HQ') {
 				return $this->isHQ();
 			}
-			if ($x == 'UG') {
+			if ($x === 'UG') {
 				return $this->isUG();
 			}
-			if ($x == 'Hardware') {
+			if ($x === 'Hardware') {
 				return $this->isHardwareSold();
 			}
-			if ($x == 'Ship') {
+			if ($x === 'Ship') {
 				return $this->isShipSold();
 			}
-			if ($x == 'Weapon') {
+			if ($x === 'Weapon') {
 				return $this->isWeaponSold();
 			}
 		}

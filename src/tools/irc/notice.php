@@ -34,7 +34,7 @@ function notice_nickserv_registered_user($fp, string $rdata): bool {
 		foreach (CallbackEvent::getAll() as $event) {
 
 			// is that a callback for our nick?
-			if ($event->type == 'NICKSERV_INFO' && $event->nick == $nick) {
+			if ($event->type === 'NICKSERV_INFO' && $event->nick === $nick) {
 				CallbackEvent::remove($event);
 				($event->callback)();
 			}
@@ -62,7 +62,7 @@ function notice_nickserv_unknown_user($fp, string $rdata): bool {
 		foreach (CallbackEvent::getAll() as $event) {
 
 			// is that a callback for our nick?
-			if ($event->type == 'NICKSERV_INFO' && $event->nick == $nick) {
+			if ($event->type === 'NICKSERV_INFO' && $event->nick === $nick) {
 
 				CallbackEvent::remove($event);
 

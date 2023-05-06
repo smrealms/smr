@@ -64,7 +64,7 @@ class MessageBoxView extends AccountPage {
 					];
 
 					$senderID = $dbRecord->getInt('sender_id');
-					if ($senderID == 0) {
+					if ($senderID === 0) {
 						$senderName = 'User not logged in';
 					} else {
 						$senderAccount = Account::getAccount($senderID);
@@ -84,7 +84,7 @@ class MessageBoxView extends AccountPage {
 					}
 					$messages[$messageID]['SenderName'] = $senderName;
 
-					if ($gameID == 0) {
+					if ($gameID === 0) {
 						$messages[$messageID]['GameName'] = 'No game selected';
 					} elseif (!$validGame) {
 						$messages[$messageID]['GameName'] = 'Game no longer exists';

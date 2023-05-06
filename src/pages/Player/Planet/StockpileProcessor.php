@@ -31,7 +31,7 @@ class StockpileProcessor extends PlayerPageProcessor {
 		// get a planet from the sector where the player is in
 		$planet = $player->getSectorPlanet();
 		$action = Request::get('action');
-		if ($action == 'Ship') {
+		if ($action === 'Ship') {
 			// transfer to ship
 
 			// do we want transfer more than we have?
@@ -49,7 +49,7 @@ class StockpileProcessor extends PlayerPageProcessor {
 			$ship->increaseCargo($goodID, $amount);
 			$player->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' ' . TradeGood::get($goodID)->name . ' from planet.');
 
-		} elseif ($action == 'Planet') {
+		} elseif ($action === 'Planet') {
 			// transfer to planet
 
 			// do we want transfer more than we have?

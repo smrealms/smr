@@ -92,7 +92,7 @@ class SectorsFile {
 			if ($location->isFed()) {
 				$locSells .= 'Fed=,';
 			}
-			if ($locSells != '') {
+			if ($locSells !== '') {
 				$file .= substr($locSells, 0, -1);
 			}
 			$file .= EOL;

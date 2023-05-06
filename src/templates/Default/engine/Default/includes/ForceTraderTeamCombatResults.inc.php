@@ -25,7 +25,7 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 					if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 						if (!$ShotHit) {
 							?> and misses<?php
-						} elseif ($ActualDamage['TotalDamage'] == 0) {
+						} elseif ($ActualDamage['TotalDamage'] === 0) {
 							if ($WeaponDamage['Shield'] > 0) {
 								?> which proves ineffective against the <?php if ($ActualDamage['HasMines']) { ?>mines<?php } elseif ($ActualDamage['HasCDs']) { ?>combat drones<?php } else { ?>scout drones<?php }
 							} elseif ($WeaponDamage['Armour'] > 0) {
@@ -65,12 +65,12 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 				$WeaponDamage = $Drones['WeaponDamage'];
 
 				echo $ShootingPlayer->getDisplayName();
-				if ($WeaponDamage['Launched'] == 0) {
+				if ($WeaponDamage['Launched'] === 0) {
 					?> fails to launch their combat drones<?php
 				} else {
 					?> launches <span class="cds"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at<?php if ($ActualDamage['TargetAlreadyDead']) { ?> the debris that was once <?php } ?> the forces<?php
 					if (!$ActualDamage['TargetAlreadyDead']) {
-						if ($ActualDamage['TotalDamage'] == 0) {
+						if ($ActualDamage['TotalDamage'] === 0) {
 							if ($WeaponDamage['Shield'] > 0) {
 								?> which prove ineffective against the <?php if ($ActualDamage['HasMines']) { ?>mines<?php } elseif ($ActualDamage['HasCDs']) { ?>combat drones<?php } else { ?>scout drones<?php }
 							} elseif ($WeaponDamage['Armour'] > 0) {
@@ -85,7 +85,7 @@ if (is_array($TraderTeamCombatResults['Traders'])) {
 							if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
 							if ($ActualDamage['NumSDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
 
-							if ($WeaponDamage['Kamikaze'] == 0) {
+							if ($WeaponDamage['Kamikaze'] === 0) {
 								?> destroying <?php
 							} else {
 								?> of which <span class="cds"><?php echo $WeaponDamage['Kamikaze'] ?></span> kamikaze against <span class="red"><?php echo $WeaponDamage['Kamikaze'] ?></span> mines<?php

@@ -68,10 +68,10 @@ class HallOfFameAll extends AccountPage {
 			$rank = 1;
 			$foundMe = false;
 
-			if ($viewType == HOF_TYPE_DONATION) {
+			if ($viewType === HOF_TYPE_DONATION) {
 				$dbResult = $db->read('SELECT account_id, SUM(amount) as amount FROM account_donated
 							GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
-			} elseif ($viewType == HOF_TYPE_USER_SCORE) {
+			} elseif ($viewType === HOF_TYPE_USER_SCORE) {
 				$statements = Account::getUserScoreCaseStatement();
 				$query = 'SELECT account_id, ' . $statements['CASE'] . ' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN (:hof_types)' . $gameIDSql . ' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25';
 				$dbResult = $db->read($query, [
@@ -87,7 +87,7 @@ class HallOfFameAll extends AccountPage {
 			$rows = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$accountID = $dbRecord->getInt('account_id');
-				if ($accountID == $account->getAccountID()) {
+				if ($accountID === $account->getAccountID()) {
 					$foundMe = true;
 				}
 				$amount = HallOfFame::applyHofVisibilityMask($dbRecord->getFloat('amount'), $hofVis[$viewType], $game_id, $accountID);

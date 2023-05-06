@@ -30,7 +30,7 @@ class ShopShipProcessor extends PlayerPageProcessor {
 			create_error($message);
 		}
 
-		if ($newShipType->getRaceID() != RACE_NEUTRAL && $player->getRaceID() != $newShipType->getRaceID()) {
+		if ($newShipType->getRaceID() !== RACE_NEUTRAL && $player->getRaceID() !== $newShipType->getRaceID()) {
 			create_error('You can\'t buy other race\'s ships!');
 		}
 

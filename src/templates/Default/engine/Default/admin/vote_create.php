@@ -12,7 +12,7 @@ if (isset($PreviewVote)) { ?><table class="standard"><tr><td><?php echo bbifyMes
 <form name="VoteForm" method="POST" action="<?php echo $VoteFormHREF; ?>">
 	Vote: <select id="vote" name="vote"><?php
 		foreach ($CurrentVotes as $CurrentVote) {
-			?><option value="<?php echo $CurrentVote['ID']; ?>"<?php if (isset($VoteID) && $CurrentVote['ID'] == $VoteID) { ?>selected="selected"<?php } ?>><?php echo bbifyMessage($CurrentVote['Question']); ?></option><?php
+			?><option value="<?php echo $CurrentVote['ID']; ?>"<?php if (isset($VoteID) && $CurrentVote['ID'] === $VoteID) { ?>selected="selected"<?php } ?>><?php echo bbifyMessage($CurrentVote['Question']); ?></option><?php
 		} ?>
 	</select><br />
 	Option: <input type="text" name="option" required value="<?php if (isset($PreviewOption)) { echo htmlspecialchars($PreviewOption); } ?>" /><br />

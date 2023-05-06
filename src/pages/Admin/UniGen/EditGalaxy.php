@@ -47,7 +47,7 @@ class EditGalaxy extends AccountPage {
 		$template->assign('ActualConnectivity', $connectivity);
 
 		// Call this after all sectors have been cached in an efficient way.
-		if ($this->focusSectorID == 0) {
+		if ($this->focusSectorID === 0) {
 			$mapSectors = $galaxy->getMapSectors();
 		} else {
 			$mapSectors = $galaxy->getMapSectors($this->focusSectorID);

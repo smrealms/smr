@@ -16,7 +16,7 @@ class VoteProcessor extends AccountPageProcessor {
 	) {}
 
 	public function build(Account $account): never {
-		if ($account->getAccountID() == ACCOUNT_ID_NHL) {
+		if ($account->getAccountID() === ACCOUNT_ID_NHL) {
 			create_error('This account is not allowed to cast a vote!');
 		}
 

@@ -57,7 +57,7 @@ class NewsletterSendProcessor extends AccountPageProcessor {
 			Request::get('salutation'),
 		);
 
-		if (Request::get('to_email') == '*') {
+		if (Request::get('to_email') === '*') {
 			// Send the newsletter to all players.
 			// Disable output buffering here so we can monitor the progress.
 			header('X-Accel-Buffering: no'); // disable Nginx output buffering
@@ -106,7 +106,7 @@ class NewsletterSendProcessor extends AccountPageProcessor {
 
 				$sent++;
 				echo 'sent.<br />';
-				if (($sent % 10) == 0) {
+				if (($sent % 10) === 0) {
 					echo 'Sent ' . $sent . ' of ' . $total . ' mails.<br /><br />';
 				}
 

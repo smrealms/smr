@@ -67,7 +67,7 @@ if (!isset($JoinGameFormHref)) { ?>
 	<p class="bold big">
 		Time until you can join this game: <?php echo format_time($Game->getJoinTime() - Epoch::time()); ?>
 		<br /><br /><?php
-		if ($Game->getStartTime() == $Game->getJoinTime()) { ?>
+		if ($Game->getStartTime() === $Game->getJoinTime()) { ?>
 			The game will start immediately at this time!<?php
 		} else { ?>
 			Note: You will not be able to start moving until the game starts <?php echo format_time($Game->getStartTime() - $Game->getJoinTime()); ?> later!<?php

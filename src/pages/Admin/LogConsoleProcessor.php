@@ -12,13 +12,13 @@ class LogConsoleProcessor extends AccountPageProcessor {
 	public function build(Account $account): never {
 		$accountIDs = Request::getIntArray('account_ids');
 		// nothing marked?
-		if (count($accountIDs) == 0) {
+		if (count($accountIDs) === 0) {
 			create_error('You have to select the log files you want to view/delete!');
 		}
 
 		$db = Database::getInstance();
 		$action = Request::get('action');
-		if ($action == 'Delete') {
+		if ($action === 'Delete') {
 			// get rid of all entries
 			$db->write('DELETE FROM account_has_logs WHERE account_id IN (:account_ids)', [
 				'account_ids' => $db->escapeArray($accountIDs),

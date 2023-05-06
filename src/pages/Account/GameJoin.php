@@ -76,7 +76,7 @@ class GameJoin extends AccountPage {
 		// Pick an initial race to display (prefer *not* Alskant)
 		do {
 			$raceKey = array_rand($races);
-		} while ($raceKey == RACE_ALSKANT && count($races) > 1);
+		} while ($raceKey === RACE_ALSKANT && count($races) > 1);
 		$races[$raceKey]['Selected'] = true;
 		$template->assign('SelectedRaceID', $raceKey);
 		$template->assign('Races', $races);

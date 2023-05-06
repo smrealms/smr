@@ -200,7 +200,7 @@ class Account {
 	}
 
 	public static function createAccount(string $login, #[SensitiveParameter] string $password, string $email, int $timez, int $referral): self {
-		if ($referral != 0) {
+		if ($referral !== 0) {
 			// Will throw if referral account doesn't exist
 			self::getAccount($referral);
 		}
@@ -410,7 +410,7 @@ class Account {
 	}
 
 	public function updateLastLogin(): void {
-		if ($this->last_login == Epoch::time()) {
+		if ($this->last_login === Epoch::time()) {
 			return;
 		}
 		$this->last_login = Epoch::time();
@@ -491,13 +491,13 @@ class Account {
 	 */
 	public function getIndividualScores(Player $player = null): array {
 		$gameID = 0;
-		if ($player != null) {
+		if ($player !== null) {
 			$gameID = $player->getGameID();
 		}
 		if (!isset($this->individualScores[$gameID])) {
 			$this->individualScores[$gameID] = [];
 			foreach (self::USER_RANKINGS_SCORE as [$stat, $a, $b]) {
-				if ($player == null) {
+				if ($player === null) {
 					$amount = $this->getHOF($stat);
 				} else {
 					$amount = $player->getHOF($stat);
@@ -576,7 +576,7 @@ class Account {
 	}
 
 	public function decreaseTotalSmrCredits(int $totalCredits): void {
-		if ($totalCredits == 0) {
+		if ($totalCredits === 0) {
 			return;
 		}
 		if ($totalCredits < 0) {
@@ -594,7 +594,7 @@ class Account {
 			$rewardCredits = 0;
 		}
 		$db = Database::getInstance();
-		if ($this->credits == 0 && $this->rewardCredits == 0) {
+		if ($this->credits === 0 && $this->rewardCredits === 0) {
 			$db->replace('account_has_credits', [
 				...$this->SQLID,
 				'credits_left' => $credits,
@@ -625,11 +625,11 @@ class Account {
 	}
 
 	public function setSmrCredits(int $credits): void {
-		if ($this->getSmrCredits() == $credits) {
+		if ($this->getSmrCredits() === $credits) {
 			return;
 		}
 		$db = Database::getInstance();
-		if ($this->credits == 0 && $this->rewardCredits == 0) {
+		if ($this->credits === 0 && $this->rewardCredits === 0) {
 			$db->replace('account_has_credits', [
 				'account_id' => $this->getAccountID(),
 				'credits_left' => $credits,
@@ -645,7 +645,7 @@ class Account {
 	}
 
 	public function increaseSmrCredits(int $credits): void {
-		if ($credits == 0) {
+		if ($credits === 0) {
 			return;
 		}
 		if ($credits < 0) {
@@ -655,7 +655,7 @@ class Account {
 	}
 
 	public function decreaseSmrCredits(int $credits): void {
-		if ($credits == 0) {
+		if ($credits === 0) {
 			return;
 		}
 		if ($credits < 0) {
@@ -672,7 +672,7 @@ class Account {
 			return;
 		}
 		$db = Database::getInstance();
-		if ($this->credits == 0 && $this->rewardCredits == 0) {
+		if ($this->credits === 0 && $this->rewardCredits === 0) {
 			$db->replace('account_has_credits', [
 				'account_id' => $this->getAccountID(),
 				'reward_credits' => $credits,
@@ -688,7 +688,7 @@ class Account {
 	}
 
 	public function increaseSmrRewardCredits(int $credits): void {
-		if ($credits == 0) {
+		if ($credits === 0) {
 			return;
 		}
 		if ($credits < 0) {
@@ -714,7 +714,7 @@ class Account {
 	}
 
 	public function equals(self $other): bool {
-		return $this->getAccountID() == $other->getAccountID();
+		return $this->getAccountID() === $other->getAccountID();
 	}
 
 	public function getAccountID(): int {
@@ -787,7 +787,7 @@ class Account {
 		// Remove an "Invalid email" ban (may or may not have one)
 		$disabled = $this->isDisabled();
 		if ($disabled !== false) {
-			if ($disabled['Reason'] == CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
+			if ($disabled['Reason'] === CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
 				$this->unbanAccount($this);
 			}
 		}
@@ -1054,7 +1054,7 @@ class Account {
 		];
 		$dbResult = $db->read('SELECT account_id FROM account_auth WHERE login_type = :login_type AND auth_key = :auth_key', $params);
 		if ($dbResult->hasRecord()) {
-			if ($dbResult->record()->getInt('account_id') != $this->getAccountID()) {
+			if ($dbResult->record()->getInt('account_id') !== $this->getAccountID()) {
 				throw new Exception('Another account already uses this form of auth.');
 			}
 			return;
@@ -1147,7 +1147,7 @@ class Account {
 	}
 
 	public function setMessageNotifications(int $messageTypeID, int $num): void {
-		if ($this->getMessageNotifications($messageTypeID) == $num) {
+		if ($this->getMessageNotifications($messageTypeID) === $num) {
 			return;
 		}
 		$this->messageNotifications[$messageTypeID] = $num;
@@ -1155,7 +1155,7 @@ class Account {
 	}
 
 	public function increaseMessageNotifications(int $messageTypeID, int $num): void {
-		if ($num == 0) {
+		if ($num === 0) {
 			return;
 		}
 		if ($num < 0) {
@@ -1165,7 +1165,7 @@ class Account {
 	}
 
 	public function decreaseMessageNotifications(int $messageTypeID, int $num): void {
-		if ($num == 0) {
+		if ($num === 0) {
 			return;
 		}
 		if ($num < 0) {
@@ -1257,11 +1257,11 @@ class Account {
 
 	public function setPoints(int $numPoints, ?int $lastUpdate = null): void {
 		$numPoints = max($numPoints, 0);
-		if ($this->getPoints() == $numPoints) {
+		if ($this->getPoints() === $numPoints) {
 			return;
 		}
 		$db = Database::getInstance();
-		if ($this->points == 0) {
+		if ($this->points === 0) {
 			$db->insert('account_has_points', [
 				...$this->SQLID,
 				'points' => $numPoints,
@@ -1313,7 +1313,7 @@ class Account {
 			$days = 0; //Forever/indefinite
 		}
 
-		if ($days == 0) {
+		if ($days === 0) {
 			$expireTime = 0;
 		} else {
 			$expireTime = Epoch::time() + $days * 86400;

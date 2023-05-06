@@ -29,7 +29,7 @@ function shared_channel_msg_seedlist(AbstractPlayer $player): array {
 	// get the seedlist
 	$seedlist = get_seedlist($player);
 
-	if (count($seedlist) == 0) {
+	if (count($seedlist) === 0) {
 		return ['Your alliance has not set up a seedlist yet.'];
 	}
 	$result = ['Your alliance has a ' . count($seedlist) . ' sector seedlist:'];

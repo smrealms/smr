@@ -40,7 +40,7 @@ class NpcManage extends AccountPage {
 			$games[] = [
 				'Name' => Game::getGame($gameID)->getDisplayName(),
 				'ID' => $gameID,
-				'Selected' => $gameID == $selectedGameID,
+				'Selected' => $gameID === $selectedGameID,
 			];
 		}
 		$selectedGameID ??= 0; // no valid games found

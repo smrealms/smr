@@ -32,7 +32,7 @@ class AdminMessageSend extends AccountPage {
 		$template->assign('MessageGameID', $gameID);
 		$template->assign('ExpireTime', $this->expireHours);
 
-		if ($gameID != self::ALL_GAMES_ID) {
+		if ($gameID !== self::ALL_GAMES_ID) {
 			$game = Game::getGame($gameID);
 			$gamePlayers = [['AccountID' => 0, 'Name' => 'All Players (' . $game->getName() . ')']];
 			$db = Database::getInstance();

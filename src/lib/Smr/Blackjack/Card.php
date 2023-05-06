@@ -44,7 +44,7 @@ class Card {
 	}
 
 	public function isAce(): bool {
-		return $this->rank == self::RANK_ACE;
+		return $this->rank === self::RANK_ACE;
 	}
 
 	public function getSuitName(): string {

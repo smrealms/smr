@@ -23,7 +23,7 @@ if ($CanChangePassword) { ?>
 		<td>
 			<select name="recruit_type" onchange="togglePassword(this)"><?php
 				foreach (Alliance::allRecruitTypes() as $type => $text) { ?>
-					<option value="<?php echo $type; ?>" <?php if ($Alliance->getRecruitType() == $type) { ?> selected<?php } ?>><?php echo $text; ?></option><?php
+					<option value="<?php echo $type; ?>" <?php if ($Alliance->getRecruitType() === $type) { ?> selected<?php } ?>><?php echo $text; ?></option><?php
 				} ?>
 			</select>
 		</td>

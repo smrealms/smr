@@ -74,8 +74,8 @@ class CurrentSector extends PlayerPage {
 		$links = [];
 		foreach ($linkSectorIDs as $dir => $linkSectorID) {
 			$links[$dir]['ID'] = $linkSectorID;
-			if ($linkSectorID > 0 && $linkSectorID != $player->getSectorID()) {
-				if ($player->getLastSectorID() == $linkSectorID) {
+			if ($linkSectorID > 0 && $linkSectorID !== $player->getSectorID()) {
+				if ($player->getLastSectorID() === $linkSectorID) {
 					$class = 'lastVisited';
 				} elseif (isset($unvisited[$linkSectorID])) {
 					$class = 'unvisited';
@@ -227,7 +227,7 @@ function checkForAttackMessage(string $msg, AbstractPlayer $player): void {
 		]);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
-			if ($player->getSectorID() == $dbRecord->getInt('sector_id')) {
+			if ($player->getSectorID() === $dbRecord->getInt('sector_id')) {
 				$results = $dbRecord->getObject('result', true);
 				$template->assign('AttackResultsType', $dbRecord->getString('type'));
 				$template->assign('AttackResults', $results);

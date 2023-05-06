@@ -7,7 +7,7 @@ use Smr\Irc\Message;
  * @param resource $fp
  */
 function channel_msg_seed($fp, Message $msg, AbstractPlayer $player): bool {
-	if ($msg->text == '!seed') {
+	if ($msg->text === '!seed') {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;

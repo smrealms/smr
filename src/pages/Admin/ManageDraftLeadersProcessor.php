@@ -38,7 +38,7 @@ class ManageDraftLeadersProcessor extends AccountPageProcessor {
 		$game = $selectedPlayer->getGame()->getDisplayName();
 
 		$msg = null; // by default, clear any messages from prior processing
-		if ($action == 'Assign') {
+		if ($action === 'Assign') {
 			if ($selectedPlayer->isDraftLeader()) {
 				$msg = "<span class='red'>ERROR: </span>$name is already a draft leader in game $game!";
 			} else {
@@ -47,7 +47,7 @@ class ManageDraftLeadersProcessor extends AccountPageProcessor {
 					'home_sector_id' => $homeSectorID,
 				]);
 			}
-		} elseif ($action == 'Remove') {
+		} elseif ($action === 'Remove') {
 			if (!$selectedPlayer->isDraftLeader()) {
 				$msg = "<span class='red'>ERROR: </span>$name is not a draft leader in game $game!";
 			} else {

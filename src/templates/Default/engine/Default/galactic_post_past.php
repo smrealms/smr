@@ -13,7 +13,7 @@ Select Game:&nbsp;
 		foreach ($PublishedGames as $Game) {
 			$id = $Game['game_id'];
 			$name = $Game['game_name'];
-			$selected = ($SelectedGame == $id ? 'selected="selected"' : '');
+			$selected = ($SelectedGame === $id ? 'selected="selected"' : '');
 			echo "<option value='$id' $selected>$name ($id)</option>";
 		} ?>
 	</select>

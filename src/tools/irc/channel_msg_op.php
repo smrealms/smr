@@ -36,7 +36,7 @@ function channel_msg_op($fp, Message $msg): bool {
  * @param resource $fp
  */
 function channel_msg_op_info($fp, Message $msg, AbstractPlayer $player): bool {
-	if ($msg->text == '!op info') {
+	if ($msg->text === '!op info') {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -59,7 +59,7 @@ function channel_msg_op_info($fp, Message $msg, AbstractPlayer $player): bool {
  */
 function channel_msg_op_cancel($fp, Message $msg, AbstractPlayer $player): bool {
 
-	if ($msg->text == '!op cancel') {
+	if ($msg->text === '!op cancel') {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -151,7 +151,7 @@ function channel_msg_op_set($fp, Message $msg, AbstractPlayer $player): bool {
  * @param resource $fp
  */
 function channel_msg_op_turns($fp, Message $msg, AbstractPlayer $player): bool {
-	if ($msg->text == '!op turns') {
+	if ($msg->text === '!op turns') {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -220,7 +220,7 @@ function channel_msg_op_response($fp, Message $msg, AbstractPlayer $player): boo
  * @param resource $fp
  */
 function channel_msg_op_list($fp, Message $msg, AbstractPlayer $player): bool {
-	if ($msg->text == '!op list') {
+	if ($msg->text === '!op list') {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;

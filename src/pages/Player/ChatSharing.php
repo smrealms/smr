@@ -39,11 +39,11 @@ class ChatSharing extends PlayerPage {
 				$otherPlayer = null;
 			}
 			$shareFrom[$fromAccountId] = [
-				'Player ID' => $otherPlayer == null ? '-' : $otherPlayer->getPlayerID(),
-				'Player Name' => $otherPlayer == null ?
+				'Player ID' => $otherPlayer === null ? '-' : $otherPlayer->getPlayerID(),
+				'Player Name' => $otherPlayer === null ?
 				                 '<b>Account</b>: ' . Account::getAccount($fromAccountId)->getHofDisplayName() :
 				                 $otherPlayer->getDisplayName(),
-				'All Games' => $gameId == 0 ? '<span class="green">YES</span>' : '<span class="red">NO</span>',
+				'All Games' => $gameId === 0 ? '<span class="green">YES</span>' : '<span class="red">NO</span>',
 				'Game ID' => $gameId,
 			];
 		}
@@ -63,11 +63,11 @@ class ChatSharing extends PlayerPage {
 				$otherPlayer = null;
 			}
 			$shareTo[$toAccountId] = [
-				'Player ID' => $otherPlayer == null ? '-' : $otherPlayer->getPlayerID(),
-				'Player Name' => $otherPlayer == null ?
+				'Player ID' => $otherPlayer === null ? '-' : $otherPlayer->getPlayerID(),
+				'Player Name' => $otherPlayer === null ?
 				                 '<b>Account</b>: ' . Account::getAccount($toAccountId)->getHofDisplayName() :
 				                 $otherPlayer->getDisplayName(),
-				'All Games' => $gameId == 0 ? '<span class="green">YES</span>' : '<span class="red">NO</span>',
+				'All Games' => $gameId === 0 ? '<span class="green">YES</span>' : '<span class="red">NO</span>',
 				'Game ID' => $gameId,
 			];
 		}

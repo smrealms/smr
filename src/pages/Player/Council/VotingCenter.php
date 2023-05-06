@@ -45,7 +45,7 @@ class VotingCenter extends PlayerPage {
 		$voteRelations = [];
 		$raceRelations = Globals::getRaceRelations($player->getGameID(), $player->getRaceID());
 		foreach (Race::getPlayableIDs() as $raceID) {
-			if ($raceID == $player->getRaceID()) {
+			if ($raceID === $player->getRaceID()) {
 				continue;
 			}
 			$container = new VotingCenterProcessor($raceID);
@@ -115,8 +115,8 @@ class VotingCenter extends PlayerPage {
 				'HREF' => $container->href(),
 				'Type' => $dbRecord->getString('type'),
 				'EndTime' => $dbRecord->getInt('end_time'),
-				'For' => $votedFor == 'YES',
-				'Against' => $votedFor == 'NO',
+				'For' => $votedFor === 'YES',
+				'Against' => $votedFor === 'NO',
 				'NoVotes' => $noVotes,
 				'YesVotes' => $yesVotes,
 			];

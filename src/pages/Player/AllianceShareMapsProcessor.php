@@ -15,7 +15,7 @@ class AllianceShareMapsProcessor extends PlayerPageProcessor {
 		$alliance_ids = array_diff($memberIDs, [$player->getAccountID()]);
 
 		// end here if we are alone in the alliance
-		if (count($alliance_ids) == 0) {
+		if (count($alliance_ids) === 0) {
 			create_error('Who exactly are you sharing maps with?');
 		}
 

@@ -65,7 +65,7 @@ class Globals {
 	public static function canAccessPage(string $pageName, AbstractPlayer $player, array $extraInfo): void {
 		switch ($pageName) {
 			case 'AllianceMOTD':
-				if ($player->getAllianceID() != $extraInfo['AllianceID']) {
+				if ($player->getAllianceID() !== $extraInfo['AllianceID']) {
 					logException(new Exception('Tried to access page without permission.'));
 					throw new UserError('You cannot access this page.');
 				}

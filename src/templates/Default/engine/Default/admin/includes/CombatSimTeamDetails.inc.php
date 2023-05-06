@@ -11,7 +11,7 @@
 			<select name="<?php echo $MemberInputName; ?>[]">
 				<option value="none">None</option><?php
 				foreach ($DummyNames as $DummyName) { ?>
-					<option value="<?php echo htmlspecialchars($DummyName); ?>"<?php if ($Dummy && $DummyName == $Dummy->getPlayerName()) { ?> selected="selected"<?php } ?>><?php echo $DummyName; ?></option><?php
+					<option value="<?php echo htmlspecialchars($DummyName); ?>"<?php if ($Dummy && $DummyName === $Dummy->getPlayerName()) { ?> selected="selected"<?php } ?>><?php echo $DummyName; ?></option><?php
 				} ?>
 			</select><br />
 		</td>

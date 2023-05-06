@@ -52,7 +52,7 @@ class AllianceMessageBoardView extends PlayerPage {
 		]);
 
 		$mbWrite = true;
-		if ($alliance->getAllianceID() != $player->getAllianceID()) {
+		if ($alliance->getAllianceID() !== $player->getAllianceID()) {
 			$dbResult = $db->read('SELECT 1 FROM alliance_treaties
 							WHERE (alliance_id_1 = :alliance_id OR alliance_id_1 = :player_alliance_id)
 							AND (alliance_id_2 = :alliance_id OR alliance_id_2 = :player_alliance_id)

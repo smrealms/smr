@@ -10,7 +10,7 @@ class NewbieLeaveProcessor extends PlayerPageProcessor {
 
 	public function build(AbstractPlayer $player): never {
 		$action = Request::get('action');
-		if ($action == 'Yes!') {
+		if ($action === 'Yes!') {
 			$player->setNewbieTurns(0);
 			$player->setNewbieWarning(false);
 		}

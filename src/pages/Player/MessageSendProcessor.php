@@ -17,7 +17,7 @@ class MessageSendProcessor extends PlayerPageProcessor {
 	public function build(AbstractPlayer $player): never {
 		$message = htmlentities(Request::get('message'), ENT_COMPAT, 'utf-8');
 
-		if (Request::get('action') == 'Preview message') {
+		if (Request::get('action') === 'Preview message') {
 			if ($this->allianceID !== null) {
 				$container = new AllianceBroadcast($this->allianceID, $message);
 			} else {

@@ -41,10 +41,10 @@ function display_hand(Hand $hand, bool $revealHand): string {
 	$html = '<table class="center"><tr>';
 	foreach ($hand->getCards() as $key => $card) {
 		//do we need a new row?
-		if ($key > 0 && $key % 3 == 0) {
+		if ($key > 0 && $key % 3 === 0) {
 			$html .= '</tr><tr>';
 		}
-		$showCard = ($key == 0 || $revealHand === true);
+		$showCard = ($key === 0 || $revealHand === true);
 		$html .= display_card($card, $showCard);
 	}
 	$html .= '</tr></table>';

@@ -46,11 +46,11 @@ function channel_msg_sd_set($fp, Message $msg): bool {
 		// delete any old entries in the list
 		foreach ($sds as $key => $value) {
 
-			if ($value[3] != $channel) {
+			if ($value[3] !== $channel) {
 				continue;
 			}
 
-			if ($value[0] == $sector) {
+			if ($value[0] === $sector) {
 				unset($sds[$key]);
 			}
 
@@ -84,11 +84,11 @@ function channel_msg_sd_del($fp, Message $msg): bool {
 
 		foreach ($sds as $key => $sd) {
 
-			if ($sd[3] != $channel) {
+			if ($sd[3] !== $channel) {
 				continue;
 			}
 
-			if ($sd[0] == $sector) {
+			if ($sd[0] === $sector) {
 				fwrite($fp, 'PRIVMSG ' . $channel . ' :The supply/demand for sector ' . $sector . ' has been deleted.' . EOL);
 				unset($sds[$key]);
 			}
@@ -106,7 +106,7 @@ function channel_msg_sd_del($fp, Message $msg): bool {
  */
 function channel_msg_sd_list($fp, Message $msg, AbstractPlayer $player): bool {
 
-	if ($msg->text == '!sd list') {
+	if ($msg->text === '!sd list') {
 
 		global $sds;
 
@@ -121,7 +121,7 @@ function channel_msg_sd_list($fp, Message $msg, AbstractPlayer $player): bool {
 		fwrite($fp, 'PRIVMSG ' . $channel . ' :The following supply/demand list has been recorded:' . EOL);
 		fwrite($fp, 'PRIVMSG ' . $channel . ' :Sector   Amount' . EOL);
 		foreach ($sds as $sd) {
-			if ($sd[3] == $channel) {
+			if ($sd[3] === $channel) {
 
 				$seconds_since_refresh = time() - $sd[2];
 				if ($seconds_since_refresh < 0) {

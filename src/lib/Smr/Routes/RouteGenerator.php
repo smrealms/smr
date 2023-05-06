@@ -74,7 +74,7 @@ class RouteGenerator {
 		foreach ($forwardRoutes as $currentStepRoute) {
 			$currentSellSectorId = $currentStepRoute->getSellSectorId();
 			$currentGoodIsNothing = $currentStepRoute->getGoodID() === GOODS_NOTHING;
-			if ($maxNumPorts == 0 && !$lastGoodIsNothing && !$currentGoodIsNothing) {
+			if ($maxNumPorts === 0 && !$lastGoodIsNothing && !$currentGoodIsNothing) {
 				continue; // We can only add empty one-way routes at this point
 			}
 			if ($lastGoodIsNothing && $currentGoodIsNothing) {

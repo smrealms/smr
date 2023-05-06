@@ -26,7 +26,7 @@ class ListPlanetFinancial extends PlayerPage {
 		// Determine if the player can view bonds on the planet list.
 		// Player can always see them if not in an alliance.
 		$viewBonds = true;
-		if ($this->allianceID != 0) {
+		if ($this->allianceID !== 0) {
 			$role_id = $player->getAllianceRole($this->allianceID);
 			$db = Database::getInstance();
 			$dbResult = $db->read('

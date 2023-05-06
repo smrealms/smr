@@ -21,7 +21,7 @@ class KickProcessor extends PlayerPageProcessor {
 
 		$planetPlayer = Player::getPlayer($this->kickAccountID, $player->getGameID());
 		$owner = $planet->getOwner();
-		if ($owner->getAllianceID() != $player->getAllianceID()) {
+		if ($owner->getAllianceID() !== $player->getAllianceID()) {
 			create_error('You can not kick someone off a planet your alliance does not own!');
 		}
 		$message = 'You have been kicked from ' . $planet->getDisplayName() . ' in ' . Globals::getSectorBBLink($player->getSectorID());

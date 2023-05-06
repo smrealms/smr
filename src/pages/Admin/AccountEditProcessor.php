@@ -82,13 +82,13 @@ class AccountEditProcessor extends AccountPageProcessor {
 			$actions[] = 'added ' . $specialClose . ' ban';
 		}
 
-		if ($choise == 'reopen') {
+		if ($choise === 'reopen') {
 			//do we have points
 			$curr_account->removePoints($points);
 			$curr_account->unbanAccount($account);
 			$actions[] = 'reopened account and removed ' . $points . ' points';
 		} elseif ($points > 0) {
-			if ($choise == 'individual') {
+			if ($choise === 'individual') {
 				$reason_id = $db->insert('closing_reason', [
 					'reason' => $reason_msg,
 				]);
@@ -112,17 +112,17 @@ class AccountEditProcessor extends AccountPageProcessor {
 
 		if (Request::has('mailban')) {
 			$mailban = Request::get('mailban');
-			if ($mailban == 'remove') {
+			if ($mailban === 'remove') {
 				$curr_account->setMailBanned(Epoch::time());
 				$actions[] = 'removed mailban';
-			} elseif ($mailban == 'add_days') {
+			} elseif ($mailban === 'add_days') {
 				$days = Request::getInt('mailban_days');
 				$curr_account->increaseMailBanned($days * 86400);
 				$actions[] = 'mail banned for ' . $days . ' days';
 			}
 		}
 
-		if ($veteran_status != $curr_account->isVeteranForced()) {
+		if ($veteran_status !== $curr_account->isVeteranForced()) {
 			$db->update(
 				'account',
 				['veteran' => $db->escapeBoolean($veteran_status)],
@@ -131,12 +131,12 @@ class AccountEditProcessor extends AccountPageProcessor {
 			$actions[] = 'set the veteran status to ' . $db->escapeBoolean($veteran_status);
 		}
 
-		if ($logging_status != $curr_account->isLoggingEnabled()) {
+		if ($logging_status !== $curr_account->isLoggingEnabled()) {
 			$curr_account->setLoggingEnabled($logging_status);
 			$actions[] = 'set the logging status to ' . $logging_status;
 		}
 
-		if ($except != '') {
+		if ($except !== '') {
 			$db->insert('account_exceptions', [
 				'account_id' => $account_id,
 				'reason' => $except,
@@ -174,7 +174,7 @@ class AccountEditProcessor extends AccountPageProcessor {
 
 		if (!empty($delete)) {
 			foreach ($delete as $game_id => $value) {
-				if ($value == 'TRUE') {
+				if ($value === 'TRUE') {
 					// Check for bank transactions into the alliance account
 					$dbResult = $db->read('SELECT 1 FROM alliance_bank_transactions WHERE payee_id = :payee_id AND game_id = :game_id LIMIT 1', [
 						'payee_id' => $db->escapeNumber($account_id),

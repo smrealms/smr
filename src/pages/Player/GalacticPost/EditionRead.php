@@ -59,7 +59,7 @@ class EditionRead extends PlayerPage {
 				$articleLayout[$row][] = $article;
 
 				// start a new row every 2 articles
-				if ($i % 2 == 1) {
+				if ($i % 2 === 1) {
 					$row++;
 				}
 			}

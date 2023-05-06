@@ -10,15 +10,15 @@ use Smr\Request;
 class ValidateProcessor extends AccountPageProcessor {
 
 	public function build(Account $account): never {
-		if (Request::get('action') == 'resend') {
+		if (Request::get('action') === 'resend') {
 			$account->sendValidationEmail();
 			$message = '<span class="green">The validation code has been resent to your e-mail address!</span>';
 			(new Validate($message))->go();
 		}
 
 		// Only skip validation check if we explicitly chose to validate later
-		if (Request::get('action') != 'skip') {
-			if ($account->getValidationCode() != Request::get('validation_code')) {
+		if (Request::get('action') !== 'skip') {
+			if ($account->getValidationCode() !== Request::get('validation_code')) {
 				$message = '<span class="red">The validation code you entered is incorrect!</span>';
 				(new Validate($message))->go();
 			}

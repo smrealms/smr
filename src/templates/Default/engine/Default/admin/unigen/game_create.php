@@ -3,7 +3,7 @@
 ?>
 <h1>Edit Existing Games</h1>
 <?php
-if (count($EditGames) == 0) { ?>
+if (count($EditGames) === 0) { ?>
 	There are no games for you to edit.<br /><?php
 } else { ?>
 	<form method="POST" action="<?php echo $EditGameHREF; ?>">

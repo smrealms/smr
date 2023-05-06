@@ -70,7 +70,7 @@ class AllianceRoster extends PlayerPage {
 		$template->assign('AllianceExp', $dbRecord->getInt('alliance_xp'));
 		$template->assign('AllianceAverageExp', $dbRecord->getInt('alliance_avg'));
 
-		if ($account->getAccountID() == $alliance->getLeaderID() || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION)) {
+		if ($account->getAccountID() === $alliance->getLeaderID() || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION)) {
 			$container = new AllianceGovernance($allianceID);
 			$template->assign('EditAllianceDescriptionHREF', $container->href());
 		}
@@ -87,7 +87,7 @@ class AllianceRoster extends PlayerPage {
 		$alliancePlayers = $alliance->getMembers();
 		$template->assign('AlliancePlayers', $alliancePlayers);
 
-		if ($alliance->getAllianceID() == $player->getAllianceID()) {
+		if ($alliance->getAllianceID() === $player->getAllianceID()) {
 			// Alliance members get to see active/inactive status of members
 			$template->assign('ActiveIDs', $alliance->getActiveIDs());
 			$container = new self($this->allianceID, !$this->showRoles);

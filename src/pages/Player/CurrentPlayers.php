@@ -47,17 +47,17 @@ class CurrentPlayers extends PlayerPage {
 
 		// Get the summary text
 		$summary = 'There ';
-		if ($count_active != 1) {
+		if ($count_active !== 1) {
 			$summary .= 'are ' . $count_active . ' players who have ';
 		} else {
 			$summary .= 'is 1 player who has ';
 		}
 		$summary .= 'accessed the server in the last ' . format_time(TIME_BEFORE_INACTIVE) . '.<br />';
 
-		if ($count_moving == 0) {
+		if ($count_moving === 0) {
 			$summary .= 'No one was moving so your ship computer can\'t intercept any transmissions.';
 		} else {
-			if ($count_moving == $count_active) {
+			if ($count_moving === $count_active) {
 				$summary .= 'All ';
 			} else {
 				$summary .= 'A few ';
@@ -84,7 +84,7 @@ class CurrentPlayers extends PlayerPage {
 			if ($curr_player->hasNewbieStatus()) {
 				$class .= ' newbie';
 			}
-			if ($class != '') {
+			if ($class !== '') {
 				$class = ' class="' . trim($class) . '"';
 			}
 			$row['tr_class'] = $class;

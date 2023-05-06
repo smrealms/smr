@@ -48,7 +48,7 @@ class CreateWarps extends AccountPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$warp1 = Sector::getSector($this->gameID, $dbRecord->getInt('sector_id'));
 			$warp2 = Sector::getSector($this->gameID, $dbRecord->getInt('warp'));
-			if ($warp1->getGalaxyID() == $warp2->getGalaxyID()) {
+			if ($warp1->getGalaxyID() === $warp2->getGalaxyID()) {
 				// For warps within the same galaxy, even though there will be two
 				// sectors with warps, we still consider this as "one warp" (pair).
 				// Since we're looping over all sectors, we'll hit this twice for each

@@ -38,7 +38,7 @@ class Twitter extends SocialLogin {
 	}
 
 	public function login(): SocialIdentity {
-		if ($_SESSION['TwitterToken']['oauth_token'] != Request::get('oauth_token')) {
+		if ($_SESSION['TwitterToken']['oauth_token'] !== Request::get('oauth_token')) {
 			throw new Exception('Unexpected token received from Twitter');
 		}
 		$helper = self::getTwitterObj($_SESSION['TwitterToken']);

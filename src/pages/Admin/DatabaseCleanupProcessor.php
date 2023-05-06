@@ -39,7 +39,7 @@ class DatabaseCleanupProcessor extends AccountPageProcessor {
 			'weighted_random',
 		];
 
-		if ($this->action == 'delete') {
+		if ($this->action === 'delete') {
 			$action = 'DELETE';
 			$method = 'write';
 		} else {

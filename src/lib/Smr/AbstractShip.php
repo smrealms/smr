@@ -488,7 +488,7 @@ class AbstractShip {
 	}
 
 	public function hasMaxHardware(int $hardwareTypeID): bool {
-		return $this->getHardware($hardwareTypeID) == $this->shipType->getMaxHardware($hardwareTypeID);
+		return $this->getHardware($hardwareTypeID) === $this->shipType->getMaxHardware($hardwareTypeID);
 	}
 
 	public function getShields(): int {
@@ -930,10 +930,10 @@ class AbstractShip {
 			$this->getPlayer()->setUnderAttack(true);
 
 			$shieldDamage = $this->takeDamageToShields($damage['Shield']);
-			if (!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover'])) {
+			if (!$this->hasShields() && ($shieldDamage === 0 || $damage['Rollover'])) {
 				$cdMaxDamage = $damage['Armour'] - $shieldDamage;
 				$cdDamage = $this->takeDamageToCDs($cdMaxDamage);
-				if (!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover'])) {
+				if (!$this->hasCDs() && ($cdDamage === 0 || $damage['Rollover'])) {
 					$armourMaxDamage = $damage['Armour'] - $shieldDamage - $cdDamage;
 					$armourDamage = $this->takeDamageToArmour($armourMaxDamage);
 				}
@@ -962,7 +962,7 @@ class AbstractShip {
 		$shieldDamage = 0;
 		if (!$alreadyDead) {
 			$shieldDamage = $this->takeDamageToShields($damage['Shield']);
-			if (!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover'])) { //skip CDs if it's mines
+			if (!$this->hasShields() && ($shieldDamage === 0 || $damage['Rollover'])) { //skip CDs if it's mines
 				$armourMaxDamage = $damage['Armour'] - $shieldDamage;
 				$armourDamage = $this->takeDamageToArmour($armourMaxDamage);
 			}

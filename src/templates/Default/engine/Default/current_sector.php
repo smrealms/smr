@@ -32,13 +32,13 @@
 					echo $ForceRefreshMessage; ?><br /><?php
 				}
 				if (isset($AttackResults)) {
-					if ($AttackResultsType == 'PLAYER') {
+					if ($AttackResultsType === 'PLAYER') {
 						$this->includeTemplate('includes/TraderFullCombatResults.inc.php', ['TraderCombatResults' => $AttackResults, 'MinimalDisplay' => true]);
-					} elseif ($AttackResultsType == 'FORCE') {
+					} elseif ($AttackResultsType === 'FORCE') {
 						$this->includeTemplate('includes/ForceFullCombatResults.inc.php', ['FullForceCombatResults' => $AttackResults, 'MinimalDisplay' => true]);
-					} elseif ($AttackResultsType == 'PORT') {
+					} elseif ($AttackResultsType === 'PORT') {
 						$this->includeTemplate('includes/PortFullCombatResults.inc.php', ['FullPortCombatResults' => $AttackResults, 'MinimalDisplay' => true, 'AlreadyDestroyed' => false]);
-					} elseif ($AttackResultsType == 'PLANET') {
+					} elseif ($AttackResultsType === 'PLANET') {
 						$this->includeTemplate('includes/PlanetFullCombatResults.inc.php', ['FullPlanetCombatResults' => $AttackResults, 'MinimalDisplay' => true]);
 					} ?><br /><?php
 				}

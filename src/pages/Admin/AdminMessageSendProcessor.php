@@ -20,8 +20,8 @@ class AdminMessageSendProcessor extends AccountPageProcessor {
 		$expire = Request::getFloat('expire');
 		$game_id = $this->sendGameID;
 
-		if (Request::get('action') == 'Preview message') {
-			if ($game_id != AdminMessageSend::ALL_GAMES_ID) {
+		if (Request::get('action') === 'Preview message') {
+			if ($game_id !== AdminMessageSend::ALL_GAMES_ID) {
 				$sendAccountID = Request::getInt('account_id');
 			} else {
 				$sendAccountID = 0;
@@ -39,9 +39,9 @@ class AdminMessageSendProcessor extends AccountPageProcessor {
 		$db = Database::getInstance();
 
 		$receivers = [];
-		if ($game_id != AdminMessageSend::ALL_GAMES_ID) {
+		if ($game_id !== AdminMessageSend::ALL_GAMES_ID) {
 			$account_id = Request::getInt('account_id');
-			if ($account_id == 0) {
+			if ($account_id === 0) {
 				// Send to all players in the requested game
 				$dbResult = $db->read('SELECT account_id FROM player WHERE game_id = :game_id', [
 					'game_id' => $db->escapeNumber($game_id),

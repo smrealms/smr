@@ -36,7 +36,7 @@ class EmbassyProcessor extends PlayerPageProcessor {
 			create_error('You can\'t initiate more than 3 votes at a time!');
 		}
 
-		if ($type == 'PEACE') {
+		if ($type === 'PEACE') {
 			$dbResult = $db->read('SELECT 1 FROM race_has_voting
 						WHERE race_id_1 = :race_id_1 AND race_id_2 = :race_id_2 AND game_id = :game_id', [
 				'race_id_1' => $db->escapeNumber($race_id),
@@ -58,7 +58,7 @@ class EmbassyProcessor extends PlayerPageProcessor {
 		]);
 
 		// If voting for peace, the other race also has to vote
-		if ($type == 'PEACE') {
+		if ($type === 'PEACE') {
 			$db->replace('race_has_voting', [
 				'game_id' => $player->getGameID(),
 				'race_id_1' => $race_id,
@@ -71,13 +71,13 @@ class EmbassyProcessor extends PlayerPageProcessor {
 		// Send vote announcement to members of the player's council (war votes)
 		// or both races' councils (peace votes).
 		$councilMembers = Council::getRaceCouncil($player->getGameID(), $player->getRaceID());
-		if ($type == 'PEACE') {
+		if ($type === 'PEACE') {
 			$otherCouncil = Council::getRaceCouncil($player->getGameID(), $race_id);
 			$councilMembers = array_merge($councilMembers, $otherCouncil);
 		}
 
 		// Construct the message to be sent to the council members.
-		$color = ($type == 'PEACE' ? 'dgreen' : 'red');
+		$color = ($type === 'PEACE' ? 'dgreen' : 'red');
 		$type_fancy = "<span class=\"$color\">$type</span>";
 		$message = $player->getLevelName() . ' ' . $player->getBBLink()
 			. " has initiated a vote for $type_fancy with the [race=$race_id]!"
@@ -86,7 +86,7 @@ class EmbassyProcessor extends PlayerPageProcessor {
 
 		foreach ($councilMembers as $accountID) {
 			// don't send to the player who started the vote
-			if ($player->getAccountID() != $accountID) {
+			if ($player->getAccountID() !== $accountID) {
 				Player::sendMessageFromRace($player->getRaceID(), $player->getGameID(), $accountID, $message, $time);
 			}
 		}

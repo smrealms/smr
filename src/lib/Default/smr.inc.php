@@ -61,7 +61,7 @@ use Smr\WeightedRandom;
 
 function parseBoolean(mixed $check): bool {
 	// Only negative strings are not implicitly converted to the correct bool
-	if (is_string($check) && (strcasecmp($check, 'NO') == 0 || strcasecmp($check, 'FALSE') == 0)) {
+	if (is_string($check) && (strcasecmp($check, 'NO') === 0 || strcasecmp($check, 'FALSE') === 0)) {
 		return false;
 	}
 	return (bool)$check;
@@ -86,32 +86,32 @@ function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $defau
 	try {
 		switch ($tagName) {
 			case 'combatlog':
-				if ($action == BBCode::BBCODE_CHECK) {
+				if ($action === BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
 				}
 				$logID = (int)$default;
 				return linkCombatLog($logID);
 
 			case 'player':
-				if ($action == BBCode::BBCODE_CHECK) {
+				if ($action === BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
 				}
 				$playerID = (int)$default;
 				$bbPlayer = Player::getPlayerByPlayerID($playerID, $overrideGameID);
 				$showAlliance = isset($tagParams['showalliance']) ? parseBoolean($tagParams['showalliance']) : false;
-				if ($disableBBLinks === false && $overrideGameID == $session->getGameID()) {
+				if ($disableBBLinks === false && $overrideGameID === $session->getGameID()) {
 					return $bbPlayer->getLinkedDisplayName($showAlliance);
 				}
 				return $bbPlayer->getDisplayName($showAlliance);
 
 			case 'alliance':
-				if ($action == BBCode::BBCODE_CHECK) {
+				if ($action === BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
 				}
 				$allianceID = (int)$default;
 				$alliance = Alliance::getAlliance($allianceID, $overrideGameID);
-				if ($disableBBLinks === false && $overrideGameID == $session->getGameID()) {
-					if ($session->hasGame() && $alliance->getAllianceID() == $session->getPlayer()->getAllianceID()) {
+				if ($disableBBLinks === false && $overrideGameID === $session->getGameID()) {
+					if ($session->hasGame() && $alliance->getAllianceID() === $session->getPlayer()->getAllianceID()) {
 						$container = new AllianceMotd($alliance->getAllianceID());
 					} else {
 						$container = new AllianceRoster($alliance->getAllianceID());
@@ -123,12 +123,12 @@ function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $defau
 			case 'race':
 				$raceNameID = $default;
 				foreach (Race::getAllNames() as $raceID => $raceName) {
-					if ((is_numeric($raceNameID) && $raceNameID == $raceID)
-						|| $raceNameID == $raceName) {
-						if ($action == BBCode::BBCODE_CHECK) {
+					if ((is_numeric($raceNameID) && $raceNameID === $raceID)
+						|| $raceNameID === $raceName) {
+						if ($action === BBCode::BBCODE_CHECK) {
 							return true;
 						}
-						$linked = $disableBBLinks === false && $overrideGameID == $session->getGameID();
+						$linked = $disableBBLinks === false && $overrideGameID === $session->getGameID();
 						$player = $session->hasGame() ? $session->getPlayer() : null;
 						return AbstractPlayer::getColouredRaceNameOrDefault($raceID, $player, $linked);
 					}
@@ -136,7 +136,7 @@ function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $defau
 				break;
 
 			case 'servertimetouser':
-				if ($action == BBCode::BBCODE_CHECK) {
+				if ($action === BBCode::BBCODE_CHECK) {
 					return true;
 				}
 				$time = strtotime($default);
@@ -147,7 +147,7 @@ function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $defau
 				break;
 
 			case 'chess':
-				if ($action == BBCode::BBCODE_CHECK) {
+				if ($action === BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
 				}
 				$chessGameID = (int)$default;
@@ -155,7 +155,7 @@ function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $defau
 				return '<a href="' . $chessGame->getPlayGameHREF() . '">chess game (' . $chessGame->getChessGameID() . ')</a>';
 
 			case 'sector':
-				if ($action == BBCode::BBCODE_CHECK) {
+				if ($action === BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
 				}
 
@@ -164,14 +164,14 @@ function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $defau
 
 				if ($disableBBLinks === false
 					&& $session->hasGame()
-					&& $session->getGameID() == $overrideGameID
+					&& $session->getGameID() === $overrideGameID
 					&& Sector::sectorExists($overrideGameID, $sectorID)) {
 					return '<a href="' . Globals::getPlotCourseHREF($session->getPlayer()->getSectorID(), $sectorID) . '">' . $sectorTag . '</a>';
 				}
 				return $sectorTag;
 
 			case 'join_alliance':
-				if ($action == BBCode::BBCODE_CHECK) {
+				if ($action === BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
 				}
 				$allianceID = (int)$default;
@@ -182,7 +182,7 @@ function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $defau
 	} catch (Throwable) {
 		// If there's an error, we will silently display the original text
 	}
-	if ($action == BBCode::BBCODE_CHECK) {
+	if ($action === BBCode::BBCODE_CHECK) {
 		return false;
 	}
 	return htmlspecialchars($tagParams['_tag']) . $tagContent . htmlspecialchars($tagParams['_endtag']);
@@ -284,20 +284,20 @@ function get_colored_text_range(float $value, float $maxValue, string $text = nu
 	if ($text === null) {
 		$text = number_format($value);
 	}
-	if ($maxValue - $minValue == 0) {
+	if ($maxValue - $minValue === 0) {
 		return $text;
 	}
 	$normalisedValue = IRound(510 * max(0, min($maxValue, $value) - $minValue) / ($maxValue - $minValue)) - 255;
 	if ($normalisedValue < 0) {
 		$r_component = 'ff';
 		$g_component = dechex(255 + $normalisedValue);
-		if (strlen($g_component) == 1) {
+		if (strlen($g_component) === 1) {
 			$g_component = '0' . $g_component;
 		}
 	} elseif ($normalisedValue > 0) {
 		$g_component = 'ff';
 		$r_component = dechex(255 - $normalisedValue);
-		if (strlen($r_component) == 1) {
+		if (strlen($r_component) === 1) {
 			$r_component = '0' . $r_component;
 		}
 	} else {
@@ -332,7 +332,7 @@ function word_filter(string $string): string {
 // choose correct pluralization based on amount
 function pluralise(int|float $amount, string $word, bool $includeAmount = true): string {
 	$result = $word;
-	if ($amount != 1) {
+	if ($amount !== 1) {
 		$result .= 's';
 	}
 	if ($includeAmount) {
@@ -383,7 +383,7 @@ function do_voodoo(): never {
 
 				// Reload player now that we have a lock.
 				$player = $session->getPlayer(true);
-				if ($player->getSectorID() != $sectorID) {
+				if ($player->getSectorID() !== $sectorID) {
 					// Player sector changed after reloading! Release lock and try again.
 					$lock->release();
 					do_voodoo();
@@ -428,7 +428,7 @@ function do_voodoo(): never {
 		$template->assign('ThisShip', $player->getShip());
 	}
 	$template->assign('ThisAccount', $account);
-	if ($account->getCssLink() != null) {
+	if ($account->getCssLink() !== null) {
 		$template->assign('ExtraCSSLink', $account->getCssLink());
 	}
 	doSkeletonAssigns($template);
@@ -691,7 +691,7 @@ function in_time_or_now(int $seconds, bool $short = false): string {
  * If seconds is <60, will prefix "less than" or "<" (HTML-safe).
  */
 function format_time(int $seconds, bool $short = false): string {
-	if ($seconds == 0) {
+	if ($seconds === 0) {
 		return 'now';
 	}
 
@@ -735,7 +735,7 @@ function format_time(int $seconds, bool $short = false): string {
 		}
 	}
 
-	if (count($parts) == 1) {
+	if (count($parts) === 1) {
 		$result = $parts[0];
 	} else {
 		// e.g. 5h, 10m and 30s

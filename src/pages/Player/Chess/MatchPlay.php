@@ -22,7 +22,7 @@ class MatchPlay extends PlayerPage {
 		$template->assign('ChessGame', $chessGame);
 
 		// Board orientation depends on the player's color.
-		$playerIsWhite = $chessGame->getWhiteID() == $player->getAccountID();
+		$playerIsWhite = $chessGame->getWhiteID() === $player->getAccountID();
 		$board = $chessGame->getBoard()->getBoardDisplay($playerIsWhite);
 		$template->assign('Board', $board);
 

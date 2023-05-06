@@ -58,7 +58,7 @@ try {
 	}
 
 	$pass_verify = Request::get('pass_verify');
-	if ($password != $pass_verify) {
+	if ($password !== $pass_verify) {
 		create_error('The passwords you entered do not match.');
 	}
 
@@ -67,7 +67,7 @@ try {
 	// Sanity check email address
 	Account::checkEmail($email);
 
-	if ($login == $password) {
+	if ($login === $password) {
 		create_error('Your login and password cannot be the same!');
 	}
 

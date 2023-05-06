@@ -33,7 +33,7 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 
 		$alliance = Alliance::getAlliance($alliance_id, $player->getGameID());
 		$action = Request::get('action');
-		if ($action == 'Deposit') {
+		if ($action === 'Deposit') {
 			if ($player->getCredits() < $amount) {
 				create_error('You don\'t own that much money!');
 			}
@@ -55,7 +55,7 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 				'alliance_id' => $db->escapeNumber($alliance_id),
 				'game_id' => $db->escapeNumber($player->getGameID()),
 			];
-			if ($alliance_id == $player->getAllianceID()) {
+			if ($alliance_id === $player->getAllianceID()) {
 				$sqlParams['role_id'] = $db->escapeNumber($player->getAllianceRole($alliance_id));
 				$dbResult = $db->read($query . 'role_id = :role_id', $sqlParams);
 			} else {

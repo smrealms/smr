@@ -18,7 +18,7 @@ class NewsReadAdvancedProcessor extends AccountPageProcessor {
 		$submit = Request::get('submit');
 
 		$db = Database::getInstance();
-		if ($submit == 'Search For Player') {
+		if ($submit === 'Search For Player') {
 			$playerName = Request::get('playerName');
 			$dbResult = $db->read('SELECT account_id FROM player WHERE player_name LIKE :player_name_like AND game_id = :game_id', [
 				'player_name_like' => $db->escapeString('%' . $playerName . '%'),
@@ -29,7 +29,7 @@ class NewsReadAdvancedProcessor extends AccountPageProcessor {
 				$IDs[] = $dbRecord->getInt('account_id');
 			}
 			$container = new NewsReadAdvanced($this->gameID, $submit, label: $playerName, accountIDs: $IDs);
-		} elseif ($submit == 'Search For Players') {
+		} elseif ($submit === 'Search For Players') {
 			$playerName1 = Request::get('player1');
 			$playerName2 = Request::get('player2');
 			$dbResult = $db->read('SELECT account_id FROM player WHERE (player_name LIKE :player_name_like_1 OR player_name LIKE :player_name_like_2) AND game_id = :game_id', [
@@ -43,10 +43,10 @@ class NewsReadAdvancedProcessor extends AccountPageProcessor {
 			}
 			$label = $playerName1 . ' vs. ' . $playerName2;
 			$container = new NewsReadAdvanced($this->gameID, $submit, label: $label, accountIDs: $IDs);
-		} elseif ($submit == 'Search For Alliance') {
+		} elseif ($submit === 'Search For Alliance') {
 			$allianceID = Request::getInt('allianceID');
 			$container = new NewsReadAdvanced($this->gameID, $submit, allianceIDs: [$allianceID]);
-		} elseif ($submit == 'Search For Alliances') {
+		} elseif ($submit === 'Search For Alliances') {
 			$allianceID1 = Request::getInt('alliance1');
 			$allianceID2 = Request::getInt('alliance2');
 			$container = new NewsReadAdvanced($this->gameID, $submit, allianceIDs: [$allianceID1, $allianceID2]);

@@ -36,7 +36,7 @@ class LogConsoleAnonBank extends AccountPage {
 				'amount' => number_format($dbRecord->getInt('amount')),
 				'date' => date($account->getDateTimeFormat(), $dbRecord->getInt('time')),
 				'type' => $transaction,
-				'color' => $transaction == 'payment' ? 'tomato' : 'green',
+				'color' => $transaction === 'payment' ? 'tomato' : 'green',
 			];
 		}
 		$template->assign('AnonLogs', $anon_logs);

@@ -17,7 +17,7 @@ class PersonalBankProcessor extends PlayerPageProcessor {
 			create_error('You must actually enter an amount > 0!');
 		}
 
-		if ($action == 'Deposit') {
+		if ($action === 'Deposit') {
 			if ($player->getCredits() < $amount) {
 				create_error('You don\'t have that much money on your ship!');
 			}

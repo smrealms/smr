@@ -110,7 +110,7 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 					// Since we only know the location name, we must search for it
 					$found = false;
 					foreach ($allLocs as $loc) {
-						if ($locName == inify($loc->getName())) {
+						if ($locName === inify($loc->getName())) {
 							$editSector->addLocation($loc);
 							$found = true;
 							break;

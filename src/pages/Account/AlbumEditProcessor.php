@@ -28,7 +28,7 @@ function isUrlReachable(string $url): bool {
 	curl_close($ch);
 
 	$statusClass = floor($statusCode / 100);
-	return $statusClass == 2 || $statusClass == 3;
+	return $statusClass === 2 || $statusClass === 3;
 }
 
 class AlbumEditProcessor extends AccountPageProcessor {
@@ -39,7 +39,7 @@ class AlbumEditProcessor extends AccountPageProcessor {
 
 		// get website (and validate it)
 		$website = Request::get('website');
-		if ($website != '') {
+		if ($website !== '') {
 			// add http:// if missing
 			if (!preg_match('=://=', $website)) {
 				$website = 'http://' . $website;
@@ -59,7 +59,7 @@ class AlbumEditProcessor extends AccountPageProcessor {
 
 		// check if we have an image
 		$noPicture = true;
-		if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
+		if ($_FILES['photo']['error'] === UPLOAD_ERR_OK) {
 			$noPicture = false;
 			// get dimensions
 			$size = getimagesize($_FILES['photo']['tmp_name']);

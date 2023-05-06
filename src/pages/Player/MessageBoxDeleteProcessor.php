@@ -15,7 +15,7 @@ class MessageBoxDeleteProcessor extends PlayerPageProcessor {
 	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 
-		if ($this->folderID == MSG_SENT) {
+		if ($this->folderID === MSG_SENT) {
 			$db->update(
 				'message',
 				['sender_delete' => $db->escapeBoolean(true)],

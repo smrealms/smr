@@ -32,7 +32,7 @@ class ComputerSharing extends AccountPage {
 
 			//make sure this is good data.
 			$cookieVersion = array_shift($accountIDs);
-			if ($cookieVersion != MULTI_CHECKING_COOKIE_VERSION) {
+			if ($cookieVersion !== MULTI_CHECKING_COOKIE_VERSION) {
 				continue;
 			}
 

@@ -45,7 +45,7 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 			create_error('Where do you want to go today?');
 		}
 
-		if ($player->getSectorID() == $target) {
+		if ($player->getSectorID() === $target) {
 			create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*you\'re real smart*cough*');
 		}
 
@@ -54,7 +54,7 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 		}
 
 		// If the Calculate Turn Cost button was pressed
-		if (Request::get('action', '') == 'Calculate Turn Cost') {
+		if (Request::get('action', '') === 'Calculate Turn Cost') {
 			$container = new SectorJumpCalculate($target);
 			$container->go();
 		}

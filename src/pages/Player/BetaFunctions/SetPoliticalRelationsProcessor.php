@@ -11,7 +11,7 @@ class SetPoliticalRelationsProcessor extends BetaFunctionsPageProcessor {
 	public function buildBetaFunctionsProcessor(AbstractPlayer $player): void {
 		$amount = Request::getInt('amount');
 		$race = Request::getInt('race');
-		if ($player->getRaceID() == $race) {
+		if ($player->getRaceID() === $race) {
 			create_error('You cannot change race relations with your own race.');
 		}
 		$db = Database::getInstance();

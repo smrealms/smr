@@ -36,7 +36,7 @@ class MessageView extends PlayerPage {
 		$db = Database::getInstance();
 
 		$messageBox = [];
-		if ($folderID == MSG_SENT) {
+		if ($folderID === MSG_SENT) {
 			$whereClause = 'game_id = :game_id
 							AND sender_id = :sender_id
 							AND message_type_id = :message_type_id
@@ -82,7 +82,7 @@ class MessageView extends PlayerPage {
 		$messageBox['Name'] = Messages::getMessageTypeNames($folderID);
 		$template->assign('PageTopic', 'Viewing ' . $messageBox['Name']);
 
-		if ($messageBox['Type'] == MSG_GLOBAL || $messageBox['Type'] == MSG_SCOUT) {
+		if ($messageBox['Type'] === MSG_GLOBAL || $messageBox['Type'] === MSG_SCOUT) {
 			$container = new MessagePreferenceProcessor($folderID);
 			$template->assign('PreferencesFormHREF', $container->href());
 		}
@@ -102,7 +102,7 @@ class MessageView extends PlayerPage {
 		$messageBox['NumberMessages'] = $dbResult->getNumRecords();
 
 		// Group scout messages if they wouldn't fit on a single page
-		if ($folderID == MSG_SCOUT && !$this->showAll && $messageBox['TotalMessages'] > $player->getScoutMessageGroupLimit()) {
+		if ($folderID === MSG_SCOUT && !$this->showAll && $messageBox['TotalMessages'] > $player->getScoutMessageGroupLimit()) {
 			// get rid of all old scout messages (>48h)
 			$db->write('DELETE FROM message WHERE expire_time < :now AND message_type_id = :message_type_id', [
 				'now' => $db->escapeNumber(Epoch::time()),
@@ -125,7 +125,7 @@ class MessageView extends PlayerPage {
 		$messageBox['Messages'] = $messages;
 
 		// This should really be part of a (pre)processing page
-		if ($page == 0 && !$session->ajax) {
+		if ($page === 0 && !$session->ajax) {
 			$player->setMessagesRead($folderID);
 		}
 
@@ -224,7 +224,7 @@ function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $
 	$message['SendTime'] = date($displayAccount->getDateTimeFormat(), $send_time);
 
 	// Display the sender (except for scout messages)
-	if ($type != MSG_SCOUT) {
+	if ($type !== MSG_SCOUT) {
 		$sender = Messages::getMessagePlayer($sender_id, $game_id, $type);
 		if ($sender instanceof AbstractPlayer) {
 			$message['Sender'] = $sender;
@@ -232,7 +232,7 @@ function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $
 			$message['SenderDisplayName'] = create_link($container, $sender->getDisplayName());
 
 			// Add actions that we can take on messages sent by other players.
-			if ($type != MSG_SENT) {
+			if ($type !== MSG_SENT) {
 				$container = new MessageReportConfirm($type, $message_id);
 				$message['ReportHref'] = $container->href();
 
@@ -247,7 +247,7 @@ function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $
 		}
 	}
 
-	if ($type == MSG_SENT) {
+	if ($type === MSG_SENT) {
 		$receiver = Player::getPlayer($receiver_id, $game_id);
 		$container = new SearchForTraderResult($receiver->getPlayerID());
 		$message['ReceiverDisplayName'] = create_link($container, $receiver->getDisplayName());

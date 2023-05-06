@@ -28,7 +28,7 @@ class ChatSharingProcessor extends PlayerPageProcessor {
 				error_on_page('You must specify a Player ID to share with!');
 			}
 
-			if ($addPlayerID == $player->getPlayerID()) {
+			if ($addPlayerID === $player->getPlayerID()) {
 				error_on_page('You do not need to share with yourself!');
 			}
 

@@ -34,7 +34,7 @@ class PreviousGameAllianceDetail extends AccountPage {
 		foreach ($alliance->getMembers() as $player) {
 			$players[] = [
 				'leader' => $player->isAllianceLeader() ? '*' : '',
-				'bold' => $player->getAccountID() == $account->getAccountID() ? 'class="bold"' : '',
+				'bold' => $player->getAccountID() === $account->getAccountID() ? 'class="bold"' : '',
 				'player_name' => $player->getDisplayName(),
 				'experience' => $player->getExperience(),
 				'alignment' => $player->getAlignment(),

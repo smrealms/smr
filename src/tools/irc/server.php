@@ -99,7 +99,7 @@ function server_msg_318($fp, string $rdata): bool {
 		foreach (CallbackEvent::getAll() as $event) {
 
 			// is that a callback for our nick?
-			if ($event->type == 'MSG_318' && $event->nick == $nick) {
+			if ($event->type === 'MSG_318' && $event->nick === $nick) {
 
 				CallbackEvent::remove($event);
 

@@ -46,7 +46,7 @@ You are currently building: <?php
 				<span <?php if ($ThisPlayer->getCredits() < $Structure->creditCost()) { ?> class="red" <?php } ?>><?php echo number_format($Structure->creditCost()); ?> credits</span><?php
 
 				foreach ($Structure->hardwareCost() as $hardwareID) {
-					if ($hardwareID == HARDWARE_SCANNER) { ?>
+					if ($hardwareID === HARDWARE_SCANNER) { ?>
 						<br /><span <?php if (!$ThisShip->hasScanner()) { ?> class="red" <?php } ?>>1 Scanner</span><?php
 					}
 				} ?>

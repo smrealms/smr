@@ -130,7 +130,7 @@ class NpcActor {
 			$transaction = $this->tradeRoute->getCurrentTransaction();
 			$targetSectorID = $this->tradeRoute->getCurrentSectorID();
 
-			if ($targetSectorID != $player->getSectorID()) {
+			if ($targetSectorID !== $player->getSectorID()) {
 				// We're not at the right port yet, let's plot to it.
 				debug('Plot To ' . $transaction->value . ': ' . $targetSectorID);
 				return plotToSector($player, $targetSectorID);
@@ -144,7 +144,7 @@ class NpcActor {
 				throw new ForwardAction();
 			}
 
-			if ($transaction == TransactionType::Buy && $player->getShip()->hasCargo()) {
+			if ($transaction === TransactionType::Buy && $player->getShip()->hasCargo()) {
 				// We're here to buy, but we have cargo already
 				debug('Dump Goods');
 				return dumpCargo($player);
@@ -185,7 +185,7 @@ class NpcActor {
 			}
 		}
 
-		if (count($this->allTradeRoutes) == 0) {
+		if (count($this->allTradeRoutes) === 0) {
 			$this->tradeRoute = null;
 			return;
 		}

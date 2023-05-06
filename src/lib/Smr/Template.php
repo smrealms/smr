@@ -137,13 +137,13 @@ class Template {
 	 * have already started filling out).
 	 */
 	protected function checkDisableAJAX(string $html): bool {
-		return preg_match('/<input (?![^>]*(submit|hidden|image))/i', $html) != 0;
+		return preg_match('/<input (?![^>]*(submit|hidden|image))/i', $html) !== 0;
 	}
 
 	protected function doDamageTypeReductionDisplay(int &$damageTypes): void {
-		if ($damageTypes == 3) {
+		if ($damageTypes === 3) {
 			echo ', ';
-		} elseif ($damageTypes == 2) {
+		} elseif ($damageTypes === 2) {
 			echo ' and ';
 		}
 		$damageTypes--;
@@ -158,7 +158,7 @@ class Template {
 	 * EVAL is special (well, will be when needed and implemented in the javascript).
 	 */
 	public function addJavascriptForAjax(string $varName, mixed $obj): string {
-		if ($varName == 'EVAL') {
+		if ($varName === 'EVAL') {
 			if (!isset($this->ajaxJS['EVAL'])) {
 				return $this->ajaxJS['EVAL'] = $obj;
 			}

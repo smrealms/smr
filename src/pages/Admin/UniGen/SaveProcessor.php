@@ -19,7 +19,7 @@ use Smr\Sector;
  * @param callable $condition True if sector is valid
  */
 function findValidSector(array $sectors, callable $condition): Sector {
-	if (count($sectors) == 0) {
+	if (count($sectors) === 0) {
 		throw new UserError('There are no eligible sectors for this action!');
 	}
 	$key = array_rand($sectors);
@@ -91,7 +91,7 @@ class SaveProcessor extends AccountPageProcessor {
 	public function build(Account $account): never {
 		$submit = Request::get('submit');
 
-		if ($submit == 'Redo Connections') {
+		if ($submit === 'Redo Connections') {
 			$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 			$connectivity = Request::getFloat('connect');
 			if (!$galaxy->setConnectivity($connectivity)) {
@@ -100,7 +100,7 @@ class SaveProcessor extends AccountPageProcessor {
 				$message = '<span class="green">Success</span> : Regenerated connectivity with ' . $connectivity . '% target.';
 			}
 			Sector::saveSectors();
-		} elseif ($submit == 'Create Locations') {
+		} elseif ($submit === 'Create Locations') {
 			$galSectors = Sector::getGalaxySectors($this->gameID, $this->galaxyID);
 			foreach ($galSectors as $galSector) {
 				$galSector->removeAllLocations();
@@ -119,7 +119,7 @@ class SaveProcessor extends AccountPageProcessor {
 				}
 			}
 			$message = '<span class="green">Success</span> : Succesfully added locations.';
-		} elseif ($submit == 'Create Warps') {
+		} elseif ($submit === 'Create Warps') {
 			//get all warp info from all gals, some need to be removed, some need to be added
 			$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 			$galSectors = $galaxy->getSectors();
@@ -159,7 +159,7 @@ class SaveProcessor extends AccountPageProcessor {
 			Sector::saveSectors();
 			$message = '<span class="green">Success</span> : Succesfully added warps.';
 			(new CreateWarps($this->gameID, $this->galaxyID, $message))->go();
-		} elseif ($submit == 'Create Planets') {
+		} elseif ($submit === 'Create Planets') {
 			$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 			$galSectors = $galaxy->getSectors();
 			foreach ($galSectors as $galSector) {
@@ -179,7 +179,7 @@ class SaveProcessor extends AccountPageProcessor {
 				}
 			}
 			$message = '<span class="green">Success</span> : Succesfully added planets.';
-		} elseif ($submit == 'Create Ports') {
+		} elseif ($submit === 'Create Ports') {
 			$numLevelPorts = [];
 			$maxPortLevel = Port::getMaxLevelByGame($this->gameID);
 			for ($i = 1; $i <= $maxPortLevel; $i++) {
@@ -197,7 +197,7 @@ class SaveProcessor extends AccountPageProcessor {
 				}
 			}
 			$assignedPorts = array_sum($numRacePorts);
-			if ($totalRaceDist == 100 || $totalPorts == 0) {
+			if ($totalRaceDist === 100 || $totalPorts === 0) {
 				$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 				$galSectors = $galaxy->getSectors();
 				foreach ($galSectors as $galSector) {
@@ -223,7 +223,7 @@ class SaveProcessor extends AccountPageProcessor {
 
 						$raceID = array_rand($numRacePorts);
 						$numRacePorts[$raceID]--;
-						if ($numRacePorts[$raceID] == 0) {
+						if ($numRacePorts[$raceID] === 0) {
 							unset($numRacePorts[$raceID]);
 						}
 						$port = $galSector->createPort();

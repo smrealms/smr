@@ -217,7 +217,7 @@ class Weapon extends AbstractWeapon {
 
 	public function getModifiedPlanetAccuracy(Planet $planet): float {
 		$modifiedAccuracy = $this->getBaseAccuracy();
-		if ($this->getWeaponTypeID() == WEAPON_PLANET_TURRET) {
+		if ($this->getWeaponTypeID() === WEAPON_PLANET_TURRET) {
 			$modifiedAccuracy += $planet->getLevel() / 2;
 		} else {
 			$modifiedAccuracy += $planet->getAccuracyBonus();

@@ -22,7 +22,7 @@ class AllianceJoinProcessor extends PlayerPageProcessor {
 		}
 
 		// Open recruitment implies an empty password
-		if (Request::get('password', '') != $alliance->getPassword()) {
+		if (Request::get('password', '') !== $alliance->getPassword()) {
 			create_error('Incorrect Password!');
 		}
 

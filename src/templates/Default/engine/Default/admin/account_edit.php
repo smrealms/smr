@@ -170,7 +170,7 @@ use Smr\Epoch;
 					Existing Reason: <select name="reason_pre_select" onchange="go()">
 						<option value="0">[Please Select]</option><?php
 						foreach ($BanReasons as $ReasonID => $BanReason) { ?>
-							<option value="<?php echo $ReasonID; ?>"<?php if ($Disabled !== false && $ReasonID == $Disabled['ReasonID']) { ?> selected="selected"<?php } ?>><?php echo $BanReason; ?></option><?php
+							<option value="<?php echo $ReasonID; ?>"<?php if ($Disabled !== false && $ReasonID === $Disabled['ReasonID']) { ?> selected="selected"<?php } ?>><?php echo $BanReason; ?></option><?php
 						} ?>
 					</select>
 				</p>

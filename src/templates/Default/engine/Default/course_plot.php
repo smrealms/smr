@@ -36,7 +36,7 @@ $this->includeTemplate('includes/JumpDrive.inc.php'); ?>
 <form class="standard" id="SelectXTypeForm" method="POST" action="<?php echo $PlotToNearestHREF; ?>">
 	<select name="xtype" onchange="this.form.submit()"><?php
 	foreach ($AllXTypes as $EachXType) {
-		?><option value="<?php echo $EachXType->value; ?>"<?php if (isset($XType) && $EachXType == $XType) { ?> selected="selected"<?php } ?>><?php echo $EachXType->value; ?></option><?php
+		?><option value="<?php echo $EachXType->value; ?>"<?php if (isset($XType) && $EachXType === $XType) { ?> selected="selected"<?php } ?>><?php echo $EachXType->value; ?></option><?php
 	} ?>
 	</select>&nbsp;
 	<input type="submit" value="Select" />
