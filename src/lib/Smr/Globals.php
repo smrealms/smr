@@ -80,7 +80,7 @@ class Globals {
 		if (!isset(self::$HIDDEN_PLAYERS)) {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM hidden_players');
-			self::$HIDDEN_PLAYERS = [0]; //stop errors
+			self::$HIDDEN_PLAYERS = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				self::$HIDDEN_PLAYERS[] = $dbRecord->getInt('account_id');
 			}
