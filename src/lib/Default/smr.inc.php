@@ -123,7 +123,7 @@ function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $defau
 			case 'race':
 				$raceNameID = $default;
 				foreach (Race::getAllNames() as $raceID => $raceName) {
-					if ((is_numeric($raceNameID) && $raceNameID === $raceID)
+					if ((is_numeric($raceNameID) && (int)$raceNameID === $raceID)
 						|| $raceNameID === $raceName) {
 						if ($action === BBCode::BBCODE_CHECK) {
 							return true;
@@ -280,7 +280,7 @@ function create_submit_link(Page $container, string $text): string {
 	return '<a href="' . $container->href() . '" class="submitStyle">' . $text . '</a>';
 }
 
-function get_colored_text_range(float $value, float $maxValue, string $text = null, float $minValue = 0): string {
+function get_colored_text_range(float $value, int $maxValue, string $text = null, int $minValue = 0): string {
 	if ($text === null) {
 		$text = number_format($value);
 	}

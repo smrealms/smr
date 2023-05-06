@@ -2125,7 +2125,7 @@ abstract class AbstractPlayer {
 		if ($amount < 0) {
 			throw new Exception('Trying to increase negative HOF: ' . implode(':', $typeList));
 		}
-		if ($amount === 0) {
+		if ($amount === 0.0) {
 			return;
 		}
 		$this->setHOF($this->getHOF($typeList) + $amount, $typeList, $visibility);
@@ -2138,7 +2138,7 @@ abstract class AbstractPlayer {
 		if ($amount < 0) {
 			throw new Exception('Trying to decrease negative HOF: ' . implode(':', $typeList));
 		}
-		if ($amount === 0) {
+		if ($amount === 0.0) {
 			return;
 		}
 		$this->setHOF($this->getHOF($typeList) - $amount, $typeList, $visibility);
@@ -2153,7 +2153,7 @@ abstract class AbstractPlayer {
 			return;
 		}
 		if ($amount < 0) {
-			$amount = 0;
+			throw new Exception('Cannot set negative HOF stats');
 		}
 		if ($this->getHOF($typeList) === $amount) {
 			return;

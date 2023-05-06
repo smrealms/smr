@@ -193,7 +193,7 @@ class SaveProcessor extends AccountPageProcessor {
 				$racePercent = Request::getInt('race' . $raceID);
 				if (!empty($racePercent)) {
 					$totalRaceDist += $racePercent;
-					$numRacePorts[$raceID] = ceil($racePercent / 100 * $totalPorts);
+					$numRacePorts[$raceID] = ICeil($racePercent / 100 * $totalPorts);
 				}
 			}
 			$assignedPorts = array_sum($numRacePorts);

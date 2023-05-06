@@ -1284,7 +1284,7 @@ class Planet {
 		$numChances = floor($damage / self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE);
 		for ($i = 0; $i < $numChances; $i++) {
 			// Stop if the planet has no more buildlings
-			if ($this->getLevel() === 0) {
+			if ($this->getLevel() === 0.0) {
 				break;
 			}
 			//15% chance to destroy something
