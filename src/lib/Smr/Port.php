@@ -1450,6 +1450,18 @@ class Port {
 		return $attackers;
 	}
 
+	/**
+	 * Identifies if the given $player is a credited attacker of this port.
+	 */
+	public function isCreditedAttacker(AbstractPlayer $player): bool {
+		foreach (self::getAttackersToCredit() as $attacker) {
+			if ($player->equals($attacker)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	protected function creditCurrentAttackersForKill(): void {
 		//get all players involved for HoF
 		$attackers = $this->getAttackersToCredit();

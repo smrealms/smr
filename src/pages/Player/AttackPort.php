@@ -30,7 +30,7 @@ class AttackPort extends PlayerPage {
 			$template->assign('CreditedAttacker', true);
 		} else {
 			$template->assign('AlreadyDestroyed', true);
-			$template->assign('CreditedAttacker', in_array($player, $port->getAttackersToCredit()));
+			$template->assign('CreditedAttacker', $port->isCreditedAttacker($player));
 		}
 		$template->assign('MinimalDisplay', false);
 
