@@ -40,7 +40,7 @@ class PhpFileInspectionTest extends TestCase {
 		}
 
 		$errors = $results->getFailures();
-		$this->assertEmpty($errors, print_r($errors, true));
+		self::assertEmpty($errors, print_r($errors, true));
 	}
 
 }

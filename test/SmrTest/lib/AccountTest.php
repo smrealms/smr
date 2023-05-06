@@ -27,10 +27,10 @@ class AccountTest extends BaseIntegrationSpec {
 		$tz = 9;
 		$referral = 0;
 		$account = Account::createAccount($login, $password, $email, $tz, $referral);
-		$this->assertSame($login, $account->getLogin());
-		$this->assertSame($email, $account->getEmail());
-		$this->assertSame($tz, $account->getOffset());
-		$this->assertSame($referral, $account->getReferrerID());
+		self::assertSame($login, $account->getLogin());
+		self::assertSame($email, $account->getEmail());
+		self::assertSame($tz, $account->getOffset());
+		self::assertSame($referral, $account->getReferrerID());
 	}
 
 	public function test_createAccount_throws_if_referrer_does_not_exist(): void {
@@ -47,13 +47,13 @@ class AccountTest extends BaseIntegrationSpec {
 		// When the account is retrieved by its ID
 		$account = Account::getAccount($original->getAccountID(), $forceUpdate);
 		// Without forceUpdate, the two objects should be the same in memory
-		$this->assertSame($original, $account);
+		self::assertSame($original, $account);
 
 		// With forceUpdate, the objects should be identical, but not the same
 		$forceUpdate = true;
 		$account = Account::getAccount($original->getAccountID(), $forceUpdate);
-		$this->assertNotSame($original, $account);
-		$this->assertEquals($original, $account);
+		self::assertNotSame($original, $account);
+		self::assertEquals($original, $account);
 	}
 
 	public function test_get_account_by_account_id_no_account_found_throws_exception(): void {
@@ -69,7 +69,7 @@ class AccountTest extends BaseIntegrationSpec {
 		// When retrieving account by login
 		$account = Account::getAccountByLogin($original->getLogin());
 		// Then the record is found
-		$this->assertSame($original, $account);
+		self::assertSame($original, $account);
 	}
 
 	public function test_get_account_by_login_throws_when_no_login_provided(): void {
@@ -92,7 +92,7 @@ class AccountTest extends BaseIntegrationSpec {
 		// When retrieving account by HoF name
 		$account = Account::getAccountByLogin($original->getHofName());
 		// Then the record is found
-		$this->assertSame($original, $account);
+		self::assertSame($original, $account);
 	}
 
 	public function test_get_account_by_hof_name_throws_when_no_hof_name_provided(): void {
@@ -115,7 +115,7 @@ class AccountTest extends BaseIntegrationSpec {
 		// When retrieving account by email
 		$account = Account::getAccountByEmail($original->getEmail());
 		// Then the record is found
-		$this->assertSame($original, $account);
+		self::assertSame($original, $account);
 	}
 
 	public function test_get_account_by_email_throws_when_no_email_provided(): void {
@@ -141,7 +141,7 @@ class AccountTest extends BaseIntegrationSpec {
 		// When retrieving account by discord
 		$account = Account::getAccountByDiscordId($original->getDiscordId(), true);
 		// Then the record is found
-		$this->assertSame($original->getAccountID(), $account->getAccountID());
+		self::assertSame($original->getAccountID(), $account->getAccountID());
 	}
 
 	public function test_get_account_by_discord_throws_when_no_discord_provided(): void {
@@ -167,7 +167,7 @@ class AccountTest extends BaseIntegrationSpec {
 		// When retrieving account by irc
 		$account = Account::getAccountByIrcNick($original->getIrcNick(), true);
 		// Then the record is found
-		$this->assertSame($original->getAccountID(), $account->getAccountID());
+		self::assertSame($original->getAccountID(), $account->getAccountID());
 	}
 
 	public function test_get_account_by_irc_throws_when_no_irc_provided(): void {
@@ -193,7 +193,7 @@ class AccountTest extends BaseIntegrationSpec {
 		// When retrieving account by social
 		$account = Account::getAccountBySocialId($socialId, true);
 		// Then the record is found
-		$this->assertSame($original->getAccountID(), $account->getAccountID());
+		self::assertSame($original->getAccountID(), $account->getAccountID());
 	}
 
 	public function test_get_account_by_social_throws_when_no_record_found(): void {

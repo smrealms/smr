@@ -51,20 +51,20 @@ class RequestTest extends TestCase {
 
 	public function test_has(): void {
 		// An index that exists
-		$this->assertTrue(Request::has('str'));
+		self::assertTrue(Request::has('str'));
 		// An index that doesn't exist
-		$this->assertFalse(Request::has('noexist'));
+		self::assertFalse(Request::has('noexist'));
 	}
 
 	//------------------------------------------------------------------------
 
 	public function test_getBool(): void {
 		// An index that exists, with default
-		$this->assertTrue(Request::getBool('bool', false));
+		self::assertTrue(Request::getBool('bool', false));
 		// An index that exists, no default
-		$this->assertTrue(Request::getBool('bool'));
+		self::assertTrue(Request::getBool('bool'));
 		// An index that doesn't exist, with default
-		$this->assertFalse(Request::getBool('noexist', false));
+		self::assertFalse(Request::getBool('noexist', false));
 	}
 
 	public function test_getBool_no_exist_exception(): void {
@@ -98,11 +98,11 @@ class RequestTest extends TestCase {
 
 	public function test_getInt(): void {
 		// An index that exists, with default
-		$this->assertSame(2, Request::getInt('int', 3));
+		self::assertSame(2, Request::getInt('int', 3));
 		// An index that exists, no default
-		$this->assertSame(2, Request::getInt('int'));
+		self::assertSame(2, Request::getInt('int'));
 		// An index that doesn't exist, with default
-		$this->assertSame(3, Request::getInt('noexist', 3));
+		self::assertSame(3, Request::getInt('noexist', 3));
 	}
 
 	public function test_getInt_exception(): void {
@@ -116,11 +116,11 @@ class RequestTest extends TestCase {
 
 	public function test_getFloat(): void {
 		// An index that exists, with default
-		$this->assertSame(3.14, Request::getFloat('float', 2.0));
+		self::assertSame(3.14, Request::getFloat('float', 2.0));
 		// An index that exists, no default
-		$this->assertSame(3.14, Request::getFloat('float'));
+		self::assertSame(3.14, Request::getFloat('float'));
 		// An index that doesn't exist, with default
-		$this->assertSame(3.14, Request::getFloat('noexist', 3.14));
+		self::assertSame(3.14, Request::getFloat('noexist', 3.14));
 	}
 
 	public function test_getFloat_exception(): void {
@@ -134,11 +134,11 @@ class RequestTest extends TestCase {
 
 	public function test_getArray(): void {
 		// An index that exists, with default
-		$this->assertSame(['a', 'b', 'c'], Request::getArray('array_str', []));
+		self::assertSame(['a', 'b', 'c'], Request::getArray('array_str', []));
 		// An index that exists, no default
-		$this->assertSame(['a', 'b', 'c'], Request::getArray('array_str'));
+		self::assertSame(['a', 'b', 'c'], Request::getArray('array_str'));
 		// An index that doesn't exist, with default
-		$this->assertSame(['a'], Request::getArray('noexist', ['a']));
+		self::assertSame(['a'], Request::getArray('noexist', ['a']));
 	}
 
 	public function test_getArray_missing(): void {
@@ -159,11 +159,11 @@ class RequestTest extends TestCase {
 
 	public function test_getIntArray(): void {
 		// An index that exists, with default
-		$this->assertSame([1, 2, 3], Request::getIntArray('array_int', []));
+		self::assertSame([1, 2, 3], Request::getIntArray('array_int', []));
 		// An index that exists, no default
-		$this->assertSame([1, 2, 3], Request::getIntArray('array_int'));
+		self::assertSame([1, 2, 3], Request::getIntArray('array_int'));
 		// An index that doesn't exist, with default
-		$this->assertSame([1], Request::getIntArray('noexist', [1]));
+		self::assertSame([1], Request::getIntArray('noexist', [1]));
 	}
 
 	public function test_getIntArray_missing(): void {
@@ -184,13 +184,13 @@ class RequestTest extends TestCase {
 
 	public function test_get(): void {
 		// An index that exists, with default
-		$this->assertSame('ing', Request::get('str', 'foo'));
+		self::assertSame('ing', Request::get('str', 'foo'));
 		// An index that exists, no default
-		$this->assertSame('ing', Request::get('str'));
+		self::assertSame('ing', Request::get('str'));
 		// An index that exists, with whitespace padding that gets trimmed
-		$this->assertSame('ing', Request::get('str_padded'));
+		self::assertSame('ing', Request::get('str_padded'));
 		// An index that doesn't exist, with default
-		$this->assertSame('foo', Request::get('noexist', 'foo'));
+		self::assertSame('foo', Request::get('noexist', 'foo'));
 	}
 
 	public function test_get_exception(): void {
@@ -205,19 +205,19 @@ class RequestTest extends TestCase {
 	public function test_getVar(): void {
 		$this->setVar(['var:str' => 'ing']);
 		// An index that exists in var but not request, no default
-		$this->assertSame('ing', Request::getVar('var:str'));
+		self::assertSame('ing', Request::getVar('var:str'));
 		// An index that exists in var but not request, with default
-		$this->assertSame('ing', Request::getVar('var:str', 'foo'));
+		self::assertSame('ing', Request::getVar('var:str', 'foo'));
 	}
 
 	public function test_getVar_no_var(): void {
 		$this->setVar([]);
 		// An index that exists in request but not var, no default
-		$this->assertSame('ing', Request::getVar('str'));
+		self::assertSame('ing', Request::getVar('str'));
 		// An index that exists in request but not var, with default
-		$this->assertSame('ing', Request::getVar('str', 'foo'));
+		self::assertSame('ing', Request::getVar('str', 'foo'));
 		// An index neither in request nor var, with default
-		$this->assertSame('foo', Request::getVar('noexist', 'foo'));
+		self::assertSame('foo', Request::getVar('noexist', 'foo'));
 	}
 
 	public function test_getVar_exception_no_default(): void {
@@ -239,7 +239,7 @@ class RequestTest extends TestCase {
 	public function test_getVar_index_same_in_both(): void {
 		$this->setVar(['str' => 'ing']);
 		// An index that exists in both var and request, with the same value
-		$this->assertSame('ing', Request::getVar('str'));
+		self::assertSame('ing', Request::getVar('str'));
 	}
 
 	//------------------------------------------------------------------------
@@ -247,19 +247,19 @@ class RequestTest extends TestCase {
 	public function test_getVarInt(): void {
 		$this->setVar(['var:int' => 2]);
 		// An index that exists in var but not request, no default
-		$this->assertSame(2, Request::getVarInt('var:int'));
+		self::assertSame(2, Request::getVarInt('var:int'));
 		// An index that exists in var but not request, with default
-		$this->assertSame(2, Request::getVarInt('var:int', 3));
+		self::assertSame(2, Request::getVarInt('var:int', 3));
 	}
 
 	public function test_getVarInt_no_var(): void {
 		$this->setVar([]);
 		// An index that exists in request but not var, no default
-		$this->assertSame(2, Request::getVarInt('int'));
+		self::assertSame(2, Request::getVarInt('int'));
 		// An index that exists in request but not var, with default
-		$this->assertSame(2, Request::getVarInt('int', 3));
+		self::assertSame(2, Request::getVarInt('int', 3));
 		// An index neither in request nor var, with default
-		$this->assertSame(3, Request::getVarInt('noexist', 3));
+		self::assertSame(3, Request::getVarInt('noexist', 3));
 	}
 
 	public function test_getVarInt_exception_no_default(): void {
@@ -281,7 +281,7 @@ class RequestTest extends TestCase {
 	public function test_getVarInt_index_same_in_both(): void {
 		$this->setVar(['int' => 2]);
 		// An index that exists in both var and request, with the same value
-		$this->assertSame(2, Request::getVarInt('int'));
+		self::assertSame(2, Request::getVarInt('int'));
 	}
 
 	//------------------------------------------------------------------------
@@ -289,19 +289,19 @@ class RequestTest extends TestCase {
 	public function test_getVarIntArray(): void {
 		$this->setVar(['var:array_int' => [1, 2, 3]]);
 		// An index that exists in var but not request, no default
-		$this->assertSame([1, 2, 3], Request::getVarIntArray('var:array_int'));
+		self::assertSame([1, 2, 3], Request::getVarIntArray('var:array_int'));
 		// An index that exists in var but not request, with default
-		$this->assertSame([1, 2, 3], Request::getVarIntArray('var:array_int', []));
+		self::assertSame([1, 2, 3], Request::getVarIntArray('var:array_int', []));
 	}
 
 	public function test_getVarIntArray_no_var(): void {
 		$this->setVar([]);
 		// An index that exists in request but not var, no default
-		$this->assertSame([1, 2, 3], Request::getVarIntArray('array_int'));
+		self::assertSame([1, 2, 3], Request::getVarIntArray('array_int'));
 		// An index that exists in request but not var, with default
-		$this->assertSame([1, 2, 3], Request::getVarIntArray('array_int', []));
+		self::assertSame([1, 2, 3], Request::getVarIntArray('array_int', []));
 		// An index neither in request nor var, with default
-		$this->assertSame([1], Request::getVarIntArray('noexist', [1]));
+		self::assertSame([1], Request::getVarIntArray('noexist', [1]));
 	}
 
 	public function test_getVarIntArray_exception_no_default(): void {
@@ -323,7 +323,7 @@ class RequestTest extends TestCase {
 	public function test_getVarIntArray_index_same_in_both(): void {
 		$this->setVar(['array_int' => [1, 2, 3]]);
 		// An index that exists in both var and request, with the same value
-		$this->assertSame([1, 2, 3], Request::getVarIntArray('array_int'));
+		self::assertSame([1, 2, 3], Request::getVarIntArray('array_int'));
 	}
 
 }

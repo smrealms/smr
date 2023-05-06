@@ -20,14 +20,14 @@ class ShipTypeTest extends TestCase {
 		// Test all properties of one particular ship (Fed Ult)
 		$shipType = ShipType::get(SHIP_TYPE_FEDERAL_ULTIMATUM);
 
-		$this->assertSame(SHIP_TYPE_FEDERAL_ULTIMATUM, $shipType->getTypeID());
-		$this->assertSame(ShipClass::Raider, $shipType->getClass());
-		$this->assertSame('Federal Ultimatum', $shipType->getName());
-		$this->assertSame(38675738, $shipType->getCost());
-		$this->assertSame(BuyerRestriction::Good, $shipType->getRestriction());
-		$this->assertSame(8, $shipType->getSpeed());
-		$this->assertSame(7, $shipType->getHardpoints());
-		$this->assertSame(24, $shipType->getMaxPower());
+		self::assertSame(SHIP_TYPE_FEDERAL_ULTIMATUM, $shipType->getTypeID());
+		self::assertSame(ShipClass::Raider, $shipType->getClass());
+		self::assertSame('Federal Ultimatum', $shipType->getName());
+		self::assertSame(38675738, $shipType->getCost());
+		self::assertSame(BuyerRestriction::Good, $shipType->getRestriction());
+		self::assertSame(8, $shipType->getSpeed());
+		self::assertSame(7, $shipType->getHardpoints());
+		self::assertSame(24, $shipType->getMaxPower());
 
 		$hardware = [
 			HARDWARE_SHIELDS => 700,
@@ -42,9 +42,9 @@ class ShipTypeTest extends TestCase {
 			HARDWARE_JUMP => 1,
 			HARDWARE_DCS => 0,
 		];
-		$this->assertSame($hardware, $shipType->getAllMaxHardware());
+		self::assertSame($hardware, $shipType->getAllMaxHardware());
 		foreach ($hardware as $hardwareID => $amount) {
-			$this->assertSame($amount, $shipType->getMaxHardware($hardwareID));
+			self::assertSame($amount, $shipType->getMaxHardware($hardwareID));
 		}
 	}
 
@@ -52,25 +52,25 @@ class ShipTypeTest extends TestCase {
 		// Check that we get the same ship type from get and getAll
 		$shipType1 = ShipType::get(SHIP_TYPE_GALACTIC_SEMI);
 		$shipType2 = ShipType::getAll()[SHIP_TYPE_GALACTIC_SEMI];
-		$this->assertSame($shipType1, $shipType2);
+		self::assertSame($shipType1, $shipType2);
 	}
 
 	public function test_can_have_special_hardware(): void {
 		// Demonica has all special hardware
 		$shipType = ShipType::get(SHIP_TYPE_DEMONICA);
-		$this->assertTrue($shipType->canHaveJump());
-		$this->assertTrue($shipType->canHaveDCS());
-		$this->assertTrue($shipType->canHaveScanner());
-		$this->assertTrue($shipType->canHaveCloak());
-		$this->assertTrue($shipType->canHaveIllusion());
+		self::assertTrue($shipType->canHaveJump());
+		self::assertTrue($shipType->canHaveDCS());
+		self::assertTrue($shipType->canHaveScanner());
+		self::assertTrue($shipType->canHaveCloak());
+		self::assertTrue($shipType->canHaveIllusion());
 
 		// Galactic Semi has no special hardware
 		$shipType = ShipType::get(SHIP_TYPE_GALACTIC_SEMI);
-		$this->assertFalse($shipType->canHaveJump());
-		$this->assertFalse($shipType->canHaveDCS());
-		$this->assertFalse($shipType->canHaveScanner());
-		$this->assertFalse($shipType->canHaveCloak());
-		$this->assertFalse($shipType->canHaveIllusion());
+		self::assertFalse($shipType->canHaveJump());
+		self::assertFalse($shipType->canHaveDCS());
+		self::assertFalse($shipType->canHaveScanner());
+		self::assertFalse($shipType->canHaveCloak());
+		self::assertFalse($shipType->canHaveIllusion());
 	}
 
 }

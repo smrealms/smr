@@ -17,7 +17,7 @@ class PluraliseTest extends TestCase {
 	#[TestWith([1, false, 'test'])]
 	public function test_pluralise(float|int $amount, bool $includeAmount, string $expect): void {
 		$result = pluralise($amount, 'test', $includeAmount);
-		$this->assertSame($expect, $result);
+		self::assertSame($expect, $result);
 	}
 
 }

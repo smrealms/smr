@@ -28,13 +28,13 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 		$inhabitableTime = 5;
 
 		$planet = Planet::createPlanet($gameID, $sectorID, $typeID, $inhabitableTime);
-		$this->assertTrue($planet->exists());
+		self::assertTrue($planet->exists());
 
 		// Check properties set explicitly
-		$this->assertSame($gameID, $planet->getGameID());
-		$this->assertSame($sectorID, $planet->getSectorID());
-		$this->assertSame($typeID, $planet->getTypeID());
-		$this->assertSame($inhabitableTime, $planet->getInhabitableTime());
+		self::assertSame($gameID, $planet->getGameID());
+		self::assertSame($sectorID, $planet->getSectorID());
+		self::assertSame($typeID, $planet->getTypeID());
+		self::assertSame($inhabitableTime, $planet->getInhabitableTime());
 	}
 
 	public function test_createPlanet_already_exists(): void {
@@ -47,140 +47,140 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 	public function test_removePlanet(): void {
 		// Check that planet exists
 		$planet = Planet::createPlanet(1, 1, 1, 1);
-		$this->assertTrue($planet->exists());
+		self::assertTrue($planet->exists());
 
 		Planet::removePlanet(1, 1);
 		$planet = Planet::getPlanet(1, 1, true);
-		$this->assertFalse($planet->exists());
+		self::assertFalse($planet->exists());
 	}
 
 	public function test_name(): void {
 		$planet = Planet::createPlanet(1, 1, 1, 1);
 		// Check default name
-		$this->assertSame('Unknown', $planet->getDisplayName());
+		self::assertSame('Unknown', $planet->getDisplayName());
 
 		// Set a new name (include non-HTML-safe character)
 		$planet->setName('Test&');
-		$this->assertSame('Test&amp;', $planet->getDisplayName());
+		self::assertSame('Test&amp;', $planet->getDisplayName());
 	}
 
 	public function test_owner(): void {
 		// Check default owner
 		$planet = Planet::createPlanet(1, 1, 1, 1);
-		$this->assertFalse($planet->hasOwner());
-		$this->assertSame(0, $planet->getOwnerID());
+		self::assertFalse($planet->hasOwner());
+		self::assertSame(0, $planet->getOwnerID());
 
 		// Set a new owner
 		$ownerID = 3;
 		$planet->setOwnerID($ownerID);
-		$this->assertTrue($planet->hasOwner());
-		$this->assertSame($ownerID, $planet->getOwnerID());
+		self::assertTrue($planet->hasOwner());
+		self::assertSame($ownerID, $planet->getOwnerID());
 
 		// Remove the owner again
 		$planet->removeOwner();
-		$this->assertFalse($planet->hasOwner());
-		$this->assertSame(0, $planet->getOwnerID());
+		self::assertFalse($planet->hasOwner());
+		self::assertSame(0, $planet->getOwnerID());
 	}
 
 	public function test_password(): void {
 		// Check default password
 		$planet = Planet::createPlanet(1, 1, 1, 1);
-		$this->assertSame('', $planet->getPassword());
+		self::assertSame('', $planet->getPassword());
 
 		// Set a new password
 		$password = 'test';
 		$planet->setPassword($password);
-		$this->assertSame($password, $planet->getPassword());
+		self::assertSame($password, $planet->getPassword());
 
 		// Remove the password again
 		$planet->removePassword();
-		$this->assertSame('', $planet->getPassword());
+		self::assertSame('', $planet->getPassword());
 	}
 
 	public function test_credits(): void {
 		// Check default credits
 		$planet = Planet::createPlanet(1, 1, 1, 1);
-		$this->assertSame(0, $planet->getCredits());
+		self::assertSame(0, $planet->getCredits());
 
 		// Check increase/decrease credits
 		$planet->increaseCredits(100);
-		$this->assertSame(100, $planet->getCredits());
+		self::assertSame(100, $planet->getCredits());
 		$planet->increaseCredits(50);
-		$this->assertSame(150, $planet->getCredits());
+		self::assertSame(150, $planet->getCredits());
 		$planet->decreaseCredits(50);
-		$this->assertSame(100, $planet->getCredits());
+		self::assertSame(100, $planet->getCredits());
 	}
 
 	public function test_bonds(): void {
 		// Check default bond
 		$planet = Planet::createPlanet(1, 1, 1, 1);
-		$this->assertSame(0, $planet->getBonds());
+		self::assertSame(0, $planet->getBonds());
 
 		// Check increase/decrease bonds
 		$planet->increaseBonds(100);
-		$this->assertSame(100, $planet->getBonds());
+		self::assertSame(100, $planet->getBonds());
 		$planet->increaseBonds(50);
-		$this->assertSame(150, $planet->getBonds());
+		self::assertSame(150, $planet->getBonds());
 		$planet->decreaseBonds(50);
-		$this->assertSame(100, $planet->getBonds());
+		self::assertSame(100, $planet->getBonds());
 	}
 
 	public function test_bond_maturity(): void {
 		// Check default maturity
 		$planet = Planet::createPlanet(1, 1, 1, 1);
-		$this->assertSame(0, $planet->getMaturity());
+		self::assertSame(0, $planet->getMaturity());
 
 		// Set a new bond maturity
 		$maturity = time();
 		$planet->setMaturity($maturity);
-		$this->assertSame($maturity, $planet->getMaturity());
+		self::assertSame($maturity, $planet->getMaturity());
 	}
 
 	public function test_stockpile(): void {
 		// Check default stockpile
 		$planet = Planet::createPlanet(1, 1, 1, 1);
-		$this->assertFalse($planet->hasStockpile());
-		$this->assertSame([], $planet->getStockpile());
+		self::assertFalse($planet->hasStockpile());
+		self::assertSame([], $planet->getStockpile());
 		foreach (TradeGood::getAllIDs() as $goodID) {
-			$this->assertFalse($planet->hasStockpile($goodID));
-			$this->assertSame(0, $planet->getStockpile($goodID));
+			self::assertFalse($planet->hasStockpile($goodID));
+			self::assertSame(0, $planet->getStockpile($goodID));
 		}
 
 		// Setting 0 still counts as empty
 		$planet->setStockpile(GOODS_ORE, 0);
-		$this->assertFalse($planet->hasStockpile());
-		$this->assertFalse($planet->hasStockpile(GOODS_ORE));
+		self::assertFalse($planet->hasStockpile());
+		self::assertFalse($planet->hasStockpile(GOODS_ORE));
 
 		// Check increase stockpile
 		$planet->increaseStockpile(GOODS_ORE, 50);
-		$this->assertTrue($planet->hasStockpile());
-		$this->assertSame([GOODS_ORE => 50], $planet->getStockpile());
+		self::assertTrue($planet->hasStockpile());
+		self::assertSame([GOODS_ORE => 50], $planet->getStockpile());
 		foreach (TradeGood::getAllIDs() as $goodID) {
 			if ($goodID === GOODS_ORE) {
-				$this->assertTrue($planet->hasStockpile($goodID));
-				$this->assertSame(50, $planet->getStockpile($goodID));
+				self::assertTrue($planet->hasStockpile($goodID));
+				self::assertSame(50, $planet->getStockpile($goodID));
 			} else {
-				$this->assertFalse($planet->hasStockpile($goodID));
-				$this->assertSame(0, $planet->getStockpile($goodID));
+				self::assertFalse($planet->hasStockpile($goodID));
+				self::assertSame(0, $planet->getStockpile($goodID));
 			}
 		}
 
 		// Check decrease stockpile
 		$planet->decreaseStockpile(GOODS_ORE, 10);
-		$this->assertTrue($planet->hasStockpile());
-		$this->assertSame([GOODS_ORE => 40], $planet->getStockpile());
+		self::assertTrue($planet->hasStockpile());
+		self::assertSame([GOODS_ORE => 40], $planet->getStockpile());
 		foreach (TradeGood::getAllIDs() as $goodID) {
 			if ($goodID === GOODS_ORE) {
-				$this->assertTrue($planet->hasStockpile($goodID));
-				$this->assertSame(40, $planet->getStockpile($goodID));
+				self::assertTrue($planet->hasStockpile($goodID));
+				self::assertSame(40, $planet->getStockpile($goodID));
 			} else {
-				$this->assertFalse($planet->hasStockpile($goodID));
-				$this->assertSame(0, $planet->getStockpile($goodID));
+				self::assertFalse($planet->hasStockpile($goodID));
+				self::assertSame(0, $planet->getStockpile($goodID));
 			}
 		}
 
 		// Check remaining stockpile (ore: 600 - 40)
-		$this->assertSame(560, $planet->getRemainingStockpile(GOODS_ORE));
+		self::assertSame(560, $planet->getRemainingStockpile(GOODS_ORE));
 	}
 
 	public function test_setStockpile_throws_when_negative(): void {
@@ -208,37 +208,37 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 		$planet = Planet::createPlanet(1, 1, 1, 1);
 
 		// If we don't do enough damage, we should never downgrade
-		$this->assertSame([], $planet->checkForDowngrade(0));
+		self::assertSame([], $planet->checkForDowngrade(0));
 
 		// With no buildings, this should always return empty
-		$this->assertSame([], $planet->checkForDowngrade(100 * Planet::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE));
+		self::assertSame([], $planet->checkForDowngrade(100 * Planet::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE));
 
 		// Give the planet 2 structures, and destroy them both
 		$planet->setBuilding(PLANET_GENERATOR, 2);
 		srand(95); // seed rand for reproducibility
 		$result = $planet->checkForDowngrade(2 * Planet::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE);
-		$this->assertSame([PLANET_GENERATOR => 2], $result);
+		self::assertSame([PLANET_GENERATOR => 2], $result);
 	}
 
 	public function test_buildings(): void {
 		$planet = Planet::createPlanet(1, 1, 1, 1);
 
 		// Tests with no buildings
-		$this->assertFalse($planet->hasBuilding(PLANET_HANGAR));
-		$this->assertSame(0, $planet->getBuilding(PLANET_HANGAR));
-		$this->assertSame(0.0, $planet->getLevel());
+		self::assertFalse($planet->hasBuilding(PLANET_HANGAR));
+		self::assertSame(0, $planet->getBuilding(PLANET_HANGAR));
+		self::assertSame(0.0, $planet->getLevel());
 
 		// Add some hangars
 		$planet->increaseBuilding(PLANET_HANGAR, 4);
-		$this->assertTrue($planet->hasBuilding(PLANET_HANGAR));
-		$this->assertSame(4, $planet->getBuilding(PLANET_HANGAR));
-		$this->assertSame(4 / 3, $planet->getLevel());
+		self::assertTrue($planet->hasBuilding(PLANET_HANGAR));
+		self::assertSame(4, $planet->getBuilding(PLANET_HANGAR));
+		self::assertSame(4 / 3, $planet->getLevel());
 
 		// Destroy some hangars
 		$planet->destroyBuilding(PLANET_HANGAR, 2);
-		$this->assertTrue($planet->hasBuilding(PLANET_HANGAR));
-		$this->assertSame(2, $planet->getBuilding(PLANET_HANGAR));
-		$this->assertSame(2 / 3, $planet->getLevel());
+		self::assertTrue($planet->hasBuilding(PLANET_HANGAR));
+		self::assertSame(2, $planet->getBuilding(PLANET_HANGAR));
+		self::assertSame(2 / 3, $planet->getLevel());
 	}
 
 	public function test_defenses(): void {
