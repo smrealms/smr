@@ -6,7 +6,6 @@ use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
-use Smr\Globals;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
@@ -38,7 +37,7 @@ class AllianceMessageBoard extends PlayerPage {
 		$mbWrite = true;
 		$in_alliance = true;
 		if ($alliance->getAllianceID() !== $player->getAllianceID()) {
-			if (!in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+			if (!$player->isObserver()) {
 				$in_alliance = false;
 			}
 			$dbResult = $db->read('SELECT 1 FROM alliance_treaties
@@ -151,7 +150,7 @@ class AllianceMessageBoard extends PlayerPage {
 		}
 		$template->assign('Threads', $threads);
 
-		if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+		if ($mbWrite || $player->isObserver()) {
 			$container = new AllianceMessageBoardAddProcessor($allianceID, $this);
 			$template->assign('CreateNewThreadFormHref', $container->href());
 			$template->assign('Preview', $this->preview);

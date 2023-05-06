@@ -96,7 +96,7 @@ class Menu {
 		$db = Database::getInstance();
 		$player = Session::getInstance()->getPlayer();
 
-		$in_alliance = ($alliance_id === $player->getAllianceID() || in_array($player->getAccountID(), Globals::getHiddenPlayers()));
+		$in_alliance = ($alliance_id === $player->getAllianceID() || $player->isObserver());
 
 		// Some pages are visible to all alliance members
 		$canReadMb = $in_alliance;

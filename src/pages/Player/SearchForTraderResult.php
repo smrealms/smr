@@ -5,7 +5,6 @@ namespace Smr\Pages\Player;
 use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
-use Smr\Globals;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Pages\Account\HallOfFamePersonal;
@@ -95,7 +94,7 @@ class SearchForTraderResult extends PlayerPage {
 			);
 			$result['NewsHREF'] = $container->href();
 
-			if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+			if ($player->isObserver()) {
 				$container = new SectorJumpProcessor($linkPlayer->getSectorID());
 				$result['JumpHREF'] = $container->href();
 			}

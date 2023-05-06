@@ -6,7 +6,6 @@ use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Epoch;
-use Smr\Globals;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
@@ -127,7 +126,7 @@ class AllianceMessageBoardView extends PlayerPage {
 			}
 		}
 
-		if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+		if ($mbWrite || $player->isObserver()) {
 			$container = new AllianceMessageBoardAddProcessor($allianceID, $this, $thread_id);
 			$thread['CreateThreadReplyFormHref'] = $container->href();
 		}

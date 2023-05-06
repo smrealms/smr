@@ -4,7 +4,6 @@ namespace Smr\Pages\Player;
 
 use Smr\AbstractPlayer;
 use Smr\Exceptions\PathNotFound;
-use Smr\Globals;
 use Smr\MovementType;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Plotter;
@@ -28,7 +27,7 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 		$target = $this->targetSectorID ?? Request::getInt('target');
 
 		//allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
-		if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+		if ($player->isObserver()) {
 			$player->setSectorID($target);
 			$player->update();
 			$sector->markVisited($player);

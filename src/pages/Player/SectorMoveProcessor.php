@@ -3,7 +3,6 @@
 namespace Smr\Pages\Player;
 
 use Smr\AbstractPlayer;
-use Smr\Globals;
 use Smr\MovementType;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Sector;
@@ -38,7 +37,7 @@ class SectorMoveProcessor extends PlayerPageProcessor {
 		}
 
 		//allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
-		if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+		if ($player->isObserver()) {
 			//make them pop on CPL
 			$player->updateLastCPLAction();
 			$player->setSectorID($this->targetSectorID);

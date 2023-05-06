@@ -192,10 +192,10 @@ abstract class AbstractPlayer {
 			$players = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$accountID = $dbRecord->getInt('account_id');
-				if (in_array($accountID, Globals::getHiddenPlayers())) {
-					continue;
+				$player = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
+				if (!$player->isObserver()) {
+					$players[$accountID] = $player;
 				}
-				$players[$accountID] = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
 			}
 			self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID] = $players;
 		}
@@ -216,10 +216,10 @@ abstract class AbstractPlayer {
 			$players = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$accountID = $dbRecord->getInt('account_id');
-				if (in_array($accountID, Globals::getHiddenPlayers())) {
-					continue;
+				$player = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
+				if (!$player->isObserver()) {
+					$players[$accountID] = $player;
 				}
-				$players[$accountID] = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
 			}
 			self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID] = $players;
 		}
@@ -632,6 +632,13 @@ abstract class AbstractPlayer {
 		}
 		// If race has multiple HQ's for some reason, use the first one
 		return key($raceHqSectors);
+	}
+
+	/**
+	 * Is player a non-interacting observer (hidden to other players)?
+	 */
+	public function isObserver(): bool {
+		return in_array($this->accountID, Globals::getHiddenPlayers(), true);
 	}
 
 	public function isDead(): bool {
