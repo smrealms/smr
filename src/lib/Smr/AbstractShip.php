@@ -940,14 +940,14 @@ class AbstractShip {
 			}
 		}
 		return [
-						'KillingShot' => !$alreadyDead && $this->isDead(),
-						'TargetAlreadyDead' => $alreadyDead,
-						'Shield' => $shieldDamage,
-						'CDs' => $cdDamage,
-						'NumCDs' => $cdDamage / CD_ARMOUR,
-						'HasCDs' => $this->hasCDs(),
-						'Armour' => $armourDamage,
-						'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
+			'KillingShot' => !$alreadyDead && $this->isDead(),
+			'TargetAlreadyDead' => $alreadyDead,
+			'Shield' => $shieldDamage,
+			'CDs' => $cdDamage,
+			'NumCDs' => $cdDamage / CD_ARMOUR,
+			'HasCDs' => $this->hasCDs(),
+			'Armour' => $armourDamage,
+			'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
 		];
 	}
 
@@ -968,14 +968,14 @@ class AbstractShip {
 			}
 		}
 		return [
-						'KillingShot' => !$alreadyDead && $this->isDead(),
-						'TargetAlreadyDead' => $alreadyDead,
-						'Shield' => $shieldDamage,
-						'CDs' => $cdDamage,
-						'NumCDs' => $cdDamage / CD_ARMOUR,
-						'HasCDs' => $this->hasCDs(),
-						'Armour' => $armourDamage,
-						'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
+			'KillingShot' => !$alreadyDead && $this->isDead(),
+			'TargetAlreadyDead' => $alreadyDead,
+			'Shield' => $shieldDamage,
+			'CDs' => $cdDamage,
+			'NumCDs' => $cdDamage / CD_ARMOUR,
+			'HasCDs' => $this->hasCDs(),
+			'Armour' => $armourDamage,
+			'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
 		];
 	}
 

@@ -1404,14 +1404,14 @@ class Port {
 		}
 
 		return [
-						'KillingShot' => !$alreadyDead && $this->isDestroyed(),
-						'TargetAlreadyDead' => $alreadyDead,
-						'Shield' => $shieldDamage,
-						'CDs' => $cdDamage,
-						'NumCDs' => $cdDamage / CD_ARMOUR,
-						'HasCDs' => $this->hasCDs(),
-						'Armour' => $armourDamage,
-						'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
+			'KillingShot' => !$alreadyDead && $this->isDestroyed(),
+			'TargetAlreadyDead' => $alreadyDead,
+			'Shield' => $shieldDamage,
+			'CDs' => $cdDamage,
+			'NumCDs' => $cdDamage / CD_ARMOUR,
+			'HasCDs' => $this->hasCDs(),
+			'Armour' => $armourDamage,
+			'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
 		];
 	}
 
