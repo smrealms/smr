@@ -4,7 +4,7 @@
  * @var Smr\Template $this
  * @var bool $MinimalDisplay
  * @var bool $AlreadyDestroyed
- * @var array<string, mixed> $FullPortCombatResults
+ * @var array{Attackers: PortAttackerCombatResults, Port: PortCombatResults} $FullPortCombatResults
  */
 
 if (!$AlreadyDestroyed) {

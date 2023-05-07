@@ -5,7 +5,7 @@
  * @var Smr\Template $this
  * @var bool $MinimalDisplay
  * @var ?string $AttackLogLink
- * @var array<string, mixed> $PortCombatResults
+ * @var PortCombatResults $PortCombatResults
  */
 
 $CombatPort = $PortCombatResults['Port'];
@@ -19,11 +19,14 @@ if ($MinimalDisplay) {
 	} ?>. <?php echo $AttackLogLink;
 	return;
 }
-if (isset($PortCombatResults['Weapons']) && is_array($PortCombatResults['Weapons'])) {
+if (isset($PortCombatResults['Weapons'])) {
 	foreach ($PortCombatResults['Weapons'] as $WeaponResults) {
 		$ShootingWeapon = $WeaponResults['Weapon'];
 		$ShotHit = $WeaponResults['Hit'];
 		if ($ShotHit) {
+			if (!isset($WeaponResults['ActualDamage']) || !isset($WeaponResults['WeaponDamage'])) {
+				throw new Exception('Weapon hit without providing damage!');
+			}
 			$ActualDamage = $WeaponResults['ActualDamage'];
 			$WeaponDamage = $WeaponResults['WeaponDamage'];
 		}
@@ -67,6 +70,9 @@ if (isset($PortCombatResults['Weapons']) && is_array($PortCombatResults['Weapons
 		} ?>.
 		<br /><?php
 		if ($ShotHit && $ActualDamage['KillingShot']) {
+			if (!isset($WeaponResults['KillResults'])) {
+				throw new Exception('KillingShot did not provide KillResults!');
+			}
 			$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', ['KillResults' => $WeaponResults['KillResults'], 'TargetPlayer' => $TargetPlayer]);
 		}
 	}
@@ -78,6 +84,9 @@ if (isset($PortCombatResults['Drones'])) {
 	$TargetPlayer = $Drones['TargetPlayer'];
 
 	echo $CombatPort->getDisplayName();
+	if (!isset($WeaponDamage['Launched'])) {
+		throw new Exception('Drone weapons must specify Launched');
+	}
 	if ($WeaponDamage['Launched'] === 0) {
 		?> fails to launch it's combat drones<?php
 	} else {
@@ -118,6 +127,9 @@ if (isset($PortCombatResults['Drones'])) {
 	} ?>.
 	<br /><?php
 	if ($ActualDamage['KillingShot']) {
+		if (!isset($Drones['KillResults'])) {
+			throw new Exception('KillingShot did not provide KillResults!');
+		}
 		$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', ['KillResults' => $Drones['KillResults'], 'TargetPlayer' => $TargetPlayer]);
 	}
 }

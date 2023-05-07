@@ -1237,7 +1237,7 @@ class Planet {
 
 	/**
 	 * @param array<AbstractPlayer> $targetPlayers
-	 * @return array{Planet: self, TotalDamage: int, TotalDamagePerTargetPlayer?: array<int, int>, DeadBeforeShot: bool, Weapons?: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}}
+	 * @return PlanetCombatResults
 	 */
 	public function shootPlayers(array $targetPlayers): array {
 		$results = ['Planet' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => []];

@@ -5,7 +5,7 @@
  * @var Smr\Template $this
  * @var bool $MinimalDisplay
  * @var ?string $AttackLogLink
- * @var array<string, mixed> $PlanetCombatResults
+ * @var PlanetCombatResults $PlanetCombatResults
  */
 
 $CombatPlanet = $PlanetCombatResults['Planet'];
@@ -19,11 +19,14 @@ if ($MinimalDisplay) {
 	} ?>. <?php echo $AttackLogLink;
 	return;
 }
-if (isset($PlanetCombatResults['Weapons']) && is_array($PlanetCombatResults['Weapons'])) {
+if (isset($PlanetCombatResults['Weapons'])) {
 	foreach ($PlanetCombatResults['Weapons'] as $WeaponResults) {
 		$ShootingWeapon = $WeaponResults['Weapon'];
 		$ShotHit = $WeaponResults['Hit'];
 		if ($ShotHit) {
+			if (!isset($WeaponResults['ActualDamage']) || !isset($WeaponResults['WeaponDamage'])) {
+				throw new Exception('Weapon hit without providing damage!');
+			}
 			$ActualDamage = $WeaponResults['ActualDamage'];
 			$WeaponDamage = $WeaponResults['WeaponDamage'];
 		}
@@ -67,6 +70,9 @@ if (isset($PlanetCombatResults['Weapons']) && is_array($PlanetCombatResults['Wea
 		} ?>.
 		<br /><?php
 		if ($ShotHit && $ActualDamage['KillingShot']) {
+			if (!isset($WeaponResults['KillResults'])) {
+				throw new Exception('KillingShot did not provide KillResults!');
+			}
 			$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', ['KillResults' => $WeaponResults['KillResults'], 'TargetPlayer' => $TargetPlayer]);
 		}
 	}
@@ -82,6 +88,9 @@ if (isset($PlanetCombatResults['Drones'])) {
 	if ($ActualDamage['Armour'] > 0) { $DamageTypes = $DamageTypes + 1; }
 
 	echo $CombatPlanet->getCombatName();
+	if (!isset($WeaponDamage['Launched'])) {
+		throw new Exception('Drone weapons must specify Launched');
+	}
 	if ($WeaponDamage['Launched'] === 0) {
 		?> fails to launch it's combat drones<?php
 	} else {
@@ -117,6 +126,9 @@ if (isset($PlanetCombatResults['Drones'])) {
 	} ?>.
 	<br /><?php
 	if ($ActualDamage['KillingShot']) {
+		if (!isset($Drones['KillResults'])) {
+			throw new Exception('KillingShot did not provide KillResults!');
+		}
 		$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', ['KillResults' => $Drones['KillResults'], 'TargetPlayer' => $TargetPlayer]);
 	}
 }

@@ -3,7 +3,7 @@
 /**
  * @var Smr\Template $this
  * @var bool $MinimalDisplay
- * @var array<string, mixed> $TraderCombatResults
+ * @var array{Attackers: TraderTeamCombatResults, Defenders: TraderTeamCombatResults} $TraderCombatResults
  * @var ?string $AttackLogLink
  */
 

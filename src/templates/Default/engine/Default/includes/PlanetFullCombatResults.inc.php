@@ -3,7 +3,7 @@
 /**
  * @var Smr\Template $this
  * @var bool $MinimalDisplay
- * @var array<string, mixed> $FullPlanetCombatResults
+ * @var array{Attackers: PlanetAttackerCombatResults, Planet: PlanetCombatResults} $FullPlanetCombatResults
  */
 
 if (!$MinimalDisplay) { ?>

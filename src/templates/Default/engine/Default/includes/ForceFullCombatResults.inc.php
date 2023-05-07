@@ -2,7 +2,7 @@
 
 /**
  * @var Smr\Template $this
- * @var array<string, mixed> $FullForceCombatResults
+ * @var array{Attackers: ForceAttackerCombatResults, Forces: ForceCombatResults, Forced: bool} $FullForceCombatResults
  */
 
 if ($FullForceCombatResults['Forced']) { ?>

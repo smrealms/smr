@@ -492,10 +492,10 @@ class Force {
 
 	/**
 	 * @param array<AbstractPlayer> $targetPlayers
-	 * @return array{TotalDamage: int, DeadBeforeShot: bool, ForcesDestroyed?: bool, Mines?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}, Scouts?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}}
+	 * @return ForceCombatResults
 	 */
 	public function shootPlayers(array $targetPlayers, bool $minesAreAttacker): array {
-		$results = ['TotalDamage' => 0];
+		$results = ['TotalDamage' => 0, 'Results' => []];
 		if (!$this->exists()) {
 			$results['DeadBeforeShot'] = true;
 			return $results;

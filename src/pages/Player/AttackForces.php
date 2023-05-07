@@ -12,7 +12,7 @@ class AttackForces extends PlayerPage {
 	public string $file = 'forces_attack.php';
 
 	/**
-	 * @param array{Attackers: array{TotalDamage: int, Traders?: array<int, array{Player: \Smr\AbstractPlayer, TotalDamage: int, DeadBeforeShot: bool, Weapons: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetForces: \Smr\Force, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: ForceTakenDamageData, KillResults?: array{}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetForces: \Smr\Force, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: ForceTakenDamageData, KillResults?: array{}}}>}, Forces?: array{TotalDamage: int, DeadBeforeShot: bool, ForcesDestroyed?: bool, Mines?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}, Scouts?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}}, Forced: bool} $results
+	 * @param array{Attackers: ForceAttackerCombatResults, Forces: ForceCombatResults, Forced: bool} $results
 	 */
 	public function __construct(
 		private readonly int $ownerAccountID,

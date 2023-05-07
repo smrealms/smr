@@ -758,7 +758,7 @@ class AbstractShip {
 
 	/**
 	 * @param array<AbstractPlayer> $targetPlayers
-	 * @return array{Player: \Smr\AbstractPlayer, TotalDamage: int, TotalDamagePerTargetPlayer?: array<int, int>, DeadBeforeShot: bool, Weapons: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}}
+	 * @return TraderCombatResult
 	 */
 	public function shootPlayers(array $targetPlayers): array {
 		$thisPlayer = $this->getPlayer();
@@ -796,7 +796,7 @@ class AbstractShip {
 	}
 
 	/**
-	 * @return array{Player: \Smr\AbstractPlayer, TotalDamage: int, DeadBeforeShot: bool, Weapons: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetForces: \Smr\Force, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: ForceTakenDamageData, KillResults?: array{}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetForces: \Smr\Force, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: ForceTakenDamageData, KillResults?: array{}}}
+	 * @return ForceAttackerCombatResult
 	 */
 	public function shootForces(Force $forces): array {
 		$thisPlayer = $this->getPlayer();
@@ -841,7 +841,7 @@ class AbstractShip {
 	}
 
 	/**
-	 * @return array{Player: \Smr\AbstractPlayer, TotalDamage: int, DeadBeforeShot: bool, Weapons: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPort: \Smr\Port, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPort: \Smr\Port, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{}}}
+	 * @return PortAttackerCombatResult
 	 */
 	public function shootPort(Port $port): array {
 		$thisPlayer = $this->getPlayer();
@@ -885,7 +885,7 @@ class AbstractShip {
 	}
 
 	/**
-	 * @return array{Player: \Smr\AbstractPlayer, TotalDamage: int, DeadBeforeShot: bool, Weapons: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlanet: \Smr\Planet, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlanet: \Smr\Planet, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{}}}
+	 * @return PlanetAttackerCombatResult
 	 */
 	public function shootPlanet(Planet $planet): array {
 		$thisPlayer = $this->getPlayer();

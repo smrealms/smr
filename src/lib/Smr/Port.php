@@ -1340,7 +1340,7 @@ class Port {
 
 	/**
 	 * @param array<AbstractPlayer> $targetPlayers
-	 * @return array{Port: self, TotalDamage: int, TotalDamagePerTargetPlayer: array<int, int>, TotalShotsPerTargetPlayer: array<int, int>, DeadBeforeShot: bool, Weapons?: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}}
+	 * @return PortCombatResults
 	 */
 	public function shootPlayers(array $targetPlayers): array {
 		$results = ['Port' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => [], 'TotalShotsPerTargetPlayer' => []];
