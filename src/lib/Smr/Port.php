@@ -1374,7 +1374,7 @@ class Port {
 			$results['Drones'] = $thisCDs->shootPlayerAsPort($this, array_rand_value($targetPlayers));
 			$totalDamage = $results['Drones']['ActualDamage']['TotalDamage'];
 			$results['TotalDamage'] += $totalDamage;
-			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $totalDamage;
+			$results['TotalDamagePerTargetPlayer'][$results['Drones']['Target']->getAccountID()] += $totalDamage;
 		}
 		return $results;
 	}

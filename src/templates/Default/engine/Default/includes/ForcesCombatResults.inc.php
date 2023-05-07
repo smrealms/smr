@@ -13,7 +13,7 @@ foreach ($CombatForces as $ForceType => $ForceResults) {
 	if (!isset($WeaponDamage['Launched'])) {
 		throw new Exception('Force weapons must specify Launched');
 	}
-	$TargetPlayer = $ForceResults['TargetPlayer'];
+	$TargetPlayer = $ForceResults['Target'];
 	?>
 	<span class="cds"><?php echo $WeaponDamage['Launched']; ?></span><?php
 	if ($ForceType === 'Mines') {

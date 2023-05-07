@@ -30,7 +30,7 @@ if (isset($PlanetCombatResults['Weapons'])) {
 			$ActualDamage = $WeaponResults['ActualDamage'];
 			$WeaponDamage = $WeaponResults['WeaponDamage'];
 		}
-		$TargetPlayer = $WeaponResults['TargetPlayer'];
+		$TargetPlayer = $WeaponResults['Target'];
 
 		echo $CombatPlanet->getCombatName() ?> fires a <?php echo $ShootingWeapon->getName(); ?> at <?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']) { ?> the debris that was once <?php } echo $TargetPlayer->getDisplayName();
 		if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
@@ -81,7 +81,7 @@ if (isset($PlanetCombatResults['Drones'])) {
 	$Drones = $PlanetCombatResults['Drones'];
 	$ActualDamage = $Drones['ActualDamage'];
 	$WeaponDamage = $Drones['WeaponDamage'];
-	$TargetPlayer = $Drones['TargetPlayer'];
+	$TargetPlayer = $Drones['Target'];
 	$DamageTypes = 0;
 	if ($ActualDamage['Shield'] > 0) { $DamageTypes = $DamageTypes + 1; }
 	if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }

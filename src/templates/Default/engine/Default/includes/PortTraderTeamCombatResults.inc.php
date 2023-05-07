@@ -34,7 +34,7 @@ foreach ($AllTraderResults as $TraderResults) {
 				$ActualDamage = $WeaponResults['ActualDamage'];
 				$WeaponDamage = $WeaponResults['WeaponDamage'];
 			}
-			$TargetPort = $WeaponResults['TargetPort'];
+			$TargetPort = $WeaponResults['Target'];
 
 			echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']) { ?>the remnants of <?php } echo $TargetPort->getDisplayName();
 			if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
@@ -84,7 +84,7 @@ foreach ($AllTraderResults as $TraderResults) {
 			$Drones = $TraderResults['Drones'];
 			$ActualDamage = $Drones['ActualDamage'];
 			$WeaponDamage = $Drones['WeaponDamage'];
-			$TargetPort = $Drones['TargetPort'];
+			$TargetPort = $Drones['Target'];
 
 			echo $ShootingPlayer->getDisplayName();
 			if (!isset($WeaponDamage['Launched'])) {

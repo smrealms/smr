@@ -36,7 +36,7 @@ foreach ($AllTraderResults as $TraderResults) {
 				$ActualDamage = $WeaponResults['ActualDamage'];
 				$WeaponDamage = $WeaponResults['WeaponDamage'];
 			}
-			$TargetPlanet = $WeaponResults['TargetPlanet'];
+			$TargetPlanet = $WeaponResults['Target'];
 
 			echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']) { ?>the debris that was once <?php } echo $TargetPlanet->getCombatName();
 			if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
@@ -86,7 +86,7 @@ foreach ($AllTraderResults as $TraderResults) {
 			$Drones = $TraderResults['Drones'];
 			$ActualDamage = $Drones['ActualDamage'];
 			$WeaponDamage = $Drones['WeaponDamage'];
-			$TargetPlanet = $Drones['TargetPlanet'];
+			$TargetPlanet = $Drones['Target'];
 			$DamageTypes = 0;
 			if ($ActualDamage['Shield'] > 0) { $DamageTypes = $DamageTypes + 1; }
 			if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }

@@ -84,8 +84,8 @@ abstract class AbstractWeapon {
 	abstract public function getModifiedPlanetDamageAgainstPlayer(Planet $planet, AbstractPlayer $targetPlayer): array;
 
 	/**
-	 * @param array{Weapon: self, TargetForces: \Smr\Force, Hit: bool} $return
-	 * @return array{Weapon: self, TargetForces: \Smr\Force, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: ForceTakenDamageData, KillResults?: array{}}
+	 * @param array{Weapon: self, Target: \Smr\Force, Hit: bool} $return
+	 * @return array{Weapon: self, Target: \Smr\Force, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: ForceTakenDamageData, KillResults?: array{}}
 	 */
 	protected function doPlayerDamageToForce(array $return, AbstractPlayer $weaponPlayer, Force $forces): array {
 		$return['WeaponDamage'] = $this->getModifiedDamageAgainstForces($weaponPlayer, $forces);
@@ -97,8 +97,8 @@ abstract class AbstractWeapon {
 	}
 
 	/**
-	 * @param array{Weapon: self, TargetPlayer: \Smr\AbstractPlayer, Hit: bool} $return
-	 * @return array{Weapon: self, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}
+	 * @param array{Weapon: self, Target: \Smr\AbstractPlayer, Hit: bool} $return
+	 * @return array{Weapon: self, Target: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}
 	 */
 	protected function doPlayerDamageToPlayer(array $return, AbstractPlayer $weaponPlayer, AbstractPlayer $targetPlayer): array {
 		$return['WeaponDamage'] = $this->getModifiedDamageAgainstPlayer($weaponPlayer, $targetPlayer);
@@ -111,8 +111,8 @@ abstract class AbstractWeapon {
 	}
 
 	/**
-	 * @param array{Weapon: self, TargetPort: \Smr\Port, Hit: bool} $return
-	 * @return array{Weapon: self, TargetPort: \Smr\Port, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{}}
+	 * @param array{Weapon: self, Target: \Smr\Port, Hit: bool} $return
+	 * @return array{Weapon: self, Target: \Smr\Port, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{}}
 	 */
 	protected function doPlayerDamageToPort(array $return, AbstractPlayer $weaponPlayer, Port $port): array {
 		$return['WeaponDamage'] = $this->getModifiedDamageAgainstPort($weaponPlayer, $port);
@@ -124,8 +124,8 @@ abstract class AbstractWeapon {
 	}
 
 	/**
-	 * @param array{Weapon: self, TargetPlanet: \Smr\Planet, Hit: bool} $return
-	 * @return array{Weapon: self, TargetPlanet: \Smr\Planet, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{}}
+	 * @param array{Weapon: self, Target: \Smr\Planet, Hit: bool} $return
+	 * @return array{Weapon: self, Target: \Smr\Planet, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{}}
 	 */
 	protected function doPlayerDamageToPlanet(array $return, AbstractPlayer $weaponPlayer, Planet $planet): array {
 		$return['WeaponDamage'] = $this->getModifiedDamageAgainstPlanet($weaponPlayer, $planet);
@@ -137,8 +137,8 @@ abstract class AbstractWeapon {
 	}
 
 	/**
-	 * @param array{Weapon: self, TargetPlayer: \Smr\AbstractPlayer, Hit: bool} $return
-	 * @return array{Weapon: self, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
+	 * @param array{Weapon: self, Target: \Smr\AbstractPlayer, Hit: bool} $return
+	 * @return array{Weapon: self, Target: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
 	 */
 	protected function doPortDamageToPlayer(array $return, Port $port, AbstractPlayer $targetPlayer): array {
 		$return['WeaponDamage'] = $this->getModifiedPortDamageAgainstPlayer($port, $targetPlayer);
@@ -151,8 +151,8 @@ abstract class AbstractWeapon {
 	}
 
 	/**
-	 * @param array{Weapon: self, TargetPlayer: \Smr\AbstractPlayer, Hit: bool} $return
-	 * @return array{Weapon: self, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
+	 * @param array{Weapon: self, Target: \Smr\AbstractPlayer, Hit: bool} $return
+	 * @return array{Weapon: self, Target: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
 	 */
 	protected function doPlanetDamageToPlayer(array $return, Planet $planet, AbstractPlayer $targetPlayer): array {
 		$return['WeaponDamage'] = $this->getModifiedPlanetDamageAgainstPlayer($planet, $targetPlayer);
@@ -165,8 +165,8 @@ abstract class AbstractWeapon {
 	}
 
 	/**
-	 * @param array{Weapon: self, TargetPlayer: \Smr\AbstractPlayer, Hit: bool} $return
-	 * @return array{Weapon: self, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
+	 * @param array{Weapon: self, Target: \Smr\AbstractPlayer, Hit: bool} $return
+	 * @return array{Weapon: self, Target: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
 	 */
 	protected function doForceDamageToPlayer(array $return, Force $forces, AbstractPlayer $targetPlayer): array {
 		$return['WeaponDamage'] = $this->getModifiedForceDamageAgainstPlayer($forces, $targetPlayer);
@@ -179,17 +179,17 @@ abstract class AbstractWeapon {
 	}
 
 	/**
-	 * @return array{Weapon: self, TargetForces: \Smr\Force, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: ForceTakenDamageData, KillResults?: array{}}
+	 * @return array{Weapon: self, Target: \Smr\Force, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: ForceTakenDamageData, KillResults?: array{}}
 	 */
 	abstract public function shootForces(AbstractPlayer $weaponPlayer, Force $forces): array;
 
 	/**
-	 * @return array{Weapon: self, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}
+	 * @return array{Weapon: self, Target: \Smr\AbstractPlayer, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}
 	 */
 	abstract public function shootPlayer(AbstractPlayer $weaponPlayer, AbstractPlayer $targetPlayer): array;
 
 	/**
-	 * @return array{Weapon: self, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
+	 * @return array{Weapon: self, Target: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
 	 */
 	abstract public function shootPlayerAsForce(Force $forces, AbstractPlayer $targetPlayer): array;
 

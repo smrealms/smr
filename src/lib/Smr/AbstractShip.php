@@ -779,7 +779,7 @@ class AbstractShip {
 				}
 				$totalDamage = $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 				$results['TotalDamage'] += $totalDamage;
-				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['TargetPlayer']->getAccountID()] += $totalDamage;
+				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['Target']->getAccountID()] += $totalDamage;
 			}
 		}
 		if ($this->hasCDs()) {
@@ -787,7 +787,7 @@ class AbstractShip {
 			$results['Drones'] = $thisCDs->shootPlayer($thisPlayer, array_rand_value($targetPlayers));
 			$totalDamage = $results['Drones']['ActualDamage']['TotalDamage'];
 			$results['TotalDamage'] += $totalDamage;
-			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $totalDamage;
+			$results['TotalDamagePerTargetPlayer'][$results['Drones']['Target']->getAccountID()] += $totalDamage;
 		}
 		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLAYER));
 		$thisPlayer->increaseHOF($results['TotalDamage'], ['Combat', 'Player', 'Damage Done'], HOF_PUBLIC);

@@ -1258,7 +1258,7 @@ class Planet {
 				}
 				$totalDamage = $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 				$results['TotalDamage'] += $totalDamage;
-				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['TargetPlayer']->getAccountID()] += $totalDamage;
+				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['Target']->getAccountID()] += $totalDamage;
 			}
 		}
 		if ($this->hasCDs()) {
@@ -1266,7 +1266,7 @@ class Planet {
 			$results['Drones'] = $thisCDs->shootPlayerAsPlanet($this, array_rand_value($targetPlayers));
 			$totalDamage = $results['Drones']['ActualDamage']['TotalDamage'];
 			$results['TotalDamage'] += $totalDamage;
-			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $totalDamage;
+			$results['TotalDamagePerTargetPlayer'][$results['Drones']['Target']->getAccountID()] += $totalDamage;
 		}
 		return $results;
 	}

@@ -35,7 +35,7 @@ foreach ($CombatTeamResults as $TraderResults) {
 				$ActualDamage = $WeaponResults['ActualDamage'];
 				$WeaponDamage = $WeaponResults['WeaponDamage'];
 			}
-			$TargetPlayer = $WeaponResults['TargetPlayer'];
+			$TargetPlayer = $WeaponResults['Target'];
 
 			echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php
 			if ($ShotHit && $ActualDamage['TargetAlreadyDead']) {
@@ -89,7 +89,7 @@ foreach ($CombatTeamResults as $TraderResults) {
 			$Drones = $TraderResults['Drones'];
 			$ActualDamage = $Drones['ActualDamage'];
 			$WeaponDamage = $Drones['WeaponDamage'];
-			$TargetPlayer = $Drones['TargetPlayer'];
+			$TargetPlayer = $Drones['Target'];
 			$DamageTypes = 0;
 			if ($ActualDamage['Shield'] > 0) { $DamageTypes = $DamageTypes + 1; }
 			if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
