@@ -220,56 +220,47 @@ class Menu {
 	 */
 	public static function rankings(int $active_level1 = 0, int $active_level2 = 0): void {
 
-		$menu = [];
+		$menu = [
+			// player rankings
+			[
+				'entry' => create_link(new PlayerExperience(), 'Player Rankings', 'nav'),
+				'submenu' => [
+					create_link(new PlayerExperience(), 'Experience', 'nav'),
+					create_link(new PlayerProfit(), 'Profit', 'nav'),
+					create_link(new PlayerKills(), 'Kills', 'nav'),
+					create_link(new PlayerDeaths(), 'Deaths', 'nav'),
+					create_link(new PlayerAssists(), 'Assists', 'nav'),
+					create_link(new PlayerNpcKills(), 'NPC Kills', 'nav'),
+				],
+			],
 
-		// player rankings
-		$menu_item = [];
-		$menu_item['entry'] = create_link(new PlayerExperience(), 'Player Rankings', 'nav');
+			// alliance rankings
+			[
+				'entry' => create_link(new AllianceExperience(), 'Alliance Rankings', 'nav'),
+				'submenu' => [
+					create_link(new AllianceExperience(), 'Experience', 'nav'),
+					create_link(new AllianceProfit(), 'Profit', 'nav'),
+					create_link(new AllianceKills(), 'Kills', 'nav'),
+					create_link(new AllianceDeaths(), 'Deaths', 'nav'),
+					create_link(new AllianceVsAlliance(), 'Versus', 'nav'),
+				],
+			],
 
-		$menu_subitem = [];
-		$menu_subitem[] = create_link(new PlayerExperience(), 'Experience', 'nav');
-		$menu_subitem[] = create_link(new PlayerProfit(), 'Profit', 'nav');
-		$menu_subitem[] = create_link(new PlayerKills(), 'Kills', 'nav');
-		$menu_subitem[] = create_link(new PlayerDeaths(), 'Deaths', 'nav');
-		$menu_subitem[] = create_link(new PlayerAssists(), 'Assists', 'nav');
-		$menu_subitem[] = create_link(new PlayerNpcKills(), 'NPC Kills', 'nav');
+			// racial rankings
+			[
+				'entry' => create_link(new RaceExperience(), 'Racial Standings', 'nav'),
+				'submenu' => [
+					create_link(new RaceExperience(), 'Experience', 'nav'),
+					create_link(new RaceKills(), 'Kills', 'nav'),
+					create_link(new RaceDeaths(), 'Deaths', 'nav'),
+				],
+			],
 
-		$menu_item['submenu'] = $menu_subitem;
-
-		$menu[] = $menu_item;
-
-		// alliance rankings
-		$menu_item = [];
-		$menu_item['entry'] = create_link(new AllianceExperience(), 'Alliance Rankings', 'nav');
-
-		$menu_subitem = [];
-		$menu_subitem[] = create_link(new AllianceExperience(), 'Experience', 'nav');
-		$menu_subitem[] = create_link(new AllianceProfit(), 'Profit', 'nav');
-		$menu_subitem[] = create_link(new AllianceKills(), 'Kills', 'nav');
-		$menu_subitem[] = create_link(new AllianceDeaths(), 'Deaths', 'nav');
-		$menu_subitem[] = create_link(new AllianceVsAlliance(), 'Versus', 'nav');
-
-		$menu_item['submenu'] = $menu_subitem;
-
-		$menu[] = $menu_item;
-
-		// racial rankings
-		$menu_item = [];
-		$menu_item['entry'] = create_link(new RaceExperience(), 'Racial Standings', 'nav');
-
-		$menu_subitem = [];
-		$menu_subitem[] = create_link(new RaceExperience(), 'Experience', 'nav');
-		$menu_subitem[] = create_link(new RaceKills(), 'Kills', 'nav');
-		$menu_subitem[] = create_link(new RaceDeaths(), 'Deaths', 'nav');
-
-		$menu_item['submenu'] = $menu_subitem;
-
-		$menu[] = $menu_item;
-
-		// sector rankings
-		$menu_item = [];
-		$menu_item['entry'] = create_link(new SectorKills(), 'Sector Kills', 'nav');
-		$menu[] = $menu_item;
+			// sector rankings
+			[
+				'entry' => create_link(new SectorKills(), 'Sector Kills', 'nav'),
+			],
+		];
 
 		create_sub_menu($menu, $active_level1, $active_level2);
 	}
@@ -386,7 +377,7 @@ class Menu {
 }
 
 /**
- * @param array<array<string, mixed>> $menu
+ * @param array<array{entry: string, submenu?: array<string>}> $menu
  */
 function create_sub_menu(array $menu, int $active_level1, int $active_level2): void {
 	$return = ('<table class="fullwidth center">');
