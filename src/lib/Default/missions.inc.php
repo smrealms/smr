@@ -122,7 +122,7 @@ const MISSIONS = [
  * Searches for placeholders in template and replaces them with values
  * derived from the supplied data.
  *
- * @param array<string, mixed> $data
+ * @param array{player: \Smr\AbstractPlayer, mission: array<mixed>} $data
  */
 function replaceMissionTemplate(string|int|PlotGroup &$template, string $key, array $data): void {
 	if (!is_string($template)) {
