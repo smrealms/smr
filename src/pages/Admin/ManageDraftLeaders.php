@@ -40,7 +40,7 @@ class ManageDraftLeaders extends AccountPage {
 		}
 		$template->assign('ActiveGames', $activeGames);
 
-		if ($activeGames) {
+		if (count($activeGames) > 0) {
 			// Set the selected game (or the first in the list if not selected yet)
 			$selectedGameID = $this->selectedGameID ?? $activeGames[0]['game_id'];
 			$template->assign('SelectedGame', $selectedGameID);

@@ -36,7 +36,7 @@ class MessageBlacklist extends PlayerPage {
 		}
 		$template->assign('Blacklist', $blacklist);
 
-		if ($blacklist) {
+		if (count($blacklist) > 0) {
 			$container = new MessageBlacklistDeleteProcessor();
 			$template->assign('BlacklistDeleteHREF', $container->href());
 		}

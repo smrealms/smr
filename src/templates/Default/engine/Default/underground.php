@@ -12,11 +12,11 @@ heavily-armed figures advance from the shadows.</p>
 <p>&nbsp;</p>
 
 <?php
-if ($AllBounties) { ?>
+if (count($AllBounties) > 0) { ?>
 	<div class="center">Most wanted by the Underground</div><br /><?php
 	$this->includeTemplate('includes/BountyList.inc.php', ['Bounties' => $AllBounties]);
 }
-if ($MyBounties) { ?>
+if (count($MyBounties) > 0) { ?>
 	<div class="center">Claimable Bounties</div><br /><?php
 	$this->includeTemplate('includes/BountyList.inc.php', ['Bounties' => $MyBounties]);
 }

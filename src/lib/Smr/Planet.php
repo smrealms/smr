@@ -379,7 +379,7 @@ class Planet {
 				$this->setArmour($this->getMaxArmour());
 		}
 		// Remove a random (0-indexed) mounted weapon, if over max mount slots
-		while ($this->getMountedWeapons() && max(array_keys($this->getMountedWeapons())) >= $this->getMaxMountedWeapons()) {
+		while (count($this->getMountedWeapons()) > 0 && max(array_keys($this->getMountedWeapons())) >= $this->getMaxMountedWeapons()) {
 			$removeID = array_rand($this->getMountedWeapons());
 			$this->removeMountedWeapon($removeID);
 			foreach ($this->getMountedWeapons() as $orderID => $weapon) {

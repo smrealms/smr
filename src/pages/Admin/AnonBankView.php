@@ -42,7 +42,7 @@ class AnonBankView extends AccountPage {
 				'amount' => $dbRecord->getInt('amount'),
 			];
 		}
-		if (!$rows) {
+		if (count($rows) === 0) {
 			$message = '<p><span class="red">Anon account #' . $anonID . ' in Game ' . $gameID . ' does NOT exist!</span></p>';
 			$container = new AnonBankViewSelect($message);
 			$container->go();

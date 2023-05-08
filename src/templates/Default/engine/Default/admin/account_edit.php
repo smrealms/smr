@@ -60,7 +60,7 @@ use Smr\Epoch;
 		<tr>
 			<td valign="top" class="right bold">Player:</td>
 				<td><?php
-					if (count($EditingPlayers)) { ?>
+					if (count($EditingPlayers) > 0) { ?>
 						<a onclick="$('#accountPlayers').fadeToggle(600);">Show/Hide</a>
 						<table id="accountPlayers" style="display:none"><?php
 							foreach ($EditingPlayers as $CurrentPlayer) {

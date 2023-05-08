@@ -9,7 +9,7 @@ use Smr\Globals;
  * @var array<string, array{ID: int, Class: string}> $Sectors
  */
 
-if ($Sectors) { ?>
+if (count($Sectors) > 0) { ?>
 	<div class="secNavBox">
 		<div class="<?php if ($ThisShip->hasScanner()) { ?>scan<?php } else { ?>no_scan<?php } ?>">
 			<?php

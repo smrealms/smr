@@ -31,7 +31,7 @@ if (count($ShipsSold) > 0) { ?>
 			</tr><?php
 		}
 	?></table><?php
-	if ($ShipsUnavailable) { ?>
+	if (count($ShipsUnavailable) > 0) { ?>
 		<br />
 		<h2>Under Construction</h2>
 		<table class="standard">

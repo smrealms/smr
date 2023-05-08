@@ -52,7 +52,7 @@ function shared_channel_msg_op_list(AbstractPlayer $player): array {
 		}
 	}
 
-	if (!$results) {
+	if (count($results) === 0) {
 		return ['No one has responded to the upcoming op.'];
 	}
 

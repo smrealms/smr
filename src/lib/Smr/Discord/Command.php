@@ -57,7 +57,7 @@ abstract class Command {
 			$this->logException($err);
 			$lines = ['I encountered an error. Please report this to an admin!'];
 		}
-		if ($lines) {
+		if (count($lines) > 0) {
 			$message->reply(implode(EOL, $lines))->done(null, 'logException');
 		}
 	}
