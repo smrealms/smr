@@ -33,7 +33,7 @@ if (isset($OpTime) && isset($ResponseInputs)) { ?>
 }
 
 if ($Alliance->hasImageURL()) { ?>
-	<img class="alliance" src="<?php echo $Alliance->getImageURL(); ?>" alt="">
+	<img class="alliance" src="<?php echo htmlspecialchars($Alliance->getImageURL()); ?>" alt="">
 	<br /><br /><?php
 } ?>
 

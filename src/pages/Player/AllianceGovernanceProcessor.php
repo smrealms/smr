@@ -16,6 +16,7 @@ class AllianceGovernanceProcessor extends PlayerPageProcessor {
 
 	public function build(AbstractPlayer $player): never {
 		$alliance_id = $this->allianceID;
+		$alliance = Alliance::getAlliance($alliance_id, $player->getGameID());
 
 		if (Request::has('description')) {
 			$description = Request::get('description');
@@ -33,15 +34,13 @@ class AllianceGovernanceProcessor extends PlayerPageProcessor {
 			$mod = Request::get('mod');
 		}
 		if (Request::has('url')) {
-			$url = Request::get('url');
+			$url = filter_var(Request::get('url'), FILTER_VALIDATE_URL);
+			if ($url === false) {
+				create_error('You must enter a valid URL for the image link!');
+			}
+			$alliance->setImageURL($url);
 		}
 
-		// Prevent XSS attacks
-		if (isset($url) && preg_match('/"/', $url)) {
-			create_error('You cannot use a " in the image link!');
-		}
-
-		$alliance = Alliance::getAlliance($alliance_id, $player->getGameID());
 		if (Request::has('recruit_type')) {
 			$recruitType = Request::get('recruit_type');
 			$password = Request::get('password', '');
@@ -76,9 +75,6 @@ class AllianceGovernanceProcessor extends PlayerPageProcessor {
 		}
 		if (isset($mod)) {
 			$alliance->setMotD($mod);
-		}
-		if (isset($url)) {
-			$alliance->setImageURL($url);
 		}
 
 		$alliance->update();

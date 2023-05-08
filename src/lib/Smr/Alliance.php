@@ -292,7 +292,7 @@ class Alliance {
 	}
 
 	public function hasImageURL(): bool {
-		return strlen($this->imgSrc) && $this->imgSrc !== 'http://';
+		return $this->imgSrc !== '';
 	}
 
 	public function getImageURL(): string {
@@ -300,10 +300,7 @@ class Alliance {
 	}
 
 	public function setImageURL(string $url): void {
-		if (preg_match('/"/', $url)) {
-			throw new Exception('Tried to set an image url with ": ' . $url);
-		}
-		$this->imgSrc = htmlspecialchars($url);
+		$this->imgSrc = $url;
 	}
 
 	/**
