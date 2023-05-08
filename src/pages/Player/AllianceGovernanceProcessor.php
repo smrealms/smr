@@ -20,19 +20,24 @@ class AllianceGovernanceProcessor extends PlayerPageProcessor {
 
 		if (Request::has('description')) {
 			$description = Request::get('description');
+			$alliance->setAllianceDescription($description, $player);
 		}
+
 		if (Request::has('discord_server')) {
 			$discordServer = Request::get('discord_server');
+			$alliance->setDiscordServer($discordServer);
 		}
-		if (Request::has('discord_channel')) {
-			$discordChannel = Request::get('discord_channel');
-		}
+
 		if (Request::has('irc')) {
 			$irc = Request::get('irc');
+			$alliance->setIrcChannel($irc);
 		}
+
 		if (Request::has('mod')) {
 			$mod = Request::get('mod');
+			$alliance->setMotD($mod);
 		}
+
 		if (Request::has('url')) {
 			$url = filter_var(Request::get('url'), FILTER_VALIDATE_URL);
 			if ($url === false) {
@@ -46,13 +51,9 @@ class AllianceGovernanceProcessor extends PlayerPageProcessor {
 			$password = Request::get('password', '');
 			$alliance->setRecruitType($recruitType, $password);
 		}
-		if (isset($description)) {
-			$alliance->setAllianceDescription($description, $player);
-		}
-		if (isset($discordServer)) {
-			$alliance->setDiscordServer($discordServer);
-		}
-		if (isset($discordChannel)) {
+
+		if (Request::has('discord_channel')) {
+			$discordChannel = Request::get('discord_channel');
 			if (empty($discordChannel)) {
 				$alliance->setDiscordChannel(null);
 			} else {
@@ -69,12 +70,6 @@ class AllianceGovernanceProcessor extends PlayerPageProcessor {
 
 				$alliance->setDiscordChannel($discordChannel);
 			}
-		}
-		if (isset($irc)) {
-			$alliance->setIrcChannel($irc);
-		}
-		if (isset($mod)) {
-			$alliance->setMotD($mod);
 		}
 
 		$alliance->update();
