@@ -91,7 +91,7 @@ use Smr\Globals;
 								$Port = $Sector->getCachedPort($MapPlayer);
 							}
 							if ($Port !== null) { ?>
-								<div class="lmport <?php if ($Sector->getLinkLeft()) { ?>a<?php } else { ?>b<?php } ?>
+								<div class="lmport <?php if ($Sector->getLinkLeft() !== 0) { ?>a<?php } else { ?>b<?php } ?>
 									"><?php
 									if ($UniGen) { ?>
 										<div

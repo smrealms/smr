@@ -59,7 +59,7 @@ class IpViewResults extends AccountPage {
 				$account_id = $db_ent['id'];
 				$acc = Account::getAccount($account_id);
 				$disabled = $acc->isDisabled();
-				$close_reason = $disabled ? $disabled['Reason'] : '';
+				$close_reason = $disabled !== false ? $disabled['Reason'] : '';
 
 				$row = [
 					'account_id' => $account_id,
@@ -252,7 +252,7 @@ class IpViewResults extends AccountPage {
 				}
 				$acc = Account::getAccount($id);
 				$disabled = $acc->isDisabled();
-				$close_reason = $disabled ? $disabled['Reason'] : '';
+				$close_reason = $disabled !== false ? $disabled['Reason'] : '';
 				$dbResult2 = $db->read('SELECT * FROM player WHERE account_id = :account_id', [
 					'account_id' => $db->escapeNumber($id),
 				]);

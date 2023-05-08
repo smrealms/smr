@@ -17,7 +17,7 @@ class InvalidEmail extends AccountPage {
 		// This page should only be accessed by players whose accounts
 		// have been closed due to an invalid e-mail.
 		$disabled = $account->isDisabled();
-		if (!$disabled || $disabled['Reason'] !== CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
+		if ($disabled === false || $disabled['Reason'] !== CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
 			throw new Exception('Account not disabled for invalid email');
 		}
 

@@ -111,7 +111,7 @@ class CurrentSector extends PlayerPage {
 		}
 
 		$protectionMessage = '';
-		if ($player->getNewbieTurns()) {
+		if ($player->getNewbieTurns() > 0) {
 			if ($player->getNewbieTurns() < 25) {
 				$protectionMessage = '<span class="blue">PROTECTION</span>: You are almost out of <span class="green">NEWBIE</span> protection.';
 			} else {

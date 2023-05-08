@@ -26,7 +26,7 @@ class NewsletterSendProcessor extends AccountPageProcessor {
 
 		$set_mail_body = function(PHPMailer $mail, string $newsletterHtml, string $newsletterText, string $salutation): void {
 			// Prepend the salutation if one is given
-			if ($salutation) {
+			if ($salutation !== '') {
 				if (!empty($newsletterHtml)) {
 					$newsletterHtml = $salutation . '<br /><br />' . $newsletterHtml;
 				}

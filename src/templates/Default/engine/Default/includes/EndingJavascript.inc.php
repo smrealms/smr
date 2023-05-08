@@ -38,7 +38,7 @@ if (isset($AddRaceRadarChartJS) && isset($SelectedRaceID)) { ?>
 
 $AvailableLinks = Globals::getAvailableLinks(); ?>
 <script>$(function(){<?php
-	if ($AJAX_ENABLE_REFRESH) { ?>
+	if ($AJAX_ENABLE_REFRESH !== false) { ?>
 		initRefresh('<?php echo $AJAX_ENABLE_REFRESH; ?>');<?php
 	}
 	foreach ($AvailableLinks as $LinkName => $AvailableLink) {

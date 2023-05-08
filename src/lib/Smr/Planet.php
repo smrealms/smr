@@ -974,7 +974,7 @@ class Planet {
 			return 'You do not have enough turns to build.';
 		}
 		foreach ($this->getStructureTypes($constructionID)->hardwareCost() as $hardwareID) {
-			if (!$constructor->getShip()->getHardware($hardwareID)) {
+			if ($constructor->getShip()->getHardware($hardwareID) === 0) {
 				return 'You do not have the hardware needed for this type of building!';
 			}
 		}
@@ -1046,7 +1046,7 @@ class Planet {
 	}
 
 	public function stopBuilding(int $constructionID): bool {
-		$matchingBuilding = false;
+		$matchingBuilding = null;
 		$latestFinish = 0;
 		foreach ($this->getCurrentlyBuilding() as $building) {
 			if ($building['ConstructionID'] === $constructionID && $building['Finishes'] > $latestFinish) {
@@ -1054,7 +1054,7 @@ class Planet {
 				$matchingBuilding = $building;
 			}
 		}
-		if ($matchingBuilding) {
+		if ($matchingBuilding !== null) {
 			$this->hasStoppedBuilding[] = $matchingBuilding['BuildingSlotID'];
 			unset($this->currentlyBuilding[$matchingBuilding['BuildingSlotID']]);
 			return true;

@@ -68,7 +68,7 @@ function checkHtmlShipName(string $name): void {
 	}
 	$bad = ['<form', '<applet', '<a ', '<bgsound', '<body', '<meta', '<dd', '<dir', '<dl', '<!doctype', '<dt', '<embed', '<frame', '<head', '<hr', '<iframe', '<ilayer', '<img', '<input', '<isindex', '<layer', '<li', '<link', '<map', '<menu', '<nobr', '<no', '<object', '<ol', '<opt', '<p', '<script', '<select', '<sound', '<td', '<text', '<t', '<ul', '<h', '<br', '<marquee', 'size', 'width', 'height', '<div', 'width='];
 	foreach ($bad as $check) {
-		if (stristr($name, $check)) {
+		if (str_contains($name, $check)) {
 			$check .= '*>';
 			if ($check !== '<h*>') {
 				create_error(htmlentities($check, ENT_NOQUOTES, 'utf-8') . ' tag is not allowed in ship names.<br /><small>If you believe the name is appropriate please contact an admin.</small>');

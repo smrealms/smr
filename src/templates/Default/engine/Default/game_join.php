@@ -14,7 +14,7 @@ Each Space Merchant Realms round requires you to create a new Trader.<br />
 To do this you must choose a name for yourself and select your race.<br />
 
 <br /><?php
-if ($Game->getDescription()) { ?>
+if ($Game->getDescription() !== '') { ?>
 	<h2>Round Description</h2>
 	<p><?php echo bbifyMessage($Game->getDescription(), $Game->getGameID()); ?></p><?php
 }?>

@@ -143,7 +143,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 
 				// If the oldID still exists, then we have to defer shifting until
 				// this destination has been vacated.
-				if (array_search($newID, $needsUpdate, true)) {
+				if (in_array($newID, $needsUpdate, true)) {
 					continue;
 				}
 
