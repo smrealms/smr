@@ -10,7 +10,7 @@ use Smr\Irc\Message;
  */
 function channel_msg_op($fp, Message $msg): bool {
 
-	if (preg_match('/^!op(\s*help)?$/i', $msg->text)) {
+	if (preg_match('/^!op(\s*help)?$/i', $msg->text) === 1) {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -100,7 +100,7 @@ function channel_msg_op_cancel($fp, Message $msg, AbstractPlayer $player): bool 
  */
 function channel_msg_op_set($fp, Message $msg, AbstractPlayer $player): bool {
 
-	if (preg_match('/^!op set (.*)$/i', $msg->text, $args)) {
+	if (preg_match('/^!op set (.*)$/i', $msg->text, $args) === 1) {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -179,7 +179,7 @@ function channel_msg_op_turns($fp, Message $msg, AbstractPlayer $player): bool {
  */
 function channel_msg_op_response($fp, Message $msg, AbstractPlayer $player): bool {
 
-	if (preg_match('/^!op (yes|no|maybe)$/i', $msg->text, $args)) {
+	if (preg_match('/^!op (yes|no|maybe)$/i', $msg->text, $args) === 1) {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;

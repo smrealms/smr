@@ -66,7 +66,7 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 
 		// Populate the sectors
 		foreach ($data as $key => $vals) {
-			if (!preg_match('/^Sector=(\d+)$/', $key, $matches)) {
+			if (preg_match('/^Sector=(\d+)$/', $key, $matches) !== 1) {
 				continue;
 			}
 

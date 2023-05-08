@@ -7,7 +7,7 @@ use Smr\Database;
  */
 function channel_join($fp, string $rdata): bool {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sJOIN\s:(.*)\s$/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sJOIN\s:(.*)\s$/i', $rdata, $msg) === 1) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
@@ -83,7 +83,7 @@ function channel_part($fp, string $rdata): bool {
 
 	// :Azool!Azool@coldfront-F706F7E1.co.hfc.comcastbusiness.net PART #smr-irc :
 	// :SomeGuy!mrspock@coldfront-DD847655.dip.t-dialin.net PART #smr-irc
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPART\s(.*?)\s/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPART\s(.*?)\s/i', $rdata, $msg) === 1) {
 
 		$nick = $msg[1];
 		$user = $msg[2];

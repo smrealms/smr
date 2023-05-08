@@ -89,7 +89,7 @@ function check_for_registration($fp, string $nick, string $channel, Closure $cal
  * @param resource $fp
  */
 function channel_msg_with_registration($fp, Message $msg): bool {
-	if (preg_match('/^!(money|forces|seed|seedlist|op|sd)\s/i', $msg->text)) {
+	if (preg_match('/^!(money|forces|seed|seedlist|op|sd)\s/i', $msg->text) === 1) {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -171,7 +171,7 @@ function channel_msg_seen($fp, Message $msg): bool {
 
 	// MrSpock, please look a bit closer at the memberlist of this channel.
 
-	if (preg_match('/^!seen\s(.*)$/i', $msg->text, $args)) {
+	if (preg_match('/^!seen\s(.*)$/i', $msg->text, $args) === 1) {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -267,7 +267,7 @@ function channel_msg_money($fp, Message $msg, AbstractPlayer $player): bool {
  */
 function channel_msg_timer($fp, Message $msg): bool {
 
-	if (preg_match('/^!timer(\s\d+)?(\s.+)?$/i', $msg->text, $args)) {
+	if (preg_match('/^!timer(\s\d+)?(\s.+)?$/i', $msg->text, $args) === 1) {
 
 		global $events;
 
@@ -314,7 +314,7 @@ function channel_msg_timer($fp, Message $msg): bool {
  * @param resource $fp
  */
 function channel_msg_8ball($fp, Message $msg): bool {
-	if (preg_match('/^!8ball (.*)$/i', $msg->text, $args)) {
+	if (preg_match('/^!8ball (.*)$/i', $msg->text, $args) === 1) {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -334,7 +334,7 @@ function channel_msg_8ball($fp, Message $msg): bool {
  * @param resource $fp
  */
 function channel_msg_forces($fp, Message $msg, AbstractPlayer $player): bool {
-	if (preg_match('/^!forces(.*)$/i', $msg->text, $args)) {
+	if (preg_match('/^!forces(.*)$/i', $msg->text, $args) === 1) {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -387,7 +387,7 @@ function channel_msg_help($fp, Message $msg): bool {
 		return true;
 
 		// help on a spec command?
-	} elseif (preg_match('/^!help\s(.*)\s$/i', $msg->text, $args)) {
+	} elseif (preg_match('/^!help\s(.*)\s$/i', $msg->text, $args) === 1) {
 
 		$nick = $msg->nick;
 		$user = $msg->user;

@@ -41,7 +41,7 @@ class AlbumEditProcessor extends AccountPageProcessor {
 		$website = Request::get('website');
 		if ($website !== '') {
 			// add http:// if missing
-			if (!preg_match('=://=', $website)) {
+			if (preg_match('=://=', $website) !== 1) {
 				$website = 'http://' . $website;
 			}
 

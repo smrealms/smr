@@ -8,7 +8,7 @@ use Smr\Irc\Message;
  */
 function channel_msg_sd($fp, Message $msg): bool {
 
-	if (preg_match('/^!sd(\s*help)?$/i', $msg->text)) {
+	if (preg_match('/^!sd(\s*help)?$/i', $msg->text) === 1) {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -32,7 +32,7 @@ function channel_msg_sd($fp, Message $msg): bool {
  */
 function channel_msg_sd_set($fp, Message $msg): bool {
 
-	if (preg_match('/^!sd set (\d+) (\d+)$/i', $msg->text, $args)) {
+	if (preg_match('/^!sd set (\d+) (\d+)$/i', $msg->text, $args) === 1) {
 
 		global $sds;
 
@@ -72,7 +72,7 @@ function channel_msg_sd_set($fp, Message $msg): bool {
  */
 function channel_msg_sd_del($fp, Message $msg): bool {
 
-	if (preg_match('/^!sd del (\d+)$/i', $msg->text, $args)) {
+	if (preg_match('/^!sd del (\d+)$/i', $msg->text, $args) === 1) {
 
 		global $sds;
 
