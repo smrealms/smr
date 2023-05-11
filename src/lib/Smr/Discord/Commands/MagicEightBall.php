@@ -21,7 +21,7 @@ class MagicEightBall extends Command {
 	}
 
 	public function response(string ...$args): array {
-		if (empty($args)) {
+		if (count($args) === 0) {
 			return ['Do you have a question for the magic 8-ball?'];
 		}
 		return [shared_channel_msg_8ball()];

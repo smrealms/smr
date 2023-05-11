@@ -19,22 +19,18 @@ class CargoDump extends PlayerPage {
 
 		$template->assign('PageTopic', 'Dump Cargo');
 
-		if ($ship->hasCargo()) {
-
-			$goods = [];
-			foreach ($ship->getCargo() as $goodID => $amount) {
-				$container = new CargoDumpProcessor($goodID);
-				$good = TradeGood::get($goodID);
-				$goods[] = [
-					'image' => $good->getImageHTML(),
-					'name' => $good->name,
-					'amount' => $amount,
-					'dump_href' => $container->href(),
-				];
-			}
-
-			$template->assign('Goods', $goods);
+		$goods = [];
+		foreach ($ship->getCargo() as $goodID => $amount) {
+			$container = new CargoDumpProcessor($goodID);
+			$good = TradeGood::get($goodID);
+			$goods[] = [
+				'image' => $good->getImageHTML(),
+				'name' => $good->name,
+				'amount' => $amount,
+				'dump_href' => $container->href(),
+			];
 		}
+		$template->assign('Goods', $goods);
 	}
 
 }

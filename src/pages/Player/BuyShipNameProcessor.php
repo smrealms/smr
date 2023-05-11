@@ -45,7 +45,7 @@ function checkShipLogo(string $filename): void {
 }
 
 function checkTextShipName(string $name, int $max_len): void {
-	if (empty($name)) {
+	if ($name === '') {
 		create_error('Please enter a ship name!');
 	}
 
@@ -84,7 +84,7 @@ function checkHtmlShipName(string $name): void {
 	$doc->loadHTML('<html>' . $name . '</html>');
 	libxml_use_internal_errors($use_errors);
 	$error = libxml_get_last_error();
-	if (!empty($error)) {
+	if ($error !== false) {
 		create_error('Your ship name must not contain invalid HTML!<br /><small>If you think you received this message in error, please contact an admin.</small>');
 	}
 

@@ -21,11 +21,6 @@ class PlotCourseConventionalProcessor extends PlayerPageProcessor {
 		$start = $this->from ?? Request::getInt('from');
 		$target = $this->to ?? Request::getInt('to');
 
-		// perform some basic checks on both numbers
-		if (empty($start) || empty($target)) {
-			create_error('Where do you want to go today?');
-		}
-
 		if ($start === $target) {
 			create_error('Hmmmm...if ' . $start . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*you\'re real smart*cough*');
 		}

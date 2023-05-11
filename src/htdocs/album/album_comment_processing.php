@@ -39,7 +39,7 @@ try {
 	$db = Database::getInstance();
 
 	$comment = Request::get('comment');
-	if (empty($comment)) {
+	if ($comment === '') {
 		create_error('Please enter a comment.');
 	}
 

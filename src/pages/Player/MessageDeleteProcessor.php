@@ -29,7 +29,7 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 
 		// Delete any individually selected messages
 		$message_id_list = Request::getIntArray('message_id', []);
-		if (!empty($message_id_list)) {
+		if (count($message_id_list) > 0) {
 			if ($this->folderID === MSG_SENT) {
 				$db->write('UPDATE message SET sender_delete = :sender_delete WHERE message_id IN (:message_ids)', [
 					'sender_delete' => $db->escapeBoolean(true),

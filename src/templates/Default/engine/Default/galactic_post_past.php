@@ -4,6 +4,7 @@
  * @var int $SelectedGame
  * @var string $SelectGameHREF
  * @var array<array{game_name: string, game_id: int}> $PublishedGames
+ * @var array<array{title: string, online_since: int, href: string}> $PastEditions
  */
 
 ?>
@@ -20,7 +21,7 @@ Select Game:&nbsp;
 </form><br />
 
 <?php
-if (empty($PastEditions)) { ?>
+if (count($PastEditions) === 0) { ?>
 	<p>There are no Galactic Post editions for this game!</p><?php
 } else { ?>
 	<p>Choose a Galactic Post edition to view:</p>

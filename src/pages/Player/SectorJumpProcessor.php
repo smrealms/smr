@@ -39,11 +39,6 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 			create_error('You are on a planet! You must launch first!');
 		}
 
-		// if no 'target' is given we forward to plot
-		if (empty($target)) {
-			create_error('Where do you want to go today?');
-		}
-
 		if ($player->getSectorID() === $target) {
 			create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*you\'re real smart*cough*');
 		}

@@ -32,7 +32,7 @@ try {
 	}
 
 	// check if we got a sn number with our url
-	if (empty($session->getSN())) {
+	if ($session->getSN() === '') {
 		create_error('Your browser lost the SN. Try to reload the page!');
 	}
 

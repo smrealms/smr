@@ -1,11 +1,16 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var ?string $ProcessingMsg
+ * @var array<int, string> $DisabledGames
+ */
+
 // This var is passed by the processing file if we enabled a game
-if (!empty($ProcessingMsg)) {
+if (isset($ProcessingMsg)) {
 	echo $ProcessingMsg;
 }
 
-if (empty($DisabledGames)) { ?>
+if (count($DisabledGames) === 0) { ?>
 	<p>All games are already enabled!</p><?php
 } else { ?>
 

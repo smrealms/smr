@@ -27,20 +27,18 @@ class NewsletterSendProcessor extends AccountPageProcessor {
 		$set_mail_body = function(PHPMailer $mail, string $newsletterHtml, string $newsletterText, string $salutation): void {
 			// Prepend the salutation if one is given
 			if ($salutation !== '') {
-				if (!empty($newsletterHtml)) {
+				if ($newsletterHtml !== '') {
 					$newsletterHtml = $salutation . '<br /><br />' . $newsletterHtml;
 				}
-				if (!empty($newsletterText)) {
+				if ($newsletterText !== '') {
 					$newsletterText = $salutation . EOL . EOL . $newsletterText;
 				}
 			}
 
 			// Set the body text, giving preference to HTML
-			if (!empty($newsletterHtml)) {
+			if ($newsletterHtml !== '') {
+				$mail->AltBody = $newsletterText;
 				$mail->msgHTML($newsletterHtml);
-				if (!empty($newsletterText)) {
-					$mail->AltBody = $newsletterText;
-				}
 			} else {
 				$mail->Body = $newsletterText;
 			}
@@ -87,7 +85,7 @@ class NewsletterSendProcessor extends AccountPageProcessor {
 
 				// Reset the message body with personalized salutation, if requested
 				$salutation = Request::get('salutation');
-				if (!empty($salutation)) {
+				if ($salutation !== '') {
 					$salutation .= ' ' . $to_name . ',';
 					$set_mail_body($mail, $this->newsletterHtml, $this->newsletterText, $salutation);
 				}

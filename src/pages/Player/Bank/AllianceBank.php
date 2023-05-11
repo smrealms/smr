@@ -129,23 +129,23 @@ class AllianceBank extends PlayerPage {
 			'limit' => 1 + $maxValue - $minValue,
 		]);
 
-		// only if we have at least one result
-		if ($dbResult->hasRecord()) {
-			$bankTransactions = [];
-			foreach ($dbResult->records() as $dbRecord) {
-				$trans = $dbRecord->getString('transaction');
-				$bankTransactions[$dbRecord->getInt('transaction_id')] = [
-					'Time' => $dbRecord->getInt('time'),
-					'Player' => Player::getPlayer($dbRecord->getInt('payee_id'), $player->getGameID()),
-					'Reason' => $dbRecord->getString('reason'),
-					'TransactionType' => $trans,
-					'Withdrawal' => $trans === 'Payment' ? number_format($dbRecord->getInt('amount')) : '',
-					'Deposit' => $trans === 'Deposit' ? number_format($dbRecord->getInt('amount')) : '',
-					'Exempt' => $dbRecord->getInt('exempt') === 1,
-				];
-			}
-			$template->assign('BankTransactions', $bankTransactions);
+		$bankTransactions = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$trans = $dbRecord->getString('transaction');
+			$bankTransactions[$dbRecord->getInt('transaction_id')] = [
+				'Time' => $dbRecord->getInt('time'),
+				'Player' => Player::getPlayer($dbRecord->getInt('payee_id'), $player->getGameID()),
+				'Reason' => $dbRecord->getString('reason'),
+				'TransactionType' => $trans,
+				'Withdrawal' => $trans === 'Payment' ? number_format($dbRecord->getInt('amount')) : '',
+				'Deposit' => $trans === 'Deposit' ? number_format($dbRecord->getInt('amount')) : '',
+				'Exempt' => $dbRecord->getInt('exempt') === 1,
+			];
+		}
+		$template->assign('BankTransactions', $bankTransactions);
 
+		// only if we have at least one result
+		if (count($bankTransactions) > 0) {
 			$template->assign('MinValue', $minValue);
 			$template->assign('MaxValue', $maxValue);
 			$container = new self($allianceID);

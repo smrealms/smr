@@ -10,7 +10,7 @@ class News {
 	/**
 	 * Takes a populated query and returns the news items.
 	 *
-	 * @return array<array<string, string>>
+	 * @return array<array{Date: string, Message: string}>
 	 */
 	public static function getNewsItems(DatabaseResult $dbResult): array {
 		$session = Session::getInstance();

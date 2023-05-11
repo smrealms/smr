@@ -85,12 +85,12 @@ class CheckMap extends AccountPage {
 		// Largest port sell multipliers per galaxy
 		$maxSellMultipliers = [];
 		foreach ($galaxies as $galaxy) {
-			$max = [];
+			$max = null;
 			foreach ($galaxy->getPorts() as $port) {
 				foreach ($port->getSellGoodIDs() as $goodID) {
 					$distance = $port->getGoodDistance($goodID);
 					// For distance ties, prefer higher good IDs
-					if (empty($max) || $distance >= $max['Distance']) {
+					if ($max === null || $distance >= $max['Distance']) {
 						$max = [
 							'Port' => $port,
 							'GoodID' => $goodID,
@@ -99,7 +99,7 @@ class CheckMap extends AccountPage {
 					}
 				}
 			}
-			if (!empty($max)) {
+			if ($max !== null) {
 				$output = $max['Distance'] . 'x ' . TradeGood::get($max['GoodID'])->name . ' at Port #' . $max['Port']->getSectorID() . ' (' . $max['Port']->getRaceName() . ')';
 				$maxSellMultipliers[$galaxy->getDisplayName()] = $output;
 			}

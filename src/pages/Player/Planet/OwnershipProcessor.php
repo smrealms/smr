@@ -42,7 +42,7 @@ class OwnershipProcessor extends PlayerPageProcessor {
 			$player->log(LOG_TYPE_PLANETS, 'Player takes ownership of planet.');
 		} elseif ($action === 'Rename') {
 			$name = Request::get('name');
-			if (empty($name)) {
+			if ($name === '') {
 				create_error('You cannot leave your planet nameless!');
 			}
 			// rename planet

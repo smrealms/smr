@@ -17,7 +17,7 @@ class AllianceCreateProcessor extends PlayerPageProcessor {
 		}
 
 		$name = Request::get('name');
-		if (empty($name)) {
+		if ($name === '') {
 			throw new Exception('No alliance name entered');
 		}
 

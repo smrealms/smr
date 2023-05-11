@@ -17,7 +17,7 @@ class FeatureRequestCommentProcessor extends AccountPageProcessor {
 
 	public function build(Account $account): never {
 		$comment = Request::get('comment');
-		if (empty($comment)) {
+		if ($comment === '') {
 			create_error('We need a comment to add!');
 		}
 

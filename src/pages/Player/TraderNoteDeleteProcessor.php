@@ -11,7 +11,7 @@ class TraderNoteDeleteProcessor extends PlayerPageProcessor {
 
 	public function build(AbstractPlayer $player): never {
 		$note_ids = Request::getIntArray('note_id', []);
-		if (!empty($note_ids)) {
+		if (count($note_ids) > 0) {
 			$db = Database::getInstance();
 			$db->write('DELETE FROM player_has_notes WHERE game_id = :game_id
 							AND account_id = :account_id

@@ -171,51 +171,37 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 
 		// message to send out
 		if ($forces->getOwnerID() !== $player->getAccountID() && $forces->getOwner()->isForceDropMessages()) {
-			$mines_message = '';
+			$msgParts = [];
 			if ($change_mines > 0) {
-				$mines_message = 'added ' . pluralise($change_mines, 'mine');
+				$msgParts[] = 'added ' . pluralise($change_mines, 'mine');
 			} elseif ($change_mines < 0) {
-				$mines_message = 'removed ' . pluralise(abs($change_mines), 'mine');
+				$msgParts[] = 'removed ' . pluralise(abs($change_mines), 'mine');
 			}
 
 			if ($change_combat_drones > 0) {
-				$combat_drones_message = ($change_mines <= 0 ? 'added ' : '') . pluralise($change_combat_drones, 'combat drone');
+				$msgParts[] = ($change_mines <= 0 ? 'added ' : '') . pluralise($change_combat_drones, 'combat drone');
 			} elseif ($change_combat_drones < 0) {
-				$combat_drones_message = ($change_mines >= 0 ? 'removed ' : '') . pluralise(abs($change_combat_drones), 'combat drone');
+				$msgParts[] = ($change_mines >= 0 ? 'removed ' : '') . pluralise(abs($change_combat_drones), 'combat drone');
 			}
 
 			if ($change_scout_drones > 0) {
 				$scout_drones_message = '';
-				if ((isset($combat_drones_message) && $change_combat_drones < 0) || (!isset($combat_drones_message) && $change_mines <= 0)) {
+				if ($change_combat_drones < 0 || ($change_combat_drones === 0 && $change_mines <= 0)) {
 					$scout_drones_message = 'added ';
 				}
 				$scout_drones_message .= pluralise($change_scout_drones, 'scout drone');
+				$msgParts[] = $scout_drones_message;
 			} elseif ($change_scout_drones < 0) {
 				$scout_drones_message = '';
-				if ((isset($combat_drones_message) && $change_combat_drones > 0) || (!isset($combat_drones_message) && $change_mines >= 0)) {
+				if ($change_combat_drones > 0 || ($change_combat_drones === 0 && $change_mines >= 0)) {
 					$scout_drones_message = 'removed ';
 				}
 				$scout_drones_message .= pluralise(abs($change_scout_drones), 'scout drone');
+				$msgParts[] = $scout_drones_message;
 			}
 
 			// now compile it together
-			$message = $player->getBBLink() . ' has ' . $mines_message;
-
-			if (!empty($mines_message) && isset($combat_drones_message) && !isset($scout_drones_message)) {
-				$message .= ' and ' . $combat_drones_message;
-			} elseif (!empty($mines_message) && isset($combat_drones_message)) {
-				$message .= ', ' . $combat_drones_message;
-			} elseif (empty($mines_message) && isset($combat_drones_message)) {
-				$message .= $combat_drones_message;
-			}
-
-			if (!empty($mines_message) && isset($combat_drones_message) && isset($scout_drones_message)) {
-				$message .= ', and ' . $scout_drones_message;
-			} elseif ((!empty($mines_message) || isset($combat_drones_message)) && isset($scout_drones_message)) {
-				$message .= ' and ' . $scout_drones_message;
-			} elseif (empty($mines_message) && !isset($combat_drones_message) && isset($scout_drones_message)) {
-				$message .= $scout_drones_message;
-			}
+			$message = $player->getBBLink() . ' has ' . format_list($msgParts);
 
 			if ($change_mines >= 0 && $change_combat_drones >= 0 && $change_scout_drones >= 0) {
 				$message .= ' to';

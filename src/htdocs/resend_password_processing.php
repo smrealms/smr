@@ -7,13 +7,14 @@ use Smr\Request;
 try {
 	require_once('../bootstrap.php');
 
-	if (empty(Request::get('email'))) {
+	$email = Request::get('email');
+	if ($email === '') {
 		create_error('You must specify an e-mail address!');
 	}
 
 	// get this user from db
 	try {
-		$account = Account::getAccountByEmail(Request::get('email'));
+		$account = Account::getAccountByEmail($email);
 	} catch (AccountNotFound) {
 		// unknown user
 		create_error('The specified e-mail address is not registered!');

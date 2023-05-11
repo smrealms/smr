@@ -1,13 +1,14 @@
 <?php declare(strict_types=1);
 
 /**
+ * @var array<array{type: string, player: string, reason: string, amount: string, transactionID: int}> $Transactions
  * @var string $ExemptHREF
  */
 
 ?>
 <h2>Exemption Requests</h2>
 <br /><?php
-if (!empty($Transactions)) { ?>
+if (count($Transactions) > 0) { ?>
 	Alliance members have requested exemptions for the following transactions.<br /><br />
 	<form method="POST" action="<?php echo $ExemptHREF; ?>">
 		<table class="standard">

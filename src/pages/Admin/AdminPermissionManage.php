@@ -39,7 +39,7 @@ class AdminPermissionManage extends AccountPage {
 		}
 		$template->assign('AdminLinks', $adminLinks);
 
-		if (empty($admin_id)) {
+		if ($admin_id === null) {
 			// If we don't have an account_id here display an account list
 			$validatedAccounts = [];
 			$dbResult = $db->read('SELECT account_id, login

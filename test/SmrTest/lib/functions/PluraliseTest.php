@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SmrTest\lib;
+namespace SmrTest\lib\functions;
 
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\TestWith;

@@ -382,7 +382,7 @@ class Session {
 	}
 
 	public function saveAjaxReturns(): void {
-		if (empty($this->ajaxReturns)) {
+		if (count($this->ajaxReturns) === 0) {
 			return;
 		}
 		$db = Database::getInstance();

@@ -11,7 +11,7 @@ use Smr\Exceptions\UserError;
 class DisplayNameValidator {
 
 	public static function validate(string $name): void {
-		if (empty($name)) {
+		if ($name === '') {
 			throw new UserError('You must enter a name!');
 		}
 

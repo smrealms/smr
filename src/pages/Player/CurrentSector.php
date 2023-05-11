@@ -106,11 +106,11 @@ class CurrentSector extends PlayerPage {
 				$turnsMessage .= ' You will gain another turn in ' . format_time($player->getTimeUntilNextTurn()) . '.';
 			}
 		}
-		if (!empty($turnsMessage)) {
+		if ($turnsMessage !== '') {
 			$template->assign('TurnsMessage', $turnsMessage);
 		}
 
-		$protectionMessage = '';
+		$protectionMessage = null;
 		if ($player->getNewbieTurns() > 0) {
 			if ($player->getNewbieTurns() < 25) {
 				$protectionMessage = '<span class="blue">PROTECTION</span>: You are almost out of <span class="green">NEWBIE</span> protection.';
@@ -123,7 +123,7 @@ class CurrentSector extends PlayerPage {
 			$protectionMessage = '<span class="blue">PROTECTION</span>: You are <span class="red">NOT</span> under protection.';
 		}
 
-		if (!empty($protectionMessage)) {
+		if ($protectionMessage !== null) {
 			$template->assign('ProtectionMessage', $protectionMessage);
 		}
 

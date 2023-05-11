@@ -87,7 +87,7 @@ class GamePlay extends AccountPage {
 			$games['Play'][$game_id]['LastMovement'] = format_time(Epoch::time() - $curr_player->getLastActive(), true);
 		}
 
-		if (empty($games['Play'])) {
+		if (count($games['Play']) === 0) {
 			unset($games['Play']);
 		}
 

@@ -8,7 +8,7 @@ try {
 	require_once('../bootstrap.php');
 
 	$password = Request::get('password');
-	if (empty($password)) {
+	if ($password === '') {
 		create_error('Password is missing!');
 	}
 
@@ -25,7 +25,7 @@ try {
 	$passwordReset = Request::get('password_reset');
 	try {
 		$account = Account::getAccountByLogin($login);
-		if (empty($passwordReset) || $account->getPasswordReset() !== $passwordReset) {
+		if ($passwordReset === '' || $account->getPasswordReset() !== $passwordReset) {
 			throw new AccountNotFound('Wrong password reset code');
 		}
 	} catch (AccountNotFound) {

@@ -27,7 +27,7 @@ try {
 	}
 
 	//Check the captcha if it's a standard registration.
-	if ($socialId === null && !empty(RECAPTCHA_PRIVATE)) {
+	if ($socialId === null && RECAPTCHA_PRIVATE !== '') {
 		$reCaptcha = new ReCaptcha(RECAPTCHA_PRIVATE);
 		// Was there a reCAPTCHA response?
 		$resp = $reCaptcha->verify(
@@ -49,11 +49,11 @@ try {
 		create_error('Login names cannot begin with "NPC".');
 	}
 
-	if (empty($login)) {
+	if ($login === '') {
 		create_error('Login name is missing!');
 	}
 
-	if ($socialId === null && empty($password)) {
+	if ($socialId === null && $password === '') {
 		create_error('Password is missing!');
 	}
 

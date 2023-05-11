@@ -34,7 +34,7 @@ class NpcManage extends AccountPage {
 		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$gameID = $dbRecord->getInt('game_id');
-			if (empty($selectedGameID)) {
+			if ($selectedGameID === null) {
 				$selectedGameID = $gameID;
 			}
 			$games[] = [

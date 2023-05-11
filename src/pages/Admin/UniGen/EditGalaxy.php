@@ -28,7 +28,7 @@ class EditGalaxy extends AccountPage {
 		$this->focusSectorID ??= Request::getInt('focus_sector_id', 0);
 
 		$galaxies = Galaxy::getGameGalaxies($this->gameID);
-		if (empty($galaxies)) {
+		if (count($galaxies) === 0) {
 			// Game was created, but no galaxies exist, so go back to
 			// the galaxy generation page
 			$container = new CreateGalaxies($this->gameID);

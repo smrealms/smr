@@ -16,7 +16,7 @@ class AccountEditSearchProcessor extends AccountPageProcessor {
 		$player_name = Request::get('player_name');
 		$searchGameID = Request::getInt('game_id');
 
-		if (!empty($player_name)) {
+		if ($player_name !== '') {
 			$gameIDClause = 'AND (:game_id = 0 OR :game_id = game_id)';
 			$dbResult = $db->read('SELECT account_id FROM player
 							WHERE player_name = :player_name ' . $gameIDClause . '

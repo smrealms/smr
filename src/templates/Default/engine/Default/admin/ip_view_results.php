@@ -46,10 +46,10 @@ if ($type === 'comp_share') {
 } elseif ($type === 'account_ips') { ?>
 	<center><?php
 		echo $Summary;
-		if (!empty($Exception)) { ?>
+		if (isset($Exception) && $Exception !== '') { ?>
 			<br />This account has an exception: <?php echo $Exception;
 		}
-		if (!empty($CloseReason)) { ?>
+		if (isset($CloseReason) && $CloseReason !== '') { ?>
 			<br />This account is closed: <?php echo $CloseReason;
 		} ?>
 		<br /><br />

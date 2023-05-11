@@ -3,6 +3,7 @@
 /**
  * @var ?string $BackHREF
  * @var ?string $StatName
+ * @var ?array<array{bold: string, name: string, stat: int}> $Rankings
  */
 
 if (isset($Links)) { ?>
@@ -16,7 +17,7 @@ if (isset($Links)) { ?>
 	<div class="center"><a href="<?php echo $BackHREF; ?>">&lt;&lt;Back</a></div>
 
 	<?php
-	if (!empty($Rankings)) { ?>
+	if (isset($Rankings) && count($Rankings) > 0) { ?>
 		<table class="shrink center standard">
 			<tr>
 				<th>Rank</th>

@@ -23,7 +23,7 @@ class Facebook extends SocialLogin {
 	}
 
 	public function getLoginUrl(): string {
-		if (empty(FACEBOOK_APP_ID)) {
+		if (FACEBOOK_APP_ID === '') {
 			// No facebook app specified. Continuing would throw an exception.
 			return URL;
 		}

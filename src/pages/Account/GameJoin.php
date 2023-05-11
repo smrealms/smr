@@ -61,7 +61,7 @@ class GameJoin extends AccountPage {
 				'Selected' => false,
 			];
 		}
-		if (empty($races)) {
+		if (count($races) === 0) {
 			create_error('This game has no races assigned yet!');
 		}
 

@@ -27,7 +27,7 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 			create_error('You must actually enter an amount > 0!');
 		}
 		$message = Request::get('message');
-		if (empty($message)) {
+		if ($message === '') {
 			$message = 'No reason specified';
 		}
 

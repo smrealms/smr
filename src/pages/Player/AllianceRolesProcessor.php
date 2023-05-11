@@ -49,7 +49,7 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 		$roleName = Request::get('role');
 		if ($this->roleID === null) {
 			// role empty too? that doesn't make sence
-			if (empty($roleName)) {
+			if ($roleName === '') {
 				throw new Exception('Empty role name is not allowed');
 			}
 
@@ -85,7 +85,7 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 			]);
 			$db->unlock();
 		} else {
-			if (empty($roleName)) {
+			if ($roleName === '') {
 				// if no role is given we delete that entry
 				if ($this->roleID === ALLIANCE_ROLE_LEADER) {
 					create_error('You cannot delete the leader role.');

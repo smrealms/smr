@@ -10,7 +10,7 @@ require_once(TOOLS . 'chat_helpers/channel_msg_seedlist.php');
  */
 function shared_channel_msg_forces(AbstractPlayer $player, ?string $option = null): array {
 	$db = Database::getInstance();
-	if (empty($option)) {
+	if ($option === null || $option === '') {
 		$dbResult = $db->read('SELECT sector_has_forces.sector_id AS sector, expire_time
 			FROM sector_has_forces
 			WHERE game_id = :game_id

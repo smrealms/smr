@@ -22,7 +22,7 @@ class Google extends SocialLogin {
 	}
 
 	public function getLoginUrl(): string {
-		if (empty(GOOGLE_CLIENT_ID)) {
+		if (GOOGLE_CLIENT_ID === '') {
 			// No google api specified. Continuing would throw an exception.
 			return URL;
 		}

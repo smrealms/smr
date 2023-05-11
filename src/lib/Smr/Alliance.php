@@ -345,6 +345,10 @@ class Alliance {
 		return $this->password;
 	}
 
+	public function hasPassword(): bool {
+		return $this->password !== '';
+	}
+
 	public function isRecruiting(): bool {
 		return $this->recruiting;
 	}
@@ -361,7 +365,7 @@ class Alliance {
 			$this->recruiting = true;
 			$this->password = '';
 		} elseif ($type === self::RECRUIT_PASSWORD) {
-			if (empty($password)) {
+			if ($password === '') {
 				throw new Exception('Password must not be empty here');
 			}
 			$this->recruiting = true;
@@ -374,7 +378,7 @@ class Alliance {
 	public function getRecruitType(): string {
 		return match (true) {
 			!$this->isRecruiting() => self::RECRUIT_CLOSED,
-			empty($this->getPassword()) => self::RECRUIT_OPEN,
+			!$this->hasPassword() => self::RECRUIT_OPEN,
 			default => self::RECRUIT_PASSWORD,
 		};
 	}
@@ -406,7 +410,7 @@ class Alliance {
 	 * Get (HTML-safe) alliance description for display.
 	 */
 	public function getDescription(): string {
-		if (empty($this->description)) {
+		if ($this->description === null) {
 			return '';
 		}
 		return htmlentities($this->description);

@@ -95,7 +95,7 @@ function logException(Throwable $err): void {
 	}
 
 	// Send error message to e-mail so that we have a permanent record
-	if (!empty(BUG_REPORT_TO_ADDRESSES)) {
+	if (count(BUG_REPORT_TO_ADDRESSES) > 0) {
 		$mail = setupMailer();
 		$mail->Subject = (defined('PAGE_PREFIX') ? PAGE_PREFIX : '??? ') .
 		                 'Automatic Bug Report: ' . $err->getMessage();
@@ -151,7 +151,7 @@ function exception_error_handler(int $errno, string $errstr, string $errfile, in
 
 function setupMailer(): PHPMailer {
 	$mail = new PHPMailer(true);
-	if (!empty(SMTP_HOSTNAME)) {
+	if (SMTP_HOSTNAME !== '') {
 		$mail->isSMTP();
 		$mail->Host = SMTP_HOSTNAME;
 	}
@@ -235,7 +235,7 @@ function random_alphabetic_string(int $length): string {
  * @return T
  */
 function array_rand_value(array $arr): mixed {
-	if (empty($arr)) {
+	if (count($arr) === 0) {
 		throw new Exception('Cannot pick random value from empty array!');
 	}
 	return $arr[array_rand($arr)];

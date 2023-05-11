@@ -50,7 +50,7 @@ class AccountCloseProcessor extends AccountPageProcessor {
 			foreach (Request::getIntArray('disable_id') as $id) {
 
 				$reason = $reasons[$id];
-				if (empty($reason)) {
+				if ($reason === '') {
 					$reason = $reasons2[$id];
 				}
 

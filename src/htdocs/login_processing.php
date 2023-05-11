@@ -51,7 +51,7 @@ try {
 			$password = Request::get('password', '');
 
 			// has the user submitted empty fields
-			if (empty($login) || empty($password)) {
+			if ($login === '' || $password === '') {
 				$msg = 'Please enter a login and password!';
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				exit;

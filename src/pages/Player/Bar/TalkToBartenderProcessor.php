@@ -22,7 +22,7 @@ class TalkToBartenderProcessor extends PlayerPageProcessor {
 
 		if ($action === 'tell') {
 			$gossip = Request::get('gossip_tell');
-			if (!empty($gossip)) {
+			if ($gossip !== '') {
 				$db = Database::getInstance();
 				$dbResult = $db->read('SELECT IFNULL(MAX(message_id)+1, 0) AS next_message_id FROM bar_tender WHERE game_id = :game_id', [
 					'game_id' => $db->escapeNumber($player->getGameID()),

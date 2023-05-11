@@ -4,9 +4,11 @@
  * @var ?string $MakePaperHREF
  * @var ?string $AddToNewsHREF
  * @var ?bool $AddedToNews
+ * @var ?array<array{title: string, addHREF: string}> $Papers
+ * @var array<array{title: string, writer: string, link: string}> $Articles
  */
 
-if (empty($Articles)) { ?>
+if (count($Articles) === 0) { ?>
 	<p>All articles have been assigned to a paper.</p><?php
 } else { ?>
 	It is your responsibility to make sure ALL HTML tags are closed!<br />
@@ -20,14 +22,14 @@ if (empty($Articles)) { ?>
 } ?>
 
 <br /><br /><?php
-if (isset($SelectedArticle)) { ?>
+if (isset($SelectedArticle) && isset($Papers) && isset($AddedToNews)) { ?>
 	<h2><?php echo $SelectedArticle['title']; ?></h2>
 	<p><?php echo $SelectedArticle['text']; ?></p>
 	<a href="<?php echo $SelectedArticle['editHREF']; ?>"><b>Edit this article</b></a>
 	<br />
 	<a href="<?php echo $SelectedArticle['deleteHREF']; ?>"><b>Delete This article</b></a>
 	<br /><br /><?php
-	if (empty($Papers)) { ?>
+	if (count($Papers) === 0) { ?>
 		You have no papers made that you can add an article to.
 		<a href="<?php echo $MakePaperHREF; ?>"><b>Click Here</b></a> to make a new one.<br /><?php
 	} else {

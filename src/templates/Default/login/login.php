@@ -4,6 +4,10 @@ use Smr\SocialLogin\Facebook;
 use Smr\SocialLogin\Google;
 use Smr\SocialLogin\Twitter;
 
+/**
+ * @var array<array{Time: string, Message: string}> $GameNews
+ */
+
 ?>
 <table class="center nobord" style="width:690px; border-spacing:30px;">
 	<tr>
@@ -85,7 +89,7 @@ use Smr\SocialLogin\Twitter;
 	</tr>
 </table><?php
 
-if (!empty($GameNews)) { ?>
+if (count($GameNews) > 0) { ?>
 	<table class="standard center" style="width:730px;">
 		<tr>
 			<th class="shrink">Time</th>

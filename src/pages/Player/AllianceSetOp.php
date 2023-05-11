@@ -25,9 +25,7 @@ class AllianceSetOp extends PlayerPage {
 		Menu::alliance($alliance->getAllianceID());
 
 		// Print any error messages that may have been created
-		if ($this->message !== null) {
-			$template->assign('Message', $this->message);
-		}
+		$template->assign('Message', $this->message);
 
 		// get the op from db
 		$db = Database::getInstance();

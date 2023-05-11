@@ -40,7 +40,7 @@ class AllianceSetOpProcessor extends PlayerPageProcessor {
 		} else {
 			// schedule an op
 			$date = Request::get('date');
-			if (empty($date)) {
+			if ($date === '') {
 				$this->error('You must specify a date for the operation!');
 			}
 

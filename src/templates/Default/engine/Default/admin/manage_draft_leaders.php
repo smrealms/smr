@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 
-if (empty($ActiveGames)) {
+/**
+ * @var array<array{game_name: string, game_id: int}> $ActiveGames
+ */
+
+if (count($ActiveGames) === 0) {
 	echo '<p>There are no active Draft games at this time!</p>';
 } else { ?>
 
@@ -39,11 +43,11 @@ if (empty($ActiveGames)) {
 	<?php
 
 	// This var is passed by the processing file if there was an error
-	if (!empty($ProcessingMsg)) {
+	if (isset($ProcessingMsg)) {
 		echo "<p>$ProcessingMsg</p>";
 	}
 
-	if (empty($CurrentLeaders)) {
+	if (!isset($CurrentLeaders) || count($CurrentLeaders) === 0) {
 		echo '<p>No current Draft Leaders for this game!</p>';
 	} else { ?>
 		<br />

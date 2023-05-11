@@ -11,7 +11,7 @@ class MessageBlacklistDeleteProcessor extends PlayerPageProcessor {
 
 	public function build(AbstractPlayer $player): never {
 		$entry_ids = Request::getIntArray('entry_ids', []);
-		if (empty($entry_ids)) {
+		if (count($entry_ids) === 0) {
 			$container = new MessageBlacklist('<span class="red bold">ERROR: </span>No entries selected for deletion.');
 			$container->go();
 		}

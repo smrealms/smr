@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 
-if (empty($GoodInfo)) { ?>
+/**
+ * @var array<array{Name: string, ImageHTML: string, ShipAmount: int, PlanetAmount: int, DefaultAmount: int, HREF: string}> $GoodInfo
+ */
+
+if (count($GoodInfo) === 0) { ?>
 	<p>There are no goods present on your ship or the planet!</p><?php
 	return;
 } ?>

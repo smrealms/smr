@@ -47,7 +47,7 @@ function shared_channel_msg_seedlist_add(AbstractPlayer $player, ?array $sectors
 		return ['Only the leader of the alliance manages the seedlist.'];
 	}
 
-	if (empty($sectors)) {
+	if ($sectors === null || count($sectors) === 0) {
 		return ['You must specify sectors to add.'];
 	}
 
@@ -110,7 +110,7 @@ function shared_channel_msg_seedlist_del(AbstractPlayer $player, ?array $sectors
 		return ['Only the leader of the alliance manages the seedlist.'];
 	}
 
-	if (empty($sectors)) {
+	if ($sectors === null || count($sectors) === 0) {
 		return ['You must specify sectors to delete.'];
 	}
 

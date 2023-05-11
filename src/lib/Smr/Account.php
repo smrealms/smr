@@ -115,7 +115,7 @@ class Account {
 	}
 
 	public static function getAccountByLogin(string $login, bool $forceUpdate = false): self {
-		if (!empty($login)) {
+		if ($login !== '') {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account WHERE login = :login', [
 				'login' => $db->escapeString($login),
@@ -129,7 +129,7 @@ class Account {
 	}
 
 	public static function getAccountByHofName(string $hofName, bool $forceUpdate = false): self {
-		if (!empty($hofName)) {
+		if ($hofName !== '') {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account WHERE hof_name = :hof_name', [
 				'hof_name' => $db->escapeString($hofName),
@@ -143,7 +143,7 @@ class Account {
 	}
 
 	public static function getAccountByEmail(?string $email, bool $forceUpdate = false): self {
-		if (!empty($email)) {
+		if ($email !== null && $email !== '') {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account WHERE email = :email', [
 				'email' => $db->escapeString($email),
@@ -157,7 +157,7 @@ class Account {
 	}
 
 	public static function getAccountByDiscordId(?string $id, bool $forceUpdate = false): self {
-		if (!empty($id)) {
+		if ($id !== null && $id !== '') {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account where discord_id = :discord_id', [
 				'discord_id' => $db->escapeString($id),
@@ -171,7 +171,7 @@ class Account {
 	}
 
 	public static function getAccountByIrcNick(?string $nick, bool $forceUpdate = false): self {
-		if (!empty($nick)) {
+		if ($nick !== null && $nick !== '') {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM account WHERE irc_nick = :irc_nick', [
 				'irc_nick' => $db->escapeString($nick),
@@ -295,10 +295,6 @@ class Account {
 
 			$this->template = $dbRecord->getString('template');
 			$this->colourScheme = $dbRecord->getString('colour_scheme');
-
-			if (empty($this->hofName)) {
-				$this->hofName = $this->login;
-			}
 		} else {
 			throw new AccountNotFound('Account ID ' . $accountID . ' does not exist!');
 		}
@@ -748,7 +744,7 @@ class Account {
 	 * Perform basic sanity checks on the usability of an email address.
 	 */
 	public static function checkEmail(string $email, self $owner = null): void {
-		if (empty($email)) {
+		if ($email === '') {
 			throw new UserError('Email address is missing!');
 		}
 

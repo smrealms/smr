@@ -428,9 +428,8 @@ function do_voodoo(): never {
 		$template->assign('ThisShip', $player->getShip());
 	}
 	$template->assign('ThisAccount', $account);
-	if ($account->getCssLink() !== null) {
-		$template->assign('ExtraCSSLink', $account->getCssLink());
-	}
+	$template->assign('ExtraCSSLink', $account->getCssLink());
+
 	doSkeletonAssigns($template);
 
 	// Set ajax refresh time
@@ -668,6 +667,22 @@ function doSkeletonAssigns(Template $template): void {
 }
 
 /**
+ * Join a list of items into a grammatically-correct sentence fragment.
+ *
+ * @param array<string> $items
+ */
+function format_list(array $items): string {
+	if (count($items) === 0) {
+		$result = '';
+	} elseif (count($items) === 1) {
+		$result = $items[0];
+	} else {
+		$result = implode(', ', array_slice($items, 0, -1)) . ' and ' . end($items);
+	}
+	return $result;
+}
+
+/**
  * Convert an integer number of seconds into a human-readable time for
  * grammatically-correct use in a sentence, i.e. prefixed with "in" when
  * the amount is positive.
@@ -733,12 +748,8 @@ function format_time(int $seconds, bool $short = false): string {
 		}
 	}
 
-	if (count($parts) === 1) {
-		$result = $parts[0];
-	} else {
-		// e.g. 5h, 10m and 30s
-		$result = implode(', ', array_slice($parts, 0, -1)) . ' and ' . end($parts);
-	}
+	// e.g. 5h, 10m and 30s
+	$result = format_list($parts);
 
 	if ($seconds < 60) {
 		$result = ($short ? '&lt;' : 'less than ') . $result;

@@ -301,6 +301,7 @@ function changeNPCLogin(): void {
 		$dbResult = $db->read('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < :now AND end_time > :now ORDER BY last_turn_update ASC', [
 			'now' => $db->escapeNumber(Epoch::time()),
 		]);
+		$availableNpcs = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$availableNpcs[] = [
 				'account_id' => $dbRecord->getInt('account_id'),
@@ -309,7 +310,7 @@ function changeNPCLogin(): void {
 		}
 	}
 
-	if (empty($availableNpcs)) {
+	if (count($availableNpcs) === 0) {
 		debug('No free NPCs');
 		exitNPC();
 	}

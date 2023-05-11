@@ -46,7 +46,7 @@ class AlbumModerateProcessor extends AccountPageProcessor {
 
 			// get his email address and send the mail
 			$receiver = Account::getAccount($account_id);
-			if (!empty($receiver->getEmail())) {
+			if ($receiver->getEmail() !== '') {
 				$mail = setupMailer();
 				$mail->Subject = 'SMR Photo Album Notification';
 				$mail->setFrom('album@smrealms.de', 'SMR Photo Album');

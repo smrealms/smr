@@ -28,13 +28,13 @@ class WordFilter extends AccountPage {
 		if ($dbResult->hasRecord()) {
 			$container = new WordFilterDeleteProcessor();
 			$template->assign('DelHREF', $container->href());
-
-			$filteredWords = [];
-			foreach ($dbResult->records() as $dbRecord) {
-				$filteredWords[] = $dbRecord->getRow();
-			}
-			$template->assign('FilteredWords', $filteredWords);
 		}
+
+		$filteredWords = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$filteredWords[] = $dbRecord->getRow();
+		}
+		$template->assign('FilteredWords', $filteredWords);
 
 		$container = new WordFilterAddProcessor();
 		$template->assign('AddHREF', $container->href());

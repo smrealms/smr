@@ -6,6 +6,7 @@ use Smr\Globals;
  * @var Smr\Player $ThisPlayer
  * @var Smr\Template $this
  * @var string $Summary
+ * @var array<array{player: Smr\Player, tr_class: string, name_link: string}> $AllRows
  */
 
 ?>
@@ -20,7 +21,7 @@ use Smr\Globals;
 	<br /><br />
 
 	<?php
-	if (!empty($AllRows)) { ?>
+	if (count($AllRows) > 0) { ?>
 		<table id="cpl" class="center standard inset">
 			<thead>
 				<tr>

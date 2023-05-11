@@ -89,13 +89,13 @@ class IpViewResults extends AccountPage {
 						$ex = '';
 					}
 
-					if (empty($ex) && empty($close_reason)) {
+					if ($ex === '' && $close_reason === '') {
 						$checked = 'checked';
 					} else {
 						$checked = '';
 					}
 
-					if (!empty($ex)) {
+					if ($ex !== '') {
 						$suspicion = 'DB Exception - ' . $ex;
 					} else {
 						$suspicion = 'Match:' . $match_id;

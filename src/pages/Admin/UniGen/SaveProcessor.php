@@ -191,7 +191,7 @@ class SaveProcessor extends AccountPageProcessor {
 			$numRacePorts = [];
 			foreach (Race::getAllIDs() as $raceID) {
 				$racePercent = Request::getInt('race' . $raceID);
-				if (!empty($racePercent)) {
+				if ($racePercent !== 0) {
 					$totalRaceDist += $racePercent;
 					$numRacePorts[$raceID] = ICeil($racePercent / 100 * $totalPorts);
 				}

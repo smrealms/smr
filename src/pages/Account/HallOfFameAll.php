@@ -34,7 +34,7 @@ class HallOfFameAll extends AccountPage {
 	public function build(Account $account, Template $template): void {
 		$game_id = $this->gameID;
 
-		if (empty($game_id)) {
+		if ($game_id === null) {
 			$topic = 'All Time Hall of Fame';
 		} else {
 			$topic = 'Hall of Fame: ' . Game::getGame($game_id)->getDisplayName();

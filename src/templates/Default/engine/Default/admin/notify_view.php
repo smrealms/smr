@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 
-if (empty($Messages)) { ?>
+/**
+ * @var array<array{notifyID: int, senderName: string, receiverName: string, gameName: string, sentDate: string, reportDate: string, text: string}> $Messages
+ */
+
+if (count($Messages) === 0) { ?>
 	<p>There are no reported Messages.</p><?php
 	return;
 } ?>

@@ -76,7 +76,7 @@ class Messages {
 					return '<span class="yellow">' . $raceName . ' Government</span>';
 				}
 			}
-			if (!empty($accountID)) {
+			if ($accountID !== 0) {
 				$return = Player::getPlayer($accountID, $gameID);
 			} else {
 				$return = match ($messageType) {

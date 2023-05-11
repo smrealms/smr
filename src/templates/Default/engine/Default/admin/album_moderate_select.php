@@ -1,6 +1,10 @@
 <?php declare(strict_types=1);
 
-if (empty($Approved)) { ?>
+/**
+ * @var array<int, string> $Approved
+ */
+
+if (count($Approved) === 0) { ?>
 	<p>There are no entries that can be moderated at this time.</p><?php
 } else { ?>
 	<p>Select the entry you wish to edit:</p>

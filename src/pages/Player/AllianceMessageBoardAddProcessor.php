@@ -44,7 +44,7 @@ class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
 			create_error('You are not in an alliance!');
 		}
 
-		if (empty($body)) {
+		if ($body === '') {
 			create_error('You must enter text!');
 		}
 
@@ -75,7 +75,7 @@ class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
 
 		// only add the topic if it's the first reply
 		if ($reply_id === 0) {
-			if (empty($topic)) {
+			if ($topic === '') {
 				create_error('You must enter a topic!');
 			}
 

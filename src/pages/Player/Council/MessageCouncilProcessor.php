@@ -17,7 +17,7 @@ class MessageCouncilProcessor extends PlayerPageProcessor {
 	public function build(AbstractPlayer $player): never {
 		$message = htmlentities(Request::get('message'), ENT_COMPAT, 'utf-8');
 
-		if (empty($message)) {
+		if ($message === '') {
 			create_error('You have to enter text to send a message!');
 		}
 

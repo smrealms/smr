@@ -187,7 +187,7 @@ class Template {
 	}
 
 	protected function convertHtmlToAjaxXml(string $str, bool $returnXml): string {
-		if (empty($str)) {
+		if ($str === '') {
 			return '';
 		}
 

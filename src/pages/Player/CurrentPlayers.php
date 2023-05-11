@@ -98,10 +98,10 @@ class CurrentPlayers extends PlayerPage {
 			foreach ($dbResult2->records() as $dbRecord2) {
 				$customRank = $dbRecord2->getString('custom_rank');
 				$tag = $dbRecord2->getString('tag');
-				if (!empty($customRank)) {
+				if ($customRank !== '') {
 					$name = $customRank . ' ' . $curr_player->getDisplayName();
 				}
-				if (!empty($tag)) {
+				if ($tag !== '') {
 					$name .= ' ' . $tag;
 				}
 			}

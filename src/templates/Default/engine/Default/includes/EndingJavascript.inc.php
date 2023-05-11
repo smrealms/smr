@@ -21,7 +21,7 @@ foreach ($this->jsAlerts as $string) {
 	?>alert(<?php echo json_encode($string, JSON_THROW_ON_ERROR); ?>);<?php
 }
 
-if (!empty($this->listjsInclude)) { ?>
+if ($this->listjsInclude !== null) { ?>
 	<script src="<?php echo LISTJS_URL; ?>"></script>
 	<script src="/js/listjs_include.js"></script>
 	<script>

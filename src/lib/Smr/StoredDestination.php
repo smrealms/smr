@@ -19,7 +19,7 @@ class StoredDestination {
 	 */
 	public function getDisplayName(): string {
 		$name = '#' . $this->sectorID;
-		if (!empty($this->label)) {
+		if ($this->label !== '') {
 			$name .= ' - ' . $this->label;
 		}
 		return $name;

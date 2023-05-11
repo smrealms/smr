@@ -26,7 +26,7 @@ class Twitter extends SocialLogin {
 	}
 
 	public function getLoginUrl(): string {
-		if (empty(TWITTER_CONSUMER_KEY)) {
+		if (TWITTER_CONSUMER_KEY === '') {
 			// No twitter app specified. Continuing would throw an exception.
 			return URL;
 		}

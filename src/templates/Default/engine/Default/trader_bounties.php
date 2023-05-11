@@ -31,7 +31,7 @@ You have the following bounties on your head:<br /><br />
 	<tr><?php
 		foreach ($AllClaims as $Claims) { ?>
 			<td style="width:50%" class="top"><?php
-				if (empty($Claims)) {
+				if (count($Claims) === 0) {
 					echo 'None';
 				}
 				foreach ($Claims as $Claim) {

@@ -54,7 +54,7 @@ class AllianceGovernanceProcessor extends PlayerPageProcessor {
 
 		if (Request::has('discord_channel')) {
 			$discordChannel = Request::get('discord_channel');
-			if (empty($discordChannel)) {
+			if ($discordChannel === '') {
 				$alliance->setDiscordChannel(null);
 			} else {
 				// no duplicates in a given game

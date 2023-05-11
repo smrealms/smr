@@ -27,7 +27,7 @@ class Deck {
 	 * Draw a random card from this deck.
 	 */
 	public function drawCard(): Card {
-		if (empty($this->cardIDs)) {
+		if (count($this->cardIDs) === 0) {
 			throw new Exception('No cards left to draw from this deck!');
 		}
 		// since the cards are already shuffled, pop off the next one

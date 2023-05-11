@@ -1,11 +1,15 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var array<array{image: string, name: string, amount: int, dump_href: string}> $Goods
+ */
+
 ?>
 Enter the amount of cargo you wish to jettison.<br />
 Please keep in mind that you will lose experience and one turn!<br /><br />
 
 <?php
-if (empty($Goods)) { ?>
+if (count($Goods) === 0) { ?>
 	You have no cargo to dump!<?php
 } else { ?>
 	<table class="standard">

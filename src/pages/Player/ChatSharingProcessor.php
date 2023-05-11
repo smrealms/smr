@@ -24,7 +24,7 @@ class ChatSharingProcessor extends PlayerPageProcessor {
 		// Process adding a "share to" account
 		if (Request::has('add')) {
 			$addPlayerID = Request::getInt('add_player_id');
-			if (empty($addPlayerID)) {
+			if ($addPlayerID === 0) {
 				error_on_page('You must specify a Player ID to share with!');
 			}
 

@@ -10,7 +10,7 @@ use Smr\Globals;
  * @var ?int $TotalWithdrawn
  * @var ?int $WithdrawalPerDay
  * @var ?int $RemainingWithdrawal
- * @var ?array<int, array{Time: int, Player: Smr\AbstractPlayer, Reason: string, TransactionType: string, Withdrawal: string, Deposit: string, Exempt: bool}> $BankTransactions
+ * @var array<int, array{Time: int, Player: Smr\AbstractPlayer, Reason: string, TransactionType: string, Withdrawal: string, Deposit: string, Exempt: bool}> $BankTransactions
  * @var ?string $EndingBalance
  * @var ?int $MinValue
  * @var ?int $MaxValue
@@ -42,7 +42,7 @@ if (isset($UnlimitedWithdrawal) && $UnlimitedWithdrawal === true) {
 <br /><br /><?php
 
 // only if we have at least one result
-if (!empty($BankTransactions)) { ?>
+if (count($BankTransactions) > 0) { ?>
 	<div class="center">
 		<form class="standard" method="POST" action="<?php echo $FilterTransactionsFormHREF; ?>">
 			<table cellspacing="5" cellpadding="0" class="nobord center">

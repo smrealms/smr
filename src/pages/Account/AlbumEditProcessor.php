@@ -92,6 +92,7 @@ class AlbumEditProcessor extends AccountPageProcessor {
 		$dbResult = $db->read('SELECT 1 FROM album WHERE account_id = :account_id', [
 			'account_id' => $db->escapeNumber($account->getAccountID()),
 		]);
+		$comment = null;
 		if ($dbResult->hasRecord()) {
 			if (!$noPicture) {
 				$comment = '<span class="green">*** Picture changed</span>';
@@ -139,7 +140,7 @@ class AlbumEditProcessor extends AccountPageProcessor {
 			]);
 		}
 
-		if (!empty($comment)) {
+		if ($comment !== null) {
 			// check if we have comments for this album already
 			$db->lockTable('album_has_comments');
 

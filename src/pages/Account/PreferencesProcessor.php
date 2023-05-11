@@ -36,7 +36,7 @@ class PreferencesProcessor extends AccountPageProcessor {
 			$old_password = Request::get('old_password');
 			$retype_password = Request::get('retype_password');
 
-			if (empty($new_password)) {
+			if ($new_password === '') {
 				create_error('You must enter a non empty password!');
 			}
 
@@ -77,7 +77,7 @@ class PreferencesProcessor extends AccountPageProcessor {
 		} elseif ($action === 'Change Discord ID') {
 			$discordId = Request::get('discord_id');
 
-			if (empty($discordId)) {
+			if ($discordId === '') {
 				$account->setDiscordId(null);
 				$message = '<span class="green">SUCCESS: </span>You have deleted your Discord User ID.';
 			} else {
@@ -99,7 +99,7 @@ class PreferencesProcessor extends AccountPageProcessor {
 			$ircNick = Request::get('irc_nick');
 
 			// here you can delete your registered irc nick
-			if (empty($ircNick)) {
+			if ($ircNick === '') {
 				$account->setIrcNick(null);
 				$message = '<span class="green">SUCCESS: </span>You have deleted your irc nick.';
 			} else {

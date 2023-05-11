@@ -26,7 +26,7 @@ class MessageSendProcessor extends PlayerPageProcessor {
 			$container->go();
 		}
 
-		if (empty($message)) {
+		if ($message === '') {
 			create_error('You have to enter a message to send!');
 		}
 

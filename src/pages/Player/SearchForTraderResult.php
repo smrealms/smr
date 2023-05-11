@@ -33,11 +33,12 @@ class SearchForTraderResult extends PlayerPage {
 		$this->playerName ??= Request::get('player_name', '');
 		$player_name = $this->playerName;
 
-		if (empty($player_name) && empty($player_id)) {
+		if ($player_name === '' && $player_id === 0) {
 			create_error('You must specify either a player name or ID!');
 		}
 
-		if (!empty($player_id)) {
+		$similarPlayers = [];
+		if ($player_id !== 0) {
 			try {
 				$resultPlayer = Player::getPlayerByPlayerID($player_id, $player->getGameID());
 			} catch (PlayerNotFound) {
@@ -60,7 +61,6 @@ class SearchForTraderResult extends PlayerPage {
 				'player_name_like' => $db->escapeString('%' . $player_name . '%'),
 				'player_name' => $db->escapeString($player_name),
 			]);
-			$similarPlayers = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$similarPlayers[] = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 			}
@@ -102,17 +102,17 @@ class SearchForTraderResult extends PlayerPage {
 			return $result;
 		};
 
-		if (empty($resultPlayer) && empty($similarPlayers)) {
+		if (!isset($resultPlayer) && count($similarPlayers) === 0) {
 			$container = new SearchForTrader(emptyResult: true);
 			$container->go();
 		}
 
-		if (!empty($resultPlayer)) {
+		if (isset($resultPlayer)) {
 			$resultPlayerLinks = $playerLinks($resultPlayer);
 			$template->assign('ResultPlayerLinks', $resultPlayerLinks);
 		}
 
-		if (!empty($similarPlayers)) {
+		if (count($similarPlayers) > 0) {
 			$similarPlayersLinks = [];
 			foreach ($similarPlayers as $similarPlayer) {
 				$similarPlayersLinks[] = $playerLinks($similarPlayer);

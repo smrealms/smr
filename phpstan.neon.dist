@@ -87,7 +87,7 @@ parameters:
             count: 1
         -
             # https://github.com/phpstan/phpstan/issues/7520
-            message: '#Expression in empty\(\) is always falsy.#'
+            message: '#Comparison operation ">" between 0 and 0 is always false.#'
             paths:
                 - src/bootstrap.php
                 - src/pages/Account/BugReportProcessor.php
