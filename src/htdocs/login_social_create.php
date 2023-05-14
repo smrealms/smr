@@ -10,21 +10,21 @@ try {
 	if (session_status() === PHP_SESSION_NONE) {
 		session_start();
 	}
-	if (!isset($_SESSION['socialLogin'])) {
+	if (!isset($_SESSION['socialId'])) {
 		$msg = 'Authentication data not found!';
 		header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
-	$socialLogin = $_SESSION['socialLogin'];
+	/** @var Smr\SocialLogin\SocialIdentity $socialId */
+	$socialId = $_SESSION['socialId'];
 
 	$template = Template::getInstance();
-	$template->assign('SocialLogin', $socialLogin);
 
 	// Pre-populate the login field if an account with this email exists.
 	// (Also disable creating a new account because they would just get
 	// an "Email already registered" error anyway.)
 	try {
-		$account = Account::getAccountByEmail($socialLogin->getEmail());
+		$account = Account::getAccountByEmail($socialId->email);
 		$template->assign('MatchingLogin', $account->getLogin());
 	} catch (AccountNotFound) {
 		// Proceed without matching account

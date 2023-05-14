@@ -4,6 +4,7 @@ namespace Smr\SocialLogin;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 use Exception;
+use Smr\Exceptions\UserError;
 use Smr\Request;
 
 class Twitter extends SocialLogin {
@@ -36,7 +37,7 @@ class Twitter extends SocialLogin {
 		return $auth->url('oauth/authenticate', $_SESSION['TwitterToken']);
 	}
 
-	public function login(): SocialLogin {
+	public function login(): SocialIdentity {
 		if ($_SESSION['TwitterToken']['oauth_token'] != Request::get('oauth_token')) {
 			throw new Exception('Unexpected token received from Twitter');
 		}
@@ -48,10 +49,10 @@ class Twitter extends SocialLogin {
 		$auth = self::getTwitterObj($accessToken);
 		/** @var \stdClass $userInfo */
 		$userInfo = $auth->get('account/verify_credentials', ['include_email' => 'true']);
-		if ($auth->getLastHttpCode() == 200) {
-			$this->setCredentials($userInfo->id_str, $userInfo->email);
+		if ($auth->getLastHttpCode() !== 200) {
+			throw new UserError('Connection failed, please try again.');
 		}
-		return $this;
+		return new SocialIdentity($userInfo->id_str, $userInfo->email, $this->getLoginType());
 	}
 
 }

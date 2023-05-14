@@ -3,10 +3,6 @@
 use Smr\Epoch;
 use Smr\Request;
 
-/**
- * @var Smr\SocialLogin\SocialLogin $SocialLogin
- */
-
 ?>
 <div class="centered" style="width: 630px;">
 	<h1>Link To Existing Login</h1>
@@ -62,13 +58,7 @@ use Smr\Request;
 				<tr>
 					<td width="27%">Verify Password (Optional):</td>
 					<td width="73%"><input type="password" name="pass_verify" size="20" maxlength="32" class="InputFields"></td>
-				</tr><?php
-				if (empty($SocialLogin->getEmail())) { ?>
-					<tr>
-						<td width="27%">Email:</td>
-						<td width="73%"><input type="email" name="email" size="20" maxlength="32" class="InputFields"></td>
-					</tr><?php
-				} ?>
+				</tr>
 				<tr>
 					<td width="27%">Local Time:</td>
 					<td width="73%">

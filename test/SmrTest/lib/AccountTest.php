@@ -6,6 +6,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use Smr\Account;
 use Smr\Exceptions\AccountNotFound;
 use Smr\SocialLogin\Facebook;
+use Smr\SocialLogin\SocialIdentity;
 use SmrTest\BaseIntegrationSpec;
 
 #[CoversClass(Account::class)]
@@ -184,72 +185,25 @@ class AccountTest extends BaseIntegrationSpec {
 	}
 
 	public function test_get_account_by_social_happy_path(): void {
-
 		// Given a record exists
 		$original = Account::createAccount('test', 'test', 'test@test.com', 9, 0);
-		$authUserID = 'MySocialUserID';
-		$original->addAuthMethod(Facebook::getLoginType(), $authUserID);
-		// And a valid social login
-		/*
-		 * Unfortunately we cannot use the simple createMock() method, because the SocialLogin class uses
-		 * a static method for getLoginType(). PHPUnit cannot operate on static methods, so it throws a warning.
-		 * Instead we create a partial mock, and all other methods will call their default method, and prevent the warning
-		 * that causes PHPUnit to fail due to "warnings" or "risky" tests.
-		 */
-		$isValid = 'isValid';
-		$getUserId = 'getUserId';
-		$socialLogin = $this->createPartialMock(Facebook::class, [$isValid, $getUserId]);
-		$socialLogin
-			->expects(self::once())
-			->method($isValid)
-			->willReturn(true);
-		$socialLogin
-			->expects(self::once())
-			->method($getUserId)
-			->willReturn($authUserID);
+		// And a valid social identity
+		$socialId = new SocialIdentity('MySocialUserID', 'dummy', Facebook::getLoginType());
+		$original->addAuthMethod($socialId);
 		// When retrieving account by social
-		$account = Account::getAccountBySocialLogin($socialLogin, true);
+		$account = Account::getAccountBySocialId($socialId, true);
 		// Then the record is found
 		$this->assertSame($original->getAccountID(), $account->getAccountID());
 	}
 
-	public function test_get_account_by_social_throws_when_social_invalid(): void {
-		// Given an invalid social login
-		$socialLogin = $this->createMock(Facebook::class);
-		$socialLogin
-			->expects(self::once())
-			->method('isValid')
-			->willReturn(false);
-		// When retrieving account by invalid social, exception is thrown
-		$this->expectException(AccountNotFound::class);
-		$this->expectExceptionMessage('Account social login not found');
-		Account::getAccountBySocialLogin($socialLogin);
-	}
-
 	public function test_get_account_by_social_throws_when_no_record_found(): void {
 		// Given no record exists
-		// And a valid social login
-		/*
-		 * Unfortunately we cannot use the simple createMock() method, because the SocialLogin class uses
-		 * a static method for getLoginType(). PHPUnit cannot operate on static methods, so it throws a warning.
-		 * Instead we create a partial mock, and all other methods will call their default method, and prevent the warning
-		 * that causes PHPUnit to fail due to "warnings" or "risky" tests.
-		 */
-		$isValid = 'isValid';
-		$getUserId = 'getUserId';
-		$socialLogin = $this->createPartialMock(Facebook::class, [$isValid, $getUserId]);
-		$socialLogin
-			->expects(self::once())
-			->method($isValid)
-			->willReturn(true);
-		$socialLogin
-			->expects(self::once())
-			->method($getUserId)
-			->willReturn('123');
+		// And a valid social identity
+		$socialId = new SocialIdentity('does_not_exist', 'dummy', Facebook::getLoginType());
 		// When retrieving account by social, exception is thrown if no record exists
 		$this->expectException(AccountNotFound::class);
 		$this->expectExceptionMessage('Account social login not found');
-		Account::getAccountBySocialLogin($socialLogin);
+		Account::getAccountBySocialId($socialId);
 	}
 
 	public function test_date_format_methods(): void {

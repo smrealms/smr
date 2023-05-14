@@ -4,6 +4,7 @@ namespace Smr\SocialLogin;
 
 use Exception;
 use League\OAuth2\Client\Provider\Facebook as FacebookProvider;
+use Smr\Exceptions\UserError;
 use Smr\Request;
 
 class Facebook extends SocialLogin {
@@ -34,13 +35,9 @@ class Facebook extends SocialLogin {
 		return $authUrl;
 	}
 
-	public function login(): SocialLogin {
+	public function login(): SocialIdentity {
 		if (!Request::has('code') || !Request::has('state')) {
-			// Error response. Return early without validating.
-			if (Request::has('error_message')) {
-				$this->errorMessage = Request::get('error_message');
-			}
-			return $this;
+			throw new UserError(Request::get('error_message', ''));
 		}
 		if ($_SESSION['FacebookToken'] != Request::get('state')) {
 			throw new Exception('Unexpected token received from Facebook');
@@ -51,8 +48,7 @@ class Facebook extends SocialLogin {
 			['code' => Request::get('code')],
 		);
 		$userInfo = $provider->getResourceOwner($accessToken);
-		$this->setCredentials($userInfo->getId(), $userInfo->getEmail());
-		return $this;
+		return new SocialIdentity($userInfo->getId(), $userInfo->getEmail(), $this->getLoginType());
 	}
 
 }
