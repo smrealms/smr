@@ -4,6 +4,7 @@ namespace Smr\SocialLogin;
 
 use Exception;
 use League\OAuth2\Client\Provider\Google as GoogleProvider;
+use Smr\Exceptions\UserError;
 use Smr\Request;
 
 class Google extends SocialLogin {
@@ -33,13 +34,9 @@ class Google extends SocialLogin {
 		return $authUrl;
 	}
 
-	public function login(): SocialLogin {
+	public function login(): SocialIdentity {
 		if (!Request::has('code') || !Request::has('state')) {
-			// Error response. Return early without validating.
-			if (Request::has('error_message')) {
-				$this->errorMessage = Request::get('error_message');
-			}
-			return $this;
+			throw new UserError(Request::get('error_message', ''));
 		}
 		if ($_SESSION['GoogleToken'] != Request::get('state')) {
 			throw new Exception('Unexpected token received from Google');
@@ -51,8 +48,7 @@ class Google extends SocialLogin {
 		);
 		/** @var \League\OAuth2\Client\Provider\GoogleUser $userInfo */
 		$userInfo = $provider->getResourceOwner($accessToken);
-		$this->setCredentials($userInfo->getId(), $userInfo->getEmail());
-		return $this;
+		return new SocialIdentity($userInfo->getId(), $userInfo->getEmail(), $this->getLoginType());
 	}
 
 }

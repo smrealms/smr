@@ -7,7 +7,7 @@ use SensitiveParameter;
 use Smr\Exceptions\AccountNotFound;
 use Smr\Exceptions\UserError;
 use Smr\Pages\Account\HallOfFamePersonal;
-use Smr\SocialLogin\SocialLogin;
+use Smr\SocialLogin\SocialIdentity;
 
 class Account {
 
@@ -184,19 +184,17 @@ class Account {
 		throw new AccountNotFound('Account IRC nick not found.');
 	}
 
-	public static function getAccountBySocialLogin(SocialLogin $social, bool $forceUpdate = false): self {
-		if ($social->isValid()) {
-			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM account JOIN account_auth USING(account_id)
-				WHERE login_type = :login_type
-				AND auth_key = :auth_key', [
-				'login_type' => $db->escapeString($social->getLoginType()),
-				'auth_key' => $db->escapeString($social->getUserID()),
-			]);
-			if ($dbResult->hasRecord()) {
-				$accountID = $dbResult->record()->getInt('account_id');
-				return self::getAccount($accountID, $forceUpdate);
-			}
+	public static function getAccountBySocialId(SocialIdentity $social, bool $forceUpdate = false): self {
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT account_id FROM account JOIN account_auth USING(account_id)
+			WHERE login_type = :login_type
+			AND auth_key = :auth_key', [
+			'login_type' => $db->escapeString($social->type),
+			'auth_key' => $db->escapeString($social->id),
+		]);
+		if ($dbResult->hasRecord()) {
+			$accountID = $dbResult->record()->getInt('account_id');
+			return self::getAccount($accountID, $forceUpdate);
 		}
 		throw new AccountNotFound('Account social login not found.');
 	}
@@ -1048,11 +1046,11 @@ class Account {
 		$this->hasChanged = true;
 	}
 
-	public function addAuthMethod(string $loginType, string $authKey): void {
+	public function addAuthMethod(SocialIdentity $socialId): void {
 		$db = Database::getInstance();
 		$params = [
-			'login_type' => $db->escapeString($loginType),
-			'auth_key' => $db->escapeString($authKey),
+			'login_type' => $db->escapeString($socialId->type),
+			'auth_key' => $db->escapeString($socialId->id),
 		];
 		$dbResult = $db->read('SELECT account_id FROM account_auth WHERE login_type = :login_type AND auth_key = :auth_key', $params);
 		if ($dbResult->hasRecord()) {

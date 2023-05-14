@@ -10,10 +10,6 @@ use Smr\Exceptions\SocialLoginInvalidType;
  */
 abstract class SocialLogin {
 
-	private ?string $userID = null;
-	private ?string $email = null;
-	protected ?string $errorMessage = null;
-
 	/**
 	 * Provides the canonical name of the platform to use in string comparison.
 	 */
@@ -41,14 +37,6 @@ abstract class SocialLogin {
 	}
 
 	/**
-	 * After a successful authentication, set credentials.
-	 */
-	protected function setCredentials(?string $userID, ?string $email): void {
-		$this->userID = $userID;
-		$this->email = $email;
-	}
-
-	/**
 	 * Returns the URL that the social platform will redirect to
 	 * after authentication.
 	 */
@@ -64,31 +52,6 @@ abstract class SocialLogin {
 	/**
 	 * Authenticates with the social platform.
 	 */
-	abstract public function login(): self;
-
-	/**
-	 * Returns true if the authentication was successful.
-	 *
-	 * @phpstan-assert-if-true non-empty-string $this->getUserID()
-	 * @phpstan-assert-if-true non-empty-string $this->getEmail()
-	 */
-	public function isValid(): bool {
-		return !empty($this->userID) && !empty($this->email);
-	}
-
-	public function getUserID(): ?string {
-		return $this->userID;
-	}
-
-	public function getEmail(): ?string {
-		return $this->email;
-	}
-
-	/**
-	 * Returns the authentication error message, if one has been set.
-	 */
-	public function getErrorMessage(): ?string {
-		return $this->errorMessage;
-	}
+	abstract public function login(): SocialIdentity;
 
 }

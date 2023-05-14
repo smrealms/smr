@@ -15,16 +15,19 @@ try {
 	if ($session->hasAccount()) {
 		create_error('You\'re already logged in! Creating multis is against the rules!');
 	}
-	$socialLogin = Request::has('socialReg');
-	if ($socialLogin) {
+
+	$socialId = null;
+	if (Request::has('socialReg')) {
 		session_start();
-		if (!$_SESSION['socialLogin']) {
-			create_error('Tried a social registration without having a social session.');
+		if (!isset($_SESSION['socialId'])) {
+			create_error('Your session has expired. Please try again.');
 		}
+		/** @var Smr\SocialLogin\SocialIdentity $socialId */
+		$socialId = $_SESSION['socialId'];
 	}
 
 	//Check the captcha if it's a standard registration.
-	if (!$socialLogin && !empty(RECAPTCHA_PRIVATE)) {
+	if ($socialId === null && !empty(RECAPTCHA_PRIVATE)) {
 		$reCaptcha = new ReCaptcha(RECAPTCHA_PRIVATE);
 		// Was there a reCAPTCHA response?
 		$resp = $reCaptcha->verify(
@@ -50,7 +53,7 @@ try {
 		create_error('Login name is missing!');
 	}
 
-	if (!$socialLogin && empty($password)) {
+	if ($socialId === null && empty($password)) {
 		create_error('Password is missing!');
 	}
 
@@ -59,17 +62,7 @@ try {
 		create_error('The passwords you entered do not match.');
 	}
 
-	// The user inputs an e-mail address in two scenarios:
-	// 1. non-social account creation
-	// 2. social account creation without an associated e-mail
-	// In these two cases, we still need to validate the input address.
-	if (!$socialLogin || empty($_SESSION['socialLogin']->getEmail())) {
-		$email = Request::get('email');
-		$validatedBySocial = false;
-	} else {
-		$email = $_SESSION['socialLogin']->getEmail();
-		$validatedBySocial = true;
-	}
+	$email = $socialId?->email ?: Request::get('email');
 
 	// Sanity check email address
 	Account::checkEmail($email);
@@ -96,15 +89,10 @@ try {
 		create_error('Invalid referral account ID!');
 	}
 	$account->increaseSmrRewardCredits(2 * CREDITS_PER_DOLLAR); // Give $2 worth of "reward" credits for joining.
-	if ($socialLogin) {
-		$account->addAuthMethod(
-			$_SESSION['socialLogin']->getLoginType(),
-			$_SESSION['socialLogin']->getUserID(),
-		);
-		if ($validatedBySocial) {
-			$account->setValidated(true);
-			$account->update();
-		}
+	if ($socialId !== null) {
+		$account->addAuthMethod($socialId);
+		$account->setValidated(true);
+		$account->update();
 		session_destroy();
 	}
 

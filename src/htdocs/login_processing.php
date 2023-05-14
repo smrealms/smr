@@ -4,6 +4,7 @@ use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Exceptions\AccountNotFound;
+use Smr\Exceptions\UserError;
 use Smr\Login\Redirect;
 use Smr\Pages\Account\LoginCheckValidatedProcessor;
 use Smr\Request;
@@ -23,22 +24,24 @@ try {
 	$session = Session::getInstance();
 	if (!$session->hasAccount()) {
 		if (Request::has('loginType')) {
-			$socialLogin = SocialLogin::get(Request::get('loginType'))->login();
-			if (!$socialLogin->isValid()) {
+			$socialLogin = SocialLogin::get(Request::get('loginType'));
+			try {
+				$socialId = $socialLogin->login();
+			} catch (UserError $err) {
 				$msg = 'Error validating ' . $socialLogin->getLoginType() . ' login. ';
-				$msg .= $socialLogin->getErrorMessage() ?? 'Please try logging in again.';
+				$msg .= $err->getMessage() ?: 'Please try logging in again.';
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				exit;
 			}
 
 			try {
-				$account = Account::getAccountBySocialLogin($socialLogin);
+				$account = Account::getAccountBySocialId($socialId);
 			} catch (AccountNotFound) {
 				// Let them create an account or link to existing
 				if (session_status() === PHP_SESSION_NONE) {
 					session_start();
 				}
-				$_SESSION['socialLogin'] = $socialLogin;
+				$_SESSION['socialId'] = $socialId;
 				header('Location: /login_social_create.php');
 				exit;
 			}
@@ -80,13 +83,10 @@ try {
 	// If linking a social login to an existing account
 	if (Request::has('social')) {
 		session_start();
-		if (!isset($_SESSION['socialLogin'])) {
-			create_error('Tried a social login link without having a social session.');
+		if (!isset($_SESSION['socialId'])) {
+			create_error('Your session has expired. Please try again.');
 		}
-		$account->addAuthMethod(
-			$_SESSION['socialLogin']->getLoginType(),
-			$_SESSION['socialLogin']->getUserID(),
-		);
+		$account->addAuthMethod($_SESSION['socialId']);
 		session_destroy();
 	}
 
