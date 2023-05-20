@@ -85,7 +85,7 @@
 					<input type="checkbox" name="comment_ids[]" value="<?php echo $Comment['id']; ?>">
 				</td>
 				<td colspan="3">
-					<span style="font-size:85%;">[<?php echo $Comment['date']; ?>] &lt;<?php echo $Comment['postee']; ?>&gt; <?php echo $Comment['msg']; ?></span>
+					<span style="font-size:85%;">[<?php echo $Comment['date']; ?>] &lt;<?php echo $Comment['commenter']; ?>&gt; <?php echo $Comment['msg']; ?></span>
 				</td>
 			</tr><?php
 		} ?>

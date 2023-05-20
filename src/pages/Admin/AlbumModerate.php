@@ -3,7 +3,7 @@
 namespace Smr\Pages\Admin;
 
 use Smr\Account;
-use Smr\Database;
+use Smr\Album;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Template;
@@ -21,45 +21,20 @@ class AlbumModerate extends AccountPage {
 	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Moderate Photo Album');
 
-		require_once(LIB . 'Album/album_functions.php');
-
 		$account_id = $this->albumAccountID;
 
 		// check if the given account really has an entry
-		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM album WHERE account_id = :account_id AND Approved = \'YES\'', [
-			'account_id' => $db->escapeNumber($account_id),
-		]);
-		$dbRecord = $dbResult->record();
-
-		$disabled = $dbRecord->getBoolean('disabled');
-		$location = $dbRecord->getNullableString('location');
-		$email = $dbRecord->getNullableString('email');
-		$website = $dbRecord->getNullableString('website');
-		$day = $dbRecord->getInt('day');
-		$month = $dbRecord->getInt('month');
-		$year = $dbRecord->getInt('year');
-		$other = nl2br($dbRecord->getString('other'));
-
-		if (!empty($day) && !empty($month) && !empty($year)) {
-			$birthdate = $month . ' / ' . $day . ' / ' . $year;
-		}
-		if (empty($birthdate) && !empty($year)) {
-			$birthdate = 'Year ' . $year;
-		}
-		if (empty($birthdate)) {
-			$birthdate = 'N/A';
-		}
+		$album = new Album($account_id);
 
 		$entry = [
-			'disabled' => $disabled,
-			'location' => empty($location) ? 'N/A' : $location,
-			'email' => empty($email) ? 'N/A' : $email,
-			'website' => empty($website) ? 'N/A' : '<a href="' . $website . '" target="_new">' . $website . '</a>',
-			'birthdate' => $birthdate,
-			'other' => empty($other) ? 'N/A' : $other,
-			'nickname' => get_album_nick($account_id),
-			'upload' => 'upload/' . $account_id,
+			'disabled' => $album->isPictureDisabled,
+			'location' => $album->getDisplayLocation(),
+			'email' => $album->getDisplayEmail(),
+			'website' => $album->getDisplayWebsite(),
+			'birthdate' => $album->getDisplayBirthdate(),
+			'other' => $album->getDisplayOtherInfo(),
+			'nickname' => Account::getAccount($account_id)->getHofDisplayName(),
+			'upload' => $album->getImageSrc(),
 		];
 		$template->assign('Entry', $entry);
 
@@ -89,21 +64,7 @@ class AlbumModerate extends AccountPage {
 						 'Admin Team';
 		$template->assign('DisableEmail', $default_email);
 
-		$dbResult = $db->read('SELECT *
-					FROM album_has_comments
-					WHERE album_id = :album_id', [
-			'album_id' => $db->escapeNumber($account_id),
-		]);
-		$comments = [];
-		foreach ($dbResult->records() as $dbRecord) {
-			$comments[] = [
-				'id' => $dbRecord->getInt('comment_id'),
-				'date' => date($account->getDateTimeFormat(), $dbRecord->getInt('time')),
-				'postee' => get_album_nick($dbRecord->getInt('post_id')),
-				'msg' => $dbRecord->getString('msg'),
-			];
-		}
-		$template->assign('Comments', $comments);
+		$template->assign('Comments', $album->getComments($account->getDateTimeFormat()));
 	}
 
 }

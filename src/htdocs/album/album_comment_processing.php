@@ -8,7 +8,6 @@ use Smr\Session;
 
 try {
 	require_once('../../bootstrap.php');
-	require_once(LIB . 'Album/album_functions.php');
 
 	$session = Session::getInstance();
 
@@ -67,7 +66,8 @@ try {
 	]);
 	$db->unlock();
 
-	header('Location: /album/?nick=' . urlencode(get_album_nick($album_id)));
+	$nick = Request::get('album_nick');
+	header('Location: /album/?nick=' . urlencode($nick));
 } catch (Throwable $e) {
 	handleException($e);
 }
