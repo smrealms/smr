@@ -34,7 +34,6 @@ class HallOfFamePersonal extends AccountPage {
 	public function build(Account $account, Template $template): void {
 		$account_id = $this->hofAccountID;
 		$game_id = $this->gameID;
-		$player = null;
 
 		if (isset($game_id)) {
 			try {
@@ -66,7 +65,7 @@ class HallOfFamePersonal extends AccountPage {
 			if ($account->getAccountID() === $account_id) {
 				$allowedVis[] = HOF_ALLIANCE;
 				$allowedVis[] = HOF_PRIVATE;
-			} elseif (isset($hofPlayer) && $hofPlayer->sameAlliance($player)) {
+			} elseif (isset($hofPlayer, $player) && $hofPlayer->sameAlliance($player)) {
 				$allowedVis[] = HOF_ALLIANCE;
 			}
 			$categories = HallOfFame::getHofCategories($this, $allowedVis, $game_id, $account_id);

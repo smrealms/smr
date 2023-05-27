@@ -3034,51 +3034,51 @@ abstract class AbstractPlayer {
 		return false;
 	}
 
-	public function equals(self $otherPlayer = null): bool {
-		return $otherPlayer !== null && $this->getAccountID() === $otherPlayer->getAccountID() && $this->getGameID() === $otherPlayer->getGameID();
+	public function equals(self $otherPlayer): bool {
+		return $this->getAccountID() === $otherPlayer->getAccountID() && $this->getGameID() === $otherPlayer->getGameID();
 	}
 
-	public function sameAlliance(self $otherPlayer = null): bool {
-		return $this->equals($otherPlayer) || ($otherPlayer !== null && $this->getGameID() === $otherPlayer->getGameID() && $this->hasAlliance() && $this->getAllianceID() === $otherPlayer->getAllianceID());
+	public function sameAlliance(self $otherPlayer): bool {
+		return $this->getGameID() === $otherPlayer->getGameID() && $this->hasAlliance() && $this->getAllianceID() === $otherPlayer->getAllianceID();
 	}
 
-	public function sharedForceAlliance(self $otherPlayer = null): bool {
+	public function sharedForceAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function forceNAPAlliance(self $otherPlayer = null): bool {
+	public function forceNAPAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function planetNAPAlliance(self $otherPlayer = null): bool {
+	public function planetNAPAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderNAPAlliance(self $otherPlayer = null): bool {
+	public function traderNAPAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderMAPAlliance(self $otherPlayer = null): bool {
+	public function traderMAPAlliance(self $otherPlayer): bool {
 		return $this->traderAttackTraderAlliance($otherPlayer) && $this->traderDefendTraderAlliance($otherPlayer);
 	}
 
-	public function traderAttackTraderAlliance(self $otherPlayer = null): bool {
+	public function traderAttackTraderAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderDefendTraderAlliance(self $otherPlayer = null): bool {
+	public function traderDefendTraderAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderAttackForceAlliance(self $otherPlayer = null): bool {
+	public function traderAttackForceAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderAttackPortAlliance(self $otherPlayer = null): bool {
+	public function traderAttackPortAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderAttackPlanetAlliance(self $otherPlayer = null): bool {
+	public function traderAttackPlanetAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
