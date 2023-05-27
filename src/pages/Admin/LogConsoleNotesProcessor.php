@@ -15,21 +15,22 @@ class LogConsoleNotesProcessor extends AccountPageProcessor {
 	 */
 	public function __construct(
 		private readonly array $accountIDs,
-		private readonly array $logTypeIDs
+		private readonly array $logTypeIDs,
 	) {}
 
 	public function build(Account $account): never {
 		$db = Database::getInstance();
 
+		$notes = Request::get('notes');
 		foreach ($this->accountIDs as $account_id) {
-			if (empty(Request::get('notes'))) {
+			if ($notes === '') {
 				$db->delete('log_has_notes', [
 					'account_id' => $account_id,
 				]);
 			} else {
 				$db->replace('log_has_notes', [
 					'account_id' => $account_id,
-					'notes' => Request::get('notes'),
+					'notes' => $notes,
 				]);
 			}
 		}

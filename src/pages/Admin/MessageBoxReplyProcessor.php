@@ -12,14 +12,14 @@ class MessageBoxReplyProcessor extends AccountPageProcessor {
 	public function __construct(
 		private readonly int $senderAccountID,
 		private readonly int $gameID,
-		private readonly int $boxTypeID
+		private readonly int $boxTypeID,
 	) {}
 
 	public function build(Account $account): never {
 		$message = Request::get('message');
 		$banPoints = Request::getInt('BanPoints');
 		$rewardCredits = Request::getInt('RewardCredits');
-		if (Request::get('action') == 'Preview message') {
+		if (Request::get('action') === 'Preview message') {
 			$container = new MessageBoxReply(
 				boxTypeID: $this->boxTypeID,
 				senderAccountID: $this->senderAccountID,

@@ -10,7 +10,7 @@ use Smr\ShipType;
 class ShopShipProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $shipTypeID
+		private readonly int $shipTypeID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -30,7 +30,7 @@ class ShopShipProcessor extends PlayerPageProcessor {
 			create_error($message);
 		}
 
-		if ($newShipType->getRaceID() != RACE_NEUTRAL && $player->getRaceID() != $newShipType->getRaceID()) {
+		if ($newShipType->getRaceID() !== RACE_NEUTRAL && $player->getRaceID() !== $newShipType->getRaceID()) {
 			create_error('You can\'t buy other race\'s ships!');
 		}
 

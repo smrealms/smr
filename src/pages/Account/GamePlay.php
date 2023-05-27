@@ -21,7 +21,7 @@ class GamePlay extends AccountPage {
 
 	public function __construct(
 		private readonly ?string $message = null,
-		private readonly ?string $errorMessage = null
+		private readonly ?string $errorMessage = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -87,7 +87,7 @@ class GamePlay extends AccountPage {
 			$games['Play'][$game_id]['LastMovement'] = format_time(Epoch::time() - $curr_player->getLastActive(), true);
 		}
 
-		if (empty($games['Play'])) {
+		if (count($games['Play']) === 0) {
 			unset($games['Play']);
 		}
 
@@ -228,7 +228,7 @@ class GamePlay extends AccountPage {
 				foreach ($dbResult2->records() as $dbRecord2) {
 					$voting[$voteID]['Options'][$dbRecord2->getInt('option_id')]['ID'] = $dbRecord2->getInt('option_id');
 					$voting[$voteID]['Options'][$dbRecord2->getInt('option_id')]['Text'] = $dbRecord2->getString('text');
-					$voting[$voteID]['Options'][$dbRecord2->getInt('option_id')]['Chosen'] = isset($votedFor[$dbRecord->getInt('vote_id')]) && $votedFor[$voteID] == $dbRecord2->getInt('option_id');
+					$voting[$voteID]['Options'][$dbRecord2->getInt('option_id')]['Chosen'] = isset($votedFor[$dbRecord->getInt('vote_id')]) && $votedFor[$voteID] === $dbRecord2->getInt('option_id');
 					$voting[$voteID]['Options'][$dbRecord2->getInt('option_id')]['Votes'] = $dbRecord2->getInt('count(account_id)');
 				}
 			}

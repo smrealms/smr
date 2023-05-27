@@ -3,6 +3,7 @@
 use Smr\Globals;
 
 /**
+ * @var array<Smr\Chess\ChessGame> $ChessGames
  * @var array<int, string> $PlayerList
  */
 
@@ -11,7 +12,7 @@ use Smr\Globals;
 a game of chess played over the super-photonic transponder aboard your ship.</p>
 
 <?php
-if (!empty($ChessGames)) { ?>
+if (count($ChessGames) > 0) { ?>
 	<table class="standard ajax" id="GameList">
 		<tr>
 			<th>Players</th>

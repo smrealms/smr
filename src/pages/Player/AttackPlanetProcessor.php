@@ -48,8 +48,10 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 			create_error('You have a planet NAP, you cannot attack this planet!');
 		}
 
-		// take the turns
-		$player->takeTurns(TURNS_TO_SHOOT_PLANET);
+		$attackers = $player->getSector()->getFightingTradersAgainstPlanet($player, $planet);
+		if (count($attackers) === 0) {
+			create_error('No players in sector are able to attack this planet!');
+		}
 
 		// ********************************
 		// *
@@ -59,7 +61,8 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 
 		$results = ['Attackers' => ['TotalDamage' => 0]];
 
-		$attackers = $player->getSector()->getFightingTradersAgainstPlanet($player, $planet);
+		// take the turns
+		$player->takeTurns(TURNS_TO_SHOOT_PLANET);
 
 		$planet->attackedBy($player, $attackers);
 

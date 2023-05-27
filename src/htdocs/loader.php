@@ -32,7 +32,7 @@ try {
 	}
 
 	// check if we got a sn number with our url
-	if (empty($session->getSN())) {
+	if ($session->getSN() === '') {
 		create_error('Your browser lost the SN. Try to reload the page!');
 	}
 
@@ -59,13 +59,13 @@ try {
 	if ($disabled !== false) {
 		// save session (incase we forward)
 		$session->update();
-		if ($disabled['Reason'] == CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
+		if ($disabled['Reason'] === CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
 			if (!($var instanceof InvalidEmailProcessor)) {
 				(new InvalidEmail())->go();
 			}
 			// The user has attempted to re-validate their e-mail
 			// so let this page process normally.
-		} elseif ($disabled['Reason'] == CLOSE_ACCOUNT_BY_REQUEST_REASON) {
+		} elseif ($disabled['Reason'] === CLOSE_ACCOUNT_BY_REQUEST_REASON) {
 			if (!($var instanceof ReopenAccountProcessor)) {
 				(new ReopenAccount())->go();
 			}

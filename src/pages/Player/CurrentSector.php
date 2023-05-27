@@ -28,7 +28,7 @@ class CurrentSector extends PlayerPage {
 		private readonly ?string $errorMessage = null,
 		private readonly ?string $missionMessage = null,
 		private readonly ?string $tradeMessage = null,
-		private readonly bool $showForceRefreshMessage = false
+		private readonly bool $showForceRefreshMessage = false,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {
@@ -74,8 +74,8 @@ class CurrentSector extends PlayerPage {
 		$links = [];
 		foreach ($linkSectorIDs as $dir => $linkSectorID) {
 			$links[$dir]['ID'] = $linkSectorID;
-			if ($linkSectorID > 0 && $linkSectorID != $player->getSectorID()) {
-				if ($player->getLastSectorID() == $linkSectorID) {
+			if ($linkSectorID > 0 && $linkSectorID !== $player->getSectorID()) {
+				if ($player->getLastSectorID() === $linkSectorID) {
 					$class = 'lastVisited';
 				} elseif (isset($unvisited[$linkSectorID])) {
 					$class = 'unvisited';
@@ -106,12 +106,12 @@ class CurrentSector extends PlayerPage {
 				$turnsMessage .= ' You will gain another turn in ' . format_time($player->getTimeUntilNextTurn()) . '.';
 			}
 		}
-		if (!empty($turnsMessage)) {
+		if ($turnsMessage !== '') {
 			$template->assign('TurnsMessage', $turnsMessage);
 		}
 
-		$protectionMessage = '';
-		if ($player->getNewbieTurns()) {
+		$protectionMessage = null;
+		if ($player->getNewbieTurns() > 0) {
 			if ($player->getNewbieTurns() < 25) {
 				$protectionMessage = '<span class="blue">PROTECTION</span>: You are almost out of <span class="green">NEWBIE</span> protection.';
 			} else {
@@ -123,7 +123,7 @@ class CurrentSector extends PlayerPage {
 			$protectionMessage = '<span class="blue">PROTECTION</span>: You are <span class="red">NOT</span> under protection.';
 		}
 
-		if (!empty($protectionMessage)) {
+		if ($protectionMessage !== null) {
 			$template->assign('ProtectionMessage', $protectionMessage);
 		}
 
@@ -227,7 +227,7 @@ function checkForAttackMessage(string $msg, AbstractPlayer $player): void {
 		]);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
-			if ($player->getSectorID() == $dbRecord->getInt('sector_id')) {
+			if ($player->getSectorID() === $dbRecord->getInt('sector_id')) {
 				$results = $dbRecord->getObject('result', true);
 				$template->assign('AttackResultsType', $dbRecord->getString('type'));
 				$template->assign('AttackResults', $results);

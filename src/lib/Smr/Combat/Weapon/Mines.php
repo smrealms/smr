@@ -105,7 +105,7 @@ class Mines extends AbstractWeapon {
 	}
 
 	public function shootPlayerAsForce(Force $forces, AbstractPlayer $targetPlayer, bool $minesAreAttacker = false): array {
-		$return = ['Weapon' => $this, 'TargetPlayer' => $targetPlayer, 'Hit' => true];
+		$return = ['Weapon' => $this, 'Target' => $targetPlayer, 'Hit' => true];
 		return $this->doForceDamageToPlayer($return, $forces, $targetPlayer, $minesAreAttacker);
 	}
 

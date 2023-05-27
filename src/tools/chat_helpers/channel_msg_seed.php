@@ -26,7 +26,7 @@ function get_seed_message(AbstractPlayer $player): string {
 		$missingSeeds[] = $dbRecord->getInt('sector_id');
 	}
 
-	if (count($missingSeeds) == 0) {
+	if (count($missingSeeds) === 0) {
 		return $player->getPlayerName() . ' has seeded all sectors.';
 	}
 	return $player->getPlayerName() . ' (' . count($missingSeeds) . ' missing) : ' . implode(' ', $missingSeeds);
@@ -47,7 +47,7 @@ function shared_channel_msg_seed(AbstractPlayer $player): array {
 	]);
 	$numSectors = $dbResult->record()->getInt('count(*)');
 
-	if ($numSectors == 0) {
+	if ($numSectors === 0) {
 		return ['Your alliance has not set up a seedlist yet.'];
 	}
 

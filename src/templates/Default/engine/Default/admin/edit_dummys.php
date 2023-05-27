@@ -7,7 +7,7 @@
 	Edit Dummy:
 	<select name="dummy_name"><?php
 		foreach ($DummyNames as $DummyName) {
-			?><option value="<?php echo $DummyName; ?>"<?php if ($DummyName == $DummyPlayer->getPlayerName()) { ?> selected="selected"<?php } ?>><?php echo $DummyName; ?></option><?php
+			?><option value="<?php echo $DummyName; ?>"<?php if ($DummyName === $DummyPlayer->getPlayerName()) { ?> selected="selected"<?php } ?>><?php echo $DummyName; ?></option><?php
 		} ?>
 	</select><br />
 	<input type="submit" value="Select Dummy" />
@@ -22,13 +22,13 @@
 				Level
 				<select name="exp">
 					<?php foreach ($Levels as $LevelID => $Level) {
-						?><option value="<?php echo $Level->expRequired; ?>"<?php if ($LevelID == $DummyPlayer->getLevelID()) { ?> selected="selected"<?php } ?>><?php echo $LevelID; ?></option><?php
+						?><option value="<?php echo $Level->expRequired; ?>"<?php if ($LevelID === $DummyPlayer->getLevelID()) { ?> selected="selected"<?php } ?>><?php echo $LevelID; ?></option><?php
 					} ?>
 				</select>
 				Ship:
 				<select name="ship_type_id"><?php
 					foreach ($ShipTypes as $ShipType) {
-						?><option value="<?php echo $ShipType->getTypeID(); ?>"<?php if ($ShipType->getTypeID() == $DummyPlayer->getShipTypeID()) { ?> selected="selected"<?php } ?>><?php echo $ShipType->getName(); ?></option><?php
+						?><option value="<?php echo $ShipType->getTypeID(); ?>"<?php if ($ShipType->getTypeID() === $DummyPlayer->getShipTypeID()) { ?> selected="selected"<?php } ?>><?php echo $ShipType->getName(); ?></option><?php
 					} ?>
 				</select><br /><?php
 
@@ -37,7 +37,7 @@
 					<select name="weapons[]">
 						<option value="0">None</option><?php
 						foreach ($Weapons as $Weapon) {
-							?><option value="<?php echo $Weapon->getWeaponTypeID(); ?>"<?php if ($Weapon->getWeaponTypeID() == $ShipWeapon->getWeaponTypeID()) { ?> selected="selected"<?php } ?>><?php echo $Weapon->getName(); ?> (dmg: <?php echo $Weapon->getShieldDamage(); ?>/<?php echo $Weapon->getArmourDamage(); ?> acc: <?php echo $Weapon->getAccuracy(); ?>% lvl:<?php echo $Weapon->getPowerLevel(); ?>)</option><?php
+							?><option value="<?php echo $Weapon->getWeaponTypeID(); ?>"<?php if ($Weapon->getWeaponTypeID() === $ShipWeapon->getWeaponTypeID()) { ?> selected="selected"<?php } ?>><?php echo $Weapon->getName(); ?> (dmg: <?php echo $Weapon->getShieldDamage(); ?>/<?php echo $Weapon->getArmourDamage(); ?> acc: <?php echo $Weapon->getAccuracy(); ?>% lvl:<?php echo $Weapon->getPowerLevel(); ?>)</option><?php
 						} ?>
 					</select><br /><?php
 				}

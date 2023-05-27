@@ -2,6 +2,10 @@
 
 use Smr\Race;
 
+/**
+ * @var int $SelectedGameID
+ */
+
 ?>
 <form method="POST" action="<?php echo $SelectGameHREF; ?>">
 	<select name="selected_game_id" onchange="this.form.submit()"><?php
@@ -13,7 +17,7 @@ use Smr\Race;
 </form>
 
 <?php
-if (!empty($SelectedGameID)) { ?>
+if ($SelectedGameID !== 0) { ?>
 	<br />
 	<table class="standard">
 		<tr>

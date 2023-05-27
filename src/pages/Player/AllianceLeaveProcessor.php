@@ -17,7 +17,7 @@ class AllianceLeaveProcessor extends PlayerPageProcessor {
 
 		// will this alliance be empty if we leave? (means one member right now)
 		// Don't delete the Newbie Help Alliance!
-		if ($alliance->getNumMembers() == 1 && !$alliance->isNHA()) {
+		if ($alliance->getNumMembers() === 1 && !$alliance->isNHA()) {
 			// Retain the alliance, but delete some auxilliary info
 			$db = Database::getInstance();
 			$sqlParams = [

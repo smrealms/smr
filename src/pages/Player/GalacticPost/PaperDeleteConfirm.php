@@ -9,10 +9,10 @@ use Smr\Template;
 
 class PaperDeleteConfirm extends PlayerPage {
 
-	public string $file = 'galactic_post_delete_confirm.php';
+	public string $file = 'galactic_post_paper_delete_confirm.php';
 
 	public function __construct(
-		private readonly int $paperID
+		private readonly int $paperID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

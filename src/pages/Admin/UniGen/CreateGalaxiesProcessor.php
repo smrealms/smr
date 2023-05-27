@@ -12,7 +12,7 @@ class CreateGalaxiesProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $numGalaxies
+		private readonly int $numGalaxies,
 	) {}
 
 	public function build(Account $account): never {

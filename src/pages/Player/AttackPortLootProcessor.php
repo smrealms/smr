@@ -10,7 +10,7 @@ use Smr\TradeGood;
 class AttackPortLootProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $goodID
+		private readonly int $goodID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -34,7 +34,7 @@ class AttackPortLootProcessor extends PlayerPageProcessor {
 		}
 
 		// do we have enough turns?
-		if ($player->getTurns() == 0) {
+		if ($player->getTurns() === 0) {
 			create_error('You don\'t have enough turns to loot.');
 		}
 

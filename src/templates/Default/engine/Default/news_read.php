@@ -5,6 +5,7 @@
  * @var int $MinNews
  * @var int $MaxNews
  * @var string $ViewNewsFormHref
+ * @var array<array{Date: string, Message: string}> $NewsItems
  */
 
 $this->includeTemplate('includes/CommonNews.inc.php'); ?>
@@ -20,7 +21,7 @@ $this->includeTemplate('includes/CommonNews.inc.php'); ?>
 </form>
 
 <?php
-if (!empty($NewsItems)) { ?>
+if (count($NewsItems) > 0) { ?>
 	<br />
 	<div class="center">
 		Showing <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />

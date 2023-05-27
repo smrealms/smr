@@ -12,7 +12,7 @@ class ShopHardwareProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly int $hardwareID,
-		private readonly int $locationID
+		private readonly int $locationID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -31,7 +31,7 @@ class ShopHardwareProcessor extends PlayerPageProcessor {
 			create_error('You must actually enter an amount greater than zero!');
 		}
 
-		if ($action == 'Buy') {
+		if ($action === 'Buy') {
 			// do we have enough cash?
 			if ($player->getCredits() < $cost * $amount) {
 				create_error('You don\'t have enough credits to buy ' . $amount . ' items!');
@@ -46,18 +46,18 @@ class ShopHardwareProcessor extends PlayerPageProcessor {
 			$ship->increaseHardware($hardware_id, $amount);
 
 			//HoF
-			if ($hardware_id == HARDWARE_COMBAT) {
+			if ($hardware_id === HARDWARE_COMBAT) {
 				$player->increaseHOF($amount, ['Forces', 'Bought', 'Combat Drones'], HOF_ALLIANCE);
 			}
-			if ($hardware_id == HARDWARE_SCOUT) {
+			if ($hardware_id === HARDWARE_SCOUT) {
 				$player->increaseHOF($amount, ['Forces', 'Bought', 'Scout Drones'], HOF_ALLIANCE);
 			}
-			if ($hardware_id == HARDWARE_MINE) {
+			if ($hardware_id === HARDWARE_MINE) {
 				$player->increaseHOF($amount, ['Forces', 'Bought', 'Mines'], HOF_ALLIANCE);
 			}
-		} elseif ($action == 'Sell') {
+		} elseif ($action === 'Sell') {
 			// We only allow selling combat drones
-			if ($hardware_id != HARDWARE_COMBAT) {
+			if ($hardware_id !== HARDWARE_COMBAT) {
 				throw new Exception('This item cannot be sold!');
 			}
 

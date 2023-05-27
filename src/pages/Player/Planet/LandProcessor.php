@@ -25,7 +25,7 @@ class LandProcessor extends PlayerPageProcessor {
 
 		//check to make sure the planet isn't full!
 		$planet = $player->getSectorPlanet();
-		if ($planet->getMaxLanded() != 0 && $planet->getMaxLanded() <= $planet->countPlayers()) {
+		if ($planet->getMaxLanded() !== 0 && $planet->getMaxLanded() <= $planet->countPlayers()) {
 			create_error('You cannot land because the planet is full!');
 		}
 
@@ -38,7 +38,7 @@ class LandProcessor extends PlayerPageProcessor {
 				'role_id' => $db->escapeNumber($role_id),
 			]);
 			if (!$dbResult->record()->getBoolean('planet_access')) {
-				if ($planet->hasOwner() && $planet->getOwnerID() != $player->getAccountID()) {
+				if ($planet->hasOwner() && $planet->getOwnerID() !== $player->getAccountID()) {
 					create_error('Your alliance doesn\'t allow you to dock at their planet.');
 				}
 			}

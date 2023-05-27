@@ -13,7 +13,7 @@ class BuyTicker extends PlayerPage {
 	public string $file = 'bar_ticker_buy.php';
 
 	public function __construct(
-		private readonly int $locationID
+		private readonly int $locationID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {
@@ -24,13 +24,13 @@ class BuyTicker extends PlayerPage {
 		$tickers = [];
 		foreach ($player->getTickers() as $ticker) {
 			$type = $ticker['Type'];
-			if ($ticker['Type'] == 'NEWS') {
+			if ($ticker['Type'] === 'NEWS') {
 				$type = 'News Ticker';
 			}
-			if ($ticker['Type'] == 'SCOUT') {
+			if ($ticker['Type'] === 'SCOUT') {
 				$type = 'Scout Message Ticker';
 			}
-			if ($ticker['Type'] == 'BLOCK') {
+			if ($ticker['Type'] === 'BLOCK') {
 				$type = 'Scout Message Blocker';
 			}
 			$tickers[$type] = $ticker['Expires'] - Epoch::time();

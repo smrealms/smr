@@ -13,7 +13,7 @@ class PlotCourseResult extends PlayerPage {
 	public string $file = 'course_plot_result.php';
 
 	public function __construct(
-		private readonly Path $path
+		private readonly Path $path,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

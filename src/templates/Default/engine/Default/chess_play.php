@@ -28,7 +28,7 @@
 						<tr>
 							<td class="chessOutline"><?php echo $Y + 1; ?></td><?php
 							foreach ($Row as $X => $Piece) { ?>
-								<td id="c<?php echo $X . $Y; ?>" data-x="<?php echo $X; ?>" data-y="<?php echo $Y; ?>" class="ajax<?php if (($X + $Y) % 2 != 0) { ?> whiteSquare<?php } else { ?> blackSquare<?php } ?>" onClick="highlightMoves.call(this)">
+								<td id="c<?php echo $X . $Y; ?>" data-x="<?php echo $X; ?>" data-y="<?php echo $Y; ?>" class="ajax<?php if (($X + $Y) % 2 !== 0) { ?> whiteSquare<?php } else { ?> blackSquare<?php } ?>" onClick="highlightMoves.call(this)">
 									<div<?php if ($ChessGame->isLastMoveSquare($X, $Y)) { ?> class="lastMove"<?php } ?>><?php
 										if ($Piece !== null) { ?><span class="pointer lastMove"><?php echo $Piece->getPieceSymbol(); ?></span><?php } ?>
 									</div>

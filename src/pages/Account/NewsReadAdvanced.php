@@ -49,13 +49,13 @@ class NewsReadAdvanced extends AccountPage {
 		// No submit value when first navigating to the page
 		$submit_value = $this->submit;
 
-		if ($submit_value == 'Search For Player') {
+		if ($submit_value === 'Search For Player') {
 			$template->assign('ResultsFor', $this->label);
 			$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND (killer_id IN (:account_ids) OR dead_id IN (:account_ids)) ORDER BY news_id DESC', [
 				'game_id' => $db->escapeNumber($gameID),
 				'account_ids' => $db->escapeArray($this->accountIDs),
 			]);
-		} elseif ($submit_value == 'Search For Alliance') {
+		} elseif ($submit_value === 'Search For Alliance') {
 			$allianceID = $this->allianceIDs[0];
 			$template->assign('ResultsFor', $newsAlliances[$allianceID]);
 			$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND ((killer_alliance = :alliance_id AND killer_id != :account_id_port) OR (dead_alliance = :alliance_id AND dead_id != :account_id_port)) ORDER BY news_id DESC', [
@@ -63,7 +63,7 @@ class NewsReadAdvanced extends AccountPage {
 				'account_id_port' => $db->escapeNumber(ACCOUNT_ID_PORT),
 				'alliance_id' => $db->escapeNumber($allianceID),
 			]);
-		} elseif ($submit_value == 'Search For Players') {
+		} elseif ($submit_value === 'Search For Players') {
 			$template->assign('ResultsFor', $this->label);
 			$dbResult = $db->read('SELECT * FROM news
 						WHERE game_id = :game_id
@@ -73,7 +73,7 @@ class NewsReadAdvanced extends AccountPage {
 				'game_id' => $db->escapeNumber($gameID),
 				'account_ids' => $db->escapeArray($this->accountIDs),
 			]);
-		} elseif ($submit_value == 'Search For Alliances') {
+		} elseif ($submit_value === 'Search For Alliances') {
 			$allianceID1 = $this->allianceIDs[0];
 			$allianceID2 = $this->allianceIDs[1];
 			$template->assign('ResultsFor', $newsAlliances[$allianceID1] . ' vs. ' . $newsAlliances[$allianceID2]);

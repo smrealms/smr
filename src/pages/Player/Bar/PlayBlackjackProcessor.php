@@ -14,7 +14,7 @@ class PlayBlackjackProcessor extends PlayerPageProcessor {
 		private readonly int $locationID,
 		private readonly string $action,
 		private readonly ?Table $table = null,
-		private readonly ?int $bet = null
+		private readonly ?int $bet = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -22,11 +22,11 @@ class PlayBlackjackProcessor extends PlayerPageProcessor {
 		$bet = $this->bet ?? Request::getInt('bet');
 		$do = $this->action;
 
-		if ($do == 'new game') {
+		if ($do === 'new game') {
 			if ($player->getCredits() < $bet) {
 				create_error('Not even enough to play BlackJack...you need to trade!');
 			}
-			if ($bet == 0) {
+			if ($bet === 0) {
 				create_error('We don\'t want you here if you don\'t want to play with cash!');
 			}
 			if ($bet > 100 && $player->getNewbieTurns() > 0) {
@@ -42,12 +42,12 @@ class PlayBlackjackProcessor extends PlayerPageProcessor {
 		}
 
 		// Add cards to the player's hand
-		if ($do == 'HIT') {
+		if ($do === 'HIT') {
 			$table->playerHits();
 		}
 
 		// Check if the game has ended
-		$gameEnded = ($do == 'STAY' || $table->gameOver());
+		$gameEnded = ($do === 'STAY' || $table->gameOver());
 
 		$winningsMsg = '';
 		if ($gameEnded) {
@@ -56,15 +56,15 @@ class PlayBlackjackProcessor extends PlayerPageProcessor {
 
 			// Process winnings and HoF stats
 			$result = $table->getPlayerResult();
-			if ($result == Result::Win || $result == Result::Blackjack) {
-				$multiplier = $result == Result::Blackjack ? 2.5 : 2;
+			if ($result === Result::Win || $result === Result::Blackjack) {
+				$multiplier = $result === Result::Blackjack ? 2.5 : 2;
 				$winnings = IFloor($bet * $multiplier);
 				$player->increaseCredits($winnings);
 				$stat = $winnings - $bet;
 				$player->increaseHOF($stat, ['Blackjack', 'Money', 'Won'], HOF_PUBLIC);
 				$player->increaseHOF(1, ['Blackjack', 'Results', 'Won'], HOF_PUBLIC);
 				$winningsMsg = 'You have won $' . number_format($winnings) . ' credits!';
-			} elseif ($result == Result::Tie) {
+			} elseif ($result === Result::Tie) {
 				$player->increaseCredits($bet);
 				$player->increaseHOF(1, ['Blackjack', 'Results', 'Draw'], HOF_PUBLIC);
 				$winningsMsg = 'You have won back your $' . number_format($bet) . ' credits.';

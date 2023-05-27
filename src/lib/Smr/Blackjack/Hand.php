@@ -36,7 +36,7 @@ class Hand {
 	 * Does this hand have Blackjack?
 	 */
 	public function hasBlackjack(): bool {
-		return $this->getNumCards() == 2 && $this->getValue() == 21;
+		return $this->getNumCards() === 2 && $this->getValue() === 21;
 	}
 
 	/**

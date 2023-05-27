@@ -27,8 +27,8 @@ function isUrlReachable(string $url): bool {
 	$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	curl_close($ch);
 
-	$statusClass = floor($statusCode / 100);
-	return $statusClass == 2 || $statusClass == 3;
+	$statusClass = IFloor($statusCode / 100);
+	return $statusClass === 2 || $statusClass === 3;
 }
 
 class AlbumEditProcessor extends AccountPageProcessor {
@@ -39,9 +39,9 @@ class AlbumEditProcessor extends AccountPageProcessor {
 
 		// get website (and validate it)
 		$website = Request::get('website');
-		if ($website != '') {
+		if ($website !== '') {
 			// add http:// if missing
-			if (!preg_match('=://=', $website)) {
+			if (preg_match('=://=', $website) !== 1) {
 				$website = 'http://' . $website;
 			}
 
@@ -59,7 +59,7 @@ class AlbumEditProcessor extends AccountPageProcessor {
 
 		// check if we have an image
 		$noPicture = true;
-		if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
+		if ($_FILES['photo']['error'] === UPLOAD_ERR_OK) {
 			$noPicture = false;
 			// get dimensions
 			$size = getimagesize($_FILES['photo']['tmp_name']);
@@ -68,7 +68,7 @@ class AlbumEditProcessor extends AccountPageProcessor {
 			}
 
 			$allowed_types = [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG];
-			if (!in_array($size[2], $allowed_types)) {
+			if (!in_array($size[2], $allowed_types, true)) {
 				create_error('Only gif, jpg or png-image allowed!');
 			}
 
@@ -92,6 +92,7 @@ class AlbumEditProcessor extends AccountPageProcessor {
 		$dbResult = $db->read('SELECT 1 FROM album WHERE account_id = :account_id', [
 			'account_id' => $db->escapeNumber($account->getAccountID()),
 		]);
+		$comment = null;
 		if ($dbResult->hasRecord()) {
 			if (!$noPicture) {
 				$comment = '<span class="green">*** Picture changed</span>';
@@ -139,7 +140,7 @@ class AlbumEditProcessor extends AccountPageProcessor {
 			]);
 		}
 
-		if (!empty($comment)) {
+		if ($comment !== null) {
 			// check if we have comments for this album already
 			$db->lockTable('album_has_comments');
 

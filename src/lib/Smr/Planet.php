@@ -142,7 +142,7 @@ class Planet {
 	protected function __construct(
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
-		DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [
@@ -249,7 +249,7 @@ class Planet {
 	}
 
 	public function hasOwner(): bool {
-		return $this->ownerID != 0;
+		return $this->ownerID !== 0;
 	}
 
 	public function removeOwner(): void {
@@ -379,7 +379,7 @@ class Planet {
 				$this->setArmour($this->getMaxArmour());
 		}
 		// Remove a random (0-indexed) mounted weapon, if over max mount slots
-		while ($this->getMountedWeapons() && max(array_keys($this->getMountedWeapons())) >= $this->getMaxMountedWeapons()) {
+		while (count($this->getMountedWeapons()) > 0 && max(array_keys($this->getMountedWeapons())) >= $this->getMaxMountedWeapons()) {
 			$removeID = array_rand($this->getMountedWeapons());
 			$this->removeMountedWeapon($removeID);
 			foreach ($this->getMountedWeapons() as $orderID => $weapon) {
@@ -558,14 +558,14 @@ class Planet {
 	}
 
 	public function moveMountedWeaponUp(int $orderID): void {
-		if ($orderID == 0) {
+		if ($orderID === 0) {
 			throw new Exception('Cannot move this weapon up!');
 		}
 		$this->swapMountedWeapons($orderID - 1, $orderID);
 	}
 
 	public function moveMountedWeaponDown(int $orderID): void {
-		if ($orderID == $this->getMaxMountedWeapons() - 1) {
+		if ($orderID === $this->getMaxMountedWeapons() - 1) {
 			throw new Exception('Cannot move this weapon down!');
 		}
 		$this->swapMountedWeapons($orderID + 1, $orderID);
@@ -814,7 +814,7 @@ class Planet {
 	 */
 	public function hasMenuOption(PlanetMenuOption $option): bool {
 		// We do not set options that are unavailable
-		return in_array($option, $this->typeInfo->menuOptions());
+		return in_array($option, $this->typeInfo->menuOptions(), true);
 	}
 
 	public function update(): void {
@@ -857,7 +857,7 @@ class Planet {
 		if ($this->hasChangedStockpile) {
 			// write stockpile info
 			foreach ($this->getStockpile() as $id => $amount) {
-				if ($amount != 0) {
+				if ($amount !== 0) {
 					$db->replace('planet_has_cargo', [
 						...$this->SQLID,
 						'good_id' => $id,
@@ -974,7 +974,7 @@ class Planet {
 			return 'You do not have enough turns to build.';
 		}
 		foreach ($this->getStructureTypes($constructionID)->hardwareCost() as $hardwareID) {
-			if (!$constructor->getShip()->getHardware($hardwareID)) {
+			if ($constructor->getShip()->getHardware($hardwareID) === 0) {
 				return 'You do not have the hardware needed for this type of building!';
 			}
 		}
@@ -1046,15 +1046,15 @@ class Planet {
 	}
 
 	public function stopBuilding(int $constructionID): bool {
-		$matchingBuilding = false;
+		$matchingBuilding = null;
 		$latestFinish = 0;
 		foreach ($this->getCurrentlyBuilding() as $building) {
-			if ($building['ConstructionID'] == $constructionID && $building['Finishes'] > $latestFinish) {
+			if ($building['ConstructionID'] === $constructionID && $building['Finishes'] > $latestFinish) {
 				$latestFinish = $building['Finishes'];
 				$matchingBuilding = $building;
 			}
 		}
-		if ($matchingBuilding) {
+		if ($matchingBuilding !== null) {
 			$this->hasStoppedBuilding[] = $matchingBuilding['BuildingSlotID'];
 			unset($this->currentlyBuilding[$matchingBuilding['BuildingSlotID']]);
 			return true;
@@ -1237,7 +1237,7 @@ class Planet {
 
 	/**
 	 * @param array<AbstractPlayer> $targetPlayers
-	 * @return array{Planet: self, TotalDamage: int, TotalDamagePerTargetPlayer?: array<int, int>, DeadBeforeShot: bool, Weapons?: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}}
+	 * @return PlanetCombatResults
 	 */
 	public function shootPlayers(array $targetPlayers): array {
 		$results = ['Planet' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => []];
@@ -1258,7 +1258,7 @@ class Planet {
 				}
 				$totalDamage = $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 				$results['TotalDamage'] += $totalDamage;
-				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['TargetPlayer']->getAccountID()] += $totalDamage;
+				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['Target']->getAccountID()] += $totalDamage;
 			}
 		}
 		if ($this->hasCDs()) {
@@ -1266,7 +1266,7 @@ class Planet {
 			$results['Drones'] = $thisCDs->shootPlayerAsPlanet($this, array_rand_value($targetPlayers));
 			$totalDamage = $results['Drones']['ActualDamage']['TotalDamage'];
 			$results['TotalDamage'] += $totalDamage;
-			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $totalDamage;
+			$results['TotalDamagePerTargetPlayer'][$results['Drones']['Target']->getAccountID()] += $totalDamage;
 		}
 		return $results;
 	}
@@ -1284,7 +1284,7 @@ class Planet {
 		$numChances = floor($damage / self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE);
 		for ($i = 0; $i < $numChances; $i++) {
 			// Stop if the planet has no more buildlings
-			if ($this->getLevel() == 0) {
+			if ($this->getLevel() === 0.0) {
 				break;
 			}
 			//15% chance to destroy something
@@ -1317,13 +1317,13 @@ class Planet {
 		$armourDamage = 0;
 		if (!$alreadyDead) {
 			$shieldDamage = $this->takeDamageToShields($damage['Shield']);
-			if ($shieldDamage == 0 || $damage['Rollover']) {
+			if ($shieldDamage === 0 || $damage['Rollover']) {
 				$cdMaxDamage = $damage['Armour'] - $shieldDamage;
-				if ($shieldDamage == 0 && $this->hasShields()) {
+				if ($shieldDamage === 0 && $this->hasShields()) {
 					$cdMaxDamage = IFloor($cdMaxDamage * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT);
 				}
 				$cdDamage = $this->takeDamageToCDs($cdMaxDamage);
-				if (!$this->hasShields() && ($cdDamage == 0 || $damage['Rollover'])) {
+				if (!$this->hasShields() && ($cdDamage === 0 || $damage['Rollover'])) {
 					$armourMaxDamage = $damage['Armour'] - $shieldDamage - $cdDamage;
 					$armourDamage = $this->takeDamageToArmour($armourMaxDamage);
 				}

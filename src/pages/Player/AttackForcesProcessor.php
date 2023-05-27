@@ -14,7 +14,7 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly int $ownerAccountID,
-		private readonly bool $bump = false
+		private readonly bool $bump = false,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -59,6 +59,17 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 			}
 		}
 
+		$attackers = $player->getSector()->getFightingTradersAgainstForces($player, $bump);
+		if (count($attackers) === 0) {
+			create_error('No players in sector are able to attack these forces!');
+		}
+
+		// ********************************
+		// *
+		// * F o r c e s   a t t a c k
+		// *
+		// ********************************
+
 		// take the turns
 		if ($bump) {
 			$player->takeTurns($forces->getBumpTurnCost($ship));
@@ -73,15 +84,7 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 		// Sending occurs after the attack so we can link the combat log.
 		$sendMessage = $forces->hasSDs();
 
-		// ********************************
-		// *
-		// * F o r c e s   a t t a c k
-		// *
-		// ********************************
-
 		$results = ['Forced' => $bump];
-
-		$attackers = $player->getSector()->getFightingTradersAgainstForces($player, $bump);
 
 		//decloak all attackers
 		foreach ($attackers as $attacker) {
@@ -93,7 +96,7 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 
 		// If mines are bumped, the forces shoot first. Otherwise player shoots first.
 		if ($bump) {
-			$results['Forces'] = $forces->shootPlayers($attackers, $bump);
+			$forceResults = $forces->shootPlayers($attackers, $bump);
 		}
 
 		$results['Attackers'] = ['TotalDamage' => 0];
@@ -104,9 +107,10 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 		}
 
 		if (!$bump) {
-			$results['Forces'] = $forces->shootPlayers($attackers, $bump);
+			$forceResults = $forces->shootPlayers($attackers, $bump);
 			$forces->updateExpire();
 		}
+		$results['Forces'] = $forceResults;
 
 		// Add this log to the `combat_logs` database table
 		$db = Database::getInstance();

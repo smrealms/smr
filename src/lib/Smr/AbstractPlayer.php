@@ -144,7 +144,7 @@ abstract class AbstractPlayer {
 	public static function getSectorPlayersByAlliances(int $gameID, int $sectorID, array $allianceIDs, bool $forceUpdate = false): array {
 		$players = self::getSectorPlayers($gameID, $sectorID, $forceUpdate); // Don't use & as we do an unset
 		foreach ($players as $accountID => $player) {
-			if (!in_array($player->getAllianceID(), $allianceIDs)) {
+			if (!in_array($player->getAllianceID(), $allianceIDs, true)) {
 				unset($players[$accountID]);
 			}
 		}
@@ -192,10 +192,10 @@ abstract class AbstractPlayer {
 			$players = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$accountID = $dbRecord->getInt('account_id');
-				if (in_array($accountID, Globals::getHiddenPlayers())) {
-					continue;
+				$player = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
+				if (!$player->isObserver()) {
+					$players[$accountID] = $player;
 				}
-				$players[$accountID] = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
 			}
 			self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID] = $players;
 		}
@@ -216,10 +216,10 @@ abstract class AbstractPlayer {
 			$players = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$accountID = $dbRecord->getInt('account_id');
-				if (in_array($accountID, Globals::getHiddenPlayers())) {
-					continue;
+				$player = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
+				if (!$player->isObserver()) {
+					$players[$accountID] = $player;
 				}
-				$players[$accountID] = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
 			}
 			self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID] = $players;
 		}
@@ -282,7 +282,7 @@ abstract class AbstractPlayer {
 	protected function __construct(
 		protected readonly int $gameID,
 		protected readonly int $accountID,
-		DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [
@@ -425,7 +425,7 @@ abstract class AbstractPlayer {
 	protected function setZoom(int $zoom): void {
 		// Set the zoom level between [1, 9]
 		$zoom = max(1, min(9, $zoom));
-		if ($this->zoom == $zoom) {
+		if ($this->zoom === $zoom) {
 			return;
 		}
 		$this->zoom = $zoom;
@@ -451,7 +451,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setAttackColour(string $colour): void {
-		if ($this->attackColour == $colour) {
+		if ($this->attackColour === $colour) {
 			return;
 		}
 		$this->attackColour = $colour;
@@ -463,7 +463,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setIgnoreGlobals(bool $bool): void {
-		if ($this->ignoreGlobals == $bool) {
+		if ($this->ignoreGlobals === $bool) {
 			return;
 		}
 		$this->ignoreGlobals = $bool;
@@ -495,7 +495,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setNewbieTurns(int $newbieTurns): void {
-		if ($this->newbieTurns == $newbieTurns) {
+		if ($this->newbieTurns === $newbieTurns) {
 			return;
 		}
 		$this->newbieTurns = $newbieTurns;
@@ -514,7 +514,7 @@ abstract class AbstractPlayer {
 	 * Do not call directly. Use Ship::setTypeID instead.
 	 */
 	public function setShipTypeID(int $shipID): void {
-		if ($this->shipID == $shipID) {
+		if ($this->shipID === $shipID) {
 			return;
 		}
 		$this->shipID = $shipID;
@@ -580,7 +580,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setSectorID(int $sectorID): void {
-		if ($this->sectorID == $sectorID) {
+		if ($this->sectorID === $sectorID) {
 			return;
 		}
 
@@ -602,7 +602,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setLastSectorID(int $lastSectorID): void {
-		if ($this->lastSectorID == $lastSectorID) {
+		if ($this->lastSectorID === $lastSectorID) {
 			return;
 		}
 		$this->lastSectorID = $lastSectorID;
@@ -626,12 +626,19 @@ abstract class AbstractPlayer {
 		// get his home sector
 		$hq_id = GOVERNMENT + $this->getRaceID();
 		$raceHqSectors = Sector::getLocationSectors($this->getGameID(), $hq_id);
-		if (empty($raceHqSectors)) {
+		if (count($raceHqSectors) === 0) {
 			// No HQ, default to sector 1
 			return 1;
 		}
 		// If race has multiple HQ's for some reason, use the first one
 		return key($raceHqSectors);
+	}
+
+	/**
+	 * Is player a non-interacting observer (hidden to other players)?
+	 */
+	public function isObserver(): bool {
+		return in_array($this->accountID, Globals::getHiddenPlayers(), true);
 	}
 
 	public function isDead(): bool {
@@ -655,7 +662,7 @@ abstract class AbstractPlayer {
 	 */
 	public function updateNewbieStatus(): void {
 		$accountNewbieStatus = !$this->getAccount()->isVeteran();
-		if ($this->newbieStatus != $accountNewbieStatus) {
+		if ($this->newbieStatus !== $accountNewbieStatus) {
 			$this->newbieStatus = $accountNewbieStatus;
 			$this->hasChanged = true;
 		}
@@ -665,11 +672,11 @@ abstract class AbstractPlayer {
 	 * Has this player been designated as the alliance flagship?
 	 */
 	public function isFlagship(): bool {
-		return $this->hasAlliance() && $this->getAlliance()->getFlagshipID() == $this->getAccountID();
+		return $this->hasAlliance() && $this->getAlliance()->getFlagshipID() === $this->getAccountID();
 	}
 
 	public function isPresident(): bool {
-		return Council::getPresidentID($this->getGameID(), $this->getRaceID()) == $this->getAccountID();
+		return Council::getPresidentID($this->getGameID(), $this->getRaceID()) === $this->getAccountID();
 	}
 
 	public function isOnCouncil(): bool {
@@ -698,7 +705,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function isGPEditor(): bool {
-		return $this->getGPWriter() == 'editor';
+		return $this->getGPWriter() === 'editor';
 	}
 
 	public function isForceDropMessages(): bool {
@@ -706,7 +713,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setForceDropMessages(bool $bool): void {
-		if ($this->forceDropMessages == $bool) {
+		if ($this->forceDropMessages === $bool) {
 			return;
 		}
 		$this->forceDropMessages = $bool;
@@ -747,6 +754,7 @@ abstract class AbstractPlayer {
 			'message_text' => $message,
 			'sender_id' => $senderID,
 			'send_time' => Epoch::time(),
+			'msg_read' => $db->escapeBoolean(!$unread),
 			'expire_time' => $expires,
 			'sender_delete' => $db->escapeBoolean($senderDelete),
 		]);
@@ -856,7 +864,7 @@ abstract class AbstractPlayer {
 		}
 
 		// Do not put scout messages in the sender's sent box
-		if ($messageTypeID == MSG_SCOUT) {
+		if ($messageTypeID === MSG_SCOUT) {
 			$senderDelete = true;
 		}
 
@@ -1005,7 +1013,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setDead(bool $bool): void {
-		if ($this->dead == $bool) {
+		if ($this->dead === $bool) {
 			return;
 		}
 		$this->dead = $bool;
@@ -1024,7 +1032,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setKills(int $kills): void {
-		if ($this->kills == $kills) {
+		if ($this->kills === $kills) {
 			return;
 		}
 		$this->kills = $kills;
@@ -1043,7 +1051,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setDeaths(int $deaths): void {
-		if ($this->deaths == $deaths) {
+		if ($this->deaths === $deaths) {
 			return;
 		}
 		$this->deaths = $deaths;
@@ -1082,7 +1090,7 @@ abstract class AbstractPlayer {
 		if ($align < 0) {
 			throw new Exception('Trying to increase negative align.');
 		}
-		if ($align == 0) {
+		if ($align === 0) {
 			return;
 		}
 		$align += $this->alignment;
@@ -1093,7 +1101,7 @@ abstract class AbstractPlayer {
 		if ($align < 0) {
 			throw new Exception('Trying to decrease negative align.');
 		}
-		if ($align == 0) {
+		if ($align === 0) {
 			return;
 		}
 		$align = $this->alignment - $align;
@@ -1101,7 +1109,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setAlignment(int $align): void {
-		if ($this->alignment == $align) {
+		if ($this->alignment === $align) {
 			return;
 		}
 		$this->alignment = $align;
@@ -1121,7 +1129,7 @@ abstract class AbstractPlayer {
 	 * Returns the amount that was actually added to handle overflow.
 	 */
 	public function increaseBank(int $credits): int {
-		if ($credits == 0) {
+		if ($credits === 0) {
 			return 0;
 		}
 		if ($credits < 0) {
@@ -1134,7 +1142,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function decreaseBank(int $credits): void {
-		if ($credits == 0) {
+		if ($credits === 0) {
 			return;
 		}
 		if ($credits < 0) {
@@ -1145,7 +1153,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setBank(int $credits): void {
-		if ($this->bank == $credits) {
+		if ($this->bank === $credits) {
 			return;
 		}
 		if ($credits < 0) {
@@ -1169,7 +1177,7 @@ abstract class AbstractPlayer {
 	public function getNextLevelPercentAcquired(): int {
 		$currentLevelExp = $this->getLevel()->expRequired;
 		$nextLevelExp = $this->getLevel()->next()->expRequired;
-		if ($nextLevelExp == $currentLevelExp) {
+		if ($nextLevelExp === $currentLevelExp) {
 			return 100;
 		}
 		return max(0, min(100, IRound(($this->getExperience() - $currentLevelExp) / ($nextLevelExp - $currentLevelExp) * 100)));
@@ -1180,7 +1188,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setExperience(int $experience): void {
-		if ($this->experience == $experience) {
+		if ($this->experience === $experience) {
 			return;
 		}
 		if ($experience < MIN_EXPERIENCE) {
@@ -1202,7 +1210,7 @@ abstract class AbstractPlayer {
 	 * Returns the amount that was actually added to handle overflow.
 	 */
 	public function increaseCredits(int $credits): int {
-		if ($credits == 0) {
+		if ($credits === 0) {
 			return 0;
 		}
 		if ($credits < 0) {
@@ -1215,7 +1223,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function decreaseCredits(int $credits): void {
-		if ($credits == 0) {
+		if ($credits === 0) {
 			return;
 		}
 		if ($credits < 0) {
@@ -1226,7 +1234,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setCredits(int $credits): void {
-		if ($this->credits == $credits) {
+		if ($this->credits === $credits) {
 			return;
 		}
 		if ($credits < 0) {
@@ -1243,7 +1251,7 @@ abstract class AbstractPlayer {
 		if ($experience < 0) {
 			throw new Exception('Trying to increase negative experience.');
 		}
-		if ($experience == 0) {
+		if ($experience === 0) {
 			return;
 		}
 		$newExperience = $this->experience + $experience;
@@ -1255,7 +1263,7 @@ abstract class AbstractPlayer {
 		if ($experience < 0) {
 			throw new Exception('Trying to decrease negative experience.');
 		}
-		if ($experience == 0) {
+		if ($experience === 0) {
 			return;
 		}
 		$newExperience = $this->experience - $experience;
@@ -1268,7 +1276,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setLandedOnPlanet(bool $bool): void {
-		if ($this->landedOnPlanet == $bool) {
+		if ($this->landedOnPlanet === $bool) {
 			return;
 		}
 		$this->landedOnPlanet = $bool;
@@ -1354,7 +1362,7 @@ abstract class AbstractPlayer {
 	 */
 	public function changePlayerName(string $name): void {
 		// Check if the player already has this name (case-sensitive)
-		if ($this->getPlayerName() == $name) {
+		if ($this->getPlayerName() === $name) {
 			throw new UserError('Your player already has that name!');
 		}
 
@@ -1423,7 +1431,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setRaceID(int $raceID): void {
-		if ($this->raceID == $raceID) {
+		if ($this->raceID === $raceID) {
 			return;
 		}
 		$this->raceID = $raceID;
@@ -1431,7 +1439,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function isAllianceLeader(bool $forceUpdate = false): bool {
-		return $this->getAccountID() == $this->getAlliance($forceUpdate)->getLeaderID();
+		return $this->getAccountID() === $this->getAlliance($forceUpdate)->getLeaderID();
 	}
 
 	public function getAlliance(bool $forceUpdate = false): Alliance {
@@ -1443,15 +1451,15 @@ abstract class AbstractPlayer {
 	}
 
 	public function hasAlliance(): bool {
-		return $this->getAllianceID() != 0;
+		return $this->getAllianceID() !== 0;
 	}
 
 	protected function setAllianceID(int $ID): void {
-		if ($this->allianceID == $ID) {
+		if ($this->allianceID === $ID) {
 			return;
 		}
 		$this->allianceID = $ID;
-		if ($this->allianceID != 0) {
+		if ($this->allianceID !== 0) {
 			$status = $this->hasNewbieStatus() ? 'NEWBIE' : 'VETERAN';
 			$db = Database::getInstance();
 			$db->write('INSERT IGNORE INTO player_joined_alliance (account_id,game_id,alliance_id,status)
@@ -1507,7 +1515,7 @@ abstract class AbstractPlayer {
 			$this->actionTaken('DisbandAlliance', ['Alliance' => $alliance]);
 		} else {
 			$this->actionTaken('LeaveAlliance', ['Alliance' => $alliance]);
-			if ($alliance->getLeaderID() != 0 && $alliance->getLeaderID() != ACCOUNT_ID_NHL) {
+			if ($alliance->getLeaderID() !== 0 && $alliance->getLeaderID() !== ACCOUNT_ID_NHL) {
 				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I left your alliance!', false);
 			}
 		}
@@ -1538,7 +1546,7 @@ abstract class AbstractPlayer {
 			try {
 				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I joined your alliance!', false);
 			} catch (AccountNotFound $e) {
-				if ($alliance->getLeaderID() != ACCOUNT_ID_NHL) {
+				if ($alliance->getLeaderID() !== ACCOUNT_ID_NHL) {
 					throw $e;
 				}
 			}
@@ -1562,7 +1570,7 @@ abstract class AbstractPlayer {
 	}
 
 	private function setAllianceJoinable(int $time): void {
-		if ($this->allianceJoinable == $time) {
+		if ($this->allianceJoinable === $time) {
 			return;
 		}
 		$this->allianceJoinable = $time;
@@ -1586,7 +1594,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setCombatDronesKamikazeOnMines(bool $bool): void {
-		if ($this->combatDronesKamikazeOnMines == $bool) {
+		if ($this->combatDronesKamikazeOnMines === $bool) {
 			return;
 		}
 		$this->combatDronesKamikazeOnMines = $bool;
@@ -1679,7 +1687,7 @@ abstract class AbstractPlayer {
 		if ($relations < 0) {
 			throw new Exception('Trying to increase negative relations.');
 		}
-		if ($relations == 0) {
+		if ($relations === 0) {
 			return;
 		}
 		$relations += $this->getPersonalRelation($raceID);
@@ -1693,7 +1701,7 @@ abstract class AbstractPlayer {
 		if ($relations < 0) {
 			throw new Exception('Trying to decrease negative relations.');
 		}
-		if ($relations == 0) {
+		if ($relations === 0) {
 			return;
 		}
 		$relations = $this->getPersonalRelation($raceID) - $relations;
@@ -1705,7 +1713,7 @@ abstract class AbstractPlayer {
 	 */
 	public function setRelations(int $relations, int $raceID): void {
 		$this->getRelations();
-		if ($this->personalRelations[$raceID] == $relations) {
+		if ($this->personalRelations[$raceID] === $relations) {
 			return;
 		}
 		if ($relations < MIN_RELATIONS) {
@@ -1739,7 +1747,7 @@ abstract class AbstractPlayer {
 	}
 
 	private function setLastNewsUpdate(int $time): void {
-		if ($this->lastNewsUpdate == $time) {
+		if ($this->lastNewsUpdate === $time) {
 			return;
 		}
 		$this->lastNewsUpdate = $time;
@@ -1755,7 +1763,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setLastPort(int $lastPort): void {
-		if ($this->lastPort == $lastPort) {
+		if ($this->lastPort === $lastPort) {
 			return;
 		}
 		$this->lastPort = $lastPort;
@@ -1777,11 +1785,11 @@ abstract class AbstractPlayer {
 		}
 
 		// Update the plotted course if we have moved since the last query
-		if ($this->plottedCourse !== false && $this->plottedCourse->getStartSectorID() != $this->getSectorID()) {
-			if ($this->plottedCourse->getEndSectorID() == $this->getSectorID()) {
+		if ($this->plottedCourse !== false && $this->plottedCourse->getStartSectorID() !== $this->getSectorID()) {
+			if ($this->plottedCourse->getEndSectorID() === $this->getSectorID()) {
 				// We have reached our destination
 				$this->deletePlottedCourse();
-			} elseif ($this->plottedCourse->getNextOnPath() == $this->getSectorID()) {
+			} elseif ($this->plottedCourse->getNextOnPath() === $this->getSectorID()) {
 				// We have walked into the next sector of the course
 				$this->plottedCourse->followPath();
 				$this->setPlottedCourse($this->plottedCourse);
@@ -1985,7 +1993,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setMilitaryPayment(int $amount): void {
-		if ($this->militaryPayment == $amount) {
+		if ($this->militaryPayment === $amount) {
 			return;
 		}
 		$this->militaryPayment = $amount;
@@ -2050,7 +2058,7 @@ abstract class AbstractPlayer {
 
 	public function getActiveBounty(BountyType $type): Bounty {
 		foreach ($this->getBounties() as $bounty) {
-			if ($bounty->isActive() && $bounty->type == $type) {
+			if ($bounty->isActive() && $bounty->type === $type) {
 				return $bounty;
 			}
 		}
@@ -2059,7 +2067,7 @@ abstract class AbstractPlayer {
 
 	public function hasActiveBounty(BountyType $type): bool {
 		foreach ($this->getBounties() as $bounty) {
-			if ($bounty->isActive() && $bounty->type == $type) {
+			if ($bounty->isActive() && $bounty->type === $type) {
 				return true;
 			}
 		}
@@ -2124,7 +2132,7 @@ abstract class AbstractPlayer {
 		if ($amount < 0) {
 			throw new Exception('Trying to increase negative HOF: ' . implode(':', $typeList));
 		}
-		if ($amount == 0) {
+		if ($amount === 0.0) {
 			return;
 		}
 		$this->setHOF($this->getHOF($typeList) + $amount, $typeList, $visibility);
@@ -2137,7 +2145,7 @@ abstract class AbstractPlayer {
 		if ($amount < 0) {
 			throw new Exception('Trying to decrease negative HOF: ' . implode(':', $typeList));
 		}
-		if ($amount == 0) {
+		if ($amount === 0.0) {
 			return;
 		}
 		$this->setHOF($this->getHOF($typeList) - $amount, $typeList, $visibility);
@@ -2152,16 +2160,16 @@ abstract class AbstractPlayer {
 			return;
 		}
 		if ($amount < 0) {
-			$amount = 0;
+			throw new Exception('Cannot set negative HOF stats');
 		}
-		if ($this->getHOF($typeList) == $amount) {
+		if ($this->getHOF($typeList) === $amount) {
 			return;
 		}
 
 		$hofType = implode(':', $typeList);
 		if (!isset(self::$HOFVis[$hofType])) {
 			self::$hasHOFVisChanged[$hofType] = self::HOF_NEW;
-		} elseif (self::$HOFVis[$hofType] != $visibility) {
+		} elseif (self::$HOFVis[$hofType] !== $visibility) {
 			self::$hasHOFVisChanged[$hofType] = self::HOF_CHANGED;
 		}
 		self::$HOFVis[$hofType] = $visibility;
@@ -2564,7 +2572,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setTurns(int $turns): void {
-		if ($this->turns == $turns) {
+		if ($this->turns === $turns) {
 			return;
 		}
 		// Make sure turns are in range [0, MaxTurns]
@@ -2661,7 +2669,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setLastTurnUpdate(int $time): void {
-		if ($this->lastTurnUpdate == $time) {
+		if ($this->lastTurnUpdate === $time) {
 			return;
 		}
 		$this->lastTurnUpdate = $time;
@@ -2673,7 +2681,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setLastActive(int $lastActive): void {
-		if ($this->lastActive == $lastActive) {
+		if ($this->lastActive === $lastActive) {
 			return;
 		}
 		$this->lastActive = $lastActive;
@@ -2685,7 +2693,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setLastCPLAction(int $time): void {
-		if ($this->lastCPLAction == $time) {
+		if ($this->lastCPLAction === $time) {
 			return;
 		}
 		$this->lastCPLAction = $time;
@@ -2697,7 +2705,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setNewbieWarning(bool $bool): void {
-		if ($this->newbieWarning == $bool) {
+		if ($this->newbieWarning === $bool) {
 			return;
 		}
 		$this->newbieWarning = $bool;
@@ -2713,7 +2721,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function setDisplayMissions(bool $bool): void {
-		if ($this->displayMissions == $bool) {
+		if ($this->displayMissions === $bool) {
 			return;
 		}
 		$this->displayMissions = $bool;
@@ -2908,7 +2916,7 @@ abstract class AbstractPlayer {
 			throw new Exception('Unknown mission: ' . $missionID);
 		}
 		$mission =& $this->missions[$missionID];
-		if ($mission['Task'] === false || $mission['Task']['Step'] != 'Claim') {
+		if ($mission['Task'] === false || $mission['Task']['Step'] !== 'Claim') {
 			throw new Exception('Cannot claim mission: ' . $missionID . ', for step: ' . $mission['On Step']);
 		}
 		$mission['On Step']++;
@@ -2961,7 +2969,7 @@ abstract class AbstractPlayer {
 	 * @param array<string, mixed> $values
 	 */
 	public function actionTaken(string $actionID, array $values): void {
-		if (!in_array($actionID, MISSION_ACTIONS)) {
+		if (!in_array($actionID, MISSION_ACTIONS, true)) {
 			throw new Exception('Unknown action: ' . $actionID);
 		}
 		// TODO: Reenable this once tested.     if($this->getAccount()->isLoggingEnabled())
@@ -2988,7 +2996,7 @@ abstract class AbstractPlayer {
 
 		$this->getMissions();
 		foreach ($this->missions as $missionID => &$mission) {
-			if ($mission['Task'] !== false && $mission['Task']['Step'] == $actionID) {
+			if ($mission['Task'] !== false && $mission['Task']['Step'] === $actionID) {
 				$requirements = $mission['Task']['Detail'];
 				if (checkMissionRequirements($values, $requirements) === true) {
 					$mission['On Step']++;
@@ -3026,51 +3034,51 @@ abstract class AbstractPlayer {
 		return false;
 	}
 
-	public function equals(self $otherPlayer = null): bool {
-		return $otherPlayer !== null && $this->getAccountID() == $otherPlayer->getAccountID() && $this->getGameID() == $otherPlayer->getGameID();
+	public function equals(self $otherPlayer): bool {
+		return $this->getAccountID() === $otherPlayer->getAccountID() && $this->getGameID() === $otherPlayer->getGameID();
 	}
 
-	public function sameAlliance(self $otherPlayer = null): bool {
-		return $this->equals($otherPlayer) || ($otherPlayer !== null && $this->getGameID() == $otherPlayer->getGameID() && $this->hasAlliance() && $this->getAllianceID() == $otherPlayer->getAllianceID());
+	public function sameAlliance(self $otherPlayer): bool {
+		return $this->getGameID() === $otherPlayer->getGameID() && $this->hasAlliance() && $this->getAllianceID() === $otherPlayer->getAllianceID();
 	}
 
-	public function sharedForceAlliance(self $otherPlayer = null): bool {
+	public function sharedForceAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function forceNAPAlliance(self $otherPlayer = null): bool {
+	public function forceNAPAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function planetNAPAlliance(self $otherPlayer = null): bool {
+	public function planetNAPAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderNAPAlliance(self $otherPlayer = null): bool {
+	public function traderNAPAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderMAPAlliance(self $otherPlayer = null): bool {
+	public function traderMAPAlliance(self $otherPlayer): bool {
 		return $this->traderAttackTraderAlliance($otherPlayer) && $this->traderDefendTraderAlliance($otherPlayer);
 	}
 
-	public function traderAttackTraderAlliance(self $otherPlayer = null): bool {
+	public function traderAttackTraderAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderDefendTraderAlliance(self $otherPlayer = null): bool {
+	public function traderDefendTraderAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderAttackForceAlliance(self $otherPlayer = null): bool {
+	public function traderAttackForceAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderAttackPortAlliance(self $otherPlayer = null): bool {
+	public function traderAttackPortAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
-	public function traderAttackPlanetAlliance(self $otherPlayer = null): bool {
+	public function traderAttackPlanetAlliance(self $otherPlayer): bool {
 		return $this->sameAlliance($otherPlayer);
 	}
 
@@ -3122,7 +3130,7 @@ abstract class AbstractPlayer {
 	 * Note that this populates the list of *all* unvisited sectors!
 	 */
 	public function hasVisitedSector(int $sectorID): bool {
-		return !in_array($sectorID, $this->getUnvisitedSectors());
+		return !in_array($sectorID, $this->getUnvisitedSectors(), true);
 	}
 
 	public function getLeaveNewbieProtectionHREF(): string {
@@ -3168,7 +3176,7 @@ abstract class AbstractPlayer {
 	 * which does not acquire a sector lock.
 	 */
 	public function setDisplayWeapons(bool $bool): void {
-		if ($this->displayWeapons == $bool) {
+		if ($this->displayWeapons === $bool) {
 			return;
 		}
 		$this->displayWeapons = $bool;
@@ -3242,7 +3250,7 @@ abstract class AbstractPlayer {
 	public function saveHOF(): void {
 		$db = Database::getInstance();
 		foreach (self::$hasHOFVisChanged as $hofType => $changeType) {
-			if ($changeType == self::HOF_NEW) {
+			if ($changeType === self::HOF_NEW) {
 				$db->insert('hof_visibility', [
 					'type' => $hofType,
 					'visibility' => self::$HOFVis[$hofType],

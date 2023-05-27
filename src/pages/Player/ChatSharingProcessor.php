@@ -15,7 +15,7 @@ class ChatSharingProcessor extends PlayerPageProcessor {
 	 * @param array<int> $shareAccountIDs Account IDs already being shared to
 	 */
 	public function __construct(
-		private readonly array $shareAccountIDs
+		private readonly array $shareAccountIDs,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -24,11 +24,11 @@ class ChatSharingProcessor extends PlayerPageProcessor {
 		// Process adding a "share to" account
 		if (Request::has('add')) {
 			$addPlayerID = Request::getInt('add_player_id');
-			if (empty($addPlayerID)) {
+			if ($addPlayerID === 0) {
 				error_on_page('You must specify a Player ID to share with!');
 			}
 
-			if ($addPlayerID == $player->getPlayerID()) {
+			if ($addPlayerID === $player->getPlayerID()) {
 				error_on_page('You do not need to share with yourself!');
 			}
 
@@ -38,7 +38,7 @@ class ChatSharingProcessor extends PlayerPageProcessor {
 				error_on_page($e->getMessage());
 			}
 
-			if (in_array($accountId, $this->shareAccountIDs)) {
+			if (in_array($accountId, $this->shareAccountIDs, true)) {
 				error_on_page('You are already sharing with this player!');
 			}
 

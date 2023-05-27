@@ -11,7 +11,7 @@ class Validate extends AccountPage {
 	public string $file = 'validate.php';
 
 	public function __construct(
-		private readonly ?string $message = null
+		private readonly ?string $message = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

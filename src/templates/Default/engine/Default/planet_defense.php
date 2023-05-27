@@ -9,7 +9,7 @@
  * @var string $WeaponProcessingHREF
  */
 
-if ($ThisPlanet->getMaxShields() + $ThisPlanet->getMaxCDs() + $ThisPlanet->getMaxArmour() == 0) { ?>
+if ($ThisPlanet->getMaxShields() + $ThisPlanet->getMaxCDs() + $ThisPlanet->getMaxArmour() === 0) { ?>
 	<p>This planet cannot yet store any shields, combat drones, or armour.</p>
 <?php } else { ?>
 
@@ -84,10 +84,10 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 				<tr class="center">
 					<td><?php echo $i + 1; ?></td>
 					<td><?php
-						if ($i != 0) { ?>
+						if ($i !== 0) { ?>
 							<button type="submit" title="Move Up" style="padding:0px; height:20px; border:none;" name="move_up" value="<?php echo $i; ?>"><img src="images/up.gif" alt="" height="20" width="20" /></button><?php
 						}
-						if ($i != $ThisPlanet->getMaxMountedWeapons() - 1) { ?>
+						if ($i !== $ThisPlanet->getMaxMountedWeapons() - 1) { ?>
 							<button type="submit" title="Move Down" style="padding:0px; height:20px; border:none;" name="move_down" value="<?php echo $i; ?>"><img src="images/down.gif" alt="" height="20" width="20" /></button><?php
 					} ?>
 					</td><?php
@@ -97,7 +97,7 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 						<td><?php echo $weapons[$i]->getBaseAccuracy(); ?>%</td>
 						<td><?php echo $weapons[$i]->getPowerLevel(); ?></td>
 						<td><?php
-							if (count($weapons) == $ThisPlanet->getMaxMountedWeapons()) {
+							if (count($weapons) === $ThisPlanet->getMaxMountedWeapons()) {
 								// Only allow destroying mounted weapons when all slots are filled ?>
 								<button type="submit" name="destroy" value="<?php echo $i; ?>">Destroy</button><?php
 							} ?>

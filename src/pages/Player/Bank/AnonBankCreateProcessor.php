@@ -12,7 +12,7 @@ class AnonBankCreateProcessor extends PlayerPageProcessor {
 	public function build(AbstractPlayer $player): never {
 		$password = Request::get('password');
 
-		if (empty($password)) {
+		if ($password === '') {
 			create_error('You cannot use a blank password!');
 		}
 

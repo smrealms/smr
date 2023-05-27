@@ -151,7 +151,7 @@ class Port {
 	protected function __construct(
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
-		DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null,
 	) {
 		$this->cachedTime = Epoch::time();
 		$db = Database::getInstance();
@@ -221,7 +221,7 @@ class Port {
 			$this->setShields($defences);
 			$this->setArmour($defences);
 			$this->setCDs($cds);
-			if ($this->getCredits() == 0) {
+			if ($this->getCredits() === 0) {
 				$this->setCreditsToDefault();
 			}
 			$db = Database::getInstance();
@@ -379,7 +379,7 @@ class Port {
 		}
 		// The new amount must be between 0 and the max for this good
 		$amount = max(0, min($amount, TradeGood::get($goodID)->maxPortAmount));
-		if ($this->getGoodAmount($goodID) == $amount) {
+		if ($this->getGoodAmount($goodID) === $amount) {
 			return;
 		}
 		$this->goodAmounts[$goodID] = $amount;
@@ -419,7 +419,7 @@ class Port {
 		$refreshClass = $classTraded + 1;
 		foreach ($this->getAllGoodIDs() as $goodID) {
 			$goodClass = TradeGood::get($goodID)->class;
-			if ($goodClass == $refreshClass) {
+			if ($goodClass === $refreshClass) {
 				$this->increaseGoodAmount($goodID, $refreshAmount);
 			}
 		}
@@ -500,7 +500,7 @@ class Port {
 		$goods = TradeGood::getAll();
 		shuffle($goods);
 		foreach ($goods as $good) {
-			if (!$this->hasGood($good->id) && $good->class == $goodClass) {
+			if (!$this->hasGood($good->id) && $good->class === $goodClass) {
 				$transactionType = array_rand_value(TransactionType::cases());
 				$this->addPortGood($good->id, $transactionType);
 				return $good;
@@ -518,7 +518,7 @@ class Port {
 		$goodClass = $this->getGoodClassAtLevel();
 		$this->selectAndAddGood($goodClass);
 
-		if ($this->getLevel() == 1) {
+		if ($this->getLevel() === 1) {
 			// Add 2 extra goods when upgrading to level 1 (i.e. in Uni Gen)
 			$this->selectAndAddGood($goodClass);
 			$this->selectAndAddGood($goodClass);
@@ -548,7 +548,7 @@ class Port {
 		foreach (range(1, $this->getLevel()) as $level) {
 			$expectedClasses[] = $this->getGoodClassAtLevel($level);
 		}
-		if ($givenClasses != $expectedClasses) {
+		if ($givenClasses !== $expectedClasses) {
 			return false;
 		}
 
@@ -639,7 +639,7 @@ class Port {
 
 		foreach ($goodIDs as $goodID) {
 			$good = TradeGood::get($goodID);
-			if ($good->class == $goodClass) {
+			if ($good->class === $goodClass) {
 				$this->removePortGood($good->id);
 				return;
 			}
@@ -655,7 +655,7 @@ class Port {
 		$goodClass = $this->getGoodClassAtLevel();
 		$this->selectAndRemoveGood($goodClass);
 
-		if ($this->getLevel() == 1) {
+		if ($this->getLevel() === 1) {
 			// For level 1 ports, we don't want to have fewer goods
 			$newGood = $this->selectAndAddGood($goodClass);
 			// Set new good to 0 supply
@@ -735,7 +735,7 @@ class Port {
 		if ($shields < 0) {
 			$shields = 0;
 		}
-		if ($this->shields == $shields) {
+		if ($this->shields === $shields) {
 			return;
 		}
 		$this->shields = $shields;
@@ -749,7 +749,7 @@ class Port {
 		if ($armour < 0) {
 			$armour = 0;
 		}
-		if ($this->armour == $armour) {
+		if ($this->armour === $armour) {
 			return;
 		}
 		$this->armour = $armour;
@@ -763,7 +763,7 @@ class Port {
 		if ($combatDrones < 0) {
 			$combatDrones = 0;
 		}
-		if ($this->combatDrones == $combatDrones) {
+		if ($this->combatDrones === $combatDrones) {
 			return;
 		}
 		$this->combatDrones = $combatDrones;
@@ -778,7 +778,7 @@ class Port {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}
-		if ($this->credits == $credits) {
+		if ($this->credits === $credits) {
 			return;
 		}
 		$this->credits = $credits;
@@ -803,10 +803,10 @@ class Port {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}
-		if ($this->getLevel() == $this->getMaxLevel()) {
+		if ($this->getLevel() === $this->getMaxLevel()) {
 			$upgrade = 0;
 		}
-		if ($this->upgrade == $upgrade) {
+		if ($this->upgrade === $upgrade) {
 			return;
 		}
 		$this->upgrade = $upgrade;
@@ -832,7 +832,7 @@ class Port {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}
-		if ($this->level == $level) {
+		if ($this->level === $level) {
 			return;
 		}
 		$this->level = $level;
@@ -857,7 +857,7 @@ class Port {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}
-		if ($this->experience == $experience) {
+		if ($this->experience === $experience) {
 			return;
 		}
 		$this->experience = $experience;
@@ -888,7 +888,7 @@ class Port {
 	}
 
 	public function setRaceID(int $raceID): void {
-		if ($this->raceID == $raceID) {
+		if ($this->raceID === $raceID) {
 			return;
 		}
 		$this->raceID = $raceID;
@@ -982,7 +982,7 @@ class Port {
 	}
 
 	public function setReinforceTime(int $reinforceTime): void {
-		if ($this->reinforceTime == $reinforceTime) {
+		if ($this->reinforceTime === $reinforceTime) {
 			return;
 		}
 		$this->reinforceTime = $reinforceTime;
@@ -998,7 +998,7 @@ class Port {
 	}
 
 	private function setAttackStarted(int $time): void {
-		if ($this->attackStarted == $time) {
+		if ($this->attackStarted === $time) {
 			return;
 		}
 		$this->attackStarted = $time;
@@ -1033,7 +1033,7 @@ class Port {
 		if (!$this->exists()) {
 			return 'There is no port in this sector!';
 		}
-		if ($this->getSectorID() != $player->getSectorID()) {
+		if ($this->getSectorID() !== $player->getSectorID()) {
 			return 'That port is not in this sector!';
 		}
 		if ($player->getRelation($this->getRaceID()) <= RELATIONS_WAR) {
@@ -1090,7 +1090,7 @@ class Port {
 	 * Return the fraction of max exp earned.
 	 */
 	public function calculateExperiencePercent(int $idealPrice, int $bargainPrice, TransactionType $transactionType): float {
-		if ($bargainPrice == $idealPrice) {
+		if ($bargainPrice === $idealPrice) {
 			return 1;
 		}
 
@@ -1340,7 +1340,7 @@ class Port {
 
 	/**
 	 * @param array<AbstractPlayer> $targetPlayers
-	 * @return array{Port: self, TotalDamage: int, TotalDamagePerTargetPlayer: array<int, int>, TotalShotsPerTargetPlayer: array<int, int>, DeadBeforeShot: bool, Weapons?: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}}
+	 * @return PortCombatResults
 	 */
 	public function shootPlayers(array $targetPlayers): array {
 		$results = ['Port' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => [], 'TotalShotsPerTargetPlayer' => []];
@@ -1374,7 +1374,7 @@ class Port {
 			$results['Drones'] = $thisCDs->shootPlayerAsPort($this, array_rand_value($targetPlayers));
 			$totalDamage = $results['Drones']['ActualDamage']['TotalDamage'];
 			$results['TotalDamage'] += $totalDamage;
-			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $totalDamage;
+			$results['TotalDamagePerTargetPlayer'][$results['Drones']['Target']->getAccountID()] += $totalDamage;
 		}
 		return $results;
 	}
@@ -1390,13 +1390,13 @@ class Port {
 		$armourDamage = 0;
 		if (!$alreadyDead) {
 			$shieldDamage = $this->takeDamageToShields($damage['Shield']);
-			if ($shieldDamage == 0 || $damage['Rollover']) {
+			if ($shieldDamage === 0 || $damage['Rollover']) {
 				$cdMaxDamage = $damage['Armour'] - $shieldDamage;
-				if ($shieldDamage == 0 && $this->hasShields()) {
+				if ($shieldDamage === 0 && $this->hasShields()) {
 					$cdMaxDamage = IFloor($cdMaxDamage * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT);
 				}
 				$cdDamage = $this->takeDamageToCDs($cdMaxDamage);
-				if (!$this->hasShields() && ($cdDamage == 0 || $damage['Rollover'])) {
+				if (!$this->hasShields() && ($cdDamage === 0 || $damage['Rollover'])) {
 					$armourMaxDamage = $damage['Armour'] - $shieldDamage - $cdDamage;
 					$armourDamage = $this->takeDamageToArmour($armourMaxDamage);
 				}
@@ -1404,14 +1404,14 @@ class Port {
 		}
 
 		return [
-						'KillingShot' => !$alreadyDead && $this->isDestroyed(),
-						'TargetAlreadyDead' => $alreadyDead,
-						'Shield' => $shieldDamage,
-						'CDs' => $cdDamage,
-						'NumCDs' => $cdDamage / CD_ARMOUR,
-						'HasCDs' => $this->hasCDs(),
-						'Armour' => $armourDamage,
-						'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
+			'KillingShot' => !$alreadyDead && $this->isDestroyed(),
+			'TargetAlreadyDead' => $alreadyDead,
+			'Shield' => $shieldDamage,
+			'CDs' => $cdDamage,
+			'NumCDs' => $cdDamage / CD_ARMOUR,
+			'HasCDs' => $this->hasCDs(),
+			'Armour' => $armourDamage,
+			'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
 		];
 	}
 
@@ -1450,6 +1450,18 @@ class Port {
 		return $attackers;
 	}
 
+	/**
+	 * Identifies if the given $player is a credited attacker of this port.
+	 */
+	public function isCreditedAttacker(AbstractPlayer $player): bool {
+		foreach (self::getAttackersToCredit() as $attacker) {
+			if ($player->equals($attacker)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	protected function creditCurrentAttackersForKill(): void {
 		//get all players involved for HoF
 		$attackers = $this->getAttackersToCredit();
@@ -1460,7 +1472,7 @@ class Port {
 	}
 
 	protected function payout(AbstractPlayer $killer, int $credits, string $payoutType): bool {
-		if ($this->getCredits() == 0) {
+		if ($this->getCredits() === 0) {
 			return false;
 		}
 		$killer->increaseCredits($credits);

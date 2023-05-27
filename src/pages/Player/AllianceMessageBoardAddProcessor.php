@@ -16,7 +16,7 @@ class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
 	public function __construct(
 		private readonly int $allianceID,
 		private readonly AllianceMessageBoard|AllianceMessageBoardView $lastPage,
-		private readonly ?int $threadID = null
+		private readonly ?int $threadID = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -29,7 +29,7 @@ class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
 		$alliance_id = $this->allianceID;
 
 		$action = Request::get('action');
-		if ($action == 'Preview Thread' || $action == 'Preview Reply') {
+		if ($action === 'Preview Thread' || $action === 'Preview Reply') {
 			$container = $this->lastPage;
 			$container->preview = $body;
 			if ($container instanceof AllianceMessageBoard) {
@@ -44,7 +44,7 @@ class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
 			create_error('You are not in an alliance!');
 		}
 
-		if (empty($body)) {
+		if ($body === '') {
 			create_error('You must enter text!');
 		}
 
@@ -74,8 +74,8 @@ class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
 		$reply_id = $dbResult->record()->getInt('next_reply_id');
 
 		// only add the topic if it's the first reply
-		if ($reply_id == 0) {
-			if (empty($topic)) {
+		if ($reply_id === 0) {
+			if ($topic === '') {
 				create_error('You must enter a topic!');
 			}
 

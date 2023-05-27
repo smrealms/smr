@@ -16,7 +16,7 @@ class BountyPlaceConfirmProcessor extends PlayerPageProcessor {
 		private readonly int $locationID,
 		private readonly int $otherAccountID,
 		private readonly int $credits,
-		private readonly int $smrCredits
+		private readonly int $smrCredits,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -34,7 +34,7 @@ class BountyPlaceConfirmProcessor extends PlayerPageProcessor {
 		$container = new $body($this->locationID);
 
 		// if we don't have a yes we leave immediatly
-		if (Request::get('action') != 'Yes') {
+		if (Request::get('action') !== 'Yes') {
 			$container->go();
 		}
 

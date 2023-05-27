@@ -19,7 +19,7 @@ class EditGalaxy extends AccountPage {
 		private ?int $gameID = null,
 		private ?int $galaxyID = null,
 		private readonly ?string $message = null,
-		private ?int $focusSectorID = null
+		private ?int $focusSectorID = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -28,7 +28,7 @@ class EditGalaxy extends AccountPage {
 		$this->focusSectorID ??= Request::getInt('focus_sector_id', 0);
 
 		$galaxies = Galaxy::getGameGalaxies($this->gameID);
-		if (empty($galaxies)) {
+		if (count($galaxies) === 0) {
 			// Game was created, but no galaxies exist, so go back to
 			// the galaxy generation page
 			$container = new CreateGalaxies($this->gameID);
@@ -47,7 +47,7 @@ class EditGalaxy extends AccountPage {
 		$template->assign('ActualConnectivity', $connectivity);
 
 		// Call this after all sectors have been cached in an efficient way.
-		if ($this->focusSectorID == 0) {
+		if ($this->focusSectorID === 0) {
 			$mapSectors = $galaxy->getMapSectors();
 		} else {
 			$mapSectors = $galaxy->getMapSectors($this->focusSectorID);

@@ -13,7 +13,7 @@ class PaperEdit extends PlayerPage {
 	public string $file = 'galactic_post_paper_edit.php';
 
 	public function __construct(
-		private readonly int $paperID
+		private readonly int $paperID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

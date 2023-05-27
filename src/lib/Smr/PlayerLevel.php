@@ -17,7 +17,7 @@ class PlayerLevel {
 	 * @return array<int, self>
 	 */
 	public static function getAll(): array {
-		if (empty(self::$CACHE_LEVELS)) {
+		if (count(self::$CACHE_LEVELS) === 0) {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM level');
 			foreach ($dbResult->records() as $dbRecord) {
@@ -43,7 +43,7 @@ class PlayerLevel {
 
 	public static function getMax(): int {
 		$levels = self::getAll();
-		if (count($levels) == 0) {
+		if (count($levels) === 0) {
 			throw new Exception('Cannot get the max level, no levels were found');
 		}
 		return max(array_keys($levels));

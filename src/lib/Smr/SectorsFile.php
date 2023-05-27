@@ -44,7 +44,7 @@ class SectorsFile {
 			foreach ($ship->getAllMaxHardware() as $hardwareID => $maxHardware) {
 				$shipEquip[] = HardwareType::get($hardwareID)->name . '=' . $maxHardware;
 			}
-			if (!empty($shipEquip)) {
+			if (count($shipEquip) > 0) {
 				$file .= ',ShipEquipment=' . implode(';', $shipEquip);
 			}
 			$file .= ',Restrictions=' . $ship->getRestriction()->value;
@@ -92,7 +92,7 @@ class SectorsFile {
 			if ($location->isFed()) {
 				$locSells .= 'Fed=,';
 			}
-			if ($locSells != '') {
+			if ($locSells !== '') {
 				$file .= substr($locSells, 0, -1);
 			}
 			$file .= EOL;
@@ -139,10 +139,10 @@ class SectorsFile {
 				if ($port !== null) {
 					$file .= 'Port Level=' . $port->getLevel() . EOL;
 					$file .= 'Port Race=' . $port->getRaceID() . EOL;
-					if (!empty($port->getSellGoodIDs())) {
+					if (count($port->getSellGoodIDs()) > 0) {
 						$file .= 'Buys=' . implode(',', $port->getSellGoodIDs()) . EOL;
 					}
-					if (!empty($port->getBuyGoodIDs())) {
+					if (count($port->getBuyGoodIDs()) > 0) {
 						$file .= 'Sells=' . implode(',', $port->getBuyGoodIDs()) . EOL;
 					}
 				}

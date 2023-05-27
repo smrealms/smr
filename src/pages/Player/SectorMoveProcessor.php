@@ -3,7 +3,6 @@
 namespace Smr\Pages\Player;
 
 use Smr\AbstractPlayer;
-use Smr\Globals;
 use Smr\MovementType;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Sector;
@@ -13,7 +12,7 @@ class SectorMoveProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly int $targetSectorID,
-		private readonly CurrentSector|LocalMap $targetPage
+		private readonly CurrentSector|LocalMap $targetPage,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -25,11 +24,11 @@ class SectorMoveProcessor extends PlayerPageProcessor {
 			create_error('You cannot move until the game has started!');
 		}
 
-		if ($this->targetSectorID == $player->getSectorID()) {
+		if ($this->targetSectorID === $player->getSectorID()) {
 			$this->targetPage->go();
 		}
 
-		if ($sector->getWarp() == $this->targetSectorID) {
+		if ($sector->getWarp() === $this->targetSectorID) {
 			$movement = MovementType::Warp;
 			$turns = TURNS_PER_WARP;
 		} else {
@@ -38,7 +37,7 @@ class SectorMoveProcessor extends PlayerPageProcessor {
 		}
 
 		//allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
-		if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+		if ($player->isObserver()) {
 			//make them pop on CPL
 			$player->updateLastCPLAction();
 			$player->setSectorID($this->targetSectorID);
@@ -64,7 +63,7 @@ class SectorMoveProcessor extends PlayerPageProcessor {
 		}
 
 		// If not moving to your "green sector", you might hit mines...
-		if ($player->getLastSectorID() != $this->targetSectorID) {
+		if ($player->getLastSectorID() !== $this->targetSectorID) {
 			// Update the "green sector"
 			$player->setLastSectorID($this->targetSectorID);
 			hit_sector_mines($player);

@@ -12,7 +12,7 @@ abstract class HistoryPage extends AccountPage {
 	public function __construct(
 		protected readonly string $historyDatabase,
 		protected readonly int $historyGameID,
-		protected readonly string $historyGameName
+		protected readonly string $historyGameName,
 	) {}
 
 	abstract protected function buildHistory(Account $account, Template $template): void;

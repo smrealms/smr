@@ -17,7 +17,7 @@ class NewsReadCurrent extends PlayerPage {
 	public string $file = 'news_read_current.php';
 
 	public function __construct(
-		private ?int $lastNewsUpdate = null
+		private ?int $lastNewsUpdate = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

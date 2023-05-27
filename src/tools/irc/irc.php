@@ -18,7 +18,7 @@ $sds = [];
 
 $debugging = false;
 foreach ($argv as $arg) {
-	if ($arg == '-debug') {
+	if ($arg === '-debug') {
 		$debugging = true;
 	}
 }
@@ -42,7 +42,7 @@ while (true) {
 	echo_r('Connecting to ' . IRC_BOT_SERVER_ADDRESS);
 	$fp = fsockopen(IRC_BOT_SERVER_ADDRESS, IRC_BOT_SERVER_PORT);
 
-	if (!$fp) {
+	if ($fp === false) {
 		// network troubles
 		echo_r('There was an error connecting to ' . IRC_BOT_SERVER_ADDRESS . '/' . IRC_BOT_SERVER_PORT);
 

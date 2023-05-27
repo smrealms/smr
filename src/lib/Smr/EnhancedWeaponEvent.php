@@ -135,7 +135,7 @@ class EnhancedWeaponEvent {
 		protected readonly int $sectorID,
 		protected readonly int $expires,
 		bool $bonusAccuracy,
-		bool $bonusDamage
+		bool $bonusDamage,
 	) {
 		$this->weapon = Weapon::getWeapon($weaponTypeID);
 		$this->weapon->setBonusDamage($bonusDamage);

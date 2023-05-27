@@ -11,7 +11,7 @@ class DatabaseRecord {
 	 * @param array<string, mixed> $dbRecord A record from a DatabaseResult.
 	 */
 	public function __construct(
-		private readonly array $dbRecord
+		private readonly array $dbRecord,
 	) {}
 
 	public function getNullableString(string $name): ?string {

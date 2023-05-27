@@ -54,7 +54,7 @@ use Smr\Race;
 
 			<br /><?php
 			foreach (Race::getAllNames() as $raceID => $raceName) {
-				if ($ThisPlayer->getPersonalRelation($raceID) != 0) {
+				if ($ThisPlayer->getPersonalRelation($raceID) !== 0) {
 					echo $raceName . ' : ' . get_colored_text($ThisPlayer->getPersonalRelation($raceID)) . '<br />';
 				}
 			} ?>

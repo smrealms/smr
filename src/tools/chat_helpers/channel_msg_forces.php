@@ -10,7 +10,7 @@ require_once(TOOLS . 'chat_helpers/channel_msg_seedlist.php');
  */
 function shared_channel_msg_forces(AbstractPlayer $player, ?string $option = null): array {
 	$db = Database::getInstance();
-	if (empty($option)) {
+	if ($option === null || $option === '') {
 		$dbResult = $db->read('SELECT sector_has_forces.sector_id AS sector, expire_time
 			FROM sector_has_forces
 			WHERE game_id = :game_id
@@ -23,10 +23,10 @@ function shared_channel_msg_forces(AbstractPlayer $player, ?string $option = nul
 			'game_id' => $db->escapeNumber($player->getGameID()),
 			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
 		]);
-	} elseif ($option == 'seedlist') {
+	} elseif ($option === 'seedlist') {
 		// are we restricting to the seedlist?
 		$seedlist = get_seedlist($player);
-		if (count($seedlist) == 0) {
+		if (count($seedlist) === 0) {
 			return ['Your alliance does not have a seedlist yet.'];
 		}
 		$dbResult = $db->read('SELECT sector_has_forces.sector_id AS sector, expire_time

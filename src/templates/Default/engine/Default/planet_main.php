@@ -56,7 +56,7 @@ if (isset($Msg)) {
 				} ?>
 			</table>
 			<br />
-			<?php if ($ThisPlanet->getBuildings()) { ?>
+			<?php if (count($ThisPlanet->getBuildings()) > 0) { ?>
 			<table class="standard">
 				<tr>
 					<th width="145">Installed <br>Hardware</th>

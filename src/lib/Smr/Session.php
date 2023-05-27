@@ -217,7 +217,7 @@ class Session {
 	 * Returns true if the session is inside a game, false otherwise.
 	 */
 	public function hasGame(): bool {
-		return $this->gameID != 0;
+		return $this->gameID !== 0;
 	}
 
 	public function hasAccount(): bool {
@@ -248,7 +248,7 @@ class Session {
 	 * active sessions in this game for this account.
 	 */
 	public function updateGame(int $gameID): void {
-		if ($this->gameID == $gameID) {
+		if ($this->gameID === $gameID) {
 			return;
 		}
 		$this->gameID = $gameID;
@@ -275,7 +275,7 @@ class Session {
 	 * Returns true if the current SN is different than the previous SN.
 	 */
 	public function hasChangedSN(): bool {
-		return $this->SN != $this->lastSN;
+		return $this->SN !== $this->lastSN;
 	}
 
 	public function destroy(): void {
@@ -378,11 +378,11 @@ class Session {
 
 	public function addAjaxReturns(string $element, string $contents): bool {
 		$this->ajaxReturns[$element] = $contents;
-		return isset($this->previousAjaxReturns[$element]) && $this->previousAjaxReturns[$element] == $contents;
+		return isset($this->previousAjaxReturns[$element]) && $this->previousAjaxReturns[$element] === $contents;
 	}
 
 	public function saveAjaxReturns(): void {
-		if (empty($this->ajaxReturns)) {
+		if (count($this->ajaxReturns) === 0) {
 			return;
 		}
 		$db = Database::getInstance();

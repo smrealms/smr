@@ -8,7 +8,7 @@ use Smr\Page\AccountPageProcessor;
 class BuyMessageNotificationsProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $messageTypeID
+		private readonly int $messageTypeID,
 	) {}
 
 	public function build(Account $account): never {

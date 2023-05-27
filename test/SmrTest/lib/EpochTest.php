@@ -31,8 +31,8 @@ class EpochTest extends TestCase {
 		Epoch::update();
 
 		// Make sure the times have changed
-		$this->assertNotEquals($time, Epoch::time());
-		$this->assertNotEquals($microtime, Epoch::microtime());
+		self::assertNotEquals($time, Epoch::time());
+		self::assertNotEquals($microtime, Epoch::microtime());
 	}
 
 	/**
@@ -49,7 +49,7 @@ class EpochTest extends TestCase {
 	 * the rounded values are identical.
 	 */
 	public function test_time_microtime_equality(): void {
-		$this->assertEquals(Epoch::time(), floor(Epoch::microtime()));
+		self::assertEquals(Epoch::time(), floor(Epoch::microtime()));
 	}
 
 }

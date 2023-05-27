@@ -51,7 +51,7 @@ try {
 			$password = Request::get('password', '');
 
 			// has the user submitted empty fields
-			if (empty($login) || empty($password)) {
+			if ($login === '' || $password === '') {
 				$msg = 'Please enter a login and password!';
 				header('Location: /login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				exit;
@@ -133,73 +133,32 @@ try {
 	// save ip
 	$account->updateIP();
 
-	//now we set a cookie that we can use for mult checking
-	if (!isset($_COOKIE['Session_Info'])) {
-		//we get their info from db if they have any
-		$dbResult = $db->read('SELECT * FROM multi_checking_cookie WHERE account_id = :account_id', [
-			'account_id' => $account->getAccountID(),
-		]);
-		if ($dbResult->hasRecord()) {
-			//convert to array
-			$old = explode('-', $dbResult->record()->getString('array'));
-			//get rid of old version cookie since it isn't optimal.
-			if ($old[0] != MULTI_CHECKING_COOKIE_VERSION) {
-				$old = [];
-			}
-		} else {
-			$old = [];
-		}
-		$old[0] = MULTI_CHECKING_COOKIE_VERSION;
-		if (!in_array($account->getAccountID(), $old)) {
-			$old[] = $account->getAccountID();
-		}
-	} else {
-
-		//we have a cookie so we see if we add to it etc
-		//break cookie into array
-		$cookie = explode('-', $_COOKIE['Session_Info']);
-		//check for current version
-		if ($cookie[0] != MULTI_CHECKING_COOKIE_VERSION) {
-			$cookie = [];
-		}
-		$cookie[0] = MULTI_CHECKING_COOKIE_VERSION;
-		//add this acc to the cookie if it isn't there
-		if (!in_array($account->getAccountID(), $cookie)) {
-			$cookie[] = $account->getAccountID();
-		}
-
-		$dbResult = $db->read('SELECT * FROM multi_checking_cookie WHERE account_id = :account_id', [
-			'account_id' => $account->getAccountID(),
-		]);
-		if ($dbResult->hasRecord()) {
-			//convert to array
-			$old = explode('-', $dbResult->record()->getString('array'));
-			if ($old[0] != MULTI_CHECKING_COOKIE_VERSION) {
-				$old = [];
-			}
-		} else {
-			$old = [];
-		}
-		$old[0] = MULTI_CHECKING_COOKIE_VERSION;
-		//merge arrays...but keys are all different so we go through each value
-		foreach ($cookie as $value) {
-			if (!in_array($value, $old)) {
-				$old[] = $value;
-			}
+	// Now we set a cookie that we can use for multi checking.
+	$multiIDs = [$account->getAccountID()];
+	$dbResult = $db->read('SELECT * FROM multi_checking_cookie WHERE account_id = :account_id', [
+		'account_id' => $account->getAccountID(),
+	]);
+	if ($dbResult->hasRecord()) {
+		$dbIDs = explode('-', $dbResult->record()->getString('array'));
+		// pop off multi version, then skip IDs if version is outdated
+		if (array_shift($dbIDs) === MULTI_CHECKING_COOKIE_VERSION) {
+			$multiIDs = array_merge($multiIDs, $dbIDs);
 		}
 	}
-	$use = (count($old) <= 2) ? 'FALSE' : 'TRUE';
-	//check that each value is legit and add it to db string
-	$new = MULTI_CHECKING_COOKIE_VERSION;
-	foreach ($old as $accID) {
-		if (is_numeric($accID)) {
-			$new .= '-' . $accID;
+	if (isset($_COOKIE['Session_Info'])) {
+		$cookieIDs = explode('-', $_COOKIE['Session_Info']);
+		// pop off multi version, then skip IDs if version is outdated
+		if (array_shift($cookieIDs) === MULTI_CHECKING_COOKIE_VERSION) {
+			$multiIDs = array_merge($multiIDs, $cookieIDs);
 		}
 	}
+	// Remove duplicates and filter out non-numeric elements (e.g. bad cookie)
+	$multiIDs = array_filter(array_unique($multiIDs), is_numeric(...));
+	$new = MULTI_CHECKING_COOKIE_VERSION . '-' . implode('-', $multiIDs);
 	$db->replace('multi_checking_cookie', [
 		'account_id' => $account->getAccountID(),
 		'array' => $new,
-		'`use`' => $use,
+		'`use`' => $db->escapeBoolean(count($multiIDs) > 1),
 	]);
 	//now we update their cookie with the newest info
 	setcookie('Session_Info', $new, Epoch::time() + 157680000);
@@ -208,12 +167,7 @@ try {
 	$db->write('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < :now AND expire_time != 0', [
 		'now' => $db->escapeNumber(Epoch::time()),
 	]);
-	// Mark message as read if it was sent to self as a mass mail.
-	$db->write('UPDATE message SET msg_read = \'TRUE\' WHERE account_id = :account_id AND account_id = sender_id AND message_type_id IN (:message_type_ids)', [
-		'account_id' => $db->escapeNumber($account->getAccountID()),
-		'message_type_ids' => $db->escapeArray([MSG_ALLIANCE, MSG_GLOBAL, MSG_POLITICAL]),
-	]);
-	//check to see if we need to remove player_has_unread
+	//update unread message status (in case changed by expired messages)
 	$db->delete('player_has_unread_messages', [
 		'account_id' => $account->getAccountID(),
 	]);

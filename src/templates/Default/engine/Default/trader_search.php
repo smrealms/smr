@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
 /**
+ * @var bool $EmptyResult
  * @var string $TraderSearchHREF
  */
 
-if (!empty($EmptyResult)) { ?>
+if ($EmptyResult) { ?>
 	<p><span class="bold red">No trader found that matches your search!</span></p><?php
 } ?>
 

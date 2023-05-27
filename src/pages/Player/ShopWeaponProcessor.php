@@ -13,7 +13,7 @@ class ShopWeaponProcessor extends PlayerPageProcessor {
 	public function __construct(
 		private readonly int $locationID,
 		private readonly Weapon $weapon,
-		private readonly ?int $sellOrderID = null
+		private readonly ?int $sellOrderID = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -31,7 +31,7 @@ class ShopWeaponProcessor extends PlayerPageProcessor {
 				create_error('We do not sell that weapon here!');
 			}
 
-			if ($weapon->getRaceID() != RACE_NEUTRAL && $player->getRelation($weapon->getRaceID()) < RELATIONS_PEACE) {
+			if ($weapon->getRaceID() !== RACE_NEUTRAL && $player->getRelation($weapon->getRaceID()) < RELATIONS_PEACE) {
 				create_error('We are at WAR!!! Do you really think I\'m gonna sell you that weapon?');
 			}
 

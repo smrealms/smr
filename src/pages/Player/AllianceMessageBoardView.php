@@ -6,7 +6,6 @@ use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Epoch;
-use Smr\Globals;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
@@ -52,7 +51,7 @@ class AllianceMessageBoardView extends PlayerPage {
 		]);
 
 		$mbWrite = true;
-		if ($alliance->getAllianceID() != $player->getAllianceID()) {
+		if ($alliance->getAllianceID() !== $player->getAllianceID()) {
 			$dbResult = $db->read('SELECT 1 FROM alliance_treaties
 							WHERE (alliance_id_1 = :alliance_id OR alliance_id_1 = :player_alliance_id)
 							AND (alliance_id_2 = :alliance_id OR alliance_id_2 = :player_alliance_id)
@@ -127,7 +126,7 @@ class AllianceMessageBoardView extends PlayerPage {
 			}
 		}
 
-		if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+		if ($mbWrite || $player->isObserver()) {
 			$container = new AllianceMessageBoardAddProcessor($allianceID, $this, $thread_id);
 			$thread['CreateThreadReplyFormHref'] = $container->href();
 		}

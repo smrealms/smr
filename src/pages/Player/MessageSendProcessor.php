@@ -11,13 +11,13 @@ class MessageSendProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly ?int $receiverAccountID = null,
-		private readonly ?int $allianceID = null
+		private readonly ?int $allianceID = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
 		$message = htmlentities(Request::get('message'), ENT_COMPAT, 'utf-8');
 
-		if (Request::get('action') == 'Preview message') {
+		if (Request::get('action') === 'Preview message') {
 			if ($this->allianceID !== null) {
 				$container = new AllianceBroadcast($this->allianceID, $message);
 			} else {
@@ -26,7 +26,7 @@ class MessageSendProcessor extends PlayerPageProcessor {
 			$container->go();
 		}
 
-		if (empty($message)) {
+		if ($message === '') {
 			create_error('You have to enter a message to send!');
 		}
 

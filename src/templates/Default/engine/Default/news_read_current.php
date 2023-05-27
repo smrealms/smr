@@ -2,11 +2,12 @@
 
 /**
  * @var Smr\Template $this
+ * @var array<array{Date: string, Message: string}> $NewsItems
  */
 
 $this->includeTemplate('includes/CommonNews.inc.php');
 
-if (!empty($NewsItems)) { ?>
+if (count($NewsItems) > 0) { ?>
 	<div class="center">
 		Showing most recent <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />
 	</div><?php

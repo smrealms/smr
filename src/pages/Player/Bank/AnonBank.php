@@ -13,7 +13,7 @@ class AnonBank extends PlayerPage {
 	public string $file = 'bank_anon.php';
 
 	public function __construct(
-		private readonly ?string $message = null
+		private readonly ?string $message = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

@@ -10,7 +10,7 @@ use Smr\VoteSite;
 class VoteLinkProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly VoteSite $voteSite
+		private readonly VoteSite $voteSite,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

@@ -127,7 +127,7 @@ class Sector {
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
 		bool $create = false,
-		DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [
@@ -296,7 +296,7 @@ class Sector {
 	}
 
 	public function setGalaxyID(int $galaxyID): void {
-		if (isset($this->galaxyID) && $this->galaxyID == $galaxyID) {
+		if (isset($this->galaxyID) && $this->galaxyID === $galaxyID) {
 			return;
 		}
 		$this->galaxyID = $galaxyID;
@@ -346,13 +346,13 @@ class Sector {
 				break;
 			case 'Left':
 				$neighbour -= 1;
-				if ((1 + $neighbour - $galaxy->getStartSector()) % $galaxy->getWidth() == 0) {
+				if ((1 + $neighbour - $galaxy->getStartSector()) % $galaxy->getWidth() === 0) {
 					$neighbour += $galaxy->getWidth();
 				}
 				break;
 			case 'Right':
 				$neighbour += 1;
-				if (($neighbour - $galaxy->getStartSector()) % $galaxy->getWidth() == 0) {
+				if (($neighbour - $galaxy->getStartSector()) % $galaxy->getWidth() === 0) {
 					$neighbour -= $galaxy->getWidth();
 				}
 				break;
@@ -363,14 +363,14 @@ class Sector {
 	}
 
 	public function getSectorDirection(int $sectorID): string {
-		if ($sectorID == $this->getSectorID()) {
+		if ($sectorID === $this->getSectorID()) {
 			return 'Current';
 		}
-		$dir = array_search($sectorID, $this->getLinks());
+		$dir = array_search($sectorID, $this->getLinks(), true);
 		if ($dir !== false) {
 			return $dir;
 		}
-		if ($sectorID == $this->getWarp()) {
+		if ($sectorID === $this->getWarp()) {
 			return 'Warp';
 		}
 		return 'None';
@@ -388,7 +388,7 @@ class Sector {
 	}
 
 	public function isLinked(int $sectorID): bool {
-		return in_array($sectorID, $this->links) || $sectorID == $this->getWarp();
+		return in_array($sectorID, $this->links, true) || $sectorID === $this->getWarp();
 	}
 
 	public function getLink(string $name): int {
@@ -396,7 +396,7 @@ class Sector {
 	}
 
 	public function hasLink(string $name): bool {
-		return $this->getLink($name) != 0;
+		return $this->getLink($name) !== 0;
 	}
 
 	public function getLinkSector(string $name): self {
@@ -407,13 +407,13 @@ class Sector {
 	 * Cannot be used for Warps
 	 */
 	public function setLink(string $name, int $linkID): void {
-		if ($this->getLink($name) == $linkID) {
+		if ($this->getLink($name) === $linkID) {
 			return;
 		}
-		if ($linkID == $this->sectorID) {
+		if ($linkID === $this->sectorID) {
 			throw new Exception('Sector must not link to itself!');
 		}
-		if ($linkID == 0) {
+		if ($linkID === 0) {
 			unset($this->links[$name]);
 		} else {
 			$this->links[$name] = $linkID;
@@ -529,7 +529,7 @@ class Sector {
 	}
 
 	public function hasWarp(): bool {
-		return $this->getWarp() != 0;
+		return $this->getWarp() !== 0;
 	}
 
 	/**
@@ -537,8 +537,8 @@ class Sector {
 	 * a consistent 2-way warp.
 	 */
 	public function setWarp(Sector $warp): void {
-		if ($this->getWarp() == $warp->getSectorID() &&
-		    $warp->getWarp() == $this->getSectorID()) {
+		if ($this->getWarp() === $warp->getSectorID() &&
+		    $warp->getWarp() === $this->getSectorID()) {
 			// Warps are already set correctly!
 			return;
 		}
@@ -549,7 +549,7 @@ class Sector {
 
 		// Can only have 1 warp per sector
 		foreach ([[$warp, $this], [$this, $warp]] as [$A, $B]) {
-			if ($A->hasWarp() && $A->getWarp() != $B->getSectorID()) {
+			if ($A->hasWarp() && $A->getWarp() !== $B->getSectorID()) {
 				throw new Exception('Sector ' . $A->getSectorID() . ' already has a warp (to ' . $A->getWarp() . ')!');
 			}
 		}
@@ -557,7 +557,7 @@ class Sector {
 		$this->warp = $warp->getSectorID();
 		$this->hasChanged = true;
 
-		if ($warp->getWarp() != $this->getSectorID()) {
+		if ($warp->getWarp() !== $this->getSectorID()) {
 			// Set the other side if needed
 			$warp->setWarp($this);
 		}
@@ -572,7 +572,7 @@ class Sector {
 		}
 
 		$warp = $this->getWarpSector();
-		if ($warp->hasWarp() && $warp->getWarp() != $this->getSectorID()) {
+		if ($warp->hasWarp() && $warp->getWarp() !== $this->getSectorID()) {
 			throw new Exception('Warp sectors do not match');
 		}
 
@@ -632,14 +632,14 @@ class Sector {
 
 	public function hasLocation(int $locationTypeID = null): bool {
 		$locations = $this->getLocations();
-		if (count($locations) == 0) {
+		if (count($locations) === 0) {
 			return false;
 		}
 		if ($locationTypeID === null) {
 			return true;
 		}
 		foreach ($locations as $location) {
-			if ($location->getTypeID() == $locationTypeID) {
+			if ($location->getTypeID() === $locationTypeID) {
 				return true;
 			}
 		}
@@ -701,7 +701,7 @@ class Sector {
 	}
 
 	public function hasEnemyForces(AbstractPlayer $player = null): bool {
-		if ($player == null || !$this->hasForces()) {
+		if ($player === null || !$this->hasForces()) {
 			return false;
 		}
 		foreach ($this->getForces() as $force) {
@@ -730,7 +730,7 @@ class Sector {
 	 */
 	public function hasPlayerForces(AbstractPlayer $player): bool {
 		foreach ($this->getForces() as $force) {
-			if ($player->getAccountID() == $force->getOwnerID()) {
+			if ($player->getAccountID() === $force->getOwnerID()) {
 				return true;
 			}
 		}
@@ -797,7 +797,7 @@ class Sector {
 	}
 
 	public function hasEnemyTraders(AbstractPlayer $player = null): bool {
-		if ($player == null || !$this->hasOtherTraders($player)) {
+		if ($player === null || !$this->hasOtherTraders($player)) {
 			return false;
 		}
 		$otherPlayers = $this->getOtherTraders($player);
@@ -812,7 +812,7 @@ class Sector {
 	}
 
 	public function hasFriendlyTraders(AbstractPlayer $player = null): bool {
-		if ($player == null || !$this->hasOtherTraders($player)) {
+		if ($player === null || !$this->hasOtherTraders($player)) {
 			return false;
 		}
 		$otherPlayers = $this->getOtherTraders($player);
@@ -833,7 +833,7 @@ class Sector {
 		}
 		$flagshipID = $player->getAlliance()->getFlagshipID();
 		foreach ($this->getPlayers() as $sectorPlayer) {
-			if ($sectorPlayer->getAccountID() == $flagshipID) {
+			if ($sectorPlayer->getAccountID() === $flagshipID) {
 				return true;
 			}
 		}
@@ -841,7 +841,7 @@ class Sector {
 	}
 
 	public function hasProtectedTraders(AbstractPlayer $player = null): bool {
-		if ($player == null || !$this->hasOtherTraders($player)) {
+		if ($player === null || !$this->hasOtherTraders($player)) {
 			return false;
 		}
 		$otherPlayers = $this->getOtherTraders($player);
@@ -969,7 +969,7 @@ class Sector {
 	}
 
 	public function setBattles(int $amount): void {
-		if ($this->battles == $amount) {
+		if ($this->battles === $amount) {
 			return;
 		}
 		$this->battles = $amount;
@@ -985,11 +985,11 @@ class Sector {
 	}
 
 	public function equals(Sector $otherSector): bool {
-		return $otherSector->getSectorID() == $this->getSectorID() && $otherSector->getGameID() == $this->getGameID();
+		return $otherSector->getSectorID() === $this->getSectorID() && $otherSector->getGameID() === $this->getGameID();
 	}
 
 	public function isLinkedSector(Sector $otherSector): bool {
-		return $otherSector->getGameID() == $this->getGameID() && $this->isLinked($otherSector->getSectorID());
+		return $otherSector->getGameID() === $this->getGameID() && $this->isLinked($otherSector->getSectorID());
 	}
 
 	public function isVisited(AbstractPlayer $player = null): bool {
@@ -1027,10 +1027,10 @@ class Sector {
 		if ($x instanceof Sector) {
 			return $this->equals($x);
 		}
-		if ($x == 'Port') {
+		if ($x === 'Port') {
 			return $this->hasPort();
 		}
-		if ($x == 'Location') {
+		if ($x === 'Location') {
 			return $this->hasLocation();
 		}
 		if ($x instanceof Location) {
@@ -1047,7 +1047,7 @@ class Sector {
 		}
 
 		//Check if it's possible for location to have X, hacky but nice performance gains
-		if ($x instanceof WeaponType || $x instanceof ShipType || $x instanceof HardwareType || (is_string($x) && ($x == 'Bank' || $x == 'Bar' || $x == 'Fed' || $x == 'SafeFed' || $x == 'HQ' || $x == 'UG' || $x == 'Hardware' || $x == 'Ship' || $x == 'Weapon'))) {
+		if ($x instanceof WeaponType || $x instanceof ShipType || $x instanceof HardwareType || (is_string($x) && ($x === 'Bank' || $x === 'Bar' || $x === 'Fed' || $x === 'SafeFed' || $x === 'HQ' || $x === 'UG' || $x === 'Hardware' || $x === 'Ship' || $x === 'Weapon'))) {
 			foreach ($this->getLocations() as $loc) {
 				if ($loc->hasX($x, $player)) {
 					return true;

@@ -9,7 +9,7 @@ use Smr\Page\PlayerPageProcessor;
 class ForcesRefreshProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $ownerAccountID
+		private readonly int $ownerAccountID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

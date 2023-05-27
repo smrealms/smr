@@ -10,7 +10,7 @@ use Smr\Page\AccountPageProcessor;
 class DatabaseCleanupProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly string $action
+		private readonly string $action,
 	) {}
 
 	public function build(Account $account): never {
@@ -39,7 +39,7 @@ class DatabaseCleanupProcessor extends AccountPageProcessor {
 			'weighted_random',
 		];
 
-		if ($this->action == 'delete') {
+		if ($this->action === 'delete') {
 			$action = 'DELETE';
 			$method = 'write';
 		} else {

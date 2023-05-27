@@ -1,12 +1,13 @@
 <?php declare(strict_types=1);
 
 /**
+ * @var ?string $Message
  * @var string $ProcessingHREF
  * @var array<int, array{"Player ID": string|int, "Player Name": string, "All Games": string, "Game ID": int}> $ShareFrom
  * @var array<int, array{"Player ID": string|int, "Player Name": string, "All Games": string, "Game ID": int}> $ShareTo
  */
 
-if (!empty($Message)) { ?>
+if (isset($Message)) { ?>
 	<?php echo $Message; ?><?php
 } ?>
 
@@ -57,7 +58,7 @@ is in your alliance.</p>
 
 <h2>Players sharing with you:</h2>
 <br /><?php
-if ($ShareFrom) { ?>
+if (count($ShareFrom) > 0) { ?>
 	<table class="standard">
 		<tr class="center">
 			<th>Player ID</th>

@@ -15,14 +15,14 @@ class FinancialProcessor extends PlayerPageProcessor {
 		$planet = $player->getSectorPlanet();
 		$action = Request::get('action');
 
-		if ($action == 'Deposit' || $action == 'Withdraw') {
+		if ($action === 'Deposit' || $action === 'Withdraw') {
 			// Player has requested a planetary fund transaction
 			$amount = Request::getInt('amount');
 			if ($amount <= 0) {
 				create_error('You must actually enter an amount > 0!');
 			}
 
-			if ($action == 'Deposit') {
+			if ($action === 'Deposit') {
 				if ($player->getCredits() < $amount) {
 					create_error('You don\'t own that much money!');
 				}
@@ -38,7 +38,7 @@ class FinancialProcessor extends PlayerPageProcessor {
 				$planet->decreaseCredits($amount);
 			}
 			$player->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits at planet');
-		} elseif ($action == 'Confirm') {
+		} elseif ($action === 'Confirm') {
 			// Player has confirmed the request to bond
 			$planet->bond();
 

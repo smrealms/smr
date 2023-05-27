@@ -95,7 +95,7 @@ function logException(Throwable $err): void {
 	}
 
 	// Send error message to e-mail so that we have a permanent record
-	if (!empty(BUG_REPORT_TO_ADDRESSES)) {
+	if (count(BUG_REPORT_TO_ADDRESSES) > 0) {
 		$mail = setupMailer();
 		$mail->Subject = (defined('PAGE_PREFIX') ? PAGE_PREFIX : '??? ') .
 		                 'Automatic Bug Report: ' . $err->getMessage();
@@ -143,7 +143,7 @@ function handleException(Throwable $e): void {
  * Can be used to convert any type of notice into an exception.
  */
 function exception_error_handler(int $errno, string $errstr, string $errfile, int $errline): bool {
-	if (!(error_reporting() & $errno)) {
+	if ((error_reporting() & $errno) === 0) {
 		return false; // error is suppressed
 	}
 	throw new ErrorException($errstr, $errno, E_ERROR, $errfile, $errline);
@@ -151,7 +151,7 @@ function exception_error_handler(int $errno, string $errstr, string $errfile, in
 
 function setupMailer(): PHPMailer {
 	$mail = new PHPMailer(true);
-	if (!empty(SMTP_HOSTNAME)) {
+	if (SMTP_HOSTNAME !== '') {
 		$mail->isSMTP();
 		$mail->Host = SMTP_HOSTNAME;
 	}
@@ -209,7 +209,7 @@ function str2int(string $val): int {
  */
 function random_string(int $length): string {
 	$numBytes = (int)($length / 2);
-	if ($numBytes < 1 || $length % 2 != 0) {
+	if ($numBytes < 1 || $length % 2 !== 0) {
 		throw new Exception('Length must be an even number >= 2!');
 	}
 	return bin2hex(random_bytes($numBytes));
@@ -235,7 +235,7 @@ function random_alphabetic_string(int $length): string {
  * @return T
  */
 function array_rand_value(array $arr): mixed {
-	if (empty($arr)) {
+	if (count($arr) === 0) {
 		throw new Exception('Cannot pick random value from empty array!');
 	}
 	return $arr[array_rand($arr)];

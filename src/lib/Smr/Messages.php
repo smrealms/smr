@@ -56,27 +56,27 @@ class Messages {
 	}
 
 	public static function getMessagePlayer(int $accountID, int $gameID, int $messageType = null): string|Player {
-		if ($accountID == ACCOUNT_ID_PORT) {
+		if ($accountID === ACCOUNT_ID_PORT) {
 			$return = '<span class="yellow">Port Defenses</span>';
-		} elseif ($accountID == ACCOUNT_ID_ADMIN) {
+		} elseif ($accountID === ACCOUNT_ID_ADMIN) {
 			$return = '<span class="admin">Administrator</span>';
-		} elseif ($accountID == ACCOUNT_ID_PLANET) {
+		} elseif ($accountID === ACCOUNT_ID_PLANET) {
 			$return = '<span class="yellow">Planetary Defenses</span>';
-		} elseif ($accountID == ACCOUNT_ID_ALLIANCE_AMBASSADOR) {
+		} elseif ($accountID === ACCOUNT_ID_ALLIANCE_AMBASSADOR) {
 			$return = '<span class="green">Alliance Ambassador</span>';
-		} elseif ($accountID == ACCOUNT_ID_CASINO) {
+		} elseif ($accountID === ACCOUNT_ID_CASINO) {
 			$return = '<span class="yellow">Casino</span>';
-		} elseif ($accountID == ACCOUNT_ID_FED_CLERK) {
+		} elseif ($accountID === ACCOUNT_ID_FED_CLERK) {
 			$return = '<span class="yellow">Federal Clerk</span>';
-		} elseif ($accountID == ACCOUNT_ID_OP_ANNOUNCE || $accountID == ACCOUNT_ID_ALLIANCE_COMMAND) {
+		} elseif ($accountID === ACCOUNT_ID_OP_ANNOUNCE || $accountID === ACCOUNT_ID_ALLIANCE_COMMAND) {
 			$return = '<span class="green">Alliance Command</span>';
 		} else {
 			foreach (Race::getAllNames() as $raceID => $raceName) {
-				if ($accountID == ACCOUNT_ID_GROUP_RACES + $raceID) {
+				if ($accountID === ACCOUNT_ID_GROUP_RACES + $raceID) {
 					return '<span class="yellow">' . $raceName . ' Government</span>';
 				}
 			}
-			if (!empty($accountID)) {
+			if ($accountID !== 0) {
 				$return = Player::getPlayer($accountID, $gameID);
 			} else {
 				$return = match ($messageType) {

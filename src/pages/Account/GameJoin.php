@@ -16,7 +16,7 @@ class GameJoin extends AccountPage {
 	public string $file = 'game_join.php';
 
 	public function __construct(
-		private readonly int $gameID
+		private readonly int $gameID,
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -61,7 +61,7 @@ class GameJoin extends AccountPage {
 				'Selected' => false,
 			];
 		}
-		if (empty($races)) {
+		if (count($races) === 0) {
 			create_error('This game has no races assigned yet!');
 		}
 
@@ -76,7 +76,7 @@ class GameJoin extends AccountPage {
 		// Pick an initial race to display (prefer *not* Alskant)
 		do {
 			$raceKey = array_rand($races);
-		} while ($raceKey == RACE_ALSKANT && count($races) > 1);
+		} while ($raceKey === RACE_ALSKANT && count($races) > 1);
 		$races[$raceKey]['Selected'] = true;
 		$template->assign('SelectedRaceID', $raceKey);
 		$template->assign('Races', $races);

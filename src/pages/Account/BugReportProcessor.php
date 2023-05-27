@@ -34,7 +34,7 @@ class BugReportProcessor extends AccountPageProcessor {
 		}
 
 		// Send report to e-mail so that we have a permanent record
-		if (!empty(BUG_REPORT_TO_ADDRESSES)) {
+		if (count(BUG_REPORT_TO_ADDRESSES) > 0) {
 			$mail = setupMailer();
 			$mail->Subject = PAGE_PREFIX . 'Player Bug Report';
 			$mail->setFrom('bugs@smrealms.de');

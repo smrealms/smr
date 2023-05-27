@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
+ * @var ?string $Message
  * @var ?string $OpDate
  * @var ?string $OpCountdown
  * @var string $OpProcessingHREF
@@ -12,10 +13,10 @@
 ?>
 <h2>Alliance Operation Schedule</h2>
 <?php
-if (!empty($Message)) {
+if (isset($Message)) {
 	echo "<p>$Message</p>";
 }
-if (!empty($OpDate)) { ?>
+if (isset($OpDate)) { ?>
 	<p>The next alliance operation is scheduled for:</p>
 	<table class="nobord">
 		<tr>
@@ -47,7 +48,7 @@ if (!empty($OpDate)) { ?>
 		<option value="0">-- None --</option>
 		<?php
 		foreach ($AlliancePlayers as $alliancePlayer) {
-			$selected = $alliancePlayer->getAccountID() == $FlagshipID ? 'selected' : '';
+			$selected = $alliancePlayer->getAccountID() === $FlagshipID ? 'selected' : '';
 			?>
 			<option value="<?php echo $alliancePlayer->getAccountID(); ?>" <?php echo $selected; ?>>
 				<?php echo $alliancePlayer->getDisplayName(); ?>

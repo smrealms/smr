@@ -29,7 +29,7 @@ function shared_channel_msg_seedlist(AbstractPlayer $player): array {
 	// get the seedlist
 	$seedlist = get_seedlist($player);
 
-	if (count($seedlist) == 0) {
+	if (count($seedlist) === 0) {
 		return ['Your alliance has not set up a seedlist yet.'];
 	}
 	$result = ['Your alliance has a ' . count($seedlist) . ' sector seedlist:'];
@@ -47,7 +47,7 @@ function shared_channel_msg_seedlist_add(AbstractPlayer $player, ?array $sectors
 		return ['Only the leader of the alliance manages the seedlist.'];
 	}
 
-	if (empty($sectors)) {
+	if ($sectors === null || count($sectors) === 0) {
 		return ['You must specify sectors to add.'];
 	}
 
@@ -78,7 +78,7 @@ function shared_channel_msg_seedlist_add(AbstractPlayer $player, ?array $sectors
 		}
 
 		// check if the sector is already in the seedlist
-		if (in_array($sector, $currentSeedlist)) {
+		if (in_array($sector, $currentSeedlist, true)) {
 			$result[] = "WARNING: The sector '$sector' is already in the seedlist.";
 			continue;
 		}
@@ -110,7 +110,7 @@ function shared_channel_msg_seedlist_del(AbstractPlayer $player, ?array $sectors
 		return ['Only the leader of the alliance manages the seedlist.'];
 	}
 
-	if (empty($sectors)) {
+	if ($sectors === null || count($sectors) === 0) {
 		return ['You must specify sectors to delete.'];
 	}
 

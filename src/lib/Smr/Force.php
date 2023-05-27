@@ -145,7 +145,7 @@ class Force {
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
 		protected readonly int $ownerID,
-		DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [
@@ -256,7 +256,7 @@ class Force {
 		if ($amount < 0) {
 			throw new Exception('Cannot set negative mines.');
 		}
-		if ($amount == $this->getMines()) {
+		if ($amount === $this->getMines()) {
 			return;
 		}
 		$this->hasChanged = true;
@@ -267,7 +267,7 @@ class Force {
 		if ($amount < 0) {
 			throw new Exception('Cannot set negative CDs.');
 		}
-		if ($amount == $this->getCDs()) {
+		if ($amount === $this->getCDs()) {
 			return;
 		}
 		$this->hasChanged = true;
@@ -278,7 +278,7 @@ class Force {
 		if ($amount < 0) {
 			throw new Exception('Cannot set negative SDs.');
 		}
-		if ($amount == $this->getSDs()) {
+		if ($amount === $this->getSDs()) {
 			return;
 		}
 		$this->hasChanged = true;
@@ -297,7 +297,7 @@ class Force {
 		if ($time < 0) {
 			throw new Exception('Cannot set negative expiry.');
 		}
-		if ($time == $this->getExpire()) {
+		if ($time === $this->getExpire()) {
 			return;
 		}
 		if ($time > Epoch::time() + $this->getMaxExpireTime()) {
@@ -312,7 +312,7 @@ class Force {
 
 	public function updateExpire(): void {
 		// Changed (26/10/05) - scout drones count * 2
-		if ($this->getCDs() == 0 && $this->getMines() == 0 && $this->getSDs() > 0) {
+		if ($this->getCDs() === 0 && $this->getMines() === 0 && $this->getSDs() > 0) {
 			$time = self::TIME_PER_SCOUT_ONLY * $this->getSDs();
 		} else {
 			$time = ($this->getCDs() * self::TIME_PERCENT_PER_COMBAT + $this->getSDs() * self::TIME_PERCENT_PER_SCOUT + $this->getMines() * self::TIME_PERCENT_PER_MINE) * $this->getMaxGalaxyExpireTime();
@@ -492,10 +492,10 @@ class Force {
 
 	/**
 	 * @param array<AbstractPlayer> $targetPlayers
-	 * @return array{TotalDamage: int, DeadBeforeShot: bool, ForcesDestroyed?: bool, Mines?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}, Scouts?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}}
+	 * @return ForceCombatResults
 	 */
 	public function shootPlayers(array $targetPlayers, bool $minesAreAttacker): array {
-		$results = ['TotalDamage' => 0];
+		$results = ['TotalDamage' => 0, 'Results' => []];
 		if (!$this->exists()) {
 			$results['DeadBeforeShot'] = true;
 			return $results;
@@ -543,11 +543,11 @@ class Force {
 		if (!$alreadyDead) {
 			$numMines = $this->takeDamageToMines($damage['Armour']);
 			$minesDamage = $numMines * MINE_ARMOUR;
-			if (!$this->hasMines() && ($minesDamage == 0 || $damage['Rollover'])) {
+			if (!$this->hasMines() && ($minesDamage === 0 || $damage['Rollover'])) {
 				$cdMaxDamage = $damage['Armour'] - $minesDamage;
 				$numCDs = $this->takeDamageToCDs($cdMaxDamage);
 				$cdDamage = $numCDs * CD_ARMOUR;
-				if (!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover'])) {
+				if (!$this->hasCDs() && ($cdDamage === 0 || $damage['Rollover'])) {
 					$sdMaxDamage = $damage['Armour'] - $minesDamage - $cdDamage;
 					$numSDs = $this->takeDamageToSDs($sdMaxDamage);
 					$sdDamage = $numSDs * SD_ARMOUR;

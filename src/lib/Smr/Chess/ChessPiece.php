@@ -35,7 +35,7 @@ class ChessPiece {
 	public function isAttacking(Board $board, int $x, int $y): bool {
 		$moves = $this->getPossibleMoves($board, attackingCheck: true);
 		foreach ($moves as [$toX, $toY]) {
-			if ($toX == $x && $toY == $y) {
+			if ($toX === $x && $toY === $y) {
 				return true;
 			}
 		}
@@ -47,7 +47,7 @@ class ChessPiece {
 	 */
 	public function getPossibleMoves(Board $board, bool $attackingCheck = false): array {
 		$moves = [];
-		if ($this->pieceID == self::PAWN) {
+		if ($this->pieceID === self::PAWN) {
 			$dirY = match ($this->colour) {
 				Colour::White => 1,
 				Colour::Black => -1,
@@ -59,7 +59,7 @@ class ChessPiece {
 					$moves[] = [$this->x, $moveY];
 				}
 				$doubleMoveY = $moveY + $dirY;
-				if ($this->y - $dirY == 0 || $this->y - $dirY * 2 == Board::NY) { //Double move first move
+				if ($this->y - $dirY === 0 || $this->y - $dirY * 2 === Board::NY) { //Double move first move
 					if (!$board->hasPiece($this->x, $moveY) && !$board->hasPiece($this->x, $doubleMoveY) && $this->isSafeMove($board, $this->x, $doubleMoveY)) {
 						$moves[] = [$this->x, $doubleMoveY];
 					}
@@ -70,17 +70,17 @@ class ChessPiece {
 				if ($board->isValidCoord($moveX, $moveY)) {
 					if ($attackingCheck ||
 						(($board->getEnPassantPawn() === ['X' => $moveX, 'Y' => $this->y] ||
-						($board->hasPiece($moveX, $moveY) && $board->getPiece($moveX, $moveY)->colour != $this->colour))
+						($board->hasPiece($moveX, $moveY) && $board->getPiece($moveX, $moveY)->colour !== $this->colour))
 						&& $this->isSafeMove($board, $moveX, $moveY))) {
 						$moves[] = [$moveX, $moveY];
 					}
 				}
 			}
 		}
-		if ($this->pieceID == self::KING) {
+		if ($this->pieceID === self::KING) {
 			for ($i = -1; $i < 2; $i++) {
 				for ($j = -1; $j < 2; $j++) {
-					if ($i != 0 || $j != 0) {
+					if ($i !== 0 || $j !== 0) {
 						$this->addMove($this->x + $i, $this->y + $j, $board, $moves, $attackingCheck);
 					}
 				}
@@ -102,7 +102,7 @@ class ChessPiece {
 				}
 			}
 		}
-		if ($this->pieceID == self::QUEEN || $this->pieceID == self::ROOK) {
+		if ($this->pieceID === self::QUEEN || $this->pieceID === self::ROOK) {
 			// Unlimited linear movement
 			$moveX = $this->x;
 			while ($this->addMove(--$moveX, $this->y, $board, $moves, $attackingCheck) && !$board->hasPiece($moveX, $this->y)); //Left
@@ -113,7 +113,7 @@ class ChessPiece {
 			$moveY = $this->y;
 			while ($this->addMove($this->x, --$moveY, $board, $moves, $attackingCheck) && !$board->hasPiece($this->x, $moveY)); //Down
 		}
-		if ($this->pieceID == self::QUEEN || $this->pieceID == self::BISHOP) {
+		if ($this->pieceID === self::QUEEN || $this->pieceID === self::BISHOP) {
 			// Unlimited diagonal movement
 			$moveX = $this->x;
 			$moveY = $this->y;
@@ -128,7 +128,7 @@ class ChessPiece {
 			$moveY = $this->y;
 			while ($this->addMove(++$moveX, ++$moveY, $board, $moves, $attackingCheck) && !$board->hasPiece($moveX, $moveY)); //Right-Up
 		}
-		if ($this->pieceID == self::KNIGHT) {
+		if ($this->pieceID === self::KNIGHT) {
 			$knightMoves = [[2, -1], [1, -2], [-1, -2], [-2, -1], [-2, 1], [-1, 2], [1, 2], [2, 1]];
 			foreach ($knightMoves as [$moveX, $moveY]) {
 				$this->addMove($this->x + $moveX, $this->y + $moveY, $board, $moves, $attackingCheck);
@@ -143,7 +143,7 @@ class ChessPiece {
 	 */
 	private function addMove(int $toX, int $toY, Board $board, array &$moves, bool $attackingCheck = true): bool {
 		if ($board->isValidCoord($toX, $toY)) {
-			if (!$board->hasPiece($toX, $toY) || $board->getPiece($toX, $toY)->colour != $this->colour) {
+			if (!$board->hasPiece($toX, $toY) || $board->getPiece($toX, $toY)->colour !== $this->colour) {
 				//We can only actually move to this position if it is safe to do so, however we can pass through it looking for a safe move so we still want to return true.
 				if (($attackingCheck === true || $this->isSafeMove($board, $toX, $toY))) {
 					$moves[] = [$toX, $toY];
@@ -163,7 +163,7 @@ class ChessPiece {
 	}
 
 	public static function getSymbolForPiece(int $pieceID, Colour $colour): string {
-		return '&#' . (9811 + $pieceID + ($colour == Colour::White ? 0 : 6)) . ';';
+		return '&#' . (9811 + $pieceID + ($colour === Colour::White ? 0 : 6)) . ';';
 	}
 
 	public static function getLetterForPiece(int $pieceID, Colour $colour): string {
@@ -176,7 +176,7 @@ class ChessPiece {
 			self::PAWN => 'p',
 			default => throw new Exception('Invalid chess piece ID: ' . $pieceID),
 		};
-		if ($colour == Colour::White) {
+		if ($colour === Colour::White) {
 			$letter = strtoupper($letter);
 		}
 		return $letter;

@@ -2,12 +2,13 @@
 
 /**
  * @var string $PaperTitle
+ * @var array<array{title: string, text: string, editHREF: string}> $Articles
  */
 
 ?>
 <span class="bold"><?php echo $PaperTitle; ?></span>
 <br /><br /><?php
-if (empty($Articles)) { ?>
+if (count($Articles) === 0) { ?>
 	This paper has no articles yet!<?php
 } else { ?>
 	<ul><?php

@@ -12,7 +12,7 @@ class AlbumModerateProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly int $albumAccountID,
-		private readonly string $task
+		private readonly string $task,
 	) {}
 
 	public function build(Account $account): never {
@@ -25,7 +25,7 @@ class AlbumModerateProcessor extends AccountPageProcessor {
 		];
 
 		// check for each task
-		if ($this->task == 'reset_image') {
+		if ($this->task === 'reset_image') {
 			$email_txt = Request::get('email_txt');
 			$db->update('album', ['disabled' => 'TRUE'], $sqlCondition);
 
@@ -46,7 +46,7 @@ class AlbumModerateProcessor extends AccountPageProcessor {
 
 			// get his email address and send the mail
 			$receiver = Account::getAccount($account_id);
-			if (!empty($receiver->getEmail())) {
+			if ($receiver->getEmail() !== '') {
 				$mail = setupMailer();
 				$mail->Subject = 'SMR Photo Album Notification';
 				$mail->setFrom('album@smrealms.de', 'SMR Photo Album');
@@ -55,13 +55,13 @@ class AlbumModerateProcessor extends AccountPageProcessor {
 				$mail->send();
 			}
 
-		} elseif ($this->task == 'reset_location') {
+		} elseif ($this->task === 'reset_location') {
 			$db->update('album', ['location' => ''], $sqlCondition);
-		} elseif ($this->task == 'reset_email') {
+		} elseif ($this->task === 'reset_email') {
 			$db->update('album', ['email' => ''], $sqlCondition);
-		} elseif ($this->task == 'reset_website') {
+		} elseif ($this->task === 'reset_website') {
 			$db->update('album', ['website' => ''], $sqlCondition);
-		} elseif ($this->task == 'reset_birthdate') {
+		} elseif ($this->task === 'reset_birthdate') {
 			$db->update(
 				'album',
 				[
@@ -71,9 +71,9 @@ class AlbumModerateProcessor extends AccountPageProcessor {
 				],
 				$sqlCondition,
 			);
-		} elseif ($this->task == 'reset_other') {
+		} elseif ($this->task === 'reset_other') {
 			$db->update('album', ['other' => ''], $sqlCondition);
-		} elseif ($this->task == 'delete_comment') {
+		} elseif ($this->task === 'delete_comment') {
 			// we just ignore if nothing was set
 			if (Request::has('comment_ids')) {
 				$db->write('DELETE

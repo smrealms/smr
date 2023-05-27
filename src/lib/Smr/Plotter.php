@@ -10,7 +10,7 @@ class Plotter {
 	public static function getX(PlotGroup $xType, int|string $X, int $gameID, AbstractPlayer $player = null): mixed {
 		// Special case for Location categories (i.e. Bar, HQ, SafeFed)
 		if (!is_numeric($X)) {
-			if ($xType != PlotGroup::Locations) {
+			if ($xType !== PlotGroup::Locations) {
 				throw new Exception('Non-numeric X only exists for Locations');
 			}
 			return $X;
@@ -145,7 +145,7 @@ class Plotter {
 				if ($checkSectorID >= $lowLimit && $checkSectorID <= $highLimit) {
 					$checkSector = Sector::getSector($gameID, $checkSectorID);
 					// Does this sector satisfy our criteria?
-					if ($x == 'Distance' || (($needsToHaveBeenExploredBy === null || $needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID())) === true
+					if ($x === 'Distance' || (($needsToHaveBeenExploredBy === null || $needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID())) === true
 							&& $checkSector->hasX($x, $player) === true)) {
 						if ($useFirst === true) {
 							return $distance;

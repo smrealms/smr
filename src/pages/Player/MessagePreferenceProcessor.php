@@ -10,7 +10,7 @@ use Smr\ScoutMessageGroupType;
 class MessagePreferenceProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $folderID
+		private readonly int $folderID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

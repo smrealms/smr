@@ -194,7 +194,7 @@ class AbstractShipTest extends TestCase {
 		// Set up a ship with a fixed amount of defenses
 		$this->player
 			->method('isDead')
-			->willReturn($armour == 0);
+			->willReturn($armour === 0);
 		$ship = new AbstractShip($this->player);
 		$ship->setShields($shields);
 		$ship->setCDs($cds);
@@ -372,7 +372,7 @@ class AbstractShipTest extends TestCase {
 		// Set up a ship with a fixed amount of defenses
 		$this->player
 			->method('isDead')
-			->willReturn($armour == 0);
+			->willReturn($armour === 0);
 		$ship = new AbstractShip($this->player);
 		$ship->setShields($shields);
 		$ship->setCDs($cds);

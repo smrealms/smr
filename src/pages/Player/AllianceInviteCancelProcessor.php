@@ -9,7 +9,7 @@ use Smr\Page\PlayerPageProcessor;
 class AllianceInviteCancelProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly AllianceInvite $invite
+		private readonly AllianceInvite $invite,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

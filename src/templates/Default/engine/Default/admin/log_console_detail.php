@@ -11,7 +11,7 @@
 				<br /><br />
 				<?php
 				foreach ($LogTypes as $id => $type) { ?>
-					<input type="checkbox" name="log_type_ids[<?php echo $id; ?>]" <?php echo in_array($id, $LogTypesChecked) ? 'checked' : ''; ?> ><?php echo $type; ?>
+					<input type="checkbox" name="log_type_ids[<?php echo $id; ?>]" <?php echo in_array($id, $LogTypesChecked, true) ? 'checked' : ''; ?> ><?php echo $type; ?>
 					<br /><?php
 				} ?>
 			</form>

@@ -15,7 +15,7 @@ class LogConsole extends AccountPage {
 	 * @param array<int> $accountIDs
 	 */
 	public function __construct(
-		private readonly array $accountIDs = []
+		private readonly array $accountIDs = [],
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -34,7 +34,7 @@ class LogConsole extends AccountPage {
 				'AccountID' => $accountID,
 				'Login' => $dbRecord->getString('login'),
 				'TotalEntries' => $dbRecord->getInt('number_of_entries'),
-				'Checked' => in_array($accountID, $this->accountIDs),
+				'Checked' => in_array($accountID, $this->accountIDs, true),
 				'Notes' => '',
 			];
 

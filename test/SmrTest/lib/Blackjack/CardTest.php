@@ -30,7 +30,7 @@ class CardTest extends TestCase {
 		$aceCardIDs = [0, 13, 26, 39];
 		for ($cardID = 0; $cardID < 52; $cardID++) {
 			$card = new Card($cardID);
-			self::assertSame(in_array($cardID, $aceCardIDs), $card->isAce());
+			self::assertSame(in_array($cardID, $aceCardIDs, true), $card->isAce());
 		}
 	}
 

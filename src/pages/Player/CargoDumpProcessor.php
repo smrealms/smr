@@ -16,7 +16,7 @@ class CargoDumpProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly int $goodID,
-		private readonly ?int $goodAmount = null
+		private readonly ?int $goodAmount = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

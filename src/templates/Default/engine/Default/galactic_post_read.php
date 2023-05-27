@@ -2,13 +2,15 @@
 
 /**
  * @var ?int $PaperGameID
+ * @var ?string $BackHREF
+ * @var ?array<int, array<int, array{title: string, text: string}>> $ArticleLayout
  */
 
-if (!empty($BackHREF)) { ?>
+if (isset($BackHREF)) { ?>
 	<a href="<?php echo $BackHREF; ?>"><b>&lt;&lt;Back</b></a><?php
 }
 
-if (empty($ArticleLayout)) { ?>
+if (!isset($ArticleLayout)) { ?>
 	There is no current edition of the Galactic Post for this game.<?php
 } else { ?>
 	<table class="center" spacepadding="20" cellspacing="20"><?php

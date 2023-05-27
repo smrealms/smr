@@ -38,10 +38,10 @@
 				<td <?php echo $data['Style']; ?>>
 					<select name="alliancer[]" style="width:155px"><?php
 						foreach ($ActiveAlliances as $activeID => $curr_alliance) {
-							$attr = ($data['ID'] == $activeID) ? 'selected' : ''; ?>
+							$attr = ($data['ID'] === $activeID) ? 'selected' : ''; ?>
 							<option value="<?php echo $activeID; ?>" <?php echo $attr; ?>><?php echo $curr_alliance->getAllianceDisplayName(); ?></option><?php
 						} ?>
-						<option value="0" <?php echo ($data['ID'] == 0) ? 'selected' : ''; ?>>No Alliance</option>
+						<option value="0" <?php echo ($data['ID'] === 0) ? 'selected' : ''; ?>>No Alliance</option>
 					</select>
 				</td><?php
 				foreach ($AllianceVs as $data2) {
@@ -60,7 +60,7 @@
 <table class="center">
 	<tr>
 		<td width="45%" class="top"><?php
-			if ($Kills) { ?>
+			if (count($Kills) > 0) { ?>
 				<p>Kills for <?php echo $DetailsName; ?></p>
 				<table class="standard center">
 					<tr>
@@ -81,7 +81,7 @@
 
 		<td width="10%">&nbsp;</td>
 		<td width="45%" class="top"><?php
-			if ($Deaths) { ?>
+			if (count($Deaths) > 0) { ?>
 				<p>Deaths for <?php echo $DetailsName; ?></p>
 				<table class="standard center">
 					<tr>

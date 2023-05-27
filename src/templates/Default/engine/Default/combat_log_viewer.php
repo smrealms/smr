@@ -23,20 +23,20 @@ Sector <?php echo $CombatLogSector ?><br />
 <br />
 
 <?php
-if ($CombatResultsType == 'PLAYER') {
+if ($CombatResultsType === 'PLAYER') {
 	$this->includeTemplate('includes/TraderFullCombatResults.inc.php', [
 		'TraderCombatResults' => $CombatResults,
 		'MinimalDisplay' => false,
 	]);
-} elseif ($CombatResultsType == 'FORCE') {
+} elseif ($CombatResultsType === 'FORCE') {
 	$this->includeTemplate('includes/ForceFullCombatResults.inc.php', ['FullForceCombatResults' => $CombatResults]);
-} elseif ($CombatResultsType == 'PORT') {
+} elseif ($CombatResultsType === 'PORT') {
 	$this->includeTemplate('includes/PortFullCombatResults.inc.php', [
 		'FullPortCombatResults' => $CombatResults,
 		'MinimalDisplay' => false,
 		'AlreadyDestroyed' => false,
 	]);
-} elseif ($CombatResultsType == 'PLANET') {
+} elseif ($CombatResultsType === 'PLANET') {
 	$this->includeTemplate('includes/PlanetFullCombatResults.inc.php', [
 		'FullPlanetCombatResults' => $CombatResults,
 		'MinimalDisplay' => false,

@@ -8,6 +8,7 @@ use Smr\Epoch;
  * @var ?string $OpResponseHREF
  * @var ?int $OpTime
  * @var ?array<string, string> $ResponseInputs
+ * @var ?string $DiscordServer
  */
 
 ?>
@@ -33,7 +34,7 @@ if (isset($OpTime) && isset($ResponseInputs)) { ?>
 }
 
 if ($Alliance->hasImageURL()) { ?>
-	<img class="alliance" src="<?php echo $Alliance->getImageURL(); ?>" alt="">
+	<img class="alliance" src="<?php echo htmlspecialchars($Alliance->getImageURL()); ?>" alt="">
 	<br /><br /><?php
 } ?>
 
@@ -47,7 +48,7 @@ if (isset($EditHREF)) { ?>
 	</div><?php
 }
 
-if (!empty($DiscordServer)) { ?>
+if (isset($DiscordServer)) { ?>
 	<br /><br />
 	<iframe src="https://discordapp.com/widget?id=<?php echo $DiscordServer; ?>&amp;theme=dark" width="350" height="375" allowtransparency="true" frameborder="0"></iframe>
 	<?php

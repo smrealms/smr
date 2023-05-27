@@ -16,7 +16,7 @@ class AdminPermissionManage extends AccountPage {
 	public string $file = 'admin/permission_manage.php';
 
 	public function __construct(
-		private readonly ?int $adminAccountID = null
+		private readonly ?int $adminAccountID = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -39,7 +39,7 @@ class AdminPermissionManage extends AccountPage {
 		}
 		$template->assign('AdminLinks', $adminLinks);
 
-		if (empty($admin_id)) {
+		if ($admin_id === null) {
 			// If we don't have an account_id here display an account list
 			$validatedAccounts = [];
 			$dbResult = $db->read('SELECT account_id, login

@@ -12,7 +12,7 @@ use Smr\Request;
 class CombatLogListProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly CombatLogType $action
+		private readonly CombatLogType $action,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -27,9 +27,9 @@ class CombatLogListProcessor extends PlayerPageProcessor {
 
 		// Do we need to save any logs (or delete any saved logs)?
 		$submitAction = Request::get('action');
-		if ($submitAction == 'Save' || $submitAction == 'Delete') {
+		if ($submitAction === 'Save' || $submitAction === 'Delete') {
 			$db = Database::getInstance();
-			if ($submitAction == 'Save') {
+			if ($submitAction === 'Save') {
 				//save the logs we checked
 				// Query means people can only save logs that they are allowd to view.
 				$changedRows = $db->write('INSERT IGNORE INTO player_saved_combat_logs (account_id, game_id, log_id)
@@ -69,7 +69,7 @@ class CombatLogListProcessor extends PlayerPageProcessor {
 			$message = $submitAction . 'd ' . $changedRows . ' new logs.';
 			$container = new CombatLogList($this->action, message: $message);
 			$container->go();
-		} elseif ($submitAction == 'View') {
+		} elseif ($submitAction === 'View') {
 			sort($logIDs);
 			$container = new CombatLogViewer($logIDs);
 			$container->go();

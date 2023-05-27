@@ -12,7 +12,7 @@ if (Session::getInstance()->hasGame()) { ?>
 } ?>
 <span id="vote_links"><?php
 	foreach ($VoteLinks as $VoteLink) { ?>
-		<a href='<?php echo htmlspecialchars($VoteLink['url']); ?>' target="_blank" <?php if ($VoteLink['sn']) { ?> data-sn="<?php echo $VoteLink['sn']; ?>" onclick="voteSite(this.dataset.sn)" <?php } ?>>
+		<a href='<?php echo htmlspecialchars($VoteLink['url']); ?>' target="_blank" <?php if ($VoteLink['sn'] !== false) { ?> data-sn="<?php echo $VoteLink['sn']; ?>" onclick="voteSite(this.dataset.sn)" <?php } ?>>
 			<img class="vote_site" src="images/game_sites/<?php echo $VoteLink['img']; ?>" alt="" width="98" height="41" />
 		</a><?php
 	} ?>

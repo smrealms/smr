@@ -13,7 +13,7 @@ use Smr\Page\PlayerPageProcessor;
 class CombatLogViewerVerifyProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $logID
+		private readonly int $logID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

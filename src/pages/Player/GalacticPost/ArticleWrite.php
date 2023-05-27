@@ -15,7 +15,7 @@ class ArticleWrite extends PlayerPage {
 	public function __construct(
 		private readonly ?int $articleID = null,
 		private readonly ?string $previewTitle = null,
-		private readonly ?string $previewText = null
+		private readonly ?string $previewText = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

@@ -31,7 +31,7 @@
 <h2>Invite Player</h2>
 
 <?php
-if (count($InvitePlayers) == 0) { ?>
+if (count($InvitePlayers) === 0) { ?>
 	<p>There are no players eligible to be invited to your alliance!</p><?php
 } else { ?>
 
@@ -61,7 +61,7 @@ if (count($InvitePlayers) == 0) { ?>
 
 <div class="ajax" id="pending">
 <?php
-if (count($PendingInvites) == 0) { ?>
+if (count($PendingInvites) === 0) { ?>
 	<p>Your alliance has no pending invitations.</p><?php
 } else { ?>
 	<br />

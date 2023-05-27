@@ -32,11 +32,11 @@ class IpViewResults extends AccountPage {
 
 		$template->assign('type', $type);
 
-		if ($type == 'comp_share') {
+		if ($type === 'comp_share') {
 			(new ComputerSharing())->go();
 		}
 
-		if ($type == 'list') {
+		if ($type === 'list') {
 			//=========================================================
 			// List all IPs
 			//=========================================================
@@ -59,7 +59,7 @@ class IpViewResults extends AccountPage {
 				$account_id = $db_ent['id'];
 				$acc = Account::getAccount($account_id);
 				$disabled = $acc->isDisabled();
-				$close_reason = $disabled ? $disabled['Reason'] : '';
+				$close_reason = $disabled !== false ? $disabled['Reason'] : '';
 
 				$row = [
 					'account_id' => $account_id,
@@ -71,7 +71,7 @@ class IpViewResults extends AccountPage {
 
 				$match_id = 0;
 				foreach ($ip_array as $db_ent2) {
-					if ($db_ip == $db_ent2['ip'] && $account_id != $db_ent2['id']) {
+					if ($db_ip === $db_ent2['ip'] && $account_id !== $db_ent2['id']) {
 						$match_id = $db_ent2['id'];
 						break;
 					}
@@ -89,13 +89,13 @@ class IpViewResults extends AccountPage {
 						$ex = '';
 					}
 
-					if (empty($ex) && empty($close_reason)) {
+					if ($ex === '' && $close_reason === '') {
 						$checked = 'checked';
 					} else {
 						$checked = '';
 					}
 
-					if (!empty($ex)) {
+					if ($ex !== '') {
 						$suspicion = 'DB Exception - ' . $ex;
 					} else {
 						$suspicion = 'Match:' . $match_id;
@@ -108,7 +108,7 @@ class IpViewResults extends AccountPage {
 			}
 			$template->assign('Rows', $rows);
 
-		} elseif ($type == 'account_ips') {
+		} elseif ($type === 'account_ips') {
 			//=========================================================
 			// List all IPs for a specific account (id)
 			//=========================================================
@@ -144,14 +144,14 @@ class IpViewResults extends AccountPage {
 			}
 			$template->assign('Rows', $rows);
 
-		} elseif (in_array($type, ['search', 'alliance_ips', 'wild_log', 'wild_in', 'compare', 'compare_log', 'wild_ip', 'wild_host'])) {
-			if ($type == 'search') {
+		} else {
+			if ($type === 'search') {
 				//=========================================================
 				// Search for a specific IP
 				//=========================================================
 				$ip = $variable;
 				$host = gethostbyaddr($ip);
-				if ($host == $ip) {
+				if ($host === $ip) {
 					$host = 'unknown';
 				}
 				$summary = 'The following accounts have the IP address ' . $ip . ' (' . $host . ')';
@@ -159,7 +159,7 @@ class IpViewResults extends AccountPage {
 					'ip' => $db->escapeString($ip),
 				]);
 
-			} elseif ($type == 'alliance_ips') {
+			} elseif ($type === 'alliance_ips') {
 				//=========================================================
 				// List all IPs for a specific alliance
 				//=========================================================
@@ -176,7 +176,7 @@ class IpViewResults extends AccountPage {
 				]);
 				$summary = 'Listing all IPs for alliance ' . $name . ' in game with ID ' . $gameID;
 
-			} elseif ($type == 'wild_log') {
+			} elseif ($type === 'wild_log') {
 				//=========================================================
 				// List all IPs for a wildcard login name
 				//=========================================================
@@ -185,7 +185,7 @@ class IpViewResults extends AccountPage {
 				]);
 				$summary = 'Listing all IPs for login names LIKE ' . $variable;
 
-			} elseif ($type == 'wild_in') {
+			} elseif ($type === 'wild_in') {
 				//=========================================================
 				// List all IPs for a wildcard ingame name
 				//=========================================================
@@ -194,7 +194,7 @@ class IpViewResults extends AccountPage {
 				]);
 				$summary = 'Listing all IPs for ingame names LIKE ' . $variable;
 
-			} elseif ($type == 'compare') {
+			} elseif ($type === 'compare') {
 				//=========================================================
 				// List all IPs for specified players
 				//=========================================================
@@ -204,7 +204,7 @@ class IpViewResults extends AccountPage {
 				]);
 				$summary = 'Listing all IPs for ingame names ' . $variable;
 
-			} elseif ($type == 'compare_log') {
+			} elseif ($type === 'compare_log') {
 				//=========================================================
 				// List all IPs for specified logins
 				//=========================================================
@@ -214,7 +214,7 @@ class IpViewResults extends AccountPage {
 				]);
 				$summary = 'Listing all IPs for logins ' . $variable;
 
-			} elseif ($type == 'wild_ip') {
+			} elseif ($type === 'wild_ip') {
 				//=========================================================
 				// Wildcard IP search
 				//=========================================================
@@ -223,7 +223,7 @@ class IpViewResults extends AccountPage {
 				]);
 				$summary = 'Listing all IPs LIKE ' . $variable;
 
-			} elseif ($type == 'wild_host') {
+			} elseif ($type === 'wild_host') {
 				//=========================================================
 				// Wildcard host search
 				//=========================================================
@@ -252,7 +252,7 @@ class IpViewResults extends AccountPage {
 				}
 				$acc = Account::getAccount($id);
 				$disabled = $acc->isDisabled();
-				$close_reason = $disabled ? $disabled['Reason'] : '';
+				$close_reason = $disabled !== false ? $disabled['Reason'] : '';
 				$dbResult2 = $db->read('SELECT * FROM player WHERE account_id = :account_id', [
 					'account_id' => $db->escapeNumber($id),
 				]);

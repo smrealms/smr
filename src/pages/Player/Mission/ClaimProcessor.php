@@ -9,7 +9,7 @@ use Smr\Pages\Player\CurrentSector;
 class ClaimProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $missionID
+		private readonly int $missionID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

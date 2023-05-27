@@ -22,9 +22,9 @@ class TemplateTest extends TestCase {
 	public function test_assign_unassign(): void {
 		$template = Template::getInstance();
 		$template->assign('foo', 'bar');
-		$this->assertTrue($template->hasTemplateVar('foo'));
+		self::assertTrue($template->hasTemplateVar('foo'));
 		$template->unassign('foo');
-		$this->assertFalse($template->hasTemplateVar('foo'));
+		self::assertFalse($template->hasTemplateVar('foo'));
 	}
 
 	public function test_assign_same_variable_twice_throws(): void {
@@ -45,17 +45,17 @@ class TemplateTest extends TestCase {
 		$method = TestUtils::getPrivateMethod($template, 'doAn');
 
 		// Test vowel and consonant first letters, lowercase and uppercase
-		$this->assertSame('a', $method->invoke($template, 'Car'));
-		$this->assertSame('a', $method->invoke($template, 'house'));
-		$this->assertSame('an', $method->invoke($template, 'Egg'));
-		$this->assertSame('an', $method->invoke($template, 'apple'));
+		self::assertSame('a', $method->invoke($template, 'Car'));
+		self::assertSame('a', $method->invoke($template, 'house'));
+		self::assertSame('an', $method->invoke($template, 'Egg'));
+		self::assertSame('an', $method->invoke($template, 'apple'));
 	}
 
 	#[DataProvider('checkDisableAJAX_provider')]
 	public function test_checkDisableAJAX(string $html, bool $expected): void {
 		$template = Template::getInstance();
 		$method = TestUtils::getPrivateMethod($template, 'checkDisableAJAX');
-		$this->assertSame($expected, $method->invoke($template, $html));
+		self::assertSame($expected, $method->invoke($template, $html));
 	}
 
 	/**
@@ -79,7 +79,7 @@ class TemplateTest extends TestCase {
 	public function test_convertHtmlToAjaxXml(string $html, string $expected): void {
 		$template = Template::getInstance();
 		$method = TestUtils::getPrivateMethod($template, 'convertHtmlToAjaxXml');
-		$this->assertSame($expected, $method->invoke($template, $html, true));
+		self::assertSame($expected, $method->invoke($template, $html, true));
 	}
 
 	/**

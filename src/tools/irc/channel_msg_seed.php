@@ -7,7 +7,7 @@ use Smr\Irc\Message;
  * @param resource $fp
  */
 function channel_msg_seed($fp, Message $msg, AbstractPlayer $player): bool {
-	if ($msg->text == '!seed') {
+	if ($msg->text === '!seed') {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -29,7 +29,7 @@ function channel_msg_seed($fp, Message $msg, AbstractPlayer $player): bool {
  * @param resource $fp
  */
 function channel_msg_seedlist($fp, Message $msg): bool {
-	if (preg_match('/^!seedlist(\s*help)?$/i', $msg->text)) {
+	if (preg_match('/^!seedlist(\s*help)?$/i', $msg->text) === 1) {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -51,7 +51,7 @@ function channel_msg_seedlist($fp, Message $msg): bool {
  * @param resource $fp
  */
 function channel_msg_seedlist_add($fp, Message $msg, AbstractPlayer $player): bool {
-	if (preg_match('/^!seedlist add (.*)$/i', $msg->text, $args)) {
+	if (preg_match('/^!seedlist add (.*)$/i', $msg->text, $args) === 1) {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -74,7 +74,7 @@ function channel_msg_seedlist_add($fp, Message $msg, AbstractPlayer $player): bo
  * @param resource $fp
  */
 function channel_msg_seedlist_del($fp, Message $msg, AbstractPlayer $player): bool {
-	if (preg_match('/^!seedlist del (.*)$/i', $msg->text, $args)) {
+	if (preg_match('/^!seedlist del (.*)$/i', $msg->text, $args) === 1) {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;

@@ -29,7 +29,7 @@ if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()
 						<select name="ship_type_id" size="1"><?php
 							$CurrentShipID = $ThisShip->hasActiveIllusion() ? $ThisShip->getIllusion()->shipTypeID : $ThisShip->getTypeID();
 							foreach ($IllusionShips as $ShipTypeID => $ShipName) {
-								?><option value="<?php echo $ShipTypeID; ?>"<?php if ($CurrentShipID == $ShipTypeID) { ?> selected="selected"<?php } ?>><?php echo $ShipName; ?></option><?php
+								?><option value="<?php echo $ShipTypeID; ?>"<?php if ($CurrentShipID === $ShipTypeID) { ?> selected="selected"<?php } ?>><?php echo $ShipName; ?></option><?php
 							} ?>
 						</select>
 					</td>

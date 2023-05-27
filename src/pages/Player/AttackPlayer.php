@@ -12,12 +12,12 @@ class AttackPlayer extends PlayerPage {
 	public string $file = 'trader_attack.php';
 
 	/**
-	 * @param array{Attackers: array{TotalDamage: int, Traders: array<int, array{Player: \Smr\AbstractPlayer, TotalDamage: int, TotalDamagePerTargetPlayer?: array<int, int>, DeadBeforeShot: bool, Weapons: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}}>}, Defenders: array{TotalDamage: int, Traders: array<int, array{Player: \Smr\AbstractPlayer, TotalDamage: int, TotalDamagePerTargetPlayer?: array<int, int>, DeadBeforeShot: bool, Weapons: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}}>}} $results
+	 * @param array{Attackers: TraderTeamCombatResults, Defenders: TraderTeamCombatResults} $results
 	 */
 	public function __construct(
 		private readonly array $results,
 		private readonly ?int $targetAccountID,
-		bool $playerDied
+		bool $playerDied,
 	) {
 		$this->skipRedirect = $playerDied;
 	}

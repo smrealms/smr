@@ -32,7 +32,7 @@ class CouncilVoting {
 			$race_id_2 = $dbRecord->getInt('race_id_2');
 			$action = $dbRecord->getString('action');
 
-			if ($action == 'INC') {
+			if ($action === 'INC') {
 				$relation_modifier = RELATIONS_VOTE_CHANGE;
 			} else {
 				$relation_modifier = -RELATIONS_VOTE_CHANGE;
@@ -119,7 +119,7 @@ class CouncilVoting {
 
 			// more yes than no?
 			if ($yes_votes > $no_votes) {
-				if ($type == 'WAR') {
+				if ($type === 'WAR') {
 					$currentlyParkedAccountIDs = [];
 					$raceFedSectors = [
 						$race_id_1 => Sector::getLocationSectors($gameID, LOCATION_GROUP_RACIAL_BEACONS + $race_id_1),
@@ -127,11 +127,11 @@ class CouncilVoting {
 					];
 					foreach ($raceFedSectors as $raceID => $fedSectors) {
 						$currentlyParkedAccountIDs[$raceID] = []; //initialize
-						$otherRaceID = $raceID == $race_id_1 ? $race_id_2 : $race_id_1;
+						$otherRaceID = $raceID === $race_id_1 ? $race_id_2 : $race_id_1;
 						foreach ($fedSectors as $fedSector) {
 							$sectorPlayers = $fedSector->getPlayers();
 							foreach ($sectorPlayers as $sectorPlayer) {
-								if ($sectorPlayer->getRaceID() == $otherRaceID && $sectorPlayer->canBeProtectedByRace($raceID)) {
+								if ($sectorPlayer->getRaceID() === $otherRaceID && $sectorPlayer->canBeProtectedByRace($raceID)) {
 									$currentlyParkedAccountIDs[$raceID][] = $sectorPlayer->getAccountID();
 								}
 							}
@@ -142,7 +142,7 @@ class CouncilVoting {
 						$expireTime = Epoch::time() + TIME_FOR_WAR_VOTE_FED_SAFETY;
 						$query = 'REPLACE INTO player_can_fed (account_id, game_id, race_id, expiry, allowed) VALUES ';
 						foreach ($currentlyParkedAccountIDs as $raceID => $accountIDs) {
-							if ($raceID == $race_id_1) {
+							if ($raceID === $race_id_1) {
 								$message = 'We have declared war upon your race';
 							} else {
 								$message = 'Your race has declared war upon us';
@@ -179,7 +179,7 @@ class CouncilVoting {
 						'time' => Epoch::time(),
 						'news_message' => $news,
 					]);
-				} elseif ($type == 'PEACE') {
+				} elseif ($type === 'PEACE') {
 					// get 'yes' votes
 					$dbResult2 = $db->read('SELECT 1 FROM player_votes_pact
 							WHERE game_id = :game_id

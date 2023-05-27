@@ -68,7 +68,7 @@ class ExtendedStatsDetail extends HistoryPage {
 				$name = htmlentities($dbRecord->getString('alliance_name'));
 				$container = new AllianceDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $allianceID, $this);
 				$rankings[] = [
-					'bold' => $oldAllianceID == $allianceID ? 'class="bold"' : '',
+					'bold' => $oldAllianceID === $allianceID ? 'class="bold"' : '',
 					'data' => [
 						create_link($container, $name),
 						$dbRecord->getInt('val'),
@@ -76,7 +76,7 @@ class ExtendedStatsDetail extends HistoryPage {
 				];
 			}
 			$headers = ['Alliance', $header];
-		} elseif ($this->category == 'Top Planets') {
+		} elseif ($this->category === 'Top Planets') {
 			$dbResult = $db->read('SELECT sector_id, owner_id, IFNULL(player_name, \'Unclaimed\') as player_name, IFNULL(alliance_name, \'None\') as alliance_name, IFNULL(player.alliance_id, 0) as alliance_id, ROUND((turrets + hangers + generators) / 3, 2) as level FROM planet LEFT JOIN player ON planet.owner_id = player.account_id AND planet.game_id = player.game_id LEFT JOIN alliance ON player.alliance_id = alliance.alliance_id AND planet.game_id = alliance.game_id WHERE planet.game_id = :game_id ORDER BY level DESC LIMIT 25', [
 				'game_id' => $db->escapeNumber($game_id),
 			]);
@@ -84,12 +84,12 @@ class ExtendedStatsDetail extends HistoryPage {
 				$ownerID = $dbRecord->getInt('owner_id');
 				$allianceID = $dbRecord->getInt('alliance_id');
 				$allianceName = $dbRecord->getString('alliance_name');
-				if ($allianceID != 0) {
+				if ($allianceID !== 0) {
 					$container = new AllianceDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $allianceID, $this);
 					$allianceName = create_link($container, $allianceName);
 				}
 				$rankings[] = [
-					'bold' => $ownerID > 0 && $oldAccountID == $ownerID ? 'class="bold"' : '',
+					'bold' => $ownerID > 0 && $oldAccountID === $ownerID ? 'class="bold"' : '',
 					'data' => [
 						$dbRecord->getFloat('level'),
 						$dbRecord->getString('player_name'),

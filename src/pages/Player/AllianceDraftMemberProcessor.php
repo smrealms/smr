@@ -16,7 +16,7 @@ class AllianceDraftMemberProcessor extends PlayerPageProcessor {
 	use ReusableTrait;
 
 	public function __construct(
-		private readonly int $pickedAccountID
+		private readonly int $pickedAccountID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

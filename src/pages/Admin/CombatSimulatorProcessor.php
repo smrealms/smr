@@ -39,7 +39,7 @@ class CombatSimulatorProcessor extends AccountPageProcessor {
 		$attackers = [];
 		if (Request::has('attackers')) {
 			foreach (Request::getArray('attackers') as $attackerName) {
-				if ($attackerName == 'none') {
+				if ($attackerName === 'none') {
 					continue;
 				}
 				if (isset($usedNames[$attackerName])) {
@@ -54,7 +54,7 @@ class CombatSimulatorProcessor extends AccountPageProcessor {
 		$i = 1;
 		$defenders = [];
 		foreach (Request::getArray('defenders') as $defenderName) {
-			if ($defenderName == 'none') {
+			if ($defenderName === 'none') {
 				continue;
 			}
 			if (isset($usedNames[$defenderName])) {
@@ -92,7 +92,7 @@ class CombatSimulatorProcessor extends AccountPageProcessor {
 						unset($defendersLeft[$key]);
 					}
 				}
-				if (count($attackersLeft) == 0 || count($defendersLeft) == 0) {
+				if (count($attackersLeft) === 0 || count($defendersLeft) === 0) {
 					break;
 				}
 				$results = runAnAttack($attackersLeft, $defendersLeft);

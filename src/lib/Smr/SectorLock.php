@@ -56,7 +56,7 @@ class SectorLock {
 	public function acquire(int $gameID, int $accountID, int $sectorID): bool {
 		// Skip if we already have the lock
 		if ($this->isActive()) {
-			if ($gameID !== $this->gameID || $accountID !== $this->accountID || $sectorID != $this->sectorID) {
+			if ($gameID !== $this->gameID || $accountID !== $this->accountID || $sectorID !== $this->sectorID) {
 				throw new Exception('This instance has an active lock in a different sector!');
 			}
 			return false;
@@ -104,7 +104,7 @@ class SectorLock {
 				'lock_id' => $db->escapeNumber($this->lockID),
 			]);
 			$locksInQueue = $dbResult->record()->getInt('COUNT(*)');
-			if ($locksInQueue == 0) {
+			if ($locksInQueue === 0) {
 				return true;
 			}
 

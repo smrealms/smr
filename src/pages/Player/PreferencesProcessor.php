@@ -18,15 +18,15 @@ class PreferencesProcessor extends PlayerPageProcessor {
 
 		$action = Request::get('action');
 
-		if ($action == 'Change Kamikaze Setting') {
+		if ($action === 'Change Kamikaze Setting') {
 			$player->setCombatDronesKamikazeOnMines(Request::getBool('kamikaze'));
 			$message = '<span class="green">SUCCESS: </span>You have changed your combat drones options.';
 
-		} elseif ($action == 'Change Message Setting') {
+		} elseif ($action === 'Change Message Setting') {
 			$player->setForceDropMessages(Request::getBool('forceDropMessages'));
 			$message = '<span class="green">SUCCESS: </span>You have changed your message options.';
 
-		} elseif ($action == 'change_name') {
+		} elseif ($action === 'change_name') {
 			$old_name = $player->getDisplayName();
 			$player_name = Request::get('PlayerName');
 
@@ -49,15 +49,15 @@ class PreferencesProcessor extends PlayerPageProcessor {
 			]);
 			$message = '<span class="green">SUCCESS: </span>You have changed your player name.';
 
-		} elseif ($action == 'change_race') {
+		} elseif ($action === 'change_race') {
 			if (!$player->canChangeRace()) {
 				throw new Exception('Player is not allowed to change their race!');
 			}
 			$newRaceID = Request::getInt('race_id');
-			if (!in_array($newRaceID, $player->getGame()->getPlayableRaceIDs())) {
+			if (!in_array($newRaceID, $player->getGame()->getPlayableRaceIDs(), true)) {
 				throw new Exception('Invalid race ID selected!');
 			}
-			if ($newRaceID == $player->getRaceID()) {
+			if ($newRaceID === $player->getRaceID()) {
 				create_error('You are already the ' . $player->getRaceName() . ' race!');
 			}
 

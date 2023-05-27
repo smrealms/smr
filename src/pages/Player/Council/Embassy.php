@@ -29,7 +29,7 @@ class Embassy extends PlayerPage {
 
 		$voteRaces = [];
 		foreach (Race::getPlayableIDs() as $raceID) {
-			if ($raceID == $player->getRaceID()) {
+			if ($raceID === $player->getRaceID()) {
 				continue;
 			}
 			$dbResult = $db->read('SELECT 1 FROM race_has_voting

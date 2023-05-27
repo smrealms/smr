@@ -488,7 +488,7 @@ class AbstractShip {
 	}
 
 	public function hasMaxHardware(int $hardwareTypeID): bool {
-		return $this->getHardware($hardwareTypeID) == $this->shipType->getMaxHardware($hardwareTypeID);
+		return $this->getHardware($hardwareTypeID) === $this->shipType->getMaxHardware($hardwareTypeID);
 	}
 
 	public function getShields(): int {
@@ -758,7 +758,7 @@ class AbstractShip {
 
 	/**
 	 * @param array<AbstractPlayer> $targetPlayers
-	 * @return array{Player: \Smr\AbstractPlayer, TotalDamage: int, TotalDamagePerTargetPlayer?: array<int, int>, DeadBeforeShot: bool, Weapons: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlayer: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}}
+	 * @return TraderCombatResult
 	 */
 	public function shootPlayers(array $targetPlayers): array {
 		$thisPlayer = $this->getPlayer();
@@ -779,7 +779,7 @@ class AbstractShip {
 				}
 				$totalDamage = $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 				$results['TotalDamage'] += $totalDamage;
-				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['TargetPlayer']->getAccountID()] += $totalDamage;
+				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['Target']->getAccountID()] += $totalDamage;
 			}
 		}
 		if ($this->hasCDs()) {
@@ -787,7 +787,7 @@ class AbstractShip {
 			$results['Drones'] = $thisCDs->shootPlayer($thisPlayer, array_rand_value($targetPlayers));
 			$totalDamage = $results['Drones']['ActualDamage']['TotalDamage'];
 			$results['TotalDamage'] += $totalDamage;
-			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $totalDamage;
+			$results['TotalDamagePerTargetPlayer'][$results['Drones']['Target']->getAccountID()] += $totalDamage;
 		}
 		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLAYER));
 		$thisPlayer->increaseHOF($results['TotalDamage'], ['Combat', 'Player', 'Damage Done'], HOF_PUBLIC);
@@ -796,7 +796,7 @@ class AbstractShip {
 	}
 
 	/**
-	 * @return array{Player: \Smr\AbstractPlayer, TotalDamage: int, DeadBeforeShot: bool, Weapons: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetForces: \Smr\Force, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: ForceTakenDamageData, KillResults?: array{}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetForces: \Smr\Force, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: ForceTakenDamageData, KillResults?: array{}}}
+	 * @return ForceAttackerCombatResult
 	 */
 	public function shootForces(Force $forces): array {
 		$thisPlayer = $this->getPlayer();
@@ -841,7 +841,7 @@ class AbstractShip {
 	}
 
 	/**
-	 * @return array{Player: \Smr\AbstractPlayer, TotalDamage: int, DeadBeforeShot: bool, Weapons: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPort: \Smr\Port, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPort: \Smr\Port, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{}}}
+	 * @return PortAttackerCombatResult
 	 */
 	public function shootPort(Port $port): array {
 		$thisPlayer = $this->getPlayer();
@@ -885,7 +885,7 @@ class AbstractShip {
 	}
 
 	/**
-	 * @return array{Player: \Smr\AbstractPlayer, TotalDamage: int, DeadBeforeShot: bool, Weapons: array<int, array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlanet: \Smr\Planet, Hit: bool, WeaponDamage?: WeaponDamageData, ActualDamage?: TakenDamageData, KillResults?: array{}}>, Drones?: array{Weapon: \Smr\Combat\Weapon\AbstractWeapon, TargetPlanet: \Smr\Planet, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{}}}
+	 * @return PlanetAttackerCombatResult
 	 */
 	public function shootPlanet(Planet $planet): array {
 		$thisPlayer = $this->getPlayer();
@@ -930,24 +930,24 @@ class AbstractShip {
 			$this->getPlayer()->setUnderAttack(true);
 
 			$shieldDamage = $this->takeDamageToShields($damage['Shield']);
-			if (!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover'])) {
+			if (!$this->hasShields() && ($shieldDamage === 0 || $damage['Rollover'])) {
 				$cdMaxDamage = $damage['Armour'] - $shieldDamage;
 				$cdDamage = $this->takeDamageToCDs($cdMaxDamage);
-				if (!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover'])) {
+				if (!$this->hasCDs() && ($cdDamage === 0 || $damage['Rollover'])) {
 					$armourMaxDamage = $damage['Armour'] - $shieldDamage - $cdDamage;
 					$armourDamage = $this->takeDamageToArmour($armourMaxDamage);
 				}
 			}
 		}
 		return [
-						'KillingShot' => !$alreadyDead && $this->isDead(),
-						'TargetAlreadyDead' => $alreadyDead,
-						'Shield' => $shieldDamage,
-						'CDs' => $cdDamage,
-						'NumCDs' => $cdDamage / CD_ARMOUR,
-						'HasCDs' => $this->hasCDs(),
-						'Armour' => $armourDamage,
-						'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
+			'KillingShot' => !$alreadyDead && $this->isDead(),
+			'TargetAlreadyDead' => $alreadyDead,
+			'Shield' => $shieldDamage,
+			'CDs' => $cdDamage,
+			'NumCDs' => $cdDamage / CD_ARMOUR,
+			'HasCDs' => $this->hasCDs(),
+			'Armour' => $armourDamage,
+			'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
 		];
 	}
 
@@ -962,20 +962,20 @@ class AbstractShip {
 		$shieldDamage = 0;
 		if (!$alreadyDead) {
 			$shieldDamage = $this->takeDamageToShields($damage['Shield']);
-			if (!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover'])) { //skip CDs if it's mines
+			if (!$this->hasShields() && ($shieldDamage === 0 || $damage['Rollover'])) { //skip CDs if it's mines
 				$armourMaxDamage = $damage['Armour'] - $shieldDamage;
 				$armourDamage = $this->takeDamageToArmour($armourMaxDamage);
 			}
 		}
 		return [
-						'KillingShot' => !$alreadyDead && $this->isDead(),
-						'TargetAlreadyDead' => $alreadyDead,
-						'Shield' => $shieldDamage,
-						'CDs' => $cdDamage,
-						'NumCDs' => $cdDamage / CD_ARMOUR,
-						'HasCDs' => $this->hasCDs(),
-						'Armour' => $armourDamage,
-						'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
+			'KillingShot' => !$alreadyDead && $this->isDead(),
+			'TargetAlreadyDead' => $alreadyDead,
+			'Shield' => $shieldDamage,
+			'CDs' => $cdDamage,
+			'NumCDs' => $cdDamage / CD_ARMOUR,
+			'HasCDs' => $this->hasCDs(),
+			'Armour' => $armourDamage,
+			'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
 		];
 	}
 

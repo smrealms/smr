@@ -76,7 +76,7 @@ try {
 		foreach (ChessGame::getNPCMoveGames(true) as $chessGame) {
 			debug('Looking at game: ' . $chessGame->getChessGameID());
 			writeToEngine('position fen ' . $chessGame->getBoard()->getFEN(), false);
-			writeToEngine('go ' . ($chessGame->getCurrentTurnColour() == Colour::White ? 'w' : 'b') . 'time ' . UCI_TIME_PER_MOVE_MS, true, false);
+			writeToEngine('go ' . ($chessGame->getCurrentTurnColour() === Colour::White ? 'w' : 'b') . 'time ' . UCI_TIME_PER_MOVE_MS, true, false);
 			stream_set_blocking($fromEngine, true);
 			$move = '';
 			while (!str_starts_with($move, 'bestmove')) {

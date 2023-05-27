@@ -12,7 +12,7 @@ class BuyShipNamePreview extends PlayerPage {
 
 	public function __construct(
 		private readonly string $shipName,
-		private readonly int $cost
+		private readonly int $cost,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

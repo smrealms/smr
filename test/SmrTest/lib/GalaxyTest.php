@@ -34,8 +34,8 @@ class GalaxyTest extends BaseIntegrationSpec {
 
 		$galaxy = Galaxy::createGalaxy($gameID, $galaxyID);
 
-		$this->assertSame($gameID, $galaxy->getGameID());
-		$this->assertSame($galaxyID, $galaxy->getGalaxyID());
+		self::assertSame($gameID, $galaxy->getGameID());
+		self::assertSame($galaxyID, $galaxy->getGalaxyID());
 	}
 
 	public function test_set_galaxy_dimensions(): void {

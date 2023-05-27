@@ -17,7 +17,7 @@ class AllianceBroadcast extends PlayerPage {
 
 	public function __construct(
 		private readonly int $allianceID,
-		private readonly ?string $preview = null
+		private readonly ?string $preview = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

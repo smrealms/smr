@@ -34,7 +34,7 @@ abstract class PlanetPage extends PlayerPage {
 		$menuItems = [];
 		foreach (PlanetMenuOption::cases() as $option) {
 			// All planets must at least have the "Planet Main" link
-			if ($option != PlanetMenuOption::MAIN && !$planet->hasMenuOption($option)) {
+			if ($option !== PlanetMenuOption::MAIN && !$planet->hasMenuOption($option)) {
 				continue;
 			}
 			$container = match ($option) {

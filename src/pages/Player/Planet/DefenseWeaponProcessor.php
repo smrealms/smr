@@ -31,7 +31,7 @@ class DefenseWeaponProcessor extends PlayerPageProcessor {
 			$ship->removeWeapon($shipOrderID);
 		} elseif (Request::has('destroy')) {
 			// Destroy the weapon on the planet (but only if all mounts are filled)
-			if (count($planet->getMountedWeapons()) != $planet->getMaxMountedWeapons()) {
+			if (count($planet->getMountedWeapons()) !== $planet->getMaxMountedWeapons()) {
 				create_error('You can only destroy a mounted weapon once all mounts are filled!');
 			}
 			$planet->removeMountedWeapon(Request::getInt('destroy'));

@@ -12,7 +12,7 @@ class ShopGoods extends PlayerPage {
 	public string $file = 'shop_goods.php';
 
 	public function __construct(
-		private readonly ?string $tradeMessage = null
+		private readonly ?string $tradeMessage = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {
@@ -36,7 +36,7 @@ class ShopGoods extends PlayerPage {
 		//The player is sent here after trading and sees this if his offer is accepted.
 		$template->assign('TradeMsg', $this->tradeMessage);
 
-		if ($player->getLastPort() != $player->getSectorID()) {
+		if ($player->getLastPort() !== $player->getSectorID()) {
 			// test if we are searched, but only if we hadn't a previous trade here
 
 			$baseChance = PORT_SEARCH_BASE_CHANCE;

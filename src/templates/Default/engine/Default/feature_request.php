@@ -60,9 +60,9 @@ if (isset($FeatureRequests)) { ?>
 					<td class="left"><?php echo bbifyMessage($FeatureRequest['Message']); ?></td>
 					<td class="shrink noWrap top"><a href="<?php echo $FeatureRequest['CommentsHREF']; ?>">View (<?php echo $FeatureRequest['Comments']; ?>)</a></td><?php
 					if ($CanVote) { ?>
-						<td><input type="radio" name="favourite" value="<?php echo $FeatureRequest['RequestID']; ?>"<?php if ($FeatureRequest['VotedFor'] == 'FAVOURITE') { ?> checked="checked"<?php } ?>></td>
-						<td><input type="radio" name="vote[<?php echo $FeatureRequest['RequestID']; ?>]" value="YES"<?php if ($FeatureRequest['VotedFor'] == 'YES' || $FeatureRequest['VotedFor'] == 'FAVOURITE') { ?> checked="checked"<?php } ?>></td>
-						<td><input type="radio" name="vote[<?php echo $FeatureRequest['RequestID']; ?>]" value="NO"<?php if ($FeatureRequest['VotedFor'] == 'NO') { ?> checked="checked"<?php } ?>></td><?php
+						<td><input type="radio" name="favourite" value="<?php echo $FeatureRequest['RequestID']; ?>"<?php if ($FeatureRequest['VotedFor'] === 'FAVOURITE') { ?> checked="checked"<?php } ?>></td>
+						<td><input type="radio" name="vote[<?php echo $FeatureRequest['RequestID']; ?>]" value="YES"<?php if ($FeatureRequest['VotedFor'] === 'YES' || $FeatureRequest['VotedFor'] === 'FAVOURITE') { ?> checked="checked"<?php } ?>></td>
+						<td><input type="radio" name="vote[<?php echo $FeatureRequest['RequestID']; ?>]" value="NO"<?php if ($FeatureRequest['VotedFor'] === 'NO') { ?> checked="checked"<?php } ?>></td><?php
 					}
 					if ($FeatureModerator) {
 						?><td valign="middle" class="center"><input type="checkbox" name="set_status_ids[]" value="<?php echo $FeatureRequest['RequestID']; ?>"></td><?php

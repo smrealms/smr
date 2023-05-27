@@ -99,52 +99,6 @@ class ChessGame {
 		$this->winner = $dbRecord->getInt('winner_id');
 	}
 
-	public function rerunGame(bool $debugInfo = false): void {
-		$db = Database::getInstance();
-
-		$db->update(
-			'chess_game',
-			[
-				'end_time' => null,
-				'winner_id' => 0,
-			],
-			['chess_game_id' => $this->chessGameID],
-		);
-
-		$dbResult = $db->read('SELECT * FROM chess_game_moves WHERE chess_game_id = :chess_game_id ORDER BY move_id', [
-			'chess_game_id' => $db->escapeNumber($this->chessGameID),
-		]);
-		$db->delete('chess_game_moves', [
-			'chess_game_id' => $this->chessGameID,
-		]);
-		$this->moves = [];
-		$this->board = new Board();
-		unset($this->endDate);
-		$this->winner = 0;
-
-		try {
-			foreach ($dbResult->records() as $dbRecord) {
-				$start_x = $dbRecord->getInt('start_x');
-				$start_y = $dbRecord->getInt('start_y');
-				$end_x = $dbRecord->getInt('end_x');
-				$end_y = $dbRecord->getInt('end_y');
-				$colour = $dbRecord->getInt('move_id') % 2 == 1 ? Colour::White : Colour::Black;
-				$promotePieceID = $dbRecord->getInt('promote_piece_id');
-				if ($debugInfo === true) {
-					echo 'x=', $start_x, ', y=', $start_y, ', endX=', $end_x, ', endY=', $end_y, ', colour=', $colour->name, EOL;
-				}
-				if ($this->tryMove($start_x, $start_y, $end_x, $end_y, $colour, $promotePieceID) != 0) {
-					break;
-				}
-			}
-		} catch (Exception $e) {
-			if ($debugInfo === true) {
-				echo $e->getMessage() . EOL . $e->getTraceAsString() . EOL;
-			}
-			// We probably tried an invalid move - move on.
-		}
-	}
-
 	public function getBoard(): Board {
 		if (!isset($this->board)) {
 			$this->getMoves();
@@ -169,7 +123,7 @@ class ChessGame {
 		if ($lastMove === null) {
 			return false;
 		}
-		return ($x == $lastMove['From']['X'] && $y == $lastMove['From']['Y']) || ($x == $lastMove['To']['X'] && $y == $lastMove['To']['Y']);
+		return ($x === $lastMove['From']['X'] && $y === $lastMove['From']['Y']) || ($x === $lastMove['To']['X'] && $y === $lastMove['To']['Y']);
 	}
 
 	/**
@@ -212,11 +166,11 @@ class ChessGame {
 					enPassant: $moveInfo['EnPassant'],
 					promotionPieceID: $promotionPieceID,
 				);
-				$mate = $dbRecord->getNullableString('checked') == 'MATE';
+				$mate = $dbRecord->getNullableString('checked') === 'MATE';
 			}
 			if (!$mate && $this->hasEnded()) {
 				if ($this->hasWinner()) {
-					$this->moves[] = ($this->getWinner() == $this->getWhiteID() ? 'Black' : 'White') . ' Resigned.';
+					$this->moves[] = ($this->getWinner() === $this->getWhiteID() ? 'Black' : 'White') . ' Resigned.';
 				} elseif (count($this->moves) < 2) {
 					$this->moves[] = 'Game Cancelled.';
 				} else {
@@ -304,14 +258,14 @@ class ChessGame {
 			. ($endY + 1)
 			. ($promotionPieceID === null ? '' : ChessPiece::getSymbolForPiece($promotionPieceID, $playerColour))
 			. ' '
-			. ($checking === null ? '' : ($checking == 'CHECK' ? '+' : '++'))
+			. ($checking === null ? '' : ($checking === 'CHECK' ? '+' : '++'))
 			. ($enPassant ? ' e.p.' : '');
 	}
 
 	public function isCheckmated(Colour $colour): bool {
 		$king = null;
 		foreach ($this->board->getPieces($colour) as $piece) {
-			if ($piece->pieceID == ChessPiece::KING) {
+			if ($piece->pieceID === ChessPiece::KING) {
 				$king = $piece;
 				break;
 			}
@@ -343,7 +297,7 @@ class ChessGame {
 	 * @param string $move Algebraic notation like "b2b4"
 	 */
 	public function tryAlgebraicMove(string $move): void {
-		if (strlen($move) != 4 && strlen($move) != 5) {
+		if (strlen($move) !== 4 && strlen($move) !== 5) {
 			throw new Exception('Move of length "' . strlen($move) . '" is not valid, full move: ' . $move);
 		}
 		$file = $move[0];
@@ -368,19 +322,19 @@ class ChessGame {
 		if ($this->hasEnded()) {
 			throw new UserError('This game is already over');
 		}
-		if ($this->getCurrentTurnColour() != $forColour) {
+		if ($this->getCurrentTurnColour() !== $forColour) {
 			throw new UserError('It is not your turn to move');
 		}
 
 		$p = $this->board->getPiece($x, $y);
-		if ($p->colour != $forColour) {
+		if ($p->colour !== $forColour) {
 			throw new UserError('That is not your piece to move!');
 		}
 
 		$moves = $p->getPossibleMoves($this->board);
 		$moveIsLegal = false;
 		foreach ($moves as $move) {
-			if ($move[0] == $toX && $move[1] == $toY) {
+			if ($move[0] === $toX && $move[1] === $toY) {
 				$moveIsLegal = true;
 				break;
 			}
@@ -453,7 +407,7 @@ class ChessGame {
 		]);
 
 		$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Total Taken'], HOF_PUBLIC);
-		if ($moveInfo['PieceTaken'] != null) {
+		if ($moveInfo['PieceTaken'] !== null) {
 			$pieceTakenSymbol = $moveInfo['PieceTaken']->getPieceSymbol();
 			$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Opponent Pieces Taken', 'Total'], HOF_PUBLIC);
 			$otherPlayer->increaseHOF(1, [$chessType, 'Moves', 'Own Pieces Taken', 'Total'], HOF_PUBLIC);
@@ -461,14 +415,14 @@ class ChessGame {
 			$otherPlayer->increaseHOF(1, [$chessType, 'Moves', 'Own Pieces Taken', $pieceTakenSymbol], HOF_PUBLIC);
 		}
 
-		if ($checking == 'MATE') {
+		if ($checking === 'MATE') {
 			$message = 'You have checkmated your opponent, congratulations!';
 			$this->setWinner($this->getColourID($forColour));
 			$otherPlayer->sendMessageFromCasino('You have just lost [chess=' . $this->getChessGameID() . '] against [player=' . $currentPlayer->getPlayerID() . '].');
 		} else {
 			$message = ''; // non-mating valid move, no message
 			$otherPlayer->sendMessageFromCasino('It is now your turn in [chess=' . $this->getChessGameID() . '] against [player=' . $currentPlayer->getPlayerID() . '].');
-			if ($checking == 'CHECK') {
+			if ($checking === 'CHECK') {
 				$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Check Given'], HOF_PUBLIC);
 				$otherPlayer->increaseHOF(1, [$chessType, 'Moves', 'Check Received'], HOF_PUBLIC);
 			}
@@ -596,7 +550,7 @@ class ChessGame {
 	}
 
 	public function isCurrentTurn(int $accountID): bool {
-		return $accountID == $this->getCurrentTurnAccountID();
+		return $accountID === $this->getCurrentTurnAccountID();
 	}
 
 	public function isNPCGame(): bool {

@@ -12,7 +12,7 @@ use Smr\Request;
 class BuyGalaxyMapProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $locationID
+		private readonly int $locationID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

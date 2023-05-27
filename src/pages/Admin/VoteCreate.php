@@ -16,7 +16,7 @@ class VoteCreate extends AccountPage {
 		private readonly ?string $previewVote = null,
 		private readonly ?int $days = null,
 		private readonly ?string $previewOption = null,
-		private readonly ?int $voteID = null
+		private readonly ?int $voteID = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

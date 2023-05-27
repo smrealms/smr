@@ -12,11 +12,11 @@ class VoteProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly int $voteID,
-		private readonly Page $targetPage
+		private readonly Page $targetPage,
 	) {}
 
 	public function build(Account $account): never {
-		if ($account->getAccountID() == ACCOUNT_ID_NHL) {
+		if ($account->getAccountID() === ACCOUNT_ID_NHL) {
 			create_error('This account is not allowed to cast a vote!');
 		}
 

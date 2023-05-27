@@ -83,7 +83,7 @@ if (isset($GameID)) { ?>
 					<td>
 						<select name="race_id"><?php
 							foreach ($ThisPlayer->getGame()->getPlayableRaceIDs() as $RaceID) {
-								?><option value="<?php echo $RaceID; ?>" <?php if ($RaceID == $ThisPlayer->getRaceID()) { ?> selected<?php } ?>><?php echo Race::getName($RaceID); ?></option><?php
+								?><option value="<?php echo $RaceID; ?>" <?php if ($RaceID === $ThisPlayer->getRaceID()) { ?> selected<?php } ?>><?php echo Race::getName($RaceID); ?></option><?php
 							} ?>
 						</select>
 						<br />
@@ -253,7 +253,7 @@ if (isset($GameID)) { ?>
 				$time = Epoch::time();
 				$offset = $ThisAccount->getOffset();
 				for ($i = -12; $i <= 11; $i++) {
-					?><option value="<?php echo $i; ?>"<?php if ($offset == $i) { ?> selected="selected"<?php } ?>><?php echo date($ThisAccount->getTimeFormat(), $time + $i * 3600); ?></option><?php
+					?><option value="<?php echo $i; ?>"<?php if ($offset === $i) { ?> selected="selected"<?php } ?>><?php echo date($ThisAccount->getTimeFormat(), $time + $i * 3600); ?></option><?php
 				} ?>
 				</select>
 			</td>
@@ -352,8 +352,8 @@ if (isset($GameID)) { ?>
 				<select name="template"><?php
 					foreach (Globals::getAvailableTemplates() as $Template) {
 						foreach (Globals::getAvailableColourSchemes($Template) as $ColourScheme) {
-							$selected = ($ThisAccount->getTemplate() == $Template &&
-							             $ThisAccount->getColourScheme() == $ColourScheme &&
+							$selected = ($ThisAccount->getTemplate() === $Template &&
+							             $ThisAccount->getColourScheme() === $ColourScheme &&
 							             $ThisAccount->isDefaultCSSEnabled()) ? 'selected' : '';
 							$name = $Template . ' - ' . $ColourScheme;
 							?><option value="<?php echo $name; ?>" <?php echo $selected; ?>><?php echo $name; ?></option><?php

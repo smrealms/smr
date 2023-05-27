@@ -13,7 +13,7 @@ use Smr\Request;
 class AccountEditProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $editAccountID
+		private readonly int $editAccountID,
 	) {}
 
 	public function build(Account $account): never {
@@ -24,7 +24,7 @@ class AccountEditProcessor extends AccountPageProcessor {
 
 		// request
 		$donation = Request::getInt('donation');
-		$smr_credit = Request::has('smr_credit');
+		$smrCreditsForDonation = Request::has('smr_credit');
 		$rewardCredits = Request::getInt('grant_credits');
 		$choise = Request::get('choise', ''); // no radio button selected by default
 		$reason_pre_select = Request::getInt('reason_pre_select');
@@ -38,7 +38,7 @@ class AccountEditProcessor extends AccountPageProcessor {
 
 		$actions = [];
 
-		if (!empty($donation)) {
+		if ($donation > 0) {
 			// add entry to account donated table
 			$db->insert('account_donated', [
 				'account_id' => $account_id,
@@ -47,14 +47,14 @@ class AccountEditProcessor extends AccountPageProcessor {
 			]);
 
 			// add the credits to the players account - if requested
-			if (!empty($smr_credit)) {
+			if ($smrCreditsForDonation) {
 				$curr_account->increaseSmrCredits($donation * CREDITS_PER_DOLLAR);
 			}
 
 			$actions[] = 'added $' . $donation;
 		}
 
-		if (!empty($rewardCredits)) {
+		if ($rewardCredits > 0) {
 			$curr_account->increaseSmrRewardCredits($rewardCredits);
 			$actions[] = 'added ' . $rewardCredits . ' reward credits';
 		}
@@ -74,7 +74,7 @@ class AccountEditProcessor extends AccountPageProcessor {
 			}
 
 			$closeByRequestNote = Request::get('close_by_request_note');
-			if (empty($closeByRequestNote)) {
+			if ($closeByRequestNote === '') {
 				$closeByRequestNote = $specialClose;
 			}
 
@@ -82,13 +82,13 @@ class AccountEditProcessor extends AccountPageProcessor {
 			$actions[] = 'added ' . $specialClose . ' ban';
 		}
 
-		if ($choise == 'reopen') {
+		if ($choise === 'reopen') {
 			//do we have points
 			$curr_account->removePoints($points);
 			$curr_account->unbanAccount($account);
 			$actions[] = 'reopened account and removed ' . $points . ' points';
 		} elseif ($points > 0) {
-			if ($choise == 'individual') {
+			if ($choise === 'individual') {
 				$reason_id = $db->insert('closing_reason', [
 					'reason' => $reason_msg,
 				]);
@@ -112,17 +112,17 @@ class AccountEditProcessor extends AccountPageProcessor {
 
 		if (Request::has('mailban')) {
 			$mailban = Request::get('mailban');
-			if ($mailban == 'remove') {
+			if ($mailban === 'remove') {
 				$curr_account->setMailBanned(Epoch::time());
 				$actions[] = 'removed mailban';
-			} elseif ($mailban == 'add_days') {
+			} elseif ($mailban === 'add_days') {
 				$days = Request::getInt('mailban_days');
 				$curr_account->increaseMailBanned($days * 86400);
 				$actions[] = 'mail banned for ' . $days . ' days';
 			}
 		}
 
-		if ($veteran_status != $curr_account->isVeteranForced()) {
+		if ($veteran_status !== $curr_account->isVeteranForced()) {
 			$db->update(
 				'account',
 				['veteran' => $db->escapeBoolean($veteran_status)],
@@ -131,12 +131,12 @@ class AccountEditProcessor extends AccountPageProcessor {
 			$actions[] = 'set the veteran status to ' . $db->escapeBoolean($veteran_status);
 		}
 
-		if ($logging_status != $curr_account->isLoggingEnabled()) {
+		if ($logging_status !== $curr_account->isLoggingEnabled()) {
 			$curr_account->setLoggingEnabled($logging_status);
 			$actions[] = 'set the logging status to ' . $logging_status;
 		}
 
-		if ($except != '') {
+		if ($except !== '') {
 			$db->insert('account_exceptions', [
 				'account_id' => $account_id,
 				'reason' => $except,
@@ -145,7 +145,7 @@ class AccountEditProcessor extends AccountPageProcessor {
 		}
 
 		foreach ($names as $game_id => $new_name) {
-			if (empty($new_name)) {
+			if ($new_name === '') {
 				continue;
 			}
 			$editPlayer = Player::getPlayer($account_id, $game_id);
@@ -172,91 +172,88 @@ class AccountEditProcessor extends AccountPageProcessor {
 			]);
 		}
 
-		if (!empty($delete)) {
-			foreach ($delete as $game_id => $value) {
-				if ($value == 'TRUE') {
-					// Check for bank transactions into the alliance account
-					$dbResult = $db->read('SELECT 1 FROM alliance_bank_transactions WHERE payee_id = :payee_id AND game_id = :game_id LIMIT 1', [
-						'payee_id' => $db->escapeNumber($account_id),
-						'game_id' => $db->escapeNumber($game_id),
-					]);
-					if ($dbResult->hasRecord()) {
-						// Can't delete
-						$actions[] = 'player has made alliance transaction';
-						continue;
-					}
-
-					$sql = 'account_id = :account_id AND game_id = :game_id';
-					$sqlParams = [
-						'account_id' => $db->escapeNumber($account_id),
-						'game_id' => $db->escapeNumber($game_id),
-					];
-
-					// Check anon accounts for transactions
-					$dbResult = $db->read('SELECT 1 FROM anon_bank_transactions WHERE ' . $sql . ' LIMIT 1', $sqlParams);
-					if ($dbResult->hasRecord()) {
-						// Can't delete
-						$actions[] = 'player has made anonymous transaction';
-						continue;
-					}
-
-					$db->delete('alliance_thread', [
-						'sender_id' => $account_id,
-						'game_id' => $game_id,
-					]);
-					$db->delete('bounty', $sqlParams);
-					$db->delete('galactic_post_applications', $sqlParams);
-					$db->delete('galactic_post_article', [
-						'writer_id' => $account_id,
-						'game_id' => $game_id,
-					]);
-					$db->delete('galactic_post_writer', $sqlParams);
-					$db->delete('message', $sqlParams);
-					$db->write('DELETE FROM message_notify
-								WHERE (from_id = :account_id OR to_id = :account_id) AND game_id = :game_id', $sqlParams);
-					$db->update(
-						'planet',
-						[
-							'owner_id' => 0,
-							'planet_name' => '',
-							'password' => '',
-							'shields' => 0,
-							'drones' => 0,
-							'credits' => 0,
-							'bonds' => 0,
-						],
-						[
-							'owner_id' => $account_id,
-							'game_id' => $game_id,
-						],
-					);
-					$db->delete('player_attacks_planet', $sqlParams);
-					$db->delete('player_attacks_port', $sqlParams);
-					$db->delete('player_has_alliance_role', $sqlParams);
-					$db->delete('player_has_drinks', $sqlParams);
-					$db->delete('player_has_relation', $sqlParams);
-					$db->delete('player_has_ticker', $sqlParams);
-					$db->delete('player_has_ticket', $sqlParams);
-					$db->delete('player_has_unread_messages', $sqlParams);
-					$db->delete('player_plotted_course', $sqlParams);
-					$db->delete('player_read_thread', $sqlParams);
-					$db->delete('player_visited_port', $sqlParams);
-					$db->delete('player_visited_sector', $sqlParams);
-					$db->delete('player_votes_pact', $sqlParams);
-					$db->delete('player_votes_relation', $sqlParams);
-					$db->delete('ship_has_cargo', $sqlParams);
-					$db->delete('ship_has_hardware', $sqlParams);
-					$db->delete('ship_has_illusion', $sqlParams);
-					$db->delete('ship_has_weapon', $sqlParams);
-					$db->delete('ship_is_cloaked', $sqlParams);
-					$db->delete('player', $sqlParams);
-
-					$db->update('active_session', ['game_id' => 0], $sqlParams);
-
-					$actions[] = 'deleted player from game ' . $game_id;
+		foreach ($delete as $game_id => $value) {
+			if ($value === 'TRUE') {
+				// Check for bank transactions into the alliance account
+				$dbResult = $db->read('SELECT 1 FROM alliance_bank_transactions WHERE payee_id = :payee_id AND game_id = :game_id LIMIT 1', [
+					'payee_id' => $db->escapeNumber($account_id),
+					'game_id' => $db->escapeNumber($game_id),
+				]);
+				if ($dbResult->hasRecord()) {
+					// Can't delete
+					$actions[] = 'player has made alliance transaction';
+					continue;
 				}
-			}
 
+				$sql = 'account_id = :account_id AND game_id = :game_id';
+				$sqlParams = [
+					'account_id' => $db->escapeNumber($account_id),
+					'game_id' => $db->escapeNumber($game_id),
+				];
+
+				// Check anon accounts for transactions
+				$dbResult = $db->read('SELECT 1 FROM anon_bank_transactions WHERE ' . $sql . ' LIMIT 1', $sqlParams);
+				if ($dbResult->hasRecord()) {
+					// Can't delete
+					$actions[] = 'player has made anonymous transaction';
+					continue;
+				}
+
+				$db->delete('alliance_thread', [
+					'sender_id' => $account_id,
+					'game_id' => $game_id,
+				]);
+				$db->delete('bounty', $sqlParams);
+				$db->delete('galactic_post_applications', $sqlParams);
+				$db->delete('galactic_post_article', [
+					'writer_id' => $account_id,
+					'game_id' => $game_id,
+				]);
+				$db->delete('galactic_post_writer', $sqlParams);
+				$db->delete('message', $sqlParams);
+				$db->write('DELETE FROM message_notify
+							WHERE (from_id = :account_id OR to_id = :account_id) AND game_id = :game_id', $sqlParams);
+				$db->update(
+					'planet',
+					[
+						'owner_id' => 0,
+						'planet_name' => '',
+						'password' => '',
+						'shields' => 0,
+						'drones' => 0,
+						'credits' => 0,
+						'bonds' => 0,
+					],
+					[
+						'owner_id' => $account_id,
+						'game_id' => $game_id,
+					],
+				);
+				$db->delete('player_attacks_planet', $sqlParams);
+				$db->delete('player_attacks_port', $sqlParams);
+				$db->delete('player_has_alliance_role', $sqlParams);
+				$db->delete('player_has_drinks', $sqlParams);
+				$db->delete('player_has_relation', $sqlParams);
+				$db->delete('player_has_ticker', $sqlParams);
+				$db->delete('player_has_ticket', $sqlParams);
+				$db->delete('player_has_unread_messages', $sqlParams);
+				$db->delete('player_plotted_course', $sqlParams);
+				$db->delete('player_read_thread', $sqlParams);
+				$db->delete('player_visited_port', $sqlParams);
+				$db->delete('player_visited_sector', $sqlParams);
+				$db->delete('player_votes_pact', $sqlParams);
+				$db->delete('player_votes_relation', $sqlParams);
+				$db->delete('ship_has_cargo', $sqlParams);
+				$db->delete('ship_has_hardware', $sqlParams);
+				$db->delete('ship_has_illusion', $sqlParams);
+				$db->delete('ship_has_weapon', $sqlParams);
+				$db->delete('ship_is_cloaked', $sqlParams);
+				$db->delete('player', $sqlParams);
+
+				$db->update('active_session', ['game_id' => 0], $sqlParams);
+
+				$actions[] = 'deleted player from game ' . $game_id;
+			}
 		}
 
 		//get his login name

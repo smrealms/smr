@@ -12,7 +12,7 @@ class AllianceTreatiesProcessor extends PlayerPageProcessor {
 	public function __construct(
 		private readonly int $otherAllianceID,
 		private readonly bool $accept,
-		private readonly bool $allianceBankAccess = false
+		private readonly bool $allianceBankAccess = false,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

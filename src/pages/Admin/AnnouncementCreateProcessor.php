@@ -12,7 +12,7 @@ class AnnouncementCreateProcessor extends AccountPageProcessor {
 
 	public function build(Account $account): never {
 		$message = Request::get('message');
-		if (Request::get('action') == 'Preview announcement') {
+		if (Request::get('action') === 'Preview announcement') {
 			$container = new AnnouncementCreate($message);
 			$container->go();
 		}

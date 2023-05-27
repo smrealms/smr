@@ -16,7 +16,7 @@ class RouteIterator {
 	private TransactionType $transaction = TransactionType::Buy;
 
 	public function __construct(
-		private MultiplePortRoute $route
+		private MultiplePortRoute $route,
 	) {
 		$oneWayRoutes = $route->getOneWayRoutes();
 		$this->routeIterator = new InfiniteIterator(new ArrayIterator($oneWayRoutes));
@@ -49,7 +49,7 @@ class RouteIterator {
 	 * Advance to the next action on the route
 	 */
 	public function next(): void {
-		if ($this->transaction == TransactionType::Sell) {
+		if ($this->transaction === TransactionType::Sell) {
 			$this->routeIterator->next();
 		}
 		$this->transaction = $this->transaction->opposite();

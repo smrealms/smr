@@ -6,7 +6,6 @@ use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
-use Smr\Globals;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
@@ -23,7 +22,7 @@ class AllianceMessageBoard extends PlayerPage {
 		private readonly int $allianceID,
 		public ?string $preview = null,
 		public ?string $topic = null,
-		public ?bool $allianceEyesOnly = null
+		public ?bool $allianceEyesOnly = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {
@@ -37,8 +36,8 @@ class AllianceMessageBoard extends PlayerPage {
 
 		$mbWrite = true;
 		$in_alliance = true;
-		if ($alliance->getAllianceID() != $player->getAllianceID()) {
-			if (!in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+		if ($alliance->getAllianceID() !== $player->getAllianceID()) {
+			if (!$player->isObserver()) {
 				$in_alliance = false;
 			}
 			$dbResult = $db->read('SELECT 1 FROM alliance_treaties
@@ -114,11 +113,11 @@ class AllianceMessageBoard extends PlayerPage {
 
 				// Determine the thread author display name
 				$authorAccountID = $dbRecord->getInt('author_account_id');
-				if ($authorAccountID == ACCOUNT_ID_PLANET) {
+				if ($authorAccountID === ACCOUNT_ID_PLANET) {
 					$playerName = 'Planet Reporter';
-				} elseif ($authorAccountID == ACCOUNT_ID_BANK_REPORTER) {
+				} elseif ($authorAccountID === ACCOUNT_ID_BANK_REPORTER) {
 					$playerName = 'Bank Reporter';
-				} elseif ($authorAccountID == ACCOUNT_ID_ADMIN) {
+				} elseif ($authorAccountID === ACCOUNT_ID_ADMIN) {
 					$playerName = 'Game Admins';
 				} else {
 					try {
@@ -134,7 +133,7 @@ class AllianceMessageBoard extends PlayerPage {
 					...$player->SQLID,
 					'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
 				]);
-				$canDelete = $player->getAccountID() == $authorAccountID || $dbResult2->record()->getBoolean('mb_messages');
+				$canDelete = $player->getAccountID() === $authorAccountID || $dbResult2->record()->getBoolean('mb_messages');
 				if ($canDelete) {
 					$container = new AllianceMessageBoardDeleteThreadProcessor($allianceID, $this, $threadID);
 					$threads[$i]['DeleteHref'] = $container->href();
@@ -151,7 +150,7 @@ class AllianceMessageBoard extends PlayerPage {
 		}
 		$template->assign('Threads', $threads);
 
-		if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+		if ($mbWrite || $player->isObserver()) {
 			$container = new AllianceMessageBoardAddProcessor($allianceID, $this);
 			$template->assign('CreateNewThreadFormHref', $container->href());
 			$template->assign('Preview', $this->preview);

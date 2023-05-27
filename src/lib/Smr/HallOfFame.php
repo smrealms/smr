@@ -28,7 +28,7 @@ class HallOfFame {
 		$categories = [];
 		$subcategories = [];
 		foreach (Player::getHOFVis() as $hofType => $hofVis) {
-			if (!in_array($hofVis, $allowedVis)) {
+			if (!in_array($hofVis, $allowedVis, true)) {
 				// Not allowed to view
 				continue;
 			}
@@ -58,7 +58,7 @@ class HallOfFame {
 				if (count($extra) <= 2) {
 					// Subcategory is a complete HOF type
 					$rank = self::getHofRank($hofType, $account_id, $game_id);
-					if ($rank['Rank'] != 0) {
+					if ($rank['Rank'] !== 0) {
 						$rankMsg = ' (#' . $rank['Rank'] . ')';
 					}
 					$containerViewType = $hofType;
@@ -90,8 +90,8 @@ class HallOfFame {
 	public static function applyHofVisibilityMask(float $amount, string $vis, ?int $gameID, int $accountID): string|float {
 		$session = Session::getInstance();
 		$account = $session->getAccount();
-		if (($vis == HOF_PRIVATE && $account->getAccountID() != $accountID) ||
-		    ($vis == HOF_ALLIANCE && isset($gameID) &&
+		if (($vis === HOF_PRIVATE && $account->getAccountID() !== $accountID) ||
+		    ($vis === HOF_ALLIANCE && isset($gameID) &&
 		     !Game::getGame($gameID)->hasEnded() &&
 		     !Player::getPlayer($accountID, $gameID)->sameAlliance($session->getPlayer()))) {
 			return '-';
@@ -112,11 +112,11 @@ class HallOfFame {
 		];
 
 		$rank = ['Amount' => 0, 'Rank' => 0];
-		if ($viewType == HOF_TYPE_DONATION) {
+		if ($viewType === HOF_TYPE_DONATION) {
 			$dbResult = $db->read('SELECT IFNULL(SUM(amount), 0) as amount FROM account_donated WHERE account_id = :account_id', [
 				'account_id' => $db->escapeNumber($accountID),
 			]);
-		} elseif ($viewType == HOF_TYPE_USER_SCORE) {
+		} elseif ($viewType === HOF_TYPE_USER_SCORE) {
 			$statements = Account::getUserScoreCaseStatement();
 			$dbResult = $db->read('SELECT ' . $statements['CASE'] . ' amount FROM (SELECT type, SUM(amount) amount FROM player_hof WHERE type IN (:hof_types) AND account_id = :account_id' . $gameIDSql . ' GROUP BY account_id,type) x', [
 				'hof_types' => $db->escapeArray($statements['IN']),
@@ -139,11 +139,11 @@ class HallOfFame {
 		$vis = Player::getHOFVis()[$viewType];
 		$rank['Amount'] = self::applyHofVisibilityMask($realAmount, $vis, $gameID, $accountID);
 
-		if ($viewType == HOF_TYPE_DONATION) {
+		if ($viewType === HOF_TYPE_DONATION) {
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM account_donated GROUP BY account_id HAVING SUM(amount) > :amount) x', [
 				'amount' => $db->escapeNumber($realAmount),
 			]);
-		} elseif ($viewType == HOF_TYPE_USER_SCORE) {
+		} elseif ($viewType === HOF_TYPE_USER_SCORE) {
 			$statements = Account::getUserScoreCaseStatement();
 			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type IN (:hof_types)' . $gameIDSql . ' GROUP BY account_id HAVING ' . $statements['CASE'] . ' > :amount) x', [
 				'hof_types' => $db->escapeArray($statements['IN']),
@@ -175,7 +175,7 @@ class HallOfFame {
 			$hofAccount = Account::getAccount($accountID);
 		}
 		$bold = '';
-		if ($accountID == $account->getAccountID()) {
+		if ($accountID === $account->getAccountID()) {
 			$bold = 'class="bold"';
 		}
 		$return = ('<tr>');

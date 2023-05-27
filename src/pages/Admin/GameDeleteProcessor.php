@@ -12,7 +12,7 @@ use Smr\Request;
 class GameDeleteProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $deleteGameID
+		private readonly int $deleteGameID,
 	) {}
 
 	public function build(Account $account): never {

@@ -38,7 +38,7 @@ class AllianceInvitePlayerProcessor extends PlayerPageProcessor {
 
 		[join_alliance=' . $player->getAllianceID() . ']
 		';
-		if (!empty($addMessage)) {
+		if ($addMessage !== '') {
 			$msg .= '<br />' . $addMessage;
 		}
 

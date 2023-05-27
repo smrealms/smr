@@ -83,7 +83,7 @@ class Galaxy {
 		protected readonly int $gameID,
 		protected readonly int $galaxyID,
 		bool $create = false,
-		DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [
@@ -200,7 +200,7 @@ class Galaxy {
 	public function getStartSector(): int {
 		if (!isset($this->startSector)) {
 			$this->startSector = 1;
-			if ($this->galaxyID != 1) {
+			if ($this->galaxyID !== 1) {
 				$galaxies = self::getGameGalaxies($this->gameID);
 				for ($i = 1; $i < $this->galaxyID; $i++) {
 					$this->startSector += $galaxies[$i]->getSize();
@@ -369,7 +369,7 @@ class Galaxy {
 			// Try again if any sector has 0 connections (except 1-sector gals)
 			if ($this->getSize() > 1) {
 				foreach ($this->getSectors() as $galSector) {
-					if ($galSector->getNumberOfConnections() == 0) {
+					if ($galSector->getNumberOfConnections() === 0) {
 						$problem = true;
 						break;
 					}
@@ -400,7 +400,7 @@ class Galaxy {
 	 */
 	public function contains(int|Sector $sectorID): bool {
 		if ($sectorID instanceof Sector) {
-			return $sectorID->getGalaxyID() == $this->getGalaxyID();
+			return $sectorID->getGalaxyID() === $this->getGalaxyID();
 		}
 		return $sectorID >= $this->getStartSector() && $sectorID <= $this->getEndSector();
 	}
@@ -410,7 +410,7 @@ class Galaxy {
 	}
 
 	public function equals(Galaxy $otherGalaxy): bool {
-		return $otherGalaxy->getGalaxyID() == $this->getGalaxyID() && $otherGalaxy->getGameID() == $this->getGameID();
+		return $otherGalaxy->getGalaxyID() === $this->getGalaxyID() && $otherGalaxy->getGameID() === $this->getGameID();
 	}
 
 }

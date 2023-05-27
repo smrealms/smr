@@ -15,7 +15,7 @@ class TradeGood {
 	 * @return array<int, self>
 	 */
 	public static function getAll(): array {
-		if (empty(self::$CACHE_GOODS)) {
+		if (count(self::$CACHE_GOODS) === 0) {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM good');
 			foreach ($dbResult->records() as $dbRecord) {

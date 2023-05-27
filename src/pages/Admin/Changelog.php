@@ -17,7 +17,7 @@ class Changelog extends AccountPage {
 	public function __construct(
 		private readonly string $changeTitle = '',
 		private readonly string $changeMessage = '',
-		private readonly string $affectedDb = ''
+		private readonly string $affectedDb = '',
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -78,7 +78,7 @@ class Changelog extends AccountPage {
 				$container = new ChangelogAddProcessor($version_id);
 				$template->assign('AddHREF', $container->href());
 
-				if (!empty($this->changeTitle)) {
+				if ($this->changeTitle !== '') {
 					$version['changes'][] = [
 						'title' => '<span class="red">PREVIEW: </span>' . $this->changeTitle,
 						'message' => $this->changeMessage,

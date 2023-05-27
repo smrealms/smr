@@ -75,7 +75,7 @@ function check_for_registration($fp, string $nick, string $channel, Closure $cal
 	}
 
 	// is the user part of this alliance? (no need to check for 0, cannot happen at this point in code)
-	if ($player->getAllianceID() != $alliance->getAllianceID()) {
+	if ($player->getAllianceID() !== $alliance->getAllianceID()) {
 		if ($validationMessages === true) {
 			fwrite($fp, 'KICK ' . $channel . ' ' . $nick . ' :You are not a member of this alliance!' . EOL);
 		}
@@ -89,13 +89,13 @@ function check_for_registration($fp, string $nick, string $channel, Closure $cal
  * @param resource $fp
  */
 function channel_msg_with_registration($fp, Message $msg): bool {
-	if (preg_match('/^!(money|forces|seed|seedlist|op|sd)\s/i', $msg->text)) {
+	if (preg_match('/^!(money|forces|seed|seedlist|op|sd)\s/i', $msg->text) === 1) {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
 
 		// check if the query is in public channel
-		if ($channel == '#smr' || $channel == '#smr-bar') {
+		if ($channel === '#smr' || $channel === '#smr-bar') {
 			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', that command can only be used in an alliance controlled channel.' . EOL);
 			return true;
 		}
@@ -171,7 +171,7 @@ function channel_msg_seen($fp, Message $msg): bool {
 
 	// MrSpock, please look a bit closer at the memberlist of this channel.
 
-	if (preg_match('/^!seen\s(.*)$/i', $msg->text, $args)) {
+	if (preg_match('/^!seen\s(.*)$/i', $msg->text, $args) === 1) {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -180,7 +180,7 @@ function channel_msg_seen($fp, Message $msg): bool {
 		echo_r('[SEEN] by ' . $nick . ' in ' . $channel . ' for ' . $seennick);
 
 		// if the user asks for himself
-		if ($nick == $seennick) {
+		if ($nick === $seennick) {
 			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', do I look like a mirror?' . EOL);
 			return true;
 		}
@@ -243,7 +243,7 @@ function channel_msg_seen($fp, Message $msg): bool {
  */
 function channel_msg_money($fp, Message $msg, AbstractPlayer $player): bool {
 
-	if ($msg->text == '!money') {
+	if ($msg->text === '!money') {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -267,7 +267,7 @@ function channel_msg_money($fp, Message $msg, AbstractPlayer $player): bool {
  */
 function channel_msg_timer($fp, Message $msg): bool {
 
-	if (preg_match('/^!timer(\s\d+)?(\s.+)?$/i', $msg->text, $args)) {
+	if (preg_match('/^!timer(\s\d+)?(\s.+)?$/i', $msg->text, $args) === 1) {
 
 		global $events;
 
@@ -279,7 +279,7 @@ function channel_msg_timer($fp, Message $msg): bool {
 
 			fwrite($fp, 'PRIVMSG ' . $channel . ' :The following timers have been defined for this channel:' . EOL);
 			foreach ($events as $event) {
-				if ($event[2] == $channel) {
+				if ($event[2] === $channel) {
 					fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $event[1] . ' in ' . format_time($event[0] - time()) . EOL);
 				}
 			}
@@ -314,7 +314,7 @@ function channel_msg_timer($fp, Message $msg): bool {
  * @param resource $fp
  */
 function channel_msg_8ball($fp, Message $msg): bool {
-	if (preg_match('/^!8ball (.*)$/i', $msg->text, $args)) {
+	if (preg_match('/^!8ball (.*)$/i', $msg->text, $args) === 1) {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -334,7 +334,7 @@ function channel_msg_8ball($fp, Message $msg): bool {
  * @param resource $fp
  */
 function channel_msg_forces($fp, Message $msg, AbstractPlayer $player): bool {
-	if (preg_match('/^!forces(.*)$/i', $msg->text, $args)) {
+	if (preg_match('/^!forces(.*)$/i', $msg->text, $args) === 1) {
 
 		$nick = $msg->nick;
 		$channel = $msg->channel;
@@ -359,7 +359,7 @@ function channel_msg_forces($fp, Message $msg, AbstractPlayer $player): bool {
 function channel_msg_help($fp, Message $msg): bool {
 
 	// global help?
-	if ($msg->text == '!help') {
+	if ($msg->text === '!help') {
 
 		$nick = $msg->nick;
 		$user = $msg->user;
@@ -387,7 +387,7 @@ function channel_msg_help($fp, Message $msg): bool {
 		return true;
 
 		// help on a spec command?
-	} elseif (preg_match('/^!help\s(.*)\s$/i', $msg->text, $args)) {
+	} elseif (preg_match('/^!help\s(.*)\s$/i', $msg->text, $args) === 1) {
 
 		$nick = $msg->nick;
 		$user = $msg->user;
@@ -397,7 +397,7 @@ function channel_msg_help($fp, Message $msg): bool {
 
 		echo_r('[HELP' . $topic . '] ' . $nick . '!' . $user . '@' . $host . ' ' . $channel);
 
-		if ($topic == 'seen') {
+		if ($topic === 'seen') {
 			fwrite($fp, 'NOTICE ' . $nick . ' :Syntax !seen <nickname>' . EOL);
 			fwrite($fp, 'NOTICE ' . $nick . ' :   Displays the last time <nickname> was seen' . EOL);
 		} else {

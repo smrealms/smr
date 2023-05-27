@@ -12,7 +12,7 @@ class LoginAnnouncements extends AccountPage {
 	public string $file = 'announcements.php';
 
 	public function __construct(
-		private readonly bool $viewAll = false
+		private readonly bool $viewAll = false,
 	) {}
 
 	public function build(Account $account, Template $template): void {

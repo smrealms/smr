@@ -40,7 +40,7 @@ So you're not the drinking type huh? Well how about some good ole gambling?<br /
 <br />
 
 <?php
-if ($WinningTicket) { ?>
+if ($WinningTicket !== false) { ?>
 	Congratulations. You have a winning lotto ticket.<br />
 	<br />
 	<div class="buttonA">

@@ -9,11 +9,11 @@ use Smr\Globals;
  * @var array<string, array{ID: int, Class: string}> $Sectors
  */
 
-if ($Sectors) { ?>
+if (count($Sectors) > 0) { ?>
 	<div class="secNavBox">
 		<div class="<?php if ($ThisShip->hasScanner()) { ?>scan<?php } else { ?>no_scan<?php } ?>">
 			<?php
-			if ($Sectors['Up']['ID'] != 0) { ?>
+			if ($Sectors['Up']['ID'] !== 0) { ?>
 				<div class="move_up move_text move_hover" id="moveUp">
 					<a href="<?php echo Globals::getCurrentSectorMoveHREF($ThisPlayer, $Sectors['Up']['ID']); ?>" class="<?php echo $Sectors['Up']['Class']; ?>">
 						<?php echo $Sectors['Up']['ID']; ?>
@@ -33,7 +33,7 @@ if ($Sectors) { ?>
 				}
 			}
 
-			if ($Sectors['Left']['ID'] != 0) { ?>
+			if ($Sectors['Left']['ID'] !== 0) { ?>
 				<div class="move_left move_text move_hover" id="moveLeft">
 					<a href="<?php echo Globals::getCurrentSectorMoveHREF($ThisPlayer, $Sectors['Left']['ID']); ?>" class="<?php echo $Sectors['Left']['Class']; ?>">
 						<?php echo $Sectors['Left']['ID']; ?>
@@ -65,7 +65,7 @@ if ($Sectors) { ?>
 
 
 			<?php
-			if ($Sectors['Right']['ID'] != 0) { ?>
+			if ($Sectors['Right']['ID'] !== 0) { ?>
 				<div class="move_right move_text move_hover" id="moveRight">
 					<a href="<?php echo Globals::getCurrentSectorMoveHREF($ThisPlayer, $Sectors['Right']['ID']); ?>" class="<?php echo $Sectors['Right']['Class']; ?>">
 						<?php echo $Sectors['Right']['ID']; ?>
@@ -85,7 +85,7 @@ if ($Sectors) { ?>
 				}
 			}
 
-			if ($Sectors['Down']['ID'] != 0) { ?>
+			if ($Sectors['Down']['ID'] !== 0) { ?>
 				<div class="move_down move_text move_hover" id="moveDown">
 					<a href="<?php echo Globals::getCurrentSectorMoveHREF($ThisPlayer, $Sectors['Down']['ID']); ?>" class="<?php echo $Sectors['Down']['Class']; ?>">
 						<?php echo $Sectors['Down']['ID']; ?>
@@ -105,7 +105,7 @@ if ($Sectors) { ?>
 				}
 			}
 
-			if ($Sectors['Warp']['ID'] != 0) { ?>
+			if ($Sectors['Warp']['ID'] !== 0) { ?>
 				<div class="move_warp move_text move_hover" id="moveWarp">
 					<a href="<?php echo Globals::getCurrentSectorMoveHREF($ThisPlayer, $Sectors['Warp']['ID']); ?>" class="<?php echo $Sectors['Warp']['Class']; ?>">
 						<?php echo $Sectors['Warp']['ID']; ?>

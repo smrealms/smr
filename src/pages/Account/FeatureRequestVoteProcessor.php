@@ -11,15 +11,15 @@ use Smr\Request;
 class FeatureRequestVoteProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly FeatureRequest|FeatureRequestComments $previousPage
+		private readonly FeatureRequest|FeatureRequestComments $previousPage,
 	) {}
 
 	public function build(Account $account): never {
 		$db = Database::getInstance();
 
 		$action = Request::get('action');
-		if ($action == 'Vote') {
-			if ($account->getAccountID() == ACCOUNT_ID_NHL) {
+		if ($action === 'Vote') {
+			if ($account->getAccountID() === ACCOUNT_ID_NHL) {
 				create_error('This account is not allowed to cast a vote!');
 			}
 			if (Request::has('vote')) {
@@ -39,7 +39,7 @@ class FeatureRequestVoteProcessor extends AccountPageProcessor {
 				]);
 			}
 
-		} elseif ($action == 'Set Status') {
+		} elseif ($action === 'Set Status') {
 			if (!$account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST)) {
 				create_error('You do not have permission to do that');
 			}

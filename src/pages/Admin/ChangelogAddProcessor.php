@@ -10,7 +10,7 @@ use Smr\Request;
 class ChangelogAddProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $versionID
+		private readonly int $versionID,
 	) {}
 
 	public function build(Account $account): never {
@@ -18,7 +18,7 @@ class ChangelogAddProcessor extends AccountPageProcessor {
 		$change_message = Request::get('change_message');
 		$affected_db = Request::get('affected_db');
 
-		if (Request::get('action') == 'Preview') {
+		if (Request::get('action') === 'Preview') {
 			$container = new Changelog(
 				changeTitle: $change_title,
 				changeMessage: $change_message,

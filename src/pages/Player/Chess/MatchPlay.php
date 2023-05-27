@@ -14,7 +14,7 @@ class MatchPlay extends PlayerPage {
 
 	public function __construct(
 		private readonly int $chessGameID,
-		private readonly string $moveMessage = ''
+		private readonly string $moveMessage = '',
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {
@@ -22,7 +22,7 @@ class MatchPlay extends PlayerPage {
 		$template->assign('ChessGame', $chessGame);
 
 		// Board orientation depends on the player's color.
-		$playerIsWhite = $chessGame->getWhiteID() == $player->getAccountID();
+		$playerIsWhite = $chessGame->getWhiteID() === $player->getAccountID();
 		$board = $chessGame->getBoard()->getBoardDisplay($playerIsWhite);
 		$template->assign('Board', $board);
 

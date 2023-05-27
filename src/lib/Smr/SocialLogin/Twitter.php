@@ -26,7 +26,7 @@ class Twitter extends SocialLogin {
 	}
 
 	public function getLoginUrl(): string {
-		if (empty(TWITTER_CONSUMER_KEY)) {
+		if (TWITTER_CONSUMER_KEY === '') {
 			// No twitter app specified. Continuing would throw an exception.
 			return URL;
 		}
@@ -38,7 +38,7 @@ class Twitter extends SocialLogin {
 	}
 
 	public function login(): SocialIdentity {
-		if ($_SESSION['TwitterToken']['oauth_token'] != Request::get('oauth_token')) {
+		if ($_SESSION['TwitterToken']['oauth_token'] !== Request::get('oauth_token')) {
 			throw new Exception('Unexpected token received from Twitter');
 		}
 		$helper = self::getTwitterObj($_SESSION['TwitterToken']);

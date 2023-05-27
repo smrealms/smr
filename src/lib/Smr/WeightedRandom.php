@@ -50,7 +50,7 @@ class WeightedRandom {
 		protected readonly int $gameID,
 		protected readonly int $accountID,
 		protected readonly string $type,
-		protected readonly int $typeID
+		protected readonly int $typeID,
 	) {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT weighting FROM weighted_random WHERE game_id = :game_id AND account_id = :account_id AND type = :type AND type_id = :type_id', [

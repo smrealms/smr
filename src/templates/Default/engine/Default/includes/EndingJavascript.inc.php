@@ -21,7 +21,7 @@ foreach ($this->jsAlerts as $string) {
 	?>alert(<?php echo json_encode($string, JSON_THROW_ON_ERROR); ?>);<?php
 }
 
-if (!empty($this->listjsInclude)) { ?>
+if ($this->listjsInclude !== null) { ?>
 	<script src="<?php echo LISTJS_URL; ?>"></script>
 	<script src="/js/listjs_include.js"></script>
 	<script>
@@ -38,7 +38,7 @@ if (isset($AddRaceRadarChartJS) && isset($SelectedRaceID)) { ?>
 
 $AvailableLinks = Globals::getAvailableLinks(); ?>
 <script>$(function(){<?php
-	if ($AJAX_ENABLE_REFRESH) { ?>
+	if ($AJAX_ENABLE_REFRESH !== false) { ?>
 		initRefresh('<?php echo $AJAX_ENABLE_REFRESH; ?>');<?php
 	}
 	foreach ($AvailableLinks as $LinkName => $AvailableLink) {

@@ -11,14 +11,14 @@ use Smr\Request;
 class MessageDeleteProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $folderID
+		private readonly int $folderID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 
 		// If not deleting marked messages, we are deleting entire folders
-		if (Request::get('action') == 'All Messages') {
+		if (Request::get('action') === 'All Messages') {
 			$container = new MessageBoxDeleteProcessor($this->folderID);
 			$container->go();
 		}
@@ -29,8 +29,8 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 
 		// Delete any individually selected messages
 		$message_id_list = Request::getIntArray('message_id', []);
-		if (!empty($message_id_list)) {
-			if ($this->folderID == MSG_SENT) {
+		if (count($message_id_list) > 0) {
+			if ($this->folderID === MSG_SENT) {
 				$db->write('UPDATE message SET sender_delete = :sender_delete WHERE message_id IN (:message_ids)', [
 					'sender_delete' => $db->escapeBoolean(true),
 					'message_ids' => $db->escapeArray($message_id_list),
@@ -45,9 +45,13 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 
 		// Delete any scout message groups
 		foreach (Request::getArray('group_id', []) as $groupID) {
-			[$senderID, $minTime, $maxTime] = unserialize(base64_decode($groupID));
+			$decoded = base64_decode($groupID, true);
+			if ($decoded === false) {
+				throw new Exception('Unexpected encoded group ID: ' . $groupID);
+			}
+			[$senderID, $minTime, $maxTime] = unserialize($decoded);
 			if (!is_int($senderID) || !is_int($minTime) || !is_int($maxTime)) {
-				throw new Exception('Unexpected deserialized types: ' . $groupID);
+				throw new Exception('Unexpected deserialized types: ' . $decoded);
 			}
 			$db->write('UPDATE message SET receiver_delete = :receiver_delete_new
 						WHERE sender_id = :sender_id

@@ -20,7 +20,7 @@ class EditSector extends AccountPage {
 		private readonly int $gameID,
 		private readonly int $galaxyID,
 		private ?int $sectorID = null,
-		private readonly ?string $message = null
+		private readonly ?string $message = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

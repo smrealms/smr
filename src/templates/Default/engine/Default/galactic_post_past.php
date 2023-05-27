@@ -4,6 +4,7 @@
  * @var int $SelectedGame
  * @var string $SelectGameHREF
  * @var array<array{game_name: string, game_id: int}> $PublishedGames
+ * @var array<array{title: string, online_since: int, href: string}> $PastEditions
  */
 
 ?>
@@ -13,14 +14,14 @@ Select Game:&nbsp;
 		foreach ($PublishedGames as $Game) {
 			$id = $Game['game_id'];
 			$name = $Game['game_name'];
-			$selected = ($SelectedGame == $id ? 'selected="selected"' : '');
+			$selected = ($SelectedGame === $id ? 'selected="selected"' : '');
 			echo "<option value='$id' $selected>$name ($id)</option>";
 		} ?>
 	</select>
 </form><br />
 
 <?php
-if (empty($PastEditions)) { ?>
+if (count($PastEditions) === 0) { ?>
 	<p>There are no Galactic Post editions for this game!</p><?php
 } else { ?>
 	<p>Choose a Galactic Post edition to view:</p>

@@ -16,7 +16,7 @@ class AllianceDetail extends HistoryPage {
 		protected readonly int $historyGameID,
 		protected readonly string $historyGameName,
 		private readonly int $allianceID,
-		private readonly Summary|ExtendedStatsDetail $previousPage
+		private readonly Summary|ExtendedStatsDetail $previousPage,
 	) {}
 
 	protected function buildHistory(Account $account, Template $template): void {
@@ -47,8 +47,8 @@ class AllianceDetail extends HistoryPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$memberAccountID = $dbRecord->getInt('account_id');
 			$players[] = [
-				'leader' => $memberAccountID == $leaderID ? '*' : '',
-				'bold' => $memberAccountID == $oldAccountID ? 'class="bold"' : '',
+				'leader' => $memberAccountID === $leaderID ? '*' : '',
+				'bold' => $memberAccountID === $oldAccountID ? 'class="bold"' : '',
 				'player_name' => htmlentities($dbRecord->getString('player_name')),
 				'experience' => $dbRecord->getInt('experience'),
 				'alignment' => $dbRecord->getInt('alignment'),

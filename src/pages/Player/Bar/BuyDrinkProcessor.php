@@ -12,7 +12,7 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly int $locationID,
-		private readonly string $action
+		private readonly string $action,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -35,7 +35,7 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 		]);
 		$curr_drink_id = $dbResult->record()->getInt('max_drink_id');
 
-		if ($this->action != 'drink') {
+		if ($this->action !== 'drink') {
 			$drinkName = 'water';
 			$message .= 'You ask the bartender for some water and you quickly down it.<br />';
 			// have they been drinking recently?
@@ -46,7 +46,7 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 			$player->increaseHOF(1, ['Bar', 'Drinks', 'Water'], HOF_PUBLIC);
 		} else {
 			// choose which drink to serve
-			if (rand(1, 20) == 1) {
+			if (rand(1, 20) === 1) {
 				//only have a chance at special drinks if they are very lucky
 				$drinkList = BarDrink::getAll();
 			} else {

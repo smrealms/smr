@@ -96,7 +96,7 @@ class Menu {
 		$db = Database::getInstance();
 		$player = Session::getInstance()->getPlayer();
 
-		$in_alliance = ($alliance_id == $player->getAllianceID() || in_array($player->getAccountID(), Globals::getHiddenPlayers()));
+		$in_alliance = ($alliance_id === $player->getAllianceID() || $player->isObserver());
 
 		// Some pages are visible to all alliance members
 		$canReadMb = $in_alliance;
@@ -220,56 +220,47 @@ class Menu {
 	 */
 	public static function rankings(int $active_level1 = 0, int $active_level2 = 0): void {
 
-		$menu = [];
+		$menu = [
+			// player rankings
+			[
+				'entry' => create_link(new PlayerExperience(), 'Player Rankings', 'nav'),
+				'submenu' => [
+					create_link(new PlayerExperience(), 'Experience', 'nav'),
+					create_link(new PlayerProfit(), 'Profit', 'nav'),
+					create_link(new PlayerKills(), 'Kills', 'nav'),
+					create_link(new PlayerDeaths(), 'Deaths', 'nav'),
+					create_link(new PlayerAssists(), 'Assists', 'nav'),
+					create_link(new PlayerNpcKills(), 'NPC Kills', 'nav'),
+				],
+			],
 
-		// player rankings
-		$menu_item = [];
-		$menu_item['entry'] = create_link(new PlayerExperience(), 'Player Rankings', 'nav');
+			// alliance rankings
+			[
+				'entry' => create_link(new AllianceExperience(), 'Alliance Rankings', 'nav'),
+				'submenu' => [
+					create_link(new AllianceExperience(), 'Experience', 'nav'),
+					create_link(new AllianceProfit(), 'Profit', 'nav'),
+					create_link(new AllianceKills(), 'Kills', 'nav'),
+					create_link(new AllianceDeaths(), 'Deaths', 'nav'),
+					create_link(new AllianceVsAlliance(), 'Versus', 'nav'),
+				],
+			],
 
-		$menu_subitem = [];
-		$menu_subitem[] = create_link(new PlayerExperience(), 'Experience', 'nav');
-		$menu_subitem[] = create_link(new PlayerProfit(), 'Profit', 'nav');
-		$menu_subitem[] = create_link(new PlayerKills(), 'Kills', 'nav');
-		$menu_subitem[] = create_link(new PlayerDeaths(), 'Deaths', 'nav');
-		$menu_subitem[] = create_link(new PlayerAssists(), 'Assists', 'nav');
-		$menu_subitem[] = create_link(new PlayerNpcKills(), 'NPC Kills', 'nav');
+			// racial rankings
+			[
+				'entry' => create_link(new RaceExperience(), 'Racial Standings', 'nav'),
+				'submenu' => [
+					create_link(new RaceExperience(), 'Experience', 'nav'),
+					create_link(new RaceKills(), 'Kills', 'nav'),
+					create_link(new RaceDeaths(), 'Deaths', 'nav'),
+				],
+			],
 
-		$menu_item['submenu'] = $menu_subitem;
-
-		$menu[] = $menu_item;
-
-		// alliance rankings
-		$menu_item = [];
-		$menu_item['entry'] = create_link(new AllianceExperience(), 'Alliance Rankings', 'nav');
-
-		$menu_subitem = [];
-		$menu_subitem[] = create_link(new AllianceExperience(), 'Experience', 'nav');
-		$menu_subitem[] = create_link(new AllianceProfit(), 'Profit', 'nav');
-		$menu_subitem[] = create_link(new AllianceKills(), 'Kills', 'nav');
-		$menu_subitem[] = create_link(new AllianceDeaths(), 'Deaths', 'nav');
-		$menu_subitem[] = create_link(new AllianceVsAlliance(), 'Versus', 'nav');
-
-		$menu_item['submenu'] = $menu_subitem;
-
-		$menu[] = $menu_item;
-
-		// racial rankings
-		$menu_item = [];
-		$menu_item['entry'] = create_link(new RaceExperience(), 'Racial Standings', 'nav');
-
-		$menu_subitem = [];
-		$menu_subitem[] = create_link(new RaceExperience(), 'Experience', 'nav');
-		$menu_subitem[] = create_link(new RaceKills(), 'Kills', 'nav');
-		$menu_subitem[] = create_link(new RaceDeaths(), 'Deaths', 'nav');
-
-		$menu_item['submenu'] = $menu_subitem;
-
-		$menu[] = $menu_item;
-
-		// sector rankings
-		$menu_item = [];
-		$menu_item['entry'] = create_link(new SectorKills(), 'Sector Kills', 'nav');
-		$menu[] = $menu_item;
+			// sector rankings
+			[
+				'entry' => create_link(new SectorKills(), 'Sector Kills', 'nav'),
+			],
+		];
 
 		create_sub_menu($menu, $active_level1, $active_level2);
 	}
@@ -318,7 +309,7 @@ class Menu {
 			'Text' => 'Send Message',
 		];
 
-		if ($player->getRaceID() == $race_id) {
+		if ($player->getRaceID() === $race_id) {
 			if ($player->isOnCouncil()) {
 				$container = new VotingCenter();
 				$menu_items[] = [
@@ -352,7 +343,7 @@ class Menu {
 		$session = Session::getInstance();
 
 		$menuItems = [];
-		if ($session->getGameID() == $gameID) {
+		if ($session->getGameID() === $gameID) {
 			$menuItems[] = [
 				'Link' => (new NewsReadCurrent())->href(),
 				'Text' => 'Read Current News',
@@ -386,7 +377,7 @@ class Menu {
 }
 
 /**
- * @param array<array<string, mixed>> $menu
+ * @param array<array{entry: string, submenu?: array<string>}> $menu
  */
 function create_sub_menu(array $menu, int $active_level1, int $active_level2): void {
 	$return = ('<table class="fullwidth center">');
@@ -398,7 +389,7 @@ function create_sub_menu(array $menu, int $active_level1, int $active_level2): v
 		}
 
 		// if this is the active entry we mark it
-		if ($number == $active_level1) {
+		if ($number === $active_level1) {
 			$active = ' class="bold"';
 		} else {
 			$active = '';
@@ -413,14 +404,14 @@ function create_sub_menu(array $menu, int $active_level1, int $active_level2): v
 	$return .= ('<tr>');
 	foreach ($menu as $number => $entry) {
 		// if this entry has a submenu and is the active one
-		if (isset($entry['submenu']) && $number == $active_level1) {
+		if (isset($entry['submenu']) && $number === $active_level1) {
 			$return .= ('<td><small>');
 			foreach ($entry['submenu'] as $sub_number => $sub_entry) {
 				if ($sub_number > 0) {
 					$return .= (' | ');
 				}
 
-				if ($sub_number == $active_level2) {
+				if ($sub_number === $active_level2) {
 					$return .= ('<span class="bold">' . $sub_entry . '</span>');
 				} else {
 					$return .= ($sub_entry);

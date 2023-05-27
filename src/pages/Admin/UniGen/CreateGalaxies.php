@@ -15,7 +15,7 @@ class CreateGalaxies extends AccountPage {
 	public string $file = 'admin/unigen/universe_create_galaxies.php';
 
 	public function __construct(
-		private readonly int $gameID
+		private readonly int $gameID,
 	) {}
 
 	public function build(Account $account, Template $template): void {

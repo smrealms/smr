@@ -12,12 +12,12 @@ class EditGameProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $galaxyID
+		private readonly int $galaxyID,
 	) {}
 
 	public function build(Account $account): never {
 		$join = new DateTime(Request::get('game_join'));
-		$start = empty(Request::get('game_start')) ? $join :
+		$start = Request::get('game_start') === '' ? $join :
 			new DateTime(Request::get('game_start'));
 		$end = new DateTime(Request::get('game_end'));
 

@@ -55,7 +55,7 @@
 	<tr>
 		<td class="bold">Landing:</td>
 		<td><?php
-			if ($ThisPlanet->getMaxLanded() == 0) { ?>
+			if ($ThisPlanet->getMaxLanded() === 0) { ?>
 				The planetary surface can support an entire armada!<?php
 			} else { ?>
 				There is only room for <?php echo $ThisPlanet->getMaxLanded(); ?> ships on the surface.<?php

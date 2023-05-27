@@ -4,7 +4,6 @@ namespace Smr\Pages\Player;
 
 use Smr\AbstractPlayer;
 use Smr\Exceptions\PathNotFound;
-use Smr\Globals;
 use Smr\MovementType;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Plotter;
@@ -15,7 +14,7 @@ use Smr\SectorLock;
 class SectorJumpProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly ?int $targetSectorID = null
+		private readonly ?int $targetSectorID = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -28,7 +27,7 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 		$target = $this->targetSectorID ?? Request::getInt('target');
 
 		//allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
-		if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
+		if ($player->isObserver()) {
 			$player->setSectorID($target);
 			$player->update();
 			$sector->markVisited($player);
@@ -40,12 +39,7 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 			create_error('You are on a planet! You must launch first!');
 		}
 
-		// if no 'target' is given we forward to plot
-		if (empty($target)) {
-			create_error('Where do you want to go today?');
-		}
-
-		if ($player->getSectorID() == $target) {
+		if ($player->getSectorID() === $target) {
 			create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*you\'re real smart*cough*');
 		}
 
@@ -54,7 +48,7 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 		}
 
 		// If the Calculate Turn Cost button was pressed
-		if (Request::get('action', '') == 'Calculate Turn Cost') {
+		if (Request::get('action', '') === 'Calculate Turn Cost') {
 			$container = new SectorJumpCalculate($target);
 			$container->go();
 		}

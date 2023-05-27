@@ -21,7 +21,7 @@ class FeatureRequest extends AccountPage {
 	private const CATEGORY_NEW = 'New';
 
 	public function __construct(
-		private readonly string $category = self::CATEGORY_NEW
+		private readonly string $category = self::CATEGORY_NEW,
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -49,16 +49,16 @@ class FeatureRequest extends AccountPage {
 
 			$container = new self($category);
 			$categoryTable[$category] = [
-				'Selected' => $category == $this->category,
+				'Selected' => $category === $this->category,
 				'HREF' => $container->href(),
-				'Count' => self::getFeaturesCount($status, ($category == self::CATEGORY_NEW) ? self::NEW_REQUEST_DAYS : false),
+				'Count' => self::getFeaturesCount($status, ($category === self::CATEGORY_NEW) ? self::NEW_REQUEST_DAYS : false),
 				'Description' => $description,
 			];
 		}
 		$template->assign('CategoryTable', $categoryTable);
 
 		// Can the players vote for features on the current page?
-		$canVote = $thisStatus == 'Opened';
+		$canVote = $thisStatus === 'Opened';
 		$template->assign('CanVote', $canVote);
 
 		if ($canVote) {
@@ -135,7 +135,7 @@ class FeatureRequest extends AccountPage {
 	}
 
 	private static function statusFromCategory(string $category): string {
-		return ($category == self::CATEGORY_NEW || $category == 'All Open') ? 'Opened' : $category;
+		return ($category === self::CATEGORY_NEW || $category === 'All Open') ? 'Opened' : $category;
 	}
 
 	private static function getFeaturesCount(string $status, int|false $daysNew = false): int {

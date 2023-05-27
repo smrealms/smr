@@ -14,15 +14,15 @@ use Smr\Request;
 class TalkToBartenderProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $locationID
+		private readonly int $locationID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
 		$action = Request::get('action');
 
-		if ($action == 'tell') {
+		if ($action === 'tell') {
 			$gossip = Request::get('gossip_tell');
-			if (!empty($gossip)) {
+			if ($gossip !== '') {
 				$db = Database::getInstance();
 				$dbResult = $db->read('SELECT IFNULL(MAX(message_id)+1, 0) AS next_message_id FROM bar_tender WHERE game_id = :game_id', [
 					'game_id' => $db->escapeNumber($player->getGameID()),
@@ -40,7 +40,7 @@ class TalkToBartenderProcessor extends PlayerPageProcessor {
 			} else {
 				$message = 'So you\'re the tight-lipped sort, eh? No matter, no matter...<br /><br /><i>The bartender slowly scans the room with squinted eyes and then leans in close.</i><br /><br />Must be a sensational story you\'ve got there. Don\'t worry, I can keep a secret. What\'s on your mind?';
 			}
-		} elseif ($action == 'tip') {
+		} elseif ($action === 'tip') {
 			$event = EnhancedWeaponEvent::getLatestEvent($player->getGameID());
 			$cost = $event->getWeapon()->getCost();
 

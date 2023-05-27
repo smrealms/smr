@@ -14,7 +14,7 @@ use Smr\TransactionType;
 class UploadSmrFileProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $gameID
+		private readonly int $gameID,
 	) {}
 
 	public function build(Account $account): never {
@@ -66,7 +66,7 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 
 		// Populate the sectors
 		foreach ($data as $key => $vals) {
-			if (!preg_match('/^Sector=(\d+)$/', $key, $matches)) {
+			if (preg_match('/^Sector=(\d+)$/', $key, $matches) !== 1) {
 				continue;
 			}
 
@@ -110,7 +110,7 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 					// Since we only know the location name, we must search for it
 					$found = false;
 					foreach ($allLocs as $loc) {
-						if ($locName == inify($loc->getName())) {
+						if ($locName === inify($loc->getName())) {
 							$editSector->addLocation($loc);
 							$found = true;
 							break;

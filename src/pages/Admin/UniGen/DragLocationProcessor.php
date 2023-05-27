@@ -12,7 +12,7 @@ class DragLocationProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $galaxyID
+		private readonly int $galaxyID,
 	) {}
 
 	public function build(Account $account): never {

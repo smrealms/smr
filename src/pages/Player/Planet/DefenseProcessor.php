@@ -9,7 +9,7 @@ use Smr\Request;
 class DefenseProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $hardwareTypeID
+		private readonly int $hardwareTypeID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -29,8 +29,8 @@ class DefenseProcessor extends PlayerPageProcessor {
 		$type_id = $this->hardwareTypeID;
 		$action = Request::get('action');
 		// transfer to ship
-		if ($action == 'Ship') {
-			if ($type_id == HARDWARE_SHIELDS) {
+		if ($action === 'Ship') {
+			if ($type_id === HARDWARE_SHIELDS) {
 				// do we want transfer more than we have?
 				if ($amount > $planet->getShields()) {
 					create_error('You can\'t take more shields from planet than are on it!');
@@ -45,7 +45,7 @@ class DefenseProcessor extends PlayerPageProcessor {
 				$planet->decreaseShields($amount);
 				$ship->increaseShields($amount);
 				$player->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' shields from planet.');
-			} elseif ($type_id == HARDWARE_COMBAT) {
+			} elseif ($type_id === HARDWARE_COMBAT) {
 				// do we want transfer more than we have?
 				if ($amount > $planet->getCDs()) {
 					create_error('You can\'t take more drones from planet than are on it!');
@@ -60,7 +60,7 @@ class DefenseProcessor extends PlayerPageProcessor {
 				$planet->decreaseCDs($amount);
 				$ship->increaseCDs($amount);
 				$player->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' drones from planet.');
-			} elseif ($type_id == HARDWARE_ARMOUR) {
+			} elseif ($type_id === HARDWARE_ARMOUR) {
 				// do we want transfer more than we have?
 				if ($amount > $planet->getArmour()) {
 					create_error('You can\'t take more armour from planet than are on it!');
@@ -77,8 +77,8 @@ class DefenseProcessor extends PlayerPageProcessor {
 				$player->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' armour from planet.');
 			}
 
-		} elseif ($action == 'Planet') {
-			if ($type_id == HARDWARE_SHIELDS) {
+		} elseif ($action === 'Planet') {
+			if ($type_id === HARDWARE_SHIELDS) {
 				// does the user wants to transfer shields?
 
 				// do we want transfer more than we have?
@@ -95,7 +95,7 @@ class DefenseProcessor extends PlayerPageProcessor {
 				$planet->increaseShields($amount);
 				$ship->decreaseShields($amount);
 				$player->log(LOG_TYPE_PLANETS, 'Player puts ' . $amount . ' shields on planet.');
-			} elseif ($type_id == HARDWARE_COMBAT) {
+			} elseif ($type_id === HARDWARE_COMBAT) {
 				// does the user wants to transfer drones?
 
 				// do we want transfer more than we have?
@@ -112,7 +112,7 @@ class DefenseProcessor extends PlayerPageProcessor {
 				$planet->increaseCDs($amount);
 				$ship->decreaseCDs($amount);
 				$player->log(LOG_TYPE_PLANETS, 'Player puts ' . $amount . ' drones on planet.');
-			} elseif ($type_id == HARDWARE_ARMOUR) {
+			} elseif ($type_id === HARDWARE_ARMOUR) {
 				// does the user wish to transfare armour?
 
 				// do we want transfer more than we have?

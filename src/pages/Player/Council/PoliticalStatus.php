@@ -17,7 +17,7 @@ class PoliticalStatus extends PlayerPage {
 	public string $file = 'council_politics.php';
 
 	public function __construct(
-		private readonly int $raceID
+		private readonly int $raceID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {
@@ -34,7 +34,7 @@ class PoliticalStatus extends PlayerPage {
 		$neutralRaces = [];
 		$warRaces = [];
 		foreach (Race::getPlayableIDs() as $otherRaceID) {
-			if ($raceID != $otherRaceID) {
+			if ($raceID !== $otherRaceID) {
 				if ($raceRelations[$otherRaceID] >= RELATIONS_PEACE) {
 					$peaceRaces[] = $otherRaceID;
 				} elseif ($raceRelations[$otherRaceID] <= RELATIONS_WAR) {

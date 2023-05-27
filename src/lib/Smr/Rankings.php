@@ -2,6 +2,8 @@
 
 namespace Smr;
 
+use Exception;
+
 class Rankings {
 
 	/**
@@ -14,7 +16,7 @@ class Rankings {
 
 		$rankings = [];
 		foreach ($rankedStats as $sectorID => $dbRecord) {
-			if ($player->getSectorID() == $sectorID) {
+			if ($player->getSectorID() === $sectorID) {
 				$class = ' class="bold"';
 			} else {
 				$class = '';
@@ -37,7 +39,7 @@ class Rankings {
 		$currRank = 1;
 		$rankings = [];
 		foreach ($rankedStats as $raceID => $dbRecord) {
-			if ($player->getRaceID() == $raceID) {
+			if ($player->getRaceID() === $raceID) {
 				$style = ' class="bold"';
 			} else {
 				$style = '';
@@ -67,7 +69,7 @@ class Rankings {
 			$currentAlliance = Alliance::getAlliance($allianceID, $dbRecord->getInt('game_id'), false, $dbRecord);
 
 			$class = '';
-			if ($player !== null && $player->getAllianceID() == $currentAlliance->getAllianceID()) {
+			if ($player !== null && $player->getAllianceID() === $currentAlliance->getAllianceID()) {
 				$class = ' class="bold"';
 			} elseif ($currentAlliance->hasDisbanded()) {
 				$class = ' class="red"';
@@ -101,7 +103,7 @@ class Rankings {
 			if ($currentPlayer->hasNewbieStatus()) {
 				$class .= ' newbie';
 			}
-			if ($class != '') {
+			if ($class !== '') {
 				$class = ' class="' . trim($class) . '"';
 			}
 
@@ -244,7 +246,11 @@ class Rankings {
 	 * @param array<int, \Smr\DatabaseRecord> $rankedStats
 	 */
 	public static function ourRank(array $rankedStats, int $ourID): int {
-		return array_search($ourID, array_keys($rankedStats)) + 1;
+		$ourIndex = array_search($ourID, array_keys($rankedStats), true);
+		if ($ourIndex === false) {
+			throw new Exception('Could not find ID in array');
+		}
+		return $ourIndex + 1;
 	}
 
 	/**

@@ -17,7 +17,7 @@ class PlanetList {
 		$template = Template::getInstance();
 		$player = Session::getInstance()->getPlayer();
 
-		$playerOnly = $allianceId == 0;
+		$playerOnly = $allianceId === 0;
 		if ($playerOnly && $player->hasAlliance()) {
 			// This page doesn't support this combination
 			throw new Exception('Sanity check failed!');
@@ -35,7 +35,7 @@ class PlanetList {
 		// We might not assign the planet lists if the info is private.
 		if ($getPlanets) {
 			// Get this player's planet if no alliance or viewing own alliance
-			if ($playerOnly || $player->getAllianceID() == $allianceId) {
+			if ($playerOnly || $player->getAllianceID() === $allianceId) {
 				$playerPlanet = $player->getPlanet();
 				if ($playerPlanet !== null) {
 					$template->assign('PlayerPlanet', $playerPlanet);

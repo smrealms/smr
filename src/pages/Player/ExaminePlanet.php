@@ -4,7 +4,6 @@ namespace Smr\Pages\Player;
 
 use Smr\AbstractPlayer;
 use Smr\Database;
-use Smr\Globals;
 use Smr\Page\PlayerPage;
 use Smr\Template;
 
@@ -21,7 +20,7 @@ class ExaminePlanet extends PlayerPage {
 		$planetLand =
 			!$planet->hasOwner()
 			|| $planet->getOwner()->sameAlliance($player)
-			|| in_array($player->getAccountID(), Globals::getHiddenPlayers());
+			|| $player->isObserver();
 
 		if (!$planetLand) {
 			// Only check treaties if we can't otherwise land.

@@ -16,7 +16,7 @@ class ShopShip extends PlayerPage {
 
 	public function __construct(
 		private readonly int $locationID,
-		private readonly ?int $shipTypeID = null
+		private readonly ?int $shipTypeID = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

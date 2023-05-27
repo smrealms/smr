@@ -19,7 +19,7 @@ class AllianceMotd extends PlayerPage {
 	public string $file = 'alliance_mod.php';
 
 	public function __construct(
-		private readonly int $allianceID
+		private readonly int $allianceID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {
@@ -54,7 +54,7 @@ class AllianceMotd extends PlayerPage {
 
 			$responseInputs = [];
 			foreach (['Yes', 'Maybe', 'No'] as $option) {
-				$style = strtoupper($option) == $response ? 'style="background: green"' : '';
+				$style = strtoupper($option) === $response ? 'style="background: green"' : '';
 				$responseInputs[$option] = $style;
 			}
 			$template->assign('ResponseInputs', $responseInputs);

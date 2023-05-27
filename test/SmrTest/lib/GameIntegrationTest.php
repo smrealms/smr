@@ -85,9 +85,9 @@ class GameIntegrationTest extends BaseIntegrationSpec {
 			$relations = Globals::getRaceRelations(1, $raceID1);
 			foreach (Race::getAllIDs() as $raceID2) {
 				$expected = -123;
-				if ($raceID1 == $raceID2) {
+				if ($raceID1 === $raceID2) {
 					$expected = MAX_GLOBAL_RELATIONS;
-				} elseif ($raceID1 == RACE_NEUTRAL || $raceID2 == RACE_NEUTRAL) {
+				} elseif ($raceID1 === RACE_NEUTRAL || $raceID2 === RACE_NEUTRAL) {
 					$expected = 0;
 				}
 				self::assertSame($expected, $relations[$raceID2]);

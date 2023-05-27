@@ -9,7 +9,7 @@ use Smr\Request;
 class InvalidEmailProcessor extends AccountPageProcessor {
 
 	public function build(Account $account): never {
-		if (Request::get('action') == 'Resend Validation Code') {
+		if (Request::get('action') === 'Resend Validation Code') {
 			$account->changeEmail($account->getEmail());
 		} else {
 			$account->changeEmail(Request::get('email'));

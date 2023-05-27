@@ -17,7 +17,7 @@ class AllianceBankReport extends PlayerPage {
 
 	public function __construct(
 		private readonly int $allianceID,
-		private readonly bool $reportSent = false
+		private readonly bool $reportSent = false,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {
@@ -34,7 +34,7 @@ class AllianceBankReport extends PlayerPage {
 		}
 		$trans = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$transType = ($dbRecord->getString('transaction') == 'Payment') ? self::WITHDRAW : self::DEPOSIT;
+			$transType = ($dbRecord->getString('transaction') === 'Payment') ? self::WITHDRAW : self::DEPOSIT;
 			$payeeId = ($dbRecord->getInt('exempt')) ? 0 : $dbRecord->getInt('payee_id');
 			// initialize payee if necessary
 			if (!isset($trans[$payeeId])) {

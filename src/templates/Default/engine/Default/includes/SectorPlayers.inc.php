@@ -47,7 +47,7 @@ function getPlayerOptionClass(AbstractPlayer $player, AbstractPlayer $other): st
 							}
 							echo $Ship->getName();
 							if ($Ship->hasActiveIllusion()) {
-								if ($Ship->getName() != $Ship->getIllusion()->getName()) {
+								if ($Ship->getName() !== $Ship->getIllusion()->getName()) {
 									?> <span class="npcColour">(<?php echo $Ship->getIllusion()->getName(); ?>)</span><?php
 								}
 							}
@@ -75,7 +75,7 @@ function getPlayerOptionClass(AbstractPlayer $player, AbstractPlayer $other): st
 					<td class="shrink center noWrap">
 						<div class="buttonA"><?php
 							if ($ThisPlayer->isLandedOnPlanet()) {
-								if ($ThisPlanet->getOwnerID() == $ThisPlayer->getAccountID()) {
+								if ($ThisPlanet->getOwnerID() === $ThisPlayer->getAccountID()) {
 									?><a href="<?php echo $Player->getPlanetKickHREF() ?>" class="<?php
 										echo getPlayerOptionClass($ThisPlayer, $Player);
 										?>"> Kick </a><?php

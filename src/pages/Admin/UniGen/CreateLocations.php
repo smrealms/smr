@@ -19,7 +19,7 @@ class CreateLocations extends AccountPage {
 
 	public function __construct(
 		private readonly int $gameID,
-		private ?int $galaxyID = null
+		private ?int $galaxyID = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

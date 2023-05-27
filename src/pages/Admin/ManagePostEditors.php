@@ -16,7 +16,7 @@ class ManagePostEditors extends AccountPage {
 
 	public function __construct(
 		private readonly ?int $selectedGameID = null,
-		private readonly ?string $processingMsg = null
+		private readonly ?string $processingMsg = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -39,7 +39,7 @@ class ManagePostEditors extends AccountPage {
 		}
 		$template->assign('ActiveGames', $activeGames);
 
-		if ($activeGames) {
+		if (count($activeGames) > 0) {
 			// Set the selected game (or the first in the list if not selected yet)
 			$selectedGameID = $this->selectedGameID ?? $activeGames[0]['game_id'];
 			$template->assign('SelectedGame', $selectedGameID);

@@ -15,7 +15,7 @@ class NpcManage extends AccountPage {
 	public string $file = 'admin/npc_manage.php';
 
 	public function __construct(
-		private readonly ?int $selectedGameID = null
+		private readonly ?int $selectedGameID = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -34,13 +34,13 @@ class NpcManage extends AccountPage {
 		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$gameID = $dbRecord->getInt('game_id');
-			if (empty($selectedGameID)) {
+			if ($selectedGameID === null) {
 				$selectedGameID = $gameID;
 			}
 			$games[] = [
 				'Name' => Game::getGame($gameID)->getDisplayName(),
 				'ID' => $gameID,
-				'Selected' => $gameID == $selectedGameID,
+				'Selected' => $gameID === $selectedGameID,
 			];
 		}
 		$selectedGameID ??= 0; // no valid games found

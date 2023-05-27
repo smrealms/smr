@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SmrTest\lib;
+namespace SmrTest\lib\functions;
 
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\TestWith;
@@ -17,7 +17,7 @@ class PluraliseTest extends TestCase {
 	#[TestWith([1, false, 'test'])]
 	public function test_pluralise(float|int $amount, bool $includeAmount, string $expect): void {
 		$result = pluralise($amount, 'test', $includeAmount);
-		$this->assertSame($expect, $result);
+		self::assertSame($expect, $result);
 	}
 
 }

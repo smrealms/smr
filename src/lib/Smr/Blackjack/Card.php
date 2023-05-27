@@ -21,7 +21,7 @@ class Card {
 	 * Create a specific card in the deck.
 	 */
 	public function __construct(
-		private readonly int $cardID // unique ID in all the decks (0-indexed)
+		private readonly int $cardID, // unique ID in all the decks (0-indexed)
 	) {
 		// 52 cards per deck, 13 cards per suit
 		$this->rank = ($this->cardID % 52) % 13 + 1;
@@ -44,7 +44,7 @@ class Card {
 	}
 
 	public function isAce(): bool {
-		return $this->rank == self::RANK_ACE;
+		return $this->rank === self::RANK_ACE;
 	}
 
 	public function getSuitName(): string {

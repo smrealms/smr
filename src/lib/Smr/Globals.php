@@ -65,7 +65,7 @@ class Globals {
 	public static function canAccessPage(string $pageName, AbstractPlayer $player, array $extraInfo): void {
 		switch ($pageName) {
 			case 'AllianceMOTD':
-				if ($player->getAllianceID() != $extraInfo['AllianceID']) {
+				if ($player->getAllianceID() !== $extraInfo['AllianceID']) {
 					logException(new Exception('Tried to access page without permission.'));
 					throw new UserError('You cannot access this page.');
 				}
@@ -80,7 +80,7 @@ class Globals {
 		if (!isset(self::$HIDDEN_PLAYERS)) {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT account_id FROM hidden_players');
-			self::$HIDDEN_PLAYERS = [0]; //stop errors
+			self::$HIDDEN_PLAYERS = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				self::$HIDDEN_PLAYERS[] = $dbRecord->getInt('account_id');
 			}

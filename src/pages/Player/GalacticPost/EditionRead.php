@@ -15,7 +15,7 @@ class EditionRead extends PlayerPage {
 	public function __construct(
 		private readonly int $gameID,
 		private readonly ?int $paperID,
-		private readonly bool $showBackButton = false
+		private readonly bool $showBackButton = false,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {
@@ -59,7 +59,7 @@ class EditionRead extends PlayerPage {
 				$articleLayout[$row][] = $article;
 
 				// start a new row every 2 articles
-				if ($i % 2 == 1) {
+				if ($i % 2 === 1) {
 					$row++;
 				}
 			}

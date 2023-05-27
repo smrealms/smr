@@ -13,7 +13,7 @@ class AllianceRoles extends PlayerPage {
 	public string $file = 'alliance_roles.php';
 
 	public function __construct(
-		private readonly ?int $roleID = null
+		private readonly ?int $roleID = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

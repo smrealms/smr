@@ -16,7 +16,7 @@ class ListPlanetDefense extends PlayerPage {
 	public string $file = 'planet_list.php';
 
 	public function __construct(
-		private readonly int $allianceID
+		private readonly int $allianceID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

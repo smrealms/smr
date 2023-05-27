@@ -11,7 +11,7 @@ use Smr\Request;
 class AllianceRolesProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly ?int $roleID = null
+		private readonly ?int $roleID = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -38,10 +38,10 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 		} else {
 			$withPerDay = Request::getInt('maxWith');
 		}
-		if ($withPerDay < 0 && $withPerDay != ALLIANCE_BANK_UNLIMITED) {
+		if ($withPerDay < 0 && $withPerDay !== ALLIANCE_BANK_UNLIMITED) {
 			create_error('You must enter a number for max withdrawals per 24 hours.');
 		}
-		if ($withPerDay == ALLIANCE_BANK_UNLIMITED && $positiveBalance) {
+		if ($withPerDay === ALLIANCE_BANK_UNLIMITED && $positiveBalance) {
 			create_error('You cannot have both unlimited withdrawals and a positive balance limit.');
 		}
 
@@ -49,7 +49,7 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 		$roleName = Request::get('role');
 		if ($this->roleID === null) {
 			// role empty too? that doesn't make sence
-			if (empty($roleName)) {
+			if ($roleName === '') {
 				throw new Exception('Empty role name is not allowed');
 			}
 
@@ -85,7 +85,7 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 			]);
 			$db->unlock();
 		} else {
-			if (empty($roleName)) {
+			if ($roleName === '') {
 				// if no role is given we delete that entry
 				if ($this->roleID === ALLIANCE_ROLE_LEADER) {
 					create_error('You cannot delete the leader role.');

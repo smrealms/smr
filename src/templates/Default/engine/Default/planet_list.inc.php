@@ -15,7 +15,7 @@
 		You own the planet in sector <a href="#planet-<?php echo $PlayerPlanet->getSectorID(); ?>" target="_self">#<?php echo $PlayerPlanet->getSectorID(); ?></a>.<br /><?php
 	}
 
-	if (count($AllPlanets) == 0) {
+	if (count($AllPlanets) === 0) {
 		if ($PlayerOnly) { ?>
 			You do not own a planet!
 			<a href="<?php echo WIKI_URL; ?>/game-guide/locations#planets" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Planets"/></a>

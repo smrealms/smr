@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Player\Headquarters;
 
+use Exception;
 use Smr\AbstractPlayer;
 use Smr\BountyType;
 use Smr\Location;
@@ -10,19 +11,20 @@ use Smr\Page\PlayerPageProcessor;
 class BountyClaimProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $locationID
+		private readonly int $locationID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
 		// Determine if we're claiming Fed or UG bounties
 		$location = Location::getLocation($player->getGameID(), $this->locationID);
-		if ($location->isHQ()) {
-			$bounties = $player->getClaimableBounties(BountyType::HQ);
-		} elseif ($location->isUG()) {
-			$bounties = $player->getClaimableBounties(BountyType::UG);
-		}
+		$bountyType = match (true) {
+			$location->isHQ() => BountyType::HQ,
+			$location->isUG() => BountyType::UG,
+			default => throw new Exception('Location is not HQ or UG'),
+		};
+		$bounties = $player->getClaimableBounties($bountyType);
 
-		if (!empty($bounties)) {
+		if (count($bounties) > 0) {
 			$claimText = ('You have claimed the following bounties<br /><br />');
 
 			foreach ($bounties as $bounty) {

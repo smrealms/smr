@@ -7,6 +7,7 @@ use Smr\Globals;
  * @var Smr\Template $this
  * @var string $PlayerNameLink
  * @var bool $UnderAttack
+ * @var bool $PlayerInvisible
  */
 
 if (isset($GameID)) { ?>
@@ -14,7 +15,7 @@ if (isset($GameID)) { ?>
 	$this->includeTemplate('includes/UnreadMessages.inc.php'); ?>
 	<a href="level_requirements.php" target="levelRequirements"><span id="lvlName"><?php echo $ThisPlayer->getLevelName(); ?></span></a><br />
 	<a class="big" href="<?php echo $PlayerNameLink; ?>"><?php echo $ThisPlayer->getDisplayName(); ?></a><br /><?php
-	if (isset($PlayerInvisible)) { ?>
+	if ($PlayerInvisible) { ?>
 		<span class="smallFont smallCaps red">INVISIBLE</span><br /><?php
 	} ?>
 	<br />

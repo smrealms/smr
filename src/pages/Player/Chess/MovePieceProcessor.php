@@ -12,7 +12,7 @@ use Smr\Request;
 class MovePieceProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $chessGameID
+		private readonly int $chessGameID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

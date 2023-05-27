@@ -14,7 +14,7 @@ class PreviousGameAllianceDetail extends AccountPage {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $allianceID
+		private readonly int $allianceID,
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -34,7 +34,7 @@ class PreviousGameAllianceDetail extends AccountPage {
 		foreach ($alliance->getMembers() as $player) {
 			$players[] = [
 				'leader' => $player->isAllianceLeader() ? '*' : '',
-				'bold' => $player->getAccountID() == $account->getAccountID() ? 'class="bold"' : '',
+				'bold' => $player->getAccountID() === $account->getAccountID() ? 'class="bold"' : '',
 				'player_name' => $player->getDisplayName(),
 				'experience' => $player->getExperience(),
 				'alignment' => $player->getAlignment(),

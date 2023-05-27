@@ -21,7 +21,7 @@ class EditDummiesProcessor extends AccountPageProcessor {
 		$dummyShip->setHardwareToMax();
 		$dummyShip->removeAllWeapons();
 		foreach (Request::getIntArray('weapons', []) as $weaponTypeID) {
-			if ($weaponTypeID != 0) {
+			if ($weaponTypeID !== 0) {
 				$dummyShip->addWeapon(Weapon::getWeapon($weaponTypeID));
 			}
 		}

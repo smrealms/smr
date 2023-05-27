@@ -23,7 +23,7 @@ try {
 	$account = $session->getAccount();
 
 	$action = Request::get('action');
-	if ($action == 'Moderate') {
+	if ($action === 'Moderate') {
 		if (!$account->hasPermission(PERMISSION_MODERATE_PHOTO_ALBUM)) {
 			create_error('You do not have permission to do that!');
 		}
@@ -39,7 +39,7 @@ try {
 	$db = Database::getInstance();
 
 	$comment = Request::get('comment');
-	if (empty($comment)) {
+	if ($comment === '') {
 		create_error('Please enter a comment.');
 	}
 

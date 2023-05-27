@@ -77,7 +77,7 @@ p.vert {
 			<th><a href="<?php echo $GalLinks[$galRow->getGalaxyID()]; ?>"><?php echo $galRow->getDisplayName(); ?></a></th><?php
 			foreach ($Galaxies as $galCol) {
 				$count = $Warps[$galRow->getGalaxyID()][$galCol->getGalaxyID()];
-				$display = $count == 0 ? '' : $count; ?>
+				$display = $count === 0 ? '' : $count; ?>
 				<td class="center"><?php echo $display; ?></td><?php
 			} ?>
 			<th><?php echo array_sum($Warps[$galRow->getGalaxyID()]); ?></th>

@@ -29,7 +29,7 @@ class MessageBox extends PlayerPage {
 			$messageBox['Name'] = $message_type_name;
 
 			// do we have unread msges in that folder?
-			if ($message_type_id == MSG_SENT) {
+			if ($message_type_id === MSG_SENT) {
 				$messageBox['HasUnread'] = false;
 			} else {
 				$dbResult = $db->read('SELECT 1 FROM message
@@ -48,7 +48,7 @@ class MessageBox extends PlayerPage {
 			}
 
 			// get number of msges
-			if ($message_type_id == MSG_SENT) {
+			if ($message_type_id === MSG_SENT) {
 				$dbResult = $db->read('SELECT count(message_id) as message_count FROM message
 						WHERE sender_id = :sender_id
 							AND game_id = :game_id

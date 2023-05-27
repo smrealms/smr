@@ -10,7 +10,7 @@ use Smr\Request;
 class AllianceSetOpProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly bool $cancel = false
+		private readonly bool $cancel = false,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -40,7 +40,7 @@ class AllianceSetOpProcessor extends PlayerPageProcessor {
 		} else {
 			// schedule an op
 			$date = Request::get('date');
-			if (empty($date)) {
+			if ($date === '') {
 				$this->error('You must specify a date for the operation!');
 			}
 

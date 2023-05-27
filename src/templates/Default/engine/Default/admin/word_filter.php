@@ -3,13 +3,14 @@
 /**
  * @var string $DelHREF
  * @var string $AddHREF
+ * @var array<array<string>> $FilteredWords
  */
 
 ?>
 <h2>Filtered Words</h2><br />
 
 <?php
-if (empty($FilteredWords)) { ?>
+if (count($FilteredWords) === 0) { ?>
 	No words are currently being filtered.<br /><br /><?php
 } else { ?>
 	<form method="POST" action="<?php echo $DelHREF; ?>">

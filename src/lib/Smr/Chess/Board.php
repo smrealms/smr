@@ -29,7 +29,7 @@ class Board {
 		$row = array_fill(0, self::NX, null);
 		$board = array_fill(0, self::NY, $row);
 		foreach ($pieces as $piece) {
-			if ($board[$piece->y][$piece->x] != null) {
+			if ($board[$piece->y][$piece->x] !== null) {
 				throw new Exception('Two pieces found in the same tile.');
 			}
 			$board[$piece->y][$piece->x] = $piece;
@@ -100,14 +100,14 @@ class Board {
 				$castling .= ChessPiece::getLetterForPiece(ChessPiece::QUEEN, $colour);
 			}
 		}
-		if ($castling == '') {
+		if ($castling === '') {
 			$castling = '-';
 		}
 		$fen .= $castling . ' ';
 
 		// En passant
 		['X' => $pawnX, 'Y' => $pawnY] = $this->getEnPassantPawn();
-		if ($pawnX != -1) {
+		if ($pawnX !== -1) {
 			$fen .= chr(ord('a') + $pawnX);
 			$fen .= match ($pawnY) {
 				3 => '3', // white pawn on rank 4
@@ -123,7 +123,7 @@ class Board {
 	}
 
 	public function getCurrentTurnColour(): Colour {
-		return $this->numMoves % 2 == 0 ? Colour::White : Colour::Black;
+		return $this->numMoves % 2 === 0 ? Colour::White : Colour::Black;
 	}
 
 	/**
@@ -186,7 +186,7 @@ class Board {
 	}
 
 	public function canCastle(Colour $colour, Castling $type): bool {
-		return in_array($type, $this->canCastle[$colour->value]);
+		return in_array($type, $this->canCastle[$colour->value], true);
 	}
 
 	/**
@@ -250,7 +250,7 @@ class Board {
 		$castlingType = null;
 		$pawnPromotion = false;
 
-		if ($piece->pieceID == ChessPiece::KING) {
+		if ($piece->pieceID === ChessPiece::KING) {
 			// We've moved the King, so no more castling
 			$this->canCastle[$piece->colour->value] = [];
 
@@ -262,22 +262,22 @@ class Board {
 				$this->setSquare($castling['ToX'], $y, $rook);
 				$this->clearSquare($castling['X'], $y);
 			}
-		} elseif ($piece->pieceID == ChessPiece::ROOK) {
+		} elseif ($piece->pieceID === ChessPiece::ROOK) {
 			// We've moved a Rook, so can no longer castle with it
-			if ($x == 0) {
+			if ($x === 0) {
 				array_remove_value($this->canCastle[$piece->colour->value], Castling::Queenside);
-			} elseif ($x == 7) {
+			} elseif ($x === 7) {
 				array_remove_value($this->canCastle[$piece->colour->value], Castling::Kingside);
 			}
-		} elseif ($piece->pieceID == ChessPiece::PAWN) {
-			if ($toY == 0 || $toY == 7) {
+		} elseif ($piece->pieceID === ChessPiece::PAWN) {
+			if ($toY === 0 || $toY === 7) {
 				// Pawn was promoted
 				$pawnPromotion = true;
 				$piece->pieceID = $pawnPromotionPiece;
-			} elseif ($y == 1 && $toY == 3 || $y == 6 && $toY == 4) {
+			} elseif ($y === 1 && $toY === 3 || $y === 6 && $toY === 4) {
 				// Double move to track?
 				$enPassantPawn = ['X' => $toX, 'Y' => $toY];
-			} elseif ($canEnPassant['X'] == $toX && ($canEnPassant['Y'] == 3 && $toY == 2 || $canEnPassant['Y'] == 4 && $toY == 5)) {
+			} elseif ($canEnPassant['X'] === $toX && ($canEnPassant['Y'] === 3 && $toY === 2 || $canEnPassant['Y'] === 4 && $toY === 5)) {
 				// En passant? Update the taken pawn.
 				$enPassant = true;
 				$pieceTaken = $this->getPiece($canEnPassant['X'], $canEnPassant['Y']);

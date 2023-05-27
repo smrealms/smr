@@ -10,7 +10,7 @@ use Smr\Pages\Player\CurrentSector;
 class MatchResignProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $chessGameID
+		private readonly int $chessGameID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

@@ -138,7 +138,7 @@ class VoteLink {
 	 * Returns true if account can currently receive free turns at this site.
 	 */
 	public function freeTurnsReady(bool $forceUpdate = false): bool {
-		return $this->givesFreeTurns() && $this->gameID != 0 && $this->getTimeUntilFreeTurns($forceUpdate) <= 0;
+		return $this->givesFreeTurns() && $this->gameID !== 0 && $this->getTimeUntilFreeTurns($forceUpdate) <= 0;
 	}
 
 	/**

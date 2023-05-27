@@ -1,6 +1,11 @@
 <?php declare(strict_types=1);
 
-if (empty($ActiveGames)) {
+/**
+ * @var array<array{game_name: string, game_id: int}> $ActiveGames
+ * @var ?array<string> $CurrentEditors
+ */
+
+if (count($ActiveGames) === 0) {
 	echo '<p>There are no active games at this time!</p>';
 } else { ?>
 
@@ -12,7 +17,7 @@ if (empty($ActiveGames)) {
 			foreach ($ActiveGames as $Game) {
 				$id = $Game['game_id'];
 				$name = $Game['game_name'];
-				$selected = ($SelectedGame == $id ? 'selected="selected"' : '');
+				$selected = ($SelectedGame === $id ? 'selected="selected"' : '');
 				echo "<option value='$id' $selected>$name ($id)</option>";
 			} ?>
 		</select>
@@ -28,13 +33,13 @@ if (empty($ActiveGames)) {
 	<?php
 
 	// This var is passed by the processing file if we enabled a game
-	if (!empty($ProcessingMsg)) {
+	if (isset($ProcessingMsg)) {
 		echo '<br />' . $ProcessingMsg;
 	} ?>
 	<br /><br />
 
 	<?php
-	if (empty($CurrentEditors)) {
+	if (!isset($CurrentEditors) || count($CurrentEditors) === 0) {
 		echo 'No current editors for this game!';
 	} else { ?>
 		Current Editors:

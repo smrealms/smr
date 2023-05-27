@@ -14,7 +14,7 @@ class AllianceSetOp extends PlayerPage {
 	public string $file = 'alliance_set_op.php';
 
 	public function __construct(
-		private readonly ?string $message = null
+		private readonly ?string $message = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {
@@ -25,9 +25,7 @@ class AllianceSetOp extends PlayerPage {
 		Menu::alliance($alliance->getAllianceID());
 
 		// Print any error messages that may have been created
-		if ($this->message !== null) {
-			$template->assign('Message', $this->message);
-		}
+		$template->assign('Message', $this->message);
 
 		// get the op from db
 		$db = Database::getInstance();

@@ -15,7 +15,7 @@ class AllianceTreatiesConfirmProcessor extends PlayerPageProcessor {
 	 */
 	public function __construct(
 		private readonly int $otherAllianceID,
-		private readonly array $terms
+		private readonly array $terms,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

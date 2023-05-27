@@ -41,7 +41,7 @@ function get_draft_teams(int $gameId): array {
 
 	// Teams can pick only if their size is not larger than the smallest team.
 	foreach ($teams as &$team) {
-		if ($minSize == 0) {
+		if ($minSize === 0) {
 			// This means that at least one leader hasn't made an alliance,
 			// no one should be picking yet.
 			$team['CanPick'] = false;

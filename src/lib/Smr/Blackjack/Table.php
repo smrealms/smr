@@ -63,7 +63,7 @@ class Table {
 		return match (true) {
 			$this->playerHand->hasBusted() => Result::Lose,
 			$this->playerHand->hasBlackjack() => Result::Blackjack,
-			$this->playerHand->getValue() == $this->dealerHand->getValue() => Result::Tie,
+			$this->playerHand->getValue() === $this->dealerHand->getValue() => Result::Tie,
 			$this->playerHand->getValue() > $this->dealerHand->getValue() => Result::Win,
 			$this->dealerHand->hasBusted() => Result::Win,
 			default => Result::Lose,

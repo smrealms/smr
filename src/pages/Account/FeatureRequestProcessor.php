@@ -12,7 +12,7 @@ class FeatureRequestProcessor extends AccountPageProcessor {
 
 	public function build(Account $account): never {
 		$feature = Request::get('feature');
-		if (empty($feature)) {
+		if ($feature === '') {
 			create_error('We need at least a feature description!');
 		}
 		if (strlen($feature) > 500) {

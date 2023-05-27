@@ -16,7 +16,7 @@ if ($ThisAccount->isDefaultCSSEnabled()) { ?>
 	<link rel="stylesheet" type="text/css" href="<?php echo $CSSLink; ?>" />
 	<link rel="stylesheet" type="text/css" href="<?php echo $CSSColourLink; ?>" /><?php
 }
-if (isset($ExtraCSSLink)) {
+if (isset($ExtraCSSLink) && $ExtraCSSLink !== '') {
 	?><link rel="stylesheet" type="text/css" href="<?php echo $ExtraCSSLink; ?>" /><?php
 } ?>
 <style>

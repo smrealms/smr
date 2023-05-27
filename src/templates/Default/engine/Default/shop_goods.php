@@ -11,6 +11,7 @@ use Smr\TransactionType;
  * @var bool $SearchedByFeds
  * @var ?int $TotalFine
  * @var string $LeavePortHREF
+ * @var ?string $TradeMessage
  */
 
 ?>
@@ -18,7 +19,7 @@ use Smr\TransactionType;
 Your relations with them are <?php echo get_colored_text($ThisPlayer->getRelation($Port->getRaceID())); ?>.</p>
 
 <?php
-if (!empty($TradeMsg)) { ?>
+if (isset($TradeMsg)) { ?>
 	<p><?php echo $TradeMsg; ?></p><?php
 }
 
@@ -37,7 +38,7 @@ if ($SearchedByFeds) { ?>
 
 <br />
 <?php
-if ($BoughtGoods) { ?>
+if (count($BoughtGoods) > 0) { ?>
 	<h2>The port sells you the following:</h2>
 	<table class="standard">
 		<tr class="center">
@@ -69,7 +70,7 @@ if ($BoughtGoods) { ?>
 	<br /><br /><?php
 }
 
-if ($SoldGoods) { ?>
+if (count($SoldGoods) > 0) { ?>
 	<h2>The port would buy the following:</h2>
 	<table class="standard">
 		<tr class="center">

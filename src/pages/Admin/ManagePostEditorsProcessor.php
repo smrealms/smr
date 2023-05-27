@@ -12,7 +12,7 @@ use Smr\Request;
 class ManagePostEditorsProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $selectedGameID
+		private readonly int $selectedGameID,
 	) {}
 
 	public function build(Account $account): never {
@@ -37,13 +37,13 @@ class ManagePostEditorsProcessor extends AccountPageProcessor {
 		$game = $selected_player->getGame()->getDisplayName();
 
 		$msg = null; // by default, clear any messages from prior processing
-		if ($action == 'Assign') {
+		if ($action === 'Assign') {
 			if ($selected_player->isGPEditor()) {
 				$msg = "<span class='red'>ERROR: </span>$name is already an editor in game $game!";
 			} else {
 				$db->insert('galactic_post_writer', $selected_player->SQLID);
 			}
-		} elseif ($action == 'Remove') {
+		} elseif ($action === 'Remove') {
 			if (!$selected_player->isGPEditor()) {
 				$msg = "<span class='red'>ERROR: </span>$name is not an editor in game $game!";
 			} else {

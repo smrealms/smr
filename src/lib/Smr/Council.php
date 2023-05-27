@@ -59,7 +59,7 @@ class Council {
 	}
 
 	public static function isOnCouncil(int $gameID, int $raceID, int $accountID): bool {
-		return in_array($accountID, self::getRaceCouncil($gameID, $raceID));
+		return in_array($accountID, self::getRaceCouncil($gameID, $raceID), true);
 	}
 
 }

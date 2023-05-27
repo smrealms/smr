@@ -122,7 +122,7 @@ function readFromStream($fp): bool {
 		return true;
 	}
 
-	if (preg_match('/^:(?P<nick>.*)!(?P<user>.*)@(?P<host>.*)\sPRIVMSG\s(?P<channel>.*)\s:(?P<text>.*)/i', $rdata, $args)) {
+	if (preg_match('/^:(?P<nick>.*)!(?P<user>.*)@(?P<host>.*)\sPRIVMSG\s(?P<channel>.*)\s:(?P<text>.*)/i', $rdata, $args) === 1) {
 		$msg = new Message(
 			nick: $args['nick'],
 			user: $args['user'],

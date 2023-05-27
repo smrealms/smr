@@ -21,7 +21,7 @@ class CombatLogList extends PlayerPage {
 	public function __construct(
 		private readonly CombatLogType $action = CombatLogType::Personal,
 		private readonly int $page = 0,
-		private readonly ?string $message = null
+		private readonly ?string $message = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {
@@ -52,7 +52,7 @@ class CombatLogList extends PlayerPage {
 		};
 
 		$query .= ' AND game_id=' . $db->escapeNumber($player->getGameID());
-		if ($action != CombatLogType::Personal && $player->hasAlliance()) {
+		if ($action !== CombatLogType::Personal && $player->hasAlliance()) {
 			$query .= ' AND (attacker_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' OR defender_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ') ';
 		} else {
 			$query .= ' AND (attacker_id=' . $db->escapeNumber($player->getAccountID()) . ' OR defender_id=' . $db->escapeNumber($player->getAccountID()) . ') ';
@@ -66,10 +66,10 @@ class CombatLogList extends PlayerPage {
 		$dbResult = $db->read('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs c WHERE ' . $query . ' ORDER BY log_id DESC, sector_id LIMIT ' . ($page * COMBAT_LOGS_PER_PAGE) . ', ' . COMBAT_LOGS_PER_PAGE);
 
 		$getParticipantName = function($accountID, $sectorID) use ($player): string {
-			if ($accountID == ACCOUNT_ID_PORT) {
+			if ($accountID === ACCOUNT_ID_PORT) {
 				return '<a href="' . Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">Port <span class="sectorColour">#' . $sectorID . '</span></a>';
 			}
-			if ($accountID == ACCOUNT_ID_PLANET) {
+			if ($accountID === ACCOUNT_ID_PLANET) {
 				return '<span class="yellow">Planetary Defenses</span>';
 			}
 			return Player::getPlayer($accountID, $player->getGameID())->getLinkedDisplayName(false);
@@ -96,8 +96,8 @@ class CombatLogList extends PlayerPage {
 				$template->assign('NextPage', $container->href());
 			}
 			// Saved logs
-			$template->assign('CanDelete', $action == CombatLogType::Saved);
-			$template->assign('CanSave', $action != CombatLogType::Saved);
+			$template->assign('CanDelete', $action === CombatLogType::Saved);
+			$template->assign('CanSave', $action !== CombatLogType::Saved);
 
 			foreach ($dbResult->records() as $dbRecord) {
 				$sectorID = $dbRecord->getInt('sector_id');

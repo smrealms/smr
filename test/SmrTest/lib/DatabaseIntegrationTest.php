@@ -35,7 +35,7 @@ class DatabaseIntegrationTest extends TestCase {
 
 	public function test__construct_happy_path(): void {
 		$db = DiContainer::get(Database::class);
-		$this->assertNotNull($db);
+		self::assertNotNull($db);
 	}
 
 	public function test_getInstance_always_returns_same_instance(): void {

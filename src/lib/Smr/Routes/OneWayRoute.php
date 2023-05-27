@@ -88,7 +88,7 @@ class OneWayRoute extends Route {
 	}
 
 	public function containsPort(int $sectorID): bool {
-		return $this->sellSectorId == $sectorID || $this->buySectorId == $sectorID;
+		return $this->sellSectorId === $sectorID || $this->buySectorId === $sectorID;
 	}
 
 	public function getOneWayRoutes(): array {
@@ -96,7 +96,7 @@ class OneWayRoute extends Route {
 	}
 
 	public function getGoodName(): string {
-		if ($this->goodId == GOODS_NOTHING) {
+		if ($this->goodId === GOODS_NOTHING) {
 			return 'Nothing';
 		}
 		return TradeGood::get($this->goodId)->name;

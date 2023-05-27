@@ -14,7 +14,7 @@ class HallOfFame extends HistoryPage {
 		protected readonly string $historyDatabase,
 		protected readonly int $historyGameID,
 		protected readonly string $historyGameName,
-		private readonly ?string $stat = null
+		private readonly ?string $stat = null,
 	) {}
 
 	protected function buildHistory(Account $account, Template $template): void {
@@ -28,7 +28,7 @@ class HallOfFame extends HistoryPage {
 			$dbResult = $db->read('SHOW COLUMNS FROM player_has_stats');
 			foreach ($dbResult->records() as $dbRecord) {
 				$stat = $dbRecord->getString('Field');
-				if ($stat == 'account_id' || $stat == 'game_id') {
+				if ($stat === 'account_id' || $stat === 'game_id') {
 					continue;
 				}
 				$statDisplay = ucwords(str_replace('_', ' ', $stat));
@@ -52,7 +52,7 @@ class HallOfFame extends HistoryPage {
 			$rankings = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$rankings[] = [
-					'bold' => $dbRecord->getInt('account_id') == $oldAccountId ? 'class="bold"' : '',
+					'bold' => $dbRecord->getInt('account_id') === $oldAccountId ? 'class="bold"' : '',
 					'name' => $dbRecord->getString('player_name'),
 					'stat' => $dbRecord->getInt($this->stat),
 				];

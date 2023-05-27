@@ -15,7 +15,7 @@ class WordFilter extends AccountPage {
 	public string $file = 'admin/word_filter.php';
 
 	public function __construct(
-		private readonly ?string $message = null
+		private readonly ?string $message = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -28,13 +28,13 @@ class WordFilter extends AccountPage {
 		if ($dbResult->hasRecord()) {
 			$container = new WordFilterDeleteProcessor();
 			$template->assign('DelHREF', $container->href());
-
-			$filteredWords = [];
-			foreach ($dbResult->records() as $dbRecord) {
-				$filteredWords[] = $dbRecord->getRow();
-			}
-			$template->assign('FilteredWords', $filteredWords);
 		}
+
+		$filteredWords = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$filteredWords[] = $dbRecord->getRow();
+		}
+		$template->assign('FilteredWords', $filteredWords);
 
 		$container = new WordFilterAddProcessor();
 		$template->assign('AddHREF', $container->href());

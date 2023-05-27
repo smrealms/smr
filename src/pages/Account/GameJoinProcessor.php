@@ -15,7 +15,7 @@ use Smr\Request;
 class GameJoinProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $gameID
+		private readonly int $gameID,
 	) {}
 
 	public function build(Account $account): never {
@@ -27,7 +27,7 @@ class GameJoinProcessor extends AccountPageProcessor {
 		$game = Game::getGame($gameID);
 
 		$race_id = Request::getInt('race_id');
-		if (!in_array($race_id, $game->getPlayableRaceIDs())) {
+		if (!in_array($race_id, $game->getPlayableRaceIDs(), true)) {
 			create_error('Please choose a race!');
 		}
 
@@ -76,7 +76,7 @@ class GameJoinProcessor extends AccountPageProcessor {
 		// Mark the player's start sector as visited
 		$player->getSector()->markVisited($player);
 
-		if ($isNewbie || $account->getAccountID() == ACCOUNT_ID_NHL) {
+		if ($isNewbie || $account->getAccountID() === ACCOUNT_ID_NHL) {
 			// If player is a newb (or NHL), set alliance to be Newbie Help Allaince
 			$NHA = Alliance::getAllianceByName(NHA_ALLIANCE_NAME, $gameID);
 			$player->joinAlliance($NHA->getAllianceID());

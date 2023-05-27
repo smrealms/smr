@@ -96,7 +96,7 @@ use Smr\Alliance;
 								<select form="roles" name="role[<?php echo $AlliancePlayer->getAccountID(); ?>]"><?php
 									foreach ($Roles as $RoleID => $Role) { ?>
 										<option value="<?php echo $RoleID; ?>"<?php
-										if ($RoleID == $PlayerRole) { ?>
+										if ($RoleID === $PlayerRole) { ?>
 											selected="selected"<?php
 										} ?>><?php
 											echo $Role; ?>
@@ -110,7 +110,7 @@ use Smr\Alliance;
 					}
 					if (isset($ActiveIDs)) { ?>
 						<td class="sort_status center"><?php
-							if (in_array($AlliancePlayer->getAccountID(), $ActiveIDs)) { ?>
+							if (in_array($AlliancePlayer->getAccountID(), $ActiveIDs, true)) { ?>
 								<span class="green">Online</span><?php
 							} elseif ($ThisPlayer->isAllianceLeader() && $Disabled = $AlliancePlayer->getAccount()->isDisabled()) { ?>
 								<span class="red">Banned Until:<br/><?php echo date($ThisAccount->getDateTimeFormatSplit(), $Disabled['Time']); ?></span><?php
@@ -127,7 +127,7 @@ use Smr\Alliance;
 
 $this->listjsInclude = 'alliance_roster';
 
-if ($Alliance->getAllianceID() == $ThisPlayer->getAllianceID()) { ?>
+if ($Alliance->getAllianceID() === $ThisPlayer->getAllianceID()) { ?>
 	<br /><h2>Options</h2><br />
 	<div class="buttonA">
 		<a class="buttonA" href="<?php echo $ToggleRolesHREF; ?>"><?php
@@ -144,7 +144,7 @@ if ($Alliance->getAllianceID() == $ThisPlayer->getAllianceID()) { ?>
 
 if ($JoinRestriction === false) { ?>
 	<form class="standard" method="POST" action="<?php echo $JoinHREF; ?>"><?php
-		if ($Alliance->getRecruitType() == Alliance::RECRUIT_OPEN) { ?>
+		if ($Alliance->getRecruitType() === Alliance::RECRUIT_OPEN) { ?>
 			<p>This alliance is accepting all recruits!</p><?php
 		} else { ?>
 			<p>Enter password to join alliance</p>

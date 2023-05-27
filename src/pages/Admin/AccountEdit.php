@@ -16,7 +16,7 @@ class AccountEdit extends AccountPage {
 	public string $file = 'admin/account_edit.php';
 
 	public function __construct(
-		private readonly int $editAccountID
+		private readonly int $editAccountID,
 	) {}
 
 	public function build(Account $account, Template $template): void {

@@ -10,11 +10,11 @@ use Smr\Request;
 class AdminPermissionManageProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $adminAccountID
+		private readonly int $adminAccountID,
 	) {}
 
 	public function build(Account $account): never {
-		if (Request::get('action') == 'Change') {
+		if (Request::get('action') === 'Change') {
 			// Check to see if admin previously was displaying Admin tag
 			$hadAdminTag = Account::getAccount($this->adminAccountID)->hasPermission(PERMISSION_DISPLAY_ADMIN_TAG);
 
@@ -34,7 +34,7 @@ class AdminPermissionManageProcessor extends AccountPageProcessor {
 			}
 
 			// Process adding/removing the Admin tag
-			if (in_array(PERMISSION_DISPLAY_ADMIN_TAG, $permissions)) {
+			if (in_array(PERMISSION_DISPLAY_ADMIN_TAG, $permissions, true)) {
 				// This might overwrite an existing unrelated tag.
 				$tag = '<span class="blue">Admin</span>';
 				$db->replace('cpl_tag', [

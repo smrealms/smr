@@ -13,7 +13,7 @@ use RuntimeException;
 class DatabaseResult {
 
 	public function __construct(
-		private readonly Result $dbResult
+		private readonly Result $dbResult,
 	) {}
 
 	/**
@@ -30,7 +30,7 @@ class DatabaseResult {
 	 * Use when exactly one record is expected from the result set.
 	 */
 	public function record(): DatabaseRecord {
-		if ($this->getNumRecords() != 1) {
+		if ($this->getNumRecords() !== 1) {
 			throw new RuntimeException('One record required, but found ' . $this->getNumRecords());
 		}
 		$record = $this->dbResult->fetchAssociative();

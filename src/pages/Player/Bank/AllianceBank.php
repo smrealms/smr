@@ -66,7 +66,7 @@ class AllianceBank extends PlayerPage {
 			'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
 			'game_id' => $db->escapeNumber($alliance->getGameID()),
 		];
-		if ($alliance->getAllianceID() == $player->getAllianceID()) {
+		if ($alliance->getAllianceID() === $player->getAllianceID()) {
 			$sqlParams['role_id'] = $player->getAllianceRole($alliance->getAllianceID());
 			$dbResult = $db->read($query . 'role_id = :role_id', $sqlParams);
 		} else {
@@ -79,7 +79,7 @@ class AllianceBank extends PlayerPage {
 
 		if ($dbRecord->getBoolean('positive_balance')) {
 			$template->assign('PositiveWithdrawal', $withdrawalPerDay + $playerTrans['Deposit'] - $playerTrans['Payment']);
-		} elseif ($withdrawalPerDay == ALLIANCE_BANK_UNLIMITED) {
+		} elseif ($withdrawalPerDay === ALLIANCE_BANK_UNLIMITED) {
 			$template->assign('UnlimitedWithdrawal', true);
 		} else {
 			$dbResult = $db->read('SELECT IFNULL(sum(amount), 0) as total FROM alliance_bank_transactions
@@ -129,23 +129,23 @@ class AllianceBank extends PlayerPage {
 			'limit' => 1 + $maxValue - $minValue,
 		]);
 
-		// only if we have at least one result
-		if ($dbResult->hasRecord()) {
-			$bankTransactions = [];
-			foreach ($dbResult->records() as $dbRecord) {
-				$trans = $dbRecord->getString('transaction');
-				$bankTransactions[$dbRecord->getInt('transaction_id')] = [
-					'Time' => $dbRecord->getInt('time'),
-					'Player' => Player::getPlayer($dbRecord->getInt('payee_id'), $player->getGameID()),
-					'Reason' => $dbRecord->getString('reason'),
-					'TransactionType' => $trans,
-					'Withdrawal' => $trans == 'Payment' ? number_format($dbRecord->getInt('amount')) : '',
-					'Deposit' => $trans == 'Deposit' ? number_format($dbRecord->getInt('amount')) : '',
-					'Exempt' => $dbRecord->getInt('exempt') == 1,
-				];
-			}
-			$template->assign('BankTransactions', $bankTransactions);
+		$bankTransactions = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$trans = $dbRecord->getString('transaction');
+			$bankTransactions[$dbRecord->getInt('transaction_id')] = [
+				'Time' => $dbRecord->getInt('time'),
+				'Player' => Player::getPlayer($dbRecord->getInt('payee_id'), $player->getGameID()),
+				'Reason' => $dbRecord->getString('reason'),
+				'TransactionType' => $trans,
+				'Withdrawal' => $trans === 'Payment' ? number_format($dbRecord->getInt('amount')) : '',
+				'Deposit' => $trans === 'Deposit' ? number_format($dbRecord->getInt('amount')) : '',
+				'Exempt' => $dbRecord->getInt('exempt') === 1,
+			];
+		}
+		$template->assign('BankTransactions', $bankTransactions);
 
+		// only if we have at least one result
+		if (count($bankTransactions) > 0) {
 			$template->assign('MinValue', $minValue);
 			$template->assign('MaxValue', $maxValue);
 			$container = new self($allianceID);

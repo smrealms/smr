@@ -18,7 +18,7 @@ class MessageBoxReply extends AccountPage {
 		private readonly int $gameID,
 		private readonly ?string $preview = null,
 		private readonly int $banPoints = 0,
-		private readonly int $rewardCredits = 0
+		private readonly int $rewardCredits = 0,
 	) {}
 
 	public function build(Account $account, Template $template): void {

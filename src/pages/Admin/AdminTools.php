@@ -13,7 +13,7 @@ class AdminTools extends AccountPage {
 
 	public function __construct(
 		private readonly ?string $message = null,
-		private readonly ?string $errorMessage = null
+		private readonly ?string $errorMessage = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

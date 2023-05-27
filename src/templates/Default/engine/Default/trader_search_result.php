@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
 use Smr\Epoch;
-use Smr\Globals;
 use Smr\Player;
 
 /**
@@ -16,7 +15,7 @@ function DisplayResult(array $Links, Player $Player): void { ?>
 			<th>Experience</th>
 			<th>Newbie</th>
 			<th>Online</th><?php
-			if (in_array($Player->getAccountID(), Globals::getHiddenPlayers())) { ?>
+			if ($Player->isObserver()) { ?>
 				<th>Sector</th><?php
 			} ?>
 			<th>Option</th>
@@ -45,7 +44,7 @@ function DisplayResult(array $Links, Player $Player): void { ?>
 				} else { ?>
 					<td width="10%" class="center red">NO</td><?php
 				}
-				if (in_array($Player->getAccountID(), Globals::getHiddenPlayers())) { ?>
+				if ($Player->isObserver()) { ?>
 					<td class="center"><?php echo $Link['Player']->getSectorID(); ?></td><?php
 				} ?>
 				<td style="font-size:91%;" class="shrink center noWrap">
@@ -64,7 +63,7 @@ function DisplayResult(array $Links, Player $Player): void { ?>
 					<a href="<?php echo $Link['NewsHREF']; ?>">
 						<span class="yellow">View News</span>
 					</a><?php
-					if (in_array($Player->getAccountID(), Globals::getHiddenPlayers())) { ?>
+					if ($Player->isObserver()) { ?>
 						<br />
 						<a href="<?php echo $Link['JumpHREF']; ?>">
 							<span class="yellow">Jump to Sector</span>

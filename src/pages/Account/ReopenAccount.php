@@ -18,7 +18,7 @@ class ReopenAccount extends AccountPage {
 		if ($disabled === false) {
 			create_error('Your account is not disabled!');
 		}
-		if ($disabled['Reason'] != CLOSE_ACCOUNT_BY_REQUEST_REASON) {
+		if ($disabled['Reason'] !== CLOSE_ACCOUNT_BY_REQUEST_REASON) {
 			create_error('You are not allowed to re-open your account!');
 		}
 

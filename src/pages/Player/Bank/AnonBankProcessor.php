@@ -25,7 +25,7 @@ class AnonBankProcessor extends PlayerPageProcessor {
 		}
 		$dbRecord = $dbResult->record();
 
-		if ($dbRecord->getString('password') != Request::get('password')) {
+		if ($dbRecord->getString('password') !== Request::get('password')) {
 			create_error('Invalid anonymous account password!');
 		}
 

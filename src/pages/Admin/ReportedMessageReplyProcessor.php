@@ -12,7 +12,7 @@ class ReportedMessageReplyProcessor extends AccountPageProcessor {
 	public function __construct(
 		private readonly int $gameID,
 		private readonly int $offenderAccountID,
-		private readonly int $offendedAccountID
+		private readonly int $offendedAccountID,
 	) {}
 
 	public function build(Account $account): never {
@@ -20,7 +20,7 @@ class ReportedMessageReplyProcessor extends AccountPageProcessor {
 		$offenderBanPoints = Request::getInt('offenderBanPoints');
 		$offendedReply = Request::get('offendedReply');
 		$offendedBanPoints = Request::getInt('offendedBanPoints');
-		if (Request::get('action') == 'Preview messages') {
+		if (Request::get('action') === 'Preview messages') {
 			$container = new ReportedMessageReply(
 				offenderAccountID: $this->offenderAccountID,
 				offendedAccountID: $this->offendedAccountID,
@@ -33,7 +33,7 @@ class ReportedMessageReplyProcessor extends AccountPageProcessor {
 			$container->go();
 		}
 
-		if ($offenderReply != '') {
+		if ($offenderReply !== '') {
 			Player::sendMessageFromAdmin($this->gameID, $this->offenderAccountID, $offenderReply);
 
 			//do we have points?
@@ -44,7 +44,7 @@ class ReportedMessageReplyProcessor extends AccountPageProcessor {
 			}
 		}
 
-		if ($offendedReply != '') {
+		if ($offendedReply !== '') {
 			//next message
 			Player::sendMessageFromAdmin($this->gameID, $this->offendedAccountID, $offendedReply);
 

@@ -87,7 +87,7 @@ class Game {
 
 	protected function __construct(
 		protected readonly int $gameID,
-		bool $create = false
+		bool $create = false,
 	) {
 		$db = Database::getInstance();
 
@@ -411,14 +411,14 @@ class Game {
 
 	public function getLastSectorID(): int {
 		$galaxies = $this->getGalaxies();
-		if (count($galaxies) == 0) {
+		if (count($galaxies) === 0) {
 			throw new Exception('There are no galaxies in this game yet!');
 		}
 		return end($galaxies)->getEndSector();
 	}
 
 	public function equals(self $otherGame): bool {
-		return $otherGame->getGameID() == $this->getGameID();
+		return $otherGame->getGameID() === $this->getGameID();
 	}
 
 	// Convenience function for printing the game name with id
@@ -436,10 +436,10 @@ class Game {
 		$db = Database::getInstance();
 		foreach (Race::getAllIDs() as $raceID1) {
 			foreach (Race::getAllIDs() as $raceID2) {
-				if ($raceID1 == $raceID2) {
+				if ($raceID1 === $raceID2) {
 					// Max relations for a race with itself
 					$amount = MAX_GLOBAL_RELATIONS;
-				} elseif ($raceID1 == RACE_NEUTRAL || $raceID2 == RACE_NEUTRAL) {
+				} elseif ($raceID1 === RACE_NEUTRAL || $raceID2 === RACE_NEUTRAL) {
 					$amount = 0; //0 relations with neutral
 				} else {
 					$amount = $relations;

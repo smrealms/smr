@@ -5,7 +5,7 @@
  * @var Smr\Template $this
  * @var bool $MinimalDisplay
  * @var ?string $AttackLogLink
- * @var array<string, mixed> $PlanetCombatResults
+ * @var PlanetCombatResults $PlanetCombatResults
  */
 
 $CombatPlanet = $PlanetCombatResults['Planet'];
@@ -19,21 +19,24 @@ if ($MinimalDisplay) {
 	} ?>. <?php echo $AttackLogLink;
 	return;
 }
-if (isset($PlanetCombatResults['Weapons']) && is_array($PlanetCombatResults['Weapons'])) {
+if (isset($PlanetCombatResults['Weapons'])) {
 	foreach ($PlanetCombatResults['Weapons'] as $WeaponResults) {
 		$ShootingWeapon = $WeaponResults['Weapon'];
 		$ShotHit = $WeaponResults['Hit'];
 		if ($ShotHit) {
+			if (!isset($WeaponResults['ActualDamage']) || !isset($WeaponResults['WeaponDamage'])) {
+				throw new Exception('Weapon hit without providing damage!');
+			}
 			$ActualDamage = $WeaponResults['ActualDamage'];
 			$WeaponDamage = $WeaponResults['WeaponDamage'];
 		}
-		$TargetPlayer = $WeaponResults['TargetPlayer'];
+		$TargetPlayer = $WeaponResults['Target'];
 
 		echo $CombatPlanet->getCombatName() ?> fires a <?php echo $ShootingWeapon->getName(); ?> at <?php if ($ShotHit && $ActualDamage['TargetAlreadyDead']) { ?> the debris that was once <?php } echo $TargetPlayer->getDisplayName();
 		if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
 			if (!$ShotHit) {
 				?> and misses<?php
-			} elseif ($ActualDamage['TotalDamage'] == 0) {
+			} elseif ($ActualDamage['TotalDamage'] === 0) {
 				if ($WeaponDamage['Shield'] > 0) {
 					if ($ActualDamage['HasCDs']) {
 						?> which proves ineffective against their combat drones<?php
@@ -67,6 +70,9 @@ if (isset($PlanetCombatResults['Weapons']) && is_array($PlanetCombatResults['Wea
 		} ?>.
 		<br /><?php
 		if ($ShotHit && $ActualDamage['KillingShot']) {
+			if (!isset($WeaponResults['KillResults'])) {
+				throw new Exception('KillingShot did not provide KillResults!');
+			}
 			$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', ['KillResults' => $WeaponResults['KillResults'], 'TargetPlayer' => $TargetPlayer]);
 		}
 	}
@@ -75,19 +81,22 @@ if (isset($PlanetCombatResults['Drones'])) {
 	$Drones = $PlanetCombatResults['Drones'];
 	$ActualDamage = $Drones['ActualDamage'];
 	$WeaponDamage = $Drones['WeaponDamage'];
-	$TargetPlayer = $Drones['TargetPlayer'];
+	$TargetPlayer = $Drones['Target'];
 	$DamageTypes = 0;
 	if ($ActualDamage['Shield'] > 0) { $DamageTypes = $DamageTypes + 1; }
 	if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
 	if ($ActualDamage['Armour'] > 0) { $DamageTypes = $DamageTypes + 1; }
 
 	echo $CombatPlanet->getCombatName();
-	if ($WeaponDamage['Launched'] == 0) {
+	if (!isset($WeaponDamage['Launched'])) {
+		throw new Exception('Drone weapons must specify Launched');
+	}
+	if ($WeaponDamage['Launched'] === 0) {
 		?> fails to launch it's combat drones<?php
 	} else {
 		?> launches <span class="cds"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at <?php if ($ActualDamage['TargetAlreadyDead']) { ?>the debris that was once <?php } echo $TargetPlayer->getDisplayName();
 		if (!$ActualDamage['TargetAlreadyDead']) {
-			if ($ActualDamage['TotalDamage'] == 0) {
+			if ($ActualDamage['TotalDamage'] === 0) {
 				if ($WeaponDamage['Shield'] > 0) {
 					if ($ActualDamage['HasCDs']) {
 						?> which prove ineffective against their combat drones<?php
@@ -117,6 +126,9 @@ if (isset($PlanetCombatResults['Drones'])) {
 	} ?>.
 	<br /><?php
 	if ($ActualDamage['KillingShot']) {
+		if (!isset($Drones['KillResults'])) {
+			throw new Exception('KillingShot did not provide KillResults!');
+		}
 		$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', ['KillResults' => $Drones['KillResults'], 'TargetPlayer' => $TargetPlayer]);
 	}
 }

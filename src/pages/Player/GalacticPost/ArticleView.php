@@ -15,7 +15,7 @@ class ArticleView extends PlayerPage {
 
 	public function __construct(
 		private readonly ?int $articleID = null,
-		private readonly bool $addedToNews = false
+		private readonly bool $addedToNews = false,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {
@@ -76,7 +76,7 @@ class ArticleView extends PlayerPage {
 			}
 			$template->assign('Papers', $papers);
 
-			if (empty($papers)) {
+			if (count($papers) === 0) {
 				$container = new PaperMake();
 				$template->assign('MakePaperHREF', $container->href());
 			}

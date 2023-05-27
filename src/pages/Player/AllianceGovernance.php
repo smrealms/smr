@@ -14,7 +14,7 @@ class AllianceGovernance extends PlayerPage {
 	public string $file = 'alliance_stat.php';
 
 	public function __construct(
-		private readonly int $allianceID
+		private readonly int $allianceID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {
@@ -41,7 +41,7 @@ class AllianceGovernance extends PlayerPage {
 			$change_mod = false;
 			$change_pass = false;
 		}
-		$change_chat = $player->getAllianceID() == $alliance_id && $player->isAllianceLeader();
+		$change_chat = $player->getAllianceID() === $alliance_id && $player->isAllianceLeader();
 
 		$container = new AllianceGovernanceProcessor($alliance_id);
 		$template->assign('FormHREF', $container->href());
@@ -51,7 +51,7 @@ class AllianceGovernance extends PlayerPage {
 		$template->assign('CanChangePassword', $change_pass);
 		$template->assign('CanChangeChatChannel', $change_chat);
 		$template->assign('CanChangeMOTD', $change_mod);
-		$template->assign('HidePassword', $alliance->getRecruitType() != Alliance::RECRUIT_PASSWORD);
+		$template->assign('HidePassword', $alliance->getRecruitType() !== Alliance::RECRUIT_PASSWORD);
 	}
 
 }

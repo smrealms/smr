@@ -12,12 +12,12 @@ use Smr\Request;
 class AnonBankDetailProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $anonBankID
+		private readonly int $anonBankID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
 		$action = Request::get('action');
-		if (!in_array($action, ['Deposit', 'Payment'])) {
+		if (!in_array($action, ['Deposit', 'Payment'], true)) {
 			throw new Exception('Invalid action submitted: ' . $action);
 		}
 
@@ -37,7 +37,7 @@ class AnonBankDetailProcessor extends PlayerPageProcessor {
 		$trans_id = $dbResult->record()->getInt('max_id') + 1;
 
 		// Update the credit amounts for the player and the bank
-		if ($action == 'Deposit') {
+		if ($action === 'Deposit') {
 			if ($player->getCredits() < $amount) {
 				create_error('You don\'t own that much money!');
 			}

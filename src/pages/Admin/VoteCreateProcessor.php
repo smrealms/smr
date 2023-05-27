@@ -12,14 +12,14 @@ class VoteCreateProcessor extends AccountPageProcessor {
 
 	public function build(Account $account): never {
 		$action = Request::get('action');
-		if ($action == 'Preview Vote') {
+		if ($action === 'Preview Vote') {
 			$container = new VoteCreate(
 				previewVote: Request::get('question'),
 				days: Request::getInt('days'),
 			);
 			$container->go();
 		}
-		if ($action == 'Preview Option') {
+		if ($action === 'Preview Option') {
 			$container = new VoteCreate(
 				previewOption: Request::get('option'),
 				voteID: Request::getInt('vote'),
@@ -28,14 +28,14 @@ class VoteCreateProcessor extends AccountPageProcessor {
 		}
 
 		$db = Database::getInstance();
-		if ($action == 'Create Vote') {
+		if ($action === 'Create Vote') {
 			$question = Request::get('question');
 			$end = Epoch::time() + 86400 * Request::getInt('days');
 			$db->insert('voting', [
 				'question' => $question,
 				'end' => $end,
 			]);
-		} elseif ($action == 'Add Option') {
+		} elseif ($action === 'Add Option') {
 			$option = Request::get('option');
 			$voteID = Request::getInt('vote');
 			$db->insert('voting_options', [

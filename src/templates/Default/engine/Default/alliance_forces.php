@@ -1,13 +1,14 @@
 <?php declare(strict_types=1);
 
 /**
+ * @var array<Smr\Force> $Forces
  * @var Smr\Account $ThisAccount
  * @var Smr\Template $this
  * @var array{Mines: int, CDs: int, SDs: int} $Total
  * @var array{Mines: int, CDs: int, SDs: int} $TotalCost
  */
 
-if (empty($Forces)) { ?>
+if (count($Forces) === 0) { ?>
 	Your alliance has no deployed forces.
 	<a href="<?php echo WIKI_URL; ?>/game-guide/forces" target="_blank">
 		<img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Forces"/>

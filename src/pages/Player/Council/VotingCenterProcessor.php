@@ -11,7 +11,7 @@ use Smr\Request;
 class VotingCenterProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $otherRaceID
+		private readonly int $otherRaceID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
@@ -23,15 +23,15 @@ class VotingCenterProcessor extends PlayerPageProcessor {
 
 		$action = strtoupper(Request::get('action'));
 
-		if ($action == 'INCREASE') {
+		if ($action === 'INCREASE') {
 			$action = 'INC';
-		} elseif ($action == 'DECREASE') {
+		} elseif ($action === 'DECREASE') {
 			$action = 'DEC';
 		}
 
 		$race_id = $this->otherRaceID;
 
-		if ($action == 'INC' || $action == 'DEC') {
+		if ($action === 'INC' || $action === 'DEC') {
 			$db->replace('player_votes_relation', [
 				'account_id' => $player->getAccountID(),
 				'game_id' => $player->getGameID(),
@@ -40,7 +40,7 @@ class VotingCenterProcessor extends PlayerPageProcessor {
 				'action' => $action,
 				'time' => Epoch::time(),
 			]);
-		} elseif ($action == 'YES' || $action == 'NO') {
+		} elseif ($action === 'YES' || $action === 'NO') {
 			$db->replace('player_votes_pact', [
 				'account_id' => $player->getAccountID(),
 				'game_id' => $player->getGameID(),
@@ -48,7 +48,7 @@ class VotingCenterProcessor extends PlayerPageProcessor {
 				'race_id_2' => $race_id,
 				'vote' => $action,
 			]);
-		} elseif ($action == 'VETO') {
+		} elseif ($action === 'VETO') {
 			// try to cancel both votings
 			$sqlParams = [
 				'game_id' => $player->getGameID(),
