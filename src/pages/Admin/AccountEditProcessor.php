@@ -13,7 +13,7 @@ use Smr\Request;
 class AccountEditProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $editAccountID
+		private readonly int $editAccountID,
 	) {}
 
 	public function build(Account $account): never {

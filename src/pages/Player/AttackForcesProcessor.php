@@ -14,7 +14,7 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly int $ownerAccountID,
-		private readonly bool $bump = false
+		private readonly bool $bump = false,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

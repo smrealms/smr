@@ -282,7 +282,7 @@ abstract class AbstractPlayer {
 	protected function __construct(
 		protected readonly int $gameID,
 		protected readonly int $accountID,
-		DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [

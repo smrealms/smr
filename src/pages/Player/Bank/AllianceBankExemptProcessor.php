@@ -12,7 +12,7 @@ class AllianceBankExemptProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly ?int $minTransactionID = null,
-		private readonly ?int $maxTransactionID = null
+		private readonly ?int $maxTransactionID = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

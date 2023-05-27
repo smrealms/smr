@@ -92,7 +92,7 @@ class Alliance {
 	protected function __construct(
 		protected readonly int $allianceID,
 		protected readonly int $gameID,
-		DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null,
 	) {
 		if ($allianceID !== 0) {
 			$db = Database::getInstance();

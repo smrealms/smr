@@ -16,7 +16,7 @@ class RouteIterator {
 	private TransactionType $transaction = TransactionType::Buy;
 
 	public function __construct(
-		private MultiplePortRoute $route
+		private MultiplePortRoute $route,
 	) {
 		$oneWayRoutes = $route->getOneWayRoutes();
 		$this->routeIterator = new InfiniteIterator(new ArrayIterator($oneWayRoutes));

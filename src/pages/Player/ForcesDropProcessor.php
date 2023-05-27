@@ -18,7 +18,7 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 		private readonly ?int $takeCDs = null,
 		private readonly ?int $dropSDs = null,
 		private readonly ?int $takeSDs = null,
-		private readonly ?string $referrer = null
+		private readonly ?string $referrer = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

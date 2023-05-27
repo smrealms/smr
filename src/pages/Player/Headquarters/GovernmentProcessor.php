@@ -10,7 +10,7 @@ use Smr\Pages\Player\CurrentSector;
 class GovernmentProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $locationID
+		private readonly int $locationID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

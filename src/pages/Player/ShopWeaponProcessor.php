@@ -13,7 +13,7 @@ class ShopWeaponProcessor extends PlayerPageProcessor {
 	public function __construct(
 		private readonly int $locationID,
 		private readonly Weapon $weapon,
-		private readonly ?int $sellOrderID = null
+		private readonly ?int $sellOrderID = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

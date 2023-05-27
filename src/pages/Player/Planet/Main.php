@@ -15,7 +15,7 @@ class Main extends PlanetPage {
 
 	public function __construct(
 		private readonly ?string $message = null,
-		private readonly ?string $errorMessage = null
+		private readonly ?string $errorMessage = null,
 	) {}
 
 	protected function buildPlanetPage(AbstractPlayer $player, Template $template): void {

@@ -14,7 +14,7 @@ class PlotCourseConventionalProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly ?int $from = null,
-		private readonly ?int $to = null
+		private readonly ?int $to = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

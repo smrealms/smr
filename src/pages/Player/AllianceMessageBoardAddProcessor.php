@@ -16,7 +16,7 @@ class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
 	public function __construct(
 		private readonly int $allianceID,
 		private readonly AllianceMessageBoard|AllianceMessageBoardView $lastPage,
-		private readonly ?int $threadID = null
+		private readonly ?int $threadID = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

@@ -10,7 +10,7 @@ use Smr\Request;
 class AllianceSetOpProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly bool $cancel = false
+		private readonly bool $cancel = false,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

@@ -12,7 +12,7 @@ class ReportedMessageReplyProcessor extends AccountPageProcessor {
 	public function __construct(
 		private readonly int $gameID,
 		private readonly int $offenderAccountID,
-		private readonly int $offendedAccountID
+		private readonly int $offendedAccountID,
 	) {}
 
 	public function build(Account $account): never {

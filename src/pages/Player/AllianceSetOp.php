@@ -14,7 +14,7 @@ class AllianceSetOp extends PlayerPage {
 	public string $file = 'alliance_set_op.php';
 
 	public function __construct(
-		private readonly ?string $message = null
+		private readonly ?string $message = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

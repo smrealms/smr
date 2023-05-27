@@ -21,7 +21,7 @@ class CheckMap extends AccountPage {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $galaxyID
+		private readonly int $galaxyID,
 	) {}
 
 	public function build(Account $account, Template $template): void {

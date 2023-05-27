@@ -12,7 +12,7 @@ class MessageBoxReplyProcessor extends AccountPageProcessor {
 	public function __construct(
 		private readonly int $senderAccountID,
 		private readonly int $gameID,
-		private readonly int $boxTypeID
+		private readonly int $boxTypeID,
 	) {}
 
 	public function build(Account $account): never {

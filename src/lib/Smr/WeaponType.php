@@ -71,7 +71,7 @@ class WeaponType {
 
 	protected function __construct(
 		protected readonly int $weaponTypeID,
-		DatabaseRecord $dbRecord
+		DatabaseRecord $dbRecord,
 	) {
 		$this->name = $dbRecord->getString('weapon_name');
 		$this->raceID = $dbRecord->getInt('race_id');

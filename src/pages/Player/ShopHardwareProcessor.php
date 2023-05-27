@@ -12,7 +12,7 @@ class ShopHardwareProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly int $hardwareID,
-		private readonly int $locationID
+		private readonly int $locationID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

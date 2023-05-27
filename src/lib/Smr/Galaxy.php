@@ -83,7 +83,7 @@ class Galaxy {
 		protected readonly int $gameID,
 		protected readonly int $galaxyID,
 		bool $create = false,
-		DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [

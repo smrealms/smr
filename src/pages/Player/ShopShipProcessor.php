@@ -10,7 +10,7 @@ use Smr\ShipType;
 class ShopShipProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $shipTypeID
+		private readonly int $shipTypeID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

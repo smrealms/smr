@@ -10,7 +10,7 @@ use Smr\Request;
 class AllianceJoinProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $allianceID
+		private readonly int $allianceID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

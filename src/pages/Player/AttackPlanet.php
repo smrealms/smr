@@ -17,7 +17,7 @@ class AttackPlanet extends PlayerPage {
 	public function __construct(
 		private readonly int $sectorID,
 		private readonly array $results,
-		bool $playerDied
+		bool $playerDied,
 	) {
 		// If the player died, make sure they see combat results
 		$this->skipRedirect = $playerDied;

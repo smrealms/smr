@@ -17,7 +17,7 @@ class PoliticalStatus extends PlayerPage {
 	public string $file = 'council_politics.php';
 
 	public function __construct(
-		private readonly int $raceID
+		private readonly int $raceID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

@@ -14,7 +14,7 @@ use Smr\SectorLock;
 class SectorJumpProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly ?int $targetSectorID = null
+		private readonly ?int $targetSectorID = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

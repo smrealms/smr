@@ -11,7 +11,7 @@ use Smr\Request;
 class MessageDeleteProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $folderID
+		private readonly int $folderID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

@@ -17,7 +17,7 @@ class ListPlanetFinancial extends PlayerPage {
 	public string $file = 'planet_list_financial.php';
 
 	public function __construct(
-		private readonly int $allianceID
+		private readonly int $allianceID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

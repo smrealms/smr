@@ -11,7 +11,7 @@ class ErrorDisplay extends AccountPage {
 	public string $file = 'error.php';
 
 	public function __construct(
-		public readonly string $message
+		public readonly string $message,
 	) {}
 
 	public function build(Account $account, Template $template): void {

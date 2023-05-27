@@ -15,7 +15,7 @@ class EditionRead extends PlayerPage {
 	public function __construct(
 		private readonly int $gameID,
 		private readonly ?int $paperID,
-		private readonly bool $showBackButton = false
+		private readonly bool $showBackButton = false,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

@@ -12,7 +12,7 @@ class AlbumModerateProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly int $albumAccountID,
-		private readonly string $task
+		private readonly string $task,
 	) {}
 
 	public function build(Account $account): never {

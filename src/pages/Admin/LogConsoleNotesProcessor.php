@@ -15,7 +15,7 @@ class LogConsoleNotesProcessor extends AccountPageProcessor {
 	 */
 	public function __construct(
 		private readonly array $accountIDs,
-		private readonly array $logTypeIDs
+		private readonly array $logTypeIDs,
 	) {}
 
 	public function build(Account $account): never {

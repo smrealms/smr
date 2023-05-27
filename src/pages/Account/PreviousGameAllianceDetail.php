@@ -14,7 +14,7 @@ class PreviousGameAllianceDetail extends AccountPage {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $allianceID
+		private readonly int $allianceID,
 	) {}
 
 	public function build(Account $account, Template $template): void {

@@ -10,7 +10,7 @@ class PreferencesTransferProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly int $amount,
-		private readonly int $accountID
+		private readonly int $accountID,
 	) {}
 
 	public function build(Account $account): never {

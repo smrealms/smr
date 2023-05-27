@@ -14,7 +14,7 @@ class TalkToBartender extends PlayerPage {
 
 	public function __construct(
 		private readonly int $locationID,
-		private ?string $message = null
+		private ?string $message = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

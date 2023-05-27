@@ -10,7 +10,7 @@ use Smr\TradeGood;
 class AttackPortLootProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $goodID
+		private readonly int $goodID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

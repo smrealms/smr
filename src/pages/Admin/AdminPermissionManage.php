@@ -16,7 +16,7 @@ class AdminPermissionManage extends AccountPage {
 	public string $file = 'admin/permission_manage.php';
 
 	public function __construct(
-		private readonly ?int $adminAccountID = null
+		private readonly ?int $adminAccountID = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

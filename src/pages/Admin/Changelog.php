@@ -17,7 +17,7 @@ class Changelog extends AccountPage {
 	public function __construct(
 		private readonly string $changeTitle = '',
 		private readonly string $changeMessage = '',
-		private readonly string $affectedDb = ''
+		private readonly string $affectedDb = '',
 	) {}
 
 	public function build(Account $account, Template $template): void {

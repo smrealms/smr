@@ -20,7 +20,7 @@ class CombatLogViewer extends PlayerPage {
 	 */
 	public function __construct(
 		private readonly array $logIDs,
-		private readonly int $currentLog = 0
+		private readonly int $currentLog = 0,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

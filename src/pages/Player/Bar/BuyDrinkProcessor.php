@@ -12,7 +12,7 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly int $locationID,
-		private readonly string $action
+		private readonly string $action,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

@@ -16,7 +16,7 @@ class ManageDraftLeaders extends AccountPage {
 
 	public function __construct(
 		private readonly ?int $selectedGameID = null,
-		private readonly ?string $processingMsg = null
+		private readonly ?string $processingMsg = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

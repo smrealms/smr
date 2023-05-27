@@ -42,7 +42,7 @@ class CallbackEvent {
 		public readonly string $nick,
 		public readonly Closure $callback,
 		public readonly int $time,
-		public readonly bool $validate
+		public readonly bool $validate,
 	) {}
 
 }

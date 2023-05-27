@@ -14,7 +14,7 @@ class SearchForTrader extends PlayerPage {
 	public string $file = 'trader_search.php';
 
 	public function __construct(
-		private readonly bool $emptyResult = false
+		private readonly bool $emptyResult = false,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

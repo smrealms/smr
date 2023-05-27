@@ -12,7 +12,7 @@ use Smr\Request;
 class ManagePostEditorsProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $selectedGameID
+		private readonly int $selectedGameID,
 	) {}
 
 	public function build(Account $account): never {

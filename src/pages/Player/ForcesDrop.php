@@ -13,7 +13,7 @@ class ForcesDrop extends PlayerPage {
 	public string $file = 'forces_drop.php';
 
 	public function __construct(
-		private readonly ?int $ownerAccountID = null
+		private readonly ?int $ownerAccountID = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

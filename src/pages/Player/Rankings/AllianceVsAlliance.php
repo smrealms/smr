@@ -23,7 +23,7 @@ class AllianceVsAlliance extends PlayerPage {
 	 */
 	public function __construct(
 		private ?int $detailsAllianceID = null,
-		private ?array $versusAllianceIDs = null
+		private ?array $versusAllianceIDs = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

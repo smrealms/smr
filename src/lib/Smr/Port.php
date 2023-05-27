@@ -151,7 +151,7 @@ class Port {
 	protected function __construct(
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
-		DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null,
 	) {
 		$this->cachedTime = Epoch::time();
 		$db = Database::getInstance();

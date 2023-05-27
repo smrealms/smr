@@ -13,7 +13,7 @@ use Smr\Request;
 class EmbassyProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $otherRaceID
+		private readonly int $otherRaceID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

@@ -18,7 +18,7 @@ class MessageBoxView extends AccountPage {
 	public string $file = 'admin/box_view.php';
 
 	public function __construct(
-		private readonly ?int $boxTypeID = null
+		private readonly ?int $boxTypeID = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

@@ -16,7 +16,7 @@ class NpcManageProcessor extends AccountPageProcessor {
 	public function __construct(
 		private readonly int $selectedGameID,
 		private readonly int $accountID,
-		private readonly string $login
+		private readonly string $login,
 	) {}
 
 	public function build(Account $account): never {

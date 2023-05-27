@@ -11,7 +11,7 @@ class AllianceBankReportProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly int $allianceID,
-		private readonly string $text
+		private readonly string $text,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

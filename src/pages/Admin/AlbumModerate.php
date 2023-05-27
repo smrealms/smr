@@ -15,7 +15,7 @@ class AlbumModerate extends AccountPage {
 	public string $file = 'admin/album_moderate.php';
 
 	public function __construct(
-		private readonly int $albumAccountID
+		private readonly int $albumAccountID,
 	) {}
 
 	public function build(Account $account, Template $template): void {

@@ -11,7 +11,7 @@ use Smr\Request;
 class FeatureRequestVoteProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly FeatureRequest|FeatureRequestComments $previousPage
+		private readonly FeatureRequest|FeatureRequestComments $previousPage,
 	) {}
 
 	public function build(Account $account): never {

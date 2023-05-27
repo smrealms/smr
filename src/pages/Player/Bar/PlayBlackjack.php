@@ -60,7 +60,7 @@ class PlayBlackjack extends PlayerPage {
 		private readonly Table $table,
 		private readonly bool $gameEnded,
 		private readonly int $bet,
-		private readonly string $winningsMsg
+		private readonly string $winningsMsg,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

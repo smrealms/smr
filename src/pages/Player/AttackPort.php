@@ -15,7 +15,7 @@ class AttackPort extends PlayerPage {
 	 */
 	public function __construct(
 		private readonly ?array $results = null,
-		bool $playerDied = false
+		bool $playerDied = false,
 	) {
 		// If the player died, make sure they see combat results
 		$this->skipRedirect = $playerDied;

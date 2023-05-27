@@ -14,7 +14,7 @@ class HallOfFame extends HistoryPage {
 		protected readonly string $historyDatabase,
 		protected readonly int $historyGameID,
 		protected readonly string $historyGameName,
-		private readonly ?string $stat = null
+		private readonly ?string $stat = null,
 	) {}
 
 	protected function buildHistory(Account $account, Template $template): void {

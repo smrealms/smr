@@ -19,7 +19,7 @@ class EditGalaxy extends AccountPage {
 		private ?int $gameID = null,
 		private ?int $galaxyID = null,
 		private readonly ?string $message = null,
-		private ?int $focusSectorID = null
+		private ?int $focusSectorID = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

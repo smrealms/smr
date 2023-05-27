@@ -12,7 +12,7 @@ use Smr\SectorLock;
 class AttackPlayerProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $targetAccountID
+		private readonly int $targetAccountID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

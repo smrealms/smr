@@ -17,7 +17,7 @@ class Government extends PlayerPage {
 	public string $file = 'government.php';
 
 	public function __construct(
-		private readonly int $locationID
+		private readonly int $locationID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

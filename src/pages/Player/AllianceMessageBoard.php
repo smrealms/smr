@@ -22,7 +22,7 @@ class AllianceMessageBoard extends PlayerPage {
 		private readonly int $allianceID,
 		public ?string $preview = null,
 		public ?string $topic = null,
-		public ?bool $allianceEyesOnly = null
+		public ?bool $allianceEyesOnly = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

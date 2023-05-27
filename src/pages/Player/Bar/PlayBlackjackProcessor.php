@@ -14,7 +14,7 @@ class PlayBlackjackProcessor extends PlayerPageProcessor {
 		private readonly int $locationID,
 		private readonly string $action,
 		private readonly ?Table $table = null,
-		private readonly ?int $bet = null
+		private readonly ?int $bet = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

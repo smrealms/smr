@@ -10,7 +10,7 @@ use Smr\Request;
 class PaperDeleteProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $paperID
+		private readonly int $paperID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

@@ -13,7 +13,7 @@ class MessageBlacklist extends PlayerPage {
 	public string $file = 'message_blacklist.php';
 
 	public function __construct(
-		private readonly ?string $message = null
+		private readonly ?string $message = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

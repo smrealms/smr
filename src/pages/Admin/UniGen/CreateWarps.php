@@ -19,7 +19,7 @@ class CreateWarps extends AccountPage {
 	public function __construct(
 		private readonly int $gameID,
 		private readonly int $galaxyID,
-		private readonly ?string $message = null
+		private readonly ?string $message = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

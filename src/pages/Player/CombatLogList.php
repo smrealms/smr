@@ -21,7 +21,7 @@ class CombatLogList extends PlayerPage {
 	public function __construct(
 		private readonly CombatLogType $action = CombatLogType::Personal,
 		private readonly int $page = 0,
-		private readonly ?string $message = null
+		private readonly ?string $message = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

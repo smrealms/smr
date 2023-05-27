@@ -12,7 +12,7 @@ class ArticleDeleteConfirm extends PlayerPage {
 	public string $file = 'galactic_post_article_delete_confirm.php';
 
 	public function __construct(
-		private readonly int $articleID
+		private readonly int $articleID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

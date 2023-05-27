@@ -10,7 +10,7 @@ use Smr\Request;
 class MessageBoxDeleteProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $boxTypeID
+		private readonly int $boxTypeID,
 	) {}
 
 	public function build(Account $account): never {

@@ -12,7 +12,7 @@ class BuyMessageNotifications extends AccountPage {
 	public string $file = 'buy_message_notifications.php';
 
 	public function __construct(
-		private readonly ?string $message = null
+		private readonly ?string $message = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

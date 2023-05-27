@@ -142,7 +142,7 @@ class Planet {
 	protected function __construct(
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
-		DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [

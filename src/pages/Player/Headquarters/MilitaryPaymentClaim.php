@@ -13,7 +13,7 @@ class MilitaryPaymentClaim extends PlayerPage {
 
 	public function __construct(
 		private readonly int $locationID,
-		private readonly string $claimText
+		private readonly string $claimText,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

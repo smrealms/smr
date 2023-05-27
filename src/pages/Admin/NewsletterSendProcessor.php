@@ -12,7 +12,7 @@ class NewsletterSendProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly string $newsletterHtml,
-		private readonly string $newsletterText
+		private readonly string $newsletterText,
 	) {}
 
 	public function build(Account $account): never {

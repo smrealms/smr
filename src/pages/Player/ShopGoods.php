@@ -12,7 +12,7 @@ class ShopGoods extends PlayerPage {
 	public string $file = 'shop_goods.php';
 
 	public function __construct(
-		private readonly ?string $tradeMessage = null
+		private readonly ?string $tradeMessage = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

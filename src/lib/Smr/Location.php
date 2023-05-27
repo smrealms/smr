@@ -162,7 +162,7 @@ class Location {
 	protected function __construct(
 		protected readonly int $gameID, // use 0 to be independent of game
 		protected readonly int $typeID,
-		DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = ['location_type_id' => $db->escapeNumber($typeID)];

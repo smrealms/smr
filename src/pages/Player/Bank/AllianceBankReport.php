@@ -17,7 +17,7 @@ class AllianceBankReport extends PlayerPage {
 
 	public function __construct(
 		private readonly int $allianceID,
-		private readonly bool $reportSent = false
+		private readonly bool $reportSent = false,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

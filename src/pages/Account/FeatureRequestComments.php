@@ -17,7 +17,7 @@ class FeatureRequestComments extends AccountPage {
 
 	public function __construct(
 		private readonly int $featureRequestID,
-		private readonly FeatureRequest $previousPage
+		private readonly FeatureRequest $previousPage,
 	) {}
 
 	public function build(Account $account, Template $template): void {

@@ -10,7 +10,7 @@ class PaperEditProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly int $paperID,
-		private readonly int $articleID
+		private readonly int $articleID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

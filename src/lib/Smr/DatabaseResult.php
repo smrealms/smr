@@ -13,7 +13,7 @@ use RuntimeException;
 class DatabaseResult {
 
 	public function __construct(
-		private readonly Result $dbResult
+		private readonly Result $dbResult,
 	) {}
 
 	/**

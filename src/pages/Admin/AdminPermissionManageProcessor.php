@@ -10,7 +10,7 @@ use Smr\Request;
 class AdminPermissionManageProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $adminAccountID
+		private readonly int $adminAccountID,
 	) {}
 
 	public function build(Account $account): never {

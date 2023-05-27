@@ -16,7 +16,7 @@ class EditLocations extends AccountPage {
 	public string $file = 'admin/location_edit.php';
 
 	public function __construct(
-		private readonly ?int $locationTypeID = null
+		private readonly ?int $locationTypeID = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

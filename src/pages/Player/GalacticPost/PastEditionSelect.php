@@ -13,7 +13,7 @@ class PastEditionSelect extends PlayerPage {
 	public string $file = 'galactic_post_past.php';
 
 	public function __construct(
-		private readonly int $gameID
+		private readonly int $gameID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

@@ -12,7 +12,7 @@ class MessageReportProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly int $folderID,
-		private readonly int $messageID
+		private readonly int $messageID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

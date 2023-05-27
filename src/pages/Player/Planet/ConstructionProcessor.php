@@ -9,7 +9,7 @@ class ConstructionProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly string $action,
-		private readonly int $constructionID
+		private readonly int $constructionID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

@@ -19,7 +19,7 @@ class CombatSimulator extends AccountPage {
 	public function __construct(
 		private readonly ?array $results = null,
 		private readonly array $attackers = [],
-		private readonly array $defenders = []
+		private readonly array $defenders = [],
 	) {}
 
 	public function build(Account $account, Template $template): void {

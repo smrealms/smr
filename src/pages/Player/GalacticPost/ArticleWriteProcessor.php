@@ -14,7 +14,7 @@ use Smr\Request;
 class ArticleWriteProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly ?int $articleID = null
+		private readonly ?int $articleID = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

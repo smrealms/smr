@@ -11,7 +11,7 @@ class AnnouncementCreate extends AccountPage {
 	public string $file = 'admin/announcement_create.php';
 
 	public function __construct(
-		private readonly ?string $preview = null
+		private readonly ?string $preview = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

@@ -9,7 +9,7 @@ use Smr\Request;
 class DefenseProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $hardwareTypeID
+		private readonly int $hardwareTypeID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

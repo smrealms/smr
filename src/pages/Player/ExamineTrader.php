@@ -12,7 +12,7 @@ class ExamineTrader extends PlayerPage {
 	public string $file = 'trader_examine.php';
 
 	public function __construct(
-		private readonly int $targetAccountID
+		private readonly int $targetAccountID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

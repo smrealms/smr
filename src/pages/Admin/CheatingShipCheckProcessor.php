@@ -12,7 +12,7 @@ class CheatingShipCheckProcessor extends AccountPageProcessor {
 		private readonly int $gameID,
 		private readonly int $hardwareTypeID,
 		private readonly int $maxAmount,
-		private readonly int $accountID
+		private readonly int $accountID,
 	) {}
 
 	public function build(Account $account): never {

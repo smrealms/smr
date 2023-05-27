@@ -10,7 +10,7 @@ class AlbumApproveProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly int $albumAccountID,
-		private readonly bool $approved
+		private readonly bool $approved,
 	) {}
 
 	public function build(Account $account): never {

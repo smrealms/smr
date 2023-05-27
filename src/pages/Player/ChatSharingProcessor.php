@@ -15,7 +15,7 @@ class ChatSharingProcessor extends PlayerPageProcessor {
 	 * @param array<int> $shareAccountIDs Account IDs already being shared to
 	 */
 	public function __construct(
-		private readonly array $shareAccountIDs
+		private readonly array $shareAccountIDs,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

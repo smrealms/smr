@@ -12,7 +12,7 @@ class SectorMoveProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly int $targetSectorID,
-		private readonly CurrentSector|LocalMap $targetPage
+		private readonly CurrentSector|LocalMap $targetPage,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

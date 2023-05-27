@@ -18,7 +18,7 @@ class ReportedMessageReply extends AccountPage {
 		private readonly ?string $offenderPreview = null,
 		private readonly ?int $offenderBanPoints = null,
 		private readonly ?string $offendedPreview = null,
-		private readonly ?int $offendedBanPoints = null
+		private readonly ?int $offendedBanPoints = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

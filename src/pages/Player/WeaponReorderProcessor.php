@@ -10,7 +10,7 @@ class WeaponReorderProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly int $weaponOrderID,
-		private readonly string $direction
+		private readonly string $direction,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

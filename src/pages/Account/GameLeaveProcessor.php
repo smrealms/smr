@@ -13,7 +13,7 @@ class GameLeaveProcessor extends AccountPageProcessor {
 	use ReusableTrait;
 
 	public function __construct(
-		private readonly Page $forwardTo
+		private readonly Page $forwardTo,
 	) {}
 
 	public function build(Account $account): never {

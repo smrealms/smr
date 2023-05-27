@@ -12,7 +12,7 @@ class EnableGame extends AccountPage {
 	public string $file = 'admin/enable_game.php';
 
 	public function __construct(
-		private readonly ?string $processingMessage = null
+		private readonly ?string $processingMessage = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

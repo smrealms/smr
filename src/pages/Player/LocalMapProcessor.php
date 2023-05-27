@@ -8,7 +8,7 @@ use Smr\Page\PlayerPageProcessor;
 class LocalMapProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly string $zoomDir
+		private readonly string $zoomDir,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

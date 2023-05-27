@@ -28,7 +28,7 @@ class CurrentSector extends PlayerPage {
 		private readonly ?string $errorMessage = null,
 		private readonly ?string $missionMessage = null,
 		private readonly ?string $tradeMessage = null,
-		private readonly bool $showForceRefreshMessage = false
+		private readonly bool $showForceRefreshMessage = false,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

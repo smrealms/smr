@@ -21,7 +21,7 @@ class FeatureRequest extends AccountPage {
 	private const CATEGORY_NEW = 'New';
 
 	public function __construct(
-		private readonly string $category = self::CATEGORY_NEW
+		private readonly string $category = self::CATEGORY_NEW,
 	) {}
 
 	public function build(Account $account, Template $template): void {

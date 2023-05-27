@@ -17,7 +17,7 @@ class AttackPlayer extends PlayerPage {
 	public function __construct(
 		private readonly array $results,
 		private readonly ?int $targetAccountID,
-		bool $playerDied
+		bool $playerDied,
 	) {
 		$this->skipRedirect = $playerDied;
 	}

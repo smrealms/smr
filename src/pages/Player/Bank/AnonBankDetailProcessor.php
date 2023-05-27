@@ -12,7 +12,7 @@ use Smr\Request;
 class AnonBankDetailProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $anonBankID
+		private readonly int $anonBankID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

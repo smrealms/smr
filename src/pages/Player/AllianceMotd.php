@@ -19,7 +19,7 @@ class AllianceMotd extends PlayerPage {
 	public string $file = 'alliance_mod.php';
 
 	public function __construct(
-		private readonly int $allianceID
+		private readonly int $allianceID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

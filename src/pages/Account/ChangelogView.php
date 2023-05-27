@@ -15,7 +15,7 @@ class ChangelogView extends AccountPage {
 	public string $file = 'changelog_view.php';
 
 	public function __construct(
-		private readonly ?int $lastLogin = null
+		private readonly ?int $lastLogin = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

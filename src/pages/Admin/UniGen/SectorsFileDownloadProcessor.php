@@ -9,7 +9,7 @@ use Smr\SectorsFile;
 class SectorsFileDownloadProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $gameID
+		private readonly int $gameID,
 	) {}
 
 	public function build(Account $account): never {

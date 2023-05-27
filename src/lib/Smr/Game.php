@@ -87,7 +87,7 @@ class Game {
 
 	protected function __construct(
 		protected readonly int $gameID,
-		bool $create = false
+		bool $create = false,
 	) {
 		$db = Database::getInstance();
 

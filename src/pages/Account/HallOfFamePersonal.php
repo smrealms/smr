@@ -20,7 +20,7 @@ class HallOfFamePersonal extends AccountPage {
 	public function __construct(
 		private readonly int $hofAccountID,
 		private readonly ?int $gameID = null,
-		public readonly ?string $viewType = null
+		public readonly ?string $viewType = null,
 	) {}
 
 	/**

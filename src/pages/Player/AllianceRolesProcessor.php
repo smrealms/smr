@@ -11,7 +11,7 @@ use Smr\Request;
 class AllianceRolesProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly ?int $roleID = null
+		private readonly ?int $roleID = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

@@ -12,7 +12,7 @@ class LogConsoleDetailProcessor extends AccountPageProcessor {
 	 * @param array<int> $accountIDs
 	 */
 	public function __construct(
-		private readonly array $accountIDs
+		private readonly array $accountIDs,
 	) {}
 
 	public function build(Account $account): never {

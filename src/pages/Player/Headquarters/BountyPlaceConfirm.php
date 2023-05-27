@@ -16,7 +16,7 @@ class BountyPlaceConfirm extends PlayerPage {
 		private readonly int $locationID,
 		private readonly int $otherPlayerID,
 		private readonly int $credits,
-		private readonly int $smrCredits
+		private readonly int $smrCredits,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

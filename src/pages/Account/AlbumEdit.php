@@ -17,7 +17,7 @@ class AlbumEdit extends AccountPage {
 	public string $file = 'album_edit.php';
 
 	public function __construct(
-		private readonly ?string $successMsg = null
+		private readonly ?string $successMsg = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {

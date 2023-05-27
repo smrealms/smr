@@ -18,7 +18,7 @@ class AllianceRoster extends PlayerPage {
 
 	public function __construct(
 		private readonly ?int $allianceID = null,
-		private readonly bool $showRoles = false
+		private readonly bool $showRoles = false,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

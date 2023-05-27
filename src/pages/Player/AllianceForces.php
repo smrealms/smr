@@ -20,7 +20,7 @@ class AllianceForces extends PlayerPage {
 	public string $file = 'alliance_forces.php';
 
 	public function __construct(
-		private readonly int $allianceID
+		private readonly int $allianceID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

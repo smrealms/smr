@@ -12,7 +12,7 @@ class FeatureRequestCommentProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly int $featureRequestID,
-		private readonly FeatureRequestComments $previousPage
+		private readonly FeatureRequestComments $previousPage,
 	) {}
 
 	public function build(Account $account): never {

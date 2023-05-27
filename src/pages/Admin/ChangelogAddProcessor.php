@@ -10,7 +10,7 @@ use Smr\Request;
 class ChangelogAddProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $versionID
+		private readonly int $versionID,
 	) {}
 
 	public function build(Account $account): never {

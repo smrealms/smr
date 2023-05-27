@@ -12,7 +12,7 @@ use Smr\Request;
 class CombatLogListProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly CombatLogType $action
+		private readonly CombatLogType $action,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

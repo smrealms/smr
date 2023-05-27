@@ -13,7 +13,7 @@ class SectorScan extends PlayerPage {
 	public string $file = 'sector_scan.php';
 
 	public function __construct(
-		private readonly int $targetSectorID
+		private readonly int $targetSectorID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

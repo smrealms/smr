@@ -18,7 +18,7 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 		private readonly int $bargainNumber = 0,
 		private readonly ?int $bargainPrice = null, // only for NPC
 		private readonly ?int $offeredPrice = null,
-		private readonly ?int $idealPrice = null
+		private readonly ?int $idealPrice = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

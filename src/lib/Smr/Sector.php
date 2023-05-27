@@ -127,7 +127,7 @@ class Sector {
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
 		bool $create = false,
-		DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [

@@ -15,7 +15,7 @@ class EditSectorProcessor extends AccountPageProcessor {
 	public function __construct(
 		private readonly int $gameID,
 		private readonly int $galaxyID,
-		private readonly int $sectorID
+		private readonly int $sectorID,
 	) {}
 
 	public function build(Account $account): never {

@@ -22,7 +22,7 @@ class SearchForTraderResult extends PlayerPage {
 
 	public function __construct(
 		private ?int $playerID = null,
-		private ?string $playerName = null
+		private ?string $playerName = null,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

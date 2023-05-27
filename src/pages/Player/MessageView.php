@@ -23,7 +23,7 @@ class MessageView extends PlayerPage {
 	public function __construct(
 		private readonly int $folderID,
 		private readonly int $page = 0,
-		private readonly bool $showAll = false
+		private readonly bool $showAll = false,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

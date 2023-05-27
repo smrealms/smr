@@ -12,7 +12,7 @@ class BountyView extends PlayerPage {
 	public string $file = 'bounty_view.php';
 
 	public function __construct(
-		private readonly int $otherAccountID
+		private readonly int $otherAccountID,
 	) {}
 
 	public function build(AbstractPlayer $player, Template $template): void {

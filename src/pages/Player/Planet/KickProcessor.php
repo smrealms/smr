@@ -10,7 +10,7 @@ use Smr\Player;
 class KickProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $kickAccountID
+		private readonly int $kickAccountID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

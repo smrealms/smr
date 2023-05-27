@@ -10,7 +10,7 @@ class FormOpenProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly bool $isOpen,
-		private readonly string $type
+		private readonly string $type,
 	) {}
 
 	public function build(Account $account): never {

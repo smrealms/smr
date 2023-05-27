@@ -17,7 +17,7 @@ class AttackForces extends PlayerPage {
 	public function __construct(
 		private readonly int $ownerAccountID,
 		private readonly array $results,
-		bool $playerDied
+		bool $playerDied,
 	) {
 		// If the player died, make sure they see combat results
 		$this->skipRedirect = $playerDied;

@@ -14,7 +14,7 @@ class AllianceMessageBoardDeleteThreadProcessor extends PlayerPageProcessor {
 	public function __construct(
 		private readonly int $allianceID,
 		private readonly AllianceMessageBoard $lastPage,
-		private readonly int $threadID
+		private readonly int $threadID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

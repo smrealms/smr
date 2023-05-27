@@ -38,7 +38,7 @@ class Weapon extends AbstractWeapon {
 
 	protected function __construct(
 		protected readonly int $weaponTypeID,
-		DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null,
 	) {
 		$this->weaponType = WeaponType::getWeaponType($weaponTypeID, $dbRecord);
 		$this->raceID = $this->weaponType->getRaceID();

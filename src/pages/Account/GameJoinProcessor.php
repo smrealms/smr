@@ -15,7 +15,7 @@ use Smr\Request;
 class GameJoinProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $gameID
+		private readonly int $gameID,
 	) {}
 
 	public function build(Account $account): never {

@@ -10,7 +10,7 @@ use Smr\Page\AccountPageProcessor;
 class ChangelogSetLiveProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $versionID
+		private readonly int $versionID,
 	) {}
 
 	public function build(Account $account): never {

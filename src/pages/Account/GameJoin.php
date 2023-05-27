@@ -16,7 +16,7 @@ class GameJoin extends AccountPage {
 	public string $file = 'game_join.php';
 
 	public function __construct(
-		private readonly int $gameID
+		private readonly int $gameID,
 	) {}
 
 	public function build(Account $account, Template $template): void {

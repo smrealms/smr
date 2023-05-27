@@ -9,7 +9,7 @@ use Smr\PortPayoutType;
 class AttackPortPayoutProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly PortPayoutType $payoutType
+		private readonly PortPayoutType $payoutType,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

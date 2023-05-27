@@ -12,7 +12,7 @@ use Smr\Request;
 class MessageBlacklistAddProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly ?int $blacklistAccountID = null
+		private readonly ?int $blacklistAccountID = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

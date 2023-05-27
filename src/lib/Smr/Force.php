@@ -145,7 +145,7 @@ class Force {
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
 		protected readonly int $ownerID,
-		DatabaseRecord $dbRecord = null
+		DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [

@@ -11,7 +11,7 @@ class MessageSendProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly ?int $receiverAccountID = null,
-		private readonly ?int $allianceID = null
+		private readonly ?int $allianceID = null,
 	) {}
 
 	public function build(AbstractPlayer $player): never {

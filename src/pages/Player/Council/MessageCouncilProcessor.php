@@ -11,7 +11,7 @@ use Smr\Request;
 class MessageCouncilProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $raceID
+		private readonly int $raceID,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
