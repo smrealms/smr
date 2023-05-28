@@ -5,6 +5,7 @@
  * @var Smr\Player $ThisPlayer
  * @var Smr\Sector $ThisSector
  * @var Smr\Ship $ThisShip
+ * @var bool $NewbieKill
  */
 
 $canAttack = false;
@@ -29,7 +30,10 @@ if ($ThisPlayer->hasNewbieTurns()) {
 	$canAttack = true;
 	$fightingPlayers = $ThisSector->getFightingTraders($ThisPlayer, $TargetPlayer, true, allEligible: true);
 	if (count($fightingPlayers['Defenders']) > 0) {
-		?><p><a class="submitStyle" href="<?php echo $TargetPlayer->getAttackTraderHREF(); ?>">Attack Trader (<?php echo TURNS_TO_SHOOT_SHIP; ?>)</a></p><?php
+		if ($NewbieKill) { ?>
+			<p class="big red">Your target is a new player, so you will not receive credit for killing them!</p><?php
+		} ?>
+		<p><a class="submitStyle" href="<?php echo $TargetPlayer->getAttackTraderHREF(); ?>">Attack Trader (<?php echo TURNS_TO_SHOOT_SHIP; ?>)</a></p><?php
 	} else {
 		?><p class="big red">You have no targets!</p><?php
 	}
