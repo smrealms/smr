@@ -14,7 +14,10 @@ class GameLeaveProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly Page $forwardTo,
-	) {}
+	) {
+		// Prevent infinite loops when the game ends
+		$this->skipRedirect = true;
+	}
 
 	public function build(Account $account): never {
 		$session = Session::getInstance();
