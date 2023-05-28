@@ -1231,22 +1231,25 @@ class Account {
 			$this->points = 0;
 			$db = Database::getInstance();
 			$db->lockTable('account_has_points');
-			$dbResult = $db->read('SELECT * FROM account_has_points WHERE ' . self::SQL, $this->SQLID);
-			if ($dbResult->hasRecord()) {
-				$dbRecord = $dbResult->record();
-				$this->points = $dbRecord->getInt('points');
-				$lastUpdate = $dbRecord->getInt('last_update');
-				//we are gonna check for reducing points...
-				if ($this->points > 0 && $lastUpdate < Epoch::time() - (7 * 86400)) {
-					$removePoints = 0;
-					while ($lastUpdate < Epoch::time() - (7 * 86400)) {
-						$removePoints++;
-						$lastUpdate += (7 * 86400);
+			try {
+				$dbResult = $db->read('SELECT * FROM account_has_points WHERE ' . self::SQL, $this->SQLID);
+				if ($dbResult->hasRecord()) {
+					$dbRecord = $dbResult->record();
+					$this->points = $dbRecord->getInt('points');
+					$lastUpdate = $dbRecord->getInt('last_update');
+					//we are gonna check for reducing points...
+					if ($this->points > 0 && $lastUpdate < Epoch::time() - (7 * 86400)) {
+						$removePoints = 0;
+						while ($lastUpdate < Epoch::time() - (7 * 86400)) {
+							$removePoints++;
+							$lastUpdate += (7 * 86400);
+						}
+						$this->removePoints($removePoints, $lastUpdate);
 					}
-					$this->removePoints($removePoints, $lastUpdate);
 				}
+			} finally {
+				$db->unlock();
 			}
-			$db->unlock();
 		}
 		return $this->points;
 	}

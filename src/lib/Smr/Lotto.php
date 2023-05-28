@@ -20,37 +20,39 @@ class Lotto {
 		// we check for a lotto winner...
 		$db = Database::getInstance();
 		$db->lockTable('player_has_ticket');
-		$lottoInfo = self::getLottoInfo($gameID);
+		try {
+			$lottoInfo = self::getLottoInfo($gameID);
 
-		if ($lottoInfo['TimeRemaining'] > 0) {
-			// Drawing is not closed yet
+			if ($lottoInfo['TimeRemaining'] > 0) {
+				// Drawing is not closed yet
+				return;
+			}
+
+			//we need to pick a winner
+			$dbResult = $db->read('SELECT * FROM player_has_ticket WHERE game_id = :game_id AND time > 0 ORDER BY rand() LIMIT 1', [
+				'game_id' => $db->escapeNumber($gameID),
+			]);
+			$winner_id = $dbResult->record()->getInt('account_id');
+
+			// Any unclaimed prizes get merged into this prize
+			$dbResult = $db->read('SELECT IFNULL(SUM(prize), 0) AS total_prize FROM player_has_ticket WHERE time = 0 AND game_id = :game_id', [
+				'game_id' => $db->escapeNumber($gameID),
+			]);
+			$lottoInfo['Prize'] += $dbResult->record()->getInt('total_prize');
+
+			// Delete all tickets and re-insert the winning ticket
+			$db->delete('player_has_ticket', [
+				'game_id' => $gameID,
+			]);
+			$db->insert('player_has_ticket', [
+				'game_id' => $gameID,
+				'account_id' => $winner_id,
+				'time' => 0,
+				'prize' => $lottoInfo['Prize'],
+			]);
+		} finally {
 			$db->unlock();
-			return;
 		}
-
-		//we need to pick a winner
-		$dbResult = $db->read('SELECT * FROM player_has_ticket WHERE game_id = :game_id AND time > 0 ORDER BY rand() LIMIT 1', [
-			'game_id' => $db->escapeNumber($gameID),
-		]);
-		$winner_id = $dbResult->record()->getInt('account_id');
-
-		// Any unclaimed prizes get merged into this prize
-		$dbResult = $db->read('SELECT IFNULL(SUM(prize), 0) AS total_prize FROM player_has_ticket WHERE time = 0 AND game_id = :game_id', [
-			'game_id' => $db->escapeNumber($gameID),
-		]);
-		$lottoInfo['Prize'] += $dbResult->record()->getInt('total_prize');
-
-		// Delete all tickets and re-insert the winning ticket
-		$db->delete('player_has_ticket', [
-			'game_id' => $gameID,
-		]);
-		$db->insert('player_has_ticket', [
-			'game_id' => $gameID,
-			'account_id' => $winner_id,
-			'time' => 0,
-			'prize' => $lottoInfo['Prize'],
-		]);
-		$db->unlock();
 
 		// create news msg
 		$winner = Player::getPlayer($winner_id, $gameID);

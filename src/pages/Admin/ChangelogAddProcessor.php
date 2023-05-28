@@ -29,22 +29,24 @@ class ChangelogAddProcessor extends AccountPageProcessor {
 
 		$db = Database::getInstance();
 		$db->lockTable('changelog');
+		try {
+			$dbResult = $db->read('SELECT IFNULL(MAX(changelog_id)+1, 0) AS next_changelog_id
+				FROM changelog
+				WHERE version_id = :version_id', [
+				'version_id' => $db->escapeNumber($this->versionID),
+			]);
+			$changelog_id = $dbResult->record()->getInt('next_changelog_id');
 
-		$dbResult = $db->read('SELECT IFNULL(MAX(changelog_id)+1, 0) AS next_changelog_id
-					FROM changelog
-					WHERE version_id = :version_id', [
-			'version_id' => $db->escapeNumber($this->versionID),
-		]);
-		$changelog_id = $dbResult->record()->getInt('next_changelog_id');
-
-		$db->insert('changelog', [
-			'version_id' => $this->versionID,
-			'changelog_id' => $changelog_id,
-			'change_title' => $change_title,
-			'change_message' => $change_message,
-			'affected_db' => $affected_db,
-		]);
-		$db->unlock();
+			$db->insert('changelog', [
+				'version_id' => $this->versionID,
+				'changelog_id' => $changelog_id,
+				'change_title' => $change_title,
+				'change_message' => $change_message,
+				'affected_db' => $affected_db,
+			]);
+		} finally {
+			$db->unlock();
+		}
 
 		$container = new Changelog();
 		$container->go();
