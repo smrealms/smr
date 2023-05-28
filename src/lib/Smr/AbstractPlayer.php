@@ -348,36 +348,37 @@ abstract class AbstractPlayer {
 		$time = Epoch::time();
 		$db = Database::getInstance();
 		$db->lockTable('player');
-
-		// Player names must be unique within each game
 		try {
-			self::getPlayerByPlayerName($playerName, $gameID);
+			// Player names must be unique within each game
+			try {
+				self::getPlayerByPlayerName($playerName, $gameID);
+				throw new UserError('That player name already exists.');
+			} catch (PlayerNotFound) {
+				// Player name does not yet exist, we may proceed
+			}
+
+			// Get the next available player ID (start at 1 if no players yet)
+			$dbResult = $db->read('SELECT IFNULL(MAX(player_id), 0) AS player_id FROM player WHERE game_id = :game_id', [
+				'game_id' => $db->escapeNumber($gameID),
+			]);
+			$playerID = $dbResult->record()->getInt('player_id') + 1;
+
+			$startSectorID = 0; // Temporarily put player into non-existent sector
+			$db->insert('player', [
+				'account_id' => $accountID,
+				'game_id' => $gameID,
+				'player_id' => $playerID,
+				'player_name' => $playerName,
+				'race_id' => $raceID,
+				'sector_id' => $startSectorID,
+				'last_cpl_action' => $time,
+				'last_active' => $time,
+				'npc' => $db->escapeBoolean($npc),
+				'newbie_status' => $db->escapeBoolean($isNewbie),
+			]);
+		} finally {
 			$db->unlock();
-			throw new UserError('That player name already exists.');
-		} catch (PlayerNotFound) {
-			// Player name does not yet exist, we may proceed
 		}
-
-		// Get the next available player ID (start at 1 if no players yet)
-		$dbResult = $db->read('SELECT IFNULL(MAX(player_id), 0) AS player_id FROM player WHERE game_id = :game_id', [
-			'game_id' => $db->escapeNumber($gameID),
-		]);
-		$playerID = $dbResult->record()->getInt('player_id') + 1;
-
-		$startSectorID = 0; // Temporarily put player into non-existent sector
-		$db->insert('player', [
-			'account_id' => $accountID,
-			'game_id' => $gameID,
-			'player_id' => $playerID,
-			'player_name' => $playerName,
-			'race_id' => $raceID,
-			'sector_id' => $startSectorID,
-			'last_cpl_action' => $time,
-			'last_active' => $time,
-			'npc' => $db->escapeBoolean($npc),
-			'newbie_status' => $db->escapeBoolean($isNewbie),
-		]);
-		$db->unlock();
 
 		$player = self::getPlayer($accountID, $gameID);
 		$player->setSectorID($player->getHome());

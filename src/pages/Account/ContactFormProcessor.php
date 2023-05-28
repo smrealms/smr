@@ -4,9 +4,7 @@ namespace Smr\Pages\Account;
 
 use Smr\Account;
 use Smr\Page\AccountPageProcessor;
-use Smr\Pages\Player\CurrentSector;
 use Smr\Request;
-use Smr\Session;
 
 class ContactFormProcessor extends AccountPageProcessor {
 
@@ -26,13 +24,8 @@ class ContactFormProcessor extends AccountPageProcessor {
 		$mail->addAddress($receiver);
 		$mail->send();
 
-		$session = Session::getInstance();
-		if ($session->hasGame()) {
-			$container = new CurrentSector();
-		} else {
-			$container = new GamePlay();
-		}
-		$container->go();
+		$message = 'Your message has been successfully submitted!';
+		$this::getLandingPage($message)->go();
 	}
 
 }

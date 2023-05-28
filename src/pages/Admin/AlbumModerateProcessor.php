@@ -30,19 +30,22 @@ class AlbumModerateProcessor extends AccountPageProcessor {
 			$db->update('album', ['disabled' => 'TRUE'], $sqlCondition);
 
 			$db->lockTable('album_has_comments');
-			$dbResult = $db->read('SELECT IFNULL(MAX(comment_id)+1, 0) as next_comment_id FROM album_has_comments WHERE album_id = :album_id', [
-				'album_id' => $db->escapeNumber($account_id),
-			]);
-			$comment_id = $dbResult->record()->getInt('next_comment_id');
+			try {
+				$dbResult = $db->read('SELECT IFNULL(MAX(comment_id)+1, 0) as next_comment_id FROM album_has_comments WHERE album_id = :album_id', [
+					'album_id' => $db->escapeNumber($account_id),
+				]);
+				$comment_id = $dbResult->record()->getInt('next_comment_id');
 
-			$db->insert('album_has_comments', [
-				'album_id' => $account_id,
-				'comment_id' => $comment_id,
-				'time' => Epoch::time(),
-				'post_id' => 0,
-				'msg' => '<span class="green">*** Picture disabled by an admin</span>',
-			]);
-			$db->unlock();
+				$db->insert('album_has_comments', [
+					'album_id' => $account_id,
+					'comment_id' => $comment_id,
+					'time' => Epoch::time(),
+					'post_id' => 0,
+					'msg' => '<span class="green">*** Picture disabled by an admin</span>',
+				]);
+			} finally {
+				$db->unlock();
+			}
 
 			// get his email address and send the mail
 			$receiver = Account::getAccount($account_id);

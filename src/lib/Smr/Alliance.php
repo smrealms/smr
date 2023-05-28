@@ -134,36 +134,36 @@ class Alliance {
 	public static function createAlliance(int $gameID, string $name, bool $allowNHA = false): self {
 		$db = Database::getInstance();
 		$db->lockTable('alliance');
-
-		// check if the alliance name already exists
 		try {
-			self::getAllianceByName($name, $gameID);
+			// check if the alliance name already exists
+			try {
+				self::getAllianceByName($name, $gameID);
+				throw new UserError('That alliance name already exists.');
+			} catch (AllianceNotFound) {
+				// alliance with this name does not yet exist
+			}
+
+			if (!$allowNHA && trim($name) === NHA_ALLIANCE_NAME) {
+				throw new UserError('That alliance name is reserved.');
+			}
+
+			// get the next alliance id (start at 1 if there are no alliances yet)
+			$dbResult = $db->read('SELECT IFNULL(max(alliance_id), 0) AS alliance_id FROM alliance WHERE game_id = :game_id', [
+				'game_id' => $db->escapeNumber($gameID),
+			]);
+			$allianceID = $dbResult->record()->getInt('alliance_id') + 1;
+
+			// actually create the alliance here
+			$db->insert('alliance', [
+				'alliance_id' => $allianceID,
+				'game_id' => $gameID,
+				'alliance_name' => $name,
+				'alliance_password' => '',
+				'recruiting' => $db->escapeBoolean(false),
+			]);
+		} finally {
 			$db->unlock();
-			throw new UserError('That alliance name already exists.');
-		} catch (AllianceNotFound) {
-			// alliance with this name does not yet exist
 		}
-
-		if (!$allowNHA && trim($name) === NHA_ALLIANCE_NAME) {
-			$db->unlock();
-			throw new UserError('That alliance name is reserved.');
-		}
-
-		// get the next alliance id (start at 1 if there are no alliances yet)
-		$dbResult = $db->read('SELECT IFNULL(max(alliance_id), 0) AS alliance_id FROM alliance WHERE game_id = :game_id', [
-			'game_id' => $db->escapeNumber($gameID),
-		]);
-		$allianceID = $dbResult->record()->getInt('alliance_id') + 1;
-
-		// actually create the alliance here
-		$db->insert('alliance', [
-			'alliance_id' => $allianceID,
-			'game_id' => $gameID,
-			'alliance_name' => $name,
-			'alliance_password' => '',
-			'recruiting' => $db->escapeBoolean(false),
-		]);
-		$db->unlock();
 
 		return self::getAlliance($allianceID, $gameID);
 	}

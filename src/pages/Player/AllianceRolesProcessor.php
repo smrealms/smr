@@ -54,36 +54,38 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 			}
 
 			$db->lockTable('alliance_has_roles');
-
-			// get last id
-			$dbResult = $db->read('SELECT IFNULL(MAX(role_id), 0) as max_role_id
+			try {
+				// get last id
+				$dbResult = $db->read('SELECT IFNULL(MAX(role_id), 0) as max_role_id
 						FROM alliance_has_roles
 						WHERE game_id = :game_id
 							AND alliance_id = :alliance_id', [
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'alliance_id' => $db->escapeNumber($alliance_id),
-			]);
-			$role_id = $dbResult->record()->getInt('max_role_id') + 1;
+					'game_id' => $db->escapeNumber($player->getGameID()),
+					'alliance_id' => $db->escapeNumber($alliance_id),
+				]);
+				$role_id = $dbResult->record()->getInt('max_role_id') + 1;
 
-			$db->insert('alliance_has_roles', [
-				'alliance_id' => $alliance_id,
-				'game_id' => $player->getGameID(),
-				'role_id' => $role_id,
-				'role' => $roleName,
-				'with_per_day' => $withPerDay,
-				'positive_balance' => $db->escapeBoolean($positiveBalance),
-				'remove_member' => $db->escapeBoolean($removeMember),
-				'change_pass' => $db->escapeBoolean($changePass),
-				'change_mod' => $db->escapeBoolean($changeMOD),
-				'change_roles' => $db->escapeBoolean($changeRoles),
-				'planet_access' => $db->escapeBoolean($planetAccess),
-				'exempt_with' => $db->escapeBoolean($exemptWith),
-				'mb_messages' => $db->escapeBoolean($mbMessages),
-				'send_alliance_msg' => $db->escapeBoolean($sendAllMsg),
-				'op_leader' => $db->escapeBoolean($opLeader),
-				'view_bonds' => $db->escapeBoolean($viewBonds),
-			]);
-			$db->unlock();
+				$db->insert('alliance_has_roles', [
+					'alliance_id' => $alliance_id,
+					'game_id' => $player->getGameID(),
+					'role_id' => $role_id,
+					'role' => $roleName,
+					'with_per_day' => $withPerDay,
+					'positive_balance' => $db->escapeBoolean($positiveBalance),
+					'remove_member' => $db->escapeBoolean($removeMember),
+					'change_pass' => $db->escapeBoolean($changePass),
+					'change_mod' => $db->escapeBoolean($changeMOD),
+					'change_roles' => $db->escapeBoolean($changeRoles),
+					'planet_access' => $db->escapeBoolean($planetAccess),
+					'exempt_with' => $db->escapeBoolean($exemptWith),
+					'mb_messages' => $db->escapeBoolean($mbMessages),
+					'send_alliance_msg' => $db->escapeBoolean($sendAllMsg),
+					'op_leader' => $db->escapeBoolean($opLeader),
+					'view_bonds' => $db->escapeBoolean($viewBonds),
+				]);
+			} finally {
+				$db->unlock();
+			}
 		} else {
 			if ($roleName === '') {
 				// if no role is given we delete that entry

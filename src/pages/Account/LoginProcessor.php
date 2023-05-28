@@ -11,7 +11,7 @@ class LoginProcessor extends AccountPageProcessor {
 		// update last login time
 		$account->updateLastLogin();
 
-		(new GamePlay())->go();
+		$this::getLandingPage()->go();
 	}
 
 }

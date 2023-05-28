@@ -8,30 +8,24 @@ use Smr\Database;
 use Smr\DisplayNameValidator;
 use Smr\Exceptions\AccountNotFound;
 use Smr\Page\AccountPageProcessor;
-use Smr\Pages\Player\CurrentSector;
 use Smr\Request;
-use Smr\Session;
 
 class PreferencesProcessor extends AccountPageProcessor {
 
 	public function build(Account $account): never {
-		if (Session::getInstance()->hasGame()) {
-			$nextPage = CurrentSector::class;
-		} else {
-			$nextPage = GamePlay::class;
-		}
 		$action = Request::get('action');
 
 		if ($action === 'Save and resend validation code') {
 			$email = Request::get('email');
 
 			$account->changeEmail($email);
+			$account->update();
 
-			// overwrite container
-			$nextPage = Validate::class;
 			$message = '<span class="green">SUCCESS: </span>You have changed your email address, you will now need to revalidate with the code sent to the new email address.';
+			(new Validate($message))->go();
+		}
 
-		} elseif ($action === 'Change Password') {
+		if ($action === 'Change Password') {
 			$new_password = Request::get('new_password');
 			$old_password = Request::get('old_password');
 			$retype_password = Request::get('retype_password');
@@ -202,8 +196,7 @@ class PreferencesProcessor extends AccountPageProcessor {
 		// Update the account in case it has changed
 		$account->update();
 
-		$container = new $nextPage(message: $message);
-		$container->go();
+		$this::getLandingPage($message)->go();
 	}
 
 }
