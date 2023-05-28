@@ -4,7 +4,6 @@ namespace Smr\Pages\Account;
 
 use Smr\Account;
 use Smr\Page\AccountPageProcessor;
-use Smr\Pages\Player\CurrentSector;
 use Smr\Request;
 use Smr\Session;
 
@@ -46,12 +45,7 @@ class BugReportProcessor extends AccountPageProcessor {
 		}
 
 		$message = '<span class="admin">ADMIN</span>: Bug report submitted. Thank you for helping to improve the game!';
-		if ($session->hasGame()) {
-			$container = new CurrentSector(message: $message);
-		} else {
-			$container = new GamePlay(message: $message);
-		}
-		$container->go();
+		$this::getLandingPage($message)->go();
 	}
 
 }

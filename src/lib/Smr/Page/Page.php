@@ -3,6 +3,8 @@
 namespace Smr\Page;
 
 use Smr\AbstractPlayer;
+use Smr\Pages\Account\GamePlay;
+use Smr\Pages\Player\CurrentSector;
 use Smr\Session;
 use Smr\Template;
 
@@ -71,6 +73,18 @@ class Page {
 		}
 		Session::getInstance()->setCurrentVar($this);
 		do_voodoo();
+	}
+
+	/**
+	 * Returns the default display page when in or out of a game.
+	 */
+	public static function getLandingPage(?string $msg = null): self {
+		if (Session::getInstance()->hasGame()) {
+			$page = CurrentSector::class;
+		} else {
+			$page = GamePlay::class;
+		}
+		return new $page(message: $msg);
 	}
 
 	/**

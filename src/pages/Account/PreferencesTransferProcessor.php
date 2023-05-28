@@ -25,8 +25,7 @@ class PreferencesTransferProcessor extends AccountPageProcessor {
 			$message = '<span class="green">SUCCESS: </span>You have sent SMR credits.';
 		}
 
-		// TODO: need a page that goes to either CurrentSector or PlayGame appropriately
-		(new GamePlay(message: $message))->go();
+		$this::getLandingPage($message)->go();
 	}
 
 }
