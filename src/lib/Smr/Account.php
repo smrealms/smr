@@ -74,7 +74,7 @@ class Account {
 	/** @var ?array<int, int> */
 	protected ?array $messageNotifications;
 	protected bool $centerGalaxyMapOnPlayer;
-	/** @var array<string, int> */
+	/** @var array<string, ?int> */
 	protected array $oldAccountIDs = [];
 	protected int $maxRankAchieved;
 	protected int $referrerID;
@@ -280,7 +280,7 @@ class Account {
 			}
 
 			foreach (Globals::getHistoryDatabases() as $databaseName => $oldColumn) {
-				$this->oldAccountIDs[$databaseName] = $dbRecord->getInt($oldColumn);
+				$this->oldAccountIDs[$databaseName] = $dbRecord->getNullableInt($oldColumn);
 			}
 
 			$this->referrerID = $dbRecord->getInt('referral_id');
