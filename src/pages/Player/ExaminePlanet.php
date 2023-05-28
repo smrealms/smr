@@ -12,10 +12,10 @@ class ExaminePlanet extends PlayerPage {
 	public string $file = 'planet_examine.php';
 
 	public function build(AbstractPlayer $player, Template $template): void {
-		$template->assign('PageTopic', 'Examine Planet');
-
 		$planet = $player->getSectorPlanet();
 		$template->assign('ThisPlanet', $planet);
+
+		$template->assign('PageTopic', 'Examine Planet: Sector #' . $planet->getSectorID());
 
 		$planetLand =
 			!$planet->hasOwner()
