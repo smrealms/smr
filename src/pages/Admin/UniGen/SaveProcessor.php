@@ -43,44 +43,6 @@ function checkSectorAllowedForLoc(Sector $sector, Location $location): bool {
 	return count($sector->getLocations()) < 4 && !$sector->offersFederalProtection() && !$sector->hasLocation($location->getTypeID());
 }
 
-function addLocationToSector(Location $location, Sector $sector): void {
-	$sector->addLocation($location); //insert the location
-	if ($location->isHQ()) {
-		//only playable races have extra locations to add
-		//Racial/Fed
-		foreach ($location->getLinkedLocations() as $linkedLocation) {
-			if (!$sector->hasLocation($linkedLocation->getTypeID())) {
-				$sector->addLocation($linkedLocation);
-			}
-			if ($linkedLocation->isFed()) {
-				$fedBeacon = $linkedLocation;
-			}
-		}
-
-		//add Beacons to all surrounding areas (up to 2 sectors out)
-		$visitedSectors = [];
-		$links = ['Up', 'Right', 'Down', 'Left'];
-		$fedSectors = [$sector];
-		$tempFedSectors = [];
-		for ($i = 0; $i < DEFAULT_FED_RADIUS; $i++) {
-			foreach ($fedSectors as $fedSector) {
-				foreach ($links as $link) {
-					if ($fedSector->hasLink($link) && !isset($visitedSectors[$fedSector->getLink($link)])) {
-						$linkSector = $sector->getLinkSector($link);
-						if (isset($fedBeacon) && !$linkSector->hasLocation($fedBeacon->getTypeID())) {
-							$linkSector->addLocation($fedBeacon); //add beacon to this sector
-						}
-						$tempFedSectors[] = $linkSector;
-						$visitedSectors[$fedSector->getLink($link)] = true;
-					}
-				}
-			}
-			$fedSectors = $tempFedSectors;
-			$tempFedSectors = [];
-		}
-	}
-}
-
 class SaveProcessor extends AccountPageProcessor {
 
 	public function __construct(
@@ -114,7 +76,8 @@ class SaveProcessor extends AccountPageProcessor {
 							$galSectors,
 							fn(Sector $sector): bool => checkSectorAllowedForLoc($sector, $location)
 						);
-						addLocationToSector($location, $randSector);
+						$randSector->addLocation($location);
+						$randSector->addLinkedLocations($location);
 					}
 				}
 			}

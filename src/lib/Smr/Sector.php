@@ -654,7 +654,43 @@ class Sector {
 	}
 
 	public function addLocation(Location $location): void {
+		if ($this->hasLocation($location->getTypeID())) {
+			return;
+		}
 		Location::addSectorLocation($this->getGameID(), $this->getSectorID(), $location);
+	}
+
+	public function addLinkedLocations(Location $location): void {
+		$fedBeacon = null;
+		foreach ($location->getLinkedLocations() as $linkedLocation) {
+			$this->addLocation($linkedLocation);
+			if ($linkedLocation->isFed()) {
+				$fedBeacon = $linkedLocation;
+			}
+		}
+
+		// We are done if Fed Beacon is not a linked location
+		if ($fedBeacon === null) {
+			return;
+		}
+
+		// Add Fed Beacon to sectors within a linked radius of this sector
+		$fedSectors = [$this];
+		$visitedSectorIDs = [];
+		for ($i = 0; $i < DEFAULT_FED_RADIUS; $i++) {
+			$nextFedSectors = [];
+			foreach ($fedSectors as $fedSector) {
+				foreach ($fedSector->getLinks() as $link => $linkSectorID) {
+					if (!in_array($linkSectorID, $visitedSectorIDs, true)) {
+						$linkSector = $fedSector->getLinkSector($link);
+						$linkSector->addLocation($fedBeacon);
+						$nextFedSectors[] = $linkSector;
+						$visitedSectorIDs[] = $linkSectorID;
+					}
+				}
+			}
+			$fedSectors = $nextFedSectors;
+		}
 	}
 
 	public function removeAllLocations(): void {

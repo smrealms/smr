@@ -66,18 +66,14 @@ class EditSectorProcessor extends AccountPageProcessor {
 		for ($x = 0; $x < UNI_GEN_LOCATION_SLOTS; $x++) {
 			if (Request::getInt('loc_type' . $x) !== 0) {
 				$locationTypeID = Request::getInt('loc_type' . $x);
-				$locationsToAdd[$locationTypeID] = Location::getLocation($this->gameID, $locationTypeID);
+				$locationsToAdd[] = Location::getLocation($this->gameID, $locationTypeID);
 			}
 		}
 		$editSector->removeAllLocations();
-		foreach ($locationsToAdd as $locationToAddID => $locationToAdd) {
-			// Skip duplicate locations
-			if (!$editSector->hasLocation($locationToAddID)) {
-				if (Request::has('add_linked_locs')) {
-					addLocationToSector($locationToAdd, $editSector);
-				} else {
-					$editSector->addLocation($locationToAdd);
-				}
+		foreach ($locationsToAdd as $locationToAdd) {
+			$editSector->addLocation($locationToAdd);
+			if (Request::has('add_linked_locs')) {
+				$editSector->addLinkedLocations($locationToAdd);
 			}
 		}
 
