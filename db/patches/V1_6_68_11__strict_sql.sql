@@ -2,3 +2,6 @@
 ALTER TABLE `player` DROP COLUMN `attack_warning`;
 
 ALTER TABLE `player` MODIFY `last_port` int unsigned NOT NULL DEFAULT 0;
+
+ALTER TABLE `account` MODIFY `password_reset` char(32) DEFAULT NULL;
+UPDATE `account` SET `password_reset` = NULL WHERE `password_reset` = '';
