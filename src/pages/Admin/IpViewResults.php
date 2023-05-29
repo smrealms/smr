@@ -42,7 +42,7 @@ class IpViewResults extends AccountPage {
 			//=========================================================
 
 			//we are listing ALL IPs
-			$dbResult = $db->read('SELECT * FROM account_has_ip GROUP BY ip, account_id ORDER BY ip');
+			$dbResult = $db->read('SELECT ip, account_id, host FROM account_has_ip GROUP BY ip, account_id, host ORDER BY ip');
 			$ip_array = [];
 			//make sure we have enough but not too mant to reduce lag
 			foreach ($dbResult->records() as $dbRecord) {
@@ -218,7 +218,7 @@ class IpViewResults extends AccountPage {
 				//=========================================================
 				// Wildcard IP search
 				//=========================================================
-				$dbResult = $db->read('SELECT * FROM account_has_ip WHERE ip LIKE :ip_like GROUP BY account_id, ip ORDER BY time DESC, ip', [
+				$dbResult = $db->read('SELECT ip, account_id, host, MAX(time) as time FROM account_has_ip WHERE ip LIKE :ip_like GROUP BY account_id, ip, host ORDER BY time DESC, ip', [
 					'ip_like' => $db->escapeString($variable),
 				]);
 				$summary = 'Listing all IPs LIKE ' . $variable;
@@ -227,7 +227,7 @@ class IpViewResults extends AccountPage {
 				//=========================================================
 				// Wildcard host search
 				//=========================================================
-				$dbResult = $db->read('SELECT * FROM account_has_ip WHERE host LIKE :host_like GROUP BY account_id, ip ORDER BY time, ip', [
+				$dbResult = $db->read('SELECT ip, account_id, host, MAX(time) as time FROM account_has_ip WHERE host LIKE :host_like GROUP BY account_id, ip, host ORDER BY time, ip', [
 					'host_like' => $db->escapeString($variable),
 				]);
 				$summary = 'Listing all hosts LIKE ' . $variable;
