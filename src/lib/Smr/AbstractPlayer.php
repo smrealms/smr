@@ -670,6 +670,15 @@ abstract class AbstractPlayer {
 	}
 
 	/**
+	 * Does this player qualify for new player protections?
+	 */
+	public function isNewbieCombatant(?self $other = null): bool {
+		return $this->hasNewbieStatus() &&
+			($other === null || !$other->hasNewbieStatus()) &&
+			($this->getShipTypeID() === SHIP_TYPE_NEWBIE_MERCHANT_VESSEL || $this->getShip()->getAttackRatingWithMaxCDs() <= MAX_ATTACK_RATING_NEWBIE);
+	}
+
+	/**
 	 * Has this player been designated as the alliance flagship?
 	 */
 	public function isFlagship(): bool {
@@ -2355,7 +2364,7 @@ abstract class AbstractPlayer {
 
 		if ($this->isNPC()) {
 			$killer->increaseHOF(1, ['Killing', 'NPC Kills'], HOF_PUBLIC);
-		} elseif ($this->getShip()->getAttackRatingWithMaxCDs() <= MAX_ATTACK_RATING_NEWBIE && $this->hasNewbieStatus() && !$killer->hasNewbieStatus()) { //Newbie kill
+		} elseif ($this->isNewbieCombatant($killer)) {
 			$killer->increaseHOF(1, ['Killing', 'Newbie Kills'], HOF_PUBLIC);
 		} else {
 			$killer->increaseKills(1);

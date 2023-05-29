@@ -24,15 +24,16 @@ function hit_sector_mines(AbstractPlayer $player): void {
 	}
 
 	$ship = $player->getShip();
-	if ($player->hasNewbieTurns() || $ship->getClass() === ShipClass::Scout) {
+	$protectedMsg = match (true) {
+		$player->hasNewbieTurns() => 'Your Newbie Turns have spared you from the harsh reality of the forces',
+		$player->isNewbieCombatant() => 'Your Newbie status has spared you from the harsh reality of the forces',
+		$ship->getClass() === ShipClass::Scout => 'Your ship was sufficiently agile to evade them',
+		default => false, // not protected
+	};
+	if ($protectedMsg !== false) {
 		$turns = $forcesHit->getBumpTurnCost($ship);
 		$player->takeTurns($turns, $turns);
-		if ($player->hasNewbieTurns()) {
-			$flavor = 'Because of your newbie status you have been spared from the harsh reality of the forces';
-		} else {
-			$flavor = 'Your ship was sufficiently agile to evade them';
-		}
-		$msg = 'You have just flown past a sprinkle of mines.<br />' . $flavor . ',<br />but it has cost you <span class="red">' . pluralise($turns, 'turn') . '</span> to navigate the minefield safely.';
+		$msg = 'You have just flown past a sprinkle of mines.<br />' . $protectedMsg . ',<br />but it has cost you <span class="red">' . pluralise($turns, 'turn') . '</span> to navigate the minefield safely.';
 		$container = new CurrentSector(message: $msg);
 		$container->go();
 	} else {

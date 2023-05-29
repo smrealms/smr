@@ -163,4 +163,23 @@ class AbstractPlayerIntegrationTest extends BaseIntegrationSpec {
 		];
 	}
 
+	public function test_isNewbieCombatant(): void {
+		$player1 = AbstractPlayer::createPlayer(1, self::$gameID, 'test1', RACE_HUMAN, true);
+
+		// True if player has newbie status
+		self::assertTrue($player1->isNewbieCombatant());
+
+		// False if both players have newbie status
+		$player2 = AbstractPlayer::createPlayer(2, self::$gameID, 'test2', RACE_HUMAN, true);
+		self::assertFalse($player1->isNewbieCombatant($player2));
+
+		// True if player has newbie status and other player does not
+		$player3 = AbstractPlayer::createPlayer(3, self::$gameID, 'test3', RACE_HUMAN, false);
+		self::assertTrue($player1->isNewbieCombatant($player3));
+
+		// False if player is in a ship with too large an attack rating
+		$player1->setShipTypeID(SHIP_TYPE_MOTHER_SHIP);
+		self::assertFalse($player1->isNewbieCombatant());
+	}
+
 }
