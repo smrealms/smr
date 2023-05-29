@@ -2155,9 +2155,7 @@ abstract class AbstractPlayer {
 			// Don't store HOF for NPCs.
 			return;
 		}
-		if ($amount < 0) {
-			throw new Exception('Cannot set negative HOF stats');
-		}
+
 		if ($this->getHOF($typeList) === $amount) {
 			return;
 		}
