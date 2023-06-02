@@ -160,6 +160,7 @@ class Alliance {
 				'alliance_name' => $name,
 				'alliance_password' => '',
 				'recruiting' => $db->escapeBoolean(false),
+				'`mod`' => '', // text columns can't have default values
 			]);
 		} finally {
 			$db->unlock();

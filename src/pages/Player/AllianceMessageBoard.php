@@ -74,7 +74,7 @@ class AllianceMessageBoard extends PlayerPage {
 				)
 			SELECT alliance_only, topic, thread_id, MAX(time) as sendtime, COUNT(reply_id) as num_replies, author_account_id
 			FROM t2
-			GROUP BY thread_id ORDER BY sendtime DESC
+			GROUP BY thread_id, author_account_id ORDER BY sendtime DESC
 		', [
 			'in_alliance' => $db->escapeBoolean($in_alliance),
 			'game_id' => $db->escapeNumber($alliance->getGameID()),

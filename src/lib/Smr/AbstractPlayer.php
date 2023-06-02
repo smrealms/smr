@@ -81,7 +81,6 @@ abstract class AbstractPlayer {
 	protected array $tickers;
 	protected int $lastTurnUpdate;
 	protected int $lastNewsUpdate;
-	protected string $attackColour;
 	protected int $allianceJoinable;
 	protected int $lastPort;
 	protected int $bank;
@@ -308,7 +307,6 @@ abstract class AbstractPlayer {
 		$this->lastTurnUpdate = $dbRecord->getInt('last_turn_update');
 		$this->newbieTurns = $dbRecord->getInt('newbie_turns');
 		$this->lastNewsUpdate = $dbRecord->getInt('last_news_update');
-		$this->attackColour = $dbRecord->getString('attack_warning');
 		$this->dead = $dbRecord->getBoolean('dead');
 		$this->npc = $dbRecord->getBoolean('npc');
 		$this->newbieStatus = $dbRecord->getBoolean('newbie_status');
@@ -445,18 +443,6 @@ abstract class AbstractPlayer {
 			throw new Exception('Trying to decrease negative zoom.');
 		}
 		$this->setZoom($this->getZoom() - $zoom);
-	}
-
-	public function getAttackColour(): string {
-		return $this->attackColour;
-	}
-
-	public function setAttackColour(string $colour): void {
-		if ($this->attackColour === $colour) {
-			return;
-		}
-		$this->attackColour = $colour;
-		$this->hasChanged = true;
 	}
 
 	public function isIgnoreGlobals(): bool {
@@ -2169,9 +2155,7 @@ abstract class AbstractPlayer {
 			// Don't store HOF for NPCs.
 			return;
 		}
-		if ($amount < 0) {
-			throw new Exception('Cannot set negative HOF stats');
-		}
+
 		if ($this->getHOF($typeList) === $amount) {
 			return;
 		}
@@ -3216,7 +3200,6 @@ abstract class AbstractPlayer {
 					'last_turn_update' => $this->lastTurnUpdate,
 					'newbie_turns' => $this->newbieTurns,
 					'last_news_update' => $this->lastNewsUpdate,
-					'attack_warning' => $this->attackColour,
 					'dead' => $db->escapeBoolean($this->dead),
 					'newbie_status' => $db->escapeBoolean($this->newbieStatus),
 					'land_on_planet' => $db->escapeBoolean($this->landedOnPlanet),

@@ -60,7 +60,7 @@ class Account {
 	protected int $offset;
 	protected bool $images;
 	protected int $fontSize;
-	protected string $passwordReset;
+	protected ?string $passwordReset;
 	protected int $points;
 	protected bool $useAJAX;
 	protected int $mailBanned;
@@ -259,7 +259,7 @@ class Account {
 			$this->images = $dbRecord->getBoolean('images');
 			$this->fontSize = $dbRecord->getInt('fontsize');
 
-			$this->passwordReset = $dbRecord->getString('password_reset');
+			$this->passwordReset = $dbRecord->getNullableString('password_reset');
 			$this->useAJAX = $dbRecord->getBoolean('use_ajax');
 			$this->mailBanned = $dbRecord->getInt('mail_banned');
 
@@ -1066,6 +1066,9 @@ class Account {
 	}
 
 	public function getPasswordReset(): string {
+		if ($this->passwordReset === null) {
+			throw new Exception('You must call generatePasswordReset() first');
+		}
 		return $this->passwordReset;
 	}
 
