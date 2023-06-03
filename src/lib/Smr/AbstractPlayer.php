@@ -345,7 +345,7 @@ abstract class AbstractPlayer {
 	public static function createPlayer(int $accountID, int $gameID, string $playerName, int $raceID, bool $isNewbie, bool $npc = false): self {
 		$time = Epoch::time();
 		$db = Database::getInstance();
-		$db->lockTable('player');
+		$db->lockTable('player', ['account']);
 		try {
 			// Player names must be unique within each game
 			try {
@@ -353,6 +353,16 @@ abstract class AbstractPlayer {
 				throw new UserError('That player name already exists.');
 			} catch (PlayerNotFound) {
 				// Player name does not yet exist, we may proceed
+			}
+
+			// Check if player name is reserved by someone else
+			try {
+				$account = Account::getAccountByHofName($playerName);
+				if ($account->getAccountID() !== $accountID) {
+					throw new UserError('That player name is reserved by another account. Please contact an admin if you would like to claim this name.');
+				}
+			} catch (AccountNotFound) {
+				// Name is not reserved by another account, we may proceed
 			}
 
 			// Get the next available player ID (start at 1 if no players yet)
@@ -778,7 +788,7 @@ abstract class AbstractPlayer {
 					$bbifiedMessage = 'From: ' . $sender . ' Date: ' . date($receiverAccount->getDateTimeFormat(), Epoch::time()) . "<br/>\r\n<br/>\r\n" . bbifyMessage($message, $gameID, true);
 					$mail->msgHTML($bbifiedMessage);
 					$mail->AltBody = strip_tags($bbifiedMessage);
-					$mail->addAddress($receiverAccount->getEmail(), $receiverAccount->getHofName());
+					$mail->addAddress($receiverAccount->getEmail(), $receiverAccount->getLogin());
 					$mail->send();
 					$receiverAccount->decreaseMessageNotifications($messageTypeID, 1);
 					$receiverAccount->update();

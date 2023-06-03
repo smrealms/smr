@@ -116,7 +116,7 @@ if (!isset($JoinGameFormHref)) { ?>
 				<table class="centered">
 					<tr>
 						<td class="right"><b>Name:</b>&nbsp;</td>
-						<td><input required type="text" name="player_name" maxlength="32" /></td>
+						<td><input required type="text" name="player_name" value="<?php echo $ThisAccount->getHofDisplayName(); ?>" maxlength="32" /></td>
 						<td rowspan="4">&nbsp;&nbsp;</td>
 						<td rowspan="4" class="standard top">
 							<img id="race_image" src="images/race/race<?php echo $SelectedRaceID; ?>.jpg" width="282" height="360" alt="" />

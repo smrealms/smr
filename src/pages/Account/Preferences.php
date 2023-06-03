@@ -3,7 +3,6 @@
 namespace Smr\Pages\Account;
 
 use Smr\Account;
-use Smr\Database;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Pages\Player\ChatSharing;
@@ -28,16 +27,6 @@ class Preferences extends AccountPage {
 		$template->assign('AccountPreferencesFormHREF', (new PreferencesProcessor())->href());
 
 		$template->assign('PreferencesConfirmFormHREF', (new PreferencesTransferConfirm())->href());
-
-		$transferAccounts = [];
-		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT account_id,hof_name FROM account WHERE validated = :validated ORDER BY hof_name', [
-			'validated' => $db->escapeBoolean(true),
-		]);
-		foreach ($dbResult->records() as $dbRecord) {
-			$transferAccounts[$dbRecord->getInt('account_id')] = htmlspecialchars($dbRecord->getString('hof_name'));
-		}
-		$template->assign('TransferAccounts', $transferAccounts);
 	}
 
 }

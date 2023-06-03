@@ -16,7 +16,7 @@ class ContactFormProcessor extends AccountPageProcessor {
 		$mail = setupMailer();
 		$mail->Subject = PAGE_PREFIX . $subject;
 		$mail->setFrom('contact@smrealms.de');
-		$mail->addReplyTo($account->getEmail(), $account->getHofName());
+		$mail->addReplyTo($account->getEmail(), $account->getLogin());
 		$mail->Body =
 			'Login:' . EOL . '------' . EOL . $account->getLogin() . EOL . EOL .
 			'Account ID:' . EOL . '-----------' . EOL . $account->getAccountID() . EOL . EOL .

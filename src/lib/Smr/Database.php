@@ -196,8 +196,17 @@ class Database {
 		return $this->getInsertID();
 	}
 
-	public function lockTable(string $table): void {
-		$this->write('LOCK TABLES ' . $table . ' WRITE');
+	/**
+	 * Acquire a write lock for $table.
+	 *
+	 * @param array<string> $readTables Additional read locks
+	 */
+	public function lockTable(string $table, array $readTables = []): void {
+		$locks = [$table . ' WRITE'];
+		foreach ($readTables as $readTable) {
+			$locks[] = $readTable . ' READ';
+		}
+		$this->write('LOCK TABLES ' . implode(', ', $locks));
 	}
 
 	public function unlock(): void {

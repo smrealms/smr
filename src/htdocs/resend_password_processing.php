@@ -36,7 +36,7 @@ try {
 	$mail->Subject = 'Space Merchant Realms Password';
 	$mail->setFrom('support@smrealms.de', 'SMR Support');
 	$mail->msgHTML(nl2br($emailMessage));
-	$mail->addAddress($account->getEmail(), $account->getHofName());
+	$mail->addAddress($account->getEmail(), $account->getLogin());
 	$mail->send();
 
 	header('Location: /reset_password.php');
