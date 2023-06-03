@@ -19,15 +19,15 @@ $this->includeTemplate('changelog_view.php', ['Versions' => [$FirstVersion]]); ?
 					<td colspan="2"><small>Title:</small></td>
 				</tr>
 				<tr>
-					<td colspan="2"><input type="text" name="change_title" value="<?php echo $ChangeTitle; ?>" style="width:400px;" required></td>
+					<td colspan="2"><input type="text" name="change_title" value="<?php echo htmlentities($ChangeTitle); ?>" style="width:400px;" required></td>
 				</tr>
 				<tr>
 					<td><small>Message (BBCode):</small></td>
 					<td><small>Affected Database:</small></td>
 				</tr>
 				<tr>
-					<td><textarea spellcheck="true" name="change_message" style="width:400px;height:50px;" required><?php echo $ChangeMessage; ?></textarea></td>
-					<td><textarea spellcheck="true" name="affected_db" style="width:200px;height:50px;"><?php echo $AffectedDb; ?></textarea></td>
+					<td><textarea spellcheck="true" name="change_message" style="width:400px;height:50px;" required><?php echo htmlentities($ChangeMessage); ?></textarea></td>
+					<td><textarea spellcheck="true" name="affected_db" style="width:200px;height:50px;"><?php echo htmlentities($AffectedDb); ?></textarea></td>
 				</tr>
 				<tr>
 					<td></td>
