@@ -107,13 +107,6 @@ class Session {
 				//echo 'Sleeping for: ' . $sleepTime . 'us';
 				usleep($sleepTime);
 			}
-			if (ENABLE_DEBUG) {
-				$db->insert('debug', [
-					'debug_type' => 'Delay: ' . $file,
-					'account_id' => $this->accountID,
-					'value' => $timeBetweenLoads,
-				]);
-			}
 		}
 	}
 
