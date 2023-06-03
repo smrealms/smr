@@ -26,6 +26,7 @@ parameters:
         - BUG_REPORT_TO_ADDRESSES
         - ENABLE_BETA
         - ENABLE_DEBUG
+        - ENABLE_LIBXML_ERRORS
         - ENABLE_NPCS_CHESS
         - FACEBOOK_APP_ID
         - GOOGLE_ANALYTICS_ID

@@ -6,6 +6,7 @@
 
 const URL = 'http://localhost';
 
+const ENABLE_LIBXML_ERRORS = true; // Convert libXML warnings into errors.
 const ENABLE_DEBUG = true; // This is useful for debugging on dev machines.
 const ENABLE_BETA = false;
 
