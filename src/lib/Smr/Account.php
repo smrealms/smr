@@ -204,19 +204,43 @@ class Account {
 			// Will throw if referral account doesn't exist
 			self::getAccount($referral);
 		}
-		$db = Database::getInstance();
 		$passwordHash = password_hash($password, PASSWORD_DEFAULT);
-		$db->insert('account', [
-			'login' => $login,
-			'password' => $passwordHash,
-			'email' => $email,
-			'validation_code' => random_string(10),
-			'last_login' => Epoch::time(),
-			'offset' => $timez,
-			'referral_id' => $referral,
-			'hof_name' => $login,
-			'hotkeys' => $db->escapeObject([]),
-		]);
+
+		$db = Database::getInstance();
+		$db->lockTable('account');
+		try {
+			try {
+				self::getAccountByLogin($login);
+				throw new UserError('This login name is already taken!');
+			} catch (AccountNotFound) {
+				// Proceed, login is available
+			}
+			try {
+				self::getAccountByHofName($login);
+				throw new UserError('This login name is already taken!');
+			} catch (AccountNotFound) {
+				// Proceed, login is available
+			}
+			try {
+				self::getAccountByEmail($email);
+				throw new UserError('This email address is already registered!');
+			} catch (AccountNotFound) {
+				// Proceed, email is not registered
+			}
+			$db->insert('account', [
+				'login' => $login,
+				'password' => $passwordHash,
+				'email' => $email,
+				'validation_code' => random_string(10),
+				'last_login' => Epoch::time(),
+				'offset' => $timez,
+				'referral_id' => $referral,
+				'hof_name' => $login,
+				'hotkeys' => $db->escapeObject([]),
+			]);
+		} finally {
+			$db->unlock();
+		}
 		return self::getAccountByLogin($login);
 	}
 

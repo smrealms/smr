@@ -71,13 +71,6 @@ try {
 		create_error('Your login and password cannot be the same!');
 	}
 
-	try {
-		Account::getAccountByLogin($login);
-		create_error('This login name is already registered.');
-	} catch (AccountNotFound) {
-		// Proceed, login is not yet registered
-	}
-
 	$referral = Request::getInt('referral_id');
 
 	$timez = Request::getInt('timez');

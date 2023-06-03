@@ -5,6 +5,7 @@ namespace SmrTest\lib;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Smr\Account;
 use Smr\Exceptions\AccountNotFound;
+use Smr\Exceptions\UserError;
 use Smr\SocialLogin\Facebook;
 use Smr\SocialLogin\SocialIdentity;
 use SmrTest\BaseIntegrationSpec;
@@ -37,6 +38,29 @@ class AccountTest extends BaseIntegrationSpec {
 		$this->expectException(AccountNotFound::class);
 		$this->expectExceptionMessage('Account ID 123 does not exist');
 		Account::createAccount('test', 'test', 'test@test.com', 9, 123);
+	}
+
+	public function test_createAccount_throws_if_login_exists(): void {
+		Account::createAccount('name1', 'pw', '1@test.com', 0, 0);
+		$this->expectException(UserError::class);
+		$this->expectExceptionMessage('This login name is already taken!');
+		Account::createAccount('name1', 'pw', '2@test.com', 0, 0);
+	}
+
+	public function test_createAccount_throws_if_hof_name_exists(): void {
+		$account = Account::createAccount('name1', 'pw', '1@test.com', 0, 0);
+		$account->setHofName('name2');
+		$account->update();
+		$this->expectException(UserError::class);
+		$this->expectExceptionMessage('This login name is already taken!');
+		Account::createAccount('name2', 'pw', '2@test.com', 0, 0);
+	}
+
+	public function test_createAccount_throws_if_email_exists(): void {
+		Account::createAccount('name1', 'pw', '1@test.com', 0, 0);
+		$this->expectException(UserError::class);
+		$this->expectExceptionMessage('This email address is already registered!');
+		Account::createAccount('name2', 'pw', '1@test.com', 0, 0);
 	}
 
 	public function test_get_account_by_account_id(): void {
