@@ -146,7 +146,7 @@ class CurrentSector extends PlayerPage {
 			$template->assign('MissionMessage', $this->missionMessage);
 		}
 		if ($this->message !== null) {
-			$template->assign('VarMessage', bbifyMessage($this->message));
+			$template->assign('VarMessage', bbify($this->message));
 		}
 
 		//error msgs take precedence

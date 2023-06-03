@@ -21,7 +21,7 @@ use Smr\Alliance;
 ?>
 <div class="center">
 	<div id="alliance-desc" class="ajax"><?php
-		echo bbifyMessage($Alliance->getDescription()); ?>
+		echo bbify($Alliance->getDescription()); ?>
 	</div><?php
 	if (isset($EditAllianceDescriptionHREF)) { ?>
 		<br />

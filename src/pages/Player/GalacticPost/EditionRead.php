@@ -35,7 +35,7 @@ class EditionRead extends PlayerPage {
 				'game_id' => $db->escapeNumber($this->gameID),
 				'paper_id' => $this->paperID,
 			]);
-			$paper_name = bbifyMessage($dbResult->record()->getString('title'), $this->gameID);
+			$paper_name = bbify($dbResult->record()->getString('title'), $this->gameID);
 			$template->assign('PageTopic', 'Reading <i>Galactic Post</i> Edition : ' . $paper_name);
 
 			//now get the articles in this paper.

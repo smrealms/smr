@@ -18,7 +18,7 @@ class News {
 
 		$newsItems = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$message = bbifyMessage(
+			$message = bbify(
 				$dbRecord->getString('news_message'),
 				$dbRecord->getInt('game_id'),
 			);
@@ -44,7 +44,7 @@ class News {
 			$template = Template::getInstance();
 			$template->assign('BreakingNews', [
 				'Time' => $dbRecord->getInt('time'),
-				'Message' => bbifyMessage($dbRecord->getString('news_message'), $gameID),
+				'Message' => bbify($dbRecord->getString('news_message'), $gameID),
 			]);
 		}
 	}
@@ -60,7 +60,7 @@ class News {
 			$template = Template::getInstance();
 			$template->assign('LottoNews', [
 				'Time' => $dbRecord->getInt('time'),
-				'Message' => bbifyMessage($dbRecord->getString('news_message'), $gameID),
+				'Message' => bbify($dbRecord->getString('news_message'), $gameID),
 			]);
 		}
 	}

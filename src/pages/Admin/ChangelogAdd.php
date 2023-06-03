@@ -48,7 +48,7 @@ class ChangelogAdd extends AccountPage {
 				if ($this->changeTitle !== '') {
 					$version['changes'][] = [
 						'title' => '<span class="red">PREVIEW: </span>' . htmlentities($this->changeTitle),
-						'message' => bbifyMessage(htmlentities($this->changeMessage)),
+						'message' => bbify(htmlentities($this->changeMessage)),
 					];
 				}
 				$template->assign('FirstVersion', $version);

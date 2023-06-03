@@ -15,7 +15,7 @@
 
 ?>
 <h2>Description</h2>
-<?php echo bbifyMessage($StatsGame->getDescription(), $StatsGame->getGameID()); ?>
+<?php echo bbify($StatsGame->getDescription(), $StatsGame->getGameID()); ?>
 <br /><br />
 
 <div class="center">

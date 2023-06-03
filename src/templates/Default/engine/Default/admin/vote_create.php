@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-if (isset($PreviewVote)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($PreviewVote); ?></td></tr></table><?php } ?>
+if (isset($PreviewVote)) { ?><table class="standard"><tr><td><?php echo bbify($PreviewVote); ?></td></tr></table><?php } ?>
 <form name="VoteForm" method="POST" action="<?php echo $VoteFormHREF; ?>">
 	Question: <input type="text" name="question" required value="<?php if (isset($PreviewVote)) { echo htmlspecialchars($PreviewVote); } ?>" /><br />
 	Days to end: <input type="number" name="days" required value="<?php if (isset($Days)) { echo htmlspecialchars($Days); } ?>" /><br />
@@ -8,11 +8,11 @@ if (isset($PreviewVote)) { ?><table class="standard"><tr><td><?php echo bbifyMes
 </form>
 <br /><br />
 
-	<?php if (isset($PreviewOption)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($PreviewOption); ?></td></tr></table><?php } ?>
+	<?php if (isset($PreviewOption)) { ?><table class="standard"><tr><td><?php echo bbify($PreviewOption); ?></td></tr></table><?php } ?>
 <form name="VoteForm" method="POST" action="<?php echo $VoteFormHREF; ?>">
 	Vote: <select id="vote" name="vote"><?php
 		foreach ($CurrentVotes as $CurrentVote) {
-			?><option value="<?php echo $CurrentVote['ID']; ?>"<?php if (isset($VoteID) && $CurrentVote['ID'] === $VoteID) { ?>selected="selected"<?php } ?>><?php echo bbifyMessage($CurrentVote['Question']); ?></option><?php
+			?><option value="<?php echo $CurrentVote['ID']; ?>"<?php if (isset($VoteID) && $CurrentVote['ID'] === $VoteID) { ?>selected="selected"<?php } ?>><?php echo bbify($CurrentVote['Question']); ?></option><?php
 		} ?>
 	</select><br />
 	Option: <input type="text" name="option" required value="<?php if (isset($PreviewOption)) { echo htmlspecialchars($PreviewOption); } ?>" /><br />

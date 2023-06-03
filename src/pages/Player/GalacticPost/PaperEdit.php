@@ -25,7 +25,7 @@ class PaperEdit extends PlayerPage {
 			'paper_id' => $db->escapeNumber($this->paperID),
 			'game_id' => $db->escapeNumber($player->getGameID()),
 		]);
-		$template->assign('PaperTitle', bbifyMessage($dbResult->record()->getString('title')));
+		$template->assign('PaperTitle', bbify($dbResult->record()->getString('title')));
 
 		$dbResult = $db->read('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article USING (game_id, article_id) WHERE paper_id = :paper_id AND game_id = :game_id', [
 			'paper_id' => $db->escapeNumber($this->paperID),
@@ -36,8 +36,8 @@ class PaperEdit extends PlayerPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$container = new PaperEditProcessor($this->paperID, $dbRecord->getInt('article_id'));
 			$articles[] = [
-				'title' => bbifyMessage($dbRecord->getString('title')),
-				'text' => bbifyMessage($dbRecord->getString('text')),
+				'title' => bbify($dbRecord->getString('title')),
+				'text' => bbify($dbRecord->getString('text')),
 				'editHREF' => $container->href(),
 			];
 		}

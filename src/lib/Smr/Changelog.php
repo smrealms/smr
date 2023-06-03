@@ -39,7 +39,7 @@ class Changelog {
 			foreach ($dbResult2->records() as $dbRecord2) {
 				$changes[] = [
 					'title' => htmlentities($dbRecord2->getString('change_title')),
-					'message' => bbifyMessage(htmlentities($dbRecord2->getString('change_message'))),
+					'message' => bbify(htmlentities($dbRecord2->getString('change_message'))),
 				];
 			}
 

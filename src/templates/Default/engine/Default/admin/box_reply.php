@@ -2,7 +2,7 @@
 
 ?>
 <a href="<?php echo $BackHREF; ?>">&lt;&lt; Back</a><br /><br />
-<?php if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($Preview); ?></td></tr></table><br /><?php } ?>
+<?php if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Preview); ?></td></tr></table><br /><?php } ?>
 <form name="BoxReplyForm" method="POST" action="<?php echo $BoxReplyFormHref; ?>">
 	<b>From: </b><span class="admin">Administrator</span><br />
 	<b>To: </b><?php echo $Sender->getDisplayName(); ?> a.k.a <?php echo $SenderAccount->getLogin(); ?>
