@@ -210,7 +210,22 @@ class Template {
 
 		$xml = '';
 		$dom = new DOMDocument();
+
+		// Handle libxml errors ourselves to provide more detailed errors
+		$orig = libxml_use_internal_errors(true);
 		$dom->loadHTML($str);
+		$errors = libxml_get_errors();
+		libxml_use_internal_errors($orig);
+		foreach ($errors as $error) {
+			$line = explode("\n", $str)[$error->line - 1];
+			$message = 'libxml: ' . $error->message . ' at col ' . $error->column . ' of line: ' . $line;
+			if (ENABLE_LIBXML_ERRORS) {
+				throw new Exception($message);
+			} else {
+				error_log($message);
+			}
+		}
+
 		$xpath = new DOMXPath($dom);
 
 		// Use relative xpath selectors so that they can be reused when we
