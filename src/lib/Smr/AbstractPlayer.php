@@ -1382,12 +1382,21 @@ abstract class AbstractPlayer {
 			// find our own player, then it is because the new name has a
 			// different case (since we did a case-sensitive identity check
 			// above), and we allow it to be changed.
-			if ($this->equals($other)) {
-				throw new PlayerNotFound();
+			if (!$this->equals($other)) {
+				throw new UserError('That name is already being used in this game!');
 			}
-			throw new UserError('That name is already being used in this game!');
 		} catch (PlayerNotFound) {
 			// Name is not in use, continue.
+		}
+
+		// Check if player name is reserved by someone else
+		try {
+			$other = Account::getAccountByHofName($name);
+			if ($this->getAccountID() !== $other->getAccountID()) {
+				throw new UserError('That player name is reserved by another account. Please contact an admin if you would like to claim this name.');
+			}
+		} catch (AccountNotFound) {
+			// Name is not reserved by another account, we may proceed
 		}
 
 		$this->setPlayerName($name);

@@ -129,6 +129,16 @@ class AbstractPlayerIntegrationTest extends BaseIntegrationSpec {
 		$player2->changePlayerName($name1);
 	}
 
+	public function test_changePlayerName_throws_when_name_is_reserved(): void {
+		// Try changing name to a reserved HoF name
+		$name1 = 'test1';
+		Account::createAccount($name1, 'pw', 'test@test.com', 9, 0);
+		$player2 = AbstractPlayer::createPlayer(2, self::$gameID, 'test2', RACE_HUMAN, false);
+		$this->expectException(UserError::class);
+		$this->expectExceptionMessage('That player name is reserved by another account.');
+		$player2->changePlayerName($name1);
+	}
+
 	public function test_changePlayerName_allows_case_change(): void {
 		// Try changing name from 'test' to 'TEST'
 		$name = 'test';
