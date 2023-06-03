@@ -54,7 +54,7 @@ class AlbumModerateProcessor extends AccountPageProcessor {
 				$mail->Subject = 'SMR Photo Album Notification';
 				$mail->setFrom('album@smrealms.de', 'SMR Photo Album');
 				$mail->msgHTML(nl2br($email_txt));
-				$mail->addAddress($receiver->getEmail(), $receiver->getHofName());
+				$mail->addAddress($receiver->getEmail(), $receiver->getLogin());
 				$mail->send();
 			}
 

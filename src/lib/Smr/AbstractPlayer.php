@@ -778,7 +778,7 @@ abstract class AbstractPlayer {
 					$bbifiedMessage = 'From: ' . $sender . ' Date: ' . date($receiverAccount->getDateTimeFormat(), Epoch::time()) . "<br/>\r\n<br/>\r\n" . bbifyMessage($message, $gameID, true);
 					$mail->msgHTML($bbifiedMessage);
 					$mail->AltBody = strip_tags($bbifiedMessage);
-					$mail->addAddress($receiverAccount->getEmail(), $receiverAccount->getHofName());
+					$mail->addAddress($receiverAccount->getEmail(), $receiverAccount->getLogin());
 					$mail->send();
 					$receiverAccount->decreaseMessageNotifications($messageTypeID, 1);
 					$receiverAccount->update();
