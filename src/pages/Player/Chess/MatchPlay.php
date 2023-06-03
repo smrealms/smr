@@ -21,6 +21,9 @@ class MatchPlay extends PlayerPage {
 		$chessGame = ChessGame::getChessGame($this->chessGameID);
 		$template->assign('ChessGame', $chessGame);
 
+		$topic = $chessGame->getWhitePlayer()->getPlayerName() . ' vs. ' . $chessGame->getBlackPlayer()->getPlayerName();
+		$template->assign('PageTopic', htmlentities($topic));
+
 		// Board orientation depends on the player's color.
 		$playerIsWhite = $chessGame->getWhiteID() === $player->getAccountID();
 		$board = $chessGame->getBoard()->getBoardDisplay($playerIsWhite);
