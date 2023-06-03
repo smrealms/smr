@@ -62,7 +62,7 @@ if ($MessageBox['Type'] === MSG_GLOBAL) { ?>
 				} ?>
 				<tr>
 					<td width="10"><input type="checkbox" name="<?php echo $InputName; ?>" value="<?php echo $Message['ID']; ?>" /><?php if ($Message['Unread']) { ?>*<?php } ?></td>
-					<td><?php echo bbifyMessage($Message['Text']); ?></td>
+					<td><?php echo bbify($Message['Text']); ?></td>
 					<td class="noWrap"><?php echo $Message['SendTime']; ?></td>
 				</tr><?php
 				if (isset($MessageBox['GroupedMessages'])) { ?>
@@ -76,7 +76,7 @@ if ($MessageBox['Type'] === MSG_GLOBAL) { ?>
 								foreach ($SubMessages as $SubMessage) { ?>
 									<tr>
 										<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $SubMessage['ID']; ?>" /><?php if ($SubMessage['Unread']) { ?>*<?php } ?></td>
-										<td><?php echo bbifyMessage($SubMessage['Text']); ?></td>
+										<td><?php echo bbify($SubMessage['Text']); ?></td>
 										<td class="noWrap"><?php echo $SubMessage['SendTime']; ?></td>
 									</tr><?php
 								} ?>
@@ -109,7 +109,7 @@ if ($MessageBox['Type'] === MSG_GLOBAL) { ?>
 					} ?>
 				</tr>
 				<tr>
-					<td colspan="6"><?php echo bbifyMessage($Message['Text']); ?></td>
+					<td colspan="6"><?php echo bbify($Message['Text']); ?></td>
 				</tr><?php
 			}
 		} ?>

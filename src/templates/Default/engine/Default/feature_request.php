@@ -57,7 +57,7 @@ if (isset($FeatureRequests)) { ?>
 						?><td><?php echo $FeatureRequest['RequestAccount']->getLogin(); ?>&nbsp;(<?php echo $FeatureRequest['RequestAccount']->getAccountID(); ?>)</td><?php
 					} ?>
 					<td><span class="bold green"><?php echo $FeatureRequest['Votes']['FAVOURITE']; ?></span> / <span class="green"><?php echo $FeatureRequest['Votes']['YES'] + $FeatureRequest['Votes']['FAVOURITE']; ?></span> / <span class="red"><?php echo $FeatureRequest['Votes']['NO']; ?></span></td>
-					<td class="left"><?php echo bbifyMessage($FeatureRequest['Message']); ?></td>
+					<td class="left"><?php echo bbify($FeatureRequest['Message']); ?></td>
 					<td class="shrink noWrap top"><a href="<?php echo $FeatureRequest['CommentsHREF']; ?>">View (<?php echo $FeatureRequest['Comments']; ?>)</a></td><?php
 					if ($CanVote) { ?>
 						<td><input type="radio" name="favourite" value="<?php echo $FeatureRequest['RequestID']; ?>"<?php if ($FeatureRequest['VotedFor'] === 'FAVOURITE') { ?> checked="checked"<?php } ?>></td>

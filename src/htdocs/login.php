@@ -43,7 +43,7 @@ try {
 	foreach ($dbResult->records() as $dbRecord) {
 		$gameNews[] = [
 			'Time' => date(DEFAULT_DATE_TIME_FORMAT_SPLIT, $dbRecord->getInt('time')),
-			'Message' => bbifyMessage(
+			'Message' => bbify(
 				$dbRecord->getString('news_message'),
 				$dbRecord->getInt('game_id'),
 			),

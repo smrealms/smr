@@ -31,7 +31,7 @@ class PaperDeleteConfirm extends PlayerPage {
 			'paper_id' => $db->escapeNumber($this->paperID),
 		]);
 		foreach ($dbResult->records() as $dbRecord) {
-			$articles[] = bbifyMessage($dbRecord->getString('title'));
+			$articles[] = bbify($dbRecord->getString('title'));
 		}
 		$template->assign('Articles', $articles);
 

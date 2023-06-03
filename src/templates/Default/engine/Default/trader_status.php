@@ -172,7 +172,7 @@ use Smr\Race;
 				<td class="shrink">
 					<input type="checkbox" name="note_id[]" value="<?php echo $NoteID; ?>" />
 				</td>
-				<td><?php echo bbifyMessage($Note); ?></td>
+				<td><?php echo bbify($Note); ?></td>
 			</tr><?php
 		} ?>
 	</table>

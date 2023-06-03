@@ -2,7 +2,7 @@
 
 use Smr\Pages\Admin\AdminMessageSend;
 
-if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($Preview, $MessageGameID); ?></td></tr></table><?php } ?>
+if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Preview, $MessageGameID); ?></td></tr></table><?php } ?>
 <form name="AdminMessageSendForm" method="POST" action="<?php echo $AdminMessageSendFormHref; ?>">
 	<p>
 	<b>From: </b><span class="admin">Administrator</span><br />

@@ -192,7 +192,7 @@ function inify(string $text): string {
 	return str_replace(',', '', html_entity_decode($text));
 }
 
-function bbifyMessage(string $message, int $gameID = null, bool $noLinks = false): string {
+function bbify(string $message, int $gameID = null, bool $noLinks = false): string {
 	static $bbParser;
 	if (!isset($bbParser)) {
 		$bbParser = new BBCode();

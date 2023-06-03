@@ -39,7 +39,7 @@ if ($Alliance->hasImageURL()) { ?>
 } ?>
 
 <span class="yellow">Message from your leader</span>
-<p><?php echo bbifyMessage($Alliance->getMotD()); ?></p>
+<p><?php echo bbify($Alliance->getMotD()); ?></p>
 
 <?php
 if (isset($EditHREF)) { ?>

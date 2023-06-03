@@ -24,7 +24,7 @@ class Main extends PlanetPage {
 		//echo the dump cargo message or other message.
 		$template->assign('ErrorMsg', $this->errorMessage);
 		if ($this->message !== null) {
-			$template->assign('Msg', bbifyMessage($this->message));
+			$template->assign('Msg', bbify($this->message));
 		}
 
 		$db = Database::getInstance();

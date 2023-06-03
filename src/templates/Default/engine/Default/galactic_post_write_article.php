@@ -10,11 +10,11 @@ if (isset($PreviewTitle) && isset($Preview)) { ?>
 	<table class="standard">
 		<tr>
 			<td>Title:</td>
-			<td><?php echo bbifyMessage($PreviewTitle); ?></td>
+			<td><?php echo bbify($PreviewTitle); ?></td>
 		</tr>
 		<tr>
 			<td>Article:</td>
-			<td><?php echo bbifyMessage($Preview); ?></td>
+			<td><?php echo bbify($Preview); ?></td>
 		</tr>
 	</table><br /><br /><?php
 } ?>

@@ -45,7 +45,7 @@ if (isset($PrevThread) || isset($NextThread)) { ?>
 		foreach ($Thread['Replies'] as $Reply) { ?>
 			<tr>
 				<td class="shrink noWrap top"><?php echo $Reply['Sender']; ?></td>
-				<td><?php echo bbifyMessage($Reply['Message']); ?></td>
+				<td><?php echo bbify($Reply['Message']); ?></td>
 				<td class="shrink noWrap top"><?php echo date($ThisAccount->getDateTimeFormat(), $Reply['SendTime']); ?></td><?php
 				if (isset($Reply['DeleteHref'])) {
 					?><td class="shrink noWrap top"><a href="<?php echo $Reply['DeleteHref']; ?>"><img src="images/silk/cross.png" width="16" height="16" alt="Delete" title="Delete Post"/></a></td><?php
@@ -56,7 +56,7 @@ if (isset($PrevThread) || isset($NextThread)) { ?>
 </div><?php
 if (isset($Thread['CreateThreadReplyFormHref'])) { ?>
 	<br /><h2>Create Reply</h2><br /><?php
-	if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($Preview); ?></td></tr></table><?php } ?>
+	if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Preview); ?></td></tr></table><?php } ?>
 	<form class="standard" id="CreateThreadReplyForm" method="POST" action="<?php echo $Thread['CreateThreadReplyFormHref']; ?>">
 		<table class="nobord nohpad">
 			<tr>

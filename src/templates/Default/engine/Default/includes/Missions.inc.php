@@ -17,7 +17,7 @@ if (isset($MissionMessage)) { ?>
 
 foreach ($ThisPlayer->getAvailableMissions() as $MissionID => $Mission) { ?>
 	<span class="green">New Mission: </span><?php
-	echo bbifyMessage($Mission['Steps'][0]['Text']); ?>
+	echo bbify($Mission['Steps'][0]['Text']); ?>
 	<div class="buttonA">
 		<p>
 			<a href="<?php echo (new AcceptProcessor($MissionID))->href(); ?>" class="buttonA">Accept</a>&nbsp;
@@ -29,7 +29,7 @@ foreach ($ThisPlayer->getAvailableMissions() as $MissionID => $Mission) { ?>
 foreach ($ThisPlayer->getActiveMissions() as $MissionID => $Mission) {
 	if (in_array($MissionID, $UnreadMissions, true)) { ?>
 		<span class="green">Task Complete: </span><?php
-		echo bbifyMessage($Mission['Task']['Text']); ?><br /><?php
+		echo bbify($Mission['Task']['Text']); ?><br /><?php
 	}
 	if ($Mission['Task']['Step'] === 'Claim') { ?>
 		<div class="buttonA">
@@ -37,7 +37,7 @@ foreach ($ThisPlayer->getActiveMissions() as $MissionID => $Mission) {
 		</div><?php
 	} else { ?>
 		<span class="green">Current Task: </span><?php
-		echo bbifyMessage($Mission['Task']['Task']); ?><br/>
+		echo bbify($Mission['Task']['Task']); ?><br/>
 		<div class="buttonA">
 			<p><a class="buttonA" href="<?php echo (new AbandonProcessor($MissionID))->href(); ?>">Abandon Mission</a></p>
 		</div><?php

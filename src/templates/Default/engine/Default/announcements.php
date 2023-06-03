@@ -20,7 +20,7 @@
 				<?php echo date($ThisAccount->getDateTimeFormatSplit(), $Announcement['Time']); ?>
 			</td>
 			<td class="top">
-				<?php echo bbifyMessage($Announcement['Msg']); ?>
+				<?php echo bbify($Announcement['Msg']); ?>
 			</td>
 		</tr><?php
 	} ?>

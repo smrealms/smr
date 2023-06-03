@@ -9,7 +9,7 @@
 You have selected the following message:<br /><br />
 <table class="standard">
 	<tr>
-		<td><?php echo bbifyMessage($MessageText); ?></td>
+		<td><?php echo bbify($MessageText); ?></td>
 	</tr>
 </table>
 

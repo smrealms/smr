@@ -34,7 +34,7 @@ class TalkToBartender extends PlayerPage {
 			}
 			$this->message = $message;
 		}
-		$template->assign('Message', bbifyMessage($this->message));
+		$template->assign('Message', bbify($this->message));
 
 		$container = new self($this->locationID);
 		$template->assign('ListenHREF', $container->href());
