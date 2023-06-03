@@ -216,7 +216,7 @@ services:
         <<: *smr-cli
 
     traefik:
-        image: traefik:2.9
+        image: traefik:2.10
         networks:
             - frontend
         volumes:
