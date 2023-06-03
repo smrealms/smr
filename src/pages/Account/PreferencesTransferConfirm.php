@@ -3,6 +3,7 @@
 namespace Smr\Pages\Account;
 
 use Smr\Account;
+use Smr\Exceptions\AccountNotFound;
 use Smr\Page\AccountPage;
 use Smr\Session;
 use Smr\Template;
@@ -20,12 +21,22 @@ class PreferencesTransferConfirm extends AccountPage {
 		}
 
 		if ($amount > $account->getSmrCredits()) {
-			create_error('You can\'t transfer more than you have!');
+			create_error('You can\'t transfer more SMR credits than you have!');
+		}
+
+		try {
+			$toAccount = Account::getAccount($account_id);
+		} catch (AccountNotFound) {
+			create_error('That account does not exist!');
+		}
+		if (!$toAccount->isValidated()) {
+			create_error('You cannot send SMR credits to unvalidated accounts.');
 		}
 
 		$template->assign('PageTopic', 'Confirmation');
 		$template->assign('Amount', $amount);
-		$template->assign('HofName', Account::getAccount($account_id)->getHofDisplayName());
+		$template->assign('ToAccountID', $account_id);
+		$template->assign('HofName', $toAccount->getHofDisplayName());
 
 		$container = new PreferencesTransferProcessor($amount, $account_id);
 		$template->assign('SubmitHREF', $container->href());

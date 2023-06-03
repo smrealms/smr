@@ -451,22 +451,17 @@ if (isset($GameID)) { ?>
 <form id="TransferSMRCreditsForm" method="POST" action="<?php echo $PreferencesConfirmFormHREF; ?>">
 	<table>
 		<tr>
-			<th colspan="2">SMR Credits</th>
+			<th colspan="2">Transfer SMR Credits</th>
 		</tr>
 		<tr>
-			<td>Transfer Credits:</td>
-			<td>
-				<input type="number" name="amount" class="center" style="width:50px;" /> credits to <?php if (!isset($GameID)) { ?>the account with HoF name of <?php } ?>
-				<select name="account_id"><?php
-					foreach ($TransferAccounts as $AccID => $HofDisplayName) {
-						?><option value="<?php echo $AccID; ?>"><?php echo $HofDisplayName; ?></option><?php
-					} ?>
-				</select>
-			</td>
+			<td>Account ID:</td>
+			<td><input type="number" name="account_id" class="center" required /></td>
 		</tr>
-
 		<tr>
-			<td>&nbsp;</td>
+			<td>Amount:</td>
+			<td><input type="number" name="amount" class="center" required /></td>
+		</tr>
+		<tr>
 			<td><input type="submit" name="action" value="Transfer" /></td>
 		</tr>
 	</table>
