@@ -9,7 +9,7 @@ use Smr\Pages\Admin\AlbumApprove;
 use Smr\Pages\Admin\AlbumModerateSelect;
 use Smr\Pages\Admin\AnnouncementCreate;
 use Smr\Pages\Admin\AnonBankViewSelect;
-use Smr\Pages\Admin\Changelog;
+use Smr\Pages\Admin\ChangelogAdd;
 use Smr\Pages\Admin\CheatingShipCheck;
 use Smr\Pages\Admin\CombatSimulator;
 use Smr\Pages\Admin\DatabaseCleanup;
@@ -51,7 +51,7 @@ class AdminPermissions {
 		18 => ['Form Access', FormOpen::class, 3],
 		19 => ['Approve Photo Album', AlbumApprove::class, 2],
 		20 => ['Moderate Photo Album', AlbumModerateSelect::class, 2],
-		21 => ['Manage ChangeLog', Changelog::class, 3],
+		21 => ['Manage ChangeLog', ChangelogAdd::class, 3],
 		22 => ['Anon Account View', AnonBankViewSelect::class, 1],
 		23 => ['Word Filter', WordFilter::class, 1],
 		24 => ['Combat Simulator', CombatSimulator::class, 4],

@@ -19,7 +19,7 @@ class ChangelogAddProcessor extends AccountPageProcessor {
 		$affected_db = Request::get('affected_db');
 
 		if (Request::get('action') === 'Preview') {
-			$container = new Changelog(
+			$container = new ChangelogAdd(
 				changeTitle: $change_title,
 				changeMessage: $change_message,
 				affectedDb: $affected_db,
@@ -48,7 +48,7 @@ class ChangelogAddProcessor extends AccountPageProcessor {
 			$db->unlock();
 		}
 
-		$container = new Changelog();
+		$container = new ChangelogAdd();
 		$container->go();
 	}
 

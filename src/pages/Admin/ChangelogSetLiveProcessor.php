@@ -39,7 +39,7 @@ class ChangelogSetLiveProcessor extends AccountPageProcessor {
 			'patch_level' => $db->escapeNumber($patch),
 		]);
 
-		(new Changelog())->go();
+		(new ChangelogAdd())->go();
 	}
 
 }

@@ -22,7 +22,7 @@ $this->includeTemplate('changelog_view.php', ['Versions' => [$FirstVersion]]); ?
 					<td colspan="2"><input type="text" name="change_title" value="<?php echo $ChangeTitle; ?>" style="width:400px;" required></td>
 				</tr>
 				<tr>
-					<td><small>Message (HTML):</small></td>
+					<td><small>Message (BBCode):</small></td>
 					<td><small>Affected Database:</small></td>
 				</tr>
 				<tr>
