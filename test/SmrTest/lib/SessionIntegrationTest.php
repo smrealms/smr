@@ -16,7 +16,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 	private Session $session;
 
 	protected function tablesToTruncate(): array {
-		return ['debug', 'active_session'];
+		return ['active_session'];
 	}
 
 	protected function setUp(): void {
