@@ -202,6 +202,15 @@ function bbify(string $message, int $gameID = null, bool $noLinks = false): stri
 		$bbParser->setURLTarget('_blank');
 		$bbParser->setURLTargetable('override');
 		$bbParser->setEscapeContent(false); // don't escape HTML, needed for News etc.
+
+		// Add [verbatim] tag, needed for displaying other tags
+		$bbParser->addRule('verbatim', [
+			'content' => BBCode::BBCODE_VERBATIM,
+			'simple_start' => '<tt>',
+			'simple_end' => '</tt>',
+			'allow_in' => ['block'],
+		]);
+
 		$smrRule = [
 				'mode' => BBCode::BBCODE_MODE_CALLBACK,
 				'method' => 'smrBBCode',
