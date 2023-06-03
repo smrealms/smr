@@ -114,7 +114,7 @@ class AccountTest extends BaseIntegrationSpec {
 		// Given the database has been set up with a user
 		$original = Account::createAccount('test', 'test', 'test@test.com', 9, 0);
 		// When retrieving account by HoF name
-		$account = Account::getAccountByLogin($original->getHofName());
+		$account = Account::getAccountByHofName($original->getHofName());
 		// Then the record is found
 		self::assertSame($original, $account);
 	}
@@ -228,6 +228,17 @@ class AccountTest extends BaseIntegrationSpec {
 		$this->expectException(AccountNotFound::class);
 		$this->expectExceptionMessage('Account social login not found');
 		Account::getAccountBySocialId($socialId);
+	}
+
+	public function test_hof_name(): void {
+		// Check default HoF name for a new account
+		$account = Account::createAccount('test', 'pw', 'test@test.com', 9, 0);
+		self::assertSame('test', $account->getHofName());
+		self::assertSame('test', $account->getHofDisplayName());
+
+		$account->setHofName('PB & J'); // include HTML special chars
+		self::assertSame('PB & J', $account->getHofName());
+		self::assertSame('PB &amp; J', $account->getHofDisplayName());
 	}
 
 	public function test_date_format_methods(): void {
