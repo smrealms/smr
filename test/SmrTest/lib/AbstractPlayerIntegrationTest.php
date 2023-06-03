@@ -5,6 +5,7 @@ namespace SmrTest\lib;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Smr\AbstractPlayer;
+use Smr\Account;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Exceptions\UserError;
 use Smr\Game;
@@ -16,7 +17,7 @@ class AbstractPlayerIntegrationTest extends BaseIntegrationSpec {
 	private static int $gameID = 42;
 
 	protected function tablesToTruncate(): array {
-		return ['player'];
+		return ['account', 'player'];
 	}
 
 	protected function tearDown(): void {
@@ -58,6 +59,28 @@ class AbstractPlayerIntegrationTest extends BaseIntegrationSpec {
 		$this->expectException(UserError::class);
 		$this->expectExceptionMessage('That player name already exists.');
 		AbstractPlayer::createPlayer(2, self::$gameID, $name, RACE_HUMAN, false);
+	}
+
+	public function test_createPlayer_reserved_name_by_other(): void {
+		// Create an account with an HoF name set by the login
+		$name = 'foo';
+		$account = Account::createAccount($name, 'pw', 'test@test.com', 9, 0);
+
+		// Try creating a player with the reserved name by a different account
+		$this->expectException(UserError::class);
+		$this->expectExceptionMessage('That player name is reserved by another account.');
+		AbstractPlayer::createPlayer($account->getAccountID() + 1, self::$gameID, $name, RACE_HUMAN, false);
+	}
+
+	public function test_createPlayer_reserved_name_by_self(): void {
+		// Create an account with an HoF name set by the login
+		$name = 'foo';
+		$account = Account::createAccount($name, 'pw', 'test@test.com', 9, 0);
+
+		// Try creating a player with the reserved name by the same account
+		$player = AbstractPlayer::createPlayer($account->getAccountID(), self::$gameID, $name, RACE_HUMAN, false);
+		self::assertSame($player->getAccountID(), $account->getAccountID());
+		self::assertSame($player->getPlayerName(), $account->getHofName());
 	}
 
 	public function test_createPlayer_increment_playerid(): void {

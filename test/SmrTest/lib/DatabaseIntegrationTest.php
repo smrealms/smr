@@ -157,14 +157,27 @@ class DatabaseIntegrationTest extends TestCase {
 	public function test_lockTable_allows_read(): void {
 		$db = Database::getInstance();
 		$db->lockTable('good');
-
-		// Perform a query on the locked table
-		$result = $db->read('SELECT good_name FROM good WHERE good_id = 1');
-		self::assertSame(['good_name' => 'Wood'], $result->record()->getRow());
-
+		try {
+			// Perform a query on the locked table
+			$result = $db->read('SELECT good_name FROM good WHERE good_id = 1');
+			self::assertSame(['good_name' => 'Wood'], $result->record()->getRow());
+		} finally {
+			$db->unlock();
+		}
 		// After unlock we can access other tables again
-		$db->unlock();
 		$db->read('SELECT 1 FROM account LIMIT 1');
+	}
+
+	public function test_lockTable_additional_read_locks(): void {
+		$db = Database::getInstance();
+		$db->lockTable('player', ['good']);
+		try {
+			// Perform a read query on the read-locked table
+			$result = $db->read('SELECT good_name FROM good WHERE good_id = 1');
+			self::assertSame(['good_name' => 'Wood'], $result->record()->getRow());
+		} finally {
+			$db->unlock();
+		}
 	}
 
 	/**
