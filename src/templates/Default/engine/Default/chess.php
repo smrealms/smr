@@ -23,7 +23,7 @@ if (count($ChessGames) > 0) { ?>
 			<tr>
 				<td>
 					<?php echo $ChessGame->getWhitePlayer()->getLinkedDisplayName(false); ?>
-					vs
+					vs.
 					<?php echo $ChessGame->getBlackPlayer()->getLinkedDisplayName(false); ?>
 				</td>
 				<td>
