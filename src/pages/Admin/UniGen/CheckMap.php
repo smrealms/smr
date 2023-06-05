@@ -90,7 +90,7 @@ class CheckMap extends AccountPage {
 				foreach ($port->getSellGoodIDs() as $goodID) {
 					$distance = $port->getGoodDistance($goodID);
 					// For distance ties, prefer higher good IDs
-					if ($max === null || $distance >= $max['Distance']) {
+					if ($max === null || $distance > $max['Distance'] || ($distance === $max['Distance'] && $goodID > $max['GoodID'])) {
 						$max = [
 							'Port' => $port,
 							'GoodID' => $goodID,
