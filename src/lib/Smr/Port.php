@@ -1174,15 +1174,23 @@ class Port {
 			$db = Database::getInstance();
 			$cache = $db->escapeObject($this, true);
 			$cacheHash = $db->escapeString(md5($cache));
-			//give them the port info
-			$query = 'INSERT IGNORE INTO player_visited_port ' .
-						'(account_id, game_id, sector_id, visited, port_info_hash) ' .
-						'VALUES ';
+
+			// Insert dummy rows that don't exist yet for these primary keys
+			$query = 'INSERT IGNORE INTO player_visited_port
+					(account_id, game_id, sector_id, visited, port_info_hash) VALUES ';
+			$params = [
+				'game_id' => $db->escapeNumber($this->getGameID()),
+				'sector_id' => $db->escapeNumber($this->getSectorID()),
+				'visited' => 0, // to be updated below
+				'port_info_hash' => '', // to be updated below
+			];
+			$paramSql = [];
 			foreach ($accountIDs as $accountID) {
-				$query .= '(' . $accountID . ', ' . $this->getGameID() . ', ' . $this->getSectorID() . ', 0, \'\'),';
+				$params['account_id' . $accountID] = $accountID;
+				$paramSql[] = '(:account_id' . $accountID . ', :game_id, :sector_id, :visited, :port_info_hash)';
 			}
-			$query = substr($query, 0, -1);
-			$db->write($query);
+			$query .= implode(',', $paramSql);
+			$db->write($query, $params);
 
 			$db->write('INSERT IGNORE INTO port_info_cache
 						(game_id, sector_id, port_info_hash, port_info)
