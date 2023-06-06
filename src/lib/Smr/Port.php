@@ -78,7 +78,7 @@ class Port {
 	protected bool $cacheIsValid = true;
 
 	protected bool $hasChanged = false;
-	protected bool $isNew;
+	protected bool $isNew = false;
 
 	public static function clearCache(): void {
 		self::$CACHE_PORTS = [];
@@ -168,7 +168,6 @@ class Port {
 		}
 
 		if ($dbRecord !== null) {
-			$this->isNew = false;
 			$this->shields = $dbRecord->getInt('shields');
 			$this->combatDrones = $dbRecord->getInt('combat_drones');
 			$this->armour = $dbRecord->getInt('armour');
@@ -1195,7 +1194,8 @@ class Port {
 			$db->write('INSERT IGNORE INTO port_info_cache
 						(game_id, sector_id, port_info_hash, port_info)
 						VALUES (:game_id, :sector_id, :hash, :cache)', [
-				...$this->SQLID,
+				'sector_id' => $db->escapeNumber($this->getSectorID()),
+				'game_id' => $db->escapeNumber($this->getGameID()),
 				'hash' => $cacheHash,
 				'cache' => $cache,
 			]);
