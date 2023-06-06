@@ -24,6 +24,15 @@ function channel_join($fp, string $rdata): bool {
 			'channel' => $db->escapeString($channel),
 		]);
 
+		$sqlData = [
+			'nick' => $nick,
+			'user' => $user,
+			'host' => $host,
+			'channel' => $channel,
+			'signed_on' => time(),
+			'registered_nick' => '',
+		];
+
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			// existing nick?
@@ -38,29 +47,14 @@ function channel_join($fp, string $rdata): bool {
 				fwrite($fp, 'PRIVMSG ' . $channel . ' :Welcome back ' . $nick . '. While being away ' . $seen_by . ' was looking for you.' . EOL);
 			}
 
-			$db->update(
-				'irc_seen',
-				[
-					'signed_on' => time(),
-					'signed_off' => 0,
-					'user' => $user,
-					'host' => $host,
-					'seen_count' => 0,
-					'seen_by' => null,
-					'registered' => null,
-				],
-				['seen_id' => $seen_id],
-			);
+			$db->replace('irc_seen', [
+				'seen_id' => $seen_id,
+				...$sqlData,
+			]);
 
 		} else {
 			// new nick?
-			$db->insert('irc_seen', [
-				'nick' => $nick,
-				'user' => $user,
-				'host' => $host,
-				'channel' => $channel,
-				'signed_on' => time(),
-			]);
+			$db->insert('irc_seen', $sqlData);
 
 			if ($nick !== IRC_BOT_NICK) {
 				fwrite($fp, 'PRIVMSG ' . $channel . ' :Welcome, ' . $nick . '! Most players are using Discord (' . DISCORD_URL . ') instead of IRC, but the two platforms are linked by discordbot. Anything you say here will be relayed to the Discord channel and vice versa.' . EOL);

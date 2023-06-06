@@ -43,6 +43,11 @@ x-smr-web: &smr-web
         <<: *smr-base-env
         XDEBUG_MODE:
         DISABLE_PHPDI_COMPILATION:
+    # Allow the process to be interruptible with SIGINT.
+    # For tests, this may corrupt the test database and require a reset.
+    # CLI programs may not be cleaned up properly if interrupted.
+    # (see https://github.com/docker-library/php/issues/505)
+    init: true
 
 # Base configuration for the SMR command line tools
 x-smr-cli: &smr-cli
@@ -60,10 +65,6 @@ x-smr-cli: &smr-cli
 # Base configuration for SMR testing tools
 x-smr-test: &smr-test
     <<: *smr-base
-    # Allow the process to be interruptible with SIGINT.
-    # Note that this may corrupt the test database and require a reset.
-    # (see https://github.com/docker-library/php/issues/505)
-    init: true
     environment:
         <<: *smr-base-env
         XDEBUG_MODE: "off"
@@ -203,7 +204,6 @@ services:
             - mysql
 
     discord:
-        init: true
         command: php src/tools/discord/bot.php
         <<: *smr-cli
 

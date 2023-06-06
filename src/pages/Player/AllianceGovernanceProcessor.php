@@ -39,8 +39,8 @@ class AllianceGovernanceProcessor extends PlayerPageProcessor {
 		}
 
 		if (Request::has('url')) {
-			$url = filter_var(Request::get('url'), FILTER_VALIDATE_URL);
-			if ($url === false) {
+			$url = Request::get('url');
+			if ($url !== '' && filter_var($url, FILTER_VALIDATE_URL) === false) {
 				create_error('You must enter a valid URL for the image link!');
 			}
 			$alliance->setImageURL($url);
