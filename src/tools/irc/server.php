@@ -158,31 +158,27 @@ function server_msg_352($fp, string $rdata): bool {
 			'channel' => $db->escapeString($channel),
 		]);
 
+		$sqlData = [
+			'nick' => $nick,
+			'user' => $user,
+			'host' => $host,
+			'channel' => $channel,
+			'signed_on' => time(),
+			'registered_nick' => '',
+		];
+
 		if ($dbResult->hasRecord()) {
 			// exiting nick?
 			$seen_id = $dbResult->record()->getInt('seen_id');
 
-			$db->update(
-				'irc_seen',
-				[
-					'signed_on' => time(),
-					'signed_off' => 0,
-					'user' => $user,
-					'host' => $host,
-					'registered' => null,
-				],
-				['seen_id' => $seen_id],
-			);
+			$db->replace('irc_seen', [
+				'seen_id' => $seen_id,
+				...$sqlData,
+			]);
 
 		} else {
 			// new nick?
-			$db->insert('irc_seen', [
-				'nick' => $nick,
-				'user' => $user,
-				'host' => $host,
-				'channel' => $channel,
-				'signed_on' => time(),
-			]);
+			$db->insert('irc_seen', $sqlData);
 		}
 
 		return true;
