@@ -2887,9 +2887,13 @@ abstract class AbstractPlayer {
 			// If we have completed this mission just use false to indicate no current task.
 			$currentStep = false;
 		} else {
-			$data = ['player' => $this, 'mission' => $mission];
+			$replacements = [
+				'<Race>' => $this->getRaceID(),
+				'<Sector>' => $mission['Sector'],
+				'<Starting Sector>' => $mission['Starting Sector'],
+			];
 			$currentStep = MISSIONS[$missionID]['Steps'][$mission['On Step']];
-			array_walk_recursive($currentStep, 'replaceMissionTemplate', $data);
+			array_walk_recursive($currentStep, 'replaceMissionTemplate', $replacements);
 		}
 		$this->missions[$missionID]['Task'] = $currentStep;
 	}

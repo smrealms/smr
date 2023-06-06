@@ -122,15 +122,20 @@ const MISSIONS = [
  * Searches for placeholders in template and replaces them with values
  * derived from the supplied data.
  *
- * @param array{player: \Smr\AbstractPlayer, mission: array<mixed>} $data
+ * @param array<string, int> $replacements
  */
-function replaceMissionTemplate(string|int|PlotGroup &$template, string $key, array $data): void {
+function replaceMissionTemplate(string|int|PlotGroup &$template, string $key, array $replacements): void {
 	if (!is_string($template)) {
 		return;
 	}
-	$search = ['<Race>', '<Sector>', '<Starting Sector>'];
-	$replace = [$data['player']->getRaceID(), $data['mission']['Sector'], $data['mission']['Starting Sector']];
-	$template = str_replace($search, $replace, $template);
+	foreach ($replacements as $placeholder => $value) {
+		// Try an exact (type-preserving) replacement first
+		if ($template === $placeholder) {
+			$template = $value;
+			return;
+		}
+		$template = str_replace($placeholder, (string)$value, $template);
+	}
 }
 
 /**
