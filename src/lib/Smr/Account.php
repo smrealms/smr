@@ -253,7 +253,7 @@ class Account {
 		foreach (self::USER_RANKINGS_SCORE as [$stat, $a, $b]) {
 			$userRankingType = implode(':', $stat);
 			$userRankingTypes[] = $userRankingType;
-			$case .= ' WHEN \'' . $userRankingType . '\' THEN POW(amount*' . $a . ',' . self::USER_RANKINGS_EACH_STAT_POW . ')*' . $b;
+			$case .= ' WHEN \'' . $userRankingType . '\' THEN POW(GREATEST(0, amount) * ' . $a . ',' . self::USER_RANKINGS_EACH_STAT_POW . ')*' . $b;
 		}
 		$case .= ' END)), 0)';
 		return [
