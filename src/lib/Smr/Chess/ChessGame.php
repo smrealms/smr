@@ -224,11 +224,10 @@ class ChessGame {
 		];
 	}
 
-	public static function insertNewGame(int $startDate, ?int $endDate, AbstractPlayer $whitePlayer, AbstractPlayer $blackPlayer): void {
+	public static function insertNewGame(int $startDate, AbstractPlayer $whitePlayer, AbstractPlayer $blackPlayer): void {
 		$db = Database::getInstance();
 		$db->insert('chess_game', [
 			'start_time' => $startDate,
-			'end_time' => $endDate,
 			'white_id' => $whitePlayer->getAccountID(),
 			'black_id' => $blackPlayer->getAccountID(),
 			'game_id' => $whitePlayer->getGameID(),
