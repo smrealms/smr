@@ -3284,13 +3284,11 @@ abstract class AbstractPlayer {
 		foreach ($this->hasHOFChanged as $hofType => $changeType) {
 			$amount = $this->HOF[$hofType];
 			if ($changeType === self::HOF_NEW) {
-				if ($amount > 0) {
-					$db->insert('player_hof', [
-						...$this->SQLID,
-						'type' => $hofType,
-						'amount' => $amount,
-					]);
-				}
+				$db->insert('player_hof', [
+					...$this->SQLID,
+					'type' => $hofType,
+					'amount' => $amount,
+				]);
 			} elseif ($changeType === self::HOF_CHANGED) {
 				$db->update(
 					'player_hof',
