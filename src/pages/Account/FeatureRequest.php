@@ -96,9 +96,9 @@ class FeatureRequest extends AccountPage {
 					'RequestID' => $featureRequestID,
 					'Message' => $dbRecord->getString('text'),
 					'Votes' => [
-						'FAVOURITE' => $dbRecord->getInt('fav'),
-						'YES' => $dbRecord->getInt('yes'),
-						'NO' => $dbRecord->getInt('no'),
+						'FAVOURITE' => 0,
+						'YES' => 0,
+						'NO' => 0,
 					],
 					'VotedFor' => $featureVotes[$featureRequestID] ?? false,
 				];
@@ -106,16 +106,14 @@ class FeatureRequest extends AccountPage {
 					$featureRequests[$featureRequestID]['RequestAccount'] = Account::getAccount($dbRecord->getInt('poster_id'));
 				}
 
-				if ($canVote) {
-					$dbResult2 = $db->read('SELECT COUNT(*), vote_type
-								FROM account_votes_for_feature
-								WHERE feature_request_id = :feature_request_id
-								GROUP BY vote_type', [
-						'feature_request_id' => $db->escapeNumber($featureRequestID),
-					]);
-					foreach ($dbResult2->records() as $dbRecord2) {
-						$featureRequests[$featureRequestID]['Votes'][$dbRecord2->getString('vote_type')] = $dbRecord2->getInt('COUNT(*)');
-					}
+				$dbResult2 = $db->read('SELECT COUNT(*), vote_type
+							FROM account_votes_for_feature
+							WHERE feature_request_id = :feature_request_id
+							GROUP BY vote_type', [
+					'feature_request_id' => $db->escapeNumber($featureRequestID),
+				]);
+				foreach ($dbResult2->records() as $dbRecord2) {
+					$featureRequests[$featureRequestID]['Votes'][$dbRecord2->getString('vote_type')] = $dbRecord2->getInt('COUNT(*)');
 				}
 				$dbResult2 = $db->read('SELECT COUNT(*)
 							FROM feature_request_comments

@@ -52,32 +52,6 @@ class FeatureRequestVoteProcessor extends AccountPageProcessor {
 			}
 			$setStatusIDs = Request::getIntArray('set_status_ids');
 
-			$db->write('UPDATE feature_request fr SET status = :status
-					, fav = (
-						SELECT COUNT(feature_request_id)
-						FROM account_votes_for_feature
-						WHERE feature_request_id=fr.feature_request_id
-							AND vote_type = :favorite
-					)
-					, yes = (
-						SELECT COUNT(feature_request_id)
-						FROM account_votes_for_feature
-						WHERE feature_request_id=fr.feature_request_id
-							AND vote_type IN (:yes, :favorite)
-					)
-					, no = (
-						SELECT COUNT(feature_request_id)
-						FROM account_votes_for_feature
-						WHERE feature_request_id=fr.feature_request_id
-							AND vote_type = :no
-					)
-					WHERE feature_request_id IN (:feature_request_ids)', [
-				'status' => $db->escapeString($status),
-				'favorite' => $db->escapeString('FAVOURITE'),
-				'yes' => $db->escapeString('YES'),
-				'no' => $db->escapeString('NO'),
-				'feature_request_ids' => $db->escapeArray($setStatusIDs),
-			]);
 			foreach ($setStatusIDs as $featureID) {
 				$db->insert('feature_request_comments', [
 					'feature_request_id' => $featureID,
