@@ -25,6 +25,9 @@ class AllianceGovernanceProcessor extends PlayerPageProcessor {
 
 		if (Request::has('discord_server')) {
 			$discordServer = Request::get('discord_server');
+			if ($discordServer === '') {
+				$discordServer = null;
+			}
 			$alliance->setDiscordServer($discordServer);
 		}
 

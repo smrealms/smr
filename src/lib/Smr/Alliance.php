@@ -242,7 +242,7 @@ class Alliance {
 		return $this->discordServer;
 	}
 
-	public function setDiscordServer(string $serverId): void {
+	public function setDiscordServer(?string $serverId): void {
 		$this->discordServer = $serverId;
 	}
 
