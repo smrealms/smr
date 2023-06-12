@@ -28,7 +28,7 @@ if (isset($Comments)) { ?>
 				if ($FeatureModerator) {
 					?> - <?php echo $Comment['PosterAccount']->getLogin(); ?>&nbsp;(<?php echo $Comment['PosterAccount']->getAccountID(); ?>)</td><?php
 				} ?>
-				<td class="left"><?php echo bbify($Comment['Message']); ?></td>
+				<td class="left"><?php echo bbify(htmlentities($Comment['Message'])); ?></td>
 				<td class="shrink noWrap top"><?php echo $Comment['Time']; ?></td>
 			</tr><?php
 		} ?>
