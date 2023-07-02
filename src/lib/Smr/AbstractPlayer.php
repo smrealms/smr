@@ -3059,7 +3059,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function sameAlliance(self $otherPlayer): bool {
-		return $this->getGameID() === $otherPlayer->getGameID() && $this->hasAlliance() && $this->getAllianceID() === $otherPlayer->getAllianceID();
+		return $this->equals($otherPlayer) || ($this->getGameID() === $otherPlayer->getGameID() && $this->hasAlliance() && $this->getAllianceID() === $otherPlayer->getAllianceID());
 	}
 
 	public function sharedForceAlliance(self $otherPlayer): bool {
