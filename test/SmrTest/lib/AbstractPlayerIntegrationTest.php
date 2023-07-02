@@ -10,6 +10,7 @@ use Smr\Exceptions\PlayerNotFound;
 use Smr\Exceptions\UserError;
 use Smr\Game;
 use SmrTest\BaseIntegrationSpec;
+use SmrTest\TestUtils;
 
 #[CoversClass(AbstractPlayer::class)]
 class AbstractPlayerIntegrationTest extends BaseIntegrationSpec {
@@ -213,6 +214,31 @@ class AbstractPlayerIntegrationTest extends BaseIntegrationSpec {
 		// False if player is in a ship with too large an attack rating
 		$player1->setShipTypeID(SHIP_TYPE_MOTHER_SHIP);
 		self::assertFalse($player1->isNewbieCombatant());
+	}
+
+	public function test_sameAlliance(): void {
+		$player1 = AbstractPlayer::createPlayer(1, self::$gameID, 'test1', RACE_HUMAN, true);
+		$player2 = AbstractPlayer::createPlayer(2, self::$gameID, 'test2', RACE_HUMAN, true);
+
+		// True if the players are identical, and not in an alliance
+		self::assertTrue($player1->sameAlliance($player1));
+
+		// False if both players are not in an alliance
+		self::assertFalse($player1->sameAlliance($player2));
+
+		// True if the players are identical, and in an alliance
+		$setter1 = TestUtils::getPrivateMethod($player1, 'setAllianceID');
+		$setter1->invoke($player1, 42);
+		self::assertTrue($player1->sameAlliance($player1));
+
+		// True if both players are in the same alliance
+		$setter2 = TestUtils::getPrivateMethod($player2, 'setAllianceID');
+		$setter2->invoke($player2, 42);
+		self::assertTrue($player1->sameAlliance($player2));
+
+		// False if players are in different alliances
+		$setter2->invoke($player2, 43);
+		self::assertFalse($player1->sameAlliance($player2));
 	}
 
 }

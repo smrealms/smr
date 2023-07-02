@@ -1469,22 +1469,14 @@ abstract class AbstractPlayer {
 		return $this->getAllianceID() !== 0;
 	}
 
+	/**
+	 * Not called directly. See joinAlliance and leaveAlliance.
+	 */
 	protected function setAllianceID(int $ID): void {
 		if ($this->allianceID === $ID) {
 			return;
 		}
 		$this->allianceID = $ID;
-		if ($this->allianceID !== 0) {
-			$status = $this->hasNewbieStatus() ? 'NEWBIE' : 'VETERAN';
-			$db = Database::getInstance();
-			$db->write('INSERT IGNORE INTO player_joined_alliance (account_id,game_id,alliance_id,status)
-				VALUES (:account_id, :game_id, :alliance_id, :status)', [
-				'account_id' => $db->escapeNumber($this->getAccountID()),
-				'game_id' => $db->escapeNumber($this->getGameID()),
-				'alliance_id' => $db->escapeNumber($this->getAllianceID()),
-				'status' => $db->escapeString($status),
-			]);
-		}
 		$this->hasChanged = true;
 	}
 
@@ -1554,6 +1546,17 @@ abstract class AbstractPlayer {
 	 */
 	public function joinAlliance(int $allianceID): void {
 		$this->setAllianceID($allianceID);
+
+		$status = $this->hasNewbieStatus() ? 'NEWBIE' : 'VETERAN';
+		$db = Database::getInstance();
+		$db->write('INSERT IGNORE INTO player_joined_alliance (account_id,game_id,alliance_id,status)
+			VALUES (:account_id, :game_id, :alliance_id, :status)', [
+			'account_id' => $db->escapeNumber($this->getAccountID()),
+			'game_id' => $db->escapeNumber($this->getGameID()),
+			'alliance_id' => $db->escapeNumber($allianceID),
+			'status' => $db->escapeString($status),
+		]);
+
 		$alliance = $this->getAlliance();
 
 		if (!$this->isAllianceLeader()) {
@@ -3056,7 +3059,7 @@ abstract class AbstractPlayer {
 	}
 
 	public function sameAlliance(self $otherPlayer): bool {
-		return $this->getGameID() === $otherPlayer->getGameID() && $this->hasAlliance() && $this->getAllianceID() === $otherPlayer->getAllianceID();
+		return $this->equals($otherPlayer) || ($this->getGameID() === $otherPlayer->getGameID() && $this->hasAlliance() && $this->getAllianceID() === $otherPlayer->getAllianceID());
 	}
 
 	public function sharedForceAlliance(self $otherPlayer): bool {
