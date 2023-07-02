@@ -35,11 +35,12 @@ class ExaminePlanet extends PlayerPage {
 				WHERE (alliance_id_1 = :owner_alliance_id OR alliance_id_1 = :player_alliance_id)
 				AND (alliance_id_2 = :owner_alliance_id OR alliance_id_2 = :player_alliance_id)
 				AND game_id = :game_id
-				AND planet_land = 1
+				AND planet_land = :planet_land
 				AND official = :official', [
 				'owner_alliance_id' => $db->escapeNumber($ownerAllianceID),
 				'player_alliance_id' => $db->escapeNumber($player->getAllianceID()),
 				'game_id' => $db->escapeNumber($player->getGameID()),
+				'planet_land' => $db->escapeBoolean(true),
 				'official' => $db->escapeBoolean(true),
 			]);
 			$planetLand = $dbResult->hasRecord();
