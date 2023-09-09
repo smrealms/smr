@@ -59,19 +59,24 @@ class AllianceVsAlliance extends PlayerPage {
 
 		$alliance_vs = [];
 		foreach ($alliance_vs_ids as $curr_id) {
-			$curr_alliance = Alliance::getAlliance($curr_id, $player->getGameID());
 			$container = new self($curr_id, $this->versusAllianceIDs);
 			$style = '';
-			if (!$curr_alliance->isNone() && $curr_alliance->hasDisbanded()) {
-				$style = 'class="red"';
-			}
 			if ($player->getAllianceID() === $curr_id) {
 				$style = 'class="bold"';
+			}
+			if ($curr_id === 0) {
+				$alliance_name = 'No Alliance';
+			} else {
+				$curr_alliance = Alliance::getAlliance($curr_id, $player->getGameID());
+				if ($curr_alliance->hasDisbanded()) {
+					$style = 'class="red"';
+				}
+				$alliance_name = $curr_alliance->getAllianceDisplayName();
 			}
 			$alliance_vs[] = [
 				'ID' => $curr_id,
 				'DetailsHREF' => $container->href(),
-				'Name' => $curr_alliance->isNone() ? 'No Alliance' : $curr_alliance->getAllianceDisplayName(),
+				'Name' => $alliance_name,
 				'Style' => $style,
 			];
 		}
@@ -79,14 +84,14 @@ class AllianceVsAlliance extends PlayerPage {
 
 		$alliance_vs_table = [];
 		foreach ($alliance_vs_ids as $curr_id) {
-			$curr_alliance = Alliance::getAlliance($curr_id, $player->getGameID());
 			foreach ($alliance_vs_ids as $id) {
-				$row_alliance = Alliance::getAlliance($id, $player->getGameID());
-				$showRed = (!$curr_alliance->isNone() && $curr_alliance->hasDisbanded()) ||
-				           (!$row_alliance->isNone() && $row_alliance->hasDisbanded());
+				$showRed = (
+					($curr_id !== 0 && Alliance::getAlliance($curr_id, $player->getGameID())->hasDisbanded()) ||
+					($id !== 0 && Alliance::getAlliance($id, $player->getGameID())->hasDisbanded())
+				);
 				$showBold = $curr_id === $player->getAllianceID() || $id === $player->getAllianceID();
 				$style = '';
-				if ($curr_id === $id && !$row_alliance->isNone()) {
+				if ($curr_id === $id && $id !== 0) {
 					$value = '--';
 					if ($showRed) {
 						$style = 'class="red"';
@@ -120,8 +125,12 @@ class AllianceVsAlliance extends PlayerPage {
 		$template->assign('AllianceVsTable', $alliance_vs_table);
 
 		// Show details for a specific alliance
-		$main_alliance = Alliance::getAlliance($this->detailsAllianceID, $player->getGameID());
-		$mainName = $main_alliance->isNone() ? 'No Alliance' : $main_alliance->getAllianceDisplayName();
+		if ($this->detailsAllianceID === 0) {
+			$mainName = 'No alliance';
+		} else {
+			$main_alliance = Alliance::getAlliance($this->detailsAllianceID, $player->getGameID());
+			$mainName = $main_alliance->getAllianceDisplayName();
+		}
 		$template->assign('DetailsName', $mainName);
 
 		$kills = [];

@@ -762,7 +762,12 @@ class AbstractShip {
 	 */
 	public function shootPlayers(array $targetPlayers): array {
 		$thisPlayer = $this->getPlayer();
-		$results = ['Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []];
+		$results = [
+			'Player' => $thisPlayer,
+			'TotalDamage' => 0,
+			'TotalDamagePerTargetPlayer' => [],
+			'Weapons' => [],
+		];
 		foreach ($targetPlayers as $targetPlayer) {
 			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
 		}
