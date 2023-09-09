@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout the source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Docker buildx
         uses: docker/setup-buildx-action@v2
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout the source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # Needed by Codecov
           fetch-depth: 2
@@ -76,7 +76,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout the source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Docker buildx
         uses: docker/setup-buildx-action@v2
@@ -100,7 +100,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout the source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Docker buildx
         uses: docker/setup-buildx-action@v2
