@@ -102,14 +102,4 @@ class AllianceIntegrationTest extends BaseIntegrationSpec {
 		self::assertTrue($alliance->isNHA());
 	}
 
-	public function test_isNone(): void {
-		// Create an alliance that is not "none"
-		$alliance = Alliance::createAlliance(1, 'Some alliance');
-		self::assertFalse($alliance->isNone());
-
-		// Create an alliance that is "none"
-		$alliance = Alliance::getAlliance(0, 1);
-		self::assertTrue($alliance->isNone());
-	}
-
 }

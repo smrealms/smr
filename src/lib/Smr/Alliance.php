@@ -94,37 +94,35 @@ class Alliance {
 		protected readonly int $gameID,
 		DatabaseRecord $dbRecord = null,
 	) {
-		if ($allianceID !== 0) {
-			$db = Database::getInstance();
-			$this->SQLID = [
-				'alliance_id' => $db->escapeNumber($allianceID),
-				'game_id' => $db->escapeNumber($gameID),
-			];
+		$db = Database::getInstance();
+		$this->SQLID = [
+			'alliance_id' => $db->escapeNumber($allianceID),
+			'game_id' => $db->escapeNumber($gameID),
+		];
 
-			if ($dbRecord === null) {
-				$dbResult = $db->read('SELECT * FROM alliance WHERE ' . self::SQL, $this->SQLID);
-				if ($dbResult->hasRecord()) {
-					$dbRecord = $dbResult->record();
-				}
+		if ($dbRecord === null) {
+			$dbResult = $db->read('SELECT * FROM alliance WHERE ' . self::SQL, $this->SQLID);
+			if ($dbResult->hasRecord()) {
+				$dbRecord = $dbResult->record();
 			}
-			if ($dbRecord === null) {
-				throw new AllianceNotFound('Invalid allianceID: ' . $allianceID . ' OR gameID: ' . $gameID);
-			}
-
-			$this->allianceName = $dbRecord->getString('alliance_name');
-			$this->password = $dbRecord->getString('alliance_password');
-			$this->recruiting = $dbRecord->getBoolean('recruiting');
-			$this->description = $dbRecord->getNullableString('alliance_description');
-			$this->leaderID = $dbRecord->getInt('leader_id');
-			$this->bank = $dbRecord->getInt('alliance_account');
-			$this->kills = $dbRecord->getInt('alliance_kills');
-			$this->deaths = $dbRecord->getInt('alliance_deaths');
-			$this->motd = $dbRecord->getString('mod');
-			$this->imgSrc = $dbRecord->getString('img_src');
-			$this->discordServer = $dbRecord->getNullableString('discord_server');
-			$this->discordChannel = $dbRecord->getNullableString('discord_channel');
-			$this->flagshipID = $dbRecord->getInt('flagship_id');
 		}
+		if ($dbRecord === null) {
+			throw new AllianceNotFound('Invalid allianceID: ' . $allianceID . ' OR gameID: ' . $gameID);
+		}
+
+		$this->allianceName = $dbRecord->getString('alliance_name');
+		$this->password = $dbRecord->getString('alliance_password');
+		$this->recruiting = $dbRecord->getBoolean('recruiting');
+		$this->description = $dbRecord->getNullableString('alliance_description');
+		$this->leaderID = $dbRecord->getInt('leader_id');
+		$this->bank = $dbRecord->getInt('alliance_account');
+		$this->kills = $dbRecord->getInt('alliance_kills');
+		$this->deaths = $dbRecord->getInt('alliance_deaths');
+		$this->motd = $dbRecord->getString('mod');
+		$this->imgSrc = $dbRecord->getString('img_src');
+		$this->discordServer = $dbRecord->getNullableString('discord_server');
+		$this->discordChannel = $dbRecord->getNullableString('discord_channel');
+		$this->flagshipID = $dbRecord->getInt('flagship_id');
 	}
 
 	/**
@@ -167,13 +165,6 @@ class Alliance {
 		}
 
 		return self::getAlliance($allianceID, $gameID);
-	}
-
-	/**
-	 * Returns true if the alliance ID is associated with allianceless players.
-	 */
-	public function isNone(): bool {
-		return $this->allianceID === 0;
 	}
 
 	/**
