@@ -366,7 +366,6 @@ function do_voodoo(): never {
 		// Get the nominal player information (this may change after locking).
 		// We don't force a reload here in case we don't need to lock.
 		$player = $session->getPlayer();
-		$sectorID = $player->getSectorID();
 
 		if (!$session->ajax //AJAX should never do anything that requires a lock.
 			//&& ($var->file == 'current_sector.php' || $var->file == 'map_local.php') //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
@@ -392,7 +391,7 @@ function do_voodoo(): never {
 
 				// Reload player now that we have a lock.
 				$player = $session->getPlayer(true);
-				if ($player->getSectorID() !== $sectorID) {
+				if ($player->getSectorID() !== $lock->getSectorID()) {
 					// Player sector changed after reloading! Release lock and try again.
 					$lock->release();
 					do_voodoo();

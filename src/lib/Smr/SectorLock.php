@@ -126,6 +126,13 @@ class SectorLock {
 		throw new Exception('Sector lock acquisition timed out!');
 	}
 
+	public function getSectorID(): int {
+		if ($this->sectorID === null) {
+			throw new Exception('Must acquire lock before calling this method!');
+		}
+		return $this->sectorID;
+	}
+
 	/**
 	 * @phpstan-assert-if-true !null $this->lockID
 	 */

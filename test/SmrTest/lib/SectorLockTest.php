@@ -127,4 +127,17 @@ class SectorLockTest extends BaseIntegrationSpec {
 		self::assertFalse($lock->isActive());
 	}
 
+	public function test_getSectorID(): void {
+		$lock = SectorLock::getInstance();
+		$lock->acquire(1, 2, 3);
+		self::assertSame($lock->getSectorID(), 3);
+	}
+
+	public function test_getSectorID_before_acquire(): void {
+		$lock = SectorLock::getInstance();
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Must acquire lock before calling this method!');
+		$lock->getSectorID();
+	}
+
 }

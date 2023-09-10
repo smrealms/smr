@@ -232,14 +232,22 @@ function processContainer(PlayerPageProcessor $container): never {
 			throw new Exception('We are executing the same container twice?');
 		}
 	}
-	clearCaches(); //Clear caches of anything we have used for decision making before processing container and getting lock.
 	$previousContainer = $container;
 	debug('Executing container', $container);
 	// The next "page request" must occur at an updated time.
 	Epoch::update();
 	$session->setCurrentVar($container);
 
-	SectorLock::getInstance()->acquireForPlayer($player);
+	// Acquire a lock in the sector where we chose our action
+	$lock = SectorLock::getInstance();
+	$lock->acquireForPlayer($player);
+	clearCaches(); // do not retain anything from before lock acquisition
+	if ($session->getPlayer(true)->getSectorID() !== $lock->getSectorID()) {
+		// NPC sector was modified externally (e.g. back to HQ in a pod) while
+		// deciding what to do, so skip this action and select a new action.
+		throw new ForwardAction();
+	}
+
 	$container->build($player);
 }
 
