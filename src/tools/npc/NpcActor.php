@@ -7,7 +7,7 @@ use Smr\AbstractPlayer;
 use Smr\Npc\Exceptions\FinalAction;
 use Smr\Npc\Exceptions\ForwardAction;
 use Smr\Npc\Exceptions\TradeRouteDrained;
-use Smr\Page\Page;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Routes\RouteIterator;
 use Smr\Sector;
 use Smr\TransactionType;
@@ -71,7 +71,7 @@ class NpcActor {
 		}
 	}
 
-	public function getNextAction(): Page {
+	public function getNextAction(): PlayerPageProcessor {
 
 		// Avoid infinite loops by restricting the number of actions
 		if ($this->actions >= NPC_MAX_ACTIONS) {

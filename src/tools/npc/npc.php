@@ -15,6 +15,7 @@ use Smr\Npc\Exceptions\ForwardAction;
 use Smr\Npc\Exceptions\TradeRouteDrained;
 use Smr\Npc\NpcActor;
 use Smr\Page\Page;
+use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Account\ErrorDisplay;
 use Smr\Pages\Player\CargoDumpProcessor;
 use Smr\Pages\Player\CurrentSector;
@@ -220,7 +221,7 @@ function checkStartConditions(AbstractPlayer $player): void {
 	}
 }
 
-function processContainer(Page $container): never {
+function processContainer(PlayerPageProcessor $container): never {
 	global $forwardedContainer, $previousContainer;
 	$session = Session::getInstance();
 	$player = $session->getPlayer();
@@ -239,8 +240,7 @@ function processContainer(Page $container): never {
 	$session->setCurrentVar($container);
 
 	SectorLock::getInstance()->acquireForPlayer($player);
-	$container->process();
-	throw new Exception('Container did not forward as expected!');
+	$container->build($player);
 }
 
 function sleepNPC(): void {
@@ -331,7 +331,7 @@ function changeNPCLogin(): void {
 	debug('Chosen NPC: login = ' . $account->getLogin() . ', game = ' . $session->getGameID() . ', player = ' . $session->getPlayer()->getPlayerName());
 }
 
-function tradeGoods(int $goodID, AbstractPlayer $player, Port $port): Page {
+function tradeGoods(int $goodID, AbstractPlayer $player, Port $port): PlayerPageProcessor {
 	sleepNPC(); //We have an extra sleep at port to make the NPC more vulnerable.
 	$ship = $player->getShip();
 	$relations = $player->getRelation($port->getRaceID());
@@ -361,7 +361,7 @@ function tradeGoods(int $goodID, AbstractPlayer $player, Port $port): Page {
 	);
 }
 
-function dumpCargo(AbstractPlayer $player): Page {
+function dumpCargo(AbstractPlayer $player): PlayerPageProcessor {
 	$ship = $player->getShip();
 	$cargo = $ship->getCargo();
 	debug('Ship Cargo', $cargo);
@@ -373,7 +373,7 @@ function dumpCargo(AbstractPlayer $player): Page {
 	throw new Exception('Called dumpCargo without any cargo!');
 }
 
-function plotToSector(AbstractPlayer $player, int $sectorID): Page {
+function plotToSector(AbstractPlayer $player, int $sectorID): PlayerPageProcessor {
 	return new PlotCourseConventionalProcessor(from: $player->getSectorID(), to: $sectorID);
 }
 
@@ -425,7 +425,7 @@ function plotToNearest(AbstractPlayer $player, mixed $realX): bool {
 	return true;
 }
 
-function moveToSector(AbstractPlayer $player, int $targetSector): Page {
+function moveToSector(AbstractPlayer $player, int $targetSector): PlayerPageProcessor {
 	debug('Moving from #' . $player->getSectorID() . ' to #' . $targetSector);
 	return new SectorMoveProcessor($targetSector, new CurrentSector());
 }
