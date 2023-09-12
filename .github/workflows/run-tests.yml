@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Docker buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Build image
         uses: docker/build-push-action@v4
@@ -47,7 +47,7 @@ jobs:
           fetch-depth: 2
 
       - name: Set up Docker buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Build image from cache
         uses: docker/build-push-action@v4
@@ -79,7 +79,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Docker buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Build image from cache
         uses: docker/build-push-action@v4
@@ -103,7 +103,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Docker buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Build image from cache
         uses: docker/build-push-action@v4
