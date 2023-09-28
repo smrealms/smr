@@ -96,7 +96,7 @@ if (isset($Voting)) {
 	foreach ($Voting as $Vote) {
 		?><br /><br />
 		<form name="FORM" method="POST" action="<?php echo $Vote['HREF'] ?>">
-			<span class="bold"><?php echo bbify($Vote['Question']); ?></span> (<?php echo $Vote['TimeRemaining']; ?> Remaining)<br /><?php
+			<span class="bold"><?php echo bbify(htmlentities($Vote['Question'])); ?></span> (<?php echo $Vote['TimeRemaining']; ?> Remaining)<br /><?php
 			foreach ($Vote['Options'] as $VoteOption) { ?>
 				<input type="radio" name="vote" required value="<?php echo $VoteOption['ID']; ?>"<?php if ($VoteOption['Chosen']) { ?> checked<?php } ?>><?php echo bbify($VoteOption['Text']); ?> (<?php echo $VoteOption['Votes']; ?> votes)<br /><?php
 			} ?>
