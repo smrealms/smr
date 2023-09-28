@@ -535,7 +535,7 @@ function findRoutes(AbstractPlayer $player): array {
 
 	$maxNumberOfPorts = 2;
 	$routesForPort = -1;
-	$numberOfRoutes = 100;
+	$numberOfRoutes = 150;
 	$maxDistance = 15;
 
 	$db = Database::getInstance();
