@@ -14,7 +14,7 @@ if (isset($MenuItems) || isset($SubMenuBar)) { ?>
 						}
 					}?>
 				</span><?php
-			} elseif (isset($SubMenuBar)) {
+			} else {
 				echo $SubMenuBar;
 			} ?>
 		</div>
