@@ -31,6 +31,9 @@ const SMTP_HOSTNAME = 'smtp';
 // E-mail addresses to receive bug reports
 const BUG_REPORT_TO_ADDRESSES = [];
 
+// E-mail addresses to CC on contact form submissions
+const CONTACT_FORM_CC_ADDRESSES = [];
+
 //const HISTORY_DATABASES = [
 //	'smr_classic_history' => 'old_account_id',
 //	'smr_12_history' => 'old_account_id2',

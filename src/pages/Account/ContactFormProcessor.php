@@ -22,6 +22,9 @@ class ContactFormProcessor extends AccountPageProcessor {
 			'Account ID:' . EOL . '-----------' . EOL . $account->getAccountID() . EOL . EOL .
 			'Message:' . EOL . '------------' . EOL . $msg;
 		$mail->addAddress($receiver);
+		foreach (CONTACT_FORM_CC_ADDRESSES as $ccAddress) {
+			$mail->addCC($ccAddress);
+		}
 		$mail->send();
 
 		$message = 'Your message has been successfully submitted!';
