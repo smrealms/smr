@@ -85,6 +85,9 @@ You are ranked as <?php echo $this->doAn($UserRankName); ?> <a style="font-size:
 		</table><?php
 	} else {
 		?><p>You have joined all open games.</p><?php
+		if (!isset($Games['Play'])) { ?>
+			<p>A new game will be starting shortly. More information is available on the Discord server at <a href="<?php echo DISCORD_URL; ?>" target="discord"><?php echo DISCORD_URL; ?></a>. Thank you for your patience!<?php
+		}
 	} ?>
 </div>
 
