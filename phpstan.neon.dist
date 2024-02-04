@@ -24,6 +24,7 @@ parameters:
 
     dynamicConstantNames:
         - BUG_REPORT_TO_ADDRESSES
+        - CONTACT_FORM_CC_ADDRESSES
         - ENABLE_BETA
         - ENABLE_DEBUG
         - ENABLE_LIBXML_ERRORS
@@ -92,6 +93,11 @@ parameters:
             paths:
                 - src/bootstrap.php
                 - src/pages/Account/BugReportProcessor.php
+        -
+            # https://github.com/phpstan/phpstan/issues/7520
+            message: '#Empty array passed to foreach.#'
+            path: src/pages/Account/ContactFormProcessor.php
+            count: 1
         -
             # https://github.com/thephpleague/oauth2-client/issues/897
             message: '#Parameter \#1 \$token of method .*::getResourceOwner\(\) expects .*AccessToken, .*AccessTokenInterface given.#'
