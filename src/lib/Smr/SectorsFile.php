@@ -8,36 +8,36 @@ class SectorsFile {
 		// NOTE: If the format of this file is changed in an incompatible way,
 		// make sure to update the SMR_FILE_VERSION!
 
-		$file = ';SMR1.6 Sectors File v' . SMR_FILE_VERSION . '
-		; Created on ' . date(DEFAULT_DATE_TIME_FORMAT) . '
-		[Races]
-		; Name = ID' . EOL;
+		$file = ';SMR1.6 Sectors File v' . SMR_FILE_VERSION . EOL
+			. '; Created on ' . date(DEFAULT_DATE_TIME_FORMAT) . EOL
+			. '[Races]' . EOL
+			. '; Name = ID' . EOL;
 		foreach (Race::getAllNames() as $raceID => $raceName) {
 			$file .= inify($raceName) . '=' . $raceID . EOL;
 		}
 
-		$file .= '[Goods]
-		; ID = Name, BasePrice' . EOL;
+		$file .= '[Goods]' . EOL
+			. '; ID = Name, BasePrice' . EOL;
 		foreach (TradeGood::getAll() as $goodID => $good) {
 			$file .= $goodID . '=' . inify($good->name) . ',' . $good->basePrice . EOL;
 		}
 
-		$file .= '[Weapons]
-		; Weapon = Race,Cost,Shield,Armour,Accuracy,Power level,Restriction
-		; Restriction: 0=none, 1=good, 2=evil, 3=newbie, 4=port, 5=planet' . EOL;
+		$file .= '[Weapons]' . EOL
+			. '; Weapon = Race,Cost,Shield,Armour,Accuracy,Power level,Restriction' . EOL
+			. '; Restriction: 0=none, 1=good, 2=evil, 3=newbie, 4=port, 5=planet' . EOL;
 		foreach (WeaponType::getAllWeaponTypes() as $weapon) {
 			$file .= inify($weapon->getName()) . '=' . inify($weapon->getRaceName()) . ',' . $weapon->getCost() . ',' . $weapon->getShieldDamage() . ',' . $weapon->getArmourDamage() . ',' . $weapon->getAccuracy() . ',' . $weapon->getPowerLevel() . ',' . $weapon->getBuyerRestriction()->value . EOL;
 		}
 
-		$file .= '[ShipEquipment]
-		; Name = Cost' . EOL;
+		$file .= '[ShipEquipment]' . EOL
+			. '; Name = Cost' . EOL;
 		foreach (HardwareType::getAll() as $hardware) {
 			$file .= inify($hardware->name) . '=' . $hardware->cost . EOL;
 		}
 
-		$file .= '[Ships]
-		; Name = Race,Cost,TPH,Hardpoints,Power,Class,+Equipment (Optional),+Restrictions(Optional)
-		; Restrictions:Align(Integer)' . EOL;
+		$file .= '[Ships]' . EOL
+			. '; Name = Race,Cost,TPH,Hardpoints,Power,Class,+Equipment (Optional),+Restrictions(Optional)' . EOL
+			. '; Restrictions:Align(Integer)' . EOL;
 		foreach (ShipType::getAll() as $ship) {
 			$file .= inify($ship->getName()) . '=' . inify($ship->getRaceName()) . ',' . $ship->getCost() . ',' . $ship->getSpeed() . ',' . $ship->getHardpoints() . ',' . $ship->getMaxPower() . ',' . $ship->getClass()->name;
 			$shipEquip = [];
@@ -51,8 +51,8 @@ class SectorsFile {
 			$file .= EOL;
 		}
 
-		$file .= '[Locations]
-		; Name = +Sells' . EOL;
+		$file .= '[Locations]' . EOL
+			. '; Name = +Sells' . EOL;
 		foreach (Location::getAllLocations($gameID) as $location) {
 			$file .= inify($location->getName()) . '=';
 			$locSells = '';
@@ -100,12 +100,11 @@ class SectorsFile {
 
 		// Everything below here must be valid INI syntax (safe to parse)
 		$game = Game::getGame($gameID);
-		$file .= '[Metadata]
-		FileVersion=' . SMR_FILE_VERSION . '
-		[Game]
-		Name=' . inify($game->getName()) . '
-		[Galaxies]
-		';
+		$file .= '[Metadata]' . EOL
+			. 'FileVersion=' . SMR_FILE_VERSION . EOL
+			. '[Game]' . EOL
+			. 'Name=' . inify($game->getName()) . EOL
+			. '[Galaxies]' . EOL;
 		$galaxies = $game->getGalaxies();
 		foreach ($galaxies as $galaxy) {
 			$file .= $galaxy->getGalaxyID() . '=' . $galaxy->getWidth() . ',' . $galaxy->getHeight() . ',' . $galaxy->getGalaxyType() . ',' . inify($galaxy->getName()) . ',' . $galaxy->getMaxForceTime() . EOL;
