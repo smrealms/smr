@@ -74,7 +74,7 @@ class SaveProcessor extends AccountPageProcessor {
 						//4 per sector max locs and no locations inside fed
 						$randSector = findValidSector(
 							$galSectors,
-							fn(Sector $sector): bool => checkSectorAllowedForLoc($sector, $location)
+							fn(Sector $sector): bool => checkSectorAllowedForLoc($sector, $location),
 						);
 						$randSector->addLocation($location);
 						$randSector->addLinkedLocations($location);
@@ -107,13 +107,13 @@ class SaveProcessor extends AccountPageProcessor {
 						//only 1 warp per sector
 						$galSector = findValidSector(
 							$galSectors,
-							fn(Sector $sector): bool => !$sector->hasWarp() && !$sector->offersFederalProtection()
+							fn(Sector $sector): bool => !$sector->hasWarp() && !$sector->offersFederalProtection(),
 						);
 						//get other side
 						//make sure it does not go to itself
 						$otherSector = findValidSector(
 							$eachGalaxy->getSectors(),
-							fn(Sector $sector): bool => !$sector->hasWarp() && !$sector->offersFederalProtection() && !$sector->equals($galSector)
+							fn(Sector $sector): bool => !$sector->hasWarp() && !$sector->offersFederalProtection() && !$sector->equals($galSector),
 						);
 						$galSector->setWarp($otherSector);
 					}
@@ -136,7 +136,7 @@ class SaveProcessor extends AccountPageProcessor {
 				for ($i = 1; $i <= $numberOfPlanets; $i++) {
 					$galSector = findValidSector(
 						$galSectors,
-						fn(Sector $sector): bool => !$sector->hasPlanet() // 1 per sector
+						fn(Sector $sector): bool => !$sector->hasPlanet(), // 1 per sector
 					);
 					$galSector->createPlanet($planetTypeID);
 				}
@@ -181,7 +181,7 @@ class SaveProcessor extends AccountPageProcessor {
 						//get a sector for this port
 						$galSector = findValidSector(
 							$galSectors,
-							fn(Sector $sector): bool => !$sector->hasPort() && !$sector->offersFederalProtection()
+							fn(Sector $sector): bool => !$sector->hasPort() && !$sector->offersFederalProtection(),
 						);
 
 						$raceID = array_rand($numRacePorts);
