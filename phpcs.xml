@@ -38,13 +38,10 @@
         <exclude name="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue" />
 
         <!-- We do not demand that all constants have a docstring. -->
-        <exclude name="Spryker.Commenting.DocBlockConst" />
+        <exclude name="PhpCollective.Commenting.DocBlockConst" />
 
         <!-- Docstring for return void is redundant with typehint. -->
-        <exclude name="Spryker.Commenting.DocBlockReturnVoid" />
-
-        <!-- We do not expect that all class vars have a docstring. -->
-        <exclude name="Spryker.Commenting.DocBlockVar" />
+        <exclude name="PhpCollective.Commenting.DocBlockReturnVoid" />
 
         <!-- Prevents compact class declarations. -->
         <exclude name="Squiz.WhiteSpace.MemberVarSpacing" />
@@ -94,7 +91,7 @@
     <rule ref="Generic.ControlStructures.InlineControlStructure">
         <exclude-pattern>src/templates/*</exclude-pattern>
     </rule>
-    <rule ref="Spryker.ControlStructures.NoInlineAssignment">
+    <rule ref="PhpCollective.ControlStructures.NoInlineAssignment">
         <exclude-pattern>src/templates/*</exclude-pattern>
     </rule>
 
@@ -104,7 +101,7 @@
     </rule>
 
     <!-- Ignore unknown docstring types. -->
-    <rule ref="Spryker.Commenting.DocBlockParamAllowDefaultValue.Typehint">
+    <rule ref="PhpCollective.Commenting.DocBlockParamAllowDefaultValue.Typehint">
         <severity>0</severity>
     </rule>
 
@@ -120,17 +117,17 @@
         <exclude-pattern>test/*</exclude-pattern>
     </rule>
 
-    <!-- Spryker sniffs do not support nullable typehints in docblocks.
+    <!-- PhpCollective sniffs do not support nullable typehints in docblocks.
       See https://github.com/spryker/code-sniffer/issues/349. -->
-    <rule ref="Spryker.Commenting.DocBlockParamAllowDefaultValue.Default">
+    <rule ref="PhpCollective.Commenting.DocBlockParamAllowDefaultValue.Default">
         <severity>0</severity>
     </rule>
-    <rule ref="Spryker.Commenting.DocBlockReturnNullableType.ReturnNullableMissing">
+    <rule ref="PhpCollective.Commenting.DocBlockReturnNullableType.ReturnNullableMissing">
         <severity>0</severity>
     </rule>
 
     <!-- Conflicts with PSR2R.Namespaces.NoInlineFullyQualifiedClassName.Signature -->
-    <rule ref="Spryker.Commenting.Attributes.ExpectedFQCN">
+    <rule ref="PhpCollective.Commenting.Attributes.ExpectedFQCN">
         <severity>0</severity>
     </rule>
 
@@ -150,10 +147,5 @@
       See https://github.com/squizlabs/PHP_CodeSniffer/pull/3653. -->
     <rule ref="PSR12.Operators.OperatorSpacing">
         <exclude-pattern>src/lib/Smr/Chess/ChessPiece\.php</exclude-pattern>
-    </rule>
-
-    <!-- Ignore bug in Spryker. See https://github.com/spryker/code-sniffer/issues/368. -->
-    <rule ref="Spryker.Commenting.DocBlockParamAllowDefaultValue.WrongNullable">
-        <exclude-pattern>src/lib/Smr/Database\.php</exclude-pattern>
     </rule>
 </ruleset>
