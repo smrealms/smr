@@ -88,7 +88,7 @@ class AttackPortProcessor extends PlayerPageProcessor {
 		$port->update();
 
 		$db = Database::getInstance();
-		$logId = $db->insert('combat_logs', [
+		$logId = $db->insertAutoIncrement('combat_logs', [
 			'game_id' => $player->getGameID(),
 			'type' => 'PORT',
 			'sector_id' => $port->getSectorID(),

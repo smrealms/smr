@@ -1018,7 +1018,7 @@ class Planet {
 		// gets the time for the buildings
 		$timeComplete = Epoch::time() + $this->getConstructionTime($constructionID);
 		$db = Database::getInstance();
-		$insertID = $db->insert('planet_is_building', [
+		$insertID = $db->insertAutoIncrement('planet_is_building', [
 			'game_id' => $this->getGameID(),
 			'sector_id' => $this->getSectorID(),
 			'construction_id' => $constructionID,

@@ -128,7 +128,7 @@ class Database {
 	 * Determine Doctrine\DBAL types automatically based on the passed in type.
 	 *
 	 * @param array<mixed> $params
-	 * @return array<string, int>
+	 * @return array<string, ParameterType|ArrayParameterType>
 	 */
 	private static function getParamTypes(array $params): array {
 		// Default is ParameterType::STRING for any unspecified fields
@@ -175,10 +175,20 @@ class Database {
 	 *
 	 * @param string $table
 	 * @param array<string, mixed> $fields
-	 * @return int Insert ID of auto-incrementing column, if applicable
 	 */
-	public function insert(string $table, array $fields): int {
+	public function insert(string $table, array $fields): void {
 		$this->dbConn->insert($table, $fields);
+	}
+
+	/**
+	 * INSERT a row into a $table with an auto-increment column.
+	 *
+	 * @param string $table
+	 * @param array<string, mixed> $fields
+	 * @return int Insert ID of auto-incrementing column
+	 */
+	public function insertAutoIncrement(string $table, array $fields): int {
+		$this->insert($table, $fields);
 		return $this->getInsertID();
 	}
 
@@ -187,12 +197,22 @@ class Database {
 	 *
 	 * @param string $table
 	 * @param array<string, mixed> $fields
-	 * @return int Insert ID of auto-incrementing column, if applicable
 	 */
-	public function replace(string $table, array $fields): int {
+	public function replace(string $table, array $fields): void {
 		$query = 'REPLACE INTO ' . $table . ' (' . implode(', ', array_keys($fields))
 			. ') VALUES (' . implode(', ', array_fill(0, count($fields), '?')) . ')';
 		$this->write($query, array_values($fields));
+	}
+
+	/**
+	 * REPLACE a row into $table with an auto-increment column.
+	 *
+	 * @param string $table
+	 * @param array<string, mixed> $fields
+	 * @return int Insert ID of auto-incrementing column
+	 */
+	public function replaceAutoIncrement(string $table, array $fields): int {
+		$this->replace($table, $fields);
 		return $this->getInsertID();
 	}
 
@@ -213,12 +233,8 @@ class Database {
 		$this->write('UNLOCK TABLES');
 	}
 
-	public function getInsertID(): int {
-		$insertID = $this->dbConn->lastInsertId();
-		if ($insertID === false) {
-			throw new Exception('Failed to get the last insert ID');
-		}
-		return (int)$insertID;
+	private function getInsertID(): int {
+		return (int)$this->dbConn->lastInsertId();
 	}
 
 	public function escapeNullableString(?string $string): ?string {
