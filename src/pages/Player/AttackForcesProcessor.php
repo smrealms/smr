@@ -114,7 +114,7 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 
 		// Add this log to the `combat_logs` database table
 		$db = Database::getInstance();
-		$logId = $db->insert('combat_logs', [
+		$logId = $db->insertAutoIncrement('combat_logs', [
 			'game_id' => $player->getGameID(),
 			'type' => 'FORCE',
 			'sector_id' => $forces->getSectorID(),

@@ -74,7 +74,7 @@ class SectorLock {
 
 		// Insert ourselves into the queue.
 		$db = Database::getInstance();
-		$this->lockID = $db->insert('locks_queue', [
+		$this->lockID = $db->insertAutoIncrement('locks_queue', [
 			'game_id' => $gameID,
 			'account_id' => $accountID,
 			'sector_id' => $sectorID,

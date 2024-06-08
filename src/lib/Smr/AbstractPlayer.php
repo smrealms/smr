@@ -753,7 +753,7 @@ abstract class AbstractPlayer {
 		$message = trim($message);
 		$db = Database::getInstance();
 		// Keep track of the message_id so it can be returned
-		$insertID = $db->insert('message', [
+		$insertID = $db->insertAutoIncrement('message', [
 			'account_id' => $receiverID,
 			'game_id' => $gameID,
 			'message_type_id' => $messageTypeID,

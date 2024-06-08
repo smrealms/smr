@@ -9,7 +9,7 @@ use Smr\Epoch;
 function debug(string $message, mixed $debugObject = null): void {
 	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ? EOL . var_export($debugObject, true) : '') . EOL;
 	$db = Database::getInstance();
-	$logID = $db->insert('npc_logs', [
+	$logID = $db->insertAutoIncrement('npc_logs', [
 		'script_id' => defined('SCRIPT_ID') ? SCRIPT_ID : 0,
 		'npc_id' => 0,
 		'time' => date('Y-m-d H:i:s'),

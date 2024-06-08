@@ -21,7 +21,7 @@ class FeatureRequestProcessor extends AccountPageProcessor {
 
 		// add this feature to db
 		$db = Database::getInstance();
-		$featureRequestID = $db->insert('feature_request', []);
+		$featureRequestID = $db->insertAutoIncrement('feature_request', []);
 		$db->insert('feature_request_comments', [
 			'feature_request_id' => $featureRequestID,
 			'poster_id' => $account->getAccountID(),

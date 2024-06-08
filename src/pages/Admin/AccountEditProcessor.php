@@ -68,7 +68,7 @@ class AccountEditProcessor extends AccountPageProcessor {
 			if ($dbResult->hasRecord()) {
 				$reasonID = $dbResult->record()->getInt('reason_id');
 			} else {
-				$reasonID = $db->insert('closing_reason', [
+				$reasonID = $db->insertAutoIncrement('closing_reason', [
 					'reason' => $specialClose,
 				]);
 			}
@@ -89,7 +89,7 @@ class AccountEditProcessor extends AccountPageProcessor {
 			$actions[] = 'reopened account and removed ' . $points . ' points';
 		} elseif ($points > 0) {
 			if ($choise === 'individual') {
-				$reason_id = $db->insert('closing_reason', [
+				$reason_id = $db->insertAutoIncrement('closing_reason', [
 					'reason' => $reason_msg,
 				]);
 			} else {

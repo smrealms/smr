@@ -99,7 +99,7 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 		$account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'] . ' and the other team does ' . $results['Defenders']['TotalDamage'], $sector->getSectorID());
 
 		$db = Database::getInstance();
-		$logId = $db->insert('combat_logs', [
+		$logId = $db->insertAutoIncrement('combat_logs', [
 			'game_id' => $player->getGameID(),
 			'type' => 'PLAYER',
 			'sector_id' => $sector->getSectorID(),

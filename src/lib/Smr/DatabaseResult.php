@@ -41,7 +41,7 @@ class DatabaseResult {
 	}
 
 	public function getNumRecords(): int {
-		return $this->dbResult->rowCount();
+		return (int)$this->dbResult->rowCount();
 	}
 
 	public function hasRecord(): bool {
