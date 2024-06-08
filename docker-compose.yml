@@ -125,7 +125,7 @@ services:
             - ./opendkim:/etc/opendkim/keys/smrealms.de:rw
 
     flyway: &flyway-common
-        image: flyway/flyway:10.6.0-alpine
+        image: flyway/flyway:10.14.0-alpine
         # Allow retries in case the mysql service is still spinning up
         command: migrate
         environment:
