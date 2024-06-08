@@ -79,7 +79,7 @@ x-smr-test: &smr-test
         - ./test:/smr/test:rw
 
 x-mysql-common: &mysql-common
-    image: mysql:8.0
+    image: mysql:8.1
     container_name: ${MYSQL_HOST}
     environment:
         - MYSQL_USER
