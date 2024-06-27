@@ -22,6 +22,10 @@ class AttackPort extends PlayerPage {
 	}
 
 	public function build(AbstractPlayer $player, Template $template): void {
+		$sector = $player->getSector();
+		if (!$sector->hasPort()) {
+			(new CurrentSector(message: 'The port no longer exists!'))->go();
+		}
 		$port = $player->getSector()->getPort();
 
 		if ($this->results !== null) {

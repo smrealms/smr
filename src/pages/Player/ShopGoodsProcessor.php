@@ -127,7 +127,7 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 				// Don't take the trader all the way to 0 credits
 				$newCredits = max(5000, $player->getCredits() - $fine);
 				$player->setCredits($newCredits);
-				$player->decreaseAlignment(5);
+				$player->decreaseAlignment(ALIGNMENT_LOSS_ILLEGAL_SEARCH);
 				$player->decreaseRelationsByTrade($amount, $port->getRaceID());
 
 				$fineMessage = '<span class="red">A Federation patrol caught you loading stolen goods onto your ship!<br />The stolen goods have been confiscated and you have been fined ' . number_format($fine) . ' credits.</span>';

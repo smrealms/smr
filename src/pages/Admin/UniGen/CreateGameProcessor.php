@@ -47,6 +47,7 @@ class CreateGameProcessor extends AccountPageProcessor {
 		$game->setStartingCredits(Request::getInt('starting_credits'));
 		$game->setCreditsNeeded(Request::getInt('creds_needed'));
 		$game->setStartingRelations(Request::getInt('relations'));
+		$game->setDestroyPorts(Request::getBool('destroy_ports'));
 
 		// Start game disabled by default
 		$game->setEnabled(false);

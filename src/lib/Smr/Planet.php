@@ -571,7 +571,7 @@ class Planet {
 		$this->swapMountedWeapons($orderID + 1, $orderID);
 	}
 
-	public function isDestroyed(): bool {
+	public function isBusted(): bool {
 		return !$this->hasCDs() && !$this->hasShields() && !$this->hasArmour();
 	}
 
@@ -1244,7 +1244,7 @@ class Planet {
 		foreach ($targetPlayers as $targetPlayer) {
 			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
 		}
-		if ($this->isDestroyed()) {
+		if ($this->isBusted()) {
 			$results['DeadBeforeShot'] = true;
 			return $results;
 		}
@@ -1311,7 +1311,7 @@ class Planet {
 	 * @return TakenDamageData
 	 */
 	public function takeDamage(array $damage): array {
-		$alreadyDead = $this->isDestroyed();
+		$alreadyDead = $this->isBusted();
 		$shieldDamage = 0;
 		$cdDamage = 0;
 		$armourDamage = 0;
@@ -1331,7 +1331,7 @@ class Planet {
 		}
 
 		return [
-			'KillingShot' => !$alreadyDead && $this->isDestroyed(),
+			'KillingShot' => !$alreadyDead && $this->isBusted(),
 			'TargetAlreadyDead' => $alreadyDead,
 			'Shield' => $shieldDamage,
 			'CDs' => $cdDamage,

@@ -46,6 +46,7 @@ class CreateGame extends AccountPage {
 			'startCredits' => 100000,
 			'ignoreStats' => false,
 			'relations' => MIN_GLOBAL_RELATIONS,
+			'destroyPorts' => false,
 		];
 		$template->assign('Game', $defaultGame);
 		$template->assign('SubmitValue', 'Create Game');

@@ -40,7 +40,7 @@ class AttackPortProcessor extends PlayerPageProcessor {
 			create_error('This port does not exist.');
 		}
 
-		if ($port->isDestroyed()) {
+		if ($port->isBusted()) {
 			(new AttackPort())->go();
 		}
 

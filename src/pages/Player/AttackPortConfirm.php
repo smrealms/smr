@@ -18,7 +18,7 @@ class AttackPortConfirm extends PlayerPage {
 		}
 		$port = $sector->getPort();
 
-		if ($port->isDestroyed()) {
+		if ($port->isBusted()) {
 			(new AttackPort())->go();
 		}
 

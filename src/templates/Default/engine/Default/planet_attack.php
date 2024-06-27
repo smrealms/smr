@@ -11,7 +11,7 @@ use Smr\Globals;
 $this->includeTemplate('includes/PlanetFullCombatResults.inc.php'); ?><br />
 <br />
 <div class="center"><?php
-if (!$OverrideDeath && !$Planet->isDestroyed()) { ?>
+if (!$OverrideDeath && !$Planet->isBusted()) { ?>
 	<div class="buttonA">
 		<a href="<?php echo $Planet->getAttackHREF() ?>" class="buttonA">Continue Attack</a>
 	</div><?php

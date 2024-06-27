@@ -105,7 +105,7 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 			'result' => $db->escapeObject($results, true),
 		]);
 
-		if ($planet->isDestroyed()) {
+		if ($planet->isBusted()) {
 			$db->update(
 				'player',
 				['land_on_planet' => 'FALSE'],
