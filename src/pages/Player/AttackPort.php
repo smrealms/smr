@@ -26,7 +26,7 @@ class AttackPort extends PlayerPage {
 		if (!$sector->hasPort()) {
 			(new CurrentSector(message: 'The port no longer exists!'))->go();
 		}
-		$port = $player->getSector()->getPort();
+		$port = $sector->getPort();
 
 		if ($this->results !== null) {
 			$template->assign('FullPortCombatResults', $this->results);
