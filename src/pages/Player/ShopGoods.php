@@ -86,7 +86,7 @@ class ShopGoods extends PlayerPage {
 					}
 
 					//lose align and the good your carrying along with money
-					$player->decreaseAlignment(5);
+					$player->decreaseAlignment(ALIGNMENT_LOSS_ILLEGAL_SEARCH);
 
 					$ship->setCargo(GOODS_SLAVES, 0);
 					$ship->setCargo(GOODS_WEAPONS, 0);
@@ -95,7 +95,7 @@ class ShopGoods extends PlayerPage {
 
 				} else {
 					$player->increaseHOF(1, ['Trade', 'Search', 'Times Found Innocent'], HOF_PUBLIC);
-					$player->increaseAlignment(1);
+					$player->increaseAlignment(ALIGNMENT_GAIN_ILLEGAL_SEARCH);
 					$player->log(LOG_TYPE_TRADING, 'Player gains alignment at port');
 				}
 			}

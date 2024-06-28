@@ -43,6 +43,7 @@ class EditGame extends AccountPage {
 			'startCredits' => $game->getStartingCredits(),
 			'ignoreStats' => $game->isIgnoreStats(),
 			'relations' => $relations,
+			'destroyPorts' => $game->canDestroyPorts(),
 		];
 		$template->assign('Game', $gameArray);
 

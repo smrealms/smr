@@ -9,5 +9,7 @@ enum PortPayoutType {
 
 	case Loot;
 	case Raze;
+	case Claim;
+	case Destroy;
 
 }

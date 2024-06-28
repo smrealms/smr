@@ -26,6 +26,7 @@ class Game {
 	protected int $allianceMaxPlayers;
 	protected int $allianceMaxVets;
 	protected int $startingCredits;
+	protected bool $destroyPorts;
 
 	protected int $totalPlayers;
 	/** @var array<int> */
@@ -112,6 +113,7 @@ class Game {
 			$this->allianceMaxPlayers = $dbRecord->getInt('alliance_max_players');
 			$this->allianceMaxVets = $dbRecord->getInt('alliance_max_vets');
 			$this->startingCredits = $dbRecord->getInt('starting_credits');
+			$this->destroyPorts = $dbRecord->getBoolean('destroy_ports');
 		} elseif ($create === true) {
 			$this->isNew = true;
 		} else {
@@ -140,6 +142,7 @@ class Game {
 				'alliance_max_players' => $this->getAllianceMaxPlayers(),
 				'alliance_max_vets' => $this->getAllianceMaxVets(),
 				'starting_credits' => $this->getStartingCredits(),
+				'destroy_ports' => $db->escapeBoolean($this->canDestroyPorts()),
 			]);
 		} elseif ($this->hasChanged) {
 			$db->update(
@@ -161,6 +164,7 @@ class Game {
 					'alliance_max_players' => $this->getAllianceMaxPlayers(),
 					'alliance_max_vets' => $this->getAllianceMaxVets(),
 					'starting_credits' => $this->getStartingCredits(),
+					'destroy_ports' => $db->escapeBoolean($this->canDestroyPorts()),
 				],
 				['game_id' => $this->getGameID()],
 			);
@@ -384,6 +388,18 @@ class Game {
 			return;
 		}
 		$this->startingCredits = $int;
+		$this->hasChanged = true;
+	}
+
+	public function canDestroyPorts(): bool {
+		return $this->destroyPorts;
+	}
+
+	public function setDestroyPorts(bool $destroyPorts): void {
+		if (!$this->isNew && $this->destroyPorts === $destroyPorts) {
+			return;
+		}
+		$this->destroyPorts = $destroyPorts;
 		$this->hasChanged = true;
 	}
 

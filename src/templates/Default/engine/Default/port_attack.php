@@ -2,6 +2,7 @@
 
 use Smr\Globals;
 use Smr\Port;
+use Smr\PortPayoutType;
 
 /**
  * @var Smr\Port $Port
@@ -13,7 +14,7 @@ use Smr\Port;
 $this->includeTemplate('includes/PortFullCombatResults.inc.php'); ?><br />
 <br />
 <div class="center"><?php
-	if (!$OverrideDeath && !$Port->isDestroyed()) { ?>
+	if (!$OverrideDeath && !$Port->isBusted()) { ?>
 		<div class="buttonA">
 			<a href="<?php echo $Port->getAttackHREF() ?>" class="buttonA">Continue Attack</a>
 		</div><?php
@@ -25,13 +26,17 @@ $this->includeTemplate('includes/PortFullCombatResults.inc.php'); ?><br />
 		</div><?php
 	} elseif ($CreditedAttacker) { ?>
 		<span class="yellow">You have breached the port defenses.</span>
-		<br /><br />
-		<div class="buttonA">
-			<a href="<?php echo $Port->getClaimHREF(); ?>" class="buttonA">Claim this port for your race</a><?php
-			if ($Port->getCredits() > 0) { ?>&nbsp;
-				<a href="<?php echo $Port->getLootHREF(); ?>" class="buttonA">Loot the port (100% money)</a>&nbsp;
-				<a href="<?php echo $Port->getRazeHREF(); ?>" class="buttonA">Raze the port (<?php echo IRound(Port::RAZE_PAYOUT * 100); ?>% money, 1 downgrade)</a><?php
-			} ?>
-		</div><?php
+		<br /><br /><?php
+		if ($Port->getCredits() > 0) { ?>
+			How shall your victory be marked? Choose one of the following:<br /><br />
+			<div class="buttonA">
+				<a href="<?php echo $Port->getPayoutHREF(PortPayoutType::Loot); ?>" class="buttonA">Loot (100% credits)</a><br /><br />
+				<a href="<?php echo $Port->getPayoutHREF(PortPayoutType::Raze); ?>" class="buttonA">Raze (<?php echo IRound(Port::RAZE_PAYOUT * 100); ?>% credits, 1 downgrade)</a><br /><br />
+				<a href="<?php echo $Port->getPayoutHREF(PortPayoutType::Claim); ?>" class="buttonA">Claim for your race (<?php echo IRound(Port::CLAIM_PAYOUT * 100); ?>% credits)</a><br /><br /><?php
+				if ($Port->canBeDestroyed()) { ?>
+					<a href="<?php echo $Port->getPayoutHREF(PortPayoutType::Destroy); ?>" class="buttonA">Destroy (no credits, only oblivion)</a><?php
+				} ?>
+			</div><?php
+		}
 	} ?>
 </div>

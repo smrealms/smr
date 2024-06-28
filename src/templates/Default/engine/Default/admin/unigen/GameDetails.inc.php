@@ -84,6 +84,13 @@ use Smr\Game;
 		</td>
 	</tr>
 	<tr>
+		<td class="right">Permanent Port Destruction</td>
+		<td>
+			Yes: <input type="radio" name="destroy_ports" value="Yes" <?php if ($Game['destroyPorts']) { echo 'checked'; } ?> /><br />
+			No: <input type="radio" name="destroy_ports" value="No" <?php if (!$Game['destroyPorts']) { echo 'checked'; } ?> /><br />
+		</td>
+	</tr>
+	<tr>
 		<td class="center" colspan="2"><input type="submit" value="<?php echo $SubmitValue; ?>" name="submit"></td>
 	</tr>
 	</table>

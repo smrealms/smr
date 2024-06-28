@@ -22,7 +22,11 @@ class AttackPort extends PlayerPage {
 	}
 
 	public function build(AbstractPlayer $player, Template $template): void {
-		$port = $player->getSector()->getPort();
+		$sector = $player->getSector();
+		if (!$sector->hasPort()) {
+			(new CurrentSector(message: 'The port no longer exists!'))->go();
+		}
+		$port = $sector->getPort();
 
 		if ($this->results !== null) {
 			$template->assign('FullPortCombatResults', $this->results);

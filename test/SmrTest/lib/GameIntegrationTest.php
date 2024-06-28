@@ -51,6 +51,7 @@ class GameIntegrationTest extends BaseIntegrationSpec {
 		$game1->setAllianceMaxPlayers(15);
 		$game1->setAllianceMaxVets(10);
 		$game1->setStartingCredits(3000);
+		$game1->setDestroyPorts(true);
 
 		// Now save the game and reload it
 		$game1->save();
@@ -73,6 +74,7 @@ class GameIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame(15, $game2->getAllianceMaxPlayers());
 		self::assertSame(10, $game2->getAllianceMaxVets());
 		self::assertSame(3000, $game2->getStartingCredits());
+		self::assertTrue($game2->canDestroyPorts());
 	}
 
 	public function test_setStartingRelations(): void {

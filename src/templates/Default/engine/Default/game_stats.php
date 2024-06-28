@@ -92,6 +92,11 @@
 						<td>&nbsp;</td>
 						<td><?php echo number_format($StatsGame->getStartingCredits()); ?></td>
 					</tr>
+					<tr>
+						<td class="right">Port Destruction</td>
+						<td>&nbsp;</td>
+						<td><?php echo $StatsGame->canDestroyPorts() ? 'Yes' : 'No'; ?></td>
+					</tr>
 				</table>
 			</td>
 			<td valign="top" class="left">

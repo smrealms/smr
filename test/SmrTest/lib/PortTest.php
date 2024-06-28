@@ -425,4 +425,15 @@ class PortTest extends TestCase {
 		self::assertSame([], $result);
 	}
 
+	#[TestWith([true, 1, true])]
+	#[TestWith([true, 2, false])]
+	#[TestWith([false, 1, false])]
+	#[TestWith([false, 2, false])]
+	public function test_canBeDestroyed(bool $destroyPorts, int $level, bool $canBeDestroyed): void {
+		Game::createGame(1)->setDestroyPorts($destroyPorts);
+		$port = Port::createPort(1, 1);
+		$port->setLevel($level);
+		self::assertSame($port->canBeDestroyed(), $canBeDestroyed);
+	}
+
 }

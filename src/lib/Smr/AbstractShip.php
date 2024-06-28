@@ -879,11 +879,11 @@ class AbstractShip {
 		if ($results['TotalDamage'] >= Port::DAMAGE_NEEDED_FOR_ALIGNMENT_CHANGE) {
 			$relations = Globals::getRaceRelations($thisPlayer->getGameID(), $thisPlayer->getRaceID());
 			if ($relations[$port->getRaceID()] <= RELATIONS_WAR) {
-				$thisPlayer->increaseAlignment(1);
-				$thisPlayer->increaseHOF(1, ['Combat', 'Port', 'Alignment', 'Gain'], HOF_PUBLIC);
+				$thisPlayer->increaseAlignment(ALIGNMENT_GAIN_PORT_DAMAGE);
+				$thisPlayer->increaseHOF(ALIGNMENT_GAIN_PORT_DAMAGE, ['Combat', 'Port', 'Alignment', 'Gain'], HOF_PUBLIC);
 			} else {
-				$thisPlayer->decreaseAlignment(1);
-				$thisPlayer->increaseHOF(1, ['Combat', 'Port', 'Alignment', 'Loss'], HOF_PUBLIC);
+				$thisPlayer->decreaseAlignment(ALIGNMENT_LOSS_PORT_DAMAGE);
+				$thisPlayer->increaseHOF(ALIGNMENT_LOSS_PORT_DAMAGE, ['Combat', 'Port', 'Alignment', 'Loss'], HOF_PUBLIC);
 			}
 		}
 		return $results;

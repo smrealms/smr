@@ -52,6 +52,7 @@ if ($Game->getDescription() !== '') { ?>
 		<th>Credits Required</th>
 		<th>Stats Ignored</th>
 		<th>Starting Credits</th>
+		<th>Port Destruction</th>
 	</tr>
 	<tr class="center">
 		<td><?php echo $Game->getGameType(); ?></td>
@@ -59,6 +60,7 @@ if ($Game->getDescription() !== '') { ?>
 		<td><?php echo $Game->getCreditsNeeded(); ?></td>
 		<td><?php echo $Game->isIgnoreStats() ? 'Yes' : 'No'; ?></td>
 		<td><?php echo number_format($Game->getStartingCredits()); ?></td>
+		<td><?php echo $Game->canDestroyPorts() ? 'Yes' : 'No'; ?></td>
 	</tr>
 </table><br />
 

@@ -7,8 +7,6 @@ use Smr\Combat\Weapon\CombatDrones;
 use Smr\Combat\Weapon\Weapon;
 use Smr\Exceptions\CachedPortNotFound;
 use Smr\Exceptions\PathNotFound;
-use Smr\Page\Page;
-use Smr\Pages\Player\AttackPortClaimProcessor;
 use Smr\Pages\Player\AttackPortConfirm;
 use Smr\Pages\Player\AttackPortLootProcessor;
 use Smr\Pages\Player\AttackPortPayoutProcessor;
@@ -46,6 +44,7 @@ class Port {
 	protected const GOODS_TRADED_MONEY_MULTIPLIER = 50;
 	protected const BASE_PAYOUT = 0.85; // fraction of credits for looting
 	public const RAZE_PAYOUT = 0.75; // fraction of base payout for razing
+	public const CLAIM_PAYOUT = 0.5; // fraction of base payout for claiming
 	public const KILLER_RELATIONS_LOSS = 45; // relations lost by killer in PR
 
 	public const SQL = 'sector_id = :sector_id AND game_id = :game_id';
@@ -1008,7 +1007,7 @@ class Port {
 		return ($this->getReinforceTime() >= Epoch::time());
 	}
 
-	public function isDestroyed(): bool {
+	public function isBusted(): bool {
 		return $this->getArmour() < 1;
 	}
 
@@ -1111,28 +1110,13 @@ class Port {
 		return (new AttackPortProcessor())->href();
 	}
 
-	public function getClaimHREF(): string {
-		return (new AttackPortClaimProcessor())->href();
-	}
-
-	/**
-	 * @return ($justContainer is false ? string : Page)
-	 */
-	public function getRazeHREF(bool $justContainer = false): string|Page {
-		$container = new AttackPortPayoutProcessor(PortPayoutType::Raze);
-		return $justContainer === false ? $container->href() : $container;
-	}
-
-	/**
-	 * @return ($justContainer is false ? string : Page)
-	 */
-	public function getLootHREF(bool $justContainer = false): string|Page {
+	public function getPayoutHREF(PortPayoutType $payoutType): string {
 		if ($this->getCredits() > 0) {
-			$container = new AttackPortPayoutProcessor(PortPayoutType::Loot);
+			$container = new AttackPortPayoutProcessor($payoutType);
 		} else {
-			$container = new CurrentSector(message: 'This port has already been looted.');
+			$container = new CurrentSector(message: 'The fate of this port has already been decided.');
 		}
-		return $justContainer === false ? $container->href() : $container;
+		return $container->href();
 	}
 
 	public function getLootGoodHREF(int $boughtGoodID): string {
@@ -1356,7 +1340,7 @@ class Port {
 			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
 			$results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
 		}
-		if ($this->isDestroyed()) {
+		if ($this->isBusted()) {
 			$results['DeadBeforeShot'] = true;
 			return $results;
 		}
@@ -1392,7 +1376,7 @@ class Port {
 	 * @return TakenDamageData
 	 */
 	public function takeDamage(array $damage): array {
-		$alreadyDead = $this->isDestroyed();
+		$alreadyDead = $this->isBusted();
 		$shieldDamage = 0;
 		$cdDamage = 0;
 		$armourDamage = 0;
@@ -1412,7 +1396,7 @@ class Port {
 		}
 
 		return [
-			'KillingShot' => !$alreadyDead && $this->isDestroyed(),
+			'KillingShot' => !$alreadyDead && $this->isBusted(),
 			'TargetAlreadyDead' => $alreadyDead,
 			'Shield' => $shieldDamage,
 			'CDs' => $cdDamage,
@@ -1513,6 +1497,55 @@ class Port {
 		$credits = IFloor($this->getCredits() * self::BASE_PAYOUT);
 		$this->payout($killer, $credits, 'Looted');
 		return $credits;
+	}
+
+	/**
+	 * Claim port for your race after a successful port raid.
+	 */
+	public function claimPort(AbstractPlayer $killer): int {
+		$credits = IFloor($this->getCredits() * self::BASE_PAYOUT * self::CLAIM_PAYOUT);
+		if ($this->payout($killer, $credits, 'Claimed')) {
+			$this->setRaceID($killer->getRaceID());
+		}
+		return $credits;
+	}
+
+	/**
+	 * Permanently destroy the port after a successful port raid.
+	 */
+	public function destroyPort(AbstractPlayer $killer): int {
+		$credits = 0;
+		if ($this->payout($killer, $credits, 'Destroyed')) {
+			// News Entry
+			$news = $this->getDisplayName() . ' was destroyed by ' . $killer->getBBLink();
+			if ($killer->hasCustomShipName()) {
+				$named_ship = strip_tags($killer->getCustomShipName(), '<font><span><img>');
+				$news .= ' flying <span class="yellow">' . $named_ship . '</span>';
+			}
+			$news .= ' in Sector&nbsp;' . Globals::getSectorBBLink($this->getSectorID());
+			$db = Database::getInstance();
+			$db->insert('news', [
+				'game_id' => $this->getGameID(),
+				'time' => Epoch::time(),
+				'news_message' => $news,
+				'killer_id' => $killer->getAccountID(),
+				'killer_alliance' => $killer->getAllianceID(),
+				'dead_id' => ACCOUNT_ID_PORT,
+			]);
+
+			// This wasn't a nice thing to do
+			$killer->decreaseAlignment(ALIGNMENT_LOSS_PORT_DESTROY);
+
+			self::removePort($this->getGameID(), $this->getSectorID());
+		}
+		return $credits;
+	}
+
+	/**
+	 * Can ports be destroyed after a successful port raid?
+	 */
+	public function canBeDestroyed(): bool {
+		return $this->getGame()->canDestroyPorts() && ($this->getLevel() === 1);
 	}
 
 	/**
