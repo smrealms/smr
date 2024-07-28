@@ -32,7 +32,7 @@ class RouteGeneratorTest extends TestCase {
 		foreach ($goods as $goodID => [$_, $distance]) {
 			$getGoodDistanceMap[] = [$goodID, $distance];
 		}
-		$port->method('getGoodDistance')->will(self::returnValueMap($getGoodDistanceMap));
+		$port->method('getGoodDistance')->willReturnMap($getGoodDistanceMap);
 
 		// We could call `setRaceID` instead, but `raceID` is not initialized
 		$port->method('getRaceID')->willReturn($raceID);
