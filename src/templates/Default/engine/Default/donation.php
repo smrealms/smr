@@ -5,6 +5,7 @@ use Smr\Globals;
 /**
  * @var Smr\Account $ThisAccount
  * @var int $TotalDonation
+ * @var string $ContactFormLink
  */
 
 ?>
@@ -13,6 +14,11 @@ Would you like to see the game grow? If your answer is yes, then consider
 making a donation! Your donation will translate into SMR credits that you can
 use in-game for name changes, message notifications, painting your ship, and
 more!</p>
+<p style="width:60%; text-align:justify;">
+Please allow a few days for processing. If you would like to receive your
+SMR credits faster, you can send a message to the SMR Support Team using our
+<a href="<?php echo $ContactFormLink; ?>">Contact Form</a>.
+</p>
 Current donation rate is: $<?php echo number_format($TotalDonation / 3, 2); ?> per month (within last 3 months).
 
 <br /><br />
