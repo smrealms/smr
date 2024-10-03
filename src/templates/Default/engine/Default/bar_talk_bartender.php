@@ -13,7 +13,7 @@
 <br />
 
 <form method="POST" action="<?php echo $ProcessingHREF; ?>">
-	<input type="text" name="gossip_tell" size="30" />
+	<input type="text" name="gossip_tell" maxlength="255" size="30" />
 	<button type="submit" name="action" value="tell">Spread gossip</button>
 </form>
 	<br /><br />
