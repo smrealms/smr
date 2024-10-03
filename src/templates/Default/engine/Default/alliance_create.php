@@ -11,11 +11,11 @@ use Smr\Alliance;
 	<table class="standard">
 		<tr>
 			<td class="top">Name:</td>
-			<td><input required type="text" name="name" size="30"></td>
+			<td><input required type="text" name="name" maxlength="<?php echo Alliance::MAXLENGTH_NAME; ?>" size="30"></td>
 		</tr>
 		<tr>
 			<td class="top">Description:</td>
-			<td><textarea spellcheck="true" name="description"></textarea></td>
+			<td><textarea spellcheck="true" name="description" maxlength="<?php echo Alliance::MAXLENGTH_DESCRIPTION; ?>"></textarea></td>
 		</tr>
 		<tr>
 			<td class="top">Members start with:&nbsp;&nbsp;&nbsp;</td>

@@ -36,7 +36,7 @@ if ($CanChangePassword) { ?>
 
 if ($CanChangeDescription) { ?>
 	<tr>
-		<td class="top">Description:&nbsp;</td><td><textarea spellcheck="true" name="description"><?php echo $Alliance->getDescription(); ?></textarea></td>
+		<td class="top">Description:&nbsp;</td><td><textarea spellcheck="true" name="description" maxlength="<?php echo Alliance::MAXLENGTH_DESCRIPTION; ?>"><?php echo $Alliance->getDescription(); ?></textarea></td>
 	</tr><?php
 }
 
