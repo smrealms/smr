@@ -29,6 +29,7 @@ const PAGE_TITLE = PAGE_PREFIX . 'Space Merchant Realms';
  * Database constants
  */
 const SQL_MAX_UNSIGNED_INT = 4_294_967_295; // 2^32-1
+const SQL_MAX_TEXT_LENGTH = 65_535; // 2^16-1
 
 /*
  * Special account IDs
