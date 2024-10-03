@@ -84,14 +84,16 @@ function logException(Throwable $err): void {
 	}
 
 	// Send error message to the in-game auto bugs mailbox
+	// (Truncate the message if necessary to avoid database errors)
+	$boxMessage = substr($message, 0, SQL_MAX_TEXT_LENGTH);
 	if (isset($session) && $session->hasGame()) {
-		$session->getPlayer()->sendMessageToBox(BOX_BUGS_AUTO, $message);
+		$session->getPlayer()->sendMessageToBox(BOX_BUGS_AUTO, $boxMessage);
 	} elseif (isset($session) && $session->hasAccount()) {
 		// Will be logged without a game_id
-		$session->getAccount()->sendMessageToBox(BOX_BUGS_AUTO, $message);
+		$session->getAccount()->sendMessageToBox(BOX_BUGS_AUTO, $boxMessage);
 	} else {
 		// Will be logged without a game_id or sender_id
-		Account::doMessageSendingToBox(0, BOX_BUGS_AUTO, $message, 0);
+		Account::doMessageSendingToBox(0, BOX_BUGS_AUTO, $boxMessage, 0);
 	}
 
 	// Send error message to e-mail so that we have a permanent record

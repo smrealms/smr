@@ -23,7 +23,7 @@ if (count($Threads) > 0) { ?>
 						if ($Thread['Unread']) {
 							?><b><?php
 						}
-						?><a href="<?php echo $Thread['ViewHref']; ?>"><?php echo $Thread['Topic']; ?></a><?php
+						?><a href="<?php echo $Thread['ViewHref']; ?>"><?php echo htmlentities($Thread['Topic']); ?></a><?php
 						if ($Thread['Unread']) {
 							?></b><?php
 						} ?>

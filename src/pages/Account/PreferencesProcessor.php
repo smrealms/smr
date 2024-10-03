@@ -143,8 +143,8 @@ class PreferencesProcessor extends AccountPageProcessor {
 
 		} elseif ($action === 'Change Size') {
 			$fontsize = Request::getInt('fontsize');
-			if ($fontsize < 50) {
-				create_error('Minimum font size is 50%');
+			if ($fontsize < MIN_FONTSIZE_PERCENT) {
+				create_error('Minimum font size is ' . MIN_FONTSIZE_PERCENT . '%');
 			}
 			$account->setFontSize($fontsize);
 			$message = '<span class="green">SUCCESS: </span>You have changed your font size.';

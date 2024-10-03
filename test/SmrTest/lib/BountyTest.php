@@ -20,6 +20,25 @@ class BountyTest extends BaseIntegrationSpec {
 		return ['bounty'];
 	}
 
+	public function test_max_credits(): void {
+		$bounty = new Bounty(
+			targetID: 1,
+			bountyID: 1,
+			gameID: 1,
+			type: BountyType::UG,
+			time: 0,
+			claimerID: 0,
+			credits: 0,
+			smrCredits: 0,
+		);
+		// increase bounty credits to the maximum amount
+		$bounty->increaseCredits(SQL_MAX_UNSIGNED_INT);
+		self::assertEquals($bounty->getCredits(), SQL_MAX_UNSIGNED_INT);
+		// further increases don't change the value
+		$bounty->increaseCredits(1);
+		self::assertEquals($bounty->getCredits(), SQL_MAX_UNSIGNED_INT);
+	}
+
 	public function test_update(): void {
 		// Calling update on a new bounty will add it to the database
 		$bounty = new Bounty(

@@ -40,6 +40,10 @@ class Alliance {
 	public const RECRUIT_CLOSED = 'closed';
 	public const RECRUIT_PASSWORD = 'password';
 
+	// Database constraints
+	public const MAXLENGTH_NAME = 36; // varchar(36)
+	public const MAXLENGTH_DESCRIPTION = 255; // varchar(255)
+
 	public static function clearCache(): void {
 		self::$CACHE_ALLIANCES = [];
 	}
