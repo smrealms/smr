@@ -7,6 +7,11 @@ use Exception;
 class Bounty {
 
 	/**
+	 * Maximum amount of bounty.credits in the database
+	 */
+	private const MAX_CREDITS = SQL_MAX_UNSIGNED_INT;
+
+	/**
 	 * Returns a list of all active (not claimable) bounties for given location $type.
 	 *
 	 * @return array<self>
@@ -117,7 +122,7 @@ class Bounty {
 	}
 
 	private function setCredits(int $credits): void {
-		if ($this->credits === $credits) {
+		if ($this->credits === $credits || $credits > self::MAX_CREDITS) {
 			return;
 		}
 		$this->credits = $credits;
