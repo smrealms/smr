@@ -334,7 +334,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>Font size:</td>
-			<td><input type="number" size="4" name="fontsize" value="<?php echo $ThisAccount->getFontSize(); ?>" /> Minimum font size is 50%</td>
+			<td><input type="number" size="4" name="fontsize" min="<?php echo MIN_FONTSIZE_PERCENT; ?>" max="<?php echo MAX_FONTSIZE_PERCENT; ?>" value="<?php echo $ThisAccount->getFontSize(); ?>" /> Minimum font size is <?php echo MIN_FONTSIZE_PERCENT; ?>%</td>
 		</tr>
 
 		<tr>
