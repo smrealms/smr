@@ -35,13 +35,13 @@ if (!$Planet->hasOwner()) { ?>
 	} else { ?>
 		<p>You own this planet!</p>
 		<form method="POST" action="<?php echo $ProcessingHREF; ?>">
-			<input type="text" name="password" value="<?php echo htmlspecialchars($Planet->getPassword()); ?>" />&nbsp;&nbsp;&nbsp;
+			<input type="text" name="password" maxlength="32" value="<?php echo htmlspecialchars($Planet->getPassword()); ?>" />&nbsp;&nbsp;&nbsp;
 			<input type="submit" name="action" value="Set Password" />
 		</form>
 		<br />
 
 		<form method="POST" action="<?php echo $ProcessingHREF; ?>">
-			<input required type="text" name="name" value="<?php echo $Planet->getDisplayName(); ?>" />&nbsp;&nbsp;&nbsp;
+			<input required type="text" name="name" maxlength="32" value="<?php echo $Planet->getDisplayName(); ?>" />&nbsp;&nbsp;&nbsp;
 			<input type="submit" name="action" value="Rename" />
 		</form><?php
 	}
