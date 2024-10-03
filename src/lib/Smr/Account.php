@@ -425,7 +425,7 @@ class Account {
 			'account_id' => $this->accountID,
 			'time' => Epoch::time(),
 			'ip' => $curr_ip,
-			'host' => $host,
+			'host' => substr($host, 0, 64), // column is varchar(64)
 		]);
 	}
 
