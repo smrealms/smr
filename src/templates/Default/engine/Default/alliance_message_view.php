@@ -12,14 +12,14 @@ if (isset($PrevThread) || isset($NextThread)) { ?>
 		if (isset($PrevThread)) { ?>
 			<td>
 				<a href="<?php echo $PrevThread['Href']; ?>"><img src="images/album/rew.jpg" alt="Previous" title="Previous"></a>
-				&nbsp;&nbsp;<?php echo $PrevThread['Topic']; ?>
+				&nbsp;&nbsp;<?php echo htmlentities($PrevThread['Topic']); ?>
 			</td><?php
 		} else {
 			?><td>&nbsp;</td><?php
 		}
 		if (isset($NextThread)) { ?>
 			<td class="right">
-			<?php echo $NextThread['Topic']; ?>&nbsp;&nbsp;
+			<?php echo htmlentities($NextThread['Topic']); ?>&nbsp;&nbsp;
 			<a href="<?php echo $NextThread['Href']; ?>"><img src="images/album/fwd.jpg" alt="Next" title="Next"></a>
 			</td><?php
 		} else {
