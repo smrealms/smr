@@ -36,13 +36,23 @@ class AnonBankDetailProcessor extends PlayerPageProcessor {
 		]);
 		$trans_id = $dbResult->record()->getInt('max_id') + 1;
 
+		// Get the amount currently in this anon bank
+		$dbResult = $db->read('SELECT amount FROM anon_bank WHERE anon_id = :anon_id AND game_id = :game_id', [
+			'anon_id' => $db->escapeNumber($account_num),
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
+		$anonAmount = $dbResult->record()->getInt('amount');
+
 		// Update the credit amounts for the player and the bank
 		if ($action === 'Deposit') {
 			if ($player->getCredits() < $amount) {
 				create_error('You don\'t own that much money!');
 			}
+			$amount = min($amount, MAX_MONEY - $anonAmount); // handle overflow
+			if ($amount == 0) {
+				create_error('This account has reached the maximum credit limit!');
+			}
 
-			// Does not handle overflow!
 			$player->decreaseCredits($amount);
 			$db->write('UPDATE anon_bank SET amount = amount + :amount WHERE game_id = :game_id AND anon_id = :anon_id', [
 				'amount' => $db->escapeNumber($amount),
@@ -50,11 +60,7 @@ class AnonBankDetailProcessor extends PlayerPageProcessor {
 				'anon_id' => $db->escapeNumber($account_num),
 			]);
 		} else {
-			$dbResult = $db->read('SELECT * FROM anon_bank WHERE anon_id = :anon_id AND game_id = :game_id', [
-				'anon_id' => $db->escapeNumber($account_num),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-			]);
-			if ($dbResult->record()->getInt('amount') < $amount) {
+			if ($anonAmount < $amount) {
 				create_error('You don\'t have that much money on your account!');
 			}
 
