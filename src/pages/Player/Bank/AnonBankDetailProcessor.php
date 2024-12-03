@@ -49,7 +49,7 @@ class AnonBankDetailProcessor extends PlayerPageProcessor {
 				create_error('You don\'t own that much money!');
 			}
 			$amount = min($amount, MAX_MONEY - $anonAmount); // handle overflow
-			if ($amount == 0) {
+			if ($amount === 0) {
 				create_error('This account has reached the maximum credit limit!');
 			}
 
