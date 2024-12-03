@@ -509,7 +509,7 @@ class Account {
 	/**
 	 * @return array<array{Stat: array<string>, Score: float}>
 	 */
-	public function getIndividualScores(Player $player = null): array {
+	public function getIndividualScores(?Player $player = null): array {
 		$gameID = 0;
 		if ($player !== null) {
 			$gameID = $player->getGameID();
@@ -767,7 +767,7 @@ class Account {
 	/**
 	 * Perform basic sanity checks on the usability of an email address.
 	 */
-	public static function checkEmail(string $email, self $owner = null): void {
+	public static function checkEmail(string $email, ?self $owner = null): void {
 		if ($email === '') {
 			throw new UserError('Email address is missing!');
 		}
@@ -1143,7 +1143,7 @@ class Account {
 	/**
 	 * @return ($hotkeyType is null ? array<string, array<string>> : array<string>)
 	 */
-	public function getHotkeys(string $hotkeyType = null): array {
+	public function getHotkeys(?string $hotkeyType = null): array {
 		if ($hotkeyType !== null) {
 			return $this->hotkeys[$hotkeyType] ?? [];
 		}
@@ -1245,7 +1245,7 @@ class Account {
 		return $this->permissions;
 	}
 
-	public function hasPermission(int $permissionID = null): bool {
+	public function hasPermission(?int $permissionID = null): bool {
 		$permissions = $this->getPermissions();
 		if ($permissionID === null) {
 			return count($permissions) > 0;
@@ -1414,7 +1414,7 @@ class Account {
 		}
 	}
 
-	public function unbanAccount(self $admin = null, string $currException = null): void {
+	public function unbanAccount(?self $admin = null, ?string $currException = null): void {
 		$adminID = 0;
 		if ($admin !== null) {
 			$adminID = $admin->getAccountID();

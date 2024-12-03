@@ -22,7 +22,7 @@ class WeaponType {
 	protected readonly int $powerLevel;
 	protected readonly BuyerRestriction $buyerRestriction;
 
-	public static function getWeaponType(int $weaponTypeID, DatabaseRecord $dbRecord = null): self {
+	public static function getWeaponType(int $weaponTypeID, ?DatabaseRecord $dbRecord = null): self {
 		if (!isset(self::$CACHE_WEAPON_TYPES[$weaponTypeID])) {
 			if ($dbRecord === null) {
 				$db = Database::getInstance();

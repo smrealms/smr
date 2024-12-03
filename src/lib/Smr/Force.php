@@ -104,7 +104,7 @@ class Force {
 		return self::$CACHE_SECTOR_FORCES[$gameID][$sectorID];
 	}
 
-	public static function getForce(int $gameID, int $sectorID, int $ownerID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): self {
+	public static function getForce(int $gameID, int $sectorID, int $ownerID, bool $forceUpdate = false, ?DatabaseRecord $dbRecord = null): self {
 		if ($forceUpdate || !isset(self::$CACHE_FORCES[$gameID][$sectorID][$ownerID])) {
 			self::tidyUpForces(Galaxy::getGalaxyContaining($gameID, $sectorID));
 			$p = new self($gameID, $sectorID, $ownerID, $dbRecord);
@@ -145,7 +145,7 @@ class Force {
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
 		protected readonly int $ownerID,
-		DatabaseRecord $dbRecord = null,
+		?DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [

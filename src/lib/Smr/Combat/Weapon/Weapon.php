@@ -32,13 +32,13 @@ class Weapon extends AbstractWeapon {
 	protected bool $bonusDamage = false; // default
 	protected bool $damageRollover = false; // fixed for all Weapons
 
-	public static function getWeapon(int $weaponTypeID, DatabaseRecord $dbRecord = null): self {
+	public static function getWeapon(int $weaponTypeID, ?DatabaseRecord $dbRecord = null): self {
 		return new self($weaponTypeID, $dbRecord);
 	}
 
 	protected function __construct(
 		protected readonly int $weaponTypeID,
-		DatabaseRecord $dbRecord = null,
+		?DatabaseRecord $dbRecord = null,
 	) {
 		$this->weaponType = WeaponType::getWeaponType($weaponTypeID, $dbRecord);
 		$this->raceID = $this->weaponType->getRaceID();

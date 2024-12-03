@@ -94,7 +94,7 @@ class Sector {
 		return self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID];
 	}
 
-	public static function getSector(int $gameID, int $sectorID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): self {
+	public static function getSector(int $gameID, int $sectorID, bool $forceUpdate = false, ?DatabaseRecord $dbRecord = null): self {
 		if (!isset(self::$CACHE_SECTORS[$gameID][$sectorID]) || $forceUpdate) {
 			self::$CACHE_SECTORS[$gameID][$sectorID] = new self($gameID, $sectorID, false, $dbRecord);
 		}
@@ -127,7 +127,7 @@ class Sector {
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
 		bool $create = false,
-		DatabaseRecord $dbRecord = null,
+		?DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [
@@ -603,7 +603,7 @@ class Sector {
 	/**
 	 * @phpstan-assert-if-true =AbstractPlayer $player
 	 */
-	public function hasCachedPort(AbstractPlayer $player = null): bool {
+	public function hasCachedPort(?AbstractPlayer $player = null): bool {
 		if ($player === null) {
 			return false;
 		}
@@ -630,7 +630,7 @@ class Sector {
 		return $hasAction;
 	}
 
-	public function hasLocation(int $locationTypeID = null): bool {
+	public function hasLocation(?int $locationTypeID = null): bool {
 		$locations = $this->getLocations();
 		if (count($locations) === 0) {
 			return false;
@@ -736,7 +736,7 @@ class Sector {
 		return count($this->getForces()) > 0;
 	}
 
-	public function hasEnemyForces(AbstractPlayer $player = null): bool {
+	public function hasEnemyForces(?AbstractPlayer $player = null): bool {
 		if ($player === null || !$this->hasForces()) {
 			return false;
 		}
@@ -776,7 +776,7 @@ class Sector {
 	/**
 	 * @phpstan-assert-if-true =AbstractPlayer $player
 	 */
-	public function hasFriendlyForces(AbstractPlayer $player = null): bool {
+	public function hasFriendlyForces(?AbstractPlayer $player = null): bool {
 		if ($player === null || !$this->hasForces()) {
 			return false;
 		}
@@ -832,7 +832,7 @@ class Sector {
 		return count($this->getOtherTraders($player)) > 0;
 	}
 
-	public function hasEnemyTraders(AbstractPlayer $player = null): bool {
+	public function hasEnemyTraders(?AbstractPlayer $player = null): bool {
 		if ($player === null || !$this->hasOtherTraders($player)) {
 			return false;
 		}
@@ -847,7 +847,7 @@ class Sector {
 		return false;
 	}
 
-	public function hasFriendlyTraders(AbstractPlayer $player = null): bool {
+	public function hasFriendlyTraders(?AbstractPlayer $player = null): bool {
 		if ($player === null || !$this->hasOtherTraders($player)) {
 			return false;
 		}
@@ -863,7 +863,7 @@ class Sector {
 	/**
 	 * Is the $player's alliance flagship in this sector?
 	 */
-	public function hasAllianceFlagship(AbstractPlayer $player = null): bool {
+	public function hasAllianceFlagship(?AbstractPlayer $player = null): bool {
 		if ($player === null || !$player->hasAlliance() || !$player->getAlliance()->hasFlagship()) {
 			return false;
 		}
@@ -876,7 +876,7 @@ class Sector {
 		return false;
 	}
 
-	public function hasProtectedTraders(AbstractPlayer $player = null): bool {
+	public function hasProtectedTraders(?AbstractPlayer $player = null): bool {
 		if ($player === null || !$this->hasOtherTraders($player)) {
 			return false;
 		}
@@ -1028,7 +1028,7 @@ class Sector {
 		return $otherSector->getGameID() === $this->getGameID() && $this->isLinked($otherSector->getSectorID());
 	}
 
-	public function isVisited(AbstractPlayer $player = null): bool {
+	public function isVisited(?AbstractPlayer $player = null): bool {
 		if ($player === null) {
 			return true;
 		}
@@ -1059,7 +1059,7 @@ class Sector {
 		return Globals::getSectorScanHREF($player, $this->getSectorID());
 	}
 
-	public function hasX(mixed $x, AbstractPlayer $player = null): bool {
+	public function hasX(mixed $x, ?AbstractPlayer $player = null): bool {
 		if ($x instanceof Sector) {
 			return $this->equals($x);
 		}

@@ -12,7 +12,7 @@ class Messages {
 	/**
 	 * @return ($typeID is null ? array<int, string> : string)
 	 */
-	public static function getMessageTypeNames(int $typeID = null): array|string {
+	public static function getMessageTypeNames(?int $typeID = null): array|string {
 		$typeNames = [
 			MSG_PLAYER => 'Player Messages',
 			MSG_PLANET => 'Planet Messages',
@@ -55,7 +55,7 @@ class Messages {
 		];
 	}
 
-	public static function getMessagePlayer(int $accountID, int $gameID, int $messageType = null): string|Player {
+	public static function getMessagePlayer(int $accountID, int $gameID, ?int $messageType = null): string|Player {
 		if ($accountID === ACCOUNT_ID_PORT) {
 			$return = '<span class="yellow">Port Defenses</span>';
 		} elseif ($accountID === ACCOUNT_ID_ADMIN) {

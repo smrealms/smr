@@ -22,7 +22,7 @@ class Request {
 	/**
 	 * Returns index value as a boolean for boolean-like inputs.
 	 */
-	public static function getBool(string $index, bool $default = null): bool {
+	public static function getBool(string $index, ?bool $default = null): bool {
 		if (self::has($index)) {
 			$bool = filter_var($_REQUEST[$index], FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);
 			if ($bool === null) {
@@ -39,7 +39,7 @@ class Request {
 	/**
 	 * Returns index value as an integer.
 	 */
-	public static function getInt(string $index, int $default = null): int {
+	public static function getInt(string $index, ?int $default = null): int {
 		if (self::has($index)) {
 			return (int)$_REQUEST[$index];
 		}
@@ -52,7 +52,7 @@ class Request {
 	/**
 	 * Returns index value as a float.
 	 */
-	public static function getFloat(string $index, float $default = null): float {
+	public static function getFloat(string $index, ?float $default = null): float {
 		if (self::has($index)) {
 			return (float)$_REQUEST[$index];
 		}
@@ -68,7 +68,7 @@ class Request {
 	 * @param ?array<int, string> $default
 	 * @return array<int, string>
 	 */
-	public static function getArray(string $index, array $default = null): array {
+	public static function getArray(string $index, ?array $default = null): array {
 		if (self::has($index)) {
 			foreach ($_REQUEST[$index] as $key => $value) {
 				// String keys are legal HTML, but we do not allow them
@@ -91,7 +91,7 @@ class Request {
 	 * @param ?array<int, int> $default
 	 * @return array<int, int>
 	 */
-	public static function getIntArray(string $index, array $default = null): array {
+	public static function getIntArray(string $index, ?array $default = null): array {
 		if (self::has($index)) {
 			$result = [];
 			foreach ($_REQUEST[$index] as $key => $value) {
@@ -112,7 +112,7 @@ class Request {
 	/**
 	 * Returns index value as a (trimmed) string.
 	 */
-	public static function get(string $index, string $default = null): string {
+	public static function get(string $index, ?string $default = null): string {
 		if (self::has($index)) {
 			return trim($_REQUEST[$index]);
 		}
@@ -129,14 +129,14 @@ class Request {
 	 *
 	 * Note that this does not save the result in $var (see Smr\Session).
 	 */
-	public static function getVar(string $index, string $default = null): string {
+	public static function getVar(string $index, ?string $default = null): string {
 		return self::getVarX($index, $default, self::get(...));
 	}
 
 	/**
 	 * Like getVar, but returns an int instead of a string.
 	 */
-	public static function getVarInt(string $index, int $default = null): int {
+	public static function getVarInt(string $index, ?int $default = null): int {
 		return self::getVarX($index, $default, self::getInt(...));
 	}
 
@@ -146,7 +146,7 @@ class Request {
 	 * @param ?array<int, int> $default
 	 * @return array<int, int>
 	 */
-	public static function getVarIntArray(string $index, array $default = null): array {
+	public static function getVarIntArray(string $index, ?array $default = null): array {
 		return self::getVarX($index, $default, self::getIntArray(...));
 	}
 

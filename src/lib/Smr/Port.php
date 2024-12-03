@@ -106,7 +106,7 @@ class Port {
 		return $galaxyPorts;
 	}
 
-	public static function getPort(int $gameID, int $sectorID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): self {
+	public static function getPort(int $gameID, int $sectorID, bool $forceUpdate = false, ?DatabaseRecord $dbRecord = null): self {
 		if ($forceUpdate || !isset(self::$CACHE_PORTS[$gameID][$sectorID])) {
 			self::$CACHE_PORTS[$gameID][$sectorID] = new self($gameID, $sectorID, $dbRecord);
 		}
@@ -150,7 +150,7 @@ class Port {
 	protected function __construct(
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
-		DatabaseRecord $dbRecord = null,
+		?DatabaseRecord $dbRecord = null,
 	) {
 		$this->cachedTime = Epoch::time();
 		$db = Database::getInstance();
@@ -272,7 +272,7 @@ class Port {
 	 * @param array<int> $goodIDs
 	 * @return array<int, TradeGood>
 	 */
-	private function getVisibleGoods(array $goodIDs, AbstractPlayer $player = null): array {
+	private function getVisibleGoods(array $goodIDs, ?AbstractPlayer $player = null): array {
 		$visibleGoods = [];
 		foreach ($goodIDs as $goodID) {
 			$good = TradeGood::get($goodID);
@@ -288,7 +288,7 @@ class Port {
 	 *
 	 * @return array<int, TradeGood>
 	 */
-	public function getVisibleGoodsSold(AbstractPlayer $player = null): array {
+	public function getVisibleGoodsSold(?AbstractPlayer $player = null): array {
 		return $this->getVisibleGoods($this->getSellGoodIDs(), $player);
 	}
 
@@ -297,7 +297,7 @@ class Port {
 	 *
 	 * @return array<int, TradeGood>
 	 */
-	public function getVisibleGoodsBought(AbstractPlayer $player = null): array {
+	public function getVisibleGoodsBought(?AbstractPlayer $player = null): array {
 		return $this->getVisibleGoods($this->getBuyGoodIDs(), $player);
 	}
 
@@ -482,7 +482,7 @@ class Port {
 	 * If no level specified, will use the current port level.
 	 * This is useful for determining what trade goods to add/remove.
 	 */
-	protected function getGoodClassAtLevel(int $level = null): int {
+	protected function getGoodClassAtLevel(?int $level = null): int {
 		if ($level === null) {
 			$level = $this->getLevel();
 		}

@@ -55,7 +55,7 @@ class Galaxy {
 		return self::$CACHE_GAME_GALAXIES[$gameID];
 	}
 
-	public static function getGalaxy(int $gameID, int $galaxyID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): self {
+	public static function getGalaxy(int $gameID, int $galaxyID, bool $forceUpdate = false, ?DatabaseRecord $dbRecord = null): self {
 		if ($forceUpdate || !isset(self::$CACHE_GALAXIES[$gameID][$galaxyID])) {
 			$g = new self($gameID, $galaxyID, false, $dbRecord);
 			self::$CACHE_GALAXIES[$gameID][$galaxyID] = $g;
@@ -83,7 +83,7 @@ class Galaxy {
 		protected readonly int $gameID,
 		protected readonly int $galaxyID,
 		bool $create = false,
-		DatabaseRecord $dbRecord = null,
+		?DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [
@@ -270,7 +270,7 @@ class Galaxy {
 	 *
 	 * @return array<int, array<int, Sector>>
 	 */
-	public function getMapSectors(int $centerSectorID = null, int $dist = null): array {
+	public function getMapSectors(?int $centerSectorID = null, ?int $dist = null): array {
 		if ($centerSectorID === null) {
 			$topLeft = Sector::getSector($this->getGameID(), $this->getStartSector());
 		} else {
