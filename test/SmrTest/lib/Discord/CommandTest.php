@@ -25,7 +25,7 @@ class CommandTest extends TestCase {
 		$mockPromise = $this->createMock(PromiseInterface::class);
 		$mockPromise
 			->expects(self::once())
-			->method('done');
+			->method('catch');
 		$mockMessage = $this->createMock(Message::class);
 		$mockMessage
 			->expects(self::once())
@@ -46,7 +46,7 @@ class CommandTest extends TestCase {
 		$mockPromise = $this->createMock(PromiseInterface::class);
 		$mockPromise
 			->expects(self::once())
-			->method('done');
+			->method('catch');
 		$mockMessage = $this->createMock(Message::class);
 		$mockMessage
 			->expects(self::once())
@@ -73,7 +73,7 @@ class CommandTest extends TestCase {
 		$mockPromise = $this->createMock(PromiseInterface::class);
 		$mockPromise
 			->expects(self::once())
-			->method('done');
+			->method('catch');
 		$mockMessage = $this->createMock(Message::class);
 		$mockMessage
 			->expects(self::once())
