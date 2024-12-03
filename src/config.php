@@ -77,7 +77,7 @@ const MULTI_CHECKING_COOKIE_VERSION = 'v3';
 const SMR_FILE_VERSION = '1.07';
 
 const JQUERY_URL = 'https://code.jquery.com/jquery-3.7.1.min.js';
-const JQUERYUI_URL = 'https://code.jquery.com/ui/1.13.3/jquery-ui.min.js';
+const JQUERYUI_URL = 'https://code.jquery.com/ui/1.14.1/jquery-ui.min.js';
 const LISTJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js';
 const WIKI_URL = 'https://wiki.smrealms.de';
 const DISCORD_URL = 'https://discord.me/smrealms';

@@ -33,7 +33,7 @@ RUN MODE=$([ "$NO_DEV" = "0" ] && echo "development" || echo "production") \
 RUN if [ "$NO_DEV" = "0" ]; \
 	then \
 		docker-php-ext-install pcntl \
-		&& pecl install xdebug-3.3.2 > /dev/null \
+		&& pecl install xdebug-3.4.0 > /dev/null \
 		&& docker-php-ext-enable xdebug \
 		&& echo "xdebug.output_dir = /tmp/xdebug" > "$PHP_INI_DIR/conf.d/xdebug.ini" \
 		&& mkdir /tmp/xdebug; \
@@ -48,7 +48,7 @@ RUN sed -i 's/AllowOverride All/AllowOverride None/g' /etc/apache2/conf-enabled/
 WORKDIR /smr/
 
 RUN curl -sS https://getcomposer.org/installer | \
-	php -- --install-dir=/usr/local/bin --filename=composer --version=2.7.4
+	php -- --install-dir=/usr/local/bin --filename=composer --version=2.8.3
 
 COPY composer.json .
 RUN COMPOSER_NO_DEV=$NO_DEV composer update --no-interaction
