@@ -8,7 +8,7 @@ use Discord\Parts\Channel\Message;
 use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use React\Promise\ExtendedPromiseInterface;
+use React\Promise\PromiseInterface;
 use Smr\Discord\Command;
 use Smr\Discord\Commands\MagicEightBall;
 use Smr\Exceptions\UserError;
@@ -22,10 +22,10 @@ class CommandTest extends TestCase {
 		$mockCommand->method('response')->willReturn(['A', 'B']);
 
 		// Mock the DiscordPHP Message, and make sure we call reply on it
-		$mockPromise = $this->createMock(ExtendedPromiseInterface::class);
+		$mockPromise = $this->createMock(PromiseInterface::class);
 		$mockPromise
 			->expects(self::once())
-			->method('done');
+			->method('catch');
 		$mockMessage = $this->createMock(Message::class);
 		$mockMessage
 			->expects(self::once())
@@ -43,10 +43,10 @@ class CommandTest extends TestCase {
 		$mockCommand->method('response')->willThrowException(new UserError($msg));
 
 		// Mock the DiscordPHP Message, and make sure we call reply on it
-		$mockPromise = $this->createMock(ExtendedPromiseInterface::class);
+		$mockPromise = $this->createMock(PromiseInterface::class);
 		$mockPromise
 			->expects(self::once())
-			->method('done');
+			->method('catch');
 		$mockMessage = $this->createMock(Message::class);
 		$mockMessage
 			->expects(self::once())
@@ -70,10 +70,10 @@ class CommandTest extends TestCase {
 			->with($err);
 
 		// Mock the DiscordPHP Message, and make sure we call reply on it
-		$mockPromise = $this->createMock(ExtendedPromiseInterface::class);
+		$mockPromise = $this->createMock(PromiseInterface::class);
 		$mockPromise
 			->expects(self::once())
-			->method('done');
+			->method('catch');
 		$mockMessage = $this->createMock(Message::class);
 		$mockMessage
 			->expects(self::once())
