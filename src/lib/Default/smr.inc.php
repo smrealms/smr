@@ -192,7 +192,7 @@ function inify(string $text): string {
 	return str_replace(',', '', html_entity_decode($text));
 }
 
-function bbify(string $message, int $gameID = null, bool $noLinks = false): string {
+function bbify(string $message, ?int $gameID = null, bool $noLinks = false): string {
 	static $bbParser;
 	if (!isset($bbParser)) {
 		$bbParser = new BBCode();
@@ -281,7 +281,7 @@ function handleUserError(string $message): never {
 	$container->go();
 }
 
-function create_link(Page|string $container, string $text, string $class = null): string {
+function create_link(Page|string $container, string $text, ?string $class = null): string {
 	return '<a' . ($class === null ? '' : ' class="' . $class . '"') . ' href="' . (is_string($container) ? $container : $container->href()) . '">' . $text . '</a>';
 }
 
@@ -289,7 +289,7 @@ function create_submit_link(Page $container, string $text): string {
 	return '<a href="' . $container->href() . '" class="submitStyle">' . $text . '</a>';
 }
 
-function get_colored_text_range(float $value, int $maxValue, string $text = null, int $minValue = 0): string {
+function get_colored_text_range(float $value, int $maxValue, ?string $text = null, int $minValue = 0): string {
 	if ($text === null) {
 		$text = number_format($value);
 	}
@@ -317,7 +317,7 @@ function get_colored_text_range(float $value, int $maxValue, string $text = null
 	return '<span style="color:#' . $colour . '">' . $text . '</span>';
 }
 
-function get_colored_text(float $value, string $text = null): string {
+function get_colored_text(float $value, ?string $text = null): string {
 	return get_colored_text_range($value, 300, $text, -300);
 }
 

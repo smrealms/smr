@@ -66,7 +66,7 @@ abstract class PlanetType {
 	 *
 	 * @return \Smr\PlanetStructureType|array<int, PlanetStructureType>
 	 */
-	public function structureTypes(int $structureID = null): PlanetStructureType|array {
+	public function structureTypes(?int $structureID = null): PlanetStructureType|array {
 		if (!isset($this->structures)) {
 			foreach ($this->getStructureData() as $ID => $Info) {
 				$this->structures[$ID] = new PlanetStructureType($ID, $Info);

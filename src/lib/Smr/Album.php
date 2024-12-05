@@ -67,7 +67,7 @@ readonly class Album {
 
 	public function __construct(
 		public int $accountID,
-		DatabaseRecord $dbRecord = null,
+		?DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		if ($dbRecord === null) {

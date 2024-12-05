@@ -94,14 +94,14 @@ class Planet {
 		return $galaxyPlanets;
 	}
 
-	public static function getPlanet(int $gameID, int $sectorID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): self {
+	public static function getPlanet(int $gameID, int $sectorID, bool $forceUpdate = false, ?DatabaseRecord $dbRecord = null): self {
 		if ($forceUpdate || !isset(self::$CACHE_PLANETS[$gameID][$sectorID])) {
 			self::$CACHE_PLANETS[$gameID][$sectorID] = new self($gameID, $sectorID, $dbRecord);
 		}
 		return self::$CACHE_PLANETS[$gameID][$sectorID];
 	}
 
-	public static function createPlanet(int $gameID, int $sectorID, int $typeID = 1, int $inhabitableTime = null): self {
+	public static function createPlanet(int $gameID, int $sectorID, int $typeID = 1, ?int $inhabitableTime = null): self {
 		if (self::getPlanet($gameID, $sectorID)->exists()) {
 			throw new Exception('Planet already exists in sector ' . $sectorID . ' game ' . $gameID);
 		}
@@ -142,7 +142,7 @@ class Planet {
 	protected function __construct(
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
-		DatabaseRecord $dbRecord = null,
+		?DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [
@@ -582,7 +582,7 @@ class Planet {
 	/**
 	 * @return ($goodID is null ? array<int, int> : int)
 	 */
-	public function getStockpile(int $goodID = null): int|array {
+	public function getStockpile(?int $goodID = null): int|array {
 		if (!isset($this->stockpile)) {
 			// initialize cargo array
 			$this->stockpile = [];
@@ -603,7 +603,7 @@ class Planet {
 		return 0;
 	}
 
-	public function hasStockpile(int $goodID = null): bool {
+	public function hasStockpile(?int $goodID = null): bool {
 		if ($goodID === null) {
 			$stockpile = $this->getStockpile();
 			return count($stockpile) > 0 && max($stockpile) > 0;
@@ -736,7 +736,7 @@ class Planet {
 	/**
 	 * @return ($buildingTypeID is null ? array<int, int> : int)
 	 */
-	public function getMaxBuildings(int $buildingTypeID = null): int|array {
+	public function getMaxBuildings(?int $buildingTypeID = null): int|array {
 		if ($buildingTypeID === null) {
 			$maxBuildings = [];
 			foreach ($this->getStructureTypes() as $ID => $type) {
@@ -801,7 +801,7 @@ class Planet {
 	/**
 	 * @return ($structureID is null ? array<int, PlanetStructureType> : PlanetStructureType)
 	 */
-	public function getStructureTypes(int $structureID = null): PlanetStructureType|array {
+	public function getStructureTypes(?int $structureID = null): PlanetStructureType|array {
 		return $this->typeInfo->structureTypes($structureID);
 	}
 

@@ -116,9 +116,9 @@ class Template {
 	}
 
 	/**
-	 * @param array<string, mixed> $assignVars
+	 * @param ?array<string, mixed> $assignVars
 	 */
-	protected function includeTemplate(string $templateName, array $assignVars = null): void {
+	protected function includeTemplate(string $templateName, ?array $assignVars = null): void {
 		if ($this->nestedIncludes > 15) {
 			throw new Exception('Nested more than 15 template includes, is something wrong?');
 		}

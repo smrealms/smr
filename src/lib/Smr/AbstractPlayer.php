@@ -245,7 +245,7 @@ abstract class AbstractPlayer {
 		return self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID];
 	}
 
-	public static function getPlayer(int $accountID, int $gameID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): Player {
+	public static function getPlayer(int $accountID, int $gameID, bool $forceUpdate = false, ?DatabaseRecord $dbRecord = null): Player {
 		if ($forceUpdate || !isset(self::$CACHE_PLAYERS[$gameID][$accountID])) {
 			self::$CACHE_PLAYERS[$gameID][$accountID] = new Player($gameID, $accountID, $dbRecord);
 		}
@@ -281,7 +281,7 @@ abstract class AbstractPlayer {
 	protected function __construct(
 		protected readonly int $gameID,
 		protected readonly int $accountID,
-		DatabaseRecord $dbRecord = null,
+		?DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [
@@ -834,7 +834,7 @@ abstract class AbstractPlayer {
 	/**
 	 * @return ($canBeIgnored is true ? int|false : int) Message ID
 	 */
-	public function sendMessage(int $receiverID, int $messageTypeID, string $message, bool $canBeIgnored = true, bool $unread = true, int $expires = null, bool $senderDelete = false): int|false {
+	public function sendMessage(int $receiverID, int $messageTypeID, string $message, bool $canBeIgnored = true, bool $unread = true, ?int $expires = null, bool $senderDelete = false): int|false {
 		//get expire time
 		if ($canBeIgnored) {
 			if ($this->getAccount()->isMailBanned()) {
@@ -878,7 +878,7 @@ abstract class AbstractPlayer {
 		return self::doMessageSending($this->getAccountID(), $receiverID, $this->getGameID(), $messageTypeID, $message, $expires, $senderDelete, $unread);
 	}
 
-	public function sendMessageFromOpAnnounce(int $receiverID, string $message, int $expires = null): void {
+	public function sendMessageFromOpAnnounce(int $receiverID, string $message, ?int $expires = null): void {
 		// get expire time if not set
 		if ($expires === null) {
 			$expires = Epoch::time() + 86400 * 14;
@@ -910,7 +910,7 @@ abstract class AbstractPlayer {
 		self::doMessageSending(ACCOUNT_ID_FED_CLERK, $receiverID, $gameID, MSG_PLAYER, $message, $expires);
 	}
 
-	public static function sendMessageFromAdmin(int $gameID, int $receiverID, string $message, int $expires = null): void {
+	public static function sendMessageFromAdmin(int $gameID, int $receiverID, string $message, ?int $expires = null): void {
 		//get expire time
 		if ($expires === null) {
 			$expires = Epoch::time() + 86400 * 365;
@@ -919,7 +919,7 @@ abstract class AbstractPlayer {
 		self::doMessageSending(ACCOUNT_ID_ADMIN, $receiverID, $gameID, MSG_ADMIN, $message, $expires);
 	}
 
-	public static function sendMessageFromAllianceAmbassador(int $gameID, int $receiverID, string $message, int $expires = null): void {
+	public static function sendMessageFromAllianceAmbassador(int $gameID, int $receiverID, string $message, ?int $expires = null): void {
 		//get expire time
 		if ($expires === null) {
 			$expires = Epoch::time() + 86400 * 31;
@@ -928,7 +928,7 @@ abstract class AbstractPlayer {
 		self::doMessageSending(ACCOUNT_ID_ALLIANCE_AMBASSADOR, $receiverID, $gameID, MSG_ALLIANCE, $message, $expires);
 	}
 
-	public function sendMessageFromCasino(string $message, int $expires = null): void {
+	public function sendMessageFromCasino(string $message, ?int $expires = null): void {
 		//get expire time
 		if ($expires === null) {
 			$expires = Epoch::time() + 86400 * 7;
@@ -937,7 +937,7 @@ abstract class AbstractPlayer {
 		self::doMessageSending(ACCOUNT_ID_CASINO, $this->getAccountID(), $this->getGameID(), MSG_CASINO, $message, $expires);
 	}
 
-	public static function sendMessageFromRace(int $raceID, int $gameID, int $receiverID, string $message, int $expires = null): void {
+	public static function sendMessageFromRace(int $raceID, int $gameID, int $receiverID, string $message, ?int $expires = null): void {
 		//get expire time
 		if ($expires === null) {
 			$expires = Epoch::time() + 86400 * 5;
@@ -1433,7 +1433,7 @@ abstract class AbstractPlayer {
 		return !$this->isRaceChanged() && (Epoch::time() - $this->getGame()->getStartTime() < TIME_FOR_RACE_CHANGE);
 	}
 
-	public static function getColouredRaceNameOrDefault(int $otherRaceID, self $player = null, bool $linked = false): string {
+	public static function getColouredRaceNameOrDefault(int $otherRaceID, ?self $player = null, bool $linked = false): string {
 		$relations = 0;
 		if ($player !== null) {
 			$relations = $player->getRelation($otherRaceID);
@@ -1491,7 +1491,7 @@ abstract class AbstractPlayer {
 		return $this->getAlliance()->getAllianceDisplayName($linked, $includeAllianceID);
 	}
 
-	public function getAllianceRole(int $allianceID = null): int {
+	public function getAllianceRole(?int $allianceID = null): int {
 		if ($allianceID === null) {
 			$allianceID = $this->getAllianceID();
 		}
@@ -1512,7 +1512,7 @@ abstract class AbstractPlayer {
 		return $this->allianceRoles[$allianceID];
 	}
 
-	public function leaveAlliance(self $kickedBy = null): void {
+	public function leaveAlliance(?self $kickedBy = null): void {
 		$alliance = $this->getAlliance();
 		if ($kickedBy !== null) {
 			$kickedBy->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were kicked out of the alliance!', false);

@@ -48,7 +48,7 @@ class Alliance {
 		self::$CACHE_ALLIANCES = [];
 	}
 
-	public static function getAlliance(int $allianceID, int $gameID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): self {
+	public static function getAlliance(int $allianceID, int $gameID, bool $forceUpdate = false, ?DatabaseRecord $dbRecord = null): self {
 		if ($forceUpdate || !isset(self::$CACHE_ALLIANCES[$gameID][$allianceID])) {
 			self::$CACHE_ALLIANCES[$gameID][$allianceID] = new self($allianceID, $gameID, $dbRecord);
 		}
@@ -96,7 +96,7 @@ class Alliance {
 	protected function __construct(
 		protected readonly int $allianceID,
 		protected readonly int $gameID,
-		DatabaseRecord $dbRecord = null,
+		?DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [
@@ -412,7 +412,7 @@ class Alliance {
 		return htmlentities($this->description);
 	}
 
-	public function setAllianceDescription(string $description, AbstractPlayer $player = null): void {
+	public function setAllianceDescription(string $description, ?AbstractPlayer $player = null): void {
 		$description = word_filter($description);
 		if ($description === $this->description) {
 			return;

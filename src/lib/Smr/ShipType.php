@@ -32,7 +32,7 @@ class ShipType {
 		self::$CACHE_SHIP_TYPES = [];
 	}
 
-	public static function get(int $shipTypeID, DatabaseRecord $dbRecord = null): self {
+	public static function get(int $shipTypeID, ?DatabaseRecord $dbRecord = null): self {
 		if (!isset(self::$CACHE_SHIP_TYPES[$shipTypeID])) {
 			if ($dbRecord === null) {
 				$db = Database::getInstance();

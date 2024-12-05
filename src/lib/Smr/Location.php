@@ -152,7 +152,7 @@ class Location {
 		self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] = [];
 	}
 
-	public static function getLocation(int $gameID, int $locationTypeID, bool $forceUpdate = false, DatabaseRecord $dbRecord = null): self {
+	public static function getLocation(int $gameID, int $locationTypeID, bool $forceUpdate = false, ?DatabaseRecord $dbRecord = null): self {
 		if ($forceUpdate || !isset(self::$CACHE_LOCATIONS[$locationTypeID])) {
 			self::$CACHE_LOCATIONS[$locationTypeID] = new self($gameID, $locationTypeID, $dbRecord);
 		}
@@ -162,7 +162,7 @@ class Location {
 	protected function __construct(
 		protected readonly int $gameID, // use 0 to be independent of game
 		protected readonly int $typeID,
-		DatabaseRecord $dbRecord = null,
+		?DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = ['location_type_id' => $db->escapeNumber($typeID)];
@@ -358,7 +358,7 @@ class Location {
 		return $this->hardwareSold;
 	}
 
-	public function isHardwareSold(int $hardwareTypeID = null): bool {
+	public function isHardwareSold(?int $hardwareTypeID = null): bool {
 		$hardware = $this->getHardwareSold();
 		if ($hardwareTypeID === null) {
 			return count($hardware) !== 0;
@@ -422,7 +422,7 @@ class Location {
 		return $this->shipsSold;
 	}
 
-	public function isShipSold(int $shipTypeID = null): bool {
+	public function isShipSold(?int $shipTypeID = null): bool {
 		$ships = $this->getShipsSold();
 		if ($shipTypeID === null) {
 			return count($ships) !== 0;
@@ -471,7 +471,7 @@ class Location {
 		return $this->weaponsSold;
 	}
 
-	public function isWeaponSold(int $weaponTypeID = null): bool {
+	public function isWeaponSold(?int $weaponTypeID = null): bool {
 		$weapons = $this->getWeaponsSold();
 		if ($weaponTypeID === null) {
 			return count($weapons) !== 0;
@@ -547,7 +547,7 @@ class Location {
 		return $this->getTypeID() === $otherLocation->getTypeID();
 	}
 
-	public function hasX(mixed $x, AbstractPlayer $player = null): bool {
+	public function hasX(mixed $x, ?AbstractPlayer $player = null): bool {
 		if ($x instanceof WeaponType) {
 			return $this->isWeaponSold($x->getWeaponTypeID());
 		}

@@ -7,7 +7,7 @@ use Smr\Exceptions\PathNotFound;
 
 class Plotter {
 
-	public static function getX(PlotGroup $xType, int|string $X, int $gameID, AbstractPlayer $player = null): mixed {
+	public static function getX(PlotGroup $xType, int|string $X, int $gameID, ?AbstractPlayer $player = null): mixed {
 		// Special case for Location categories (i.e. Bar, HQ, SafeFed)
 		if (!is_numeric($X)) {
 			if ($xType !== PlotGroup::Locations) {
@@ -51,7 +51,7 @@ class Plotter {
 	 *
 	 * @throws \Smr\Exceptions\PathNotFound
 	 */
-	public static function findReversiblePathToX(mixed $x, Sector $sector, AbstractPlayer $needsToHaveBeenExploredBy = null, AbstractPlayer $player = null): Path {
+	public static function findReversiblePathToX(mixed $x, Sector $sector, ?AbstractPlayer $needsToHaveBeenExploredBy = null, ?AbstractPlayer $player = null): Path {
 		if ($x instanceof Sector) {
 
 			// To ensure reversibility, always plot lowest to highest.
@@ -99,7 +99,7 @@ class Plotter {
 	 * @throws \Smr\Exceptions\PathNotFound
 	 * @return ($useFirst is true ? Path : array<int, Path>)
 	 */
-	public static function findDistanceToX(mixed $x, Sector $sector, bool $useFirst, AbstractPlayer $needsToHaveBeenExploredBy = null, AbstractPlayer $player = null, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): array|Path {
+	public static function findDistanceToX(mixed $x, Sector $sector, bool $useFirst, ?AbstractPlayer $needsToHaveBeenExploredBy = null, ?AbstractPlayer $player = null, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): array|Path {
 		$warpAddIndex = TURNS_WARP_SECTOR_EQUIVALENCE - 1;
 
 		$checkSector = $sector;

@@ -206,14 +206,14 @@ class Globals {
 		return self::$AVAILABLE_LINKS['Scan' . $player->getSector()->getSectorDirection($toSector)] = $container->href();
 	}
 
-	public static function getPlotCourseHREF(int $fromSector = null, int $toSector = null): string {
+	public static function getPlotCourseHREF(?int $fromSector = null, ?int $toSector = null): string {
 		if ($fromSector === null && $toSector === null) {
 			return self::$AVAILABLE_LINKS['PlotCourse'] = (new PlotCourse())->href();
 		}
 		return (new PlotCourseConventionalProcessor(from: $fromSector, to: $toSector))->href();
 	}
 
-	public static function getAllianceHREF(int $allianceID = null): string {
+	public static function getAllianceHREF(?int $allianceID = null): string {
 		if ($allianceID > 0) {
 			return self::getAllianceMotdHREF($allianceID);
 		}
@@ -225,7 +225,7 @@ class Globals {
 		return $container->href();
 	}
 
-	public static function getAllianceRosterHREF(int $allianceID = null): string {
+	public static function getAllianceRosterHREF(?int $allianceID = null): string {
 		return (new AllianceRoster($allianceID))->href();
 	}
 

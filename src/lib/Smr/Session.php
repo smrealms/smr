@@ -313,13 +313,13 @@ class Session {
 	 * This is the recommended way to get $_REQUEST data for display pages.
 	 * For processing pages, see the Request class.
 	 */
-	public function getRequestVar(string $varName, string $default = null): string {
+	public function getRequestVar(string $varName, ?string $default = null): string {
 		$result = Request::getVar($varName, $default);
 		$this->requestData[$varName] = $result;
 		return $result;
 	}
 
-	public function getRequestVarInt(string $varName, int $default = null): int {
+	public function getRequestVarInt(string $varName, ?int $default = null): int {
 		$result = Request::getVarInt($varName, $default);
 		$this->requestData[$varName] = $result;
 		return $result;
@@ -329,7 +329,7 @@ class Session {
 	 * @param ?array<int, int> $default
 	 * @return array<int, int>
 	 */
-	public function getRequestVarIntArray(string $varName, array $default = null): array {
+	public function getRequestVarIntArray(string $varName, ?array $default = null): array {
 		$result = Request::getVarIntArray($varName, $default);
 		$this->requestData[$varName] = $result;
 		return $result;

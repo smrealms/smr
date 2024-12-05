@@ -468,7 +468,7 @@ class AbstractShip {
 	/**
 	 * @return ($hardwareTypeID is null ? array<int, int> : int)
 	 */
-	public function getHardware(int $hardwareTypeID = null): array|int {
+	public function getHardware(?int $hardwareTypeID = null): array|int {
 		if ($hardwareTypeID === null) {
 			return $this->hardware;
 		}
@@ -646,14 +646,14 @@ class AbstractShip {
 	/**
 	 * @return ($goodID is null ? array<int, int> : int)
 	 */
-	public function getCargo(int $goodID = null): int|array {
+	public function getCargo(?int $goodID = null): int|array {
 		if ($goodID === null) {
 			return $this->cargo;
 		}
 		return $this->cargo[$goodID] ?? 0;
 	}
 
-	public function hasCargo(int $goodID = null): bool {
+	public function hasCargo(?int $goodID = null): bool {
 		if ($goodID === null) {
 			return $this->getUsedHolds() > 0;
 		}
