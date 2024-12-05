@@ -7,7 +7,7 @@ use Smr\Request;
 try {
 	require_once('../bootstrap.php');
 
-	$email = Request::get('email');
+	$email = Request::get('email', ''); // default prevents crawler bug report spam
 	if ($email === '') {
 		create_error('You must specify an e-mail address!');
 	}
