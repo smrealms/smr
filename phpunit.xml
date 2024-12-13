@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
 	beStrictAboutChangesToGlobalState="true"
 	bootstrap="src/bootstrap.php"
 	cacheDirectory=".phpunit.cache"
 	colors="true"
+	displayDetailsOnPhpunitDeprecations="true"
 	displayDetailsOnTestsThatTriggerDeprecations="true"
 	displayDetailsOnTestsThatTriggerErrors="true"
 	displayDetailsOnTestsThatTriggerNotices="true"
 	displayDetailsOnTestsThatTriggerWarnings="true"
 	executionOrder="depends,defects"
 	failOnDeprecation="true"
+	failOnEmptyTestSuite="true"
 	failOnNotice="true"
+	failOnPhpunitDeprecation="true"
 	failOnRisky="true"
 	failOnWarning="true"
 	requireCoverageMetadata="true">
@@ -24,7 +27,7 @@
 	<php>
 		<env name="DISABLE_PHPDI_COMPILATION" value="true" force="true" />
 	</php>
-	<coverage includeUncoveredFiles="true">
+	<coverage>
 		<report>
 			<clover outputFile="test/coverage/clover.xml" />
 			<text outputFile="php://stdout" showOnlySummary="true" />
