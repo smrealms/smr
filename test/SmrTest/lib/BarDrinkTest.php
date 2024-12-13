@@ -46,7 +46,7 @@ class BarDrinkTest extends TestCase {
 	public function test_getSpecialMessage(): void {
 		// every special drink has a special message
 		foreach (BarDrink::getSpecial() as $drink) {
-			self::assertIsString(BarDrink::getSpecialMessage($drink));
+			self::assertNotEmpty(BarDrink::getSpecialMessage($drink));
 		}
 	}
 

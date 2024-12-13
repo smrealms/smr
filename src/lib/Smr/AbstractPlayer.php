@@ -2051,6 +2051,9 @@ abstract class AbstractPlayer {
 		return $this->bounties;
 	}
 
+	/**
+	 * @phpstan-assert-if-false array{} $this->getBounties()
+	 */
 	public function hasBounties(): bool {
 		return count($this->getBounties()) > 0;
 	}

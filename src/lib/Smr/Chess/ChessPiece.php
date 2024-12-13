@@ -43,7 +43,7 @@ class ChessPiece {
 	}
 
 	/**
-	 * @return array<array{int, int}>>
+	 * @return array<array{int, int}>
 	 */
 	public function getPossibleMoves(Board $board, bool $attackingCheck = false): array {
 		$moves = [];
@@ -139,7 +139,7 @@ class ChessPiece {
 	}
 
 	/**
-	 * @param array{int, int} $moves
+	 * @param list<array{int, int}> $moves
 	 */
 	private function addMove(int $toX, int $toY, Board $board, array &$moves, bool $attackingCheck = true): bool {
 		if ($board->isValidCoord($toX, $toY)) {

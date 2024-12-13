@@ -1331,7 +1331,7 @@ class Port {
 	}
 
 	/**
-	 * @param array<AbstractPlayer> $targetPlayers
+	 * @param non-empty-array<int, AbstractPlayer> $targetPlayers
 	 * @return PortCombatResults
 	 */
 	public function shootPlayers(array $targetPlayers): array {

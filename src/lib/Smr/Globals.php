@@ -320,7 +320,7 @@ class Globals {
 	}
 
 	/**
-	 * @return array<string, int>
+	 * @return array{text: int, html: int, logo: int}
 	 */
 	public static function getBuyShipNameCosts(): array {
 		return [

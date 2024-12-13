@@ -36,6 +36,10 @@ function get_draft_teams(int $gameId): array {
 		}
 	}
 
+	if (count($teams) === 0) {
+		throw new Exception('No draft leaders have been selected yet.');
+	}
+
 	// Determine the smallest team alliance size.
 	$minSize = min(array_map(fn(array $i): int => $i['Size'], $teams));
 

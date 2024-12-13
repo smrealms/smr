@@ -11,7 +11,7 @@ class Board {
 
 	/** @var array<value-of<Colour>, array<Castling>> */
 	private array $canCastle;
-	/** @var array{X: int, Y: int}> */
+	/** @var array{X: int, Y: int} */
 	private array $enPassantPawn;
 	/** @var array<int, array<int, ?ChessPiece>> */
 	private array $board;
@@ -190,7 +190,7 @@ class Board {
 	}
 
 	/**
-	 * @return array{'X': int, 'Y': int}
+	 * @return array{X: int, Y: int}
 	 */
 	public function getEnPassantPawn(): array {
 		return $this->enPassantPawn;
