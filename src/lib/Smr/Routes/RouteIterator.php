@@ -11,6 +11,7 @@ use Smr\TransactionType;
  */
 class RouteIterator {
 
+	/** @var InfiniteIterator<int, OneWayRoute, ArrayIterator<int, OneWayRoute>> */
 	private InfiniteIterator $routeIterator;
 
 	private TransactionType $transaction = TransactionType::Buy;
