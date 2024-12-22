@@ -67,7 +67,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		// Now create a new Session with a specific 'sn' parameter set.
 		$sn = 'some_sn';
 		$_REQUEST['sn'] = $sn;
-		$session = DiContainer::make(Session::class);
+		$session = DiContainer::makeClass(Session::class);
 		self::assertSame($sn, $session->getSN());
 	}
 
@@ -78,14 +78,14 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		// Create a Session with a specific ID
 		$sessionID = md5('hello');
 		$_COOKIE['session_id'] = $sessionID;
-		$session = DiContainer::make(Session::class);
+		$session = DiContainer::makeClass(Session::class);
 		self::assertSame($sessionID, $session->getSessionID());
 
 		// If we try to use a session ID with fewer than 32 chars,
 		// we get a random ID instead
 		$sessionID = 'hello';
 		$_COOKIE['session_id'] = $sessionID;
-		$session = DiContainer::make(Session::class);
+		$session = DiContainer::makeClass(Session::class);
 		self::assertNotEquals($sessionID, $session->getSessionID());
 	}
 
@@ -95,9 +95,9 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 
 		// Test other values in $_REQUEST
 		$_REQUEST['ajax'] = 1;
-		self::assertTrue(DiContainer::make(Session::class)->ajax);
+		self::assertTrue(DiContainer::makeClass(Session::class)->ajax);
 		$_REQUEST['ajax'] = 'anything other than 1';
-		self::assertFalse(DiContainer::make(Session::class)->ajax);
+		self::assertFalse(DiContainer::makeClass(Session::class)->ajax);
 	}
 
 	public function test_getCurrentVar_throws(): void {
@@ -119,7 +119,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		// Create a new Session, requesting the SN we just made
 		$_REQUEST['sn'] = $sn;
 		$_COOKIE['session_id'] = $this->session->getSessionID();
-		$session = DiContainer::make(Session::class);
+		$session = DiContainer::makeClass(Session::class);
 
 		// Now we should be able to find this sn in the var
 		self::assertTrue($session->hasCurrentVar());
@@ -143,16 +143,16 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		// with this SN.
 		$session->update();
 		$_REQUEST['ajax'] = 1; // simulate AJAX refresh
-		$session = DiContainer::make(Session::class);
+		$session = DiContainer::makeClass(Session::class);
 		self::assertEquals($var2, $session->getCurrentVar());
 		$_REQUEST['ajax'] = 0; // simulate F5 refresh
-		$session = DiContainer::make(Session::class);
+		$session = DiContainer::makeClass(Session::class);
 		self::assertEquals($var2, $session->getCurrentVar());
 
 		// If we destroy the Session, then the current var should no longer
 		// be accessible to a new Session.
 		$session->destroy();
-		$session = DiContainer::make(Session::class);
+		$session = DiContainer::makeClass(Session::class);
 		self::assertFalse($session->hasCurrentVar());
 	}
 

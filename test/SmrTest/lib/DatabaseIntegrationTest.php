@@ -26,7 +26,7 @@ class DatabaseIntegrationTest extends TestCase {
 
 	public function test_connectionFactory(): void {
 		// Given database properties are retrieved from the container
-		$dbProperties = DiContainer::get(DatabaseProperties::class);
+		$dbProperties = DiContainer::getClass(DatabaseProperties::class);
 		// When using the factory to retrieve a connection instance
 		$conn = Database::connectionFactory($dbProperties);
 		// The the connection is successful
@@ -34,8 +34,8 @@ class DatabaseIntegrationTest extends TestCase {
 	}
 
 	public function test__construct_happy_path(): void {
-		$db = DiContainer::get(Database::class);
-		self::assertNotNull($db);
+		$db = DiContainer::getClass(Database::class);
+		self::assertInstanceOf(Database::class, $db);
 	}
 
 	public function test_getInstance_always_returns_same_instance(): void {
@@ -48,17 +48,17 @@ class DatabaseIntegrationTest extends TestCase {
 
 	public function test_resetInstance_returns_new_instance(): void {
 		// Given an original connection instance
-		$original = DiContainer::get(Connection::class);
+		$original = DiContainer::getClass(Connection::class);
 		// And resetInstance is called
 		Database::resetInstance();
 		// And Database is usable again after reconnecting
 		Database::getInstance()->read('SELECT 1');
 		// Then new instance is not the same as the original instance
-		self::assertNotSame($original, DiContainer::get(Connection::class));
+		self::assertNotSame($original, DiContainer::getClass(Connection::class));
 	}
 
 	public function test_resetInstance_closes_connection(): void {
-		$conn = DiContainer::get(Connection::class);
+		$conn = DiContainer::getClass(Connection::class);
 		$db = Database::getInstance();
 		$db->read('SELECT 1'); // initialize the connection
 		self::assertTrue($conn->isConnected());
