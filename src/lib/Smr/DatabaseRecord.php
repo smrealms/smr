@@ -69,6 +69,19 @@ class DatabaseRecord {
 	}
 
 	/**
+	 * @template T of object
+	 * @param class-string<T> $class
+	 * @return T
+	 */
+	public function getClass(string $name, string $class, bool $compressed = false): mixed {
+		$object = $this->getObject($name, $compressed);
+		if (!($object instanceof $class)) {
+			throw new Exception('Value ' . var_export($object, true) . ' is not of type ' . $class);
+		}
+		return $object;
+	}
+
+	/**
 	 * @template T of BackedEnum
 	 * @param class-string<T> $enum
 	 * @return T

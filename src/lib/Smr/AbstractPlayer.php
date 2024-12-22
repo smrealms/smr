@@ -1796,7 +1796,7 @@ abstract class AbstractPlayer {
 
 			if ($dbResult->hasRecord()) {
 				// get the course back
-				$this->plottedCourse = $dbResult->record()->getObject('course');
+				$this->plottedCourse = $dbResult->record()->getClass('course', Path::class);
 			} else {
 				$this->plottedCourse = false;
 			}

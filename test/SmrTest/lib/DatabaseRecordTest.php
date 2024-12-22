@@ -109,16 +109,17 @@ class DatabaseRecordTest extends TestCase {
 
 	//------------------------------------------------------------------------
 
-	public function test_getObject(): void {
-		// Construct a record with various types of objects
-		$record = new DatabaseRecord([
-			'name' => serialize(new ArrayObject(['a' => 1, 'b' => 2])),
-			'name_compressed' => gzcompress(serialize(['c', 'd'])),
-		]);
-		// Class objects must be compared here with Equals instead of Same
-		// since the two objects will not be the same instance.
-		self::assertEquals(new ArrayObject(['a' => 1, 'b' => 2]), $record->getObject('name'));
-		self::assertSame(['c', 'd'], $record->getObject('name_compressed', compressed: true));
+	#[TestWith([true])]
+	#[TestWith([false])]
+	public function test_getObject(bool $compressed): void {
+		// Construct a record with various array objects
+		$expected = ['a' => 1, 'b' => 2];
+		$value = serialize($expected);
+		if ($compressed) {
+			$value = gzcompress($value);
+		}
+		$record = new DatabaseRecord(['name' => $value]);
+		self::assertSame($expected, $record->getObject('name', $compressed));
 	}
 
 	public function test_getNullableObject(): void {
@@ -128,6 +129,29 @@ class DatabaseRecordTest extends TestCase {
 		]);
 		self::assertSame(null, $record->getNullableObject('null'));
 		self::assertSame([1, 2], $record->getNullableObject('not_null'));
+	}
+
+	#[TestWith([true])]
+	#[TestWith([false])]
+	public function test_getClass(bool $compressed): void {
+		// Construct a record with a class instance
+		$expected = new ArrayObject(['a' => 1, 'b' => 2]);
+		$value = serialize($expected);
+		if ($compressed) {
+			$value = gzcompress($value);
+		}
+		$record = new DatabaseRecord(['name' => $value]);
+		// Class instances must be compared here with Equals instead of Same
+		// since the two objects will not be the same instance in memory.
+		self::assertEquals($expected, $record->getClass('name', ArrayObject::class, $compressed));
+	}
+
+	public function test_getClass_error(): void {
+		// Construct a record with a string, but then fetch as ArrayObject
+		$record = new DatabaseRecord(['name' => serialize('foo')]);
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Value \'foo\' is not of type ArrayObject');
+		$record->getClass('name', ArrayObject::class);
 	}
 
 	//------------------------------------------------------------------------

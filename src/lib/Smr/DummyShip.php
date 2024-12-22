@@ -36,7 +36,7 @@ class DummyShip extends AbstractShip {
 				'dummy_name' => $db->escapeString($dummyName),
 			]);
 			if ($dbResult->hasRecord()) {
-				$ship = $dbResult->record()->getObject('info');
+				$ship = $dbResult->record()->getClass('info', self::class);
 			} else {
 				$player = new DummyPlayer($dummyName);
 				$ship = new self($player);
