@@ -80,7 +80,7 @@ class SectorLockTest extends BaseIntegrationSpec {
 		// Given that we acquire a lock
 		$lock1->acquire(1, 1, 1);
 		// And we use a new SectorLock instance to simulate a separate request
-		$lock2 = DiContainer::make(SectorLock::class);
+		$lock2 = DiContainer::makeClass(SectorLock::class);
 		// Then if that instance tries to acquire a lock (even for the same
 		// sector) before the other instance releases, we throw a UserError.
 		$this->expectException(UserError::class);

@@ -30,7 +30,7 @@ abstract class BaseIntegrationSpec extends TestCase {
 	#[BeforeClass]
 	final public static function initializeTableRowCounts(): void {
 		if (!isset(self::$conn)) {
-			self::$conn = DiContainer::make(Connection::class);
+			self::$conn = DiContainer::makeClass(Connection::class);
 			self::$checksums = self::getChecksums();
 		}
 	}

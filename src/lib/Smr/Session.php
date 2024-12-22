@@ -58,7 +58,7 @@ class Session {
 	 * This is the intended way to construct this class.
 	 */
 	public static function getInstance(): self {
-		return DiContainer::get(self::class);
+		return DiContainer::getClass(self::class);
 	}
 
 	/**

@@ -172,7 +172,7 @@ class SectorLock {
 	 * The first time this is called, it will populate the DI container.
 	 */
 	public static function getInstance(): self {
-		return DiContainer::get(self::class);
+		return DiContainer::getClass(self::class);
 	}
 
 	/**
@@ -183,7 +183,7 @@ class SectorLock {
 	 * only be used by the CLI programs that run continuously.
 	 */
 	public static function resetInstance(): void {
-		if (DiContainer::get('NPC_SCRIPT') === false) {
+		if (DiContainer::getContainer()->get('NPC_SCRIPT') === false) {
 			throw new Exception('Only call this function from CLI programs!');
 		}
 		// Release before resetting

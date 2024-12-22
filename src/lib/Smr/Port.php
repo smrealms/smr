@@ -1219,7 +1219,7 @@ class Port {
 
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
-				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = $dbRecord->getObject('port_info', true);
+				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = $dbRecord->getClass('port_info', self::class, true);
 				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID]->setCachedTime($dbRecord->getInt('visited'));
 			} else {
 				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = false;

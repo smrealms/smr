@@ -4,6 +4,7 @@ namespace Smr\Container;
 
 use DI\ContainerBuilder;
 use Doctrine\DBAL\Connection;
+use Exception;
 use Smr\Database;
 use Smr\DatabaseProperties;
 use Smr\Epoch;
@@ -73,23 +74,41 @@ class DiContainer {
 
 	/**
 	 * Retrieve the managed instance of $className, or construct a new instance with all dependencies.
-	 * @param string $className The name of the class to retrieve from the container.
+	 *
+	 * @template T of object
+	 * @param class-string<T> $className The name of the class to retrieve from the container.
+	 *
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
+	 *
+	 * @return T
 	 */
-	public static function get(string $className): mixed {
-		return self::getContainer()->get($className);
+	public static function getClass(string $className): mixed {
+		$class = self::getContainer()->get($className);
+		if (!($class instanceof $className)) {
+			throw new Exception('Expected instance of ' . $className . ' from container, got ' . gettype($class));
+		}
+		return $class;
 	}
 
 	/**
 	 * Construct a fresh instance of $className. Dependencies will be retrieved from the container if they
 	 * are already managed, and created themselves if they are not.
-	 * @param string $className The name of the class to construct.
+	 *
+	 * @template T of object
+	 * @param class-string<T> $className The name of the class to construct.
+	 *
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
+	 *
+	 * @return T
 	 */
-	public static function make(string $className): mixed {
-		return self::getContainer()->make($className);
+	public static function makeClass(string $className): mixed {
+		$class = self::getContainer()->make($className);
+		if (!($class instanceof $className)) {
+			throw new Exception('Expected instance of ' . $className . ' from container, got ' . gettype($class));
+		}
+		return $class;
 	}
 
 	/**
