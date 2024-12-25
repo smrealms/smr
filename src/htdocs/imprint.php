@@ -6,7 +6,7 @@ $json = file_get_contents('https://gitlab.fem-net.de/vorstand/fem-impressum/-/ra
 if ($json === false) {
 	throw new Exception('Failed to fetch JSON imprint');
 }
-$data = json_decode($json);
+$data = json_decode($json, flags: JSON_THROW_ON_ERROR);
 $contact = $data->imprintContact;
 $board = array_map(
 	fn(stdClass $member): string => $member->role->en . ': ' . $member->name,
