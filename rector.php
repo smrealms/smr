@@ -9,6 +9,7 @@ use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php80\Rector\FuncCall\ClassOnObjectRector;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
+use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 
 return RectorConfig::configure()
@@ -18,6 +19,7 @@ return RectorConfig::configure()
 	])
 	->withImportNames(true, false)
 	->withRules([
+		AddOverrideAttributeToOverriddenMethodsRector::class,
 		ClassOnObjectRector::class,
 		ClassPropertyAssignToConstructorPromotionRector::class,
 		DirNameFileConstantToDirConstantRector::class,
