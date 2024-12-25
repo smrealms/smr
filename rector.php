@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Rector\CodeQuality\Rector\Assign\CombinedAssignRector;
 use Rector\Config\RectorConfig;
 use Rector\Php53\Rector\FuncCall\DirNameFileConstantToDirConstantRector;
 use Rector\Php70\Rector\MethodCall\ThisCallOnStaticMethodToStaticCallRector;
@@ -14,6 +15,7 @@ use Rector\Php83\Rector\ClassConst\AddTypeToConstRector;
 use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 
+
 return RectorConfig::configure()
 	->withPaths([
 		__DIR__ . '/test',
@@ -25,6 +27,7 @@ return RectorConfig::configure()
 		AddOverrideAttributeToOverriddenMethodsRector::class,
 		ClassOnObjectRector::class,
 		ClassPropertyAssignToConstructorPromotionRector::class,
+		CombinedAssignRector::class,
 		DirNameFileConstantToDirConstantRector::class,
 		FirstClassCallableRector::class,
 		IfIssetToCoalescingRector::class,

@@ -51,9 +51,9 @@ if (isset($PlanetCombatResults['Weapons'])) {
 			} else {
 				?> destroying <?php
 				$DamageTypes = 0;
-				if ($ActualDamage['Shield'] > 0) { $DamageTypes = $DamageTypes + 1; }
-				if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
-				if ($ActualDamage['Armour'] > 0) { $DamageTypes = $DamageTypes + 1; }
+				if ($ActualDamage['Shield'] > 0) { $DamageTypes += 1; }
+				if ($ActualDamage['NumCDs'] > 0) { $DamageTypes += 1; }
+				if ($ActualDamage['Armour'] > 0) { $DamageTypes += 1; }
 
 				if ($ActualDamage['Shield'] > 0) {
 					?><span class="shields"><?php echo number_format($ActualDamage['Shield']); ?></span> shields<?php
@@ -83,9 +83,9 @@ if (isset($PlanetCombatResults['Drones'])) {
 	$WeaponDamage = $Drones['WeaponDamage'];
 	$TargetPlayer = $Drones['Target'];
 	$DamageTypes = 0;
-	if ($ActualDamage['Shield'] > 0) { $DamageTypes = $DamageTypes + 1; }
-	if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
-	if ($ActualDamage['Armour'] > 0) { $DamageTypes = $DamageTypes + 1; }
+	if ($ActualDamage['Shield'] > 0) { $DamageTypes += 1; }
+	if ($ActualDamage['NumCDs'] > 0) { $DamageTypes += 1; }
+	if ($ActualDamage['Armour'] > 0) { $DamageTypes += 1; }
 
 	echo $CombatPlanet->getCombatName();
 	if (!isset($WeaponDamage['Launched'])) {
