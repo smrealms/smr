@@ -12,6 +12,7 @@ class PluraliseTest extends TestCase {
 	#[TestWith([3, true, '3 tests'])]
 	#[TestWith([1, true, '1 test'])]
 	#[TestWith([0, true, '0 tests'])]
+	#[TestWith([1.0, true, '1 test'])]
 	#[TestWith([0.5, true, '0.5 tests'])]
 	#[TestWith([3, false, 'tests'])]
 	#[TestWith([1, false, 'test'])]
