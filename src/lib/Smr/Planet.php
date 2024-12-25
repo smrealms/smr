@@ -597,10 +597,7 @@ class Planet {
 		if ($goodID === null) {
 			return $this->stockpile;
 		}
-		if (isset($this->stockpile[$goodID])) {
-			return $this->stockpile[$goodID];
-		}
-		return 0;
+		return $this->stockpile[$goodID] ?? 0;
 	}
 
 	public function hasStockpile(?int $goodID = null): bool {
@@ -659,10 +656,7 @@ class Planet {
 
 	public function getBuilding(int $buildingTypeID): int {
 		$buildings = $this->getBuildings();
-		if (isset($buildings[$buildingTypeID])) {
-			return $buildings[$buildingTypeID];
-		}
-		return 0;
+		return $buildings[$buildingTypeID] ?? 0;
 	}
 
 	public function hasBuilding(int $buildingTypeID): bool {
