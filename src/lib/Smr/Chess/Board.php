@@ -6,8 +6,8 @@ use Exception;
 
 class Board {
 
-	public const NX = 8; // number of x-coordinates
-	public const NY = 8; // number of y-coordinates
+	public const int NX = 8; // number of x-coordinates
+	public const int NY = 8; // number of y-coordinates
 
 	/** @var array<value-of<Colour>, array<Castling>> */
 	private array $canCastle;

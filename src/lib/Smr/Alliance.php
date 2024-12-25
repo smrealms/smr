@@ -11,7 +11,7 @@ class Alliance {
 	/** @var array<int, array<int, self>> */
 	protected static array $CACHE_ALLIANCES = [];
 
-	public const SQL = 'alliance_id = :alliance_id AND game_id = :game_id';
+	public const string SQL = 'alliance_id = :alliance_id AND game_id = :game_id';
 	/** @var array{alliance_id: int, game_id: int} */
 	public readonly array $SQLID;
 
@@ -36,13 +36,13 @@ class Alliance {
 	protected array $seedlist;
 
 	// Recruit type constants
-	public const RECRUIT_OPEN = 'open';
-	public const RECRUIT_CLOSED = 'closed';
-	public const RECRUIT_PASSWORD = 'password';
+	public const string RECRUIT_OPEN = 'open';
+	public const string RECRUIT_CLOSED = 'closed';
+	public const string RECRUIT_PASSWORD = 'password';
 
 	// Database constraints
-	public const MAXLENGTH_NAME = 36; // varchar(36)
-	public const MAXLENGTH_DESCRIPTION = 255; // varchar(255)
+	public const int MAXLENGTH_NAME = 36; // varchar(36)
+	public const int MAXLENGTH_DESCRIPTION = 255; // varchar(255)
 
 	public static function clearCache(): void {
 		self::$CACHE_ALLIANCES = [];

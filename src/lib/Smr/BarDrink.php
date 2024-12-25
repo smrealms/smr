@@ -8,9 +8,9 @@ namespace Smr;
 class BarDrink {
 
 	// Special drink used in missions
-	public const SALVENE_SWAMP_SODA = 'Salvene Swamp Soda';
+	public const string SALVENE_SWAMP_SODA = 'Salvene Swamp Soda';
 
-	private const DRINK_NAMES = [
+	private const array DRINK_NAMES = [
 		'Spooky Midnight Special',
 		'Azoolian Sunrise Special',
 		'Big Momma Mojito',
@@ -33,7 +33,7 @@ class BarDrink {
 		'Nijarin Ion Martini',
 	];
 
-	private const SPECIAL_DRINK_MESSAGES = [
+	private const array SPECIAL_DRINK_MESSAGES = [
 		'Spooky Midnight Special' => 'Suddenly the secrets of the universe become manifestly clear and you are at peace.',
 		'Azoolian Sunrise Special' => 'At the bottom of the glass, you see a reflection of the best trader in the universe, and it is you.',
 	];

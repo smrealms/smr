@@ -17,7 +17,7 @@ class WeightedRandom {
 	/** @var array<int, array<int, array<string, array<int, self>>>> */
 	protected static array $CACHE_RANDOMS = [];
 
-	protected const WEIGHTING_CHANGE = 50; // as a percent
+	protected const int WEIGHTING_CHANGE = 50; // as a percent
 
 	protected float $weighting;
 

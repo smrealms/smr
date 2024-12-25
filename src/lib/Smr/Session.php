@@ -18,9 +18,9 @@ use Smr\Pages\Player\ShopGoodsProcessor;
 
 class Session {
 
-	private const TIME_BEFORE_EXPIRY = 172800; // 2 days
+	private const int TIME_BEFORE_EXPIRY = 172800; // 2 days
 
-	private const URL_LOAD_DELAY = [
+	private const array URL_LOAD_DELAY = [
 		HardwareConfigure::class => .4,
 		ForcesDrop::class => .4,
 		ForcesDropProcessor::class => .5,

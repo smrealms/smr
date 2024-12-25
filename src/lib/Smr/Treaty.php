@@ -8,7 +8,7 @@ class Treaty {
 	 * For each treaty type (as given by the columns in the alliance_treaties
 	 * database table), provides an array with a display title and description.
 	 */
-	public const TYPES = [
+	public const array TYPES = [
 		'trader_assist' => [
 			'Assist - Trader Attacks',
 			'Assist your ally in attacking traders.',

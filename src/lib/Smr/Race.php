@@ -7,7 +7,7 @@ namespace Smr;
  */
 class Race {
 
-	private const RACE_NAMES = [
+	private const array RACE_NAMES = [
 		RACE_NEUTRAL => 'Neutral',
 		RACE_ALSKANT => 'Alskant',
 		RACE_CREONTI => 'Creonti',

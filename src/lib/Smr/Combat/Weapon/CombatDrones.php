@@ -12,7 +12,7 @@ class CombatDrones extends AbstractWeapon {
 
 	use ForcesTrait;
 
-	protected const MAX_CDS_RAND = 54;
+	protected const int MAX_CDS_RAND = 54;
 
 	public function __construct(int $numberOfCDs, bool $portPlanetDrones = false) {
 		$this->amount = $numberOfCDs;

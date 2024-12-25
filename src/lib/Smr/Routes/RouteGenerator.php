@@ -6,8 +6,8 @@ use Smr\TransactionType;
 
 class RouteGenerator {
 
-	public const EXP_ROUTE = 0;
-	public const MONEY_ROUTE = 1;
+	public const int EXP_ROUTE = 0;
+	public const int MONEY_ROUTE = 1;
 	/** @var array<numeric-string, array<MultiplePortRoute>> */
 	private static array $expRoutes;
 	/** @var array<numeric-string, array<MultiplePortRoute>> */

@@ -23,31 +23,31 @@ class Port {
 	/** @var array<int, array<int, array<int, self|false>>> */
 	protected static array $CACHE_CACHED_PORTS = [];
 
-	public const DAMAGE_NEEDED_FOR_ALIGNMENT_CHANGE = 300; // single player
-	protected const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 325; // all attackers
-	protected const CHANCE_TO_DOWNGRADE = 1;
-	protected const TIME_FEDS_STAY = 1800;
-	protected const MAX_FEDS_BONUS = 4000;
-	protected const BASE_CDS = 725;
-	protected const CDS_PER_LEVEL = 100;
-	protected const CDS_PER_TEN_MIL_CREDITS = 25;
-	protected const BASE_DEFENCES = 500;
-	protected const DEFENCES_PER_LEVEL = 700;
-	protected const DEFENCES_PER_TEN_MIL_CREDITS = 250;
-	protected const BASE_REFRESH_PER_HOUR = [
+	public const int DAMAGE_NEEDED_FOR_ALIGNMENT_CHANGE = 300; // single player
+	protected const int DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 325; // all attackers
+	protected const int CHANCE_TO_DOWNGRADE = 1;
+	protected const int TIME_FEDS_STAY = 1800;
+	protected const int MAX_FEDS_BONUS = 4000;
+	protected const int BASE_CDS = 725;
+	protected const int CDS_PER_LEVEL = 100;
+	protected const int CDS_PER_TEN_MIL_CREDITS = 25;
+	protected const int BASE_DEFENCES = 500;
+	protected const int DEFENCES_PER_LEVEL = 700;
+	protected const int DEFENCES_PER_TEN_MIL_CREDITS = 250;
+	protected const array BASE_REFRESH_PER_HOUR = [
 		'1' => 150,
 		'2' => 110,
 		'3' => 70,
 	];
-	protected const REFRESH_PER_GOOD = .9;
-	protected const TIME_TO_CREDIT_RAID = 10800; // 3 hours
-	protected const GOODS_TRADED_MONEY_MULTIPLIER = 50;
-	protected const BASE_PAYOUT = 0.85; // fraction of credits for looting
-	public const RAZE_PAYOUT = 0.75; // fraction of base payout for razing
-	public const CLAIM_PAYOUT = 0.5; // fraction of base payout for claiming
-	public const KILLER_RELATIONS_LOSS = 45; // relations lost by killer in PR
+	protected const float REFRESH_PER_GOOD = .9;
+	protected const int TIME_TO_CREDIT_RAID = 10800; // 3 hours
+	protected const int GOODS_TRADED_MONEY_MULTIPLIER = 50;
+	protected const float BASE_PAYOUT = 0.85; // fraction of credits for looting
+	public const float RAZE_PAYOUT = 0.75; // fraction of base payout for razing
+	public const float CLAIM_PAYOUT = 0.5; // fraction of base payout for claiming
+	public const int KILLER_RELATIONS_LOSS = 45; // relations lost by killer in PR
 
-	public const SQL = 'sector_id = :sector_id AND game_id = :game_id';
+	public const string SQL = 'sector_id = :sector_id AND game_id = :game_id';
 	/** @var array{sector_id: int, game_id: int} */
 	public readonly array $SQLID;
 

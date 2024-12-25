@@ -11,7 +11,7 @@ use Smr\Pages\Player\VoteLinkProcessor;
  */
 class VoteLink {
 
-	public const TIME_BETWEEN_VOTING = 84600; // 23.5 hours
+	public const int TIME_BETWEEN_VOTING = 84600; // 23.5 hours
 
 	/** @var ?array<int, int> */
 	private static ?array $CACHE_TIMEOUTS = null;

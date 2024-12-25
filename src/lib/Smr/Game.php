@@ -35,13 +35,13 @@ class Game {
 	protected bool $hasChanged = false;
 	protected bool $isNew = false;
 
-	public const GAME_TYPE_DEFAULT = 0;
-	public const GAME_TYPE_HUNTER_WARS = 3;
-	public const GAME_TYPE_SEMI_WARS = 4;
-	public const GAME_TYPE_DRAFT = 5;
-	public const GAME_TYPE_FFA = 6;
-	public const GAME_TYPE_NEWBIE = 7;
-	public const GAME_TYPES = [
+	public const int GAME_TYPE_DEFAULT = 0;
+	public const int GAME_TYPE_HUNTER_WARS = 3;
+	public const int GAME_TYPE_SEMI_WARS = 4;
+	public const int GAME_TYPE_DRAFT = 5;
+	public const int GAME_TYPE_FFA = 6;
+	public const int GAME_TYPE_NEWBIE = 7;
+	public const array GAME_TYPES = [
 		self::GAME_TYPE_DEFAULT => 'Default',
 		self::GAME_TYPE_HUNTER_WARS => 'Hunter Wars',
 		self::GAME_TYPE_SEMI_WARS => 'Semi Wars',

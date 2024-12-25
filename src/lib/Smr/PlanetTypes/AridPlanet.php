@@ -6,7 +6,7 @@ use Smr\PlanetMenuOption;
 
 class AridPlanet extends PlanetType {
 
-	public const STRUCTURES = [
+	public const array STRUCTURES = [
 		PLANET_GENERATOR => [
 			'max_amount' => 25,
 			'base_time' => 10800,

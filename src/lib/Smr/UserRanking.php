@@ -18,11 +18,11 @@ enum UserRanking: int {
 	case Master = 8;
 	case Grandmaster = 9;
 
-	public const MIN_RANK = 1;
-	public const MAX_RANK = 9;
+	public const int MIN_RANK = 1;
+	public const int MAX_RANK = 9;
 
-	public const SCORE_POW = .3;
-	public const SCORE_POW_RANK_INCREMENT = 5.2;
+	public const float SCORE_POW = .3;
+	public const float SCORE_POW_RANK_INCREMENT = 5.2;
 
 	/**
 	 * Given a score, return the associated rank

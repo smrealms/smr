@@ -14,8 +14,8 @@ use Smr\Player;
 
 class ChessGame {
 
-	public const END_RESIGN = 0;
-	public const END_CANCEL = 1;
+	public const int END_RESIGN = 0;
+	public const int END_CANCEL = 1;
 
 	/** @var array<int, self> */
 	protected static array $CACHE_CHESS_GAMES = [];

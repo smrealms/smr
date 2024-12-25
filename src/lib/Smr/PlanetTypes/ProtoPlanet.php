@@ -6,7 +6,7 @@ use Smr\PlanetMenuOption;
 
 class ProtoPlanet extends PlanetType {
 
-	public const STRUCTURES = [
+	public const array STRUCTURES = [
 		PLANET_GENERATOR => [
 			'max_amount' => 5,
 			'base_time' => 10800,

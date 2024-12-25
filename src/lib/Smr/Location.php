@@ -22,7 +22,7 @@ class Location {
 	/** @var array<int, array<int, array<int, self>>> */
 	protected static array $CACHE_SECTOR_LOCATIONS = [];
 
-	public const SQL = 'location_type_id = :location_type_id';
+	public const string SQL = 'location_type_id = :location_type_id';
 	/** @var array{location_type_id: int} */
 	public readonly array $SQLID;
 

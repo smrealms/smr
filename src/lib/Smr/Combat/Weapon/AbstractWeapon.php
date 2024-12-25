@@ -12,7 +12,7 @@ abstract class AbstractWeapon {
 	/**
 	 * Reduce the damage done to planets by this factor
 	 */
-	protected const PLANET_DAMAGE_MOD = 0.2;
+	protected const float PLANET_DAMAGE_MOD = 0.2;
 
 	protected bool $damageRollover;
 

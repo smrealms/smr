@@ -19,13 +19,13 @@ class Planet {
 	/** @var array<int, array<int, self>> */
 	protected static array $CACHE_PLANETS = [];
 
-	public const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 100;
-	protected const CHANCE_TO_DOWNGRADE = 15; // percent
-	protected const TIME_TO_CREDIT_BUST = 10800; // 3 hours
-	protected const TIME_ATTACK_NEWS_COOLDOWN = 3600; // 1 hour
-	public const MAX_STOCKPILE = 600;
+	public const int DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 100;
+	protected const int CHANCE_TO_DOWNGRADE = 15; // percent
+	protected const int TIME_TO_CREDIT_BUST = 10800; // 3 hours
+	protected const int TIME_ATTACK_NEWS_COOLDOWN = 3600; // 1 hour
+	public const int MAX_STOCKPILE = 600;
 
-	public const SQL = 'game_id = :game_id AND sector_id = :sector_id';
+	public const string SQL = 'game_id = :game_id AND sector_id = :sector_id';
 	/** @var array{game_id: int, sector_id: int} */
 	public readonly array $SQLID;
 
