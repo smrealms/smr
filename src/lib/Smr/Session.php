@@ -42,7 +42,7 @@ class Session {
 	private array $requestData = [];
 	private bool $generate;
 	public readonly bool $ajax;
-	private string $SN;
+	private readonly string $SN;
 	private string $lastSN;
 	private int $accountID;
 	private float $lastAccessed;

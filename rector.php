@@ -8,6 +8,7 @@ use Rector\Php74\Rector\Assign\NullCoalescingOperatorRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php80\Rector\FuncCall\ClassOnObjectRector;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
+use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 
 return RectorConfig::configure()
@@ -24,6 +25,7 @@ return RectorConfig::configure()
 		IfIssetToCoalescingRector::class,
 		JsonThrowOnErrorRector::class,
 		NullCoalescingOperatorRector::class,
+		ReadOnlyPropertyRector::class,
 	])
 	->withSets([
 		PHPUnitSetList::PHPUNIT_100,
