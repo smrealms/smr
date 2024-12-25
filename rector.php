@@ -2,6 +2,7 @@
 
 use Rector\Config\RectorConfig;
 use Rector\Php53\Rector\FuncCall\DirNameFileConstantToDirConstantRector;
+use Rector\Php70\Rector\MethodCall\ThisCallOnStaticMethodToStaticCallRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
 use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\Php74\Rector\Assign\NullCoalescingOperatorRector;
@@ -30,6 +31,7 @@ return RectorConfig::configure()
 		JsonThrowOnErrorRector::class,
 		NullCoalescingOperatorRector::class,
 		ReadOnlyPropertyRector::class,
+		ThisCallOnStaticMethodToStaticCallRector::class,
 	])
 	->withSets([
 		PHPUnitSetList::PHPUNIT_100,

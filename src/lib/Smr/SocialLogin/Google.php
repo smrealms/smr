@@ -48,7 +48,7 @@ class Google extends SocialLogin {
 		);
 		/** @var \League\OAuth2\Client\Provider\GoogleUser $userInfo */
 		$userInfo = $provider->getResourceOwner($accessToken);
-		return new SocialIdentity($userInfo->getId(), $userInfo->getEmail(), $this->getLoginType());
+		return new SocialIdentity($userInfo->getId(), $userInfo->getEmail(), static::getLoginType());
 	}
 
 }

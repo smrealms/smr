@@ -52,7 +52,7 @@ class Twitter extends SocialLogin {
 		if ($auth->getLastHttpCode() !== 200) {
 			throw new UserError('Connection failed, please try again.');
 		}
-		return new SocialIdentity($userInfo->id_str, $userInfo->email, $this->getLoginType());
+		return new SocialIdentity($userInfo->id_str, $userInfo->email, static::getLoginType());
 	}
 
 }
