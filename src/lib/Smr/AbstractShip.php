@@ -30,8 +30,6 @@ class AbstractShip {
 		RACE_NIJARIN => SHIP_TYPE_REDEEMER,
 	];
 
-	protected AbstractPlayer $player;
-
 	protected int $gameID;
 	protected ShipType $shipType;
 
@@ -51,9 +49,8 @@ class AbstractShip {
 	protected bool $hasChangedCloak = false;
 	protected bool $hasChangedIllusion = false;
 
-	public function __construct(AbstractPlayer $player) {
-		$this->player = $player;
-		$this->gameID = $player->getGameID();
+	public function __construct(protected AbstractPlayer $player) {
+		$this->gameID = $this->player->getGameID();
 		$this->regenerateShipType();
 	}
 
