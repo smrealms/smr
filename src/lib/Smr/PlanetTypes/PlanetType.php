@@ -10,7 +10,7 @@ use Smr\PlanetStructureType;
  */
 abstract class PlanetType {
 
-	protected const MAX_LANDED_UNLIMITED = 0;
+	protected const int MAX_LANDED_UNLIMITED = 0;
 
 	/**
 	 * Returns the properties of all the structures this planet type can build.
@@ -41,7 +41,7 @@ abstract class PlanetType {
 	 * Associates the planet_type_id with the planet class.
 	 * These indices must not be changed!
 	 */
-	public const PLANET_TYPES = [
+	public const array PLANET_TYPES = [
 		1 => TerranPlanet::class,
 		2 => AridPlanet::class,
 		3 => DwarfPlanet::class,

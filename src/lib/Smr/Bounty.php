@@ -9,7 +9,7 @@ class Bounty {
 	/**
 	 * Maximum amount of bounty.credits in the database
 	 */
-	private const MAX_CREDITS = SQL_MAX_UNSIGNED_INT;
+	private const int MAX_CREDITS = SQL_MAX_UNSIGNED_INT;
 
 	/**
 	 * Returns a list of all active (not claimable) bounties for given location $type.

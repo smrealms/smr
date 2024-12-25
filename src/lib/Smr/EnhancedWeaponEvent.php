@@ -9,8 +9,8 @@ use Smr\Combat\Weapon\Weapon;
  */
 class EnhancedWeaponEvent {
 
-	protected const GRACE_PERIOD = 3600; // 1 hour
-	protected const DURATION = 21600; // 6 hours
+	protected const int GRACE_PERIOD = 3600; // 1 hour
+	protected const int DURATION = 21600; // 6 hours
 
 	protected readonly Weapon $weapon;
 

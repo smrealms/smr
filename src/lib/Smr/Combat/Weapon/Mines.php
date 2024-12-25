@@ -13,9 +13,9 @@ class Mines extends AbstractWeapon {
 
 	use ForcesTrait;
 
-	protected const TOTAL_ENEMY_MINES_MODIFIER = 25;
-	protected const FED_SHIP_DAMAGE_MODIFIER = .5;
-	protected const DCS_DAMAGE_MODIFIER = .75;
+	protected const float TOTAL_ENEMY_MINES_MODIFIER = 25;
+	protected const float FED_SHIP_DAMAGE_MODIFIER = .5;
+	protected const float DCS_DAMAGE_MODIFIER = .75;
 
 	public function __construct(int $numberOfMines) {
 		$this->amount = $numberOfMines;

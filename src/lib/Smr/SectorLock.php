@@ -26,13 +26,13 @@ class SectorLock {
 	 * The max time (in seconds) for a lock to be active before being
 	 * considered stale.
 	 */
-	private const LOCK_DURATION = 10;
+	private const int LOCK_DURATION = 10;
 
 	/**
 	 * The max time (in seconds) to retry acquiring locks before giving up.
 	 * Should be less than LOCK_DURATION.
 	 */
-	private const RETRY_DURATION = 5;
+	private const int RETRY_DURATION = 5;
 
 	private ?int $lockID = null;
 	private bool $failed = false;

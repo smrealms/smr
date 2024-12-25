@@ -45,9 +45,9 @@ foreach ($CombatForces as $ForceType => $ForceResults) {
 			?> destroying <?php
 		}
 		$DamageTypes = 0;
-		if ($ActualDamage['Shield'] > 0) { $DamageTypes = $DamageTypes + 1; }
-		if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
-		if ($ActualDamage['Armour'] > 0) { $DamageTypes = $DamageTypes + 1; }
+		if ($ActualDamage['Shield'] > 0) { $DamageTypes += 1; }
+		if ($ActualDamage['NumCDs'] > 0) { $DamageTypes += 1; }
+		if ($ActualDamage['Armour'] > 0) { $DamageTypes += 1; }
 
 		if ($ActualDamage['Shield'] > 0) {
 			?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php

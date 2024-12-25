@@ -13,7 +13,7 @@ class Ship extends AbstractShip {
 	/** @var array<int, array<int, self>> */
 	protected static array $CACHE_SHIPS = [];
 
-	public const SQL = 'account_id = :account_id AND game_id = :game_id';
+	public const string SQL = 'account_id = :account_id AND game_id = :game_id';
 	/** @var array{account_id: int, game_id: int} */
 	public readonly array $SQLID;
 

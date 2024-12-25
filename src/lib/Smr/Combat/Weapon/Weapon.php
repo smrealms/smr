@@ -22,10 +22,10 @@ class Weapon extends AbstractWeapon {
 
 	use RaceID;
 
-	protected const BONUS_DAMAGE = 15; // additive bonus
-	protected const BONUS_ACCURACY = 4; // additive bonus
+	protected const int BONUS_DAMAGE = 15; // additive bonus
+	protected const int BONUS_ACCURACY = 4; // additive bonus
 
-	protected const HIGHEST_POWER_LEVEL = 5; // must track the highest power level in db
+	protected const int HIGHEST_POWER_LEVEL = 5; // must track the highest power level in db
 
 	protected readonly WeaponType $weaponType;
 	protected bool $bonusAccuracy = false; // default

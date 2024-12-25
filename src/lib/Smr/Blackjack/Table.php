@@ -7,7 +7,7 @@ namespace Smr\Blackjack;
  */
 class Table {
 
-	private Deck $deck;
+	private readonly Deck $deck;
 	public Hand $playerHand;
 	public Hand $dealerHand;
 

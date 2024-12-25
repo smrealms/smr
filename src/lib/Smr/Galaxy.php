@@ -11,12 +11,12 @@ class Galaxy {
 	/** @var array<int, array<int, self>> */
 	protected static array $CACHE_GAME_GALAXIES = [];
 
-	public const TYPE_RACIAL = 'Racial';
-	public const TYPE_NEUTRAL = 'Neutral';
-	public const TYPE_PLANET = 'Planet';
-	public const TYPES = [self::TYPE_RACIAL, self::TYPE_NEUTRAL, self::TYPE_PLANET];
+	public const string TYPE_RACIAL = 'Racial';
+	public const string TYPE_NEUTRAL = 'Neutral';
+	public const string TYPE_PLANET = 'Planet';
+	public const array TYPES = [self::TYPE_RACIAL, self::TYPE_NEUTRAL, self::TYPE_PLANET];
 
-	public const SQL = 'game_id = :game_id AND galaxy_id = :galaxy_id';
+	public const string SQL = 'game_id = :game_id AND galaxy_id = :galaxy_id';
 	/** @var array{game_id: int, galaxy_id: int} */
 	public readonly array $SQLID;
 

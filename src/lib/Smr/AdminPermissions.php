@@ -35,7 +35,7 @@ class AdminPermissions {
 	// The array keys must not be changed because they are referred to
 	// in the `account_has_permission` database table.
 	// Info is [Permission Name, Page to Link, Category].
-	private const PERMISSION_TABLE = [
+	private const array PERMISSION_TABLE = [
 		1 => ['Manage Admin Permissions', AdminPermissionManage::class, 3],
 		2 => ['Database Cleanup', DatabaseCleanup::class, 3],
 		3 => ['Server Open/Close', ServerStatus::class, 3],
@@ -69,7 +69,7 @@ class AdminPermissions {
 		37 => ['Manage NPCs', NpcManage::class, 5],
 	];
 
-	private const PERMISSION_CATEGORIES = [
+	private const array PERMISSION_CATEGORIES = [
 		1 => 'Monitor Players',
 		2 => 'Community Services',
 		3 => 'Administrative',

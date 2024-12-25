@@ -11,8 +11,8 @@ use Smr\SocialLogin\SocialIdentity;
 
 class Account {
 
-	protected const USER_RANKINGS_EACH_STAT_POW = .9;
-	protected const USER_RANKINGS_SCORE = [
+	protected const float USER_RANKINGS_EACH_STAT_POW = .9;
+	protected const array USER_RANKINGS_SCORE = [
 		// [Stat, a, b]
 		// Used as: pow(Stat * a, USER_RANKINGS_EACH_STAT_POW) * b
 		[['Trade', 'Experience', 'Total'], .1, 0.5],
@@ -22,7 +22,7 @@ class Account {
 
 	/** @var array<int, self> */
 	protected static array $CACHE_ACCOUNTS = [];
-	protected const DEFAULT_HOTKEYS = [
+	protected const array DEFAULT_HOTKEYS = [
 		'MoveUp' => ['w', 'up'],
 		'ScanUp' => ['shift+w', 'shift+up'],
 		'MoveLeft' => ['a', 'left'],
@@ -42,7 +42,7 @@ class Account {
 		'AttackTrader' => ['f'],
 	];
 
-	public const SQL = 'account_id = :account_id';
+	public const string SQL = 'account_id = :account_id';
 	/** @var array{account_id: int} */
 	protected readonly array $SQLID;
 

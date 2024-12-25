@@ -41,7 +41,7 @@ abstract class SocialLogin {
 	 * after authentication.
 	 */
 	protected function getRedirectUrl(): string {
-		return URL . '/login_processing.php?loginType=' . $this->getLoginType();
+		return URL . '/login_processing.php?loginType=' . static::getLoginType();
 	}
 
 	/**

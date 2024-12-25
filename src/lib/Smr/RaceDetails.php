@@ -7,7 +7,7 @@ namespace Smr;
  */
 class RaceDetails {
 
-	private const SHORT_DESCRIPTION = [
+	private const array SHORT_DESCRIPTION = [
 		RACE_ALSKANT => 'Diverse assortment of hardware, but no dedicated warship. Trade bonuses with all races.',
 		RACE_CREONTI => 'Bulky ships reinforced with heavy armour plating and lots of firepower.',
 		RACE_HUMAN => 'Jump drive technology which enables fast inter-galactic movement.',
@@ -18,7 +18,7 @@ class RaceDetails {
 		RACE_NIJARIN => 'Strong weapons and Drone Communication Scrambler technology offsets lower defenses.',
 	];
 
-	private const LONG_DESCRIPTION = [
+	private const array LONG_DESCRIPTION = [
 		RACE_ALSKANT => 'This race of tall, thin humanoids has just recently (in the last 100 years) discovered interstellar travel. However, their charisma and enterprising nature has allowed them to trade for much of the advanced technology the other races had already developed. Alskants are generally peaceful, and have designed their ships for commerce rather than war. Since they pose no military threat, they tend to have relatively good relationships with the other races. They continue to seek the knowledge of the cosmos, and to explore to the edges of space.',
 		RACE_CREONTI => 'As the manufacturers of the most colossal warships known to history, the Creonti are perceived as formidable opponents in war. The fact that they stand over 11 feet tall does not soften their brutish reputation. While a focus on war-waging has long served the Creonti in their pursuit of resources, it has also severely stunted their culture in almost every other aspect. Compared to the other races, the Creonti lack advanced technology and only have a rudimentary economy. Painfully aware of this weakness, the Creonti are now attempting to leverage peace for assistance with trade and economic development.',
 		RACE_HUMAN => 'After discovering Jump Drive technology, the Human race underwent a space exploration renaissance marked by many noble and altruistic deeds, including an attempt to unify all of the races through the creation of The Federation. Over time, the Human military grew in power and co-opted the Jump Drive for the purposes of conquest and colonization, weakening the Federation and dissolving any hope for true unification. Today, the Humans continue down this hegemonic path, fighting in wars over resources, and using the crumbling Federation to legitimize their political interests.',

@@ -48,7 +48,8 @@
 		"test": [
 			"@phpstan",
 			"@phpunit",
-			"@phpcs"
+			"@phpcs",
+			"@rector"
 		],
 		"phpunit": [
 			"docker compose --env-file test/env run --rm phpunit"
@@ -61,6 +62,9 @@
 		],
 		"phpstan": [
 			"docker compose --env-file test/env run --rm phpstan"
+		],
+		"rector": [
+			"docker compose --env-file test/env run --rm rector --dry-run"
 		],
 		"stop": [
 			"docker compose stop",

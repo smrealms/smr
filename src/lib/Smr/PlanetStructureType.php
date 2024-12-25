@@ -18,7 +18,7 @@ class PlanetStructureType {
 	/**
 	 * Trade goods required to build each type of structure.
 	 */
-	protected const GOODS = [
+	protected const array GOODS = [
 		PLANET_GENERATOR => [
 			GOODS_WOOD => 20,
 			GOODS_ORE => 15,
@@ -57,7 +57,7 @@ class PlanetStructureType {
 	/**
 	 * Information to display about each structure type.
 	 */
-	private const INFO = [
+	private const array INFO = [
 		PLANET_GENERATOR => [
 			'name' => 'Generator',
 			'image' => 'generator.png',

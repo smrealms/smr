@@ -21,18 +21,18 @@ class Force {
 	/** @var array<int, array<int, bool>> */
 	protected static array $TIDIED_UP = [];
 
-	public const LOWEST_MAX_EXPIRE_SCOUTS_ONLY = 432000; // 5 days
-	protected const TIME_PER_SCOUT_ONLY = 86400; // 1 = 1 day
-	protected const TIME_PERCENT_PER_SCOUT = 0.02; // 1/50th
-	protected const TIME_PERCENT_PER_COMBAT = 0.02; // 1/50th
-	protected const TIME_PERCENT_PER_MINE = 0.02; // 1/50th
-	public const REFRESH_ALL_TIME_PER_STACK = 1; // 1 second
+	public const int LOWEST_MAX_EXPIRE_SCOUTS_ONLY = 432000; // 5 days
+	protected const int TIME_PER_SCOUT_ONLY = 86400; // 1 = 1 day
+	protected const float TIME_PERCENT_PER_SCOUT = 0.02; // 1/50th
+	protected const float TIME_PERCENT_PER_COMBAT = 0.02; // 1/50th
+	protected const float TIME_PERCENT_PER_MINE = 0.02; // 1/50th
+	public const int REFRESH_ALL_TIME_PER_STACK = 1; // 1 second
 
-	public const MAX_MINES = 50;
-	public const MAX_CDS = 50;
-	public const MAX_SDS = 5;
+	public const int MAX_MINES = 50;
+	public const int MAX_CDS = 50;
+	public const int MAX_SDS = 5;
 
-	public const SQL = 'game_id = :game_id AND sector_id = :sector_id AND owner_id = :owner_id';
+	public const string SQL = 'game_id = :game_id AND sector_id = :sector_id AND owner_id = :owner_id';
 	/** @var array{game_id: int, sector_id: int, owner_id: int} */
 	protected readonly array $SQLID;
 

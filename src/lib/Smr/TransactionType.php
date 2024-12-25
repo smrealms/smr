@@ -21,6 +21,6 @@ enum TransactionType: string {
 
 	// This is *NOT* one of the enum cases, but it logistically makes sense to
 	// include it in the same namespace as the first-class transactions.
-	public const STEAL = 'Steal';
+	public const string STEAL = 'Steal';
 
 }

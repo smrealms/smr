@@ -12,12 +12,12 @@ use Smr\TransactionType;
 class RouteIterator {
 
 	/** @var InfiniteIterator<int, OneWayRoute, ArrayIterator<int, OneWayRoute>> */
-	private InfiniteIterator $routeIterator;
+	private readonly InfiniteIterator $routeIterator;
 
 	private TransactionType $transaction = TransactionType::Buy;
 
 	public function __construct(
-		private MultiplePortRoute $route,
+		private readonly MultiplePortRoute $route,
 	) {
 		$oneWayRoutes = $route->getOneWayRoutes();
 		$this->routeIterator = new InfiniteIterator(new ArrayIterator($oneWayRoutes));

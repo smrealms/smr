@@ -6,12 +6,12 @@ use Exception;
 
 class ChessPiece {
 
-	public const KING = 1;
-	public const QUEEN = 2;
-	public const ROOK = 3;
-	public const BISHOP = 4;
-	public const KNIGHT = 5;
-	public const PAWN = 6;
+	public const int KING = 1;
+	public const int QUEEN = 2;
+	public const int ROOK = 3;
+	public const int BISHOP = 4;
+	public const int KNIGHT = 5;
+	public const int PAWN = 6;
 
 	public function __construct(
 		public readonly Colour $colour,

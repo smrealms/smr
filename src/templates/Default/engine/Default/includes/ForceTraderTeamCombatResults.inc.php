@@ -38,9 +38,9 @@ foreach ($AllTraderResults as $TraderResults) {
 				} else {
 					?> destroying <?php
 					$DamageTypes = 0;
-					if ($ActualDamage['NumMines'] > 0) { $DamageTypes = $DamageTypes + 1; }
-					if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
-					if ($ActualDamage['NumSDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
+					if ($ActualDamage['NumMines'] > 0) { $DamageTypes += 1; }
+					if ($ActualDamage['NumCDs'] > 0) { $DamageTypes += 1; }
+					if ($ActualDamage['NumSDs'] > 0) { $DamageTypes += 1; }
 
 					if ($ActualDamage['NumMines'] > 0) {
 						?><span class="red"><?php echo number_format($ActualDamage['NumMines']) ?></span> mines<?php
@@ -85,9 +85,9 @@ foreach ($AllTraderResults as $TraderResults) {
 						}
 					} else {
 						$DamageTypes = 0;
-						if ($ActualDamage['NumMines'] > $WeaponDamage['Kamikaze']) { $DamageTypes = $DamageTypes + 1; }
-						if ($ActualDamage['NumCDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
-						if ($ActualDamage['NumSDs'] > 0) { $DamageTypes = $DamageTypes + 1; }
+						if ($ActualDamage['NumMines'] > $WeaponDamage['Kamikaze']) { $DamageTypes += 1; }
+						if ($ActualDamage['NumCDs'] > 0) { $DamageTypes += 1; }
+						if ($ActualDamage['NumSDs'] > 0) { $DamageTypes += 1; }
 
 						if ($WeaponDamage['Kamikaze'] === 0) {
 							?> destroying <?php

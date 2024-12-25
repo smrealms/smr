@@ -6,8 +6,8 @@ use Exception;
 
 class Board {
 
-	public const NX = 8; // number of x-coordinates
-	public const NY = 8; // number of y-coordinates
+	public const int NX = 8; // number of x-coordinates
+	public const int NY = 8; // number of y-coordinates
 
 	/** @var array<value-of<Colour>, array<Castling>> */
 	private array $canCastle;
@@ -228,10 +228,10 @@ class Board {
 	 * @return array{Castling: ?Castling, PieceTaken: ?ChessPiece, EnPassant: bool, PawnPromotion: bool}
 	 */
 	public function movePiece(int $x, int $y, int $toX, int $toY, int $pawnPromotionPiece = ChessPiece::QUEEN): array {
-		if (!$this->isValidCoord($x, $y)) {
+		if (!static::isValidCoord($x, $y)) {
 			throw new Exception('Invalid from coordinates, x=' . $x . ', y=' . $y);
 		}
-		if (!$this->isValidCoord($toX, $toY)) {
+		if (!static::isValidCoord($toX, $toY)) {
 			throw new Exception('Invalid to coordinates, x=' . $toX . ', y=' . $toY);
 		}
 		$piece = $this->getPiece($x, $y);

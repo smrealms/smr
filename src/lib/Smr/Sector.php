@@ -16,7 +16,7 @@ class Sector {
 	/** @var array<int, array<int, array<int, self>>> */
 	protected static array $CACHE_LOCATION_SECTORS = [];
 
-	public const SQL = 'game_id = :game_id AND sector_id = :sector_id';
+	public const string SQL = 'game_id = :game_id AND sector_id = :sector_id';
 	/** @var array{game_id: int, sector_id: int} */
 	public readonly array $SQLID;
 
@@ -34,7 +34,7 @@ class Sector {
 	/**
 	 * Maps the Sector link direction names to database columns.
 	 */
-	protected const LINK_DIR_MAPPING = [
+	protected const array LINK_DIR_MAPPING = [
 		'Up' => 'link_up',
 		'Down' => 'link_down',
 		'Left' => 'link_left',

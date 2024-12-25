@@ -729,15 +729,15 @@ function format_time(int $seconds, bool $short = false): string {
 	$weeks = 0;
 	if ($minutes >= 60) {
 		$hours = floor($minutes / 60);
-		$minutes = $minutes % 60;
+		$minutes %= 60;
 	}
 	if ($hours >= 24) {
 		$days = floor($hours / 24);
-		$hours = $hours % 24;
+		$hours %= 24;
 	}
 	if ($days >= 7) {
 		$weeks = floor($days / 7);
-		$days = $days % 7;
+		$days %= 7;
 	}
 	$times = [
 		'week' => $weeks,

@@ -24,13 +24,13 @@ abstract class AbstractPlayer {
 
 	use RaceID;
 
-	protected const TIME_FOR_FEDERAL_BOUNTY_ON_PR = 10800;
-	protected const TIME_FOR_ALLIANCE_SWITCH = 0;
+	protected const int TIME_FOR_FEDERAL_BOUNTY_ON_PR = 10800;
+	protected const int TIME_FOR_ALLIANCE_SWITCH = 0;
 
-	protected const SHIP_INSURANCE_FRACTION = 0.25; // ship value regained on death
+	protected const float SHIP_INSURANCE_FRACTION = 0.25; // ship value regained on death
 
-	protected const HOF_CHANGED = 1;
-	protected const HOF_NEW = 2;
+	protected const int HOF_CHANGED = 1;
+	protected const int HOF_NEW = 2;
 
 	/** @var array<int, array<int, array<int, Player>>> */
 	protected static array $CACHE_SECTOR_PLAYERS = [];
@@ -41,7 +41,7 @@ abstract class AbstractPlayer {
 	/** @var array<int, array<int, Player>> */
 	protected static array $CACHE_PLAYERS = [];
 
-	public const SQL = 'account_id = :account_id AND game_id = :game_id';
+	public const string SQL = 'account_id = :account_id AND game_id = :game_id';
 	/** @var array{account_id: int, game_id: int} */
 	public readonly array $SQLID;
 

@@ -8,12 +8,12 @@ namespace Smr\Blackjack;
 class Card {
 
 	// Special card ranks
-	private const RANK_ACE = 1;
-	private const RANK_JACK = 11;
-	private const RANK_QUEEN = 12;
-	private const RANK_KING = 13;
+	private const int RANK_ACE = 1;
+	private const int RANK_JACK = 11;
+	private const int RANK_QUEEN = 12;
+	private const int RANK_KING = 13;
 
-	private const SUITS = ['hearts', 'clubs', 'diamonds', 'spades'];
+	private const array SUITS = ['hearts', 'clubs', 'diamonds', 'spades'];
 
 	private readonly int $rank; // non-unique rank of the card (1-indexed)
 

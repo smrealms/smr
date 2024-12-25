@@ -120,3 +120,27 @@ jobs:
 
       - name: Run code sniffer
         run: composer phpcs
+
+  rector:
+    name: Rector
+    needs: build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout the source code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image from cache
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          build-args: |
+            NO_DEV=0
+          tags: local/smr:latest
+          cache-from: type=gha
+          load: true
+
+      - name: Run rector analysis
+        run: composer rector

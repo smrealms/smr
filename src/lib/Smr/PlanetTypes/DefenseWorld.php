@@ -6,7 +6,7 @@ use Smr\PlanetMenuOption;
 
 class DefenseWorld extends PlanetType {
 
-	public const STRUCTURES = [
+	public const array STRUCTURES = [
 		PLANET_GENERATOR => [
 			'max_amount' => 800,
 			'base_time' => 2700,

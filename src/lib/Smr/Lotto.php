@@ -7,8 +7,8 @@ namespace Smr;
  */
 class Lotto {
 
-	public const TICKET_COST = 1000000; // cost of 1 ticket
-	public const WIN_FRAC = 0.9; // fraction of ticket sales returned to winner
+	public const int TICKET_COST = 1000000; // cost of 1 ticket
+	public const float WIN_FRAC = 0.9; // fraction of ticket sales returned to winner
 
 	public static function checkForLottoWinner(int $gameID): void {
 

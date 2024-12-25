@@ -48,7 +48,7 @@ class Facebook extends SocialLogin {
 			['code' => Request::get('code')],
 		);
 		$userInfo = $provider->getResourceOwner($accessToken);
-		return new SocialIdentity($userInfo->getId(), $userInfo->getEmail(), $this->getLoginType());
+		return new SocialIdentity($userInfo->getId(), $userInfo->getEmail(), static::getLoginType());
 	}
 
 }
