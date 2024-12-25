@@ -341,7 +341,7 @@ function word_filter(string $string): string {
 // choose correct pluralization based on amount
 function pluralise(int|float $amount, string $word, bool $includeAmount = true): string {
 	$result = $word;
-	if ($amount !== 1) {
+	if ((float)$amount !== 1.) {
 		$result .= 's';
 	}
 	if ($includeAmount) {
