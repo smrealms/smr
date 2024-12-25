@@ -8,20 +8,20 @@ use Rector\Php80\Rector\FuncCall\ClassOnObjectRector;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 
-return static function (RectorConfig $rectorConfig): void {
-	$rectorConfig->paths([
+return RectorConfig::configure()
+	->withPaths([
 		__DIR__ . '/test',
 		__DIR__ . '/src',
-	]);
-	$rectorConfig->importNames(true, false);
-
-	$rectorConfig->rule(DirNameFileConstantToDirConstantRector::class);
-	$rectorConfig->rule(JsonThrowOnErrorRector::class);
-	$rectorConfig->rule(NullCoalescingOperatorRector::class);
-	$rectorConfig->rule(ClassOnObjectRector::class);
-	$rectorConfig->rule(FirstClassCallableRector::class);
-
-	$rectorConfig->sets([
+	])
+	->withImportNames(true, false)
+	->withRules([
+		DirNameFileConstantToDirConstantRector::class,
+		JsonThrowOnErrorRector::class,
+		NullCoalescingOperatorRector::class,
+		ClassOnObjectRector::class,
+		FirstClassCallableRector::class,
+	])
+	->withSets([
 		PHPUnitSetList::PHPUNIT_100,
-	]);
-};
+	])
+;
