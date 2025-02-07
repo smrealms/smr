@@ -261,25 +261,6 @@ class ChessGame {
 			. ($enPassant ? ' e.p.' : '');
 	}
 
-	public function isCheckmated(Colour $colour): bool {
-		$king = null;
-		foreach ($this->board->getPieces($colour) as $piece) {
-			if ($piece->pieceID === ChessPiece::KING) {
-				$king = $piece;
-				break;
-			}
-		}
-		if ($king === null) {
-			throw new Exception('Could not find the king: game id = ' . $this->chessGameID);
-		}
-		if (!$this->board->isChecked($colour)) {
-			return false;
-		}
-		$moves = $king->getPossibleMoves($this->board);
-		// If there are no moves the King can make, they are checkmated.
-		return count($moves) === 0;
-	}
-
 	/**
 	 * @return array{Type: Castling, X: int, ToX: int}|false
 	 */
@@ -359,7 +340,7 @@ class ChessGame {
 		if ($this->board->isChecked($p->colour->opposite())) {
 			$checking = 'CHECK';
 		}
-		if ($this->isCheckmated($p->colour->opposite())) {
+		if ($this->board->isCheckmated($p->colour->opposite())) {
 			$checking = 'MATE';
 		}
 

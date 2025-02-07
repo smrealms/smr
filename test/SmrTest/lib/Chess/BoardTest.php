@@ -166,6 +166,7 @@ class BoardTest extends TestCase {
 		$board->movePiece(3, 6, 3, 5); // d6
 		$board->movePiece(5, 0, 1, 4); // Bb5+
 		self::assertTrue($board->isChecked(Colour::Black));
+		self::assertFalse($board->isCheckmated(Colour::Black));
 		self::assertFalse($board->isChecked(Colour::White));
 
 		// Blocking the check results in no longer being checked
@@ -173,6 +174,24 @@ class BoardTest extends TestCase {
 		foreach (Colour::cases() as $colour) {
 			self::assertFalse($board->isChecked($colour));
 		}
+	}
+
+	public function test_isCheckmated(): void {
+		// Not in checkmate by default
+		$board = new Board();
+		foreach (Colour::cases() as $colour) {
+			self::assertFalse($board->isCheckmated($colour));
+		}
+
+		// Scholar's Mate against Black
+		$board->movePiece(4, 1, 4, 3); // e4
+		$board->movePiece(4, 6, 4, 4); // e5
+		$board->movePiece(5, 0, 2, 3); // Bc4
+		$board->movePiece(1, 7, 2, 5); // Nc6
+		$board->movePiece(3, 0, 7, 4); // Qh5
+		$board->movePiece(6, 7, 5, 5); // Nf6
+		$board->movePiece(7, 4, 5, 6); // Qxf7++
+		self::assertTrue($board->isCheckmated(Colour::Black));
 	}
 
 	public function test_setSquare(): void {
@@ -300,6 +319,20 @@ class BoardTest extends TestCase {
 		// Make sure pieces are in the right spot
 		$expectedQueen = new ChessPiece(Colour::White, ChessPiece::QUEEN, 0, 7);
 		self::assertEquals($expectedQueen, $board->getPiece(0, 7));
+	}
+
+	public function test_movePiece_invalid_to_coord(): void {
+		$board = new Board();
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Invalid from coordinates, x=0, y=8');
+		$board->movePiece(0, 8, 0, 7);
+	}
+
+	public function test_movePiece_invalid_from_coord(): void {
+		$board = new Board();
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Invalid to coordinates, x=0, y=8');
+		$board->movePiece(0, 7, 0, 8);
 	}
 
 }

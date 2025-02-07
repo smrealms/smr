@@ -209,6 +209,16 @@ class Board {
 		return false;
 	}
 
+	public function isCheckmated(Colour $colour): bool {
+		foreach ($this->getPieces($colour) as $piece) {
+			// If any piece can make a legal move, it's not checkmate
+			if (count($piece->getPossibleMoves($this)) > 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * Change the position of a piece on the board
 	 */
