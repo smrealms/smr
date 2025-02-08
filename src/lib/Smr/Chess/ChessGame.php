@@ -138,6 +138,7 @@ class ChessGame {
 			$this->moves = [];
 			$this->board = new Board();
 			$mate = false;
+			$draw = false;
 			foreach ($dbResult->records() as $dbRecord) {
 				$forColour = $this->board->getCurrentTurnColour();
 				$promotionPieceID = $dbRecord->getNullableInt('promote_piece_id');
@@ -153,6 +154,7 @@ class ChessGame {
 					toY: $endY,
 					pawnPromotionPiece: $promotionPieceID ?? ChessPiece::QUEEN,
 				);
+				$draw = $this->board->isDraw($forColour->opposite());
 				$this->moves[] = $this->createMove(
 					pieceID: $dbRecord->getInt('piece_id'),
 					startX: $startX,
@@ -165,6 +167,7 @@ class ChessGame {
 					castling: $moveInfo['Castling'],
 					enPassant: $moveInfo['EnPassant'],
 					promotionPieceID: $promotionPieceID,
+					draw: $draw,
 				);
 				$mate = $dbRecord->getNullableString('checked') === 'MATE';
 			}
@@ -173,8 +176,10 @@ class ChessGame {
 					$this->moves[] = ($this->getWinner() === $this->getWhiteID() ? 'Black' : 'White') . ' Resigned.';
 				} elseif (count($this->moves) < 2) {
 					$this->moves[] = 'Game Cancelled.';
-				} else {
+				} elseif ($draw) {
 					$this->moves[] = 'Game Drawn.';
+				} else {
+					throw new Exception('Game end state unknown!');
 				}
 			}
 		}
@@ -234,7 +239,20 @@ class ChessGame {
 		]);
 	}
 
-	private function createMove(int $pieceID, int $startX, int $startY, int $endX, int $endY, ?int $pieceTaken, ?string $checking, Colour $playerColour, ?Castling $castling, bool $enPassant, ?int $promotionPieceID): string {
+	private function createMove(
+		int $pieceID,
+		int $startX,
+		int $startY,
+		int $endX,
+		int $endY,
+		?int $pieceTaken,
+		?string $checking,
+		Colour $playerColour,
+		?Castling $castling,
+		bool $enPassant,
+		?int $promotionPieceID,
+		bool $draw,
+	): string {
 		// This move will be set as the most recent move
 		$this->lastMove = [
 			'From' => ['X' => $startX, 'Y' => $startY],
@@ -247,7 +265,7 @@ class ChessGame {
 			Castling::Queenside => '0-0-0',
 			null => '',
 		};
-		return $castlingSymbol
+		return ($castlingSymbol
 			. ChessPiece::getSymbolForPiece($pieceID, $playerColour)
 			. chr(ord('a') + $startX)
 			. ($startY + 1)
@@ -258,7 +276,9 @@ class ChessGame {
 			. ($promotionPieceID === null ? '' : ChessPiece::getSymbolForPiece($promotionPieceID, $playerColour))
 			. ' '
 			. ($checking === null ? '' : ($checking === 'CHECK' ? '+' : '++'))
-			. ($enPassant ? ' e.p.' : '');
+			. ($enPassant ? ' e.p.' : '')
+			. ($draw ? ' =' : '')
+		);
 	}
 
 	/**
@@ -310,6 +330,7 @@ class ChessGame {
 		if ($p->colour !== $forColour) {
 			throw new UserError('That is not your piece to move!');
 		}
+		$otherColour = $forColour->opposite();
 
 		$moves = $p->getPossibleMoves($this->board);
 		$moveIsLegal = false;
@@ -337,11 +358,13 @@ class ChessGame {
 		}
 
 		$checking = null;
-		if ($this->board->isChecked($p->colour->opposite())) {
-			$checking = 'CHECK';
-		}
-		if ($this->board->isCheckmated($p->colour->opposite())) {
+		$draw = false;
+		if ($this->board->isCheckmated($otherColour)) {
 			$checking = 'MATE';
+		} elseif ($this->board->isChecked($otherColour)) {
+			$checking = 'CHECK';
+		} elseif ($this->board->isDraw($otherColour)) {
+			$draw = true;
 		}
 
 		$this->getMoves(); // make sure $this->moves is initialized
@@ -357,6 +380,7 @@ class ChessGame {
 			castling: $moveInfo['Castling'],
 			enPassant: $moveInfo['EnPassant'],
 			promotionPieceID: $promotionPieceID,
+			draw: $draw,
 		);
 		if ($this->board->isChecked($forColour)) {
 			throw new UserError('You cannot end your turn in check');
@@ -397,16 +421,21 @@ class ChessGame {
 
 		if ($checking === 'MATE') {
 			$message = 'You have checkmated your opponent, congratulations!';
-			$this->setWinner($this->getColourID($forColour));
-			$otherPlayer->sendMessageFromCasino('You have just lost [chess=' . $this->getChessGameID() . '] against [player=' . $currentPlayer->getPlayerID() . '].');
+			$otherPlayerMsgPrefix = 'You have lost';
+			$this->setWinner($forColour);
+		} elseif ($draw) {
+			$message = 'You have drawn your opponent.';
+			$otherPlayerMsgPrefix = 'You have drawn';
+			$this->setDraw();
 		} else {
 			$message = ''; // non-mating valid move, no message
-			$otherPlayer->sendMessageFromCasino('It is now your turn in [chess=' . $this->getChessGameID() . '] against [player=' . $currentPlayer->getPlayerID() . '].');
+			$otherPlayerMsgPrefix = 'It is now your turn in';
 			if ($checking === 'CHECK') {
 				$currentPlayer->increaseHOF(1, [$chessType, 'Moves', 'Check Given'], HOF_PUBLIC);
 				$otherPlayer->increaseHOF(1, [$chessType, 'Moves', 'Check Received'], HOF_PUBLIC);
 			}
 		}
+		$otherPlayer->sendMessageFromCasino($otherPlayerMsgPrefix . ' [chess=' . $this->getChessGameID() . '] against [player=' . $currentPlayer->getPlayerID() . '].');
 		$currentPlayer->saveHOF();
 		$otherPlayer->saveHOF();
 		return $message;
@@ -478,11 +507,17 @@ class ChessGame {
 		return $this->winner;
 	}
 
-	/**
-	 * @return array<string, AbstractPlayer>
-	 */
-	public function setWinner(int $accountID): array {
-		$this->winner = $accountID;
+	public function setWinner(Colour $winnerColour): void {
+		$winnerAccountID = $this->getColourID($winnerColour);
+		$this->updateEndedGame($winnerAccountID);
+	}
+
+	public function setDraw(): void {
+		$this->updateEndedGame(0); // no winner
+	}
+
+	private function updateEndedGame(int $winnerAccountID): void {
+		$this->winner = $winnerAccountID;
 		$this->endDate = Epoch::time();
 		$db = Database::getInstance();
 		$db->update(
@@ -493,13 +528,22 @@ class ChessGame {
 			],
 			['chess_game_id' => $this->chessGameID],
 		);
-		$winnerColour = $this->getColourForAccountID($accountID);
-		$winningPlayer = $this->getColourPlayer($winnerColour);
-		$losingPlayer = $this->getColourPlayer($winnerColour->opposite());
+
+		// Update HOF
 		$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
-		$winningPlayer->increaseHOF(1, [$chessType, 'Games', 'Won'], HOF_PUBLIC);
-		$losingPlayer->increaseHOF(1, [$chessType, 'Games', 'Lost'], HOF_PUBLIC);
-		return ['Winner' => $winningPlayer, 'Loser' => $losingPlayer];
+		$results = [];
+		if ($this->winner !== 0) {
+			$winnerColour = $this->getColourForAccountID($this->winner);
+			$results['Won'] = [$this->getColourPlayer($winnerColour)];
+			$results['Lost'] = [$this->getColourPlayer($winnerColour->opposite())];
+		} else {
+			$results['Draw'] = [$this->getWhitePlayer(), $this->getBlackPlayer()];
+		}
+		foreach ($results as $result => $players) {
+			foreach ($players as $player) {
+				$player->increaseHOF(1, [$chessType, 'Games', $result], HOF_PUBLIC);
+			}
+		}
 	}
 
 	public function getCurrentTurnColour(): Colour {
@@ -558,11 +602,14 @@ class ChessGame {
 		}
 
 		$loserColour = $this->getColourForAccountID($accountID);
-		$winnerAccountID = $this->getColourID($loserColour->opposite());
-		$results = $this->setWinner($winnerAccountID);
+		$winnerColour = $loserColour->opposite();
+		$this->setWinner($winnerColour);
+
 		$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
-		$results['Loser']->increaseHOF(1, [$chessType, 'Games', 'Resigned'], HOF_PUBLIC);
-		$results['Winner']->sendMessageFromCasino('[player=' . $results['Loser']->getPlayerID() . '] just resigned against you in [chess=' . $this->getChessGameID() . '].');
+		$winnerPlayer = $this->getColourPlayer($winnerColour);
+		$loserPlayer = $this->getColourPlayer($loserColour);
+		$loserPlayer->increaseHOF(1, [$chessType, 'Games', 'Resigned'], HOF_PUBLIC);
+		$winnerPlayer->sendMessageFromCasino('[player=' . $loserPlayer->getPlayerID() . '] just resigned against you in [chess=' . $this->getChessGameID() . '].');
 		return self::END_RESIGN;
 	}
 

@@ -97,6 +97,12 @@ class BoardTest extends TestCase {
 		}
 	}
 
+	public function test_setCastling(): void {
+		$board = new Board();
+		$board->setCastling(Colour::Black, [Castling::Queenside]);
+		self::assertFalse($board->canCastle(Colour::Black, Castling::Kingside));
+	}
+
 	public function test_canCastle_move_king(): void {
 		// Moving King disables all castling
 		$board = new Board();
@@ -154,6 +160,17 @@ class BoardTest extends TestCase {
 		self::assertSame($none, $board->getEnPassantPawn());
 	}
 
+	public function test_setEnPassantPawn(): void {
+		$board = new Board();
+		$enPassantPawn = ['X' => 3, 'Y' => 4];
+		$board->setEnPassantPawn($enPassantPawn);
+		self::assertSame($enPassantPawn, $board->getEnPassantPawn());
+
+		// Now reset it
+		$board->setEnPassantPawn();
+		self::assertSame(['X' => -1, 'Y' => -1], $board->getEnPassantPawn());
+	}
+
 	public function test_isChecked(): void {
 		// Not in check by default
 		$board = new Board();
@@ -194,6 +211,42 @@ class BoardTest extends TestCase {
 		self::assertTrue($board->isCheckmated(Colour::Black));
 	}
 
+	public function test_isDraw_not_by_default(): void {
+		// Not draw by default
+		$board = new Board();
+		foreach (Colour::cases() as $colour) {
+			self::assertFalse($board->isDraw($colour));
+		}
+	}
+
+	public function test_isDraw_stalemate(): void {
+		$board = new Board();
+		$board->clear();
+
+		// Black King on a1
+		$board->setSquare(0, 0, new ChessPiece(Colour::Black, ChessPiece::KING, 0, 0));
+		// White Queen on b3
+		$board->setSquare(1, 2, new ChessPiece(Colour::White, ChessPiece::QUEEN, 0, 0));
+
+		// Position is stalemate: Black has no valid moves and is not in check
+		self::assertTrue($board->isDraw(Colour::Black));
+	}
+
+	public function test_isDraw_insufficient_material(): void {
+		$board = new Board();
+		$board->clear();
+
+		// Black King on a1
+		$board->setSquare(0, 0, new ChessPiece(Colour::Black, ChessPiece::KING, 0, 0));
+		// White King on a3
+		$board->setSquare(0, 2, new ChessPiece(Colour::White, ChessPiece::KING, 0, 0));
+
+		// Insufficient material draw doesn't depend on player turn
+		foreach (Colour::cases() as $colour) {
+			self::assertTrue($board->isDraw($colour));
+		}
+	}
+
 	public function test_setSquare(): void {
 		// Add a White Rook to d5
 		$board = new Board();
@@ -213,6 +266,17 @@ class BoardTest extends TestCase {
 		self::assertTrue($board->hasPiece(1, 0));
 		$board->clearSquare(1, 0);
 		self::assertFalse($board->hasPiece(1, 0));
+	}
+
+	public function test_clear(): void {
+		$board = new Board();
+		$board->clear();
+		self::assertEquals($board->getPieces(), []);
+		foreach (Castling::cases() as $castling) {
+			foreach (Colour::cases() as $colour) {
+				self::assertFalse($board->canCastle($colour, $castling));
+			}
+		}
 	}
 
 	public function test_movePiece_castling_kingside(): void {
