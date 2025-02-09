@@ -37,11 +37,28 @@ class Board {
 		$this->board = $board;
 
 		// Initialize metadata (castling/en passant)
-		$this->canCastle = [
-			Colour::White->value => Castling::cases(),
-			Colour::Black->value => Castling::cases(),
-		];
-		$this->enPassantPawn = ['X' => -1, 'Y' => -1];
+		foreach (Colour::cases() as $colour) {
+			$this->setCastling($colour, Castling::cases());
+		}
+		$this->setEnPassantPawn();
+	}
+
+	/**
+	 * @param array<Castling> $castling Set allowed castling operations
+	 */
+	public function setCastling(Colour $colour, array $castling): void {
+		$this->canCastle[$colour->value] = $castling;
+	}
+
+	/**
+	 * @param ?array{X: int, Y: int} $enPassantPawn Set (or reset) en passant pawn
+	 */
+	public function setEnPassantPawn(?array $enPassantPawn = null): void {
+		if ($enPassantPawn === null) {
+			$this->enPassantPawn = ['X' => -1, 'Y' => -1];
+		} else {
+			$this->enPassantPawn = $enPassantPawn;
+		}
 	}
 
 	public function deepCopy(): self {
@@ -209,6 +226,38 @@ class Board {
 		return false;
 	}
 
+	public function isCheckmated(Colour $colour): bool {
+		// Checkmate only if there are no legal moves and King is in check
+		return !$this->hasLegalMoves($colour) && $this->isChecked($colour);
+	}
+
+	public function isDraw(Colour $colour): bool {
+		if (!$this->hasLegalMoves($colour) && !$this->isChecked($colour)) {
+			// Draw by stalemate
+			return true;
+		}
+		// Draw by insufficient material
+		// (Consider only the case where Kings remain, others too complex)
+		foreach ($this->getPieces() as $piece) {
+			if ($piece->pieceID !== ChessPiece::KING) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Can $colour make any legal moves in the current position?
+	 */
+	private function hasLegalMoves(Colour $colour): bool {
+		foreach ($this->getPieces($colour) as $piece) {
+			if (count($piece->getPossibleMoves($this)) > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Change the position of a piece on the board
 	 */
@@ -218,8 +267,25 @@ class Board {
 		$piece->y = $y;
 	}
 
+	/**
+	 * Remove the piece, if any, from this square
+	 */
 	public function clearSquare(int $x, int $y): void {
 		$this->board[$y][$x] = null;
+	}
+
+	/**
+	 * Remove all pieces from the board
+	 */
+	public function clear(): void {
+		foreach ($this->board as $y => $row) {
+			foreach (array_keys($row) as $x) {
+				$this->board[$y][$x] = null;
+			}
+		}
+		$this->setEnPassantPawn();
+		$this->setCastling(Colour::White, []);
+		$this->setCastling(Colour::Black, []);
 	}
 
 	/**

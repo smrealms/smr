@@ -9,12 +9,17 @@
  * @var array<string> $FileCoords
  * @var string $MoveMessage
  * @var string $ChessMoveHREF
+ * @var bool $Ended
+ * @var ?string $Winner
  */
 
 ?>
 <p><span id="chess_status">
-	<?php if (isset($Winner)) { ?>
-		The game has ended. <?php echo $Winner; ?> has won!<?php
+	<?php if ($Ended) { ?>
+		The game has ended.<?php
+		if (isset($Winner)) { ?>
+			<?php echo $Winner; ?> has won!<?php
+		}
 	} else { ?>
 		It is currently <?php echo $ChessGame->getCurrentTurnPlayer()->getLinkedDisplayName(false); ?>'s turn.<?php
 	} ?>

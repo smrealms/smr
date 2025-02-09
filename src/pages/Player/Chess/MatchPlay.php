@@ -30,6 +30,7 @@ class MatchPlay extends PlayerPage {
 		$template->assign('Board', $board);
 
 		// Check if there is a winner
+		$template->assign('Ended', $chessGame->hasEnded());
 		if ($chessGame->hasWinner()) {
 			$winningPlayer = Player::getPlayer($chessGame->getWinner(), $player->getGameID());
 			$template->assign('Winner', $winningPlayer->getLinkedDisplayName(false));

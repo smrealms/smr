@@ -97,6 +97,12 @@ class BoardTest extends TestCase {
 		}
 	}
 
+	public function test_setCastling(): void {
+		$board = new Board();
+		$board->setCastling(Colour::Black, [Castling::Queenside]);
+		self::assertFalse($board->canCastle(Colour::Black, Castling::Kingside));
+	}
+
 	public function test_canCastle_move_king(): void {
 		// Moving King disables all castling
 		$board = new Board();
@@ -154,6 +160,17 @@ class BoardTest extends TestCase {
 		self::assertSame($none, $board->getEnPassantPawn());
 	}
 
+	public function test_setEnPassantPawn(): void {
+		$board = new Board();
+		$enPassantPawn = ['X' => 3, 'Y' => 4];
+		$board->setEnPassantPawn($enPassantPawn);
+		self::assertSame($enPassantPawn, $board->getEnPassantPawn());
+
+		// Now reset it
+		$board->setEnPassantPawn();
+		self::assertSame(['X' => -1, 'Y' => -1], $board->getEnPassantPawn());
+	}
+
 	public function test_isChecked(): void {
 		// Not in check by default
 		$board = new Board();
@@ -166,12 +183,67 @@ class BoardTest extends TestCase {
 		$board->movePiece(3, 6, 3, 5); // d6
 		$board->movePiece(5, 0, 1, 4); // Bb5+
 		self::assertTrue($board->isChecked(Colour::Black));
+		self::assertFalse($board->isCheckmated(Colour::Black));
 		self::assertFalse($board->isChecked(Colour::White));
 
 		// Blocking the check results in no longer being checked
 		$board->movePiece(3, 7, 3, 6); // Qd7
 		foreach (Colour::cases() as $colour) {
 			self::assertFalse($board->isChecked($colour));
+		}
+	}
+
+	public function test_isCheckmated(): void {
+		// Not in checkmate by default
+		$board = new Board();
+		foreach (Colour::cases() as $colour) {
+			self::assertFalse($board->isCheckmated($colour));
+		}
+
+		// Scholar's Mate against Black
+		$board->movePiece(4, 1, 4, 3); // e4
+		$board->movePiece(4, 6, 4, 4); // e5
+		$board->movePiece(5, 0, 2, 3); // Bc4
+		$board->movePiece(1, 7, 2, 5); // Nc6
+		$board->movePiece(3, 0, 7, 4); // Qh5
+		$board->movePiece(6, 7, 5, 5); // Nf6
+		$board->movePiece(7, 4, 5, 6); // Qxf7++
+		self::assertTrue($board->isCheckmated(Colour::Black));
+	}
+
+	public function test_isDraw_not_by_default(): void {
+		// Not draw by default
+		$board = new Board();
+		foreach (Colour::cases() as $colour) {
+			self::assertFalse($board->isDraw($colour));
+		}
+	}
+
+	public function test_isDraw_stalemate(): void {
+		$board = new Board();
+		$board->clear();
+
+		// Black King on a1
+		$board->setSquare(0, 0, new ChessPiece(Colour::Black, ChessPiece::KING, 0, 0));
+		// White Queen on b3
+		$board->setSquare(1, 2, new ChessPiece(Colour::White, ChessPiece::QUEEN, 0, 0));
+
+		// Position is stalemate: Black has no valid moves and is not in check
+		self::assertTrue($board->isDraw(Colour::Black));
+	}
+
+	public function test_isDraw_insufficient_material(): void {
+		$board = new Board();
+		$board->clear();
+
+		// Black King on a1
+		$board->setSquare(0, 0, new ChessPiece(Colour::Black, ChessPiece::KING, 0, 0));
+		// White King on a3
+		$board->setSquare(0, 2, new ChessPiece(Colour::White, ChessPiece::KING, 0, 0));
+
+		// Insufficient material draw doesn't depend on player turn
+		foreach (Colour::cases() as $colour) {
+			self::assertTrue($board->isDraw($colour));
 		}
 	}
 
@@ -194,6 +266,17 @@ class BoardTest extends TestCase {
 		self::assertTrue($board->hasPiece(1, 0));
 		$board->clearSquare(1, 0);
 		self::assertFalse($board->hasPiece(1, 0));
+	}
+
+	public function test_clear(): void {
+		$board = new Board();
+		$board->clear();
+		self::assertEquals($board->getPieces(), []);
+		foreach (Castling::cases() as $castling) {
+			foreach (Colour::cases() as $colour) {
+				self::assertFalse($board->canCastle($colour, $castling));
+			}
+		}
 	}
 
 	public function test_movePiece_castling_kingside(): void {
@@ -300,6 +383,20 @@ class BoardTest extends TestCase {
 		// Make sure pieces are in the right spot
 		$expectedQueen = new ChessPiece(Colour::White, ChessPiece::QUEEN, 0, 7);
 		self::assertEquals($expectedQueen, $board->getPiece(0, 7));
+	}
+
+	public function test_movePiece_invalid_to_coord(): void {
+		$board = new Board();
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Invalid from coordinates, x=0, y=8');
+		$board->movePiece(0, 8, 0, 7);
+	}
+
+	public function test_movePiece_invalid_from_coord(): void {
+		$board = new Board();
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Invalid to coordinates, x=0, y=8');
+		$board->movePiece(0, 7, 0, 8);
 	}
 
 }
