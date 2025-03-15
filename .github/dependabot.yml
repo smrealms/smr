@@ -9,28 +9,18 @@ updates:
   rebase-strategy: disabled
 
 - package-ecosystem: docker
-  directory: "/.github/actions/api-docs"
+  directories:
+    - "/"
+    - "/.github/actions/api-docs"
+    - "/api-docs"
+    - "/db"
   schedule:
     interval: daily
   rebase-strategy: disabled
-
-- package-ecosystem: docker
-  directory: "/api-docs"
-  schedule:
-    interval: daily
-  rebase-strategy: disabled
-
-- package-ecosystem: docker
-  directory: "/db"
-  schedule:
-    interval: daily
-  rebase-strategy: disabled
-
-- package-ecosystem: docker
-  directory: "/"
-  schedule:
-    interval: daily
-  rebase-strategy: disabled
+  groups:
+    php-updates:
+      patterns:
+        - "php"
 
 - package-ecosystem: composer
   directory: "/"
