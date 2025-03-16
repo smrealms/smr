@@ -2,8 +2,8 @@
 
 namespace Smr\Discord;
 
+use Discord\Parts\Channel\Channel;
 use Discord\Parts\Channel\Message;
-use Discord\Parts\Thread\Thread;
 use Exception;
 use Smr\AbstractPlayer;
 use Smr\Account;
@@ -35,14 +35,8 @@ class PlayerLink {
 			throw new UserError("There is no SMR account associated with your Discord User ID. To set this up, go to `Preferences` in-game and set `$user_id` as your `Discord User ID`.");
 		}
 
-		// Handle if the message was sent in a thread
-		if ($message->channel instanceof Thread) {
-			$channel = $message->channel->parent;
-		} else {
-			$channel = $message->channel;
-		}
-
-		if ($channel->is_private) {
+		$channel = $message->channel; // might be Channel or Thread
+		if ($channel instanceof Channel && $channel->is_private) {
 			// Get the most recent enabled game, since there is no other way to determine the game ID
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT MAX(game_id) FROM game WHERE enabled = :enabled AND end_time > :now', [
