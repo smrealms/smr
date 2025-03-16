@@ -474,7 +474,7 @@ function setupShip(AbstractPlayer $player): void {
 		WEAPON_TYPE_LASER,
 	];
 	$ship->removeAllWeapons();
-	while ($ship->hasOpenWeaponSlots()) {
+	while ($ship->hasOpenWeaponSlots() && count($weaponIDs) > 0) {
 		$weapon = Weapon::getWeapon(array_shift($weaponIDs));
 		$ship->addWeapon($weapon);
 	}
