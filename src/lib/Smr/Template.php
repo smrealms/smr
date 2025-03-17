@@ -140,13 +140,41 @@ class Template {
 		return preg_match('/<input (?![^>]*(submit|hidden|image))/i', $html) !== 0;
 	}
 
-	protected function doDamageTypeReductionDisplay(int &$damageTypes): void {
-		if ($damageTypes === 3) {
-			echo ', ';
-		} elseif ($damageTypes === 2) {
-			echo ' and ';
+	/**
+	 * @param ForceTakenDamageData $damageTaken
+	 */
+	public function displayForceTakenDamage(array $damageTaken, int $kamikaze = 0): string {
+		$items = [
+			[$damageTaken['NumMines'] - $kamikaze, 'red', 'mine', ''],
+			[$damageTaken['NumCDs'], 'red', 'combat drone', ''],
+			[$damageTaken['NumSDs'], 'red', 'scout drone', ''],
+		];
+		return $this->displayDamage($items);
+	}
+
+	/**
+	 * @param TakenDamageData $damageTaken
+	 */
+	public function displayTakenDamage(array $damageTaken): string {
+		$items = [
+			[$damageTaken['Shield'], 'shields', 'shield', ''],
+			[$damageTaken['NumCDs'], 'cds', 'combat drone', ''],
+			[$damageTaken['Armour'], 'red', 'plate', ' of armour'],
+		];
+		return $this->displayDamage($items);
+	}
+
+	/**
+	 * @param array<array{int, string, string, string}> $damageTypes
+	 */
+	private function displayDamage(array $damageTypes): string {
+		$strings = [];
+		foreach ($damageTypes as [$damage, $class, $name, $suffix]) {
+			if ($damage > 0) {
+				$strings[] = '<span class="' . $class . '">' . number_format($damage) . '</span> ' . pluralise($damage, $name, false) . $suffix;
+			}
 		}
-		$damageTypes--;
+		return format_list($strings);
 	}
 
 	protected function doAn(string $wordAfter): string {
