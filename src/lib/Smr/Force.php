@@ -555,18 +555,18 @@ class Force {
 			}
 		}
 		return [
-						'KillingShot' => !$alreadyDead && !$this->exists(),
-						'TargetAlreadyDead' => $alreadyDead,
-						'Mines' => $minesDamage,
-						'NumMines' => $numMines,
-						'HasMines' => $this->hasMines(),
-						'CDs' => $cdDamage,
-						'NumCDs' => $numCDs,
-						'HasCDs' => $this->hasCDs(),
-						'SDs' => $sdDamage,
-						'NumSDs' => $numSDs,
-						'HasSDs' => $this->hasSDs(),
-						'TotalDamage' => $minesDamage + $cdDamage + $sdDamage,
+			'KillingShot' => !$alreadyDead && !$this->exists(),
+			'TargetAlreadyDead' => $alreadyDead,
+			'Mines' => $minesDamage,
+			'NumMines' => $numMines,
+			'HasMines' => $this->hasMines(),
+			'CDs' => $cdDamage,
+			'NumCDs' => $numCDs,
+			'HasCDs' => $this->hasCDs(),
+			'SDs' => $sdDamage,
+			'NumSDs' => $numSDs,
+			'HasSDs' => $this->hasSDs(),
+			'TotalDamage' => $minesDamage + $cdDamage + $sdDamage,
 		];
 	}
 

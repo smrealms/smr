@@ -5,6 +5,7 @@ namespace SmrTest\lib;
 use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
 use Smr\Template;
@@ -49,6 +50,48 @@ class TemplateTest extends TestCase {
 		self::assertSame('a', $method->invoke($template, 'house'));
 		self::assertSame('an', $method->invoke($template, 'Egg'));
 		self::assertSame('an', $method->invoke($template, 'apple'));
+	}
+
+	#[TestWith([3, 1, 1, '<span class="red">1</span> mine, <span class="red">1</span> combat drone and <span class="red">1</span> scout drone'])]
+	#[TestWith([4, 0, 2, '<span class="red">2</span> mines and <span class="red">2</span> scout drones'])]
+	#[TestWith([0, 2, 0, '<span class="red">2</span> combat drones'])]
+	public function test_displayForceTakenDamage(int $mines, int $cds, int $sds, string $expected): void {
+		$template = Template::getInstance();
+		$damageTaken = [
+			'KillingShot' => false, // unused
+			'TargetAlreadyDead' => false, // unused
+			'Mines' => 0, // unused
+			'NumMines' => $mines,
+			'HasMines' => false, // unused
+			'CDs' => 0, // unused
+			'NumCDs' => $cds,
+			'HasCDs' => false, // unused
+			'SDs' => 0, // unused
+			'NumSDs' => $sds,
+			'HasSDs' => false, // unused
+			'TotalDamage' => 0, // unused
+		];
+		$result = $template->displayForceTakenDamage($damageTaken, kamikaze: 2);
+		self::assertSame($expected, $result);
+	}
+
+	#[TestWith([1, 1, 1, '<span class="shields">1</span> shield, <span class="cds">1</span> combat drone and <span class="red">1</span> plate of armour'])]
+	#[TestWith([2, 0, 2, '<span class="shields">2</span> shields and <span class="red">2</span> plates of armour'])]
+	#[TestWith([0, 2, 0, '<span class="cds">2</span> combat drones'])]
+	public function test_displayTakenDamage(int $shields, int $cds, int $armour, string $expected): void {
+		$template = Template::getInstance();
+		$damageTaken = [
+			'KillingShot' => false, // unused
+			'TargetAlreadyDead' => false, // unused
+			'Shield' => $shields,
+			'CDs' => 0, // unused
+			'NumCDs' => $cds,
+			'HasCDs' => false, // unused
+			'Armour' => $armour,
+			'TotalDamage' => 0, // unused
+		];
+		$result = $template->displayTakenDamage($damageTaken);
+		self::assertSame($expected, $result);
 	}
 
 	#[DataProvider('checkDisableAJAX_provider')]

@@ -36,23 +36,7 @@ foreach ($AllTraderResults as $TraderResults) {
 						?> but it cannot do any damage<?php
 					}
 				} else {
-					?> destroying <?php
-					$DamageTypes = 0;
-					if ($ActualDamage['NumMines'] > 0) { $DamageTypes += 1; }
-					if ($ActualDamage['NumCDs'] > 0) { $DamageTypes += 1; }
-					if ($ActualDamage['NumSDs'] > 0) { $DamageTypes += 1; }
-
-					if ($ActualDamage['NumMines'] > 0) {
-						?><span class="red"><?php echo number_format($ActualDamage['NumMines']) ?></span> mines<?php
-						$this->doDamageTypeReductionDisplay($DamageTypes);
-					}
-					if ($ActualDamage['NumCDs'] > 0) {
-						?><span class="red"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
-						$this->doDamageTypeReductionDisplay($DamageTypes);
-					}
-					if ($ActualDamage['NumSDs'] > 0) {
-						?><span class="red"><?php echo number_format($ActualDamage['NumSDs']) ?></span> scout drones<?php
-					}
+					?> destroying <?php echo $this->displayForceTakenDamage($ActualDamage);
 				}
 			} ?>.
 			<br />
@@ -97,17 +81,7 @@ foreach ($AllTraderResults as $TraderResults) {
 								?> whilst the others destroy <?php
 							}
 						}
-						if ($ActualDamage['NumMines'] > $WeaponDamage['Kamikaze']) {
-							?><span class="red"><?php echo number_format($ActualDamage['NumMines']) ?></span> mines<?php
-							$this->doDamageTypeReductionDisplay($DamageTypes);
-						}
-						if ($ActualDamage['NumCDs'] > 0) {
-							?><span class="red"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
-							$this->doDamageTypeReductionDisplay($DamageTypes);
-						}
-						if ($ActualDamage['NumSDs'] > 0) {
-							?><span class="red"><?php echo number_format($ActualDamage['NumSDs']) ?></span> scout drones<?php
-						}
+						echo $this->displayForceTakenDamage($ActualDamage, $WeaponDamage['Kamikaze']);
 					}
 				}
 			}?>.

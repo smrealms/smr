@@ -58,23 +58,7 @@ foreach ($CombatTeamResults as $TraderResults) {
 						?> but it cannot do any damage<?php
 					}
 				} else {
-					?> destroying <?php
-					$DamageTypes = 0;
-					if ($ActualDamage['Shield'] > 0) { $DamageTypes += 1; }
-					if ($ActualDamage['NumCDs'] > 0) { $DamageTypes += 1; }
-					if ($ActualDamage['Armour'] > 0) { $DamageTypes += 1; }
-
-					if ($ActualDamage['Shield'] > 0) {
-						?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
-						$this->doDamageTypeReductionDisplay($DamageTypes);
-					}
-					if ($ActualDamage['NumCDs'] > 0) {
-						?><span class="cds"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
-						$this->doDamageTypeReductionDisplay($DamageTypes);
-					}
-					if ($ActualDamage['Armour'] > 0) {
-						?><span class="red"><?php echo number_format($ActualDamage['Armour']) ?></span> plates of armour<?php
-					}
+					?> destroying <?php echo $this->displayTakenDamage($ActualDamage);
 				}
 			} ?>.
 			<br /><?php
@@ -90,10 +74,6 @@ foreach ($CombatTeamResults as $TraderResults) {
 			$ActualDamage = $Drones['ActualDamage'];
 			$WeaponDamage = $Drones['WeaponDamage'];
 			$TargetPlayer = $Drones['Target'];
-			$DamageTypes = 0;
-			if ($ActualDamage['Shield'] > 0) { $DamageTypes += 1; }
-			if ($ActualDamage['NumCDs'] > 0) { $DamageTypes += 1; }
-			if ($ActualDamage['Armour'] > 0) { $DamageTypes += 1; }
 
 			echo $ShootingPlayer->getDisplayName();
 			if (!isset($WeaponDamage['Launched'])) {
@@ -122,18 +102,7 @@ foreach ($CombatTeamResults as $TraderResults) {
 							?> but they cannot do any damage<?php
 						}
 					} else {
-						?> destroying <?php
-						if ($ActualDamage['Shield'] > 0) {
-							?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
-							$this->doDamageTypeReductionDisplay($DamageTypes);
-						}
-						if ($ActualDamage['NumCDs'] > 0) {
-							?><span class="cds"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
-							$this->doDamageTypeReductionDisplay($DamageTypes);
-						}
-						if ($ActualDamage['Armour'] > 0) {
-							?><span class="red"><?php echo number_format($ActualDamage['Armour']) ?></span> plates of armour<?php
-						}
+						?> destroying <?php echo $this->displayTakenDamage($ActualDamage);
 					}
 				}
 			} ?>.
