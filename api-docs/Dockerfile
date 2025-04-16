@@ -11,7 +11,7 @@ RUN phpdoc
 
 #--------------------
 
-FROM nginx:1.27-alpine
+FROM nginx:1.27.5-alpine
 
 # Only the html files are needed in the nginx stage of the build
 COPY --from=builder /smr/api-docs/build/ /usr/share/nginx/html/
