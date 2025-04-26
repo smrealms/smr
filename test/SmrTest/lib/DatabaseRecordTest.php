@@ -39,6 +39,8 @@ class DatabaseRecordTest extends TestCase {
 		// Construct a record with a null value
 		$record = new DatabaseRecord(['name' => null]);
 		$this->expectException(TypeError::class);
+		$this->expectExceptionMessage('Return value must be of type string, null returned');
+		/** @phpstan-ignore-next-line: method.resultUnused */
 		$record->getString('name');
 	}
 
