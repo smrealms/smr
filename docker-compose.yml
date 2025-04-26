@@ -24,7 +24,6 @@ x-smr-base: &smr-base
         MYSQL_PASSWORD_FILE: /run/secrets/mysql-password
     secrets:
         - source: mysql-password
-          mode: 0444
 
 # Web configuration for `smr` (production) and `smr-dev` (testing).
 x-smr-web: &smr-web
