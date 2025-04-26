@@ -4,6 +4,7 @@ namespace Smr\Pages\Admin;
 
 use Smr\Account;
 use Smr\Database;
+use Smr\DatabaseResult;
 use Smr\Epoch;
 use Smr\Page\AccountPageProcessor;
 
@@ -41,28 +42,37 @@ class DatabaseCleanupProcessor extends AccountPageProcessor {
 
 		if ($this->action === 'delete') {
 			$action = 'DELETE';
-			$method = 'write';
+			$method = $db->write(...);
+			$preview = false;
 		} else {
-			$action = 'SELECT 1';
-			$method = 'read';
+			$action = 'SELECT COUNT(*)';
+			$method = $db->read(...);
+			$preview = true;
 		}
+
+		$numRows = function(DatabaseResult|int $result): int {
+			if ($result instanceof DatabaseResult) {
+				$result = $result->record()->getInt('COUNT(*)');
+			}
+			return $result;
+		};
 
 		$rowsDeleted = [];
 		foreach ($tablesToClean as $table) {
-			$result = $db->$method($action . ' FROM ' . $table . ' WHERE game_id IN (:game_ids)', [
+			$result = $method($action . ' FROM ' . $table . ' WHERE game_id IN (:game_ids)', [
 				'game_ids' => $db->escapeArray($endedGameIDs),
 			]);
-			$rowsDeleted[$table] = $method === 'write' ? $result : 0;
+			$rowsDeleted[$table] = $numRows($result);
 		}
 
-		$result = $db->$method($action . ' FROM npc_logs');
-		$rowsDeleted['npc_logs'] = $method === 'write' ? $result : 0;
+		$result = $method($action . ' FROM npc_logs');
+		$rowsDeleted['npc_logs'] = $numRows($result);
 
 		// Get difference in storage size
 		$diffBytes = $initialBytes - $db->getDbBytes();
 
 		$results = [
-			'action' => $this->action,
+			'preview' => $preview,
 			'rowsDeleted' => $rowsDeleted,
 			'diffBytes' => $diffBytes,
 			'endedGameIDs' => $endedGameIDs,

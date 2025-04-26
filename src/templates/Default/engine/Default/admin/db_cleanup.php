@@ -6,13 +6,13 @@ Current database size: <?php echo $DbSizeMB; ?>
 
 <?php
 if (isset($Results)) { ?>
-	<h2>Results (<?php echo $Action; ?>)</h2>
+	<h2>Results<?php echo $Preview ? ' (Preview)' : ''; ?></h2>
 	<p>Size of data deleted: <?php echo $DiffMB; ?></p>
 	<p>Ended games: <?php echo implode(', ', $EndedGames); ?></p>
 	<table class="standard">
 		<tr>
 			<th>Table Name</th>
-			<th>Rows<br />Deleted</th>
+			<th>Rows<br /><?php echo $Preview ? 'To Delete' : 'Deleted'; ?></th>
 		</tr><?php
 		foreach ($Results as $table => $rowsDeleted) { ?>
 			<tr>

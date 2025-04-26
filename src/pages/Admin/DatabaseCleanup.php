@@ -12,7 +12,7 @@ class DatabaseCleanup extends AccountPage {
 	public string $file = 'admin/db_cleanup.php';
 
 	/**
-	 * @param ?array{action: string, rowsDeleted: array<string, int>, diffBytes: int, endedGameIDs: array<int>} $results
+	 * @param ?array{preview: bool, rowsDeleted: array<string, int>, diffBytes: int, endedGameIDs: array<int>} $results
 	 */
 	public function __construct(
 		private readonly ?array $results = null,
@@ -32,7 +32,7 @@ class DatabaseCleanup extends AccountPage {
 			// Display the results
 			$template->assign('Results', $this->results['rowsDeleted']);
 			$template->assign('DiffMB', $bytesToMB($this->results['diffBytes']));
-			$template->assign('Action', $this->results['action']);
+			$template->assign('Preview', $this->results['preview']);
 			$template->assign('EndedGames', $this->results['endedGameIDs']);
 			$container = new self();
 			$template->assign('BackHREF', $container->href());
