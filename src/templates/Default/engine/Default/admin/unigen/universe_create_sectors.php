@@ -1,39 +1,71 @@
 <?php declare(strict_types=1);
 
+use Smr\Pages\Admin\UniGen\EditGalaxy;
+
 /**
  * @var Smr\Galaxy $Galaxy
+ * @var ?Smr\Galaxy $NextGalaxy
+ * @var ?Smr\Galaxy $PrevGalaxy
  * @var Smr\Template $this
+ * @var string $GameName
+ * @var string $BackButtonHREF
  */
 
 ?>
-<table class="center standard">
-	<tr>
-		<th>Galaxy</th>
-		<th>ID</th>
-		<th>Type</th>
-		<th>Size</th>
-		<th>Max Force Time</th>
-		<th>Connectivity</th>
-	</tr>
-	<tr>
-		<td>
-			<form method="POST" action="<?php echo $JumpGalaxyHREF; ?>">
-				<select name="gal_on" onchange="this.form.submit()"><?php
-					foreach ($Galaxies as $CurrentGalaxy) { ?>
-						<option value="<?php echo $CurrentGalaxy->getGalaxyID(); ?>"<?php if ($CurrentGalaxy->equals($Galaxy)) { ?> selected="SELECTED"<?php } ?>><?php
-							echo $CurrentGalaxy->getDisplayName(); ?>
-						</option><?php
-					} ?>
-				</select>
-			</form>
-		</td>
-		<td><?php echo $Galaxy->getGalaxyID(); ?> / <?php echo count($Galaxies); ?></td>
-		<td><?php echo $Galaxy->getGalaxyType(); ?></td>
-		<td><?php echo $Galaxy->getWidth(); ?> x <?php echo $Galaxy->getHeight(); ?></td>
-		<td><?php echo format_time($Galaxy->getMaxForceTime()); ?></td>
-		<td id="conn" class="ajax"><?php echo $ActualConnectivity; ?>%</td>
-	</tr>
-</table>
+
+<a href="<?php echo $BackButtonHREF; ?>">&lt;&lt; Exit game: <?php echo $GameName; ?></a><br /><br />
+
+<div style="display: flex; align-items: center; justify-content: center;">
+	<div style="width: 75px; margin-right: 15px; text-align: right;"><?php
+		if ($PrevGalaxy !== null) { ?>
+			<a href="<?php echo new EditGalaxy($PrevGalaxy->getGameID(), $PrevGalaxy->getGalaxyID())->href(); ?>">
+				<img src="/images/album/rew.jpg" alt="<?php echo $PrevGalaxy->getDisplayName(); ?>" border="0">
+			</a>
+			<br /><?php echo $PrevGalaxy->getDisplayName();
+		} ?>
+	</div>
+
+	<div>
+		<table class="center standard">
+			<tr>
+				<th>Galaxy</th>
+				<th>ID</th>
+				<th>Type</th>
+				<th>Size</th>
+				<th>Max Force Time</th>
+				<th>Connectivity</th>
+			</tr>
+			<tr>
+				<td>
+					<form method="POST" action="<?php echo $JumpGalaxyHREF; ?>">
+						<select name="gal_on" onchange="this.form.submit()"><?php
+							foreach ($Galaxies as $CurrentGalaxy) { ?>
+								<option value="<?php echo $CurrentGalaxy->getGalaxyID(); ?>"<?php if ($CurrentGalaxy->equals($Galaxy)) { ?> selected="SELECTED"<?php } ?>><?php
+									echo $CurrentGalaxy->getDisplayName(); ?>
+								</option><?php
+							} ?>
+						</select>
+					</form>
+				</td>
+				<td><?php echo $Galaxy->getGalaxyID(); ?> / <?php echo count($Galaxies); ?></td>
+				<td><?php echo $Galaxy->getGalaxyType(); ?></td>
+				<td><?php echo $Galaxy->getWidth(); ?> x <?php echo $Galaxy->getHeight(); ?></td>
+				<td><?php echo format_time($Galaxy->getMaxForceTime()); ?></td>
+				<td id="conn" class="ajax"><?php echo $ActualConnectivity; ?>%</td>
+			</tr>
+		</table>
+	</div>
+
+	<div style="width: 75px; margin-left: 15px;"><?php
+		if ($NextGalaxy !== null) { ?>
+			<a href="<?php echo new EditGalaxy($NextGalaxy->getGameID(), $NextGalaxy->getGalaxyID())->href(); ?>">
+				<img src="/images/album/fwd.jpg" alt="<?php echo $NextGalaxy->getDisplayName(); ?>" border="0">
+			</a>
+			<br /><?php echo $NextGalaxy->getDisplayName();
+		} ?>
+	</div>
+</div>
+
 <br />
 
 <table class="center">

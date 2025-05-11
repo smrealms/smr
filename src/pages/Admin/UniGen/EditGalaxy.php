@@ -3,7 +3,9 @@
 namespace Smr\Pages\Admin\UniGen;
 
 use Smr\Account;
+use Smr\Exceptions\GalaxyNotFound;
 use Smr\Galaxy;
+use Smr\Game;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
 use Smr\Request;
@@ -54,6 +56,21 @@ class EditGalaxy extends AccountPage {
 			$template->assign('FocusSector', $this->focusSectorID);
 		}
 
+		// Get previous galaxy
+		try {
+			$prevGalaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID - 1);
+		} catch (GalaxyNotFound) {
+			$prevGalaxy = null;
+		}
+		$template->assign('PrevGalaxy', $prevGalaxy);
+		try {
+			$nextGalaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID + 1);
+		} catch (GalaxyNotFound) {
+			$nextGalaxy = null;
+		}
+		$template->assign('NextGalaxy', $nextGalaxy);
+
+		$template->assign('GameName', Game::getGame($this->gameID)->getName());
 		$template->assign('Galaxy', $galaxy);
 		$template->assign('Galaxies', $galaxies);
 		$template->assign('MapSectors', $mapSectors);
@@ -121,6 +138,9 @@ class EditGalaxy extends AccountPage {
 
 		$container = new ResetGalaxyProcessor($this->gameID, $this->galaxyID);
 		$template->assign('ResetGalaxyHREF', $container->href());
+
+		$container = new CreateGame();
+		$template->assign('BackButtonHREF', $container->href());
 
 		$template->assign('UniGen', true);
 	}
