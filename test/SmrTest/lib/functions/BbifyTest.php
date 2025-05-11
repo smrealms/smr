@@ -10,6 +10,13 @@ use PHPUnit\Framework\TestCase;
 #[CoversFunction('smrBBCode')]
 class BbifyTest extends TestCase {
 
+	#[TestWith(['No tag', 'No tag'])]
+	#[TestWith(["Multi\nline", "Multi<br />\nline"])]
+	public function test_no_tag(string $input, string $expect): void {
+		$result = bbify($input, gameID: 0);
+		self::assertSame($expect, $result);
+	}
+
 	public function test_verbatim(): void {
 		$result = bbify('[verbatim]Hello[/verbatim]', gameID: 0, noLinks: true);
 		$expect = '<tt>Hello</tt>';
@@ -22,6 +29,13 @@ class BbifyTest extends TestCase {
 		srand(321); // set rand seed for session href generation
 		$result = bbify('[race=3]', gameID: 0, noLinks: $noLinks);
 		self::assertSame($expect, $result);
+	}
+
+	public function test_race_invalid_id(): void {
+		// Returned unmodified if an exception is thrown (e.g. invalid race)
+		$input = '[race=700]';
+		$result = bbify($input, gameID: 0);
+		self::assertSame($input, $result);
 	}
 
 }
