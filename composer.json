@@ -2,6 +2,12 @@
 	"name": "smr/smr",
 	"description": "SMR",
 	"license": "AGPL-3.0",
+	"repositories": [
+		{
+			"type": "github",
+			"url": "https://github.com/hemberger/nbbc"
+		}
+	],
 	"require": {
 		"abraham/twitteroauth": "7.0.0",
 		"doctrine/dbal": "4.2.3",
@@ -15,7 +21,7 @@
 		"php-di/php-di": "7.0.10",
 		"phpmailer/phpmailer": "6.10.0",
 		"team-reflex/discord-php": "10.5.0",
-		"vanilla/nbbc": "2.6.0"
+		"vanilla/nbbc": "dev-php-8.4-deprecation#79c7e0457c"
 	},
 	"autoload": {
 		"psr-4": {
