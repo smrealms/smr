@@ -202,8 +202,11 @@ class Galaxy {
 			$this->startSector = 1;
 			if ($this->galaxyID !== 1) {
 				$galaxies = self::getGameGalaxies($this->gameID);
-				for ($i = 1; $i < $this->galaxyID; $i++) {
-					$this->startSector += $galaxies[$i]->getSize();
+				foreach ($galaxies as $galaxyId => $galaxy) {
+					if ($galaxyId >= $this->galaxyID) {
+						break;
+					}
+					$this->startSector += $galaxy->getSize();
 				}
 			}
 		}
@@ -387,6 +390,9 @@ class Galaxy {
 	 * Returns the sector connectivity of the galaxy as a percent.
 	 */
 	public function getConnectivity(): float {
+		if ($this->getSize() === 0) {
+			return 0;
+		}
 		$totalLinks = 0;
 		foreach ($this->getSectors() as $galSector) {
 			$totalLinks += $galSector->getNumberOfLinks();

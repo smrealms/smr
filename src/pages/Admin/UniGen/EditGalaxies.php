@@ -13,7 +13,7 @@ class EditGalaxies extends AccountPage {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $galaxyID,
+		private readonly int $galaxyID, // for back button only
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -42,6 +42,10 @@ class EditGalaxies extends AccountPage {
 
 		$container = new EditGalaxy($this->gameID, $this->galaxyID);
 		$template->assign('BackHREF', $container->href());
+
+		$container = new EditGalaxiesAddProcessor($this->gameID, $this->galaxyID);
+		$template->assign('AddHREF', $container->href());
+		$template->assign('MaxAddId', $game->getNumberOfGalaxies() + 1);
 	}
 
 }

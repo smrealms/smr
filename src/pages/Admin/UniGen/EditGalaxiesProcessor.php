@@ -18,7 +18,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $galaxyID,
+		private readonly int $galaxyID, // for back button only
 	) {}
 
 	public function build(Account $account): never {
@@ -61,6 +61,8 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 			$message = '<span class="green">SUCCESS: </span>Edited galaxies (sizes unchanged).';
 			$container = new EditGalaxy($this->gameID, $this->galaxyID, $message);
 			$container->go();
+		} elseif ($game->isEnabled()) {
+			throw new Exception('Unexpected galaxy size changes in an enabled game!');
 		}
 
 		// *** BEGIN GALAXY DIMENSION MODIFICATION! ***
