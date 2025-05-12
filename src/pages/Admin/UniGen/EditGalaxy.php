@@ -70,7 +70,7 @@ class EditGalaxy extends AccountPage {
 		}
 		$template->assign('NextGalaxy', $nextGalaxy);
 
-		$template->assign('GameName', Game::getGame($this->gameID)->getName());
+		$template->assign('GameName', Game::getGame($this->gameID)->getDisplayName());
 		$template->assign('Galaxy', $galaxy);
 		$template->assign('Galaxies', $galaxies);
 		$template->assign('MapSectors', $mapSectors);

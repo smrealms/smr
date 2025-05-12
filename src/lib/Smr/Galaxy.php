@@ -274,6 +274,10 @@ class Galaxy {
 	 * @return array<int, array<int, Sector>>
 	 */
 	public function getMapSectors(?int $centerSectorID = null, ?int $dist = null): array {
+		if ($this->getSize() === 0) {
+			return [];
+		}
+
 		if ($centerSectorID === null) {
 			$topLeft = Sector::getSector($this->getGameID(), $this->getStartSector());
 		} else {
