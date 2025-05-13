@@ -22,29 +22,55 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 	) {}
 
 	public function build(Account $account): never {
-		$db = Database::getInstance();
-
-		$gameID = $this->gameID;
-		$game = Game::getGame($gameID);
+		$game = Game::getGame($this->gameID);
 		$galaxies = $game->getGalaxies();
-
-		// Save the original sizes for later processing
-		$origGals = [];
-		foreach ($galaxies as $i => $galaxy) {
-			$origGals[$i] = [
-				'Width' => $galaxy->getWidth(),
-				'Height' => $galaxy->getHeight(),
-			];
-		}
 
 		// Modify the galaxy properties
 		foreach ($galaxies as $i => $galaxy) {
 			$galaxy->setName(Request::get('gal' . $i));
 			$galaxy->setGalaxyType(Request::get('type' . $i));
 			$galaxy->setMaxForceTime(IFloor(Request::getFloat('forces' . $i) * 3600));
-			if (!$game->isEnabled()) {
-				$galaxy->setWidth(Request::getInt('width' . $i));
-				$galaxy->setHeight(Request::getInt('height' . $i));
+		}
+
+		// Change galaxy dimensions (if game isn't enabled yet)
+		$resized = false;
+		if (!$game->isEnabled()) {
+			$newSizes = [];
+			foreach ($galaxies as $i => $galaxy) {
+				$newSizes[$i] = [
+					'Width' => Request::getInt('width' . $i),
+					'Height' => Request::getInt('height' . $i),
+				];
+			}
+			$resized = self::resizeGalaxies($this->gameID, $newSizes);
+		}
+
+		Galaxy::saveGalaxies();
+		Sector::saveSectors();
+
+		$message = '<span class="green">SUCCESS: </span>Edited galaxies (sizes' . ($resized ? ' ' : ' NOT ') . 'changed).';
+		$container = new EditGalaxy($this->gameID, $this->galaxyID, $message);
+		$container->go();
+	}
+
+	/**
+	 * @param array<int, array{Width: int, Height: int}> $newSizes
+	 * @return bool Return true if any galaxy sizes changed
+	 */
+	public static function resizeGalaxies(int $gameID, array $newSizes): bool {
+		$db = Database::getInstance();
+		$galaxies = Galaxy::getGameGalaxies($gameID);
+
+		// Store the old sizes and then resize each galaxy
+		$origGals = [];
+		foreach ($galaxies as $i => $galaxy) {
+			$origGals[$i] = [
+				'Width' => $galaxy->getWidth(),
+				'Height' => $galaxy->getHeight(),
+			];
+			if (isset($newSizes[$i])) {
+				$galaxy->setWidth($newSizes[$i]['Width']);
+				$galaxy->setHeight($newSizes[$i]['Height']);
 			}
 		}
 
@@ -57,12 +83,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 			}
 		}
 		if ($galaxySizesUnchanged) {
-			Galaxy::saveGalaxies();
-			$message = '<span class="green">SUCCESS: </span>Edited galaxies (sizes unchanged).';
-			$container = new EditGalaxy($this->gameID, $this->galaxyID, $message);
-			$container->go();
-		} elseif ($game->isEnabled()) {
-			throw new Exception('Unexpected galaxy size changes in an enabled game!');
+			return false;
 		}
 
 		// *** BEGIN GALAXY DIMENSION MODIFICATION! ***
@@ -227,12 +248,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 			}
 		}
 
-		Galaxy::saveGalaxies();
-		Sector::saveSectors();
-
-		$message = '<span class="green">SUCCESS: </span>Edited galaxies (sizes have changed).';
-		$container = new EditGalaxy($this->gameID, $this->galaxyID, $message);
-		$container->go();
+		return true;
 	}
 
 }

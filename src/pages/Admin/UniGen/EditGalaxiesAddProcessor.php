@@ -48,6 +48,10 @@ class EditGalaxiesAddProcessor extends AccountPageProcessor {
 				}
 			}
 		}
+		// Save modified sectors, then reset cache since primary IDs changed
+		Sector::saveSectors();
+		Sector::clearCache();
+		Galaxy::clearCache();
 
 		// Add a new empty galaxy
 		$galaxy = Galaxy::createGalaxy($this->gameID, $insertGalaxyId);
@@ -58,11 +62,12 @@ class EditGalaxiesAddProcessor extends AccountPageProcessor {
 		$galaxy->setMaxForceTime(0);
 		$galaxy->save();
 
-		Sector::saveSectors();
-		Sector::clearCache();
-		Galaxy::clearCache();
-
-		$container = new EditGalaxies($this->gameID, $this->galaxyID);
+		// Adjust the galaxy the back button returns to
+		$backGalaxyId = $this->galaxyID;
+		if ($backGalaxyId >= $insertGalaxyId) {
+			$backGalaxyId += 1;
+		}
+		$container = new EditGalaxies($this->gameID, $backGalaxyId);
 		$container->go();
 	}
 

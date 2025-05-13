@@ -29,13 +29,19 @@ class EditGalaxies extends AccountPage {
 		$template->assign('Submit', $submit);
 
 		$galaxies = [];
-		foreach ($game->getGalaxies() as $galaxy) {
-			$galaxies[$galaxy->getGalaxyID()] = [
+		foreach ($game->getGalaxies() as $galaxyId => $galaxy) {
+			$container = new EditGalaxiesDelProcessor(
+				gameId: $this->gameID,
+				galaxyId: $this->galaxyID,
+				deleteGalaxyId: $galaxyId,
+			);
+			$galaxies[$galaxyId] = [
 				'Name' => $galaxy->getDisplayName(),
 				'Width' => $galaxy->getWidth(),
 				'Height' => $galaxy->getHeight(),
 				'Type' => $galaxy->getGalaxyType(),
 				'ForceMaxHours' => $galaxy->getMaxForceTime() / 3600,
+				'DelHREF' => $container->href(),
 			];
 		}
 		$template->assign('Galaxies', $galaxies);
