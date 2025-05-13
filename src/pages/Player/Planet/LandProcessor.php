@@ -19,8 +19,9 @@ class LandProcessor extends PlayerPageProcessor {
 			create_error('You don\'t have enough turns to land on planet.');
 		}
 
-		if ($player->hasNewbieTurns()) {
-			create_error('You cannot land on a planet whilst under newbie protection.');
+		// Only allow landing in newbie turns if in the NHA
+		if ($player->hasNewbieTurns() && !($player->hasAlliance() && $player->getAlliance()->isNHA())) {
+			create_error('You cannot land on this planet whilst under newbie protection.');
 		}
 
 		//check to make sure the planet isn't full!
@@ -44,7 +45,7 @@ class LandProcessor extends PlayerPageProcessor {
 			}
 		}
 		$player->setLandedOnPlanet(true);
-		$player->takeTurns(TURNS_TO_LAND);
+		$player->takeTurns(TURNS_TO_LAND, TURNS_TO_LAND);
 		$player->log(LOG_TYPE_MOVEMENT, 'Player lands at planet');
 		(new Main())->go();
 	}
