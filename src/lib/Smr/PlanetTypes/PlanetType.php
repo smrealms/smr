@@ -12,6 +12,13 @@ abstract class PlanetType {
 
 	protected const int MAX_LANDED_UNLIMITED = 0;
 
+	// These types are associated with database indexes and must not change
+	public const int TYPE_TERRAN = 1;
+	public const int TYPE_ARID = 2;
+	public const int TYPE_DWARF = 3;
+	public const int TYPE_DEFENSE = 4;
+	public const int TYPE_PROTO = 5;
+
 	/**
 	 * Returns the properties of all the structures this planet type can build.
 	 *
@@ -42,11 +49,11 @@ abstract class PlanetType {
 	 * These indices must not be changed!
 	 */
 	public const array PLANET_TYPES = [
-		1 => TerranPlanet::class,
-		2 => AridPlanet::class,
-		3 => DwarfPlanet::class,
-		4 => DefenseWorld::class,
-		5 => ProtoPlanet::class,
+		self::TYPE_TERRAN => TerranPlanet::class,
+		self::TYPE_ARID => AridPlanet::class,
+		self::TYPE_DWARF => DwarfPlanet::class,
+		self::TYPE_DEFENSE => DefenseWorld::class,
+		self::TYPE_PROTO => ProtoPlanet::class,
 	];
 
 	/**

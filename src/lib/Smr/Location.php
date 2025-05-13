@@ -249,10 +249,10 @@ class Location {
 	}
 
 	public function getRaceID(): int {
-		if ($this->isFed() && $this->getTypeID() !== LOCATION_TYPE_FEDERAL_BEACON) {
+		if ($this->isFed() && $this->getTypeID() !== LOCATION_FEDERAL_BEACON) {
 			return $this->getTypeID() - LOCATION_GROUP_RACIAL_BEACONS;
 		}
-		if ($this->isHQ() && $this->getTypeID() !== LOCATION_TYPE_FEDERAL_HQ) {
+		if ($this->isHQ() && $this->getTypeID() !== LOCATION_FEDERAL_HQ) {
 			return $this->getTypeID() - LOCATION_GROUP_RACIAL_HQS;
 		}
 		return RACE_NEUTRAL;
@@ -566,15 +566,19 @@ class Location {
 	public function getLinkedLocations(): array {
 		$linkedLocations = [];
 		if ($this->isHQ()) {
-			if ($this->getTypeID() === LOCATION_TYPE_FEDERAL_HQ) {
-				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_TYPE_FEDERAL_BEACON);
-				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_TYPE_FEDERAL_MINT);
+			if ($this->getTypeID() === LOCATION_FEDERAL_HQ) {
+				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_FEDERAL_MINT);
+				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_MONASTERY_OF_THE_IRON_MAIDEN);
+				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_FEDERATION_SHIPYARD);
 			} else {
 				$raceID = $this->getRaceID();
 				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_GROUP_RACIAL_BEACONS + $raceID);
 				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_GROUP_RACIAL_SHIPS + $raceID);
 				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_GROUP_RACIAL_SHOPS + $raceID);
 			}
+		} elseif ($this->isUG()) {
+			$linkedLocations[] = self::getLocation($this->gameID, LOCATION_UNDERGROUND_WEAPONS);
+			$linkedLocations[] = self::getLocation($this->gameID, LOCATION_SMUGGLERS_CRAFT);
 		}
 		return $linkedLocations;
 	}

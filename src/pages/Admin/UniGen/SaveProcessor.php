@@ -14,23 +14,6 @@ use Smr\Race;
 use Smr\Request;
 use Smr\Sector;
 
-/**
- * @param array<int, Sector> $sectors
- * @param callable $condition True if sector is valid
- */
-function findValidSector(array $sectors, callable $condition): Sector {
-	if (count($sectors) === 0) {
-		throw new UserError('There are no eligible sectors for this action!');
-	}
-	$key = array_rand($sectors);
-	$sector = $sectors[$key];
-	if ($condition($sector) !== true) {
-		unset($sectors[$key]);
-		return findValidSector($sectors, $condition);
-	}
-	return $sector;
-}
-
 function checkSectorAllowedForLoc(Sector $sector, Location $location): bool {
 	if ($location->isHQ()) {
 		// Only add HQs to empty sectors
@@ -73,7 +56,7 @@ class SaveProcessor extends AccountPageProcessor {
 					$numLoc = Request::getInt('loc' . $location->getTypeID());
 					for ($i = 0; $i < $numLoc; $i++) {
 						//4 per sector max locs and no locations inside fed
-						$randSector = findValidSector(
+						$randSector = self::findValidSector(
 							$galSectors,
 							fn(Sector $sector): bool => checkSectorAllowedForLoc($sector, $location),
 						);
@@ -106,13 +89,13 @@ class SaveProcessor extends AccountPageProcessor {
 					//iterate for each warp to this gal
 					for ($i = 1; $i <= $numWarps; $i++) {
 						//only 1 warp per sector
-						$galSector = findValidSector(
+						$galSector = self::findValidSector(
 							$galSectors,
 							fn(Sector $sector): bool => !$sector->hasWarp() && !$sector->offersFederalProtection(),
 						);
 						//get other side
 						//make sure it does not go to itself
-						$otherSector = findValidSector(
+						$otherSector = self::findValidSector(
 							$eachGalaxy->getSectors(),
 							fn(Sector $sector): bool => !$sector->hasWarp() && !$sector->offersFederalProtection() && !$sector->equals($galSector),
 						);
@@ -135,7 +118,7 @@ class SaveProcessor extends AccountPageProcessor {
 			foreach (array_keys(PlanetType::PLANET_TYPES) as $planetTypeID) {
 				$numberOfPlanets = Request::getInt('type' . $planetTypeID);
 				for ($i = 1; $i <= $numberOfPlanets; $i++) {
-					$galSector = findValidSector(
+					$galSector = self::findValidSector(
 						$galSectors,
 						fn(Sector $sector): bool => !$sector->hasPlanet(), // 1 per sector
 					);
@@ -160,43 +143,9 @@ class SaveProcessor extends AccountPageProcessor {
 					$numRacePorts[$raceID] = ICeil($racePercent / 100 * $totalPorts);
 				}
 			}
-			$assignedPorts = array_sum($numRacePorts);
 			if ($totalRaceDist === 100 || $totalPorts === 0) {
 				$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
-				$galSectors = $galaxy->getSectors();
-				foreach ($galSectors as $galSector) {
-					if ($galSector->hasPort()) {
-						$galSector->removePort();
-					}
-				}
-				//get race for all ports
-				while ($totalPorts > $assignedPorts) {
-					//this adds extra ports until we reach the requested #
-					$numRacePorts[array_rand($numRacePorts)]++;
-					$assignedPorts++;
-				}
-				//iterate through levels 1-9 port
-				foreach ($numLevelPorts as $portLevel => $numLevel) {
-					//iterate once for each port of this level
-					for ($j = 0; $j < $numLevel; $j++) {
-						//get a sector for this port
-						$galSector = findValidSector(
-							$galSectors,
-							fn(Sector $sector): bool => !$sector->hasPort() && !$sector->offersFederalProtection(),
-						);
-
-						$raceID = array_rand($numRacePorts);
-						$numRacePorts[$raceID]--;
-						if ($numRacePorts[$raceID] === 0) {
-							unset($numRacePorts[$raceID]);
-						}
-						$port = $galSector->createPort();
-						$port->setRaceID($raceID);
-						$port->upgradeToLevel($portLevel);
-						$port->setCreditsToDefault();
-					}
-				}
-				Port::savePorts();
+				self::createPorts($galaxy, $numRacePorts, $numLevelPorts);
 				$message = '<span class="green">Success</span> : Succesfully added ports.';
 			} else {
 				$message = '<span class="red">Error: Your port race distribution must equal 100!</span>';
@@ -207,6 +156,73 @@ class SaveProcessor extends AccountPageProcessor {
 
 		$this->returnTo->message = $message;
 		$this->returnTo->go();
+	}
+
+	/**
+	 * @param array<int, int> $numRacePorts Number of ports for each race
+	 * @param array<int, int> $numLevelPorts Number of ports at each level
+	 */
+	public static function createPorts(
+		Galaxy $galaxy,
+		array $numRacePorts,
+		array $numLevelPorts,
+		bool $removeExisting = true,
+	): void {
+		$totalPorts = array_sum($numLevelPorts);
+		$assignedPorts = array_sum($numRacePorts);
+
+		$galSectors = $galaxy->getSectors();
+		foreach ($galSectors as $galSector) {
+			if ($removeExisting && $galSector->hasPort()) {
+				$galSector->removePort();
+			}
+		}
+		//get race for all ports
+		while ($totalPorts > $assignedPorts) {
+			//this adds extra ports until we reach the requested #
+			$numRacePorts[array_rand($numRacePorts)]++;
+			$assignedPorts++;
+		}
+		//iterate through levels 1-9 port
+		foreach ($numLevelPorts as $portLevel => $numLevel) {
+			//iterate once for each port of this level
+			for ($j = 0; $j < $numLevel; $j++) {
+				//get a sector for this port
+				$galSector = self::findValidSector(
+					$galSectors,
+					fn(Sector $sector): bool => !$sector->hasPort() && !$sector->offersFederalProtection(),
+				);
+
+				$raceID = array_rand($numRacePorts);
+				$numRacePorts[$raceID]--;
+				if ($numRacePorts[$raceID] === 0) {
+					unset($numRacePorts[$raceID]);
+				}
+				$port = $galSector->createPort();
+				$port->setRaceID($raceID);
+				$port->upgradeToLevel($portLevel);
+				$port->setCreditsToDefault();
+			}
+		}
+
+		Port::savePorts();
+	}
+
+	/**
+	 * @param array<int, Sector> $sectors
+	 * @param callable(Sector): bool $condition True if sector is valid
+	 */
+	public static function findValidSector(array $sectors, callable $condition): Sector {
+		if (count($sectors) === 0) {
+			throw new UserError('There are no eligible sectors for this action!');
+		}
+		$key = array_rand($sectors);
+		$sector = $sectors[$key];
+		if ($condition($sector) !== true) {
+			unset($sectors[$key]);
+			return self::findValidSector($sectors, $condition);
+		}
+		return $sector;
 	}
 
 }

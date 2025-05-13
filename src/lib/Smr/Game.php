@@ -486,13 +486,13 @@ class Game {
 					AND location_type_id < :location_type_id_fed
 					AND game_id = :game_id
 				ORDER BY location_type_id', [
-				'location_type_id_ug' => $db->escapeNumber(UNDERGROUND),
-				'location_type_id_fed' => $db->escapeNumber(FED),
+				'location_type_id_ug' => $db->escapeNumber(LOCATION_UNDERGROUND),
+				'location_type_id_fed' => $db->escapeNumber(LOCATION_FEDERAL_BEACON),
 				'game_id' => $db->escapeNumber($this->getGameID()),
 			]);
 			$this->playableRaceIDs = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$this->playableRaceIDs[] = $dbRecord->getInt('location_type_id') - GOVERNMENT;
+				$this->playableRaceIDs[] = $dbRecord->getInt('location_type_id') - LOCATION_GROUP_RACIAL_HQS;
 			}
 		}
 		return $this->playableRaceIDs;

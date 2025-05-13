@@ -38,6 +38,10 @@ class CreateGalaxies extends AccountPage {
 		];
 		$template->assign('Submit', $submit);
 
+		// Link for auto-generating the galaxies
+		$container = new CreateGalaxiesAutoProcessor($this->gameID);
+		$template->assign('GenerateHREF', $container->href());
+
 		// Link for creating universe from SMR file
 		$container = new UploadSmrFileProcessor($this->gameID);
 		$template->assign('UploadSmrFileHREF', $container->href());
@@ -45,7 +49,7 @@ class CreateGalaxies extends AccountPage {
 		// Create default list of galaxy names (starting with race names)
 		$raceNames = Race::getPlayableNames();
 		sort($raceNames);
-		$defaultNames = [...$raceNames, 'Omar', 'Salzik', 'Manton', 'Livstar', 'Teryllia', 'Doriath', 'Anconus', 'Valheru', 'Sardine', 'Clacher', 'Tangeria'];
+		$defaultNames = [...$raceNames, ...self::GALAXY_NAMES];
 		$template->assign('NumGals', $numGals);
 
 		//Galaxy Creation area
@@ -62,5 +66,33 @@ class CreateGalaxies extends AccountPage {
 		}
 		$template->assign('Galaxies', $galaxies);
 	}
+
+	public const array GALAXY_NAMES = [
+		'Omar',
+		'Salzik',
+		'Manton',
+		'Livstar',
+		'Teryllia',
+		'Doriath',
+		'Anconus',
+		'Valheru',
+		'Sardine',
+		'Clacher',
+		'Tangeria',
+		'Panumbra',
+		'Schattenreich',
+		'Dinrepkalap',
+		'Besidkibilo',
+		'Theraseth',
+		'Ybirejan',
+		'Qirekin',
+		'Zelijar',
+		'Dinrepyeter',
+		'Eridanus',
+		'Lacerta',
+		'Pyxis',
+		'Sagitta',
+		'Scutum',
+	];
 
 }

@@ -264,7 +264,7 @@ class Galaxy {
 	}
 
 	/**
-	 * Returns a 2D array of sectors in the galaxy.
+	 * Returns a 2D array of sectors in the galaxy [row][col].
 	 * If $centerSectorID is specified, it will be in the center of the array.
 	 * If $dist is also specified, only include sectors $dist away from center.
 	 *
