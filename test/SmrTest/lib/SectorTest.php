@@ -14,6 +14,10 @@ class SectorTest extends TestCase {
 		Sector::clearCache();
 	}
 
+	public function test_getLinkDirs(): void {
+		self::assertSame(['Up', 'Down', 'Left', 'Right'], Sector::getLinkDirs());
+	}
+
 	public function test_setLink(): void {
 		// Construct a new sector
 		$sector = Sector::createSector(1, 1);

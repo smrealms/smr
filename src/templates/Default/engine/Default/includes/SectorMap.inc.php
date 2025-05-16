@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\Globals;
+use Smr\Sector;
 
 /**
  * @var Smr\Player $ThisPlayer
@@ -19,7 +20,7 @@ use Smr\Globals;
 	$GalaxyMap = isset($GalaxyMap) && $GalaxyMap;
 	$UniGen ??= false;
 	$MapPlayer = $UniGen ? null : $ThisPlayer;
-	$MovementTypes = ['Up', 'Left', 'Right', 'Down'];
+	$MovementTypes = Sector::getLinkDirs();
 	foreach ($MapSectors as $MapSector) { ?>
 		<tr><?php
 			foreach ($MapSector as $Sector) {

@@ -483,6 +483,13 @@ class Sector {
 		};
 	}
 
+	/**
+	 * @return list<key-of<self::LINK_DIR_MAPPING>>
+	 */
+	public static function getLinkDirs(): array {
+		return array_keys(self::LINK_DIR_MAPPING);
+	}
+
 	public function getLinkUp(): int {
 		return $this->getLink('Up');
 	}

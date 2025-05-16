@@ -225,7 +225,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 			}
 
 			// Update the sector connections
-			foreach (['Up', 'Down', 'Left', 'Right'] as $dir) {
+			foreach (Sector::getLinkDirs() as $dir) {
 				if ($oldID === false) {
 					// No sector walls for newly added sectors
 					$newSector->enableLink($dir);

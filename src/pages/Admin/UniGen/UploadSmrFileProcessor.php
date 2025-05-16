@@ -74,7 +74,7 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 			$editSector = Sector::getSector($this->gameID, $sectorID);
 
 			// Sector connections (we assume link sectors are correct)
-			foreach (['Up', 'Down', 'Left', 'Right'] as $dir) {
+			foreach (Sector::getLinkDirs() as $dir) {
 				if (isset($vals[$dir])) {
 					$editSector->enableLink($dir);
 				} else {
