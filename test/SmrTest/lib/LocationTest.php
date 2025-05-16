@@ -85,4 +85,28 @@ class LocationTest extends TestCase {
 		self::assertFalse($loc->isWeaponSold(WEAPON_PLANET_TURRET));
 	}
 
+	public function test_getAllBars(): void {
+		foreach (Location::getAllBars() as $loc) {
+			self::assertTrue($loc->isBar());
+		}
+	}
+
+	public function test_getAllBanks(): void {
+		foreach (Location::getAllBanks() as $loc) {
+			self::assertTrue($loc->isBank());
+		}
+	}
+
+	public function test_getAllWeaponShops(): void {
+		foreach (Location::getAllWeaponShops() as $loc) {
+			self::assertTrue($loc->isWeaponSold());
+		}
+	}
+
+	public function test_getAllShipShops(): void {
+		foreach (Location::getAllShipShops() as $loc) {
+			self::assertTrue($loc->isShipSold());
+		}
+	}
+
 }

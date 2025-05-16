@@ -67,6 +67,62 @@ class Location {
 	}
 
 	/**
+	 * @return array<int, self>
+	 */
+	public static function getAllBars(): array {
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT * FROM location_type JOIN location_is_bar USING(location_type_id)');
+		$locations = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$locationTypeID = $dbRecord->getInt('location_type_id');
+			$locations[$locationTypeID] = self::getLocation(0, $locationTypeID, false, $dbRecord);
+		}
+		return $locations;
+	}
+
+	/**
+	 * @return array<int, self>
+	 */
+	public static function getAllBanks(): array {
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT * FROM location_type JOIN location_is_bank USING(location_type_id)');
+		$locations = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$locationTypeID = $dbRecord->getInt('location_type_id');
+			$locations[$locationTypeID] = self::getLocation(0, $locationTypeID, false, $dbRecord);
+		}
+		return $locations;
+	}
+
+	/**
+	 * @return array<int, self>
+	 */
+	public static function getAllWeaponShops(): array {
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT location_type.* FROM location_type JOIN location_sells_weapons USING(location_type_id)');
+		$locations = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$locationTypeID = $dbRecord->getInt('location_type_id');
+			$locations[$locationTypeID] = self::getLocation(0, $locationTypeID, false, $dbRecord);
+		}
+		return $locations;
+	}
+
+	/**
+	 * @return array<int, self>
+	 */
+	public static function getAllShipShops(): array {
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT location_type.* FROM location_type JOIN location_sells_ships USING(location_type_id)');
+		$locations = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$locationTypeID = $dbRecord->getInt('location_type_id');
+			$locations[$locationTypeID] = self::getLocation(0, $locationTypeID, false, $dbRecord);
+		}
+		return $locations;
+	}
+
+	/**
 	 * @return array<int, array<int, self>>
 	 */
 	public static function getGalaxyLocations(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
