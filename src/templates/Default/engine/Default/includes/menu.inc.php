@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
-if (isset($MenuItems) || isset($SubMenuBar)) { ?>
+// If there are no menu items, we still want a blank menu bar if there is a page topic
+if (isset($MenuItems) || isset($SubMenuBar) || isset($PageTopic)) { ?>
 	<div class="bar1">
 		<div><?php
 			if (isset($MenuItems)) { ?>
@@ -14,7 +15,7 @@ if (isset($MenuItems) || isset($SubMenuBar)) { ?>
 						}
 					}?>
 				</span><?php
-			} else {
+			} elseif (isset($SubMenuBar)) {
 				echo $SubMenuBar;
 			} ?>
 		</div>
