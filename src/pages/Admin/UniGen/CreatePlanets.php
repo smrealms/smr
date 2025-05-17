@@ -18,6 +18,7 @@ class CreatePlanets extends AccountPage {
 
 	public function __construct(
 		private readonly int $gameID,
+		private readonly EditGalaxy $returnTo,
 		private ?int $galaxyID = null,
 	) {}
 
@@ -25,7 +26,7 @@ class CreatePlanets extends AccountPage {
 		$this->galaxyID ??= Request::getInt('gal_on');
 		$template->assign('Galaxies', Galaxy::getGameGalaxies($this->gameID));
 
-		$container = new self($this->gameID);
+		$container = new self($this->gameID, $this->returnTo);
 		$template->assign('JumpGalaxyHREF', $container->href());
 
 		// Get a list of all available planet types
@@ -53,12 +54,11 @@ class CreatePlanets extends AccountPage {
 		$template->assign('NumberOfPlanets', $numberOfPlanets);
 
 		// Form to make planet changes
-		$container = new SaveProcessor($this->gameID, $this->galaxyID);
+		$container = new SaveProcessor($this->gameID, $this->galaxyID, $this->returnTo);
 		$template->assign('CreatePlanetsFormHREF', $container->href());
 
 		// HREF to cancel and return to the previous page
-		$container = new EditGalaxy($this->gameID, $this->galaxyID);
-		$template->assign('CancelHREF', $container->href());
+		$template->assign('CancelHREF', $this->returnTo->href());
 	}
 
 }

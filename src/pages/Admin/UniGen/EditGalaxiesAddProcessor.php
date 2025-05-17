@@ -15,7 +15,7 @@ class EditGalaxiesAddProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $galaxyID, // for back button only
+		private readonly EditGalaxies $returnTo,
 	) {}
 
 	public function build(Account $account): never {
@@ -63,12 +63,10 @@ class EditGalaxiesAddProcessor extends AccountPageProcessor {
 		$galaxy->save();
 
 		// Adjust the galaxy the back button returns to
-		$backGalaxyId = $this->galaxyID;
-		if ($backGalaxyId >= $insertGalaxyId) {
-			$backGalaxyId += 1;
+		if ($this->returnTo->returnTo->galaxyID >= $insertGalaxyId) {
+			$this->returnTo->returnTo->galaxyID += 1;
 		}
-		$container = new EditGalaxies($this->gameID, $backGalaxyId);
-		$container->go();
+		$this->returnTo->go();
 	}
 
 }

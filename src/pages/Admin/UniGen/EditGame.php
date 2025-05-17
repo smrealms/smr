@@ -14,7 +14,7 @@ class EditGame extends AccountPage {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $galaxyID,
+		private readonly EditGalaxy $returnTo,
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -47,12 +47,11 @@ class EditGame extends AccountPage {
 		];
 		$template->assign('Game', $gameArray);
 
-		$container = new EditGameProcessor($this->gameID, $this->galaxyID);
+		$container = new EditGameProcessor($this->gameID, $this->returnTo);
 		$template->assign('ProcessingHREF', $container->href());
 		$template->assign('SubmitValue', 'Modify Game');
 
-		$container = new EditGalaxy($this->gameID, $this->galaxyID);
-		$template->assign('CancelHREF', $container->href());
+		$template->assign('CancelHREF', $this->returnTo->href());
 	}
 
 }

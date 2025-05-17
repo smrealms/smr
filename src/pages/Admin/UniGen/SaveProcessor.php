@@ -48,6 +48,7 @@ class SaveProcessor extends AccountPageProcessor {
 	public function __construct(
 		private readonly int $gameID,
 		private readonly int $galaxyID,
+		private readonly EditGalaxy $returnTo,
 	) {}
 
 	public function build(Account $account): never {
@@ -121,7 +122,7 @@ class SaveProcessor extends AccountPageProcessor {
 			}
 			Sector::saveSectors();
 			$message = '<span class="green">Success</span> : Succesfully added warps.';
-			(new CreateWarps($this->gameID, $this->galaxyID, $message))->go();
+			(new CreateWarps($this->gameID, $this->galaxyID, $this->returnTo, $message))->go();
 		} elseif ($submit === 'Create Planets') {
 			$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 			$galSectors = $galaxy->getSectors();
@@ -204,7 +205,8 @@ class SaveProcessor extends AccountPageProcessor {
 			throw new Exception('Unknown submit: ' . $submit);
 		}
 
-		(new EditGalaxy($this->gameID, $this->galaxyID, $message))->go();
+		$this->returnTo->message = $message;
+		$this->returnTo->go();
 	}
 
 }

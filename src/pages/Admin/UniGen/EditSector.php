@@ -18,10 +18,17 @@ class EditSector extends AccountPage {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $galaxyID,
+		private readonly EditGalaxy $returnTo,
 		private ?int $sectorID = null,
-		private readonly ?string $message = null,
+		public ?string $message = null,
 	) {}
+
+	private function returnTo(): self {
+		// When returning to this page, we don't want any stale messages
+		$clone = clone $this;
+		$clone->message = null;
+		return $clone;
+	}
 
 	public function build(Account $account, Template $template): void {
 		$this->sectorID ??= Request::getInt('sector_edit');
@@ -31,7 +38,7 @@ class EditSector extends AccountPage {
 
 		$template->assign('LastSector', Game::getGame($this->gameID)->getLastSectorID());
 
-		$container = new EditSectorProcessor($this->gameID, $this->galaxyID, $this->sectorID);
+		$container = new EditSectorProcessor($this->gameID, $this->sectorID, $this->returnTo());
 		$template->assign('EditHREF', $container->href());
 
 		$selectedPlanetType = 0;
@@ -69,8 +76,7 @@ class EditSector extends AccountPage {
 		$template->assign('WarpGal', $warpGal);
 		$template->assign('WarpSectorID', $warpSectorID);
 
-		$container = new EditGalaxy($this->gameID, $this->galaxyID);
-		$template->assign('CancelHREF', $container->href());
+		$template->assign('CancelHREF', $this->returnTo->href());
 
 		$template->assign('Message', $this->message);
 	}

@@ -23,8 +23,10 @@ class CreateGame extends AccountPage {
 		$container = new CreateGameProcessor();
 		$template->assign('CreateGalaxiesHREF', $container->href());
 
-		$container = new EditGalaxy();
+		$container = new EditGalaxy(canEdit: true);
 		$template->assign('EditGameHREF', $container->href());
+		$container = new EditGalaxy(canEdit: false);
+		$template->assign('ViewGameHREF', $container->href());
 
 		$canEditEnabledGames = $account->hasPermission(PERMISSION_EDIT_ENABLED_GAMES);
 		$template->assign('CanEditEnabledGames', $canEditEnabledGames);

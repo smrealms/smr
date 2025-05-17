@@ -14,8 +14,8 @@ class EditSectorProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $galaxyID,
 		private readonly int $sectorID,
+		private readonly EditSector $returnTo,
 	) {}
 
 	public function build(Account $account): never {
@@ -93,9 +93,8 @@ class EditSectorProcessor extends AccountPageProcessor {
 		}
 		Sector::saveSectors();
 
-		$message = '<span class="green">Success</span> : Succesfully edited sector.';
-		$container = new EditSector($this->gameID, $this->galaxyID, $this->sectorID, $message);
-		$container->go();
+		$this->returnTo->message = '<span class="green">Success</span> : Succesfully edited sector.';
+		$this->returnTo->go();
 	}
 
 }

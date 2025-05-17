@@ -19,6 +19,7 @@ class CreateLocations extends AccountPage {
 
 	public function __construct(
 		private readonly int $gameID,
+		private readonly EditGalaxy $returnTo,
 		private ?int $galaxyID = null,
 	) {}
 
@@ -26,7 +27,7 @@ class CreateLocations extends AccountPage {
 		$this->galaxyID ??= Request::getInt('gal_on');
 		$template->assign('Galaxies', Galaxy::getGameGalaxies($this->gameID));
 
-		$container = new self($this->gameID);
+		$container = new self($this->gameID, $this->returnTo);
 		$template->assign('JumpGalaxyHREF', $container->href());
 
 		$locations = Location::getAllLocations($this->gameID);
@@ -103,12 +104,11 @@ class CreateLocations extends AccountPage {
 		$template->assign('LocTypes', $categories->locTypes);
 
 		// Form to make location changes
-		$container = new SaveProcessor($this->gameID, $this->galaxyID);
+		$container = new SaveProcessor($this->gameID, $this->galaxyID, $this->returnTo);
 		$template->assign('CreateLocationsFormHREF', $container->href());
 
 		// HREF to cancel and return to the previous page
-		$container = new EditGalaxy($this->gameID, $this->galaxyID);
-		$template->assign('CancelHREF', $container->href());
+		$template->assign('CancelHREF', $this->returnTo->href());
 	}
 
 }

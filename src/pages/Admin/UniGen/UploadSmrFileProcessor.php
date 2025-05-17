@@ -138,7 +138,7 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 		Sector::saveSectors();
 		Port::savePorts();
 
-		$container = new EditGalaxy($this->gameID);
+		$container = new EditGalaxy(canEdit: true, gameID: $this->gameID);
 		$container->go();
 	}
 

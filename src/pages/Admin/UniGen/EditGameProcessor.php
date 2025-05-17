@@ -12,7 +12,7 @@ class EditGameProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $galaxyID,
+		private readonly EditGalaxy $returnTo,
 	) {}
 
 	public function build(Account $account): never {
@@ -43,9 +43,8 @@ class EditGameProcessor extends AccountPageProcessor {
 		}
 		$game->save();
 
-		$message = '<span class="green">SUCCESS: edited game details</span>';
-		$container = new EditGalaxy($this->gameID, $this->galaxyID, $message);
-		$container->go();
+		$this->returnTo->message = '<span class="green">SUCCESS: edited game details</span>';
+		$this->returnTo->go();
 	}
 
 }

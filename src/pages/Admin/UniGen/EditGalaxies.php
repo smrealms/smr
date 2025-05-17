@@ -13,7 +13,7 @@ class EditGalaxies extends AccountPage {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $galaxyID, // for back button only
+		public readonly EditGalaxy $returnTo,
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -21,7 +21,7 @@ class EditGalaxies extends AccountPage {
 		$template->assign('PageTopic', 'Edit Galaxies : ' . $game->getDisplayName());
 		$template->assign('GameEnabled', $game->isEnabled());
 
-		$container = new EditGalaxiesProcessor($this->gameID, $this->galaxyID);
+		$container = new EditGalaxiesProcessor($this->gameID, $this->returnTo);
 		$submit = [
 			'value' => 'Edit Galaxies',
 			'href' => $container->href(),
@@ -32,8 +32,8 @@ class EditGalaxies extends AccountPage {
 		foreach ($game->getGalaxies() as $galaxyId => $galaxy) {
 			$container = new EditGalaxiesDelProcessor(
 				gameId: $this->gameID,
-				galaxyId: $this->galaxyID,
 				deleteGalaxyId: $galaxyId,
+				returnTo: $this,
 			);
 			$galaxies[$galaxyId] = [
 				'Name' => $galaxy->getDisplayName(),
@@ -46,10 +46,9 @@ class EditGalaxies extends AccountPage {
 		}
 		$template->assign('Galaxies', $galaxies);
 
-		$container = new EditGalaxy($this->gameID, $this->galaxyID);
-		$template->assign('BackHREF', $container->href());
+		$template->assign('BackHREF', $this->returnTo->href());
 
-		$container = new EditGalaxiesAddProcessor($this->gameID, $this->galaxyID);
+		$container = new EditGalaxiesAddProcessor($this->gameID, $this);
 		$template->assign('AddHREF', $container->href());
 		$template->assign('MaxAddId', $game->getNumberOfGalaxies() + 1);
 	}

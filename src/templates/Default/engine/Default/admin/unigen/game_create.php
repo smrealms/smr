@@ -6,7 +6,7 @@
 if (count($EditGames) === 0) { ?>
 	There are no games for you to edit.<br /><?php
 } else { ?>
-	<form method="POST" action="<?php echo $EditGameHREF; ?>">
+	<form method="POST">
 		<table class="standard">
 			<tr>
 				<td class="right">
@@ -18,7 +18,10 @@ if (count($EditGames) === 0) { ?>
 				</td>
 			</tr>
 			<tr>
-				<td class="center"><input type="submit" value="Edit" name="Edit"></td>
+				<td class="center">
+					<input type="submit" value="Edit" name="Edit" formaction="<?php echo $EditGameHREF; ?>">
+					<input type="submit" value="View" name="View" formaction="<?php echo $ViewGameHREF; ?>">
+				</td>
 			</tr>
 		</table>
 	</form><?php

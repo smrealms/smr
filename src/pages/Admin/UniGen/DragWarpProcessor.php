@@ -11,7 +11,7 @@ class DragWarpProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $galaxyID,
+		private readonly EditGalaxy $returnTo,
 	) {}
 
 	public function build(Account $account): never {
@@ -30,8 +30,7 @@ class DragWarpProcessor extends AccountPageProcessor {
 			Sector::saveSectors();
 		}
 
-		$container = new EditGalaxy($this->gameID, $this->galaxyID);
-		$container->go();
+		$this->returnTo->go();
 	}
 
 }

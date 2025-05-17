@@ -12,6 +12,7 @@ class ResetGalaxyProcessor extends AccountPageProcessor {
 	public function __construct(
 		private readonly int $gameID,
 		private readonly int $galaxyID,
+		private readonly EditGalaxy $returnTo,
 	) {}
 
 	public function build(Account $account): never {
@@ -31,9 +32,8 @@ class ResetGalaxyProcessor extends AccountPageProcessor {
 
 		Sector::saveSectors();
 
-		$message = '<span class="green">Success</span> : reset galaxy.';
-		$container = new EditGalaxy($this->gameID, $this->galaxyID, $message);
-		$container->go();
+		$this->returnTo->message = '<span class="green">Success</span> : reset galaxy.';
+		$this->returnTo->go();
 	}
 
 }

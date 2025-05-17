@@ -23,15 +23,14 @@ class CheckMap extends AccountPage {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $galaxyID, // for back button only
+		private readonly EditGalaxy $returnTo,
 	) {}
 
 	public function build(Account $account, Template $template): void {
 		$game = Game::getGame($this->gameID);
 		$template->assign('PageTopic', 'Check Map : ' . $game->getDisplayName());
 
-		$container = new EditGalaxy($this->gameID, $this->galaxyID);
-		$template->assign('BackHREF', $container->href());
+		$template->assign('BackHREF', $this->returnTo->href());
 
 		$galaxies = $game->getGalaxies();
 

@@ -14,8 +14,8 @@ class EditGalaxiesDelProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly int $gameId,
-		private readonly int $galaxyId, // for back button only
 		private readonly int $deleteGalaxyId,
+		private readonly EditGalaxies $returnTo,
 	) {}
 
 	public function build(Account $account): never {
@@ -58,12 +58,10 @@ class EditGalaxiesDelProcessor extends AccountPageProcessor {
 		Galaxy::clearCache();
 
 		// Adjust the galaxy the back button returns to
-		$backGalaxyId = $this->galaxyId;
-		if ($backGalaxyId >= $this->deleteGalaxyId) {
-			$backGalaxyId -= 1;
+		if ($this->returnTo->returnTo->galaxyID >= $this->deleteGalaxyId) {
+			$this->returnTo->returnTo->galaxyID -= 1;
 		}
-		$container = new EditGalaxies($this->gameId, $backGalaxyId);
-		$container->go();
+		$this->returnTo->go();
 	}
 
 }

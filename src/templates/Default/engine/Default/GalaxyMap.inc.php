@@ -2,7 +2,6 @@
 
 /**
  * @var Smr\Galaxy $ThisGalaxy
- * @var Smr\Player $ThisPlayer
  * @var Smr\Template $this
  * @var array<int, Smr\Galaxy> $GameGalaxies
  * @var int $LastSector
@@ -33,7 +32,7 @@
 					<td>Map of the known <span class="big bold"><?php echo $ThisGalaxy->getDisplayName(); ?></span> galaxy.</td>
 					<td>
 						&thinsp;
-						<a href="map_warps.php?game=<?php echo $ThisPlayer->getGameID(); ?>">
+						<a href="map_warps.php?game=<?php echo $ThisGalaxy->getGameID(); ?>">
 							<img src="images/warp_chart.svg" height="24" width="24" style="vertical-align: middle;" />&thinsp;Open warp chart
 						</a>
 					</td>
