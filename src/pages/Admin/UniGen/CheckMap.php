@@ -3,6 +3,7 @@
 namespace Smr\Pages\Admin\UniGen;
 
 use Smr\Account;
+use Smr\Exceptions\PathNotFound;
 use Smr\Game;
 use Smr\Location;
 use Smr\Page\AccountPage;
@@ -10,6 +11,7 @@ use Smr\Page\ReusableTrait;
 use Smr\Plotter;
 use Smr\Race;
 use Smr\Routes\RouteGenerator;
+use Smr\Sector;
 use Smr\Template;
 use Smr\TradeGood;
 
@@ -21,7 +23,7 @@ class CheckMap extends AccountPage {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $galaxyID,
+		private readonly int $galaxyID, // for back button only
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -32,6 +34,11 @@ class CheckMap extends AccountPage {
 		$template->assign('BackHREF', $container->href());
 
 		$galaxies = $game->getGalaxies();
+
+		// Efficiently construct the sector cache
+		foreach ($galaxies as $galaxy) {
+			$galaxy->getSectors();
+		}
 
 		// Check if any locations are missing
 		$existingLocs = [];
@@ -52,6 +59,23 @@ class CheckMap extends AccountPage {
 		}
 		$template->assign('MissingLocNames', $missingLocNames);
 
+		// Find unreachable sectors
+		$unreachableSectors = [];
+		$lastSectorId = $game->getLastSectorID();
+		$lastAccessibleSector = Sector::getSector($this->gameID, sectorID: 1);
+		for ($sectorId = 2; $sectorId <= $lastSectorId; $sectorId++) {
+			$checkSector = Sector::getSector($this->gameID, $sectorId);
+			// Path from neighbor (or nearest accessible neighbor) is likely the shortest,
+			// on average, and thus fastest way to test accessibility.
+			try {
+				Plotter::findDistanceToX($checkSector, $lastAccessibleSector, useFirst: true);
+				$lastAccessibleSector = $checkSector;
+			} catch (PathNotFound) {
+				$unreachableSectors[] = $checkSector;
+			}
+		}
+		$template->assign('UnreachableSectors', $unreachableSectors);
+
 		// Calculate the best trade routes for each galaxy
 		$tradeGoods = [GOODS_NOTHING => true];
 		foreach (TradeGood::getAllIDs() as $goodID) {
@@ -69,7 +93,6 @@ class CheckMap extends AccountPage {
 
 		$allGalaxyRoutes = [];
 		foreach ($galaxies as $galaxy) {
-			$galaxy->getSectors(); // Efficiently construct the sector cache
 			$ports = $galaxy->getPorts();
 			$distances = Plotter::calculatePortToPortDistances($ports, $tradeRaces, $maxDistance, $galaxy->getStartSector(), $galaxy->getEndSector());
 			$allGalaxyRoutes[$galaxy->getDisplayName()] = RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $ports, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
@@ -105,6 +128,7 @@ class CheckMap extends AccountPage {
 			}
 		}
 		$template->assign('MaxSellMultipliers', $maxSellMultipliers);
+
 	}
 
 }

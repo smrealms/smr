@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var list<Smr\Sector> $UnreachableSectors
+ */
+
 ?>
 <a href="<?php echo $BackHREF; ?>" class="submitStyle">&lt;&lt; Back to Map</a>
 <br /><br />
@@ -7,6 +11,16 @@
 <h2>Missing Locations</h2>
 <?php echo implode('<br />', $MissingLocNames); ?>
 <br /><br />
+
+<h2>Unreachable Sectors</h2><?php
+if (count($UnreachableSectors) === 0) { ?>
+	None!<br /><?php
+} else {
+	foreach ($UnreachableSectors as $sector) {
+		echo $sector->getSectorID() . ' (' . $sector->getGalaxy()->getName() . ')<br />';
+	}
+} ?>
+<br />
 
 <?php
 foreach ($RouteTypes as $RouteTypeID => $RouteType) { ?>
