@@ -93,7 +93,7 @@ class EditSectorProcessor extends AccountPageProcessor {
 		}
 		Sector::saveSectors();
 
-		$this->returnTo->message = '<span class="green">Success</span> : Succesfully edited sector.';
+		$this->returnTo->message = '<span class="green">Success</span> : edited sector.';
 		$this->returnTo->go();
 	}
 

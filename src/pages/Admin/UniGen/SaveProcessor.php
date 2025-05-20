@@ -65,7 +65,7 @@ class SaveProcessor extends AccountPageProcessor {
 					}
 				}
 			}
-			$message = '<span class="green">Success</span> : Succesfully added locations.';
+			$message = '<span class="green">Success</span> : added locations.';
 		} elseif ($submit === 'Create Warps') {
 			//get all warp info from all gals, some need to be removed, some need to be added
 			$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
@@ -104,7 +104,7 @@ class SaveProcessor extends AccountPageProcessor {
 				}
 			}
 			Sector::saveSectors();
-			$message = '<span class="green">Success</span> : Succesfully added warps.';
+			$message = '<span class="green">Success</span> : added warps.';
 			(new CreateWarps($this->gameID, $this->galaxyID, $this->returnTo, $message))->go();
 		} elseif ($submit === 'Create Planets') {
 			$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
@@ -125,7 +125,7 @@ class SaveProcessor extends AccountPageProcessor {
 					$galSector->createPlanet($planetTypeID);
 				}
 			}
-			$message = '<span class="green">Success</span> : Succesfully added planets.';
+			$message = '<span class="green">Success</span> : added planets.';
 		} elseif ($submit === 'Create Ports') {
 			$numLevelPorts = [];
 			$maxPortLevel = Port::getMaxLevelByGame($this->gameID);
@@ -146,7 +146,7 @@ class SaveProcessor extends AccountPageProcessor {
 			if ($totalRaceDist === 100 || $totalPorts === 0) {
 				$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 				self::createPorts($galaxy, $numRacePorts, $numLevelPorts);
-				$message = '<span class="green">Success</span> : Succesfully added ports.';
+				$message = '<span class="green">Success</span> : added ports.';
 			} else {
 				$message = '<span class="red">Error: Your port race distribution must equal 100!</span>';
 			}
