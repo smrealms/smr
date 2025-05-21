@@ -3,6 +3,7 @@
 namespace SmrTest\lib;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use Smr\Epoch;
 use Smr\Game;
 use Smr\Globals;
 use Smr\Race;
@@ -102,6 +103,60 @@ class GameIntegrationTest extends BaseIntegrationSpec {
 		$game->setGameTypeID(Game::GAME_TYPE_NEWBIE);
 		self::assertTrue($game->isGameType(Game::GAME_TYPE_NEWBIE));
 		self::assertFalse($game->isGameType(Game::GAME_TYPE_DEFAULT));
+	}
+
+	/**
+	 * Helper function to set up 4 games in a matrix of (enabled, end_time)
+	 */
+	private static function setupGameMatrix(): void {
+		$gameId = 1;
+		foreach ([false, true] as $enabled) {
+			foreach ([Epoch::time() - 1, Epoch::time() + 1] as $endTime) {
+				$game = Game::createGame($gameId);
+				$game->setEnabled($enabled);
+				$game->setEndTime($endTime);
+
+				// All remaining properties must be set to save the game
+				$game->setName('game' . $gameId); // must be unique
+				$game->setDescription('');
+				$game->setJoinTime(0);
+				$game->setStartTime(0);
+				$game->setMaxPlayers(0);
+				$game->setMaxTurns(0);
+				$game->setStartTurnHours(0);
+				$game->setGameTypeID(Game::GAME_TYPE_DEFAULT);
+				$game->setCreditsNeeded(0);
+				$game->setGameSpeed(0);
+				$game->setIgnoreStats(true);
+				$game->setAllianceMaxPlayers(0);
+				$game->setAllianceMaxVets(0);
+				$game->setStartingCredits(0);
+				$game->setDestroyPorts(true);
+
+				$game->save();
+				$gameId += 1;
+			}
+		}
+	}
+
+	public function test_getActiveGames(): void {
+		self::setupGameMatrix();
+		foreach (Game::getActiveGames(forceUpdate: true) as $gameId => $game) {
+			self::assertSame(4, $game->getGameID()); // expect only game 4 from matrix
+			self::assertSame(4, $gameId);
+			self::assertTrue($game->isEnabled());
+			self::assertFalse($game->hasEnded());
+		}
+	}
+
+	public function test_getPastGames(): void {
+		self::setupGameMatrix();
+		foreach (Game::getPastGames(forceUpdate: true) as $gameId => $game) {
+			self::assertSame(3, $game->getGameID()); // expect only game 3 from matrix
+			self::assertSame(3, $gameId);
+			self::assertTrue($game->isEnabled());
+			self::assertTrue($game->hasEnded());
+		}
 	}
 
 }

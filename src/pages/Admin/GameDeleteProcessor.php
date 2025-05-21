@@ -29,15 +29,16 @@ class GameDeleteProcessor extends AccountPageProcessor {
 			// Since game is not enabled, we only need to remove it from tables
 			// that are populated by the UniGen.
 			$db = Database::getInstance();
-			$data = ['game_id' => $this->deleteGameID];
-			$db->write('DELETE FROM game WHERE game_id = :game_id', $data);
-			$db->write('DELETE FROM game_galaxy WHERE game_id = :game_id', $data);
-			$db->write('DELETE FROM location WHERE game_id = :game_id', $data);
-			$db->write('DELETE FROM planet WHERE game_id = :game_id', $data);
-			$db->write('DELETE FROM port WHERE game_id = :game_id', $data);
-			$db->write('DELETE FROM port_has_goods WHERE game_id = :game_id', $data);
-			$db->write('DELETE FROM race_has_relation WHERE game_id = :game_id', $data);
-			$db->write('DELETE FROM sector WHERE game_id = :game_id', $data);
+			$data = $game->SQLID;
+			$db->delete('game', $data);
+			$db->delete('game_create_status', $data);
+			$db->delete('game_galaxy', $data);
+			$db->delete('location', $data);
+			$db->delete('planet', $data);
+			$db->delete('port', $data);
+			$db->delete('port_has_goods', $data);
+			$db->delete('race_has_relation', $data);
+			$db->delete('sector', $data);
 
 			$message = '<span class="green">SUCCESS: </span>deleted game: ' . $game->getDisplayName();
 		}

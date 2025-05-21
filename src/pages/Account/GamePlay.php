@@ -145,18 +145,13 @@ class GamePlay extends AccountPage {
 		$games['Previous'] = [];
 
 		//New previous games
-		$dbResult = $db->read('SELECT start_time, end_time, game_name, game_type, game_speed, game_id ' .
-				'FROM game WHERE enabled = \'TRUE\' AND end_time < :now ORDER BY game_id DESC', [
-			'now' => $db->escapeNumber(Epoch::time()),
-		]);
-		foreach ($dbResult->records() as $dbRecord) {
-			$game_id = $dbRecord->getInt('game_id');
+		foreach (Game::getPastGames() as $game_id => $game) {
 			$games['Previous'][$game_id]['ID'] = $game_id;
-			$games['Previous'][$game_id]['Name'] = $dbRecord->getString('game_name');
-			$games['Previous'][$game_id]['StartDate'] = date($account->getDateFormat(), $dbRecord->getInt('start_time'));
-			$games['Previous'][$game_id]['EndDate'] = date($account->getDateFormat(), $dbRecord->getInt('end_time'));
-			$games['Previous'][$game_id]['Type'] = Game::GAME_TYPES[$dbRecord->getInt('game_type')];
-			$games['Previous'][$game_id]['Speed'] = $dbRecord->getFloat('game_speed');
+			$games['Previous'][$game_id]['Name'] = $game->getName();
+			$games['Previous'][$game_id]['StartDate'] = date($account->getDateFormat(), $game->getStartTime());
+			$games['Previous'][$game_id]['EndDate'] = date($account->getDateFormat(), $game->getEndTime());
+			$games['Previous'][$game_id]['Type'] = $game->getGameType();
+			$games['Previous'][$game_id]['Speed'] = $game->getGameSpeed();
 			// create a container that will hold next url and additional variables.
 			$container = new HallOfFameAll($game_id);
 			$games['Previous'][$game_id]['PreviousGameHOFLink'] = $container->href();

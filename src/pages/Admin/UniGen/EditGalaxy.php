@@ -3,6 +3,7 @@
 namespace Smr\Pages\Admin\UniGen;
 
 use Smr\Account;
+use Smr\Database;
 use Smr\Exceptions\GalaxyNotFound;
 use Smr\Galaxy;
 use Smr\Game;
@@ -158,6 +159,17 @@ class EditGalaxy extends AccountPage {
 
 			$container = new ResetGalaxyProcessor($this->gameID, $this->galaxyID, $returnTo);
 			$template->assign('ResetGalaxyHREF', $container->href());
+
+			$container = new EditGameCreateStatusProcessor($this->gameID, $returnTo);
+			$template->assign('CreateStatusHREF', $container->href());
+
+			$db = Database::getInstance();
+			$dbResult = $db->read('SELECT ready_date, all_edit FROM game_create_status WHERE game_id = :game_id', [
+				'game_id' => $db->escapeNumber($this->gameID),
+			]);
+			$dbRecord = $dbResult->record();
+			$template->assign('MapReady', $dbRecord->getNullableString('ready_date') !== null);
+			$template->assign('AllEdit', $dbRecord->getBoolean('all_edit'));
 		}
 
 	}

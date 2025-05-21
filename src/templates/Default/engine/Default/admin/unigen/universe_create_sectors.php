@@ -69,13 +69,22 @@
 
 <table class="center">
 	<tr>
-		<td class="top"><?php
-			if ($UniGen) { ?>
-				<a href="<?php echo $EditGameDetailsHREF; ?>" class="submitStyle">Edit Game Details</a>
-				<p><a href="<?php echo $EditGalaxyDetailsHREF; ?>" class="submitStyle">Edit Galaxies</a></p><?php
-			} ?>
+		<td class="top">
 			<p><a href="<?php echo $CheckMapHREF; ?>" class="submitStyle">Check Map</a></p>
 			<p><a href="<?php echo $SMRFileHREF; ?>" class="submitStyle" target="_blank">Create SMR file</a></p>
+		</td>
+
+		<td class="top"><?php
+			if ($UniGen) { ?>
+				<form id="create_status" method="POST" action="<?php echo $CreateStatusHREF; ?>"></form>
+				<table class="center standard">
+					<tr><th>Modify Game</th></tr>
+					<tr><td><a href="<?php echo $EditGameDetailsHREF; ?>">Game Settings</a></td></tr>
+					<tr><td><a href="<?php echo $EditGalaxyDetailsHREF; ?>">Universe Layout</a></td></tr>
+					<tr><td><input type="checkbox" <?php if ($AllEdit) { ?>checked<?php } ?> name="all_edit" form="create_status" onchange="this.form.submit()" title="Check this box to let all map editors modify this game" /> Anyone edit?</td></tr>
+					<tr><td><input type="checkbox" <?php if ($MapReady) { ?>checked<?php } ?> name="map_ready" form="create_status" onchange="this.form.submit()" title="Check this box if the map is ready to be enabled" /> Map ready?</td></tr>
+				</table><?php
+			} ?>
 		</td>
 
 		<td class="top"><?php

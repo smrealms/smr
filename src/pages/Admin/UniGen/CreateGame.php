@@ -8,6 +8,7 @@ use Smr\Epoch;
 use Smr\Game;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
+use Smr\Pages\Admin\GameDeleteConfirm;
 use Smr\Template;
 
 class CreateGame extends AccountPage {
@@ -53,18 +54,43 @@ class CreateGame extends AccountPage {
 		$template->assign('Game', $defaultGame);
 		$template->assign('SubmitValue', 'Create Game');
 
-		$games = [];
-		if ($canEditEnabledGames) {
-			$dbResult = $db->read('SELECT game_id FROM game ORDER BY game_id DESC');
-		} else {
-			$dbResult = $db->read('SELECT game_id FROM game WHERE enabled = :enabled ORDER BY game_id DESC', [
-				'enabled' => $db->escapeBoolean(false),
-			]);
-		}
+		// Get information for "In Development" game table
+		$devGames = [];
+		$dbResult = $db->read('SELECT * FROM game LEFT JOIN game_create_status USING (game_id) WHERE enabled = :enabled ORDER BY game_id DESC', [
+			'enabled' => $db->escapeBoolean(false),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
-			$games[] = Game::getGame($dbRecord->getInt('game_id'));
+			$game = Game::getGame($dbRecord->getInt('game_id'), false, $dbRecord);
+			$allEdit = $dbRecord->getBoolean('all_edit');
+			$creatorId = $dbRecord->getInt('account_id');
+			if ($creatorId === $account->getAccountID() || $canEditEnabledGames || $allEdit) {
+				$editHREF = new EditGalaxy(canEdit: true, gameID: $game->getGameID())->href();
+			} else {
+				$editHREF = null;
+			}
+			if ($creatorId === $account->getAccountID() || $canEditEnabledGames) {
+				$deleteHREF = new GameDeleteConfirm($game->getGameID())->href();
+			} else {
+				$deleteHREF = null;
+			}
+			if ($creatorId === 0) {
+				// fallback for legacy games from before we tracked creators
+				$creator = '';
+			} else {
+				$creator = Account::getAccount($creatorId)->getLogin();
+			}
+			$devGames[] = [
+				'ID' => $game->getGameID(),
+				'Name' => $game->getName(),
+				'Creator' => $creator,
+				'CreateDate' => $dbRecord->getString('create_date'),
+				'ReadyDate' => $dbRecord->getNullableString('ready_date') ?? '',
+				'ViewHREF' => new EditGalaxy(canEdit: false, gameID: $game->getGameID())->href(),
+				'EditHREF' => $editHREF,
+				'DeleteHREF' => $deleteHREF,
+			];
 		}
-		$template->assign('EditGames', $games);
+		$template->assign('DevGames', $devGames);
 	}
 
 }
