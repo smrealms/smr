@@ -1030,7 +1030,7 @@ class Planet {
 
 		// Consume the required resources
 		$constructor->decreaseCredits($this->getStructureTypes($constructionID)->creditCost());
-		$constructor->takeTurns(TURNS_TO_BUILD);
+		$constructor->takeTurns(TURNS_TO_BUILD, TURNS_TO_BUILD);
 		foreach ($this->getStructureTypes($constructionID)->goods() as $goodID => $amount) {
 			$this->decreaseStockpile($goodID, $amount);
 		}
