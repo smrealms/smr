@@ -46,6 +46,22 @@ class DatabaseRecordTest extends TestCase {
 
 	//------------------------------------------------------------------------
 
+	public function test_getNullableBoolean(): void {
+		$record = new DatabaseRecord([
+			'name_true' => 'TRUE',
+			'name_false' => 'FALSE',
+		]);
+		self::assertSame(true, $record->getNullableBoolean('name_true'));
+		self::assertSame(false, $record->getNullableBoolean('name_false'));
+	}
+
+	public function test_getNullableBoolean_with_null_value(): void {
+		$record = new DatabaseRecord(['name' => null]);
+		self::assertSame(null, $record->getNullableBoolean('name'));
+	}
+
+	//------------------------------------------------------------------------
+
 	public function test_getBoolean(): void {
 		$record = new DatabaseRecord([
 			'name_true' => 'TRUE',

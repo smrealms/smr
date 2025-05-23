@@ -19,6 +19,7 @@ class CreateWarps extends AccountPage {
 	public function __construct(
 		private readonly int $gameID,
 		private readonly int $galaxyID,
+		private readonly EditGalaxy $returnTo,
 		private readonly ?string $message = null,
 	) {}
 
@@ -62,16 +63,15 @@ class CreateWarps extends AccountPage {
 		// Get links to other pages
 		$galLinks = [];
 		foreach ($galaxies as $gal) {
-			$container = new self($this->gameID, $gal->getGalaxyID());
+			$container = new self($this->gameID, $gal->getGalaxyID(), $this->returnTo);
 			$galLinks[$gal->getGalaxyID()] = $container->href();
 		}
 		$template->assign('GalLinks', $galLinks);
 
-		$container = new SaveProcessor($this->gameID, $this->galaxyID);
+		$container = new SaveProcessor($this->gameID, $this->galaxyID, $this->returnTo);
 		$template->assign('SubmitHREF', $container->href());
 
-		$container = new EditGalaxy($this->gameID, $this->galaxyID);
-		$template->assign('CancelHREF', $container->href());
+		$template->assign('CancelHREF', $this->returnTo->href());
 
 		$template->assign('Galaxy', $galaxy);
 		$template->assign('Galaxies', $galaxies);

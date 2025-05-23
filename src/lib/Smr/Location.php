@@ -67,6 +67,62 @@ class Location {
 	}
 
 	/**
+	 * @return array<int, self>
+	 */
+	public static function getAllBars(): array {
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT * FROM location_type JOIN location_is_bar USING(location_type_id)');
+		$locations = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$locationTypeID = $dbRecord->getInt('location_type_id');
+			$locations[$locationTypeID] = self::getLocation(0, $locationTypeID, false, $dbRecord);
+		}
+		return $locations;
+	}
+
+	/**
+	 * @return array<int, self>
+	 */
+	public static function getAllBanks(): array {
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT * FROM location_type JOIN location_is_bank USING(location_type_id)');
+		$locations = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$locationTypeID = $dbRecord->getInt('location_type_id');
+			$locations[$locationTypeID] = self::getLocation(0, $locationTypeID, false, $dbRecord);
+		}
+		return $locations;
+	}
+
+	/**
+	 * @return array<int, self>
+	 */
+	public static function getAllWeaponShops(): array {
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT location_type.* FROM location_type JOIN location_sells_weapons USING(location_type_id)');
+		$locations = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$locationTypeID = $dbRecord->getInt('location_type_id');
+			$locations[$locationTypeID] = self::getLocation(0, $locationTypeID, false, $dbRecord);
+		}
+		return $locations;
+	}
+
+	/**
+	 * @return array<int, self>
+	 */
+	public static function getAllShipShops(): array {
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT location_type.* FROM location_type JOIN location_sells_ships USING(location_type_id)');
+		$locations = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$locationTypeID = $dbRecord->getInt('location_type_id');
+			$locations[$locationTypeID] = self::getLocation(0, $locationTypeID, false, $dbRecord);
+		}
+		return $locations;
+	}
+
+	/**
 	 * @return array<int, array<int, self>>
 	 */
 	public static function getGalaxyLocations(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
@@ -193,10 +249,10 @@ class Location {
 	}
 
 	public function getRaceID(): int {
-		if ($this->isFed() && $this->getTypeID() !== LOCATION_TYPE_FEDERAL_BEACON) {
+		if ($this->isFed() && $this->getTypeID() !== LOCATION_FEDERAL_BEACON) {
 			return $this->getTypeID() - LOCATION_GROUP_RACIAL_BEACONS;
 		}
-		if ($this->isHQ() && $this->getTypeID() !== LOCATION_TYPE_FEDERAL_HQ) {
+		if ($this->isHQ() && $this->getTypeID() !== LOCATION_FEDERAL_HQ) {
 			return $this->getTypeID() - LOCATION_GROUP_RACIAL_HQS;
 		}
 		return RACE_NEUTRAL;
@@ -510,15 +566,19 @@ class Location {
 	public function getLinkedLocations(): array {
 		$linkedLocations = [];
 		if ($this->isHQ()) {
-			if ($this->getTypeID() === LOCATION_TYPE_FEDERAL_HQ) {
-				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_TYPE_FEDERAL_BEACON);
-				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_TYPE_FEDERAL_MINT);
+			if ($this->getTypeID() === LOCATION_FEDERAL_HQ) {
+				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_FEDERAL_MINT);
+				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_MONASTERY_OF_THE_IRON_MAIDEN);
+				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_FEDERATION_SHIPYARD);
 			} else {
 				$raceID = $this->getRaceID();
 				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_GROUP_RACIAL_BEACONS + $raceID);
 				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_GROUP_RACIAL_SHIPS + $raceID);
 				$linkedLocations[] = self::getLocation($this->gameID, LOCATION_GROUP_RACIAL_SHOPS + $raceID);
 			}
+		} elseif ($this->isUG()) {
+			$linkedLocations[] = self::getLocation($this->gameID, LOCATION_UNDERGROUND_WEAPONS);
+			$linkedLocations[] = self::getLocation($this->gameID, LOCATION_SMUGGLERS_CRAFT);
 		}
 		return $linkedLocations;
 	}

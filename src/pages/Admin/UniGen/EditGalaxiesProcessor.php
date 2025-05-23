@@ -18,7 +18,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 
 	public function __construct(
 		private readonly int $gameID,
-		private readonly int $galaxyID, // for back button only
+		private readonly EditGalaxy $returnTo,
 	) {}
 
 	public function build(Account $account): never {
@@ -48,9 +48,8 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 		Galaxy::saveGalaxies();
 		Sector::saveSectors();
 
-		$message = '<span class="green">SUCCESS: </span>Edited galaxies (sizes' . ($resized ? ' ' : ' NOT ') . 'changed).';
-		$container = new EditGalaxy($this->gameID, $this->galaxyID, $message);
-		$container->go();
+		$this->returnTo->message = '<span class="green">SUCCESS: </span>Edited galaxies (sizes' . ($resized ? ' ' : ' NOT ') . 'changed).';
+		$this->returnTo->go();
 	}
 
 	/**
@@ -225,7 +224,7 @@ class EditGalaxiesProcessor extends AccountPageProcessor {
 			}
 
 			// Update the sector connections
-			foreach (['Up', 'Down', 'Left', 'Right'] as $dir) {
+			foreach (Sector::getLinkDirs() as $dir) {
 				if ($oldID === false) {
 					// No sector walls for newly added sectors
 					$newSector->enableLink($dir);

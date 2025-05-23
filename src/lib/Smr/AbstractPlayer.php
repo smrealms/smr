@@ -621,7 +621,7 @@ abstract class AbstractPlayer {
 		}
 
 		// get his home sector
-		$hq_id = GOVERNMENT + $this->getRaceID();
+		$hq_id = LOCATION_GROUP_RACIAL_HQS + $this->getRaceID();
 		$raceHqSectors = Sector::getLocationSectors($this->getGameID(), $hq_id);
 		if (count($raceHqSectors) === 0) {
 			// No HQ, default to sector 1

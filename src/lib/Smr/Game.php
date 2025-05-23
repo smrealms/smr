@@ -35,6 +35,10 @@ class Game {
 	protected bool $hasChanged = false;
 	protected bool $isNew = false;
 
+	public const string SQL = 'game_id = :game_id';
+	/** @var array{game_id: int} */
+	public readonly array $SQLID;
+
 	public const int GAME_TYPE_DEFAULT = 0;
 	public const int GAME_TYPE_HUNTER_WARS = 3;
 	public const int GAME_TYPE_SEMI_WARS = 4;
@@ -62,9 +66,47 @@ class Game {
 		}
 	}
 
-	public static function getGame(int $gameID, bool $forceUpdate = false): self {
+	/**
+	 * Get past games (enabled and have ended).
+	 *
+	 * @return array<int, self>
+	 */
+	public static function getPastGames(bool $forceUpdate = false): array {
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT * FROM game WHERE enabled = :enabled AND end_time <= :now ORDER BY game_id DESC', [
+			'enabled' => $db->escapeBoolean(true),
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
+		$games = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$gameId = $dbRecord->getInt('game_id');
+			$games[$gameId] = self::getGame($gameId, $forceUpdate, $dbRecord);
+		}
+		return $games;
+	}
+
+	/**
+	 * Get active games (enabled but not ended).
+	 *
+	 * @return array<int, self>
+	 */
+	public static function getActiveGames(bool $forceUpdate = false): array {
+		$db = Database::getInstance();
+		$dbResult = $db->read('SELECT * FROM game WHERE enabled = :enabled AND end_time > :now ORDER BY game_id DESC', [
+			'enabled' => $db->escapeBoolean(true),
+			'now' => $db->escapeNumber(Epoch::time()),
+		]);
+		$games = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$gameId = $dbRecord->getInt('game_id');
+			$games[$gameId] = self::getGame($gameId, $forceUpdate, $dbRecord);
+		}
+		return $games;
+	}
+
+	public static function getGame(int $gameID, bool $forceUpdate = false, ?DatabaseRecord $dbRecord = null): self {
 		if ($forceUpdate || !isset(self::$CACHE_GAMES[$gameID])) {
-			self::$CACHE_GAMES[$gameID] = new self($gameID);
+			self::$CACHE_GAMES[$gameID] = new self($gameID, create: false, dbRecord: $dbRecord);
 		}
 		return self::$CACHE_GAMES[$gameID];
 	}
@@ -89,14 +131,21 @@ class Game {
 	protected function __construct(
 		protected readonly int $gameID,
 		bool $create = false,
+		?DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
+		$this->SQLID = ['game_id' => $db->escapeNumber($gameID)];
 
-		$dbResult = $db->read('SELECT * FROM game WHERE game_id = :game_id', [
-			'game_id' => $db->escapeNumber($gameID),
-		]);
-		if ($dbResult->hasRecord()) {
-			$dbRecord = $dbResult->record();
+		// Do we already have a database record for this game?
+		if ($dbRecord === null) {
+			$dbResult = $db->read('SELECT * FROM game WHERE ' . self::SQL, $this->SQLID);
+			if ($dbResult->hasRecord()) {
+				$dbRecord = $dbResult->record();
+			}
+		}
+		$gameExists = $dbRecord !== null;
+
+		if ($gameExists) {
 			$this->name = $dbRecord->getString('game_name');
 			$this->description = $dbRecord->getString('game_description');
 			$this->joinTime = $dbRecord->getInt('join_time');
@@ -125,7 +174,7 @@ class Game {
 		$db = Database::getInstance();
 		if ($this->isNew) {
 			$db->insert('game', [
-				'game_id' => $this->getGameID(),
+				...$this->SQLID,
 				'game_name' => $this->getName(),
 				'game_description' => $this->getDescription(),
 				'join_time' => $this->getJoinTime(),
@@ -166,7 +215,7 @@ class Game {
 					'starting_credits' => $this->getStartingCredits(),
 					'destroy_ports' => $db->escapeBoolean($this->canDestroyPorts()),
 				],
-				['game_id' => $this->getGameID()],
+				$this->SQLID,
 			);
 		}
 		$this->isNew = false;
@@ -406,9 +455,7 @@ class Game {
 	public function getTotalPlayers(): int {
 		if (!isset($this->totalPlayers)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT count(*) FROM player WHERE game_id = :game_id', [
-				'game_id' => $db->escapeNumber($this->getGameID()),
-			]);
+			$dbResult = $db->read('SELECT count(*) FROM player WHERE ' . self::SQL, $this->SQLID);
 			$this->totalPlayers = $dbResult->record()->getInt('count(*)');
 		}
 		return $this->totalPlayers;
@@ -461,7 +508,7 @@ class Game {
 					$amount = $relations;
 				}
 				$db->replace('race_has_relation', [
-					'game_id' => $this->getGameID(),
+					...$this->SQLID,
 					'race_id_1' => $raceID1,
 					'race_id_2' => $raceID2,
 					'relation' => $amount,
@@ -484,15 +531,15 @@ class Game {
 				FROM location
 				WHERE location_type_id > :location_type_id_ug
 					AND location_type_id < :location_type_id_fed
-					AND game_id = :game_id
+					AND ' . self::SQL . '
 				ORDER BY location_type_id', [
-				'location_type_id_ug' => $db->escapeNumber(UNDERGROUND),
-				'location_type_id_fed' => $db->escapeNumber(FED),
-				'game_id' => $db->escapeNumber($this->getGameID()),
+				'location_type_id_ug' => $db->escapeNumber(LOCATION_UNDERGROUND),
+				'location_type_id_fed' => $db->escapeNumber(LOCATION_FEDERAL_BEACON),
+				...$this->SQLID,
 			]);
 			$this->playableRaceIDs = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$this->playableRaceIDs[] = $dbRecord->getInt('location_type_id') - GOVERNMENT;
+				$this->playableRaceIDs[] = $dbRecord->getInt('location_type_id') - LOCATION_GROUP_RACIAL_HQS;
 			}
 		}
 		return $this->playableRaceIDs;

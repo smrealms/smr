@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
 use Smr\Globals;
+use Smr\Sector;
 
 /**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Sector $ThisSector
- * @var Smr\Ship $ThisShip
+ * @var ?Smr\Player $ThisPlayer Player to view map as (null if admin view)
  * @var array<array<Smr\Sector>> $MapSectors
+ * @var bool $UniGen If true, enables map editing links
  * @var ?string $DragLocationHREF
  * @var ?string $DragPlanetHREF
  * @var ?string $DragPortHREF
@@ -17,14 +17,13 @@ use Smr\Globals;
 ?>
 <table class="lmt centered"><?php
 	$GalaxyMap = isset($GalaxyMap) && $GalaxyMap;
-	$UniGen ??= false;
 	$MapPlayer = $UniGen ? null : $ThisPlayer;
-	$MovementTypes = ['Up', 'Left', 'Right', 'Down'];
+	$MovementTypes = Sector::getLinkDirs();
 	foreach ($MapSectors as $MapSector) { ?>
 		<tr><?php
 			foreach ($MapSector as $Sector) {
-				$isCurrentSector = !$UniGen && $ThisSector->equals($Sector);
-				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector);
+				$isCurrentSector = $MapPlayer?->getSector()->equals($Sector) ?? false;
+				$isLinkedSector = $MapPlayer?->getSector()->isLinkedSector($Sector) ?? false;
 				$isSeedlistSector = isset($ShowSeedlistSectors) && $ShowSeedlistSectors && $MapPlayer?->getAlliance()->isInSeedlist($Sector) === true;
 				$isVisited = $Sector->isVisited($MapPlayer); ?>
 				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax">
@@ -85,7 +84,7 @@ use Smr\Globals;
 								</div><?php
 							}
 							$Port = null;
-							if (($UniGen || $isCurrentSector) && $Sector->hasPort()) {
+							if (($MapPlayer === null || $isCurrentSector) && $Sector->hasPort()) {
 								$Port = $Sector->getPort();
 							} elseif ($Sector->hasCachedPort($MapPlayer)) {
 								$Port = $Sector->getCachedPort($MapPlayer);
@@ -126,7 +125,7 @@ use Smr\Globals;
 								}
 								if ($isVisited) {
 									if ($Sector->hasWarp()) {
-										if ($GalaxyMap) { ?><a href="<?php echo $Sector->getWarpSector()->getGalaxyMapHREF(); ?>"><?php } elseif ($isCurrentSector) { ?><a href="<?php echo $Sector->getWarpSector()->getLocalMapMoveHREF($ThisPlayer); ?>"><?php } ?>
+										if ($GalaxyMap) { ?><a href="<?php echo $Sector->getWarpSector()->getGalaxyMapHREF(); ?>"><?php } elseif ($isCurrentSector && $MapPlayer !== null) { ?><a href="<?php echo $Sector->getWarpSector()->getLocalMapMoveHREF($MapPlayer); ?>"><?php } ?>
 											<img src="images/warp.png" width="16" height="16"
 												title="Warp to #<?php echo $Sector->getWarp(); ?> (<?php echo $Sector->getWarpSector()->getGalaxy()->getDisplayName(); ?>)"
 												alt="Warp to #<?php echo $Sector->getWarp(); ?>" <?php
@@ -142,7 +141,7 @@ use Smr\Globals;
 							</div><?php
 						}
 						if ($MapPlayer !== null) { // skip in UniGen
-							$CanScanSector = ($ThisShip->hasScanner() && $isLinkedSector) || $isCurrentSector;
+							$CanScanSector = ($MapPlayer->getShip()->hasScanner() && $isLinkedSector) || $isCurrentSector;
 							$ShowFriendlyForces = isset($HideAlliedForces) && $HideAlliedForces ?
 							                      $Sector->hasPlayerForces($MapPlayer) : $Sector->hasFriendlyForces($MapPlayer);
 							if (($CanScanSector && ($Sector->hasForces() || $Sector->hasPlayers())) || $ShowFriendlyForces || $Sector->hasFriendlyTraders($MapPlayer)) { ?>
@@ -177,8 +176,8 @@ use Smr\Globals;
 							</form><?php
 						} elseif ($GalaxyMap) { ?>
 							<a class="move_hack" href="<?php echo $Sector->getGalaxyMapHREF(); ?>"></a><?php
-						} elseif ($isLinkedSector) { ?>
-							<a class="move_hack" href="<?php echo $Sector->getLocalMapMoveHREF($ThisPlayer); ?>"></a><?php
+						} elseif ($isLinkedSector && $MapPlayer !== null) { ?>
+							<a class="move_hack" href="<?php echo $Sector->getLocalMapMoveHREF($MapPlayer); ?>"></a><?php
 						} elseif ($isCurrentSector) { ?>
 							<a class="move_hack" href="<?php echo Globals::getCurrentSectorHREF(); ?>"></a><?php
 						} ?>

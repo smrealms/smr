@@ -264,7 +264,7 @@ class Galaxy {
 	}
 
 	/**
-	 * Returns a 2D array of sectors in the galaxy.
+	 * Returns a 2D array of sectors in the galaxy [row][col].
 	 * If $centerSectorID is specified, it will be in the center of the array.
 	 * If $dist is also specified, only include sectors $dist away from center.
 	 *
@@ -338,16 +338,19 @@ class Galaxy {
 		$this->hasChanged = true;
 	}
 
-	public function generateSectors(): void {
-		$sectorID = $this->getStartSector();
-		$galSize = $this->getSize();
-		for ($i = 0; $i < $galSize; $i++) {
-			$sector = Sector::createSector($this->gameID, $sectorID);
-			$sector->setGalaxyID($this->getGalaxyID());
-			$sector->update(); //Have to save sectors after creating them
-			$sectorID++;
-		}
+	/**
+	 * @return array<int, Sector>
+	 */
+	public function generateSectors(): array {
+		$startSector = $this->getStartSector();
+		$sectors = Sector::createGalaxySectors(
+			gameID: $this->gameID,
+			galaxyID: $this->galaxyID,
+			startSector: $startSector,
+			endSector: $startSector + $this->getSize() - 1,
+		);
 		$this->setConnectivity(100);
+		return $sectors;
 	}
 
 	/**

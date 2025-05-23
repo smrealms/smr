@@ -74,7 +74,7 @@ class DatabaseIntegrationTest extends TestCase {
 		// added that modify the base table size. If that becomes too onerous,
 		// we can do a fuzzier comparison. Until then, this is a useful check
 		// that the test database is properly reset between invocations.
-		self::assertSame($bytes, 712156);
+		self::assertSame($bytes, 728580);
 	}
 
 	public function test_escapeBoolean(): void {

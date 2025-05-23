@@ -109,6 +109,7 @@ try {
 	$template->assign('MapSectors', $mapSectors);
 	$template->assign('ThisShip', $player->getShip());
 	$template->assign('ThisPlayer', $player);
+	$template->assign('UniGen', false); // we are not editing the map here!
 
 	// AJAX updates are not set up for the galaxy map at this time
 	$template->assign('AJAX_ENABLE_REFRESH', false);

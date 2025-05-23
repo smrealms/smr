@@ -123,6 +123,20 @@ class Sector {
 		return self::$CACHE_SECTORS[$gameID][$sectorID];
 	}
 
+	/**
+	 * @return array<int, self>
+	 */
+	public static function createGalaxySectors(int $gameID, int $galaxyID, int $startSector, int $endSector): array {
+		$sectors = [];
+		for ($sectorID = $startSector; $sectorID <= $endSector; $sectorID++) {
+			$sector = self::createSector($gameID, $sectorID);
+			$sector->setGalaxyID($galaxyID);
+			$sectors[$sectorID] = $sector;
+		}
+		self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID] = $sectors;
+		return $sectors;
+	}
+
 	protected function __construct(
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
@@ -467,6 +481,13 @@ class Sector {
 			'Right' => 'Left',
 			default => throw new Exception('Invalid direction: ' . $dir),
 		};
+	}
+
+	/**
+	 * @return list<key-of<self::LINK_DIR_MAPPING>>
+	 */
+	public static function getLinkDirs(): array {
+		return array_keys(self::LINK_DIR_MAPPING);
 	}
 
 	public function getLinkUp(): int {

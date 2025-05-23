@@ -52,6 +52,8 @@ class LocalMap extends PlayerPage {
 
 		$mapSectors = $galaxy->getMapSectors($player->getSectorID(), $player->getZoom());
 		$template->assign('MapSectors', $mapSectors);
+
+		$template->assign('UniGen', false); // we are not editing the map here!
 	}
 
 }

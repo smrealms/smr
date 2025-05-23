@@ -66,6 +66,10 @@ var listjs = (function() {
 		defaultList('draft-pick', ['sort_name', 'sort_race', 'sort_hof', 'sort_score']);
 	};
 
+	listjs.dev_games = function() {
+		defaultList('dev-games', ['sort_id', 'sort_name', 'sort_creator', 'sort_created', 'sort_ready']);
+	};
+
 	return listjs;
 
 })();

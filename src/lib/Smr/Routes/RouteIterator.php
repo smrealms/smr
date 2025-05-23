@@ -2,8 +2,7 @@
 
 namespace Smr\Routes;
 
-use ArrayIterator;
-use InfiniteIterator;
+use Smr\StdlibExtensions\InfiniteArrayIterator;
 use Smr\TransactionType;
 
 /**
@@ -11,8 +10,8 @@ use Smr\TransactionType;
  */
 class RouteIterator {
 
-	/** @var InfiniteIterator<int, OneWayRoute, ArrayIterator<int, OneWayRoute>> */
-	private readonly InfiniteIterator $routeIterator;
+	/** @var InfiniteArrayIterator<int, OneWayRoute> */
+	private readonly InfiniteArrayIterator $routeIterator;
 
 	private TransactionType $transaction = TransactionType::Buy;
 
@@ -20,11 +19,7 @@ class RouteIterator {
 		private readonly MultiplePortRoute $route,
 	) {
 		$oneWayRoutes = $route->getOneWayRoutes();
-		$this->routeIterator = new InfiniteIterator(new ArrayIterator($oneWayRoutes));
-
-		// PHP bug prevents IteratorIterator cache from initializing properly.
-		// Just rewind to force it to populate its cache.
-		$this->routeIterator->rewind();
+		$this->routeIterator = new InfiniteArrayIterator($oneWayRoutes);
 	}
 
 	public function getEntireRoute(): MultiplePortRoute {

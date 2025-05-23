@@ -5,6 +5,7 @@ namespace Smr\Pages\Admin\UniGen;
 use DateTime;
 use Smr\Account;
 use Smr\Database;
+use Smr\Epoch;
 use Smr\Game;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
@@ -52,6 +53,12 @@ class CreateGameProcessor extends AccountPageProcessor {
 		// Start game disabled by default
 		$game->setEnabled(false);
 		$game->save();
+
+		$db->insert('game_create_status', [
+			'game_id' => $db->escapeNumber($game->getGameID()),
+			'account_id' => $db->escapeNumber($account->getAccountID()),
+			'create_date' => $db->escapeString(date('Y-m-d', Epoch::time())),
+		]);
 
 		$container = new CreateGalaxies($game->getGameID());
 		$container->go();

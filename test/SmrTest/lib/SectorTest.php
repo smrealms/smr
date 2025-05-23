@@ -14,6 +14,10 @@ class SectorTest extends TestCase {
 		Sector::clearCache();
 	}
 
+	public function test_getLinkDirs(): void {
+		self::assertSame(['Up', 'Down', 'Left', 'Right'], Sector::getLinkDirs());
+	}
+
 	public function test_setLink(): void {
 		// Construct a new sector
 		$sector = Sector::createSector(1, 1);
@@ -146,6 +150,25 @@ class SectorTest extends TestCase {
 		$dir = 'Down';
 		$sector1->setLink($dir, $sector2->getSectorID());
 		self::assertSame($dir, $sector1->getSectorDirection($sector2->getSectorID()));
+	}
+
+	public function test_createGalaxySectors(): void {
+		// Create sectors
+		$gameId = 3;
+		$galaxyId = 4;
+		$sectors = Sector::createGalaxySectors($gameId, $galaxyId, 5, 7);
+		self::assertCount(3, $sectors);
+
+		// Test that the galaxy cache is populated
+		$sectors2 = Sector::getGalaxySectors($gameId, $galaxyId);
+		self::assertSame($sectors2, $sectors);
+
+		// Test that the individual sector cache is populated
+		$sectors3 = [];
+		foreach ([5, 6, 7] as $sectorId) {
+			$sectors3[$sectorId] = Sector::getSector($gameId, $sectorId);
+		}
+		self::assertSame($sectors3, $sectors);
 	}
 
 }

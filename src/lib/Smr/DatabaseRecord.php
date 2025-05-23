@@ -22,6 +22,13 @@ class DatabaseRecord {
 		return $this->dbRecord[$name];
 	}
 
+	public function getNullableBoolean(string $name): ?bool {
+		if ($this->dbRecord[$name] === null) {
+			return null;
+		}
+		return $this->getBoolean($name);
+	}
+
 	public function getBoolean(string $name): bool {
 		return match ($this->dbRecord[$name]) {
 			'TRUE' => true,
