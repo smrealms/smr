@@ -98,7 +98,8 @@ class EditGalaxy extends AccountPage {
 		$container = new self($this->canEdit, $this->gameID);
 		$template->assign('JumpGalaxyHREF', $container->href());
 
-		$template->assign('RecenterHREF', new self($this->canEdit, $this->gameID)->href());
+		$container = new self($this->canEdit, $this->gameID, $this->galaxyID);
+		$template->assign('RecenterHREF', $container->href());
 
 		$container = new CreateGame();
 		$template->assign('BackButtonHREF', $container->href());
