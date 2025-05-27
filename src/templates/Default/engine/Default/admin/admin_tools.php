@@ -8,9 +8,7 @@ if (isset($ErrorMessage)) {
 if (isset($Message)) {
 	echo $Message; ?><br /><br /><?php
 }
-if (isset($AdminPermissions)) { ?>
-	<h1>Admin Tools</h1>
-	<br /><?php
+if (isset($AdminPermissions)) {
 	foreach ($AdminPermissions as $CategoryID => $Permissions) { ?>
 		<h2><?php echo AdminPermissions::getCategoryName($CategoryID); ?></h2>
 		<ul><?php
