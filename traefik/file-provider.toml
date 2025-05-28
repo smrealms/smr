@@ -1,5 +1,5 @@
-# For services that need to strip off a PathPrefix and/or add a trailing slash
 [http.middlewares]
+  # For services that need to strip off a PathPrefix and/or add a trailing slash
   [http.middlewares.strip-pathprefix.stripPrefixRegex]
     regex = ["/[^/]+"]
   [http.middlewares.add-slash.redirectRegex]
@@ -8,3 +8,14 @@
     permanent = true
   [http.middlewares.slash-then-strip.chain]
     middlewares = ["add-slash", "strip-pathprefix"]
+
+  # Canonicalize non-www to www
+  [http.middlewares.nonwww-to-www.redirectRegex]
+    regex = "^https://smrealms.de/(.*)"
+    replacement = "https://www.smrealms.de/$1"
+    permanent = true
+
+# Set the default minimum TLS to 1.2, as suggested by SSL Labs
+[tls.options]
+  [tls.options.default]
+    minVersion = "VersionTLS12"

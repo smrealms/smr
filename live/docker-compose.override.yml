@@ -1,0 +1,35 @@
+# Service overrides for the live (production) environment
+
+services:
+
+    smtp:
+        restart: unless-stopped
+
+    mysql:
+        restart: unless-stopped
+
+    pma:
+        restart: unless-stopped
+
+    traefik:
+        restart: unless-stopped
+        command:
+          - "--configFile=/etc/traefik/traefik-live.toml"
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.traefik.rule=Host(`traefik.smrealms.de`)"
+            - "traefik.http.routers.traefik.service=api@internal"
+            - "traefik.http.routers.traefik.middlewares=traefik-auth"
+            - "traefik.http.middlewares.traefik-auth.basicauth.users=traefik:$$apr1$$N1XTczE5$$5GvS93f.oSRstkxmjw9JD0"
+
+    backup-s3:
+        image: amazon/aws-cli:2.2.24
+        networks:
+            - backend
+        environment:
+            AWS_ACCESS_KEY_ID: ${S3_ACCESS_KEY}
+            AWS_SECRET_ACCESS_KEY: ${S3_SECRET_KEY}
+        volumes:
+            - ./backup/daily:/aws/daily
+            - ./backup/archive:/aws/archive
+            - ./vol_upload:/aws/player-upload

@@ -1,0 +1,58 @@
+networks:
+    backend: {}
+
+services:
+
+    # MySQL container with no volumes mounted for testing
+    mysql:
+        extends:
+            file: ../abstract-services.yml
+            service: mysql-base
+
+    flyway:
+        extends:
+            file: ../abstract-services.yml
+            service: flyway-base
+
+    phpunit:
+        extends:
+            file: ../abstract-services.yml
+            service: smr-test
+        entrypoint: vendor/bin/phpunit
+        networks:
+            - backend
+        environment:
+            XDEBUG_MODE: coverage
+        depends_on:
+            mysql:
+                condition: service_healthy
+
+    phpstan:
+        extends:
+            file: ../abstract-services.yml
+            service: smr-test
+        entrypoint: vendor/bin/phpstan --memory-limit=4G --ansi analyse -v
+
+    phpcs:
+        extends:
+            file: ../abstract-services.yml
+            service: smr-test
+        entrypoint: vendor/bin/phpcs --report-code --report-source
+
+    phpcbf:
+        extends:
+            file: ../abstract-services.yml
+            service: smr-test
+        entrypoint: vendor/bin/phpcbf
+
+    rector:
+        extends:
+            file: ../abstract-services.yml
+            service: smr-test
+        entrypoint: vendor/bin/rector process
+
+secrets:
+    mysql-password:
+        environment: "MYSQL_PASSWORD"
+    mysql-root-password:
+        environment: "MYSQL_ROOT_PASSWORD"

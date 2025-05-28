@@ -24,10 +24,6 @@ const GOOGLE_CLIENT_SECRET = '';
 
 const GOOGLE_ANALYTICS_ID = '';
 
-// Set to empty string if using a local mailserver.
-// Use the default value if using the provided docker-compose orchestration.
-const SMTP_HOSTNAME = 'smtp';
-
 // E-mail addresses to receive bug reports
 const BUG_REPORT_TO_ADDRESSES = [];
 
