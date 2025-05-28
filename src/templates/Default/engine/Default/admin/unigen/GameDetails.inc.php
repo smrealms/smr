@@ -80,7 +80,7 @@ use Smr\Game;
 		<td class="right">Starting Relations</td>
 		<td>
 			<input required type="number" name="relations" min="<?php echo MIN_GLOBAL_RELATIONS; ?>" max="<?php echo MAX_GLOBAL_RELATIONS; ?>" value="<?php echo $Game['relations']; ?>">
-			Only updated if game hasn't started yet
+			Not updated if game is enabled and has started
 		</td>
 	</tr>
 	<tr>
