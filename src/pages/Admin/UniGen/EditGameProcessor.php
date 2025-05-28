@@ -38,7 +38,7 @@ class EditGameProcessor extends AccountPageProcessor {
 		$game->setStartingCredits(Request::getInt('starting_credits'));
 		$game->setCreditsNeeded(Request::getInt('creds_needed'));
 		$game->setDestroyPorts(Request::getBool('destroy_ports'));
-		if (!$game->hasStarted()) {
+		if (!$game->isEnabled() || !$game->hasStarted()) {
 			$game->setStartingRelations(Request::getInt('relations'));
 		}
 		$game->save();
