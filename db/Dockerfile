@@ -1,3 +1,3 @@
-FROM flyway/flyway:10.14.0-alpine
+FROM flyway/flyway:11.9.0-alpine
 
 COPY ./patches/ /flyway/sql/
