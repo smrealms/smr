@@ -73,12 +73,12 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 		$expected = [
 			VoteSite::TWG->value => [
 				'img' => 'twg_vote.png',
-				'url' => 'http://topwebgames.com/in.aspx?ID=136&account=7&game=42&link=3&alwaysreward=1',
+				'url' => 'https://topwebgames.com/in.aspx?ID=136&account=7&game=42&link=3&alwaysreward=1',
 				'sn' => LOADER_URI . '?sn=gbuyay',
 			],
 			VoteSite::DOG->value => [
 				'img' => 'dog_vote.png',
-				'url' => 'http://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315&votedef=7,42,4',
+				'url' => 'https://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315&votedef=7,42,4',
 				'sn' => LOADER_URI . '?sn=wnpclr',
 			],
 			VoteSite::PBBG->value => [
@@ -100,12 +100,12 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 		$expected = [
 			VoteSite::TWG->value => [
 				'img' => 'twg.png',
-				'url' => 'http://topwebgames.com/in.aspx?ID=136',
+				'url' => 'https://topwebgames.com/in.aspx?ID=136',
 				'sn' => false,
 			],
 			VoteSite::DOG->value => [
 				'img' => 'dog.png',
-				'url' => 'http://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315',
+				'url' => 'https://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315',
 				'sn' => false,
 			],
 			VoteSite::PBBG->value => [
