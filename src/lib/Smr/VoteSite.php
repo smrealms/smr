@@ -26,7 +26,7 @@ enum VoteSite: int {
 			self::TWG => [
 				'img_default' => 'twg.png',
 				'img_star' => 'twg_vote.png',
-				'url_base' => 'http://topwebgames.com/in.aspx?ID=136',
+				'url_base' => 'https://topwebgames.com/in.aspx?ID=136',
 				'url_func' => function($baseUrl, $accountId, $gameId) {
 					$query = ['account' => $accountId, 'game' => $gameId, 'link' => $this->value, 'alwaysreward' => 1];
 					return $baseUrl . '&' . http_build_query($query);
@@ -35,7 +35,7 @@ enum VoteSite: int {
 			self::DOG => [
 				'img_default' => 'dog.png',
 				'img_star' => 'dog_vote.png',
-				'url_base' => 'http://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315',
+				'url_base' => 'https://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315',
 				'url_func' => function($baseUrl, $accountId, $gameId) {
 					$params = implode(',', [$accountId, $gameId, $this->value]);
 					return $baseUrl . '&votedef=' . $params;
