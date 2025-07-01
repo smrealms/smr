@@ -10,7 +10,7 @@
 	],
 	"require": {
 		"abraham/twitteroauth": "7.0.0",
-		"doctrine/dbal": "4.2.3",
+		"doctrine/dbal": "4.2.4",
 		"ext-curl": "*",
 		"ext-json": "*",
 		"ext-pdo_mysql": "*",
