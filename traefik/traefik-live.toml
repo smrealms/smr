@@ -25,7 +25,7 @@
 [api]
 
 [certificatesResolvers.myresolver.acme]
-  email = "mrspock@smrealms.de,daniel.hemberger@gmail.com"
+  email = "daniel.hemberger@gmail.com"
   storage = "/etc/traefik/acme.json"
   caServer = "https://acme-v02.api.letsencrypt.org/directory"
   [certificatesResolvers.myresolver.acme.tlsChallenge]
