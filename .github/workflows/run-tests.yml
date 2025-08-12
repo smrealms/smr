@@ -29,7 +29,7 @@ jobs:
         run: docker compose config
 
       - name: Validate live compose
-        run: SMR_BASE_IMG_SERVICE=smr-base-img-live SMR_BASE_SRC_SERVICE=smr-base-src-build docker compose config -f docker-compose.yml -f live/docker-compose.yml
+        run: SMR_BASE_IMG_SERVICE=smr-base-img-live SMR_BASE_SRC_SERVICE=smr-base-src-build docker compose -f docker-compose.yml -f live/docker-compose.yml config
 
       - name: Validate test compose
         run: docker compose --project-directory test config
