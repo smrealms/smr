@@ -1,5 +1,5 @@
 # Allow passwordless login to mysql via commandline
 [client]
 host=localhost
-user=smr
+user=root
 password=smr
