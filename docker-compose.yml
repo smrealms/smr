@@ -93,7 +93,8 @@ services:
             - frontend
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
-            - ./traefik:/etc/traefik:ro
+            # Mount read+write for writing acme.json file in live
+            - ./traefik:/etc/traefik:rw
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.traefik.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
