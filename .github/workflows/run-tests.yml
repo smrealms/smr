@@ -22,6 +22,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
 
+      - name: Set up the default dev environment
+        run: ln -s .env.sample .env
+
       - name: Validate typical dev compose
         run: docker compose config
 
