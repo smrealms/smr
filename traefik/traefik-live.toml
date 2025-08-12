@@ -1,0 +1,36 @@
+[entryPoints]
+
+  [entryPoints.http]
+    address = ":80"
+
+    [entryPoints.http.http.redirections.entryPoint]
+      to = "https"
+      scheme = "https"
+      permanent = true
+
+  [entryPoints.https]
+    address = ":443"
+
+    [entryPoints.https.http.tls]
+      certResolver = "myresolver"
+
+[providers]
+  [providers.docker]
+    exposedByDefault = false
+    network = "frontend"
+  [providers.file]
+    filename = "/etc/traefik/file-provider.toml"
+
+# We need this for the traefik dashboard to work
+[api]
+
+[certificatesResolvers.myresolver.acme]
+  email = "mrspock@smrealms.de,daniel.hemberger@gmail.com"
+  storage = "/etc/traefik/acme.json"
+  caServer = "https://acme-v02.api.letsencrypt.org/directory"
+  [certificatesResolvers.myresolver.acme.tlsChallenge]
+
+[log]
+  level = "INFO"
+
+[accessLog]

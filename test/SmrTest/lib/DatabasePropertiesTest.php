@@ -14,7 +14,6 @@ class DatabasePropertiesTest extends TestCase {
 	private const MYSQL_PASSWORD_FILE = '/tmp/phpunit_dummy_mysql_password';
 
 	private const TEST_ENV = [
-		'MYSQL_HOST' => 'host',
 		'MYSQL_USER' => 'user',
 		'MYSQL_DATABASE' => 'database',
 		'MYSQL_PASSWORD_FILE' => self::MYSQL_PASSWORD_FILE,
@@ -66,13 +65,12 @@ class DatabasePropertiesTest extends TestCase {
 
 		// Then the properties have expected values
 		$dbProperties = new DatabaseProperties();
-		self::assertEquals('host', $dbProperties->host);
+		self::assertEquals(MYSQL_HOSTNAME, $dbProperties->host);
 		self::assertEquals('user', $dbProperties->user);
 		self::assertEquals('pass', $dbProperties->password);
 		self::assertEquals('database', $dbProperties->database);
 	}
 
-	#[TestWith(['MYSQL_HOST'])]
 	#[TestWith(['MYSQL_USER'])]
 	#[TestWith(['MYSQL_DATABASE'])]
 	#[TestWith(['MYSQL_PASSWORD_FILE'])]

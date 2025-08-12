@@ -7,7 +7,7 @@ use Exception;
 /**
  * Expects the following environment variables to be set by the OS:
  *
- *  MYSQL_HOST
+ *  MYSQL_HOSTNAME
  *  MYSQL_USER
  *  MYSQL_DATABASE
  *  MYSQL_PASSWORD_FILE
@@ -20,7 +20,7 @@ class DatabaseProperties {
 	public readonly string $database;
 
 	public function __construct() {
-		$this->host = $this->getFromEnv('MYSQL_HOST');
+		$this->host = MYSQL_HOSTNAME;
 		$this->user = $this->getFromEnv('MYSQL_USER');
 		$this->database = $this->getFromEnv('MYSQL_DATABASE');
 		$passwordFile = $this->getFromEnv('MYSQL_PASSWORD_FILE');

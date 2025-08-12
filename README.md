@@ -18,6 +18,7 @@ First, you will need to clone this repository. Then inside the clone, you
 will need to create installation-specific copies of the following files:
 
 * `.env.sample` &rarr; `.env`
+* `.my.cnf.sample` &rarr; `.my.cnf`
 * `config/config.specific.sample.php` &rarr; `config/config.specific.php`
 
 The sample versions have sensible defaults, but update the copies as necessary.
@@ -43,12 +44,6 @@ Then you can start up the persistent game services
 ```
 docker compose up --build -d traefik smr
 ```
-
-For development, it may be desirable to automatically pick up source code changes without rebuilding the docker image. Simply use the `smr-dev` service instead of `smr`, i.e.:
-```
-docker compose up --build -d traefik smr-dev
-```
-
 
 # Runtime
 

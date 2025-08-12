@@ -13,7 +13,6 @@ updates:
     - "/"
     - "/.github/actions/api-docs"
     - "/api-docs"
-    - "/db"
   schedule:
     interval: daily
   rebase-strategy: disabled

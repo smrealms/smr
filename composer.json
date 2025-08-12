@@ -32,24 +32,24 @@
 		}
 	},
 	"scripts": {
-		"start:dev": [
-			"docker compose up -d traefik smr-dev"
+		"start": [
+			"docker compose up -d traefik smr"
 		],
-		"rebuild:dev": [
-			"docker compose up --build -d smr-dev"
+		"rebuild": [
+			"docker compose up --build -d smr"
 		],
 		"start:test-services": [
-			"docker compose --env-file test/env up -d mysql-test",
+			"docker compose --project-directory test up -d mysql",
 			"@rebuild:test-services"
 		],
 		"reset:test-services": [
-			"docker compose --env-file test/env stop mysql-test",
-			"docker compose --env-file test/env rm -f -v mysql-test",
+			"docker compose --project-directory test stop mysql",
+			"docker compose --project-directory test rm -f -v mysql",
 			"@start:test-services"
 		],
 		"rebuild:test-services": [
-			"docker compose --env-file test/env build phpunit",
-			"docker compose --env-file test/env run --rm flyway-test"
+			"docker compose --project-directory test build phpunit",
+			"docker compose --project-directory test run --rm flyway"
 		],
 		"test": [
 			"@phpstan",
@@ -58,19 +58,19 @@
 			"@rector"
 		],
 		"phpunit": [
-			"docker compose --env-file test/env run --rm phpunit"
+			"docker compose --project-directory test run --rm phpunit"
 		],
 		"phpcs": [
-			"docker compose --env-file test/env run --rm phpcs"
+			"docker compose --project-directory test run --rm phpcs"
 		],
 		"phpcbf": [
-			"docker compose --env-file test/env run --rm phpcbf"
+			"docker compose --project-directory test run --rm phpcbf"
 		],
 		"phpstan": [
-			"docker compose --env-file test/env run --rm phpstan"
+			"docker compose --project-directory test run --rm phpstan"
 		],
 		"rector": [
-			"docker compose --env-file test/env run --rm rector --dry-run"
+			"docker compose --project-directory test run --rm rector --dry-run"
 		],
 		"stop": [
 			"docker compose stop",

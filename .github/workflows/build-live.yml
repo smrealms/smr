@@ -21,16 +21,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push web
+      - name: Build and push live branch
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: smrealms/smr:web
-
-      - name: Build and push flyway
-        uses: docker/build-push-action@v6
-        with:
-          context: ./db
-          push: true
-          tags: smrealms/smr:flyway
+          tags: smrealms/smr:live

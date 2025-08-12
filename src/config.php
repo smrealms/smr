@@ -3,6 +3,10 @@
 ini_set('date.timezone', 'UTC');
 error_reporting(E_ALL);
 
+// Container hostnames (from docker-compose service names)
+const MYSQL_HOSTNAME = 'mysql';
+const SMTP_HOSTNAME = 'smtp';
+
 // Repository paths
 const ROOT = __DIR__ . '/../';
 const LIB = ROOT . 'src/lib/';

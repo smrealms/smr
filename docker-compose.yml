@@ -1,116 +1,32 @@
 networks:
     frontend:
-        name: frontend
-        external: false
-    backend:
-        name: backend
-        external: false
-    backend-test:
-        name: backend-test
-        external: false
-
-# Base configuration for services that use the local smr image
-x-smr-base: &smr-base
-    build:
-        context: .
-        args:
-            - NO_DEV
-    image: local/smr
-    pull_policy: never
-    environment: &smr-base-env
-        MYSQL_HOST:
-        MYSQL_USER:
-        MYSQL_DATABASE:
-        MYSQL_PASSWORD_FILE: /run/secrets/mysql-password
-    secrets:
-        - source: mysql-password
-
-# Web configuration for `smr` (production) and `smr-dev` (testing).
-x-smr-web: &smr-web
-    <<: *smr-base
-    container_name: ${SMR_HOST}
-    networks:
-        - frontend
-        - backend
-    labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.${SMR_HOST}.rule=${SMR_RULE:-PathPrefix(`/`)}"
-    depends_on:
-        - mysql
-        - smtp
-    environment:
-        <<: *smr-base-env
-        XDEBUG_MODE:
-        DISABLE_PHPDI_COMPILATION:
-    # Allow the process to be interruptible with SIGINT.
-    # For tests, this may corrupt the test database and require a reset.
-    # CLI programs may not be cleaned up properly if interrupted.
-    # (see https://github.com/docker-library/php/issues/505)
-    init: true
-
-# Base configuration for the SMR command line tools
-x-smr-cli: &smr-cli
-    <<: *smr-base
-    networks:
-        - backend
-    depends_on:
-        - mysql
-        - smtp
-    volumes:
-        - ./config:/smr/config:ro
-        # Mount the source code instead of copying it.
-        - ./src:/smr/src:ro
-
-# Base configuration for SMR testing tools
-x-smr-test: &smr-test
-    <<: *smr-base
-    environment:
-        <<: *smr-base-env
-        XDEBUG_MODE: "off"
-    volumes:
-        - ./config/config.specific.sample.php:/smr/config/config.specific.php:ro
-        - ./phpunit.xml:/smr/phpunit.xml:ro
-        - ./phpstan.neon.dist:/smr/phpstan.neon.dist:ro
-        - ./phpcs.xml:/smr/phpcs.xml:ro
-        - ./rector.php:/smr/rector.php:ro
-        # Mount the source code instead of copying it.
-        - ./src:/smr/src:rw
-        - ./test:/smr/test:rw
-
-x-mysql-common: &mysql-common
-    image: mysql:8.1
-    container_name: ${MYSQL_HOST}
-    environment:
-        - MYSQL_USER
-        - MYSQL_DATABASE
-        - MYSQL_PASSWORD_FILE=/run/secrets/mysql-password
-        - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
-    secrets:
-        - mysql-password
-        - mysql-root-password
-    command: [ "mysqld",
-               "--character-set-server=utf8",
-               "--collation-server=utf8_general_ci" ]
-    healthcheck:
-        test: mysql -uroot -p$$(cat $$MYSQL_ROOT_PASSWORD_FILE) -e 'SHOW DATABASES'
-        interval: 5s
-        timeout: 20s
+        external: true
+    backend: {}
 
 services:
-    smr:
-        <<: *smr-web
-        volumes:
-            - ./vol_upload:/smr/src/htdocs/upload:rw
-            - ./config:/smr/config:ro
 
-    smr-dev:
-        <<: *smr-web
+    # Configuration for the SMR game engine
+    smr:
+        extends:
+            file: abstract-services.yml
+            service: smr-base
+        networks:
+            - frontend
+            - backend
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-smr.rule=${SMR_HOST_RULE} && PathPrefix(`/`)"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-smr.middlewares=nonwww-to-www@file"
+        depends_on:
+            - mysql
+            - smtp
+        environment:
+            XDEBUG_MODE:
+            DISABLE_PHPDI_COMPILATION:
         volumes:
             - ./vol_upload:/smr/src/htdocs/upload:rw
             - ./config:/smr/config:ro
-            # Mount the source code instead of copying it.
-            - ./src:/smr/src:ro
-            # Directory for Xdebug profiler output
+            # Directory for Xdebug profiler output (if enabled)
             - ./vol_xdebug:/tmp/xdebug:rw
 
     smtp:
@@ -118,74 +34,24 @@ services:
         networks:
             - backend
         environment:
-            - POSTFIX_myhostname=hostname.local
+            - POSTFIX_myhostname=${POSTFIX_HOSTNAME:-hostname.local}
             - OPENDKIM_DOMAINS=smrealms.de=key1
         volumes:
             - ./opendkim:/etc/opendkim/keys/smrealms.de:rw
 
-    flyway: &flyway-common
-        image: flyway/flyway:10.14.0-alpine
-        # Allow retries in case the mysql service is still spinning up
-        command: migrate
-        environment:
-            FLYWAY_CONNECT_RETRIES: 20
-            FLYWAY_PASSWORD: ${MYSQL_PASSWORD}
-            FLYWAY_URL: "jdbc:mysql://${MYSQL_HOST}/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true&useSSL=false"
-            FLYWAY_USER: ${MYSQL_USER}
-        networks:
-            - backend
+    flyway:
+        extends:
+            file: abstract-services.yml
+            service: flyway-base
         depends_on:
             - mysql
-        volumes:
-            - ./db/patches:/flyway/sql:ro
-
-    flyway-test:
-        <<: *flyway-common
-        networks:
-            - backend-test
-        depends_on:
-            - mysql-test
 
     mysql:
-        <<: *mysql-common
-        networks:
-            - backend
+        extends:
+            file: abstract-services.yml
+            service: mysql-base
         volumes:
             - ./vol_db:/var/lib/mysql:rw
-
-    # MySQL container with no volumes mounted for testing
-    mysql-test:
-        <<: *mysql-common
-        networks:
-            - backend-test
-
-    phpunit:
-        <<: *smr-test
-        entrypoint: vendor/bin/phpunit
-        networks:
-            - backend-test
-        environment:
-            <<: *smr-base-env
-            XDEBUG_MODE: coverage
-        depends_on:
-            mysql-test:
-                condition: service_healthy
-
-    phpstan:
-        <<: *smr-test
-        entrypoint: vendor/bin/phpstan --memory-limit=4G --ansi analyse -v
-
-    phpcs:
-        <<: *smr-test
-        entrypoint: vendor/bin/phpcs --report-code --report-source
-
-    phpcbf:
-        <<: *smr-test
-        entrypoint: vendor/bin/phpcbf
-
-    rector:
-        <<: *smr-test
-        entrypoint: vendor/bin/rector process
 
     pma:
         image: phpmyadmin/phpmyadmin
@@ -193,26 +59,33 @@ services:
             - frontend
             - backend
         environment:
-            PMA_HOST: ${MYSQL_HOST}
+            PMA_HOST: mysql
             PMA_ABSOLUTE_URI: /pma/
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.pma-${MYSQL_HOST}.rule=${SMR_RULE:-PathPrefix(`/`)} && PathPrefix(`/pma`)"
-            - "traefik.http.routers.pma-${MYSQL_HOST}.middlewares=slash-then-strip@file"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-pma.rule=${SMR_HOST_RULE} && PathPrefix(`/pma`)"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-pma.middlewares=slash-then-strip@file"
         depends_on:
             - mysql
 
     discord:
+        extends:
+            file: abstract-services.yml
+            service: smr-cli
         command: php src/tools/discord/bot.php
-        <<: *smr-cli
 
     irc:
+        extends:
+            file: abstract-services.yml
+            service: smr-cli
         command: php src/tools/irc/irc.php
-        <<: *smr-cli
 
     npc:
+        extends:
+            file: abstract-services.yml
+            service: smr-cli
         command: php src/tools/npc/npc.php
-        <<: *smr-cli
+        restart: "no"
 
     traefik:
         image: traefik:3.3
@@ -229,6 +102,12 @@ services:
         ports:
             - "80:80"
             - "443:443"
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "100m"
+                max-file: "7"
+                compress: "true"
 
     # Generate rich API documentation of the SMR source code.
     api-docs:

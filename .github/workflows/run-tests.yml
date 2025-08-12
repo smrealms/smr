@@ -15,6 +15,25 @@ env:
   BUILDKIT_PROGRESS: plain
 
 jobs:
+  validate-compose:
+    name: Validate docker-compose configurations
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Set up the default dev environment
+        run: ln -s .env.sample .env
+
+      - name: Validate typical dev compose
+        run: docker compose config
+
+      - name: Validate live compose
+        run: SMR_BASE_IMG_SERVICE=smr-base-img-live SMR_BASE_SRC_SERVICE=smr-base-src-build docker compose -f docker-compose.yml -f live/docker-compose.override.yml config
+
+      - name: Validate test compose
+        run: docker compose --project-directory test config
+
   build:
     name: Build
     runs-on: ubuntu-22.04

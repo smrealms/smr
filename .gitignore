@@ -1,18 +1,7 @@
-
-# /
-/.buildpath
-/.project
-/.idea
-*.iml
-/nbproject
-/composer.lock
-
-# /.settings/
-/.settings/
-
 # /config/
 /.env
 /config/config.specific.php
+/.my.cnf
 
 # /htdocs/
 /src/htdocs/upload
@@ -20,15 +9,16 @@
 # DKIM private keys
 /opendkim
 
-# Docker data volumes
+# Docker volume mount points
 /vol_*
-
-/sys$command
-
-/newsletters
-/vendor
-.phpunit*
-out/
 
 # Coverage files created by phpunit
 /test/coverage
+
+# Traefik certificate store
+/traefik/acme.json
+
+# Database backups
+/backup/daily
+/backup/archive
+/backup/manual

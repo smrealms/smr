@@ -1,0 +1,117 @@
+# Abstract services that are used as the base for real services.
+# This mechanism allows for dynamic inheritence based on environment variables,
+# and extending services used by both the root and test docker-compose.yml.
+
+services:
+    # The "smr-base-img" services determine if we build a local smr image or
+    # download the one from DockerHub.
+    smr-base-img-live:
+        image: smrealms/smr:live
+        restart: unless-stopped
+
+    smr-base-img-local:
+        build:
+            context: .
+            args:
+                - NO_DEV
+        image: local/smr
+        pull_policy: never
+
+    smr-base-img:
+        extends: ${SMR_BASE_IMG_SERVICE}
+
+    # The "smr-base-src" services determine if we use the source code that was
+    # built into the image or overwrite it with a volume mount.
+    smr-base-src-mount:
+        extends: smr-base-img
+        volumes:
+            # Mount the source code instead of copying it.
+            - ./src:/smr/src:ro
+
+    smr-base-src-build:
+        extends: smr-base-img
+
+    smr-base-src:
+        extends: ${SMR_BASE_SRC_SERVICE}
+
+    # The "smr-base" service provides the remaining fields that are common to
+    # all game-related services (i.e. smr/cli/test).
+    smr-base:
+        extends: smr-base-src
+        environment:
+            MYSQL_USER:
+            MYSQL_DATABASE:
+            MYSQL_PASSWORD_FILE: /run/secrets/mysql-password
+        secrets:
+            - mysql-password
+        # Allow the process to be interruptible with SIGINT.
+        # For tests, this may corrupt the test database and require a reset.
+        # CLI programs may not be cleaned up properly if interrupted.
+        # (see https://github.com/docker-library/php/issues/505)
+        init: true
+
+    # Base configuration for the SMR command line tools
+    smr-cli:
+        extends: smr-base
+        networks:
+            - backend
+        depends_on:
+            - mysql
+            - smtp
+        volumes:
+            - ./config:/smr/config:ro
+
+    # Base configuration for SMR testing tools
+    smr-test:
+        extends: smr-base
+        environment:
+            XDEBUG_MODE: "off"
+        volumes:
+            - ./config/config.specific.sample.php:/smr/config/config.specific.php:ro
+            - ./phpunit.xml:/smr/phpunit.xml:ro
+            - ./phpstan.neon.dist:/smr/phpstan.neon.dist:ro
+            - ./phpcs.xml:/smr/phpcs.xml:ro
+            - ./rector.php:/smr/rector.php:ro
+            # Mount the source code instead of copying it (read+write for rector)
+            - ./src:/smr/src:rw
+            - ./test:/smr/test:rw
+
+    mysql-base:
+        image: mysql:8.1
+        # By using the default image, we must expose the secrets in
+        # the runtime environment (because we can't specify build args).
+        environment:
+            - MYSQL_USER
+            - MYSQL_DATABASE
+            - MYSQL_PASSWORD_FILE=/run/secrets/mysql-password
+            - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-password
+        secrets:
+            - mysql-password
+            - mysql-root-password
+        volumes:
+            - ./.my.cnf:/root/.my.cnf:ro
+        networks:
+            - backend
+        command: [ "mysqld",
+                   "--character-set-server=utf8",
+                   "--collation-server=utf8_general_ci" ]
+        healthcheck:
+            test: mysql -e 'SHOW DATABASES'
+            interval: 5s
+            timeout: 20s
+
+    flyway-base:
+        image: flyway/flyway:10.14.0-alpine
+        command: migrate
+        environment:
+            # Allow retries in case the mysql service is still spinning up
+            FLYWAY_CONNECT_RETRIES: 20
+            FLYWAY_PASSWORD: ${MYSQL_PASSWORD}
+            FLYWAY_URL: "jdbc:mysql://mysql/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true&useSSL=false"
+            FLYWAY_USER: ${MYSQL_USER}
+        volumes:
+            - ./db/patches:/flyway/sql:ro
+        networks:
+            - backend
+        depends_on:
+            - mysql
