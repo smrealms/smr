@@ -5,10 +5,12 @@ namespace SmrTest\lib;
 use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Smr\AbstractPlayer;
 use Smr\AbstractShip;
+use Smr\Combat\Weapon\Weapon;
 use Smr\ShipClass;
 use Smr\ShipIllusion;
 
@@ -43,6 +45,64 @@ class AbstractShipTest extends TestCase {
 		self::assertSame(6, $ship->getHardpoints());
 		self::assertSame(10, $ship->getType()->getSpeed());
 		self::assertSame(0, $ship->getCost());
+	}
+
+	/**
+	 * @param array<int> $expectedIDs
+	 */
+	#[TestWith([0, [1, 2, 0]])] // Moving the top reorders all
+	#[TestWith([1, [1, 0, 2]])] // Swap first and second
+	#[TestWith([2, [0, 2, 1]])] // Swap second and third
+	public function test_moveWeaponUp(int $moveID, array $expectedIDs): void {
+		$ship = new AbstractShip($this->player);
+		$weapons = [
+			Weapon::getWeapon(WEAPON_TYPE_LASER),
+			Weapon::getWeapon(WEAPON_TYPE_LARGE_PULSE_LASER),
+			Weapon::getWeapon(WEAPON_TYPE_HUGE_PULSE_LASER),
+		];
+		foreach ($weapons as $weapon) {
+			$ship->addWeapon($weapon);
+		}
+
+		$ship->moveWeaponUp($moveID);
+		$expected = array_map(fn(int $id) => $weapons[$id], $expectedIDs);
+		self::assertSame($expected, $ship->getWeapons());
+	}
+
+	/**
+	 * @param array<int> $expectedIDs
+	 */
+	#[TestWith([0, [1, 0, 2]])] // Swap first and second
+	#[TestWith([1, [0, 2, 1]])] // Swap second and third
+	#[TestWith([2, [2, 0, 1]])] // Moving the bottom reorders all
+	public function test_moveWeaponDown(int $moveID, array $expectedIDs): void {
+		$ship = new AbstractShip($this->player);
+		$weapons = [
+			Weapon::getWeapon(WEAPON_TYPE_LASER),
+			Weapon::getWeapon(WEAPON_TYPE_LARGE_PULSE_LASER),
+			Weapon::getWeapon(WEAPON_TYPE_HUGE_PULSE_LASER),
+		];
+		foreach ($weapons as $weapon) {
+			$ship->addWeapon($weapon);
+		}
+
+		$ship->moveWeaponDown($moveID);
+		$expected = array_map(fn(int $id) => $weapons[$id], $expectedIDs);
+		self::assertSame($expected, $ship->getWeapons());
+	}
+
+	public function test_moveWeaponUp_no_weapons(): void {
+		$ship = new AbstractShip($this->player);
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('This method cannot be used when there are no weapons');
+		$ship->moveWeaponUp(0);
+	}
+
+	public function test_moveWeaponDown_no_weapons(): void {
+		$ship = new AbstractShip($this->player);
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('This method cannot be used when there are no weapons');
+		$ship->moveWeaponDown(0);
 	}
 
 	public function test_cloak(): void {
