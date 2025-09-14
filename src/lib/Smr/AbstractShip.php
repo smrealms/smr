@@ -199,6 +199,9 @@ class AbstractShip {
 	}
 
 	public function moveWeaponDown(int $orderID): void {
+		if (count($this->weapons) === 0) {
+			throw new Exception('This method cannot be used when there are no weapons');
+		}
 		$replacement = $orderID + 1;
 		if ($replacement >= count($this->weapons)) {
 			// Shift everything down by one and put the selected weapon at the top
