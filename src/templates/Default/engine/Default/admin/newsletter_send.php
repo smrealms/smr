@@ -30,7 +30,7 @@ if (!isset($NewsletterId)) { ?>
 			<td><?php echo $NewsletterHtml; ?></td>
 		</tr>
 	</table>
-  <br />
+	<br />
 
 	<p>Plain text body (will only be displayed if HTML is empty or in e-mail clients that don't support HTML):</p>
 	<table class="standard" width=75%>

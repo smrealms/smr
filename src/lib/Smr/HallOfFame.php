@@ -90,10 +90,15 @@ class HallOfFame {
 	public static function applyHofVisibilityMask(float $amount, string $vis, ?int $gameID, int $accountID): string|float {
 		$session = Session::getInstance();
 		$account = $session->getAccount();
-		if (($vis === HOF_PRIVATE && $account->getAccountID() !== $accountID) ||
-		    ($vis === HOF_ALLIANCE && isset($gameID) &&
-		     !Game::getGame($gameID)->hasEnded() &&
-		     !Player::getPlayer($accountID, $gameID)->sameAlliance($session->getPlayer()))) {
+		if (
+			($vis === HOF_PRIVATE && $account->getAccountID() !== $accountID) ||
+			(
+				$vis === HOF_ALLIANCE &&
+				isset($gameID) &&
+				!Game::getGame($gameID)->hasEnded() &&
+				!Player::getPlayer($accountID, $gameID)->sameAlliance($session->getPlayer())
+			)
+		) {
 			return '-';
 		}
 		return $amount;

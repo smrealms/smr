@@ -21,7 +21,7 @@ if (count($Papers) > 0) { ?>
 }
 foreach ($Papers as $Paper) { ?>
 	<span class="red">***</span><i><?php echo $Paper['title']; ?></i>
-	 which contains <span class="<?php echo $Paper['color']; ?>"><?php echo $Paper['num_articles']; ?> </span>articles.<?php
+	which contains <span class="<?php echo $Paper['color']; ?>"><?php echo $Paper['num_articles']; ?> </span>articles.<?php
 	if ($Paper['published']) { ?>
 		<span class="bold green">PUBLISHED!</span><?php
 	} elseif (isset($Paper['PublishHREF'])) { ?>

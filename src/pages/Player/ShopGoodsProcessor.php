@@ -137,10 +137,11 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 		}
 
 		// can we accept the current price?
-		if ($stealing ||
-			  ($transaction === TransactionType::Buy && $bargain_price >= $ideal_price) ||
-			  ($transaction === TransactionType::Sell && $bargain_price <= $ideal_price)) {
-
+		if (
+			$stealing ||
+			($transaction === TransactionType::Buy && $bargain_price >= $ideal_price) ||
+			($transaction === TransactionType::Sell && $bargain_price <= $ideal_price)
+		) {
 			// base xp is the amount you would get for a perfect trade.
 			// this is the absolut max. the real xp can only be smaller.
 			$base_xp = Port::getBaseExperience($amount, $port->getGoodDistance($good_id));

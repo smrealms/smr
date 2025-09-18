@@ -44,7 +44,7 @@ use Smr\TransactionType;
 	</select>
 	<br />
 
-  <?php
+	<?php
 	if ($SelectedPortLevel) { ?>
 		<br /><span class="bold red">WARNING: </span>Ports should only have (Level + 2) number of goods.
 		These options will be ignored if you are changing the port level.

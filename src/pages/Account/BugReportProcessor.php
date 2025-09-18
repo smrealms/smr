@@ -18,12 +18,12 @@ class BugReportProcessor extends AccountPageProcessor {
 		$description = Request::get('description');
 
 		$delim = EOL . EOL . '-----------' . EOL . EOL;
-		$message = 'Login: ' . $account->getLogin() . EOL .
-			'Account ID: ' . $account->getAccountID() . $delim .
-			'Subject: ' . $subject . $delim .
-			'Description: ' . $description . $delim .
-			'Steps to repeat: ' . $steps . $delim .
-			'Error Message: ' . $error_msg;
+		$message = 'Login: ' . $account->getLogin() . EOL
+			. 'Account ID: ' . $account->getAccountID() . $delim
+			. 'Subject: ' . $subject . $delim
+			. 'Description: ' . $description . $delim
+			. 'Steps to repeat: ' . $steps . $delim
+			. 'Error Message: ' . $error_msg;
 
 		if ($session->hasGame()) {
 			$player = $session->getPlayer();

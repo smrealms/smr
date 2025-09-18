@@ -78,7 +78,8 @@ class AllianceRoles extends PlayerPage {
 			'ExemptWithdrawals' => false,
 			'SendAllianceMessage' => false,
 			'OpLeader' => false,
-			'ViewBondsInPlanetList' => false]);
+			'ViewBondsInPlanetList' => false,
+		]);
 	}
 
 }

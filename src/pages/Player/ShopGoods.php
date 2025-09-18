@@ -62,10 +62,11 @@ class ShopGoods extends PlayerPage {
 					$player->increaseHOF(1, ['Trade', 'Search', 'Caught', 'Number Of Times'], HOF_PUBLIC);
 					//find the fine
 					//get base for ports that dont happen to trade that good
-					$fine = $totalFine = $port->getLevel() *
-					    (($ship->getCargo(GOODS_SLAVES) * TradeGood::get(GOODS_SLAVES)->basePrice) +
-					     ($ship->getCargo(GOODS_WEAPONS) * TradeGood::get(GOODS_WEAPONS)->basePrice) +
-					     ($ship->getCargo(GOODS_NARCOTICS) * TradeGood::get(GOODS_NARCOTICS)->basePrice));
+					$fine = $totalFine = $port->getLevel() * (
+						($ship->getCargo(GOODS_SLAVES) * TradeGood::get(GOODS_SLAVES)->basePrice) +
+						($ship->getCargo(GOODS_WEAPONS) * TradeGood::get(GOODS_WEAPONS)->basePrice) +
+						($ship->getCargo(GOODS_NARCOTICS) * TradeGood::get(GOODS_NARCOTICS)->basePrice)
+					);
 					$player->increaseHOF($ship->getCargo(GOODS_SLAVES) + $ship->getCargo(GOODS_WEAPONS) + $ship->getCargo(GOODS_NARCOTICS), ['Trade', 'Search', 'Caught', 'Goods Confiscated'], HOF_PUBLIC);
 					$player->increaseHOF($totalFine, ['Trade', 'Search', 'Caught', 'Amount Fined'], HOF_PUBLIC);
 					$template->assign('TotalFine', $totalFine);

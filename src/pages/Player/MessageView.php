@@ -90,8 +90,8 @@ class MessageView extends PlayerPage {
 		$container = new MessageDeleteProcessor($folderID);
 		$messageBox['DeleteFormHref'] = $container->href();
 
-		$dbResult = $db->read('SELECT * FROM message WHERE ' .
-					$whereClause . '
+		$dbResult = $db->read('SELECT * FROM message WHERE '
+					. $whereClause . '
 					ORDER BY send_time DESC
 					LIMIT :limit_offset, :limit_count', [
 			...$whereParams,

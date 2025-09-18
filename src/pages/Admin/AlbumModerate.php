@@ -55,13 +55,13 @@ class AlbumModerate extends AccountPage {
 		$container = new AlbumModerateProcessor($account_id, 'delete_comment');
 		$template->assign('DeleteCommentHREF', $container->href());
 
-		$default_email = 'Dear Photo Album User,' . EOL . EOL .
-						 'You have received this email as notification that the picture you submitted to the Space Merchant Realms Photo Album has been temporarily disabled due to a Photo Album Rules violation.' . EOL .
-						 'Please visit ' . URL . '/album.php or log into the SMR site to upload a new picture.' . EOL .
-						 'Reply to this email when you have uploaded a new picture so we may re-enable your pic.' . EOL .
-						 'Note: Please allow up to 48 hours for changes to occur.' . EOL .
-						 'Thanks,' . EOL . EOL .
-						 'Admin Team';
+		$default_email = 'Dear Photo Album User,' . EOL . EOL
+			. 'You have received this email as notification that the picture you submitted to the Space Merchant Realms Photo Album has been temporarily disabled due to a Photo Album Rules violation.' . EOL
+			. 'Please visit ' . URL . '/album.php or log into the SMR site to upload a new picture.' . EOL
+			. 'Reply to this email when you have uploaded a new picture so we may re-enable your pic.' . EOL
+			. 'Note: Please allow up to 48 hours for changes to occur.' . EOL
+			. 'Thanks,' . EOL . EOL
+			. 'Admin Team';
 		$template->assign('DisableEmail', $default_email);
 
 		$template->assign('Comments', $album->getComments($account->getDateTimeFormat()));

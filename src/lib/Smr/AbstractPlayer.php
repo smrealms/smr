@@ -1012,10 +1012,12 @@ abstract class AbstractPlayer {
 	 * participate in battles.
 	 */
 	public function canFight(): bool {
-		return !($this->hasNewbieTurns() ||
-		         $this->isDead() ||
-		         $this->isLandedOnPlanet() ||
-		         $this->hasFederalProtection());
+		return !(
+			$this->hasNewbieTurns() ||
+			$this->isDead() ||
+			$this->isLandedOnPlanet() ||
+			$this->hasFederalProtection()
+		);
 	}
 
 	public function setDead(bool $bool): void {

@@ -10,6 +10,9 @@
     <file>test/</file>
 
     <rule ref="vendor/fig-r/psr2r-sniffer/PSR2R/ruleset.xml">
+        <!-- Allow misalignment of leading brace for compactness. -->
+        <exclude name="Generic.Arrays.ArrayIndent.OpenBraceIncorrect" />
+
         <!-- Do not require trait names to end in "Trait". -->
         <exclude name="PSR2R.Classes.TraitName" />
 
@@ -36,6 +39,9 @@
 
         <!-- Erroneous sniff. Disables a real language feature. -->
         <exclude name="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue" />
+
+        <!-- Don't be prescriptive about enum casing (e.g. HQ/UG) -->
+        <exclude name="PhpCollective.Classes.EnumCaseCasing.WrongCasing" />
 
         <!-- We do not demand that all constants have a docstring. -->
         <exclude name="PhpCollective.Commenting.DocBlockConst" />

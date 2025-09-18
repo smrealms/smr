@@ -18,9 +18,9 @@ class ContactFormProcessor extends AccountPageProcessor {
 		$mail->setFrom('contact@smrealms.de');
 		$mail->addReplyTo($account->getEmail(), $account->getLogin());
 		$mail->Body =
-			'Login:' . EOL . '------' . EOL . $account->getLogin() . EOL . EOL .
-			'Account ID:' . EOL . '-----------' . EOL . $account->getAccountID() . EOL . EOL .
-			'Message:' . EOL . '------------' . EOL . $msg;
+			'Login:' . EOL . '------' . EOL . $account->getLogin() . EOL . EOL
+			. 'Account ID:' . EOL . '-----------' . EOL . $account->getAccountID() . EOL . EOL
+			. 'Message:' . EOL . '------------' . EOL . $msg;
 		$mail->addAddress($receiver);
 		foreach (CONTACT_FORM_CC_ADDRESSES as $ccAddress) {
 			$mail->addCC($ccAddress);

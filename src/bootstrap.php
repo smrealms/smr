@@ -18,13 +18,13 @@ function logException(Throwable $err): void {
 
 		if ($session->hasAccount()) {
 			$account = $session->getAccount();
-			$message .= 'Login: ' . $account->getLogin() . "\n" .
-				'E-Mail: ' . $account->getEmail() . "\n" .
-				'Account ID: ' . $account->getAccountID();
+			$message .= 'Login: ' . $account->getLogin() . "\n"
+				. 'E-Mail: ' . $account->getEmail() . "\n"
+				. 'Account ID: ' . $account->getAccountID();
 			if ($session->hasGame()) {
-				$message .= "\n" .
-					'Game ID: ' . $session->getGameID() . "\n" .
-					'Sector ID: ' . $session->getPlayer()->getSectorID();
+				$message .= "\n"
+					. 'Game ID: ' . $session->getGameID() . "\n"
+					. 'Sector ID: ' . $session->getPlayer()->getSectorID();
 			}
 			$message .= $delim;
 		}
@@ -52,18 +52,18 @@ function logException(Throwable $err): void {
 	$message .= $delim;
 
 	$message .=
-		'User IP: ' . getIpAddress() . "\n" .
-		'User Agent: ' . ($_SERVER['HTTP_USER_AGENT'] ?? 'undefined') . "\n" .
-		'URL: ' . (defined('URL') ? URL : 'undefined');
+		'User IP: ' . getIpAddress() . "\n"
+		. 'User Agent: ' . ($_SERVER['HTTP_USER_AGENT'] ?? 'undefined') . "\n"
+		. 'URL: ' . (defined('URL') ? URL : 'undefined');
 
 	// Try to release lock so they can carry on normally
 	if (DiContainer::initialized(SectorLock::class)) {
 		try {
 			SectorLock::getInstance()->release();
 		} catch (Throwable $ee) {
-			$message .= $delim .
-					'Releasing Lock Failed' . "\n" .
-					'Message: ' . $ee . "\n";
+			$message .= $delim
+					. 'Releasing Lock Failed' . "\n"
+					. 'Message: ' . $ee . "\n";
 		}
 	}
 
@@ -99,8 +99,8 @@ function logException(Throwable $err): void {
 	// Send error message to e-mail so that we have a permanent record
 	if (count(BUG_REPORT_TO_ADDRESSES) > 0) {
 		$mail = setupMailer();
-		$mail->Subject = (defined('PAGE_PREFIX') ? PAGE_PREFIX : '??? ') .
-		                 'Automatic Bug Report: ' . $err->getMessage();
+		$mail->Subject = (defined('PAGE_PREFIX') ? PAGE_PREFIX : '??? ')
+			. 'Automatic Bug Report: ' . $err->getMessage();
 		$mail->setFrom('bugs@smrealms.de');
 		$mail->Body = $message;
 		foreach (BUG_REPORT_TO_ADDRESSES as $toAddress) {

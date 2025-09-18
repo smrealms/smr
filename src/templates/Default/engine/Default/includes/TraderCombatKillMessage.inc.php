@@ -13,6 +13,6 @@ if (isset($ShootingPlayer)) {
 } else {
 	// Killed by port, planet, forces
 	echo 'The <span class="creds"> ' . number_format($KillResults['LostCredits'])
-	     . '</span> credits that were onboard ' . $TargetPlayer->getDisplayName()
-	     . "'s ship are lost in the wreckage.<br />";
+		. '</span> credits that were onboard ' . $TargetPlayer->getDisplayName()
+		. "'s ship are lost in the wreckage.<br />";
 }
