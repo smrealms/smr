@@ -823,8 +823,8 @@ class Account {
 		]);
 
 		$emailMessage =
-			'Your validation code is: ' . $this->getValidationCode() . EOL . EOL .
-			'The Space Merchant Realms server is on the web at ' . URL;
+			'Your validation code is: ' . $this->getValidationCode() . EOL . EOL
+			. 'The Space Merchant Realms server is on the web at ' . URL;
 
 		$mail = setupMailer();
 		$mail->Subject = 'Space Merchant Realms Validation Code';

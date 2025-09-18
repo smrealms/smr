@@ -745,15 +745,19 @@ class AbstractShip {
 	}
 
 	public function isFederal(): bool {
-		return $this->getTypeID() === SHIP_TYPE_FEDERAL_DISCOVERY ||
-		       $this->getTypeID() === SHIP_TYPE_FEDERAL_WARRANT ||
-		       $this->getTypeID() === SHIP_TYPE_FEDERAL_ULTIMATUM;
+		return (
+			$this->getTypeID() === SHIP_TYPE_FEDERAL_DISCOVERY ||
+			$this->getTypeID() === SHIP_TYPE_FEDERAL_WARRANT ||
+			$this->getTypeID() === SHIP_TYPE_FEDERAL_ULTIMATUM
+		);
 	}
 
 	public function isUnderground(): bool {
-		return $this->getTypeID() === SHIP_TYPE_THIEF ||
-		       $this->getTypeID() === SHIP_TYPE_ASSASSIN ||
-		       $this->getTypeID() === SHIP_TYPE_DEATH_CRUISER;
+		return (
+			$this->getTypeID() === SHIP_TYPE_THIEF ||
+			$this->getTypeID() === SHIP_TYPE_ASSASSIN ||
+			$this->getTypeID() === SHIP_TYPE_DEATH_CRUISER
+		);
 	}
 
 	/**

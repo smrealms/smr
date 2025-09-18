@@ -52,10 +52,10 @@ class FeatureRequestComments extends AccountPage {
 			foreach ($dbResult->records() as $dbRecord) {
 				$commentID = $dbRecord->getInt('comment_id');
 				$featureRequestComments[$commentID] = [
-										'CommentID' => $commentID,
-										'Message' => $dbRecord->getString('text'),
-										'Time' => date($account->getDateTimeFormat(), $dbRecord->getInt('posting_time')),
-										'Anonymous' => $dbRecord->getBoolean('anonymous'),
+					'CommentID' => $commentID,
+					'Message' => $dbRecord->getString('text'),
+					'Time' => date($account->getDateTimeFormat(), $dbRecord->getInt('posting_time')),
+					'Anonymous' => $dbRecord->getBoolean('anonymous'),
 				];
 				if ($featureModerator || !$dbRecord->getBoolean('anonymous')) {
 					$featureRequestComments[$commentID]['PosterAccount'] = Account::getAccount($dbRecord->getInt('poster_id'));

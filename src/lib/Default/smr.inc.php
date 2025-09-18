@@ -212,13 +212,13 @@ function bbify(string $message, ?int $gameID = null, bool $noLinks = false): str
 		]);
 
 		$smrRule = [
-				'mode' => BBCode::BBCODE_MODE_CALLBACK,
-				'method' => smrBBCode(...),
-				'class' => 'link',
-				'allow_in' => ['listitem', 'block', 'columns', 'inline'],
-				'end_tag' => BBCode::BBCODE_PROHIBIT,
-				'content' => BBCode::BBCODE_PROHIBIT,
-			];
+			'mode' => BBCode::BBCODE_MODE_CALLBACK,
+			'method' => smrBBCode(...),
+			'class' => 'link',
+			'allow_in' => ['listitem', 'block', 'columns', 'inline'],
+			'end_tag' => BBCode::BBCODE_PROHIBIT,
+			'content' => BBCode::BBCODE_PROHIBIT,
+		];
 		$bbParser->addRule('combatlog', $smrRule);
 		$bbParser->addRule('player', $smrRule);
 		$bbParser->addRule('alliance', $smrRule);

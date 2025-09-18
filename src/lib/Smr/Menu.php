@@ -206,12 +206,13 @@ class Menu {
 
 		$template = Template::getInstance();
 		$template->assign('MenuItems', [
-						['Link' => Globals::getTraderStatusHREF(), 'Text' => 'Trader Status'],
-						['Link' => Globals::getPlanetListHREF($player->getAllianceID()), 'Text' => 'Planets'],
-						['Link' => Globals::getAllianceHREF($player->getAllianceID()), 'Text' => 'Alliance'],
-						['Link' => Globals::getCouncilHREF($player->getRaceID()), 'Text' => 'Politics'],
-						['Link' => Globals::getTraderRelationsHREF(), 'Text' => 'Relations'],
-						['Link' => Globals::getTraderBountiesHREF(), 'Text' => 'Bounties']]);
+			['Link' => Globals::getTraderStatusHREF(), 'Text' => 'Trader Status'],
+			['Link' => Globals::getPlanetListHREF($player->getAllianceID()), 'Text' => 'Planets'],
+			['Link' => Globals::getAllianceHREF($player->getAllianceID()), 'Text' => 'Alliance'],
+			['Link' => Globals::getCouncilHREF($player->getRaceID()), 'Text' => 'Politics'],
+			['Link' => Globals::getTraderRelationsHREF(), 'Text' => 'Relations'],
+			['Link' => Globals::getTraderBountiesHREF(), 'Text' => 'Bounties'],
+		]);
 	}
 
 	/*

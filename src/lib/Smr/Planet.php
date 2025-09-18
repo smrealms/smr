@@ -1143,8 +1143,8 @@ class Planet {
 		]);
 		if (!$dbResult->hasRecord()) {
 			if (count($attackers) >= 5) {
-				$text = count($attackers) . ' members of ' . $trigger->getAllianceBBLink() . ' have been spotted attacking ' .
-					$this->getDisplayName() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()) . '. The planet is owned by ' . $owner->getBBLink();
+				$text = count($attackers) . ' members of ' . $trigger->getAllianceBBLink() . ' have been spotted attacking '
+					. $this->getDisplayName() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()) . '. The planet is owned by ' . $owner->getBBLink();
 				if ($owner->hasAlliance()) {
 					$text .= ', a member of ' . $owner->getAllianceBBLink();
 				}
