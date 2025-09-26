@@ -98,7 +98,9 @@ services:
         healthcheck:
             test: mysql -e 'SHOW DATABASES'
             interval: 5s
-            timeout: 20s
+            timeout: 5s
+            retries: 10
+            start_period: 30s
 
     flyway-base:
         image: flyway/flyway:10.14.0-alpine
