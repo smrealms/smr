@@ -26,3 +26,12 @@ updates:
   schedule:
     interval: daily
   rebase-strategy: disabled
+
+- package-ecosystem: docker-compose
+  directories:
+    - "/"
+    - "/test"
+    - "/live"
+  schedule:
+    interval: daily
+  rebase-strategy: disabled
