@@ -16,6 +16,6 @@ if (count($Approved) === 0) { ?>
 			} ?>
 		</select>
 		&nbsp;
-		<input type="submit" value="Submit" />
+		<?php echo create_submit_display('Submit'); ?>
 	</form><?php
 }

@@ -92,12 +92,12 @@
 							</td>
 							<td>
 								<br />
-								<input type="submit" name="action" value="Send" />
+								<?php echo create_submit('action', 'Send'); ?>
 							</td><?php
 							if (isset($CanModerate) && $CanModerate) { ?>
 								<td>
 									<br />
-									<input type="submit" name="action" value="Moderate" formnovalidate />
+									<?php echo create_submit('action', 'Moderate', fields: ['formnovalidate' => true]); ?>
 								</td><?php
 							} ?>
 						</tr>

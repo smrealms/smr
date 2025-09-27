@@ -137,7 +137,7 @@ if ($Alliance->getAllianceID() === $ThisPlayer->getAllianceID()) { ?>
 	if (isset($Roles) && $CanChangeRoles) { ?>
 		&nbsp;&nbsp;
 		<form id="roles" style="display: inline;" method="POST" action="<?php echo $SaveAllianceRolesHREF; ?>">
-			<input type="submit" name="action" value="Save Alliance Roles">
+			<?php echo create_submit('action', 'Save Alliance Roles'); ?>
 		</form><?php
 	}
 }
@@ -150,7 +150,7 @@ if ($JoinRestriction === false) { ?>
 			<p>Enter password to join alliance</p>
 			<input required name="password" size="30">&nbsp;<?php
 		} ?>
-		<input type="submit" name="action" value="Join">
+		<?php echo create_submit('action', 'Join'); ?>
 	</form><?php
 } elseif ($JoinRestriction !== true) { ?>
 	<p><?php echo $JoinRestriction; ?></p><?php

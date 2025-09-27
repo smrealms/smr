@@ -26,7 +26,7 @@
 				<td><?php echo $Good->basePrice; ?></td>
 				<td><?php echo $ThisShip->getCargo($GoodID); ?></td>
 				<td><input type="number" name="amount" value="<?php echo min($Amount, $ThisShip->getCargoHolds()); ?>" size="4" class="center"></td>
-				<td><input type="submit" name="action" value="Loot" /></td>
+				<td><?php echo create_submit('action', 'Loot'); ?></td>
 			</tr>
 		</form><?php
 	} ?>

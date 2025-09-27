@@ -13,6 +13,6 @@ account <?php echo $ToAccountID; ?> with Hall of Fame name <?php echo $HofName; 
 
 <p class="bold">Please make sure this is definitely the correct person before confirming.</p>
 <form method="POST" action="<?php echo $SubmitHREF; ?>">
-	<input type="submit" name="action" value="Yes" />&nbsp;&nbsp;
-	<input type="submit" name="action" value="No" />
+	<?php echo create_submit('action', 'Yes'); ?>&nbsp;&nbsp;
+	<?php echo create_submit('action', 'No'); ?>
 </form>

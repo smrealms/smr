@@ -46,7 +46,7 @@ if (count($PlayerList) > 0) { ?>
 			foreach ($PlayerList as $PlayerID => $PlayerName) {
 				?><option value="<?php echo $PlayerID; ?>"><?php echo $PlayerName; ?></option><?php
 			} ?>
-		</select>&nbsp;<input type="submit"/>
+		</select>&nbsp;<?php echo create_submit_display('Submit'); ?>
 	</form><?php
 } else { ?>
 	<p>You have challenged every player.</p><?php
@@ -60,7 +60,7 @@ if (isset($NPCList)) {
 				foreach ($NPCList as $PlayerID => $PlayerName) {
 					?><option value="<?php echo $PlayerID; ?>"><?php echo $PlayerName; ?></option><?php
 				} ?>
-			</select>&nbsp;<input type="submit"/>
+			</select>&nbsp;<?php echo create_submit_display('Submit'); ?>
 		</form><?php
 	} else { ?>
 		<p>You have challenged every NPC.</p><?php

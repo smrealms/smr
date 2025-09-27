@@ -11,5 +11,5 @@
 	<input type="number" value="<?php echo $BanPoints; ?>" name="BanPoints" size="4" /> Add Ban Points<br /><br />
 	<input type="number" value="<?php echo $RewardCredits; ?>" name="RewardCredits" size="4" /> Add Reward Credits<br />
 	<p>Sending the message will add ban points or reward credits, if specified above.</p>
-	<input type="submit" name="action" value="Send message" />&nbsp;<input type="submit" name="action" value="Preview message" />
+	<?php echo create_submit('action', 'Send message'); ?>&nbsp;<?php echo create_submit('action', 'Preview message'); ?>
 </form>

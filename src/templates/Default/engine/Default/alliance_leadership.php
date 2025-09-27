@@ -21,5 +21,5 @@ Please select the new Leader:
 		} ?>
 	</select>
 	<br /><br />
-	<input type="submit" name="action" value="Handover Leadership" />
+	<?php echo create_submit('action', 'Handover Leadership'); ?>
 </form>

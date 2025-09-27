@@ -289,6 +289,52 @@ function create_submit_link(Page $container, string $text): string {
 	return '<a href="' . $container->href() . '" class="submitStyle">' . $text . '</a>';
 }
 
+/**
+ * Create a submit element that will not add any data to the submitted form.
+ *
+ * @param array<string, string | int | true> $fields
+ */
+function create_submit_display(string $display, array $fields = []): string {
+	// Add arbitrary extra fields to the element
+	$extra = '';
+	foreach ($fields as $fieldKey => $fieldValue) {
+		if ($fieldValue === true) {
+			// Special handling for boolean fields since libxml does not support HTML5
+			$fieldValue = 'true';
+		}
+		$extra .= ' ' . $fieldKey . '="' . $fieldValue . '"';
+
+	}
+
+	// No name attribute means value is ignored on submission (only used for display)
+	return '<input type="submit" value="' . $display . '"' . $extra . ' />';
+}
+
+/**
+ * Create a submit element that will add a name-value field to the submitted form data.
+ *
+ * @param array<string, string | int | true> $fields
+ */
+function create_submit(string $name, string $value, ?string $display = null, array $fields = []): string {
+	if ($display === null) {
+		$display = $value;
+	}
+
+	// Add arbitrary extra fields to the element
+	$extra = '';
+	foreach ($fields as $fieldKey => $fieldValue) {
+		if ($fieldValue === true) {
+			// Special handling for boolean fields since libxml does not support HTML5
+			$fieldValue = 'true';
+		}
+		$extra .= ' ' . $fieldKey . '="' . $fieldValue . '"';
+
+	}
+
+	// Use button instead of input element to prevent value from being translated
+	return '<button name="' . $name . '" value="' . $value . '"' . $extra . '>' . $display . '</button>';
+}
+
 function get_colored_text_range(float $value, int $maxValue, ?string $text = null, int $minValue = 0): string {
 	if ($text === null) {
 		$text = number_format($value);

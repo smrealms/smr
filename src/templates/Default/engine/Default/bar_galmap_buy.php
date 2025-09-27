@@ -16,6 +16,6 @@
 			} ?>
 		</select>
 		<br /><br />
-		<input type="submit" name="action" value="Buy the map" />
+		<?php echo create_submit('action', 'Buy the map'); ?>
 	</form>
 </div>

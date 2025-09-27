@@ -8,7 +8,7 @@ if (isset($PreviewVote)) { ?><table class="standard"><tr><td><?php echo bbify(ht
 <form name="VoteForm" method="POST" action="<?php echo $VoteFormHREF; ?>">
 	Question: <input type="text" name="question" required value="<?php if (isset($PreviewVote)) { echo bbify(htmlentities($PreviewVote)); } ?>" /><br />
 	Days to end: <input type="number" name="days" required value="<?php if (isset($Days)) { echo $Days; } ?>" /><br />
-	<input type="submit" name="action" value="Create Vote" />&nbsp;<input type="submit" name="action" value="Preview Vote" />
+	<?php echo create_submit('action', 'Create Vote'); ?>&nbsp;<?php echo create_submit('action', 'Preview Vote'); ?>
 </form>
 <br /><br />
 
@@ -20,5 +20,5 @@ if (isset($PreviewVote)) { ?><table class="standard"><tr><td><?php echo bbify(ht
 		} ?>
 	</select><br />
 	Option: <input type="text" name="option" required value="<?php if (isset($PreviewOption)) { echo htmlspecialchars($PreviewOption); } ?>" /><br />
-	<input type="submit" name="action" value="Add Option" />&nbsp;<input type="submit" name="action" value="Preview Option" />
+	<?php echo create_submit('action', 'Add Option'); ?>&nbsp;<?php echo create_submit('action', 'Preview Option'); ?>
 </form>

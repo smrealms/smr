@@ -33,11 +33,11 @@
 	<input type="text" name="validation_code" maxlength="10" size="10" class="center">
 </p>
 <p class="center">
-	<input type="submit" name="action" value="Validate me now!">
+	<?php echo create_submit('action', 'Validate me now!'); ?>
 	&nbsp;&nbsp;
-	<button type="submit" name="action" value="resend">Resend code</button>
+	<?php echo create_submit('action', 'resend', 'Resend code'); ?>
 	&nbsp;&nbsp;
-	<button type="submit" name="action" value="skip">I'll validate later</button>
+	<?php echo create_submit('action', 'skip', 'I\'ll validate later'); ?>
 </p>
 </form>
 

@@ -138,7 +138,7 @@ if (!isset($JoinGameFormHref)) { ?>
 
 					<tr>
 						<td>&nbsp;</td>
-						<td><input type="submit" name="action" value="Create Player" /></td>
+						<td><?php echo create_submit('action', 'Create Player'); ?></td>
 					</tr>
 
 					<tr>

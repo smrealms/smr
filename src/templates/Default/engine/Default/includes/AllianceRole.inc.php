@@ -66,7 +66,9 @@
 			}
 		} ?>
 		<tr>
-			<td colspan="2" class="center"><input type="submit" name="action" value="<?php if ($Role['CreatingRole']) { ?>Create<?php } elseif ($Role['EditingRole']) { ?>Submit Changes<?php } else { ?>Edit<?php } ?>"></td>
+			<td colspan="2" class="center">
+				<?php echo create_submit('action', ($Role['CreatingRole'] ? 'Create' : ($Role['EditingRole'] ? 'Submit Changes' : 'Edit'))); ?>
+			</td>
 		</tr>
 	</table>
 </form><br />

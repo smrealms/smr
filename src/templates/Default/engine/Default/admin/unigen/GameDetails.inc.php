@@ -91,7 +91,9 @@ use Smr\Game;
 		</td>
 	</tr>
 	<tr>
-		<td class="center" colspan="2"><input type="submit" value="<?php echo $SubmitValue; ?>" name="submit"></td>
+		<td class="center" colspan="2">
+			<?php echo create_submit('submit', $SubmitValue); ?>
+		</td>
 	</tr>
 	</table>
 </form>

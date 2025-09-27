@@ -30,8 +30,8 @@ if (count($GoodInfo) === 0) { ?>
 				<td class="center"><?php echo $info['PlanetAmount']; ?></td>
 				<td><input type="number" name="amount" value="<?php echo $info['DefaultAmount']; ?>" class="center" size="4" /></td>
 				<td class="center">
-					<input type="submit" name="action" value="Ship" />&thinsp;
-					<input type="submit" name="action" value="Planet" />
+					<?php echo create_submit('action', 'Ship'); ?>&thinsp;
+					<?php echo create_submit('action', 'Planet'); ?>
 				</td>
 			</tr>
 		</form><?php

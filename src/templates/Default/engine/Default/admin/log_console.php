@@ -28,7 +28,7 @@ if (count($LoggedAccounts) > 0) { ?>
 			<tr>
 				<td colspan="3">&nbsp;</td>
 				<td>
-					<input type="submit" name="action" value="View" />&nbsp;&nbsp;<input type="submit" name="action" value="Delete" />
+					<?php echo create_submit('action', 'View'); ?>&nbsp;&nbsp;<?php echo create_submit('action', 'Delete'); ?>
 				</td>
 			</tr>
 		</table>

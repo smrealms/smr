@@ -14,5 +14,5 @@ if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Previ
 	</p>
 	<textarea spellcheck="true" name="message" required><?php if (isset($Preview)) { echo $Preview; } ?></textarea><br />
 	<br />
-	<input type="submit" name="action" value="Send message" />&nbsp;<input type="submit" name="action" value="Preview message" />
+	<?php echo create_submit('action', 'Send message'); ?>&nbsp;<?php echo create_submit('action', 'Preview message'); ?>
 </form>

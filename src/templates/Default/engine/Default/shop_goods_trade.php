@@ -35,7 +35,7 @@ Note: In order to maximize your experience you have to bargain with the port own
 	<!-- all needed information to calculate the ideal price -->
 	<!-- Trade.Amount:Good.BasePrice:Good.Distance:Port.Good.Amount:Port.Good.Max:Relations -->
 	<!-- (<?php echo implode(':', $TradeCalcInfo); ?>)-->
-	<input type="submit" name="action" value="Bargain (1)" />
+	<?php echo create_submit('action', 'Bargain (1)'); ?>
 </form>
 
 <p>Distance Index: <?php echo $Port->getGoodDistance($Good->id); ?></p>

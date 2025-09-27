@@ -16,7 +16,7 @@ $this->includeTemplate('includes/CommonNews.inc.php'); ?>
 		<input type="number" name="min_news" value="<?php echo $MinNews; ?>" class="center">
 		&nbsp;-&nbsp;
 		<input type="number" name="max_news" value="<?php echo $MaxNews; ?>" class="center">&nbsp;<br />
-		<input type="submit" name="action" value="View" />
+		<?php echo create_submit('action', 'View'); ?>
 	</div>
 </form>
 

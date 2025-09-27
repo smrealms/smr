@@ -14,5 +14,5 @@
 		} ?>
 	</select>
 	&nbsp;&nbsp;
-	<input type="submit" name="action" value="Delete" />
+	<?php echo create_submit('action', 'Delete'); ?>
 </form>

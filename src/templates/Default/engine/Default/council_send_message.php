@@ -17,5 +17,5 @@
 
 	<textarea spellcheck="true" name="message"></textarea>
 	<br /><br />
-	<input type="submit" name="action" value="Send message" />
+	<?php echo create_submit('action', 'Send message'); ?>
 </form>

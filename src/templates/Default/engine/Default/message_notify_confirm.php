@@ -17,7 +17,7 @@ You have selected the following message:<br /><br />
 <small><b>Please note:</b> Abuse of this system could end in disablement.<br />Therefore, please only notify if the message is inappropriate.</small></p>
 
 <form method="POST" action="<?php echo $ProcessingHREF; ?>">
-	<input type="submit" name="action" value="Yes" />
+	<?php echo create_submit('action', 'Yes'); ?>
 	&nbsp;&nbsp;
-	<input type="submit" name="action" value="No" />
+	<?php echo create_submit('action', 'No'); ?>
 </form>

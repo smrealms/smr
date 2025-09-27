@@ -34,8 +34,8 @@ if (count($ActiveGames) === 0) {
 			</tr>
 			<tr>
 				<td colspan=2>
-					<input type="submit" name="submit" value="Assign">&nbsp;
-					<input type="submit" name="submit" value="Remove">
+					<?php echo create_submit('submit', 'Assign'); ?>&nbsp;
+					<?php echo create_submit('submit', 'Remove'); ?>
 				</td>
 			</tr>
 		</table>

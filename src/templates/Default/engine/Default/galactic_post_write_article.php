@@ -23,5 +23,5 @@ What is the title?<br />
 	<input type="text" name="title" class="center" style="width:525;" value="<?php if (isset($PreviewTitle)) { echo htmlspecialchars($PreviewTitle); } ?>" required><br /><br />
 	<br />Write what you want to write here!<br />
 	<textarea spellcheck="true" name="message" required><?php if (isset($Preview)) { echo $Preview; } ?></textarea><br /><br />
-	<input type="submit" name="action" value="Submit article" />&nbsp;<input type="submit" name="action" value="Preview article" />
+	<?php echo create_submit('action', 'Submit article'); ?>&nbsp;<?php echo create_submit('action', 'Preview article'); ?>
 </form>

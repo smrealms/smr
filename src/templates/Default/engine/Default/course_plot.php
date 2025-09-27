@@ -23,7 +23,7 @@
 			<td><input required type="number" size="5" name="from" maxlength="5" class="center" value="<?php echo $ThisPlayer->getSectorID(); ?>"></td>
 			<td>&nbsp;&nbsp;&nbsp;&nbsp;To:&nbsp;</td>
 			<td><input required type="number" size="5" name="to" maxlength="5" class="center"></td>
-			<td>&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="action" value="Plot Course"></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo create_submit('action', 'Plot course'); ?></td>
 		</tr>
 	</table>
 </form><?php
@@ -39,7 +39,7 @@ $this->includeTemplate('includes/JumpDrive.inc.php'); ?>
 		?><option value="<?php echo $EachXType->value; ?>"<?php if (isset($XType) && $EachXType === $XType) { ?> selected="selected"<?php } ?>><?php echo $EachXType->value; ?></option><?php
 	} ?>
 	</select>&nbsp;
-	<input type="submit" value="Select" />
+	<?php echo create_submit_display('Select'); ?>
 </form><?php
 if (isset($XType)) { ?>
 	<form class="standard" id="PlotNearestForm" method="POST" action="<?php echo $PlotNearestFormLink; ?>">
@@ -49,7 +49,7 @@ if (isset($XType)) { ?>
 				<option value="<?php echo $Value; ?>"><?php echo $Name; ?></option><?php
 			} ?>
 		</select>&nbsp;
-		<input type="submit" value="Go" />
+		<?php echo create_submit_display('Go'); ?>
 	</form><?php
 } ?>
 
@@ -79,7 +79,7 @@ Add new destinations below. Stored destinations can be organized by dragging.
 	<input type="hidden" name="type" value="add"/>
 	<input type="hidden" name="offsetTop" value="0"/>
 	<input type="hidden" name="offsetLeft" value="0"/>
-	<input type="submit" value="Add Destination"/>
+	<?php echo create_submit_display('Add Destination'); ?>
 </form>
 
 <form  id="plotCourseForm" method="POST" action="<?php echo $PlotCourseFormLink; ?>">

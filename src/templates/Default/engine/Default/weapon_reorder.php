@@ -42,7 +42,7 @@ if ($ThisShip->hasWeapons()) { ?>
 			} ?>
 			</table>
 			<br />
-			<input type="submit" value="Update Weapon Order" />
+			<?php echo create_submit_display('Update Weapon Order'); ?>
 		</form>
 	</div>
 	<?php $this->addJavascriptSource('/js/weapon_reorder.js');

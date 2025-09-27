@@ -7,7 +7,7 @@
 		<td class="top" width="50%">
 			<p>Display only the following types:</p>
 			<form method="POST" action="<?php echo $UpdateHREF; ?>">
-				<input type="submit" name="action" value="Update" />
+				<?php echo create_submit('action', 'Update'); ?>
 				<br /><br />
 				<?php
 				foreach ($LogTypes as $id => $type) { ?>
@@ -20,7 +20,7 @@
 		<td class="top" width="50%">
 			<p>Change the notes for these users:</p>
 			<form method="POST" action="<?php echo $SaveHREF; ?>">
-				<input type="submit" name="action" value="Save" />
+				<?php echo create_submit('action', 'Save'); ?>
 				<br /><br />
 				<textarea spellcheck="true" name="notes" style="width:300px; height:200px;"><?php echo $FlatNotes; ?></textarea>
 			</form>

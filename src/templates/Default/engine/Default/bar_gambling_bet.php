@@ -15,7 +15,7 @@ if (isset($Message)) {
 	How much do you want to bet? <?php echo $MaxBetMsg; ?><br />
 	<form method="POST" action="<?php echo $PlayHREF; ?>">
 		<input type="number" value="<?php echo $MaxBet; ?>" name="bet" class="center" style="width:100px;">&nbsp;&nbsp;&nbsp;
-		<input type="submit" name="action" value="Play the Game" />
+		<?php echo create_submit('action', 'Play the Game'); ?>
 	</form>
 </div>
 

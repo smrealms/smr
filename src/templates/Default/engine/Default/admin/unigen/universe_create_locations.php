@@ -53,7 +53,11 @@ Click a category heading to toggle its display.
 		} ?>
 
 		<tr>
-			<td colspan="2" class="center"><input type="submit" name="submit" value="Create Locations"><br /><br /><a href="<?php echo $CancelHREF; ?>" class="submitStyle">Cancel</a></td>
+			<td colspan="2" class="center">
+				<?php echo create_submit('submit', 'Create Locations'); ?>
+				<br /><br />
+				<a href="<?php echo $CancelHREF; ?>" class="submitStyle">Cancel</a>
+			</td>
 		</tr>
 	</table>
 

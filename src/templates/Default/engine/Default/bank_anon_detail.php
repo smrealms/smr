@@ -16,7 +16,7 @@ if (isset($Transactions)) { ?>
 				<td><input type="number" class="center" name="minValue" size="3" value="<?php echo $MinValue; ?>"></td>
 				<td>-</td>
 				<td><input type="number" class="center" name="maxValue" size="3" value="<?php echo $MaxValue; ?>"></td>
-				<td><input type="submit" name="action" value="Show" /></td>
+				<td><?php echo create_submit('action', 'Show'); ?></td>
 			</tr>
 		</table>
 	</form>
@@ -51,7 +51,7 @@ if (isset($Transactions)) { ?>
 <h2>Make transaction</h2><br />
 <form method="POST" action="<?php echo $TransactionHREF; ?>">
 	Amount:&nbsp;<input type="number" name="amount" min="1" required size="10"><br /><br />
-	<input type="submit" name="action" value="Deposit" />
+	<?php echo create_submit('action', 'Deposit'); ?>
 	&nbsp;&nbsp;
-	<button type="submit" name="action" value="Payment">Withdraw</button>
+	<?php echo create_submit('action', 'Payment', 'Withdraw'); ?>
 </form>

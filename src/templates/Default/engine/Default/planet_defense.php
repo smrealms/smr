@@ -31,7 +31,7 @@ if ($ThisPlanet->getMaxShields() + $ThisPlanet->getMaxCDs() + $ThisPlanet->getMa
 			<td class="center"><input form="TransferShieldsForm" type="number" name="amount" value="<?php echo min($ThisShip->getShields(), $ThisPlanet->getMaxShields() - $ThisPlanet->getShields()); ?>" class="center" size="4"></td>
 			<td>
 				<form id="TransferShieldsForm" method="POST" action="<?php echo $TransferShieldsHref; ?>">
-					<input type="submit" name="action" value="Ship" />&nbsp;<input type="submit" name="action" value="Planet" />
+					<?php echo create_submit('action', 'Ship'); ?>&nbsp;<?php echo create_submit('action', 'Planet'); ?>
 				</form>
 			</td>
 		</tr>
@@ -43,7 +43,7 @@ if ($ThisPlanet->getMaxShields() + $ThisPlanet->getMaxCDs() + $ThisPlanet->getMa
 			<td class="center"><input form="TransferCDsForm" type="number" name="amount" value="<?php echo min($ThisShip->getCDs(), $ThisPlanet->getMaxCDs() - $ThisPlanet->getCDs()); ?>" class="center" size="4"></td>
 			<td>
 				<form id="TransferCDsForm" method="POST" action="<?php echo $TransferCDsHref; ?>">
-					<input type="submit" name="action" value="Ship" />&nbsp;<input type="submit" name="action" value="Planet" />
+					<?php echo create_submit('action', 'Ship'); ?>&nbsp;<?php echo create_submit('action', 'Planet'); ?>
 				</form>
 			</td>
 		</tr>
@@ -56,7 +56,7 @@ if ($ThisPlanet->getMaxShields() + $ThisPlanet->getMaxCDs() + $ThisPlanet->getMa
 			<td class="center"><input form="TransferArmourForm" type="number" name="amount" value="<?php echo min($ThisShip->getArmour() - 1, $ThisPlanet->getMaxArmour() - ($ThisPlanet->getArmour())); ?>" class="center" size="4"></td>
 			<td>
 				<form id="TransferArmourForm" method="POST" action="<?php echo $TransferArmourHref; ?>">
-					<input type="submit" name="action" value="Ship" />&nbsp;<input type="submit" name="action" value="Planet" />
+					<?php echo create_submit('action', 'Ship'); ?>&nbsp;<?php echo create_submit('action', 'Planet'); ?>
 				</form>
 			</td>
 		</tr>
@@ -98,8 +98,8 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 						<td><?php echo $weapons[$i]->getPowerLevel(); ?></td>
 						<td><?php
 							if (count($weapons) === $ThisPlanet->getMaxMountedWeapons()) {
-								// Only allow destroying mounted weapons when all slots are filled ?>
-								<button type="submit" name="destroy" value="<?php echo $i; ?>">Destroy</button><?php
+								// Only allow destroying mounted weapons when all slots are filled
+								echo create_submit('destroy', (string)$i, 'Destroy');
 							} ?>
 						</td><?php
 					} else { ?>
@@ -131,7 +131,7 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 									<div class="weapon<?php echo $i . '-' . $orderID; ?> hide"><?php echo $weapon->getPowerLevel(); ?></div><?php
 								} ?>
 							</div>
-						<td><button type="submit" name="transfer" value="<?php echo $i; ?>">Transfer</button></td><?php
+						<td><?php echo create_submit('transfer', (string)$i, 'Transfer'); ?></td><?php
 					} ?>
 				</tr><?php
 			} ?>

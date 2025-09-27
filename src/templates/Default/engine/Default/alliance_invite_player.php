@@ -52,7 +52,7 @@ if (count($InvitePlayers) === 0) { ?>
 		<p>Days until invitation expires:</p>
 		<input type="number" name="expire_days" value="7" min="1" max="365" />
 		<br /><br />
-		<input type="submit" name="action" value="Invite Player" />
+		<?php echo create_submit('action', 'Invite Player'); ?>
 	</form><?php
 } ?>
 

@@ -21,7 +21,7 @@ if (isset($Message)) {
 					} ?>
 					<tr>
 						<td colspan="2" class="center">
-							<input type="submit" name="submit" value="Create Warps">
+							<?php echo create_submit('submit', 'Create Warps'); ?>
 							<br /><br />
 							<a href="<?php echo $CancelHREF; ?>" class="submitStyle">&lt;&lt;&nbsp;Back to Map</a>
 						</td>

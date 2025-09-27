@@ -26,9 +26,9 @@ use Smr\Race;
 			<td><img src="<?php echo Race::getHeadImage($RaceID); ?>" width="60" height="64" /><br /><?php echo $ThisPlayer->getColouredRaceName($RaceID, true); ?></td>
 			<td>
 				<form method="POST" action="<?php echo $FormHref; ?>">
-					<input type="submit" name="action" value="Peace" />
+					<?php echo create_submit('action', 'Peace'); ?>
 					&nbsp;
-					<input type="submit" name="action" value="War" />
+					<?php echo create_submit('action', 'War'); ?>
 				</form>
 			</td>
 		</tr><?php

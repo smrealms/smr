@@ -10,9 +10,9 @@ if ($ServerIsOpen) { ?>
 	<input spellcheck="true" type="text" name="close_reason" maxlength="255" size="80"><br /><br />
 	<b>NOTE:</b> Closing the server will kick all players and disable general logins.
 	Only admins with permission to reopen the game will be allowed to log in while closed.<br /><br />
-	<input type="submit" name="action" value="Close"><?php
+	<?php echo create_submit('action', 'Close');
 } else { ?>
 	Do you want to reopen Space Merchant Realms?<br /><br />
-	<input type="submit" name="action" value="Open"><?php
+	<?php echo create_submit('action', 'Open');
 } ?>
 </form>

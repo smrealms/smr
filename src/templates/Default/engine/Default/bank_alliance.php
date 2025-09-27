@@ -55,7 +55,7 @@ if (count($BankTransactions) > 0) { ?>
 						<input class="center" type="number" name="maxValue" size="3" value="<?php echo $MaxValue; ?>">
 					</td>
 					<td>
-						<input type="submit" name="action" value="Show">
+						<?php echo create_submit('action', 'Show'); ?>
 					</td>
 				</tr>
 			</table>
@@ -97,7 +97,7 @@ if (count($BankTransactions) > 0) { ?>
 					<th colspan="5" class="right">Ending Balance</th>
 					<td class="bold right"><?php echo $EndingBalance; ?></td><?php
 					if ($CanExempt) {
-						?><td><input type="submit" name="action" value="Make Exempt"></td><?php
+						echo create_submit('action', 'Make Exempt');
 					} ?>
 				</tr>
 			</table><?php
@@ -130,5 +130,5 @@ if (count($BankTransactions) > 0) { ?>
 		</tr>
 	</table>
 	<br />
-	<input type="submit" name="action" value="Deposit">&nbsp;&nbsp;<input type="submit" name="action" value="Withdraw">
+	<?php echo create_submit('action', 'Deposit'); ?>&nbsp;&nbsp;<?php echo create_submit('action', 'Withdraw'); ?>
 </form>

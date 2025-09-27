@@ -47,7 +47,7 @@ if ($FeatureModerator) { ?>
 				<option value="Deleted">Delete</option>
 			</select>&nbsp;
 			<input type="hidden" name="set_status_ids[]" value="<?php echo $FeatureRequestId; ?>" />
-			<input type="submit" name="action" value="Set Status" />
+			<?php echo create_submit('action', 'Set Status'); ?>
 		</div>
 	</form><?php
 } ?>
@@ -65,7 +65,7 @@ if ($FeatureModerator) { ?>
 			<td class="center">Anonymous: <input name="anon" type="checkbox" checked="checked"/></td>
 		</tr>
 		<tr>
-			<td class="center"><input type="submit" name="action" value="Add Comment"></td>
+			<td class="center"><?php echo create_submit('action', 'Add Comment'); ?></td>
 		</tr>
 	</table>
 </form>

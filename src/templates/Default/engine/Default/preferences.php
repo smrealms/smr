@@ -36,7 +36,7 @@ if (isset($GameID)) { ?>
 
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="submit" name="action" value="Change Kamikaze Setting" /></td>
+				<td><?php echo create_submit('action', 'Change Kamikaze Setting'); ?></td>
 			</tr>
 
 			<tr>
@@ -49,7 +49,7 @@ if (isset($GameID)) { ?>
 
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="submit" name="action" value="Change Message Setting" /></td>
+				<td><?php echo create_submit('action', 'Change Message Setting'); ?></td>
 			</tr>
 
 			<tr>
@@ -70,7 +70,7 @@ if (isset($GameID)) { ?>
 
 			<tr>
 				<td>&nbsp;</td>
-				<td><button type="submit" name="action" value="change_name">Alter Player Name <?php if ($ThisPlayer->isNameChanged()) { ?>(<?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits) <?php } ?></button></td>
+				<td><?php echo create_submit('action', 'change_name', 'Alter Player Name' . ($ThisPlayer->isNameChanged() ? ' (' . CREDITS_PER_NAME_CHANGE . ' SMR Credits)' : '')); ?></td>
 			</tr>
 
 			<tr>
@@ -88,12 +88,13 @@ if (isset($GameID)) { ?>
 						</select>
 						<br />
 						(This will mostly reset your trader! You may only change your race once per game, and only during the first <?php echo format_time(TIME_FOR_RACE_CHANGE); ?> of the game.)
+					</td>
 			</tr>
 
 				<tr>
 					<td>&nbsp;</td>
-					<td><button type="submit" name="action" value="change_race">Alter Player Race</button></td>
-
+					<td><?php echo create_submit('action', 'change_race', 'Alter Player Race'); ?></td>
+				</tr>
 				<tr>
 					<td colspan="2">&nbsp;</td>
 				</tr><?php
@@ -171,7 +172,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Update Colours" /></td>
+			<td><?php echo create_submit('action', 'Update Colours'); ?></td>
 		</tr>
 
 		<tr>
@@ -191,7 +192,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Password" /></td>
+			<td><?php echo create_submit('action', 'Change Password'); ?></td>
 		</tr>
 
 		<tr><td colspan="2">&nbsp;</td></tr>
@@ -203,7 +204,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Save and resend validation code" /></td>
+			<td><?php echo create_submit('action', 'Save and resend validation code'); ?></td>
 		</tr>
 
 		<tr><td colspan="2">&nbsp;</td></tr>
@@ -215,7 +216,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Name" /></td>
+			<td><?php echo create_submit('action', 'Change Name'); ?></td>
 		</tr>
 
 		<tr>
@@ -229,7 +230,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Discord ID" /></td>
+			<td><?php echo create_submit('action', 'Change Discord ID'); ?></td>
 		</tr>
 
 		<tr>
@@ -239,7 +240,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change IRC Nick" /></td>
+			<td><?php echo create_submit('action', 'Change IRC Nick'); ?></td>
 		</tr>
 
 		<tr>
@@ -261,7 +262,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Timezone" /></td>
+			<td><?php echo create_submit('action', 'Change Timezone'); ?></td>
 		</tr>
 
 		<tr>
@@ -280,7 +281,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Date Formats" /></td>
+			<td><?php echo create_submit('action', 'Change Date Formats'); ?></td>
 		</tr>
 
 		<tr>
@@ -290,7 +291,7 @@ if (isset($GameID)) { ?>
 		<tr>
 			<td>Use AJAX (Auto&nbsp;Refresh):</td>
 			<td>
-				<button type="submit" name="action" value="Toggle Ajax"><?php echo $ThisAccount->isUseAJAX() ? 'Disable' : 'Enable'; ?> AJAX</button> (Currently <?php echo $ThisAccount->isUseAJAX() ? 'Enabled' : 'Disabled'; ?>)<br />
+				<?php echo create_submit('action', 'Toggle Ajax', ($ThisAccount->isUseAJAX() ? 'Disable' : 'Enable') . ' AJAX'); ?> (Currently <?php echo $ThisAccount->isUseAJAX() ? 'Enabled' : 'Disabled'; ?>)<br />
 			</td>
 		</tr>
 
@@ -308,7 +309,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Images" /></td>
+			<td><?php echo create_submit('action', 'Change Images'); ?></td>
 		</tr>
 
 		<tr>
@@ -325,7 +326,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Centering" /></td>
+			<td><?php echo create_submit('action', 'Change Centering'); ?></td>
 		</tr>
 
 		<tr>
@@ -339,7 +340,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Size" /></td>
+			<td><?php echo create_submit('action', 'Change Size'); ?></td>
 		</tr>
 
 		<tr>
@@ -378,7 +379,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change CSS Options" /></td>
+			<td><?php echo create_submit('action', 'Change CSS Options'); ?></td>
 		</tr>
 	</table>
 </form><br />
@@ -445,7 +446,7 @@ if (isset($GameID)) { ?>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Save Hotkeys" /></td>
+			<td><?php echo create_submit('action', 'Save Hotkeys'); ?></td>
 		</tr>
 	</table>
 </form><br />
@@ -464,7 +465,7 @@ if (isset($GameID)) { ?>
 			<td><input type="number" name="amount" class="center" required /></td>
 		</tr>
 		<tr>
-			<td><input type="submit" name="action" value="Transfer" /></td>
+			<td><?php echo create_submit('action', 'Transfer'); ?></td>
 		</tr>
 	</table>
 </form>

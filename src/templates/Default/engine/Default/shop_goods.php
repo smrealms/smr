@@ -58,9 +58,9 @@ if (count($BoughtGoods) > 0) { ?>
 				<td><input form="form<?php echo $goodID; ?>" type="number" name="amount" value="<?php echo $good['Amount']; ?>" required min="1" size="4" class="center"></td>
 				<td>
 					<form id="form<?php echo $goodID; ?>" method="POST" action="<?php echo $good['HREF']; ?>">
-						<input type="submit" name="action" value="<?php echo TransactionType::Buy->value; ?>"><?php
-						if ($ThisShip->isUnderground()) { ?>
-							<input type="submit" name="action" value="<?php echo TransactionType::STEAL; ?>"><?php
+						<?php echo create_submit('action', TransactionType::Buy->value);
+						if ($ThisShip->isUnderground()) {
+							echo create_submit('action', TransactionType::STEAL);
 						} ?>
 					</form>
 				</td>
@@ -90,7 +90,7 @@ if (count($SoldGoods) > 0) { ?>
 				<td><input form="form<?php echo $goodID; ?>" type="number" name="amount" value="<?php echo $good['Amount']; ?>" required min="1" size="4" class="center"></td>
 				<td>
 					<form id="form<?php echo $goodID; ?>" method="POST" action="<?php echo $good['HREF']; ?>">
-						<input type="submit" name="action" value="<?php echo TransactionType::Sell->value; ?>">
+						<?php echo create_submit('action', TransactionType::Sell->value); ?>
 					</form>
 				</td>
 			</tr><?php

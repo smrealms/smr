@@ -20,5 +20,5 @@ Great idea!  So what do you want us to configure your system to do?<br />
 	<input type="radio" name="type" required value="BLOCK" />Block Scout Message Tickers<br />
 	<small>This will only block messages to tickers, it will not completely block scout messages</small><br />
 	<br />
-	<input type="submit" name="action" value="Buy" />
+	<?php echo create_submit('action', 'Buy'); ?>
 </form>

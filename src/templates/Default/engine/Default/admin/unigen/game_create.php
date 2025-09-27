@@ -9,13 +9,13 @@ use Smr\Game;
 <br />
 
 <h1>Past Games</h1>
-<form method="POST">
+<form method="POST" action="<?php echo $ViewGameHREF; ?>">
 	<select name="game_id" required><?php
 		foreach (Game::getPastGames() as $game) {
 			?><option value="<?php echo $game->getGameID(); ?>"><?php echo $game->getDisplayName(); ?></option><?php
 		} ?>
 	</select>
-	<input type="submit" value="View" name="View" formaction="<?php echo $ViewGameHREF; ?>">
+	<?php echo create_submit('View', 'View'); ?>
 </form>
 <br /><?php
 
@@ -27,8 +27,8 @@ if ($CanEditEnabledGames) { ?>
 				?><option value="<?php echo $game->getGameID(); ?>"><?php echo $game->getDisplayName(); ?></option><?php
 			} ?>
 		</select>
-		<input type="submit" value="View" name="View" formaction="<?php echo $ViewGameHREF; ?>">
-		<input type="submit" value="Edit" name="Edit" formaction="<?php echo $EditGameHREF; ?>">
+		<?php echo create_submit('View', 'View', fields: ['formaction' => $ViewGameHREF]); ?>
+		<?php echo create_submit('Edit', 'Edit', fields: ['formaction' => $EditGameHREF]); ?>
 	</form>
 	<br /><?php
 } ?>

@@ -63,7 +63,7 @@ Your image will be posted under your <i>Hall Of Fame</i> nick!<br />
 		<tr>
 			<td>&nbsp;</td>
 			<td>
-				<input type="submit" name="action" value="Submit" />&nbsp;&nbsp;&nbsp;
+				<?php echo create_submit('action', 'Submit'); ?>&nbsp;&nbsp;&nbsp;
 				<a href="<?php echo $AlbumDeleteHref; ?>" class="submitStyle">Delete Entry</a>
 			</td>
 		</tr>

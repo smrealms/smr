@@ -59,7 +59,7 @@ Please select the type of IP search you would like.<br />
 	</select><br /><br />
 	<input type="text" size="64" value="Press continue to proceed" name="variable">
 	<br /><br />
-	<input type="submit" name="action" value="Continue" />
+	<?php echo create_submit('action', 'Continue'); ?>
 </form>
 <script>
 	window.document.form_ip.variable.select();

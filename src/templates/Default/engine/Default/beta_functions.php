@@ -42,7 +42,7 @@ use Smr\Race;
 			<option value="<?php echo $weaponTypeID; ?>"><?php echo $weaponName; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
-	<input type="submit" value="Add Weapon(s)" />
+	<?php echo create_submit_display('Add Weapons(s)'); ?>
 </form>
 <br />
 
@@ -52,7 +52,7 @@ use Smr\Race;
 			<option value="<?php echo $shipTypeID; ?>"><?php echo $shipName; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
-	<input type="submit" value="Change Ship" />
+	<?php echo create_submit_display('Change Ship'); ?>
 </form>
 <br />
 
@@ -63,31 +63,31 @@ use Smr\Race;
 			<option value="<?php echo $hardwareTypeID; ?>"><?php echo $hardwareName; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
-	<input type="submit" value="Set Hardware" />
+	<?php echo create_submit_display('Set Hardware'); ?>
 </form>
 <br />
 
 <form method="POST" action="<?php echo $WarpHREF; ?>">
 	<input type="number" name="sector_to" value="<?php echo $ThisPlayer->getSectorID(); ?>" style="width:75px" />&nbsp;&nbsp;
-	<input type="submit" value="Warp to Sector" />
+	<?php echo create_submit_display('Warp to Sector'); ?>
 </form>
 <br />
 
 <form method="POST" action="<?php echo $TurnsHREF; ?>">
 	<input type="number" name="turns" value="<?php echo $ThisPlayer->getTurns(); ?>" style="width:75px" />&nbsp;&nbsp;
-	<input type="submit" value="Set Turns" />
+	<?php echo create_submit_display('Set Turns'); ?>
 </form>
 <br />
 
 <form method="POST" action="<?php echo $ExperienceHREF; ?>">
 	<input type="number" name="exp" value="<?php echo $ThisPlayer->getExperience(); ?>" style="width:75px" />&nbsp;&nbsp;
-	<input type="submit" value="Set Experience" />
+	<?php echo create_submit_display('Set Experience'); ?>
 </form>
 <br />
 
 <form method="POST" action="<?php echo $AlignmentHREF; ?>">
 	<input type="number" name="align" value="<?php echo $ThisPlayer->getAlignment(); ?>" style="width:75px" />&nbsp;&nbsp;
-	<input type="submit" value="Set Alignment" />
+	<?php echo create_submit_display('Set Alignment'); ?>
 </form>
 <br />
 
@@ -98,7 +98,7 @@ use Smr\Race;
 			<option value="<?php echo $raceID; ?>"><?php echo $raceName; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
-	<input type="submit" value="Set Personal Relations" />
+	<?php echo create_submit_display('Set Personal Relations'); ?>
 </form>
 <br />
 
@@ -110,7 +110,7 @@ use Smr\Race;
 			<option value="<?php echo $raceID; ?>"><?php echo $raceName; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
-	<input type="submit" value="Set Political Relations" />
+	<?php echo create_submit_display('Set Political Relations'); ?>
 </form>
 <br />
 
@@ -121,7 +121,7 @@ use Smr\Race;
 			<option value="<?php echo $raceID; ?>"><?php echo $raceName; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
-	<input type="submit" value="Change Race" />
+	<?php echo create_submit_display('Change Race'); ?>
 </form>
 
 <?php

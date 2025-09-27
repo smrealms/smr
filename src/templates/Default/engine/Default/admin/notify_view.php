@@ -33,5 +33,5 @@ if (count($Messages) === 0) { ?>
 	} ?>
 	</table>
 	<br />
-	<input type="submit" name="action" value="Delete" />
+	<?php echo create_submit('action', 'Delete'); ?>
 </form>

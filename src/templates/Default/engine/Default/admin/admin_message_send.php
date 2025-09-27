@@ -20,7 +20,7 @@ if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Previ
 	<textarea required spellcheck="true" name="message"><?php if (isset($Preview)) { echo $Preview; } ?></textarea><br />
 	Hours Till Expire: <input required type="number" step="0.01" name="expire" value="<?php echo $ExpireTime; ?>" min="0" size="2"> (0 = never expire)<br />
 	<br />
-	<input type="submit" name="action" value="Send message" />&nbsp;<input type="submit" name="action" value="Preview message" />
+	<?php echo create_submit('action', 'Send message'); ?>&nbsp;<?php echo create_submit('action', 'Preview message'); ?>
 </form>
 <br /><br />
 <a href="<?php echo $BackHREF; ?>">&lt;&lt; Back</a>

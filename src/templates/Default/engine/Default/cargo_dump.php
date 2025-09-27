@@ -27,7 +27,7 @@ if (count($Goods) === 0) { ?>
 						<input type="number" name="amount" value="<?php echo $good['amount']; ?>" maxlength="5" size="5" class="center" />
 					</td>
 					<td class="center">
-						<input type="submit" name="action" value="Dump (<?php echo TURNS_TO_DUMP_CARGO; ?>)" />
+						<?php echo create_submit('action', 'Dump (' . TURNS_TO_DUMP_CARGO . ')'); ?>
 					</td>
 				</tr>
 			</form><?php

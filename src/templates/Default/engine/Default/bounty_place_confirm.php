@@ -13,7 +13,7 @@ credit and <span class="yellow"><?php echo $SmrCredits; ?></span>
 SMR credit bounty on <?php echo $BountyPlayer; ?>?</p>
 
 <form method="POST" action="<?php echo $ProcessingHREF; ?>">
-	<input type="submit" name="action" value="Yes" />
+	<?php echo create_submit('action', 'Yes'); ?>
 	&nbsp;&nbsp;
-	<input type="submit" name="action" value="No" />
+	<?php echo create_submit('action', 'No'); ?>
 </form>

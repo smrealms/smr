@@ -29,7 +29,9 @@ if (count($DisabledGames) === 0) { ?>
 				</td>
 			</tr>
 			<tr>
-				<td class="center"><input type="submit" value="Enable Game"></td>
+				<td class="center">
+					<?php echo create_submit_display('Enable Game'); ?>
+				</td>
 			</tr>
 		</table>
 	</form> <?php

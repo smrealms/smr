@@ -17,7 +17,7 @@ if (!$Planet->hasOwner()) { ?>
 	</p>
 	<form method="POST" action="<?php echo $ProcessingHREF; ?>">
 		<input hidden name="password" />
-		<input type="submit" name="action" value="Take Ownership" />
+		<?php echo create_submit('action', 'Take Ownership'); ?>
 	</form><?php
 } else {
 	if ($Planet->getOwnerID() !== $ThisPlayer->getAccountID()) { ?>
@@ -30,19 +30,19 @@ if (!$Planet->hasOwner()) { ?>
 		</p>
 		<form method="POST" action="<?php echo $ProcessingHREF; ?>">
 			<input type="text" name="password">&nbsp;&nbsp;&nbsp;
-			<input type="submit" name="action" value="Take Ownership" />
+			<?php echo create_submit('action', 'Take Ownership'); ?>
 		</form><?php
 	} else { ?>
 		<p>You own this planet!</p>
 		<form method="POST" action="<?php echo $ProcessingHREF; ?>">
 			<input type="text" name="password" maxlength="32" value="<?php echo htmlspecialchars($Planet->getPassword()); ?>" />&nbsp;&nbsp;&nbsp;
-			<input type="submit" name="action" value="Set Password" />
+			<?php echo create_submit('action', 'Set Password'); ?>
 		</form>
 		<br />
 
 		<form method="POST" action="<?php echo $ProcessingHREF; ?>">
 			<input required type="text" name="name" maxlength="32" value="<?php echo $Planet->getDisplayName(); ?>" />&nbsp;&nbsp;&nbsp;
-			<input type="submit" name="action" value="Rename" />
+			<?php echo create_submit('action', 'Rename'); ?>
 		</form><?php
 	}
 }

@@ -26,6 +26,6 @@ if (count($Articles) > 0) { ?>
 	} else { ?>
 		<input type="hidden" name="delete_articles" value="No" /><?php
 	} ?>
-	<input type="submit" name="action" value="Yes" />&nbsp;
-	<input type="submit" name="action" value="No" />
+	<?php echo create_submit('action', 'Yes'); ?>&nbsp;
+	<?php echo create_submit('action', 'No'); ?>
 </form>
