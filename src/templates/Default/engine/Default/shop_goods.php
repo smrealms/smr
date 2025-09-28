@@ -6,8 +6,8 @@ use Smr\TransactionType;
  * @var Smr\Player $ThisPlayer
  * @var Smr\Port $Port
  * @var Smr\Ship $ThisShip
- * @var array<int, array{HREF: string, Image: string, Name: string, BasePrice: int, PortAmount: int, Amount: int}> $BoughtGoods
- * @var array<int, array{HREF: string, Image: string, Name: string, BasePrice: int, PortAmount: int, Amount: int}> $SoldGoods
+ * @var array<int, array{Page: Smr\Pages\Player\ShopGoodsProcessor, Image: string, Name: string, BasePrice: int, PortAmount: int, Amount: int}> $BoughtGoods
+ * @var array<int, array{Page: Smr\Pages\Player\ShopGoodsProcessor, Image: string, Name: string, BasePrice: int, PortAmount: int, Amount: int}> $SoldGoods
  * @var bool $SearchedByFeds
  * @var ?int $TotalFine
  * @var string $LeavePortHREF
@@ -57,10 +57,10 @@ if (count($BoughtGoods) > 0) { ?>
 				<td><?php echo $ThisShip->getCargo($goodID); ?></td>
 				<td><input form="form<?php echo $goodID; ?>" type="number" name="amount" value="<?php echo $good['Amount']; ?>" required min="1" size="4" class="center"></td>
 				<td>
-					<form id="form<?php echo $goodID; ?>" method="POST" action="<?php echo $good['HREF']; ?>">
-						<?php echo create_submit('action', TransactionType::Buy->value);
+					<form id="form<?php echo $goodID; ?>" method="POST" action="<?php echo $good['Page']->href(); ?>">
+						<?php echo create_submit_display(TransactionType::Buy->value);
 						if ($ThisShip->isUnderground()) {
-							echo create_submit('action', TransactionType::STEAL);
+							echo $good['Page']->actionSteal->html();
 						} ?>
 					</form>
 				</td>
@@ -89,8 +89,8 @@ if (count($SoldGoods) > 0) { ?>
 				<td><?php echo $ThisShip->getCargo($goodID); ?></td>
 				<td><input form="form<?php echo $goodID; ?>" type="number" name="amount" value="<?php echo $good['Amount']; ?>" required min="1" size="4" class="center"></td>
 				<td>
-					<form id="form<?php echo $goodID; ?>" method="POST" action="<?php echo $good['HREF']; ?>">
-						<?php echo create_submit('action', TransactionType::Sell->value); ?>
+					<form id="form<?php echo $goodID; ?>" method="POST" action="<?php echo $good['Page']->href(); ?>">
+						<?php echo create_submit_display(TransactionType::Sell->value); ?>
 					</form>
 				</td>
 			</tr><?php

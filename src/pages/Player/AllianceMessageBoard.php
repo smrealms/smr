@@ -151,7 +151,7 @@ class AllianceMessageBoard extends PlayerPage {
 
 		if ($mbWrite || $player->isObserver()) {
 			$container = new AllianceMessageBoardAddProcessor($allianceID, $this);
-			$template->assign('CreateNewThreadFormHref', $container->href());
+			$template->assign('CreateNewThreadFormPage', $container);
 			$template->assign('Preview', $this->preview);
 			$template->assign('Topic', $this->topic);
 			$template->assign('AllianceEyesOnly', $this->allianceEyesOnly);

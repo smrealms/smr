@@ -203,7 +203,7 @@ class CreateGalaxiesAutoProcessor extends AccountPageProcessor {
 				$nextWeaponShop(),
 			];
 			foreach ($locsToAdd as $loc) {
-				$locSector = SaveProcessor::findValidSector(
+				$locSector = findValidSector(
 					$galSectors,
 					fn(Sector $sector): bool => !$sector->hasLocation(),
 				);
@@ -224,7 +224,7 @@ class CreateGalaxiesAutoProcessor extends AccountPageProcessor {
 				9 => 0.3,
 			];
 			$fracToNum = fn(float $x): int => ICeil($x * $totalPorts);
-			SaveProcessor::createPorts(
+			CreatePortsProcessor::createPorts(
 				$galaxy,
 				numRacePorts: array_map($fracToNum, $fracRacePorts),
 				numLevelPorts: array_map($fracToNum, $fracLevelPorts),
@@ -286,11 +286,11 @@ class CreateGalaxiesAutoProcessor extends AccountPageProcessor {
 
 		// Add warps to each racial
 		foreach ($racialGalaxies as $raceId => $racialGalaxy) {
-			$warpSector = SaveProcessor::findValidSector(
+			$warpSector = findValidSector(
 				$sectors,
 				fn(Sector $sector): bool => !$sector->hasWarp(),
 			);
-			$destSector = SaveProcessor::findValidSector(
+			$destSector = findValidSector(
 				$racialGalaxy->getSectors(),
 				fn(Sector $sector): bool => !$sector->hasLocation() && !$sector->hasWarp(),
 			);
@@ -321,7 +321,7 @@ class CreateGalaxiesAutoProcessor extends AccountPageProcessor {
 			...$techShops,
 		];
 		foreach ($locsToAdd as $loc) {
-			$locSector = SaveProcessor::findValidSector(
+			$locSector = findValidSector(
 				$sectors,
 				fn(Sector $sector): bool => !$sector->hasLocation(),
 			);
@@ -345,7 +345,7 @@ class CreateGalaxiesAutoProcessor extends AccountPageProcessor {
 			9 => 0.3,
 		];
 		$fracToNum = fn(float $x): int => ICeil($x * $totalPorts);
-		SaveProcessor::createPorts(
+		CreatePortsProcessor::createPorts(
 			$neutralGalaxy,
 			numRacePorts: array_map($fracToNum, $fracRacePorts),
 			numLevelPorts: array_map($fracToNum, $fracLevelPorts),
@@ -361,7 +361,7 @@ class CreateGalaxiesAutoProcessor extends AccountPageProcessor {
 
 			// Add warps to neutral
 			$warpSector = array_rand_value($sectors);
-			$destSector = SaveProcessor::findValidSector(
+			$destSector = findValidSector(
 				$neutralGalaxy->getSectors(),
 				fn(Sector $sector): bool => !$sector->hasLocation() && !$sector->hasWarp(),
 			);
@@ -373,7 +373,7 @@ class CreateGalaxiesAutoProcessor extends AccountPageProcessor {
 				$barIter->getAndAdvance(),
 			];
 			foreach ($locsToAdd as $loc) {
-				$locSector = SaveProcessor::findValidSector(
+				$locSector = findValidSector(
 					$sectors,
 					fn(Sector $sector): bool => !$sector->hasLocation() && !$sector->hasWarp(),
 				);
@@ -388,7 +388,7 @@ class CreateGalaxiesAutoProcessor extends AccountPageProcessor {
 				array_rand_value([PlanetType::TYPE_ARID, PlanetType::TYPE_PROTO]),
 			];
 			foreach ($planetTypes as $planetType) {
-				$sector = SaveProcessor::findValidSector(
+				$sector = findValidSector(
 					$sectors,
 					fn(Sector $sector): bool => !$sector->hasLocation() && !$sector->hasWarp() && !$sector->hasPlanet(),
 				);

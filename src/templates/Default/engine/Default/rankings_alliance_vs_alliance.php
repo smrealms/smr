@@ -53,7 +53,7 @@
 	</table>
 
 	<br />
-	<?php echo create_submit('action', 'Show'); ?>
+	<?php echo create_submit_display('Show'); ?>
 </form>
 </div>
 

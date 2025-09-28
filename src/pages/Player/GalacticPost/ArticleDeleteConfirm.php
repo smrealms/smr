@@ -27,7 +27,10 @@ class ArticleDeleteConfirm extends PlayerPage {
 		$template->assign('ArticleTitle', $dbResult->record()->getString('title'));
 
 		$container = new ArticleDeleteProcessor($this->articleID);
-		$template->assign('SubmitHREF', $container->href());
+		$template->assign('ConfirmHREF', $container->href());
+
+		$container = new ArticleView($this->articleID);
+		$template->assign('CancelHREF', $container->href());
 	}
 
 }

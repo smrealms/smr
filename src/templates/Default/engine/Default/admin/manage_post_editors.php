@@ -24,11 +24,11 @@ if (count($ActiveGames) === 0) {
 	</form><br />
 
 	Player ID:&nbsp;
-	<form method="POST" action="<?php echo $PostEditorHREF; ?>">
+<form method="POST" action="<?php echo $PostEditorPage->href(); ?>">
 		<input type="number" name="player_id" class="center">
-		<br />
-		<?php echo create_submit('submit', 'Assign'); ?>&nbsp;
-		<?php echo create_submit('submit', 'Remove'); ?>
+		<br /><br />
+		<?php echo $PostEditorPage->actionAssign->html(); ?>&nbsp;
+		<?php echo $PostEditorPage->actionRemove->html(); ?>
 	</form>
 	<?php
 

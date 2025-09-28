@@ -147,7 +147,7 @@ class AllianceBank extends PlayerPage {
 		$template->assign('BankReportHREF', $container->href());
 
 		$container = new AllianceBankProcessor($allianceID);
-		$template->assign('BankTransactionFormHREF', $container->href());
+		$template->assign('BankTransactionForm', $container);
 	}
 
 }

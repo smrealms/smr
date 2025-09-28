@@ -44,7 +44,7 @@
 		<tr class="center">
 			<td colspan="3">&nbsp;</td>
 			<td colspan="2">
-				<?php echo create_submit('action', 'Drop/Take'); ?>
+				<?php echo create_submit_display('Drop/Take'); ?>
 			</td>
 		</tr>
 

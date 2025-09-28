@@ -6,7 +6,6 @@ use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
-use Smr\Request;
 
 class MessageReportProcessor extends PlayerPageProcessor {
 
@@ -17,10 +16,6 @@ class MessageReportProcessor extends PlayerPageProcessor {
 
 	public function build(Player $player): never {
 		$container = new MessageView($this->folderID);
-
-		if (Request::getBool('action') === false) {
-			$container->go();
-		}
 
 		// get next id
 		$db = Database::getInstance();

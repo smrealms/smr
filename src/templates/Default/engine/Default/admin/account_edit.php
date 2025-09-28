@@ -296,6 +296,6 @@ use Smr\Epoch;
 	</table>
 
 	<br />
-	<?php echo create_submit('action', 'Edit Account'); ?>&nbsp;&nbsp;
+	<?php echo create_submit_display('Edit Account'); ?>&nbsp;&nbsp;
 	<div class="buttonA"><a class="buttonA" href="<?php echo $ResetFormHREF; ?>">Reset Form</a></div>
 </form>

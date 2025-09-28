@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
 
 /**
- * @var string $SubmitHREF
+ * @var string $CancelHREF
+ * @var string $ConfirmHREF
  * @var string $PaperTitle
  * @var array<string> $Articles
  */
@@ -18,7 +19,7 @@ if (count($Articles) > 0) { ?>
 } else { ?>
 	This paper contains no articles.<br /><br /><?php
 } ?>
-<form method="POST" action="<?php echo $SubmitHREF; ?>"><?php
+<form method="POST" action="<?php echo $ConfirmHREF; ?>"><?php
 	if (count($Articles) > 0) { ?>
 		Do you want to also delete the articles in this paper?<br />
 		<input type="radio" name="delete_articles" value="Yes" />Yes<br />
@@ -26,6 +27,6 @@ if (count($Articles) > 0) { ?>
 	} else { ?>
 		<input type="hidden" name="delete_articles" value="No" /><?php
 	} ?>
-	<?php echo create_submit('action', 'Yes'); ?>&nbsp;
-	<?php echo create_submit('action', 'No'); ?>
+	<?php echo create_submit_display('Yes'); ?>&nbsp;
+	<?php echo create_submit_link($CancelHREF, 'No') ?>
 </form>

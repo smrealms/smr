@@ -56,5 +56,5 @@ if (isset($OpDate)) { ?>
 		} ?>
 	</select>
 	<br /><br />
-	<?php echo create_submit('action', 'Designate Flagship'); ?>
+	<?php echo create_submit_display('Designate Flagship'); ?>
 </form>

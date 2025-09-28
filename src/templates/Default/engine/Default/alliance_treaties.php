@@ -55,7 +55,7 @@ use Smr\Treaty;
 			} ?>
 			<tr>
 				<td colspan="2">
-					<?php echo create_submit('action', 'Send the Offer'); ?>
+					<?php echo create_submit_display('Send the Offer'); ?>
 				</td>
 			</tr>
 		</table>

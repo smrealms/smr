@@ -3,21 +3,30 @@
 namespace Smr\Pages\Player;
 
 use Smr\Database;
+use Smr\Html\Submit;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
 use Smr\Request;
 
 class MessageSendProcessor extends PlayerPageProcessor {
 
+	private const string ACTION = 'action';
+
+	public readonly Submit $actionSend;
+	public readonly Submit $actionPreview;
+
 	public function __construct(
 		private readonly ?int $receiverAccountID = null,
 		private readonly ?int $allianceID = null,
-	) {}
+	) {
+		$this->actionSend = new Submit(self::ACTION, 'send');
+		$this->actionPreview = new Submit(self::ACTION, 'preview');
+	}
 
 	public function build(Player $player): never {
 		$message = htmlentities(Request::get('message'), ENT_COMPAT, 'utf-8');
 
-		if (Request::get('action') === 'Preview message') {
+		if (Request::get(self::ACTION) === $this->actionPreview->value) {
 			if ($this->allianceID !== null) {
 				$container = new AllianceBroadcast($this->allianceID, $message);
 			} else {

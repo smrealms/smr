@@ -15,7 +15,7 @@ use Smr\Game;
 			?><option value="<?php echo $game->getGameID(); ?>"><?php echo $game->getDisplayName(); ?></option><?php
 		} ?>
 	</select>
-	<?php echo create_submit('View', 'View'); ?>
+	<?php echo create_submit_display('View'); ?>
 </form>
 <br /><?php
 
@@ -27,8 +27,8 @@ if ($CanEditEnabledGames) { ?>
 				?><option value="<?php echo $game->getGameID(); ?>"><?php echo $game->getDisplayName(); ?></option><?php
 			} ?>
 		</select>
-		<?php echo create_submit('View', 'View', fields: ['formaction' => $ViewGameHREF]); ?>
-		<?php echo create_submit('Edit', 'Edit', fields: ['formaction' => $EditGameHREF]); ?>
+		<?php echo create_submit_display('View', fields: ['formaction' => $ViewGameHREF]); ?>
+		<?php echo create_submit_display('Edit', fields: ['formaction' => $EditGameHREF]); ?>
 	</form>
 	<br /><?php
 } ?>

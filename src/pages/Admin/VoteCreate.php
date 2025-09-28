@@ -22,7 +22,7 @@ class VoteCreate extends AccountPage {
 	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Create Vote');
 
-		$template->assign('VoteFormHREF', (new VoteCreateProcessor())->href());
+		$template->assign('VoteFormPage', new VoteCreateProcessor());
 
 		$voting = [];
 		$db = Database::getInstance();

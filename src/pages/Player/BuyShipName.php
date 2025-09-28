@@ -14,11 +14,9 @@ class BuyShipName extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$costs = Globals::getBuyShipNameCosts();
 
-		$container = new BuyShipNameProcessor();
-
 		$template->assign('PageTopic', 'Naming Your Ship');
 		$template->assign('Costs', $costs);
-		$template->assign('ShipNameFormHref', $container->href());
+		$template->assign('ProcessorPage', new BuyShipNameProcessor());
 	}
 
 }

@@ -107,13 +107,13 @@
 			if ($UniGen) { ?>
 				<form method="POST" action="<?php echo $ModifySectorHREF; ?>">
 					<input required type="number" min="1" max="<?php echo $LastSector; ?>" name="sector_edit" placeholder="Sector ID" class="center" style="width:140px" /><br />
-					<?php echo create_submit('submit', 'Modify Sector'); ?>
+					<?php echo create_submit_display('Modify Sector'); ?>
 				</form><?php
 			} ?>
 			<br />
 			<form method="POST" action="<?php echo $RecenterHREF; ?>">
 				<input required type="number" min="<?php echo $Galaxy->getStartSector(); ?>" max="<?php echo $Galaxy->getEndSector(); ?>" name="focus_sector_id" placeholder="Sector ID" class="center" style="width:140px" value="<?php echo $FocusSector ?? ''; ?>" /><br />
-				<?php echo create_submit('submit', 'Recenter on Sector'); ?>
+				<?php echo create_submit_display('Recenter on Sector'); ?>
 			</form>
 			<a href="<?php echo $RecenterHREF; ?>" class="submitStyle">Default Center</a>
 		</td>
@@ -122,9 +122,9 @@
 			if ($UniGen) { ?>
 				<span class="red bold">DANGEROUS OPTIONS</span>
 				<p><a href="<?php echo $ResetGalaxyHREF; ?>" class="submitStyle">Reset Current Galaxy</a></p>
-				<form method="POST" action="<?php echo $SubmitChangesHREF; ?>">
+				<form method="POST" action="<?php echo $RedoConnectionsHREF; ?>">
 					<input required type="number" name="connect" placeholder="Connectivity %" class="center" style="width:140px" /><br />
-					<?php echo create_submit('submit', 'Redo Connections'); ?>
+					<?php echo create_submit_display('Redo Connections'); ?>
 				</form><?php
 			} ?>
 		</td>

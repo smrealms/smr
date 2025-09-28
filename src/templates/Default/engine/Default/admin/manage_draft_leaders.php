@@ -2,6 +2,7 @@
 
 /**
  * @var array<array{game_name: string, game_id: int}> $ActiveGames
+ * @var Smr\Pages\Admin\ManageDraftLeadersProcessor $ProcessingPage
  */
 
 if (count($ActiveGames) === 0) {
@@ -22,7 +23,7 @@ if (count($ActiveGames) === 0) {
 		</select>
 	</form><br />
 
-	<form method="POST" action="<?php echo $ProcessingHREF; ?>">
+	<form method="POST" action="<?php echo $ProcessingPage->href(); ?>">
 		<table>
 			<tr>
 				<td>Player ID:</td>
@@ -34,8 +35,8 @@ if (count($ActiveGames) === 0) {
 			</tr>
 			<tr>
 				<td colspan=2>
-					<?php echo create_submit('submit', 'Assign'); ?>&nbsp;
-					<?php echo create_submit('submit', 'Remove'); ?>
+					<?php echo $ProcessingPage->actionAssign->html(); ?>&nbsp;
+					<?php echo $ProcessingPage->actionRemove->html(); ?>
 				</td>
 			</tr>
 		</table>

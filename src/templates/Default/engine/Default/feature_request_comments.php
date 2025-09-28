@@ -4,7 +4,7 @@
  * @var string $BackHref
  * @var ?bool $FeatureModerator
  * @var ?int $FeatureRequestId
- * @var ?string $FeatureRequestStatusFormHREF
+ * @var ?Smr\Pages\Account\FeatureRequestVoteProcessor $FeatureRequestStatusFormPage
  * @var string $FeatureRequestCommentFormHREF
  */
 
@@ -35,8 +35,8 @@ if (isset($Comments)) { ?>
 	</table><?php
 }
 
-if ($FeatureModerator) { ?>
-	<form name="FeatureRequestStatusForm" method="POST" action="<?php echo $FeatureRequestStatusFormHREF; ?>">
+if ($FeatureModerator && $FeatureRequestStatusFormPage !== null) { ?>
+	<form name="FeatureRequestStatusForm" method="POST" action="<?php echo $FeatureRequestStatusFormPage->href(); ?>">
 		<div class="right">&nbsp;
 			<select name="status">
 				<option disabled selected value style="display:none"> -- Select Status -- </option>
@@ -47,7 +47,7 @@ if ($FeatureModerator) { ?>
 				<option value="Deleted">Delete</option>
 			</select>&nbsp;
 			<input type="hidden" name="set_status_ids[]" value="<?php echo $FeatureRequestId; ?>" />
-			<?php echo create_submit('action', 'Set Status'); ?>
+			<?php echo $FeatureRequestStatusFormPage->actionSetStatus->html(); ?>
 		</div>
 	</form><?php
 } ?>
@@ -65,7 +65,7 @@ if ($FeatureModerator) { ?>
 			<td class="center">Anonymous: <input name="anon" type="checkbox" checked="checked"/></td>
 		</tr>
 		<tr>
-			<td class="center"><?php echo create_submit('action', 'Add Comment'); ?></td>
+			<td class="center"><?php echo create_submit_display('Add Comment'); ?></td>
 		</tr>
 	</table>
 </form>

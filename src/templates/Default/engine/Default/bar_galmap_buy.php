@@ -16,6 +16,6 @@
 			} ?>
 		</select>
 		<br /><br />
-		<?php echo create_submit('action', 'Buy the map'); ?>
+		<?php echo create_submit_display('Buy the map'); ?>
 	</form>
 </div>

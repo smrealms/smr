@@ -20,17 +20,12 @@ class HardwareConfigure extends PlayerPage {
 		$template->assign('PageTopic', 'Configure Hardware');
 
 		if ($ship->hasCloak()) {
-			if (!$ship->isCloaked()) {
-				$action = 'Enable Cloak';
-			} else {
-				$action = 'Disable Cloak';
-			}
-			$container = new HardwareConfigureProcessor($action);
+			$container = new HardwareConfigureCloakProcessor(disable: $ship->isCloaked());
 			$template->assign('ToggleCloakHREF', $container->href());
 		}
 
 		if ($ship->hasIllusion()) {
-			$container = new HardwareConfigureProcessor('Set Illusion');
+			$container = new HardwareConfigureIllusionProcessor(disable: false);
 			$template->assign('SetIllusionFormHREF', $container->href());
 
 			$ships = [];
@@ -40,13 +35,13 @@ class HardwareConfigure extends PlayerPage {
 				$ships[$dbRecord->getInt('ship_type_id')] = $dbRecord->getString('ship_name');
 			}
 			$template->assign('IllusionShips', $ships);
-			$container = new HardwareConfigureProcessor('Disable Illusion');
+			$container = new HardwareConfigureIllusionProcessor(disable: true);
 			$template->assign('DisableIllusionHref', $container->href());
 		}
 
 		if ($ship->hasJump()) {
 			$container = new SectorJumpProcessor();
-			$template->assign('JumpDriveFormLink', $container->href());
+			$template->assign('JumpDrivePage', $container);
 		}
 	}
 

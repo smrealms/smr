@@ -29,7 +29,7 @@ class ReportedMessageReply extends AccountPage {
 			offenderAccountID: $this->offenderAccountID,
 			offendedAccountID: $this->offendedAccountID,
 		);
-		$template->assign('NotifyReplyFormHref', $container->href());
+		$template->assign('NotifyReplyFormPage', $container);
 
 		$offender = Messages::getMessagePlayer($this->offenderAccountID, $this->gameID);
 		if (is_object($offender)) {

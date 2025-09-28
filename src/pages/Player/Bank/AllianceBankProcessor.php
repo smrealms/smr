@@ -5,15 +5,24 @@ namespace Smr\Pages\Player\Bank;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Html\Submit;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
 use Smr\Request;
 
 class AllianceBankProcessor extends PlayerPageProcessor {
 
+	private const string ACTION = 'action';
+
+	public readonly Submit $actionDeposit;
+	public readonly Submit $actionWithdraw;
+
 	public function __construct(
 		private readonly int $allianceID,
-	) {}
+	) {
+		$this->actionDeposit = new Submit(self::ACTION, 'Deposit');
+		$this->actionWithdraw = new Submit(self::ACTION, 'Withdraw');
+	}
 
 	public function build(Player $player): never {
 		$amount = Request::getInt('amount');
@@ -29,13 +38,15 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 
 		$alliance = Alliance::getAlliance($this->allianceID, $player->getGameID());
 
-		$action = Request::get('action');
-		if ($action !== 'Deposit') {
-			$action = 'Payment';
+		$action = Request::get(self::ACTION);
+		if ($action === $this->actionDeposit->value) {
+			$dbAction = 'Deposit';
+		} else {
+			$dbAction = 'Payment';
 		}
 
 		self::doTransaction(
-			action: $action,
+			action: $dbAction,
 			alliance: $alliance,
 			player: $player,
 			message: $message,
@@ -71,7 +82,6 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 			}
 
 		} else {
-			$action = 'Payment';
 			if ($alliance->getBank() < $amount) {
 				create_error('Your alliance isn\'t that rich!');
 			}

@@ -14,7 +14,7 @@ class Ownership extends PlanetPage {
 
 	protected function buildPlanetPage(Player $player, Template $template): void {
 		$container = new OwnershipProcessor();
-		$template->assign('ProcessingHREF', $container->href());
+		$template->assign('ProcessingPage', $container);
 
 		$template->assign('Planet', $player->getSectorPlanet());
 

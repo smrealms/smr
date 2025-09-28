@@ -28,7 +28,7 @@ class AdminMessageSend extends AccountPage {
 		$this->sendGameID ??= Request::getInt('SendGameID');
 		$gameID = $this->sendGameID;
 		$container = new AdminMessageSendProcessor($gameID);
-		$template->assign('AdminMessageSendFormHref', $container->href());
+		$template->assign('AdminMessageSendForm', $container);
 		$template->assign('MessageGameID', $gameID);
 		$template->assign('ExpireTime', $this->expireHours);
 

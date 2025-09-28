@@ -27,7 +27,7 @@
 		} ?>
 		<tr>
 			<td colspan="2" class="center">
-				<?php echo create_submit('submit', 'Create Planets'); ?>
+				<?php echo create_submit_display('Create Planets'); ?>
 				<br /><br />
 				<a href="<?php echo $CancelHREF; ?>" class="submitStyle">Cancel</a>
 			</td>

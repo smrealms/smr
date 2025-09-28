@@ -4,7 +4,7 @@ use Smr\Race;
 
 /**
  * @var Smr\Player $ThisPlayer
- * @var array<int, string> $VoteRaceHrefs
+ * @var array<int, Smr\Pages\Player\Council\EmbassyProcessor> $VoteRacePages
  */
 
 ?>
@@ -21,14 +21,14 @@ use Smr\Race;
 		<th>Treaty</th>
 	</tr><?php
 
-	foreach ($VoteRaceHrefs as $RaceID => $FormHref) { ?>
+	foreach ($VoteRacePages as $RaceID => $VoteRacePage) { ?>
 		<tr>
 			<td><img src="<?php echo Race::getHeadImage($RaceID); ?>" width="60" height="64" /><br /><?php echo $ThisPlayer->getColouredRaceName($RaceID, true); ?></td>
 			<td>
-				<form method="POST" action="<?php echo $FormHref; ?>">
-					<?php echo create_submit('action', 'Peace'); ?>
+				<form method="POST" action="<?php echo $VoteRacePage->href(); ?>">
+					<?php echo $VoteRacePage->actionPeace->html('Peace'); ?>
 					&nbsp;
-					<?php echo create_submit('action', 'War'); ?>
+					<?php echo $VoteRacePage->actionWar->html('War'); ?>
 				</form>
 			</td>
 		</tr><?php

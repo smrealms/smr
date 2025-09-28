@@ -17,7 +17,7 @@ use Smr\Globals;
  * @var ?string $FilterTransactionsFormHREF
  * @var ?string $ExemptTransactionsFormHREF
  * @var string $BankReportHREF
- * @var string $BankTransactionFormHREF
+ * @var Smr\Pages\Player\Bank\AllianceBankProcessor $BankTransactionForm
  */
 
 if (count($AlliedAllianceBanks) > 0) { ?>
@@ -55,7 +55,7 @@ if (count($BankTransactions) > 0) { ?>
 						<input class="center" type="number" name="maxValue" size="3" value="<?php echo $MaxValue; ?>">
 					</td>
 					<td>
-						<?php echo create_submit('action', 'Show'); ?>
+						<?php echo create_submit_display('Show'); ?>
 					</td>
 				</tr>
 			</table>
@@ -97,7 +97,7 @@ if (count($BankTransactions) > 0) { ?>
 					<th colspan="5" class="right">Ending Balance</th>
 					<td class="bold right"><?php echo $EndingBalance; ?></td><?php
 					if ($CanExempt) {
-						echo create_submit('action', 'Make Exempt');
+						echo create_submit_display('Make Exempt');
 					} ?>
 				</tr>
 			</table><?php
@@ -117,7 +117,7 @@ if (count($BankTransactions) > 0) { ?>
 
 <br />
 <h2>Make transaction</h2><br />
-<form class="standard" method="POST" action="<?php echo $BankTransactionFormHREF; ?>">
+<form class="standard" method="POST" action="<?php echo $BankTransactionForm->href(); ?>">
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 		<tr>
 			<td class="top">Amount:&nbsp;</td>
@@ -130,5 +130,6 @@ if (count($BankTransactions) > 0) { ?>
 		</tr>
 	</table>
 	<br />
-	<?php echo create_submit('action', 'Deposit'); ?>&nbsp;&nbsp;<?php echo create_submit('action', 'Withdraw'); ?>
+	<?php echo $BankTransactionForm->actionDeposit->html(); ?>&nbsp;&nbsp;
+	<?php echo $BankTransactionForm->actionWithdraw->html(); ?>
 </form>

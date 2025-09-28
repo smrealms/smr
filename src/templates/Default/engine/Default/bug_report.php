@@ -46,7 +46,7 @@ Be as accurate as possible with your bug description.
 		<tr>
 			<td></td>
 			<td>
-				<?php echo create_submit('action', 'Submit'); ?>
+				<?php echo create_submit_display('Submit'); ?>
 			</td>
 		</tr>
 

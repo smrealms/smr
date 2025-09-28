@@ -14,5 +14,5 @@
 		} ?>
 	</select>
 	&nbsp;&nbsp;
-	<?php echo create_submit('action', 'Delete'); ?>
+	<?php echo create_submit_display('Delete'); ?>
 </form>

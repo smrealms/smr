@@ -2,7 +2,7 @@
 
 /**
  * @var Smr\Account $ThisAccount
- * @var array{AllianceEyesOnly: bool, CanDelete: bool, Replies: array<int, array{Sender: string, Message: string, SendTime: int, DeleteHref?: string}>, CreateThreadReplyFormHref?: string} $Thread
+ * @var array{AllianceEyesOnly: bool, CanDelete: bool, Replies: array<int, array{Sender: string, Message: string, SendTime: int, DeleteHref?: string}>, CreateThreadReplyFormPage?: Smr\Pages\Player\AllianceMessageBoardAddProcessor} $Thread
  */
 
 if (isset($PrevThread) || isset($NextThread)) { ?>
@@ -54,16 +54,16 @@ if (isset($PrevThread) || isset($NextThread)) { ?>
 		} ?>
 	</table>
 </div><?php
-if (isset($Thread['CreateThreadReplyFormHref'])) { ?>
+if (isset($Thread['CreateThreadReplyFormPage'])) { ?>
 	<br /><h2>Create Reply</h2><br /><?php
 	if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Preview); ?></td></tr></table><?php } ?>
-	<form class="standard" id="CreateThreadReplyForm" method="POST" action="<?php echo $Thread['CreateThreadReplyFormHref']; ?>">
+	<form class="standard" id="CreateThreadReplyForm" method="POST" action="<?php echo $Thread['CreateThreadReplyFormPage']->href(); ?>">
 		<table class="nobord nohpad">
 			<tr>
 				<td class="top">Body:&nbsp;</td>
 				<td><textarea spellcheck="true" name="body" required><?php if (isset($Preview)) { echo $Preview; } ?></textarea></td>
 			</tr>
 		</table><br />
-		<?php echo create_submit('action', 'Create Reply'); ?>&nbsp;<?php echo create_submit('action', 'Preview Reply'); ?>
+		<?php echo $Thread['CreateThreadReplyFormPage']->actionCreate->html('Create Reply'); ?>&nbsp;<?php echo $Thread['CreateThreadReplyFormPage']->actionPreview->html('Preview Reply'); ?>
 	</form><?php
 }

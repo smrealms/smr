@@ -4,7 +4,6 @@ namespace Smr\Pages\Account;
 
 use Smr\Account;
 use Smr\Page\AccountPageProcessor;
-use Smr\Request;
 
 class PreferencesTransferProcessor extends AccountPageProcessor {
 
@@ -14,16 +13,13 @@ class PreferencesTransferProcessor extends AccountPageProcessor {
 	) {}
 
 	public function build(Account $account): never {
-		$message = null;
-		if (Request::getBool('action')) {
-			// take from us
-			$account->decreaseSmrCredits($this->amount);
-			// add to recepient
-			$toAccount = Account::getAccount($this->accountID);
-			$toAccount->increaseSmrCredits($this->amount);
+		// take from us
+		$account->decreaseSmrCredits($this->amount);
+		// add to recepient
+		$toAccount = Account::getAccount($this->accountID);
+		$toAccount->increaseSmrCredits($this->amount);
 
-			$message = '<span class="green">SUCCESS: </span>You have sent SMR credits.';
-		}
+		$message = '<span class="green">SUCCESS: </span>You have sent SMR credits.';
 
 		$this::getLandingPage($message)->go();
 	}

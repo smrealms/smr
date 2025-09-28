@@ -43,7 +43,7 @@ class ChangelogAdd extends AccountPage {
 			if ($first_entry) {
 				$first_entry = false;
 				$container = new ChangelogAddProcessor($version_id);
-				$template->assign('AddHREF', $container->href());
+				$template->assign('AddPage', $container);
 
 				if ($this->changeTitle !== '') {
 					$version['changes'][] = [

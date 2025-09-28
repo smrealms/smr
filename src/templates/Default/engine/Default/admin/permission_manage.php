@@ -42,8 +42,8 @@ if (!isset($EditAccount)) { ?>
 			</div><?php
 		} ?>
 		<br />
-		<?php echo create_submit('action', 'Change'); ?>
+		<?php echo create_submit_display('Change'); ?>
 		&nbsp;&nbsp;&nbsp;
-		<?php echo create_submit('action', 'Select Another User'); ?>
+		<?php echo create_submit_link($CancelHREF, 'Select Another User'); ?>
 	</form><?php
 }

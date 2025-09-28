@@ -52,7 +52,7 @@
 						} ?>
 					</select><br /><?php
 				}
-				echo create_submit('save_dummy', 'Save Dummy'); ?>
+				echo create_submit_display('Save Dummy'); ?>
 			</form>
 		</td>
 		<td class="top">

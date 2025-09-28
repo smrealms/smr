@@ -5,6 +5,7 @@ namespace Smr\Pages\Player\Council;
 use Smr\Council;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Html\Submit;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
 use Smr\Race;
@@ -12,9 +13,18 @@ use Smr\Request;
 
 class EmbassyProcessor extends PlayerPageProcessor {
 
+	private const string ACTION = 'action';
+
+	public readonly Submit $actionPeace;
+	public readonly Submit $actionWar;
+
 	public function __construct(
 		private readonly int $otherRaceID,
-	) {}
+	) {
+		// Values are database enums and must not change
+		$this->actionPeace = new Submit(self::ACTION, 'PEACE');
+		$this->actionWar = new Submit(self::ACTION, 'WAR');
+	}
 
 	public function build(Player $player): never {
 		if (!$player->isPresident()) {
@@ -22,7 +32,7 @@ class EmbassyProcessor extends PlayerPageProcessor {
 		}
 
 		$race_id = $this->otherRaceID;
-		$type = strtoupper(Request::get('action'));
+		$type = Request::get(self::ACTION);
 		$time = Epoch::time() + TIME_FOR_COUNCIL_VOTE;
 
 		$db = Database::getInstance();
@@ -34,7 +44,7 @@ class EmbassyProcessor extends PlayerPageProcessor {
 			create_error('You can\'t initiate more than 3 votes at a time!');
 		}
 
-		if ($type === 'PEACE') {
+		if ($type === $this->actionPeace->value) {
 			$dbResult = $db->select('race_has_voting', [
 				'race_id_1' => $race_id,
 				'race_id_2' => $player->getRaceID(),
@@ -55,7 +65,7 @@ class EmbassyProcessor extends PlayerPageProcessor {
 		]);
 
 		// If voting for peace, the other race also has to vote
-		if ($type === 'PEACE') {
+		if ($type === $this->actionPeace->value) {
 			$db->replace('race_has_voting', [
 				'game_id' => $player->getGameID(),
 				'race_id_1' => $race_id,
@@ -68,13 +78,13 @@ class EmbassyProcessor extends PlayerPageProcessor {
 		// Send vote announcement to members of the player's council (war votes)
 		// or both races' councils (peace votes).
 		$councilMembers = Council::getRaceCouncil($player->getGameID(), $player->getRaceID());
-		if ($type === 'PEACE') {
+		if ($type === $this->actionPeace->value) {
 			$otherCouncil = Council::getRaceCouncil($player->getGameID(), $race_id);
 			$councilMembers = array_merge($councilMembers, $otherCouncil);
 		}
 
 		// Construct the message to be sent to the council members.
-		$color = ($type === 'PEACE' ? 'dgreen' : 'red');
+		$color = ($type === $this->actionPeace->value ? 'dgreen' : 'red');
 		$type_fancy = "<span class=\"$color\">$type</span>";
 		$message = $player->getLevelName() . ' ' . $player->getBBLink()
 			. " has initiated a vote for $type_fancy with the [race=$race_id]!"

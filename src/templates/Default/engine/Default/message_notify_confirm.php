@@ -2,7 +2,8 @@
 
 /**
  * @var string $MessageText
- * @var string $ProcessingHREF
+ * @var string $ConfirmHREF
+ * @var string $CancelHREF
  */
 
 ?>
@@ -16,8 +17,6 @@ You have selected the following message:<br /><br />
 <p>Are you sure you want to report this message to the admins?<br />
 <small><b>Please note:</b> Abuse of this system could end in disablement.<br />Therefore, please only notify if the message is inappropriate.</small></p>
 
-<form method="POST" action="<?php echo $ProcessingHREF; ?>">
-	<?php echo create_submit('action', 'Yes'); ?>
-	&nbsp;&nbsp;
-	<?php echo create_submit('action', 'No'); ?>
-</form>
+<?php echo create_submit_link($ConfirmHREF, 'Yes'); ?>
+&nbsp;&nbsp;
+<?php echo create_submit_link($CancelHREF, 'No');

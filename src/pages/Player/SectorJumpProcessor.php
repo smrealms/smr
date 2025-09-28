@@ -3,6 +3,7 @@
 namespace Smr\Pages\Player;
 
 use Smr\Exceptions\PathNotFound;
+use Smr\Html\Submit;
 use Smr\MovementType;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
@@ -13,9 +14,15 @@ use Smr\SectorLock;
 
 class SectorJumpProcessor extends PlayerPageProcessor {
 
+	private const string ACTION = 'action';
+
+	public readonly Submit $actionCalculate;
+
 	public function __construct(
 		private readonly ?int $targetSectorID = null,
-	) {}
+	) {
+		$this->actionCalculate = new Submit(self::ACTION, 'calculate');
+	}
 
 	public function build(Player $player): never {
 		$sector = $player->getSector();
@@ -48,7 +55,7 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 		}
 
 		// If the Calculate Turn Cost button was pressed
-		if (Request::get('action', '') === 'Calculate Turn Cost') {
+		if (Request::get(self::ACTION, '') === $this->actionCalculate->value) {
 			$container = new SectorJumpCalculate($target);
 			$container->go();
 		}

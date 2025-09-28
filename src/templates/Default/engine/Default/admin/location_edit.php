@@ -1,8 +1,12 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var string $SaveChangesHREF
+ */
+
 if (!isset($Locations)) {
 	?><a href="<?php echo $ViewAllLocationsLink; ?>">View All Locations</a><br /><br />
-	<form action="<?php echo $Location->getEditHREF(); ?>" method="POST"><?php
+	<form action="<?php echo $SaveChangesHREF; ?>" method="POST"><?php
 } ?>
 <table>
 	<tr>
@@ -95,7 +99,7 @@ if (isset($Locations)) {
 			</table>
 		</td>
 		<td>
-			<?php echo create_submit('save', 'Save'); ?>
+			<?php echo create_submit_display('Save'); ?>
 		</td>
 	</tr><?php
 } ?>

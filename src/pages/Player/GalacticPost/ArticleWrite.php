@@ -50,7 +50,7 @@ class ArticleWrite extends PlayerPage {
 		$template->assign('Preview', $text);
 
 		$container = new ArticleWriteProcessor($this->articleID);
-		$template->assign('SubmitArticleHref', $container->href());
+		$template->assign('SubmitArticlePage', $container);
 	}
 
 }

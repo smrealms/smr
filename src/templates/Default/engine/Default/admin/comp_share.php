@@ -27,5 +27,5 @@
 		</table>
 		<br /><?php
 	}
-	echo create_submit('action', 'Close Accounts'); ?>
+	echo create_submit_display('Close Accounts'); ?>
 </form>

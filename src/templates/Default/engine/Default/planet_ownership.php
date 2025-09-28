@@ -5,9 +5,10 @@ use Smr\Player;
 /**
  * @var Smr\Planet $Planet
  * @var Smr\Player $ThisPlayer
- * @var string $ProcessingHREF
+ * @var Smr\Pages\Player\Planet\OwnershipProcessor $ProcessingPage
  */
 
+$ProcessingHREF = $ProcessingPage->href();
 if (!$Planet->hasOwner()) { ?>
 	<p>
 		This planet is unclaimed.<?php
@@ -17,7 +18,7 @@ if (!$Planet->hasOwner()) { ?>
 	</p>
 	<form method="POST" action="<?php echo $ProcessingHREF; ?>">
 		<input hidden name="password" />
-		<?php echo create_submit('action', 'Take Ownership'); ?>
+		<?php echo $ProcessingPage->actionTakeOwnership->html(); ?>
 	</form><?php
 } else {
 	if ($Planet->getOwnerID() !== $ThisPlayer->getAccountID()) { ?>
@@ -30,19 +31,19 @@ if (!$Planet->hasOwner()) { ?>
 		</p>
 		<form method="POST" action="<?php echo $ProcessingHREF; ?>">
 			<input type="text" name="password">&nbsp;&nbsp;&nbsp;
-			<?php echo create_submit('action', 'Take Ownership'); ?>
+			<?php echo $ProcessingPage->actionTakeOwnership->html(); ?>
 		</form><?php
 	} else { ?>
 		<p>You own this planet!</p>
 		<form method="POST" action="<?php echo $ProcessingHREF; ?>">
 			<input type="text" name="password" maxlength="32" value="<?php echo htmlspecialchars($Planet->getPassword()); ?>" />&nbsp;&nbsp;&nbsp;
-			<?php echo create_submit('action', 'Set Password'); ?>
+			<?php echo $ProcessingPage->actionSetPassword->html(); ?>
 		</form>
 		<br />
 
 		<form method="POST" action="<?php echo $ProcessingHREF; ?>">
 			<input required type="text" name="name" maxlength="32" value="<?php echo $Planet->getDisplayName(); ?>" />&nbsp;&nbsp;&nbsp;
-			<?php echo create_submit('action', 'Rename'); ?>
+			<?php echo $ProcessingPage->actionRename->html(); ?>
 		</form><?php
 	}
 }

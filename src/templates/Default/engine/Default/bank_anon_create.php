@@ -14,5 +14,5 @@ Please enter the desired password for your new account.<br /><br />
 		</tr>
 	</table>
 	<br />
-	<?php echo create_submit('action', 'Create Account'); ?>
+	<?php echo create_submit_display('Create Account'); ?>
 </form>

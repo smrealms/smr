@@ -2,7 +2,7 @@
 
 /**
  * @var Smr\Account $ThisAccount
- * @var string $ReopenLink
+ * @var Smr\Pages\Account\InvalidEmailProcessor $ReopenPage
  */
 
 ?>
@@ -14,19 +14,19 @@ away!</p>
 <p><b>Current e-mail address:</b> <?php echo $ThisAccount->getEmail(); ?></p>
 <br />
 
-<form method="POST" action="<?php echo $ReopenLink; ?>">
+<form method="POST" action="<?php echo $ReopenPage->href(); ?>">
 	<h2>Re-validate current address</h2>
 	<p>
 		If you believe that your current e-mail address is correct, you can simply
 		re-validate this address.
 	</p>
 
-	<p><?php echo create_submit('action', 'Resend Validation Code'); ?></p>
+	<p><?php echo $ReopenPage->actionResend->html(); ?></p>
 	<br />
 
 	<h2>Enter new address</h2>
 	<p>If your current address is no longer valid, please enter a new one.</p>
 	<p>New e-mail address: <input type="email" name="email" size="40" maxlength="128"></p>
 
-	<p><?php echo create_submit('action', 'Change E-mail Address'); ?></p>
+	<p><?php echo $ReopenPage->actionChange->html(); ?></p>
 </form>

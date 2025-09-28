@@ -103,7 +103,7 @@ if (isset($Voting)) {
 			foreach ($Vote['Options'] as $VoteOption) { ?>
 				<input type="radio" name="vote" required value="<?php echo $VoteOption['ID']; ?>"<?php if ($VoteOption['Chosen']) { ?> checked<?php } ?>><?php echo bbify($VoteOption['Text']); ?> (<?php echo $VoteOption['Votes']; ?> votes)<br /><?php
 			} ?>
-			<?php echo create_submit('submit', 'Vote!'); ?><br />
+			<?php echo create_submit_display('Vote!'); ?><br />
 		</form><?php
 	}
 } ?>

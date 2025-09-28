@@ -39,7 +39,10 @@ class PreferencesTransferConfirm extends AccountPage {
 		$template->assign('HofName', $toAccount->getHofDisplayName());
 
 		$container = new PreferencesTransferProcessor($amount, $account_id);
-		$template->assign('SubmitHREF', $container->href());
+		$template->assign('ConfirmHREF', $container->href());
+
+		$container = new Preferences();
+		$template->assign('CancelHREF', $container->href());
 	}
 
 }

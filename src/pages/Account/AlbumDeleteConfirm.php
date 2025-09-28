@@ -12,7 +12,8 @@ class AlbumDeleteConfirm extends AccountPage {
 
 	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Delete Album Entry - Confirmation');
-		$template->assign('ConfirmAlbumDeleteHref', (new AlbumDeleteProcessor())->href());
+		$template->assign('CancelHref', (new AlbumEdit())->href());
+		$template->assign('ConfirmHref', (new AlbumDeleteProcessor())->href());
 	}
 
 }

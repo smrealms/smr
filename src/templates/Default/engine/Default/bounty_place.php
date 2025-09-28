@@ -31,5 +31,5 @@
 	</table>
 
 	<br /><br />
-	<?php echo create_submit('action', 'Place'); ?>
+	<?php echo create_submit_display('Place'); ?>
 </form>

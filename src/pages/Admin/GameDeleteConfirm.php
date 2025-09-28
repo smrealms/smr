@@ -23,7 +23,10 @@ class GameDeleteConfirm extends AccountPage {
 		$template->assign('Game', Game::getGame($this->deleteGameID));
 
 		$container = new GameDeleteProcessor($this->deleteGameID);
-		$template->assign('ProcessingHREF', $container->href());
+		$template->assign('ConfirmHREF', $container->href());
+
+		$container = new AdminTools();
+		$template->assign('CancelHREF', $container->href());
 	}
 
 }

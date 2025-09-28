@@ -3,7 +3,8 @@
 /**
  * @var Smr\Player $ThisPlayer
  * @var string $Message
- * @var string $ProcessingHREF
+ * @var string $ProcessGossipHREF
+ * @var string $ProcessTipHREF
  * @var string $BackHREF
  * @var string $ListenHREF
  */
@@ -12,14 +13,14 @@
 <p><?php echo $Message; ?></p>
 <br />
 
-<form method="POST" action="<?php echo $ProcessingHREF; ?>">
+<form method="POST" action="<?php echo $ProcessGossipHREF; ?>">
 	<input type="text" name="gossip_tell" maxlength="255" size="30" />
-	<button type="submit" name="action" value="tell">Spread gossip</button>
+	<?php echo create_submit_display('Spread gossip'); ?>
 </form>
 	<br /><br />
-<form method="POST" action="<?php echo $ProcessingHREF; ?>">
+<form method="POST" action="<?php echo $ProcessTipHREF; ?>">
 	<input type="number" name="tip" class="center" min="1" max="<?php echo $ThisPlayer->getCredits(); ?>" required />
-	<button type="submit" name="action" value="tip">Give to tip jar</button>
+	<?php echo create_submit_display('Give to tip jar'); ?>
 </form>
 
 <br />

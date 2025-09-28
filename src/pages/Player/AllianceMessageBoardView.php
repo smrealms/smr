@@ -123,7 +123,7 @@ class AllianceMessageBoardView extends PlayerPage {
 
 		if ($mbWrite || $player->isObserver()) {
 			$container = new AllianceMessageBoardAddProcessor($allianceID, $this, $thread_id);
-			$thread['CreateThreadReplyFormHref'] = $container->href();
+			$thread['CreateThreadReplyFormPage'] = $container;
 		}
 		$template->assign('Thread', $thread);
 		$template->assign('Preview', $this->preview);

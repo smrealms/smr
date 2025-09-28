@@ -31,7 +31,7 @@ class MessageSend extends PlayerPage {
 		}
 
 		$container = new MessageSendProcessor($this->receiverAccountID);
-		$template->assign('MessageSendFormHref', $container->href());
+		$template->assign('MessageSendPage', $container);
 
 		if ($this->preview !== null) {
 			$template->assign('Preview', $this->preview);

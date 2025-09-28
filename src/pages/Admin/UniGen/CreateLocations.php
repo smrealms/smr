@@ -104,7 +104,7 @@ class CreateLocations extends AccountPage {
 		$template->assign('LocTypes', $categories->locTypes);
 
 		// Form to make location changes
-		$container = new SaveProcessor($this->gameID, $this->galaxyID, $this->returnTo);
+		$container = new CreateLocationsProcessor($this->gameID, $this->galaxyID, $this->returnTo);
 		$template->assign('CreateLocationsFormHREF', $container->href());
 
 		// HREF to cancel and return to the previous page

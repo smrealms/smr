@@ -57,7 +57,7 @@ class CreatePorts extends AccountPage {
 		$template->assign('TotalPorts', $totalPorts);
 		$template->assign('Total', array_sum($totalPorts));
 
-		$container = new SaveProcessor($this->gameID, $this->galaxyID, $this->returnTo);
+		$container = new CreatePortsProcessor($this->gameID, $this->galaxyID, $this->returnTo);
 		$template->assign('CreateHREF', $container->href());
 
 		// HREF to cancel and return to the previous page

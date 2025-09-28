@@ -83,7 +83,7 @@ class CombatLogList extends PlayerPage {
 			// 'View' and 'Save' share the same form, so we use 'action' as a
 			// way to return to this page when we only want to save the logs.
 			$container = new CombatLogListProcessor($action);
-			$template->assign('LogFormHREF', $container->href());
+			$template->assign('LogFormPage', $container);
 
 			// Set the links for the "view next/previous log list" buttons
 			if ($page > 0) {

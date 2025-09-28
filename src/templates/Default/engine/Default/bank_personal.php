@@ -2,7 +2,7 @@
 
 /**
  * @var Smr\Player $ThisPlayer
- * @var string $ProcessingHREF
+ * @var Smr\Pages\Player\Bank\PersonalBankProcessor $ProcessingPage
  */
 
 ?>
@@ -17,9 +17,9 @@ if ($ThisPlayer->getBank() >= MAX_MONEY) { ?>
 <h2>Make transaction</h2>
 <br />
 
-<form method="POST" action="<?php echo $ProcessingHREF; ?>">
+<form method="POST" action="<?php echo $ProcessingPage->href(); ?>">
 	Amount:&nbsp;<input type="number" name="amount" min="1" required size="10"><br /><br />
-	<?php echo create_submit('action', 'Deposit'); ?>
+	<?php echo $ProcessingPage->actionDeposit->html(); ?>
 	&nbsp;&nbsp;
-	<?php echo create_submit('action', 'Withdraw'); ?>
+	<?php echo $ProcessingPage->actionWithdraw->html(); ?>
 </form>

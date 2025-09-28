@@ -10,7 +10,6 @@ use Smr\Pages\Player\AttackPlanetProcessor;
 use Smr\Pages\Player\ExaminePlanet;
 use Smr\Pages\Player\Planet\BondConfirm;
 use Smr\Pages\Player\Planet\ConstructionProcessor;
-use Smr\Pages\Player\Planet\FinancialProcessor;
 use Smr\Pages\Player\Planet\LandProcessor;
 use Smr\PlanetTypes\PlanetType;
 
@@ -1127,10 +1126,6 @@ class Planet {
 	public function getCancelHREF(int $structureID): string {
 		$container = new ConstructionProcessor('Cancel', $structureID);
 		return $container->href();
-	}
-
-	public function getFinancesHREF(): string {
-		return (new FinancialProcessor())->href();
 	}
 
 	public function getBondConfirmationHREF(): string {

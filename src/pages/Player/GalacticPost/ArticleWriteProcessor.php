@@ -5,6 +5,7 @@ namespace Smr\Pages\Player\GalacticPost;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Globals;
+use Smr\Html\Submit;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Player\CurrentSector;
 use Smr\Player;
@@ -12,9 +13,17 @@ use Smr\Request;
 
 class ArticleWriteProcessor extends PlayerPageProcessor {
 
+	private const string ACTION = 'action';
+
+	public readonly Submit $actionPreview;
+	public readonly Submit $actionSubmit;
+
 	public function __construct(
 		private readonly ?int $articleID = null,
-	) {}
+	) {
+		$this->actionPreview = new Submit(self::ACTION, 'Preview article');
+		$this->actionSubmit = new Submit(self::ACTION, 'Submit article');
+	}
 
 	public function build(Player $player): never {
 		$title = Request::get('title');
@@ -24,7 +33,7 @@ class ArticleWriteProcessor extends PlayerPageProcessor {
 			$message = htmlentities($message, ENT_COMPAT, 'utf-8');
 		}
 
-		if (Request::get('action') === 'Preview article') {
+		if (Request::get(self::ACTION) === $this->actionPreview->value) {
 			$container = new ArticleWrite($this->articleID, $title, $message);
 			$container->go();
 		}

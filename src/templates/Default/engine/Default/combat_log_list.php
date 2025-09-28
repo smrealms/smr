@@ -7,7 +7,7 @@
  * @var int $TotalLogs
  * @var ?bool $CanSave
  * @var ?bool $CanDelete
- * @var ?string $LogFormHREF
+ * @var ?Smr\Pages\Player\CombatLogListProcessor $LogFormPage
  * @var array<int, array{Attacker: string, Defender: string, Time: int, Sector: int}> $Logs
  */
 
@@ -17,9 +17,12 @@ if (isset($Message)) {?>
 
 <div class="center"><?php
 	$NumLogs = count($Logs);
-	if ($NumLogs > 0) { ?>
+	if ($NumLogs > 0) {
+		if ($LogFormPage === null) {
+			throw new Exception('Expected non-null LogFormPage');
+		} ?>
 		You have <span id="total-logs"><?php echo pluralise($TotalLogs, $LogType . ' log'); ?></span> available for viewing (<?php echo $NumLogs; ?> shown).<br /><br />
-		<form class="standard" method="POST" action="<?php echo $LogFormHREF; ?>">
+		<form class="standard" method="POST" action="<?php echo $LogFormPage->href(); ?>">
 			<table class="fullwidth center">
 				<tr>
 					<td id="prev" class="ajax" style="width: 30%" valign="middle"><?php
@@ -28,12 +31,12 @@ if (isset($Message)) {?>
 						} ?>
 					</td>
 					<td>
-						<?php echo create_submit('action', 'View');
+						<?php echo $LogFormPage->actionView->html();
 						if ($CanDelete) {
-							?>&nbsp;<?php echo create_submit('action', 'Delete');
+							?>&nbsp;<?php echo $LogFormPage->actionDelete->html();
 						}
 						if ($CanSave) {
-							?>&nbsp;<?php echo create_submit('action', 'Save');
+							?>&nbsp;<?php echo $LogFormPage->actionSave->html();
 						} ?>
 					</td>
 					<td id="next" class="ajax" style="width: 30%" valign="middle"><?php

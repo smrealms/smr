@@ -4,7 +4,7 @@
  * @var array<string, array{Selected: bool, HREF: string, Count: int, Description: string}> $CategoryTable
  * @var bool $CanVote
  * @var string $FeatureRequestFormHREF
- * @var ?string $FeatureRequestVoteFormHREF
+ * @var ?Smr\Pages\Account\FeatureRequestVoteProcessor $FeatureRequestVoteFormPage
  * @var ?bool $FeatureModerator
  */
 
@@ -27,11 +27,14 @@
 </table>
 
 <?php
-if (isset($FeatureRequests)) { ?>
-	<form name="FeatureRequestVoteForm" method="POST" action="<?php echo $FeatureRequestVoteFormHREF; ?>">
+if (isset($FeatureRequests)) {
+	if ($FeatureRequestVoteFormPage === null) {
+		throw new Exception('Expected non-null FeatureRequestVoteFormPage');
+	} ?>
+	<form name="FeatureRequestVoteForm" method="POST" action="<?php echo $FeatureRequestVoteFormPage->href(); ?>">
 		<div class="right"><?php
 			if ($CanVote) {
-				echo create_submit('action', 'Vote');
+				echo $FeatureRequestVoteFormPage->actionVote->html();
 			} ?>
 		</div><br />
 		<table class="standard fullwidth">
@@ -79,10 +82,10 @@ if (isset($FeatureRequests)) { ?>
 					<option value="Rejected">Rejected</option>
 					<option value="Opened">Open</option>
 					<option value="Deleted">Delete</option>
-				</select>&nbsp;<?php echo create_submit('action', 'Set Status');
+				</select>&nbsp;<?php echo $FeatureRequestVoteFormPage->actionSetStatus->html();
 			}
 			if ($CanVote) {
-				echo create_submit('action', 'Vote');
+				echo $FeatureRequestVoteFormPage->actionVote->html();
 			} ?>
 		</div><br />
 	</form><?php
@@ -101,7 +104,7 @@ if (isset($FeatureRequests)) { ?>
 			<td class="center">Anonymous: <input name="anon" type="checkbox" checked="checked"/></td>
 		</tr>
 		<tr>
-			<td class="center"><?php echo create_submit('action', 'Submit New Feature'); ?></td>
+			<td class="center"><?php echo create_submit_display('Submit New Feature'); ?></td>
 		</tr>
 	</table>
 </form>

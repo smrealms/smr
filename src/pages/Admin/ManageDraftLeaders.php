@@ -67,7 +67,7 @@ class ManageDraftLeaders extends AccountPage {
 
 			// Create the link to the processing file
 			$linkContainer = new ManageDraftLeadersProcessor($selectedGameID);
-			$template->assign('ProcessingHREF', $linkContainer->href());
+			$template->assign('ProcessingPage', $linkContainer);
 		}
 	}
 

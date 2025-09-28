@@ -54,7 +54,7 @@ Click a category heading to toggle its display.
 
 		<tr>
 			<td colspan="2" class="center">
-				<?php echo create_submit('submit', 'Create Locations'); ?>
+				<?php echo create_submit_display('Create Locations'); ?>
 				<br /><br />
 				<a href="<?php echo $CancelHREF; ?>" class="submitStyle">Cancel</a>
 			</td>

@@ -63,8 +63,9 @@ class AdminPermissionManage extends AccountPage {
 			$template->assign('EditAccount', $editAccount);
 
 			$container = new AdminPermissionManageProcessor($admin_id);
-			$processingHREF = $container->href();
-			$template->assign('ProcessingHREF', $processingHREF);
+			$template->assign('ProcessingHREF', $container->href());
+			$container = new self();
+			$template->assign('CancelHREF', $container->href());
 
 			$template->assign('PermissionCategories', AdminPermissions::getPermissionsByCategory());
 		}

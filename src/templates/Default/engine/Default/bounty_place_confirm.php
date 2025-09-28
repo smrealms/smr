@@ -4,7 +4,8 @@
  * @var string $Amount
  * @var string $SmrCredits
  * @var string $BountyPlayer
- * @var string $ProcessingHREF
+ * @var string $ConfirmHREF
+ * @var string $CancelHREF
  */
 
 ?>
@@ -12,8 +13,6 @@
 credit and <span class="yellow"><?php echo $SmrCredits; ?></span>
 SMR credit bounty on <?php echo $BountyPlayer; ?>?</p>
 
-<form method="POST" action="<?php echo $ProcessingHREF; ?>">
-	<?php echo create_submit('action', 'Yes'); ?>
-	&nbsp;&nbsp;
-	<?php echo create_submit('action', 'No'); ?>
-</form>
+<?php echo create_submit_link($ConfirmHREF, 'Yes'); ?>
+&nbsp;&nbsp;
+<?php echo create_submit_link($CancelHREF, 'No');

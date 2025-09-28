@@ -4,19 +4,20 @@ use Smr\Epoch;
 
 /**
  * @var Smr\Planet $ThisPlanet
+ * @var Smr\Pages\Player\Planet\FinancialProcessor $ProcessorPage
  */
 
 ?>
 <p>Balance: <b><span id="planet_credits"><?php echo number_format($ThisPlanet->getCredits()); ?></span></b><?php if ($ThisPlanet->getCredits() >= MAX_MONEY) { ?> (Account is Full)<?php } ?></p>
 
-<form id="BondForm" method="POST" action="<?php echo $ThisPlanet->getFinancesHREF(); ?>">
+<form id="BondForm" method="POST" action="<?php echo $ProcessorPage->href(); ?>">
 	<table>
 		<tr>
 			<td colspan="2"><input type="number" name="amount" value="0" style="text-align:right;width:152;"></td>
 		</tr>
 		<tr>
-			<td><?php echo create_submit('action', 'Deposit'); ?></td>
-			<td><?php echo create_submit('action', 'Withdraw'); ?></td>
+			<td><?php echo $ProcessorPage->actionDeposit->html(); ?></td>
+			<td><?php echo $ProcessorPage->actionWithdraw->html(); ?></td>
 		</tr>
 	</table>
 </form>

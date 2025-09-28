@@ -13,7 +13,8 @@ class BondConfirm extends PlanetPage {
 		$planet = $player->getSectorPlanet();
 
 		$template->assign('BondDuration', format_time($planet->getBondTime()));
-		$template->assign('ReturnHREF', $planet->getFinancesHREF());
+		$template->assign('ConfirmHREF', (new BondProcessor())->href());
+		$template->assign('CancelHREF', (new Financial())->href());
 	}
 
 }

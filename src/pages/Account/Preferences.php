@@ -21,12 +21,12 @@ class Preferences extends AccountPage {
 
 		$session = Session::getInstance();
 		if ($session->hasGame()) {
-			$template->assign('PlayerPreferencesFormHREF', (new PlayerPreferencesProcessor())->href());
+			$template->assign('PlayerPreferencesForm', new PlayerPreferencesProcessor());
 			$template->assign('ChatSharingHREF', (new ChatSharing())->href());
 		}
-		$template->assign('AccountPreferencesFormHREF', (new PreferencesProcessor())->href());
+		$template->assign('AccountPreferencesForm', new PreferencesProcessor());
 
-		$template->assign('PreferencesConfirmFormHREF', (new PreferencesTransferConfirm())->href());
+		$template->assign('TransferConfirmFormHREF', (new PreferencesTransferConfirm())->href());
 	}
 
 }

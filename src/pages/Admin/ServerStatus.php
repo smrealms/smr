@@ -12,8 +12,7 @@ class ServerStatus extends AccountPage {
 	public string $file = 'admin/game_status.php';
 
 	public function build(Account $account, Template $template): void {
-		$processingHREF = (new ServerStatusProcessor())->href();
-		$template->assign('ProcessingHREF', $processingHREF);
+		$template->assign('ProcessingPage', new ServerStatusProcessor());
 
 		$db = Database::getInstance();
 		$dbResult = $db->select('game_disable');

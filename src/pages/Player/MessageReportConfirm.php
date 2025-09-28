@@ -28,7 +28,10 @@ class MessageReportConfirm extends PlayerPage {
 		$template->assign('MessageText', $dbResult->record()->getString('message_text'));
 
 		$container = new MessageReportProcessor($this->folderID, $this->messageID);
-		$template->assign('ProcessingHREF', $container->href());
+		$template->assign('ConfirmHREF', $container->href());
+
+		$container = new MessageView($this->folderID);
+		$template->assign('CancelHREF', $container->href());
 
 		$template->assign('PageTopic', 'Report a Message');
 		Menu::messages();
