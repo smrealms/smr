@@ -20,23 +20,23 @@ parameters:
     checkDynamicProperties: true
 
     dynamicConstantNames:
-        - BUG_REPORT_TO_ADDRESSES
-        - CONTACT_FORM_CC_ADDRESSES
-        - ENABLE_BETA
-        - ENABLE_DEBUG
-        - ENABLE_LIBXML_ERRORS
-        - ENABLE_NPCS_CHESS
-        - FACEBOOK_APP_ID
-        - GOOGLE_ANALYTICS_ID
-        - GOOGLE_CLIENT_ID
-        - IRC_BOT_VERBOSE_PING
-        - NPC_LOG_TO_DATABASE
-        - OVERRIDE_FORWARD
-        - RECAPTCHA_PRIVATE
-        - SMTP_HOSTNAME
-        - TWITTER_CONSUMER_KEY
+        BUG_REPORT_TO_ADDRESSES: list<string>
+        CONTACT_FORM_CC_ADDRESSES: list<string>
+        ENABLE_BETA: bool
+        ENABLE_DEBUG: bool
+        ENABLE_LIBXML_ERRORS: bool
+        ENABLE_NPCS_CHESS: bool
+        FACEBOOK_APP_ID: string
+        GOOGLE_ANALYTICS_ID: string
+        GOOGLE_CLIENT_ID: string
+        IRC_BOT_VERBOSE_PING: bool
+        NPC_LOG_TO_DATABASE: bool
+        OVERRIDE_FORWARD: ?true
+        RECAPTCHA_PRIVATE: string
+        SMTP_HOSTNAME: string
+        TWITTER_CONSUMER_KEY: string
         # We code in protection against a value of 0
-        - Smr\Combat\Weapon\Mines::TOTAL_ENEMY_MINES_MODIFIER
+        Smr\Combat\Weapon\Mines::TOTAL_ENEMY_MINES_MODIFIER: float
 
     typeAliases:
         WeaponDamageData: 'array{Shield: int, Armour: int, Rollover: bool, Launched?: int, Kamikaze?: int}'
@@ -78,17 +78,6 @@ parameters:
             # detect that this is happening. (Level 4)
             message: '#Right side of || is always false.#'
             path: src/pages/Player/AttackPlayerProcessor.php
-            count: 1
-        -
-            # https://github.com/phpstan/phpstan/issues/7520
-            message: '#Comparison operation ">" between 0 and 0 is always false.#'
-            paths:
-                - src/bootstrap.php
-                - src/pages/Account/BugReportProcessor.php
-        -
-            # https://github.com/phpstan/phpstan/issues/7520
-            message: '#Empty array passed to foreach.#'
-            path: src/pages/Account/ContactFormProcessor.php
             count: 1
         -
             # https://github.com/thephpleague/oauth2-client/issues/897
