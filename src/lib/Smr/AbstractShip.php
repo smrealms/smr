@@ -205,7 +205,8 @@ class AbstractShip {
 		$replacement = $orderID + 1;
 		if ($replacement >= count($this->weapons)) {
 			// Shift everything down by one and put the selected weapon at the top
-			array_unshift($this->weapons, array_pop($this->weapons));
+			$temp = array_pop($this->weapons);
+			array_unshift($this->weapons, $temp);
 		} else {
 			// Swap the selected weapon with the one below it
 			$temp = $this->weapons[$replacement];
