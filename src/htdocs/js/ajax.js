@@ -89,7 +89,6 @@ var exec = function(s) {
 		// Similarly, we only need event listeners when refresh is enabled.
 		window.onfocus = scheduleRefresh;
 		window.onblur = cancelRefresh;
-		window.onunload = cancelRefresh;
 
 		if(!_refreshSpeed) {
 			return;
