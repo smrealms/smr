@@ -35,12 +35,13 @@ class AdminPermissionManageProcessor extends AccountPageProcessor {
 
 			// Process adding/removing the Admin tag
 			if (in_array(PERMISSION_DISPLAY_ADMIN_TAG, $permissions, true)) {
-				// This might overwrite an existing unrelated tag.
+				// This might overwrite an existing unrelated tag and/or custom rank
 				$tag = '<span class="blue">Admin</span>';
 				$db->replace('cpl_tag', [
 					'account_id' => $this->adminAccountID,
 					'tag' => $tag,
 					'custom' => 0,
+					'custom_rank' => '',
 				]);
 			} elseif ($hadAdminTag) {
 				// Only delete the tag if they previously had an admin tag;
