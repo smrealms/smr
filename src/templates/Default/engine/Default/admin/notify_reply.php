@@ -16,5 +16,5 @@ Leave a message box blank to not reply to that player.<br />
 	<input type="number" value="<?php if (isset($OffendedBanPoints)) { echo htmlspecialchars($OffendedBanPoints); } else { ?>0<?php } ?>" name="offendedBanPoints" size="4" /> Points<br />
 	<textarea spellcheck="true" name="offendedReply"><?php if (isset($PreviewOffended)) { echo $PreviewOffended; } ?></textarea><br /><br />
 
-	<input type="submit" name="action" value="Send messages" />&nbsp;<input type="submit" name="action" value="Preview messages" />
+	<?php echo create_submit('action', 'Send messages'); ?>&nbsp;<?php echo create_submit('action', 'Preview messages'); ?>
 </form>

@@ -35,7 +35,7 @@ if (isset($OpDate)) { ?>
 	<p>Schedule the next alliance operation:<br><small>Enter the date in server time (example: Dec 12 18:30)</small></p>
 	<form method="POST" action="<?php echo $OpProcessingHREF; ?>">
 		<input type="text" name="date" required />
-		<input type="submit" value="Confirm" />
+		<?php echo create_submit_display('Confirm'); ?>
 	</form><?php
 }
 ?>
@@ -56,5 +56,5 @@ if (isset($OpDate)) { ?>
 		} ?>
 	</select>
 	<br /><br />
-	<input type="submit" name="action" value="Designate Flagship" />
+	<?php echo create_submit('action', 'Designate Flagship'); ?>
 </form>

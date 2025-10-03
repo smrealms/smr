@@ -17,7 +17,7 @@ if (isset($Boxes)) { ?>
 	<a href="<?php echo $BackHREF; ?>">&lt;&lt; Back</a><br /><br /><?php
 	if (isset($Messages)) { ?>
 		<form method="POST" action="<?php echo $DeleteHREF; ?>">
-			<input type="submit" name="action" value="Delete" />
+			<?php echo create_submit('action', 'Delete'); ?>
 			&nbsp;
 			<select name="action" size="1">
 				<option>Marked Messages</option>

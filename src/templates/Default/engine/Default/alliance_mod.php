@@ -7,7 +7,7 @@ use Smr\Epoch;
  * @var Smr\Alliance $Alliance
  * @var ?string $OpResponseHREF
  * @var ?int $OpTime
- * @var ?array<string, string> $ResponseInputs
+ * @var ?array<string, array<string, string>> $ResponseInputs
  * @var ?string $DiscordServer
  */
 
@@ -23,9 +23,9 @@ if (isset($OpTime) && isset($ResponseInputs)) { ?>
 		<tr><td><b>Will you join the operation?</b></td></tr>
 		<tr><td>
 			<form method="POST" action="<?php echo $OpResponseHREF; ?>"><?php
-				foreach ($ResponseInputs as $option => $style) { ?>
+				foreach ($ResponseInputs as $option => $fields) { ?>
 					<span style="padding: 0 4px 0 4px">
-						<input type="submit" name="op_response" <?php echo $style; ?> value="<?php echo $option; ?>" />
+						<?php echo create_submit('op_response', $option, fields: $fields); ?>
 					</span><?php
 				} ?>
 			</form>

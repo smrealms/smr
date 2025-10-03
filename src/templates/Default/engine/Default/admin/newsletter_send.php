@@ -19,7 +19,7 @@ if (!isset($NewsletterId)) { ?>
 	Please send to yourself first to verify that everything displays as intended.</p>
 	<input type="text" name="to_email" required value="<?php echo htmlspecialchars($CurrentEmail); ?>" size="35">
 
-	<p><input type="submit" name="action" value="Send" /></p>
+	<p><?php echo create_submit('action', 'Send'); ?></p>
 	</form>
 	<br /><br />
 

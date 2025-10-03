@@ -40,7 +40,7 @@ if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
-					<td><input type="submit" name="action" value="Set Illusion" />&nbsp;&nbsp;&nbsp;&nbsp;<div class="buttonA"><a class="buttonA" href="<?php echo $DisableIllusionHref; ?>">Disable Illusion</a></div></td>
+					<td><?php echo create_submit('action', 'Set Illusion'); ?>&nbsp;&nbsp;&nbsp;&nbsp;<div class="buttonA"><a class="buttonA" href="<?php echo $DisableIllusionHref; ?>">Disable Illusion</a></div></td>
 				</tr>
 			</table>
 		</form><?php

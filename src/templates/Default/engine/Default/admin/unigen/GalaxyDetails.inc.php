@@ -46,6 +46,10 @@ use Smr\Galaxy;
 				} ?>
 			</tr><?php
 		} ?>
-		<tr><td class="center" colspan="6"><input type="submit" value="<?php echo $Submit['value']; ?>" name="submit"></td>
+		<tr>
+			<td class="center" colspan="6">
+				<?php echo create_submit('submit', $Submit['value']); ?>
+			</td>
+		</tr>
 	</table>
 </form>

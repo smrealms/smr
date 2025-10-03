@@ -49,13 +49,13 @@
 									</option><?php
 								} ?>
 							</select>&nbsp;
-							<input type="submit" value="View"/>
+							<?php echo create_submit_display('View'); ?>
 						</form>
 						<br />
 						<form name="GalaxyMapJumpTo" method="GET">
 							<label for="sector_id">Switch sector</label>&nbsp;
 							<input type="number" min="1" max="<?php echo $LastSector; ?>" required name="sector_id" id="sector_id" />&nbsp;
-							<input type="submit" value="View" />
+							<?php echo create_submit_display('View'); ?>
 						</form>
 					</td>
 					<td class="bottom">

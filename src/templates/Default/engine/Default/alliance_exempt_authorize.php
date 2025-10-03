@@ -30,7 +30,7 @@ if (count($Transactions) > 0) { ?>
 			} ?>
 		</table>
 		<br />
-		<input type="submit" name="action" value="Make Exempt" />
+		<?php echo create_submit('action', 'Make Exempt'); ?>
 	</form><?php
 } else { ?>
 	Nothing to authorize.<?php

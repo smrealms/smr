@@ -84,5 +84,5 @@ if ($CanChangeMOTD) { ?>
 
 </table>
 <br />
-<input type="submit" name="action" value="Change" />
+<?php echo create_submit('action', 'Change'); ?>
 </form>

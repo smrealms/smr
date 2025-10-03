@@ -50,7 +50,7 @@
 	<table>
 		<tr>
 			<td>
-					<input type="submit" name="action" value="Search" />
+				<?php echo create_submit('action', 'Search'); ?>
 			</td>
 	</table>
 </form><?php

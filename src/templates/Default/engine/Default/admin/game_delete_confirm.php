@@ -5,7 +5,7 @@ Are you sure you want to delete the game: <i><?php echo $Game->getDisplayName();
 <br /><br />
 
 <form method="POST" action="<?php echo $ProcessingHREF; ?>">
-	<input type="submit" name="action" value="Yes" />
+	<?php echo create_submit('action', 'Yes'); ?>
 	&nbsp;&nbsp;
-	<input type="submit" name="action" value="No" />
+	<?php echo create_submit('action', 'No'); ?>
 </form>

@@ -26,7 +26,7 @@ if (!isset($EditAccount)) { ?>
 		} ?>
 		</select>
 		&nbsp;&nbsp;&nbsp;
-		<input type="submit" value="Select" />
+		<?php echo create_submit_display('Select'); ?>
 	</form><?php
 } else { ?>
 	Change permissions for the Account of <u><?php echo $EditAccount->getLogin(); ?></u>!
@@ -42,8 +42,8 @@ if (!isset($EditAccount)) { ?>
 			</div><?php
 		} ?>
 		<br />
-		<input type="submit" name="action" value="Change" />
+		<?php echo create_submit('action', 'Change'); ?>
 		&nbsp;&nbsp;&nbsp;
-		<input type="submit" name="action" value="Select Another User" />
+		<?php echo create_submit('action', 'Select Another User'); ?>
 	</form><?php
 }

@@ -13,7 +13,7 @@ use Smr\Race;
 			<option <?php if ($Game['Selected']) { ?>selected<?php } ?> value="<?php echo $Game['ID']; ?>"><?php echo $Game['Name']; ?></option><?php
 		} ?>
 	</select>&nbsp;
-	<input type="submit" name="action" value="Select" />
+	<?php echo create_submit('action', 'Select'); ?>
 </form>
 
 <?php
@@ -49,7 +49,7 @@ if ($SelectedGameID !== 0) { ?>
 							</select>
 						</td>
 						<td><input name="player_alliance" value="<?php echo $npc['default_alliance']; ?>" /></td>
-						<td><input type="submit" name="create_npc_player" value="Create" /></td>
+						<td><?php echo create_submit('create_npc_player', 'Create'); ?></td>
 					</form><?php
 				} else { ?>
 					<td><?php echo $npc['player']->getDisplayName(); ?></td>
@@ -69,5 +69,5 @@ if ($SelectedGameID !== 0) { ?>
 	Login: <?php echo $NextLogin; ?><br />
 	Default Player Name: <input required name="default_player_name" /><br />
 	Default Alliance: <input required name="default_alliance" /><br />
-	<input type="submit" name="add_npc_account" />
+	<?php echo create_submit_display('Submit'); ?>
 </form>

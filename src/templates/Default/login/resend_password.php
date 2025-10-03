@@ -15,7 +15,7 @@
 					<td><input required type="email" name="email" class="InputFields"></td>
 				</tr>
 			</table>
-			<p><input type="submit" value="Resend my password" class="InputFields"></p>
+			<p><?php echo create_submit_display('Resend my password', ['class' => 'InputFields']); ?></p>
 		</div>
 	</form>
 </div>

@@ -17,7 +17,7 @@ use Smr\Request;
 				<td width="73%"><input required type="password" name="password" size="20" maxlength="32" class="InputFields"></td>
 			</tr>
 		</table>
-		<p><input class="InputFields" type="submit" name="link_login" value="Link Login"></p>
+		<p><?php echo create_submit('link_login', 'Link Login', fields: ['class' => 'InputFields']); ?></p>
 	</form>
 	<br/>
 
@@ -89,7 +89,7 @@ use Smr\Request;
 				<a href="<?php echo WIKI_URL; ?>/privacy" target="_blank" style="font-weight:bold;">Privacy Policy</a>.
 			</div>
 
-			<p><input class="InputFields" type="submit" name="create_login" value="Create Login"></p>
+			<p><?php echo create_submit('create_login', 'Create Login', fields: ['class' => 'InputFields']); ?></p>
 		</form><?php
 	} ?>
 </div>

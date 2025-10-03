@@ -28,7 +28,7 @@
 				} ?>
 			</table>
 			<br />
-			<input type="submit" name="action" value="Banish 'em!" />
+			<?php echo create_submit_display('Banish \'em!'); ?>
 		</form><?php
 	} ?>
 </div>

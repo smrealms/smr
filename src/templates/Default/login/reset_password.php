@@ -28,7 +28,7 @@ use Smr\Request;
 								<td><input required name="pass_verify" type="password" class="InputFields" /></td>
 						</tr>
 					</table>
-					<p><input type="submit" value="Reset my password" class="InputFields" /></p>
+					<p><?php echo create_submit_display('Reset my password', ['class' => 'InputFields']); ?></p>
 			</div>
 	</form>
 </div>

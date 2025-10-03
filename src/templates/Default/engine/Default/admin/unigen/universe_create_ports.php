@@ -75,7 +75,7 @@ use Smr\Race;
 
 		<tr>
 			<td colspan="3" class="center">
-				<input type="submit" name="submit" value="Create Ports" />
+				<?php echo create_submit('submit', 'Create Ports'); ?>
 				<br /><br />
 				<a href="<?php echo $CancelHREF; ?>" class="submitStyle">Cancel</a>
 			</td>

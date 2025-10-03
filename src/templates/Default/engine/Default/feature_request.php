@@ -30,8 +30,8 @@
 if (isset($FeatureRequests)) { ?>
 	<form name="FeatureRequestVoteForm" method="POST" action="<?php echo $FeatureRequestVoteFormHREF; ?>">
 		<div class="right"><?php
-			if ($CanVote) { ?>
-				<input type="submit" name="action" value="Vote"><?php
+			if ($CanVote) {
+				echo create_submit('action', 'Vote');
 			} ?>
 		</div><br />
 		<table class="standard fullwidth">
@@ -79,10 +79,10 @@ if (isset($FeatureRequests)) { ?>
 					<option value="Rejected">Rejected</option>
 					<option value="Opened">Open</option>
 					<option value="Deleted">Delete</option>
-				</select>&nbsp;<input type="submit" name="action" value="Set Status"><?php
+				</select>&nbsp;<?php echo create_submit('action', 'Set Status');
 			}
-			if ($CanVote) { ?>
-				<input type="submit" name="action" value="Vote"><?php
+			if ($CanVote) {
+				echo create_submit('action', 'Vote');
 			} ?>
 		</div><br />
 	</form><?php
@@ -101,7 +101,7 @@ if (isset($FeatureRequests)) { ?>
 			<td class="center">Anonymous: <input name="anon" type="checkbox" checked="checked"/></td>
 		</tr>
 		<tr>
-			<td class="center"><input type="submit" name="action" value="Submit New Feature"></td>
+			<td class="center"><?php echo create_submit('action', 'Submit New Feature'); ?></td>
 		</tr>
 	</table>
 </form>

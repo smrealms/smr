@@ -95,7 +95,7 @@ if (isset($Locations)) {
 			</table>
 		</td>
 		<td>
-			<input type="submit" name="save" value="Save"/>
+			<?php echo create_submit('save', 'Save'); ?>
 		</td>
 	</tr><?php
 } ?>

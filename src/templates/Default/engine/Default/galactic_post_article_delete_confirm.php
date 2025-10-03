@@ -9,6 +9,6 @@
 Are you sure you want to delete the article titled <b><?php echo $ArticleTitle; ?></b>?
 <br /><br />
 <form method="POST" action="<?php echo $SubmitHREF; ?>">
-	<input type="submit" name="action" value="Yes" />&nbsp;
-	<input type="submit" name="action" value="No" />
+	<?php echo create_submit('action', 'Yes'); ?>&nbsp;
+	<?php echo create_submit('action', 'No'); ?>
 </form>

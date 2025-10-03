@@ -10,7 +10,7 @@
 			?><option value="<?php echo $DummyName; ?>"<?php if ($DummyName === $DummyPlayer->getPlayerName()) { ?> selected="selected"<?php } ?>><?php echo $DummyName; ?></option><?php
 		} ?>
 	</select><br />
-	<input type="submit" value="Select Dummy" />
+	<?php echo create_submit_display('Select Dummy'); ?>
 </form>
 
 <table>
@@ -51,8 +51,8 @@
 							?><option value="<?php echo $Weapon->getWeaponTypeID(); ?>"><?php echo $Weapon->getName(); ?> (dmg: <?php echo $Weapon->getShieldDamage(); ?>/<?php echo $Weapon->getArmourDamage(); ?> acc: <?php echo $Weapon->getAccuracy(); ?>% lvl:<?php echo $Weapon->getPowerLevel(); ?>)</option><?php
 						} ?>
 					</select><br /><?php
-				} ?>
-				<input type="submit" name="save_dummy" value="Save Dummy" />
+				}
+				echo create_submit('save_dummy', 'Save Dummy'); ?>
 			</form>
 		</td>
 		<td class="top">

@@ -18,7 +18,7 @@
 		<p>
 			<input type="number" name="min_rank" value="<?php echo $MinRank; ?>" size="3" class="center">&nbsp;-&nbsp;
 			<input type="number" name="max_rank" value="<?php echo $MaxRank; ?>" size="3" class="center">&nbsp;
-			<input type="submit" name="action" value="Show" />
+			<?php echo create_submit('action', 'Show'); ?>
 		</p>
 	</form>
 

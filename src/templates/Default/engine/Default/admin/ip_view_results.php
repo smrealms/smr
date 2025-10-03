@@ -40,7 +40,7 @@ if ($type === 'comp_share') {
 					</tr><?php
 				} ?>
 			</table>
-		<input type="submit" name="action" value="Disable" />
+		<?php echo create_submit('action', 'Disable'); ?>
 	</form><?php
 
 } elseif ($type === 'account_ips') { ?>
@@ -71,7 +71,7 @@ if ($type === 'comp_share') {
 			<p>
 				Reason:&nbsp;<input type=text name="reason" value="Reason Here">&nbsp;
 				<input type=hidden name=second value="<?php echo $BanAccountID; ?>" />
-				<input type="submit" name="action" value="Disable Account" />
+				<?php echo create_submit('action', 'Disable Account'); ?>
 			</p>
 		</form>
 	</center><?php
@@ -107,7 +107,7 @@ if ($type === 'comp_share') {
 					</tr><?php
 				} ?>
 			</table>
-			<p><input type="submit" name="action" value="Disable Accounts" /></p>
+			<p><?php echo create_submit('action', 'Disable Accounts'); ?></p>
 			<input type=hidden name=first value="first">
 		</form>
 	</center><?php

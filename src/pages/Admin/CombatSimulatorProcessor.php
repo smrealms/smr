@@ -37,18 +37,16 @@ class CombatSimulatorProcessor extends AccountPageProcessor {
 
 		$i = 1;
 		$attackers = [];
-		if (Request::has('attackers')) {
-			foreach (Request::getArray('attackers') as $attackerName) {
-				if ($attackerName === 'none') {
-					continue;
-				}
-				if (isset($usedNames[$attackerName])) {
-					create_error('Duplicate name used: ' . $attackerName);
-				}
-				$usedNames[$attackerName] = true;
-				$attackers[$i] = DummyShip::getCachedDummyShip($attackerName)->getPlayer();
-				++$i;
+		foreach (Request::getArray('attackers') as $attackerName) {
+			if ($attackerName === 'none') {
+				continue;
 			}
+			if (isset($usedNames[$attackerName])) {
+				create_error('Duplicate name used: ' . $attackerName);
+			}
+			$usedNames[$attackerName] = true;
+			$attackers[$i] = DummyShip::getCachedDummyShip($attackerName)->getPlayer();
+			++$i;
 		}
 
 		$i = 1;
@@ -65,7 +63,8 @@ class CombatSimulatorProcessor extends AccountPageProcessor {
 			++$i;
 		}
 
-		if (Request::has('repair')) {
+		$action = Request::get('action');
+		if ($action === 'repair') {
 			foreach ([...$attackers, ...$defenders] as $player) {
 				$player->setDead(false);
 				$player->getShip()->setHardwareToMax();
@@ -73,8 +72,8 @@ class CombatSimulatorProcessor extends AccountPageProcessor {
 		}
 
 		$results = null;
-		if (Request::has('run') || Request::has('death_run')) {
-			if (Request::has('death_run')) {
+		if ($action === 'run' || $action === 'death_run') {
+			if ($action === 'death_run') {
 				$maxRounds = 100;
 			} else {
 				$maxRounds = 1;
@@ -100,7 +99,7 @@ class CombatSimulatorProcessor extends AccountPageProcessor {
 		}
 
 		// Save ships unless we're just updating the dummy list
-		if (!Request::has('update')) {
+		if ($action !== 'update') {
 			DummyShip::saveDummyShips();
 		}
 

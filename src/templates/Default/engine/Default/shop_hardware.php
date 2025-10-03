@@ -25,7 +25,7 @@ if (isset($HardwareSold)) { ?>
 				<td><input form="buy<?php echo $HardwareTypeID; ?>" type="number" name="total" disabled="disabled" value="<?php echo $AmountToBuy * $Hardware['Cost']; ?>" size="7" class="center"></td>
 				<td class="center">
 					<form method="POST" id="buy<?php echo $HardwareTypeID; ?>" action="<?php echo $Hardware['HREF']; ?>">
-						<input type="submit" name="action" value="Buy" />
+						<?php echo create_submit('action', 'Buy'); ?>
 					</form>
 				</td>
 			</tr><?php
@@ -53,7 +53,7 @@ if (isset($HardwareSold)) { ?>
 				<td><input form="sell<?php echo HARDWARE_COMBAT; ?>" type="number" name="total" disabled="disabled" value="<?php echo $MaxAmountToSell * $UnitRefund; ?>" size="7" class="center"></td>
 				<td class="center">
 					<form method="POST" id="sell<?php echo HARDWARE_COMBAT; ?>" action="<?php echo $Hardware['HREF']; ?>">
-						<input type="submit" name="action" value="Sell" />
+						<?php echo create_submit('action', 'Sell'); ?>
 					</form>
 				</td>
 			</tr>

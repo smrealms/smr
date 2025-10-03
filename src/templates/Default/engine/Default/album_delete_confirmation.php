@@ -9,5 +9,5 @@ Are you sure you want to delete your photo album entry and all comments added to
 This action cannot be undone.<br /><br />
 
 <form name="ConfirmAlbumDeleteForm" method="POST" action="<?php echo $ConfirmAlbumDeleteHref; ?>">
-	<input type="submit" name="action" value="Yes" />&nbsp;&nbsp;&nbsp;<input type="submit" name="action" value="No" />
+	<?php echo create_submit('action', 'Yes'); ?>&nbps;&nbsp;&nbsp;<?php echo create_submit('action', 'No'); ?>
 </form>

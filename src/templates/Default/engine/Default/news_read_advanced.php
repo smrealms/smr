@@ -15,7 +15,7 @@
 				<form name="AdvancedNewsForm" method="POST" action="<?php echo $AdvancedNewsFormHref; ?>">
 					<h2>Player Search</h2>
 					<input type="text" name="playerName" required size="14"><br /><br />
-					<input type="submit" value="Search For Player" name="submit"><br />
+					<?php echo create_submit('submit', 'Search For Player'); ?><br />
 				</form>
 			</td>
 			<td class="center">
@@ -28,7 +28,7 @@
 						} ?>
 					</select><br />
 					<br />
-					<input type="submit" value="Search For Alliance" name="submit">
+					<?php echo create_submit('submit', 'Search For Alliance'); ?>
 				</form>
 			</td>
 		</tr>
@@ -41,7 +41,7 @@
 					<h2>Player Vs Player Search</h2>
 					<input type="text" name="player1" required size="14"> vs. <input type="text" name="player2" required size="14"><br />
 					<br />
-					<input type="submit" value="Search For Players" name="submit">
+					<?php echo create_submit('submit', 'Search For Players'); ?>
 				</form>
 			</td>
 			<td class="center">
@@ -61,7 +61,7 @@
 						} ?>
 					</select><br />
 					<br />
-					<input type="submit" value="Search For Alliances" name="submit">
+					<?php echo create_submit('submit', 'Search For Alliances'); ?>
 				</form>
 			</td>
 		</tr>

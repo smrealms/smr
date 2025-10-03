@@ -14,8 +14,8 @@
 			<td class="center"><?php
 				if ($Entry['disabled']) { ?>
 					Already<br />Disabled<?php
-				} else { ?>
-					<input type="submit" name="action" value="Disable" /><?php
+				} else {
+					echo create_submit('action', 'Disable');
 				} ?>
 			</td>
 			<td colspan="2">
@@ -91,7 +91,7 @@
 		} ?>
 		<tr>
 			<td class="center">
-				<input type="submit" name="action" value="Delete" />
+				<?php echo create_submit('action', 'Delete'); ?>
 			</td>
 		</tr>
 	</form>

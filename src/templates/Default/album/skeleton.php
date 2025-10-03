@@ -33,7 +33,7 @@ use Smr\Epoch;
 					]</div>
 					<form>
 						<input type="text" name="search" size="10" required />
-						<input type="submit" value="Search" />
+						<?php echo create_submit_display('Search'); ?>
 					</form>
 				</div>
 				<hr class="center">

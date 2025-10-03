@@ -27,8 +27,8 @@ if (count($ActiveGames) === 0) {
 	<form method="POST" action="<?php echo $PostEditorHREF; ?>">
 		<input type="number" name="player_id" class="center">
 		<br />
-		<input type="submit" name="submit" value="Assign">&nbsp;
-		<input type="submit" name="submit" value="Remove">
+		<?php echo create_submit('submit', 'Assign'); ?>&nbsp;
+		<?php echo create_submit('submit', 'Remove'); ?>
 	</form>
 	<?php
 

@@ -12,12 +12,12 @@ if ($EmptyResult) { ?>
 <form method="POST" action="<?php echo $TraderSearchHREF; ?>">
 <p>
 	Player name:<br />
-	<input type="text" name="player_name" style="width:150px">&nbsp;<input type="submit" name="action" value="Search" />
+	<input type="text" name="player_name" style="width:150px">&nbsp;<?php echo create_submit('action', 'Search'); ?>
 
 	<br /><br /><br />
 
 	Player ID:<br />
-	<input type="number" name="player_id" style="width:50px">&nbsp;<input type="submit" name="action" value="Search" />
+	<input type="number" name="player_id" style="width:50px">&nbsp;<?php echo create_submit('action', 'Search'); ?>
 
 </p>
 </form>

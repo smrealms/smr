@@ -8,19 +8,20 @@ use Smr\ScoutMessageGroupType;
  * @var array{UnreadMessages: int, TotalMessages: int, Type: int, Name: string, DeleteFormHref: string, NumberMessages: int, Messages: array<mixed>, ShowAllHref?: string, GroupedMessages?: array<mixed>} $MessageBox
  */
 
+$styleGreen = ['style' => 'background-color:green'];
 if ($MessageBox['Type'] === MSG_GLOBAL) { ?>
 	<form name="FORM" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
 		<div class="center">Ignore global messages?&nbsp;&nbsp;
-			<input type="submit" name="ignore_globals" value="Yes" <?php if ($ThisPlayer->isIgnoreGlobals()) { ?> style="background-color:green;"<?php } ?> />&nbsp;
-			<input type="submit" name="ignore_globals" value="No" <?php if (!$ThisPlayer->isIgnoreGlobals()) { ?> style="background-color:green;"<?php } ?> />
+			<?php echo create_submit('ignore_globals', 'Yes', fields: ($ThisPlayer->isIgnoreGlobals() ? $styleGreen : [])); ?>&nbsp;
+			<?php echo create_submit('ignore_globals', 'No', fields: ($ThisPlayer->isIgnoreGlobals() ? [] : $styleGreen)); ?>
 		</div>
 	</form><?php
 } elseif ($MessageBox['Type'] === MSG_SCOUT) { ?>
 	<form name="FORM" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
 		<div class="center">
 			Group scout messages?&nbsp;&nbsp;<?php
-			foreach (ScoutMessageGroupType::cases() as $groupType) { ?>
-				<button type="submit" name="group_scouts" value="<?php echo $groupType->value; ?>" <?php if ($ThisPlayer->getScoutMessageGroupType() === $groupType) { ?> style="background-color:green;" <?php } ?>><?php echo $groupType->name; ?></button>&nbsp;<?php
+			foreach (ScoutMessageGroupType::cases() as $groupType) {
+				echo create_submit('group_scouts', $groupType->value, $groupType->name, fields: ($ThisPlayer->getScoutMessageGroupType() === $groupType ? $styleGreen : []));
 			} ?>
 		</div>
 	</form><?php
@@ -35,7 +36,7 @@ if ($MessageBox['Type'] === MSG_GLOBAL) { ?>
 				} ?>
 			</td>
 			<td>
-				<input type="submit" name="action" value="Delete" />&nbsp;<select name="action" size="1">
+				<?php echo create_submit('action', 'Delete'); ?>&nbsp;<select name="action" size="1">
 					<option>Marked Messages</option>
 					<option>All Messages</option>
 				</select>

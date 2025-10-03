@@ -32,8 +32,8 @@ $this->includeTemplate('changelog_view.php', ['Versions' => [$FirstVersion]]); ?
 				<tr>
 					<td></td>
 					<td class="right">
-						<input type="submit" name="action" value="Preview" />&nbsp;
-						<input type="submit" name="action" value="Add" />
+						<?php echo create_submit('action', 'Preview'); ?>&nbsp;
+						<?php echo create_submit('action', 'Add'); ?>
 					</td>
 				</tr>
 			</table>

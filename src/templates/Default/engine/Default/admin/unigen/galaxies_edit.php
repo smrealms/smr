@@ -26,7 +26,7 @@ if ($GameEnabled) { ?>
 	<br />
 
 	<form method=POST action="<?php echo $AddHREF; ?>">
-		Add new galaxy ID: <input required name="insert_galaxy_id" type="number" min="1" max="<?php echo $MaxAddId; ?>" /> <input type="submit" value="Insert" />
+		Add new galaxy ID: <input required name="insert_galaxy_id" type="number" min="1" max="<?php echo $MaxAddId; ?>" /> <?php echo create_submit_display('Insert'); ?>
 	</form><?php
 } ?>
 

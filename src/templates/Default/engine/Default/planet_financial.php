@@ -15,8 +15,8 @@ use Smr\Epoch;
 			<td colspan="2"><input type="number" name="amount" value="0" style="text-align:right;width:152;"></td>
 		</tr>
 		<tr>
-			<td><input type="submit" name="action" value="Deposit" /></td>
-			<td><input type="submit" name="action" value="Withdraw" /></td>
+			<td><?php echo create_submit('action', 'Deposit'); ?></td>
+			<td><?php echo create_submit('action', 'Withdraw'); ?></td>
 		</tr>
 	</table>
 </form>

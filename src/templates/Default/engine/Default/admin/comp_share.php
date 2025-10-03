@@ -26,6 +26,6 @@
 			} ?>
 		</table>
 		<br /><?php
-	} ?>
-	<input type="submit" name="action" value="Close Accounts" />
+	}
+	echo create_submit('action', 'Close Accounts'); ?>
 </form>

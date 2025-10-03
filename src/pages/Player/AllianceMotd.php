@@ -54,8 +54,8 @@ class AllianceMotd extends PlayerPage {
 
 			$responseInputs = [];
 			foreach (['Yes', 'Maybe', 'No'] as $option) {
-				$style = strtoupper($option) === $response ? 'style="background: green"' : '';
-				$responseInputs[$option] = $style;
+				$fields = strtoupper($option) === $response ? ['style' => 'background: green'] : [];
+				$responseInputs[$option] = $fields;
 			}
 			$template->assign('ResponseInputs', $responseInputs);
 		}

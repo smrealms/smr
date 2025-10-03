@@ -28,12 +28,12 @@ if (isset($Message)) {?>
 						} ?>
 					</td>
 					<td>
-						<input type="submit" name="action" value="View"><?php
+						<?php echo create_submit('action', 'View');
 						if ($CanDelete) {
-							?>&nbsp;<input type="submit" name="action" value="Delete"><?php
+							?>&nbsp;<?php echo create_submit('action', 'Delete');
 						}
 						if ($CanSave) {
-							?>&nbsp;<input type="submit" name="action" value="Save"><?php
+							?>&nbsp;<?php echo create_submit('action', 'Save');
 						} ?>
 					</td>
 					<td id="next" class="ajax" style="width: 30%" valign="middle"><?php

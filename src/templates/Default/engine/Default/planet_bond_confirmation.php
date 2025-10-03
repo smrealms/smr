@@ -18,8 +18,8 @@ the bond matures in <?php echo $BondDuration; ?>.</p>
 <form id="BondConfirmForm" method="POST" action="<?php echo $ReturnHREF; ?>">
 	<table>
 		<tr>
-			<td><input type="submit" name="action" value="Confirm" id="confirmBond" /></td>
-			<td><input type="submit" name="action" value="Cancel" id="cancelBond" /></td>
+			<td><?php echo create_submit('action', 'Confirm'); ?></td>
+			<td><?php echo create_submit('action', 'Cancel'); ?></td>
 		</tr>
 	</table>
 </form>
