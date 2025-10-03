@@ -42,7 +42,7 @@ use Smr\Race;
 			<option value="<?php echo $weaponTypeID; ?>"><?php echo $weaponName; ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
-	<?php echo create_submit_display('Add Weapons(s)'); ?>
+	<?php echo create_submit_display('Add Weapon(s)'); ?>
 </form>
 <br />
 

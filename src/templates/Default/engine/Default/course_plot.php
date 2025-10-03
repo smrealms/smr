@@ -23,7 +23,7 @@
 			<td><input required type="number" size="5" name="from" maxlength="5" class="center" value="<?php echo $ThisPlayer->getSectorID(); ?>"></td>
 			<td>&nbsp;&nbsp;&nbsp;&nbsp;To:&nbsp;</td>
 			<td><input required type="number" size="5" name="to" maxlength="5" class="center"></td>
-			<td>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo create_submit('action', 'Plot course'); ?></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo create_submit('action', 'Plot Course'); ?></td>
 		</tr>
 	</table>
 </form><?php
