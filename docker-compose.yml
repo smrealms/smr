@@ -88,7 +88,7 @@ services:
         restart: "no"
 
     traefik:
-        image: traefik:3.5
+        image: traefik:v3.5.3
         networks:
             - frontend
         volumes:
