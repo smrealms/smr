@@ -3,6 +3,7 @@
 use Discord\Discord;
 use Discord\DiscordCommandClient;
 use Discord\Parts\User\Activity;
+use Discord\WebSockets\Intents;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Smr\Database;
@@ -34,6 +35,7 @@ $discord = new DiscordCommandClient([
 	'caseInsensitiveCommands' => true,
 	'discordOptions' => [
 		'logger' => $logger,
+		'intents' => Intents::getDefaultIntents() | Intents::MESSAGE_CONTENT,
 	],
 ]);
 
