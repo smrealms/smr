@@ -31,7 +31,7 @@ if ($SearchedByFeds) { ?>
 				All illegal goods have been removed from your ship and you have been fined <?php echo number_format($TotalFine); ?> credits.
 			</span><?php
 		} else { ?>
-			<span class="blue">The Federation searched your ship and no illegal goods where found!</span><?php
+			<span class="blue">The Federation searched your ship and no illegal goods were found!</span><?php
 		} ?>
 	</p><?php
 } ?>
