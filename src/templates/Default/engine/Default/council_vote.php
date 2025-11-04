@@ -6,7 +6,7 @@ use Smr\Race;
 /**
  * @var Smr\Account $ThisAccount
  * @var Smr\Player $ThisPlayer
- * @var array<int, array{HREF: string, Type: string, EndTime: int, For: bool, Against: bool, NoVotes: int, YesVotes: int}> $VoteTreaties
+ * @var array<int, array{VoteHREF: string, VetoPage: ?Smr\Page\Page, Type: string, EndTime: int, For: bool, Against: bool, NoVotes: int, YesVotes: int}> $VoteTreaties
  * @var array<int, array{HREF: string, Increased: bool, Decreased: bool, Relations: int}> $VoteRelations
  */
 
@@ -39,13 +39,13 @@ if (count($VoteTreaties) === 0) { ?>
 			<td><?php echo $ThisPlayer->getColouredRaceName($RaceID, true); ?></td>
 			<td><?php echo $VoteInfo['Type']; ?></td>
 			<td class="noWrap">
-				<form method="POST" action="<?php echo $VoteInfo['HREF']; ?>">
+				<form method="POST" action="<?php echo $VoteInfo['VoteHREF']; ?>">
 					<?php echo create_submit('action', 'Yes', fields: ($VoteInfo['For'] ? ['style' => 'background-color:green'] : [])); ?>
 					&nbsp;
 					<?php echo create_submit('action', 'No', fields: ($VoteInfo['Against'] ? ['style' => 'background-color:green'] : []));
-					if ($ThisPlayer->isPresident()) { ?>
+					if ($VoteInfo['VetoPage'] !== null) { ?>
 						&nbsp;
-						<?php echo create_submit('action', 'Veto');
+						<?php echo create_submit_link($VoteInfo['VetoPage'], 'Veto');
 					} ?>
 				</form>
 			</td>

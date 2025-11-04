@@ -3,6 +3,7 @@
 namespace Smr\Pages\Player\Council;
 
 use Smr\AbstractPlayer;
+use Smr\CouncilVoting;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Globals;
@@ -70,31 +71,15 @@ class VotingCenter extends PlayerPage {
 
 		foreach ($dbResult->records() as $dbRecord) {
 			$otherRaceID = $dbRecord->getInt('race_id_2');
-			$container = new VotingCenterProcessor($otherRaceID);
+			$voteType = $dbRecord->getString('type');
 
-			// get 'yes' votes
-			$dbResult2 = $db->read('SELECT count(*) FROM player_votes_pact
-						WHERE game_id = :game_id
-							AND race_id_1 = :race_id_1
-							AND race_id_2 = :race_id_2
-							AND vote = \'YES\'', [
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'race_id_1' => $db->escapeNumber($player->getRaceID()),
-				'race_id_2' => $db->escapeNumber($otherRaceID),
-			]);
-			$yesVotes = $dbResult2->record()->getInt('count(*)');
+			$voteHref = (new VotingCenterProcessor($otherRaceID))->href();
 
-			// get 'no' votes
-			$dbResult2 = $db->read('SELECT count(*) FROM player_votes_pact
-						WHERE game_id = :game_id
-							AND race_id_1 = :race_id_1
-							AND race_id_2 = :race_id_2
-							AND vote = \'NO\'', [
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'race_id_1' => $db->escapeNumber($player->getRaceID()),
-				'race_id_2' => $db->escapeNumber($otherRaceID),
-			]);
-			$noVotes = $dbResult2->record()->getInt('count(*)');
+			$votes = CouncilVoting::countVotes(
+				race_id_1: $player->getRaceID(),
+				race_id_2: $otherRaceID,
+				gameID: $player->getGameID(),
+			);
 
 			$dbResult2 = $db->read('SELECT vote FROM player_votes_pact
 						WHERE account_id = :account_id
@@ -111,14 +96,23 @@ class VotingCenter extends PlayerPage {
 				$votedFor = $dbResult2->record()->getString('vote'); // this should be a boolean
 			}
 
+			$vetoPage = null;
+			if ($player->isPresident()) {
+				$vetoPage = new VotingCenterVetoProcessor(
+					otherRaceID: $otherRaceID,
+					voteType: $voteType,
+				);
+			}
+
 			$voteTreaties[$otherRaceID] = [
-				'HREF' => $container->href(),
-				'Type' => $dbRecord->getString('type'),
+				'VoteHREF' => $voteHref,
+				'VetoPage' => $vetoPage,
+				'Type' => $voteType,
 				'EndTime' => $dbRecord->getInt('end_time'),
 				'For' => $votedFor === 'YES',
 				'Against' => $votedFor === 'NO',
-				'NoVotes' => $noVotes,
-				'YesVotes' => $yesVotes,
+				'NoVotes' => $votes['NO'],
+				'YesVotes' => $votes['YES'],
 			];
 		}
 		$template->assign('VoteTreaties', $voteTreaties);

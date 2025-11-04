@@ -77,6 +77,52 @@ class CouncilVoting {
 		}
 	}
 
+	/**
+	 * @return array{YES: int, NO: int} Number of yes and no votes
+	 */
+	public static function countVotes(int $race_id_1, int $race_id_2, int $gameID): array {
+		$db = Database::getInstance();
+		$results = ['YES' => 0, 'NO' => 0];
+		foreach (array_keys($results) as $vote) {
+			$dbResult = $db->read('SELECT count(*) FROM player_votes_pact
+					WHERE game_id = :game_id
+						AND race_id_1 = :race_id_1
+						AND race_id_2 = :race_id_2
+						AND vote = :vote', [
+				'game_id' => $db->escapeNumber($gameID),
+				'race_id_1' => $db->escapeNumber($race_id_1),
+				'race_id_2' => $db->escapeNumber($race_id_2),
+				'vote' => $db->escapeString($vote),
+			]);
+			$results[$vote] = $dbResult->record()->getInt('count(*)');
+		}
+		return $results;
+	}
+
+	public static function deleteVote(int $race_id_1, int $race_id_2, int $gameID, string $type): void {
+		$db = Database::getInstance();
+
+		// Delete vote for current race
+		$sqlParams = [
+			'game_id' => $db->escapeNumber($gameID),
+			'race_id_1' => $db->escapeNumber($race_id_1),
+			'race_id_2' => $db->escapeNumber($race_id_2),
+		];
+		$db->delete('race_has_voting', $sqlParams);
+		$db->delete('player_votes_pact', $sqlParams);
+
+		// Only delete vote for other race if it's a peace vote
+		if ($type === 'PEACE') {
+			$sqlParams2 = [
+				'game_id' => $db->escapeNumber($gameID),
+				'race_id_1' => $db->escapeNumber($race_id_2),
+				'race_id_2' => $db->escapeNumber($race_id_1),
+			];
+			$db->delete('race_has_voting', $sqlParams2);
+			$db->delete('player_votes_pact', $sqlParams2);
+		}
+	}
+
 	public static function checkPacts(int $race_id_1, int $gameID): void {
 
 		$db = Database::getInstance();
@@ -93,32 +139,14 @@ class CouncilVoting {
 			$race_id_2 = $dbRecord->getInt('race_id_2');
 			$type = $dbRecord->getString('type');
 
-			// get 'yes' votes
-			$dbResult2 = $db->read('SELECT 1 FROM player_votes_pact
-					WHERE game_id = :game_id
-						AND race_id_1 = :race_id_1
-						AND race_id_2 = :race_id_2
-						AND vote = \'YES\'', [
-				'game_id' => $db->escapeNumber($gameID),
-				'race_id_1' => $db->escapeNumber($race_id_1),
-				'race_id_2' => $db->escapeNumber($race_id_2),
-			]);
-			$yes_votes = $dbResult2->getNumRecords();
-
-			// get 'no' votes
-			$dbResult2 = $db->read('SELECT 1 FROM player_votes_pact
-					WHERE game_id = :game_id
-						AND race_id_1 = :race_id_1
-						AND race_id_2 = :race_id_2
-						AND vote = \'NO\'', [
-				'game_id' => $db->escapeNumber($gameID),
-				'race_id_1' => $db->escapeNumber($race_id_1),
-				'race_id_2' => $db->escapeNumber($race_id_2),
-			]);
-			$no_votes = $dbResult2->getNumRecords();
+			$votes = self::countVotes(
+				race_id_1: $race_id_1,
+				race_id_2: $race_id_2,
+				gameID: $gameID,
+			);
 
 			// more yes than no?
-			if ($yes_votes > $no_votes) {
+			if ($votes['YES'] > $votes['NO']) {
 				if ($type === 'WAR') {
 					$currentlyParkedAccountIDs = [];
 					$raceFedSectors = [
@@ -180,32 +208,14 @@ class CouncilVoting {
 						'news_message' => $news,
 					]);
 				} elseif ($type === 'PEACE') {
-					// get 'yes' votes
-					$dbResult2 = $db->read('SELECT 1 FROM player_votes_pact
-							WHERE game_id = :game_id
-								AND race_id_1 = :race_id_1
-								AND race_id_2 = :race_id_2
-								AND vote = \'YES\'', [
-						'game_id' => $db->escapeNumber($gameID),
-						'race_id_1' => $db->escapeNumber($race_id_2),
-						'race_id_2' => $db->escapeNumber($race_id_1),
-					]);
-					$rev_yes_votes = $dbResult2->getNumRecords();
-
-					// get 'no' votes
-					$dbResult2 = $db->read('SELECT 1 FROM player_votes_pact
-							WHERE game_id = :game_id
-								AND race_id_1 = :race_id_1
-								AND race_id_2 = :race_id_2
-								AND vote = \'NO\'', [
-						'game_id' => $db->escapeNumber($gameID),
-						'race_id_1' => $db->escapeNumber($race_id_2),
-						'race_id_2' => $db->escapeNumber($race_id_1),
-					]);
-					$rev_no_votes = $dbResult2->getNumRecords();
+					$rev_votes = self::countVotes(
+						race_id_1: $race_id_2,
+						race_id_2: $race_id_1,
+						gameID: $gameID,
+					);
 
 					// more yes than no?
-					if ($rev_yes_votes > $rev_no_votes) {
+					if ($rev_votes['YES'] > $rev_votes['NO']) {
 						$db->write('UPDATE race_has_relation
 								SET relation = GREATEST(relation, :relations_peace)
 								WHERE game_id = :game_id
@@ -234,21 +244,12 @@ class CouncilVoting {
 			}
 
 			// delete vote and user votes
-			$sqlParams = [
-				'game_id' => $db->escapeNumber($gameID),
-				'race_id_1' => $db->escapeNumber($race_id_1),
-				'race_id_2' => $db->escapeNumber($race_id_2),
-			];
-			$db->delete('race_has_voting', $sqlParams);
-			$db->delete('player_votes_pact', $sqlParams);
-			// delete vote and user votes
-			$sqlParams2 = [
-				'game_id' => $db->escapeNumber($gameID),
-				'race_id_1' => $db->escapeNumber($race_id_2),
-				'race_id_2' => $db->escapeNumber($race_id_1),
-			];
-			$db->delete('race_has_voting', $sqlParams2);
-			$db->delete('player_votes_pact', $sqlParams2);
+			self::deleteVote(
+				race_id_1: $race_id_1,
+				race_id_2: $race_id_2,
+				gameID: $gameID,
+				type: $type,
+			);
 		}
 	}
 

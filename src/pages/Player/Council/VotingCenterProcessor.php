@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Player\Council;
 
+use Exception;
 use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
@@ -48,22 +49,8 @@ class VotingCenterProcessor extends PlayerPageProcessor {
 				'race_id_2' => $race_id,
 				'vote' => $action,
 			]);
-		} elseif ($action === 'VETO') {
-			// try to cancel both votings
-			$sqlParams = [
-				'game_id' => $player->getGameID(),
-				'race_id_1' => $player->getRaceID(),
-				'race_id_2' => $race_id,
-			];
-			$db->delete('race_has_voting', $sqlParams);
-			$db->delete('player_votes_pact', $sqlParams);
-			$sqlParams2 = [
-				'game_id' => $player->getGameID(),
-				'race_id_1' => $race_id,
-				'race_id_2' => $player->getRaceID(),
-			];
-			$db->delete('race_has_voting', $sqlParams2);
-			$db->delete('player_votes_pact', $sqlParams2);
+		} else {
+			throw new Exception('Unexpected action: ' . $action);
 		}
 
 		(new VotingCenter())->go();
