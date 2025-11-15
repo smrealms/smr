@@ -8,6 +8,7 @@ use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
+use Smr\Race;
 use Smr\Request;
 
 class EmbassyProcessor extends PlayerPageProcessor {
@@ -44,7 +45,7 @@ class EmbassyProcessor extends PlayerPageProcessor {
 				'game_id' => $db->escapeNumber($player->getGameID()),
 			]);
 			if ($dbResult->hasRecord()) {
-				create_error('You cannot start a vote with that race.');
+				create_error('You cannot start a peace vote with the ' . Race::getName($race_id) . ' at this time.');
 			}
 		}
 
