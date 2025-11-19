@@ -142,8 +142,8 @@ use Smr\Sector;
 						}
 						if ($MapPlayer !== null) { // skip in UniGen
 							$CanScanSector = ($MapPlayer->getShip()->hasScanner() && $isLinkedSector) || $isCurrentSector;
-							$ShowFriendlyForces = isset($HideAlliedForces) && (
-								$HideAlliedForces ?
+							$ShowFriendlyForces = (
+								(isset($HideAlliedForces) && $HideAlliedForces) ?
 								$Sector->hasPlayerForces($MapPlayer) :
 								$Sector->hasFriendlyForces($MapPlayer)
 							);
