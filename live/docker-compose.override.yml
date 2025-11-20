@@ -23,7 +23,7 @@ services:
             - "traefik.http.middlewares.traefik-auth.basicauth.users=traefik:$$apr1$$N1XTczE5$$5GvS93f.oSRstkxmjw9JD0"
 
     backup-s3:
-        image: amazon/aws-cli:2.31.3
+        image: amazon/aws-cli:2.32.2
         networks:
             - backend
         environment:
