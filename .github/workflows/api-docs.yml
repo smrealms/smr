@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Build API Docs
         uses: ./.github/actions/api-docs
       - name: Publish API Docs
