@@ -16,11 +16,11 @@ RUN rm -rf node_modules
 
 #---------------------------
 
-FROM php:8.4.13-apache
+FROM php:8.5.0-apache
 RUN apt-get --quiet=2 update \
 	&& apt-get --quiet=2 install zip unzip \
 	&& rm -rf /var/lib/apt/lists/* \
-	&& docker-php-ext-install pdo_mysql opcache > /dev/null
+	&& docker-php-ext-install pdo_mysql > /dev/null
 
 # Set the baseline php.ini version (default to production)
 ARG NO_DEV=1
@@ -48,7 +48,7 @@ RUN sed -i 's/AllowOverride All/AllowOverride None/g' /etc/apache2/conf-enabled/
 WORKDIR /smr/
 
 RUN curl -sS https://getcomposer.org/installer | \
-	php -- --install-dir=/usr/local/bin --filename=composer --version=2.8.4
+	php -- --install-dir=/usr/local/bin --filename=composer --version=2.9.2
 
 COPY composer.json .
 RUN COMPOSER_NO_DEV=$NO_DEV composer update --no-interaction

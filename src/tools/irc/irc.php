@@ -17,7 +17,7 @@ $events = [];
 $sds = [];
 
 $debugging = false;
-foreach ($argv as $arg) {
+foreach ($_SERVER['argv'] as $arg) {
 	if ($arg === '-debug') {
 		$debugging = true;
 	}
