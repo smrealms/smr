@@ -49,7 +49,7 @@ class Card {
 
 	public function getSuitName(): string {
 		$deckID = $this->cardID % 52; //which card is this in the deck?
-		$suitID = floor($deckID / 13);
+		$suitID = Ifloor($deckID / 13);
 		return self::SUITS[$suitID];
 	}
 
