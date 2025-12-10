@@ -33,7 +33,7 @@ RUN MODE=$([ "$NO_DEV" = "0" ] && echo "development" || echo "production") \
 RUN if [ "$NO_DEV" = "0" ]; \
 	then \
 		docker-php-ext-install pcntl \
-		&& pecl install xdebug-3.4.5 > /dev/null \
+		&& pecl install xdebug-3.5.0 > /dev/null \
 		&& docker-php-ext-enable xdebug \
 		&& echo "xdebug.output_dir = /tmp/xdebug" > "$PHP_INI_DIR/conf.d/xdebug.ini" \
 		&& mkdir /tmp/xdebug; \
