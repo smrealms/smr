@@ -23,9 +23,7 @@ class TestUtils {
 	 * @return \ReflectionMethod The method you want to test
 	 */
 	public static function getPrivateMethod(object $obj, string $name): ReflectionMethod {
-		$method = new ReflectionMethod($obj, $name);
-		$method->setAccessible(true);
-		return $method;
+		return new ReflectionMethod($obj, $name);
 	}
 
 	/**
@@ -44,7 +42,6 @@ class TestUtils {
 		if ($constructor === null) {
 			throw new Exception('Class does not have a constructor: ' . $name);
 		}
-		$constructor->setAccessible(true);
 		$object = $class->newInstanceWithoutConstructor();
 		$constructor->invoke($object, ...$args);
 		return $object;
