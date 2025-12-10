@@ -139,7 +139,7 @@ class Database {
 			if (is_int($value)) {
 				$types[$field] = ParameterType::INTEGER;
 			} elseif (is_array($value)) {
-				if (count($value) > 0 && is_int($value[array_key_first($value)])) {
+				if (count($value) > 0 && is_int(array_first($value))) {
 					$types[$field] = ArrayParameterType::INTEGER;
 				} else {
 					$types[$field] = ArrayParameterType::STRING;
