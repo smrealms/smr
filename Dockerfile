@@ -20,7 +20,7 @@ FROM php:8.5.0-apache
 RUN apt-get --quiet=2 update \
 	&& apt-get --quiet=2 install zip unzip \
 	&& rm -rf /var/lib/apt/lists/* \
-	&& docker-php-ext-install pdo_mysql opcache > /dev/null
+	&& docker-php-ext-install pdo_mysql > /dev/null
 
 # Set the baseline php.ini version (default to production)
 ARG NO_DEV=1
