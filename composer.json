@@ -14,7 +14,7 @@
 		"php": "^8.2",
 		"php-di/php-di": "7.0.10",
 		"phpmailer/phpmailer": "7.0.1",
-		"team-reflex/discord-php": "10.37.4",
+		"team-reflex/discord-php": "10.41.14",
 		"vanilla/nbbc": "3.0.0"
 	},
 	"autoload": {
