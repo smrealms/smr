@@ -10,7 +10,7 @@
 		"ext-pdo_mysql": "*",
 		"google/recaptcha": "1.3.1",
 		"league/oauth2-facebook": "2.2.0",
-		"league/oauth2-google": "4.0.1",
+		"league/oauth2-google": "4.1.0",
 		"php": "^8.2",
 		"php-di/php-di": "7.0.10",
 		"phpmailer/phpmailer": "7.0.1",
