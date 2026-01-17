@@ -66,7 +66,7 @@ Once you are happy with the game you need to edit the "game" table and set the "
 # Coding Style
 This is the coding style that should be used for any new code, although currently not all code currently follows these guidelines (the guidelines are also likely to require extension).
 
-* Opening races should be placed on the same line with a single space before
+* Opening braces should be placed on the same line with a single space before
 * Single line if statements should still include braces
 
 	```php
