@@ -43,7 +43,7 @@ class EnhancedWeaponEventTest extends BaseIntegrationSpec {
 		Location::addSectorLocation($gameID, $sectorID, $location);
 
 		// Set an initial t=0
-		$epoch = $this->createPartialMock(Epoch::class, ['getTime']);
+		$epoch = $this->createStub(Epoch::class);
 		$epoch->method('getTime')->willReturn(0);
 		DiContainer::getContainer()->set(Epoch::class, $epoch);
 
@@ -68,7 +68,7 @@ class EnhancedWeaponEventTest extends BaseIntegrationSpec {
 		self::assertEquals([$event], $events);
 
 		// Advance to the very latest time that this event is valid
-		$epoch = $this->createPartialMock(Epoch::class, ['getTime']);
+		$epoch = $this->createStub(Epoch::class);
 		$epoch->method('getTime')->willReturn($buffer);
 		DiContainer::getContainer()->set(Epoch::class, $epoch);
 		self::assertSame(0.0, $event->getDurationRemainingPercent());

@@ -24,23 +24,21 @@ class RouteGeneratorTest extends TestCase {
 	 * @param array<int, array{TransactionType, int}> $goods
 	 */
 	private function createPortStub(int $raceID, array $goods): Port {
-		// Create a partial mock, only mocking the methods we will use
-		$port = $this->createPartialMock(Port::class, ['getGoodDistance', 'getRaceID']);
+		$port = $this->createStub(Port::class);
 
 		// Distances are the most important to mock, since they are complicated
 		$getGoodDistanceMap = [];
-		foreach ($goods as $goodID => [$_, $distance]) {
+		$hasGoodArgs = [];
+		foreach ($goods as $goodID => [$transaction, $distance]) {
 			$getGoodDistanceMap[] = [$goodID, $distance];
+			$hasGoodArgs[] = [$goodID, $transaction];
 		}
 		$port->method('getGoodDistance')->willReturnMap($getGoodDistanceMap);
+		$port->method('hasGood')->willReturnCallback(
+			fn(int $arg1, TransactionType $arg2) => in_array([$arg1, $arg2], $hasGoodArgs, true),
+		);
 
-		// We could call `setRaceID` instead, but `raceID` is not initialized
 		$port->method('getRaceID')->willReturn($raceID);
-
-		// We could mock `hasGood`, but adding the goods is less complicated
-		foreach ($goods as $goodID => [$transaction, $_]) {
-			$port->addPortGood($goodID, $transaction);
-		}
 
 		return $port;
 	}

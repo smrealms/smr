@@ -40,7 +40,7 @@ class RequestTest extends TestCase {
 	 * @param array<string, mixed> $var
 	 */
 	private function setVar(array $var): void {
-		$session = $this->createMock(Session::class);
+		$session = $this->createStub(Session::class);
 		$session
 			->method('getRequestData')
 			->willReturn($var);
