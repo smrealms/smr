@@ -18,14 +18,16 @@ class SocialIdentityTest extends TestCase {
 		self::assertSame('baz', $id->type);
 	}
 
-	#[TestWith(['', null])]
+	#[TestWith([''])]
+	#[TestWith([null])]
 	public function test_invalid_id(?string $id): void {
 		$this->expectException(UserError::class);
 		$this->expectExceptionMessage('Failed to retrieve your bar ID!');
 		new SocialIdentity($id, 'foo', 'bar');
 	}
 
-	#[TestWith(['', null])]
+	#[TestWith([''])]
+	#[TestWith([null])]
 	public function test_invalid_email(?string $email): void {
 		$this->expectException(UserError::class);
 		$this->expectExceptionMessage('An email address is required, but was not found!');
