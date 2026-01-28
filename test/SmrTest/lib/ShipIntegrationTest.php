@@ -22,7 +22,7 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		Ship::clearCache();
 
 		// Create mock player that will be needed to create any ship
-		$this->player = $this->createMock(AbstractPlayer::class);
+		$this->player = $this->createStub(AbstractPlayer::class);
 		$this->player
 			->method('getAccountID')
 			->willReturn(7);

@@ -50,7 +50,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame(0, $this->session->getAccountID());
 
 		// Now update the account
-		$account = $this->createMock(Account::class);
+		$account = $this->createStub(Account::class);
 		$account
 			->method('getAccountID')
 			->willReturn(7);

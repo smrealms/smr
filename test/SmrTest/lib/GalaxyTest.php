@@ -82,12 +82,12 @@ class GalaxyTest extends BaseIntegrationSpec {
 		$galaxy = Galaxy::createGalaxy(1, $galaxyID);
 
 		// Test a sector that should be in the galaxy
-		$sector1 = $this->createPartialMock(Sector::class, ['getGalaxyID']);
+		$sector1 = $this->createStub(Sector::class);
 		$sector1->method('getGalaxyID')->willReturn($galaxyID);
 		self::assertTrue($galaxy->contains($sector1));
 
 		// Test a sector that should NOT be in the galaxy
-		$sector2 = $this->createPartialMock(Sector::class, ['getGalaxyID']);
+		$sector2 = $this->createStub(Sector::class);
 		$sector2->method('getGalaxyID')->willReturn($galaxyID + 1);
 		self::assertFalse($galaxy->contains($sector2));
 	}

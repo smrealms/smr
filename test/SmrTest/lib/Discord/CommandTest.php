@@ -19,7 +19,10 @@ class CommandTest extends TestCase {
 	public function test_callback_happy_path(): void {
 		// Stub the response method of an arbitrary Command to return normally
 		$mockCommand = $this->createPartialMock(MagicEightBall::class, ['response']);
-		$mockCommand->method('response')->willReturn(['A', 'B']);
+		$mockCommand
+			->expects(self::once())
+			->method('response')
+			->willReturn(['A', 'B']);
 
 		// Mock the DiscordPHP Message, and make sure we call reply on it
 		$mockPromise = $this->createMock(PromiseInterface::class);
@@ -40,7 +43,10 @@ class CommandTest extends TestCase {
 		// Stub the response method of an arbitrary Command to throw a UserError exception
 		$mockCommand = $this->createPartialMock(MagicEightBall::class, ['response']);
 		$msg = 'This is a test';
-		$mockCommand->method('response')->willThrowException(new UserError($msg));
+		$mockCommand
+			->expects(self::once())
+			->method('response')
+			->willThrowException(new UserError($msg));
 
 		// Mock the DiscordPHP Message, and make sure we call reply on it
 		$mockPromise = $this->createMock(PromiseInterface::class);
@@ -62,6 +68,7 @@ class CommandTest extends TestCase {
 		$mockCommand = $this->createPartialMock(MagicEightBall::class, ['response', 'logException']);
 		$err = new Exception(__METHOD__);
 		$mockCommand
+			->expects(self::once())
 			->method('response')
 			->willThrowException($err);
 		$mockCommand
@@ -87,7 +94,10 @@ class CommandTest extends TestCase {
 	public function test_callback_returns_empty(): void {
 		// Stub the response method of an arbitrary Command to return empty
 		$mockCommand = $this->createPartialMock(MagicEightBall::class, ['response']);
-		$mockCommand->method('response')->willReturn([]);
+		$mockCommand
+			->expects(self::once())
+			->method('response')
+			->willReturn([]);
 
 		// Mock the DiscordPHP Message, and make sure we do NOT call reply on it
 		$mockMessage = $this->createMock(Message::class);

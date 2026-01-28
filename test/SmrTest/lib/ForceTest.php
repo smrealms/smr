@@ -38,7 +38,7 @@ class ForceTest extends TestCase {
 	#[TestWith([25, true, 2])]
 	public function test_getBumpTurnCost(int $mines, bool $hasDCS, int $expected): void {
 		$this->force->setMines($mines);
-		$ship = $this->createPartialMock(AbstractShip::class, ['hasDCS', 'isFederal']);
+		$ship = $this->createStub(AbstractShip::class);
 		$ship->method('hasDCS')->willReturn($hasDCS);
 		$ship->method('isFederal')->willReturn(false); // redundant with hasDCS
 		self::assertSame($expected, $this->force->getBumpTurnCost($ship));
@@ -47,7 +47,7 @@ class ForceTest extends TestCase {
 	#[TestWith([false, 3])]
 	#[TestWith([true, 2])]
 	public function test_getAttackTurnCost(bool $hasDCS, int $expected): void {
-		$ship = $this->createPartialMock(AbstractShip::class, ['hasDCS', 'isFederal']);
+		$ship = $this->createStub(AbstractShip::class);
 		$ship->method('hasDCS')->willReturn($hasDCS);
 		$ship->method('isFederal')->willReturn(false); // redundant with hasDCS
 		self::assertSame($expected, $this->force->getAttackTurnCost($ship));
@@ -99,8 +99,8 @@ class ForceTest extends TestCase {
 	#[DataProvider('dataProvider_takeDamage')]
 	public function test_takeDamage(string $case, array $damage, array $expected, int $mines, int $cds, int $sds): void {
 		// Set up an unexpired stack with a specific number of forces
-		$force = $this->createPartialMock($this->force::class, ['hasExpired']);
-		$force->method('hasExpired')->willReturn(false);
+		$force = $this->createPartialMock(Force::class, ['hasExpired']);
+		$force->expects(self::atMost(2))->method('hasExpired')->willReturn(false);
 		$force->setMines($mines);
 		$force->setCDs($cds);
 		$force->setSDs($sds);
@@ -286,7 +286,7 @@ class ForceTest extends TestCase {
 
 		// Partially mock the force so we can use the galaxy stub
 		$force = $this->createPartialMock($this->force::class, ['getGalaxy']);
-		$force->method('getGalaxy')->willReturn($galaxy);
+		$force->expects(self::atMost(1))->method('getGalaxy')->willReturn($galaxy);
 
 		// Set the number of forces, and check result
 		$force->setSDs($sds);

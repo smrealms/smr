@@ -6,7 +6,7 @@ use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Smr\AbstractPlayer;
 use Smr\AbstractShip;
@@ -20,11 +20,11 @@ use Smr\ShipIllusion;
 #[CoversClass(AbstractShip::class)]
 class AbstractShipTest extends TestCase {
 
-	private AbstractPlayer&MockObject $player; // will be mocked
+	private AbstractPlayer&Stub $player; // will be mocked
 
 	protected function setUp(): void {
 		// Create mock player that will be needed to create any ship
-		$this->player = $this->createMock(AbstractPlayer::class);
+		$this->player = $this->createStub(AbstractPlayer::class);
 		$this->player
 			->method('getAccountID')
 			->willReturn(7);
