@@ -2,6 +2,8 @@
 
 namespace Smr;
 
+use Override;
+
 class DummyPlayer extends AbstractPlayer {
 
 	protected readonly int $accountID;
@@ -29,6 +31,7 @@ class DummyPlayer extends AbstractPlayer {
 		$this->npc = true;
 	}
 
+	#[Override]
 	public function __sleep() {
 		return ['playerName', 'experience', 'shipID', 'dead', 'accountID', 'gameID'];
 	}
@@ -37,13 +40,16 @@ class DummyPlayer extends AbstractPlayer {
 		$this->setConstantProperties();
 	}
 
+	#[Override]
 	public function increaseHOF(float $amount, array $typeList, string $visibility): void {}
 
+	#[Override]
 	public function killPlayerByPlayer(AbstractPlayer $killer): array {
 		$this->dead = true;
 		return ['DeadExp' => 0, 'KillerCredits' => 0, 'KillerExp' => 0];
 	}
 
+	#[Override]
 	public function getShip(bool $forceUpdate = false): DummyShip {
 		return DummyShip::getCachedDummyShip($this->playerName);
 	}

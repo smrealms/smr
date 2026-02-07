@@ -15,7 +15,7 @@ use Smr\DatabaseProperties;
 #[CoversClass(DiContainer::class)]
 class DiContainerTest extends TestCase {
 
-	private const PHPDI_COMPILED_CONTAINER_FILE = '/tmp/CompiledContainer.php';
+	private const string PHPDI_COMPILED_CONTAINER_FILE = '/tmp/CompiledContainer.php';
 
 	protected function tearDown(): void {
 		if (file_exists(self::PHPDI_COMPILED_CONTAINER_FILE)) {

@@ -3,6 +3,7 @@
 namespace Smr\Combat\Weapon;
 
 use Exception;
+use Override;
 use Smr\AbstractPlayer;
 use Smr\Force;
 use Smr\Planet;
@@ -109,6 +110,7 @@ class Mines extends AbstractWeapon {
 		return $this->doForceDamageToPlayer($return, $forces, $targetPlayer, $minesAreAttacker);
 	}
 
+	#[Override]
 	protected function doForceDamageToPlayer(array $return, Force $forces, AbstractPlayer $targetPlayer, bool $minesAreAttacker = false): array {
 		$return['WeaponDamage'] = $this->getModifiedForceDamageAgainstPlayer($forces, $targetPlayer, $minesAreAttacker);
 		$return['ActualDamage'] = $targetPlayer->getShip()->takeDamageFromMines($return['WeaponDamage']);
