@@ -17,8 +17,8 @@ class FeatureRequest extends AccountPage {
 	public string $file = 'feature_request.php';
 
 	// Feature Requests show up as new for this many days
-	private const NEW_REQUEST_DAYS = 30;
-	private const CATEGORY_NEW = 'New';
+	private const int NEW_REQUEST_DAYS = 30;
+	private const string CATEGORY_NEW = 'New';
 
 	public function __construct(
 		private readonly string $category = self::CATEGORY_NEW,

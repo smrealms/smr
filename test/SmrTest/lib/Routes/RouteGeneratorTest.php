@@ -14,7 +14,7 @@ use Smr\TransactionType;
 #[CoversClass(RouteGenerator::class)]
 class RouteGeneratorTest extends TestCase {
 
-	private const EMPTY_ROUTES = [
+	private const array EMPTY_ROUTES = [
 		RouteGenerator::EXP_ROUTE => [],
 		RouteGenerator::MONEY_ROUTE => [],
 	];

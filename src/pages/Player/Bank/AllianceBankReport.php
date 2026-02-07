@@ -12,8 +12,8 @@ class AllianceBankReport extends PlayerPage {
 
 	public string $file = 'bank_report.php';
 
-	private const WITHDRAW = 0;
-	private const DEPOSIT = 1;
+	private const int WITHDRAW = 0;
+	private const int DEPOSIT = 1;
 
 	public function __construct(
 		private readonly int $allianceID,

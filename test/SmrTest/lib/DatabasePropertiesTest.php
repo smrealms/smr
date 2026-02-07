@@ -11,9 +11,9 @@ use Smr\DatabaseProperties;
 #[CoversClass(DatabaseProperties::class)]
 class DatabasePropertiesTest extends TestCase {
 
-	private const MYSQL_PASSWORD_FILE = '/tmp/phpunit_dummy_mysql_password';
+	private const string MYSQL_PASSWORD_FILE = '/tmp/phpunit_dummy_mysql_password';
 
-	private const TEST_ENV = [
+	private const array TEST_ENV = [
 		'MYSQL_USER' => 'user',
 		'MYSQL_DATABASE' => 'database',
 		'MYSQL_PASSWORD_FILE' => self::MYSQL_PASSWORD_FILE,
