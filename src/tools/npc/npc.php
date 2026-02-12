@@ -60,62 +60,87 @@ DiContainer::getContainer()->set('NPC_SCRIPT', true);
 set_error_handler('exception_error_handler');
 
 const SHIP_UPGRADE_PATH = [
+	RACE_NEUTRAL => [
+		SHIP_TYPE_CELESTIAL_TRADER,
+		SHIP_TYPE_MERCHANT_VESSEL,
+		SHIP_TYPE_FREIGHTER,
+		SHIP_TYPE_PLANETARY_FREIGHTER,
+		SHIP_TYPE_PLANETARY_SUPER_FREIGHTER,
+	],
 	RACE_ALSKANT => [
-		SHIP_TYPE_TRADE_MASTER,
-		SHIP_TYPE_DEEP_SPACER,
-		SHIP_TYPE_DEAL_MAKER,
-		SHIP_TYPE_TRIP_MAKER,
 		SHIP_TYPE_SMALL_TIMER,
+		SHIP_TYPE_TRIP_MAKER,
+		SHIP_TYPE_DEAL_MAKER,
+		SHIP_TYPE_DEEP_SPACER,
+		SHIP_TYPE_TRADE_MASTER,
 	],
 	RACE_CREONTI => [
-		SHIP_TYPE_DEVASTATOR,
-		SHIP_TYPE_JUGGERNAUT,
-		SHIP_TYPE_GOLIATH,
-		SHIP_TYPE_LEVIATHAN,
 		SHIP_TYPE_MEDIUM_CARGO_HULK,
+		SHIP_TYPE_LEVIATHAN,
+		SHIP_TYPE_GOLIATH,
+		SHIP_TYPE_JUGGERNAUT,
+		SHIP_TYPE_DEVASTATOR,
 	],
 	RACE_HUMAN => [
-		SHIP_TYPE_DESTROYER,
-		SHIP_TYPE_BORDER_CRUISER,
-		SHIP_TYPE_AMBASSADOR,
-		SHIP_TYPE_RENAISSANCE,
 		SHIP_TYPE_LIGHT_FREIGHTER,
+		SHIP_TYPE_RENAISSANCE,
+		SHIP_TYPE_AMBASSADOR,
+		SHIP_TYPE_BORDER_CRUISER,
+		SHIP_TYPE_DESTROYER,
 	],
 	RACE_IKTHORNE => [
-		SHIP_TYPE_MOTHER_SHIP,
-		SHIP_TYPE_ADVANCED_CARRIER,
-		SHIP_TYPE_FAVOURED_OFFSPRING,
-		SHIP_TYPE_PROTO_CARRIER,
 		SHIP_TYPE_TINY_DELIGHT,
+		SHIP_TYPE_PROTO_CARRIER,
+		SHIP_TYPE_FAVOURED_OFFSPRING,
+		SHIP_TYPE_ADVANCED_CARRIER,
+		SHIP_TYPE_MOTHER_SHIP,
 	],
 	RACE_SALVENE => [
-		SHIP_TYPE_EATER_OF_SOULS,
-		SHIP_TYPE_RAVAGER,
-		SHIP_TYPE_PREDATOR,
-		SHIP_TYPE_DRUDGE,
 		SHIP_TYPE_HATCHLINGS_DUE,
+		SHIP_TYPE_DRUDGE,
+		SHIP_TYPE_PREDATOR,
+		SHIP_TYPE_RAVAGER,
+		SHIP_TYPE_EATER_OF_SOULS,
 	],
 	RACE_THEVIAN => [
-		SHIP_TYPE_ASSAULT_CRAFT,
-		SHIP_TYPE_CARAPACE,
-		SHIP_TYPE_BOUNTY_HUNTER,
-		SHIP_TYPE_EXPEDITER,
 		SHIP_TYPE_SWIFT_VENTURE,
+		SHIP_TYPE_EXPEDITER,
+		SHIP_TYPE_BOUNTY_HUNTER,
+		SHIP_TYPE_CARAPACE,
+		SHIP_TYPE_ASSAULT_CRAFT,
 	],
 	RACE_WQHUMAN => [
-		SHIP_TYPE_DARK_MIRAGE,
-		SHIP_TYPE_BLOCKADE_RUNNER,
-		SHIP_TYPE_ROGUE,
-		SHIP_TYPE_RESISTANCE,
 		SHIP_TYPE_SLIP_FREIGHTER,
+		SHIP_TYPE_RESISTANCE,
+		SHIP_TYPE_ROGUE,
+		SHIP_TYPE_BLOCKADE_RUNNER,
+		SHIP_TYPE_DARK_MIRAGE,
 	],
 	RACE_NIJARIN => [
-		SHIP_TYPE_FURY,
-		SHIP_TYPE_VINDICATOR,
-		SHIP_TYPE_VENGEANCE,
-		SHIP_TYPE_RETALIATION,
 		SHIP_TYPE_REDEEMER,
+		SHIP_TYPE_RETALIATION,
+		SHIP_TYPE_VENGEANCE,
+		SHIP_TYPE_VINDICATOR,
+		SHIP_TYPE_FURY,
 	],
+];
+
+const SHIP_UPGRADE_PATH_GOOD = [
+	SHIP_TYPE_GALACTIC_SEMI,
+	SHIP_TYPE_LIGHT_COURIER_VESSEL,
+	SHIP_TYPE_ADVANCED_COURIER_VESSEL,
+	SHIP_TYPE_FEDERAL_DISCOVERY,
+	SHIP_TYPE_FEDERAL_WARRANT,
+	SHIP_TYPE_FEDERAL_ULTIMATUM,
+];
+
+const SHIP_UPGRADE_PATH_EVIL = [
+	SHIP_TYPE_GALACTIC_SEMI,
+	SHIP_TYPE_CELESTIAL_MERCENARY,
+	SHIP_TYPE_STELLAR_FREIGHTER,
+	SHIP_TYPE_THIEF,
+	SHIP_TYPE_ASSASSIN,
+	SHIP_TYPE_DEATH_CRUISER,
 ];
 
 try {
@@ -438,20 +463,59 @@ function moveToSector(AbstractPlayer $player, int $targetSector): PlayerPageProc
 	return new SectorMoveProcessor($targetSector, new CurrentSector());
 }
 
+/**
+ * @param list<list<int>> $upgradeGroups
+ */
+function getCurrentShipTier(AbstractPlayer $player, array $upgradeGroups): int {
+	// Determine current ship tier
+	foreach ($upgradeGroups as $upgradeGroup) {
+		foreach ($upgradeGroup as $tier => $upgradeShipID) {
+			if ($player->getShipTypeID() === $upgradeShipID) {
+				return $tier;
+			}
+		}
+	}
+	// Ship is not in a valid upgrade path; this will upgrade to tier 0
+	return -1;
+}
+
 function checkForShipUpgrade(AbstractPlayer $player): void {
-	foreach (SHIP_UPGRADE_PATH[$player->getRaceID()] as $upgradeShipID) {
-		if ($player->getShipTypeID() === $upgradeShipID) {
-			//We can't upgrade, only downgrade.
-			return;
-		}
-		$cost = $player->getShip()->getCostToUpgrade($upgradeShipID);
+	// Select the next tier ship in a random upgrade group
+	$upgradeGroups = [
+		SHIP_UPGRADE_PATH[$player->getRaceID()],
+		SHIP_UPGRADE_PATH[RACE_NEUTRAL],
+	];
+	// 50% chance to pick from evil/good ships
+	if ($player->hasGoodAlignment() && flip_coin()) {
+		$upgradeGroups[] = SHIP_UPGRADE_PATH_GOOD;
+	}
+	if ($player->hasEvilAlignment() && flip_coin()) {
+		$upgradeGroups[] = SHIP_UPGRADE_PATH_EVIL;
+	}
+	$currentTier = getCurrentShipTier($player, $upgradeGroups);
+	$upgradeGroup = array_rand_value($upgradeGroups);
+	$upgradeTier = $currentTier + 1;
+	if (!array_key_exists($upgradeTier, $upgradeGroup)) {
+		// Already at highest tier, no upgrade
+		return;
+	}
+	$upgradeShipID = $upgradeGroup[$upgradeTier];
+
+	// Base chance to upgrade is percent of cost of ship NPC can afford,
+	// which decreases for higher ship tier (but returns to the base chance
+	// over a number of weeks).
+	$cost = $player->getShip()->getCostToUpgrade($upgradeShipID);
+	$weekNum = (Epoch::time() - $player->getGame()->getStartTime()) / 604800;
+	$delayFactor = 1 + max(0, 1.5 * $upgradeTier - $weekNum);
+	$baseUpgradeFrac = $player->getCredits() / max($cost, 1); // avoid <=0 denom
+	$maxUpgradeFrac = 1 - 0.1 * $upgradeTier; // -10% max chance per tier
+	$upgradeFrac = min($maxUpgradeFrac, $baseUpgradeFrac) / $delayFactor;
+	$upgradePercent = IRound(100 * $upgradeFrac);
+	if (flip_coin($upgradePercent)) {
+		debug('Upgrading to ship type: ' . $upgradeShipID);
 		$balance = $player->getCredits() - $cost;
-		if ($balance > NPC_MINIMUM_RESERVE_CREDITS) {
-			debug('Upgrading to ship type: ' . $upgradeShipID);
-			$player->setCredits($balance);
-			$player->getShip()->setTypeID($upgradeShipID);
-			return;
-		}
+		$player->setCredits(max(NPC_MINIMUM_RESERVE_CREDITS, $balance));
+		$player->getShip()->setTypeID($upgradeShipID);
 	}
 }
 
