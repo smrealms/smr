@@ -230,6 +230,13 @@ function random_alphabetic_string(int $length): string {
 }
 
 /**
+ * Flip a coin with a certain percent chance of success.
+ */
+function flip_coin(int $percentSuccess = 50): bool {
+	return rand(1, 100) <= $percentSuccess;
+}
+
+/**
  * Return the value of a random key from an array.
  *
  * @template T

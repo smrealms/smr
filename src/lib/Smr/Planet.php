@@ -1282,7 +1282,7 @@ class Planet {
 				break;
 			}
 			//15% chance to destroy something
-			if (rand(1, 100) <= self::CHANCE_TO_DOWNGRADE) {
+			if (flip_coin(self::CHANCE_TO_DOWNGRADE)) {
 				$chanceFactors = [];
 				foreach ($this->getStructureTypes() as $structureID => $structure) {
 					$chanceFactors[$structureID] = ($this->getBuilding($structureID) / $this->getMaxBuildings($structureID)) / $structure->baseTime();

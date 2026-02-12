@@ -122,7 +122,7 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 
 			// Small chance to get caught stealing
 			$catchChancePercent = $port->getMaxLevel() - $port->getLevel() + 1;
-			if (rand(1, 100) <= $catchChancePercent) {
+			if (flip_coin($catchChancePercent)) {
 				$fine = $ideal_price * ($port->getLevel() + 1);
 				// Don't take the trader all the way to 0 credits
 				$newCredits = max(5000, $player->getCredits() - $fine);

@@ -95,7 +95,7 @@ class WeightedRandom {
 		$successChance = min(100, max(0, $successChance));
 
 		// Check if the event was successful.
-		$success = rand(1, 100) + $this->weighting <= $successChance;
+		$success = flip_coin($successChance - $this->weighting);
 
 		// Now update the weighting (the extra factor is needed to achieve the
 		// base success chance on average).
