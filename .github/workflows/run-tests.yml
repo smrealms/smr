@@ -94,11 +94,11 @@ jobs:
 
       - name: Show mysql logs
         if: failure()
-        run: docker compose logs mysql
+        run: docker compose --project-directory test logs mysql
 
       - name: Inspect mysql container (e.g. healthcheck logs)
         if: failure()
-        run: docker inspect $(docker compose ps -q mysql)
+        run: docker inspect $(docker compose --project-directory test ps -q mysql)
 
   phpstan:
     name: PHPStan
