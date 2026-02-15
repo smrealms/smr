@@ -215,7 +215,7 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 
 		// Give the planet 2 structures, and destroy them both
 		$planet->setBuilding(PLANET_GENERATOR, 2);
-		srand(95); // seed rand for reproducibility
+		srand(126); // seed rand for reproducibility
 		$result = $planet->checkForDowngrade(2 * Planet::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE);
 		self::assertSame([PLANET_GENERATOR => 2], $result);
 	}
