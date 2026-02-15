@@ -46,7 +46,7 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 			$player->increaseHOF(1, ['Bar', 'Drinks', 'Water'], HOF_PUBLIC);
 		} else {
 			// choose which drink to serve
-			if (rand(1, 20) === 1) {
+			if (flip_coin(5)) {
 				//only have a chance at special drinks if they are very lucky
 				$drinkList = BarDrink::getAll();
 			} else {

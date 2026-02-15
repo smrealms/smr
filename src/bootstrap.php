@@ -230,6 +230,16 @@ function random_alphabetic_string(int $length): string {
 }
 
 /**
+ * Flip a coin with a certain percent chance of success. Returns true on success.
+ */
+function flip_coin(float $percentSuccess = 50): bool {
+	if ($percentSuccess >= 100) {
+		return true; // since rand() could return getrandmax()
+	}
+	return rand() / getrandmax() < $percentSuccess / 100;
+}
+
+/**
  * Return the value of a random key from an array.
  *
  * @template T

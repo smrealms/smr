@@ -368,7 +368,7 @@ class Galaxy {
 
 			foreach ($this->getSectors() as $galSector) {
 				foreach ($linkDirs as $linkDir) {
-					if (rand(1, 100) <= $connectivity) {
+					if (flip_coin($connectivity)) {
 						$galSector->enableLink($linkDir);
 					} else {
 						$galSector->disableLink($linkDir);
