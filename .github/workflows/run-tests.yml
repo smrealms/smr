@@ -92,6 +92,14 @@ jobs:
           fail_ci_if_error: true
           verbose: true
 
+      - name: Show mysql logs
+        if: failure()
+        run: docker compose logs mysql
+
+      - name: Inspect mysql container (e.g. healthcheck logs)
+        if: failure()
+        run: docker inspect $(docker compose ps -q mysql)
+
   phpstan:
     name: PHPStan
     needs: build
