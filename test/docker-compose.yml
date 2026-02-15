@@ -8,6 +8,8 @@ services:
         extends:
             file: ../abstract-services.yml
             service: mysql-base
+        volumes:
+            - ../.my.cnf.sample:/root/.my.cnf:ro
 
     flyway:
         extends:
