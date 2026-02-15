@@ -649,3 +649,9 @@ table#moveTable td {
 #lvlBar {
 	font-size: 0;
 }
+
+/* Enforce maximum width for alliance MotD image and retain aspect ratio */
+img.alliance {
+	max-width: 650px;
+	height: auto;
+}
