@@ -126,12 +126,13 @@ class Session {
 			// We may not have ajax_returns if ajax was disabled
 			$this->previousAjaxReturns = $dbRecord->getNullableObject('ajax_returns', true);
 
-			[$this->links, $lastPage, $lastRequestData] = $dbRecord->getObject('session_var', true);
+			$sessionVar = $dbRecord->getClass('session_var', SessionVar::class, compressed: true);
+			$this->links = $sessionVar->links;
 
 			$ajaxRefresh = $this->ajax && !$this->hasChangedSN();
 			if ($ajaxRefresh) {
-				$this->currentPage = $lastPage;
-				$this->requestData = $lastRequestData;
+				$this->currentPage = $sessionVar->lastPage;
+				$this->requestData = $sessionVar->lastRequestData;
 			} elseif (isset($this->links[$this->SN])) {
 				// If the current page is modified during page processing, we need
 				// to make sure the original link is unchanged. So we clone it here.
@@ -139,8 +140,9 @@ class Session {
 			} elseif (!$this->hasChangedSN()) {
 				// If we're manually refreshing the page (F5), but the SN is not
 				// reusable, it is safe to use the previous displayed page.
-				$this->currentPage = $lastPage;
+				$this->currentPage = $sessionVar->lastPage;
 			}
+			unset($sessionVar); // avoid copy-on-write when modifying $this->links below
 
 			if (!$ajaxRefresh) { // since form pages don't ajax refresh properly
 				foreach ($this->links as $sn => $link) {
@@ -158,7 +160,7 @@ class Session {
 	}
 
 	public function update(): void {
-		$sessionVar = [$this->links, $this->currentPage, $this->requestData];
+		$sessionVar = new SessionVar($this->links, $this->currentPage, $this->requestData);
 		$db = Database::getInstance();
 		$data = [
 			'account_id' => $this->accountID,
