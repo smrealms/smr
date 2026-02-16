@@ -16,26 +16,24 @@ class ChessPiece {
 	public function __construct(
 		public readonly Colour $colour,
 		public int $pieceID,
-		public int $x,
-		public int $y,
+		public Loc $loc,
 	) {}
 
-	public function isSafeMove(Board $board, int $toX, int $toY): bool {
+	public function isSafeMove(Board $board, Loc $toLoc): bool {
 		// Make a deep copy of the board so that we can inspect possible future
 		// positions without actually changing the state of the real board.
-		// (Note $hasMoved is safe to shallow copy since it has no objects.)
 		$boardCopy = $board->deepCopy();
-		$boardCopy->movePiece($this->x, $this->y, $toX, $toY);
+		$boardCopy->movePiece($this->loc, $toLoc);
 		return !$boardCopy->isChecked($this->colour);
 	}
 
 	/**
 	 * Check if the piece is attacking a specific square
 	 */
-	public function isAttacking(Board $board, int $x, int $y): bool {
+	public function isAttacking(Board $board, Loc $loc): bool {
 		$moves = $this->getPossibleMoves($board, attackingCheck: true);
-		foreach ($moves as [$toX, $toY]) {
-			if ($toX === $x && $toY === $y) {
+		foreach ($moves as $toLoc) {
+			if ($toLoc->same($loc)) {
 				return true;
 			}
 		}
@@ -43,7 +41,7 @@ class ChessPiece {
 	}
 
 	/**
-	 * @return array<array{int, int}>
+	 * @return array<Loc>
 	 */
 	public function getPossibleMoves(Board $board, bool $attackingCheck = false): array {
 		$moves = [];
@@ -52,86 +50,92 @@ class ChessPiece {
 				Colour::White => 1,
 				Colour::Black => -1,
 			};
-			$moveY = $this->y + $dirY;
 			//Pawn forward movement is not attacking - so don't check it if doing an attacking check.
 			if (!$attackingCheck) {
-				if ($board->isValidCoord($this->x, $moveY) && !$board->hasPiece($this->x, $moveY) && $this->isSafeMove($board, $this->x, $moveY)) {
-					$moves[] = [$this->x, $moveY];
+				$move1 = $this->loc->relative(dy: $dirY);
+				if (!$board->hasPiece($move1) && $this->isSafeMove($board, $move1)) {
+					$moves[] = $move1;
 				}
-				$doubleMoveY = $moveY + $dirY;
-				if ($this->y - $dirY === 0 || $this->y - $dirY * 2 === Board::NY) { //Double move first move
-					if (!$board->hasPiece($this->x, $moveY) && !$board->hasPiece($this->x, $doubleMoveY) && $this->isSafeMove($board, $this->x, $doubleMoveY)) {
-						$moves[] = [$this->x, $doubleMoveY];
+				$pawnStartY = match ($this->colour) {
+					Colour::White => 1,
+					Colour::Black => 6,
+				};
+				if ($this->loc->y === $pawnStartY) { // pawn can still double move
+					$move2 = $this->loc->relative(dy: 2 * $dirY);
+					if (!$board->hasPiece($move1) && !$board->hasPiece($move2) && $this->isSafeMove($board, $move2)) {
+						$moves[] = $move2;
 					}
 				}
 			}
-			for ($i = -1; $i < 2; $i += 2) {
-				$moveX = $this->x + $i;
-				if ($board->isValidCoord($moveX, $moveY)) {
+			// Diagonal attack (including en passant)
+			foreach ([-1, 1] as $dirX) {
+				$moveDiag = $this->loc->relativeOrNull($dirX, $dirY);
+				if ($moveDiag !== null) {
+					$epTarget = new Loc($moveDiag->x, $this->loc->y);
 					if ($attackingCheck ||
-						(($board->getEnPassantPawn() === ['X' => $moveX, 'Y' => $this->y] ||
-						($board->hasPiece($moveX, $moveY) && $board->getPiece($moveX, $moveY)->colour !== $this->colour))
-						&& $this->isSafeMove($board, $moveX, $moveY))) {
-						$moves[] = [$moveX, $moveY];
+						(($board->getEnPassantPawn()?->same($epTarget) ||
+						($board->getPieceOrNull($moveDiag)?->colour === $this->colour->opposite()))
+						&& $this->isSafeMove($board, $moveDiag))) {
+						$moves[] = $moveDiag;
 					}
 				}
 			}
 		}
 		if ($this->pieceID === self::KING) {
-			for ($i = -1; $i < 2; $i++) {
-				for ($j = -1; $j < 2; $j++) {
-					if ($i !== 0 || $j !== 0) {
-						$this->addMove($this->x + $i, $this->y + $j, $board, $moves, $attackingCheck);
+			foreach ([-1, 0, 1] as $moveX) {
+				foreach ([-1, 0, 1] as $moveY) {
+					if ($moveX !== 0 || $moveY !== 0) {
+						$this->addMove($moveX, $moveY, $board, $moves, $attackingCheck);
 					}
 				}
 			}
 			//Castling is not attacking - so don't check it if doing an attacking check.
-			if (!$attackingCheck && !$board->isChecked($this->colour)) {
+			if (!$attackingCheck && !$board->isChecked($this->colour) && $this->loc->x === 4) {
 				if ($board->canCastle($this->colour, Castling::Queenside) &&
-					$board->isValidCoord($this->x - 1, $this->y) && !$board->hasPiece($this->x - 1, $this->y) &&
-					$board->isValidCoord($this->x - 3, $this->y) && !$board->hasPiece($this->x - 3, $this->y) &&
-					$this->isSafeMove($board, $this->x - 1, $this->y)
+					!$board->hasPiece($this->loc->relative(dx: -1)) &&
+					!$board->hasPiece($this->loc->relative(dx: -3)) &&
+					$this->isSafeMove($board, $this->loc->relative(dx: -1))
 				) {
-					$this->addMove($this->x - 2, $this->y, $board, $moves, $attackingCheck);
+					$this->addMove(-2, 0, $board, $moves, $attackingCheck);
 				}
 				if ($board->canCastle($this->colour, Castling::Kingside) &&
-					$board->isValidCoord($this->x + 1, $this->y) && !$board->hasPiece($this->x + 1, $this->y) &&
-					$this->isSafeMove($board, $this->x + 1, $this->y)
+					!$board->hasPiece($this->loc->relative(dx: 1)) &&
+					$this->isSafeMove($board, $this->loc->relative(dx: 1))
 				) {
-					$this->addMove($this->x + 2, $this->y, $board, $moves, $attackingCheck);
+					$this->addMove(2, 0, $board, $moves, $attackingCheck);
 				}
 			}
 		}
 		if ($this->pieceID === self::QUEEN || $this->pieceID === self::ROOK) {
 			// Unlimited linear movement
-			$moveX = $this->x;
-			while ($this->addMove(--$moveX, $this->y, $board, $moves, $attackingCheck) && !$board->hasPiece($moveX, $this->y)); //Left
-			$moveX = $this->x;
-			while ($this->addMove(++$moveX, $this->y, $board, $moves, $attackingCheck) && !$board->hasPiece($moveX, $this->y)); //Right
-			$moveY = $this->y;
-			while ($this->addMove($this->x, ++$moveY, $board, $moves, $attackingCheck) && !$board->hasPiece($this->x, $moveY)); //Up
-			$moveY = $this->y;
-			while ($this->addMove($this->x, --$moveY, $board, $moves, $attackingCheck) && !$board->hasPiece($this->x, $moveY)); //Down
+			$moveX = 0;
+			while ($this->addMove(--$moveX, 0, $board, $moves, $attackingCheck)); //Left
+			$moveX = 0;
+			while ($this->addMove(++$moveX, 0, $board, $moves, $attackingCheck)); //Right
+			$moveY = 0;
+			while ($this->addMove(0, ++$moveY, $board, $moves, $attackingCheck)); //Up
+			$moveY = 0;
+			while ($this->addMove(0, --$moveY, $board, $moves, $attackingCheck)); //Down
 		}
 		if ($this->pieceID === self::QUEEN || $this->pieceID === self::BISHOP) {
 			// Unlimited diagonal movement
-			$moveX = $this->x;
-			$moveY = $this->y;
-			while ($this->addMove(--$moveX, --$moveY, $board, $moves, $attackingCheck) && !$board->hasPiece($moveX, $moveY)); //Left-Down
-			$moveX = $this->x;
-			$moveY = $this->y;
-			while ($this->addMove(++$moveX, --$moveY, $board, $moves, $attackingCheck) && !$board->hasPiece($moveX, $moveY)); //Right-Down
-			$moveX = $this->x;
-			$moveY = $this->y;
-			while ($this->addMove(--$moveX, ++$moveY, $board, $moves, $attackingCheck) && !$board->hasPiece($moveX, $moveY)); //Left-Up
-			$moveX = $this->x;
-			$moveY = $this->y;
-			while ($this->addMove(++$moveX, ++$moveY, $board, $moves, $attackingCheck) && !$board->hasPiece($moveX, $moveY)); //Right-Up
+			$moveX = 0;
+			$moveY = 0;
+			while ($this->addMove(--$moveX, --$moveY, $board, $moves, $attackingCheck)); //Left-Down
+			$moveX = 0;
+			$moveY = 0;
+			while ($this->addMove(++$moveX, --$moveY, $board, $moves, $attackingCheck)); //Right-Down
+			$moveX = 0;
+			$moveY = 0;
+			while ($this->addMove(--$moveX, ++$moveY, $board, $moves, $attackingCheck)); //Left-Up
+			$moveX = 0;
+			$moveY = 0;
+			while ($this->addMove(++$moveX, ++$moveY, $board, $moves, $attackingCheck)); //Right-Up
 		}
 		if ($this->pieceID === self::KNIGHT) {
 			$knightMoves = [[2, -1], [1, -2], [-1, -2], [-2, -1], [-2, 1], [-1, 2], [1, 2], [2, 1]];
 			foreach ($knightMoves as [$moveX, $moveY]) {
-				$this->addMove($this->x + $moveX, $this->y + $moveY, $board, $moves, $attackingCheck);
+				$this->addMove($moveX, $moveY, $board, $moves, $attackingCheck);
 			}
 		}
 
@@ -139,16 +143,18 @@ class ChessPiece {
 	}
 
 	/**
-	 * @param list<array{int, int}> $moves
+	 * @param list<Loc> $moves
 	 */
-	private function addMove(int $toX, int $toY, Board $board, array &$moves, bool $attackingCheck = true): bool {
-		if ($board->isValidCoord($toX, $toY)) {
-			if (!$board->hasPiece($toX, $toY) || $board->getPiece($toX, $toY)->colour !== $this->colour) {
+	private function addMove(int $dx, int $dy, Board $board, array &$moves, bool $attackingCheck = true): bool {
+		$toLoc = $this->loc->relativeOrNull($dx, $dy);
+		if ($toLoc !== null) {
+			$toPiece = $board->getPieceOrNull($toLoc);
+			if ($toPiece === null || $toPiece->colour !== $this->colour) {
 				//We can only actually move to this position if it is safe to do so, however we can pass through it looking for a safe move so we still want to return true.
-				if (($attackingCheck === true || $this->isSafeMove($board, $toX, $toY))) {
-					$moves[] = [$toX, $toY];
+				if (($attackingCheck === true || $this->isSafeMove($board, $toLoc))) {
+					$moves[] = $toLoc;
 				}
-				return true;
+				return $toPiece === null; // no more moves if we hit another piece
 			}
 		}
 		return false;

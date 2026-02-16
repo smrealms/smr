@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Smr\Chess\Loc;
+
 /**
  * @var Smr\Account $ThisAccount
  * @var Smr\Chess\ChessGame $ChessGame
@@ -34,7 +36,7 @@
 							<td class="chessOutline"><?php echo $Y + 1; ?></td><?php
 							foreach ($Row as $X => $Piece) { ?>
 								<td id="c<?php echo $X . $Y; ?>" data-x="<?php echo $X; ?>" data-y="<?php echo $Y; ?>" class="ajax<?php if (($X + $Y) % 2 !== 0) { ?> whiteSquare<?php } else { ?> blackSquare<?php } ?>" onClick="highlightMoves.call(this)">
-									<div<?php if ($ChessGame->isLastMoveSquare($X, $Y)) { ?> class="lastMove"<?php } ?>><?php
+									<div<?php if ($ChessGame->isLastMoveSquare(Loc::validate($X, $Y))) { ?> class="lastMove"<?php } ?>><?php
 										if ($Piece !== null) { ?><span class="pointer lastMove"><?php echo $Piece->getPieceSymbol(); ?></span><?php } ?>
 									</div>
 								</td><?php
@@ -75,9 +77,9 @@
 		foreach ($ChessGame->getBoard()->getPieces($Colour) as $Piece) {
 			$Moves = [];
 			foreach ($Piece->getPossibleMoves($ChessGame->getBoard()) as $Move) {
-				$Moves[] = '#c' . $Move[0] . $Move[1];
+				$Moves[] = '#c' . $Move->x . $Move->y;
 			}
-			$AvailableMoves[$Piece->y][$Piece->x] = implode(',', $Moves);
+			$AvailableMoves[$Piece->loc->y][$Piece->loc->x] = implode(',', $Moves);
 		}
 	} ?>
 	var submitMoveHREF = <?php echo $this->addJavascriptForAjax('submitMoveHREF', $ChessMoveHREF); ?>;
