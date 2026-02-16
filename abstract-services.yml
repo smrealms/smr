@@ -88,8 +88,6 @@ services:
         secrets:
             - mysql-password
             - mysql-root-password
-        volumes:
-            - ./.my.cnf:/root/.my.cnf:ro
         networks:
             - backend
         command: [ "mysqld",
