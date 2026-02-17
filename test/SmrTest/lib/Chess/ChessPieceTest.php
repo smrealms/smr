@@ -39,7 +39,6 @@ class ChessPieceTest extends TestCase {
 		$board = new Board();
 		$queen = $board->getPiece(Loc::at('d8'));
 		$board->setSquare(Loc::at('d5'), $queen); // place queen in the open
-		$board->clearSquare(Loc::at('d8')); // remove original queen
 		$expected = [
 			Loc::at('c5'), Loc::at('b5'), Loc::at('a5'), // left
 			Loc::at('e5'), Loc::at('f5'), Loc::at('g5'), Loc::at('h5'), // right
@@ -57,7 +56,6 @@ class ChessPieceTest extends TestCase {
 		$board = new Board();
 		$king = $board->getPiece(Loc::at('e1'));
 		$board->setSquare(Loc::at('g6'), $king);
-		$board->clearSquare(Loc::at('e1')); // remove original king
 		$board->clearSquare(Loc::at('f8')); // remove enemy bishop
 		$expected = [
 			// can't move to h6 or f6 since pawns defend those squares

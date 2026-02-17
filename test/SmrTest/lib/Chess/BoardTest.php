@@ -221,11 +221,13 @@ class BoardTest extends TestCase {
 	public function test_isDraw_stalemate(): void {
 		$board = new Board();
 		$board->clear();
+		$a1 = Loc::at('a1');
+		$b3 = Loc::at('b3');
 
 		// Black King on a1
-		$board->setSquare(Loc::at('a1'), new ChessPiece(Colour::Black, ChessPiece::KING, new Loc(0, 0)));
+		$board->setSquare($a1, new ChessPiece(Colour::Black, ChessPiece::KING, $a1));
 		// White Queen on b3
-		$board->setSquare(Loc::at('b3'), new ChessPiece(Colour::White, ChessPiece::QUEEN, new Loc(0, 0)));
+		$board->setSquare($b3, new ChessPiece(Colour::White, ChessPiece::QUEEN, $b3));
 
 		// Position is stalemate: Black has no valid moves and is not in check
 		self::assertTrue($board->isDraw(Colour::Black));
@@ -234,11 +236,13 @@ class BoardTest extends TestCase {
 	public function test_isDraw_insufficient_material(): void {
 		$board = new Board();
 		$board->clear();
+		$a1 = Loc::at('a1');
+		$b3 = Loc::at('b3');
 
 		// Black King on a1
-		$board->setSquare(Loc::at('a1'), new ChessPiece(Colour::Black, ChessPiece::KING, new Loc(0, 0)));
+		$board->setSquare($a1, new ChessPiece(Colour::Black, ChessPiece::KING, $a1));
 		// White King on a3
-		$board->setSquare(Loc::at('a3'), new ChessPiece(Colour::White, ChessPiece::KING, new Loc(0, 0)));
+		$board->setSquare($b3, new ChessPiece(Colour::White, ChessPiece::KING, $b3));
 
 		// Insufficient material draw doesn't depend on player turn
 		foreach (Colour::cases() as $colour) {
@@ -250,7 +254,8 @@ class BoardTest extends TestCase {
 		// Add a White Rook to d5
 		$board = new Board();
 		$d5 = Loc::at('d5');
-		$piece = new ChessPiece(Colour::White, ChessPiece::ROOK, new Loc(0, 0));
+		$a1 = Loc::at('a1');
+		$piece = $board->getPiece($a1);
 		self::assertNotEquals($d5, $piece->loc);
 		$board->setSquare($d5, $piece);
 
@@ -260,6 +265,9 @@ class BoardTest extends TestCase {
 		// The piece has its coords updates
 		$expected = new ChessPiece(Colour::White, ChessPiece::ROOK, $d5);
 		self::assertEquals($piece, $expected);
+
+		// There is no longer a piece at the original location
+		self::assertNull($board->getPieceOrNull($a1));
 	}
 
 	public function test_clearSquare(): void {

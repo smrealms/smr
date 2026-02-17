@@ -253,8 +253,13 @@ class Board {
 	 * Change the position of a piece on the board
 	 */
 	public function setSquare(Loc $loc, ChessPiece $piece): void {
+		$origLoc = $piece->loc;
 		$this->board[$loc->y][$loc->x] = $piece;
 		$piece->loc = $loc;
+		if (!$loc->same($origLoc)) {
+			// If piece loc has changed, clear its original square
+			$this->clearSquare($origLoc);
+		}
 	}
 
 	/**
@@ -292,7 +297,6 @@ class Board {
 
 		// Update the board state
 		$this->setSquare($toLoc, $piece);
-		$this->clearSquare($loc);
 
 		$canEnPassant = $this->getEnPassantPawn();
 		$enPassant = false;
@@ -310,7 +314,6 @@ class Board {
 				$castlingType = $castling['Type'];
 				$rook = $this->getPiece($castling['RookFrom']);
 				$this->setSquare($castling['RookTo'], $rook);
-				$this->clearSquare($castling['RookFrom']);
 			}
 		} elseif ($piece->pieceID === ChessPiece::ROOK) {
 			// We've moved a Rook, so can no longer castle with it
