@@ -51,6 +51,7 @@ services:
             file: abstract-services.yml
             service: mysql-base
         volumes:
+            - ./.my.cnf:/root/.my.cnf:ro
             - ./vol_db:/var/lib/mysql:rw
 
     pma:

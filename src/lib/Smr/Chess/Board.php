@@ -11,8 +11,7 @@ class Board {
 
 	/** @var array<value-of<Colour>, array<Castling>> */
 	private array $canCastle;
-	/** @var array{X: int, Y: int} */
-	private array $enPassantPawn;
+	private ?Loc $enPassantPawn;
 	/** @var array<int, array<int, ?ChessPiece>> */
 	private array $board;
 	private int $numMoves = 0;
@@ -29,10 +28,10 @@ class Board {
 		$row = array_fill(0, self::NX, null);
 		$board = array_fill(0, self::NY, $row);
 		foreach ($pieces as $piece) {
-			if ($board[$piece->y][$piece->x] !== null) {
+			if ($board[$piece->loc->y][$piece->loc->x] !== null) {
 				throw new Exception('Two pieces found in the same tile.');
 			}
-			$board[$piece->y][$piece->x] = $piece;
+			$board[$piece->loc->y][$piece->loc->x] = $piece;
 		}
 		$this->board = $board;
 
@@ -40,7 +39,7 @@ class Board {
 		foreach (Colour::cases() as $colour) {
 			$this->setCastling($colour, Castling::cases());
 		}
-		$this->setEnPassantPawn();
+		$this->setEnPassantPawn(null);
 	}
 
 	/**
@@ -50,15 +49,8 @@ class Board {
 		$this->canCastle[$colour->value] = $castling;
 	}
 
-	/**
-	 * @param ?array{X: int, Y: int} $enPassantPawn Set (or reset) en passant pawn
-	 */
-	public function setEnPassantPawn(?array $enPassantPawn = null): void {
-		if ($enPassantPawn === null) {
-			$this->enPassantPawn = ['X' => -1, 'Y' => -1];
-		} else {
-			$this->enPassantPawn = $enPassantPawn;
-		}
+	public function setEnPassantPawn(?Loc $enPassantPawn): void {
+		$this->enPassantPawn = $enPassantPawn;
 	}
 
 	public function deepCopy(): self {
@@ -82,16 +74,17 @@ class Board {
 	public function getFEN(): string {
 		$fen = '';
 		$blanks = 0;
-		foreach (range(self::NY - 1, 0, -1) as $y) {
-			foreach (range(0, self::NX - 1) as $x) {
-				if (!$this->hasPiece($x, $y)) {
+		foreach (range(Loc::MAX_Y, 0, -1) as $y) {
+			foreach (range(0, Loc::MAX_X) as $x) {
+				$loc = new Loc($x, $y);
+				if (!$this->hasPiece($loc)) {
 					$blanks++;
 				} else {
 					if ($blanks > 0) {
 						$fen .= $blanks;
 						$blanks = 0;
 					}
-					$fen .= $this->getPiece($x, $y)->getPieceLetter();
+					$fen .= $this->getPiece($loc)->getPieceLetter();
 				}
 			}
 			if ($blanks > 0) {
@@ -123,13 +116,13 @@ class Board {
 		$fen .= $castling . ' ';
 
 		// En passant
-		['X' => $pawnX, 'Y' => $pawnY] = $this->getEnPassantPawn();
-		if ($pawnX !== -1) {
-			$fen .= chr(ord('a') + $pawnX);
-			$fen .= match ($pawnY) {
+		$epLoc = $this->getEnPassantPawn();
+		if ($epLoc !== null) {
+			$fen .= $epLoc->file();
+			$fen .= match ($epLoc->y) {
 				3 => '3', // white pawn on rank 4
 				4 => '6', // black pawn on rank 5
-				default => throw new Exception('Invalid en passant rank: ' . $pawnY),
+				default => throw new Exception('Invalid en passant target: ' . $epLoc->algebraic()),
 			};
 		} else {
 			$fen .= '-';
@@ -163,10 +156,6 @@ class Board {
 		return $board;
 	}
 
-	public static function isValidCoord(int $x, int $y): bool {
-		return ($x >= 0 && $x < self::NX) && ($y >= 0 && $y < self::NY);
-	}
-
 	/**
 	 * @return array<ChessPiece>
 	 */
@@ -182,15 +171,20 @@ class Board {
 		return $pieces;
 	}
 
-	public function hasPiece(int $x, int $y): bool {
-		return $this->board[$y][$x] !== null;
+	public function getPieceOrNull(Loc $loc): ?ChessPiece {
+		return $this->board[$loc->y][$loc->x];
 	}
 
-	public function getPiece(int $x, int $y): ChessPiece {
-		if ($this->board[$y][$x] === null) {
-			throw new Exception('No piece found on: ' . $x . ', ' . $y);
+	public function hasPiece(Loc $loc): bool {
+		return $this->getPieceOrNull($loc) !== null;
+	}
+
+	public function getPiece(Loc $loc): ChessPiece {
+		$piece = $this->getPieceOrNull($loc);
+		if ($piece === null) {
+			throw new Exception('No piece found on: ' . $loc->algebraic());
 		}
-		return $this->board[$y][$x];
+		return $piece;
 	}
 
 	public function getKing(Colour $colour): ChessPiece {
@@ -206,10 +200,7 @@ class Board {
 		return in_array($type, $this->canCastle[$colour->value], true);
 	}
 
-	/**
-	 * @return array{X: int, Y: int}
-	 */
-	public function getEnPassantPawn(): array {
+	public function getEnPassantPawn(): ?Loc {
 		return $this->enPassantPawn;
 	}
 
@@ -219,7 +210,7 @@ class Board {
 	public function isChecked(Colour $colour): bool {
 		$king = $this->getKing($colour);
 		foreach ($this->getPieces($colour->opposite()) as $piece) {
-			if ($piece->isAttacking($this, x: $king->x, y: $king->y)) {
+			if ($piece->isAttacking($this, $king->loc)) {
 				return true;
 			}
 		}
@@ -261,17 +252,21 @@ class Board {
 	/**
 	 * Change the position of a piece on the board
 	 */
-	public function setSquare(int $x, int $y, ChessPiece $piece): void {
-		$this->board[$y][$x] = $piece;
-		$piece->x = $x;
-		$piece->y = $y;
+	public function setSquare(Loc $loc, ChessPiece $piece): void {
+		$origLoc = $piece->loc;
+		$this->board[$loc->y][$loc->x] = $piece;
+		$piece->loc = $loc;
+		if (!$loc->same($origLoc)) {
+			// If piece loc has changed, clear its original square
+			$this->clearSquare($origLoc);
+		}
 	}
 
 	/**
 	 * Remove the piece, if any, from this square
 	 */
-	public function clearSquare(int $x, int $y): void {
-		$this->board[$y][$x] = null;
+	public function clearSquare(Loc $loc): void {
+		$this->board[$loc->y][$loc->x] = null;
 	}
 
 	/**
@@ -283,7 +278,7 @@ class Board {
 				$this->board[$y][$x] = null;
 			}
 		}
-		$this->setEnPassantPawn();
+		$this->setEnPassantPawn(null);
 		$this->setCastling(Colour::White, []);
 		$this->setCastling(Colour::Black, []);
 	}
@@ -293,26 +288,19 @@ class Board {
 	 *
 	 * @return array{Castling: ?Castling, PieceTaken: ?ChessPiece, EnPassant: bool, PawnPromotion: bool}
 	 */
-	public function movePiece(int $x, int $y, int $toX, int $toY, int $pawnPromotionPiece = ChessPiece::QUEEN): array {
-		if (!static::isValidCoord($x, $y)) {
-			throw new Exception('Invalid from coordinates, x=' . $x . ', y=' . $y);
-		}
-		if (!static::isValidCoord($toX, $toY)) {
-			throw new Exception('Invalid to coordinates, x=' . $toX . ', y=' . $toY);
-		}
-		$piece = $this->getPiece($x, $y);
-		$pieceTaken = $this->board[$toY][$toX];
+	public function movePiece(Loc $loc, Loc $toLoc, int $pawnPromotionPiece = ChessPiece::QUEEN): array {
+		$piece = $this->getPiece($loc);
+		$pieceTaken = $this->getPieceOrNull($toLoc);
 		if ($pieceTaken?->pieceID === ChessPiece::KING) {
 			throw new Exception('King cannot be taken');
 		}
 
 		// Update the board state
-		$this->setSquare($toX, $toY, $piece);
-		$this->clearSquare($x, $y);
+		$this->setSquare($toLoc, $piece);
 
 		$canEnPassant = $this->getEnPassantPawn();
 		$enPassant = false;
-		$enPassantPawn = ['X' => -1, 'Y' => -1];
+		$enPassantPawn = null;
 		$castlingType = null;
 		$pawnPromotion = false;
 
@@ -321,33 +309,32 @@ class Board {
 			$this->canCastle[$piece->colour->value] = [];
 
 			// If castling, also update the Rook position
-			$castling = ChessGame::isCastling($x, $toX);
+			$castling = ChessGame::isCastling($loc, $toLoc);
 			if ($castling !== false) {
 				$castlingType = $castling['Type'];
-				$rook = $this->getPiece($castling['X'], $y);
-				$this->setSquare($castling['ToX'], $y, $rook);
-				$this->clearSquare($castling['X'], $y);
+				$rook = $this->getPiece($castling['RookFrom']);
+				$this->setSquare($castling['RookTo'], $rook);
 			}
 		} elseif ($piece->pieceID === ChessPiece::ROOK) {
 			// We've moved a Rook, so can no longer castle with it
-			if ($x === 0) {
+			if ($loc->x === 0) {
 				array_remove_value($this->canCastle[$piece->colour->value], Castling::Queenside);
-			} elseif ($x === 7) {
+			} elseif ($loc->x === 7) {
 				array_remove_value($this->canCastle[$piece->colour->value], Castling::Kingside);
 			}
 		} elseif ($piece->pieceID === ChessPiece::PAWN) {
-			if ($toY === 0 || $toY === 7) {
+			if ($toLoc->y === 0 || $toLoc->y === 7) {
 				// Pawn was promoted
 				$pawnPromotion = true;
 				$piece->pieceID = $pawnPromotionPiece;
-			} elseif ($y === 1 && $toY === 3 || $y === 6 && $toY === 4) {
+			} elseif ($loc->y === 1 && $toLoc->y === 3 || $loc->y === 6 && $toLoc->y === 4) {
 				// Double move to track?
-				$enPassantPawn = ['X' => $toX, 'Y' => $toY];
-			} elseif ($canEnPassant['X'] === $toX && ($canEnPassant['Y'] === 3 && $toY === 2 || $canEnPassant['Y'] === 4 && $toY === 5)) {
+				$enPassantPawn = $toLoc;
+			} elseif ($canEnPassant !== null && $canEnPassant->x === $toLoc->x && ($canEnPassant->y === 3 && $toLoc->y === 2 || $canEnPassant->y === 4 && $toLoc->y === 5)) {
 				// En passant? Update the taken pawn.
 				$enPassant = true;
-				$pieceTaken = $this->getPiece($canEnPassant['X'], $canEnPassant['Y']);
-				$this->clearSquare($canEnPassant['X'], $canEnPassant['Y']);
+				$pieceTaken = $this->getPiece($canEnPassant);
+				$this->clearSquare($canEnPassant);
 			}
 		}
 

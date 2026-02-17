@@ -131,7 +131,7 @@ $TotalDamageToThisPlayer = 0;
 foreach ($TraderTeamCombatResults['Traders'] as $TraderResults) {
 	// Check if ThisPlayer was a target in this round of combat
 	$ThisAccountID = $ThisPlayer?->getAccountID();
-	if (!isset($TraderResults['TotalDamagePerTargetPlayer'][$ThisAccountID])) {
+	if ($ThisAccountID === null || !isset($TraderResults['TotalDamagePerTargetPlayer'][$ThisAccountID])) {
 		$TotalDamageToThisPlayer = null;
 		break;
 	}
