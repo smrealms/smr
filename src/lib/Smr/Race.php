@@ -47,9 +47,7 @@ class Race {
 	 * @return array<int>
 	 */
 	public static function getPlayableIDs(): array {
-		$names = self::RACE_NAMES;
-		unset($names[RACE_NEUTRAL]);
-		return \array_keys($names);
+		return \array_keys(self::getPlayableNames());
 	}
 
 	/**

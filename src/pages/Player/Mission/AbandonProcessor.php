@@ -3,17 +3,19 @@
 namespace Smr\Pages\Player\Mission;
 
 use Smr\AbstractPlayer;
+use Smr\MissionState;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Player\CurrentSector;
 
 class AbandonProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $missionID,
+		private readonly MissionState $missionState,
 	) {}
 
 	public function build(AbstractPlayer $player): never {
-		$player->deleteMission($this->missionID);
+		// Delete the mission so that it can be accepted again later.
+		$this->missionState->delete();
 
 		(new CurrentSector())->go();
 	}

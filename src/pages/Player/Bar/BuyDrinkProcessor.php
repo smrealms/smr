@@ -6,6 +6,7 @@ use Smr\AbstractPlayer;
 use Smr\BarDrink;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\MissionActions\BuyDrink;
 use Smr\Page\PlayerPageProcessor;
 
 class BuyDrinkProcessor extends PlayerPageProcessor {
@@ -78,10 +79,8 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 			$message .= '<br />You feel a little W' . str_repeat('oO', $num_drinks) . 'zy<br />';
 		}
 
-		$player->actionTaken('BuyDrink', [
-			'SectorID' => $player->getSectorID(),
-			'Drink' => $drinkName,
-		]);
+		$action = new BuyDrink(sectorID: $player->getSectorID(), drink: $drinkName);
+		$player->actionTaken($action);
 
 		//see if the player blacksout or not
 		if (isset($num_drinks) && $num_drinks > 15) {

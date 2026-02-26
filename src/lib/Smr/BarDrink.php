@@ -7,12 +7,7 @@ namespace Smr;
  */
 class BarDrink {
 
-	// Special drink used in missions
-	public const string SALVENE_SWAMP_SODA = 'Salvene Swamp Soda';
-
-	private const array DRINK_NAMES = [
-		'Spooky Midnight Special',
-		'Azoolian Sunrise Special',
+	private const array BASIC_DRINKS = [
 		'Big Momma Mojito',
 		'Cosmic Crush',
 		'Federal Berry Fizz',
@@ -23,23 +18,26 @@ class BarDrink {
 		'Pod Giver',
 		'Stellar Side Car',
 		'Smuggler\'s Salty Swizzler',
-		'Alskant Space Shandy',
-		'Creonti "Big Daiquiri"',
-		'Human Bourbon Bruiser',
-		'Ik\'Thorne Buttery Burst',
-		self::SALVENE_SWAMP_SODA,
-		'Thevian Vodka Vortex',
-		'West Quadrant Colada',
-		'Nijarin Ion Martini',
 	];
 
-	private const array SPECIAL_DRINK_MESSAGES = [
+	private const array RACIAL_DRINKS = [
+		RACE_ALSKANT => 'Alskant Space Shandy',
+		RACE_CREONTI => 'Creonti "Big Daiquiri"',
+		RACE_HUMAN => 'Human Bourbon Bruiser',
+		RACE_IKTHORNE => 'Ik\'Thorne Buttery Burst',
+		RACE_SALVENE => 'Salvene Swamp Soda',
+		RACE_THEVIAN => 'Thevian Vodka Vortex',
+		RACE_WQHUMAN => 'West Quadrant Colada',
+		RACE_NIJARIN => 'Nijarin Ion Martini',
+	];
+
+	private const array SPECIAL_DRINKS = [
 		'Spooky Midnight Special' => 'Suddenly the secrets of the universe become manifestly clear and you are at peace.',
 		'Azoolian Sunrise Special' => 'At the bottom of the glass, you see a reflection of the best trader in the universe, and it is you.',
 	];
 
 	public static function isSpecial(string $drink): bool {
-		return array_key_exists($drink, self::SPECIAL_DRINK_MESSAGES);
+		return array_key_exists($drink, self::SPECIAL_DRINKS);
 	}
 
 	/**
@@ -47,7 +45,14 @@ class BarDrink {
 	 * bar drink with the given name.
 	 */
 	public static function getSpecialMessage(string $drink): string {
-		return self::SPECIAL_DRINK_MESSAGES[$drink];
+		return self::SPECIAL_DRINKS[$drink];
+	}
+
+	/**
+	 * Returns the name of the drink associated with the given race.
+	 */
+	public static function getRacialDrink(int $raceID): string {
+		return self::RACIAL_DRINKS[$raceID];
 	}
 
 	/**
@@ -56,7 +61,11 @@ class BarDrink {
 	 * @return array<string>
 	 */
 	public static function getAll(): array {
-		return self::DRINK_NAMES;
+		return array_merge(
+			self::BASIC_DRINKS,
+			self::getRacial(),
+			self::getSpecial(),
+		);
 	}
 
 	/**
@@ -65,7 +74,16 @@ class BarDrink {
 	 * @return array<string>
 	 */
 	public static function getSpecial(): array {
-		return array_keys(self::SPECIAL_DRINK_MESSAGES);
+		return array_keys(self::SPECIAL_DRINKS);
+	}
+
+	/**
+	 * Returns the list of racial bar drinks.
+	 *
+	 * @return array<string>
+	 */
+	public static function getRacial(): array {
+		return array_values(self::RACIAL_DRINKS);
 	}
 
 	/**
@@ -75,7 +93,7 @@ class BarDrink {
 	 */
 	public static function getCommon(): array {
 		// Remove the special drinks
-		return array_diff(self::DRINK_NAMES, self::getSpecial());
+		return array_diff(self::getAll(), self::getSpecial());
 	}
 
 }
