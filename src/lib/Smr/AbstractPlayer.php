@@ -2300,22 +2300,50 @@ abstract class AbstractPlayer {
 		$return['KillerCredits'] = $this->getCredits();
 		$killer->increaseCredits($return['KillerCredits']);
 
-		// The killer may change alignment
-		$relations = Globals::getRaceRelations($this->getGameID(), $this->getRaceID());
-		$relation = $relations[$killer->getRaceID()];
+		//process relation and alignment changes
+		$deadPlayerPoliticalRelations = Globals::getRaceRelations($this->getGameID(), $this->getRaceID());
+		$killerAlignChange = 0;
 
-		$alignChangePerRelation = 0.1;
-		if ($relation >= RELATIONS_PEACE || $relation <= RELATIONS_WAR) {
-			$alignChangePerRelation = 0.04;
+		foreach ($deadPlayerPoliticalRelations as $raceID => $politicalRelations) {
+			if ($raceID === $this->getRaceID()) {
+				// dead players race reactions
+				$killer->decreaseRelations(25, $raceID);
+			} elseif ($raceID === $killer->getRaceID()) {
+				// killers race reaction and alignment delta
+				if ($politicalRelations <= RELATIONS_WAR) {
+					$killer->increaseRelations(IFloor($politicalRelations / -20), $raceID); // 15 to 25
+					$killerAlignChange += $politicalRelations / -20; // 15 to 25
+				}
+				if ($politicalRelations >= RELATIONS_PEACE) {
+					$killer->decreaseRelations(IFloor($politicalRelations / 20), $raceID); // 15 to 25
+					$killerAlignChange -= $politicalRelations / 20; // 15 to 25
+				}
+			} else {
+				// bystander race reactions
+				if ($politicalRelations <= RELATIONS_WAR) {
+					$killer->increaseRelations(IFloor($politicalRelations / -40), $raceID); // 7 to 12
+				}
+				if ($politicalRelations >= RELATIONS_PEACE) {
+					$killer->decreaseRelations(IFloor($politicalRelations / 40), $raceID); // 7 to 12
+				}
+			}
 		}
 
-		$killerAlignChange = IRound(-$relation * $alignChangePerRelation); //Lose relations when killing a peaceful race
+		if ($this->getAlignment() <= ALIGNMENT_EVIL) {
+			$killerAlignChange += max($this->getAlignment(), -250) / -10; // 15 to 25
+		}
+		if ($this->getAlignment() >= ALIGNMENT_GOOD) {
+			$killerAlignChange -= min($this->getAlignment(), 250) / 10; // 15 to 25
+		}
+
 		if ($killerAlignChange > 0) {
-			$killer->increaseAlignment($killerAlignChange);
+			$killer->increaseAlignment(IFloor($killerAlignChange)); // 1 to 50
 		} else {
-			$killer->decreaseAlignment(-$killerAlignChange);
+			$killer->decreaseAlignment(IFloor(-$killerAlignChange)); // 1 to 50
 		}
+
 		// War setting gives them military pay
+		$relation = $deadPlayerPoliticalRelations[$killer->getRaceID()];
 		if ($relation <= RELATIONS_WAR) {
 			$killer->increaseMilitaryPayment(-IFloor($relation * 100 * pow($return['KillerExp'] / 2, 0.25)));
 		}
