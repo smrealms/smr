@@ -46,6 +46,7 @@ class Port {
 	public const float RAZE_PAYOUT = 0.75; // fraction of base payout for razing
 	public const float CLAIM_PAYOUT = 0.5; // fraction of base payout for claiming
 	public const int KILLER_RELATIONS_LOSS = 45; // relations lost by killer in PR
+	public const int DAMAGE_NEEDED_FOR_RELATION_CHANGE = 350; // single player
 
 	public const string SQL = 'sector_id = :sector_id AND game_id = :game_id';
 	/** @var array{sector_id: int, game_id: int} */
@@ -1460,6 +1461,10 @@ class Port {
 		foreach ($attackers as $attacker) {
 			$attacker->increaseHOF($this->level, ['Combat', 'Port', 'Levels Raided'], HOF_PUBLIC);
 			$attacker->increaseHOF(1, ['Combat', 'Port', 'Total Raided'], HOF_PUBLIC);
+			// attackers also get a federal bounty
+			$attackerBounty = $attacker->getExperience() * $this->getLevel();
+			$attacker->getActiveBounty(BountyType::HQ)->increaseCredits($attackerBounty);
+			$attacker->increaseHOF($attackerBounty, ['Combat', 'Port', 'Bounties', 'Gained'], HOF_PUBLIC);
 		}
 	}
 
@@ -1575,14 +1580,6 @@ class Port {
 			'killer_alliance' => $killer->getAllianceID(),
 			'dead_id' => ACCOUNT_ID_PORT,
 		]);
-
-		// Killer gets a relations change and a bounty if port is taken
-		$killerBounty = $killer->getExperience() * $this->getLevel();
-		$killer->getActiveBounty(BountyType::HQ)->increaseCredits($killerBounty);
-		$killer->increaseHOF($killerBounty, ['Combat', 'Port', 'Bounties', 'Gained'], HOF_PUBLIC);
-
-		$killer->decreaseRelations(self::KILLER_RELATIONS_LOSS, $this->getRaceID());
-		$killer->increaseHOF(self::KILLER_RELATIONS_LOSS, ['Combat', 'Port', 'Relation', 'Loss'], HOF_PUBLIC);
 
 		return [];
 	}
