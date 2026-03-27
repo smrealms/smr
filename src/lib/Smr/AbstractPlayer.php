@@ -2319,11 +2319,11 @@ abstract class AbstractPlayer {
 		}
 
 		// Process alignment change for killer
-		$killerAlignChange = IRound(sqrt(abs($this->getAlignment()) / 150)) * 20;
-		if ($this->getAlignment() < 0) {
+		$killerAlignChange = IRound(signed_sqrt($this->getAlignment() / 150)) * 20;
+		if ($killerAlignChange > 0) {
 			$killer->increaseAlignment($killerAlignChange);
 		} else {
-			$killer->decreaseAlignment($killerAlignChange);
+			$killer->decreaseAlignment(-$killerAlignChange);
 		}
 
 		// War setting gives them military pay
