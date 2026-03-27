@@ -879,14 +879,35 @@ class AbstractShip {
 		$thisPlayer->increaseHOF($results['TotalDamage'], ['Combat', 'Port', 'Damage Done'], HOF_PUBLIC);
 		//$thisPlayer->increaseHOF(1,array('Combat','Port','Shots')); //in Port::attackedBy()
 
-		// Change alignment if we reach a damage threshold.
-		// Increase if player and port races are at war; decrease otherwise.
+		// process relations and alignment changes given racial politics
+		$relations = Globals::getRaceRelations($thisPlayer->getGameID(), $port->getRaceID());
+
+		if ($results['TotalDamage'] >= Port::DAMAGE_NEEDED_FOR_RELATION_CHANGE) {
+			foreach ($relations as $raceID => $politicalRelations) {
+				if ($raceID === $port->getRaceID()) {
+					// port race reaction
+					$thisPlayer->decreaseRelations(2, $raceID);
+					$thisPlayer->increaseHOF(2, ['Combat', 'Port', 'Relation', 'Loss'], HOF_PUBLIC);
+				} else {
+					// bystander reactions
+					if ($politicalRelations <= RELATIONS_WAR) {
+						$thisPlayer->increaseRelations(1, $raceID);
+						$thisPlayer->increaseHOF(1, ['Combat', 'Port', 'Relation', 'Gain'], HOF_PUBLIC);
+					}
+					if ($politicalRelations >= RELATIONS_PEACE) {
+						$thisPlayer->decreaseRelations(1, $raceID);
+						$thisPlayer->increaseHOF(1, ['Combat', 'Port', 'Relation', 'Loss'], HOF_PUBLIC);
+					}
+				}
+			}
+		}
+
 		if ($results['TotalDamage'] >= Port::DAMAGE_NEEDED_FOR_ALIGNMENT_CHANGE) {
-			$relations = Globals::getRaceRelations($thisPlayer->getGameID(), $thisPlayer->getRaceID());
-			if ($relations[$port->getRaceID()] <= RELATIONS_WAR) {
+			if ($relations[$thisPlayer->getRaceID()] <= RELATIONS_WAR) {
 				$thisPlayer->increaseAlignment(ALIGNMENT_GAIN_PORT_DAMAGE);
 				$thisPlayer->increaseHOF(ALIGNMENT_GAIN_PORT_DAMAGE, ['Combat', 'Port', 'Alignment', 'Gain'], HOF_PUBLIC);
-			} else {
+			}
+			if ($relations[$thisPlayer->getRaceID()] >= RELATIONS_PEACE) {
 				$thisPlayer->decreaseAlignment(ALIGNMENT_LOSS_PORT_DAMAGE);
 				$thisPlayer->increaseHOF(ALIGNMENT_LOSS_PORT_DAMAGE, ['Combat', 'Port', 'Alignment', 'Loss'], HOF_PUBLIC);
 			}
