@@ -870,3 +870,7 @@ function getWeightedRandom(array $choices): string|int {
 	}
 	throw new Exception('Internal error computing weights');
 }
+
+function signed_sqrt(float $x): float {
+	return ($x <=> 0) * sqrt(abs($x));
+}
