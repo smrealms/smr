@@ -2310,7 +2310,7 @@ abstract class AbstractPlayer {
 				// bystander race reactions
 				$relFactor = 0.02; // 0 to 10
 			}
-			$killerRelChange = IRound($politicalRelations * $relFactor);
+			$killerRelChange = IRound(-$politicalRelations * $relFactor);
 			if ($killerRelChange > 0) {
 				$killer->increaseRelations($killerRelChange, $raceID);
 			} else {
@@ -2319,7 +2319,7 @@ abstract class AbstractPlayer {
 		}
 
 		// Process alignment change for killer
-		$killerAlignChange = IRound(signed_sqrt($this->getAlignment() / 150)) * 20;
+		$killerAlignChange = IRound(signed_sqrt(-$this->getAlignment() / 150)) * 20;
 		if ($killerAlignChange > 0) {
 			$killer->increaseAlignment($killerAlignChange);
 		} else {
