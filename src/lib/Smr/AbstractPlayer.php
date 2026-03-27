@@ -2303,12 +2303,12 @@ abstract class AbstractPlayer {
 		// Process personal relation changes for killer
 		$relations = Globals::getRaceRelations($this->getGameID(), $this->getRaceID());
 		foreach ($relations as $raceID => $politicalRelations) {
-			if ($raceID == $this->getRaceID() || $raceID === $killer->getRaceID()) {
+			if ($raceID === $this->getRaceID() || $raceID === $killer->getRaceID()) {
 				// killer and dead player's race reaction
-				$relFactor = 0.04;  // 0 to 20
+				$relFactor = 0.04; // 0 to 20
 			} else {
 				// bystander race reactions
-				$relFactor = 0.02;  // 0 to 10
+				$relFactor = 0.02; // 0 to 10
 			}
 			$killerRelChange = IRound($politicalRelations * $relFactor);
 			if ($killerRelChange > 0) {
