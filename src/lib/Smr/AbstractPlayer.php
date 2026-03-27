@@ -2311,10 +2311,10 @@ abstract class AbstractPlayer {
 				$relFactor = 0.02;  // 0 to 10
 			}
 			$killerRelChange = IRound($politicalRelations * $relFactor);
-			if ($relChange > 0) {
-				$killer->increaseRelations($killerRelChange);
+			if ($killerRelChange > 0) {
+				$killer->increaseRelations($killerRelChange, $raceID);
 			} else {
-				$killer->decreaseRelations(-$killerRelChange);
+				$killer->decreaseRelations(-$killerRelChange, $raceID);
 			}
 		}
 
