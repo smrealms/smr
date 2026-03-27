@@ -40,6 +40,9 @@ class Lotto {
 			]);
 			$lottoInfo['Prize'] += $dbResult->record()->getInt('total_prize');
 
+			// Prevent prize SQL overflow
+			$lottoInfo['Prize'] = min(MAX_MONEY, $lottoInfo['Prize']);
+
 			// Delete all tickets and re-insert the winning ticket
 			$db->delete('player_has_ticket', [
 				'game_id' => $gameID,
