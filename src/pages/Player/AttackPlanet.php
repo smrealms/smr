@@ -15,7 +15,7 @@ class AttackPlanet extends PlayerPage {
 	 * @param array{Attackers: PlanetAttackerCombatResults, Planet: PlanetCombatResults} $results
 	 */
 	public function __construct(
-		private readonly int $sectorID,
+		private readonly Planet $planet,
 		private readonly array $results,
 		bool $playerDied,
 	) {
@@ -27,7 +27,7 @@ class AttackPlanet extends PlayerPage {
 		$template->assign('FullPlanetCombatResults', $this->results);
 		$template->assign('MinimalDisplay', false);
 		$template->assign('OverrideDeath', $player->isDead());
-		$template->assign('Planet', Planet::getPlanet($player->getGameID(), $this->sectorID));
+		$template->assign('Planet', $this->planet);
 	}
 
 }

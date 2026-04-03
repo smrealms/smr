@@ -521,7 +521,7 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 					'Rollover' => true,
 				],
 				[
-					'KillingShot' => false,
+					'KillingShot' => true,
 					'TargetAlreadyDead' => true,
 					'Shield' => 0,
 					'CDs' => 0,

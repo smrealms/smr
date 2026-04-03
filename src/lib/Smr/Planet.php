@@ -60,6 +60,7 @@ class Planet {
 	protected array $hasChangedBuildings = [];
 	/** @var array<int> */
 	protected array $hasStoppedBuilding = [];
+	protected bool $hasBeenAttackedByWeapon = false;
 
 	public function __sleep() {
 		return ['sectorID', 'gameID', 'planetName', 'ownerID', 'typeID'];
@@ -572,7 +573,7 @@ class Planet {
 	}
 
 	public function isBusted(): bool {
-		return !$this->hasCDs() && !$this->hasShields() && !$this->hasArmour();
+		return !$this->exists() || (!$this->hasCDs() && !$this->hasShields() && !$this->hasArmour());
 	}
 
 	public function exists(): bool {
@@ -790,6 +791,14 @@ class Planet {
 
 	public function getMaxLanded(): int {
 		return $this->typeInfo->maxLanded();
+	}
+
+	public function isMaxLandedUnlimited(): bool {
+		return $this->getMaxLanded() === PlanetType::MAX_LANDED_UNLIMITED;
+	}
+
+	public function hasPermanentDestruction(): bool {
+		return $this->typeInfo->hasPermanentDestruction();
 	}
 
 	/**
@@ -1221,11 +1230,9 @@ class Planet {
 	 * @return array<Weapon>
 	 */
 	public function getWeapons(): array {
-		$weapons = $this->getMountedWeapons();
-		return array_pad(
-			$weapons,
-			count($weapons) + $this->getBuilding(PLANET_TURRET),
-			Weapon::getWeapon(WEAPON_PLANET_TURRET),
+		return array_merge(
+			array_fill(0, $this->getBuilding(PLANET_TURRET), Weapon::getWeapon(WEAPON_PLANET_TURRET)),
+			$this->getMountedWeapons(),
 		);
 	}
 
@@ -1306,6 +1313,7 @@ class Planet {
 	 */
 	public function takeDamage(array $damage): array {
 		$alreadyDead = $this->isBusted();
+		$killingShot = $alreadyDead && !$this->hasBeenAttackedByWeapon; // no defenses before 1st shot
 		$shieldDamage = 0;
 		$cdDamage = 0;
 		$armourDamage = 0;
@@ -1322,10 +1330,12 @@ class Planet {
 					$armourDamage = $this->takeDamageToArmour($armourMaxDamage);
 				}
 			}
+			$killingShot = $this->isBusted();
 		}
+		$this->hasBeenAttackedByWeapon = true;
 
 		return [
-			'KillingShot' => !$alreadyDead && $this->isBusted(),
+			'KillingShot' => $killingShot,
 			'TargetAlreadyDead' => $alreadyDead,
 			'Shield' => $shieldDamage,
 			'CDs' => $cdDamage,
@@ -1375,11 +1385,16 @@ class Planet {
 	public function killPlanetByPlayer(Player $killer): array {
 		$this->creditCurrentAttackersForKill();
 
-		//kick everyone from planet
-		$db = Database::getInstance();
-		$db->update('player', ['land_on_planet' => 'FALSE'], $this->SQLID);
-		$this->removeOwner();
-		$this->removePassword();
+		if ($this->hasPermanentDestruction()) {
+			$this->exists = false;
+			static::removePlanet($this->gameID, $this->sectorID);
+		} else {
+			//kick everyone from planet
+			$db = Database::getInstance();
+			$db->update('player', ['land_on_planet' => 'FALSE'], $this->SQLID);
+			$this->removeOwner();
+			$this->removePassword();
+		}
 		return [];
 	}
 

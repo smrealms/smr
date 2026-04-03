@@ -55,7 +55,7 @@
 	<tr>
 		<td class="bold">Landing:</td>
 		<td><?php
-			if ($ThisPlanet->getMaxLanded() === 0) { ?>
+			if ($ThisPlanet->isMaxLandedUnlimited()) { ?>
 				The planetary surface can support an entire armada!<?php
 			} else { ?>
 				There is only room for <?php echo $ThisPlanet->getMaxLanded(); ?> ships on the surface.<?php
@@ -63,6 +63,11 @@
 		</td>
 	</tr>
 </table>
+
+<?php
+if ($ThisPlanet->hasPermanentDestruction()) { ?>
+	<p class="red">This location is permanently destroyed once its defences are breached!</p><?php
+} ?>
 
 <br />
 

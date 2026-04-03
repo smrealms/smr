@@ -26,8 +26,10 @@ if (!$OverrideDeath && !$Planet->isBusted()) { ?>
 		if ($OverrideDeath) { ?>
 			<a href="<?php echo Globals::getCurrentSectorHREF() ?>" class="buttonA">Let there be pod</a><?php
 		} else { ?>
-			<a href="<?php echo Globals::getCurrentSectorHREF() ?>" class="buttonA">Current Sector</a>&nbsp;
-			<a href="<?php echo $Planet->getLandHREF(); ?>" class="buttonA">Land on Planet (<?php echo TURNS_TO_LAND; ?>)</a><?php
+			<a href="<?php echo Globals::getCurrentSectorHREF() ?>" class="buttonA">Current Sector</a><?php
+			if ($Planet->exists()) { ?>
+				<a href="<?php echo $Planet->getLandHREF(); ?>" class="buttonA">Land on Planet (<?php echo TURNS_TO_LAND; ?>)</a><?php
+			}
 		} ?>
 	</div><?php
 } ?>
