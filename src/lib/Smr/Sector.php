@@ -60,9 +60,9 @@ class Sector {
 	public static function getGalaxySectors(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID])) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM sector WHERE game_id = :game_id AND galaxy_id = :galaxy_id ORDER BY sector_id ASC', [
-				'game_id' => $db->escapeNumber($gameID),
-				'galaxy_id' => $db->escapeNumber($galaxyID),
+			$dbResult = $db->select('sector', [
+				'game_id' => $gameID,
+				'galaxy_id' => $galaxyID,
 			]);
 			$sectors = [];
 			foreach ($dbResult->records() as $dbRecord) {
@@ -151,7 +151,7 @@ class Sector {
 
 		// Do we already have a database record for this sector?
 		if ($dbRecord === null) {
-			$dbResult = $db->read('SELECT * FROM sector WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('sector', $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -1055,9 +1055,9 @@ class Sector {
 		}
 		if (!isset($this->visited[$player->getAccountID()])) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT 1 FROM player_visited_sector WHERE ' . self::SQL . ' AND account_id = :account_id', [
+			$dbResult = $db->select('player_visited_sector', [
 				...$this->SQLID,
-				'account_id' => $db->escapeNumber($player->getAccountID()),
+				'account_id' => $player->getAccountID(),
 			]);
 			$this->visited[$player->getAccountID()] = !$dbResult->hasRecord();
 		}

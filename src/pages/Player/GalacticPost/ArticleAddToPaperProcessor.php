@@ -16,9 +16,9 @@ class ArticleAddToPaperProcessor extends PlayerPageProcessor {
 	public function build(AbstractPlayer $player): never {
 		//limit 4 per paper...make sure we arent over that
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM galactic_post_paper_content WHERE game_id = :game_id AND paper_id = :paper_id', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'paper_id' => $db->escapeNumber($this->paperID),
+		$dbResult = $db->select('galactic_post_paper_content', [
+			'game_id' => $player->getGameID(),
+			'paper_id' => $this->paperID,
 		]);
 		if ($dbResult->getNumRecords() >= 8) {
 			create_error('You can only have 8 articles per paper.');

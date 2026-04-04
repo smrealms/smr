@@ -16,7 +16,7 @@ class ServerStatus extends AccountPage {
 		$template->assign('ProcessingHREF', $processingHREF);
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM game_disable');
+		$dbResult = $db->select('game_disable');
 		if (!$dbResult->hasRecord()) {
 			$template->assign('PageTopic', 'Close Server');
 			$template->assign('ServerIsOpen', true);

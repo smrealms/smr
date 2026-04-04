@@ -10,13 +10,7 @@ use Smr\Player;
 function shared_channel_msg_op_list(AbstractPlayer $player): array {
 	// get the op info from db
 	$db = Database::getInstance();
-	$dbResult = $db->read('SELECT 1
-				FROM alliance_has_op
-				WHERE alliance_id = :alliance_id
-					AND game_id = :game_id', [
-		'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-		'game_id' => $db->escapeNumber($player->getGameID()),
-	]);
+	$dbResult = $db->select('alliance_has_op', $player->getAlliance()->SQLID);
 	if (!$dbResult->hasRecord()) {
 		return ['Your leader has not scheduled an op.'];
 	}
@@ -26,13 +20,11 @@ function shared_channel_msg_op_list(AbstractPlayer $player): array {
 		'NO' => [],
 		'MAYBE' => [],
 	];
-	$dbResult = $db->read('SELECT account_id, response
-				FROM alliance_has_op_response
-				WHERE alliance_id = :alliance_id
-					AND game_id = :game_id', [
-		'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-		'game_id' => $db->escapeNumber($player->getGameID()),
-	]);
+	$dbResult = $db->select(
+		'alliance_has_op_response',
+		$player->getAlliance()->SQLID,
+		['account_id', 'response'],
+	);
 	foreach ($dbResult->records() as $dbRecord) {
 		$respondingPlayer = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), true);
 		// check that the player is still in this alliance

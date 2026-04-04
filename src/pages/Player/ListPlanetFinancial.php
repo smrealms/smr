@@ -29,16 +29,11 @@ class ListPlanetFinancial extends PlayerPage {
 		if ($this->allianceID !== 0) {
 			$role_id = $player->getAllianceRole($this->allianceID);
 			$db = Database::getInstance();
-			$dbResult = $db->read('
-				SELECT 1
-				FROM alliance_has_roles
-				WHERE alliance_id = :alliance_id
-				AND game_id = :game_id
-				AND role_id = :role_id
-				AND view_bonds = 1', [
-				'alliance_id' => $db->escapeNumber($this->allianceID),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'role_id' => $db->escapeNumber($role_id),
+			$dbResult = $db->select('alliance_has_roles', [
+				'view_bonds' => $db->escapeBoolean(true),
+				'alliance_id' => $this->allianceID,
+				'game_id' => $player->getGameID(),
+				'role_id' => $role_id,
 			]);
 			$viewBonds = $dbResult->hasRecord();
 		}

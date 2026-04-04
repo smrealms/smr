@@ -113,7 +113,7 @@ class Ship extends AbstractShip {
 
 		// get cargo from db
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM ship_has_cargo WHERE ' . self::SQL, $this->SQLID);
+		$dbResult = $db->select('ship_has_cargo', $this->SQLID);
 		foreach ($dbResult->records() as $dbRecord) {
 			// adding cargo and amount to array
 			$this->cargo[$dbRecord->getInt('good_id')] = $dbRecord->getInt('amount');
@@ -196,7 +196,7 @@ class Ship extends AbstractShip {
 			return;
 		}
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM ship_is_cloaked WHERE ' . self::SQL, $this->SQLID);
+		$dbResult = $db->select('ship_is_cloaked', $this->SQLID);
 		$this->isCloaked = $dbResult->hasRecord();
 	}
 
@@ -219,7 +219,7 @@ class Ship extends AbstractShip {
 			return;
 		}
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM ship_has_illusion WHERE ' . self::SQL, $this->SQLID);
+		$dbResult = $db->select('ship_has_illusion', $this->SQLID);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$this->illusionShip = new ShipIllusion(

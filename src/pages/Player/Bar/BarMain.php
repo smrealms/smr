@@ -34,7 +34,7 @@ class BarMain extends PlayerPage {
 		$winningTicket = false;
 		//check for winner
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT prize FROM player_has_ticket WHERE ' . AbstractPlayer::SQL . ' AND time = 0', $player->SQLID);
+		$dbResult = $db->select('player_has_ticket', ['time' => 0, ...$player->SQLID], ['prize']);
 		if ($dbResult->hasRecord()) {
 			$winningTicket = $dbResult->record()->getInt('prize');
 

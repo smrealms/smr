@@ -123,11 +123,15 @@ class Menu {
 		}
 
 		$role_id = $player->getAllianceRole($alliance_id);
-		$dbResult = $db->read('SELECT send_alliance_msg FROM alliance_has_roles WHERE alliance_id = :alliance_id AND game_id = :game_id AND role_id = :role_id', [
-			'alliance_id' => $db->escapeNumber($alliance_id),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'role_id' => $db->escapeNumber($role_id),
-		]);
+		$dbResult = $db->select(
+			'alliance_has_roles',
+			[
+				'alliance_id' => $alliance_id,
+				'game_id' => $player->getGameID(),
+				'role_id' => $role_id,
+			],
+			['send_alliance_msg'],
+		);
 		if ($dbResult->hasRecord()) {
 			$send_alliance_msg = $dbResult->record()->getBoolean('send_alliance_msg');
 		} else {

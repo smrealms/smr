@@ -24,7 +24,7 @@ class WordFilter extends AccountPage {
 		$template->assign('Message', $this->message);
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM word_filter');
+		$dbResult = $db->select('word_filter');
 		if ($dbResult->hasRecord()) {
 			$container = new WordFilterDeleteProcessor();
 			$template->assign('DelHREF', $container->href());

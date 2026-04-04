@@ -19,7 +19,7 @@ class PlayerLevel {
 	public static function getAll(): array {
 		if (count(self::$CACHE_LEVELS) === 0) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM level');
+			$dbResult = $db->select('level');
 			foreach ($dbResult->records() as $dbRecord) {
 				$levelID = $dbRecord->getInt('level_id');
 				self::$CACHE_LEVELS[$levelID] = new self(

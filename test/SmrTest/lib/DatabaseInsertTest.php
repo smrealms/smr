@@ -49,9 +49,7 @@ class DatabaseInsertTest extends TestCase {
 		$logID = $db->insertAutoIncrement('test2', [
 			'var' => 'foo',
 		]);
-		$result = $db->read('SELECT * FROM test2 WHERE id = :id', [
-			'id' => $logID,
-		]);
+		$result = $db->select('test2', ['id' => $logID]);
 		self::assertSame('foo', $result->record()->getString('var'));
 	}
 
@@ -79,9 +77,7 @@ class DatabaseInsertTest extends TestCase {
 		self::assertSame(2, $logID);
 
 		// Non-empty fields are successfully recovered
-		$result = $db->read('SELECT * FROM test2 WHERE id = :id', [
-			'id' => $logID,
-		]);
+		$result = $db->select('test2', ['id' => $logID]);
 		self::assertSame('foo', $result->record()->getString('var'));
 	}
 

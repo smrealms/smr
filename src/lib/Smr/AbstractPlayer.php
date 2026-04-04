@@ -254,9 +254,9 @@ abstract class AbstractPlayer {
 
 	public static function getPlayerByPlayerID(int $playerID, int $gameID, bool $forceUpdate = false): Player {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM player WHERE game_id = :game_id AND player_id = :player_id', [
-			'game_id' => $db->escapeNumber($gameID),
-			'player_id' => $db->escapeNumber($playerID),
+		$dbResult = $db->select('player', [
+			'game_id' => $gameID,
+			'player_id' => $playerID,
 		]);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
@@ -267,9 +267,9 @@ abstract class AbstractPlayer {
 
 	public static function getPlayerByPlayerName(string $playerName, int $gameID, bool $forceUpdate = false): Player {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM player WHERE game_id = :game_id AND player_name = :player_name', [
-			'game_id' => $db->escapeNumber($gameID),
-			'player_name' => $db->escapeString($playerName),
+		$dbResult = $db->select('player', [
+			'game_id' => $gameID,
+			'player_name' => $playerName,
 		]);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
@@ -290,7 +290,7 @@ abstract class AbstractPlayer {
 		];
 
 		if ($dbRecord === null) {
-			$dbResult = $db->read('SELECT * FROM player WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('player', $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -528,7 +528,7 @@ abstract class AbstractPlayer {
 	public function getCustomShipName(): string|false {
 		if (!isset($this->customShipName)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM ship_has_name WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('ship_has_name', $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$this->customShipName = $dbResult->record()->getString('ship_name');
 			} else {
@@ -552,7 +552,10 @@ abstract class AbstractPlayer {
 	 */
 	public function getPlanet(): ?Planet {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM planet WHERE game_id = :game_id AND owner_id = :account_id', $this->SQLID);
+		$dbResult = $db->select('planet', [
+			'game_id' => $this->gameID,
+			'owner_id' => $this->accountID,
+		]);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			return Planet::getPlanet($this->getGameID(), $dbRecord->getInt('sector_id'), false, $dbRecord);
@@ -611,10 +614,11 @@ abstract class AbstractPlayer {
 		if ($this->getGame()->isGameType(Game::GAME_TYPE_DRAFT) && $this->hasAlliance()) {
 			$leaderID = $this->getAlliance()->getLeaderID();
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT home_sector_id FROM draft_leaders WHERE ' . self::SQL, [
-				'account_id' => $db->escapeNumber($leaderID),
-				'game_id' => $db->escapeNumber($this->getGameID()),
-			]);
+			$dbResult = $db->select(
+				'draft_leaders',
+				['account_id' => $leaderID, 'game_id' => $this->getGameID()],
+				['home_sector_id'],
+			);
 			if ($dbResult->hasRecord()) {
 				return $dbResult->record()->getInt('home_sector_id');
 			}
@@ -692,7 +696,7 @@ abstract class AbstractPlayer {
 	public function isDraftLeader(): bool {
 		if (!isset($this->draftLeader)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT 1 FROM draft_leaders WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('draft_leaders', $this->SQLID);
 			$this->draftLeader = $dbResult->hasRecord();
 		}
 		return $this->draftLeader;
@@ -702,7 +706,7 @@ abstract class AbstractPlayer {
 		if (!isset($this->gpWriter)) {
 			$this->gpWriter = false;
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT position FROM galactic_post_writer WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('galactic_post_writer', $this->SQLID, ['position']);
 			if ($dbResult->hasRecord()) {
 				$this->gpWriter = $dbResult->record()->getString('position');
 			}
@@ -842,9 +846,9 @@ abstract class AbstractPlayer {
 			}
 			// Don't send messages to players ignoring us
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT 1 FROM message_blacklist WHERE account_id = :receiver_id AND blacklisted_id = :sender_id LIMIT 1', [
-				'receiver_id' => $db->escapeNumber($receiverID),
-				'sender_id' => $db->escapeNumber($this->getAccountID()),
+			$dbResult = $db->select('message_blacklist', [
+				'account_id' => $receiverID,
+				'blacklisted_id' => $this->getAccountID(), // sender
 			]);
 			if ($dbResult->hasRecord()) {
 				return false;
@@ -1500,13 +1504,11 @@ abstract class AbstractPlayer {
 		if (!isset($this->allianceRoles[$allianceID])) {
 			$this->allianceRoles[$allianceID] = 0;
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT role_id
-						FROM player_has_alliance_role
-						WHERE ' . self::SQL . '
-						AND alliance_id = :alliance_id', [
-				'alliance_id' => $db->escapeNumber($allianceID),
-				...$this->SQLID,
-			]);
+			$dbResult = $db->select(
+				'player_has_alliance_role',
+				['alliance_id' => $allianceID, ...$this->SQLID],
+				['role_id'],
+			);
 			if ($dbResult->hasRecord()) {
 				$this->allianceRoles[$allianceID] = $dbResult->record()->getInt('role_id');
 			}
@@ -1629,7 +1631,7 @@ abstract class AbstractPlayer {
 				$this->personalRelations[$raceID] = 0;
 			}
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT race_id,relation FROM player_has_relation WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('player_has_relation', $this->SQLID, ['race_id', 'relation']);
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->personalRelations[$dbRecord->getInt('race_id')] = $dbRecord->getInt('relation');
 			}
@@ -1794,7 +1796,7 @@ abstract class AbstractPlayer {
 		if (!isset($this->plottedCourse)) {
 			// check if we have a course plotted
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT course FROM player_plotted_course WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('player_plotted_course', $this->SQLID, ['course']);
 
 			if ($dbResult->hasRecord()) {
 				// get the course back
@@ -1874,7 +1876,7 @@ abstract class AbstractPlayer {
 		if (!isset($this->storedDestinations)) {
 			$this->storedDestinations = [];
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM player_stored_sector WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('player_stored_sector', $this->SQLID);
 			foreach ($dbResult->records() as $dbRecord) {
 				$sectorID = $dbRecord->getInt('sector_id');
 				$this->storedDestinations[$sectorID] = new StoredDestination(
@@ -2112,7 +2114,7 @@ abstract class AbstractPlayer {
 		if (!isset($this->HOF)) {
 			//Get Player HOF
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT type,amount FROM player_hof WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('player_hof', $this->SQLID, ['type', 'amount']);
 			$this->HOF = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->HOF[$dbRecord->getString('type')] = $dbRecord->getFloat('amount');
@@ -2128,7 +2130,7 @@ abstract class AbstractPlayer {
 		if (!isset(self::$HOFVis)) {
 			//Get Player HOF Vis
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT type,visibility FROM hof_visibility');
+			$dbResult = $db->select('hof_visibility');
 			self::$HOFVis = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				self::$HOFVis[$dbRecord->getString('type')] = $dbRecord->getString('visibility');
@@ -3142,7 +3144,7 @@ abstract class AbstractPlayer {
 			$this->unvisitedSectors = [];
 			// Note that this table actually has entries for the *unvisited* sectors!
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT sector_id FROM player_visited_sector WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('player_visited_sector', $this->SQLID, ['sector_id']);
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->unvisitedSectors[] = $dbRecord->getInt('sector_id');
 			}

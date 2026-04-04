@@ -45,9 +45,7 @@ class LogConsoleDetail extends AccountPage {
 			// assign it a color
 			$color = $avail_colors[$i % count($avail_colors)];
 
-			$dbResult = $db->read('SELECT login FROM account WHERE account_id = :account_id', [
-				'account_id' => $db->escapeNumber($id),
-			]);
+			$dbResult = $db->select('account', ['account_id' => $id], ['login']);
 			if ($dbResult->hasRecord()) {
 				$colors[$id] = [
 					'name' => $dbResult->record()->getString('login'),
@@ -64,7 +62,7 @@ class LogConsoleDetail extends AccountPage {
 		$template->assign('UpdateHREF', $container->href());
 
 		$logTypes = [];
-		$dbResult = $db->read('SELECT * FROM log_type');
+		$dbResult = $db->select('log_type');
 		foreach ($dbResult->records() as $dbRecord) {
 			$logTypes[$dbRecord->getInt('log_type_id')] = $dbRecord->getString('log_type_entry');
 		}

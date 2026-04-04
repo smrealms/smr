@@ -40,9 +40,9 @@ class AllianceInvite {
 			'now' => $db->escapeNumber(Epoch::time()),
 		]);
 
-		$dbResult = $db->read('SELECT * FROM alliance_invites_player WHERE alliance_id = :alliance_id AND game_id = :game_id', [
-			'alliance_id' => $db->escapeNumber($allianceID),
-			'game_id' => $db->escapeNumber($gameID),
+		$dbResult = $db->select('alliance_invites_player', [
+			'alliance_id' => $allianceID,
+			'game_id' => $gameID,
 		]);
 		$invites = [];
 		foreach ($dbResult->records() as $dbRecord) {
@@ -61,10 +61,10 @@ class AllianceInvite {
 			'now' => $db->escapeNumber(Epoch::time()),
 		]);
 
-		$dbResult = $db->read('SELECT * FROM alliance_invites_player WHERE alliance_id = :alliance_id AND game_id = :game_id AND account_id = :account_id', [
-			'alliance_id' => $db->escapeNumber($allianceID),
-			'game_id' => $db->escapeNumber($gameID),
-			'account_id' => $db->escapeNumber($receiverAccountID),
+		$dbResult = $db->select('alliance_invites_player', [
+			'alliance_id' => $allianceID,
+			'game_id' => $gameID,
+			'account_id' => $receiverAccountID,
 		]);
 		if ($dbResult->hasRecord()) {
 			return new self($dbResult->record());

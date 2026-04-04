@@ -26,9 +26,7 @@ class WeaponType {
 		if (!isset(self::$CACHE_WEAPON_TYPES[$weaponTypeID])) {
 			if ($dbRecord === null) {
 				$db = Database::getInstance();
-				$dbResult = $db->read('SELECT * FROM weapon_type WHERE weapon_type_id = :weapon_type_id', [
-					'weapon_type_id' => $db->escapeNumber($weaponTypeID),
-				]);
+				$dbResult = $db->select('weapon_type', ['weapon_type_id' => $weaponTypeID]);
 				$dbRecord = $dbResult->record();
 			}
 			$weapon = new self($weaponTypeID, $dbRecord);
@@ -42,7 +40,7 @@ class WeaponType {
 	 */
 	public static function getAllWeaponTypes(): array {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM weapon_type');
+		$dbResult = $db->select('weapon_type');
 		$weapons = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$weaponTypeID = $dbRecord->getInt('weapon_type_id');

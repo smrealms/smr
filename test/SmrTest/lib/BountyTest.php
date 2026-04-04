@@ -55,7 +55,7 @@ class BountyTest extends BaseIntegrationSpec {
 
 		// Reading it out of the database gets back an equal object
 		$db = Database::getInstance();
-		$dbRecord = $db->read('SELECT * FROM bounty')->record();
+		$dbRecord = $db->select('bounty')->record();
 		self::assertEquals($bounty, Bounty::getFromRecord($dbRecord));
 
 		// Calling update on an unchanged bounty should do nothing
@@ -77,7 +77,7 @@ class BountyTest extends BaseIntegrationSpec {
 		self::assertTrue($bounty->update());
 
 		// All modified fields should be updated in the database
-		$dbRecord = $db->read('SELECT * FROM bounty')->record();
+		$dbRecord = $db->select('bounty')->record();
 		self::assertEquals($bounty, Bounty::getFromRecord($dbRecord));
 
 		// Updating a claimed bounty should delete it from the database
@@ -85,7 +85,7 @@ class BountyTest extends BaseIntegrationSpec {
 		self::assertSame(0, $bounty->getCredits());
 		self::assertSame(0, $bounty->getSmrCredits());
 		self::assertTrue($bounty->update());
-		$dbResult = $db->read('SELECT * FROM bounty');
+		$dbResult = $db->select('bounty');
 		self::assertFalse($dbResult->hasRecord());
 	}
 

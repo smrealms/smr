@@ -46,21 +46,17 @@ class CombatLogListProcessor extends PlayerPageProcessor {
 									))
 								)
 							LIMIT :limit', [
-					'account_id' => $db->escapeNumber($player->getAccountID()),
-					'game_id' => $db->escapeNumber($player->getGameID()),
+					...$player->SQLID,
 					'alliance_id' => $db->escapeNumber($player->getAllianceID()),
 					'log_ids' => $db->escapeArray($logIDs),
 					'limit' => count($logIDs),
 				]);
 			} else { // $submitAction == 'Delete'
 				$changedRows = $db->write('DELETE FROM player_saved_combat_logs
-							WHERE log_id IN (:log_ids)
-								AND account_id = :account_id
-								AND game_id = :game_id
+							WHERE log_id IN (:log_ids) AND ' . AbstractPlayer::SQL . '
 							LIMIT :limit', [
 					'log_ids' => $db->escapeArray($logIDs),
-					'account_id' => $db->escapeNumber($player->getAccountID()),
-					'game_id' => $db->escapeNumber($player->getGameID()),
+					...$player->SQLID,
 					'limit' => count($logIDs),
 				]);
 			}

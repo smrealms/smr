@@ -18,10 +18,7 @@ class Summary extends HistoryPage {
 		$this->addMenu($template);
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT start_date, type, end_date, game_name, speed, game_id
-			FROM game WHERE game_id = :game_id', [
-			'game_id' => $db->escapeNumber($game_id),
-		]);
+		$dbResult = $db->select('game', ['game_id' => $game_id]);
 		$dbRecord = $dbResult->record();
 		$template->assign('GameName', $game_name);
 		$template->assign('Start', date($account->getDateFormat(), $dbRecord->getInt('start_date')));
@@ -46,10 +43,11 @@ class Summary extends HistoryPage {
 
 		// Get linked player information, if available
 		$oldAccountID = $account->getOldAccountID($this->historyDatabase);
-		$dbResult = $db->read('SELECT alliance_id FROM player WHERE game_id = :game_id AND account_id = :account_id', [
-			'game_id' => $db->escapeNumber($game_id),
-			'account_id' => $db->escapeNumber($oldAccountID),
-		]);
+		$dbResult = $db->select(
+			'player',
+			['game_id' => $game_id, 'account_id' => $oldAccountID],
+			['alliance_id'],
+		);
 		$oldAllianceID = $dbResult->hasRecord() ? $dbResult->record()->getInt('alliance_id') : 0;
 
 		$playerExp = [];

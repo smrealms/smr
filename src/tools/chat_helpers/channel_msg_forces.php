@@ -45,10 +45,14 @@ function shared_channel_msg_forces(AbstractPlayer $player, ?string $option = nul
 		]);
 	} else {
 		// did we get a galaxy name?
-		$dbResult = $db->read('SELECT galaxy_id FROM game_galaxy WHERE galaxy_name = :galaxy_name AND game_id = :game_id', [
-			'galaxy_name' => $db->escapeString($option),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-		]);
+		$dbResult = $db->select(
+			'game_galaxy',
+			[
+				'galaxy_name' => $option,
+				'game_id' => $player->getGameID(),
+			],
+			['galaxy_id'],
+		);
 		if (!$dbResult->hasRecord()) {
 			return ["Could not find a galaxy named '$option'."];
 		}

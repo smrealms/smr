@@ -4,7 +4,6 @@ namespace Smr\Pages\Admin;
 
 use Smr\Account;
 use Smr\Database;
-use Smr\Epoch;
 use Smr\Game;
 use Smr\Page\AccountPage;
 use Smr\Player;
@@ -27,18 +26,12 @@ class NpcManage extends AccountPage {
 		$template->assign('SelectGameHREF', $container->href());
 
 		$games = [];
-		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT game_id FROM game WHERE end_time > :now AND enabled = :enabled ORDER BY game_id DESC', [
-			'now' => $db->escapeNumber(Epoch::time()),
-			'enabled' => $db->escapeBoolean(true),
-		]);
-		foreach ($dbResult->records() as $dbRecord) {
-			$gameID = $dbRecord->getInt('game_id');
+		foreach (Game::getActiveGames() as $gameID => $game) {
 			if ($selectedGameID === null) {
 				$selectedGameID = $gameID;
 			}
 			$games[] = [
-				'Name' => Game::getGame($gameID)->getDisplayName(),
+				'Name' => $game->getDisplayName(),
 				'ID' => $gameID,
 				'Selected' => $gameID === $selectedGameID,
 			];
@@ -52,6 +45,7 @@ class NpcManage extends AccountPage {
 		$template->assign('AddAccountHREF', $container->href());
 
 		$npcs = [];
+		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM npc_logins JOIN account USING(login)');
 		foreach ($dbResult->records() as $dbRecord) {
 			$accountID = $dbRecord->getInt('account_id');
@@ -78,8 +72,8 @@ class NpcManage extends AccountPage {
 		$template->assign('NextLogin', 'npc' . $nextNpcID);
 
 		// Get the existing NPC players for the selected game
-		$dbResult = $db->read('SELECT * FROM player WHERE game_id = :game_id AND npc = :npc', [
-			'game_id' => $db->escapeNumber($selectedGameID),
+		$dbResult = $db->select('player', [
+			'game_id' => $selectedGameID,
 			'npc' => $db->escapeBoolean(true),
 		]);
 		foreach ($dbResult->records() as $dbRecord) {

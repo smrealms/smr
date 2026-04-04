@@ -117,9 +117,7 @@ class Account {
 	public static function getAccountByLogin(string $login, bool $forceUpdate = false): self {
 		if ($login !== '') {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM account WHERE login = :login', [
-				'login' => $db->escapeString($login),
-			]);
+			$dbResult = $db->select('account', ['login' => $login], ['account_id']);
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -131,9 +129,7 @@ class Account {
 	public static function getAccountByHofName(string $hofName, bool $forceUpdate = false): self {
 		if ($hofName !== '') {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM account WHERE hof_name = :hof_name', [
-				'hof_name' => $db->escapeString($hofName),
-			]);
+			$dbResult = $db->select('account', ['hof_name' => $hofName], ['account_id']);
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -145,9 +141,7 @@ class Account {
 	public static function getAccountByEmail(?string $email, bool $forceUpdate = false): self {
 		if ($email !== null && $email !== '') {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM account WHERE email = :email', [
-				'email' => $db->escapeString($email),
-			]);
+			$dbResult = $db->select('account', ['email' => $email], ['account_id']);
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -159,9 +153,7 @@ class Account {
 	public static function getAccountByDiscordId(?string $id, bool $forceUpdate = false): self {
 		if ($id !== null && $id !== '') {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM account where discord_id = :discord_id', [
-				'discord_id' => $db->escapeString($id),
-			]);
+			$dbResult = $db->select('account', ['discord_id' => $id], ['account_id']);
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -173,9 +165,7 @@ class Account {
 	public static function getAccountByIrcNick(?string $nick, bool $forceUpdate = false): self {
 		if ($nick !== null && $nick !== '') {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM account WHERE irc_nick = :irc_nick', [
-				'irc_nick' => $db->escapeString($nick),
-			]);
+			$dbResult = $db->select('account', ['irc_nick' => $nick], ['account_id']);
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -265,7 +255,7 @@ class Account {
 	protected function __construct(protected readonly int $accountID) {
 		$db = Database::getInstance();
 		$this->SQLID = ['account_id' => $db->escapeNumber($accountID)];
-		$dbResult = $db->read('SELECT * FROM account WHERE ' . self::SQL, $this->SQLID);
+		$dbResult = $db->select('account', $this->SQLID);
 
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
@@ -467,9 +457,7 @@ class Account {
 	public function isNPC(): bool {
 		if (!isset($this->npc)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT 1 FROM npc_logins WHERE login = :login', [
-				'login' => $db->escapeString($this->getLogin()),
-			]);
+			$dbResult = $db->select('npc_logins', ['login' => $this->getLogin()]);
 			$this->npc = $dbResult->hasRecord();
 		}
 		return $this->npc;
@@ -582,7 +570,7 @@ class Account {
 			$this->credits = 0;
 			$this->rewardCredits = 0;
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM account_has_credits WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('account_has_credits', $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 				$this->credits = $dbRecord->getInt('credits_left');
@@ -1069,10 +1057,10 @@ class Account {
 	public function addAuthMethod(SocialIdentity $socialId): void {
 		$db = Database::getInstance();
 		$params = [
-			'login_type' => $db->escapeString($socialId->type),
-			'auth_key' => $db->escapeString($socialId->id),
+			'login_type' => $socialId->type,
+			'auth_key' => $socialId->id,
 		];
-		$dbResult = $db->read('SELECT account_id FROM account_auth WHERE login_type = :login_type AND auth_key = :auth_key', $params);
+		$dbResult = $db->select('account_auth', $params, ['account_id']);
 		if ($dbResult->hasRecord()) {
 			if ($dbResult->record()->getInt('account_id') !== $this->getAccountID()) {
 				throw new Exception('Another account already uses this form of auth.');
@@ -1237,7 +1225,7 @@ class Account {
 		if (!isset($this->permissions)) {
 			$this->permissions = [];
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT permission_id FROM account_has_permission WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('account_has_permission', $this->SQLID, ['permission_id']);
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->permissions[$dbRecord->getInt('permission_id')] = true;
 			}
@@ -1259,7 +1247,7 @@ class Account {
 			$db = Database::getInstance();
 			$db->lockTable('account_has_points');
 			try {
-				$dbResult = $db->read('SELECT * FROM account_has_points WHERE ' . self::SQL, $this->SQLID);
+				$dbResult = $db->select('account_has_points', $this->SQLID);
 				if ($dbResult->hasRecord()) {
 					$dbRecord = $dbResult->record();
 					$this->points = $dbRecord->getInt('points');

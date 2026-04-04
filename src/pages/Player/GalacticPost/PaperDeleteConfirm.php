@@ -19,10 +19,14 @@ class PaperDeleteConfirm extends PlayerPage {
 		$db = Database::getInstance();
 
 		$template->assign('PageTopic', 'Delete Paper - Confirm');
-		$dbResult = $db->read('SELECT title FROM galactic_post_paper WHERE game_id = :game_id AND paper_id = :paper_id', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'paper_id' => $db->escapeNumber($this->paperID),
-		]);
+		$dbResult = $db->select(
+			'galactic_post_paper',
+			[
+				'game_id' => $player->getGameID(),
+				'paper_id' => $this->paperID,
+			],
+			['title'],
+		);
 		$template->assign('PaperTitle', $dbResult->record()->getString('title'));
 
 		$articles = [];

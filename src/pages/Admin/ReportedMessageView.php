@@ -21,7 +21,7 @@ class ReportedMessageView extends AccountPage {
 		$template->assign('DeleteHREF', $container->href());
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM message_notify');
+		$dbResult = $db->select('message_notify');
 		$messages = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$gameID = $dbRecord->getInt('game_id');

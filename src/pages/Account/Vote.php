@@ -19,8 +19,8 @@ class Vote extends AccountPage {
 		$dbResult = $db->read('SELECT * FROM voting ORDER BY end DESC');
 		if ($dbResult->hasRecord()) {
 			$votedFor = [];
-			$dbResult2 = $db->read('SELECT * FROM voting_results WHERE account_id = :account_id', [
-				'account_id' => $db->escapeNumber($account->getAccountID()),
+			$dbResult2 = $db->select('voting_results', [
+				'account_id' => $account->getAccountID(),
 			]);
 			foreach ($dbResult2->records() as $dbRecord2) {
 				$votedFor[$dbRecord2->getInt('vote_id')] = $dbRecord2->getInt('option_id');

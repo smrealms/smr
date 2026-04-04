@@ -70,9 +70,7 @@ class Alliance {
 
 	public static function getAllianceByIrcChannel(string $channel, bool $forceUpdate = false): self {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT alliance_id, game_id FROM irc_alliance_has_channel WHERE channel = :irc_channel LIMIT 1', [
-			'irc_channel' => $db->escapeString($channel),
-		]);
+		$dbResult = $db->select('irc_alliance_has_channel', ['channel' => $channel], ['alliance_id', 'game_id']);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			return self::getAlliance($dbRecord->getInt('alliance_id'), $dbRecord->getInt('game_id'), $forceUpdate);
@@ -82,9 +80,9 @@ class Alliance {
 
 	public static function getAllianceByName(string $name, int $gameID, bool $forceUpdate = false): self {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM alliance WHERE alliance_name = :alliance_name AND game_id = :game_id', [
-			'alliance_name' => $db->escapeString($name),
-			'game_id' => $db->escapeNumber($gameID),
+		$dbResult = $db->select('alliance', [
+			'alliance_name' => $name,
+			'game_id' => $gameID,
 		]);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
@@ -105,7 +103,7 @@ class Alliance {
 		];
 
 		if ($dbRecord === null) {
-			$dbResult = $db->read('SELECT * FROM alliance WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('alliance', $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -252,7 +250,7 @@ class Alliance {
 	public function getIrcChannel(): string {
 		if (!isset($this->ircChannel)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT channel FROM irc_alliance_has_channel WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('irc_alliance_has_channel', $this->SQLID, ['channel']);
 			if ($dbResult->hasRecord()) {
 				$this->ircChannel = $dbResult->record()->getString('channel');
 			} else {
@@ -474,10 +472,11 @@ class Alliance {
 				return false;
 			}
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT status FROM player_joined_alliance WHERE account_id = :account_id AND ' . self::SQL, [
-				'account_id' => $db->escapeNumber($player->getAccountID()),
-				...$this->SQLID,
-			]);
+			$dbResult = $db->select(
+				'player_joined_alliance',
+				['account_id' => $player->getAccountID(), ...$this->SQLID],
+				['status'],
+			);
 			if ($dbResult->hasRecord()) {
 				if ($dbResult->record()->getString('status') === 'NEWBIE') {
 					return false;
@@ -545,7 +544,7 @@ class Alliance {
 	public function getMemberIDs(): array {
 		if (!isset($this->memberList)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM player WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('player', $this->SQLID, ['account_id']);
 
 			//we have the list of players put them in an array now
 			$this->memberList = [];
@@ -607,7 +606,7 @@ class Alliance {
 	public function getSeedlist(): array {
 		if (!isset($this->seedlist)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT sector_id FROM alliance_has_seedlist WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('alliance_has_seedlist', $this->SQLID, ['sector_id']);
 			$this->seedlist = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->seedlist[] = $dbRecord->getInt('sector_id');

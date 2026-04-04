@@ -34,19 +34,22 @@ class AllianceMotd extends PlayerPage {
 		// Check to see if an alliance op is scheduled
 		// Display it for 1 hour past start time (late arrivals, etc.)
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE alliance_id = :alliance_id AND game_id = :game_id AND time > :expire_time', [
-			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-			'game_id' => $db->escapeNumber($player->getGameID()),
+		$dbResult = $db->read('SELECT time FROM alliance_has_op WHERE ' . Alliance::SQL . ' AND time > :expire_time', [
+			...$alliance->SQLID,
 			'expire_time' => $db->escapeNumber(Epoch::time() - 3600),
 		]);
 		if ($dbResult->hasRecord()) {
 			$template->assign('OpTime', $dbResult->record()->getInt('time'));
 
 			// Has player responded yet?
-			$dbResult2 = $db->read('SELECT response FROM alliance_has_op_response WHERE alliance_id = :alliance_id AND ' . AbstractPlayer::SQL, [
-				'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-				...$player->SQLID,
-			]);
+			$dbResult2 = $db->select(
+				'alliance_has_op_response',
+				[
+					'alliance_id' => $this->allianceID,
+					...$player->SQLID,
+				],
+				['response'],
+			);
 
 			$response = $dbResult2->hasRecord() ? $dbResult2->record()->getString('response') : null;
 			$responseHREF = (new AllianceOpResponseProcessor($this->allianceID))->href();
@@ -62,10 +65,9 @@ class AllianceMotd extends PlayerPage {
 
 		// Does the player have edit permission?
 		$role_id = $player->getAllianceRole($alliance->getAllianceID());
-		$dbResult = $db->read('SELECT * FROM alliance_has_roles WHERE alliance_id = :alliance_id AND game_id = :game_id AND role_id = :role_id', [
-			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'role_id' => $db->escapeNumber($role_id),
+		$dbResult = $db->select('alliance_has_roles', [
+			...$alliance->SQLID,
+			'role_id' => $role_id,
 		]);
 		$dbRecord = $dbResult->record();
 		if ($dbRecord->getBoolean('change_mod') || $dbRecord->getBoolean('change_pass')) {

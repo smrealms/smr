@@ -23,7 +23,10 @@ class TraderSavings extends PlayerPage {
 
 		$anonAccounts = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM anon_bank WHERE owner_id = :account_id AND game_id = :game_id', $player->SQLID);
+		$dbResult = $db->select('anon_bank', [
+			'owner_id' => $player->getAccountID(),
+			'game_id' => $player->getGameID(),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$anonAccounts[] = [
 				'ID' => $dbRecord->getInt('anon_id'),

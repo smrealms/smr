@@ -54,10 +54,11 @@ class ExtendedStatsDetail extends HistoryPage {
 				'Top Alliance Deaths' => ['deaths', 'Deaths'],
 			};
 			// Determine which alliance this account was in
-			$dbResult = $db->read('SELECT alliance_id FROM player WHERE game_id = :game_id AND account_id = :account_id', [
-				'game_id' => $db->escapeNumber($game_id),
-				'account_id' => $db->escapeNumber($oldAccountID),
-			]);
+			$dbResult = $db->select(
+				'player',
+				['game_id' => $game_id, 'account_id' => $oldAccountID],
+				['alliance_id'],
+			);
 			$oldAllianceID = $dbResult->hasRecord() ? $dbResult->record()->getInt('alliance_id') : 0;
 			// Get the top 25 alliance ordered by the requested stat
 			$dbResult = $db->read('SELECT alliance_name, alliance_id, ' . $sql . ' as val FROM alliance WHERE game_id = :game_id AND alliance_id > 0 GROUP BY alliance_id ORDER BY val DESC, alliance_id LIMIT 25', [

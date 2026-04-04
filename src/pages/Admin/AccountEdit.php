@@ -43,7 +43,7 @@ class AccountEdit extends AccountPage {
 		$template->assign('Disabled', $curr_account->isDisabled());
 
 		$banReasons = [];
-		$dbResult = $db->read('SELECT * FROM closing_reason');
+		$dbResult = $db->select('closing_reason');
 		foreach ($dbResult->records() as $dbRecord) {
 			$reason = $dbRecord->getString('reason');
 			if (strlen($reason) > 61) {
@@ -73,7 +73,7 @@ class AccountEdit extends AccountPage {
 		}
 		$template->assign('ClosingHistory', $closingHistory);
 
-		$dbResult = $db->read('SELECT * FROM account_exceptions WHERE account_id = :account_id', [
+		$dbResult = $db->select('account_exceptions', [
 			'account_id' => $curr_account->getAccountID(),
 		]);
 		if ($dbResult->hasRecord()) {

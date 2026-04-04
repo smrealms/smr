@@ -23,9 +23,11 @@ class EnableGame extends AccountPage {
 
 		// Get the list of disabled games
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT game_name, game_id FROM game WHERE enabled = :enabled', [
-			'enabled' => $db->escapeBoolean(false),
-		]);
+		$dbResult = $db->select(
+			'game',
+			['enabled' => $db->escapeBoolean(false)],
+			['game_name', 'game_id'],
+		);
 		$disabledGames = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$disabledGames[$dbRecord->getInt('game_id')] = $dbRecord->getString('game_name');

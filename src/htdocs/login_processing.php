@@ -135,7 +135,7 @@ try {
 
 	// Now we set a cookie that we can use for multi checking.
 	$multiIDs = [$account->getAccountID()];
-	$dbResult = $db->read('SELECT * FROM multi_checking_cookie WHERE account_id = :account_id', [
+	$dbResult = $db->select('multi_checking_cookie', [
 		'account_id' => $account->getAccountID(),
 	]);
 	if ($dbResult->hasRecord()) {

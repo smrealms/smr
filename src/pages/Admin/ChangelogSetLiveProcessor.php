@@ -23,9 +23,7 @@ class ChangelogSetLiveProcessor extends AccountPageProcessor {
 
 		// Initialize the next version (since the version set live is not always the
 		// last one, we INSERT IGNORE to skip this step in this case).
-		$dbResult = $db->read('SELECT * FROM version WHERE version_id = :version_id', [
-			'version_id' => $db->escapeNumber($this->versionID),
-		]);
+		$dbResult = $db->select('version', ['version_id' => $this->versionID]);
 		$dbRecord = $dbResult->record();
 		$versionID = $dbRecord->getInt('version_id') + 1;
 		$major = $dbRecord->getInt('major_version');

@@ -164,8 +164,7 @@ class GamePlay extends AccountPage {
 		foreach (Globals::getHistoryDatabases() as $databaseName => $oldColumn) {
 			//Old previous games
 			$db->switchDatabases($databaseName);
-			$dbResult = $db->read('SELECT start_date, end_date, game_name, type, speed, game_id
-								FROM game ORDER BY game_id DESC');
+			$dbResult = $db->select('game');
 			foreach ($dbResult->records() as $dbRecord) {
 				$game_id = $dbRecord->getInt('game_id');
 				$index = $databaseName . $game_id;
@@ -202,8 +201,8 @@ class GamePlay extends AccountPage {
 		]);
 		if ($dbResult->hasRecord()) {
 			$votedFor = [];
-			$dbResult2 = $db->read('SELECT * FROM voting_results WHERE account_id = :account_id', [
-				'account_id' => $db->escapeNumber($account->getAccountID()),
+			$dbResult2 = $db->select('voting_results', [
+				'account_id' => $account->getAccountID(),
 			]);
 			foreach ($dbResult2->records() as $dbRecord2) {
 				$votedFor[$dbRecord2->getInt('vote_id')] = $dbRecord2->getInt('option_id');

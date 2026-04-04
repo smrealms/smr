@@ -16,9 +16,7 @@ class RevealMapProcessor extends BetaFunctionsPageProcessor {
 		$db->delete('player_visited_sector', $player->SQLID);
 
 		// add port infos
-		$dbResult = $db->read('SELECT * FROM port WHERE game_id = :game_id', [
-			'game_id' => $db->escapeNumber($game_id),
-		]);
+		$dbResult = $db->select('port', ['game_id' => $game_id]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$port = Port::getPort($game_id, $dbRecord->getInt('sector_id'), false, $dbRecord);
 			$port->addCachePort($account_id);

@@ -27,10 +27,10 @@ class AllianceExemptAuthorize extends PlayerPage {
 			['exempt' => 1],
 		);
 
-		$dbResult = $db->read('SELECT * FROM alliance_bank_transactions WHERE request_exempt = 1
-					AND alliance_id = :alliance_id AND game_id = :game_id AND exempt = 0', [
-			'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
-			'game_id' => $db->escapeNumber($alliance->getGameID()),
+		$dbResult = $db->select('alliance_bank_transactions', [
+			'request_exempt' => 1,
+			'exempt' => 0,
+			...$alliance->SQLID,
 		]);
 		$transactions = [];
 		if ($dbResult->hasRecord()) {

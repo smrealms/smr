@@ -70,9 +70,11 @@ class VoteLink {
 		if ($forceUpdate || !isset(self::$CACHE_TIMEOUTS)) {
 			self::$CACHE_TIMEOUTS = []; // ensure this is set
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT link_id, timeout FROM vote_links WHERE account_id = :account_id', [
-				'account_id' => $db->escapeNumber($this->accountID),
-			]);
+			$dbResult = $db->select(
+				'vote_links',
+				['account_id' => $this->accountID],
+				['link_id', 'timeout'],
+			);
 			foreach ($dbResult->records() as $dbRecord) {
 				// 'timeout' is the last time the player claimed free turns (or 0, if unclaimed)
 				self::$CACHE_TIMEOUTS[$dbRecord->getInt('link_id')] = $dbRecord->getInt('timeout');

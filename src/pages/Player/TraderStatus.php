@@ -71,12 +71,12 @@ class TraderStatus extends PlayerPage {
 
 		$notes = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM player_has_notes WHERE ' . AbstractPlayer::SQL . ' ORDER BY note_id DESC', $player->SQLID);
+		$dbResult = $db->select('player_has_notes', $player->SQLID);
 		foreach ($dbResult->records() as $dbRecord) {
 			$note = $dbRecord->getObject('note', true);
 			$notes[$dbRecord->getInt('note_id')] = htmlentities($note);
 		}
-		$template->assign('Notes', $notes);
+		$template->assign('Notes', array_reverse($notes, true)); // display newest first
 
 		$container = new TraderNoteAddProcessor();
 		$template->assign('NoteAddHREF', $container->href());

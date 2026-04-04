@@ -9,12 +9,7 @@ use Smr\Database;
 function get_seedlist(AbstractPlayer $player): array {
 	// Return the seedlist
 	$db = Database::getInstance();
-	$dbResult = $db->read('SELECT sector_id FROM alliance_has_seedlist
-						WHERE alliance_id = :alliance_id
-							AND game_id = :game_id', [
-		'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-		'game_id' => $db->escapeNumber($player->getGameID()),
-	]);
+	$dbResult = $db->select('alliance_has_seedlist', $player->getAlliance()->SQLID, ['sector_id']);
 	$seedlist = [];
 	foreach ($dbResult->records() as $dbRecord) {
 		$seedlist[] = $dbRecord->getInt('sector_id');
@@ -65,12 +60,9 @@ function shared_channel_msg_seedlist_add(AbstractPlayer $player, ?array $sectors
 		}
 
 		// check if the sector is a part of the game
-		$dbResult = $db->read('SELECT 1
-					FROM sector
-					WHERE game_id = :game_id
-						AND sector_id = :sector_id', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'sector_id' => $db->escapeNumber($sector),
+		$dbResult = $db->select('sector', [
+			'game_id' => $player->getGameID(),
+			'sector_id' => $sector,
 		]);
 		if (!$dbResult->hasRecord()) {
 			$result[] = "WARNING: The sector '$sector' does not exist in the current game.";

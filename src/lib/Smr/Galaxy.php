@@ -42,9 +42,7 @@ class Galaxy {
 	public static function getGameGalaxies(int $gameID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_GAME_GALAXIES[$gameID])) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM game_galaxy WHERE game_id = :game_id ORDER BY galaxy_id ASC', [
-				'game_id' => $db->escapeNumber($gameID),
-			]);
+			$dbResult = $db->select('game_galaxy', ['game_id' => $gameID]);
 			$galaxies = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$galaxyID = $dbRecord->getInt('galaxy_id');
@@ -92,7 +90,7 @@ class Galaxy {
 		];
 
 		if ($dbRecord === null) {
-			$dbResult = $db->read('SELECT * FROM game_galaxy WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('game_galaxy', $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}

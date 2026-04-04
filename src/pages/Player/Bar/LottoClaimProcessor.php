@@ -17,7 +17,7 @@ class LottoClaimProcessor extends PlayerPageProcessor {
 		$message = '';
 		//check if we really are a winner
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM player_has_ticket WHERE ' . AbstractPlayer::SQL . ' AND time = 0', $player->SQLID);
+		$dbResult = $db->select('player_has_ticket', ['time' => 0, ...$player->SQLID]);
 		if ($dbResult->hasRecord()) {
 			$prize = $dbResult->record()->getInt('prize');
 			$NHLAmount = IFloor(($prize - Lotto::TICKET_COST) * (1 - Lotto::WIN_FRAC)); // NHL gets leftover after winner's cut

@@ -82,11 +82,7 @@ class ChessGame {
 
 	public function __construct(private readonly int $chessGameID) {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT *
-						FROM chess_game
-						WHERE chess_game_id = :chess_game_id', [
-			'chess_game_id' => $db->escapeNumber($chessGameID),
-		]);
+		$dbResult = $db->select('chess_game', ['chess_game_id' => $chessGameID]);
 		if (!$dbResult->hasRecord()) {
 			throw new Exception('Chess game not found: ' . $chessGameID);
 		}

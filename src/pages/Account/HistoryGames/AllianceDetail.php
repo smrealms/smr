@@ -29,10 +29,11 @@ class AllianceDetail extends HistoryPage {
 		$id = $this->allianceID;
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT alliance_name, leader_id FROM alliance WHERE alliance_id = :alliance_id AND game_id = :game_id', [
-			'alliance_id' => $db->escapeNumber($id),
-			'game_id' => $db->escapeNumber($game_id),
-		]);
+		$dbResult = $db->select(
+			'alliance',
+			['alliance_id' => $id, 'game_id' => $game_id],
+			['alliance_name', 'leader_id'],
+		);
 		$dbRecord = $dbResult->record();
 		$leaderID = $dbRecord->getInt('leader_id');
 		$template->assign('PageTopic', 'Alliance Roster: ' . htmlentities($dbRecord->getString('alliance_name')));

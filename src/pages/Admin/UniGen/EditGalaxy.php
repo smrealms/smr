@@ -165,9 +165,11 @@ class EditGalaxy extends AccountPage {
 			$template->assign('CreateStatusHREF', $container->href());
 
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT ready_date, all_edit FROM game_create_status WHERE game_id = :game_id', [
-				'game_id' => $db->escapeNumber($this->gameID),
-			]);
+			$dbResult = $db->select(
+				'game_create_status',
+				['game_id' => $this->gameID],
+				['ready_date', 'all_edit'],
+			);
 			$dbRecord = $dbResult->record();
 			$template->assign('MapReady', $dbRecord->getNullableString('ready_date') !== null);
 			$template->assign('AllEdit', $dbRecord->getBoolean('all_edit'));

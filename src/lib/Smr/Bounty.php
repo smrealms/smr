@@ -36,7 +36,7 @@ class Bounty {
 	 */
 	public static function getPlacedOnPlayer(AbstractPlayer $player): array {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM bounty WHERE ' . AbstractPlayer::SQL, $player->SQLID);
+		$dbResult = $db->select('bounty', $player->SQLID);
 		$bounties = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			// Recall that bounty_id is only unique to a given player
@@ -52,16 +52,15 @@ class Bounty {
 	 */
 	public static function getClaimableByPlayer(AbstractPlayer $player, ?BountyType $type = null): array {
 		$db = Database::getInstance();
-		$query = 'SELECT * FROM bounty WHERE claimer_id = :claimer_id AND game_id = :game_id';
+		$table = 'bounty';
 		$sqlParams = [
-			'claimer_id' => $db->escapeNumber($player->getAccountID()),
-			'game_id' => $db->escapeNumber($player->getGameID()),
+			'claimer_id' => $player->getAccountID(),
+			'game_id' => $player->getGameID(),
 		];
 		if ($type === null) {
-			$dbResult = $db->read($query, $sqlParams);
+			$dbResult = $db->select($table, $sqlParams);
 		} else {
-			$sqlParams['type'] = $db->escapeString($type->value);
-			$dbResult = $db->read($query . ' AND type = :type', $sqlParams);
+			$dbResult = $db->select($table, ['type' => $type->value, ...$sqlParams]);
 		}
 		$bounties = [];
 		foreach ($dbResult->records() as $dbRecord) {

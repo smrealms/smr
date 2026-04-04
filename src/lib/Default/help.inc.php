@@ -7,9 +7,7 @@ function echo_nav(int $topic_id): void {
 	$db = Database::getInstance();
 
 	// get current entry
-	$dbResult = $db->read('SELECT * FROM manual WHERE topic_id = :topic_id', [
-		'topic_id' => $db->escapeNumber($topic_id),
-	]);
+	$dbResult = $db->select('manual', ['topic_id' => $topic_id]);
 	if (!$dbResult->hasRecord()) {
 		echo ('Invalid Topic!');
 		return;
@@ -20,9 +18,7 @@ function echo_nav(int $topic_id): void {
 	$topic = stripslashes($dbRecord->getString('topic'));
 
 	$parent_topic_id = $dbRecord->getInt('parent_topic_id');
-	$dbResult = $db->read('SELECT * FROM manual WHERE topic_id = :topic_id', [
-		'topic_id' => $db->escapeNumber($parent_topic_id),
-	]);
+	$dbResult = $db->select('manual', ['topic_id' => $parent_topic_id]);
 	if ($dbResult->hasRecord()) {
 		$dbRecord = $dbResult->record();
 		$parent = [
@@ -39,9 +35,9 @@ function echo_nav(int $topic_id): void {
 	// **************************
 	// **  PREVIOUS
 	// **************************
-	$dbResult = $db->read('SELECT * FROM manual WHERE parent_topic_id = :parent_topic_id AND order_id = :order_id', [
-		'parent_topic_id' => $db->escapeNumber($parent_topic_id),
-		'order_id' => $db->escapeNumber($order_id - 1),
+	$dbResult = $db->select('manual', [
+		'parent_topic_id' => $parent_topic_id,
+		'order_id' => $order_id - 1,
 	]);
 	echo ('<th width="32">');
 	if ($dbResult->hasRecord()) {
@@ -76,21 +72,22 @@ function echo_nav(int $topic_id): void {
 	// **************************
 	// **  NEXT
 	// **************************
-	$dbResult = $db->read('SELECT * FROM manual WHERE parent_topic_id = :parent_topic_id AND order_id = 1', [
-		'parent_topic_id' => $db->escapeNumber($topic_id),
+	$dbResult = $db->select('manual', [
+		'parent_topic_id' => $topic_id,
+		'order_id' => 1,
 	]);
 
 	if (!$dbResult->hasRecord()) {
-		$dbResult = $db->read('SELECT * FROM manual WHERE parent_topic_id = :parent_topic_id AND order_id = :order_id', [
-			'parent_topic_id' => $db->escapeNumber($parent_topic_id),
-			'order_id' => $db->escapeNumber($order_id + 1),
+		$dbResult = $db->select('manual', [
+			'parent_topic_id' => $parent_topic_id,
+			'order_id' => $order_id + 1,
 		]);
 	}
 
 	if (!$dbResult->hasRecord() && isset($parent)) {
-		$dbResult = $db->read('SELECT * FROM manual WHERE parent_topic_id = :parent_topic_id AND order_id = :order_id', [
-			'parent_topic_id' => $db->escapeNumber($parent['parent_topic_id']),
-			'order_id' => $db->escapeNumber($parent['order_id'] + 1),
+		$dbResult = $db->select('manual', [
+			'parent_topic_id' => $parent['parent_topic_id'],
+			'order_id' => $parent['order_id'] + 1,
 		]);
 	}
 
@@ -133,9 +130,7 @@ function echo_content(int $topic_id): void {
 	$db = Database::getInstance();
 
 	// get current entry
-	$dbResult = $db->read('SELECT * FROM manual WHERE topic_id = :topic_id', [
-		'topic_id' => $topic_id,
-	]);
+	$dbResult = $db->select('manual', ['topic_id' => $topic_id]);
 	if ($dbResult->hasRecord()) {
 		$dbRecord = $dbResult->record();
 		$topic = stripslashes($dbRecord->getString('topic'));
@@ -155,9 +150,7 @@ function echo_subsection(int $topic_id): void {
 	$db = Database::getInstance();
 
 	// check if there are subsections
-	$dbResult = $db->read('SELECT 1 FROM manual WHERE parent_topic_id = :parent_topic_id ORDER BY order_id', [
-		'parent_topic_id' => $db->escapeNumber($topic_id),
-	]);
+	$dbResult = $db->select('manual', ['parent_topic_id' => $topic_id]);
 	if ($dbResult->hasRecord()) {
 		echo ('<hr noshade width="75%" size="1" class="center"/>');
 		echo ('<div id="help_menu">');
@@ -192,9 +185,7 @@ function echo_menu(int $topic_id): void {
 function get_numbering(int $topic_id): string {
 	$db = Database::getInstance();
 
-	$dbResult = $db->read('SELECT * FROM manual WHERE topic_id = :topic_id', [
-		'topic_id' => $db->escapeNumber($topic_id),
-	]);
+	$dbResult = $db->select('manual', ['topic_id' => $topic_id]);
 	if (!$dbResult->hasRecord()) {
 		return '';
 	}

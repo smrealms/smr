@@ -101,15 +101,11 @@ class AllianceMessageBoardView extends PlayerPage {
 		]);
 		$thread['CanDelete'] = $dbResult->record()->getBoolean('mb_messages');
 
-		$dbResult = $db->read('SELECT text, sender_id, time, reply_id
-		FROM alliance_thread
-		WHERE game_id = :game_id
-		AND alliance_id = :alliance_id
-		AND thread_id = :thread_id
-		ORDER BY reply_id', [
-			...$alliance->SQLID,
-			'thread_id' => $db->escapeNumber($thread_id),
-		]);
+		$dbResult = $db->select(
+			'alliance_thread',
+			[...$alliance->SQLID, 'thread_id' => $thread_id],
+			['text', 'sender_id', 'time', 'reply_id'],
+		);
 
 		$thread['CanDelete'] = $dbResult->getNumRecords() > 1 && $thread['CanDelete'];
 		$thread['Replies'] = [];

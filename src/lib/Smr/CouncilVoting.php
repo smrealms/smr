@@ -38,13 +38,10 @@ class CouncilVoting {
 				$relation_modifier = -RELATIONS_VOTE_CHANGE;
 			}
 
-			$dbResult2 = $db->read('SELECT * FROM race_has_relation
-					WHERE race_id_1 = :race_id_1
-						AND race_id_2 = :race_id_2
-						AND game_id = :game_id', [
-				'race_id_1' => $db->escapeNumber($race_id_1),
-				'race_id_2' => $db->escapeNumber($race_id_2),
-				'game_id' => $db->escapeNumber($gameID),
+			$dbResult2 = $db->select('race_has_relation', [
+				'race_id_1' => $race_id_1,
+				'race_id_2' => $race_id_2,
+				'game_id' => $gameID,
 			]);
 			$relation = $dbResult2->record()->getInt('relation') + $relation_modifier;
 

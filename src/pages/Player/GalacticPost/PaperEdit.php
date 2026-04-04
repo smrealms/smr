@@ -21,16 +21,14 @@ class PaperEdit extends PlayerPage {
 		Menu::galacticPost();
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT title FROM galactic_post_paper WHERE paper_id = :paper_id AND game_id = :game_id', [
-			'paper_id' => $db->escapeNumber($this->paperID),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-		]);
+		$sqlParams = [
+			'paper_id' => $this->paperID,
+			'game_id' => $player->getGameID(),
+		];
+		$dbResult = $db->select('galactic_post_paper', $sqlParams, ['title']);
 		$template->assign('PaperTitle', bbify($dbResult->record()->getString('title')));
 
-		$dbResult = $db->read('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article USING (game_id, article_id) WHERE paper_id = :paper_id AND game_id = :game_id', [
-			'paper_id' => $db->escapeNumber($this->paperID),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-		]);
+		$dbResult = $db->read('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article USING (game_id, article_id) WHERE paper_id = :paper_id AND game_id = :game_id', $sqlParams);
 
 		$articles = [];
 		foreach ($dbResult->records() as $dbRecord) {

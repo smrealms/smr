@@ -80,9 +80,7 @@ class IpViewResults extends AccountPage {
 				$row['matches'] = $matches;
 
 				if ($matches) {
-					$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = :account_id', [
-						'account_id' => $db->escapeNumber($account_id),
-					]);
+					$dbResult2 = $db->select('account_exceptions', ['account_id' => $account_id]);
 					if ($dbResult2->hasRecord()) {
 						$ex = $dbResult2->record()->getString('reason');
 					} else {
@@ -119,9 +117,7 @@ class IpViewResults extends AccountPage {
 			$template->assign('BanAccountID', $accountID);
 			$summary = 'Account ' . $accountID . ' has had the following IPs at the following times.';
 			$template->assign('Summary', $summary);
-			$dbResult = $db->read('SELECT * FROM account_exceptions WHERE account_id = :account_id', [
-				'account_id' => $db->escapeNumber($accountID),
-			]);
+			$dbResult = $db->select('account_exceptions', ['account_id' => $accountID]);
 			if ($dbResult->hasRecord()) {
 				$ex = $dbResult->record()->getString('reason');
 				$template->assign('Exception', $ex);
@@ -253,16 +249,12 @@ class IpViewResults extends AccountPage {
 				$acc = Account::getAccount($id);
 				$disabled = $acc->isDisabled();
 				$close_reason = $disabled !== false ? $disabled['Reason'] : '';
-				$dbResult2 = $db->read('SELECT * FROM player WHERE account_id = :account_id', [
-					'account_id' => $db->escapeNumber($id),
-				]);
+				$dbResult2 = $db->select('player', ['account_id' => $id]);
 				$names = [];
 				foreach ($dbResult2->records() as $dbRecord2) {
 					$names[] = $dbRecord2->getString('player_name');
 				}
-				$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = :account_id', [
-					'account_id' => $db->escapeNumber($id),
-				]);
+				$dbResult2 = $db->select('account_exceptions', ['account_id' => $id]);
 				if ($dbResult2->hasRecord()) {
 					$ex = $dbResult2->record()->getString('reason');
 				} else {

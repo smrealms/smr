@@ -50,27 +50,22 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 				create_error('Your alliance isn\'t that rich!');
 			}
 
-			$query = 'SELECT * FROM alliance_has_roles WHERE alliance_id = :alliance_id AND game_id = :game_id AND ';
-			$sqlParams = [
-				'alliance_id' => $db->escapeNumber($alliance_id),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-			];
+			$table = 'alliance_has_roles';
 			if ($alliance_id === $player->getAllianceID()) {
-				$sqlParams['role_id'] = $db->escapeNumber($player->getAllianceRole($alliance_id));
-				$dbResult = $db->read($query . 'role_id = :role_id', $sqlParams);
+				$roleID = $player->getAllianceRole($alliance_id);
+				$dbResult = $db->select($table, [...$alliance->SQLID, 'role_id' => $roleID]);
 			} else {
 				// Alliance treaties create new roles with alliance names
-				$sqlParams['role'] = $db->escapeString($player->getAlliance()->getAllianceName());
-				$dbResult = $db->read($query . 'role = :role', $sqlParams);
+				$role = $player->getAlliance()->getAllianceName();
+				$dbResult = $db->select($table, [...$alliance->SQLID, 'role' => $role]);
 			}
 			$dbRecord = $dbResult->record();
 			$withdrawalPerDay = $dbRecord->getInt('with_per_day');
 			if ($dbRecord->getBoolean('positive_balance')) {
 				$dbResult = $db->read('SELECT transaction, sum(amount) as total FROM alliance_bank_transactions
-					WHERE alliance_id = :alliance_id AND game_id = :game_id AND payee_id = :payee_id
+					WHERE ' . Alliance::SQL . ' AND payee_id = :payee_id
 					GROUP BY transaction', [
-					'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
-					'game_id' => $db->escapeNumber($alliance->getGameID()),
+					...$alliance->SQLID,
 					'payee_id' => $db->escapeNumber($player->getAccountID()),
 				]);
 				$playerTrans = ['Deposit' => 0, 'Payment' => 0];
@@ -83,14 +78,12 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 				}
 			} elseif ($withdrawalPerDay >= 0) {
 				$dbResult = $db->read('SELECT IFNULL(sum(amount), 0) as total FROM alliance_bank_transactions
-							WHERE alliance_id = :alliance_id
-								AND game_id = :game_id
+							WHERE ' . Alliance::SQL . '
 								AND payee_id = :payee_id
 								AND transaction = \'Payment\'
 								AND exempt = 0
 								AND time > :one_day_ago', [
-					'alliance_id' => $db->escapeNumber($alliance_id),
-					'game_id' => $db->escapeNumber($player->getGameID()),
+					...$alliance->SQLID,
 					'payee_id' => $db->escapeNumber($player->getAccountID()),
 					'one_day_ago' => $db->escapeNumber(Epoch::time() - 86400),
 				]);
@@ -109,11 +102,7 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 
 		// get next transaction id
 		$dbResult = $db->read('SELECT IFNULL(MAX(transaction_id), 0) as max_id FROM alliance_bank_transactions
-					WHERE alliance_id = :alliance_id
-						AND game_id = :game_id', [
-			'alliance_id' => $db->escapeNumber($alliance_id),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-		]);
+					WHERE ' . Alliance::SQL, $alliance->SQLID);
 		$next_id = $dbResult->record()->getInt('max_id') + 1;
 
 		// save log

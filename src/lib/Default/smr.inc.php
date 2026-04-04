@@ -372,7 +372,7 @@ function word_filter(string $string): string {
 
 	if (!is_array($search) && !is_array($replace)) {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT word_value, word_replacement FROM word_filter');
+		$dbResult = $db->select('word_filter', [], ['word_value', 'word_replacement']);
 		$search = [];
 		$replace = [];
 		foreach ($dbResult->records() as $dbRecord) {

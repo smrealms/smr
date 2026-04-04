@@ -33,10 +33,9 @@ class LandProcessor extends PlayerPageProcessor {
 		if ($player->hasAlliance()) {
 			$role_id = $player->getAllianceRole();
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM alliance_has_roles WHERE alliance_id = :alliance_id AND game_id = :game_id AND role_id = :role_id', [
-				'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'role_id' => $db->escapeNumber($role_id),
+			$dbResult = $db->select('alliance_has_roles', [
+				...$player->getAlliance()->SQLID,
+				'role_id' => $role_id,
 			]);
 			if (!$dbResult->record()->getBoolean('planet_access')) {
 				if ($planet->hasOwner() && $planet->getOwnerID() !== $player->getAccountID()) {

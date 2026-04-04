@@ -30,9 +30,9 @@ class MessageBlacklistAddProcessor extends PlayerPageProcessor {
 		$db = Database::getInstance();
 		$params = [
 			...$player->SQLID,
-			'blacklisted_id' => $db->escapeNumber($blacklisted->getAccountID()),
+			'blacklisted_id' => $blacklisted->getAccountID(),
 		];
-		$dbResult = $db->read('SELECT 1 FROM message_blacklist WHERE ' . AbstractPlayer::SQL . ' AND blacklisted_id = :blacklisted_id LIMIT 1', $params);
+		$dbResult = $db->select('message_blacklist', $params);
 
 		if ($dbResult->hasRecord()) {
 			$container = new MessageBlacklist('<span class="red bold">ERROR: </span>Player is already blacklisted.');

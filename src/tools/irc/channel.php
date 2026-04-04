@@ -19,9 +19,9 @@ function channel_join($fp, string $rdata): bool {
 		$db = Database::getInstance();
 
 		// check if we have seen this user before
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND channel = :channel', [
-			'nick' => $db->escapeString($nick),
-			'channel' => $db->escapeString($channel),
+		$dbResult = $db->select('irc_seen', [
+			'nick' => $nick,
+			'channel' => $channel,
 		]);
 
 		$sqlData = [
@@ -89,9 +89,9 @@ function channel_part($fp, string $rdata): bool {
 		// database object
 		$db = Database::getInstance();
 
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND channel = :channel', [
-			'nick' => $db->escapeString($nick),
-			'channel' => $db->escapeString($channel),
+		$dbResult = $db->select('irc_seen', [
+			'nick' => $nick,
+			'channel' => $channel,
 		]);
 
 		// exiting nick?

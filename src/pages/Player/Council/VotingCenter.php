@@ -29,12 +29,7 @@ class VotingCenter extends PlayerPage {
 
 		// determine for what we voted
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM player_votes_relation
-					WHERE account_id = :account_id
-						AND game_id = :game_id', [
-			'account_id' => $db->escapeNumber($player->getAccountID()),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-		]);
+		$dbResult = $db->select('player_votes_relation', $player->SQLID);
 		$votedForRace = null;
 		$votedFor = null;
 		if ($dbResult->hasRecord()) {
@@ -81,16 +76,15 @@ class VotingCenter extends PlayerPage {
 				gameID: $player->getGameID(),
 			);
 
-			$dbResult2 = $db->read('SELECT vote FROM player_votes_pact
-						WHERE account_id = :account_id
-							AND game_id = :game_id
-							AND race_id_1 = :race_id_1
-							AND race_id_2 = :race_id_2', [
-				'account_id' => $db->escapeNumber($player->getAccountID()),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'race_id_1' => $db->escapeNumber($player->getRaceID()),
-				'race_id_2' => $db->escapeNumber($otherRaceID),
-			]);
+			$dbResult2 = $db->select(
+				'player_votes_pact',
+				[
+					...$player->SQLID,
+					'race_id_1' => $player->getRaceID(),
+					'race_id_2' => $otherRaceID,
+				],
+				['vote'],
+			);
 			$votedFor = '';
 			if ($dbResult2->hasRecord()) {
 				$votedFor = $dbResult2->record()->getString('vote'); // this should be a boolean

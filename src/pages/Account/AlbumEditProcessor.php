@@ -89,8 +89,8 @@ class AlbumEditProcessor extends AccountPageProcessor {
 
 		// check if we had a album entry so far
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM album WHERE account_id = :account_id', [
-			'account_id' => $db->escapeNumber($account->getAccountID()),
+		$dbResult = $db->select('album', [
+			'account_id' => $account->getAccountID(),
 		]);
 		$comment = null;
 		if ($dbResult->hasRecord()) {

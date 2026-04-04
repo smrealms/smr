@@ -31,10 +31,11 @@ class DummyShip extends AbstractShip {
 		if (!isset(self::$CACHED_DUMMY_SHIPS[$dummyName])) {
 			// Load ship from the dummy database cache, if available
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT info FROM cached_dummys WHERE type = \'DummyShip\'
-						AND id = :dummy_name', [
-				'dummy_name' => $db->escapeString($dummyName),
-			]);
+			$dbResult = $db->select(
+				'cached_dummys',
+				['type' => 'DummyShip', 'id' => $dummyName],
+				['info'],
+			);
 			if ($dbResult->hasRecord()) {
 				$ship = $dbResult->record()->getClass('info', self::class);
 			} else {
@@ -51,7 +52,7 @@ class DummyShip extends AbstractShip {
 	 */
 	public static function getDummyNames(): array {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT id FROM cached_dummys');
+		$dbResult = $db->select('cached_dummys', [], ['id']);
 		$dummyNames = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$dummyNames[] = $dbRecord->getString('id');

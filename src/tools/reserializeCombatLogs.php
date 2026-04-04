@@ -6,7 +6,7 @@ require_once('../bootstrap.php');
 
 $db = Database::getInstance();
 
-$dbResult = $db->read('SELECT result,log_id FROM combat_logs');
+$dbResult = $db->select('combat_logs', [], ['result', 'log_id']);
 foreach ($dbResult->records() as $dbRecord) {
 	$db->update(
 		'combat_logs',
