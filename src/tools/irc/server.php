@@ -47,9 +47,7 @@ function server_msg_307($fp, string $rdata): bool {
 		echo_r('[SERVER_307] ' . $server . ' said that ' . $nick . ' is registered');
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick', [
-			'nick' => $db->escapeString($nick),
-		]);
+		$dbResult = $db->select('irc_seen', ['nick' => $nick]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$seen_id = $dbRecord->getInt('seen_id');
 
@@ -104,9 +102,10 @@ function server_msg_318($fp, string $rdata): bool {
 				CallbackEvent::remove($event);
 
 				// so we should do a callback but need to check first if the guy has registered
-				$dbResult = $db->read('SELECT 1 FROM irc_seen WHERE nick = :nick AND registered = 1 AND channel = :channel', [
-					'nick' => $db->escapeString($nick),
-					'channel' => $db->escapeString($event->channel),
+				$dbResult = $db->select('irc_seen', [
+					'registered' => 1,
+					'nick' => $nick,
+					'channel' => $event->channel,
 				]);
 				if ($dbResult->hasRecord()) {
 					//Forward to a NICKSERV INFO call.
@@ -153,9 +152,9 @@ function server_msg_352($fp, string $rdata): bool {
 		$db = Database::getInstance();
 
 		// check if we have seen this user before
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND channel = :channel', [
-			'nick' => $db->escapeString($nick),
-			'channel' => $db->escapeString($channel),
+		$dbResult = $db->select('irc_seen', [
+			'nick' => $nick,
+			'channel' => $channel,
 		]);
 
 		$sqlData = [
@@ -205,8 +204,9 @@ function server_msg_401($fp, string $rdata): bool {
 		$db = Database::getInstance();
 
 		// get the user in question
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND signed_off = 0', [
-			'nick' => $db->escapeString($nick),
+		$dbResult = $db->select('irc_seen', [
+			'signed_off' => 0,
+			'nick' => $nick,
 		]);
 		if ($dbResult->hasRecord()) {
 			$seen_id = $dbResult->record()->getInt('seen_id');

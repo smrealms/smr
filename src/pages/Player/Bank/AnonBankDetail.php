@@ -26,12 +26,9 @@ class AnonBankDetail extends PlayerPage {
 		$minValue = $session->getRequestVarInt('minValue', 0);
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT *
-					FROM anon_bank
-					WHERE anon_id = :anon_id
-					AND game_id = :game_id', [
-			'anon_id' => $db->escapeNumber($account_num),
-			'game_id' => $db->escapeNumber($player->getGameID()),
+		$dbResult = $db->select('anon_bank', [
+			'anon_id' => $account_num,
+			'game_id' => $player->getGameID(),
 		]);
 		$dbRecord = $dbResult->record();
 

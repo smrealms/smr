@@ -138,7 +138,7 @@ class Game {
 
 		// Do we already have a database record for this game?
 		if ($dbRecord === null) {
-			$dbResult = $db->read('SELECT * FROM game WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('game', $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}

@@ -63,7 +63,7 @@ class FeatureRequest extends AccountPage {
 
 		if ($canVote) {
 			$featureVotes = [];
-			$dbResult = $db->read('SELECT * FROM account_votes_for_feature WHERE account_id = :account_id', [
+			$dbResult = $db->select('account_votes_for_feature', [
 				'account_id' => $account->getAccountID(),
 			]);
 			foreach ($dbResult->records() as $dbRecord) {

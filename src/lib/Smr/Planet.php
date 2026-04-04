@@ -151,7 +151,7 @@ class Planet {
 		];
 
 		if ($dbRecord === null) {
-			$dbResult = $db->read('SELECT * FROM planet WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('planet', $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -588,7 +588,7 @@ class Planet {
 			$this->stockpile = [];
 			// get supplies from db
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT good_id, amount FROM planet_has_cargo WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('planet_has_cargo', $this->SQLID, ['good_id', 'amount']);
 			// adding cargo and amount to array
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->stockpile[$dbRecord->getInt('good_id')] = $dbRecord->getInt('amount');
@@ -642,7 +642,7 @@ class Planet {
 
 			// get buildingss from db
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT construction_id, amount FROM planet_has_building WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('planet_has_building', $this->SQLID, ['construction_id', 'amount']);
 			// adding building and amount to array
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->buildings[$dbRecord->getInt('construction_id')] = $dbRecord->getInt('amount');
@@ -691,7 +691,7 @@ class Planet {
 			$this->currentlyBuilding = [];
 
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM planet_is_building WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('planet_is_building', $this->SQLID);
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->currentlyBuilding[$dbRecord->getInt('building_slot_id')] = [
 					'BuildingSlotID' => $dbRecord->getInt('building_slot_id'),

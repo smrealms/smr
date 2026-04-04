@@ -130,7 +130,7 @@ class CurrentSector extends PlayerPage {
 		//enableProtectionDependantRefresh($template,$player);
 
 		// Do we have an unseen attack message to store in this var?
-		$dbResult = $db->read('SELECT * FROM sector_message WHERE ' . AbstractPlayer::SQL, $player->SQLID);
+		$dbResult = $db->select('sector_message', $player->SQLID);
 		if ($dbResult->hasRecord()) {
 			$this->attackMessage = $dbResult->record()->getString('message');
 			$db->delete('sector_message', $player->SQLID);
@@ -222,9 +222,7 @@ function checkForAttackMessage(string $msg, AbstractPlayer $player): void {
 
 		$template = Template::getInstance();
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT sector_id,result,type FROM combat_logs WHERE log_id = :log_id LIMIT 1', [
-			'log_id' => $db->escapeNumber($logID),
-		]);
+		$dbResult = $db->select('combat_logs', ['log_id' => $logID], ['sector_id', 'result', 'type']);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			if ($player->getSectorID() === $dbRecord->getInt('sector_id')) {

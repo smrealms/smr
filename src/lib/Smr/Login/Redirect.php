@@ -52,7 +52,7 @@ class Redirect {
 	public static function redirectIfOffline(Account $account): void {
 		// Check if the game is offline
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT reason FROM game_disable');
+		$dbResult = $db->select('game_disable', [], ['reason']);
 		$offline = $dbResult->hasRecord();
 
 		// Skip redirect if we're not offline or if account has admin permission

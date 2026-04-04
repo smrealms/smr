@@ -155,7 +155,7 @@ class Force {
 		];
 
 		if ($dbRecord === null) {
-			$dbResult = $db->read('SELECT * FROM sector_has_forces WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('sector_has_forces', $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}

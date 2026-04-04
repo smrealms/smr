@@ -24,9 +24,9 @@ class LottoBuyTicketProcessor extends PlayerPageProcessor {
 		$time = Epoch::time();
 		while (true) {
 			//avoid double entries (since table is unique on game,account,time)
-			$dbResult = $db->read('SELECT 1 FROM player_has_ticket WHERE ' . AbstractPlayer::SQL . ' AND time = :time', [
+			$dbResult = $db->select('player_has_ticket', [
 				...$player->SQLID,
-				'time' => $db->escapeNumber($time),
+				'time' => $time,
 			]);
 			if (!$dbResult->hasRecord()) {
 				break;

@@ -55,7 +55,7 @@ class Location {
 	public static function getAllLocations(int $gameID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_ALL_LOCATIONS)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM location_type ORDER BY location_type_id');
+			$dbResult = $db->select('location_type');
 			$locations = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$locationTypeID = $dbRecord->getInt('location_type_id');
@@ -224,7 +224,7 @@ class Location {
 		$this->SQLID = ['location_type_id' => $db->escapeNumber($typeID)];
 
 		if ($dbRecord === null) {
-			$dbResult = $db->read('SELECT * FROM location_type WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('location_type', $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -291,7 +291,7 @@ class Location {
 	public function isFed(): bool {
 		if (!isset($this->fed)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT 1 FROM location_is_fed WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('location_is_fed', $this->SQLID);
 			$this->fed = $dbResult->hasRecord();
 		}
 		return $this->fed;
@@ -313,7 +313,7 @@ class Location {
 	public function isBank(): bool {
 		if (!isset($this->bank)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT 1 FROM location_is_bank WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('location_is_bank', $this->SQLID);
 			$this->bank = $dbResult->hasRecord();
 		}
 		return $this->bank;
@@ -335,7 +335,7 @@ class Location {
 	public function isBar(): bool {
 		if (!isset($this->bar)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT 1 FROM location_is_bar WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('location_is_bar', $this->SQLID);
 			$this->bar = $dbResult->hasRecord();
 		}
 		return $this->bar;
@@ -357,7 +357,7 @@ class Location {
 	public function isHQ(): bool {
 		if (!isset($this->HQ)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT 1 FROM location_is_hq WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('location_is_hq', $this->SQLID);
 			$this->HQ = $dbResult->hasRecord();
 		}
 		return $this->HQ;
@@ -379,7 +379,7 @@ class Location {
 	public function isUG(): bool {
 		if (!isset($this->UG)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT 1 FROM location_is_ug WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('location_is_ug', $this->SQLID);
 			$this->UG = $dbResult->hasRecord();
 		}
 		return $this->UG;
@@ -405,7 +405,7 @@ class Location {
 		if (!isset($this->hardwareSold)) {
 			$this->hardwareSold = [];
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT hardware_type_id FROM location_sells_hardware WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('location_sells_hardware', $this->SQLID, ['hardware_type_id']);
 			foreach ($dbResult->records() as $dbRecord) {
 				$hardwareTypeID = $dbRecord->getInt('hardware_type_id');
 				$this->hardwareSold[$hardwareTypeID] = HardwareType::get($hardwareTypeID);
@@ -427,9 +427,7 @@ class Location {
 			return;
 		}
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT 1 FROM hardware_type WHERE hardware_type_id = :hardware_type_id', [
-			'hardware_type_id' => $db->escapeNumber($hardwareTypeID),
-		]);
+		$dbResult = $db->select('hardware_type', ['hardware_type_id' => $hardwareTypeID]);
 		if (!$dbResult->hasRecord()) {
 			throw new Exception('Invalid hardware type id given');
 		}

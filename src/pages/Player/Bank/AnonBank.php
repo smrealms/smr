@@ -33,11 +33,9 @@ class AnonBank extends PlayerPage {
 		$template->assign('Message', $this->message ?? '');
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM anon_bank
-					WHERE owner_id = :owner_id
-					AND game_id = :game_id', [
-			'owner_id' => $db->escapeNumber($player->getAccountID()),
-			'game_id' => $db->escapeNumber($player->getGameID()),
+		$dbResult = $db->select('anon_bank', [
+			'owner_id' => $player->getAccountID(),
+			'game_id' => $player->getGameID(),
 		]);
 
 		$ownedAnon = [];

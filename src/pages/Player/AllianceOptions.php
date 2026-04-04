@@ -53,10 +53,9 @@ class AllianceOptions extends PlayerPage {
 		$role_id = $player->getAllianceRole($alliance->getAllianceID());
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM alliance_has_roles WHERE alliance_id = :alliance_id AND game_id = :game_id AND role_id = :role_id', [
-			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'role_id' => $db->escapeNumber($role_id),
+		$dbResult = $db->select('alliance_has_roles', [
+			...$alliance->SQLID,
+			'role_id' => $role_id,
 		]);
 		$dbRecord = $dbResult->record();
 

@@ -29,7 +29,7 @@ class LogConsoleProcessor extends AccountPageProcessor {
 			$container = new LogConsole();
 		} else {
 			$logTypes = [];
-			$dbResult = $db->read('SELECT log_type_id FROM log_type');
+			$dbResult = $db->select('log_type', [], ['log_type_id']);
 			foreach ($dbResult->records() as $dbRecord) {
 				$logTypes[] = $dbRecord->getInt('log_type_id');
 			}

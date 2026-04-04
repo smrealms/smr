@@ -42,7 +42,7 @@ class AllianceShareMapsProcessor extends PlayerPageProcessor {
 		unset($unvisitedSectors);
 
 		// get a list of all visited ports
-		$dbResult = $db->read('SELECT sector_id FROM player_visited_port WHERE ' . AbstractPlayer::SQL, $player->SQLID);
+		$dbResult = $db->select('player_visited_port', $player->SQLID, ['sector_id']);
 		foreach ($dbResult->records() as $dbRecord) {
 			$cachedPort = Port::getCachedPort($player->getGameID(), $dbRecord->getInt('sector_id'), $player->getAccountID());
 			$cachedPort->addCachePorts($alliance_ids);

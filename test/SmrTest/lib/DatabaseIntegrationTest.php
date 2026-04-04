@@ -67,6 +67,41 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertFalse($conn->isConnected());
 	}
 
+	public function test_select(): void {
+		$db = Database::getInstance();
+
+		// Test specifying all arguments
+		$dbResult = $db->select('level', ['level_id' => 2], ['level_name']);
+		$expected = ['level_name' => 'Recruit'];
+		self::assertSame($expected, $dbResult->record()->getRow());
+
+		// Test specifying multiple return columns
+		$dbResult = $db->select('level', ['level_id' => 2], ['level_name', 'level_id']);
+		$expected = [
+			'level_name' => 'Recruit',
+			'level_id' => 2,
+		];
+		self::assertSame($expected, $dbResult->record()->getRow());
+
+		// Test specifying multiple criteria
+		$dbResult = $db->select('level', ['level_id' => 2, 'requirement' => 25], ['level_name']);
+		$expected = ['level_name' => 'Recruit'];
+		self::assertSame($expected, $dbResult->record()->getRow());
+
+		// Test with default returnColumns (all columns)
+		$dbResult = $db->select('level', ['level_id' => 2]);
+		$expected = [
+			'level_id' => 2,
+			'level_name' => 'Recruit',
+			'requirement' => 25,
+		];
+		self::assertSame($expected, $dbResult->record()->getRow());
+
+		// Test with default criteria (all rows)
+		$dbResult = $db->select('level');
+		self::assertSame(50, $dbResult->getNumRecords());
+	}
+
 	public function test_getDbBytes(): void {
 		$db = Database::getInstance();
 		$bytes = $db->getDbBytes();
@@ -159,7 +194,7 @@ class DatabaseIntegrationTest extends TestCase {
 		$db->lockTable('good');
 		try {
 			// Perform a query on the locked table
-			$result = $db->read('SELECT good_name FROM good WHERE good_id = 1');
+			$result = $db->select('good', ['good_id' => 1], ['good_name']);
 			self::assertSame(['good_name' => 'Wood'], $result->record()->getRow());
 		} finally {
 			$db->unlock();
@@ -173,7 +208,7 @@ class DatabaseIntegrationTest extends TestCase {
 		$db->lockTable('player', ['good']);
 		try {
 			// Perform a read query on the read-locked table
-			$result = $db->read('SELECT good_name FROM good WHERE good_id = 1');
+			$result = $db->select('good', ['good_id' => 1], ['good_name']);
 			self::assertSame(['good_name' => 'Wood'], $result->record()->getRow());
 		} finally {
 			$db->unlock();

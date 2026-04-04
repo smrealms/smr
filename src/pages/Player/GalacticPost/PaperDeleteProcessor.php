@@ -17,15 +17,14 @@ class PaperDeleteProcessor extends PlayerPageProcessor {
 		$db = Database::getInstance();
 		// Should we delete this paper?
 		if (Request::getBool('action')) {
-			$sql = 'game_id = :game_id AND paper_id = :paper_id';
 			$sqlParams = [
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'paper_id' => $db->escapeNumber($this->paperID),
+				'game_id' => $player->getGameID(),
+				'paper_id' => $this->paperID,
 			];
 
 			// Should the articles associated with the paper be deleted as well?
 			if (Request::getBool('delete_articles')) {
-				$dbResult = $db->read('SELECT * FROM galactic_post_paper_content WHERE ' . $sql, $sqlParams);
+				$dbResult = $db->select('galactic_post_paper_content', $sqlParams);
 				foreach ($dbResult->records() as $dbRecord) {
 					$db->delete('galactic_post_article', [
 						'article_id' => $db->escapeNumber($dbRecord->getInt('article_id')),

@@ -76,8 +76,8 @@ class Session {
 			// create a new session id
 			do {
 				$this->sessionID = random_string($idLength);
-				$dbResult = $db->read('SELECT 1 FROM active_session WHERE session_id = :session_id', [
-					'session_id' => $db->escapeString($this->sessionID),
+				$dbResult = $db->select('active_session', [
+					'session_id' => $this->sessionID,
 				]);
 			} while ($dbResult->hasRecord()); //Make sure we haven't somehow clashed with someone else's session.
 
@@ -112,8 +112,8 @@ class Session {
 
 	public function fetchVarInfo(): void {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM active_session WHERE session_id = :session_id', [
-			'session_id' => $db->escapeString($this->sessionID),
+		$dbResult = $db->select('active_session', [
+			'session_id' => $this->sessionID,
 		]);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();

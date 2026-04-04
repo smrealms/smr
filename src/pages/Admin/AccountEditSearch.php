@@ -21,7 +21,7 @@ class AccountEditSearch extends AccountPage {
 
 		$games = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT game_id, game_name FROM game WHERE enabled = \'TRUE\' ORDER BY game_id DESC');
+		$dbResult = $db->select('game', ['enabled' => $db->escapeBoolean(true)], ['game_id', 'game_name']);
 		foreach ($dbResult->records() as $dbRecord) {
 			$gameID = $dbRecord->getInt('game_id');
 			$games[$gameID] = $dbRecord->getString('game_name') . ' (' . $gameID . ')';

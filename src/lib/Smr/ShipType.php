@@ -36,8 +36,8 @@ class ShipType {
 		if (!isset(self::$CACHE_SHIP_TYPES[$shipTypeID])) {
 			if ($dbRecord === null) {
 				$db = Database::getInstance();
-				$dbResult = $db->read('SELECT * FROM ship_type WHERE ship_type_id = :ship_type_id', [
-					'ship_type_id' => $db->escapeNumber($shipTypeID),
+				$dbResult = $db->select('ship_type', [
+					'ship_type_id' => $shipTypeID,
 				]);
 				$dbRecord = $dbResult->record();
 			} elseif ($shipTypeID !== $dbRecord->getInt('ship_type_id')) {
@@ -53,7 +53,7 @@ class ShipType {
 	 */
 	public static function getAll(): array {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM ship_type ORDER BY ship_type_id ASC');
+		$dbResult = $db->select('ship_type');
 		foreach ($dbResult->records() as $dbRecord) {
 			// populate the cache
 			self::get($dbRecord->getInt('ship_type_id'), $dbRecord);
@@ -90,10 +90,11 @@ class ShipType {
 
 		// get supported hardware from db
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT hardware_type_id, max_amount FROM ship_type_support_hardware
-			WHERE ship_type_id = :ship_type_id ORDER BY hardware_type_id', [
-			'ship_type_id' => $db->escapeNumber($this->typeID),
-		]);
+		$dbResult = $db->select(
+			'ship_type_support_hardware',
+			['ship_type_id' => $this->typeID],
+			['hardware_type_id', 'max_amount'],
+		);
 
 		$maxHardware = [];
 		foreach ($dbResult->records() as $dbRecord2) {

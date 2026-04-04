@@ -32,11 +32,7 @@ class NewsReadAdvanced extends AccountPage {
 		$gameID = $this->gameID;
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT alliance_id, alliance_name
-					FROM alliance
-					WHERE game_id = :game_id', [
-			'game_id' => $db->escapeNumber($gameID),
-		]);
+		$dbResult = $db->select('alliance', ['game_id' => $gameID], ['alliance_id', 'alliance_name']);
 
 		$newsAlliances = [0 => 'None'];
 		foreach ($dbResult->records() as $dbRecord) {

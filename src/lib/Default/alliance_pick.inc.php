@@ -11,9 +11,11 @@ use Smr\Player;
  */
 function get_draft_teams(int $gameId): array {
 	$db = Database::getInstance();
-	$dbResult = $db->read('SELECT account_id FROM draft_leaders WHERE game_id = :game_id', [
-		'game_id' => $db->escapeNumber($gameId),
-	]);
+	$dbResult = $db->select(
+		'draft_leaders',
+		['game_id' => $gameId],
+		['account_id'],
+	);
 
 	// Get team leader, alliance, and alliance size
 	$teams = [];

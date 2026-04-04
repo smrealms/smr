@@ -62,9 +62,7 @@ class AccountEditProcessor extends AccountPageProcessor {
 		if (Request::has('special_close')) {
 			$specialClose = Request::get('special_close');
 			// Make sure the special closing reason exists
-			$dbResult = $db->read('SELECT reason_id FROM closing_reason WHERE reason = :reason', [
-				'reason' => $db->escapeString($specialClose),
-			]);
+			$dbResult = $db->select('closing_reason', ['reason' => $specialClose], ['reason_id']);
 			if ($dbResult->hasRecord()) {
 				$reasonID = $dbResult->record()->getInt('reason_id');
 			} else {

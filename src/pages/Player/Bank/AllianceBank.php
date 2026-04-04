@@ -36,12 +36,12 @@ class AllianceBank extends PlayerPage {
 		Menu::bank();
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM alliance_treaties WHERE game_id = :game_id
+		$dbResult = $db->read(
+			'SELECT * FROM alliance_treaties WHERE game_id = :game_id
 					AND (alliance_id_1 = :alliance_id OR alliance_id_2 = :alliance_id)
-					AND aa_access = 1 AND official = \'TRUE\'', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-		]);
+					AND aa_access = 1 AND official = \'TRUE\'',
+			$player->getAlliance()->SQLID,
+		);
 		$alliedAllianceBanks = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$alliedAllianceBanks[$dbRecord->getInt('alliance_id_2')] = Alliance::getAlliance($dbRecord->getInt('alliance_id_2'), $alliance->getGameID());
@@ -50,10 +50,9 @@ class AllianceBank extends PlayerPage {
 		$template->assign('AlliedAllianceBanks', $alliedAllianceBanks);
 
 		$dbResult = $db->read('SELECT transaction, sum(amount) as total FROM alliance_bank_transactions
-					WHERE alliance_id = :alliance_id AND game_id = :game_id AND payee_id = :payee_id
+					WHERE ' . Alliance::SQL . ' AND payee_id = :payee_id
 					GROUP BY transaction', [
-			'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
-			'game_id' => $db->escapeNumber($alliance->getGameID()),
+			...$alliance->SQLID,
 			'payee_id' => $db->escapeNumber($player->getAccountID()),
 		]);
 		$playerTrans = ['Deposit' => 0, 'Payment' => 0];
@@ -61,17 +60,13 @@ class AllianceBank extends PlayerPage {
 			$playerTrans[$dbRecord->getString('transaction')] = $dbRecord->getInt('total');
 		}
 
-		$query = 'SELECT * FROM alliance_has_roles WHERE alliance_id = :alliance_id AND game_id = :game_id AND ';
-		$sqlParams = [
-			'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
-			'game_id' => $db->escapeNumber($alliance->getGameID()),
-		];
+		$table = 'alliance_has_roles';
 		if ($alliance->getAllianceID() === $player->getAllianceID()) {
-			$sqlParams['role_id'] = $player->getAllianceRole($alliance->getAllianceID());
-			$dbResult = $db->read($query . 'role_id = :role_id', $sqlParams);
+			$roleID = $player->getAllianceRole($alliance->getAllianceID());
+			$dbResult = $db->select($table, [...$alliance->SQLID, 'role_id' => $roleID]);
 		} else {
-			$sqlParams['role'] = $db->escapeString($player->getAlliance()->getAllianceName());
-			$dbResult = $db->read($query . 'role = :role', $sqlParams);
+			$role = $player->getAlliance()->getAllianceName();
+			$dbResult = $db->select($table, [...$alliance->SQLID, 'role' => $role]);
 		}
 		$dbRecord = $dbResult->record();
 		$template->assign('CanExempt', $dbRecord->getBoolean('exempt_with'));
@@ -83,11 +78,10 @@ class AllianceBank extends PlayerPage {
 			$template->assign('UnlimitedWithdrawal', true);
 		} else {
 			$dbResult = $db->read('SELECT IFNULL(sum(amount), 0) as total FROM alliance_bank_transactions
-						WHERE alliance_id = :alliance_id AND game_id = :game_id
+						WHERE ' . Alliance::SQL . '
 						AND payee_id = :payee_id AND transaction = \'Payment\' AND exempt = 0
 						AND time > :one_day_ago', [
-				'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
-				'game_id' => $db->escapeNumber($alliance->getGameID()),
+				...$alliance->SQLID,
 				'payee_id' => $db->escapeNumber($player->getAccountID()),
 				'one_day_ago' => $db->escapeNumber(Epoch::time() - 86400),
 			]);
@@ -101,12 +95,7 @@ class AllianceBank extends PlayerPage {
 		$minValue = $session->getRequestVarInt('minValue', 0);
 
 		if ($maxValue <= 0) {
-			$dbResult = $db->read('SELECT IFNULL(MAX(transaction_id), 0) as max_transaction_id FROM alliance_bank_transactions
-						WHERE game_id = :game_id
-						AND alliance_id = :alliance_id', [
-				'game_id' => $db->escapeNumber($alliance->getGameID()),
-				'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
-			]);
+			$dbResult = $db->read('SELECT IFNULL(MAX(transaction_id), 0) as max_transaction_id FROM alliance_bank_transactions WHERE ' . Alliance::SQL, $alliance->SQLID);
 			$maxValue = $dbResult->record()->getInt('max_transaction_id');
 		}
 
@@ -116,14 +105,12 @@ class AllianceBank extends PlayerPage {
 
 		$query = 'SELECT time, transaction_id, transaction, amount, exempt, reason, payee_id
 			FROM alliance_bank_transactions
-			WHERE game_id = :game_id
-			AND alliance_id = :alliance_id
+			WHERE ' . Alliance::SQL . '
 			AND transaction_id >= :min_transaction_id
 			AND transaction_id <= :max_transaction_id
 			ORDER BY time LIMIT :limit';
 		$dbResult = $db->read($query, [
-			'game_id' => $db->escapeNumber($alliance->getGameID()),
-			'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
+			...$alliance->SQLID,
 			'min_transaction_id' => $db->escapeNumber($minValue),
 			'max_transaction_id' => $db->escapeNumber($maxValue),
 			'limit' => 1 + $maxValue - $minValue,

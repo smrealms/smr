@@ -3,6 +3,7 @@
 namespace Smr\Pages\Player\Bank;
 
 use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
@@ -25,10 +26,8 @@ class AllianceBankReport extends PlayerPage {
 
 		//get all transactions
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM alliance_bank_transactions WHERE alliance_id = :alliance_id AND game_id = :game_id', [
-			'alliance_id' => $db->escapeNumber($alliance_id),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-		]);
+		$alliance = Alliance::getAlliance($alliance_id, $player->getGameID());
+		$dbResult = $db->select('alliance_bank_transactions', $alliance->SQLID);
 		if (!$dbResult->hasRecord()) {
 			create_error('Your alliance has no recorded transactions.');
 		}

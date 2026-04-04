@@ -3,6 +3,7 @@
 namespace Smr\Pages\Player\Bank;
 
 use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
@@ -21,10 +22,8 @@ class AllianceBankReportProcessor extends PlayerPageProcessor {
 
 		// Check if the "Bank Statement" thread exists yet
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT thread_id FROM alliance_thread_topic WHERE game_id = :game_id AND alliance_id = :alliance_id AND topic = \'Bank Statement\' LIMIT 1', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'alliance_id' => $db->escapeNumber($alliance_id),
-		]);
+		$alliance = Alliance::getAlliance($alliance_id, $player->getGameID());
+		$dbResult = $db->read('SELECT thread_id FROM alliance_thread_topic WHERE ' . Alliance::SQL . ' AND topic = \'Bank Statement\' LIMIT 1', $alliance->SQLID);
 
 		if ($dbResult->hasRecord()) {
 			// Update the existing "Bank Statement" thread
@@ -49,20 +48,15 @@ class AllianceBankReportProcessor extends PlayerPageProcessor {
 			]);
 		} else {
 			// There is no "Bank Statement" thread yet
-			$dbResult = $db->read('SELECT IFNULL(MAX(thread_id)+1, 0) AS next_id FROM alliance_thread_topic WHERE game_id = :game_id AND alliance_id = :alliance_id', [
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'alliance_id' => $db->escapeNumber($alliance_id),
-			]);
+			$dbResult = $db->read('SELECT IFNULL(MAX(thread_id)+1, 0) AS next_id FROM alliance_thread_topic WHERE ' . Alliance::SQL, $alliance->SQLID);
 			$thread_id = $dbResult->record()->getInt('next_id');
 			$db->insert('alliance_thread_topic', [
-				'game_id' => $player->getGameID(),
-				'alliance_id' => $alliance_id,
+				...$alliance->SQLID,
 				'thread_id' => $thread_id,
 				'topic' => 'Bank Statement',
 			]);
 			$db->insert('alliance_thread', [
-				'game_id' => $player->getGameID(),
-				'alliance_id' => $alliance_id,
+				...$alliance->SQLID,
 				'thread_id' => $thread_id,
 				'reply_id' => 1,
 				'text' => $text,

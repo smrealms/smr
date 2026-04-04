@@ -43,9 +43,7 @@ class AdminMessageSendProcessor extends AccountPageProcessor {
 			$account_id = Request::getInt('account_id');
 			if ($account_id === 0) {
 				// Send to all players in the requested game
-				$dbResult = $db->read('SELECT account_id FROM player WHERE game_id = :game_id', [
-					'game_id' => $db->escapeNumber($game_id),
-				]);
+				$dbResult = $db->select('player', ['game_id' => $game_id], ['account_id']);
 				foreach ($dbResult->records() as $dbRecord) {
 					$receivers[] = [$game_id, $dbRecord->getInt('account_id')];
 				}

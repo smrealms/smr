@@ -18,9 +18,10 @@ function check_for_registration($fp, string $nick, string $channel, Closure $cal
 	$db = Database::getInstance();
 
 	// only registered users are allowed to use this command
-	$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND registered = 1 AND channel = :channel', [
-		'nick' => $db->escapeString($nick),
-		'channel' => $db->escapeString($channel),
+	$dbResult = $db->select('irc_seen', [
+		'registered' => 1,
+		'nick' => $nick,
+		'channel' => $channel,
 	]);
 	if (!$dbResult->hasRecord()) {
 
@@ -194,9 +195,9 @@ function channel_msg_seen($fp, Message $msg): bool {
 				'channel' => $db->escapeString($channel),
 			]);
 		} else {
-			$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND channel = :channel', [
-				'nick' => $db->escapeString($seennick),
-				'channel' => $db->escapeString($channel),
+			$dbResult = $db->select('irc_seen', [
+				'nick' => $seennick,
+				'channel' => $channel,
 			]);
 		}
 

@@ -16,9 +16,8 @@ class CreateGameProcessor extends AccountPageProcessor {
 		$db = Database::getInstance();
 
 		//first create the game
-		$dbResult = $db->read('SELECT 1 FROM game WHERE game_name = :game_name', [
-			'game_name' => $db->escapeString(Request::get('game_name')),
-		]);
+		$gameName = Request::get('game_name');
+		$dbResult = $db->select('game', ['game_name' => $gameName]);
 		if ($dbResult->hasRecord()) {
 			create_error('That game name is already taken.');
 		}
@@ -32,7 +31,7 @@ class CreateGameProcessor extends AccountPageProcessor {
 		$end = new DateTime(Request::get('game_end'));
 
 		$game = Game::createGame($newID);
-		$game->setName(Request::get('game_name'));
+		$game->setName($gameName);
 		$game->setDescription(Request::get('desc'));
 		$game->setGameTypeID(Request::getInt('game_type'));
 		$game->setMaxTurns(Request::getInt('max_turns'));

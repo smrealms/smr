@@ -35,7 +35,7 @@ class HardwareConfigure extends PlayerPage {
 
 			$ships = [];
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT ship_type_id,ship_name FROM ship_type ORDER BY ship_name');
+			$dbResult = $db->select('ship_type', [], ['ship_type_id', 'ship_name']);
 			foreach ($dbResult->records() as $dbRecord) {
 				$ships[$dbRecord->getInt('ship_type_id')] = $dbRecord->getString('ship_name');
 			}

@@ -20,11 +20,7 @@ class MessageReportConfirm extends PlayerPage {
 	public function build(AbstractPlayer $player, Template $template): void {
 		// get message form db
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT message_text
-					FROM message
-					WHERE message_id = :message_id', [
-			'message_id' => $db->escapeNumber($this->messageID),
-		]);
+		$dbResult = $db->select('message', ['message_id' => $this->messageID], ['message_text']);
 		if (!$dbResult->hasRecord()) {
 			create_error('Could not find the message you selected!');
 		}

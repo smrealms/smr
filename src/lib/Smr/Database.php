@@ -150,13 +150,32 @@ class Database {
 	}
 
 	/**
+	 * Simple SELECT query matching criteria and returning columns.
+	 *
+	 * @param array<string, mixed> $criteria
+	 * @param list<string> $returnColumns
+	 */
+	public function select(string $table, array $criteria = [], array $returnColumns = ['*']): DatabaseResult {
+		$query = 'SELECT ' . implode(',', $returnColumns) . ' FROM ' . $table;
+		if (count($criteria) > 0) {
+			// Create named placeholder SQL using the name of each column in the criteria
+			$criteriaSql = [];
+			foreach (array_keys($criteria) as $column) {
+				$criteriaSql[] = $column . ' = :' . $column;
+			}
+			$query .= ' WHERE ' . implode(' AND ', $criteriaSql);
+		}
+		return $this->read($query, $criteria);
+	}
+
+	/**
 	 * UPDATE $fields in $table for rows that meet $criteria.
 	 *
 	 * @param array<string, mixed> $fields
 	 * @param array<string, mixed> $criteria
 	 * @return int Number of updated rows
 	 */
-	public function update(string $table, array $fields, array $criteria) {
+	public function update(string $table, array $fields, array $criteria): int {
 		return (int)$this->dbConn->update($table, $fields, $criteria);
 	}
 

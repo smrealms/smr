@@ -29,8 +29,8 @@ class EditorOptions extends PlayerPage {
 		$container = new PaperMake();
 		$template->assign('MakePaperHREF', $container->href());
 
-		$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE game_id = :game_id', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
+		$dbResult = $db->select('galactic_post_paper', [
+			'game_id' => $player->getGameID(),
 		]);
 		$papers = [];
 		foreach ($dbResult->records() as $dbRecord) {

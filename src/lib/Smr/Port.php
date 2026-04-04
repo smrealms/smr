@@ -160,7 +160,7 @@ class Port {
 		];
 
 		if ($dbRecord === null) {
-			$dbResult = $db->read('SELECT * FROM port WHERE ' . self::SQL, $this->SQLID);
+			$dbResult = $db->select('port', $this->SQLID);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}
@@ -256,7 +256,7 @@ class Port {
 		}
 		if (!isset($this->goodAmounts)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM port_has_goods WHERE ' . self::SQL . ' ORDER BY good_id ASC', $this->SQLID);
+			$dbResult = $db->select('port_has_goods', $this->SQLID);
 			foreach ($dbResult->records() as $dbRecord) {
 				$goodID = $dbRecord->getInt('good_id');
 				$this->goodTransactions[$goodID] = $dbRecord->getStringEnum('transaction_type', TransactionType::class);

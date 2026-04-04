@@ -71,9 +71,7 @@ readonly class Album {
 	) {
 		$db = Database::getInstance();
 		if ($dbRecord === null) {
-			$dbResult = $db->read('SELECT * FROM album WHERE account_id = :account_id', [
-				'account_id' => $db->escapeNumber($accountID),
-			]);
+			$dbResult = $db->select('album', ['account_id' => $accountID]);
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
 			}

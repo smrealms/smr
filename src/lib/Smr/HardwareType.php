@@ -17,7 +17,7 @@ class HardwareType {
 	public static function getAll(): array {
 		if (count(self::$CACHE_HARDWARE_TYPES) === 0) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM hardware_type');
+			$dbResult = $db->select('hardware_type');
 			foreach ($dbResult->records() as $dbRecord) {
 				$typeID = $dbRecord->getInt('hardware_type_id');
 				self::$CACHE_HARDWARE_TYPES[$typeID] = new self(

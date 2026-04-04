@@ -17,9 +17,7 @@ function user_quit(string $rdata): bool {
 		// database object
 		$db = Database::getInstance();
 
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick', [
-			'nick' => $db->escapeString($nick),
-		]);
+		$dbResult = $db->select('irc_seen', ['nick' => $nick]);
 
 		// sign off all nicks
 		foreach ($dbResult->records() as $dbRecord) {
@@ -62,8 +60,9 @@ function user_nick(string $rdata): bool {
 		$channel_list = [];
 
 		// 'sign off' all active old_nicks (multiple channels)
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND signed_off = 0', [
-			'nick' => $db->escapeString($nick),
+		$dbResult = $db->select('irc_seen', [
+			'signed_off' => 0,
+			'nick' => $nick,
 		]);
 		foreach ($dbResult->records() as $dbRecord) {
 
@@ -84,9 +83,9 @@ function user_nick(string $rdata): bool {
 		foreach ($channel_list as $channel) {
 
 			// 'sign in' the new nick
-			$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick AND channel = :channel', [
-				'nick' => $db->escapeString($new_nick),
-				'channel' => $db->escapeString($channel),
+			$dbResult = $db->select('irc_seen', [
+				'nick' => $new_nick,
+				'channel' => $channel,
 			]);
 
 			if ($dbResult->hasRecord()) {

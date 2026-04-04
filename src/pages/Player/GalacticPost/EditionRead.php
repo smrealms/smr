@@ -31,10 +31,11 @@ class EditionRead extends PlayerPage {
 			}
 
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT title FROM galactic_post_paper WHERE game_id = :game_id AND paper_id = :paper_id', [
-				'game_id' => $db->escapeNumber($this->gameID),
-				'paper_id' => $this->paperID,
-			]);
+			$dbResult = $db->select(
+				'galactic_post_paper',
+				['game_id' => $this->gameID, 'paper_id' => $this->paperID],
+				['title'],
+			);
 			$paper_name = bbify($dbResult->record()->getString('title'), $this->gameID);
 			$template->assign('PageTopic', 'Reading <i>Galactic Post</i> Edition : ' . $paper_name);
 

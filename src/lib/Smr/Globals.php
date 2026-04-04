@@ -79,7 +79,7 @@ class Globals {
 	public static function getHiddenPlayers(): array {
 		if (!isset(self::$HIDDEN_PLAYERS)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM hidden_players');
+			$dbResult = $db->select('hidden_players', [], ['account_id']);
 			self::$HIDDEN_PLAYERS = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				self::$HIDDEN_PLAYERS[] = $dbRecord->getInt('account_id');
@@ -94,9 +94,11 @@ class Globals {
 	public static function getGalacticPostEditorIDs(int $gameID): array {
 		$editorIDs = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT account_id FROM galactic_post_writer WHERE position=\'editor\' AND game_id = :game_id', [
-			'game_id' => $db->escapeNumber($gameID),
-		]);
+		$dbResult = $db->select(
+			'galactic_post_writer',
+			['position' => 'editor', 'game_id' => $gameID],
+			['account_id'],
+		);
 		foreach ($dbResult->records() as $dbRecord) {
 			$editorIDs[] = $dbRecord->getInt('account_id');
 		}
@@ -120,7 +122,7 @@ class Globals {
 	public static function isFeatureRequestOpen(): bool {
 		if (!isset(self::$FEATURE_REQUEST_OPEN)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT open FROM open_forms WHERE type=\'FEATURE\'');
+			$dbResult = $db->select('open_forms', ['type' => 'FEATURE'], ['open']);
 
 			self::$FEATURE_REQUEST_OPEN = $dbResult->record()->getBoolean('open');
 		}
@@ -138,10 +140,11 @@ class Globals {
 				self::$RACE_RELATIONS[$gameID][$raceID][$otherRaceID] = 0;
 			}
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1 = :race_id_1 AND game_id = :game_id', [
-				'race_id_1' => $db->escapeNumber($raceID),
-				'game_id' => $db->escapeNumber($gameID),
-			]);
+			$dbResult = $db->select(
+				'race_has_relation',
+				['race_id_1' => $raceID, 'game_id' => $gameID],
+				['race_id_2', 'relation'],
+			);
 			foreach ($dbResult->records() as $dbRecord) {
 				self::$RACE_RELATIONS[$gameID][$raceID][$dbRecord->getInt('race_id_2')] = $dbRecord->getInt('relation');
 			}

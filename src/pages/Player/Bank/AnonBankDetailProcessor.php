@@ -37,10 +37,11 @@ class AnonBankDetailProcessor extends PlayerPageProcessor {
 		$trans_id = $dbResult->record()->getInt('max_id') + 1;
 
 		// Get the amount currently in this anon bank
-		$dbResult = $db->read('SELECT amount FROM anon_bank WHERE anon_id = :anon_id AND game_id = :game_id', [
-			'anon_id' => $db->escapeNumber($account_num),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-		]);
+		$dbResult = $db->select(
+			'anon_bank',
+			['anon_id' => $account_num, 'game_id' => $player->getGameID()],
+			['amount'],
+		);
 		$anonAmount = $dbResult->record()->getInt('amount');
 
 		// Update the credit amounts for the player and the bank

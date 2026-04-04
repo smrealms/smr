@@ -18,9 +18,7 @@ function notice_nickserv_registered_user($fp, string $rdata): bool {
 
 		$db = Database::getInstance();
 
-		$dbResult = $db->read('SELECT * FROM irc_seen WHERE nick = :nick', [
-			'nick' => $db->escapeString($nick),
-		]);
+		$dbResult = $db->select('irc_seen', ['nick' => $nick]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$seen_id = $dbRecord->getInt('seen_id');
 

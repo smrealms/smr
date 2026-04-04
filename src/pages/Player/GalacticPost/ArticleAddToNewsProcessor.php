@@ -15,10 +15,11 @@ class ArticleAddToNewsProcessor extends PlayerPageProcessor {
 
 	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT text FROM galactic_post_article WHERE game_id = :game_id AND article_id = :article_id', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'article_id' => $db->escapeNumber($this->articleID),
-		]);
+		$dbResult = $db->select(
+			'galactic_post_article',
+			['game_id' => $player->getGameID(), 'article_id' => $this->articleID],
+			['text'],
+		);
 		$dbRecord = $dbResult->record();
 		$newsMessage = $dbRecord->getString('text');
 

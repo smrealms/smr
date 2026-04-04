@@ -222,17 +222,17 @@ class Rankings {
 			$query = 'SELECT alliance.*, COALESCE(SUM(experience), 0) amount
 				FROM alliance
 				LEFT JOIN player USING (game_id, alliance_id)
-				WHERE game_id = ' . $db->escapeNumber($gameID) . '
+				WHERE game_id = :game_id
 				GROUP BY alliance_id
 				ORDER BY amount DESC, alliance_name ASC';
 		} else {
 			$query = 'SELECT alliance.*, alliance_' . $stat . ' AS amount
-				FROM alliance WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY amount DESC, alliance_name';
+				FROM alliance WHERE game_id = :game_id ORDER BY amount DESC, alliance_name';
 		}
 		if ($limit !== null) {
 			$query .= ' LIMIT ' . $limit;
 		}
-		$dbResult = $db->read($query);
+		$dbResult = $db->read($query, ['game_id' => $db->escapeNumber($gameID)]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$allianceStats[$dbRecord->getInt('alliance_id')] = $dbRecord;
 		}

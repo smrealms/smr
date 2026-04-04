@@ -43,9 +43,9 @@ class ArticleView extends PlayerPage {
 
 		// Details about a selected article
 		if ($this->articleID !== null) {
-			$dbResult = $db->read('SELECT * FROM galactic_post_article WHERE game_id = :game_id AND article_id = :article_id', [
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'article_id' => $db->escapeNumber($this->articleID),
+			$dbResult = $db->select('galactic_post_article', [
+				'game_id' => $player->getGameID(),
+				'article_id' => $this->articleID,
 			]);
 			$dbRecord = $dbResult->record();
 
@@ -64,8 +64,8 @@ class ArticleView extends PlayerPage {
 			$template->assign('SelectedArticle', $selectedArticle);
 
 			$papers = [];
-			$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE game_id = :game_id', [
-				'game_id' => $db->escapeNumber($player->getGameID()),
+			$dbResult = $db->select('galactic_post_paper', [
+				'game_id' => $player->getGameID(),
 			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				$container = new ArticleAddToPaperProcessor($dbRecord->getInt('paper_id'), $this->articleID);

@@ -99,14 +99,15 @@ class AllianceVsAlliance extends PlayerPage {
 						$style = 'class="bold"';
 					}
 				} else {
-					$dbResult = $db->read('SELECT kills FROM alliance_vs_alliance
-								WHERE alliance_id_2 = :alliance_id_2
-									AND alliance_id_1 = :alliance_id_1
-									AND game_id = :game_id', [
-						'alliance_id_1' => $db->escapeNumber($id),
-						'alliance_id_2' => $db->escapeNumber($curr_id),
-						'game_id' => $db->escapeNumber($player->getGameID()),
-					]);
+					$dbResult = $db->select(
+						'alliance_vs_alliance',
+						[
+							'alliance_id_1' => $id,
+							'alliance_id_2' => $curr_id,
+							'game_id' => $player->getGameID(),
+						],
+						['kills'],
+					);
 					$value = $dbResult->hasRecord() ? $dbResult->record()->getInt('kills') : 0;
 					if ($showRed && $showBold) {
 						$style = 'class="bold red"';

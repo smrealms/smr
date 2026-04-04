@@ -603,16 +603,20 @@ function findRoutes(AbstractPlayer $player): array {
 	$maxDistance = 15;
 
 	$db = Database::getInstance();
-	$dbResult = $db->read('SELECT routes FROM route_cache WHERE game_id = :game_id AND max_ports = :max_ports AND goods_allowed = :goods_allowed AND races_allowed = :races_allowed AND start_sector_id = :start_sector_id AND end_sector_id = :end_sector_id AND routes_for_port = :routes_for_port AND max_distance = :max_distance', [
-		'game_id' => $db->escapeNumber($player->getGameID()),
-		'max_ports' => $db->escapeNumber($maxNumberOfPorts),
-		'goods_allowed' => $db->escapeObject($tradeGoods),
-		'races_allowed' => $db->escapeObject($tradeRaces),
-		'start_sector_id' => $db->escapeNumber($startSectorID),
-		'end_sector_id' => $db->escapeNumber($endSectorID),
-		'routes_for_port' => $db->escapeNumber($routesForPort),
-		'max_distance' => $db->escapeNumber($maxDistance),
-	]);
+	$dbResult = $db->select(
+		'route_cache',
+		[
+			'game_id' => $player->getGameID(),
+			'max_ports' => $maxNumberOfPorts,
+			'goods_allowed' => $db->escapeObject($tradeGoods),
+			'races_allowed' => $db->escapeObject($tradeRaces),
+			'start_sector_id' => $startSectorID,
+			'end_sector_id' => $endSectorID,
+			'routes_for_port' => $routesForPort,
+			'max_distance' => $maxDistance,
+		],
+		['routes'],
+	);
 	if ($dbResult->hasRecord()) {
 		$routes = $dbResult->record()->getObject('routes', true);
 		debug('Using Cached Routes: #' . count($routes));

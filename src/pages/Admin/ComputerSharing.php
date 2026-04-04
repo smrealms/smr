@@ -24,7 +24,7 @@ class ComputerSharing extends AccountPage {
 
 		//check the db and get the info we need
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM multi_checking_cookie WHERE `use` = \'TRUE\'');
+		$dbResult = $db->select('multi_checking_cookie', ['use' => $db->escapeBoolean(true)]);
 		$tables = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			//get info about linked IDs
@@ -74,9 +74,7 @@ class ComputerSharing extends AccountPage {
 					$common_ip = $dbRecord2->getString('common_ip');
 					$last_login = date($account->getDateTimeFormat(), $dbRecord2->getInt('last_login'));
 
-					$dbResult2 = $db->read('SELECT * FROM account_is_closed WHERE account_id = :account_id', [
-						'account_id' => $db->escapeNumber($currLinkAccId),
-					]);
+					$dbResult2 = $db->select('account_is_closed', ['account_id' => $currLinkAccId]);
 					$isDisabled = $dbResult2->hasRecord();
 					if ($isDisabled) {
 						$suspicion = $dbResult2->record()->getString('suspicion');
@@ -84,9 +82,7 @@ class ComputerSharing extends AccountPage {
 						$suspicion = '';
 					}
 
-					$dbResult2 = $db->read('SELECT * FROM account_exceptions WHERE account_id = :account_id', [
-						'account_id' => $db->escapeNumber($currLinkAccId),
-					]);
+					$dbResult2 = $db->select('account_exceptions', ['account_id' => $currLinkAccId]);
 					if ($dbResult2->hasRecord()) {
 						$exception = $dbResult2->record()->getString('reason');
 					} else {

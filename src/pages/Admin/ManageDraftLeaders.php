@@ -47,9 +47,11 @@ class ManageDraftLeaders extends AccountPage {
 
 			// Get the list of current draft leaders for the selected game
 			$currentLeaders = [];
-			$dbResult = $db->read('SELECT account_id, home_sector_id FROM draft_leaders WHERE game_id = :game_id', [
-				'game_id' => $db->escapeNumber($selectedGameID),
-			]);
+			$dbResult = $db->select(
+				'draft_leaders',
+				['game_id' => $selectedGameID],
+				['account_id', 'home_sector_id'],
+			);
 			foreach ($dbResult->records() as $dbRecord) {
 				$homeSectorID = $dbRecord->getInt('home_sector_id');
 				$leader = Player::getPlayer($dbRecord->getInt('account_id'), $selectedGameID);
