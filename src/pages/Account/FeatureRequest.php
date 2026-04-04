@@ -115,14 +115,10 @@ class FeatureRequest extends AccountPage {
 				foreach ($dbResult2->records() as $dbRecord2) {
 					$featureRequests[$featureRequestID]['Votes'][$dbRecord2->getString('vote_type')] = $dbRecord2->getInt('COUNT(*)');
 				}
-				$dbResult2 = $db->read('SELECT COUNT(*)
-							FROM feature_request_comments
-							WHERE feature_request_id = :feature_request_id', [
-					'feature_request_id' => $db->escapeNumber($featureRequestID),
+				$numComments = $db->count('feature_request_comments', [
+					'feature_request_id' => $featureRequestID,
 				]);
-				foreach ($dbResult2->records() as $dbRecord2) {
-					$featureRequests[$featureRequestID]['Comments'] = $dbRecord2->getInt('COUNT(*)');
-				}
+				$featureRequests[$featureRequestID]['Comments'] = $numComments;
 				$commentsContainer = new FeatureRequestComments($featureRequestID, $this);
 				$featureRequests[$featureRequestID]['CommentsHREF'] = $commentsContainer->href();
 			}

@@ -56,8 +56,8 @@ class TraderSavings extends PlayerPage {
 		$template->assign('LottoWinChance', $win_chance);
 
 		// Number of winning lotto tickets this player has to claim
-		$dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE ' . AbstractPlayer::SQL . ' AND time = 0', $player->SQLID);
-		$template->assign('WinningTickets', $dbResult->record()->getInt('count(*)'));
+		$numToClaim = $db->count('player_has_ticket', ['time' => 0, ...$player->SQLID]);
+		$template->assign('WinningTickets', $numToClaim);
 	}
 
 }

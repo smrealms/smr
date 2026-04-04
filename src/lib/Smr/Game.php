@@ -455,8 +455,7 @@ class Game {
 	public function getTotalPlayers(): int {
 		if (!isset($this->totalPlayers)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT count(*) FROM player WHERE ' . self::SQL, $this->SQLID);
-			$this->totalPlayers = $dbResult->record()->getInt('count(*)');
+			$this->totalPlayers = $db->count('player', $this->SQLID);
 		}
 		return $this->totalPlayers;
 	}

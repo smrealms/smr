@@ -39,10 +39,7 @@ class GameStats extends AccountPage {
 		$template->assign('LowestAlign', $dbRecord->getInt('min_align'));
 		$template->assign('HighestKills', $dbRecord->getInt('max_kills'));
 
-		$dbResult = $db->read('SELECT count(*) num_alliance FROM alliance WHERE game_id = :game_id', [
-			'game_id' => $gameID,
-		]);
-		$template->assign('TotalAlliances', $dbResult->record()->getInt('num_alliance'));
+		$template->assign('TotalAlliances', $db->count('alliance', ['game_id' => $gameID]));
 
 		// Get current account's player for this game (if any)
 		try {

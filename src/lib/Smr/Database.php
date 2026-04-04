@@ -169,6 +169,17 @@ class Database {
 	}
 
 	/**
+	 * Count rows in a table matching criteria.
+	 *
+	 * @param array<string, mixed> $criteria
+	 */
+	public function count(string $table, array $criteria): int {
+		$dbResult = $this->select($table, $criteria, ['count(*)']);
+		$record = $dbResult->record();
+		return $record->getInt('count(*)');
+	}
+
+	/**
 	 * UPDATE $fields in $table for rows that meet $criteria.
 	 *
 	 * @param array<string, mixed> $fields

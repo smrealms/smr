@@ -73,8 +73,7 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 				$player->increaseHOF(1, ['Bar', 'Drinks', 'Special'], HOF_PUBLIC);
 			}
 
-			$dbResult = $db->read('SELECT count(*) FROM player_has_drinks WHERE ' . AbstractPlayer::SQL, $player->SQLID);
-			$num_drinks = $dbResult->record()->getInt('count(*)');
+			$num_drinks = $db->count('player_has_drinks', $player->SQLID);
 			//display woozy message
 			$message .= '<br />You feel a little W' . str_repeat('oO', $num_drinks) . 'zy<br />';
 		}
