@@ -7,7 +7,7 @@ use Smr\Pages\Player\Mission\DeclineProcessor;
 
 /**
  * @var Smr\Player $ThisPlayer
- * @var array<int> $UnreadMissions
+ * @var array<int, ?string> $UnreadMissions
  */
 
 if (isset($MissionMessage)) { ?>
@@ -15,31 +15,31 @@ if (isset($MissionMessage)) { ?>
 	echo $MissionMessage;
 }
 
-foreach ($ThisPlayer->getAvailableMissions() as $MissionID => $Mission) { ?>
+foreach ($ThisPlayer->getAvailableMissions() as $Mission) { ?>
 	<span class="green">New Mission: </span><?php
-	echo bbify($Mission['Steps'][0]['Text']); ?>
+	echo bbify($Mission->getFirstMessage()); ?>
 	<div class="buttonA">
 		<p>
-			<a href="<?php echo (new AcceptProcessor($MissionID))->href(); ?>" class="buttonA">Accept</a>&nbsp;
-			<a href="<?php echo (new DeclineProcessor($MissionID))->href(); ?>" class="buttonA">Decline</a>
+			<a href="<?php echo (new AcceptProcessor($Mission))->href(); ?>" class="buttonA">Accept</a>&nbsp;
+			<a href="<?php echo (new DeclineProcessor($Mission))->href(); ?>" class="buttonA">Decline</a>
 		</p>
 	</div><?php
 }
 
-foreach ($ThisPlayer->getActiveMissions() as $MissionID => $Mission) {
-	if (in_array($MissionID, $UnreadMissions, true)) { ?>
+foreach ($ThisPlayer->getActiveMissionStates() as $MissionID => $MissionState) {
+	$UnreadMessage = $UnreadMissions[$MissionID];
+	if ($UnreadMessage !== null) { ?>
 		<span class="green">Task Complete: </span><?php
-		echo bbify($Mission['Task']['Text']); ?><br /><?php
-	}
-	if ($Mission['Task']['Step'] === 'Claim') { ?>
+		echo bbify($UnreadMessage); ?><br /><?php
+	} ?>
+	<span class="green">Current Task: </span><?php
+	echo bbify($MissionState->getTask()); ?><br/>
+	<div class="buttonA">
+		<p><a class="buttonA" href="<?php echo (new AbandonProcessor($MissionState))->href(); ?>">Abandon Mission</a></p>
+	</div><?php
+	if ($MissionState->hasClaimableReward($ThisPlayer->getSectorID())) { ?>
 		<div class="buttonA">
-			<p><a href="<?php echo (new ClaimProcessor($MissionID))->href(); ?>" class="buttonA">Claim Reward</a></p>
-		</div><?php
-	} else { ?>
-		<span class="green">Current Task: </span><?php
-		echo bbify($Mission['Task']['Task']); ?><br/>
-		<div class="buttonA">
-			<p><a class="buttonA" href="<?php echo (new AbandonProcessor($MissionID))->href(); ?>">Abandon Mission</a></p>
+			<p><a href="<?php echo (new ClaimProcessor($MissionState->mission))->href(); ?>" class="buttonA">Claim Reward</a></p>
 		</div><?php
 	}
 }

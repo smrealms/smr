@@ -2,13 +2,12 @@
 
 namespace Smr;
 
-require_once(LIB . 'Default/missions.inc.php');
-
 use Exception;
 use Smr\Exceptions\AccountNotFound;
-use Smr\Exceptions\PathNotFound;
+use Smr\Exceptions\MissionNotPossible;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Exceptions\UserError;
+use Smr\MissionActions\EnterSector;
 use Smr\Pages\Player\ExamineTrader;
 use Smr\Pages\Player\NewbieLeaveProcessor;
 use Smr\Pages\Player\Planet\KickProcessor;
@@ -18,7 +17,6 @@ use Smr\Traits\RaceID;
 
 /**
  * @phpstan-type TickerData array{Type: string, Time: int, Expires: int, Recent: string}
- * @phpstan-type MissionData array{'On Step': int, Progress: int, Unread: bool, Expires: int, Sector: int, 'Starting Sector': int, Task: mixed}
  */
 abstract class AbstractPlayer {
 
@@ -74,8 +72,6 @@ abstract class AbstractPlayer {
 	protected array $bounties;
 	protected int $turns;
 	protected int $lastCPLAction;
-	/** @var array<int, MissionData> */
-	protected array $missions;
 
 	/** @var array<string, TickerData> */
 	protected array $tickers;
@@ -588,9 +584,8 @@ abstract class AbstractPlayer {
 		$port->addCachePort($this->getAccountID()); //Add port of sector we were just in, to make sure it is left totally up to date.
 
 		$this->setLastSectorID($this->getSectorID());
-		$this->actionTaken('LeaveSector', ['SectorID' => $this->getSectorID()]);
 		$this->sectorID = $sectorID;
-		$this->actionTaken('EnterSector', ['SectorID' => $this->getSectorID()]);
+		$this->actionTaken(new EnterSector(sectorID: $this->getSectorID()));
 		$this->hasChanged = true;
 
 		$port = Port::getPort($this->getGameID(), $this->getSectorID());
@@ -1520,12 +1515,12 @@ abstract class AbstractPlayer {
 		$alliance = $this->getAlliance();
 		if ($kickedBy !== null) {
 			$kickedBy->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were kicked out of the alliance!', false);
-			$this->actionTaken('PlayerKicked', ['Alliance' => $alliance, 'Player' => $kickedBy]);
-			$kickedBy->actionTaken('KickPlayer', ['Alliance' => $alliance, 'Player' => $this]);
+			$this->log(LOG_TYPE_ALLIANCE, 'was kicked from alliance ' . $alliance->getAllianceName() . ' by ' . $kickedBy->getAccount()->getLogin() . ' (' . $kickedBy->getPlayerName() . ')');
+			$kickedBy->log(LOG_TYPE_ALLIANCE, 'kicked ' . $this->getAccount()->getLogin() . ' (' . $this->getPlayerName() . ') from alliance ' . $alliance->getAllianceName());
 		} elseif ($this->isAllianceLeader()) {
-			$this->actionTaken('DisbandAlliance', ['Alliance' => $alliance]);
+			$this->log(LOG_TYPE_ALLIANCE, 'disbanded alliance ' . $alliance->getAllianceName());
 		} else {
-			$this->actionTaken('LeaveAlliance', ['Alliance' => $alliance]);
+			$this->log(LOG_TYPE_ALLIANCE, 'left alliance: ' . $alliance->getAllianceName());
 			if ($alliance->getLeaderID() !== 0 && $alliance->getLeaderID() !== ACCOUNT_ID_NHL) {
 				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I left your alliance!', false);
 			}
@@ -1584,7 +1579,7 @@ abstract class AbstractPlayer {
 			'alliance_id' => $this->getAllianceID(),
 		]);
 
-		$this->actionTaken('JoinAlliance', ['Alliance' => $alliance]);
+		$this->log(LOG_TYPE_ALLIANCE, 'joined alliance: ' . $alliance->getAllianceName());
 	}
 
 	public function getAllianceJoinable(): int {
@@ -2752,234 +2747,59 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<int, MissionData>
+	 * @return array<int, MissionState>
 	 */
-	public function getMissions(): array {
-		if (!isset($this->missions)) {
-			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM player_has_mission WHERE ' . self::SQL, $this->SQLID);
-			$this->missions = [];
-			foreach ($dbResult->records() as $dbRecord) {
-				$missionID = $dbRecord->getInt('mission_id');
-				$this->missions[$missionID] = [
-					'On Step' => $dbRecord->getInt('on_step'),
-					'Progress' => $dbRecord->getInt('progress'),
-					'Unread' => $dbRecord->getBoolean('unread'),
-					'Expires' => $dbRecord->getInt('step_fails'),
-					'Sector' => $dbRecord->getInt('mission_sector'),
-					'Starting Sector' => $dbRecord->getInt('starting_sector'),
-					'Task' => false,
-				];
-				$this->rebuildMission($missionID);
+	public function getActiveMissionStates(): array {
+		$missionStates = MissionState::getPlayerMissionStates($this);
+		foreach ($missionStates as $missionID => $missionState) {
+			if ($missionState->isComplete()) {
+				unset($missionStates[$missionID]);
 			}
 		}
-		return $this->missions;
+		return $missionStates;
 	}
 
-	/**
-	 * @return array<int, MissionData>
-	 */
-	public function getActiveMissions(): array {
-		$missions = $this->getMissions();
-		foreach ($missions as $missionID => $mission) {
-			if ($mission['On Step'] >= count(MISSIONS[$missionID]['Steps'])) {
-				unset($missions[$missionID]);
-			}
-		}
-		return $missions;
-	}
-
-	/**
-	 * @return MissionData|false
-	 */
-	protected function getMission(int $missionID): array|false {
-		$missions = $this->getMissions();
-		return $missions[$missionID] ?? false;
+	protected function getMissionState(int $missionID): ?MissionState {
+		$missionStates = MissionState::getPlayerMissionStates($this);
+		return $missionStates[$missionID] ?? null;
 	}
 
 	protected function hasMission(int $missionID): bool {
-		return $this->getMission($missionID) !== false;
+		return $this->getMissionState($missionID) !== null;
 	}
 
-	protected function updateMission(int $missionID): bool {
-		$this->getMissions();
-		if (isset($this->missions[$missionID])) {
-			$mission = $this->missions[$missionID];
-			$db = Database::getInstance();
-			$db->update(
-				'player_has_mission',
-				[
-					'on_step' => $mission['On Step'],
-					'progress' => $mission['Progress'],
-					'unread' => $db->escapeBoolean($mission['Unread']),
-					'starting_sector' => $mission['Starting Sector'],
-					'mission_sector' => $mission['Sector'],
-					'step_fails' => $mission['Expires'],
-				],
-				[
-					'mission_id' => $missionID,
-					...$this->SQLID,
-				],
-			);
-			return true;
-		}
-		return false;
-	}
-
-	private function setupMissionStep(int $missionID): void {
-		$stepID = $this->missions[$missionID]['On Step'];
-		if ($stepID >= count(MISSIONS[$missionID]['Steps'])) {
-			// Nothing to do if this mission is already completed
-			return;
-		}
-		$step = MISSIONS[$missionID]['Steps'][$stepID];
-		if (isset($step['PickSector'])) {
-			$realX = Plotter::getX($step['PickSector']['Type'], $step['PickSector']['X'], $this->getGameID());
-			try {
-				$path = Plotter::findDistanceToX($realX, $this->getSector(), true, null, $this);
-			} catch (PathNotFound) {
-				// Abandon the mission if it cannot be completed due to a
-				// sector that does not exist or cannot be reached.
-				// (Probably shouldn't bestow this mission in the first place)
-				$this->deleteMission($missionID);
-				throw new UserError('Cannot find a path to the destination!');
-			}
-			$this->missions[$missionID]['Sector'] = $path->getEndSectorID();
-		}
+	public function addMission(Mission $mission): MissionState {
+		return MissionState::addPlayerMission($this, $mission);
 	}
 
 	/**
 	 * Declining a mission will permanently hide it from the player
 	 * by adding it in its completed state.
 	 */
-	public function declineMission(int $missionID): void {
-		$finishedStep = count(MISSIONS[$missionID]['Steps']);
-		$this->addMission($missionID, $finishedStep);
-	}
-
-	public function addMission(int $missionID, int $step = 0): void {
-		if ($this->hasMission($missionID)) {
-			throw new Exception('Mission ID already added: ' . $missionID);
-		}
-
-		$mission = [
-			'On Step' => $step,
-			'Progress' => 0,
-			'Unread' => true,
-			'Expires' => (Epoch::time() + 86400),
-			'Sector' => 0,
-			'Starting Sector' => $this->getSectorID(),
-			'Task' => false,
-		];
-
-		$this->missions[$missionID] =& $mission;
-		$this->setupMissionStep($missionID);
-		$this->rebuildMission($missionID);
-
-		$db = Database::getInstance();
-		$db->replace('player_has_mission', [
-			...$this->SQLID,
-			'mission_id' => $missionID,
-			'on_step' => $mission['On Step'],
-			'progress' => $mission['Progress'],
-			'unread' => $db->escapeBoolean($mission['Unread']),
-			'starting_sector' => $mission['Starting Sector'],
-			'mission_sector' => $mission['Sector'],
-			'step_fails' => $mission['Expires'],
-		]);
-	}
-
-	private function rebuildMission(int $missionID): void {
-		$mission = $this->missions[$missionID];
-		$this->missions[$missionID]['Name'] = MISSIONS[$missionID]['Name'];
-
-		if ($mission['On Step'] >= count(MISSIONS[$missionID]['Steps'])) {
-			// If we have completed this mission just use false to indicate no current task.
-			$currentStep = false;
-		} else {
-			$replacements = [
-				'<Race>' => $this->getRaceID(),
-				'<Sector>' => $mission['Sector'],
-				'<Starting Sector>' => $mission['Starting Sector'],
-			];
-			$currentStep = MISSIONS[$missionID]['Steps'][$mission['On Step']];
-			array_walk_recursive($currentStep, 'replaceMissionTemplate', $replacements);
-		}
-		$this->missions[$missionID]['Task'] = $currentStep;
-	}
-
-	public function deleteMission(int $missionID): void {
-		$this->getMissions();
-		if (isset($this->missions[$missionID])) {
-			unset($this->missions[$missionID]);
-			$db = Database::getInstance();
-			$db->delete('player_has_mission', [
-				'mission_id' => $missionID,
-				...$this->SQLID,
-			]);
-			return;
-		}
-		throw new Exception('Mission with ID not found: ' . $missionID);
+	public function declineMission(Mission $mission): void {
+		$this->addMission($mission)->markComplete();
 	}
 
 	/**
-	 * @return array<int>
-	 */
-	public function markMissionsRead(): array {
-		$this->getMissions();
-		$unreadMissions = [];
-		foreach ($this->missions as $missionID => &$mission) {
-			if ($mission['Unread']) {
-				$unreadMissions[] = $missionID;
-				$mission['Unread'] = false;
-				$this->updateMission($missionID);
-			}
-		}
-		return $unreadMissions;
-	}
-
-	public function claimMissionReward(int $missionID): string {
-		if (!$this->hasMission($missionID)) {
-			throw new Exception('Unknown mission: ' . $missionID);
-		}
-		$mission =& $this->missions[$missionID];
-		if ($mission['Task'] === false || $mission['Task']['Step'] !== 'Claim') {
-			throw new Exception('Cannot claim mission: ' . $missionID . ', for step: ' . $mission['On Step']);
-		}
-		$mission['On Step']++;
-		$mission['Unread'] = true;
-		foreach ($mission['Task']['Rewards'] as $rewardItem => $amount) {
-			switch ($rewardItem) {
-				case 'Credits':
-					$this->increaseCredits($amount);
-					break;
-				case 'Experience':
-					$this->increaseExperience($amount);
-					break;
-			}
-		}
-		$rewardText = $mission['Task']['Rewards']['Text'];
-		if ($mission['On Step'] < count(MISSIONS[$missionID]['Steps'])) {
-			// If we haven't finished the mission yet then
-			$this->setupMissionStep($missionID);
-		}
-		$this->rebuildMission($missionID);
-		$this->updateMission($missionID);
-		return $rewardText;
-	}
-
-	/**
-	 * @return array<int, array<string, mixed>>
+	 * @return array<int, Mission>
 	 */
 	public function getAvailableMissions(): array {
 		$availableMissions = [];
-		foreach (MISSIONS as $missionID => $mission) {
+		foreach (Mission::MISSIONS as $missionID => $missionType) {
 			if ($this->hasMission($missionID)) {
 				continue;
 			}
-			$realX = Plotter::getX($mission['HasX']['Type'], $mission['HasX']['X'], $this->getGameID());
-			if ($this->getSector()->hasX($realX)) {
-				$availableMissions[$missionID] = $mission;
+			if ($missionType::isAvailableToPlayer($this)) {
+				try {
+					$availableMissions[$missionID] = new $missionType($this);
+				} catch (MissionNotPossible) {
+					// Skip impossible mission. Note that if a mission will
+					// never be able to be completed (e.g. due to location not
+					// in the game), then we could consider declining the
+					// mission so that we don't keep trying to construct it.
+					// Though it might be hard to distinguish between permanent
+					// and temporary blocking conditions.
+				}
 			}
 		}
 		return $availableMissions;
@@ -2993,46 +2813,11 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @param array<string, mixed> $values
+	 * Check if a taken action satisfies any active mission requirements.
 	 */
-	public function actionTaken(string $actionID, array $values): void {
-		if (!in_array($actionID, MISSION_ACTIONS, true)) {
-			throw new Exception('Unknown action: ' . $actionID);
-		}
-		// TODO: Reenable this once tested.     if($this->getAccount()->isLoggingEnabled())
-		switch ($actionID) {
-			case 'WalkSector':
-				$this->log(LOG_TYPE_MOVEMENT, 'Walks to sector: ' . $values['Sector']->getSectorID());
-				break;
-			case 'JoinAlliance':
-				$this->log(LOG_TYPE_ALLIANCE, 'joined alliance: ' . $values['Alliance']->getAllianceName());
-				break;
-			case 'LeaveAlliance':
-				$this->log(LOG_TYPE_ALLIANCE, 'left alliance: ' . $values['Alliance']->getAllianceName());
-				break;
-			case 'DisbandAlliance':
-				$this->log(LOG_TYPE_ALLIANCE, 'disbanded alliance ' . $values['Alliance']->getAllianceName());
-				break;
-			case 'KickPlayer':
-				$this->log(LOG_TYPE_ALLIANCE, 'kicked ' . $values['Player']->getAccount()->getLogin() . ' (' . $values['Player']->getPlayerName() . ') from alliance ' . $values['Alliance']->getAllianceName());
-				break;
-			case 'PlayerKicked':
-				$this->log(LOG_TYPE_ALLIANCE, 'was kicked from alliance ' . $values['Alliance']->getAllianceName() . ' by ' . $values['Player']->getAccount()->getLogin() . ' (' . $values['Player']->getPlayerName() . ')');
-				break;
-		}
-
-		$this->getMissions();
-		foreach ($this->missions as $missionID => &$mission) {
-			if ($mission['Task'] !== false && $mission['Task']['Step'] === $actionID) {
-				$requirements = $mission['Task']['Detail'];
-				if (checkMissionRequirements($values, $requirements) === true) {
-					$mission['On Step']++;
-					$mission['Unread'] = true;
-					$this->setupMissionStep($missionID);
-					$this->rebuildMission($missionID);
-					$this->updateMission($missionID);
-				}
-			}
+	public function actionTaken(MissionAction $action): void {
+		foreach ($this->getActiveMissionStates() as $missionState) {
+			$missionState->checkAction($action);
 		}
 	}
 

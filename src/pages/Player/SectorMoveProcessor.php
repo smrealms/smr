@@ -71,7 +71,7 @@ class SectorMoveProcessor extends PlayerPageProcessor {
 
 		// log action
 		$targetSector = Sector::getSector($player->getGameID(), $this->targetSectorID);
-		$player->actionTaken('WalkSector', ['Sector' => $targetSector]);
+		$player->log(LOG_TYPE_MOVEMENT, 'Walks to sector : ' . $targetSector->getSectorID());
 
 		// send scout msg
 		$sector->leavingSector($player, $movement);

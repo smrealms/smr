@@ -12,6 +12,7 @@ use Smr\Force;
 use Smr\Game;
 use Smr\Globals;
 use Smr\Messages;
+use Smr\MissionState;
 use Smr\Page\Page;
 use Smr\Pages\Account\AlbumEdit;
 use Smr\Pages\Account\BugReport;
@@ -516,6 +517,7 @@ function saveAllAndReleaseLock(bool $updateSession = true): void {
 		Port::savePorts();
 		Planet::savePlanets();
 		WeightedRandom::saveWeightedRandoms();
+		MissionState::saveMissionStates();
 		if ($updateSession) {
 			//Update session here to make sure current page $var is up to date before releasing lock.
 			Session::getInstance()->update();

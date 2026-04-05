@@ -19,8 +19,6 @@ class CurrentSector extends PlayerPage {
 
 	public string $file = 'current_sector.php';
 
-	/** @var array<int> */
-	private array $unreadMissions;
 	private ?string $attackMessage = null;
 
 	public function __construct(
@@ -89,8 +87,11 @@ class CurrentSector extends PlayerPage {
 
 		doTickerAssigns($template, $player, $db);
 
-		$this->unreadMissions ??= $player->markMissionsRead();
-		$template->assign('UnreadMissions', $this->unreadMissions);
+		$unreadMissions = [];
+		foreach ($player->getActiveMissionStates() as $missionID => $missionState) {
+			$unreadMissions[$missionID] = $missionState->getUnreadMessage();
+		}
+		$template->assign('UnreadMissions', $unreadMissions);
 
 		// *******************************************
 		// *

@@ -51,7 +51,12 @@ class Plotter {
 	 *
 	 * @throws \Smr\Exceptions\PathNotFound
 	 */
-	public static function findReversiblePathToX(mixed $x, Sector $sector, ?AbstractPlayer $needsToHaveBeenExploredBy = null, ?AbstractPlayer $player = null): Path {
+	public static function findReversiblePathToX(
+		mixed $x,
+		Sector $sector,
+		?AbstractPlayer $needsToHaveBeenExploredBy = null,
+		?AbstractPlayer $player = null,
+	): Path {
 		if ($x instanceof Sector) {
 
 			// To ensure reversibility, always plot lowest to highest.
@@ -95,11 +100,22 @@ class Plotter {
 	 * @param mixed $x If the string 'Distance', then distances to all visited sectors will
 	 *                 be returned. Otherwise, must be a type implemented by Sector::hasX,
 	 *                 and will only return distances to sectors for which hasX returns true.
+	 * @param ?array<int> $excludeSectorIDs Sectors to exclude from results.
 	 *
 	 * @throws \Smr\Exceptions\PathNotFound
 	 * @return ($useFirst is true ? Path : array<int, Path>)
 	 */
-	public static function findDistanceToX(mixed $x, Sector $sector, bool $useFirst, ?AbstractPlayer $needsToHaveBeenExploredBy = null, ?AbstractPlayer $player = null, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): array|Path {
+	public static function findDistanceToX(
+		mixed $x,
+		Sector $sector,
+		bool $useFirst,
+		?AbstractPlayer $needsToHaveBeenExploredBy = null,
+		?AbstractPlayer $player = null,
+		int $distanceLimit = 10000,
+		int $lowLimit = 0,
+		int $highLimit = 100000,
+		?array $excludeSectorIDs = null,
+	): array|Path {
 		$warpAddIndex = TURNS_WARP_SECTOR_EQUIVALENCE - 1;
 
 		$checkSector = $sector;
@@ -142,32 +158,38 @@ class Plotter {
 				$checkSectorID = $distance->getEndSectorID();
 				$visitedSectors[$checkSectorID] = true; // This is here for warps, because they are delayed visits if we set this before the actual visit we'll get sectors marked as visited long before they are actually visited - causes problems when it's quicker to walk to the warp exit than to warp there.
 																// We still need to mark walked sectors as visited before we go to each one otherwise we get a huge number of paths being checked twice (up then left, left then up are essentially the same but if we set up-left as visited only when we actually check it then it gets queued up twice - nasty)
-				if ($checkSectorID >= $lowLimit && $checkSectorID <= $highLimit) {
-					$checkSector = Sector::getSector($gameID, $checkSectorID);
-					// Does this sector satisfy our criteria?
-					if ($x === 'Distance' || (($needsToHaveBeenExploredBy === null || $needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID())) === true
-							&& $checkSector->hasX($x, $player) === true)) {
-						if ($useFirst === true) {
-							return $distance;
-						}
-						$distances[$checkSector->getSectorID()] = $distance;
-					}
-					//Warps first as a slight optimisation due to how visitedSectors is set.
-					if ($checkSector->hasWarp() === true) {
-						if (!isset($visitedSectors[$checkSector->getWarp()])) {
-							$cloneDistance = clone($distance);
-							$cloneDistance->addWarp($checkSector->getWarp());
-							$distanceQ[$warpAddIndex][] = $cloneDistance;
-						}
-					}
-					foreach ($checkSector->getLinks() as $nextSector) {
-						if (!isset($visitedSectors[$nextSector])) {
-							$visitedSectors[$nextSector] = true;
 
-							$cloneDistance = clone($distance);
-							$cloneDistance->addLink($nextSector);
-							$distanceQ[0][] = $cloneDistance;
-						}
+				if ($checkSectorID < $lowLimit || $checkSectorID > $highLimit) {
+					continue;
+				}
+				if ($excludeSectorIDs !== null && in_array($checkSectorID, $excludeSectorIDs, true)) {
+					continue;
+				}
+
+				$checkSector = Sector::getSector($gameID, $checkSectorID);
+				// Does this sector satisfy our criteria?
+				if ($x === 'Distance' || (($needsToHaveBeenExploredBy === null || $needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID())) === true
+						&& $checkSector->hasX($x, $player) === true)) {
+					if ($useFirst === true) {
+						return $distance;
+					}
+					$distances[$checkSector->getSectorID()] = $distance;
+				}
+				//Warps first as a slight optimisation due to how visitedSectors is set.
+				if ($checkSector->hasWarp() === true) {
+					if (!isset($visitedSectors[$checkSector->getWarp()])) {
+						$cloneDistance = clone($distance);
+						$cloneDistance->addWarp($checkSector->getWarp());
+						$distanceQ[$warpAddIndex][] = $cloneDistance;
+					}
+				}
+				foreach ($checkSector->getLinks() as $nextSector) {
+					if (!isset($visitedSectors[$nextSector])) {
+						$visitedSectors[$nextSector] = true;
+
+						$cloneDistance = clone($distance);
+						$cloneDistance->addLink($nextSector);
+						$distanceQ[0][] = $cloneDistance;
 					}
 				}
 			}
@@ -183,7 +205,13 @@ class Plotter {
 	 * @param array<int, bool> $races
 	 * @return array<int, array<int, Path>>
 	 */
-	public static function calculatePortToPortDistances(array $ports, array $races, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): array {
+	public static function calculatePortToPortDistances(
+		array $ports,
+		array $races,
+		int $distanceLimit = 10000,
+		int $lowLimit = 0,
+		int $highLimit = 100000,
+	): array {
 		$distances = [];
 		foreach ($ports as $port) {
 			$sectorID = $port->getSectorID();
@@ -197,7 +225,12 @@ class Plotter {
 	/**
 	 * @return array<int, Path>
 	 */
-	public static function findDistanceToOtherPorts(Sector $sector, int $distanceLimit = 10000, int $lowLimit = 0, int $highLimit = 100000): array {
+	public static function findDistanceToOtherPorts(
+		Sector $sector,
+		int $distanceLimit = 10000,
+		int $lowLimit = 0,
+		int $highLimit = 100000,
+	): array {
 		return self::findDistanceToX('Port', $sector, false, null, null, $distanceLimit, $lowLimit, $highLimit);
 	}
 
