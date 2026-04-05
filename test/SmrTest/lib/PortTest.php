@@ -7,8 +7,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
-use Smr\Bounty;
-use Smr\BountyType;
 use Smr\Container\DiContainer;
 use Smr\Database;
 use Smr\Game;
@@ -383,26 +381,19 @@ class PortTest extends TestCase {
 		$db = $this->createStub(Database::class);
 		DiContainer::getContainer()->set(Database::class, $db);
 
-		// Add a few basic checks on the player that gets the killshot
-		$portLevel = 3;
-		$playerExp = 100;
-
-		$player = $this->createMock(Player::class);
-		$player
-			->method('getExperience')
-			->willReturn($playerExp);
-
 		// Make objects that must be accessed statically (can't be mocked)
 		Sector::createSector(1, 1);
 		Game::createGame(1)->setGameTypeID(Game::GAME_TYPE_DEFAULT);
 
 		// Set up the port
+		$portLevel = 3;
 		$port = Port::createPort(1, 1);
 		$port->upgradeToLevel($portLevel);
 
 		// Imitate the scenario of de-leveling a port in the same attack that
 		// destroys the port. While there's a lot we could verify here, most
 		// important is to make sure that it doesn't throw.
+		$player = $this->createStub(Player::class);
 		$result = $port->killPortByPlayer($player);
 		$port->upgradeToLevel($portLevel - 1);
 		$port->update();
