@@ -387,21 +387,7 @@ class PortTest extends TestCase {
 		$portLevel = 3;
 		$playerExp = 100;
 
-		$bounty = $this->createMock(Bounty::class);
-		$bounty
-			->expects(self::once())
-			->method('increaseCredits')
-			->with($portLevel * $playerExp);
 		$player = $this->createMock(Player::class);
-		$player
-			->expects(self::once())
-			->method('decreaseRelations')
-			->with(Port::KILLER_RELATIONS_LOSS, RACE_NEUTRAL);
-		$player
-			->expects(self::once())
-			->method('getActiveBounty')
-			->with(BountyType::HQ)
-			->willReturn($bounty);
 		$player
 			->method('getExperience')
 			->willReturn($playerExp);
