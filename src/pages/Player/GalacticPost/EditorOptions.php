@@ -37,11 +37,10 @@ class EditorOptions extends PlayerPage {
 			$paper_id = $dbRecord->getInt('paper_id');
 			$published = $dbRecord->getNullableInt('online_since') !== null;
 
-			$dbResult2 = $db->read('SELECT count(*) FROM galactic_post_paper_content WHERE paper_id = :paper_id AND game_id = :game_id', [
-				'paper_id' => $db->escapeNumber($paper_id),
-				'game_id' => $db->escapeNumber($player->getGameID()),
+			$numArticles = $db->count('galactic_post_paper_content', [
+				'paper_id' => $paper_id,
+				'game_id' => $player->getGameID(),
 			]);
-			$numArticles = $dbResult2->record()->getInt('count(*)');
 			$hasEnoughArticles = $numArticles > 2 && $numArticles < 9;
 
 			$paper = [

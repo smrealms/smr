@@ -48,16 +48,16 @@ class GameJoin extends AccountPage {
 		$db = Database::getInstance();
 		foreach ($game->getPlayableRaceIDs() as $raceID) {
 			// get number of traders in game
-			$dbResult = $db->read('SELECT count(*) as number_of_race FROM player WHERE race_id = :race_id AND game_id = :game_id', [
-				'race_id' => $db->escapeNumber($raceID),
-				'game_id' => $db->escapeNumber($this->gameID),
+			$numOfRace = $db->count('player', [
+				'race_id' => $raceID,
+				'game_id' => $this->gameID,
 			]);
 
 			$races[$raceID] = [
 				'Name' => Race::getName($raceID),
 				'ShortDescription' => RaceDetails::getShortDescription($raceID),
 				'LongDescription' => RaceDetails::getLongDescription($raceID),
-				'NumberOfPlayers' => $dbResult->record()->getInt('number_of_race'),
+				'NumberOfPlayers' => $numOfRace,
 				'Selected' => false,
 			];
 		}

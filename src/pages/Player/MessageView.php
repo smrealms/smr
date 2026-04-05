@@ -59,13 +59,10 @@ class MessageView extends PlayerPage {
 				'receiver_delete' => $db->escapeBoolean(false),
 				'game_id' => $db->escapeNumber($player->getGameID()),
 			];
-			$dbResult = $db->read('SELECT count(*) as count
-						FROM message WHERE ' . $whereClause . '
-							AND msg_read = \'FALSE\'', $whereParams);
-			$messageBox['UnreadMessages'] = $dbResult->record()->getInt('count');
+			$numUnread = $db->count('message', [...$whereParams, 'msg_read' => $db->escapeBoolean(false)]);
+			$messageBox['UnreadMessages'] = $numUnread;
 		}
-		$dbResult = $db->read('SELECT count(*) as count FROM message WHERE ' . $whereClause, $whereParams);
-		$messageBox['TotalMessages'] = $dbResult->record()->getInt('count');
+		$messageBox['TotalMessages'] = $db->count('message', $whereParams);
 		$messageBox['Type'] = $folderID;
 
 		$page = $this->page;

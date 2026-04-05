@@ -27,13 +27,11 @@ class EmbassyProcessor extends PlayerPageProcessor {
 		$time = Epoch::time() + TIME_FOR_COUNCIL_VOTE;
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT count(*) FROM race_has_voting
-					WHERE game_id = :game_id
-					AND race_id_1 = :race_id_1', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'race_id_1' => $db->escapeNumber($player->getRaceID()),
+		$numVotes = $db->count('race_has_voting', [
+			'game_id' => $player->getGameID(),
+			'race_id_1' => $player->getRaceID(),
 		]);
-		if ($dbResult->record()->getInt('count(*)') > 2) {
+		if ($numVotes > 2) {
 			create_error('You can\'t initiate more than 3 votes at a time!');
 		}
 

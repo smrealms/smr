@@ -81,17 +81,13 @@ class CouncilVoting {
 		$db = Database::getInstance();
 		$results = ['YES' => 0, 'NO' => 0];
 		foreach (array_keys($results) as $vote) {
-			$dbResult = $db->read('SELECT count(*) FROM player_votes_pact
-					WHERE game_id = :game_id
-						AND race_id_1 = :race_id_1
-						AND race_id_2 = :race_id_2
-						AND vote = :vote', [
-				'game_id' => $db->escapeNumber($gameID),
-				'race_id_1' => $db->escapeNumber($race_id_1),
-				'race_id_2' => $db->escapeNumber($race_id_2),
-				'vote' => $db->escapeString($vote),
+			$count = $db->count('player_votes_pact', [
+				'game_id' => $gameID,
+				'race_id_1' => $race_id_1,
+				'race_id_2' => $race_id_2,
+				'vote' => $vote,
 			]);
-			$results[$vote] = $dbResult->record()->getInt('count(*)');
+			$results[$vote] = $count;
 		}
 		return $results;
 	}

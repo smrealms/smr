@@ -38,14 +38,7 @@ function get_seed_message(AbstractPlayer $player): string {
 function shared_channel_msg_seed(AbstractPlayer $player): array {
 	// Check to see how many sectors are in the seedlist
 	$db = Database::getInstance();
-	$dbResult = $db->read('SELECT count(*)
-		FROM alliance_has_seedlist
-		WHERE alliance_id = :alliance_id
-			AND game_id = :game_id', [
-		'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-		'game_id' => $db->escapeNumber($player->getGameID()),
-	]);
-	$numSectors = $dbResult->record()->getInt('count(*)');
+	$numSectors = $db->count('alliance_has_seedlist', $player->getAlliance()->SQLID);
 
 	if ($numSectors === 0) {
 		return ['Your alliance has not set up a seedlist yet.'];

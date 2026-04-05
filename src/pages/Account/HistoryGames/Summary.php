@@ -36,10 +36,7 @@ class Summary extends HistoryPage {
 		$template->assign('MinAlign', $dbRecord->getInt('min_align'));
 		$template->assign('MaxKills', $dbRecord->getInt('max_kills'));
 
-		$dbResult = $db->read('SELECT count(*) FROM alliance WHERE game_id = :game_id', [
-			'game_id' => $db->escapeNumber($game_id),
-		]);
-		$template->assign('NumAlliances', $dbResult->record()->getInt('count(*)'));
+		$template->assign('NumAlliances', $db->count('alliance', ['game_id' => $game_id]));
 
 		// Get linked player information, if available
 		$oldAccountID = $account->getOldAccountID($this->historyDatabase);

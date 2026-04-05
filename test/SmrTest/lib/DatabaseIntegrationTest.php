@@ -102,6 +102,14 @@ class DatabaseIntegrationTest extends TestCase {
 		self::assertSame(50, $dbResult->getNumRecords());
 	}
 
+	public function test_count(): void {
+		$db = Database::getInstance();
+		// Test with criteria
+		self::assertSame(1, $db->count('level', ['level_id' => 2]));
+		// Test without criteria (all rows)
+		self::assertSame(50, $db->count('level', []));
+	}
+
 	public function test_getDbBytes(): void {
 		$db = Database::getInstance();
 		$bytes = $db->getDbBytes();
