@@ -895,13 +895,13 @@ class AbstractShip {
 				// bystander reactions
 				$relChangeFactor = MAX_GLOBAL_RELATIONS; // 0.5x at 250, 1x at 500
 			}
-			$relChange = IFloor($relChangeBase * (-$politicalRelations / $relChangeFactor));
+			$relChange = ITrunc($relChangeBase * (-$politicalRelations / $relChangeFactor));
 			if ($relChange > 0) {
 				$thisPlayer->increaseRelations($relChange, $raceID);
 				$thisPlayer->increaseHOF($relChange, ['Combat', 'Port', 'Relation', 'Gain'], HOF_PUBLIC);
 			} else {
-				$thisPlayer->decreaseRelations($relChange, $raceID);
-				$thisPlayer->increaseHOF($relChange, ['Combat', 'Port', 'Relation', 'Loss'], HOF_PUBLIC);
+				$thisPlayer->decreaseRelations(-$relChange, $raceID);
+				$thisPlayer->increaseHOF(-$relChange, ['Combat', 'Port', 'Relation', 'Loss'], HOF_PUBLIC);
 			}
 		}
 
