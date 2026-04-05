@@ -9,7 +9,7 @@ use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\Php74\Rector\Assign\NullCoalescingOperatorRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php80\Rector\FuncCall\ClassOnObjectRector;
-use Rector\Php81\Rector\Array_\FirstClassCallableRector;
+use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\Php83\Rector\ClassConst\AddTypeToConstRector;
 use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
@@ -25,11 +25,11 @@ return RectorConfig::configure()
 	->withRules([
 		AddTypeToConstRector::class,
 		AddOverrideAttributeToOverriddenMethodsRector::class,
+		ArrayToFirstClassCallableRector::class,
 		ClassOnObjectRector::class,
 		ClassPropertyAssignToConstructorPromotionRector::class,
 		CombinedAssignRector::class,
 		DirNameFileConstantToDirConstantRector::class,
-		FirstClassCallableRector::class,
 		IfIssetToCoalescingRector::class,
 		JsonThrowOnErrorRector::class,
 		NullCoalescingOperatorRector::class,

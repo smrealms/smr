@@ -41,7 +41,7 @@ readonly class Loc {
 	}
 
 	public function file(): string {
-		return chr(ord('a') + $this->x);
+		return chr(97 + $this->x); // 97 = ord('a')
 	}
 
 	public function rank(): int {
