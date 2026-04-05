@@ -50,14 +50,23 @@ readonly class DrunkGuy extends Mission {
 		// Get sector ID for mission locations
 		$hqID = LOCATION_GROUP_RACIAL_HQS + $raceID;
 		$this->hqSectorID = $this->pickSector($hqID, $this->startSectorID);
-		$this->barSectorID = $this->pickSector('Bar', $this->hqSectorID);
+		// Don't go back to the bar we started at (that would be silly)
+		$this->barSectorID = $this->pickSector('Bar', $this->hqSectorID, [$this->startSectorID]);
 	}
 
-	private function pickSector(int|string $loc, int $fromSectorID): int {
+	/**
+	 * @param array<int> $excludeSectorIDs Sectors to exclude from picking.
+	 */
+	private function pickSector(int|string $loc, int $fromSectorID, ?array $excludeSectorIDs = null): int {
 		$toFind = Plotter::getX(PlotGroup::Locations, $loc, $this->gameID);
 		$fromSector = Sector::getSector($this->gameID, $fromSectorID);
 		try {
-			$path = Plotter::findDistanceToX($toFind, $fromSector, useFirst: true);
+			$path = Plotter::findDistanceToX(
+				x: $toFind,
+				sector: $fromSector,
+				useFirst: true,
+				excludeSectorIDs: $excludeSectorIDs,
+			);
 		} catch (PathNotFound) {
 			throw new MissionNotPossible();
 		}
@@ -100,7 +109,7 @@ readonly class DrunkGuy extends Mission {
 		$player->increaseCredits($credits);
 		$exp = self::REWARD_EXP;
 		$player->increaseExperience($exp);
-		return '<i>*Hiccup*</i> For your...service <i>*Hiccup*</i> to me, take this as a reward <i>*Hiccup*</i> ...<br /><br />They trail off incoherently.<br /><br />You gain <span class="creds">' . $credits . '</span> ' . pluralise($credits, 'credit', false) . ' and <span class="exp">' . $exp . '</span> ' . pluralise($exp, 'experience point', false) . '!';
+		return '<i>*Hiccup*</i> For your...service <i>*Hiccup*</i> to me, take this as a reward <i>*Hiccup*</i> ...<br /><br />They trail off incoherently.<br /><br />You gain <span class="creds">' . number_format($credits) . '</span> ' . pluralise($credits, 'credit', false) . ' and <span class="exp">' . number_format($exp) . '</span> ' . pluralise($exp, 'experience point', false) . '!';
 	}
 
 }
