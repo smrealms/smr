@@ -97,8 +97,8 @@ readonly class DrunkGuy extends Mission {
 			),
 			4 => new MissionStep(
 				message: 'You hand the ' . $this->drinkName . ' to the drunk!',
-				task: 'Claim your reward in sector [sector=' . $this->barSectorID . ']',
-				requirement: new ClaimReward($this->barSectorID),
+				task: 'Claim your reward in sector [sector=' . $this->startSectorID . ']',
+				requirement: new ClaimReward($this->startSectorID),
 			),
 			default => throw new MissionStepNotFound(),
 		};
