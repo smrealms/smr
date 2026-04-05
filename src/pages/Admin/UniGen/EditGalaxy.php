@@ -85,7 +85,8 @@ class EditGalaxy extends AccountPage {
 			$template->assign($templateVar, $newGalaxyInfo);
 		}
 
-		$template->assign('GameName', Game::getGame($this->gameID)->getDisplayName());
+		$game = Game::getGame($this->gameID);
+		$template->assign('GameName', $game->getDisplayName());
 		$template->assign('Galaxy', $galaxy);
 		$template->assign('Galaxies', $galaxies);
 		$template->assign('MapSectors', $mapSectors);
@@ -164,15 +165,17 @@ class EditGalaxy extends AccountPage {
 			$container = new EditGameCreateStatusProcessor($this->gameID, $returnTo);
 			$template->assign('CreateStatusHREF', $container->href());
 
-			$db = Database::getInstance();
-			$dbResult = $db->select(
-				'game_create_status',
-				['game_id' => $this->gameID],
-				['ready_date', 'all_edit'],
-			);
-			$dbRecord = $dbResult->record();
-			$template->assign('MapReady', $dbRecord->getNullableString('ready_date') !== null);
-			$template->assign('AllEdit', $dbRecord->getBoolean('all_edit'));
+			if (!$game->isEnabled()) {
+				$db = Database::getInstance();
+				$dbResult = $db->select(
+					'game_create_status',
+					['game_id' => $this->gameID],
+					['ready_date', 'all_edit'],
+				);
+				$dbRecord = $dbResult->record();
+				$template->assign('MapReady', $dbRecord->getNullableString('ready_date') !== null);
+				$template->assign('AllEdit', $dbRecord->getBoolean('all_edit'));
+			}
 		}
 
 	}
