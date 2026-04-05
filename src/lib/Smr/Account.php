@@ -510,6 +510,9 @@ class Account {
 				} else {
 					$amount = $player->getHOF($stat);
 				}
+				// Don't let any negative stat (e.g. profit) contribute to score.
+				// (Required to avoid imaginary numbers from fractional pow.)
+				$amount = max(0, $amount);
 				$this->individualScores[$gameID][] = [
 					'Stat' => $stat,
 					'Score' => pow($amount * $a, self::USER_RANKINGS_EACH_STAT_POW) * $b,
