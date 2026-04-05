@@ -9,7 +9,7 @@ mkdir -p "${backup_dir}"
 today="$(date +'%Y-%m-%d_%H-%M')"
 backup_file="${backup_dir}/smr_live_${today}.sql"
 
-echo "Backing up to ${backup}"
+echo "Backing up to ${backup_file}"
 docker compose exec -T mysql mysqldump --no-tablespaces --add-drop-database --databases smr_live > ${backup_file}
 
 # To restore:
