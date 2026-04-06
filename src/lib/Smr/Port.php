@@ -23,7 +23,9 @@ class Port {
 	/** @var array<int, array<int, array<int, self|false>>> */
 	protected static array $CACHE_CACHED_PORTS = [];
 
-	public const int DAMAGE_NEEDED_FOR_ALIGNMENT_CHANGE = 300; // single player
+	public const int FED_BOUNTY_PER_DAMAGE = 80; // credits
+	public const int DAMAGE_PER_ALIGNMENT_CHANGE = 400; // single player
+	public const int DAMAGE_PER_RELATION_CHANGE = 375; // single player
 	protected const int DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 325; // all attackers
 	protected const int CHANCE_TO_DOWNGRADE = 1;
 	protected const int TIME_FEDS_STAY = 1800;
@@ -45,7 +47,6 @@ class Port {
 	protected const float BASE_PAYOUT = 0.85; // fraction of credits for looting
 	public const float RAZE_PAYOUT = 0.75; // fraction of base payout for razing
 	public const float CLAIM_PAYOUT = 0.5; // fraction of base payout for claiming
-	public const int KILLER_RELATIONS_LOSS = 45; // relations lost by killer in PR
 
 	public const string SQL = 'sector_id = :sector_id AND game_id = :game_id';
 	/** @var array{sector_id: int, game_id: int} */
@@ -1575,14 +1576,6 @@ class Port {
 			'killer_alliance' => $killer->getAllianceID(),
 			'dead_id' => ACCOUNT_ID_PORT,
 		]);
-
-		// Killer gets a relations change and a bounty if port is taken
-		$killerBounty = $killer->getExperience() * $this->getLevel();
-		$killer->getActiveBounty(BountyType::HQ)->increaseCredits($killerBounty);
-		$killer->increaseHOF($killerBounty, ['Combat', 'Port', 'Bounties', 'Gained'], HOF_PUBLIC);
-
-		$killer->decreaseRelations(self::KILLER_RELATIONS_LOSS, $this->getRaceID());
-		$killer->increaseHOF(self::KILLER_RELATIONS_LOSS, ['Combat', 'Port', 'Relation', 'Loss'], HOF_PUBLIC);
 
 		return [];
 	}

@@ -8,9 +8,14 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use Smr\AbstractPlayer;
 use Smr\AbstractShip;
+use Smr\Bounty;
+use Smr\BountyType;
 use Smr\Combat\Weapon\Weapon;
+use Smr\Globals;
+use Smr\Port;
 use Smr\ShipClass;
 use Smr\ShipIllusion;
 
@@ -35,6 +40,12 @@ class AbstractShipTest extends TestCase {
 		$this->player
 			->method('getShipTypeID')
 			->willReturn(SHIP_TYPE_DEMONICA);
+	}
+
+	protected function tearDown(): void {
+		// Reset Globals::$RACE_RELATIONS due to test_shootPort
+		$raceRelations = new ReflectionProperty(Globals::class, 'RACE_RELATIONS');
+		$raceRelations->setValue(null, []);
 	}
 
 	public function test_base_ship_properties_are_set_correctly(): void {
@@ -528,6 +539,204 @@ class AbstractShipTest extends TestCase {
 				0, 0, 0,
 			],
 		];
+	}
+
+	public function test_shootPort(): void {
+		$bounty = $this->createMock(Bounty::class);
+		$bounty
+			->expects(self::once())
+			->method('increaseCredits')
+			->with(44_800);
+
+		$gameID = 3;
+		$player = $this->createMock(AbstractPlayer::class);
+		$player
+			->expects(self::atLeastOnce())
+			->method('getGameID')
+			->willReturn($gameID);
+		$player
+			->expects(self::atLeastOnce())
+			->method('getRaceID')
+			->willReturn(RACE_THEVIAN);
+		$player
+			->expects(self::once())
+			->method('getShipTypeID')
+			->willReturn(SHIP_TYPE_ASSAULT_CRAFT);
+		$player
+			->expects(self::atLeastOnce())
+			->method('getLevelID')
+			->willReturn(25);
+		$player
+			->expects(self::once())
+			->method('isDead')
+			->willReturn(false);
+		$player
+			->expects(self::once())
+			->method('getActiveBounty')
+			->with(BountyType::HQ)
+			->willReturn($bounty);
+		$player
+			->expects(self::once())
+			->method('increaseExperience')
+			->with(84);
+		$increaseHof = [];
+		$player
+			->method('increaseHOF')
+			->willReturnCallback(function (...$args) use (&$increaseHof) {
+				$increaseHof[] = $args;
+			});
+		$decreaseRelations = [];
+		$player
+			->method('decreaseRelations')
+			->willReturnCallback(function (...$args) use (&$decreaseRelations) {
+				$decreaseRelations[] = $args;
+			});
+		$increaseRelations = [];
+		$player
+			->method('increaseRelations')
+			->willReturnCallback(function (...$args) use (&$increaseRelations) {
+				$increaseRelations[] = $args;
+			});
+		$player
+			->expects(self::once())
+			->method('increaseAlignment')
+			->with(1);
+
+		$port = Port::createPort($gameID, 9);
+		$port->setRaceID(RACE_SALVENE);
+		$port->upgradeToLevel(2);
+		$port->checkDefenses(); // populates shields/armour/cds
+
+		// Set Globals::$RACE_RELATIONS
+		$raceRelations = new ReflectionProperty(Globals::class, 'RACE_RELATIONS');
+		$raceRelations->setValue(null, [
+			$gameID => [
+				RACE_SALVENE => [
+					RACE_THEVIAN => -500,
+					RACE_SALVENE => 500,
+					RACE_NIJARIN => 350,
+					RACE_ALSKANT => -250,
+				],
+			],
+		]);
+
+		$ship = new AbstractShip($player);
+		$weapons = [
+			Weapon::getWeapon(WEAPON_TYPE_HHG),
+			Weapon::getWeapon(WEAPON_TYPE_HUGE_PULSE_LASER),
+			Weapon::getWeapon(WEAPON_TYPE_HUGE_PULSE_LASER),
+			Weapon::getWeapon(WEAPON_TYPE_LARGE_PULSE_LASER),
+			Weapon::getWeapon(WEAPON_TYPE_LARGE_PULSE_LASER),
+			Weapon::getWeapon(WEAPON_TYPE_LARGE_PULSE_LASER),
+		];
+		foreach ($weapons as $weapon) {
+			$ship->addWeapon($weapon);
+		}
+
+		srand(16); // set rand seed for weapons
+		$result = $ship->shootPort($port);
+
+		// Validate the array returned from shootPort
+		$hhgDamage = [
+			'Shield' => 300,
+			'Armour' => 0,
+			'Rollover' => false,
+		];
+		$hplDamage = [
+			'Shield' => 80,
+			'Armour' => 80,
+			'Rollover' => false,
+		];
+		$lplDamage = [
+			'Shield' => 60,
+			'Armour' => 60,
+			'Rollover' => false,
+		];
+		$getActualDamage = function (int $damage): array {
+			return [
+				'KillingShot' => false,
+				'TargetAlreadyDead' => false,
+				'Shield' => $damage,
+				'CDs' => 0,
+				'NumCDs' => 0,
+				'HasCDs' => true,
+				'Armour' => 0,
+				'TotalDamage' => $damage,
+			];
+		};
+		$expected = [
+			'Player' => $player,
+			'TotalDamage' => 560,
+			'Weapons' => [
+				[
+					'Weapon' => $weapons[0],
+					'Target' => $port,
+					'Hit' => true,
+					'WeaponDamage' => $hhgDamage,
+					'ActualDamage' => $getActualDamage(300),
+				],
+				[
+					'Weapon' => $weapons[1],
+					'Target' => $port,
+					'Hit' => true,
+					'WeaponDamage' => $hplDamage,
+					'ActualDamage' => $getActualDamage(80),
+				],
+				[
+					'Weapon' => $weapons[2],
+					'Target' => $port,
+					'Hit' => false,
+				],
+				[
+					'Weapon' => $weapons[3],
+					'Target' => $port,
+					'Hit' => true,
+					'WeaponDamage' => $lplDamage,
+					'ActualDamage' => $getActualDamage(60),
+				],
+				[
+					'Weapon' => $weapons[4],
+					'Target' => $port,
+					'Hit' => true,
+					'WeaponDamage' => $lplDamage,
+					'ActualDamage' => $getActualDamage(60),
+				],
+				[
+					'Weapon' => $weapons[5],
+					'Target' => $port,
+					'Hit' => true,
+					'WeaponDamage' => $lplDamage,
+					'ActualDamage' => $getActualDamage(60),
+				],
+			],
+			'DeadBeforeShot' => false,
+		];
+		self::assertSame($expected, $result);
+
+		// Validate the mocked functions called multiple times in shootPort
+		$decreaseRelationsExpected = [
+			[2, RACE_SALVENE],
+			[1, RACE_NIJARIN],
+			[0, RACE_ALSKANT],
+		];
+		self::assertSame($decreaseRelationsExpected, $decreaseRelations);
+
+		$increaseRelationsExpected = [
+			[2, RACE_THEVIAN],
+		];
+		self::assertSame($increaseRelationsExpected, $increaseRelations);
+
+		$increaseHofExpected = [
+			[560., ['Combat', 'Port', 'Damage Done'], HOF_PUBLIC],
+			[44_800., ['Combat', 'Port', 'Bounties', 'Gained'], HOF_PUBLIC],
+			[2., ['Combat', 'Port', 'Relation', 'Gain'], HOF_PUBLIC],
+			[2., ['Combat', 'Port', 'Relation', 'Loss'], HOF_PUBLIC],
+			[1., ['Combat', 'Port', 'Relation', 'Loss'], HOF_PUBLIC],
+			[0., ['Combat', 'Port', 'Relation', 'Loss'], HOF_PUBLIC],
+			[1., ['Combat', 'Port', 'Alignment', 'Gain'], HOF_PUBLIC],
+		];
+		self::assertSame($increaseHofExpected, $increaseHof);
+
 	}
 
 }

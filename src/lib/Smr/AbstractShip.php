@@ -879,17 +879,40 @@ class AbstractShip {
 		$thisPlayer->increaseHOF($results['TotalDamage'], ['Combat', 'Port', 'Damage Done'], HOF_PUBLIC);
 		//$thisPlayer->increaseHOF(1,array('Combat','Port','Shots')); //in Port::attackedBy()
 
-		// Change alignment if we reach a damage threshold.
-		// Increase if player and port races are at war; decrease otherwise.
-		if ($results['TotalDamage'] >= Port::DAMAGE_NEEDED_FOR_ALIGNMENT_CHANGE) {
-			$relations = Globals::getRaceRelations($thisPlayer->getGameID(), $thisPlayer->getRaceID());
-			if ($relations[$port->getRaceID()] <= RELATIONS_WAR) {
-				$thisPlayer->increaseAlignment(ALIGNMENT_GAIN_PORT_DAMAGE);
-				$thisPlayer->increaseHOF(ALIGNMENT_GAIN_PORT_DAMAGE, ['Combat', 'Port', 'Alignment', 'Gain'], HOF_PUBLIC);
+		// Attackers also get a federal bounty
+		$bounty = $results['TotalDamage'] * Port::FED_BOUNTY_PER_DAMAGE;
+		$thisPlayer->getActiveBounty(BountyType::HQ)->increaseCredits($bounty);
+		$thisPlayer->increaseHOF($bounty, ['Combat', 'Port', 'Bounties', 'Gained'], HOF_PUBLIC);
+
+		// Change personal relations based on political relations between races
+		$relations = Globals::getRaceRelations($thisPlayer->getGameID(), $port->getRaceID());
+		$relChangeBase = $results['TotalDamage'] / Port::DAMAGE_PER_RELATION_CHANGE;
+		foreach ($relations as $raceID => $politicalRelations) {
+			if ($raceID === $port->getRaceID() || $raceID === $thisPlayer->getRaceID()) {
+				// port race and player race reaction
+				$relChangeFactor = MAX_GLOBAL_RELATIONS / 2; // 1x at 250, 2x at 500
 			} else {
-				$thisPlayer->decreaseAlignment(ALIGNMENT_LOSS_PORT_DAMAGE);
-				$thisPlayer->increaseHOF(ALIGNMENT_LOSS_PORT_DAMAGE, ['Combat', 'Port', 'Alignment', 'Loss'], HOF_PUBLIC);
+				// bystander reactions
+				$relChangeFactor = MAX_GLOBAL_RELATIONS; // 0.5x at 250, 1x at 500
 			}
+			$relChange = ITrunc($relChangeBase * (-$politicalRelations / $relChangeFactor));
+			if ($relChange > 0) {
+				$thisPlayer->increaseRelations($relChange, $raceID);
+				$thisPlayer->increaseHOF($relChange, ['Combat', 'Port', 'Relation', 'Gain'], HOF_PUBLIC);
+			} else {
+				$thisPlayer->decreaseRelations(-$relChange, $raceID);
+				$thisPlayer->increaseHOF(-$relChange, ['Combat', 'Port', 'Relation', 'Loss'], HOF_PUBLIC);
+			}
+		}
+
+		// Change alignment based on WAR/PEACE status between races
+		$alignChange = IFloor($results['TotalDamage'] / Port::DAMAGE_PER_ALIGNMENT_CHANGE);
+		if ($relations[$thisPlayer->getRaceID()] <= RELATIONS_WAR) {
+			$thisPlayer->increaseAlignment($alignChange);
+			$thisPlayer->increaseHOF($alignChange, ['Combat', 'Port', 'Alignment', 'Gain'], HOF_PUBLIC);
+		} elseif ($relations[$thisPlayer->getRaceID()] >= RELATIONS_PEACE) {
+			$thisPlayer->decreaseAlignment($alignChange);
+			$thisPlayer->increaseHOF($alignChange, ['Combat', 'Port', 'Alignment', 'Loss'], HOF_PUBLIC);
 		}
 		return $results;
 	}

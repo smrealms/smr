@@ -195,6 +195,13 @@ function IRound(float $val): int {
 }
 
 /**
+ * Round towards zero for both positive and negative numbers, returning an integer type.
+ */
+function ITrunc(float $val): int {
+	return (int)$val;
+}
+
+/**
  * Convert a numeric string to an int with input validation.
  */
 function str2int(string $val): int {
