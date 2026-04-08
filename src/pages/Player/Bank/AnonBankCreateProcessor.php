@@ -16,10 +16,6 @@ class AnonBankCreateProcessor extends PlayerPageProcessor {
 			create_error('You cannot use a blank password!');
 		}
 
-		if (strlen($password) > 20) {
-			create_error('Password length cannot exceed 20 characters!');
-		}
-
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT IFNULL(MAX(anon_id), 0) as max_id FROM anon_bank WHERE game_id = :game_id', [
 			'game_id' => $db->escapeNumber($player->getGameID()),
