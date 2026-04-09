@@ -23,7 +23,11 @@ class AllianceBankReportProcessor extends PlayerPageProcessor {
 		// Check if the "Bank Statement" thread exists yet
 		$db = Database::getInstance();
 		$alliance = Alliance::getAlliance($alliance_id, $player->getGameID());
-		$dbResult = $db->read('SELECT thread_id FROM alliance_thread_topic WHERE ' . Alliance::SQL . ' AND topic = \'Bank Statement\' LIMIT 1', $alliance->SQLID);
+		$dbResult = $db->select(
+			'alliance_thread_topic',
+			[...$alliance->SQLID, 'topic' => 'Bank Statement'],
+			['thread_id'],
+		);
 
 		if ($dbResult->hasRecord()) {
 			// Update the existing "Bank Statement" thread

@@ -19,7 +19,13 @@ class GameDelete extends AccountPage {
 
 		$db = Database::getInstance();
 		// Only allow deleting games that haven't been enabled yet
-		$dbResult = $db->read('SELECT game_id, game_name FROM game WHERE enabled = \'FALSE\' ORDER BY game_id DESC');
+		$dbResult = $db->select(
+			'game',
+			['enabled' => $db->escapeBoolean(false)],
+			['game_id', 'game_name'],
+			orderBy: ['game_id'],
+			order: ['DESC'],
+		);
 		$games = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$name = $dbRecord->getString('game_name');

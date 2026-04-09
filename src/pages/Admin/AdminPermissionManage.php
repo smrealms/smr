@@ -42,12 +42,12 @@ class AdminPermissionManage extends AccountPage {
 		if ($admin_id === null) {
 			// If we don't have an account_id here display an account list
 			$validatedAccounts = [];
-			$dbResult = $db->read('SELECT account_id, login
-						FROM account
-						WHERE validated = :validated
-						ORDER BY login', [
-				'validated' => $db->escapeBoolean(true),
-			]);
+			$dbResult = $db->select(
+				'account',
+				['validated' => $db->escapeBoolean(true)],
+				['account_id', 'login'],
+				orderBy: ['login'],
+			);
 			foreach ($dbResult->records() as $dbRecord) {
 				$accountID = $dbRecord->getInt('account_id');
 				if (!array_key_exists($accountID, $adminLinks)) {

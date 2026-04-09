@@ -173,24 +173,24 @@ class AccountEditProcessor extends AccountPageProcessor {
 		foreach ($delete as $game_id => $value) {
 			if ($value === 'TRUE') {
 				// Check for bank transactions into the alliance account
-				$dbResult = $db->read('SELECT 1 FROM alliance_bank_transactions WHERE payee_id = :payee_id AND game_id = :game_id LIMIT 1', [
-					'payee_id' => $db->escapeNumber($account_id),
-					'game_id' => $db->escapeNumber($game_id),
-				]);
+				$dbResult = $db->select(
+					'alliance_bank_transactions',
+					['payee_id' => $account_id, 'game_id' => $game_id],
+					limit: 1,
+				);
 				if ($dbResult->hasRecord()) {
 					// Can't delete
 					$actions[] = 'player has made alliance transaction';
 					continue;
 				}
 
-				$sql = 'account_id = :account_id AND game_id = :game_id';
 				$sqlParams = [
 					'account_id' => $db->escapeNumber($account_id),
 					'game_id' => $db->escapeNumber($game_id),
 				];
 
 				// Check anon accounts for transactions
-				$dbResult = $db->read('SELECT 1 FROM anon_bank_transactions WHERE ' . $sql . ' LIMIT 1', $sqlParams);
+				$dbResult = $db->select('anon_bank_transactions', $sqlParams, limit: 1);
 				if ($dbResult->hasRecord()) {
 					// Can't delete
 					$actions[] = 'player has made anonymous transaction';

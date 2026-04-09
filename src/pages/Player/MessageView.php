@@ -163,18 +163,16 @@ function displayScouts(AbstractPlayer $player): array {
 
 	// Now display individual messages in each group
 	// Perform a single query to minimize query overhead
-	$dbResult = $db->read('SELECT message_id, account_id, sender_id, message_text, send_time, msg_read
-					FROM message
-					WHERE account_id = :account_id
-					AND game_id = :game_id
-					AND message_type_id = :message_type_id
-					AND receiver_delete = :receiver_delete
-					ORDER BY send_time DESC', [
-		'account_id' => $db->escapeNumber($player->getAccountID()),
-		'game_id' => $db->escapeNumber($player->getGameID()),
-		'message_type_id' => $db->escapeNumber(MSG_SCOUT),
-		'receiver_delete' => $db->escapeBoolean(false),
-	]);
+	$dbResult = $db->select(
+		'message',
+		[
+			...$player->SQLID,
+			'message_type_id' => MSG_SCOUT,
+			'receiver_delete' => $db->escapeBoolean(false),
+		],
+		orderBy: ['send_time'],
+		order: ['DESC'],
+	);
 	$groupedMessages = [];
 	foreach ($dbResult->records() as $dbRecord) {
 		$senderID = $dbRecord->getInt('sender_id');

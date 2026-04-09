@@ -44,7 +44,7 @@ class Account {
 
 	public const string SQL = 'account_id = :account_id';
 	/** @var array{account_id: int} */
-	protected readonly array $SQLID;
+	public readonly array $SQLID;
 
 	protected string $login;
 	protected string $passwordHash;
@@ -387,7 +387,7 @@ class Account {
 		// more than 50 elements in it?
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT time,ip FROM account_has_ip WHERE ' . self::SQL . ' ORDER BY time ASC', $this->SQLID);
+		$dbResult = $db->select('account_has_ip', $this->SQLID, ['time', 'ip'], orderBy: ['time']);
 		if ($dbResult->getNumRecords() > 50) {
 			$dbRecord = $dbResult->records()->current();
 			$delete_time = $dbRecord->getInt('time');

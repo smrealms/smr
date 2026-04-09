@@ -18,7 +18,7 @@ class NewsletterSend extends AccountPage {
 
 		// Get the most recent newsletter text for preview
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT newsletter_id, newsletter_html, newsletter_text FROM newsletter ORDER BY newsletter_id DESC LIMIT 1');
+		$dbResult = $db->select('newsletter', orderBy: ['newsletter_id'], order: ['DESC'], limit: 1);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$id = $dbRecord->getInt('newsletter_id');

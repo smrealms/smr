@@ -203,11 +203,16 @@ abstract class AbstractPlayer {
 	public static function getPlanetPlayers(int $gameID, int $sectorID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID])) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM player WHERE sector_id = :sector_id AND game_id = :game_id AND land_on_planet = :land_on_planet ORDER BY last_cpl_action DESC', [
-				'sector_id' => $db->escapeNumber($sectorID),
-				'game_id' => $db->escapeNumber($gameID),
-				'land_on_planet' => $db->escapeBoolean(true),
-			]);
+			$dbResult = $db->select(
+				'player',
+				[
+					'sector_id' => $sectorID,
+					'game_id' => $gameID,
+					'land_on_planet' => $db->escapeBoolean(true),
+				],
+				orderBy: ['last_cpl_action'],
+				order: ['DESC'],
+			);
 			$players = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$accountID = $dbRecord->getInt('account_id');
@@ -227,10 +232,15 @@ abstract class AbstractPlayer {
 	public static function getAlliancePlayers(int $gameID, int $allianceID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID])) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM player WHERE alliance_id = :alliance_id AND game_id = :game_id ORDER BY experience DESC', [
-				'alliance_id' => $db->escapeNumber($allianceID),
-				'game_id' => $db->escapeNumber($gameID),
-			]);
+			$dbResult = $db->select(
+				'player',
+				[
+					'alliance_id' => $allianceID,
+					'game_id' => $gameID,
+				],
+				orderBy: ['experience'],
+				order: ['DESC'],
+			);
 			$players = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$accountID = $dbRecord->getInt('account_id');

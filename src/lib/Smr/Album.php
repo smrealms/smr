@@ -22,11 +22,7 @@ readonly class Album {
 
 	public static function getNextUnapproved(): self {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT *
-					FROM album
-					WHERE approved = \'TBC\'
-					ORDER BY last_changed
-					LIMIT 1');
+		$dbResult = $db->select('album', ['approved' => 'TBC'], orderBy: ['last_changed'], limit: 1);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			return new self($dbRecord->getInt('account_id'), $dbRecord);

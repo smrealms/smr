@@ -34,7 +34,7 @@ class MissionState {
 		$accountID = $player->getAccountID();
 		if (!isset(self::$CACHE[$gameID][$accountID])) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM player_has_mission WHERE ' . AbstractPlayer::SQL, $player->SQLID);
+			$dbResult = $db->select('player_has_mission', $player->SQLID);
 			$missionStates = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$missionID = $dbRecord->getInt('mission_id');

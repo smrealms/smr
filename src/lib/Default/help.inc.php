@@ -166,9 +166,11 @@ function echo_menu(int $topic_id): void {
 	// database object
 	$db = Database::getInstance();
 
-	$dbResult = $db->read('SELECT * FROM manual WHERE parent_topic_id = :parent_topic_id ORDER BY order_id', [
-		'parent_topic_id' => $db->escapeNumber($topic_id),
-	]);
+	$dbResult = $db->select(
+		'manual',
+		['parent_topic_id' => $topic_id],
+		orderBy: ['order_id'],
+	);
 	if ($dbResult->hasRecord()) {
 		echo ('<ul type="disc">');
 		foreach ($dbResult->records() as $dbRecord) {

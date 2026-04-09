@@ -128,9 +128,7 @@ class IpViewResults extends AccountPage {
 				$template->assign('CloseReason', $disabled['Reason']);
 			}
 			$rows = [];
-			$dbResult = $db->read('SELECT * FROM account_has_ip WHERE account_id = :account_id ORDER BY time', [
-				'account_id' => $db->escapeNumber($accountID),
-			]);
+			$dbResult = $db->select('account_has_ip', ['account_id' => $accountID], orderBy: ['time']);
 			foreach ($dbResult->records() as $dbRecord) {
 				$rows[] = [
 					'ip' => $dbRecord->getString('ip'),
@@ -151,9 +149,7 @@ class IpViewResults extends AccountPage {
 					$host = 'unknown';
 				}
 				$summary = 'The following accounts have the IP address ' . $ip . ' (' . $host . ')';
-				$dbResult = $db->read('SELECT * FROM account_has_ip WHERE ip = :ip ORDER BY account_id', [
-					'ip' => $db->escapeString($ip),
-				]);
+				$dbResult = $db->select('account_has_ip', ['ip' => $ip], orderBy: ['account_id']);
 
 			} elseif ($type === 'alliance_ips') {
 				//=========================================================

@@ -32,41 +32,35 @@ class MessageBox extends PlayerPage {
 			if ($message_type_id === MSG_SENT) {
 				$messageBox['HasUnread'] = false;
 			} else {
-				$dbResult = $db->read('SELECT 1 FROM message
-						WHERE ' . AbstractPlayer::SQL . '
-							AND message_type_id = :message_type_id
-							AND msg_read = :msg_read
-							AND receiver_delete = :receiver_delete LIMIT 1', [
-					...$player->SQLID,
-					'message_type_id' => $db->escapeNumber($message_type_id),
-					'msg_read' => $db->escapeBoolean(false),
-					'receiver_delete' => $db->escapeBoolean(false),
-				]);
+				$dbResult = $db->select(
+					'message',
+					[
+						...$player->SQLID,
+						'message_type_id' => $message_type_id,
+						'msg_read' => $db->escapeBoolean(false),
+						'receiver_delete' => $db->escapeBoolean(false),
+					],
+					limit: 1,
+				);
 				$messageBox['HasUnread'] = $dbResult->hasRecord();
 			}
 
 			// get number of msges
 			if ($message_type_id === MSG_SENT) {
-				$dbResult = $db->read('SELECT count(message_id) as message_count FROM message
-						WHERE sender_id = :account_id
-							AND game_id = :game_id
-							AND message_type_id = :message_type_id
-							AND sender_delete = :sender_delete', [
-					...$player->SQLID,
-					'message_type_id' => $db->escapeNumber(MSG_PLAYER),
+				$count = $db->count('message', [
+					'sender_id' => $player->getAccountID(),
+					'game_id' => $player->getGameID(),
+					'message_type_id' => MSG_PLAYER,
 					'sender_delete' => $db->escapeBoolean(false),
 				]);
 			} else {
-				$dbResult = $db->read('SELECT count(message_id) as message_count FROM message
-						WHERE ' . AbstractPlayer::SQL . '
-							AND message_type_id = :message_type_id
-							AND receiver_delete = :receiver_delete', [
+				$count = $db->count('message', [
 					...$player->SQLID,
-					'message_type_id' => $db->escapeNumber($message_type_id),
+					'message_type_id' => $message_type_id,
 					'receiver_delete' => $db->escapeBoolean(false),
 				]);
 			}
-			$messageBox['MessageCount'] = $dbResult->record()->getInt('message_count');
+			$messageBox['MessageCount'] = $count;
 
 			$container = new MessageView($message_type_id);
 			$messageBox['ViewHref'] = $container->href();

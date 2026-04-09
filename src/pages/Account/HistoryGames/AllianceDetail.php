@@ -40,10 +40,15 @@ class AllianceDetail extends HistoryPage {
 
 		//get alliance members
 		$oldAccountID = $account->getOldAccountID($this->historyDatabase);
-		$dbResult = $db->read('SELECT * FROM player WHERE alliance_id = :alliance_id AND game_id = :game_id ORDER BY experience DESC', [
-			'alliance_id' => $db->escapeNumber($id),
-			'game_id' => $db->escapeNumber($game_id),
-		]);
+		$dbResult = $db->select(
+			'player',
+			[
+				'alliance_id' => $id,
+				'game_id' => $game_id,
+			],
+			orderBy: ['experience'],
+			order: ['DESC'],
+		);
 		$players = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$memberAccountID = $dbRecord->getInt('account_id');
