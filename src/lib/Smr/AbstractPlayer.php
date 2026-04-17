@@ -1531,7 +1531,7 @@ abstract class AbstractPlayer {
 			$this->log(LOG_TYPE_ALLIANCE, 'disbanded alliance ' . $alliance->getAllianceName());
 		} else {
 			$this->log(LOG_TYPE_ALLIANCE, 'left alliance: ' . $alliance->getAllianceName());
-			if ($alliance->getLeaderID() !== 0 && $alliance->getLeaderID() !== ACCOUNT_ID_NHL) {
+			if ($alliance->getLeaderID() !== 0) {
 				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I left your alliance!', false);
 			}
 		}
@@ -1553,7 +1553,7 @@ abstract class AbstractPlayer {
 	/**
 	 * Join an alliance (used for both Leader and New Member roles)
 	 */
-	public function joinAlliance(int $allianceID): void {
+	public function joinAlliance(int $allianceID, bool $log = true): void {
 		$this->setAllianceID($allianceID);
 
 		$status = $this->hasNewbieStatus() ? 'NEWBIE' : 'VETERAN';
@@ -1569,15 +1569,7 @@ abstract class AbstractPlayer {
 		$alliance = $this->getAlliance();
 
 		if (!$this->isAllianceLeader()) {
-			// Do not throw an exception if the NHL account doesn't exist.
-			try {
-				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I joined your alliance!', false);
-			} catch (AccountNotFound $e) {
-				if ($alliance->getLeaderID() !== ACCOUNT_ID_NHL) {
-					throw $e;
-				}
-			}
-
+			$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I joined your alliance!', false);
 			$roleID = ALLIANCE_ROLE_NEW_MEMBER;
 		} else {
 			$roleID = ALLIANCE_ROLE_LEADER;
@@ -1589,7 +1581,9 @@ abstract class AbstractPlayer {
 			'alliance_id' => $this->getAllianceID(),
 		]);
 
-		$this->log(LOG_TYPE_ALLIANCE, 'joined alliance: ' . $alliance->getAllianceName());
+		if ($log) {
+			$this->log(LOG_TYPE_ALLIANCE, 'joined alliance: ' . $alliance->getAllianceName());
+		}
 	}
 
 	public function getAllianceJoinable(): int {
