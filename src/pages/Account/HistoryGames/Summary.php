@@ -48,9 +48,13 @@ class Summary extends HistoryPage {
 		$oldAllianceID = $dbResult->hasRecord() ? $dbResult->record()->getInt('alliance_id') : 0;
 
 		$playerExp = [];
-		$dbResult = $db->read('SELECT * FROM player WHERE game_id = :game_id ORDER BY experience DESC LIMIT 10', [
-			'game_id' => $db->escapeNumber($game_id),
-		]);
+		$dbResult = $db->select(
+			'player',
+			['game_id' => $game_id],
+			orderBy: ['experience'],
+			order: ['DESC'],
+			limit: 10,
+		);
 		foreach ($dbResult->records() as $dbRecord) {
 			$playerExp[] = [
 				'bold' => $dbRecord->getInt('account_id') === $oldAccountID ? 'class="bold"' : '',
@@ -61,9 +65,13 @@ class Summary extends HistoryPage {
 		$template->assign('PlayerExp', $playerExp);
 
 		$playerKills = [];
-		$dbResult = $db->read('SELECT * FROM player WHERE game_id = :game_id ORDER BY kills DESC LIMIT 10', [
-			'game_id' => $db->escapeNumber($game_id),
-		]);
+		$dbResult = $db->select(
+			'player',
+			['game_id' => $game_id],
+			orderBy: ['kills'],
+			order: ['DESC'],
+			limit: 10,
+		);
 		foreach ($dbResult->records() as $dbRecord) {
 			$playerKills[] = [
 				'bold' => $dbRecord->getInt('account_id') === $oldAccountID ? 'class="bold"' : '',
@@ -93,9 +101,14 @@ class Summary extends HistoryPage {
 		$template->assign('AllianceExp', $allianceExp);
 
 		$allianceKills = [];
-		$dbResult = $db->read('SELECT kills, alliance_name, alliance_id FROM alliance WHERE game_id = :game_id ORDER BY kills DESC LIMIT 10', [
-			'game_id' => $db->escapeNumber($game_id),
-		]);
+		$dbResult = $db->select(
+			'alliance',
+			['game_id' => $game_id],
+			['kills', 'alliance_name', 'alliance_id'],
+			orderBy: ['kills'],
+			order: ['DESC'],
+			limit: 10,
+		);
 		foreach ($dbResult->records() as $dbRecord) {
 			$alliance = htmlentities($dbRecord->getString('alliance_name'));
 			$id = $dbRecord->getInt('alliance_id');

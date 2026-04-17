@@ -324,7 +324,7 @@ function changeNPCLogin(): void {
 
 	if ($availableNpcs === null) {
 		// Make sure NPC's have been set up in the database
-		$dbResult = $db->read('SELECT 1 FROM npc_logins LIMIT 1');
+		$dbResult = $db->select('npc_logins', limit: 1);
 		if (!$dbResult->hasRecord()) {
 			debug('No NPCs have been created yet!');
 			exitNPC();

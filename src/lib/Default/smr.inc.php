@@ -710,7 +710,7 @@ function doSkeletonAssigns(Template $template): void {
 	$template->assign('TimeToNextVote', in_time_or_now($minVoteWait, true));
 
 	// ------- VERSION --------
-	$dbResult = $db->read('SELECT * FROM version ORDER BY went_live DESC LIMIT 1');
+	$dbResult = $db->select('version', orderBy: ['went_live'], order: ['DESC'], limit: 1);
 	$version = '';
 	if ($dbResult->hasRecord()) {
 		$dbRecord = $dbResult->record();

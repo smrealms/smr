@@ -90,10 +90,14 @@ class Force {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_FORCES[$gameID][$sectorID])) {
 			self::tidyUpForces(Galaxy::getGalaxyContaining($gameID, $sectorID));
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM sector_has_forces WHERE sector_id = :sector_id AND game_id = :game_id ORDER BY expire_time ASC', [
-				'sector_id' => $db->escapeNumber($sectorID),
-				'game_id' => $db->escapeNumber($gameID),
-			]);
+			$dbResult = $db->select(
+				'sector_has_forces',
+				[
+					'sector_id' => $sectorID,
+					'game_id' => $gameID,
+				],
+				orderBy: ['expire_time'],
+			);
 			$forces = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$ownerID = $dbRecord->getInt('owner_id');

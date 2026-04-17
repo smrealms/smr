@@ -32,9 +32,7 @@ class AccountEdit extends AccountPage {
 		$template->assign('ResetFormHREF', (new AccountEditSearch())->href());
 
 		$editingPlayers = [];
-		$dbResult = $db->read('SELECT * FROM player WHERE account_id = :account_id ORDER BY game_id ASC', [
-			'account_id' => $db->escapeNumber($curr_account->getAccountID()),
-		]);
+		$dbResult = $db->select('player', $curr_account->SQLID, orderBy: ['game_id']);
 		foreach ($dbResult->records() as $dbRecord) {
 			$editingPlayers[] = Player::getPlayer($curr_account->getAccountID(), $dbRecord->getInt('game_id'), false, $dbRecord);
 		}
@@ -54,9 +52,12 @@ class AccountEdit extends AccountPage {
 		$template->assign('BanReasons', $banReasons);
 
 		$closingHistory = [];
-		$dbResult = $db->read('SELECT * FROM account_has_closing_history WHERE account_id = :account_id ORDER BY time DESC', [
-			'account_id' => $db->escapeNumber($curr_account->getAccountID()),
-		]);
+		$dbResult = $db->select(
+			'account_has_closing_history',
+			$curr_account->SQLID,
+			orderBy: ['time'],
+			order: ['DESC'],
+		);
 		foreach ($dbResult->records() as $dbRecord) {
 			// if an admin did it we get his/her name
 			$admin_id = $dbRecord->getInt('admin_id');
@@ -81,9 +82,13 @@ class AccountEdit extends AccountPage {
 		}
 
 		$recentIPs = [];
-		$dbResult = $db->read('SELECT ip, time, host FROM account_has_ip WHERE account_id = :account_id ORDER BY time DESC', [
-			'account_id' => $db->escapeNumber($curr_account->getAccountID()),
-		]);
+		$dbResult = $db->select(
+			'account_has_ip',
+			$curr_account->SQLID,
+			['ip', 'time', 'host'],
+			orderBy: ['time'],
+			order: ['DESC'],
+		);
 		foreach ($dbResult->records() as $dbRecord) {
 			$recentIPs[] = [
 				'IP' => $dbRecord->getString('ip'),

@@ -29,9 +29,7 @@ class LoginAnnouncements extends AccountPage {
 			]);
 			$container = new LoginCheckChangelogProcessor();
 		} else {
-			$dbResult = $db->read('SELECT time, msg
-						FROM announcement
-						ORDER BY time DESC');
+			$dbResult = $db->select('announcement', [], ['time', 'msg'], orderBy: ['time'], order: ['DESC']);
 			$container = new GamePlay();
 		}
 

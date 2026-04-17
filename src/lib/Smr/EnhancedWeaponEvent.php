@@ -49,9 +49,13 @@ class EnhancedWeaponEvent {
 
 		// Next, check if an existing event can be advertised
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM location_sells_special WHERE game_id = :game_id ORDER BY expires DESC LIMIT 1', [
-			'game_id' => $db->escapeNumber($gameID),
-		]);
+		$dbResult = $db->select(
+			'location_sells_special',
+			['game_id' => $gameID],
+			orderBy: ['expires'],
+			order: ['DESC'],
+			limit: 1,
+		);
 		if ($dbResult->hasRecord()) {
 			$event = self::getEventFromDatabase($dbResult->record());
 			// Don't advertise if the event expires within one GRACE_PERIOD

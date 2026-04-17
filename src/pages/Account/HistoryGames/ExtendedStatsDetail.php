@@ -31,19 +31,24 @@ class ExtendedStatsDetail extends HistoryPage {
 		$rankings = [];
 		$db = Database::getInstance();
 		if (in_array($this->category, ['Top Mined Sectors', 'Most Dangerous Sectors'], true)) {
-			[$sql, $header] = match ($this->category) {
+			[$dbCol, $header] = match ($this->category) {
 				'Top Mined Sectors' => ['mines', 'Mines'],
 				'Most Dangerous Sectors' => ['kills', 'Kills'],
 			};
-			$dbResult = $db->read('SELECT ' . $sql . ' as val, sector_id FROM sector WHERE game_id = :game_id ORDER BY val DESC LIMIT 25', [
-				'game_id' => $db->escapeNumber($game_id),
-			]);
+			$dbResult = $db->select(
+				'sector',
+				['game_id' => $game_id],
+				[$dbCol, 'sector_id'],
+				orderBy: [$dbCol],
+				order: ['DESC'],
+				limit: 25,
+			);
 			foreach ($dbResult->records() as $dbRecord) {
 				$rankings[] = [
 					'bold' => '',
 					'data' => [
 						$dbRecord->getInt('sector_id'),
-						$dbRecord->getInt('val'),
+						$dbRecord->getInt($dbCol),
 					],
 				];
 			}

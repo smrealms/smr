@@ -16,7 +16,7 @@ class Vote extends AccountPage {
 		$template->assign('PageTopic', 'Voting');
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM voting ORDER BY end DESC');
+		$dbResult = $db->select('voting', orderBy: ['end'], order: ['DESC']);
 		if ($dbResult->hasRecord()) {
 			$votedFor = [];
 			$dbResult2 = $db->select('voting_results', [

@@ -85,9 +85,13 @@ class NewsReadAdvanced extends AccountPage {
 				'alliance_id_2' => $db->escapeNumber($allianceID2),
 			]);
 		} else {
-			$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id ORDER BY news_id DESC LIMIT 50', [
-				'game_id' => $db->escapeNumber($gameID),
-			]);
+			$dbResult = $db->select(
+				'news',
+				['game_id' => $gameID],
+				orderBy: ['news_id'],
+				order: ['DESC'],
+				limit: 50,
+			);
 		}
 
 		$template->assign('NewsItems', News::getNewsItems($dbResult));

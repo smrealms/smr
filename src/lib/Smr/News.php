@@ -52,9 +52,13 @@ class News {
 	public static function doLottoNewsAssign(int $gameID): void {
 		Lotto::checkForLottoWinner($gameID);
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND type = \'lotto\' ORDER BY time DESC LIMIT 1', [
-			'game_id' => $db->escapeNumber($gameID),
-		]);
+		$dbResult = $db->select(
+			'news',
+			['game_id' => $gameID, 'type' => 'lotto'],
+			orderBy: ['time'],
+			order: ['DESC'],
+			limit: 1,
+		);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			$template = Template::getInstance();

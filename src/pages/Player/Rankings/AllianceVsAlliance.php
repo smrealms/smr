@@ -135,12 +135,15 @@ class AllianceVsAlliance extends PlayerPage {
 		$template->assign('DetailsName', $mainName);
 
 		$kills = [];
-		$dbResult = $db->read('SELECT * FROM alliance_vs_alliance
-					WHERE alliance_id_1 = :alliance_id_1
-						AND game_id = :game_id ORDER BY kills DESC', [
-			'alliance_id_1' => $db->escapeNumber($this->detailsAllianceID),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-		]);
+		$dbResult = $db->select(
+			'alliance_vs_alliance',
+			[
+				'alliance_id_1' => $this->detailsAllianceID,
+				'game_id' => $player->getGameID(),
+			],
+			orderBy: ['kills'],
+			order: ['DESC'],
+		);
 		foreach ($dbResult->records() as $dbRecord) {
 			$id = $dbRecord->getInt('alliance_id_2');
 			$alliance_name = match (true) {
@@ -160,12 +163,15 @@ class AllianceVsAlliance extends PlayerPage {
 		$template->assign('Kills', $kills);
 
 		$deaths = [];
-		$dbResult = $db->read('SELECT * FROM alliance_vs_alliance
-					WHERE alliance_id_2 = :alliance_id_2
-						AND game_id = :game_id ORDER BY kills DESC', [
-			'alliance_id_2' => $db->escapeNumber($this->detailsAllianceID),
-			'game_id' => $db->escapeNumber($player->getGameID()),
-		]);
+		$dbResult = $db->select(
+			'alliance_vs_alliance',
+			[
+				'alliance_id_2' => $this->detailsAllianceID,
+				'game_id' => $player->getGameID(),
+			],
+			orderBy: ['kills'],
+			order: ['DESC'],
+		);
 		foreach ($dbResult->records() as $dbRecord) {
 			$id = $dbRecord->getInt('alliance_id_1');
 			$alliance_name = match (true) {

@@ -100,6 +100,42 @@ class DatabaseIntegrationTest extends TestCase {
 		// Test with default criteria (all rows)
 		$dbResult = $db->select('level');
 		self::assertSame(50, $dbResult->getNumRecords());
+
+		// Test orderBy with default ordering (ASC)
+		$dbResult = $db->select(
+			'location_type',
+			orderBy: ['location_processor', 'location_type_id'],
+		);
+		$records = iterator_to_array($dbResult->records());
+		self::assertSame('bank_personal.php', $records[10]->getNullableString('location_processor'));
+		self::assertSame('government.php', $records[18]->getNullableString('location_processor'));
+		$expectedOrder = [10 => 701, 11 => 702, 18 => 101];
+		foreach ($expectedOrder as $index => $id) {
+			self::assertSame($id, $records[$index]->getInt('location_type_id'));
+		}
+
+		// Test orderBy with specified ordering
+		$dbResult = $db->select(
+			'location_type',
+			orderBy: ['location_processor', 'location_type_id'],
+			order: ['DESC', 'DESC'],
+		);
+		$records = iterator_to_array($dbResult->records());
+		foreach ($expectedOrder as $index => $id) {
+			$reverseIndex = count($records) - $index - 1;
+			self::assertSame($id, $records[$reverseIndex]->getInt('location_type_id'));
+		}
+
+		// Test limit
+		$dbResult = $db->select('level', limit: 2);
+		self::assertSame(2, $dbResult->getNumRecords());
+	}
+
+	public function test_select_orderBy_order_length_error(): void {
+		$db = Database::getInstance();
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('order and orderBy must be the same length');
+		$db->select('level', orderBy: ['level_id', 'level_name'], order: ['DESC']);
 	}
 
 	public function test_count(): void {
@@ -190,7 +226,7 @@ class DatabaseIntegrationTest extends TestCase {
 		$this->expectException(DriverException::class);
 		$this->expectExceptionMessage("Table 'account' was not locked with LOCK TABLES");
 		try {
-			$db->read('SELECT 1 FROM account LIMIT 1');
+			$db->select('account', limit: 1);
 		} finally {
 			// Avoid leaving database in a locked state
 			$db->unlock();
@@ -208,7 +244,7 @@ class DatabaseIntegrationTest extends TestCase {
 			$db->unlock();
 		}
 		// After unlock we can access other tables again
-		$db->read('SELECT 1 FROM account LIMIT 1');
+		$db->select('account', limit: 1);
 	}
 
 	public function test_lockTable_additional_read_locks(): void {

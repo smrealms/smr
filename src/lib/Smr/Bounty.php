@@ -18,10 +18,16 @@ class Bounty {
 	 */
 	public static function getMostWanted(BountyType $type, int $gameID): array {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM bounty WHERE game_id = :game_id AND type = :type AND claimer_id = 0 ORDER BY amount DESC', [
-			'game_id' => $db->escapeNumber($gameID),
-			'type' => $db->escapeString($type->value),
-		]);
+		$dbResult = $db->select(
+			'bounty',
+			[
+				'game_id' => $gameID,
+				'type' => $type->value,
+				'claimer_id' => 0,
+			],
+			orderBy: ['amount'],
+			order: ['DESC'],
+		);
 		$bounties = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$bounties[] = self::getFromRecord($dbRecord);

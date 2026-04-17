@@ -67,9 +67,7 @@ class AllianceDraftMember extends PlayerPage {
 
 		// Get the draft history
 		$history = [];
-		$dbResult = $db->read('SELECT * FROM draft_history WHERE game_id = :game_id ORDER BY draft_id', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-		]);
+		$dbResult = $db->select('draft_history', ['game_id' => $player->getGameID()], orderBy: ['draft_id']);
 		foreach ($dbResult->records() as $dbRecord) {
 			$leader = Player::getPlayer($dbRecord->getInt('leader_account_id'), $player->getGameID());
 			$pickedPlayer = Player::getPlayer($dbRecord->getInt('picked_account_id'), $player->getGameID());

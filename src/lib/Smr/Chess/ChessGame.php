@@ -128,9 +128,11 @@ class ChessGame {
 	public function getMoves(): array {
 		if (!isset($this->moves)) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT * FROM chess_game_moves WHERE chess_game_id = :chess_game_id ORDER BY move_id', [
-				'chess_game_id' => $db->escapeNumber($this->chessGameID),
-			]);
+			$dbResult = $db->select(
+				'chess_game_moves',
+				['chess_game_id' => $this->chessGameID],
+				orderBy: ['move_id'],
+			);
 			$this->moves = [];
 			$this->board = new Board();
 			$mate = false;

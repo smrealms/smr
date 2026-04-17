@@ -154,8 +154,17 @@ class Database {
 	 *
 	 * @param array<string, mixed> $criteria
 	 * @param list<string> $returnColumns
+	 * @param list<string> $orderBy Columns to order the result by
+	 * @param list<'ASC'|'DESC'> $order Direction to order the $orderBy columns
 	 */
-	public function select(string $table, array $criteria = [], array $returnColumns = ['*']): DatabaseResult {
+	public function select(
+		string $table,
+		array $criteria = [],
+		array $returnColumns = ['*'],
+		array $orderBy = [],
+		array $order = [],
+		?int $limit = null,
+	): DatabaseResult {
 		$query = 'SELECT ' . implode(',', $returnColumns) . ' FROM ' . $table;
 		if (count($criteria) > 0) {
 			// Create named placeholder SQL using the name of each column in the criteria
@@ -164,6 +173,20 @@ class Database {
 				$criteriaSql[] = $column . ' = :' . $column;
 			}
 			$query .= ' WHERE ' . implode(' AND ', $criteriaSql);
+		}
+		if ($orderBy !== []) {
+			if ($order === []) {
+				$orderBySql = $orderBy;
+			} else {
+				if (count($orderBy) !== count($order)) {
+					throw new Exception('order and orderBy must be the same length');
+				}
+				$orderBySql = array_map(fn($col, $dir) => $col . ' ' . $dir, $orderBy, $order);
+			}
+			$query .= ' ORDER BY ' . implode(', ', $orderBySql);
+		}
+		if ($limit !== null) {
+			$query .= ' LIMIT ' . $limit;
 		}
 		return $this->read($query, $criteria);
 	}

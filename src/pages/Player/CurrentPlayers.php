@@ -92,9 +92,12 @@ class CurrentPlayers extends PlayerPage {
 			// What should the player name be displayed as?
 			$container = new SearchForTraderResult($curr_player->getPlayerID());
 			$name = $curr_player->getLevelName() . ' ' . $curr_player->getDisplayName();
-			$dbResult2 = $db->read('SELECT * FROM cpl_tag WHERE account_id = :account_id ORDER BY custom DESC', [
-				'account_id' => $db->escapeNumber($curr_player->getAccountID()),
-			]);
+			$dbResult2 = $db->select(
+				'cpl_tag',
+				['account_id' => $curr_player->getAccountID()],
+				orderBy: ['custom'],
+				order: ['DESC'],
+			);
 			foreach ($dbResult2->records() as $dbRecord2) {
 				$customRank = $dbRecord2->getString('custom_rank');
 				$tag = $dbRecord2->getString('tag');

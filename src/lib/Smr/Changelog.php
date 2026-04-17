@@ -29,12 +29,7 @@ class Changelog {
 				$went_live = null;
 			}
 
-			$dbResult2 = $db->read('SELECT *
-						FROM changelog
-						WHERE version_id = :version_id
-						ORDER BY changelog_id', [
-				'version_id' => $db->escapeNumber($version_id),
-			]);
+			$dbResult2 = $db->select('changelog', ['version_id' => $version_id], orderBy: ['changelog_id']);
 			$changes = [];
 			foreach ($dbResult2->records() as $dbRecord2) {
 				$changes[] = [
