@@ -8,6 +8,8 @@ use Smr\Npc\Exceptions\FinalAction;
 use Smr\Npc\Exceptions\ForwardAction;
 use Smr\Npc\Exceptions\TradeRouteDrained;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Pages\Player\AllianceManageNpcsDismissProcessor;
+use Smr\Pages\Player\Bank\AllianceBankProcessor;
 use Smr\Routes\RouteIterator;
 use Smr\Sector;
 use Smr\TransactionType;
@@ -18,6 +20,8 @@ class NpcActor {
 	private array $allTradeRoutes;
 	private ?RouteIterator $tradeRoute = null;
 	private int $actions = 0;
+	private readonly int $startingCredits;
+	private readonly bool $hired;
 
 	public function __construct(
 		private readonly int $gameID,
@@ -51,6 +55,9 @@ class NpcActor {
 
 		// Update database (not essential to have a lock here)
 		$player->update();
+
+		$this->startingCredits = $player->getCredits();
+		$this->hired = $player->isHiredNPC();
 	}
 
 	private function refreshPlayer(): AbstractPlayer {
@@ -68,6 +75,20 @@ class NpcActor {
 			$player->getShip()->setCDs(0);
 			$player->getShip()->removeAllWeapons();
 			$player->getShip()->update();
+		}
+
+		if ($this->hired) {
+			// Give half earned profits to employer
+			$credits = IFloor(max(0, $player->getCredits() - $this->startingCredits) / 2);
+			debug('Giving ' . $credits . ' credits to alliance');
+			AllianceBankProcessor::doTransaction(
+				action: 'Deposit',
+				alliance: $player->getAlliance(),
+				player: $player,
+				message: 'Profits from trading',
+				amount: $credits,
+			);
+			$player->update();
 		}
 	}
 
@@ -89,8 +110,16 @@ class NpcActor {
 
 		if ($player->isDead()) {
 			debug('Some evil person killed us, let\'s move on now.');
+
 			$player->setDead(false); // see death_processing.php
 			$player->setNewbieWarning(false); // undo Player::killPlayer setting this to true
+
+			if ($this->hired) {
+				// Hired traders quit their job after getting podded
+				AllianceManageNpcsDismissProcessor::dismissNpc($player, $player);
+				throw new FinalAction();
+			}
+
 			checkStartConditions($player);
 
 			global $previousContainer;

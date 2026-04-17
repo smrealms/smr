@@ -469,7 +469,11 @@ const ALLIANCE_BANK_UNLIMITED = -1;
 
 const UNI_GEN_LOCATION_SLOTS = 9;
 
+/*
+ * Reserved alliance names
+ */
 const NHA_ALLIANCE_NAME = 'Newbie Help Alliance';
+const NPC_FOR_HIRE_ALLIANCE_NAME = 'The Freelancers';
 
 const CLOSE_ACCOUNT_BY_REQUEST_REASON = 'User Request';
 const CLOSE_ACCOUNT_INVALID_EMAIL_REASON = 'Invalid email';

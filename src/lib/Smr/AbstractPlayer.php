@@ -656,6 +656,21 @@ abstract class AbstractPlayer {
 	}
 
 	/**
+	 * Is this an NPC that has been hired by a player alliance?
+	 */
+	public function isHiredNPC(): bool {
+		// Currently determined by whether or not alliance leader is an NPC.
+		// This should really be tracked in the database directly instead.
+		if ($this->isNPC() && $this->hasAlliance()) {
+			$alliance = $this->getAlliance();
+			if ($alliance->hasLeader() && !$alliance->getLeader()->isNPC()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Does the player have Newbie status?
 	 */
 	public function hasNewbieStatus(): bool {
@@ -1523,7 +1538,7 @@ abstract class AbstractPlayer {
 
 	public function leaveAlliance(?self $kickedBy = null): void {
 		$alliance = $this->getAlliance();
-		if ($kickedBy !== null) {
+		if ($kickedBy !== null && !$kickedBy->equals($this)) {
 			$kickedBy->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were kicked out of the alliance!', false);
 			$this->log(LOG_TYPE_ALLIANCE, 'was kicked from alliance ' . $alliance->getAllianceName() . ' by ' . $kickedBy->getAccount()->getLogin() . ' (' . $kickedBy->getPlayerName() . ')');
 			$kickedBy->log(LOG_TYPE_ALLIANCE, 'kicked ' . $this->getAccount()->getLogin() . ' (' . $this->getPlayerName() . ') from alliance ' . $alliance->getAllianceName());
@@ -1537,7 +1552,7 @@ abstract class AbstractPlayer {
 		}
 
 		// Don't have a delay for switching alliance after leaving NHA, or for disbanding an alliance.
-		if (!$this->isAllianceLeader() && !$alliance->isNHA()) {
+		if (!$this->isAllianceLeader() && !$alliance->isNHA() && !$alliance->isNpcForHire()) {
 			$this->setAllianceJoinable(Epoch::time() + self::TIME_FOR_ALLIANCE_SWITCH);
 			$alliance->getLeader()->setAllianceJoinable(Epoch::time() + self::TIME_FOR_ALLIANCE_SWITCH); //We set the joinable time for leader here, that way a single player alliance won't cause a player to wait before switching.
 		}
@@ -1559,7 +1574,9 @@ abstract class AbstractPlayer {
 		$alliance = $this->getAlliance();
 
 		if (!$this->isAllianceLeader()) {
-			$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I joined your alliance!', false);
+			if ($alliance->getLeaderID() !== 0) {
+				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I joined your alliance!', false);
+			}
 			$roleID = ALLIANCE_ROLE_NEW_MEMBER;
 		} else {
 			$roleID = ALLIANCE_ROLE_LEADER;

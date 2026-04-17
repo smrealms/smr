@@ -19,6 +19,7 @@ use Smr\Race;
 <?php
 if ($SelectedGameID !== 0) { ?>
 	<br />
+	<div><b>Note: </b>For-hire NPCs use alliance name: <?php echo NPC_FOR_HIRE_ALLIANCE_NAME; ?></div>
 	<table class="standard">
 		<tr>
 			<th>Login</th>
@@ -33,7 +34,7 @@ if ($SelectedGameID !== 0) { ?>
 				<td><?php echo $npc['login']; ?></td>
 				<td class="center">
 					<form method="POST" action="<?php echo $npc['href']; ?>">
-						<input name="active" type="checkbox" <?php if ($npc['active']) { ?>checked<?php } ?> onclick="this.form.submit()" />
+						<input name="active" type="checkbox" <?php if ($npc['active']) { ?>checked<?php } ?> onclick="this.form.submit()" <?php if ($npc['disable_active_toggle']) { ?>disabled<?php } ?> />
 						<input type="hidden" name="active-submit" />
 					</form>
 				</td><?php

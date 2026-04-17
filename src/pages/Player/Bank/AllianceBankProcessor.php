@@ -16,10 +16,6 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 	) {}
 
 	public function build(AbstractPlayer $player): never {
-		$db = Database::getInstance();
-
-		$alliance_id = $this->allianceID;
-
 		$amount = Request::getInt('amount');
 
 		// no negative amounts are allowed
@@ -31,8 +27,38 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 			$message = 'No reason specified';
 		}
 
-		$alliance = Alliance::getAlliance($alliance_id, $player->getGameID());
+		$alliance = Alliance::getAlliance($this->allianceID, $player->getGameID());
+
 		$action = Request::get('action');
+		if ($action !== 'Deposit') {
+			$action = 'Payment';
+		}
+
+		self::doTransaction(
+			action: $action,
+			alliance: $alliance,
+			player: $player,
+			message: $message,
+			amount: $amount,
+			requestExempt: Request::has('requestExempt'),
+		);
+
+		$container = new AllianceBank($this->allianceID);
+		$container->go();
+	}
+
+	/**
+	 * @param 'Deposit'|'Payment' $action
+	 */
+	public static function doTransaction(
+		string $action,
+		Alliance $alliance,
+		AbstractPlayer $player,
+		string $message,
+		int $amount,
+		bool $requestExempt = false,
+	): void {
+		$db = Database::getInstance();
 		if ($action === 'Deposit') {
 			if ($player->getCredits() < $amount) {
 				create_error('You don\'t own that much money!');
@@ -51,8 +77,8 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 			}
 
 			$table = 'alliance_has_roles';
-			if ($alliance_id === $player->getAllianceID()) {
-				$roleID = $player->getAllianceRole($alliance_id);
+			if ($alliance->getAllianceID() === $player->getAllianceID()) {
+				$roleID = $player->getAllianceRole($alliance->getAllianceID());
 				$dbResult = $db->select($table, [...$alliance->SQLID, 'role_id' => $roleID]);
 			} else {
 				// Alliance treaties create new roles with alliance names
@@ -101,7 +127,6 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 		$player->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits for alliance account of ' . $alliance->getAllianceName());
 
 		// save transaction
-		$requestExempt = Request::has('requestExempt') ? 1 : 0;
 		$db->insert('alliance_bank_transactions', [
 			...$alliance->SQLID,
 			'time' => Epoch::time(),
@@ -109,17 +134,11 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 			'reason' => $message,
 			'transaction' => $action,
 			'amount' => $amount,
-			'request_exempt' => $requestExempt,
+			'request_exempt' => $requestExempt ? 1 : 0,
 		]);
-
-		// update player credits
-		$player->update();
 
 		// save money for alliance
 		$alliance->update();
-
-		$container = new AllianceBank($alliance_id);
-		$container->go();
 	}
 
 }

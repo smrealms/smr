@@ -4,6 +4,7 @@ namespace Smr\Pages\Player;
 
 use Exception;
 use Smr\AbstractPlayer;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Request;
@@ -17,7 +18,7 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 
-		$alliance_id = $player->getAllianceID();
+		$alliance = $player->getAlliance();
 
 		// Checkbox inputs only post if they are checked
 		$unlimited = Request::has('unlimited');
@@ -32,6 +33,7 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 		$sendAllMsg = Request::has('sendAllMsg');
 		$viewBonds = Request::has('viewBonds');
 		$opLeader = Request::has('opLeader');
+		$manageNpcs = Request::has('manageNpcs');
 
 		if ($unlimited) {
 			$withPerDay = ALLIANCE_BANK_UNLIMITED;
@@ -56,18 +58,16 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 			$db->lockTable('alliance_has_roles');
 			try {
 				// get last id
-				$dbResult = $db->read('SELECT IFNULL(MAX(role_id), 0) as max_role_id
+				$dbResult = $db->read(
+					'SELECT IFNULL(MAX(role_id), 0) as max_role_id
 						FROM alliance_has_roles
-						WHERE game_id = :game_id
-							AND alliance_id = :alliance_id', [
-					'game_id' => $db->escapeNumber($player->getGameID()),
-					'alliance_id' => $db->escapeNumber($alliance_id),
-				]);
+						WHERE ' . Alliance::SQL,
+					$alliance->SQLID,
+				);
 				$role_id = $dbResult->record()->getInt('max_role_id') + 1;
 
 				$db->insert('alliance_has_roles', [
-					'alliance_id' => $alliance_id,
-					'game_id' => $player->getGameID(),
+					...$alliance->SQLID,
 					'role_id' => $role_id,
 					'role' => $roleName,
 					'with_per_day' => $withPerDay,
@@ -82,6 +82,7 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 					'send_alliance_msg' => $db->escapeBoolean($sendAllMsg),
 					'op_leader' => $db->escapeBoolean($opLeader),
 					'view_bonds' => $db->escapeBoolean($viewBonds),
+					'manage_npcs' => $db->escapeBoolean($manageNpcs),
 				]);
 			} finally {
 				$db->unlock();
@@ -95,8 +96,7 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 					create_error('You cannot delete the new member role.');
 				}
 				$db->delete('alliance_has_roles', [
-					'game_id' => $player->getGameID(),
-					'alliance_id' => $alliance_id,
+					...$alliance->SQLID,
 					'role_id' => $this->roleID,
 				]);
 			} else {
@@ -117,10 +117,10 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 						'send_alliance_msg' => $db->escapeBoolean($sendAllMsg),
 						'op_leader' => $db->escapeBoolean($opLeader),
 						'view_bonds' => $db->escapeBoolean($viewBonds),
+						'manage_npcs' => $db->escapeBoolean($manageNpcs),
 					],
 					[
-						'alliance_id' => $alliance_id,
-						'game_id' => $player->getGameID(),
+						...$alliance->SQLID,
 						'role_id' => $this->roleID,
 					],
 				);

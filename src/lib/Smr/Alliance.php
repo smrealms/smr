@@ -129,7 +129,7 @@ class Alliance {
 	 * Create an alliance and return the new object.
 	 * Starts alliance with "closed" recruitment (for safety).
 	 */
-	public static function createAlliance(int $gameID, string $name, bool $allowNHA = false): self {
+	public static function createAlliance(int $gameID, string $name, bool $allowReserved = false): self {
 		$db = Database::getInstance();
 		$db->lockTable('alliance');
 		try {
@@ -141,7 +141,11 @@ class Alliance {
 				// alliance with this name does not yet exist
 			}
 
-			if (!$allowNHA && trim($name) === NHA_ALLIANCE_NAME) {
+			$reserved = [
+				NHA_ALLIANCE_NAME,
+				NPC_FOR_HIRE_ALLIANCE_NAME,
+			];
+			if (!$allowReserved && in_array(trim($name), $reserved, true)) {
 				throw new UserError('That alliance name is reserved.');
 			}
 
@@ -172,6 +176,13 @@ class Alliance {
 	 */
 	public function isNHA(): bool {
 		return $this->allianceName === NHA_ALLIANCE_NAME;
+	}
+
+	/**
+	 * Returns true if the alliance is the NPC-For-Hire alliance.
+	 */
+	public function isNpcForHire(): bool {
+		return $this->allianceName === NPC_FOR_HIRE_ALLIANCE_NAME;
 	}
 
 	public function getAllianceID(): int {
@@ -530,6 +541,16 @@ class Alliance {
 	}
 
 	/**
+	 * @return array<int, Player>
+	 */
+	public function getNpcs(): array {
+		return array_filter(
+			$this->getMembers(includeNpc: true),
+			fn($player) => $player->isNPC(),
+		);
+	}
+
+	/**
 	 * @return array<int>
 	 */
 	public function getActiveIDs(): array {
@@ -613,10 +634,10 @@ class Alliance {
 		$sendAllMsg = true;
 		$opLeader = true;
 		$viewBonds = true;
+		$manageNpcs = true;
 		$db = Database::getInstance();
 		$db->insert('alliance_has_roles', [
-			'alliance_id' => $this->getAllianceID(),
-			'game_id' => $this->getGameID(),
+			...$this->SQLID,
 			'role_id' => ALLIANCE_ROLE_LEADER,
 			'role' => 'Leader',
 			'with_per_day' => $withPerDay,
@@ -630,6 +651,7 @@ class Alliance {
 			'send_alliance_msg' => $db->escapeBoolean($sendAllMsg),
 			'op_leader' => $db->escapeBoolean($opLeader),
 			'view_bonds' => $db->escapeBoolean($viewBonds),
+			'manage_npcs' => $db->escapeBoolean($manageNpcs),
 		]);
 
 		// Create new member role
@@ -649,6 +671,7 @@ class Alliance {
 				$sendAllMsg = false;
 				$opLeader = false;
 				$viewBonds = false;
+				$manageNpcs = false;
 				break;
 			case 'basic':
 				$withPerDay = ALLIANCE_BANK_UNLIMITED;
@@ -662,11 +685,11 @@ class Alliance {
 				$sendAllMsg = false;
 				$opLeader = false;
 				$viewBonds = false;
+				$manageNpcs = true;
 				break;
 		}
 		$db->insert('alliance_has_roles', [
-			'alliance_id' => $this->getAllianceID(),
-			'game_id' => $this->getGameID(),
+			...$this->SQLID,
 			'role_id' => ALLIANCE_ROLE_NEW_MEMBER,
 			'role' => 'New Member',
 			'with_per_day' => $withPerDay,
@@ -680,6 +703,7 @@ class Alliance {
 			'send_alliance_msg' => $db->escapeBoolean($sendAllMsg),
 			'op_leader' => $db->escapeBoolean($opLeader),
 			'view_bonds' => $db->escapeBoolean($viewBonds),
+			'manage_npcs' => $db->escapeBoolean($manageNpcs),
 		]);
 	}
 

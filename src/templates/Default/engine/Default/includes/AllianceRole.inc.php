@@ -62,6 +62,10 @@
 				<tr>
 					<td>View Bonds In Planet List</td>
 					<td><input type="checkbox" name="viewBonds"<?php if ($Role['ViewBondsInPlanetList']) { ?> checked="checked"<?php } ?>></td>
+				</tr>
+				<tr>
+					<td>Manage NPCs</td>
+					<td><input type="checkbox" name="manageNpcs"<?php if ($Role['ManageNpcs']) { ?> checked="checked"<?php } ?>></td>
 				</tr><?php
 			}
 		} ?>

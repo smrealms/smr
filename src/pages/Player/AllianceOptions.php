@@ -115,6 +115,13 @@ class AllianceOptions extends PlayerPage {
 				'text' => 'Schedule and manage the next alliance operation and designate an alliance flagship.',
 			];
 		}
+		if ($dbRecord->getBoolean('manage_npcs')) {
+			$container = new AllianceManageNpcs();
+			$links[] = [
+				'link' => create_link($container, 'Manage NPCs'),
+				'text' => 'Make changes to hired NPC traders.',
+			];
+		}
 
 		$template->assign('Links', $links);
 	}
