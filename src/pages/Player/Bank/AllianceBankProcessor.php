@@ -100,17 +100,10 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 		// log action
 		$player->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits for alliance account of ' . $alliance->getAllianceName());
 
-		// get next transaction id
-		$dbResult = $db->read('SELECT IFNULL(MAX(transaction_id), 0) as max_id FROM alliance_bank_transactions
-					WHERE ' . Alliance::SQL, $alliance->SQLID);
-		$next_id = $dbResult->record()->getInt('max_id') + 1;
-
-		// save log
+		// save transaction
 		$requestExempt = Request::has('requestExempt') ? 1 : 0;
 		$db->insert('alliance_bank_transactions', [
-			'alliance_id' => $alliance_id,
-			'game_id' => $player->getGameID(),
-			'transaction_id' => $next_id,
+			...$alliance->SQLID,
 			'time' => Epoch::time(),
 			'payee_id' => $player->getAccountID(),
 			'reason' => $message,

@@ -94,32 +94,31 @@ class AllianceBank extends PlayerPage {
 		$maxValue = $session->getRequestVarInt('maxValue', 0);
 		$minValue = $session->getRequestVarInt('minValue', 0);
 
+		// By default, display the last 5 records
 		if ($maxValue <= 0) {
-			$dbResult = $db->read('SELECT IFNULL(MAX(transaction_id), 0) as max_transaction_id FROM alliance_bank_transactions WHERE ' . Alliance::SQL, $alliance->SQLID);
-			$maxValue = $dbResult->record()->getInt('max_transaction_id');
+			$maxValue = $db->count('alliance_bank_transactions', $alliance->SQLID);
 		}
 
 		if ($minValue <= 0 || $minValue > $maxValue) {
-			$minValue = max(1, $maxValue - 5);
+			$minValue = max(1, $maxValue - 4);
 		}
 
-		$query = 'SELECT time, transaction_id, transaction, amount, exempt, reason, payee_id
+		$query = 'SELECT *
 			FROM alliance_bank_transactions
 			WHERE ' . Alliance::SQL . '
-			AND transaction_id >= :min_transaction_id
-			AND transaction_id <= :max_transaction_id
-			ORDER BY time LIMIT :limit';
+			LIMIT :limit_offset, :limit_count';
 		$dbResult = $db->read($query, [
 			...$alliance->SQLID,
-			'min_transaction_id' => $db->escapeNumber($minValue),
-			'max_transaction_id' => $db->escapeNumber($maxValue),
-			'limit' => 1 + $maxValue - $minValue,
+			'limit_offset' => $minValue - 1,
+			'limit_count' => $maxValue - $minValue + 1,
 		]);
 
 		$bankTransactions = [];
-		foreach ($dbResult->records() as $dbRecord) {
+		$transactionIDs = [];
+		foreach ($dbResult->records() as $i => $dbRecord) {
+			$index = $i + $minValue;
 			$trans = $dbRecord->getString('transaction');
-			$bankTransactions[$dbRecord->getInt('transaction_id')] = [
+			$bankTransactions[$index] = [
 				'Time' => $dbRecord->getInt('time'),
 				'Player' => Player::getPlayer($dbRecord->getInt('payee_id'), $player->getGameID()),
 				'Reason' => $dbRecord->getString('reason'),
@@ -128,6 +127,7 @@ class AllianceBank extends PlayerPage {
 				'Deposit' => $trans === 'Deposit' ? number_format($dbRecord->getInt('amount')) : '',
 				'Exempt' => $dbRecord->getInt('exempt') === 1,
 			];
+			$transactionIDs[] = $dbRecord->getInt('transaction_id');
 		}
 		$template->assign('BankTransactions', $bankTransactions);
 
@@ -138,7 +138,7 @@ class AllianceBank extends PlayerPage {
 			$container = new self($allianceID);
 			$template->assign('FilterTransactionsFormHREF', $container->href());
 
-			$container = new AllianceBankExemptProcessor($minValue, $maxValue);
+			$container = new AllianceBankExemptProcessor($this, $transactionIDs);
 			$template->assign('ExemptTransactionsFormHREF', $container->href());
 
 			$template->assign('EndingBalance', number_format($alliance->getBank()));

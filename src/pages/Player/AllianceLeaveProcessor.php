@@ -20,21 +20,17 @@ class AllianceLeaveProcessor extends PlayerPageProcessor {
 		if ($alliance->getNumMembers() === 1 && !$alliance->isNHA()) {
 			// Retain the alliance, but delete some auxilliary info
 			$db = Database::getInstance();
-			$sqlParams = [
-				'alliance_id' => $db->escapeNumber($player->getAllianceID()),
-				'game_id' => $db->escapeNumber($player->getGameID()),
-			];
-			$db->delete('alliance_bank_transactions', $sqlParams);
-			$db->delete('alliance_thread', $sqlParams);
-			$db->delete('alliance_thread_topic', $sqlParams);
-			$db->delete('alliance_has_roles', $sqlParams);
+			$db->delete('alliance_bank_transactions', $alliance->SQLID);
+			$db->delete('alliance_thread', $alliance->SQLID);
+			$db->delete('alliance_thread_topic', $alliance->SQLID);
+			$db->delete('alliance_has_roles', $alliance->SQLID);
 			$db->update(
 				'alliance',
 				[
 					'leader_id' => 0,
 					'discord_channel' => null,
 				],
-				$sqlParams,
+				$alliance->SQLID,
 			);
 		}
 

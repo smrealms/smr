@@ -35,7 +35,7 @@ class AllianceExemptAuthorize extends PlayerPage {
 		]);
 		$transactions = [];
 		if ($dbResult->hasRecord()) {
-			$container = new AllianceBankExemptProcessor();
+			$container = new AllianceBankExemptProcessor($this);
 			$template->assign('ExemptHREF', $container->href());
 
 			foreach ($dbResult->records() as $dbRecord) {
