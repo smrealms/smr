@@ -35,7 +35,7 @@ class AllianceOptions extends PlayerPage {
 			];
 		}
 
-		if (!$isDraftGame) {
+		if (!$isDraftGame && !$alliance->isNHA()) {
 			// Players can choose to leave their alliance (except in Draft games)
 			$container = new AllianceLeaveConfirm();
 			$links[] = [
@@ -59,28 +59,28 @@ class AllianceOptions extends PlayerPage {
 		]);
 		$dbRecord = $dbResult->record();
 
-		if ($dbRecord->getBoolean('change_pass')) {
+		if ($dbRecord->getBoolean('change_pass') && !$alliance->isNHA()) {
 			$container = new AllianceInvitePlayer();
 			$links[] = [
 				'link' => create_link($container, 'Invite Player'),
 				'text' => 'Invite a player to the alliance.',
 			];
 		}
-		if ($dbRecord->getBoolean('remove_member')) {
+		if ($dbRecord->getBoolean('remove_member') && !$alliance->isNHA()) {
 			$container = new AllianceRemoveMember();
 			$links[] = [
 				'link' => create_link($container, 'Remove Member'),
 				'text' => 'Remove a trader from alliance roster.',
 			];
 		}
-		if ($player->isAllianceLeader()) {
+		if ($player->isAllianceLeader() && !$alliance->isNHA()) {
 			$container = new AllianceLeadership();
 			$links[] = [
 				'link' => create_link($container, 'Handover Leadership'),
 				'text' => 'Hand over leadership of the alliance to an alliance mate.',
 			];
 		}
-		if ($dbRecord->getBoolean('change_pass') || $dbRecord->getBoolean('change_mod')) {
+		if (($dbRecord->getBoolean('change_pass') || $dbRecord->getBoolean('change_mod')) && !$alliance->isNHA()) {
 			$container = new AllianceGovernance($alliance->getAllianceID());
 			$links[] = [
 				'link' => create_link($container, 'Govern Alliance'),
