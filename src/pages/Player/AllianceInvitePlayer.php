@@ -40,7 +40,7 @@ class AllianceInvitePlayer extends PlayerPage {
 		// Get list of players eligible to join this alliance.
 		// List those who joined the game most recently first.
 		$invitePlayers = [];
-		if ($alliance->getNumMembers() < $game->getAllianceMaxPlayers()) {
+		if ($alliance->hasRoomForPlayer()) {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT * FROM player
 			            WHERE game_id = :game_id
@@ -57,7 +57,7 @@ class AllianceInvitePlayer extends PlayerPage {
 					// Don't display players we've already invited
 					continue;
 				}
-				if ($alliance->getNumVeterans() < $game->getAllianceMaxVets() || $invitePlayer->hasNewbieStatus()) {
+				if ($alliance->hasRoomForPlayer($invitePlayer)) {
 					$invitePlayers[] = $invitePlayer;
 				}
 			}

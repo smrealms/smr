@@ -7,6 +7,7 @@ use Smr\Database;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Pages\Player\Bank\AllianceBankExemptProcessor;
+use Smr\Player;
 use Smr\Template;
 
 class AllianceExemptAuthorize extends PlayerPage {
@@ -37,11 +38,11 @@ class AllianceExemptAuthorize extends PlayerPage {
 			$container = new AllianceBankExemptProcessor();
 			$template->assign('ExemptHREF', $container->href());
 
-			$players = $alliance->getMembers();
 			foreach ($dbResult->records() as $dbRecord) {
+				$recPlayer = Player::getPlayer($dbRecord->getInt('payee_id'), $player->getGameID());
 				$transactions[] = [
 					'type' => $dbRecord->getString('transaction') === 'Payment' ? 'Withdraw' : 'Deposit',
-					'player' => $players[$dbRecord->getInt('payee_id')]->getDisplayName(),
+					'player' => $recPlayer->getDisplayName(),
 					'reason' => $dbRecord->getString('reason'),
 					'amount' => number_format($dbRecord->getInt('amount')),
 					'transactionID' => $dbRecord->getInt('transaction_id'),

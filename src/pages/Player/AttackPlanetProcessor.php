@@ -125,8 +125,8 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 
 		// Send notification to planet owners
 		if ($planetOwner->hasAlliance()) {
-			foreach ($planetOwner->getAlliance()->getMemberIDs() as $allyAccountID) {
-				Player::sendMessageFromPlanet($planet->getGameID(), $allyAccountID, $planetAttackMessage);
+			foreach ($planetOwner->getAlliance()->getMembers(includeNpc: false) as $allyPlayer) {
+				Player::sendMessageFromPlanet($planet->getGameID(), $allyPlayer->getAccountID(), $planetAttackMessage);
 			}
 		} else {
 			Player::sendMessageFromPlanet($planet->getGameID(), $planetOwner->getAccountID(), $planetAttackMessage);

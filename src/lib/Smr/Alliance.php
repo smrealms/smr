@@ -31,8 +31,6 @@ class Alliance {
 	protected int $flagshipID;
 
 	/** @var array<int> */
-	protected array $memberList;
-	/** @var array<int> */
 	protected array $seedlist;
 
 	// Recruit type constants
@@ -463,39 +461,28 @@ class Alliance {
 		if ($player->getAllianceJoinable() > Epoch::time()) {
 			return 'You cannot join another alliance for ' . format_time($player->getAllianceJoinable() - Epoch::time()) . '.';
 		}
-		if ($this->getNumMembers() < $this->getGame()->getAllianceMaxPlayers()) {
-			if ($player->hasNewbieStatus()) {
-				return false;
-			}
-			$maxVets = $this->getGame()->getAllianceMaxVets();
-			if ($this->getNumMembers() < $maxVets) {
-				return false;
-			}
-			$db = Database::getInstance();
-			$dbResult = $db->select(
-				'player_joined_alliance',
-				['account_id' => $player->getAccountID(), ...$this->SQLID],
-				['status'],
-			);
-			if ($dbResult->hasRecord()) {
-				if ($dbResult->record()->getString('status') === 'NEWBIE') {
-					return false;
-				}
-			}
-			$dbResult = $db->read('SELECT COUNT(*) AS num_orig_vets
-							FROM player_joined_alliance
-							JOIN player USING (account_id, alliance_id, game_id)
-							WHERE ' . self::SQL . ' AND status=\'VETERAN\'', $this->SQLID);
-			if (!$dbResult->hasRecord() || $dbResult->record()->getInt('num_orig_vets') < $maxVets) {
-				return false;
-			}
+		if (!$this->hasRoomForPlayer($player)) {
+			return 'There is not currently enough room for you in this alliance.';
 		}
-		return 'There is not currently enough room for you in this alliance.';
+		return false; // player is allowed to join alliance
 	}
 
+	public function hasRoomForPlayer(?AbstractPlayer $player = null): bool {
+		if ($this->getNumMembers() >= $this->getGame()->getAllianceMaxPlayers()) {
+			return false;
+		}
+		if ($player === null || $player->hasNewbieStatus()) {
+			return true;
+		}
+		return $this->getNumVeterans() < $this->getGame()->getAllianceMaxVets();
+	}
+
+	/**
+	 * Number of members who are currently non-Newbie status (excluding NPCs)
+	 */
 	public function getNumVeterans(): int {
 		$numVeterans = 0;
-		foreach ($this->getMembers() as $player) {
+		foreach ($this->getMembers(includeNpc: false) as $player) {
 			if (!$player->hasNewbieStatus()) {
 				$numVeterans++;
 			}
@@ -504,7 +491,7 @@ class Alliance {
 	}
 
 	public function getNumMembers(): int {
-		return count($this->getMemberIDs());
+		return count($this->getMembers(includeNpc: true));
 	}
 
 	public function update(): void {
@@ -534,25 +521,12 @@ class Alliance {
 	 *
 	 * @return array<int, Player>
 	 */
-	public function getMembers(): array {
-		return Player::getAlliancePlayers($this->getGameID(), $this->getAllianceID());
-	}
-
-	/**
-	 * @return array<int>
-	 */
-	public function getMemberIDs(): array {
-		if (!isset($this->memberList)) {
-			$db = Database::getInstance();
-			$dbResult = $db->select('player', $this->SQLID, ['account_id']);
-
-			//we have the list of players put them in an array now
-			$this->memberList = [];
-			foreach ($dbResult->records() as $dbRecord) {
-				$this->memberList[] = $dbRecord->getInt('account_id');
-			}
+	public function getMembers(bool $includeNpc): array {
+		$members = Player::getAlliancePlayers($this->getGameID(), $this->getAllianceID());
+		if (!$includeNpc) {
+			$members = array_filter($members, fn($player) => !$player->isNPC());
 		}
-		return $this->memberList;
+		return $members;
 	}
 
 	/**

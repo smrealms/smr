@@ -1556,16 +1556,6 @@ abstract class AbstractPlayer {
 	public function joinAlliance(int $allianceID, bool $log = true): void {
 		$this->setAllianceID($allianceID);
 
-		$status = $this->hasNewbieStatus() ? 'NEWBIE' : 'VETERAN';
-		$db = Database::getInstance();
-		$db->write('INSERT IGNORE INTO player_joined_alliance (account_id,game_id,alliance_id,status)
-			VALUES (:account_id, :game_id, :alliance_id, :status)', [
-			'account_id' => $db->escapeNumber($this->getAccountID()),
-			'game_id' => $db->escapeNumber($this->getGameID()),
-			'alliance_id' => $db->escapeNumber($allianceID),
-			'status' => $db->escapeString($status),
-		]);
-
 		$alliance = $this->getAlliance();
 
 		if (!$this->isAllianceLeader()) {

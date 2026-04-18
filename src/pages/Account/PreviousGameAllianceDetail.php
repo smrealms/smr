@@ -31,7 +31,7 @@ class PreviousGameAllianceDetail extends AccountPage {
 		$template->assign('BackHREF', $container->href());
 
 		$players = [];
-		foreach ($alliance->getMembers() as $player) {
+		foreach ($alliance->getMembers(includeNpc: false) as $player) {
 			$players[] = [
 				'leader' => $player->isAllianceLeader() ? '*' : '',
 				'bold' => $player->getAccountID() === $account->getAccountID() ? 'class="bold"' : '',

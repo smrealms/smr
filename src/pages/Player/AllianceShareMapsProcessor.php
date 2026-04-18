@@ -11,7 +11,8 @@ class AllianceShareMapsProcessor extends PlayerPageProcessor {
 
 	public function build(AbstractPlayer $player): never {
 		// get a list of alliance member (remove current player)
-		$memberIDs = $player->getAlliance()->getMemberIDs();
+		$alliance = $player->getAlliance();
+		$memberIDs = array_keys($alliance->getMembers(includeNpc: false));
 		$alliance_ids = array_diff($memberIDs, [$player->getAccountID()]);
 
 		// end here if we are alone in the alliance
