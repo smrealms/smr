@@ -2,6 +2,7 @@
 
 namespace SmrTest\lib;
 
+use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestWith;
 use Smr\Alliance;
@@ -113,6 +114,58 @@ class AllianceIntegrationTest extends BaseIntegrationSpec {
 		// Create an alliance that is the NPC-For-Hire
 		$alliance = Alliance::createAlliance(1, NPC_FOR_HIRE_ALLIANCE_NAME, true);
 		self::assertTrue($alliance->isNpcForHire());
+	}
+
+	public function test_incrementKills(): void {
+		$alliance = Alliance::createAlliance(1, 'test');
+		self::assertSame(0, $alliance->getKills());
+		$alliance->incrementKills();
+		self::assertSame(1, $alliance->getKills());
+		// Force update to check database
+		$alliance = Alliance::getAlliance($alliance->getAllianceID(), 1, forceUpdate: true);
+		self::assertSame(1, $alliance->getKills());
+	}
+
+	public function test_incrementDeaths(): void {
+		$alliance = Alliance::createAlliance(1, 'test');
+		self::assertSame(0, $alliance->getDeaths());
+		$alliance->incrementDeaths();
+		self::assertSame(1, $alliance->getDeaths());
+		// Force update to check database
+		$alliance = Alliance::getAlliance($alliance->getAllianceID(), 1, forceUpdate: true);
+		self::assertSame(1, $alliance->getDeaths());
+	}
+
+	public function test_decreaseBank_underflow(): void {
+		$alliance = Alliance::createAlliance(1, 'test');
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Do not allow negative credits');
+		$alliance->decreaseBank(1);
+	}
+
+	public function test_increaseBank_decreaseBank(): void {
+		$alliance = Alliance::createAlliance(1, 'test');
+		self::assertSame(0, $alliance->getBank());
+
+		// Test adding money
+		$added = $alliance->increaseBank(300);
+		self::assertSame(300, $added);
+		self::assertSame(300, $alliance->getBank());
+		// Force update to check database
+		$alliance = Alliance::getAlliance($alliance->getAllianceID(), 1, forceUpdate: true);
+		self::assertSame(300, $alliance->getBank());
+
+		// Test removing money
+		$alliance->decreaseBank(200);
+		self::assertSame(100, $alliance->getBank());
+		// Force update to check database
+		$alliance = Alliance::getAlliance($alliance->getAllianceID(), 1, forceUpdate: true);
+		self::assertSame(100, $alliance->getBank());
+
+		// Test adding money over the limit
+		$added = $alliance->increaseBank(MAX_MONEY);
+		self::assertSame(MAX_MONEY - 100, $added);
+		self::assertSame(MAX_MONEY, $alliance->getBank());
 	}
 
 }

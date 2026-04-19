@@ -2233,12 +2233,7 @@ abstract class AbstractPlayer {
 
 		// if we are in an alliance we increase their deaths
 		if ($this->hasAlliance()) {
-			$db = Database::getInstance();
-			$db->write('UPDATE alliance SET alliance_deaths = alliance_deaths + 1
-							WHERE game_id = :game_id AND alliance_id = :alliance_id', [
-				'game_id' => $db->escapeNumber($this->getGameID()),
-				'alliance_id' => $db->escapeNumber($this->getAllianceID()),
-			]);
+			$this->getAlliance()->incrementDeaths();
 		}
 
 		// record death stat
@@ -2402,10 +2397,7 @@ abstract class AbstractPlayer {
 			$killer->increaseHOF(1, ['Killing', 'Kills'], HOF_PUBLIC);
 
 			if ($killer->hasAlliance()) {
-				$db->write('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id = :alliance_id AND game_id = :game_id', [
-					'alliance_id' => $db->escapeNumber($killer->getAllianceID()),
-					'game_id' => $db->escapeNumber($killer->getGameID()),
-				]);
+				$killer->getAlliance()->incrementKills();
 			}
 
 			// alliance vs. alliance stats
