@@ -4,8 +4,8 @@ namespace SmrTest\lib;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use Smr\AbstractPlayer;
 use Smr\BuyerRestriction;
+use Smr\Player;
 
 #[CoversClass(BuyerRestriction::class)]
 class BuyerRestrictionTest extends TestCase {
@@ -24,7 +24,7 @@ class BuyerRestrictionTest extends TestCase {
 	}
 
 	public function test_passes(): void {
-		$player = $this->createStub(AbstractPlayer::class);
+		$player = $this->createStub(Player::class);
 
 		// Test None restriction passes by default
 		self::assertTrue(BuyerRestriction::None->passes($player));

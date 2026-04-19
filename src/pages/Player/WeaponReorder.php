@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
 
 class WeaponReorder extends PlayerPage {
@@ -13,7 +13,7 @@ class WeaponReorder extends PlayerPage {
 
 	public string $file = 'weapon_reorder.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Weapon Reorder');
 	}
 

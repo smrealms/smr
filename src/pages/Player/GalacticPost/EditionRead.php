@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class EditionRead extends PlayerPage {
@@ -18,7 +18,7 @@ class EditionRead extends PlayerPage {
 		private readonly bool $showBackButton = false,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		Menu::galacticPost();
 
 		if ($this->paperID !== null) {

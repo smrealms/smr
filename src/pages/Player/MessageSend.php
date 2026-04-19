@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
@@ -20,7 +19,7 @@ class MessageSend extends PlayerPage {
 		private readonly ?string $preview = null,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Send Message');
 
 		Menu::messages();

@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Game;
@@ -10,6 +9,7 @@ use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Pages\Player\Planet\Main as PlanetMain;
+use Smr\Player;
 use Smr\Template;
 use Smr\TurnsLevel;
 
@@ -29,7 +29,7 @@ class CurrentSector extends PlayerPage {
 		private readonly bool $showForceRefreshMessage = false,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$sector = $player->getSector();
 
 		// If on a planet, forward to planet_main.php
@@ -61,7 +61,7 @@ class CurrentSector extends PlayerPage {
 		$unvisited = [];
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (:sector_ids) AND ' . AbstractPlayer::SQL, [
+		$dbResult = $db->read('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (:sector_ids) AND ' . Player::SQL, [
 			...$player->SQLID,
 			'sector_ids' => $db->escapeArray($linkSectorIDs),
 		]);
@@ -198,7 +198,7 @@ class CurrentSector extends PlayerPage {
 
 }
 
-function getForceRefreshMessage(AbstractPlayer $player): string {
+function getForceRefreshMessage(Player $player): string {
 	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at > :now AND sector_id = :sector_id AND game_id = :game_id AND refresher = :account_id ORDER BY refresh_at DESC LIMIT 1', [
 		'now' => $db->escapeNumber(Epoch::time()),
@@ -214,7 +214,7 @@ function getForceRefreshMessage(AbstractPlayer $player): string {
 	return $forceRefreshMessage;
 }
 
-function checkForAttackMessage(string $msg, AbstractPlayer $player): void {
+function checkForAttackMessage(string $msg, Player $player): void {
 	$contains = 0;
 	$msg = str_replace('[ATTACK_RESULTS]', '', $msg, $contains);
 	if ($contains > 0) {

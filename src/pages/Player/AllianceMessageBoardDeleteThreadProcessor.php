@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 
 class AllianceMessageBoardDeleteThreadProcessor extends PlayerPageProcessor {
 
@@ -17,7 +17,7 @@ class AllianceMessageBoardDeleteThreadProcessor extends PlayerPageProcessor {
 		private readonly int $threadID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$db = Database::getInstance();
 		$sqlParams = [
 			'game_id' => $player->getGameID(),

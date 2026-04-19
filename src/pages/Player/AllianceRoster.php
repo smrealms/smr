@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
 
 class AllianceRoster extends PlayerPage {
@@ -21,7 +21,7 @@ class AllianceRoster extends PlayerPage {
 		private readonly bool $showRoles = false,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$db = Database::getInstance();
 		$account = $player->getAccount();
 

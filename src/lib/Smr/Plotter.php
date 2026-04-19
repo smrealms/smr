@@ -7,7 +7,7 @@ use Smr\Exceptions\PathNotFound;
 
 class Plotter {
 
-	public static function getX(PlotGroup $xType, int|string $X, int $gameID, ?AbstractPlayer $player = null): mixed {
+	public static function getX(PlotGroup $xType, int|string $X, int $gameID, ?Player $player = null): mixed {
 		// Special case for Location categories (i.e. Bar, HQ, SafeFed)
 		if (!is_numeric($X)) {
 			if ($xType !== PlotGroup::Locations) {
@@ -54,8 +54,8 @@ class Plotter {
 	public static function findReversiblePathToX(
 		mixed $x,
 		Sector $sector,
-		?AbstractPlayer $needsToHaveBeenExploredBy = null,
-		?AbstractPlayer $player = null,
+		?Player $needsToHaveBeenExploredBy = null,
+		?Player $player = null,
 	): Path {
 		if ($x instanceof Sector) {
 
@@ -109,8 +109,8 @@ class Plotter {
 		mixed $x,
 		Sector $sector,
 		bool $useFirst,
-		?AbstractPlayer $needsToHaveBeenExploredBy = null,
-		?AbstractPlayer $player = null,
+		?Player $needsToHaveBeenExploredBy = null,
+		?Player $player = null,
 		int $distanceLimit = 10000,
 		int $lowLimit = 0,
 		int $highLimit = 100000,

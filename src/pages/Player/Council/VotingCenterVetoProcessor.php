@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player\Council;
 
-use Smr\AbstractPlayer;
 use Smr\CouncilVoting;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class VotingCenterVetoProcessor extends PlayerPageProcessor {
 
@@ -13,7 +13,7 @@ class VotingCenterVetoProcessor extends PlayerPageProcessor {
 		private readonly string $voteType,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		if (!$player->isPresident()) {
 			create_error('You have to be the president to veto!');
 		}

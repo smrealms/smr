@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Force;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class AttackForces extends PlayerPage {
@@ -23,7 +23,7 @@ class AttackForces extends PlayerPage {
 		$this->skipRedirect = $playerDied;
 	}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('FullForceCombatResults', $this->results);
 
 		if ($this->ownerAccountID > 0) {

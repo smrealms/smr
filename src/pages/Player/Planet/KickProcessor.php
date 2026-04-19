@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player\Planet;
 
-use Smr\AbstractPlayer;
 use Smr\Globals;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
@@ -13,7 +12,7 @@ class KickProcessor extends PlayerPageProcessor {
 		private readonly int $kickAccountID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		if (!$player->isLandedOnPlanet()) {
 			create_error('You are not on a planet!');
 		}

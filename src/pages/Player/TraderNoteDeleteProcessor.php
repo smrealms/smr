@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class TraderNoteDeleteProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$note_ids = Request::getIntArray('note_id', []);
 		if (count($note_ids) > 0) {
 			$db = Database::getInstance();

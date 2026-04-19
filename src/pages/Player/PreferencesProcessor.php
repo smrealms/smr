@@ -3,16 +3,16 @@
 namespace Smr\Pages\Player;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 use Smr\SectorLock;
 
 class PreferencesProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$db = Database::getInstance();
 		$account = $player->getAccount();
 

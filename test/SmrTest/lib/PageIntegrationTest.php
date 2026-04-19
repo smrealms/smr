@@ -5,9 +5,9 @@ namespace SmrTest\lib;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
-use Smr\AbstractPlayer;
 use Smr\Container\DiContainer;
 use Smr\Page\Page;
+use Smr\Player;
 use Smr\Session;
 
 /**
@@ -50,8 +50,8 @@ class PageIntegrationTest extends TestCase {
 	#[TestWith([false, false, true, true, false, true])]
 	#[TestWith([false, true, true, true, false, true])]
 	public function test_showUnderAttack(bool $underAttack1, bool $ajax1, ?bool $underAttack2, bool $ajax2, bool $expected1, bool $expected2): void {
-		$getPlayer = function(bool $underAttack, bool $ajax): AbstractPlayer {
-			$mockPlayer = $this->createMock(AbstractPlayer::class);
+		$getPlayer = function(bool $underAttack, bool $ajax): Player {
+			$mockPlayer = $this->createMock(Player::class);
 			$mockPlayer
 				->method('isUnderAttack')
 				->willReturn($underAttack);

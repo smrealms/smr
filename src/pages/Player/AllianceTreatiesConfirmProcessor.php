@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
@@ -18,7 +17,7 @@ class AllianceTreatiesConfirmProcessor extends PlayerPageProcessor {
 		private readonly array $terms,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$alliance1 = $player->getAlliance();
 		$alliance2 = Alliance::getAlliance($this->otherAllianceID, $player->getGameID());
 

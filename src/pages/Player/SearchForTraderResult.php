@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Page\PlayerPage;
@@ -25,7 +24,7 @@ class SearchForTraderResult extends PlayerPage {
 		private ?string $playerName = null,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$this->playerID ??= Request::getInt('player_id');
 		$player_id = $this->playerID;
 

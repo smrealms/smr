@@ -29,7 +29,7 @@ class MissionState {
 	 *
 	 * @return array<int, self>
 	 */
-	public static function getPlayerMissionStates(AbstractPlayer $player): array {
+	public static function getPlayerMissionStates(Player $player): array {
 		$gameID = $player->getGameID();
 		$accountID = $player->getAccountID();
 		if (!isset(self::$CACHE[$gameID][$accountID])) {
@@ -48,7 +48,7 @@ class MissionState {
 	/**
 	 * Add a new mission for the given player.
 	 */
-	public static function addPlayerMission(AbstractPlayer $player, Mission $mission): self {
+	public static function addPlayerMission(Player $player, Mission $mission): self {
 		$gameID = $player->getGameID();
 		$accountID = $player->getAccountID();
 		$missionID = $mission->getMissionID();

@@ -3,7 +3,6 @@
 namespace Smr\Pages\Player\Headquarters;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\BountyType;
 use Smr\Location;
 use Smr\Page\PlayerPageProcessor;
@@ -19,7 +18,7 @@ class BountyPlaceConfirmProcessor extends PlayerPageProcessor {
 		private readonly int $smrCredits,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		if (!$player->getSector()->hasLocation($this->locationID)) {
 			create_error('That location does not exist in this sector');
 		}

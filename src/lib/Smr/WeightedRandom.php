@@ -30,7 +30,7 @@ class WeightedRandom {
 		return self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID];
 	}
 
-	public static function getWeightedRandomForPlayer(AbstractPlayer $player, string $type, int $typeID, bool $forceUpdate = false): self {
+	public static function getWeightedRandomForPlayer(Player $player, string $type, int $typeID, bool $forceUpdate = false): self {
 		return self::getWeightedRandom($player->getGameID(), $player->getAccountID(), $type, $typeID, $forceUpdate);
 	}
 

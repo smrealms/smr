@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\BuyerRestriction;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\ShipType;
 
 class ShopShipProcessor extends PlayerPageProcessor {
@@ -13,7 +13,7 @@ class ShopShipProcessor extends PlayerPageProcessor {
 		private readonly int $shipTypeID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$ship = $player->getShip();
 
 		$shipTypeID = $this->shipTypeID;

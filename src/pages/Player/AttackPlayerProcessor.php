@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
@@ -15,7 +14,7 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 		private readonly int $targetAccountID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$account = $player->getAccount();
 		$sector = $player->getSector();
 

@@ -232,7 +232,7 @@ class Alliance {
 		return $this->leaderID;
 	}
 
-	public function getLeader(): AbstractPlayer {
+	public function getLeader(): Player {
 		return Player::getPlayer($this->getLeaderID(), $this->getGameID());
 	}
 
@@ -449,7 +449,7 @@ class Alliance {
 		return htmlentities($this->description);
 	}
 
-	public function setAllianceDescription(string $description, ?AbstractPlayer $player = null): void {
+	public function setAllianceDescription(string $description, ?Player $player = null): void {
 		$description = word_filter($description);
 		if ($description === $this->description) {
 			return;
@@ -483,7 +483,7 @@ class Alliance {
 		$this->flagshipID = $accountID;
 	}
 
-	public function getJoinRestriction(AbstractPlayer $player, bool $doAllianceCheck = true, bool $doRecruitingCheck = true): string|false {
+	public function getJoinRestriction(Player $player, bool $doAllianceCheck = true, bool $doRecruitingCheck = true): string|false {
 		if ($player->getGame()->isGameType(Game::GAME_TYPE_DRAFT)) {
 			return 'Alliance members will be selected by the Draft Leaders.';
 		}
@@ -508,7 +508,7 @@ class Alliance {
 		return false; // player is allowed to join alliance
 	}
 
-	public function hasRoomForPlayer(?AbstractPlayer $player = null): bool {
+	public function hasRoomForPlayer(?Player $player = null): bool {
 		if ($this->getNumMembers() >= $this->getGame()->getAllianceMaxPlayers()) {
 			return false;
 		}

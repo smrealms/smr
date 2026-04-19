@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class AllianceSetOpProcessor extends PlayerPageProcessor {
@@ -13,7 +13,7 @@ class AllianceSetOpProcessor extends PlayerPageProcessor {
 		private readonly bool $cancel = false,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$db = Database::getInstance();
 		$account = $player->getAccount();
 		$alliance = $player->getAlliance();

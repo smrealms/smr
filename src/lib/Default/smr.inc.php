@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
 use Nbbc\BBCode;
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Chess\ChessGame;
 use Smr\Container\DiContainer;
@@ -131,7 +130,7 @@ function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $defau
 						}
 						$linked = $disableBBLinks === false && $overrideGameID === $session->getGameID();
 						$player = $session->hasGame() ? $session->getPlayer() : null;
-						return AbstractPlayer::getColouredRaceNameOrDefault($raceID, $player, $linked);
+						return Player::getColouredRaceNameOrDefault($raceID, $player, $linked);
 					}
 				}
 				break;
@@ -526,7 +525,7 @@ function saveAllAndReleaseLock(bool $updateSession = true): void {
 	}
 }
 
-function doTickerAssigns(Template $template, AbstractPlayer $player, Database $db): void {
+function doTickerAssigns(Template $template, Player $player, Database $db): void {
 	//any ticker news?
 	if ($player->hasTickers()) {
 		$ticker = [];
@@ -547,7 +546,7 @@ function doTickerAssigns(Template $template, AbstractPlayer $player, Database $d
 		}
 		if ($player->hasTicker('SCOUT')) {
 			$dbResult = $db->read('SELECT message_text,send_time FROM message
-						WHERE ' . AbstractPlayer::SQL . '
+						WHERE ' . Player::SQL . '
 						AND message_type_id = :message_type_id
 						AND send_time >= :max_time
 						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type = :type AND expires > :now AND game_id = :game_id) AND receiver_delete = \'FALSE\'
@@ -647,7 +646,7 @@ function doSkeletonAssigns(Template $template): void {
 		$template->assign('CurrentHallOfFameLink', $container->href());
 
 		$unreadMessages = [];
-		$dbResult = $db->read('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . AbstractPlayer::SQL . ' GROUP BY message_type_id', $player->SQLID);
+		$dbResult = $db->read('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . Player::SQL . ' GROUP BY message_type_id', $player->SQLID);
 		foreach ($dbResult->records() as $dbRecord) {
 			$messageTypeID = $dbRecord->getInt('message_type_id');
 			$container = new MessageView($messageTypeID);

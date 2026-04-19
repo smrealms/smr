@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-use Smr\AbstractPlayer;
 use Smr\Irc\Message;
+use Smr\Player;
 
 /**
  * @param resource $fp
  */
-function channel_msg_seed($fp, Message $msg, AbstractPlayer $player): bool {
+function channel_msg_seed($fp, Message $msg, Player $player): bool {
 	if ($msg->text === '!seed') {
 
 		$nick = $msg->nick;
@@ -50,7 +50,7 @@ function channel_msg_seedlist($fp, Message $msg): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_seedlist_add($fp, Message $msg, AbstractPlayer $player): bool {
+function channel_msg_seedlist_add($fp, Message $msg, Player $player): bool {
 	if (preg_match('/^!seedlist add (.*)$/i', $msg->text, $args) === 1) {
 
 		$nick = $msg->nick;
@@ -73,7 +73,7 @@ function channel_msg_seedlist_add($fp, Message $msg, AbstractPlayer $player): bo
 /**
  * @param resource $fp
  */
-function channel_msg_seedlist_del($fp, Message $msg, AbstractPlayer $player): bool {
+function channel_msg_seedlist_del($fp, Message $msg, Player $player): bool {
 	if (preg_match('/^!seedlist del (.*)$/i', $msg->text, $args) === 1) {
 
 		$nick = $msg->nick;

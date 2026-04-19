@@ -3,8 +3,8 @@
 namespace Smr\Pages\Player;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Port;
 use Smr\Request;
 use Smr\TradeGood;
@@ -21,7 +21,7 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 		private readonly ?int $idealPrice = null,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$ship = $player->getShip();
 		$sector = $player->getSector();
 

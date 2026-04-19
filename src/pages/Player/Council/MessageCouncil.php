@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player\Council;
 
-use Smr\AbstractPlayer;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Race;
 use Smr\Template;
 
@@ -19,7 +19,7 @@ class MessageCouncil extends PlayerPage {
 		private readonly int $raceID,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$raceName = Race::getName($this->raceID);
 		$template->assign('RaceName', $raceName);
 

@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
 use Smr\TradeGood;
 
@@ -14,7 +14,7 @@ class CargoDump extends PlayerPage {
 
 	public string $file = 'cargo_dump.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$ship = $player->getShip();
 
 		$template->assign('PageTopic', 'Dump Cargo');

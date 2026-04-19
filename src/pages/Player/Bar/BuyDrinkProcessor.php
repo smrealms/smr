@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player\Bar;
 
-use Smr\AbstractPlayer;
 use Smr\BarDrink;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\MissionActions\BuyDrink;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class BuyDrinkProcessor extends PlayerPageProcessor {
 
@@ -16,7 +16,7 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 		private readonly string $action,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$db = Database::getInstance();
 
 		$message = '<div class="center">';
@@ -42,7 +42,7 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 			// have they been drinking recently?
 			if ($curr_drink_id > 0) {
 				$message .= 'You don\'t feel quite so intoxicated anymore.<br />';
-				$db->write('DELETE FROM player_has_drinks WHERE ' . AbstractPlayer::SQL . ' LIMIT 1', $player->SQLID);
+				$db->write('DELETE FROM player_has_drinks WHERE ' . Player::SQL . ' LIMIT 1', $player->SQLID);
 			}
 			$player->increaseHOF(1, ['Bar', 'Drinks', 'Water'], HOF_PUBLIC);
 		} else {

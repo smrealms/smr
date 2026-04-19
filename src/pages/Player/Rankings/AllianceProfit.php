@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player\Rankings;
 
-use Smr\AbstractPlayer;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Rankings;
 use Smr\Template;
 
@@ -12,7 +12,7 @@ class AllianceProfit extends PlayerPage {
 
 	public string $file = 'rankings_alliance_profit.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Alliance Profit Rankings');
 		Menu::rankings(1, 1);
 

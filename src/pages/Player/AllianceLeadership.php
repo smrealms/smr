@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class AllianceLeadership extends PlayerPage {
 
 	public string $file = 'alliance_leadership.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$alliance = $player->getAlliance();
 
 		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));

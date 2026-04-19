@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class AttackPort extends PlayerPage {
@@ -21,7 +21,7 @@ class AttackPort extends PlayerPage {
 		$this->skipRedirect = $playerDied;
 	}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$sector = $player->getSector();
 		if (!$sector->hasPort()) {
 			(new CurrentSector(message: 'The port no longer exists!'))->go();

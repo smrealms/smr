@@ -2,20 +2,20 @@
 
 namespace Smr\Pages\Player\Planet;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
 use Smr\Planet;
 use Smr\PlanetMenuOption;
+use Smr\Player;
 use Smr\Template;
 
 abstract class PlanetPage extends PlayerPage {
 
-	abstract protected function buildPlanetPage(AbstractPlayer $player, Template $template): void;
+	abstract protected function buildPlanetPage(Player $player, Template $template): void;
 
 	/**
 	 * Common code for all the planet display pages
 	 */
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		if (!$player->isLandedOnPlanet()) {
 			// If not on planet, they must have been kicked by another player
 			create_error('You have been ejected from the planet!');

@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Player\Bank;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class AnonBankProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$account_num = Request::getInt('account_num');
 
 		$db = Database::getInstance();

@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class AllianceRolesSaveProcessor extends PlayerPageProcessor {
@@ -13,7 +13,7 @@ class AllianceRolesSaveProcessor extends PlayerPageProcessor {
 		private readonly int $allianceID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		foreach (Request::getIntArray('role', []) as $accountID => $roleID) {
 			$db = Database::getInstance();
 			$db->replace('player_has_alliance_role', [

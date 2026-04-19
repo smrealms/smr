@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPage;
@@ -16,7 +15,7 @@ class CurrentPlayers extends PlayerPage {
 
 	public string $file = 'current_players.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$inactiveTime = Epoch::time() - TIME_BEFORE_INACTIVE;
 
 		$template->assign('PageTopic', 'Current Players');

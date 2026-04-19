@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player\Bank;
 
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class AllianceBankReportProcessor extends PlayerPageProcessor {
 
@@ -15,7 +15,7 @@ class AllianceBankReportProcessor extends PlayerPageProcessor {
 		private readonly string $text,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		// Send the bank report to the alliance message board
 		$alliance_id = $this->allianceID;
 		$text = $this->text;

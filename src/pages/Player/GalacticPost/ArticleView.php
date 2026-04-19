@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
@@ -18,7 +17,7 @@ class ArticleView extends PlayerPage {
 		private readonly bool $addedToNews = false,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$db = Database::getInstance();
 
 		$template->assign('PageTopic', 'Viewing Articles');

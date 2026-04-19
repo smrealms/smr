@@ -3,10 +3,10 @@
 namespace Smr\Pages\Player\Headquarters;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\BountyType;
 use Smr\Location;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class BountyClaimProcessor extends PlayerPageProcessor {
 
@@ -14,7 +14,7 @@ class BountyClaimProcessor extends PlayerPageProcessor {
 		private readonly int $locationID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		// Determine if we're claiming Fed or UG bounties
 		$location = Location::getLocation($player->getGameID(), $this->locationID);
 		$bountyType = match (true) {

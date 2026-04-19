@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
 use Smr\Player;
 use Smr\Template;
@@ -22,7 +21,7 @@ class AttackPlayer extends PlayerPage {
 		$this->skipRedirect = $playerDied;
 	}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('TraderCombatResults', $this->results);
 		$template->assign('MinimalDisplay', false);
 		if ($this->targetAccountID !== null) {

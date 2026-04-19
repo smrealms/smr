@@ -49,7 +49,7 @@ class AbstractShip {
 	protected bool $hasChangedCloak = false;
 	protected bool $hasChangedIllusion = false;
 
-	public function __construct(protected AbstractPlayer $player) {
+	public function __construct(protected Player $player) {
 		$this->gameID = $this->player->getGameID();
 		$this->regenerateShipType();
 	}
@@ -374,7 +374,7 @@ class AbstractShip {
 		$this->hasChangedIllusion = true;
 	}
 
-	public function getPlayer(): AbstractPlayer {
+	public function getPlayer(): Player {
 		return $this->player;
 	}
 
@@ -762,7 +762,7 @@ class AbstractShip {
 	}
 
 	/**
-	 * @param array<AbstractPlayer> $targetPlayers
+	 * @param array<Player> $targetPlayers
 	 * @return TraderCombatResult
 	 */
 	public function shootPlayers(array $targetPlayers): array {

@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
@@ -14,7 +13,7 @@ class AllianceManageNpcsDismissProcessor extends PlayerPageProcessor {
 		private readonly int $npcAccountID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$npc = Player::getPlayer($this->npcAccountID, $player->getGameID());
 		if (!$npc->sameAlliance($player)) {
 			create_error('You cannot dismiss an NPC that is not in your alliance!');
@@ -35,7 +34,7 @@ class AllianceManageNpcsDismissProcessor extends PlayerPageProcessor {
 		(new AllianceManageNpcs())->go();
 	}
 
-	public static function dismissNpc(AbstractPlayer $npc, AbstractPlayer $kickedBy): void {
+	public static function dismissNpc(Player $npc, Player $kickedBy): void {
 		// Return to NPC-For-Hire alliance and deactive.
 		$npc->leaveAlliance($kickedBy);
 		$npcAlliance = Alliance::getAllianceByName(NPC_FOR_HIRE_ALLIANCE_NAME, $npc->getGameID());

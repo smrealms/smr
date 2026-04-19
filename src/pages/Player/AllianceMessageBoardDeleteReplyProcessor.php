@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class AllianceMessageBoardDeleteReplyProcessor extends PlayerPageProcessor {
 
@@ -15,7 +15,7 @@ class AllianceMessageBoardDeleteReplyProcessor extends PlayerPageProcessor {
 		private readonly int $replyID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$db = Database::getInstance();
 		$db->delete('alliance_thread', [
 			'game_id' => $player->getGameID(),

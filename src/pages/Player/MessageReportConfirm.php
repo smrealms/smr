@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class MessageReportConfirm extends PlayerPage {
@@ -17,7 +17,7 @@ class MessageReportConfirm extends PlayerPage {
 		private readonly int $messageID,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		// get message form db
 		$db = Database::getInstance();
 		$dbResult = $db->select('message', ['message_id' => $this->messageID], ['message_text']);

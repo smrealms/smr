@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
 use Smr\Player;
 use Smr\Template;
@@ -15,7 +14,7 @@ class ExamineTrader extends PlayerPage {
 		private readonly int $targetAccountID,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		// Get the player we're attacking
 		$targetPlayer = Player::getPlayer($this->targetAccountID, $player->getGameID());
 

@@ -379,7 +379,7 @@ class Force {
 		return $this->sectorID;
 	}
 
-	public function ping(string $pingMessage, AbstractPlayer $playerPinging, bool $skipCheck = false): void {
+	public function ping(string $pingMessage, Player $playerPinging, bool $skipCheck = false): void {
 		if (!$this->hasSDs() && !$skipCheck) {
 			return;
 		}
@@ -393,7 +393,7 @@ class Force {
 		return Galaxy::getGalaxyContaining($this->getGameID(), $this->getSectorID());
 	}
 
-	public function getOwner(): AbstractPlayer {
+	public function getOwner(): Player {
 		return Player::getPlayer($this->getOwnerID(), $this->getGameID());
 	}
 
@@ -432,7 +432,7 @@ class Force {
 	/**
 	 * Update the table fields associated with using Refresh All
 	 */
-	public function updateRefreshAll(AbstractPlayer $player, int $refreshTime): void {
+	public function updateRefreshAll(Player $player, int $refreshTime): void {
 		$db = Database::getInstance();
 		$db->update(
 			'sector_has_forces',
@@ -495,7 +495,7 @@ class Force {
 	}
 
 	/**
-	 * @param array<AbstractPlayer> $targetPlayers
+	 * @param array<Player> $targetPlayers
 	 * @return ForceCombatResults
 	 */
 	public function shootPlayers(array $targetPlayers, bool $minesAreAttacker): array {
@@ -604,7 +604,7 @@ class Force {
 	/**
 	 * @return array{}
 	 */
-	public function killForcesByPlayer(AbstractPlayer $killer): array {
+	public function killForcesByPlayer(Player $killer): array {
 		return [];
 	}
 

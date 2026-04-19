@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player\Chess;
 
-use Smr\AbstractPlayer;
 use Smr\Chess\ChessGame;
 use Smr\Database;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
 
 class MatchList extends PlayerPage {
@@ -15,7 +15,7 @@ class MatchList extends PlayerPage {
 
 	public string $file = 'chess.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$chessGames = ChessGame::getOngoingPlayerGames($player);
 		$template->assign('ChessGames', $chessGames);
 		$template->assign('PageTopic', 'Casino');

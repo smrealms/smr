@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Game;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
 
 class AllianceList extends PlayerPage {
@@ -16,7 +16,7 @@ class AllianceList extends PlayerPage {
 
 	public string $file = 'alliance_list.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'List Of Alliances');
 
 		$allowCreate = !$player->hasAlliance() && (!$player->getGame()->isGameType(Game::GAME_TYPE_DRAFT) || $player->isDraftLeader());

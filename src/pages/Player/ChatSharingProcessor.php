@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Page\PlayerPageProcessor;
@@ -18,7 +17,7 @@ class ChatSharingProcessor extends PlayerPageProcessor {
 		private readonly array $shareAccountIDs,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$db = Database::getInstance();
 
 		// Process adding a "share to" account

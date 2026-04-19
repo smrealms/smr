@@ -4,7 +4,7 @@ namespace Smr;
 
 use Override;
 
-class DummyPlayer extends AbstractPlayer {
+class DummyPlayer extends Player {
 
 	protected readonly int $accountID;
 	protected readonly int $gameID;
@@ -44,7 +44,7 @@ class DummyPlayer extends AbstractPlayer {
 	public function increaseHOF(float $amount, array $typeList, string $visibility): void {}
 
 	#[Override]
-	public function killPlayerByPlayer(AbstractPlayer $killer): array {
+	public function killPlayerByPlayer(Player $killer): array {
 		$this->dead = true;
 		return ['DeadExp' => 0, 'KillerCredits' => 0, 'KillerExp' => 0];
 	}

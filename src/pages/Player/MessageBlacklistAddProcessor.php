@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Page\PlayerPageProcessor;
@@ -15,7 +14,7 @@ class MessageBlacklistAddProcessor extends PlayerPageProcessor {
 		private readonly ?int $blacklistAccountID = null,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		if ($this->blacklistAccountID !== null) {
 			$blacklisted = Player::getPlayer($this->blacklistAccountID, $player->getGameID());
 		} else {

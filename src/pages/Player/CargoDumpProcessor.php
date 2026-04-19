@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Exceptions\PathNotFound;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Plotter;
 use Smr\Port;
 use Smr\Request;
@@ -19,7 +19,7 @@ class CargoDumpProcessor extends PlayerPageProcessor {
 		private readonly ?int $goodAmount = null,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$ship = $player->getShip();
 		$sector = $player->getSector();
 

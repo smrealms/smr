@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Request;
 use Smr\Template;
 use Smr\Treaty;
@@ -15,7 +15,7 @@ class AllianceTreatiesConfirm extends PlayerPage {
 
 	public string $file = 'alliance_treaties_confirm.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$alliance_id_1 = $player->getAllianceID();
 		$alliance_id_2 = Request::getInt('proposedAlliance');
 

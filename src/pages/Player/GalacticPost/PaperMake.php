@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use Smr\AbstractPlayer;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class PaperMake extends PlayerPage {
 
 	public string $file = 'galactic_post_make_paper.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Making A Paper');
 		Menu::galacticPost();
 

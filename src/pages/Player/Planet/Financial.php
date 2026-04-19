@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player\Planet;
 
-use Smr\AbstractPlayer;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
 
 class Financial extends PlanetPage {
@@ -12,7 +12,7 @@ class Financial extends PlanetPage {
 
 	public string $file = 'planet_financial.php';
 
-	protected function buildPlanetPage(AbstractPlayer $player, Template $template): void {
+	protected function buildPlanetPage(Player $player, Template $template): void {
 	}
 
 }

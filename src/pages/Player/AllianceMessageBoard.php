@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
@@ -25,7 +24,7 @@ class AllianceMessageBoard extends PlayerPage {
 		public ?bool $allianceEyesOnly = null,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$db = Database::getInstance();
 
 		$allianceID = $this->allianceID;
@@ -100,7 +99,7 @@ class AllianceMessageBoard extends PlayerPage {
 
 				$dbResult2 = $db->read('SELECT time
 							FROM player_read_thread
-							WHERE ' . AbstractPlayer::SQL . '
+							WHERE ' . Player::SQL . '
 							AND alliance_id = :alliance_id
 							AND thread_id = :thread_id
 							AND time > :sendtime LIMIT 1', [
@@ -129,7 +128,7 @@ class AllianceMessageBoard extends PlayerPage {
 				}
 				$threads[$i]['Sender'] = $playerName;
 
-				$dbResult2 = $db->read('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . AbstractPlayer::SQL . ' AND alliance_id = :alliance_id LIMIT 1', [
+				$dbResult2 = $db->read('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . Player::SQL . ' AND alliance_id = :alliance_id LIMIT 1', [
 					...$player->SQLID,
 					'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
 				]);

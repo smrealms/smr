@@ -1,13 +1,12 @@
 <?php declare(strict_types=1);
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Player;
 
 /**
  * @return array<string>
  */
-function shared_channel_msg_op_list(AbstractPlayer $player): array {
+function shared_channel_msg_op_list(Player $player): array {
 	// get the op info from db
 	$db = Database::getInstance();
 	$dbResult = $db->select('alliance_has_op', $player->getAlliance()->SQLID);

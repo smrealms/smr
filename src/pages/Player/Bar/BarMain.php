@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player\Bar;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Location;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class BarMain extends PlayerPage {
@@ -18,7 +18,7 @@ class BarMain extends PlayerPage {
 		private readonly ?string $message = null,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		//get bar name
 		$location = Location::getLocation($player->getGameID(), $this->locationID);
 		$template->assign('PageTopic', 'Welcome to ' . $location->getName());

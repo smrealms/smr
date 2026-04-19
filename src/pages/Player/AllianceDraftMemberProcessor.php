@@ -3,7 +3,6 @@
 namespace Smr\Pages\Player;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Game;
@@ -19,7 +18,7 @@ class AllianceDraftMemberProcessor extends PlayerPageProcessor {
 		private readonly int $pickedAccountID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		if (!$player->getGame()->isGameType(Game::GAME_TYPE_DRAFT)) {
 			throw new Exception('This page is only allowed in Draft games!');
 		}

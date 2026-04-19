@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\HardwareType;
 use Smr\Location;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\ShipClass;
 use Smr\ShipType;
 use Smr\Template;
@@ -19,7 +19,7 @@ class ShopShip extends PlayerPage {
 		private readonly ?int $shipTypeID = null,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$location = Location::getLocation($player->getGameID(), $this->locationID);
 		$template->assign('PageTopic', $location->getName());
 

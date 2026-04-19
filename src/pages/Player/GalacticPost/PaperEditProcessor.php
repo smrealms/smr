@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class PaperEditProcessor extends PlayerPageProcessor {
 
@@ -13,7 +13,7 @@ class PaperEditProcessor extends PlayerPageProcessor {
 		private readonly int $articleID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$db = Database::getInstance();
 		$db->delete('galactic_post_paper_content', [
 			'game_id' => $player->getGameID(),

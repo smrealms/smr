@@ -25,12 +25,12 @@ abstract readonly class Mission {
 		throw new Exception('Unmapped Mission child class: ' . static::class);
 	}
 
-	abstract public function __construct(AbstractPlayer $player);
+	abstract public function __construct(Player $player);
 
 	/**
 	 * Bestows the reward to the player upon completion.
 	 */
-	public function claimReward(AbstractPlayer $player): string {
+	public function claimReward(Player $player): string {
 		$rewardText = $this->reward($player);
 		$player->actionTaken(new ClaimReward($player->getSectorID()));
 		return $rewardText;
@@ -43,12 +43,12 @@ abstract readonly class Mission {
 		return $this->getStep(0)->message;
 	}
 
-	abstract protected function reward(AbstractPlayer $player): string;
+	abstract protected function reward(Player $player): string;
 
 	/**
 	 * Is the player eligible to accept the mission in their current state?
 	 */
-	abstract public static function isAvailableToPlayer(AbstractPlayer $player): bool;
+	abstract public static function isAvailableToPlayer(Player $player): bool;
 
 	/**
 	 * Get the details of the current Mission step.

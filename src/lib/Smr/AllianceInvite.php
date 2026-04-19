@@ -93,11 +93,11 @@ class AllianceInvite {
 		]);
 	}
 
-	public function getSender(): AbstractPlayer {
+	public function getSender(): Player {
 		return Player::getPlayer($this->senderAccountID, $this->gameID);
 	}
 
-	public function getReceiver(): AbstractPlayer {
+	public function getReceiver(): Player {
 		return Player::getPlayer($this->receiverAccountID, $this->gameID);
 	}
 

@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-use Smr\AbstractPlayer;
 use Smr\Database;
+use Smr\Player;
 
 /**
  * @return array<string>
  */
-function shared_channel_msg_op_info(AbstractPlayer $player): array {
+function shared_channel_msg_op_info(Player $player): array {
 	// get the op from db
 	$db = Database::getInstance();
 	$dbResult = $db->select('alliance_has_op', $player->getAlliance()->SQLID, ['time']);
@@ -21,7 +21,7 @@ function shared_channel_msg_op_info(AbstractPlayer $player): array {
 	}
 
 	// function to return op info message for each player
-	$getOpInfoMessage = function(AbstractPlayer $player) use ($opTime): string {
+	$getOpInfoMessage = function(Player $player) use ($opTime): string {
 		// have we signed up?
 		$db = Database::getInstance();
 		$dbResult = $db->select(

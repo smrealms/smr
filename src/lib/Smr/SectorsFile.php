@@ -4,7 +4,7 @@ namespace Smr;
 
 class SectorsFile {
 
-	public static function create(int $gameID, ?AbstractPlayer $player, bool $adminCreate = false): never {
+	public static function create(int $gameID, ?Player $player, bool $adminCreate = false): never {
 		// NOTE: If the format of this file is changed in an incompatible way,
 		// make sure to update the SMR_FILE_VERSION!
 

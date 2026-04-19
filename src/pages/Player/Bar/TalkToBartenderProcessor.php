@@ -3,12 +3,12 @@
 namespace Smr\Pages\Player\Bar;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\EnhancedWeaponEvent;
 use Smr\Galaxy;
 use Smr\Globals;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class TalkToBartenderProcessor extends PlayerPageProcessor {
@@ -17,7 +17,7 @@ class TalkToBartenderProcessor extends PlayerPageProcessor {
 		private readonly int $locationID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$action = Request::get('action');
 
 		if ($action === 'tell') {

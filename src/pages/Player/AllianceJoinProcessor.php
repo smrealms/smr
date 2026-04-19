@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class AllianceJoinProcessor extends PlayerPageProcessor {
@@ -13,7 +13,7 @@ class AllianceJoinProcessor extends PlayerPageProcessor {
 		private readonly int $allianceID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$alliance = Alliance::getAlliance($this->allianceID, $player->getGameID());
 
 		$joinRestriction = $alliance->getJoinRestriction($player);

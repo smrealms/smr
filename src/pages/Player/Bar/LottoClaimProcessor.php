@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player\Bar;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Lotto;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class LottoClaimProcessor extends PlayerPageProcessor {
 
@@ -13,7 +13,7 @@ class LottoClaimProcessor extends PlayerPageProcessor {
 		private readonly int $locationID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$message = '';
 		//check if we really are a winner
 		$db = Database::getInstance();

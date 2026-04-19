@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class PastEditionSelect extends PlayerPage {
@@ -16,7 +16,7 @@ class PastEditionSelect extends PlayerPage {
 		private readonly int $gameID,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Past <i>Galactic Post</i> Editions');
 		Menu::galacticPost();
 

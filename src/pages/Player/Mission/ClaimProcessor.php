@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player\Mission;
 
-use Smr\AbstractPlayer;
 use Smr\Mission;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Player\CurrentSector;
+use Smr\Player;
 
 class ClaimProcessor extends PlayerPageProcessor {
 
@@ -13,7 +13,7 @@ class ClaimProcessor extends PlayerPageProcessor {
 		private readonly Mission $mission,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$rewardText = $this->mission->claimReward($player);
 
 		(new CurrentSector(missionMessage: $rewardText))->go();

@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class AllianceLeaveProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$alliance = $player->getAlliance();
 
 		if ($player->isAllianceLeader() && $alliance->getNumMembers() > 1) {

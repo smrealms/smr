@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Exceptions\PathNotFound;
 use Smr\MovementType;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Plotter;
 use Smr\Request;
 use Smr\Sector;
@@ -17,7 +17,7 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 		private readonly ?int $targetSectorID = null,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$sector = $player->getSector();
 
 		if (!$player->getGame()->hasStarted()) {

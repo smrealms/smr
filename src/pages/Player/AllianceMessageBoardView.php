@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Epoch;
@@ -32,7 +31,7 @@ class AllianceMessageBoardView extends PlayerPage {
 		public ?string $preview = null,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$allianceID = $this->allianceID;
 
 		$alliance = Alliance::getAlliance($allianceID, $player->getGameID());
@@ -95,7 +94,7 @@ class AllianceMessageBoardView extends PlayerPage {
 			$players[$accountID] = Player::getPlayer($accountID, $player->getGameID(), false, $dbRecord)->getLinkedDisplayName(false);
 		}
 
-		$dbResult = $db->read('SELECT mb_messages FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . AbstractPlayer::SQL . ' AND alliance_id = :alliance_id LIMIT 1', [
+		$dbResult = $db->read('SELECT mb_messages FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . Player::SQL . ' AND alliance_id = :alliance_id LIMIT 1', [
 			...$player->SQLID,
 			'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
 		]);

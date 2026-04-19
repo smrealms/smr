@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class NewbieWarningProcessor extends PlayerPageProcessor {
 
@@ -11,7 +11,7 @@ class NewbieWarningProcessor extends PlayerPageProcessor {
 		$this->skipRedirect = true;
 	}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$player->setNewbieWarning(false);
 		(new NewbieWarning())->go();
 	}

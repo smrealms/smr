@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\AllianceInvite;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class AllianceInviteCancelProcessor extends PlayerPageProcessor {
 
@@ -12,7 +12,7 @@ class AllianceInviteCancelProcessor extends PlayerPageProcessor {
 		private readonly AllianceInvite $invite,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		// Delete the alliance invitation
 		$this->invite->delete();
 		(new AllianceInvitePlayer())->go();

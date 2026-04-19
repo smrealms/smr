@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class ArticleAddToPaperProcessor extends PlayerPageProcessor {
 
@@ -13,7 +13,7 @@ class ArticleAddToPaperProcessor extends PlayerPageProcessor {
 		private readonly int $articleID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		//limit 4 per paper...make sure we arent over that
 		$db = Database::getInstance();
 		$dbResult = $db->select('galactic_post_paper_content', [

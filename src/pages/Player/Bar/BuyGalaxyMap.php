@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player\Bar;
 
-use Smr\AbstractPlayer;
 use Smr\Epoch;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class BuyGalaxyMap extends PlayerPage {
@@ -16,7 +16,7 @@ class BuyGalaxyMap extends PlayerPage {
 		private readonly int $locationID,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 
 		$timeUntilMaps = $player->getGame()->getStartTime() + TIME_MAP_BUY_WAIT - Epoch::time();
 		if ($timeUntilMaps > 0) {

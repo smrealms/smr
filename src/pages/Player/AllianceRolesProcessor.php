@@ -3,10 +3,10 @@
 namespace Smr\Pages\Player;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class AllianceRolesProcessor extends PlayerPageProcessor {
@@ -15,7 +15,7 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 		private readonly ?int $roleID = null,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$db = Database::getInstance();
 
 		$alliance = $player->getAlliance();

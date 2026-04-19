@@ -3,7 +3,6 @@
 namespace Smr\Chess;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
@@ -59,7 +58,7 @@ class ChessGame {
 	/**
 	 * @return array<self>
 	 */
-	public static function getOngoingPlayerGames(AbstractPlayer $player): array {
+	public static function getOngoingPlayerGames(Player $player): array {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT chess_game_id FROM chess_game WHERE game_id = :game_id AND (black_id = :account_id OR white_id = :account_id) AND (end_time > :now OR end_time IS NULL)', [
 			'game_id' => $db->escapeNumber($player->getGameID()),
@@ -227,7 +226,7 @@ class ChessGame {
 		];
 	}
 
-	public static function insertNewGame(int $startDate, AbstractPlayer $whitePlayer, AbstractPlayer $blackPlayer): void {
+	public static function insertNewGame(int $startDate, Player $whitePlayer, Player $blackPlayer): void {
 		$db = Database::getInstance();
 		$db->insert('chess_game', [
 			'start_time' => $startDate,
@@ -440,7 +439,7 @@ class ChessGame {
 		return $this->gameID;
 	}
 
-	public function getWhitePlayer(): AbstractPlayer {
+	public function getWhitePlayer(): Player {
 		return Player::getPlayer($this->whiteID, $this->getGameID());
 	}
 
@@ -448,7 +447,7 @@ class ChessGame {
 		return $this->whiteID;
 	}
 
-	public function getBlackPlayer(): AbstractPlayer {
+	public function getBlackPlayer(): Player {
 		return Player::getPlayer($this->blackID, $this->getGameID());
 	}
 
@@ -463,7 +462,7 @@ class ChessGame {
 		};
 	}
 
-	public function getColourPlayer(Colour $colour): AbstractPlayer {
+	public function getColourPlayer(Colour $colour): Player {
 		return Player::getPlayer($this->getColourID($colour), $this->getGameID());
 	}
 
@@ -544,7 +543,7 @@ class ChessGame {
 		};
 	}
 
-	public function getCurrentTurnPlayer(): AbstractPlayer {
+	public function getCurrentTurnPlayer(): Player {
 		return Player::getPlayer($this->getCurrentTurnAccountID(), $this->getGameID());
 	}
 

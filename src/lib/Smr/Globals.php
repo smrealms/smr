@@ -62,7 +62,7 @@ class Globals {
 	/**
 	 * @param array<string, int> $extraInfo
 	 */
-	public static function canAccessPage(string $pageName, AbstractPlayer $player, array $extraInfo): void {
+	public static function canAccessPage(string $pageName, Player $player, array $extraInfo): void {
 		switch ($pageName) {
 			case 'AllianceMOTD':
 				if ($player->getAllianceID() !== $extraInfo['AllianceID']) {
@@ -195,16 +195,16 @@ class Globals {
 		return $container->href();
 	}
 
-	public static function getCurrentSectorMoveHREF(AbstractPlayer $player, int $toSector): string {
+	public static function getCurrentSectorMoveHREF(Player $player, int $toSector): string {
 		return self::getSectorMoveHREF($player, $toSector, new CurrentSector());
 	}
 
-	public static function getSectorMoveHREF(AbstractPlayer $player, int $toSector, CurrentSector|LocalMap $targetPage): string {
+	public static function getSectorMoveHREF(Player $player, int $toSector, CurrentSector|LocalMap $targetPage): string {
 		$container = new SectorMoveProcessor($toSector, $targetPage);
 		return self::$AVAILABLE_LINKS['Move' . $player->getSector()->getSectorDirection($toSector)] = $container->href();
 	}
 
-	public static function getSectorScanHREF(AbstractPlayer $player, int $toSector): string {
+	public static function getSectorScanHREF(Player $player, int $toSector): string {
 		$container = new SectorScan($toSector);
 		return self::$AVAILABLE_LINKS['Scan' . $player->getSector()->getSectorDirection($toSector)] = $container->href();
 	}

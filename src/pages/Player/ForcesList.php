@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Force;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
 
 class ForcesList extends PlayerPage {
@@ -16,7 +16,7 @@ class ForcesList extends PlayerPage {
 
 	public string $file = 'forces_list.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'View Forces');
 
 		$db = Database::getInstance();

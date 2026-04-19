@@ -13,8 +13,8 @@ class CombatSimulator extends AccountPage {
 
 	/**
 	 * @param ?array<mixed> $results
-	 * @param array<\Smr\AbstractPlayer> $attackers
-	 * @param array<\Smr\AbstractPlayer> $defenders
+	 * @param array<\Smr\Player> $attackers
+	 * @param array<\Smr\Player> $defenders
 	 */
 	public function __construct(
 		private readonly ?array $results = null,

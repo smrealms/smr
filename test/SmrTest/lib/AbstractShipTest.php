@@ -9,12 +9,12 @@ use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
-use Smr\AbstractPlayer;
 use Smr\AbstractShip;
 use Smr\Bounty;
 use Smr\BountyType;
 use Smr\Combat\Weapon\Weapon;
 use Smr\Globals;
+use Smr\Player;
 use Smr\Port;
 use Smr\ShipClass;
 use Smr\ShipIllusion;
@@ -25,11 +25,11 @@ use Smr\ShipIllusion;
 #[CoversClass(AbstractShip::class)]
 class AbstractShipTest extends TestCase {
 
-	private AbstractPlayer&Stub $player; // will be mocked
+	private Player&Stub $player; // will be mocked
 
 	protected function setUp(): void {
 		// Create mock player that will be needed to create any ship
-		$this->player = $this->createStub(AbstractPlayer::class);
+		$this->player = $this->createStub(Player::class);
 		$this->player
 			->method('getAccountID')
 			->willReturn(7);
@@ -549,7 +549,7 @@ class AbstractShipTest extends TestCase {
 			->with(44_800);
 
 		$gameID = 3;
-		$player = $this->createMock(AbstractPlayer::class);
+		$player = $this->createMock(Player::class);
 		$player
 			->expects(self::atLeastOnce())
 			->method('getGameID')

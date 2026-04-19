@@ -5,12 +5,12 @@ namespace SmrTest\lib;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
-use Smr\AbstractPlayer;
 use Smr\Exceptions\MissionStepNotFound;
 use Smr\MissionActions\ClaimReward;
 use Smr\MissionActions\EnterSector;
 use Smr\MissionState;
 use Smr\MissionStep;
+use Smr\Player;
 use SmrTest\Fakes\MissionFake;
 use SmrTest\TestUtils;
 
@@ -21,7 +21,7 @@ class MissionStateTest extends TestCase {
 		$missionID = 7;
 		$mission = $this->createStub(MissionFake::class);
 		$mission->method('getMissionID')->willReturn($missionID);
-		$player = $this->createStub(AbstractPlayer::class);
+		$player = $this->createStub(Player::class);
 		$player->method('getAccountID')->willReturn(2);
 		$player->method('getGameID')->willReturn(3);
 

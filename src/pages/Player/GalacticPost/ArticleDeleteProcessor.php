@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class ArticleDeleteProcessor extends PlayerPageProcessor {
@@ -13,7 +13,7 @@ class ArticleDeleteProcessor extends PlayerPageProcessor {
 		private readonly int $articleID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$db = Database::getInstance();
 		if (Request::getBool('action')) {
 			$db->delete('galactic_post_article', [

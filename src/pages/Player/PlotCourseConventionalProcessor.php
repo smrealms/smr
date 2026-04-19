@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Exceptions\PathNotFound;
 use Smr\Exceptions\SectorNotFound;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Plotter;
 use Smr\Request;
 use Smr\Sector;
@@ -17,7 +17,7 @@ class PlotCourseConventionalProcessor extends PlayerPageProcessor {
 		private readonly ?int $to = null,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$start = $this->from ?? Request::getInt('from');
 		$target = $this->to ?? Request::getInt('to');
 

@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player\Bank;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
@@ -18,7 +17,7 @@ class AnonBankDetail extends PlayerPage {
 		private readonly int $anonBankID,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$session = Session::getInstance();
 
 		$account_num = $this->anonBankID;

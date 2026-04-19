@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player\Planet;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class ConstructionProcessor extends PlayerPageProcessor {
 
@@ -12,7 +12,7 @@ class ConstructionProcessor extends PlayerPageProcessor {
 		private readonly int $constructionID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		if (!$player->isLandedOnPlanet()) {
 			create_error('You are not on a planet!');
 		}

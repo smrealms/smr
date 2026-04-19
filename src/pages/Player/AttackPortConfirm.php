@@ -2,15 +2,15 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class AttackPortConfirm extends PlayerPage {
 
 	public string $file = 'port_attack_warning.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$sector = $player->getSector();
 
 		if (!$sector->hasPort()) {

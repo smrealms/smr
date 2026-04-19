@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player\Planet;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class LandProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		// is account validated?
 		if (!$player->getAccount()->isValidated()) {
 			create_error('You are not validated so you can\'t land on a planet.');

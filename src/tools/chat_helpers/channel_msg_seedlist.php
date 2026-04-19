@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-use Smr\AbstractPlayer;
 use Smr\Database;
+use Smr\Player;
 
 /**
  * @return array<int>
  */
-function get_seedlist(AbstractPlayer $player): array {
+function get_seedlist(Player $player): array {
 	// Return the seedlist
 	$db = Database::getInstance();
 	$dbResult = $db->select('alliance_has_seedlist', $player->getAlliance()->SQLID, ['sector_id']);
@@ -20,7 +20,7 @@ function get_seedlist(AbstractPlayer $player): array {
 /**
  * @return array<string>
  */
-function shared_channel_msg_seedlist(AbstractPlayer $player): array {
+function shared_channel_msg_seedlist(Player $player): array {
 	// get the seedlist
 	$seedlist = get_seedlist($player);
 
@@ -36,7 +36,7 @@ function shared_channel_msg_seedlist(AbstractPlayer $player): array {
  * @param ?array<string> $sectors
  * @return array<string>
  */
-function shared_channel_msg_seedlist_add(AbstractPlayer $player, ?array $sectors): array {
+function shared_channel_msg_seedlist_add(Player $player, ?array $sectors): array {
 	// check if $nick is leader
 	if (!$player->isAllianceLeader(true)) {
 		return ['Only the leader of the alliance manages the seedlist.'];
@@ -96,7 +96,7 @@ function shared_channel_msg_seedlist_add(AbstractPlayer $player, ?array $sectors
  * @param ?array<string> $sectors
  * @return array<string>
  */
-function shared_channel_msg_seedlist_del(AbstractPlayer $player, ?array $sectors): array {
+function shared_channel_msg_seedlist_del(Player $player, ?array $sectors): array {
 	// check if $nick is leader
 	if (!$player->isAllianceLeader(true)) {
 		return ['Only the leader of the alliance manages the seedlist.'];

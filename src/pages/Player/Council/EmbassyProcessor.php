@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player\Council;
 
-use Smr\AbstractPlayer;
 use Smr\Council;
 use Smr\Database;
 use Smr\Epoch;
@@ -17,7 +16,7 @@ class EmbassyProcessor extends PlayerPageProcessor {
 		private readonly int $otherRaceID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		if (!$player->isPresident()) {
 			create_error('Only the president can view the embassy.');
 		}

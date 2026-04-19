@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Exceptions\PathNotFound;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\PlotGroup;
 use Smr\Plotter;
 use Smr\Request;
 
 class PlotCourseNearestProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$sector = $player->getSector();
 
 		$xType = PlotGroup::from(Request::get('xtype'));

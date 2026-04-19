@@ -273,7 +273,7 @@ class Port {
 	 * @param array<int> $goodIDs
 	 * @return array<int, TradeGood>
 	 */
-	private function getVisibleGoods(array $goodIDs, ?AbstractPlayer $player = null): array {
+	private function getVisibleGoods(array $goodIDs, ?Player $player = null): array {
 		$visibleGoods = [];
 		foreach ($goodIDs as $goodID) {
 			$good = TradeGood::get($goodID);
@@ -289,7 +289,7 @@ class Port {
 	 *
 	 * @return array<int, TradeGood>
 	 */
-	public function getVisibleGoodsSold(?AbstractPlayer $player = null): array {
+	public function getVisibleGoodsSold(?Player $player = null): array {
 		return $this->getVisibleGoods($this->getSellGoodIDs(), $player);
 	}
 
@@ -298,7 +298,7 @@ class Port {
 	 *
 	 * @return array<int, TradeGood>
 	 */
-	public function getVisibleGoodsBought(?AbstractPlayer $player = null): array {
+	public function getVisibleGoodsBought(?Player $player = null): array {
 		return $this->getVisibleGoods($this->getBuyGoodIDs(), $player);
 	}
 
@@ -668,9 +668,9 @@ class Port {
 	}
 
 	/**
-	 * @param array<AbstractPlayer> $attackers
+	 * @param array<Player> $attackers
 	 */
-	public function attackedBy(AbstractPlayer $trigger, array $attackers): void {
+	public function attackedBy(Player $trigger, array $attackers): void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot attack a cached port!');
 		}
@@ -1028,7 +1028,7 @@ class Port {
 		$this->setArmour($this->getArmour() - $number);
 	}
 
-	public function getTradeRestriction(AbstractPlayer $player): string|false {
+	public function getTradeRestriction(Player $player): string|false {
 		if (!$this->exists()) {
 			return 'There is no port in this sector!';
 		}
@@ -1332,7 +1332,7 @@ class Port {
 	}
 
 	/**
-	 * @param non-empty-array<int, AbstractPlayer> $targetPlayers
+	 * @param non-empty-array<int, Player> $targetPlayers
 	 * @return PortCombatResults
 	 */
 	public function shootPlayers(array $targetPlayers): array {
@@ -1446,7 +1446,7 @@ class Port {
 	/**
 	 * Identifies if the given $player is a credited attacker of this port.
 	 */
-	public function isCreditedAttacker(AbstractPlayer $player): bool {
+	public function isCreditedAttacker(Player $player): bool {
 		foreach (self::getAttackersToCredit() as $attacker) {
 			if ($player->equals($attacker)) {
 				return true;
@@ -1464,7 +1464,7 @@ class Port {
 		}
 	}
 
-	protected function payout(AbstractPlayer $killer, int $credits, string $payoutType): bool {
+	protected function payout(Player $killer, int $credits, string $payoutType): bool {
 		if ($this->getCredits() === 0) {
 			return false;
 		}
@@ -1482,7 +1482,7 @@ class Port {
 	 * Get a reduced fraction of the credits stored in the port for razing
 	 * after a successful port raid.
 	 */
-	public function razePort(AbstractPlayer $killer): int {
+	public function razePort(Player $killer): int {
 		$credits = IFloor($this->getCredits() * self::BASE_PAYOUT * self::RAZE_PAYOUT);
 		if ($this->payout($killer, $credits, 'Razed')) {
 			$this->doDowngrade();
@@ -1494,7 +1494,7 @@ class Port {
 	 * Get a fraction of the credits stored in the port for looting after a
 	 * successful port raid.
 	 */
-	public function lootPort(AbstractPlayer $killer): int {
+	public function lootPort(Player $killer): int {
 		$credits = IFloor($this->getCredits() * self::BASE_PAYOUT);
 		$this->payout($killer, $credits, 'Looted');
 		return $credits;
@@ -1503,7 +1503,7 @@ class Port {
 	/**
 	 * Claim port for your race after a successful port raid.
 	 */
-	public function claimPort(AbstractPlayer $killer): int {
+	public function claimPort(Player $killer): int {
 		$credits = IFloor($this->getCredits() * self::BASE_PAYOUT * self::CLAIM_PAYOUT);
 		if ($this->payout($killer, $credits, 'Claimed')) {
 			$this->setRaceID($killer->getRaceID());
@@ -1514,7 +1514,7 @@ class Port {
 	/**
 	 * Permanently destroy the port after a successful port raid.
 	 */
-	public function destroyPort(AbstractPlayer $killer): int {
+	public function destroyPort(Player $killer): int {
 		$credits = 0;
 		if ($this->payout($killer, $credits, 'Destroyed')) {
 			// News Entry
@@ -1552,7 +1552,7 @@ class Port {
 	/**
 	 * @return array{}
 	 */
-	public function killPortByPlayer(AbstractPlayer $killer): array {
+	public function killPortByPlayer(Player $killer): array {
 		// Port is destroyed, so empty the port of all trade goods
 		foreach ($this->getAllGoodIDs() as $goodID) {
 			$this->setGoodAmount($goodID, 0);

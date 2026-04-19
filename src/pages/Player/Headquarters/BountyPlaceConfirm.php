@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player\Headquarters;
 
-use Smr\AbstractPlayer;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Player;
@@ -19,7 +18,7 @@ class BountyPlaceConfirm extends PlayerPage {
 		private readonly int $smrCredits,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Place Bounty');
 
 		Menu::headquarters($this->locationID);

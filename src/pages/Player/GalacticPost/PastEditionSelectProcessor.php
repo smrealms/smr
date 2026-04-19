@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class PastEditionSelectProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$selectedGameID = Request::getInt('selected_game_id');
 		(new PastEditionSelect($selectedGameID))->go();
 	}
