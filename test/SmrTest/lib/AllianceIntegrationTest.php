@@ -3,6 +3,7 @@
 namespace SmrTest\lib;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestWith;
 use Smr\Alliance;
 use Smr\Exceptions\AllianceNotFound;
 use Smr\Exceptions\UserError;
@@ -80,10 +81,12 @@ class AllianceIntegrationTest extends BaseIntegrationSpec {
 		Alliance::createAlliance(1, $name);
 	}
 
-	public function test_createAlliance_with_NHA_name(): void {
+	#[TestWith([NHA_ALLIANCE_NAME])]
+	#[TestWith([NPC_FOR_HIRE_ALLIANCE_NAME])]
+	public function test_createAlliance_with_reserved_name(string $name): void {
 		$this->expectException(UserError::class);
 		$this->expectExceptionMessage('That alliance name is reserved.');
-		Alliance::createAlliance(1, NHA_ALLIANCE_NAME);
+		Alliance::createAlliance(1, $name);
 	}
 
 	public function test_createAlliance_increment_allianceID(): void {
@@ -100,6 +103,16 @@ class AllianceIntegrationTest extends BaseIntegrationSpec {
 		// Create an alliance that is the NHA
 		$alliance = Alliance::createAlliance(1, NHA_ALLIANCE_NAME, true);
 		self::assertTrue($alliance->isNHA());
+	}
+
+	public function test_isNpcForHire(): void {
+		// Create an alliance that is not NPC-For-Hire
+		$alliance = Alliance::createAlliance(1, 'The Expensivelancers', true);
+		self::assertFalse($alliance->isNpcForHire());
+
+		// Create an alliance that is the NPC-For-Hire
+		$alliance = Alliance::createAlliance(1, NPC_FOR_HIRE_ALLIANCE_NAME, true);
+		self::assertTrue($alliance->isNpcForHire());
 	}
 
 }

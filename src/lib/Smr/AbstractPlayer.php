@@ -656,6 +656,21 @@ abstract class AbstractPlayer {
 	}
 
 	/**
+	 * Is this an NPC that has been hired by a player alliance?
+	 */
+	public function isHiredNPC(): bool {
+		// Currently determined by whether or not alliance leader is an NPC.
+		// This should really be tracked in the database directly instead.
+		if ($this->isNPC() && $this->hasAlliance()) {
+			$alliance = $this->getAlliance();
+			if ($alliance->hasLeader() && !$alliance->getLeader()->isNPC()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Does the player have Newbie status?
 	 */
 	public function hasNewbieStatus(): bool {
@@ -1523,7 +1538,7 @@ abstract class AbstractPlayer {
 
 	public function leaveAlliance(?self $kickedBy = null): void {
 		$alliance = $this->getAlliance();
-		if ($kickedBy !== null) {
+		if ($kickedBy !== null && !$kickedBy->equals($this)) {
 			$kickedBy->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were kicked out of the alliance!', false);
 			$this->log(LOG_TYPE_ALLIANCE, 'was kicked from alliance ' . $alliance->getAllianceName() . ' by ' . $kickedBy->getAccount()->getLogin() . ' (' . $kickedBy->getPlayerName() . ')');
 			$kickedBy->log(LOG_TYPE_ALLIANCE, 'kicked ' . $this->getAccount()->getLogin() . ' (' . $this->getPlayerName() . ') from alliance ' . $alliance->getAllianceName());
@@ -1531,13 +1546,13 @@ abstract class AbstractPlayer {
 			$this->log(LOG_TYPE_ALLIANCE, 'disbanded alliance ' . $alliance->getAllianceName());
 		} else {
 			$this->log(LOG_TYPE_ALLIANCE, 'left alliance: ' . $alliance->getAllianceName());
-			if ($alliance->getLeaderID() !== 0 && $alliance->getLeaderID() !== ACCOUNT_ID_NHL) {
+			if ($alliance->getLeaderID() !== 0) {
 				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I left your alliance!', false);
 			}
 		}
 
 		// Don't have a delay for switching alliance after leaving NHA, or for disbanding an alliance.
-		if (!$this->isAllianceLeader() && !$alliance->isNHA()) {
+		if (!$this->isAllianceLeader() && !$alliance->isNHA() && !$alliance->isNpcForHire()) {
 			$this->setAllianceJoinable(Epoch::time() + self::TIME_FOR_ALLIANCE_SWITCH);
 			$alliance->getLeader()->setAllianceJoinable(Epoch::time() + self::TIME_FOR_ALLIANCE_SWITCH); //We set the joinable time for leader here, that way a single player alliance won't cause a player to wait before switching.
 		}
@@ -1553,31 +1568,15 @@ abstract class AbstractPlayer {
 	/**
 	 * Join an alliance (used for both Leader and New Member roles)
 	 */
-	public function joinAlliance(int $allianceID): void {
+	public function joinAlliance(int $allianceID, bool $log = true): void {
 		$this->setAllianceID($allianceID);
-
-		$status = $this->hasNewbieStatus() ? 'NEWBIE' : 'VETERAN';
-		$db = Database::getInstance();
-		$db->write('INSERT IGNORE INTO player_joined_alliance (account_id,game_id,alliance_id,status)
-			VALUES (:account_id, :game_id, :alliance_id, :status)', [
-			'account_id' => $db->escapeNumber($this->getAccountID()),
-			'game_id' => $db->escapeNumber($this->getGameID()),
-			'alliance_id' => $db->escapeNumber($allianceID),
-			'status' => $db->escapeString($status),
-		]);
 
 		$alliance = $this->getAlliance();
 
 		if (!$this->isAllianceLeader()) {
-			// Do not throw an exception if the NHL account doesn't exist.
-			try {
+			if ($alliance->getLeaderID() !== 0) {
 				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I joined your alliance!', false);
-			} catch (AccountNotFound $e) {
-				if ($alliance->getLeaderID() !== ACCOUNT_ID_NHL) {
-					throw $e;
-				}
 			}
-
 			$roleID = ALLIANCE_ROLE_NEW_MEMBER;
 		} else {
 			$roleID = ALLIANCE_ROLE_LEADER;
@@ -1589,7 +1588,9 @@ abstract class AbstractPlayer {
 			'alliance_id' => $this->getAllianceID(),
 		]);
 
-		$this->log(LOG_TYPE_ALLIANCE, 'joined alliance: ' . $alliance->getAllianceName());
+		if ($log) {
+			$this->log(LOG_TYPE_ALLIANCE, 'joined alliance: ' . $alliance->getAllianceName());
+		}
 	}
 
 	public function getAllianceJoinable(): int {

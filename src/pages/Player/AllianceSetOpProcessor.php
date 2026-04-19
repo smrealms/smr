@@ -16,23 +16,19 @@ class AllianceSetOpProcessor extends PlayerPageProcessor {
 	public function build(AbstractPlayer $player): never {
 		$db = Database::getInstance();
 		$account = $player->getAccount();
+		$alliance = $player->getAlliance();
+		$memberIDs = array_keys($alliance->getMembers(includeNpc: false));
 
 		if ($this->cancel) {
 			// just get rid of op
-			$db->delete('alliance_has_op', [
-				'alliance_id' => $player->getAllianceID(),
-				'game_id' => $player->getGameID(),
-			]);
-			$db->delete('alliance_has_op_response', [
-				'alliance_id' => $player->getAllianceID(),
-				'game_id' => $player->getGameID(),
-			]);
+			$db->delete('alliance_has_op', $alliance->SQLID);
+			$db->delete('alliance_has_op_response', $alliance->SQLID);
 
 			// Delete the announcement from alliance members message boxes
 			$db->write('DELETE FROM message WHERE game_id = :game_id AND sender_id = :sender_id AND account_id IN (:account_ids)', [
 				'game_id' => $db->escapeNumber($player->getGameID()),
 				'sender_id' => $db->escapeNumber(ACCOUNT_ID_OP_ANNOUNCE),
-				'account_ids' => $db->escapeArray($player->getAlliance()->getMemberIDs()),
+				'account_ids' => $db->escapeArray($memberIDs),
 			]);
 
 			// NOTE: for simplicity we don't touch `player_has_unread_messages` here,
@@ -51,15 +47,14 @@ class AllianceSetOpProcessor extends PlayerPageProcessor {
 
 			// add op to db
 			$db->insert('alliance_has_op', [
-				'alliance_id' => $player->getAllianceID(),
-				'game_id' => $player->getGameID(),
+				...$alliance->SQLID,
 				'time' => $time,
 			]);
 
 			// Send an alliance message that expires at the time of the op.
 			// Since the message is procedural, don't exclude this player.
 			$message = $player->getBBLink() . ' has scheduled an operation for ' . date($account->getDateTimeFormat(), $time) . '. Navigate to your Alliance console to respond!';
-			foreach ($player->getAlliance()->getMemberIDs() as $memberAccountID) {
+			foreach ($memberIDs as $memberAccountID) {
 				$player->sendMessageFromOpAnnounce($memberAccountID, $message, $time);
 			}
 		}

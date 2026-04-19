@@ -4,6 +4,8 @@ namespace SmrTest\lib;
 
 use PHPUnit\Framework\Attributes\CoversFunction;
 use Smr\Alliance;
+use Smr\Game;
+use Smr\Player;
 use SmrTest\BaseIntegrationSpec;
 
 require_once(LIB . 'Default/nha.inc.php');
@@ -17,12 +19,18 @@ class CreateNHATest extends BaseIntegrationSpec {
 			'alliance_has_roles',
 			'alliance_thread',
 			'alliance_thread_topic',
+			'player',
+			'player_has_alliance_role',
 		];
 	}
 
 	public function test_createNHA(): void {
-		// Create the NHA
+		// Set up a fake game (needed for Player::getHome)
 		$gameID = 1;
+		$game = Game::createGame($gameID);
+		$game->setGameTypeID(Game::GAME_TYPE_DEFAULT);
+
+		// Create the NHA
 		createNHA($gameID);
 
 		// Reload NHA and make sure relevant properties are set
@@ -33,6 +41,11 @@ class CreateNHATest extends BaseIntegrationSpec {
 		self::assertSame('Alliance message board includes tips and FAQs.', $alliance->getMotD());
 		self::assertSame('Newbie Help Alliance', $alliance->getDescription());
 		self::assertFalse($alliance->isRecruiting());
+
+		// Reload NHL and make sure it's set
+		$nhl = Player::getPlayer(ACCOUNT_ID_NHL, $gameID, true);
+		self::assertSame('Newbie Help Leader', $nhl->getPlayerName());
+		self::assertSame($alliance->getAllianceID(), $nhl->getAllianceID());
 	}
 
 }

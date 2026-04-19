@@ -76,7 +76,7 @@ class AllianceRoster extends PlayerPage {
 		$allowed = $dbResult->hasRecord();
 		$template->assign('CanChangeRoles', $allowed);
 
-		$alliancePlayers = $alliance->getMembers();
+		$alliancePlayers = $alliance->getMembers(includeNpc: true);
 		$template->assign('AlliancePlayers', $alliancePlayers);
 
 		if ($alliance->getAllianceID() === $player->getAllianceID()) {

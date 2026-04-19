@@ -31,8 +31,6 @@ class Alliance {
 	protected int $flagshipID;
 
 	/** @var array<int> */
-	protected array $memberList;
-	/** @var array<int> */
 	protected array $seedlist;
 
 	// Recruit type constants
@@ -131,7 +129,7 @@ class Alliance {
 	 * Create an alliance and return the new object.
 	 * Starts alliance with "closed" recruitment (for safety).
 	 */
-	public static function createAlliance(int $gameID, string $name, bool $allowNHA = false): self {
+	public static function createAlliance(int $gameID, string $name, bool $allowReserved = false): self {
 		$db = Database::getInstance();
 		$db->lockTable('alliance');
 		try {
@@ -143,7 +141,11 @@ class Alliance {
 				// alliance with this name does not yet exist
 			}
 
-			if (!$allowNHA && trim($name) === NHA_ALLIANCE_NAME) {
+			$reserved = [
+				NHA_ALLIANCE_NAME,
+				NPC_FOR_HIRE_ALLIANCE_NAME,
+			];
+			if (!$allowReserved && in_array(trim($name), $reserved, true)) {
 				throw new UserError('That alliance name is reserved.');
 			}
 
@@ -174,6 +176,13 @@ class Alliance {
 	 */
 	public function isNHA(): bool {
 		return $this->allianceName === NHA_ALLIANCE_NAME;
+	}
+
+	/**
+	 * Returns true if the alliance is the NPC-For-Hire alliance.
+	 */
+	public function isNpcForHire(): bool {
+		return $this->allianceName === NPC_FOR_HIRE_ALLIANCE_NAME;
 	}
 
 	public function getAllianceID(): int {
@@ -463,39 +472,28 @@ class Alliance {
 		if ($player->getAllianceJoinable() > Epoch::time()) {
 			return 'You cannot join another alliance for ' . format_time($player->getAllianceJoinable() - Epoch::time()) . '.';
 		}
-		if ($this->getNumMembers() < $this->getGame()->getAllianceMaxPlayers()) {
-			if ($player->hasNewbieStatus()) {
-				return false;
-			}
-			$maxVets = $this->getGame()->getAllianceMaxVets();
-			if ($this->getNumMembers() < $maxVets) {
-				return false;
-			}
-			$db = Database::getInstance();
-			$dbResult = $db->select(
-				'player_joined_alliance',
-				['account_id' => $player->getAccountID(), ...$this->SQLID],
-				['status'],
-			);
-			if ($dbResult->hasRecord()) {
-				if ($dbResult->record()->getString('status') === 'NEWBIE') {
-					return false;
-				}
-			}
-			$dbResult = $db->read('SELECT COUNT(*) AS num_orig_vets
-							FROM player_joined_alliance
-							JOIN player USING (account_id, alliance_id, game_id)
-							WHERE ' . self::SQL . ' AND status=\'VETERAN\'', $this->SQLID);
-			if (!$dbResult->hasRecord() || $dbResult->record()->getInt('num_orig_vets') < $maxVets) {
-				return false;
-			}
+		if (!$this->hasRoomForPlayer($player)) {
+			return 'There is not currently enough room for you in this alliance.';
 		}
-		return 'There is not currently enough room for you in this alliance.';
+		return false; // player is allowed to join alliance
 	}
 
+	public function hasRoomForPlayer(?AbstractPlayer $player = null): bool {
+		if ($this->getNumMembers() >= $this->getGame()->getAllianceMaxPlayers()) {
+			return false;
+		}
+		if ($player === null || $player->hasNewbieStatus()) {
+			return true;
+		}
+		return $this->getNumVeterans() < $this->getGame()->getAllianceMaxVets();
+	}
+
+	/**
+	 * Number of members who are currently non-Newbie status (excluding NPCs)
+	 */
 	public function getNumVeterans(): int {
 		$numVeterans = 0;
-		foreach ($this->getMembers() as $player) {
+		foreach ($this->getMembers(includeNpc: false) as $player) {
 			if (!$player->hasNewbieStatus()) {
 				$numVeterans++;
 			}
@@ -504,7 +502,7 @@ class Alliance {
 	}
 
 	public function getNumMembers(): int {
-		return count($this->getMemberIDs());
+		return count($this->getMembers(includeNpc: true));
 	}
 
 	public function update(): void {
@@ -534,25 +532,22 @@ class Alliance {
 	 *
 	 * @return array<int, Player>
 	 */
-	public function getMembers(): array {
-		return Player::getAlliancePlayers($this->getGameID(), $this->getAllianceID());
+	public function getMembers(bool $includeNpc): array {
+		$members = Player::getAlliancePlayers($this->getGameID(), $this->getAllianceID());
+		if (!$includeNpc) {
+			$members = array_filter($members, fn($player) => !$player->isNPC());
+		}
+		return $members;
 	}
 
 	/**
-	 * @return array<int>
+	 * @return array<int, Player>
 	 */
-	public function getMemberIDs(): array {
-		if (!isset($this->memberList)) {
-			$db = Database::getInstance();
-			$dbResult = $db->select('player', $this->SQLID, ['account_id']);
-
-			//we have the list of players put them in an array now
-			$this->memberList = [];
-			foreach ($dbResult->records() as $dbRecord) {
-				$this->memberList[] = $dbRecord->getInt('account_id');
-			}
-		}
-		return $this->memberList;
+	public function getNpcs(): array {
+		return array_filter(
+			$this->getMembers(includeNpc: true),
+			fn($player) => $player->isNPC(),
+		);
 	}
 
 	/**
@@ -639,10 +634,10 @@ class Alliance {
 		$sendAllMsg = true;
 		$opLeader = true;
 		$viewBonds = true;
+		$manageNpcs = true;
 		$db = Database::getInstance();
 		$db->insert('alliance_has_roles', [
-			'alliance_id' => $this->getAllianceID(),
-			'game_id' => $this->getGameID(),
+			...$this->SQLID,
 			'role_id' => ALLIANCE_ROLE_LEADER,
 			'role' => 'Leader',
 			'with_per_day' => $withPerDay,
@@ -656,6 +651,7 @@ class Alliance {
 			'send_alliance_msg' => $db->escapeBoolean($sendAllMsg),
 			'op_leader' => $db->escapeBoolean($opLeader),
 			'view_bonds' => $db->escapeBoolean($viewBonds),
+			'manage_npcs' => $db->escapeBoolean($manageNpcs),
 		]);
 
 		// Create new member role
@@ -675,6 +671,7 @@ class Alliance {
 				$sendAllMsg = false;
 				$opLeader = false;
 				$viewBonds = false;
+				$manageNpcs = false;
 				break;
 			case 'basic':
 				$withPerDay = ALLIANCE_BANK_UNLIMITED;
@@ -688,11 +685,11 @@ class Alliance {
 				$sendAllMsg = false;
 				$opLeader = false;
 				$viewBonds = false;
+				$manageNpcs = true;
 				break;
 		}
 		$db->insert('alliance_has_roles', [
-			'alliance_id' => $this->getAllianceID(),
-			'game_id' => $this->getGameID(),
+			...$this->SQLID,
 			'role_id' => ALLIANCE_ROLE_NEW_MEMBER,
 			'role' => 'New Member',
 			'with_per_day' => $withPerDay,
@@ -706,6 +703,7 @@ class Alliance {
 			'send_alliance_msg' => $db->escapeBoolean($sendAllMsg),
 			'op_leader' => $db->escapeBoolean($opLeader),
 			'view_bonds' => $db->escapeBoolean($viewBonds),
+			'manage_npcs' => $db->escapeBoolean($manageNpcs),
 		]);
 	}
 

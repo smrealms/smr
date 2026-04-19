@@ -76,8 +76,8 @@ class GameJoinProcessor extends AccountPageProcessor {
 		// Mark the player's start sector as visited
 		$player->getSector()->markVisited($player);
 
-		if ($isNewbie || $account->getAccountID() === ACCOUNT_ID_NHL) {
-			// If player is a newb (or NHL), set alliance to be Newbie Help Allaince
+		if ($isNewbie) {
+			// If player is a newb, set alliance to be Newbie Help Allaince
 			$NHA = Alliance::getAllianceByName(NHA_ALLIANCE_NAME, $gameID);
 			$player->joinAlliance($NHA->getAllianceID());
 

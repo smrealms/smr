@@ -3,6 +3,7 @@
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Player;
 
 /**
  * Create the Newbie Help Alliance and populate its Message Board
@@ -17,7 +18,9 @@ function createNHA(int $gameID): void {
 	$alliance->setDiscordServer(DISCORD_SERVER_ID);
 	$alliance->update();
 
-	$allianceID = $alliance->getAllianceID();
+	$nhl = Player::createPlayer(ACCOUNT_ID_NHL, $gameID, 'Newbie Help Leader', RACE_HUMAN, false);
+	$nhl->joinAlliance($alliance->getAllianceID(), log: false);
+	$nhl->update();
 
 	// NHA default topics
 	$threads = [
@@ -29,7 +32,7 @@ function createNHA(int $gameID): void {
 	4) Talk to other players ingame or in IRC chat.<br />
 	5) Stay in the racial galaxies as much as possible.<br />
 	6) Learn to use Merchant\'s Guide to the Universe.<br />
-	7) Contact Newbie Help Leader for help, advice or with any questions you have.<br />
+	7) Contact ' . $nhl->getBBLink() . ' for help, advice or with any questions you have.<br />
 	<br />
 	8) Most of all - have fun out there!',
 
@@ -41,9 +44,9 @@ function createNHA(int $gameID): void {
 	<br />
 	3) Maps. A short time into every game, this alliance will usually have full maps of the game universe. However, keep in mind that maps will change slightly during the course of a game as ports get upgraded and busted down.<br />
 	<br />
-	4) If you stay in NHA, stay active, try to learn, and keep in touch with the Newbie Help Leader then this alliance can be a stepping stone to the more established alliances. Every game I get alliance leaders asking me to recommend newbies who are active and have potential.<br />
+	4) If you stay in NHA, stay active, try to learn, and keep in touch with ' . $nhl->getBBLink() . ', then this alliance can be a stepping stone to the more established alliances. Every game I get alliance leaders asking me to recommend newbies who are active and have potential.<br />
 	<br />
-	5) Newbie Help Leader will work with each of you individually on specific questions and game goals if you want. If resources allow it (I am dependent on my own trading income for cash) I try to reward players for achieving the game goals they work towards. I also try to make sure that members have at least a mid-level tradeship after they have been killed, although I try to make sure that they have learned from their mistakes before buying replacement ships (to be fair to the rest of the players in the game, you can no longer get cash or new ships after reaching fledgling status, although you are welcome to stay in the alliance as long as you like).',
+	5) ' . $nhl->getBBLink() . ' will work with each of you individually on specific questions and game goals if you want. If resources allow it (I am dependent on my own trading income for cash) I try to reward players for achieving the game goals they work towards. I also try to make sure that members have at least a mid-level tradeship after they have been killed, although I try to make sure that they have learned from their mistakes before buying replacement ships (to be fair to the rest of the players in the game, you can no longer get cash or new ships after reaching fledgling status, although you are welcome to stay in the alliance as long as you like).',
 
 		'Turns' => 'Many of the basic actions performed in SMR cost turns, the most common examples being moving, trading &amp; attacking. One of the keys to success in the game is good turn management, no matter what you are busing the turns to accomplish. If you are a trader, you want to get as much cash and xp as possible per turn used. If you are a hunter, you want to spend as many turns as possible efficiently locating targets and getting kills, and as few as possible chasing traders around without getting the final trigger shot off. In an alliance, you will often be expected to save turns for op\'s, where it is often crucial to have plenty of alliance members show up with plenty of turns.<br />
 	<br />
@@ -221,14 +224,12 @@ function createNHA(int $gameID): void {
 	$threadID = 1;
 	foreach ($threads as $topic => $text) {
 		$db->replace('alliance_thread_topic', [
-			'game_id' => $gameID,
-			'alliance_id' => $allianceID,
+			...$alliance->SQLID,
 			'thread_id' => $threadID,
 			'topic' => $topic,
 		]);
 		$db->replace('alliance_thread', [
-			'game_id' => $gameID,
-			'alliance_id' => $allianceID,
+			...$alliance->SQLID,
 			'thread_id' => $threadID,
 			'reply_id' => 1,
 			'text' => $text,

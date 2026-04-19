@@ -52,11 +52,25 @@ class NpcManageProcessor extends AccountPageProcessor {
 			$npcPlayer->setAlignment(rand(-300, 300));
 
 			$allianceName = Request::get('player_alliance');
+			if ($allianceName === NPC_FOR_HIRE_ALLIANCE_NAME) {
+				// For-hire NPCs must start out deactivated
+				$db->update(
+					'npc_logins',
+					['active' => $db->escapeBoolean(false)],
+					['login' => $this->login],
+				);
+				$allowReserved = true;
+				$allianceDescription = 'Traders for hire.';
+			} else {
+				$allowReserved = false;
+				$allianceDescription = '';
+			}
 			try {
 				$alliance = Alliance::getAllianceByName($allianceName, $gameID);
 			} catch (AllianceNotFound) {
-				$alliance = Alliance::createAlliance($gameID, $allianceName);
+				$alliance = Alliance::createAlliance($gameID, $allianceName, $allowReserved);
 				$alliance->setLeaderID($npcPlayer->getAccountID());
+				$alliance->setAllianceDescription($allianceDescription);
 				$alliance->update();
 				$alliance->createDefaultRoles();
 			}

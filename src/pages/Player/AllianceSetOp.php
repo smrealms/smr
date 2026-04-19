@@ -47,7 +47,7 @@ class AllianceSetOp extends PlayerPage {
 
 		// Stuff for designating a flagship
 		$template->assign('FlagshipID', $alliance->getFlagshipID());
-		$template->assign('AlliancePlayers', $alliance->getMembers());
+		$template->assign('AlliancePlayers', $alliance->getMembers(includeNpc: false));
 
 		$container = new AllianceSetFlagshipProcessor();
 		$template->assign('FlagshipHREF', $container->href());

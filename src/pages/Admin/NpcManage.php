@@ -64,6 +64,7 @@ class NpcManage extends AccountPage {
 				'active' => $dbRecord->getBoolean('active'),
 				'working' => $dbRecord->getBoolean('working'),
 				'href' => $container->href(),
+				'disable_active_toggle' => false,
 			];
 		}
 
@@ -78,7 +79,11 @@ class NpcManage extends AccountPage {
 		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$accountID = $dbRecord->getInt('account_id');
-			$npcs[$accountID]['player'] = Player::getPlayer($accountID, $selectedGameID, false, $dbRecord);
+			$npc = Player::getPlayer($accountID, $selectedGameID, false, $dbRecord);
+			$npcs[$accountID]['player'] = $npc;
+			if (($npc->hasAlliance() && $npc->getAlliance()->isNpcForHire()) || $npc->isHiredNPC()) {
+				$npcs[$accountID]['disable_active_toggle'] = true;
+			}
 		}
 
 		$template->assign('Npcs', $npcs);

@@ -24,6 +24,7 @@ use Smr\Pages\Player\GalacticPost\PastEditionSelect;
 use Smr\Pages\Player\Headquarters\BountyClaimProcessor;
 use Smr\Pages\Player\Headquarters\BountyPlace;
 use Smr\Pages\Player\Headquarters\Government;
+use Smr\Pages\Player\Headquarters\HireTrader;
 use Smr\Pages\Player\Headquarters\MilitaryPaymentClaimProcessor;
 use Smr\Pages\Player\Headquarters\Underground;
 use Smr\Pages\Player\NewsReadCurrent;
@@ -67,6 +68,9 @@ class Menu {
 			$links[] = [BountyClaimProcessor::class, 'Claim Bounty'];
 			$links[] = [BountyPlace::class, 'Place Bounty'];
 		}
+
+		// Show to everybody, even if they don't have hiring permission yet
+		$links[] = [HireTrader::class, 'Hire Trader'];
 
 		$menuItems = [];
 		foreach ($links as [$class, $text]) {

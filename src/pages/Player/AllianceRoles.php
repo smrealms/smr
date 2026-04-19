@@ -45,6 +45,7 @@ class AllianceRoles extends PlayerPage {
 				$allianceRoles[$roleID]['SendAllianceMessage'] = $dbRecord->getBoolean('send_alliance_msg');
 				$allianceRoles[$roleID]['OpLeader'] = $dbRecord->getBoolean('op_leader');
 				$allianceRoles[$roleID]['ViewBondsInPlanetList'] = $dbRecord->getBoolean('view_bonds');
+				$allianceRoles[$roleID]['ManageNpcs'] = $dbRecord->getBoolean('manage_npcs');
 			} else {
 				$container = new self($roleID);
 			}
@@ -71,6 +72,7 @@ class AllianceRoles extends PlayerPage {
 			'SendAllianceMessage' => false,
 			'OpLeader' => false,
 			'ViewBondsInPlanetList' => false,
+			'ManageNpcs' => true,
 		]);
 	}
 

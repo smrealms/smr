@@ -26,7 +26,7 @@ class AllianceRemoveMember extends PlayerPage {
 		$template->assign('BanishHREF', $container->href());
 
 		// Get alliance members sorted by most active first
-		$alliancePlayers = $alliance->getMembers();
+		$alliancePlayers = $alliance->getMembers(includeNpc: false);
 		uasort($alliancePlayers, fn($a, $b) => $b->getLastCPLAction() <=> $a->getLastCPLAction());
 
 		$members = [];
