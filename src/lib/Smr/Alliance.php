@@ -320,17 +320,27 @@ class Alliance {
 	public function increaseBank(int $credits): int {
 		$newTotal = min($this->bank + $credits, MAX_MONEY);
 		$actualAdded = $newTotal - $this->bank;
-		$this->setBank($newTotal);
+		$this->updateBank($actualAdded);
 		return $actualAdded;
 	}
 
 	public function decreaseBank(int $credits): void {
-		$newTotal = $this->bank - $credits;
-		$this->setBank($newTotal);
+		if ($credits > $this->bank) {
+			throw new Exception('Do not allow negative credits');
+		}
+		$this->updateBank(-$credits);
 	}
 
-	public function setBank(int $credits): void {
-		$this->bank = $credits;
+	private function updateBank(int $creditChange): void {
+		// Write immediately to avoid race conditions
+		$db = Database::getInstance();
+		$db->write('UPDATE alliance
+			SET alliance_account = alliance_account + :credit_change
+			WHERE ' . self::SQL, [
+			...$this->SQLID,
+			'credit_change' => $creditChange,
+		]);
+		$this->bank += $creditChange;
 	}
 
 	/**
@@ -405,8 +415,28 @@ class Alliance {
 		return $this->kills;
 	}
 
+	public function incrementKills(): void {
+		// Write immediately to avoid race conditions
+		$db = Database::getInstance();
+		$db->write(
+			'UPDATE alliance SET alliance_kills = alliance_kills + 1 WHERE ' . self::SQL,
+			$this->SQLID,
+		);
+		$this->kills++;
+	}
+
 	public function getDeaths(): int {
 		return $this->deaths;
+	}
+
+	public function incrementDeaths(): void {
+		// Write immediately to avoid race conditions
+		$db = Database::getInstance();
+		$db->write(
+			'UPDATE alliance SET alliance_deaths = alliance_deaths + 1 WHERE ' . self::SQL,
+			$this->SQLID,
+		);
+		$this->deaths++;
 	}
 
 	/**
@@ -506,18 +536,17 @@ class Alliance {
 	}
 
 	public function update(): void {
+		// We do not update kills, deaths, and alliance_account here
+		// because they are updated separately for race condition safety.
 		$db = Database::getInstance();
 		$db->update(
 			'alliance',
 			[
 				'alliance_password' => $this->password,
 				'recruiting' => $db->escapeBoolean($this->recruiting),
-				'alliance_account' => $this->bank,
 				'alliance_description' => $this->description,
 				'`mod`' => $this->motd,
 				'img_src' => $this->imgSrc,
-				'alliance_kills' => $this->kills,
-				'alliance_deaths' => $this->deaths,
 				'discord_server' => $this->discordServer,
 				'discord_channel' => $this->discordChannel,
 				'flagship_id' => $this->flagshipID,

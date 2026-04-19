@@ -136,9 +136,6 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 			'amount' => $amount,
 			'request_exempt' => $requestExempt ? 1 : 0,
 		]);
-
-		// save money for alliance
-		$alliance->update();
 	}
 
 }
