@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Force;
 use Smr\Globals;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\SectorLock;
 
 class AttackForcesProcessor extends PlayerPageProcessor {
@@ -17,7 +17,7 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 		private readonly bool $bump = false,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$ship = $player->getShip();
 
 		$forces = Force::getForce($player->getGameID(), $player->getSectorID(), $this->ownerAccountID);

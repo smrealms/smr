@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Force;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class ForcesRefreshProcessor extends PlayerPageProcessor {
 
@@ -12,7 +12,7 @@ class ForcesRefreshProcessor extends PlayerPageProcessor {
 		private readonly int $ownerAccountID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$forces = Force::getForce($player->getGameID(), $player->getSectorID(), $this->ownerAccountID);
 
 		$forces->updateExpire();

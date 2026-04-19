@@ -18,7 +18,7 @@ enum BuyerRestriction: int {
 	/**
 	 * Does the player pass the restriction?
 	 */
-	public function passes(AbstractPlayer $player): bool {
+	public function passes(Player $player): bool {
 		return match ($this) {
 			self::None => true, // no restriction, all players pass
 			self::Good => $player->hasGoodAlignment(),

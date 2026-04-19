@@ -3,10 +3,10 @@
 namespace Smr\Pages\Player;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\CombatLogType;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class CombatLogListProcessor extends PlayerPageProcessor {
@@ -15,7 +15,7 @@ class CombatLogListProcessor extends PlayerPageProcessor {
 		private readonly CombatLogType $action,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		// If here, we have hit either the 'Save', 'Delete', or 'View' form buttons.
 		// Immediately return to the log list if we haven't selected any logs.
 		$logIDs = array_keys(Request::getArray('id', []));
@@ -53,7 +53,7 @@ class CombatLogListProcessor extends PlayerPageProcessor {
 				]);
 			} else { // $submitAction == 'Delete'
 				$changedRows = $db->write('DELETE FROM player_saved_combat_logs
-							WHERE log_id IN (:log_ids) AND ' . AbstractPlayer::SQL . '
+							WHERE log_id IN (:log_ids) AND ' . Player::SQL . '
 							LIMIT :limit', [
 					'log_ids' => $db->escapeArray($logIDs),
 					...$player->SQLID,

@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Globals;
@@ -17,7 +16,7 @@ class ArticleWriteProcessor extends PlayerPageProcessor {
 		private readonly ?int $articleID = null,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$title = Request::get('title');
 		$message = Request::get('message');
 		if (!$player->isGPEditor()) {

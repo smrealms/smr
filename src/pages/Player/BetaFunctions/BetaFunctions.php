@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player\BetaFunctions;
 
-use Smr\AbstractPlayer;
 use Smr\HardwareType;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\ShipType;
 use Smr\Template;
 use Smr\WeaponType;
@@ -16,7 +16,7 @@ class BetaFunctions extends PlayerPage {
 
 	public string $file = 'beta_functions.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		if (!ENABLE_BETA) {
 			create_error('Beta functions are disabled.');
 		}

@@ -3,13 +3,13 @@
 namespace Smr\Npc;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\Npc\Exceptions\FinalAction;
 use Smr\Npc\Exceptions\ForwardAction;
 use Smr\Npc\Exceptions\TradeRouteDrained;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Player\AllianceManageNpcsDismissProcessor;
 use Smr\Pages\Player\Bank\AllianceBankProcessor;
+use Smr\Player;
 use Smr\Routes\RouteIterator;
 use Smr\Sector;
 use Smr\TransactionType;
@@ -60,8 +60,8 @@ class NpcActor {
 		$this->hired = $player->isHiredNPC();
 	}
 
-	private function refreshPlayer(): AbstractPlayer {
-		return AbstractPlayer::getPlayer($this->accountID, $this->gameID, true);
+	private function refreshPlayer(): Player {
+		return Player::getPlayer($this->accountID, $this->gameID, true);
 	}
 
 	public function getNumActions(): int {

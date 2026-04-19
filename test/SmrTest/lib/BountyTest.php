@@ -3,7 +3,6 @@
 namespace SmrTest\lib;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use Smr\AbstractPlayer;
 use Smr\Bounty;
 use Smr\BountyType;
 use Smr\Database;
@@ -160,7 +159,7 @@ class BountyTest extends BaseIntegrationSpec {
 		$bounty2->update();
 		$bounty3->update();
 
-		$player1 = $this->createStub(AbstractPlayer::class);
+		$player1 = $this->createStub(Player::class);
 		$player1->method('getAccountID')->willReturn(1);
 		$player1->method('getGameID')->willReturn(42);
 

@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player\BetaFunctions;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
+use Smr\Player;
 use Smr\Port;
 
 class RevealMapProcessor extends BetaFunctionsPageProcessor {
 
-	public function buildBetaFunctionsProcessor(AbstractPlayer $player): void {
+	public function buildBetaFunctionsProcessor(Player $player): void {
 		$account_id = $player->getAccountID();
 		$game_id = $player->getGameID();
 		// delete all entries from the player_visited_sector/port table

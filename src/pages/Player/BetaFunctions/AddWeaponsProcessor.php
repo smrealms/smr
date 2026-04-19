@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player\BetaFunctions;
 
-use Smr\AbstractPlayer;
 use Smr\Combat\Weapon\Weapon;
+use Smr\Player;
 use Smr\Request;
 
 class AddWeaponsProcessor extends BetaFunctionsPageProcessor {
 
-	public function buildBetaFunctionsProcessor(AbstractPlayer $player): void {
+	public function buildBetaFunctionsProcessor(Player $player): void {
 		$ship = $player->getShip();
 		$weapon = Weapon::getWeapon(Request::getInt('weapon_id'));
 		$amount = Request::getInt('amount');

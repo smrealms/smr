@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 // Verify that the player is permitted to view the requested combat log
 // Qualifications:
@@ -16,7 +16,7 @@ class CombatLogViewerVerifyProcessor extends PlayerPageProcessor {
 		private readonly int $logID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$db = Database::getInstance();
 
 		$query = 'SELECT 1 FROM combat_logs WHERE log_id = :log_id AND game_id = :game_id AND ';

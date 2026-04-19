@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player\Bank;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\Page;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class AllianceBankExemptProcessor extends PlayerPageProcessor {
@@ -18,7 +18,7 @@ class AllianceBankExemptProcessor extends PlayerPageProcessor {
 		private readonly array $displayedTransactionIDs = [],
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$db = Database::getInstance();
 
 		// Unexempt all displayed transactions first, then exempt selected below.

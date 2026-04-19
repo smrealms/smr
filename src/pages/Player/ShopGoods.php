@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 use Smr\TradeGood;
 
@@ -15,7 +15,7 @@ class ShopGoods extends PlayerPage {
 		private readonly ?string $tradeMessage = null,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$ship = $player->getShip();
 
 		// create object from port we can work with

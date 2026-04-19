@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Force;
 use Smr\Globals;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class ForcesDropProcessor extends PlayerPageProcessor {
@@ -21,7 +21,7 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 		private readonly ?string $referrer = null,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$ship = $player->getShip();
 
 		if ($player->getNewbieTurns() > 0) {

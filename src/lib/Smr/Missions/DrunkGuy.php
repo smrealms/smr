@@ -2,7 +2,6 @@
 
 namespace Smr\Missions;
 
-use Smr\AbstractPlayer;
 use Smr\BarDrink;
 use Smr\Exceptions\MissionNotPossible;
 use Smr\Exceptions\MissionStepNotFound;
@@ -12,6 +11,7 @@ use Smr\MissionActions\BuyDrink;
 use Smr\MissionActions\ClaimReward;
 use Smr\MissionActions\EnterSector;
 use Smr\MissionStep;
+use Smr\Player;
 use Smr\PlotGroup;
 use Smr\Plotter;
 use Smr\Race;
@@ -29,12 +29,12 @@ readonly class DrunkGuy extends Mission {
 	private int $hqSectorID;
 	private int $barSectorID;
 
-	public static function isAvailableToPlayer(AbstractPlayer $player): bool {
+	public static function isAvailableToPlayer(Player $player): bool {
 		return $player->getSector()->hasX('Bar');
 	}
 
 	public function __construct(
-		AbstractPlayer $player,
+		Player $player,
 	) {
 		$this->gameID = $player->getGameID();
 		$this->startSectorID = $player->getSectorID();
@@ -104,7 +104,7 @@ readonly class DrunkGuy extends Mission {
 		};
 	}
 
-	public function reward(AbstractPlayer $player): string {
+	public function reward(Player $player): string {
 		$credits = self::REWARD_CREDITS;
 		$player->increaseCredits($credits);
 		$exp = self::REWARD_EXP;

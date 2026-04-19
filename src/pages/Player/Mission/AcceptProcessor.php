@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player\Mission;
 
-use Smr\AbstractPlayer;
 use Smr\Mission;
 use Smr\MissionState;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Player\CurrentSector;
+use Smr\Player;
 
 class AcceptProcessor extends PlayerPageProcessor {
 
@@ -14,7 +14,7 @@ class AcceptProcessor extends PlayerPageProcessor {
 		private readonly Mission $mission,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		MissionState::addPlayerMission($player, $this->mission);
 
 		(new CurrentSector())->go();

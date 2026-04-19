@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player\Headquarters;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class BountyPlaceProcessor extends PlayerPageProcessor {
@@ -12,7 +12,7 @@ class BountyPlaceProcessor extends PlayerPageProcessor {
 		private readonly int $locationID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$amount = Request::getInt('amount');
 		$smrCredits = Request::getInt('smrcredits');
 

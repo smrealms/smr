@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\AllianceInvite;
 use Smr\Exceptions\AllianceInvitationNotFound;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class AllianceInviteAcceptProcessor extends PlayerPageProcessor {
 
@@ -14,7 +14,7 @@ class AllianceInviteAcceptProcessor extends PlayerPageProcessor {
 		private readonly int $allianceID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		// Check that the invitation is registered in the database
 		try {
 			$invite = AllianceInvite::get($this->allianceID, $player->getGameID(), $player->getAccountID());

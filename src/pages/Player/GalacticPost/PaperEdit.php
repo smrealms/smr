@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class PaperEdit extends PlayerPage {
@@ -16,7 +16,7 @@ class PaperEdit extends PlayerPage {
 		private readonly int $paperID,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Edit Paper');
 		Menu::galacticPost();
 

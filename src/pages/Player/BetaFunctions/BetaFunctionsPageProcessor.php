@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Player\BetaFunctions;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 abstract class BetaFunctionsPageProcessor extends PlayerPageProcessor {
 
-	abstract protected function buildBetaFunctionsProcessor(AbstractPlayer $player): void;
+	abstract protected function buildBetaFunctionsProcessor(Player $player): void;
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$this->buildBetaFunctionsProcessor($player);
 
 		$container = new BetaFunctions();

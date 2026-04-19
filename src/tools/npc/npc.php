@@ -1,6 +1,5 @@
 <?php declare(strict_types=1);
 
-use Smr\AbstractPlayer;
 use Smr\Account;
 use Smr\Combat\Weapon\Weapon;
 use Smr\Container\DiContainer;
@@ -238,7 +237,7 @@ function debug(string $message, mixed $debugObject = null): void {
 /**
  * Determines if a player has enough turns to start taking actions
  */
-function checkStartConditions(AbstractPlayer $player): void {
+function checkStartConditions(Player $player): void {
 	$minTurnsThreshold = rand($player->getMaxTurns() / 2, $player->getMaxTurns());
 	if ($player->getTurns() < $minTurnsThreshold && !$player->canFight()) {
 		debug('We don\'t have enough turns to bother starting trading, and we are protected: ' . $player->getTurns());
@@ -364,7 +363,7 @@ function changeNPCLogin(): void {
 	debug('Chosen NPC: login = ' . $account->getLogin() . ', game = ' . $session->getGameID() . ', player = ' . $session->getPlayer()->getPlayerName());
 }
 
-function tradeGoods(int $goodID, AbstractPlayer $player, Port $port): PlayerPageProcessor {
+function tradeGoods(int $goodID, Player $player, Port $port): PlayerPageProcessor {
 	sleepNPC(); //We have an extra sleep at port to make the NPC more vulnerable.
 	$ship = $player->getShip();
 	$relations = $player->getRelation($port->getRaceID());
@@ -394,7 +393,7 @@ function tradeGoods(int $goodID, AbstractPlayer $player, Port $port): PlayerPage
 	);
 }
 
-function dumpCargo(AbstractPlayer $player): PlayerPageProcessor {
+function dumpCargo(Player $player): PlayerPageProcessor {
 	$ship = $player->getShip();
 	$cargo = $ship->getCargo();
 	debug('Ship Cargo', $cargo);
@@ -406,11 +405,11 @@ function dumpCargo(AbstractPlayer $player): PlayerPageProcessor {
 	throw new Exception('Called dumpCargo without any cargo!');
 }
 
-function plotToSector(AbstractPlayer $player, int $sectorID): PlayerPageProcessor {
+function plotToSector(Player $player, int $sectorID): PlayerPageProcessor {
 	return new PlotCourseConventionalProcessor(from: $player->getSectorID(), to: $sectorID);
 }
 
-function plotToFed(AbstractPlayer $player): never {
+function plotToFed(Player $player): never {
 	debug('Plotting To Fed');
 
 	// Always drop illegal goods before heading to fed space
@@ -439,7 +438,7 @@ function plotToFed(AbstractPlayer $player): never {
  * @raises \Smr\Exceptions\PathNotFound
  * @return bool True if location is in another sector, false if in current sector.
  */
-function plotToNearest(AbstractPlayer $player, mixed $realX): bool {
+function plotToNearest(Player $player, mixed $realX): bool {
 	debug('Plotting To: ', $realX); //TODO: Can we make the debug output a bit nicer?
 
 	if ($player->getSector()->hasX($realX, $player)) {
@@ -458,7 +457,7 @@ function plotToNearest(AbstractPlayer $player, mixed $realX): bool {
 	return true;
 }
 
-function moveToSector(AbstractPlayer $player, int $targetSector): PlayerPageProcessor {
+function moveToSector(Player $player, int $targetSector): PlayerPageProcessor {
 	debug('Moving from #' . $player->getSectorID() . ' to #' . $targetSector);
 	return new SectorMoveProcessor($targetSector, new CurrentSector());
 }
@@ -466,7 +465,7 @@ function moveToSector(AbstractPlayer $player, int $targetSector): PlayerPageProc
 /**
  * @param list<list<int>> $upgradeGroups
  */
-function getCurrentShipTier(AbstractPlayer $player, array $upgradeGroups): int {
+function getCurrentShipTier(Player $player, array $upgradeGroups): int {
 	// Determine current ship tier
 	foreach ($upgradeGroups as $upgradeGroup) {
 		foreach ($upgradeGroup as $tier => $upgradeShipID) {
@@ -479,7 +478,7 @@ function getCurrentShipTier(AbstractPlayer $player, array $upgradeGroups): int {
 	return -1;
 }
 
-function checkForShipUpgrade(AbstractPlayer $player): void {
+function checkForShipUpgrade(Player $player): void {
 	// Select the next tier ship in a random upgrade group
 	$upgradeGroups = [
 		SHIP_UPGRADE_PATH[$player->getRaceID()],
@@ -519,7 +518,7 @@ function checkForShipUpgrade(AbstractPlayer $player): void {
 	}
 }
 
-function setupShip(AbstractPlayer $player): void {
+function setupShip(Player $player): void {
 	// Upgrade ships if we can
 	checkForShipUpgrade($player);
 
@@ -560,7 +559,7 @@ function setupShip(AbstractPlayer $player): void {
 /**
  * @return array<Smr\Routes\MultiplePortRoute>
  */
-function findRoutes(AbstractPlayer $player): array {
+function findRoutes(Player $player): array {
 	debug('Finding Routes');
 
 	$tradeGoods = [GOODS_NOTHING => false];

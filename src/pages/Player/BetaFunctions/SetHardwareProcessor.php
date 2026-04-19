@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player\BetaFunctions;
 
-use Smr\AbstractPlayer;
+use Smr\Player;
 use Smr\Request;
 
 class SetHardwareProcessor extends BetaFunctionsPageProcessor {
 
-	public function buildBetaFunctionsProcessor(AbstractPlayer $player): void {
+	public function buildBetaFunctionsProcessor(Player $player): void {
 		$ship = $player->getShip();
 		$type_hard = Request::getInt('type_hard');
 		$amount_hard = Request::getInt('amount_hard');

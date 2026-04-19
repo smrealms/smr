@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\BuyerRestriction;
 use Smr\Combat\Weapon\Weapon;
 use Smr\Location;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class ShopWeaponProcessor extends PlayerPageProcessor {
 
@@ -16,7 +16,7 @@ class ShopWeaponProcessor extends PlayerPageProcessor {
 		private readonly ?int $sellOrderID = null,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$ship = $player->getShip();
 
 		if (!$player->getSector()->hasLocation($this->locationID)) {

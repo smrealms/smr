@@ -3,15 +3,15 @@
 namespace SmrTest\lib;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use Smr\AbstractPlayer;
 use Smr\Combat\Weapon\Weapon;
+use Smr\Player;
 use Smr\Ship;
 use SmrTest\BaseIntegrationSpec;
 
 #[CoversClass(Ship::class)]
 class ShipIntegrationTest extends BaseIntegrationSpec {
 
-	private AbstractPlayer $player; // will be mocked
+	private Player $player; // will be mocked
 
 	protected function tablesToTruncate(): array {
 		return ['ship_has_cargo', 'ship_has_hardware', 'ship_has_illusion', 'ship_has_weapon', 'ship_is_cloaked'];
@@ -22,7 +22,7 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		Ship::clearCache();
 
 		// Create mock player that will be needed to create any ship
-		$this->player = $this->createStub(AbstractPlayer::class);
+		$this->player = $this->createStub(Player::class);
 		$this->player
 			->method('getAccountID')
 			->willReturn(7);

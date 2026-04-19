@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 use Smr\ScoutMessageGroupType;
 
@@ -13,7 +13,7 @@ class MessagePreferenceProcessor extends PlayerPageProcessor {
 		private readonly int $folderID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		if (Request::has('ignore_globals')) {
 			$player->setIgnoreGlobals(Request::getBool('ignore_globals'));
 		} elseif (Request::has('group_scouts')) {

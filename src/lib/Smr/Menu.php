@@ -371,7 +371,7 @@ class Menu {
 		$template->assign('MenuItems', $menuItems);
 	}
 
-	public static function navigation(AbstractPlayer $player): void {
+	public static function navigation(Player $player): void {
 		$menuItems = [];
 		$menuItems[] = ['Link' => Globals::getPlotCourseHREF(), 'Text' => 'Plot A Course'];
 		if (!$player->isLandedOnPlanet()) {

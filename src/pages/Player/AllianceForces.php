@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Epoch;
@@ -11,6 +10,7 @@ use Smr\HardwareType;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
 
 class AllianceForces extends PlayerPage {
@@ -23,7 +23,7 @@ class AllianceForces extends PlayerPage {
 		private readonly int $allianceID,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$allianceID = $this->allianceID;
 
 		$alliance = Alliance::getAlliance($allianceID, $player->getGameID());

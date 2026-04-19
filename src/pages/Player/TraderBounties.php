@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\BountyType;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
 
 class TraderBounties extends PlayerPage {
@@ -15,7 +15,7 @@ class TraderBounties extends PlayerPage {
 
 	public string $file = 'trader_bounties.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Bounties');
 
 		Menu::trader();

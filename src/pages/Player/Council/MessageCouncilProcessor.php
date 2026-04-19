@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player\Council;
 
-use Smr\AbstractPlayer;
 use Smr\Council;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Player\CurrentSector;
+use Smr\Player;
 use Smr\Request;
 
 class MessageCouncilProcessor extends PlayerPageProcessor {
@@ -14,7 +14,7 @@ class MessageCouncilProcessor extends PlayerPageProcessor {
 		private readonly int $raceID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$message = htmlentities(Request::get('message'), ENT_COMPAT, 'utf-8');
 
 		if ($message === '') {

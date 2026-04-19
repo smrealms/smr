@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\CombatLogType;
 use Smr\Database;
 use Smr\Globals;
@@ -24,7 +23,7 @@ class CombatLogList extends PlayerPage {
 		private readonly ?string $message = null,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$db = Database::getInstance();
 
 		$template->assign('PageTopic', 'Combat Logs');

@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class AllianceGovernanceProcessor extends PlayerPageProcessor {
@@ -14,7 +14,7 @@ class AllianceGovernanceProcessor extends PlayerPageProcessor {
 		private readonly int $allianceID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$alliance_id = $this->allianceID;
 		$alliance = Alliance::getAlliance($alliance_id, $player->getGameID());
 

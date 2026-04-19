@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class BuyShipNamePreview extends PlayerPage {
@@ -15,7 +15,7 @@ class BuyShipNamePreview extends PlayerPage {
 		private readonly int $cost,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Naming Your Ship');
 
 		$container = new BuyShipNamePreviewProcessor($this->shipName, $this->cost);

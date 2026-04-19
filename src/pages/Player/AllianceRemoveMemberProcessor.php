@@ -3,7 +3,6 @@
 namespace Smr\Pages\Player;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\Game;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
@@ -11,7 +10,7 @@ use Smr\Request;
 
 class AllianceRemoveMemberProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$accountIDs = Request::getIntArray('account_id', []);
 
 		if (count($accountIDs) === 0) {

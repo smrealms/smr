@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Player\Planet;
 
-use Smr\AbstractPlayer;
+use Smr\Player;
 use Smr\Template;
 
 class BondConfirm extends PlanetPage {
 
 	public string $file = 'planet_bond_confirmation.php';
 
-	protected function buildPlanetPage(AbstractPlayer $player, Template $template): void {
+	protected function buildPlanetPage(Player $player, Template $template): void {
 		$planet = $player->getSectorPlanet();
 
 		$template->assign('BondDuration', format_time($planet->getBondTime()));

@@ -8,8 +8,8 @@ use Smr\Page\AccountPageProcessor;
 use Smr\Request;
 
 /**
- * @param array<int, \Smr\AbstractPlayer> $realAttackers
- * @param array<int, \Smr\AbstractPlayer> $realDefenders
+ * @param array<int, \Smr\Player> $realAttackers
+ * @param array<int, \Smr\Player> $realDefenders
  * @return array<string, mixed>
  */
 function runAnAttack(array $realAttackers, array $realDefenders): array {

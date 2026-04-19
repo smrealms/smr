@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\MovementType;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Sector;
 use Smr\SectorLock;
 
@@ -15,7 +15,7 @@ class SectorMoveProcessor extends PlayerPageProcessor {
 		private readonly CurrentSector|LocalMap $targetPage,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		require_once(LIB . 'Default/sector_mines.inc.php');
 
 		$sector = $player->getSector();

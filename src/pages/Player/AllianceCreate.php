@@ -2,15 +2,15 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class AllianceCreate extends PlayerPage {
 
 	public string $file = 'alliance_create.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Create Alliance');
 
 		$container = new AllianceCreateProcessor();

@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Menu;
 use Smr\News;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
 
 class NewsReadCurrent extends PlayerPage {
@@ -20,7 +20,7 @@ class NewsReadCurrent extends PlayerPage {
 		private ?int $lastNewsUpdate = null,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$gameID = $player->getGameID();
 
 		$template->assign('PageTopic', 'Current News');

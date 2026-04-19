@@ -3,12 +3,12 @@
 namespace Smr\Pages\Player\Rankings;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Request;
 use Smr\Template;
 
@@ -26,7 +26,7 @@ class AllianceVsAlliance extends PlayerPage {
 		private ?array $versusAllianceIDs = null,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Alliance VS Alliance Rankings');
 
 		Menu::rankings(1, 4);

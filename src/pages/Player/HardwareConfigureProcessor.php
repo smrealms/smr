@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class HardwareConfigureProcessor extends PlayerPageProcessor {
@@ -12,7 +12,7 @@ class HardwareConfigureProcessor extends PlayerPageProcessor {
 		private readonly string $action,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$ship = $player->getShip();
 
 		if ($this->action === 'Enable Cloak') {

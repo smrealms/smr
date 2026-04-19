@@ -3,9 +3,9 @@
 namespace Smr\Pages\Player;
 
 use DOMDocument;
-use Smr\AbstractPlayer;
 use Smr\Globals;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 function checkShipLogo(string $filename): void {
@@ -105,7 +105,7 @@ function checkHtmlShipName(string $name): void {
 
 class BuyShipNameProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$account = $player->getAccount();
 
 		$action = Request::get('action');

@@ -40,7 +40,7 @@ class Bounty {
 	 *
 	 * @return array<int, self>
 	 */
-	public static function getPlacedOnPlayer(AbstractPlayer $player): array {
+	public static function getPlacedOnPlayer(Player $player): array {
 		$db = Database::getInstance();
 		$dbResult = $db->select('bounty', $player->SQLID);
 		$bounties = [];
@@ -56,7 +56,7 @@ class Bounty {
 	 *
 	 * @return array<self>
 	 */
-	public static function getClaimableByPlayer(AbstractPlayer $player, ?BountyType $type = null): array {
+	public static function getClaimableByPlayer(Player $player, ?BountyType $type = null): array {
 		$db = Database::getInstance();
 		$table = 'bounty';
 		$sqlParams = [
@@ -156,11 +156,11 @@ class Bounty {
 		$this->setSmrCredits($this->smrCredits + $smrCredits);
 	}
 
-	public function getTargetPlayer(): AbstractPlayer {
+	public function getTargetPlayer(): Player {
 		return Player::getPlayer($this->targetID, $this->gameID);
 	}
 
-	public function getClaimerPlayer(): AbstractPlayer {
+	public function getClaimerPlayer(): Player {
 		return Player::getPlayer($this->claimerID, $this->gameID);
 	}
 

@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player\Bar;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Galaxy;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class BuyGalaxyMapProcessor extends PlayerPageProcessor {
@@ -15,7 +15,7 @@ class BuyGalaxyMapProcessor extends PlayerPageProcessor {
 		private readonly int $locationID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$account = $player->getAccount();
 
 		$timeUntilMaps = $player->getGame()->getStartTime() + TIME_MAP_BUY_WAIT - Epoch::time();
@@ -43,7 +43,7 @@ class BuyGalaxyMapProcessor extends PlayerPageProcessor {
 			'high' => $db->escapeNumber($high),
 			...$player->SQLID,
 		];
-		$dbResult = $db->read('SELECT 1 FROM player_visited_sector WHERE sector_id >= :low AND sector_id <= :high AND ' . AbstractPlayer::SQL . ' LIMIT 1', $params);
+		$dbResult = $db->read('SELECT 1 FROM player_visited_sector WHERE sector_id >= :low AND sector_id <= :high AND ' . Player::SQL . ' LIMIT 1', $params);
 		if (!$dbResult->hasRecord()) {
 			create_error('You already have maps of this galaxy!');
 		}
@@ -54,7 +54,7 @@ class BuyGalaxyMapProcessor extends PlayerPageProcessor {
 		//now give maps
 
 		// delete all entries from the player_visited_sector/port table
-		$db->write('DELETE FROM player_visited_sector WHERE sector_id >= :low AND sector_id <= :high AND ' . AbstractPlayer::SQL, $params);
+		$db->write('DELETE FROM player_visited_sector WHERE sector_id >= :low AND sector_id <= :high AND ' . Player::SQL, $params);
 		//start section
 
 		// add port infos

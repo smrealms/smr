@@ -3,9 +3,9 @@
 namespace Smr\Combat\Weapon;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\Force;
 use Smr\Planet;
+use Smr\Player;
 use Smr\Port;
 
 class ScoutDrones extends AbstractWeapon {
@@ -25,42 +25,42 @@ class ScoutDrones extends AbstractWeapon {
 		return $this->getBaseAccuracy();
 	}
 
-	public function getModifiedForceAccuracyAgainstPlayer(Force $forces, AbstractPlayer $targetPlayer): float {
+	public function getModifiedForceAccuracyAgainstPlayer(Force $forces, Player $targetPlayer): float {
 		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces, $targetPlayer, rand(1, 7) * rand(1, 7));
 	}
 
-	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(Force $forces, AbstractPlayer $targetPlayer, int $random): float {
+	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(Force $forces, Player $targetPlayer, int $random): float {
 		$modifiedAccuracy = $this->getModifiedAccuracy();
 		$modifiedAccuracy -= $targetPlayer->getLevelID() + $random;
 
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	public function getModifiedDamageAgainstForces(AbstractPlayer $weaponPlayer, Force $forces): never {
+	public function getModifiedDamageAgainstForces(Player $weaponPlayer, Force $forces): never {
 		throw new Exception('This weapon should not be used in this context');
 	}
 
-	public function getModifiedDamageAgainstPort(AbstractPlayer $weaponPlayer, Port $port): never {
+	public function getModifiedDamageAgainstPort(Player $weaponPlayer, Port $port): never {
 		throw new Exception('This weapon should not be used in this context');
 	}
 
-	public function getModifiedDamageAgainstPlanet(AbstractPlayer $weaponPlayer, Planet $planet): never {
+	public function getModifiedDamageAgainstPlanet(Player $weaponPlayer, Planet $planet): never {
 		throw new Exception('This weapon should not be used in this context');
 	}
 
-	public function getModifiedDamageAgainstPlayer(AbstractPlayer $weaponPlayer, AbstractPlayer $targetPlayer): never {
+	public function getModifiedDamageAgainstPlayer(Player $weaponPlayer, Player $targetPlayer): never {
 		throw new Exception('This weapon should not be used in this context');
 	}
 
-	public function getModifiedPortDamageAgainstPlayer(Port $port, AbstractPlayer $targetPlayer): never {
+	public function getModifiedPortDamageAgainstPlayer(Port $port, Player $targetPlayer): never {
 		throw new Exception('This weapon should not be used in this context');
 	}
 
-	public function getModifiedPlanetDamageAgainstPlayer(Planet $planet, AbstractPlayer $targetPlayer): never {
+	public function getModifiedPlanetDamageAgainstPlayer(Planet $planet, Player $targetPlayer): never {
 		throw new Exception('This weapon should not be used in this context');
 	}
 
-	public function getModifiedForceDamageAgainstPlayer(Force $forces, AbstractPlayer $targetPlayer): array {
+	public function getModifiedForceDamageAgainstPlayer(Force $forces, Player $targetPlayer): array {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
 			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		}
@@ -71,15 +71,15 @@ class ScoutDrones extends AbstractWeapon {
 		return $damage;
 	}
 
-	public function shootForces(AbstractPlayer $weaponPlayer, Force $forces): never {
+	public function shootForces(Player $weaponPlayer, Force $forces): never {
 		throw new Exception('This weapon should not be used in this context');
 	}
 
-	public function shootPlayer(AbstractPlayer $weaponPlayer, AbstractPlayer $targetPlayer): never {
+	public function shootPlayer(Player $weaponPlayer, Player $targetPlayer): never {
 		throw new Exception('This weapon should not be used in this context');
 	}
 
-	public function shootPlayerAsForce(Force $forces, AbstractPlayer $targetPlayer): array {
+	public function shootPlayerAsForce(Force $forces, Player $targetPlayer): array {
 		$return = ['Weapon' => $this, 'Target' => $targetPlayer, 'Hit' => true];
 		$return = $this->doForceDamageToPlayer($return, $forces, $targetPlayer);
 		if (!isset($return['WeaponDamage']['Launched'])) {

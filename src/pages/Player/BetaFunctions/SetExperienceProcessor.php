@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player\BetaFunctions;
 
-use Smr\AbstractPlayer;
+use Smr\Player;
 use Smr\Request;
 
 class SetExperienceProcessor extends BetaFunctionsPageProcessor {
 
-	public function buildBetaFunctionsProcessor(AbstractPlayer $player): void {
+	public function buildBetaFunctionsProcessor(Player $player): void {
 		$exp = min(500000, Request::getInt('exp'));
 		$player->setExperience($exp);
 	}

@@ -3,10 +3,10 @@
 namespace Smr\Pages\Player\Bank;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class AnonBankDetailProcessor extends PlayerPageProcessor {
@@ -15,7 +15,7 @@ class AnonBankDetailProcessor extends PlayerPageProcessor {
 		private readonly int $anonBankID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$action = Request::get('action');
 		if (!in_array($action, ['Deposit', 'Payment'], true)) {
 			throw new Exception('Invalid action submitted: ' . $action);

@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player\Headquarters;
 
-use Smr\AbstractPlayer;
 use Smr\Bounty;
 use Smr\BountyType;
 use Smr\Globals;
 use Smr\Location;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Race;
 use Smr\Template;
 
@@ -20,7 +20,7 @@ class Government extends PlayerPage {
 		private readonly int $locationID,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		// check if our alignment is high enough
 		if ($player->hasEvilAlignment()) {
 			create_error('You are not allowed to enter our Government HQ!');

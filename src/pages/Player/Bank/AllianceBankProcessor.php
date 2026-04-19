@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Player\Bank;
 
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class AllianceBankProcessor extends PlayerPageProcessor {
@@ -15,7 +15,7 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 		private readonly int $allianceID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$amount = Request::getInt('amount');
 
 		// no negative amounts are allowed
@@ -53,7 +53,7 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 	public static function doTransaction(
 		string $action,
 		Alliance $alliance,
-		AbstractPlayer $player,
+		Player $player,
 		string $message,
 		int $amount,
 		bool $requestExempt = false,

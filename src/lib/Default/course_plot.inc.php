@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-use Smr\AbstractPlayer;
 use Smr\Pages\Player\CurrentSector;
 use Smr\Pages\Player\PlotCourseResult;
 use Smr\Path;
+use Smr\Player;
 
 /**
  * This function is called by "Conventional" and "Plot To Nearest" pages.
  */
-function course_plot_forward(AbstractPlayer $player, Path $path): never {
+function course_plot_forward(Player $player, Path $path): never {
 
 	if ($player->getSectorID() === $path->getStartSectorID()) {
 		$player->setPlottedCourse($path);

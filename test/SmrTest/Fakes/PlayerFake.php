@@ -2,10 +2,10 @@
 
 namespace SmrTest\Fakes;
 
-use Smr\AbstractPlayer;
 use Smr\DatabaseRecord;
+use Smr\Player;
 
-class PlayerFake extends AbstractPlayer {
+class PlayerFake extends Player {
 
 	public readonly array $SQLID;
 

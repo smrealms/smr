@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class AllianceTreatiesProcessor extends PlayerPageProcessor {
 
@@ -15,7 +15,7 @@ class AllianceTreatiesProcessor extends PlayerPageProcessor {
 		private readonly bool $allianceBankAccess = false,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		//get the alliances
 		if (!$player->hasAlliance()) {
 			create_error('You are not in an alliance!');

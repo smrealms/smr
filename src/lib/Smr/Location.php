@@ -605,7 +605,7 @@ class Location {
 		return $this->getTypeID() === $otherLocation->getTypeID();
 	}
 
-	public function hasX(mixed $x, ?AbstractPlayer $player = null): bool {
+	public function hasX(mixed $x, ?Player $player = null): bool {
 		if ($x instanceof WeaponType) {
 			return $this->isWeaponSold($x->getWeaponTypeID());
 		}

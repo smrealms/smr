@@ -13,7 +13,7 @@ class DummyShip extends AbstractShip {
 		}
 	}
 
-	public function __construct(AbstractPlayer $player) {
+	public function __construct(Player $player) {
 		parent::__construct($player);
 		$this->setHardwareToMax();
 	}

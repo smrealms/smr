@@ -3,10 +3,10 @@
 namespace Smr\Pages\Player\Council;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class VotingCenterProcessor extends PlayerPageProcessor {
@@ -15,7 +15,7 @@ class VotingCenterProcessor extends PlayerPageProcessor {
 		private readonly int $otherRaceID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$db = Database::getInstance();
 
 		if (!$player->isOnCouncil()) {

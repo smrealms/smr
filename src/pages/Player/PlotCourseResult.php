@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Path;
+use Smr\Player;
 use Smr\Template;
 
 class PlotCourseResult extends PlayerPage {
@@ -16,7 +16,7 @@ class PlotCourseResult extends PlayerPage {
 		private readonly Path $path,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$path = $this->path;
 		$fullPath = implode(' - ', $path->getPath());
 

@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class MessageBoxDeleteProcessor extends PlayerPageProcessor {
 
@@ -12,7 +12,7 @@ class MessageBoxDeleteProcessor extends PlayerPageProcessor {
 		private readonly int $folderID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$db = Database::getInstance();
 
 		if ($this->folderID === MSG_SENT) {

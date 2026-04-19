@@ -2,25 +2,25 @@
 
 namespace SmrTest\Fakes;
 
-use Smr\AbstractPlayer;
 use Smr\Mission;
 use Smr\MissionActions\EnterSector;
 use Smr\MissionStep;
+use Smr\Player;
 
 /**
  * Fake Mission class used for testing only.
  */
 readonly class MissionFake extends Mission {
 
-	public function __construct(?AbstractPlayer $player = null) {
+	public function __construct(?Player $player = null) {
 		assert($player === null); // avoid PHPStan unused argument warning
 	}
 
-	public static function isAvailableToPlayer(?AbstractPlayer $player = null): bool {
+	public static function isAvailableToPlayer(?Player $player = null): bool {
 		return true;
 	}
 
-	public function reward(?AbstractPlayer $player = null): string {
+	public function reward(?Player $player = null): string {
 		return 'reward';
 	}
 

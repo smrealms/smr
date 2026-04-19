@@ -264,7 +264,7 @@ class Planet {
 		$this->hasChanged = true;
 	}
 
-	public function getOwner(): AbstractPlayer {
+	public function getOwner(): Player {
 		return Player::getPlayer($this->getOwnerID(), $this->getGameID());
 	}
 
@@ -953,7 +953,7 @@ class Planet {
 	 * Returns the reason a build cannot be performed, or false if there is
 	 * no restriction.
 	 */
-	public function getBuildRestriction(AbstractPlayer $constructor, int $constructionID): string|false {
+	public function getBuildRestriction(Player $constructor, int $constructionID): string|false {
 		if ($this->hasCurrentlyBuilding()) {
 			return 'There is already a building in progress!';
 		}
@@ -1003,7 +1003,7 @@ class Planet {
 	/**
 	 * @throws \Smr\Exceptions\UserError If the player cannot build the structure.
 	 */
-	public function startBuilding(AbstractPlayer $constructor, int $constructionID): void {
+	public function startBuilding(Player $constructor, int $constructionID): void {
 		$restriction = $this->getBuildRestriction($constructor, $constructionID);
 		if ($restriction !== false) {
 			throw new UserError('Unable to start building: ' . $restriction);
@@ -1117,9 +1117,9 @@ class Planet {
 	}
 
 	/**
-	 * @param array<AbstractPlayer> $attackers
+	 * @param array<Player> $attackers
 	 */
-	public function attackedBy(AbstractPlayer $trigger, array $attackers): void {
+	public function attackedBy(Player $trigger, array $attackers): void {
 		$trigger->increaseHOF(1, ['Combat', 'Planet', 'Number Of Triggers'], HOF_PUBLIC);
 		$db = Database::getInstance();
 		foreach ($attackers as $attacker) {
@@ -1181,17 +1181,17 @@ class Planet {
 	/**
 	 * @return array<int, Player>
 	 */
-	public function getOtherTraders(AbstractPlayer $player): array {
+	public function getOtherTraders(Player $player): array {
 		$players = Player::getPlanetPlayers($this->getGameID(), $this->getSectorID()); //Do not use & because we unset something and only want that in what we return
 		unset($players[$player->getAccountID()]);
 		return $players;
 	}
 
-	public function hasOtherTraders(AbstractPlayer $player): bool {
+	public function hasOtherTraders(Player $player): bool {
 		return count($this->getOtherTraders($player)) > 0;
 	}
 
-	public function hasEnemyTraders(AbstractPlayer $player): bool {
+	public function hasEnemyTraders(Player $player): bool {
 		if (!$this->hasOtherTraders($player)) {
 			return false;
 		}
@@ -1204,7 +1204,7 @@ class Planet {
 		return false;
 	}
 
-	public function hasFriendlyTraders(AbstractPlayer $player): bool {
+	public function hasFriendlyTraders(Player $player): bool {
 		if (!$this->hasOtherTraders($player)) {
 			return false;
 		}
@@ -1230,7 +1230,7 @@ class Planet {
 	}
 
 	/**
-	 * @param array<AbstractPlayer> $targetPlayers
+	 * @param array<Player> $targetPlayers
 	 * @return PlanetCombatResults
 	 */
 	public function shootPlayers(array $targetPlayers): array {
@@ -1372,7 +1372,7 @@ class Planet {
 	/**
 	 * @return array{}
 	 */
-	public function killPlanetByPlayer(AbstractPlayer $killer): array {
+	public function killPlanetByPlayer(Player $killer): array {
 		$this->creditCurrentAttackersForKill();
 
 		//kick everyone from planet

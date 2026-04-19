@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Account;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
@@ -18,7 +17,7 @@ class ChatSharing extends PlayerPage {
 		private readonly ?string $message = null,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Chat Sharing Settings');
 
 		$template->assign('Message', $this->message);

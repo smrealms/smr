@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player\Headquarters;
 
-use Smr\AbstractPlayer;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class BountyClaim extends PlayerPage {
@@ -16,7 +16,7 @@ class BountyClaim extends PlayerPage {
 		private readonly string $claimText,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Bounty Payout');
 
 		Menu::headquarters($this->locationID);

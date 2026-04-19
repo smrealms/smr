@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\AllianceInvite;
 use Smr\Database;
 use Smr\Epoch;
@@ -15,7 +14,7 @@ class AllianceInvitePlayer extends PlayerPage {
 
 	public string $file = 'alliance_invite_player.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$alliance = $player->getAlliance();
 		$game = $player->getGame();
 

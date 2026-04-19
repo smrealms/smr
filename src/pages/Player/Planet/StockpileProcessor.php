@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player\Planet;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Planet;
+use Smr\Player;
 use Smr\Request;
 use Smr\TradeGood;
 
@@ -14,7 +14,7 @@ class StockpileProcessor extends PlayerPageProcessor {
 		private readonly int $goodID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$ship = $player->getShip();
 
 		if (!$player->isLandedOnPlanet()) {

@@ -10,7 +10,7 @@ use Smr\Globals;
  * @var ?int $TotalWithdrawn
  * @var ?int $WithdrawalPerDay
  * @var ?int $RemainingWithdrawal
- * @var array<int, array{Time: int, Player: Smr\AbstractPlayer, Reason: string, TransactionType: string, Withdrawal: string, Deposit: string, Exempt: bool}> $BankTransactions
+ * @var array<int, array{Time: int, Player: Smr\Player, Reason: string, TransactionType: string, Withdrawal: string, Deposit: string, Exempt: bool}> $BankTransactions
  * @var ?string $EndingBalance
  * @var ?int $MinValue
  * @var ?int $MaxValue

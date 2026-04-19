@@ -18,7 +18,7 @@ use Smr\Traits\RaceID;
 /**
  * @phpstan-type TickerData array{Type: string, Time: int, Expires: int, Recent: string}
  */
-abstract class AbstractPlayer {
+class Player {
 
 	use RaceID;
 
@@ -30,13 +30,13 @@ abstract class AbstractPlayer {
 	protected const int HOF_CHANGED = 1;
 	protected const int HOF_NEW = 2;
 
-	/** @var array<int, array<int, array<int, Player>>> */
+	/** @var array<int, array<int, array<int, self>>> */
 	protected static array $CACHE_SECTOR_PLAYERS = [];
-	/** @var array<int, array<int, array<int, Player>>> */
+	/** @var array<int, array<int, array<int, self>>> */
 	protected static array $CACHE_PLANET_PLAYERS = [];
-	/** @var array<int, array<int, array<int, Player>>> */
+	/** @var array<int, array<int, array<int, self>>> */
 	protected static array $CACHE_ALLIANCE_PLAYERS = [];
-	/** @var array<int, array<int, Player>> */
+	/** @var array<int, array<int, self>> */
 	protected static array $CACHE_PLAYERS = [];
 
 	public const string SQL = 'account_id = :account_id AND game_id = :game_id';
@@ -134,7 +134,7 @@ abstract class AbstractPlayer {
 
 	/**
 	 * @param array<int> $allianceIDs
-	 * @return array<int, Player>
+	 * @return array<int, self>
 	 */
 	public static function getSectorPlayersByAlliances(int $gameID, int $sectorID, array $allianceIDs, bool $forceUpdate = false): array {
 		$players = self::getSectorPlayers($gameID, $sectorID, $forceUpdate); // Don't use & as we do an unset
@@ -151,7 +151,7 @@ abstract class AbstractPlayer {
 	 * but for an entire galaxy rather than a single sector. This is useful
 	 * for reducing the number of queries in galaxy-wide processing.
 	 *
-	 * @return array<int, array<int, Player>>
+	 * @return array<int, array<int, self>>
 	 */
 	public static function getGalaxyPlayers(int $gameID, int $galaxyID, bool $forceUpdate = false): array {
 		$db = Database::getInstance();
@@ -173,7 +173,7 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<int, Player>
+	 * @return array<int, self>
 	 */
 	public static function getSectorPlayers(int $gameID, int $sectorID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID])) {
@@ -198,7 +198,7 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<int, Player>
+	 * @return array<int, self>
 	 */
 	public static function getPlanetPlayers(int $gameID, int $sectorID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID])) {
@@ -227,7 +227,7 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @return array<int, Player>
+	 * @return array<int, self>
 	 */
 	public static function getAlliancePlayers(int $gameID, int $allianceID, bool $forceUpdate = false): array {
 		if ($forceUpdate || !isset(self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID])) {
@@ -251,14 +251,14 @@ abstract class AbstractPlayer {
 		return self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID];
 	}
 
-	public static function getPlayer(int $accountID, int $gameID, bool $forceUpdate = false, ?DatabaseRecord $dbRecord = null): Player {
+	public static function getPlayer(int $accountID, int $gameID, bool $forceUpdate = false, ?DatabaseRecord $dbRecord = null): self {
 		if ($forceUpdate || !isset(self::$CACHE_PLAYERS[$gameID][$accountID])) {
-			self::$CACHE_PLAYERS[$gameID][$accountID] = new Player($gameID, $accountID, $dbRecord);
+			self::$CACHE_PLAYERS[$gameID][$accountID] = new self($gameID, $accountID, $dbRecord);
 		}
 		return self::$CACHE_PLAYERS[$gameID][$accountID];
 	}
 
-	public static function getPlayerByPlayerID(int $playerID, int $gameID, bool $forceUpdate = false): Player {
+	public static function getPlayerByPlayerID(int $playerID, int $gameID, bool $forceUpdate = false): self {
 		$db = Database::getInstance();
 		$dbResult = $db->select('player', [
 			'game_id' => $gameID,
@@ -271,7 +271,7 @@ abstract class AbstractPlayer {
 		throw new PlayerNotFound('Player ID not found.');
 	}
 
-	public static function getPlayerByPlayerName(string $playerName, int $gameID, bool $forceUpdate = false): Player {
+	public static function getPlayerByPlayerName(string $playerName, int $gameID, bool $forceUpdate = false): self {
 		$db = Database::getInstance();
 		$dbResult = $db->select('player', [
 			'game_id' => $gameID,
@@ -403,7 +403,7 @@ abstract class AbstractPlayer {
 	 * Get array of players whose info can be accessed by this player.
 	 * Skips players who are not in the same alliance as this player.
 	 *
-	 * @return array<AbstractPlayer>
+	 * @return array<self>
 	 */
 	public function getSharingPlayers(bool $forceUpdate = false): array {
 		$results = [$this];
@@ -2837,7 +2837,7 @@ abstract class AbstractPlayer {
 	}
 
 	/**
-	 * @param array<Player> $otherPlayerArray
+	 * @param array<self> $otherPlayerArray
 	 */
 	public function canSeeAny(array $otherPlayerArray): bool {
 		foreach ($otherPlayerArray as $otherPlayer) {

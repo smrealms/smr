@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player\Bar;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class TalkToBartender extends PlayerPage {
@@ -17,7 +17,7 @@ class TalkToBartender extends PlayerPage {
 		private ?string $message = null,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Talk to Bartender');
 		Menu::bar($this->locationID);
 

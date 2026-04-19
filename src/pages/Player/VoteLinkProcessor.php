@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\VoteLink;
 use Smr\VoteSite;
 
@@ -13,7 +13,7 @@ class VoteLinkProcessor extends PlayerPageProcessor {
 		private readonly VoteSite $voteSite,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		if (!$player->getGame()->hasStarted()) {
 			create_error('You cannot gain bonus turns until the game has started!');
 		}

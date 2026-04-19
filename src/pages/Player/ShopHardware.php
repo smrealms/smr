@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Location;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class ShopHardware extends PlayerPage {
@@ -15,7 +15,7 @@ class ShopHardware extends PlayerPage {
 		private readonly int $locationID,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		if (!$player->getSector()->hasLocation($this->locationID)) {
 			create_error('That location does not exist in this sector');
 		}

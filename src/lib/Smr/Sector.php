@@ -209,7 +209,7 @@ class Sector {
 		$this->hasChanged = false;
 	}
 
-	public function markVisited(AbstractPlayer $player): void {
+	public function markVisited(Player $player): void {
 		if ($this->hasPort()) {
 			$this->getPort()->addCachePort($player->getAccountID());
 		}
@@ -247,7 +247,7 @@ class Sector {
 		return $raceIDs;
 	}
 
-	public function enteringSector(AbstractPlayer $player, MovementType $movementType): void {
+	public function enteringSector(Player $player, MovementType $movementType): void {
 		// send scout messages to user
 		$message = 'Your forces have spotted ' . $player->getBBLink() . ' ';
 		$message .= match ($movementType) {
@@ -263,7 +263,7 @@ class Sector {
 		}
 	}
 
-	public function leavingSector(AbstractPlayer $player, MovementType $movementType): void {
+	public function leavingSector(Player $player, MovementType $movementType): void {
 		// send scout messages to user
 		$message = 'Your forces have spotted ' . $player->getBBLink() . ' ';
 		$message .= match ($movementType) {
@@ -288,7 +288,7 @@ class Sector {
 		);
 	}
 
-	public function diedHere(AbstractPlayer $player): void {
+	public function diedHere(Player $player): void {
 		// iterate over all scout drones in sector
 		foreach ($this->getForces() as $force) {
 			// send scout messages to user
@@ -622,9 +622,9 @@ class Sector {
 	}
 
 	/**
-	 * @phpstan-assert-if-true =AbstractPlayer $player
+	 * @phpstan-assert-if-true =Player $player
 	 */
-	public function hasCachedPort(?AbstractPlayer $player = null): bool {
+	public function hasCachedPort(?Player $player = null): bool {
 		if ($player === null) {
 			return false;
 		}
@@ -636,7 +636,7 @@ class Sector {
 		}
 	}
 
-	public function getCachedPort(AbstractPlayer $player): Port {
+	public function getCachedPort(Player $player): Port {
 		return Port::getCachedPort($this->getGameID(), $this->getSectorID(), $player->getAccountID());
 	}
 
@@ -757,7 +757,7 @@ class Sector {
 		return count($this->getForces()) > 0;
 	}
 
-	public function hasEnemyForces(?AbstractPlayer $player = null): bool {
+	public function hasEnemyForces(?Player $player = null): bool {
 		if ($player === null || !$this->hasForces()) {
 			return false;
 		}
@@ -772,7 +772,7 @@ class Sector {
 	/**
 	 * @return array<Force>
 	 */
-	public function getEnemyForces(AbstractPlayer $player): array {
+	public function getEnemyForces(Player $player): array {
 		$enemyForces = [];
 		foreach ($this->getForces() as $force) {
 			if (!$player->forceNAPAlliance($force->getOwner())) {
@@ -785,7 +785,7 @@ class Sector {
 	/**
 	 * Returns true if any forces in this sector belong to $player.
 	 */
-	public function hasPlayerForces(AbstractPlayer $player): bool {
+	public function hasPlayerForces(Player $player): bool {
 		foreach ($this->getForces() as $force) {
 			if ($player->getAccountID() === $force->getOwnerID()) {
 				return true;
@@ -795,9 +795,9 @@ class Sector {
 	}
 
 	/**
-	 * @phpstan-assert-if-true =AbstractPlayer $player
+	 * @phpstan-assert-if-true =Player $player
 	 */
-	public function hasFriendlyForces(?AbstractPlayer $player = null): bool {
+	public function hasFriendlyForces(?Player $player = null): bool {
 		if ($player === null || !$this->hasForces()) {
 			return false;
 		}
@@ -812,7 +812,7 @@ class Sector {
 	/**
 	 * @return array<Force>
 	 */
-	public function getFriendlyForces(AbstractPlayer $player): array {
+	public function getFriendlyForces(Player $player): array {
 		$friendlyForces = [];
 		foreach ($this->getForces() as $force) {
 			if ($player->forceNAPAlliance($force->getOwner())) {
@@ -843,17 +843,17 @@ class Sector {
 	/**
 	 * @return array<int, Player>
 	 */
-	public function getOtherTraders(AbstractPlayer $player): array {
+	public function getOtherTraders(Player $player): array {
 		$players = Player::getSectorPlayers($this->getGameID(), $this->getSectorID()); //Do not use & because we unset something and only want that in what we return
 		unset($players[$player->getAccountID()]);
 		return $players;
 	}
 
-	public function hasOtherTraders(AbstractPlayer $player): bool {
+	public function hasOtherTraders(Player $player): bool {
 		return count($this->getOtherTraders($player)) > 0;
 	}
 
-	public function hasEnemyTraders(?AbstractPlayer $player = null): bool {
+	public function hasEnemyTraders(?Player $player = null): bool {
 		if ($player === null || !$this->hasOtherTraders($player)) {
 			return false;
 		}
@@ -868,7 +868,7 @@ class Sector {
 		return false;
 	}
 
-	public function hasFriendlyTraders(?AbstractPlayer $player = null): bool {
+	public function hasFriendlyTraders(?Player $player = null): bool {
 		if ($player === null || !$this->hasOtherTraders($player)) {
 			return false;
 		}
@@ -884,7 +884,7 @@ class Sector {
 	/**
 	 * Is the $player's alliance flagship in this sector?
 	 */
-	public function hasAllianceFlagship(?AbstractPlayer $player = null): bool {
+	public function hasAllianceFlagship(?Player $player = null): bool {
 		if ($player === null || !$player->hasAlliance() || !$player->getAlliance()->hasFlagship()) {
 			return false;
 		}
@@ -897,7 +897,7 @@ class Sector {
 		return false;
 	}
 
-	public function hasProtectedTraders(?AbstractPlayer $player = null): bool {
+	public function hasProtectedTraders(?Player $player = null): bool {
 		if ($player === null || !$this->hasOtherTraders($player)) {
 			return false;
 		}
@@ -912,17 +912,17 @@ class Sector {
 	}
 
 	/**
-	 * @return array<AbstractPlayer>
+	 * @return array<Player>
 	 */
-	public function getFightingTradersAgainstForces(AbstractPlayer $attackingPlayer, bool $bump): array {
+	public function getFightingTradersAgainstForces(Player $attackingPlayer, bool $bump): array {
 		// Whether bumping or attacking, only the current player fires at forces
 		return [$attackingPlayer];
 	}
 
 	/**
-	 * @return array<int, AbstractPlayer>
+	 * @return array<int, Player>
 	 */
-	public function getFightingTradersAgainstPort(AbstractPlayer $attackingPlayer, Port $defendingPort, bool $allEligible = false): array {
+	public function getFightingTradersAgainstPort(Player $attackingPlayer, Port $defendingPort, bool $allEligible = false): array {
 		$fightingPlayers = [];
 		$alliancePlayers = Player::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
 		foreach ($alliancePlayers as $accountID => $player) {
@@ -939,9 +939,9 @@ class Sector {
 	}
 
 	/**
-	 * @return array<int, AbstractPlayer>
+	 * @return array<int, Player>
 	 */
-	public function getFightingTradersAgainstPlanet(AbstractPlayer $attackingPlayer, Planet $defendingPlanet, bool $allEligible = false): array {
+	public function getFightingTradersAgainstPlanet(Player $attackingPlayer, Planet $defendingPlanet, bool $allEligible = false): array {
 		$fightingPlayers = [];
 		$alliancePlayers = Player::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
 		if (count($alliancePlayers) > 0) {
@@ -961,9 +961,9 @@ class Sector {
 	}
 
 	/**
-	 * @return array<string, array<int, AbstractPlayer>>
+	 * @return array<string, array<int, Player>>
 	 */
-	public function getFightingTraders(AbstractPlayer $attackingPlayer, AbstractPlayer $defendingPlayer, bool $checkForCloak = false, bool $allEligible = false): array {
+	public function getFightingTraders(Player $attackingPlayer, Player $defendingPlayer, bool $checkForCloak = false, bool $allEligible = false): array {
 		if ($attackingPlayer->traderNAPAlliance($defendingPlayer)) {
 			throw new Exception('These traders are NAPed.');
 		}
@@ -987,10 +987,10 @@ class Sector {
 	}
 
 	/**
-	 * @param array<int, AbstractPlayer> $fightingPlayers
-	 * @return array<int, AbstractPlayer>
+	 * @param array<int, Player> $fightingPlayers
+	 * @return array<int, Player>
 	 */
-	public static function limitFightingTraders(array $fightingPlayers, AbstractPlayer $keepPlayer, int $maximumFleetSize): array {
+	public static function limitFightingTraders(array $fightingPlayers, Player $keepPlayer, int $maximumFleetSize): array {
 		// Cap fleets to the required size
 		$fleet_size = count($fightingPlayers);
 		if ($fleet_size > $maximumFleetSize) {
@@ -1006,9 +1006,9 @@ class Sector {
 	}
 
 	/**
-	 * @return array<string, array<int, AbstractPlayer>>
+	 * @return array<string, array<int, Player>>
 	 */
-	public function getPotentialFightingTraders(AbstractPlayer $attackingPlayer): array {
+	public function getPotentialFightingTraders(Player $attackingPlayer): array {
 		$fightingPlayers = ['Attackers' => [], 'Defenders' => []];
 		$alliancePlayers = Player::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
 		foreach ($alliancePlayers as $accountID => $player) {
@@ -1049,7 +1049,7 @@ class Sector {
 		return $otherSector->getGameID() === $this->getGameID() && $this->isLinked($otherSector->getSectorID());
 	}
 
-	public function isVisited(?AbstractPlayer $player = null): bool {
+	public function isVisited(?Player $player = null): bool {
 		if ($player === null) {
 			return true;
 		}
@@ -1064,11 +1064,11 @@ class Sector {
 		return $this->visited[$player->getAccountID()];
 	}
 
-	public function getLocalMapMoveHREF(AbstractPlayer $player): string {
+	public function getLocalMapMoveHREF(Player $player): string {
 		return Globals::getSectorMoveHREF($player, $this->getSectorID(), new LocalMap());
 	}
 
-	public function getCurrentSectorMoveHREF(AbstractPlayer $player): string {
+	public function getCurrentSectorMoveHREF(Player $player): string {
 		return Globals::getCurrentSectorMoveHREF($player, $this->getSectorID());
 	}
 
@@ -1076,11 +1076,11 @@ class Sector {
 		return '?sector_id=' . $this->getSectorID();
 	}
 
-	public function getSectorScanHREF(AbstractPlayer $player): string {
+	public function getSectorScanHREF(Player $player): string {
 		return Globals::getSectorScanHREF($player, $this->getSectorID());
 	}
 
-	public function hasX(mixed $x, ?AbstractPlayer $player = null): bool {
+	public function hasX(mixed $x, ?Player $player = null): bool {
 		if ($x instanceof Sector) {
 			return $this->equals($x);
 		}

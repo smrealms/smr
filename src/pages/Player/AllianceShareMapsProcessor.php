@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Port;
 
 class AllianceShareMapsProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		// get a list of alliance member (remove current player)
 		$alliance = $player->getAlliance();
 		$memberIDs = array_keys($alliance->getMembers(includeNpc: false));

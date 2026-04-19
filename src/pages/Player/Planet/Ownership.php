@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player\Planet;
 
-use Smr\AbstractPlayer;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
 
 class Ownership extends PlanetPage {
@@ -12,7 +12,7 @@ class Ownership extends PlanetPage {
 
 	public string $file = 'planet_ownership.php';
 
-	protected function buildPlanetPage(AbstractPlayer $player, Template $template): void {
+	protected function buildPlanetPage(Player $player, Template $template): void {
 		$container = new OwnershipProcessor();
 		$template->assign('ProcessingHREF', $container->href());
 

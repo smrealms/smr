@@ -3,9 +3,9 @@
 namespace Smr\Pages\Player;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\Request;
 
 class MessageDeleteProcessor extends PlayerPageProcessor {
@@ -14,7 +14,7 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 		private readonly int $folderID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$db = Database::getInstance();
 
 		// If not deleting marked messages, we are deleting entire folders
@@ -55,7 +55,7 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 			}
 			$db->write('UPDATE message SET receiver_delete = :receiver_delete_new
 						WHERE sender_id = :sender_id
-						AND ' . AbstractPlayer::SQL . '
+						AND ' . Player::SQL . '
 						AND send_time >= :min_time
 						AND send_time <= :max_time
 						AND message_type_id = :message_type_id

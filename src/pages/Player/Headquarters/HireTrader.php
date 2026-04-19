@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player\Headquarters;
 
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Exceptions\AllianceNotFound;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class HireTrader extends PlayerPage {
@@ -21,7 +21,7 @@ class HireTrader extends PlayerPage {
 		private readonly int $locationID,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Hire Trader');
 
 		Menu::headquarters($this->locationID);

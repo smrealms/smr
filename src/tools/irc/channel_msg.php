@@ -1,6 +1,5 @@
 <?php declare(strict_types=1);
 
-use Smr\AbstractPlayer;
 use Smr\Account;
 use Smr\Alliance;
 use Smr\Database;
@@ -14,7 +13,7 @@ use Smr\Player;
 /**
  * @param resource $fp
  */
-function check_for_registration($fp, string $nick, string $channel, Closure $callback, bool $validationMessages = true): AbstractPlayer|false {
+function check_for_registration($fp, string $nick, string $channel, Closure $callback, bool $validationMessages = true): Player|false {
 	$db = Database::getInstance();
 
 	// only registered users are allowed to use this command
@@ -242,7 +241,7 @@ function channel_msg_seen($fp, Message $msg): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_money($fp, Message $msg, AbstractPlayer $player): bool {
+function channel_msg_money($fp, Message $msg, Player $player): bool {
 
 	if ($msg->text === '!money') {
 
@@ -334,7 +333,7 @@ function channel_msg_8ball($fp, Message $msg): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_forces($fp, Message $msg, AbstractPlayer $player): bool {
+function channel_msg_forces($fp, Message $msg, Player $player): bool {
 	if (preg_match('/^!forces(.*)$/i', $msg->text, $args) === 1) {
 
 		$nick = $msg->nick;

@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player\Headquarters;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class HireTraderProcessor extends PlayerPageProcessor {
 
@@ -14,7 +14,7 @@ class HireTraderProcessor extends PlayerPageProcessor {
 		private readonly int $hireCost,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		// Pay the hiring fee
 		if ($player->getCredits() < $this->hireCost) {
 			create_error('You do not have enough credits to hire this trader!');
@@ -22,7 +22,7 @@ class HireTraderProcessor extends PlayerPageProcessor {
 		$player->decreaseCredits($this->hireCost);
 
 		// Leave NPC alliance and join player's alliance (this should be locked)
-		$npc = AbstractPlayer::getPlayer($this->npcAccountID, $player->getGameID());
+		$npc = Player::getPlayer($this->npcAccountID, $player->getGameID());
 		$npcAlliance = $npc->getAlliance();
 		if ($npcAlliance->getNumMembers() === 1) {
 			$npcAlliance->setLeaderID(0);

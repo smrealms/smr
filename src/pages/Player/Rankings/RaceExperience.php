@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player\Rankings;
 
-use Smr\AbstractPlayer;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Rankings;
 use Smr\Template;
 
@@ -15,7 +15,7 @@ class RaceExperience extends PlayerPage {
 
 	public string $file = 'rankings_race.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Racial Standings');
 
 		Menu::rankings(2, 0);

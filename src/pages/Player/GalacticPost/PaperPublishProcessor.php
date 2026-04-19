@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 
 class PaperPublishProcessor extends PlayerPageProcessor {
 
@@ -13,7 +13,7 @@ class PaperPublishProcessor extends PlayerPageProcessor {
 		private readonly int $paperID,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		// Make sure this paper hasn't been published before
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT 1 FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id = :game_id AND paper_id = :paper_id', [

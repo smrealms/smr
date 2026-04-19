@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class ExaminePlanet extends PlayerPage {
 
 	public string $file = 'planet_examine.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$planet = $player->getSectorPlanet();
 		$template->assign('ThisPlanet', $planet);
 

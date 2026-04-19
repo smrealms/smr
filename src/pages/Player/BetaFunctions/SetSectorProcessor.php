@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Player\BetaFunctions;
 
-use Smr\AbstractPlayer;
+use Smr\Player;
 use Smr\Request;
 use Smr\Sector;
 use Smr\SectorLock;
 
 class SetSectorProcessor extends BetaFunctionsPageProcessor {
 
-	public function buildBetaFunctionsProcessor(AbstractPlayer $player): void {
+	public function buildBetaFunctionsProcessor(Player $player): void {
 		$sector_to = Request::getInt('sector_to');
 		if (!Sector::sectorExists($player->getGameID(), $sector_to)) {
 			create_error('Sector ID is not in any galaxy.');

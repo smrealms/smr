@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player\Planet;
 
-use Smr\AbstractPlayer;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
 use Smr\TradeGood;
 
@@ -13,7 +13,7 @@ class Stockpile extends PlanetPage {
 
 	public string $file = 'planet_stockpile.php';
 
-	protected function buildPlanetPage(AbstractPlayer $player, Template $template): void {
+	protected function buildPlanetPage(Player $player, Template $template): void {
 		$planet = $player->getSectorPlanet();
 		$ship = $player->getShip();
 

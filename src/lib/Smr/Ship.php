@@ -29,7 +29,7 @@ class Ship extends AbstractShip {
 		}
 	}
 
-	public static function getShip(AbstractPlayer $player, bool $forceUpdate = false): self {
+	public static function getShip(Player $player, bool $forceUpdate = false): self {
 		if ($forceUpdate || !isset(self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()])) {
 			$s = new self($player);
 			self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()] = $s;
@@ -37,7 +37,7 @@ class Ship extends AbstractShip {
 		return self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()];
 	}
 
-	protected function __construct(AbstractPlayer $player) {
+	protected function __construct(Player $player) {
 		parent::__construct($player);
 		$db = Database::getInstance();
 		$this->SQLID = [

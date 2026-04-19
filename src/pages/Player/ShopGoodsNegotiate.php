@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 use Smr\TradeGood;
 use Smr\TransactionType;
@@ -21,7 +21,7 @@ class ShopGoodsNegotiate extends PlayerPage {
 		private readonly int $idealPrice,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Negotiate Price');
 
 		// creates needed objects

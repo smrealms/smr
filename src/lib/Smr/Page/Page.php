@@ -2,9 +2,9 @@
 
 namespace Smr\Page;
 
-use Smr\AbstractPlayer;
 use Smr\Pages\Account\GamePlay;
 use Smr\Pages\Player\CurrentSector;
+use Smr\Player;
 use Smr\Session;
 use Smr\Template;
 
@@ -47,7 +47,7 @@ class Page {
 	 * Determine if we should show the player that they are under attack,
 	 * since it needs to persist across ajax updates.
 	 */
-	public function showUnderAttack(AbstractPlayer $player, bool $ajax): bool {
+	public function showUnderAttack(Player $player, bool $ajax): bool {
 		// Only ever change the stored value from false -> true so that the under
 		// attack warning persists for the lifetime of this Page.
 		if ($player->isUnderAttack()) {

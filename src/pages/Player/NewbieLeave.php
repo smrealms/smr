@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
 
 class NewbieLeave extends PlayerPage {
@@ -13,7 +13,7 @@ class NewbieLeave extends PlayerPage {
 
 	public string $file = 'leave_newbie.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		if (!$player->getGame()->hasStarted()) {
 			create_error('You cannot leave newbie protection before the game begins!');
 		}

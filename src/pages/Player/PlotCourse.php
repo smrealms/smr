@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\HardwareType;
 use Smr\Location;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\PlotGroup;
 use Smr\Session;
 use Smr\ShipType;
@@ -20,7 +20,7 @@ class PlotCourse extends PlayerPage {
 
 	public string $file = 'course_plot.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$session = Session::getInstance();
 
 		$template->assign('PageTopic', 'Plot A Course');

@@ -2,11 +2,11 @@
 
 namespace Smr\Page;
 
-use Smr\AbstractPlayer;
+use Smr\Player;
 use Smr\Template;
 
 abstract class PlayerPage extends Page {
 
-	abstract public function build(AbstractPlayer $player, Template $template): void;
+	abstract public function build(Player $player, Template $template): void;
 
 }

@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPageProcessor;
+use Smr\Player;
 use Smr\PortPayoutType;
 
 class AttackPortPayoutProcessor extends PlayerPageProcessor {
@@ -12,7 +12,7 @@ class AttackPortPayoutProcessor extends PlayerPageProcessor {
 		private readonly PortPayoutType $payoutType,
 	) {}
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$port = $player->getSectorPort();
 		if (!$port->exists()) {
 			create_error('The port no longer exists!');

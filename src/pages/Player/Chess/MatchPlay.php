@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player\Chess;
 
-use Smr\AbstractPlayer;
 use Smr\Chess\ChessGame;
 use Smr\Page\PlayerPage;
 use Smr\Player;
@@ -17,7 +16,7 @@ class MatchPlay extends PlayerPage {
 		private readonly string $moveMessage = '',
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$chessGame = ChessGame::getChessGame($this->chessGameID);
 		$template->assign('ChessGame', $chessGame);
 

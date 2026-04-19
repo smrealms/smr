@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Page\PlayerPage;
 use Smr\Planet;
+use Smr\Player;
 use Smr\Template;
 
 class AttackPlanet extends PlayerPage {
@@ -23,7 +23,7 @@ class AttackPlanet extends PlayerPage {
 		$this->skipRedirect = $playerDied;
 	}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('FullPlanetCombatResults', $this->results);
 		$template->assign('MinimalDisplay', false);
 		$template->assign('OverrideDeath', $player->isDead());

@@ -3,7 +3,6 @@
 namespace Smr\Pages\Player;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Exceptions\AllianceNotFound;
@@ -20,7 +19,7 @@ class AllianceDraftMember extends PlayerPage {
 
 	public string $file = 'alliance_pick.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		if (!$player->getGame()->isGameType(Game::GAME_TYPE_DRAFT)) {
 			throw new Exception('This page is only allowed in Draft games!');
 		}

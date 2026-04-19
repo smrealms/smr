@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Exceptions\PathNotFound;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Sector;
 use Smr\Template;
 
@@ -17,7 +17,7 @@ class SectorJumpCalculate extends PlayerPage {
 		private readonly int $targetSectorID,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Jump Drive');
 		Menu::navigation($player);
 

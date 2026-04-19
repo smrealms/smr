@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\EnhancedWeaponEvent;
 use Smr\Location;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 class ShopWeapon extends PlayerPage {
@@ -16,7 +16,7 @@ class ShopWeapon extends PlayerPage {
 		private readonly int $locationID,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$location = Location::getLocation($player->getGameID(), $this->locationID);
 		$template->assign('PageTopic', $location->getName());
 		$template->assign('ThisLocation', $location);

@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player\Bar;
 
-use Smr\AbstractPlayer;
 use Smr\Blackjack\Card;
 use Smr\Blackjack\Hand;
 use Smr\Blackjack\Result;
 use Smr\Blackjack\Table;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Player;
 use Smr\Template;
 
 function display_card(Card $card, bool $show): string {
@@ -63,7 +63,7 @@ class PlayBlackjack extends PlayerPage {
 		private readonly string $winningsMsg,
 	) {}
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'BlackJack');
 		Menu::bar($this->locationID);
 

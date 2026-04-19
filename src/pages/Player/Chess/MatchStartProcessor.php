@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player\Chess;
 
-use Smr\AbstractPlayer;
 use Smr\Chess\ChessGame;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
@@ -11,7 +10,7 @@ use Smr\Request;
 
 class MatchStartProcessor extends PlayerPageProcessor {
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$challengePlayer = Player::getPlayerByPlayerID(Request::getInt('player_id'), $player->getGameID());
 		ChessGame::insertNewGame(Epoch::time(), $player, $challengePlayer);
 

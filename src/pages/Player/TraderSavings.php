@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Lotto;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 use Smr\Template;
 
 class TraderSavings extends PlayerPage {
@@ -16,7 +16,7 @@ class TraderSavings extends PlayerPage {
 
 	public string $file = 'trader_savings.php';
 
-	public function build(AbstractPlayer $player, Template $template): void {
+	public function build(Player $player, Template $template): void {
 		$template->assign('PageTopic', 'Savings');
 
 		Menu::trader();
@@ -39,7 +39,7 @@ class TraderSavings extends PlayerPage {
 		$template->assign('LottoInfo', Lotto::getLottoInfo($player->getGameID()));
 
 		// Number of active lotto tickets this player has
-		$dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE ' . AbstractPlayer::SQL . ' AND time > 0', $player->SQLID);
+		$dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE ' . Player::SQL . ' AND time > 0', $player->SQLID);
 		$tickets = $dbResult->record()->getInt('count(*)');
 		$template->assign('LottoTickets', $tickets);
 

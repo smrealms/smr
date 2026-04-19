@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Player\GalacticPost;
 
-use Smr\AbstractPlayer;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Page\ReusableTrait;
+use Smr\Player;
 
 class CurrentEditionProcessor extends PlayerPageProcessor {
 
 	use ReusableTrait;
 
-	public function build(AbstractPlayer $player): never {
+	public function build(Player $player): never {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id = :game_id ORDER BY online_since DESC LIMIT 1', [
 			'game_id' => $db->escapeNumber($player->getGameID()),

@@ -10,7 +10,7 @@ class Rankings {
 	 * @param array<int, \Smr\DatabaseRecord> $rankedStats
 	 * @return array<int, array{Class: string, SectorID: int, Value: int}>
 	 */
-	public static function collectSectorRankings(array $rankedStats, AbstractPlayer $player, int $minRank = 1, int $maxRank = 10): array {
+	public static function collectSectorRankings(array $rankedStats, Player $player, int $minRank = 1, int $maxRank = 10): array {
 		$rankedStats = self::filterRanks($rankedStats, $minRank, $maxRank);
 		$currRank = $minRank;
 
@@ -35,7 +35,7 @@ class Rankings {
 	 * @param array<int, \Smr\DatabaseRecord> $rankedStats
 	 * @return array<int, array{style: string, race_id: int, amount: int, amount_avg: int, num_players: int}>
 	 */
-	public static function collectRaceRankings(array $rankedStats, AbstractPlayer $player): array {
+	public static function collectRaceRankings(array $rankedStats, Player $player): array {
 		$currRank = 1;
 		$rankings = [];
 		foreach ($rankedStats as $raceID => $dbRecord) {
@@ -60,7 +60,7 @@ class Rankings {
 	 * @param array<int, \Smr\DatabaseRecord> $rankedStats
 	 * @return array<int, array{Alliance: \Smr\Alliance, Class: string, Value: int}>
 	 */
-	public static function collectAllianceRankings(array $rankedStats, ?AbstractPlayer $player, int $minRank = 1, int $maxRank = 10): array {
+	public static function collectAllianceRankings(array $rankedStats, ?Player $player, int $minRank = 1, int $maxRank = 10): array {
 		$rankedStats = self::filterRanks($rankedStats, $minRank, $maxRank);
 		$currRank = $minRank;
 
@@ -86,9 +86,9 @@ class Rankings {
 
 	/**
 	 * @param array<int, \Smr\DatabaseRecord> $rankedStats
-	 * @return array<int, array{Player: \Smr\AbstractPlayer, Class: string, Value: int}>
+	 * @return array<int, array{Player: \Smr\Player, Class: string, Value: int}>
 	 */
-	public static function collectRankings(array $rankedStats, ?AbstractPlayer $player, int $minRank = 1, int $maxRank = 10): array {
+	public static function collectRankings(array $rankedStats, ?Player $player, int $minRank = 1, int $maxRank = 10): array {
 		$rankedStats = self::filterRanks($rankedStats, $minRank, $maxRank);
 		$currRank = $minRank;
 

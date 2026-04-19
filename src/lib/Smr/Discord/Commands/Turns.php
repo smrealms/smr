@@ -2,8 +2,8 @@
 
 namespace Smr\Discord\Commands;
 
-use Smr\AbstractPlayer;
 use Smr\Discord\DatabaseCommand;
+use Smr\Player;
 
 class Turns extends DatabaseCommand {
 
@@ -19,7 +19,7 @@ class Turns extends DatabaseCommand {
 		return array_map($this->getTurnsMessage(...), $this->player->getSharingPlayers(true));
 	}
 
-	private function getTurnsMessage(AbstractPlayer $player): string {
+	private function getTurnsMessage(Player $player): string {
 		// turns only update when the player is active, so calculate current turns
 		$turns = min(
 			$player->getTurns() + $player->getTurnsGained(time(), true),

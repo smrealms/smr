@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-use Smr\AbstractPlayer;
+use Smr\Player;
 
-function getPlayerOptionClass(AbstractPlayer $player, AbstractPlayer $other): string {
+function getPlayerOptionClass(Player $player, Player $other): string {
 	// Returns the CSS relational class of player "other" relative to "player".
 	return match (true) {
 		$player->traderNAPAlliance($other) => 'friendly',

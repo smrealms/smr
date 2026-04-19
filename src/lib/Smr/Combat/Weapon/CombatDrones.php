@@ -3,9 +3,9 @@
 namespace Smr\Combat\Weapon;
 
 use Exception;
-use Smr\AbstractPlayer;
 use Smr\Force;
 use Smr\Planet;
+use Smr\Player;
 use Smr\Port;
 
 class CombatDrones extends AbstractWeapon {
@@ -32,44 +32,44 @@ class CombatDrones extends AbstractWeapon {
 		return $this->getBaseAccuracy();
 	}
 
-	protected function getModifiedAccuracyAgainstForcesUsingRandom(AbstractPlayer $weaponPlayer, Force $forces, int $random): float {
+	protected function getModifiedAccuracyAgainstForcesUsingRandom(Player $weaponPlayer, Force $forces, int $random): float {
 		$modifiedAccuracy = $this->getModifiedAccuracy();
 		$modifiedAccuracy += $random;
 
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	public function getModifiedAccuracyAgainstForces(AbstractPlayer $weaponPlayer, Force $forces): float {
+	public function getModifiedAccuracyAgainstForces(Player $weaponPlayer, Force $forces): float {
 		return $this->getModifiedAccuracyAgainstForcesUsingRandom($weaponPlayer, $forces, rand(3, self::MAX_CDS_RAND));
 	}
 
-	protected function getModifiedAccuracyAgainstPortUsingRandom(AbstractPlayer $weaponPlayer, Port $port, int $random): float {
+	protected function getModifiedAccuracyAgainstPortUsingRandom(Player $weaponPlayer, Port $port, int $random): float {
 		$modifiedAccuracy = $this->getModifiedAccuracy();
 		$modifiedAccuracy += $random;
 
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	public function getModifiedAccuracyAgainstPort(AbstractPlayer $weaponPlayer, Port $port): float {
+	public function getModifiedAccuracyAgainstPort(Player $weaponPlayer, Port $port): float {
 		return $this->getModifiedAccuracyAgainstPortUsingRandom($weaponPlayer, $port, rand(3, self::MAX_CDS_RAND));
 	}
 
-	protected function getModifiedAccuracyAgainstPlanetUsingRandom(AbstractPlayer $weaponPlayer, Planet $planet, int $random): float {
+	protected function getModifiedAccuracyAgainstPlanetUsingRandom(Player $weaponPlayer, Planet $planet, int $random): float {
 		$modifiedAccuracy = $this->getModifiedAccuracy();
 		$modifiedAccuracy += $random;
 
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	public function getModifiedAccuracyAgainstPlanet(AbstractPlayer $weaponPlayer, Planet $planet): float {
+	public function getModifiedAccuracyAgainstPlanet(Player $weaponPlayer, Planet $planet): float {
 		return $this->getModifiedAccuracyAgainstPlanetUsingRandom($weaponPlayer, $planet, rand(3, self::MAX_CDS_RAND));
 	}
 
-	public function getModifiedAccuracyAgainstPlayer(AbstractPlayer $weaponPlayer, AbstractPlayer $targetPlayer): float {
+	public function getModifiedAccuracyAgainstPlayer(Player $weaponPlayer, Player $targetPlayer): float {
 		return $this->getModifiedAccuracyAgainstPlayerUsingRandom($weaponPlayer, $targetPlayer, rand(3, self::MAX_CDS_RAND));
 	}
 
-	protected function getModifiedAccuracyAgainstPlayerUsingRandom(AbstractPlayer $weaponPlayer, AbstractPlayer $targetPlayer, int $random): float {
+	protected function getModifiedAccuracyAgainstPlayerUsingRandom(Player $weaponPlayer, Player $targetPlayer, int $random): float {
 		$modifiedAccuracy = $this->getModifiedAccuracy();
 		$levelRand = rand(IFloor($weaponPlayer->getLevelID() / 2), $weaponPlayer->getLevelID());
 		$modifiedAccuracy += ($random + $levelRand - ($targetPlayer->getLevelID() - $weaponPlayer->getLevelID()) / 3) / 1.5;
@@ -84,26 +84,26 @@ class CombatDrones extends AbstractWeapon {
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	public function getModifiedForceAccuracyAgainstPlayer(Force $forces, AbstractPlayer $targetPlayer): float {
+	public function getModifiedForceAccuracyAgainstPlayer(Force $forces, Player $targetPlayer): float {
 		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces, $targetPlayer, rand(3, self::MAX_CDS_RAND));
 	}
 
-	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(Force $forces, AbstractPlayer $targetPlayer, int $random): float {
+	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(Force $forces, Player $targetPlayer, int $random): float {
 		$modifiedAccuracy = $this->getModifiedAccuracy();
 		$modifiedAccuracy += $random;
 
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	protected function getModifiedPortAccuracyAgainstPlayer(Port $port, AbstractPlayer $targetPlayer): float {
+	protected function getModifiedPortAccuracyAgainstPlayer(Port $port, Player $targetPlayer): float {
 		return 100;
 	}
 
-	protected function getModifiedPlanetAccuracyAgainstPlayer(Planet $planet, AbstractPlayer $targetPlayer): float {
+	protected function getModifiedPlanetAccuracyAgainstPlayer(Planet $planet, Player $targetPlayer): float {
 		return 100;
 	}
 
-	public function getModifiedDamageAgainstForces(AbstractPlayer $weaponPlayer, Force $forces): array {
+	public function getModifiedDamageAgainstForces(Player $weaponPlayer, Force $forces): array {
 		if (!$this->canShootForces()) {
 			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
@@ -125,7 +125,7 @@ class CombatDrones extends AbstractWeapon {
 		return $damage;
 	}
 
-	public function getModifiedDamageAgainstPort(AbstractPlayer $weaponPlayer, Port $port): array {
+	public function getModifiedDamageAgainstPort(Player $weaponPlayer, Port $port): array {
 		if (!$this->canShootPorts()) {
 			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
@@ -138,7 +138,7 @@ class CombatDrones extends AbstractWeapon {
 		return $damage;
 	}
 
-	public function getModifiedDamageAgainstPlanet(AbstractPlayer $weaponPlayer, Planet $planet): array {
+	public function getModifiedDamageAgainstPlanet(Player $weaponPlayer, Planet $planet): array {
 		if (!$this->canShootPlanets()) {
 			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
@@ -152,7 +152,7 @@ class CombatDrones extends AbstractWeapon {
 		return $damage;
 	}
 
-	public function getModifiedDamageAgainstPlayer(AbstractPlayer $weaponPlayer, AbstractPlayer $targetPlayer): array {
+	public function getModifiedDamageAgainstPlayer(Player $weaponPlayer, Player $targetPlayer): array {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
 			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		}
@@ -164,7 +164,7 @@ class CombatDrones extends AbstractWeapon {
 		return $damage;
 	}
 
-	public function getModifiedForceDamageAgainstPlayer(Force $forces, AbstractPlayer $targetPlayer): array {
+	public function getModifiedForceDamageAgainstPlayer(Force $forces, Player $targetPlayer): array {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
 			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		}
@@ -176,7 +176,7 @@ class CombatDrones extends AbstractWeapon {
 		return $damage;
 	}
 
-	public function getModifiedPortDamageAgainstPlayer(Port $port, AbstractPlayer $targetPlayer): array {
+	public function getModifiedPortDamageAgainstPlayer(Port $port, Player $targetPlayer): array {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
 			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		}
@@ -188,7 +188,7 @@ class CombatDrones extends AbstractWeapon {
 		return $damage;
 	}
 
-	public function getModifiedPlanetDamageAgainstPlayer(Planet $planet, AbstractPlayer $targetPlayer): array {
+	public function getModifiedPlanetDamageAgainstPlayer(Planet $planet, Player $targetPlayer): array {
 		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
 			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
 		}
@@ -203,7 +203,7 @@ class CombatDrones extends AbstractWeapon {
 	/**
 	 * @return array{Weapon: parent, Target: \Smr\Force, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: ForceTakenDamageData, KillResults?: array{}}
 	 */
-	public function shootForces(AbstractPlayer $weaponPlayer, Force $forces): array {
+	public function shootForces(Player $weaponPlayer, Force $forces): array {
 		$return = ['Weapon' => $this, 'Target' => $forces, 'Hit' => true];
 		$return = $this->doPlayerDamageToForce($return, $weaponPlayer, $forces);
 		if (!isset($return['WeaponDamage']['Kamikaze'])) {
@@ -218,7 +218,7 @@ class CombatDrones extends AbstractWeapon {
 	/**
 	 * @return array{Weapon: parent, Target: \Smr\Port, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{}}
 	 */
-	public function shootPort(AbstractPlayer $weaponPlayer, Port $port): array {
+	public function shootPort(Player $weaponPlayer, Port $port): array {
 		$return = ['Weapon' => $this, 'Target' => $port, 'Hit' => true];
 		return $this->doPlayerDamageToPort($return, $weaponPlayer, $port);
 	}
@@ -226,36 +226,36 @@ class CombatDrones extends AbstractWeapon {
 	/**
 	 * @return array{Weapon: parent, Target: \Smr\Planet, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{}}
 	 */
-	public function shootPlanet(AbstractPlayer $weaponPlayer, Planet $planet): array {
+	public function shootPlanet(Player $weaponPlayer, Planet $planet): array {
 		$return = ['Weapon' => $this, 'Target' => $planet, 'Hit' => true];
 		return $this->doPlayerDamageToPlanet($return, $weaponPlayer, $planet);
 	}
 
 	/**
-	 * @return array{Weapon: parent, Target: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}
+	 * @return array{Weapon: parent, Target: \Smr\Player, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}
 	 */
-	public function shootPlayer(AbstractPlayer $weaponPlayer, AbstractPlayer $targetPlayer): array {
+	public function shootPlayer(Player $weaponPlayer, Player $targetPlayer): array {
 		$return = ['Weapon' => $this, 'Target' => $targetPlayer, 'Hit' => true];
 		return $this->doPlayerDamageToPlayer($return, $weaponPlayer, $targetPlayer);
 	}
 
-	public function shootPlayerAsForce(Force $forces, AbstractPlayer $targetPlayer): array {
+	public function shootPlayerAsForce(Force $forces, Player $targetPlayer): array {
 		$return = ['Weapon' => $this, 'Target' => $targetPlayer, 'Hit' => true];
 		return $this->doForceDamageToPlayer($return, $forces, $targetPlayer);
 	}
 
 	/**
-	 * @return array{Weapon: parent, Target: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
+	 * @return array{Weapon: parent, Target: \Smr\Player, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
 	 */
-	public function shootPlayerAsPort(Port $forces, AbstractPlayer $targetPlayer): array {
+	public function shootPlayerAsPort(Port $forces, Player $targetPlayer): array {
 		$return = ['Weapon' => $this, 'Target' => $targetPlayer, 'Hit' => true];
 		return $this->doPortDamageToPlayer($return, $forces, $targetPlayer);
 	}
 
 	/**
-	 * @return array{Weapon: parent, Target: \Smr\AbstractPlayer, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
+	 * @return array{Weapon: parent, Target: \Smr\Player, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
 	 */
-	public function shootPlayerAsPlanet(Planet $forces, AbstractPlayer $targetPlayer): array {
+	public function shootPlayerAsPlanet(Planet $forces, Player $targetPlayer): array {
 		$return = ['Weapon' => $this, 'Target' => $targetPlayer, 'Hit' => true];
 		return $this->doPlanetDamageToPlayer($return, $forces, $targetPlayer);
 	}

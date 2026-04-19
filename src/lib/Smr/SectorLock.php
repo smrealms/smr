@@ -44,7 +44,7 @@ class SectorLock {
 	/**
 	 * Convenience wrapper to acquire a lock for the player in their current sector.
 	 */
-	public function acquireForPlayer(AbstractPlayer $player): bool {
+	public function acquireForPlayer(Player $player): bool {
 		return $this->acquire($player->getGameID(), $player->getAccountID(), $player->getSectorID());
 	}
 
