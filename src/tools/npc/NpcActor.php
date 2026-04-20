@@ -70,11 +70,20 @@ class NpcActor {
 
 	public function shutdown(): void {
 		$player = $this->refreshPlayer();
-		if ($player->getSector()->offersFederalProtection() && !$player->hasFederalProtection()) {
+		$sector = $player->getSector();
+		if ($sector->offersFederalProtection() && !$player->hasFederalProtection()) {
 			debug('Disarming so we can get Fed protection');
 			$player->getShip()->setCDs(0);
 			$player->getShip()->removeAllWeapons();
 			$player->getShip()->update();
+		} elseif ($sector->hasPlanet()) {
+			$planet = $sector->getPlanet();
+			if (!$planet->hasOwner() || $planet->getOwner()->sameAlliance($player)) {
+				debug('Landing on planet');
+				$player->setNewbieTurns(0);
+				$player->setLandedOnPlanet(true);
+				$player->update();
+			}
 		}
 
 		if ($this->hired) {
@@ -136,7 +145,7 @@ class NpcActor {
 		if ($player->isUnderAttack()) {
 			// We're under attack and need to plot course to fed.
 			debug('Under Attack');
-			plotToFed($player);
+			plotToSafety($player);
 		}
 		if ($player->getTurns() < NPC_LOW_TURNS) {
 			// We're low on turns or have been under attack and need to plot course to fed
@@ -145,7 +154,7 @@ class NpcActor {
 				throw new FinalAction();
 			}
 			debug('Low Turns:' . $player->getTurns());
-			plotToFed($player);
+			plotToSafety($player);
 		}
 		if ($player->hasPlottedCourse()) {
 			// We have a route to follow
@@ -190,7 +199,7 @@ class NpcActor {
 			}
 		}
 		debug('No valid actions to take');
-		plotToFed($player);
+		plotToSafety($player);
 		/*
 		//Otherwise let's run around at random.
 		$moveTo = array_rand_value($player->getSector()->getLinks());

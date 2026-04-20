@@ -7,10 +7,7 @@ use Smr\Player;
 class PlanetDefensesProcessor extends BetaFunctionsPageProcessor {
 
 	public function buildBetaFunctionsProcessor(Player $player): void {
-		$planet = $player->getSector()->getPlanet();
-		$planet->setShields($planet->getMaxShields());
-		$planet->setCDs($planet->getMaxCDs());
-		$planet->setArmour($planet->getMaxArmour());
+		$player->getSectorPlanet()->setDefensesToMax();
 	}
 
 }

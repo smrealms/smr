@@ -742,6 +742,18 @@ class Planet {
 		return $this->getStructureTypes($buildingTypeID)->maxAmount();
 	}
 
+	public function setBuildingsToMax(): void {
+		foreach ($this->getMaxBuildings() as $buildingID => $maxAmount) {
+			$this->setBuilding($buildingID, $maxAmount);
+		}
+	}
+
+	public function setDefensesToMax(): void {
+		$this->setShields($this->getMaxShields());
+		$this->setCDs($this->getMaxCDs());
+		$this->setArmour($this->getMaxArmour());
+	}
+
 	public function getTypeID(): int {
 		return $this->typeID;
 	}

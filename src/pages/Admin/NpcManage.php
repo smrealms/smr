@@ -4,6 +4,7 @@ namespace Smr\Pages\Admin;
 
 use Smr\Account;
 use Smr\Database;
+use Smr\Galaxy;
 use Smr\Game;
 use Smr\Page\AccountPage;
 use Smr\Player;
@@ -15,6 +16,7 @@ class NpcManage extends AccountPage {
 
 	public function __construct(
 		private readonly ?int $selectedGameID = null,
+		private readonly ?string $message = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -24,6 +26,8 @@ class NpcManage extends AccountPage {
 
 		$container = new NpcManageSelectProcessor();
 		$template->assign('SelectGameHREF', $container->href());
+
+		$template->assign('Message', $this->message);
 
 		$games = [];
 		foreach (Game::getActiveGames() as $gameID => $game) {
@@ -77,6 +81,7 @@ class NpcManage extends AccountPage {
 			'game_id' => $selectedGameID,
 			'npc' => $db->escapeBoolean(true),
 		]);
+		$npcPlayers = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$accountID = $dbRecord->getInt('account_id');
 			$npc = Player::getPlayer($accountID, $selectedGameID, false, $dbRecord);
@@ -84,9 +89,31 @@ class NpcManage extends AccountPage {
 			if (($npc->hasAlliance() && $npc->getAlliance()->isNpcForHire()) || $npc->isHiredNPC()) {
 				$npcs[$accountID]['disable_active_toggle'] = true;
 			}
+			$npcPlayers[] = $npc;
 		}
 
 		$template->assign('Npcs', $npcs);
+
+		// Get galaxy/alliance options for NPC galaxies
+		$npcGalaxyChoices = [];
+		foreach (Game::getGame($selectedGameID)->getGalaxies() as $galaxy) {
+			if ($galaxy->getGalaxyType() !== Galaxy::TYPE_RACIAL) {
+				$npcGalaxyChoices[] = $galaxy;
+			}
+		}
+		$template->assign('NpcGalaxyChoices', $npcGalaxyChoices);
+		$npcGalaxyAllianceChoices = [];
+		foreach ($npcPlayers as $npc) {
+			if (!$npc->hasAlliance()) {
+				continue;
+			}
+			$alliance = $npc->getAlliance();
+			if (!$alliance->isNpcForHire() && $alliance->hasLeader() && $alliance->getLeader()->isNPC()) {
+				$npcGalaxyAllianceChoices[$alliance->getAllianceID()] = $alliance->getAllianceDisplayName();
+			}
+		}
+		$template->assign('NpcGalaxyAllianceChoices', $npcGalaxyAllianceChoices);
+		$template->assign('SetupNpcGalaxyHref', (new NpcManageSetupGalaxyProcessor($selectedGameID))->href());
 	}
 
 }

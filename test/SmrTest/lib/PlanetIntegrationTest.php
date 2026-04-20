@@ -356,6 +356,23 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 		];
 	}
 
+	public function test_setBuildingsToMax(): void {
+		$planet = Planet::createPlanet(1, 1, 1, 1);
+		self::assertSame(0., $planet->getLevel());
+		$planet->setBuildingsToMax();
+		self::assertSame($planet->getMaxLevel(), $planet->getLevel());
+		self::assertSame($planet->getMaxBuildings(), $planet->getBuildings());
+	}
+
+	public function test_setDefensesToMax(): void {
+		$planet = Planet::createPlanet(1, 1, 1, 1);
+		$planet->setBuildingsToMax();
+		$planet->setDefensesToMax();
+		self::assertSame($planet->getMaxShields(), $planet->getShields());
+		self::assertSame($planet->getMaxCDs(), $planet->getCDs());
+		self::assertSame($planet->getMaxArmour(), $planet->getArmour());
+	}
+
 	/**
 	 * @param WeaponDamageData $damage
 	 * @param TakenDamageData $expected

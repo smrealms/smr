@@ -21,6 +21,7 @@ use Smr\Pages\Player\CurrentSector;
 use Smr\Pages\Player\PlotCourseConventionalProcessor;
 use Smr\Pages\Player\SectorMoveProcessor;
 use Smr\Pages\Player\ShopGoodsProcessor;
+use Smr\PlanetTypes\PlanetType;
 use Smr\Player;
 use Smr\Plotter;
 use Smr\Port;
@@ -409,8 +410,28 @@ function plotToSector(Player $player, int $sectorID): PlayerPageProcessor {
 	return new PlotCourseConventionalProcessor(from: $player->getSectorID(), to: $sectorID);
 }
 
-function plotToFed(Player $player): never {
-	debug('Plotting To Fed');
+function plotToSafety(Player $player): never {
+	debug('Plotting To Safety');
+
+	// Should we go to a planet instead of Fed?
+	if ($player->hasAlliance()) {
+		// For now, only go to Sentinel Outpost (i.e. NPC galaxy), but maybe
+		// we'll want to land on player-owned planets in the future.
+		$planets = array_filter(
+			$player->getAlliance()->getPlanets(),
+			fn($planet) => $planet->getTypeID() === PlanetType::TYPE_OUTPOST,
+		);
+		if (count($planets) > 0) {
+			// Stop if we're already at our destination
+			if (in_array($player->getSectorPlanet(), $planets, true)) {
+				debug('Stopping at safe planet');
+				throw new FinalAction();
+			}
+			// Plot to a random planet
+			$planet = array_rand_value($planets);
+			processContainer(plotToSector($player, $planet->getSectorID()));
+		}
+	}
 
 	// Always drop illegal goods before heading to fed space
 	if ($player->getShip()->hasIllegalGoods()) {
