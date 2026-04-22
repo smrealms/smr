@@ -890,10 +890,10 @@ class AbstractShip {
 		foreach ($relations as $raceID => $politicalRelations) {
 			if ($raceID === $port->getRaceID() || $raceID === $thisPlayer->getRaceID()) {
 				// port race and player race reaction
-				$relChangeFactor = MAX_GLOBAL_RELATIONS / 2; // 1x at 250, 2x at 500
+				$relChangeFactor = MAX_POLITICAL_RELATIONS / 2; // 1x at 250, 2x at 500
 			} else {
 				// bystander reactions
-				$relChangeFactor = MAX_GLOBAL_RELATIONS; // 0.5x at 250, 1x at 500
+				$relChangeFactor = MAX_POLITICAL_RELATIONS; // 0.5x at 250, 1x at 500
 			}
 			$relChange = ITrunc($relChangeBase * (-$politicalRelations / $relChangeFactor));
 			if ($relChange > 0) {

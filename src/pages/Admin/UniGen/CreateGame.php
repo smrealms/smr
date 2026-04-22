@@ -48,7 +48,7 @@ class CreateGame extends AccountPage {
 			'allianceMaxVets' => 15,
 			'startCredits' => 100000,
 			'ignoreStats' => false,
-			'relations' => MIN_GLOBAL_RELATIONS,
+			'relations' => MIN_POLITICAL_RELATIONS,
 			'destroyPorts' => false,
 		];
 		$template->assign('Game', $defaultGame);

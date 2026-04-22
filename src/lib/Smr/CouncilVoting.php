@@ -45,11 +45,7 @@ class CouncilVoting {
 			]);
 			$relation = $dbResult2->record()->getInt('relation') + $relation_modifier;
 
-			if ($relation < MIN_GLOBAL_RELATIONS) {
-				$relation = MIN_GLOBAL_RELATIONS;
-			} elseif ($relation > MAX_GLOBAL_RELATIONS) {
-				$relation = MAX_GLOBAL_RELATIONS;
-			}
+			$relation = max(MIN_POLITICAL_RELATIONS, min(MAX_POLITICAL_RELATIONS, $relation));
 
 			$db->write('UPDATE race_has_relation
 					SET relation = :relation

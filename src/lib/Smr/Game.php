@@ -492,7 +492,7 @@ class Game {
 	 * Set the starting political relations between races.
 	 */
 	public function setStartingRelations(int $relations): void {
-		if ($relations < MIN_GLOBAL_RELATIONS || $relations > MAX_GLOBAL_RELATIONS) {
+		if ($relations < MIN_POLITICAL_RELATIONS || $relations > MAX_POLITICAL_RELATIONS) {
 			throw new Exception('Invalid relations: ' . $relations);
 		}
 		$db = Database::getInstance();
@@ -500,7 +500,7 @@ class Game {
 			foreach (Race::getAllIDs() as $raceID2) {
 				if ($raceID1 === $raceID2) {
 					// Max relations for a race with itself
-					$amount = MAX_GLOBAL_RELATIONS;
+					$amount = MAX_POLITICAL_RELATIONS;
 				} elseif ($raceID1 === RACE_NEUTRAL || $raceID2 === RACE_NEUTRAL) {
 					$amount = 0; //0 relations with neutral
 				} else {
