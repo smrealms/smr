@@ -356,6 +356,12 @@ class Force {
 		return $turns;
 	}
 
+	public function setForcesToMax(): void {
+		$this->setMines(self::MAX_MINES);
+		$this->setCDs(self::MAX_CDS);
+		$this->setSDs(self::MAX_SDS);
+	}
+
 	public function getAttackTurnCost(AbstractShip $ship): int {
 		if ($ship->isFederal() || $ship->hasDCS()) {
 			return 2;

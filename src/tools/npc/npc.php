@@ -21,6 +21,8 @@ use Smr\Pages\Player\CurrentSector;
 use Smr\Pages\Player\PlotCourseConventionalProcessor;
 use Smr\Pages\Player\SectorMoveProcessor;
 use Smr\Pages\Player\ShopGoodsProcessor;
+use Smr\Planet;
+use Smr\PlanetTypes\PlanetType;
 use Smr\Player;
 use Smr\Plotter;
 use Smr\Port;
@@ -200,6 +202,7 @@ function npcDriver(): bool {
 
 function clearCaches(): void {
 	Sector::clearCache();
+	Planet::clearCache();
 	Player::clearCache();
 	Ship::clearCache();
 	Force::clearCache();
@@ -409,13 +412,28 @@ function plotToSector(Player $player, int $sectorID): PlayerPageProcessor {
 	return new PlotCourseConventionalProcessor(from: $player->getSectorID(), to: $sectorID);
 }
 
-function plotToFed(Player $player): never {
-	debug('Plotting To Fed');
+function plotToSafety(Player $player): PlayerPageProcessor {
+	debug('Plotting To Safety');
+
+	// Should we go to a planet instead of Fed?
+	if ($player->hasAlliance()) {
+		// For now, only go to Sentinel Outpost (i.e. NPC galaxy), but maybe
+		// we'll want to land on player-owned planets in the future.
+		$planets = array_filter(
+			$player->getAlliance()->getPlanets(),
+			fn($planet) => $planet->getTypeID() === PlanetType::TYPE_OUTPOST,
+		);
+		if (count($planets) > 0) {
+			// Plot to a random planet
+			$planet = array_rand_value($planets);
+			return plotToSector($player, $planet->getSectorID());
+		}
+	}
 
 	// Always drop illegal goods before heading to fed space
 	if ($player->getShip()->hasIllegalGoods()) {
 		debug('Dumping illegal goods');
-		processContainer(dumpCargo($player));
+		return dumpCargo($player);
 	}
 
 	$fedLocID = $player->getRaceID() + LOCATION_GROUP_RACIAL_BEACONS;
@@ -559,7 +577,7 @@ function setupShip(Player $player): void {
 /**
  * @return array<Smr\Routes\MultiplePortRoute>
  */
-function findRoutes(Player $player): array {
+function findRoutes(Player $player, ?int $galaxyID): array {
 	debug('Finding Routes');
 
 	$tradeGoods = [GOODS_NOTHING => false];
@@ -579,17 +597,24 @@ function findRoutes(Player $player): array {
 	$tradeRaces[$player->getRaceID()] = true;
 	$tradeRaces[RACE_NEUTRAL] = true;
 
-	// Trade in all Racial/Neutral galaxies up until the first Planet galaxy
+	// Select galaxies to look for trade routes in
+	$allGalaxies = $player->getGame()->getGalaxies();
 	$galaxies = [];
-	foreach ($player->getGame()->getGalaxies() as $galaxy) {
-		if ($galaxy->getGalaxyType() === Galaxy::TYPE_PLANET) {
-			break;
+	if ($galaxyID !== null) {
+		// Trade only in specified galaxy
+		$galaxies[] = $allGalaxies[$galaxyID];
+	} else {
+		// Trade in all Racial/Neutral galaxies up until the first Planet galaxy
+		foreach ($allGalaxies as $galaxy) {
+			if ($galaxy->getGalaxyType() === Galaxy::TYPE_PLANET) {
+				break;
+			}
+			$galaxies[] = $galaxy;
 		}
-		$galaxies[] = $galaxy;
-	}
-	// Fallback to current galaxy in case this has selected no galaxies
-	if (count($galaxies) === 0) {
-		$galaxies[] = $player->getSector()->getGalaxy();
+		// Fallback to current galaxy in case this has selected no galaxies
+		if (count($galaxies) === 0) {
+			$galaxies[] = $player->getSector()->getGalaxy();
+		}
 	}
 
 	// Determine the trade area (start of first galaxy to end of last)

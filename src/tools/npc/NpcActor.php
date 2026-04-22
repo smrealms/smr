@@ -3,6 +3,7 @@
 namespace Smr\Npc;
 
 use Exception;
+use Smr\Force;
 use Smr\Npc\Exceptions\FinalAction;
 use Smr\Npc\Exceptions\ForwardAction;
 use Smr\Npc\Exceptions\TradeRouteDrained;
@@ -11,7 +12,6 @@ use Smr\Pages\Player\AllianceManageNpcsDismissProcessor;
 use Smr\Pages\Player\Bank\AllianceBankProcessor;
 use Smr\Player;
 use Smr\Routes\RouteIterator;
-use Smr\Sector;
 use Smr\TransactionType;
 
 class NpcActor {
@@ -22,6 +22,8 @@ class NpcActor {
 	private int $actions = 0;
 	private readonly int $startingCredits;
 	private readonly bool $hired;
+	private readonly ?int $npcGalaxyID;
+	private bool $isReturningToSafety = false;
 
 	public function __construct(
 		private readonly int $gameID,
@@ -45,8 +47,11 @@ class NpcActor {
 		// but this ensures a clean startup even if shutdown was unclean.
 		$player->deletePlottedCourse();
 
+		// Get NPC Galaxy (from alliance leader's planet)
+		$this->npcGalaxyID = self::getNpcGalaxyID($player);
+
 		// Initialize the trade route for this NPC
-		$this->allTradeRoutes = findRoutes($player);
+		$this->allTradeRoutes = findRoutes($player, $this->npcGalaxyID);
 		shuffle($this->allTradeRoutes); // randomize
 		$this->changeRoute();
 
@@ -60,6 +65,20 @@ class NpcActor {
 		$this->hired = $player->isHiredNPC();
 	}
 
+	private static function getNpcGalaxyID(Player $player): ?int {
+		if ($player->hasAlliance()) {
+			$alliance = $player->getAlliance();
+			if ($alliance->hasLeader()) {
+				$leader = $alliance->getLeader();
+				// This *must* be null for NPCs in normal player alliances!
+				if ($leader->isNPC()) {
+					return $leader->getPlanet()?->getGalaxy()->getGalaxyID();
+				}
+			}
+		}
+		return null;
+	}
+
 	private function refreshPlayer(): Player {
 		return Player::getPlayer($this->accountID, $this->gameID, true);
 	}
@@ -70,11 +89,20 @@ class NpcActor {
 
 	public function shutdown(): void {
 		$player = $this->refreshPlayer();
-		if ($player->getSector()->offersFederalProtection() && !$player->hasFederalProtection()) {
+		$sector = $player->getSector();
+		if ($sector->offersFederalProtection() && !$player->hasFederalProtection()) {
 			debug('Disarming so we can get Fed protection');
 			$player->getShip()->setCDs(0);
 			$player->getShip()->removeAllWeapons();
 			$player->getShip()->update();
+		} elseif ($sector->hasPlanet()) {
+			$planet = $sector->getPlanet();
+			if (!$planet->hasOwner() || $planet->getOwner()->sameAlliance($player)) {
+				debug('Landing on planet');
+				$player->setNewbieTurns(0);
+				$player->setLandedOnPlanet(true);
+				$player->update();
+			}
 		}
 
 		if ($this->hired) {
@@ -128,15 +156,18 @@ class NpcActor {
 			$this->changeRoute();
 		}
 
-		if ($player->hasPlottedCourse() && Sector::getSector($player->getGameID(), $player->getPlottedCourse()->getEndSectorID())->offersFederalProtection()) {
-			// We have a route to fed to follow
-			debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
-			return moveToSector($player, $player->getPlottedCourse()->getNextOnPath());
+		if ($this->isReturningToSafety) {
+			// Returning to safety is our highest priority action
+			if ($player->hasPlottedCourse()) {
+				return $this->moveToNextSector($player);
+			}
+			// We've reached the end of our plotted course to safety
+			throw new FinalAction();
 		}
 		if ($player->isUnderAttack()) {
-			// We're under attack and need to plot course to fed.
+			// We're under attack and need to plot course to safety.
 			debug('Under Attack');
-			plotToFed($player);
+			return $this->returnToSafety($player);
 		}
 		if ($player->getTurns() < NPC_LOW_TURNS) {
 			// We're low on turns or have been under attack and need to plot course to fed
@@ -145,12 +176,11 @@ class NpcActor {
 				throw new FinalAction();
 			}
 			debug('Low Turns:' . $player->getTurns());
-			plotToFed($player);
+			return $this->returnToSafety($player);
 		}
 		if ($player->hasPlottedCourse()) {
 			// We have a route to follow
-			debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
-			return moveToSector($player, $player->getPlottedCourse()->getNextOnPath());
+			return $this->moveToNextSector($player);
 		}
 		if ($this->tradeRoute instanceof RouteIterator) {
 			debug('Trade Route');
@@ -190,13 +220,36 @@ class NpcActor {
 			}
 		}
 		debug('No valid actions to take');
-		plotToFed($player);
+		return $this->returnToSafety($player);
 		/*
 		//Otherwise let's run around at random.
 		$moveTo = array_rand_value($player->getSector()->getLinks());
 		debug('Random Wanderings: ' . $moveTo);
 		return moveToSector($player, $moveTo);
 		*/
+	}
+
+	private function moveToNextSector(Player $player): PlayerPageProcessor {
+		// Before we move, lay forces if we're in our NPC galaxy
+		if ($this->npcGalaxyID !== null) {
+			$sector = $player->getSector();
+			if ($this->npcGalaxyID === $sector->getGalaxyID() && !$sector->hasWarp()) {
+				$force = Force::getForce($this->gameID, $sector->getSectorID(), $this->accountID);
+				$force->setForcesToMax();
+				$force->setExpire($player->getGame()->getEndTime());
+				$force->update();
+			}
+		}
+		if (!$player->hasPlottedCourse()) {
+			throw new Exception('This should only be called when we have a plotted course');
+		}
+		debug('Follow Course: ' . $player->getPlottedCourse()->getNextOnPath());
+		return moveToSector($player, $player->getPlottedCourse()->getNextOnPath());
+	}
+
+	private function returnToSafety(Player $player): PlayerPageProcessor {
+		$this->isReturningToSafety = true;
+		return plotToSafety($player);
 	}
 
 	private function changeRoute(): void {

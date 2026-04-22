@@ -105,17 +105,6 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 		]);
 
 		if ($planet->isBusted()) {
-			$db->update(
-				'player',
-				['land_on_planet' => 'FALSE'],
-				[
-					'sector_id' => $planet->getSectorID(),
-					'game_id' => $player->getGameID(),
-				],
-			);
-			$planet->removeOwner();
-			$planet->removePassword();
-
 			// Prepare message for planet owners
 			$planetAttackMessage = 'The defenses of ' . $planet->getCombatName() . ' have been breached. The planet is lost! [combatlog=' . $logId . ']';
 		} else {
@@ -150,7 +139,7 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 		}
 
 		// If they died on the shot they get to see the results
-		$container = new AttackPlanet($planet->getSectorID(), $results, $player->isDead());
+		$container = new AttackPlanet($planet, $results, $player->isDead());
 		$container->go();
 	}
 

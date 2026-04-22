@@ -10,7 +10,7 @@ use Smr\PlanetStructureType;
  */
 abstract class PlanetType {
 
-	protected const int MAX_LANDED_UNLIMITED = 0;
+	public const int MAX_LANDED_UNLIMITED = -1;
 
 	// These types are associated with database indexes and must not change
 	public const int TYPE_TERRAN = 1;
@@ -18,6 +18,7 @@ abstract class PlanetType {
 	public const int TYPE_DWARF = 3;
 	public const int TYPE_DEFENSE = 4;
 	public const int TYPE_PROTO = 5;
+	public const int TYPE_OUTPOST = 6;
 
 	/**
 	 * Returns the properties of all the structures this planet type can build.
@@ -54,6 +55,7 @@ abstract class PlanetType {
 		self::TYPE_DWARF => DwarfPlanet::class,
 		self::TYPE_DEFENSE => DefenseWorld::class,
 		self::TYPE_PROTO => ProtoPlanet::class,
+		self::TYPE_OUTPOST => SentinelOutpost::class,
 	];
 
 	/**
@@ -62,7 +64,7 @@ abstract class PlanetType {
 	 */
 	public static function getTypeInfo(int $typeID): self {
 		if (!isset(self::PLANET_TYPES[$typeID])) {
-			throw new Exception("Planet type ID does not exist: $typeID");
+			throw new Exception('Planet type ID does not exist: ' . $typeID);
 		}
 		$planetType = self::PLANET_TYPES[$typeID];
 		return new $planetType();
@@ -85,7 +87,14 @@ abstract class PlanetType {
 		if (isset($this->structures[$structureID])) {
 			return $this->structures[$structureID];
 		}
-		throw new Exception("Structure not supported on this planet type: $structureID");
+		throw new Exception('Structure not supported on this planet type: ' . $structureID);
+	}
+
+	/**
+	 * Is this planet type permanently destroyed when its defenses are breached?
+	 */
+	public function hasPermanentDestruction(): bool {
+		return false;
 	}
 
 }

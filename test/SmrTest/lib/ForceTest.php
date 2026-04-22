@@ -92,6 +92,16 @@ class ForceTest extends TestCase {
 		self::assertFalse($this->force->hasMaxMines());
 	}
 
+	public function test_setForcesToMax(): void {
+		self::assertSame(0, $this->force->getMines());
+		self::assertSame(0, $this->force->getCDs());
+		self::assertSame(0, $this->force->getSDs());
+		$this->force->setForcesToMax();
+		self::assertSame(Force::MAX_MINES, $this->force->getMines());
+		self::assertSame(Force::MAX_CDS, $this->force->getCDs());
+		self::assertSame(Force::MAX_SDS, $this->force->getSDs());
+	}
+
 	/**
 	 * @param WeaponDamageData $damage
 	 * @param ForceTakenDamageData $expected

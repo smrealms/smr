@@ -4,9 +4,16 @@ use Smr\Race;
 
 /**
  * @var int $SelectedGameID
+ * @var list<Smr\Galaxy> $NpcGalaxyChoices
+ * @var array<int, string> $NpcGalaxyAllianceChoices
+ * @var string $SetupNpcGalaxyHref
+ * @var ?string $Message
  */
 
-?>
+if ($Message !== null) { ?>
+	<p><?php echo $Message; ?></p><?php
+} ?>
+
 <form method="POST" action="<?php echo $SelectGameHREF; ?>">
 	<select name="selected_game_id" onchange="this.form.submit()"><?php
 		foreach ($Games as $Game) { ?>
@@ -60,7 +67,27 @@ if ($SelectedGameID !== 0) { ?>
 				} ?>
 			</tr><?php
 		} ?>
-	</table><?php
+	</table>
+
+	<br /><br />
+	<h2>Setup NPC Galaxy</h2>
+	<p>Creates a Sentinel Outpost planet in the selected galaxy owned by the
+	selected alliance and fills most sectors in the galaxy with non-expiring NPC mines.</p>
+	<form method="POST" action="<?php echo $SetupNpcGalaxyHref; ?>">
+		Galaxy: <select name="galaxy_id"><?php
+			foreach ($NpcGalaxyChoices as $galaxy) { ?>
+				<option value="<?php echo $galaxy->getGalaxyID(); ?>"><?php echo $galaxy->getDisplayName(); ?></option><?php
+			} ?>
+		</select>
+		<br />
+		Alliance: <select name="alliance_id"><?php
+			foreach ($NpcGalaxyAllianceChoices as $allianceID => $allianceName) { ?>
+				<option value="<?php echo $allianceID; ?>"><?php echo $allianceName; ?></option><?php
+			} ?>
+		</select>
+		<br /><br />
+		<?php echo create_submit('action', 'Setup Galaxy'); ?>
+	</form><?php
 } ?>
 
 <br /><br />
