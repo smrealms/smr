@@ -96,9 +96,11 @@ class NpcManage extends AccountPage {
 
 		// Get galaxy/alliance options for NPC galaxies
 		$npcGalaxyChoices = [];
-		foreach (Game::getGame($selectedGameID)->getGalaxies() as $galaxy) {
-			if ($galaxy->getGalaxyType() !== Galaxy::TYPE_RACIAL) {
-				$npcGalaxyChoices[] = $galaxy;
+		if (Game::gameExists($selectedGameID)) {
+			foreach (Game::getGame($selectedGameID)->getGalaxies() as $galaxy) {
+				if ($galaxy->getGalaxyType() !== Galaxy::TYPE_RACIAL) {
+					$npcGalaxyChoices[] = $galaxy;
+				}
 			}
 		}
 		$template->assign('NpcGalaxyChoices', $npcGalaxyChoices);
