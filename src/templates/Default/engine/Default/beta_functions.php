@@ -92,7 +92,7 @@ use Smr\Race;
 <br />
 
 <form method="POST" action="<?php echo $PersonalRelationsHREF; ?>">
-	<input type="number" name="amount" value="0" style="width:75px" />&nbsp;
+	<input type="number" name="amount" value="0" min="<?php echo MIN_PERSONAL_RELATIONS; ?>" max="<?php echo MAX_PERSONAL_RELATIONS; ?>" style="width:75px" />&nbsp;
 	<select name="race"><?php
 		foreach (Race::getAllNames() as $raceID => $raceName) { ?>
 			<option value="<?php echo $raceID; ?>"><?php echo $raceName; ?></option><?php
@@ -103,7 +103,7 @@ use Smr\Race;
 <br />
 
 <form method="POST" action="<?php echo $RaceRelationsHREF; ?>">
-	<input type="number" name="amount" value="0" min="<?php echo MIN_GLOBAL_RELATIONS; ?>" max="<?php echo MAX_GLOBAL_RELATIONS; ?>" style="width:75px" />&nbsp;
+	<input type="number" name="amount" value="0" min="<?php echo MIN_POLITICAL_RELATIONS; ?>" max="<?php echo MAX_POLITICAL_RELATIONS; ?>" style="width:75px" />&nbsp;
 	<select name="race"><?php
 		foreach (Race::getPlayableNames() as $raceID => $raceName) {
 			if ($raceID === $ThisPlayer->getRaceID()) continue; ?>

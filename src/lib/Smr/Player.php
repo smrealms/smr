@@ -1741,11 +1741,9 @@ class Player {
 	 */
 	public function setRelations(int $relations, int $raceID): void {
 		$this->getRelations();
+		$relations = max(MIN_PERSONAL_RELATIONS, min(MAX_PERSONAL_RELATIONS, $relations));
 		if ($this->personalRelations[$raceID] === $relations) {
 			return;
-		}
-		if ($relations < MIN_RELATIONS) {
-			$relations = MIN_RELATIONS;
 		}
 		$relationsDiff = IRound($relations - $this->personalRelations[$raceID]);
 		$this->personalRelations[$raceID] = $relations;

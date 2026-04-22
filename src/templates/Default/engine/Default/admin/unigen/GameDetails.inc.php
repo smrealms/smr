@@ -79,7 +79,7 @@ use Smr\Game;
 	<tr>
 		<td class="right">Starting Relations</td>
 		<td>
-			<input required type="number" name="relations" min="<?php echo MIN_GLOBAL_RELATIONS; ?>" max="<?php echo MAX_GLOBAL_RELATIONS; ?>" value="<?php echo $Game['relations']; ?>">
+			<input required type="number" name="relations" min="<?php echo MIN_POLITICAL_RELATIONS; ?>" max="<?php echo MAX_POLITICAL_RELATIONS; ?>" value="<?php echo $Game['relations']; ?>">
 			Not updated if game is enabled and has started
 		</td>
 	</tr>

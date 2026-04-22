@@ -89,7 +89,7 @@ class GameIntegrationTest extends BaseIntegrationSpec {
 			foreach (Race::getAllIDs() as $raceID2) {
 				$expected = -123;
 				if ($raceID1 === $raceID2) {
-					$expected = MAX_GLOBAL_RELATIONS;
+					$expected = MAX_POLITICAL_RELATIONS;
 				} elseif ($raceID1 === RACE_NEUTRAL || $raceID2 === RACE_NEUTRAL) {
 					$expected = 0;
 				}
