@@ -10,7 +10,8 @@ class SetHardwareProcessor extends BetaFunctionsPageProcessor {
 	public function buildBetaFunctionsProcessor(Player $player): void {
 		$ship = $player->getShip();
 		$type_hard = Request::getInt('type_hard');
-		$amount_hard = Request::getInt('amount_hard');
+		$max_hard = $ship->getType()->getMaxHardware($type_hard);
+		$amount_hard = min(Request::getInt('amount_hard'), $max_hard);
 		$ship->setHardware($type_hard, $amount_hard);
 	}
 
