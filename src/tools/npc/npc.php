@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\AbstractShip;
 use Smr\Account;
 use Smr\Combat\Weapon\Weapon;
 use Smr\Container\DiContainer;
@@ -397,8 +398,7 @@ function tradeGoods(int $goodID, Player $player, Port $port): PlayerPageProcesso
 }
 
 function dumpCargo(Player $player): PlayerPageProcessor {
-	$ship = $player->getShip();
-	$cargo = $ship->getCargo();
+	$cargo = $player->getShip()->getCargo();
 	debug('Ship Cargo', $cargo);
 	foreach ($cargo as $goodID => $amount) {
 		if ($amount > 0) {
@@ -483,11 +483,11 @@ function moveToSector(Player $player, int $targetSector): PlayerPageProcessor {
 /**
  * @param list<list<int>> $upgradeGroups
  */
-function getCurrentShipTier(Player $player, array $upgradeGroups): int {
+function getCurrentShipTier(AbstractShip $ship, array $upgradeGroups): int {
 	// Determine current ship tier
 	foreach ($upgradeGroups as $upgradeGroup) {
 		foreach ($upgradeGroup as $tier => $upgradeShipID) {
-			if ($player->getShipTypeID() === $upgradeShipID) {
+			if ($ship->getTypeID() === $upgradeShipID) {
 				return $tier;
 			}
 		}
@@ -497,6 +497,9 @@ function getCurrentShipTier(Player $player, array $upgradeGroups): int {
 }
 
 function checkForShipUpgrade(Player $player): void {
+	// Make sure the ship is up-to-date
+	$ship = $player->getShip(forceUpdate: true);
+
 	// Select the next tier ship in a random upgrade group
 	$upgradeGroups = [
 		SHIP_UPGRADE_PATH[$player->getRaceID()],
@@ -509,7 +512,7 @@ function checkForShipUpgrade(Player $player): void {
 	if ($player->hasEvilAlignment() && flip_coin()) {
 		$upgradeGroups[] = SHIP_UPGRADE_PATH_EVIL;
 	}
-	$currentTier = getCurrentShipTier($player, $upgradeGroups);
+	$currentTier = getCurrentShipTier($ship, $upgradeGroups);
 	$upgradeGroup = array_rand_value($upgradeGroups);
 	$upgradeTier = $currentTier + 1;
 	if (!array_key_exists($upgradeTier, $upgradeGroup)) {
@@ -521,7 +524,7 @@ function checkForShipUpgrade(Player $player): void {
 	// Base chance to upgrade is percent of cost of ship NPC can afford,
 	// which decreases for higher ship tier (but returns to the base chance
 	// over a number of weeks).
-	$cost = $player->getShip()->getCostToUpgrade($upgradeShipID);
+	$cost = $ship->getCostToUpgrade($upgradeShipID);
 	$weekNum = (Epoch::time() - $player->getGame()->getStartTime()) / 604800;
 	$delayFactor = 1 + max(0, 1.5 * $upgradeTier - $weekNum);
 	$baseUpgradeFrac = $player->getCredits() / max($cost, 1); // avoid <=0 denom
@@ -532,7 +535,7 @@ function checkForShipUpgrade(Player $player): void {
 		debug('Upgrading to ship type: ' . $upgradeShipID);
 		$balance = $player->getCredits() - $cost;
 		$player->setCredits(max(NPC_MINIMUM_RESERVE_CREDITS, $balance));
-		$player->getShip()->setTypeID($upgradeShipID);
+		$ship->setTypeID($upgradeShipID);
 	}
 }
 
