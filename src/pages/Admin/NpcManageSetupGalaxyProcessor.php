@@ -40,9 +40,7 @@ class NpcManageSetupGalaxyProcessor extends AccountPageProcessor {
 					sectorID: $sector->getSectorID(),
 					ownerID: $player->getAccountID(),
 				);
-				$force->setMines(Force::MAX_MINES);
-				$force->setCDs(Force::MAX_CDS);
-				$force->setSDs(Force::MAX_SDS);
+				$force->setForcesToMax();
 				$force->setExpire($expireTime);
 			}
 		}
