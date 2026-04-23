@@ -17,9 +17,9 @@ class GovernmentProcessor extends PlayerPageProcessor {
 		// Player has selected to become a deputy/smuggler
 		$location = Location::getLocation($player->getGameID(), $this->locationID);
 		if ($location->isHQ()) {
-			$player->setAlignment(150);
+			$player->setAlignment(ALIGNMENT_DEPUTY);
 		} elseif ($location->isUG()) {
-			$player->setAlignment(-150);
+			$player->setAlignment(ALIGNMENT_SMUGGLER);
 		}
 
 		(new CurrentSector())->go();
