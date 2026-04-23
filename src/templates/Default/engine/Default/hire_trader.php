@@ -21,10 +21,10 @@ if (count($Npcs) > 0) { ?>
 		foreach ($Npcs as $npc) { ?>
 			<tr>
 				<td><?php echo $npc['player']->getLinkedDisplayName(true); ?></td>
-				<td><?php echo $npc['player']->getColouredRaceName($ThisPlayer->getRaceID()); ?></td>
+				<td><?php echo $ThisPlayer->getColouredRaceName($npc['player']->getRaceID()); ?></td>
 				<td><?php echo number_format($npc['hireCost']); ?></td>
 				<td>
-					<?php if ($DisableReason !== null) { ?>
+					<?php if ($DisableReason === null) { ?>
 						<div class="buttonA">
 							<a class="buttonA" href="<?php echo $npc['hireHref']; ?>">Hire</a>
 						</div><?php
