@@ -35,7 +35,7 @@ class AllianceOptions extends PlayerPage {
 			];
 		}
 
-		if (!$isDraftGame && !$alliance->isNHA()) {
+		if (!$isDraftGame && !$player->getAccount()->isNHL()) {
 			// Players can choose to leave their alliance (except in Draft games)
 			$container = new AllianceLeaveConfirm();
 			$links[] = [

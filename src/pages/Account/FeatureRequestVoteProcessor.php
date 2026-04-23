@@ -19,7 +19,7 @@ class FeatureRequestVoteProcessor extends AccountPageProcessor {
 
 		$action = Request::get('action');
 		if ($action === 'Vote') {
-			if ($account->getAccountID() === ACCOUNT_ID_NHL) {
+			if ($account->isNHL()) {
 				create_error('This account is not allowed to cast a vote!');
 			}
 			if (Request::has('vote')) {
