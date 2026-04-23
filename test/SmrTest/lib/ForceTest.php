@@ -110,7 +110,11 @@ class ForceTest extends TestCase {
 	public function test_takeDamage(string $case, array $damage, array $expected, int $mines, int $cds, int $sds): void {
 		// Set up an unexpired stack with a specific number of forces
 		$force = $this->createPartialMock(Force::class, ['hasExpired']);
-		$force->expects(self::atMost(2))->method('hasExpired')->willReturn(false);
+		$force
+			->expects(self::atMost(2))
+			->method('hasExpired')
+			->willReturn(false)
+			->seal();
 		$force->setMines($mines);
 		$force->setCDs($cds);
 		$force->setSDs($sds);
@@ -296,7 +300,11 @@ class ForceTest extends TestCase {
 
 		// Partially mock the force so we can use the galaxy stub
 		$force = $this->createPartialMock($this->force::class, ['getGalaxy']);
-		$force->expects(self::atMost(1))->method('getGalaxy')->willReturn($galaxy);
+		$force
+			->expects(self::atMost(1))
+			->method('getGalaxy')
+			->willReturn($galaxy)
+			->seal();
 
 		// Set the number of forces, and check result
 		$force->setSDs($sds);

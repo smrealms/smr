@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.5/phpunit.xsd"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/13.1/phpunit.xsd"
 	beStrictAboutChangesToGlobalState="true"
 	bootstrap="src/bootstrap.php"
 	cacheDirectory=".phpunit.cache"
@@ -9,7 +9,9 @@
 	displayDetailsOnAllIssues="true"
 	executionOrder="depends,defects"
 	failOnAllIssues="true"
-	requireCoverageMetadata="true">
+	requireCoverageMetadata="true"
+	requireSealedMockObjects="true"
+>
 	<testsuites>
 		<testsuite name="default">
 			<directory suffix="Test.php">test</directory>
