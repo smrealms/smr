@@ -48,7 +48,7 @@ class CargoDumpProcessor extends PlayerPageProcessor {
 			create_error('You can\'t dump cargo in a Federal Sector!');
 		}
 
-		$msg = 'You have jettisoned <span class="yellow">' . $amount . '</span> ' . pluralise($amount, 'unit', false) . ' of ' . $good->name;
+		$msg = 'You have jettisoned <span class="yellow">' . number_format($amount) . '</span> ' . pluralise($amount, 'unit', false) . ' of ' . $good->name;
 
 		if ($player->getExperience() > 0) {
 			// If they have any experience left, lose exp
@@ -72,7 +72,7 @@ class CargoDumpProcessor extends PlayerPageProcessor {
 			$player->decreaseExperience($lost_xp);
 			$player->increaseHOF($lost_xp, ['Trade', 'Experience', 'Jettisoned'], HOF_PUBLIC);
 
-			$msg .= ' and have lost <span class="exp">' . $lost_xp . '</span> experience.';
+			$msg .= ' and have lost <span class="exp">' . number_format($lost_xp) . '</span> experience.';
 			// log action
 			$player->log(LOG_TYPE_TRADING, 'Dumps ' . $amount . ' of ' . $good->name . ' and loses ' . $lost_xp . ' experience');
 		} else {
