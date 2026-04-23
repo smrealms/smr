@@ -476,7 +476,7 @@ class Game {
 		if (count($galaxies) === 0) {
 			throw new Exception('There are no galaxies in this game yet!');
 		}
-		return end($galaxies)->getEndSector();
+		return array_last($galaxies)->getEndSector();
 	}
 
 	public function equals(self $otherGame): bool {

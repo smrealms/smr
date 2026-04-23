@@ -621,8 +621,8 @@ function findRoutes(Player $player, ?int $galaxyID): array {
 	}
 
 	// Determine the trade area (start of first galaxy to end of last)
-	$startSectorID = reset($galaxies)->getStartSector();
-	$endSectorID = end($galaxies)->getEndSector();
+	$startSectorID = array_first($galaxies)->getStartSector();
+	$endSectorID = array_last($galaxies)->getEndSector();
 
 	$maxNumberOfPorts = 2;
 	$routesForPort = -1;

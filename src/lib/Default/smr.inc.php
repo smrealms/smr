@@ -732,7 +732,7 @@ function format_list(array $items): string {
 	} elseif (count($items) === 1) {
 		$result = $items[0];
 	} else {
-		$result = implode(', ', array_slice($items, 0, -1)) . ' and ' . end($items);
+		$result = implode(', ', array_slice($items, 0, -1)) . ' and ' . array_last($items);
 	}
 	return $result;
 }

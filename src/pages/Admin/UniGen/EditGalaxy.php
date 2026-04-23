@@ -91,7 +91,7 @@ class EditGalaxy extends AccountPage {
 		$template->assign('Galaxies', $galaxies);
 		$template->assign('MapSectors', $mapSectors);
 
-		$lastSector = end($galaxies)->getEndSector();
+		$lastSector = $game->getLastSectorID();
 		$template->assign('LastSector', $lastSector);
 
 		$template->assign('Message', $this->message);
