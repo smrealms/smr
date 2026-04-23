@@ -463,6 +463,13 @@ class Account {
 		return $this->npc;
 	}
 
+	/**
+	 * Is account designated as the Newbie Help Leader?
+	 */
+	public function isNHL(): bool {
+		return $this->accountID === ACCOUNT_ID_NHL;
+	}
+
 	protected function getHOFData(): void {
 		if (!isset($this->HOF)) {
 			//Get Player HOF
