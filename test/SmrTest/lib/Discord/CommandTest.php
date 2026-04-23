@@ -22,19 +22,22 @@ class CommandTest extends TestCase {
 		$mockCommand
 			->expects(self::once())
 			->method('response')
-			->willReturn(['A', 'B']);
+			->willReturn(['A', 'B'])
+			->seal();
 
 		// Mock the DiscordPHP Message, and make sure we call reply on it
 		$mockPromise = $this->createMock(PromiseInterface::class);
 		$mockPromise
 			->expects(self::once())
-			->method('catch');
+			->method('catch')
+			->seal();
 		$mockMessage = $this->createMock(Message::class);
 		$mockMessage
 			->expects(self::once())
 			->method('reply')
 			->with("A\nB")
-			->willReturn($mockPromise);
+			->willReturn($mockPromise)
+			->seal();
 
 		$mockCommand->callback($mockMessage, []);
 	}
@@ -46,19 +49,22 @@ class CommandTest extends TestCase {
 		$mockCommand
 			->expects(self::once())
 			->method('response')
-			->willThrowException(new UserError($msg));
+			->willThrowException(new UserError($msg))
+			->seal();
 
 		// Mock the DiscordPHP Message, and make sure we call reply on it
 		$mockPromise = $this->createMock(PromiseInterface::class);
 		$mockPromise
 			->expects(self::once())
-			->method('catch');
+			->method('catch')
+			->seal();
 		$mockMessage = $this->createMock(Message::class);
 		$mockMessage
 			->expects(self::once())
 			->method('reply')
 			->with($msg)
-			->willReturn($mockPromise);
+			->willReturn($mockPromise)
+			->seal();
 
 		$mockCommand->callback($mockMessage, []);
 	}
@@ -74,19 +80,22 @@ class CommandTest extends TestCase {
 		$mockCommand
 			->expects(self::once())
 			->method('logException')
-			->with($err);
+			->with($err)
+			->seal();
 
 		// Mock the DiscordPHP Message, and make sure we call reply on it
 		$mockPromise = $this->createMock(PromiseInterface::class);
 		$mockPromise
 			->expects(self::once())
-			->method('catch');
+			->method('catch')
+			->seal();
 		$mockMessage = $this->createMock(Message::class);
 		$mockMessage
 			->expects(self::once())
 			->method('reply')
 			->with('I encountered an error. Please report this to an admin!')
-			->willReturn($mockPromise);
+			->willReturn($mockPromise)
+			->seal();
 
 		$mockCommand->callback($mockMessage, []);
 	}
@@ -97,13 +106,15 @@ class CommandTest extends TestCase {
 		$mockCommand
 			->expects(self::once())
 			->method('response')
-			->willReturn([]);
+			->willReturn([])
+			->seal();
 
 		// Mock the DiscordPHP Message, and make sure we do NOT call reply on it
 		$mockMessage = $this->createMock(Message::class);
 		$mockMessage
 			->expects(self::never())
-			->method('reply');
+			->method('reply')
+			->seal();
 
 		$mockCommand->callback($mockMessage, []);
 	}
@@ -119,7 +130,8 @@ class CommandTest extends TestCase {
 				'8ball',
 				$command->callback(...),
 				['description' => $command->description(), 'usage' => '.8ball [question]'],
-			);
+			)
+			->seal();
 		$command->register($mockClient);
 	}
 
@@ -129,7 +141,8 @@ class CommandTest extends TestCase {
 		$mockClient = $this->createMock(DiscordCommand::class);
 		$mockClient
 			->expects(self::once())
-			->method('registerSubCommand');
+			->method('registerSubCommand')
+			->seal();
 		$command->register($mockClient);
 	}
 

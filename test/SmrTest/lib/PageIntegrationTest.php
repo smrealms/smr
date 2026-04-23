@@ -58,7 +58,8 @@ class PageIntegrationTest extends TestCase {
 			$mockPlayer
 				->expects(self::exactly($ajax ? 0 : 1))
 				->method('setUnderAttack')
-				->with(false);
+				->with(false)
+				->seal();
 			return $mockPlayer;
 		};
 

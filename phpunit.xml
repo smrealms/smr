@@ -9,7 +9,9 @@
 	displayDetailsOnAllIssues="true"
 	executionOrder="depends,defects"
 	failOnAllIssues="true"
-	requireCoverageMetadata="true">
+	requireCoverageMetadata="true"
+	requireSealedMockObjects="true"
+>
 	<testsuites>
 		<testsuite name="default">
 			<directory suffix="Test.php">test</directory>

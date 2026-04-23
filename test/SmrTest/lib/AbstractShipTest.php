@@ -546,10 +546,15 @@ class AbstractShipTest extends TestCase {
 		$bounty
 			->expects(self::once())
 			->method('increaseCredits')
-			->with(44_800);
+			->with(44_800)
+			->seal();
 
 		$gameID = 3;
 		$player = $this->createMock(Player::class);
+		$player
+			->expects(self::atLeastOnce())
+			->method('getAccountID')
+			->willReturn(999); // value doesn't matter
 		$player
 			->expects(self::atLeastOnce())
 			->method('getGameID')
@@ -600,7 +605,8 @@ class AbstractShipTest extends TestCase {
 		$player
 			->expects(self::once())
 			->method('increaseAlignment')
-			->with(1);
+			->with(1)
+			->seal();
 
 		$port = Port::createPort($gameID, 9);
 		$port->setRaceID(RACE_SALVENE);
