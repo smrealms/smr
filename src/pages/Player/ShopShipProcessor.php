@@ -47,8 +47,6 @@ class ShopShipProcessor extends PlayerPageProcessor {
 		}
 
 		// assign the new ship
-		$ship->decloak();
-		$ship->disableIllusion();
 		$ship->setTypeID($shipTypeID);
 
 		$player->log(LOG_TYPE_HARDWARE, 'Buys a ' . $newShipType->getName() . ' for ' . $cost . ' credits');

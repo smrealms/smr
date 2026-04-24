@@ -12,8 +12,6 @@ class SetShipProcessor extends BetaFunctionsPageProcessor {
 		$shipTypeID = Request::getInt('ship_type_id');
 		if ($shipTypeID <= 75 && $shipTypeID !== 68) {
 			// assign the new ship
-			$ship->decloak();
-			$ship->disableIllusion();
 			$ship->setTypeID($shipTypeID);
 			$ship->setHardwareToMax();
 		}

@@ -394,6 +394,10 @@ class AbstractShip {
 	 * Switch to a new ship, updating player turns accordingly.
 	 */
 	public function setTypeID(int $shipTypeID): void {
+		// Remove any hardware-related settings before we change ship type
+		$this->decloak();
+		$this->disableIllusion();
+
 		$oldSpeed = $this->shipType->getSpeed();
 		$this->getPlayer()->setShipTypeID($shipTypeID);
 		$this->regenerateShipType();
