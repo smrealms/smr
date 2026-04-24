@@ -4,9 +4,9 @@ namespace Smr\Npc;
 
 use Exception;
 use Smr\Force;
+use Smr\Npc\Exceptions\AbandonTradeRoute;
 use Smr\Npc\Exceptions\FinalAction;
 use Smr\Npc\Exceptions\ForwardAction;
-use Smr\Npc\Exceptions\TradeRouteDrained;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Player\AllianceManageNpcsDismissProcessor;
 use Smr\Pages\Player\Bank\AllianceBankProcessor;
@@ -216,8 +216,8 @@ class NpcActor {
 			$this->tradeRoute->next();
 			try {
 				return tradeGoods($currentRoute->getGoodID(), $player, $port);
-			} catch (TradeRouteDrained) {
-				debug('Trade route is drained');
+			} catch (AbandonTradeRoute $err) {
+				debug('Abandoning current trade route: ' . $err->getMessage());
 				$this->changeRoute();
 				throw new ForwardAction();
 			}

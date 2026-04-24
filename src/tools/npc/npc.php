@@ -10,9 +10,9 @@ use Smr\Exceptions\PathNotFound;
 use Smr\Force;
 use Smr\Galaxy;
 use Smr\Location;
+use Smr\Npc\Exceptions\AbandonTradeRoute;
 use Smr\Npc\Exceptions\FinalAction;
 use Smr\Npc\Exceptions\ForwardAction;
-use Smr\Npc\Exceptions\TradeRouteDrained;
 use Smr\Npc\NpcActor;
 use Smr\Page\Page;
 use Smr\Page\PlayerPageProcessor;
@@ -383,11 +383,14 @@ function tradeGoods(int $goodID, Player $player, Port $port): PlayerPageProcesso
 	}
 
 	if ($port->getGoodAmount($goodID) < $amount) {
-		throw new TradeRouteDrained();
+		throw new AbandonTradeRoute('Route is drained');
 	}
 
 	$idealPrice = $port->getIdealPrice($goodID, $transaction, $amount, $relations);
 	$offeredPrice = $port->getOfferPrice($idealPrice, $relations, $transaction);
+	if ($player->getCredits() < $offeredPrice) {
+		throw new AbandonTradeRoute('Goods cost ' . $offeredPrice . ', but player has ' . $player->getCredits());
+	}
 
 	return new ShopGoodsProcessor(
 		goodID: $goodID,
