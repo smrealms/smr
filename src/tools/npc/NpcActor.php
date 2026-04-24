@@ -58,6 +58,9 @@ class NpcActor {
 		// Upgrade ship if possible, reset hardware to max, etc.
 		setupShip($player);
 
+		// Launch from planet, if necessary
+		$player->setLandedOnPlanet(false);
+
 		// Update database (not essential to have a lock here)
 		$player->update();
 
