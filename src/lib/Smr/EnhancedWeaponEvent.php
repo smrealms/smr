@@ -76,7 +76,10 @@ class EnhancedWeaponEvent {
 	 */
 	private static function createEvent(int $gameID): self {
 		// First, randomly select a weapon type to enhance
-		$weaponTypeID = array_rand(WeaponType::getAllSoldWeaponTypes($gameID));
+		// Don't allow it to be NPL, since that is restricted to newbies
+		$soldWeaponTypes = WeaponType::getAllSoldWeaponTypes($gameID);
+		unset($soldWeaponTypes[WEAPON_TYPE_NEWBIE_PULSE_LASER]);
+		$weaponTypeID = array_rand($soldWeaponTypes);
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT location_type_id, sector_id FROM location JOIN location_sells_weapons USING (location_type_id) WHERE game_id = :game_id AND weapon_type_id = :weapon_type_id ORDER BY RAND() LIMIT 1', [
