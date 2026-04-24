@@ -58,7 +58,7 @@ class Ship extends AbstractShip {
 		$this->updateCargo();
 		$this->updateCloak();
 		$this->updateIllusion();
-		// note: Ship::setTypeID updates the Player only
+		// note: Ship::setTypeID modifies the Player
 		$this->getPlayer()->update();
 	}
 
