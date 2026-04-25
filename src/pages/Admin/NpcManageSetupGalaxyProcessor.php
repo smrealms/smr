@@ -51,6 +51,7 @@ class NpcManageSetupGalaxyProcessor extends AccountPageProcessor {
 		$planetSector = array_rand_value($sectors);
 		$planet = $planetSector->createPlanet(PlanetType::TYPE_OUTPOST, inhabitableTime: 0);
 		$planet->setOwnerID($alliance->getLeaderID());
+		$planet->setName($alliance->getAllianceName() . ' Stronghold');
 		$planet->setBuildingsToMax();
 		$planet->setDefensesToMax();
 		$weapons = [
