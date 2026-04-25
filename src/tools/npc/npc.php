@@ -433,12 +433,7 @@ function plotToSafety(Player $player): PlayerPageProcessor {
 		}
 	}
 
-	// Always drop illegal goods before heading to fed space
-	if ($player->getShip()->hasIllegalGoods()) {
-		debug('Dumping illegal goods');
-		return dumpCargo($player);
-	}
-
+	$ship = $player->getShip();
 	$fedLocID = $player->getRaceID() + LOCATION_GROUP_RACIAL_BEACONS;
 	try {
 		$needToMove = plotToNearest($player, Location::getLocation($player->getGameID(), $fedLocID));
@@ -448,8 +443,24 @@ function plotToSafety(Player $player): PlayerPageProcessor {
 	}
 	if ($needToMove === false) {
 		debug('Plotted to fed whilst in fed, switch NPC and wait for turns');
+		// In the rare case where we are already in fed and have illegal goods,
+		// just remove the cargo since traditional dumping is not allowed here.
+		if ($ship->hasIllegalGoods()) {
+			debug('Dumping illegal goods (forced)');
+			$ship->removeAllCargo();
+			$ship->updateCargo();
+		}
 		throw new FinalAction();
 	}
+
+	// Always drop illegal goods before heading to fed space.
+	// This must be done *after* setting the plotted course and relies on the
+	// course plotting being done directly rather than through a Processor.
+	if ($ship->hasIllegalGoods()) {
+		debug('Dumping illegal goods');
+		return dumpCargo($player);
+	}
+
 	throw new ForwardAction();
 }
 

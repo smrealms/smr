@@ -1045,4 +1045,8 @@ class AbstractShip {
 		throw new Exception('Can only call update on Ship objects');
 	}
 
+	public function updateCargo(): void {
+		throw new Exception('Can only call updateCargo on Ship objects');
+	}
+
 }
