@@ -156,7 +156,7 @@ class NpcActor {
 			global $previousContainer;
 			$previousContainer = null; //We died, we don't care what we were doing beforehand.
 			setupShip($player); // reship before continuing
-			$this->changeRoute();
+			$this->changeRoute(avoidPreviousPorts: true);
 		}
 
 		if ($this->isReturningToSafety) {
@@ -255,10 +255,10 @@ class NpcActor {
 		return plotToSafety($player);
 	}
 
-	private function changeRoute(): void {
+	private function changeRoute(bool $avoidPreviousPorts = false): void {
 		// Remove any route from the pool of available routes if it contains any
 		// the sectors in the current route (e.g. we died on it, don't return).
-		if ($this->tradeRoute !== null) {
+		if ($avoidPreviousPorts && $this->tradeRoute !== null) {
 			$avoidSectorIDs = $this->tradeRoute->getEntireRoute()->getPortSectorIDs();
 			foreach ($this->allTradeRoutes as $key => $route) {
 				foreach ($avoidSectorIDs as $avoidSectorID) {

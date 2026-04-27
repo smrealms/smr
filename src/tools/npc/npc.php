@@ -640,7 +640,7 @@ function findRoutes(Player $player, ?int $galaxyID): array {
 
 	$maxNumberOfPorts = 2;
 	$routesForPort = -1;
-	$numberOfRoutes = 150;
+	$numberOfRoutes = 100; // should this scale with size of search area?
 	$maxDistance = 15;
 
 	$db = Database::getInstance();
@@ -676,10 +676,8 @@ function findRoutes(Player $player, ?int $galaxyID): array {
 
 	unset($distances);
 
-	$routesMerged = [];
-	foreach ($allRoutes[RouteGenerator::MONEY_ROUTE] as $routesByMulti) {
-		$routesMerged += $routesByMulti; //Merge arrays
-	}
+	// Flatten to a list of routes (i.e. no grouping by profit)
+	$routesMerged = array_merge(...array_values($allRoutes[RouteGenerator::MONEY_ROUTE]));
 
 	Port::clearCache();
 	Sector::clearCache();

@@ -17,7 +17,7 @@ class NpcManageAddAccountProcessor extends AccountPageProcessor {
 		// Add a new NPC account
 		$login = Request::get('npc_login');
 		$email = $login . '@smrealms.de';
-		$npcAccount = Account::createAccount($login, '', $email, 0, 0);
+		$npcAccount = Account::createAccount($login, '', $email, 0, 0, veteranForced: true);
 		$npcAccount->setValidated(true);
 		$npcAccount->update();
 

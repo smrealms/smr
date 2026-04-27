@@ -41,6 +41,7 @@ class NpcManageProcessor extends AccountPageProcessor {
 			$raceID = Request::getInt('race_id');
 			$npcPlayer = Player::createPlayer($accountID, $gameID, $playerName, $raceID, false, true);
 
+			$npcPlayer->getShip()->giveStarterShip();
 			$npcPlayer->getShip()->setHardwareToMax();
 			$npcPlayer->giveStartingTurns();
 			$npcPlayer->setCredits(Game::getGame($gameID)->getStartingCredits());
@@ -69,14 +70,16 @@ class NpcManageProcessor extends AccountPageProcessor {
 				$alliance = Alliance::getAllianceByName($allianceName, $gameID);
 			} catch (AllianceNotFound) {
 				$alliance = Alliance::createAlliance($gameID, $allianceName, $allowReserved);
-				$alliance->setLeaderID($npcPlayer->getAccountID());
 				$alliance->setAllianceDescription($allianceDescription);
-				$alliance->update();
 				$alliance->createDefaultRoles();
+			}
+			if (!$alliance->hasLeader()) {
+				$alliance->setLeaderID($npcPlayer->getAccountID());
 			}
 			$npcPlayer->joinAlliance($alliance->getAllianceID());
 
 			// Update because we may not have a lock
+			$alliance->update();
 			$npcPlayer->update();
 			$npcPlayer->getShip()->update();
 		}
