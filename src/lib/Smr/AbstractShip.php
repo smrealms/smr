@@ -325,7 +325,7 @@ class AbstractShip {
 	}
 
 	protected function setCloak(bool $isCloaked): void {
-		if ($this->isCloaked == $isCloaked) {
+		if ($this->isCloaked === $isCloaked) {
 			return;
 		}
 		$this->isCloaked = $isCloaked;
