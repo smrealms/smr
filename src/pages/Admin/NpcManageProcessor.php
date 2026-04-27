@@ -41,6 +41,7 @@ class NpcManageProcessor extends AccountPageProcessor {
 			$raceID = Request::getInt('race_id');
 			$npcPlayer = Player::createPlayer($accountID, $gameID, $playerName, $raceID, false, true);
 
+			$npcPlayer->getShip()->giveStarterShip();
 			$npcPlayer->getShip()->setHardwareToMax();
 			$npcPlayer->giveStartingTurns();
 			$npcPlayer->setCredits(Game::getGame($gameID)->getStartingCredits());
