@@ -189,7 +189,14 @@ class Account {
 		throw new AccountNotFound('Account social login not found.');
 	}
 
-	public static function createAccount(string $login, #[SensitiveParameter] string $password, string $email, int $timez, int $referral): self {
+	public static function createAccount(
+		string $login,
+		#[SensitiveParameter] string $password,
+		string $email,
+		int $timez,
+		int $referral,
+		bool $veteranForced = false,
+	): self {
 		if ($referral !== 0) {
 			// Will throw if referral account doesn't exist
 			self::getAccount($referral);
@@ -223,6 +230,7 @@ class Account {
 				'email' => $email,
 				'validation_code' => random_string(10),
 				'last_login' => Epoch::time(),
+				'veteran' => $db->escapeBoolean($veteranForced),
 				'offset' => $timez,
 				'referral_id' => $referral,
 				'hof_name' => $login,

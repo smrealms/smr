@@ -27,11 +27,13 @@ class AccountTest extends BaseIntegrationSpec {
 		$email = 'test@test.com';
 		$tz = 9;
 		$referral = 0;
-		$account = Account::createAccount($login, $password, $email, $tz, $referral);
+		$veteranForced = true;
+		$account = Account::createAccount($login, $password, $email, $tz, $referral, $veteranForced);
 		self::assertSame($login, $account->getLogin());
 		self::assertSame($email, $account->getEmail());
 		self::assertSame($tz, $account->getOffset());
 		self::assertSame($referral, $account->getReferrerID());
+		self::assertSame($veteranForced, $account->isVeteranForced());
 	}
 
 	public function test_createAccount_throws_if_referrer_does_not_exist(): void {
