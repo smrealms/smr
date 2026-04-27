@@ -314,22 +314,23 @@ class AbstractShip {
 	}
 
 	public function decloak(): void {
-		if ($this->isCloaked === false) {
-			return;
-		}
-		$this->isCloaked = false;
-		$this->hasChangedCloak = true;
+		$this->setCloak(false);
 	}
 
 	public function enableCloak(): void {
 		if ($this->hasCloak() === false) {
 			throw new Exception('Ship does not have the supported hardware!');
 		}
-		if ($this->isCloaked === true) {
+		$this->setCloak(true);
+	}
+
+	protected function setCloak(bool $isCloaked): void {
+		if ($this->isCloaked === $isCloaked) {
 			return;
 		}
-		$this->isCloaked = true;
-		$this->hasChangedCloak = true;
+		$this->isCloaked = $isCloaked;
+		// Toggle rather than set true because we insert to db on update.
+		$this->hasChangedCloak = !$this->hasChangedCloak;
 	}
 
 	public function hasIllusion(): bool {
