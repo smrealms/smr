@@ -178,6 +178,29 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		self::assertEquals($original, $ship);
 	}
 
+	/**
+	 * Check that if cloak is enabled, we can disable and then re-enable
+	 * without breaking update.
+	 */
+	public function test_updateCloak_idempotency(): void {
+		$original = Ship::getShip($this->player);
+		$original->setHardwareToMax();
+
+		// Enable cloak
+		$original->enableCloak();
+		$original->update();
+
+		// Now disable and re-enable before updating again
+		$original->decloak();
+		$original->enableCloak();
+		$original->update();
+
+		// Check that the reloaded ship is equal to the original
+		$ship = Ship::getShip($this->player, true);
+		self::assertNotSame($original, $ship);
+		self::assertEquals($original, $ship);
+	}
+
 	public function test_updateIllusion(): void {
 		$original = Ship::getShip($this->player);
 		$original->setHardwareToMax();
