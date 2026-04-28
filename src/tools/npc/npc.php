@@ -388,7 +388,7 @@ function tradeGoods(int $goodID, Player $player, Port $port): PlayerPageProcesso
 
 	$idealPrice = $port->getIdealPrice($goodID, $transaction, $amount, $relations);
 	$offeredPrice = $port->getOfferPrice($idealPrice, $relations, $transaction);
-	if ($player->getCredits() < $offeredPrice) {
+	if ($transaction === TransactionType::Buy && $player->getCredits() < $offeredPrice) {
 		throw new AbandonTradeRoute('Goods cost ' . $offeredPrice . ', but player has ' . $player->getCredits());
 	}
 
