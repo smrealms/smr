@@ -62,6 +62,7 @@ DiContainer::getContainer()->set('NPC_SCRIPT', true);
 set_error_handler('exception_error_handler');
 
 const SHIP_UPGRADE_PATH = [
+	// Racial pathways
 	RACE_NEUTRAL => [
 		SHIP_TYPE_CELESTIAL_TRADER,
 		SHIP_TYPE_MERCHANT_VESSEL,
@@ -125,24 +126,23 @@ const SHIP_UPGRADE_PATH = [
 		SHIP_TYPE_VINDICATOR,
 		SHIP_TYPE_FURY,
 	],
-];
-
-const SHIP_UPGRADE_PATH_GOOD = [
-	SHIP_TYPE_GALACTIC_SEMI,
-	SHIP_TYPE_LIGHT_COURIER_VESSEL,
-	SHIP_TYPE_ADVANCED_COURIER_VESSEL,
-	SHIP_TYPE_FEDERAL_DISCOVERY,
-	SHIP_TYPE_FEDERAL_WARRANT,
-	SHIP_TYPE_FEDERAL_ULTIMATUM,
-];
-
-const SHIP_UPGRADE_PATH_EVIL = [
-	SHIP_TYPE_GALACTIC_SEMI,
-	SHIP_TYPE_CELESTIAL_MERCENARY,
-	SHIP_TYPE_STELLAR_FREIGHTER,
-	SHIP_TYPE_THIEF,
-	SHIP_TYPE_ASSASSIN,
-	SHIP_TYPE_DEATH_CRUISER,
+	// Alignment pathways
+	'GOOD' => [
+		SHIP_TYPE_GALACTIC_SEMI,
+		SHIP_TYPE_LIGHT_COURIER_VESSEL,
+		SHIP_TYPE_ADVANCED_COURIER_VESSEL,
+		SHIP_TYPE_FEDERAL_DISCOVERY,
+		SHIP_TYPE_FEDERAL_WARRANT,
+		SHIP_TYPE_FEDERAL_ULTIMATUM,
+	],
+	'EVIL' => [
+		SHIP_TYPE_GALACTIC_SEMI,
+		SHIP_TYPE_CELESTIAL_MERCENARY,
+		SHIP_TYPE_STELLAR_FREIGHTER,
+		SHIP_TYPE_THIEF,
+		SHIP_TYPE_ASSASSIN,
+		SHIP_TYPE_DEATH_CRUISER,
+	],
 ];
 
 try {
@@ -494,12 +494,9 @@ function moveToSector(Player $player, int $targetSector): PlayerPageProcessor {
 	return new SectorMoveProcessor($targetSector, new CurrentSector());
 }
 
-/**
- * @param list<list<int>> $upgradeGroups
- */
-function getCurrentShipTier(AbstractShip $ship, array $upgradeGroups): int {
+function getCurrentShipTier(AbstractShip $ship): int {
 	// Determine current ship tier
-	foreach ($upgradeGroups as $upgradeGroup) {
+	foreach (SHIP_UPGRADE_PATH as $upgradeGroup) {
 		foreach ($upgradeGroup as $tier => $upgradeShipID) {
 			if ($ship->getTypeID() === $upgradeShipID) {
 				return $tier;
@@ -521,12 +518,12 @@ function checkForShipUpgrade(Player $player): void {
 	];
 	// 50% chance to pick from evil/good ships
 	if ($player->hasGoodAlignment() && flip_coin()) {
-		$upgradeGroups[] = SHIP_UPGRADE_PATH_GOOD;
+		$upgradeGroups[] = SHIP_UPGRADE_PATH['GOOD'];
 	}
 	if ($player->hasEvilAlignment() && flip_coin()) {
-		$upgradeGroups[] = SHIP_UPGRADE_PATH_EVIL;
+		$upgradeGroups[] = SHIP_UPGRADE_PATH['EVIL'];
 	}
-	$currentTier = getCurrentShipTier($ship, $upgradeGroups);
+	$currentTier = getCurrentShipTier($ship);
 	$upgradeGroup = array_rand_value($upgradeGroups);
 	$upgradeTier = $currentTier + 1;
 	if (!array_key_exists($upgradeTier, $upgradeGroup)) {
@@ -545,11 +542,13 @@ function checkForShipUpgrade(Player $player): void {
 	$maxUpgradeFrac = 1 - 0.1 * $upgradeTier; // -10% max chance per tier
 	$upgradeFrac = min($maxUpgradeFrac, $baseUpgradeFrac) / $delayFactor;
 	$upgradePercent = IRound(100 * $upgradeFrac);
+	debug('Chance to upgrade ship: ' . $upgradePercent . '%');
 	if (flip_coin($upgradePercent)) {
-		debug('Upgrading to ship type: ' . $upgradeShipID);
+		$oldShipName = $ship->getName();
 		$balance = $player->getCredits() - $cost;
 		$player->setCredits(max(NPC_MINIMUM_RESERVE_CREDITS, $balance));
 		$ship->setTypeID($upgradeShipID);
+		debug('Upgraded ship: old = ' . $oldShipName . ' (T' . $currentTier . '), new = ' . $ship->getName() . ' (T' . $upgradeTier . ')');
 	}
 }
 
