@@ -125,7 +125,7 @@ use Smr\Sector;
 								}
 								if ($isVisited) {
 									if ($Sector->hasWarp()) {
-										if ($GalaxyMap) { ?><a href="<?php echo $Sector->getWarpSector()->getGalaxyMapHREF(); ?>"><?php } elseif ($isCurrentSector && $MapPlayer !== null) { ?><a href="<?php echo $Sector->getWarpSector()->getLocalMapMoveHREF($MapPlayer); ?>"><?php } ?>
+										if ($GalaxyMap) { ?><a href="<?php echo $Sector->getWarpSector()->getGalaxyMapHREF(); ?>"><?php } elseif ($isCurrentSector) { ?><a href="<?php echo $Sector->getWarpSector()->getLocalMapMoveHREF($MapPlayer); ?>"><?php } ?>
 											<img src="images/warp.png" width="16" height="16"
 												title="Warp to #<?php echo $Sector->getWarp(); ?> (<?php echo $Sector->getWarpSector()->getGalaxy()->getDisplayName(); ?>)"
 												alt="Warp to #<?php echo $Sector->getWarp(); ?>" <?php
@@ -179,7 +179,7 @@ use Smr\Sector;
 							</form><?php
 						} elseif ($GalaxyMap) { ?>
 							<a class="move_hack" href="<?php echo $Sector->getGalaxyMapHREF(); ?>"></a><?php
-						} elseif ($isLinkedSector && $MapPlayer !== null) { ?>
+						} elseif ($isLinkedSector) { ?>
 							<a class="move_hack" href="<?php echo $Sector->getLocalMapMoveHREF($MapPlayer); ?>"></a><?php
 						} elseif ($isCurrentSector) { ?>
 							<a class="move_hack" href="<?php echo Globals::getCurrentSectorHREF(); ?>"></a><?php
