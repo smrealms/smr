@@ -24,10 +24,7 @@ class ExaminePlanet extends PlayerPage {
 
 		if (!$planetLand) {
 			// Only check treaties if we can't otherwise land.
-			$ownerAllianceID = 0;
-			if ($planet->hasOwner()) {
-				$ownerAllianceID = $planet->getOwner()->getAllianceID();
-			}
+			$ownerAllianceID = $planet->getOwner()->getAllianceID();
 			$db = Database::getInstance();
 			$dbResult = $db->read('
 				SELECT 1

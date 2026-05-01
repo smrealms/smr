@@ -582,6 +582,8 @@ class Force {
 
 	/**
 	 * Returns the number of mines destroyed
+	 *
+	 * @phpstan-impure
 	 */
 	protected function takeDamageToMines(int $damage): int {
 		$numMines = min($this->getMines(), IFloor($damage / MINE_ARMOUR));
@@ -591,6 +593,8 @@ class Force {
 
 	/**
 	 * Returns the number of CDs destroyed
+	 *
+	 * @phpstan-impure
 	 */
 	protected function takeDamageToCDs(int $damage): int {
 		$numCDs = min($this->getCDs(), IFloor($damage / CD_ARMOUR));
@@ -600,6 +604,8 @@ class Force {
 
 	/**
 	 * Returns the number of SDs destroyed
+	 *
+	 * @phpstan-impure
 	 */
 	protected function takeDamageToSDs(int $damage): int {
 		$numSDs = min($this->getSDs(), IFloor($damage / SD_ARMOUR));
