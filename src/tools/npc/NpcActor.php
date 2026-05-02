@@ -86,8 +86,8 @@ class NpcActor {
 		return Player::getPlayer($this->accountID, $this->gameID, true);
 	}
 
-	public function getNumActions(): int {
-		return $this->actions;
+	public function hasTakenActions(): bool {
+		return $this->actions > 0;
 	}
 
 	public function shutdown(): void {
@@ -131,10 +131,6 @@ class NpcActor {
 			throw new FinalAction();
 		}
 
-		// Start the action sequence
-		$this->actions++;
-		debug('Action #' . $this->actions);
-
 		//We have to reload player on each loop
 		$player = $this->refreshPlayer();
 		$player->updateTurns();
@@ -145,8 +141,9 @@ class NpcActor {
 			$player->setDead(false); // see death_processing.php
 			$player->setNewbieWarning(false); // undo Player::killPlayer setting this to true
 
-			if ($this->hired) {
-				// Hired traders quit their job after getting podded
+			// Hired traders quit their job after getting podded while acting.
+			// If no action yet, don't dismiss since this might be a new employer.
+			if ($this->hired && $this->hasTakenActions()) {
 				AllianceManageNpcsDismissProcessor::dismissNpc($player, $player);
 				throw new FinalAction();
 			}
@@ -158,6 +155,10 @@ class NpcActor {
 			setupShip($player); // reship before continuing
 			$this->changeRoute(avoidPreviousPorts: true);
 		}
+
+		// Start the action sequence
+		$this->actions++;
+		debug('Action #' . $this->actions);
 
 		if ($this->isReturningToSafety) {
 			// Returning to safety is our highest priority action

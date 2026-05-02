@@ -187,7 +187,7 @@ function npcDriver(): bool {
 		} catch (FinalAction) {
 			$actor->shutdown();
 			// switch to a new NPC if we haven't taken any actions yet
-			return $actor->getNumActions() > 0;
+			return $actor->hasTakenActions();
 		} finally {
 			// Save any changes that we made during this action
 			saveAllAndReleaseLock(updateSession: false);
