@@ -39,6 +39,14 @@ class NpcActor {
 		$player->updateTurns();
 		checkStartConditions($player);
 
+		debug('Player Status', [
+			'Ship' => $player->getShip()->getName(),
+			'Turns' => $player->getTurns(),
+			'Credits' => $player->getCredits(),
+			'Exp' => $player->getExperience(),
+			'Alliance' => $player->getAlliance()->getAllianceName(),
+		]);
+
 		// Ensure the NPC doesn't think it's under attack at startup,
 		// since this could cause it to get stuck in a loop in Fed.
 		$player->setUnderAttack(false);
