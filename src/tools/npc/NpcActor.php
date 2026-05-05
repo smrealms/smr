@@ -21,7 +21,7 @@ class NpcActor {
 	private ?RouteIterator $tradeRoute = null;
 	private int $actions = 0;
 	private readonly int $startingCredits;
-	private readonly bool $hired;
+	private bool $hired;
 	private readonly ?int $npcGalaxyID;
 	private bool $isReturningToSafety = false;
 
@@ -144,7 +144,9 @@ class NpcActor {
 			// Hired traders quit their job after getting podded while acting.
 			// If no action yet, don't dismiss since this might be a new employer.
 			if ($this->hired && $this->hasTakenActions()) {
+				debug('Leaving alliance: ' . $player->getAlliance()->getAllianceName());
 				AllianceManageNpcsDismissProcessor::dismissNpc($player, $player);
+				$this->hired = false;
 				throw new FinalAction();
 			}
 
