@@ -1546,7 +1546,7 @@ class Player {
 			$this->log(LOG_TYPE_ALLIANCE, 'disbanded alliance ' . $alliance->getAllianceName());
 		} else {
 			$this->log(LOG_TYPE_ALLIANCE, 'left alliance: ' . $alliance->getAllianceName());
-			if ($alliance->getLeaderID() !== 0) {
+			if ($alliance->hasLeader()) {
 				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I left your alliance!', false);
 			}
 		}
