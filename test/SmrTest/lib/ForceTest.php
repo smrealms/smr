@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\AbstractShip;
+use Smr\Epoch;
 use Smr\Force;
 use Smr\Galaxy;
 use SmrTest\TestUtils;
@@ -330,6 +331,54 @@ class ForceTest extends TestCase {
 			[0, 0, 1, $below, $below],
 			[0, 1, 1, $below, $below],
 			[0, 0, 0, $below, 0],
+		];
+	}
+
+	#[DataProvider('dataProvider_updateExpire')]
+	public function test_updateExpire(int $sds, int $cds, int $mines, int $galMaxForceTime, int $expectedExpire): void {
+		// Stub the galaxy that this force is inside
+		$galaxy = $this->createStub(Galaxy::class);
+		$galaxy->method('getMaxForceTime')->willReturn($galMaxForceTime);
+
+		// Partially mock the force so we can use the galaxy stub
+		$force = $this->createPartialMock($this->force::class, ['getGalaxy']);
+		$force
+			->expects(self::atMost(2))
+			->method('getGalaxy')
+			->willReturn($galaxy)
+			->seal();
+
+		// Set the number of forces, and check result
+		$force->setSDs($sds);
+		$force->setCDs($cds);
+		$force->setMines($mines);
+		$force->updateExpire();
+		self::assertSame($expectedExpire, $force->getExpire() - Epoch::time());
+	}
+
+	/**
+	 * @return array<array<int>>
+	 */
+	public static function dataProvider_updateExpire(): array {
+		$day = 86400;
+		// sds, cds, mines, galaxy max expire time, expected expire time
+		return [
+			[0, 0, 0, $day, 0],
+			// Scouts independent of gal max expire time
+			[1, 0, 0, 0, 1 * $day],
+			[5, 0, 0, 0, 5 * $day],
+			// Non-scout-only goes up to gal max expire time
+			[5, 50, 50, 7 * $day, 7 * $day],
+			// Individual cd/mine add 1/50th
+			[0, 1, 0, 50 * $day, $day],
+			[0, 0, 1, 50 * $day, $day],
+			[0, 49, 0, 50 * $day, 49 * $day],
+			[0, 0, 49, 50 * $day, 49 * $day],
+			[0, 50, 0, $day, $day],
+			[0, 0, 50, $day, $day],
+			[1, 1, 1, 50 * $day, 3 * $day],
+			[0, 25, 24, 50 * $day, 49 * $day],
+			[0, 25, 25, 50 * $day, 50 * $day],
 		];
 	}
 
