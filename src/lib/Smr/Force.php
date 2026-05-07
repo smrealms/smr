@@ -304,9 +304,6 @@ class Force {
 		if ($time === $this->getExpire()) {
 			return;
 		}
-		if ($time > Epoch::time() + $this->getMaxExpireTime()) {
-			$time = Epoch::time() + $this->getMaxExpireTime();
-		}
 		$this->hasChanged = true;
 		$this->expire = $time;
 		if (!$this->isNew) {
@@ -316,11 +313,13 @@ class Force {
 
 	public function updateExpire(): void {
 		// Changed (26/10/05) - scout drones count * 2
-		if ($this->getCDs() === 0 && $this->getMines() === 0 && $this->getSDs() > 0) {
+		if (!$this->hasCDs() && !$this->hasMines() && $this->hasSDs()) {
 			$time = self::TIME_PER_SCOUT_ONLY * $this->getSDs();
 		} else {
 			$time = ($this->getCDs() * self::TIME_PERCENT_PER_COMBAT + $this->getSDs() * self::TIME_PERCENT_PER_SCOUT + $this->getMines() * self::TIME_PERCENT_PER_MINE) * $this->getMaxGalaxyExpireTime();
 		}
+		// Limit to max expire time
+		$time = min($time, $this->getMaxExpireTime());
 		$this->setExpire(Epoch::time() + IFloor($time));
 	}
 
