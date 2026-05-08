@@ -7,7 +7,7 @@
  */
 
 if ($DisableReason !== null) { ?>
-	<div><?php echo $DisableReason; ?></div><?php
+	<div><?php echo $DisableReason; ?></div><br /><?php
 }
 
 if (count($Npcs) > 0) { ?>
