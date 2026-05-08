@@ -1363,9 +1363,11 @@ class Player {
 	/**
 	 * Returns the decorated player name, suitable for HTML display.
 	 */
-	public function getDisplayName(bool $includeAlliance = false): string {
-		$name = htmlentities($this->playerName) . ' (' . $this->getPlayerID() . ')';
-		$return = get_colored_text($this->getAlignment(), $name);
+	public function getDisplayName(bool $includeAlliance = false, bool $colorByAlignment = true): string {
+		$return = htmlentities($this->playerName) . ' (' . $this->getPlayerID() . ')';
+		if ($colorByAlignment) {
+			$return = get_colored_text($this->getAlignment(), $return);
+		}
 		if ($this->isNPC()) {
 			$return .= ' <span class="npcColour">[NPC]</span>';
 		}
