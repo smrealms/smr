@@ -20,7 +20,9 @@ class AllianceManageNpcs extends PlayerPage {
 		$npcs = [];
 		foreach ($alliance->getNpcs() as $npc) {
 			$npcs[] = [
-				'player' => $npc,
+				'name' => $npc->getDisplayName(),
+				'race' => $player->getColouredRaceName($npc->getRaceID(), true),
+				'lastActive' => date($player->getAccount()->getDateTimeFormat(), $npc->getLastCPLAction()),
 				'dismissHref' => (new AllianceManageNpcsDismissProcessor($npc->getAccountID()))->href(),
 			];
 		}
