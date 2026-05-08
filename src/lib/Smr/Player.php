@@ -1542,6 +1542,9 @@ class Player {
 			$kickedBy->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were kicked out of the alliance!', false);
 			$this->log(LOG_TYPE_ALLIANCE, 'was kicked from alliance ' . $alliance->getAllianceName() . ' by ' . $kickedBy->getAccount()->getLogin() . ' (' . $kickedBy->getPlayerName() . ')');
 			$kickedBy->log(LOG_TYPE_ALLIANCE, 'kicked ' . $this->getAccount()->getLogin() . ' (' . $this->getPlayerName() . ') from alliance ' . $alliance->getAllianceName());
+			if ($alliance->hasLeader() && !$kickedBy->equals($alliance->getLeader())) {
+				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I was kicked from your alliance by ' . $kickedBy->getBBLink());
+			}
 		} elseif ($this->isAllianceLeader()) {
 			$this->log(LOG_TYPE_ALLIANCE, 'disbanded alliance ' . $alliance->getAllianceName());
 		} else {
