@@ -30,6 +30,7 @@ class HireTraderProcessor extends PlayerPageProcessor {
 		}
 		$npc->leaveAlliance();
 		$npc->joinAlliance($player->getAllianceID());
+		$npc->update(); // make sure Alliance::getMembers is accurate
 
 		// Enable NPC
 		$db = Database::getInstance();
