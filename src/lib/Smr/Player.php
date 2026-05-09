@@ -2272,12 +2272,17 @@ class Player {
 	public function killPlayerByPlayer(self $killer): array {
 		$return = [];
 		$msg = $this->getBBLink();
-
+		if ($this->hasAlliance()) {
+			$msg .= ', a member of ' . $this->getAllianceBBLink() . ',';
+		}
 		if ($this->hasCustomShipName()) {
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
 			$msg .= ' flying <span class="yellow">' . $named_ship . '</span>';
 		}
 		$msg .= ' was destroyed by ' . $killer->getBBLink();
+		if ($killer->hasAlliance()) {
+			$msg .= ', a member of ' . $killer->getAllianceBBLink() . ',';
+		}
 		if ($killer->hasCustomShipName()) {
 			$named_ship = strip_tags($killer->getCustomShipName(), '<font><span><img>');
 			$msg .= ' flying <span class="yellow">' . $named_ship . '</span>';
