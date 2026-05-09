@@ -16,7 +16,7 @@ if (count($Npcs) > 0) { ?>
 			<th>Trader</th>
 			<th>Race</th>
 			<th>Cost</th>
-			<th></th>
+			<th>Action</th>
 		</tr><?php
 		foreach ($Npcs as $npc) { ?>
 			<tr>
