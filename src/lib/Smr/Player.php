@@ -1588,6 +1588,11 @@ class Player {
 			'alliance_id' => $this->getAllianceID(),
 		]);
 
+		// Update the alliance cache if already populated
+		if (isset(self::$CACHE_ALLIANCE_PLAYERS[$this->gameID][$alliance->getAllianceID()])) {
+			self::$CACHE_ALLIANCE_PLAYERS[$this->gameID][$alliance->getAllianceID()][$this->accountID] = $this;
+		}
+
 		if ($log) {
 			$this->log(LOG_TYPE_ALLIANCE, 'joined alliance: ' . $alliance->getAllianceName());
 		}
