@@ -7,7 +7,7 @@
  */
 
 if ($DisableReason !== null) { ?>
-	<div><?php echo $DisableReason; ?></div><?php
+	<div><?php echo $DisableReason; ?></div><br /><?php
 }
 
 if (count($Npcs) > 0) { ?>
@@ -16,7 +16,7 @@ if (count($Npcs) > 0) { ?>
 			<th>Trader</th>
 			<th>Race</th>
 			<th>Cost</th>
-			<th></th>
+			<th>Action</th>
 		</tr><?php
 		foreach ($Npcs as $npc) { ?>
 			<tr>

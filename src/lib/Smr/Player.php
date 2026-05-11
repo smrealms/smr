@@ -1363,9 +1363,11 @@ class Player {
 	/**
 	 * Returns the decorated player name, suitable for HTML display.
 	 */
-	public function getDisplayName(bool $includeAlliance = false): string {
-		$name = htmlentities($this->playerName) . ' (' . $this->getPlayerID() . ')';
-		$return = get_colored_text($this->getAlignment(), $name);
+	public function getDisplayName(bool $includeAlliance = false, bool $colorByAlignment = true): string {
+		$return = htmlentities($this->playerName) . ' (' . $this->getPlayerID() . ')';
+		if ($colorByAlignment) {
+			$return = get_colored_text($this->getAlignment(), $return);
+		}
 		if ($this->isNPC()) {
 			$return .= ' <span class="npcColour">[NPC]</span>';
 		}
@@ -1542,6 +1544,9 @@ class Player {
 			$kickedBy->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were kicked out of the alliance!', false);
 			$this->log(LOG_TYPE_ALLIANCE, 'was kicked from alliance ' . $alliance->getAllianceName() . ' by ' . $kickedBy->getAccount()->getLogin() . ' (' . $kickedBy->getPlayerName() . ')');
 			$kickedBy->log(LOG_TYPE_ALLIANCE, 'kicked ' . $this->getAccount()->getLogin() . ' (' . $this->getPlayerName() . ') from alliance ' . $alliance->getAllianceName());
+			if ($alliance->hasLeader() && !$kickedBy->equals($alliance->getLeader())) {
+				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I was kicked from your alliance by ' . $kickedBy->getBBLink());
+			}
 		} elseif ($this->isAllianceLeader()) {
 			$this->log(LOG_TYPE_ALLIANCE, 'disbanded alliance ' . $alliance->getAllianceName());
 		} else {
@@ -2267,12 +2272,17 @@ class Player {
 	public function killPlayerByPlayer(self $killer): array {
 		$return = [];
 		$msg = $this->getBBLink();
-
+		if ($this->hasAlliance()) {
+			$msg .= ', a member of ' . $this->getAllianceBBLink() . ',';
+		}
 		if ($this->hasCustomShipName()) {
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
 			$msg .= ' flying <span class="yellow">' . $named_ship . '</span>';
 		}
 		$msg .= ' was destroyed by ' . $killer->getBBLink();
+		if ($killer->hasAlliance()) {
+			$msg .= ', a member of ' . $killer->getAllianceBBLink() . ',';
+		}
 		if ($killer->hasCustomShipName()) {
 			$named_ship = strip_tags($killer->getCustomShipName(), '<font><span><img>');
 			$msg .= ' flying <span class="yellow">' . $named_ship . '</span>';

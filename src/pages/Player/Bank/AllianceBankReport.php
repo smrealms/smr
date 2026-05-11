@@ -49,13 +49,14 @@ class AllianceBankReport extends PlayerPage {
 			$totals[$accId] = $transArray[self::DEPOSIT] - $transArray[self::WITHDRAW];
 		}
 		arsort($totals, SORT_NUMERIC);
-		$dbResult = $db->read('SELECT * FROM player WHERE account_id IN (:account_ids) AND game_id = :game_id ORDER BY player_name', [
+		$dbResult = $db->read('SELECT * FROM player WHERE account_id IN (:account_ids) AND game_id = :game_id', [
 			'account_ids' => $db->escapeArray($playerIDs),
 			'game_id' => $db->escapeNumber($player->getGameID()),
 		]);
 		$players = [0 => 'Alliance Funds'];
 		foreach ($dbResult->records() as $dbRecord) {
-			$players[$dbRecord->getInt('account_id')] = htmlentities($dbRecord->getString('player_name'));
+			$recordPlayer = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), dbRecord: $dbRecord);
+			$players[$recordPlayer->getAccountID()] = $recordPlayer->getDisplayName(colorByAlignment: false);
 		}
 
 		//format it this way so its easy to send to the alliance MB if requested.
