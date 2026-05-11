@@ -20,7 +20,9 @@ class AllianceLeadership extends PlayerPage {
 		$container = new AllianceLeadershipProcessor();
 		$template->assign('HandoverHREF', $container->href());
 
-		$template->assign('AlliancePlayers', $alliance->getMembers(includeNpc: false));
+		$members = $alliance->getMembers(includeNpc: false);
+		unset($members[$alliance->getLeaderID()]); // don't show current leader
+		$template->assign('AlliancePlayers', $members);
 	}
 
 }
