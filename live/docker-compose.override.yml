@@ -24,7 +24,7 @@ services:
 
     backup-s3:
         # Note: from 2.27.51 onward, requires x86-64-v2, which we don't have
-        image: amazon/aws-cli:2.27.50
+        image: amazon/aws-cli:2.34.18
         networks:
             - backend
         environment:
