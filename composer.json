@@ -8,7 +8,7 @@
 		"ext-curl": "*",
 		"ext-json": "*",
 		"ext-pdo_mysql": "*",
-		"google/recaptcha": "1.4.2",
+		"google/recaptcha": "1.5",
 		"league/oauth2-facebook": "2.2.0",
 		"league/oauth2-google": "5.0.0",
 		"php": "^8.5",
