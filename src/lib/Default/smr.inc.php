@@ -28,7 +28,6 @@ use Smr\Pages\Account\Preferences;
 use Smr\Pages\Admin\AdminTools;
 use Smr\Pages\Player\AllianceInviteAcceptProcessor;
 use Smr\Pages\Player\AllianceMotd;
-use Smr\Pages\Player\AllianceRoster;
 use Smr\Pages\Player\CargoDump;
 use Smr\Pages\Player\CombatLogList;
 use Smr\Pages\Player\CombatLogViewerVerifyProcessor;
