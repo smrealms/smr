@@ -13,7 +13,7 @@
 		"league/oauth2-google": "5.0.0",
 		"php": "^8.5",
 		"php-di/php-di": "7.0.10",
-		"phpmailer/phpmailer": "7.1.0",
+		"phpmailer/phpmailer": "7.1.1",
 		"team-reflex/discord-php": "10.47.*",
 		"vanilla/nbbc": "3.0.0"
 	},
