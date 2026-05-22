@@ -1382,7 +1382,7 @@ class Player {
 	}
 
 	public function getLinkedDisplayName(bool $includeAlliance = true): string {
-		$return = '<a href="' . $this->getTraderSearchHREF() . '">' . $this->getDisplayName() . '</a>';
+		$return = create_link($this->getTraderSearchHREF(), $this->getDisplayName());
 		if ($includeAlliance) {
 			$return .= ' (' . $this->getAllianceDisplayName(true) . ')';
 		}
