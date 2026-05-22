@@ -83,6 +83,7 @@ function linkCombatLog(int $logID): string {
 function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $default, array $tagParams, string $tagContent): bool|string {
 	global $overrideGameID, $disableBBLinks;
 	$session = Session::getInstance();
+	$linked = $disableBBLinks === false && $session->hasGame() && $overrideGameID === $session->getGameID();
 	try {
 		switch ($tagName) {
 			case 'combatlog':
@@ -99,7 +100,7 @@ function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $defau
 				$playerID = (int)$default;
 				$bbPlayer = Player::getPlayerByPlayerID($playerID, $overrideGameID);
 				$showAlliance = isset($tagParams['showalliance']) ? parseBoolean($tagParams['showalliance']) : false;
-				if ($disableBBLinks === false && $overrideGameID === $session->getGameID()) {
+				if ($linked) {
 					return $bbPlayer->getLinkedDisplayName($showAlliance);
 				}
 				return $bbPlayer->getDisplayName($showAlliance);
@@ -110,15 +111,11 @@ function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $defau
 				}
 				$allianceID = (int)$default;
 				$alliance = Alliance::getAlliance($allianceID, $overrideGameID);
-				if ($disableBBLinks === false && $overrideGameID === $session->getGameID()) {
-					if ($session->hasGame() && $alliance->getAllianceID() === $session->getPlayer()->getAllianceID()) {
-						$container = new AllianceMotd($alliance->getAllianceID());
-					} else {
-						$container = new AllianceRoster($alliance->getAllianceID());
-					}
+				if ($linked && $alliance->getAllianceID() === $session->getPlayer()->getAllianceID()) {
+					$container = new AllianceMotd($alliance->getAllianceID());
 					return create_link($container, $alliance->getAllianceDisplayName());
 				}
-				return $alliance->getAllianceDisplayName();
+				return $alliance->getAllianceDisplayName($linked);
 
 			case 'race':
 				$raceNameID = $default;
