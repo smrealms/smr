@@ -412,6 +412,10 @@ function dumpCargo(Player $player): PlayerPageProcessor {
 }
 
 function plotToSector(Player $player, int $sectorID): PlayerPageProcessor {
+	if ($player->getSectorID() === $sectorID) {
+		debug('Already in sector ' . $sectorID);
+		throw new ForwardAction();
+	}
 	return new PlotCourseConventionalProcessor(from: $player->getSectorID(), to: $sectorID);
 }
 
