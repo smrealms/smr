@@ -18,7 +18,7 @@ class Op extends DatabaseCommand {
 
 	public function databaseResponse(string ...$args): array {
 		// print info about the next op
-		return shared_channel_msg_op_info($this->player);
+		return shared_channel_msg_op_info($this->player, discord: true);
 	}
 
 }
