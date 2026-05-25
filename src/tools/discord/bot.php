@@ -40,7 +40,7 @@ $discord = new DiscordCommandClient([
 ]);
 
 // Set bot presence to "Listening to <help command>"
-$discord->on('ready', function($discord) {
+$discord->on('init', function($discord) {
 	$activity = $discord->factory(Activity::class, [
 		'name' => DISCORD_COMMAND_PREFIX . 'help',
 		'type' => Activity::TYPE_LISTENING,
