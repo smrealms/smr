@@ -6,7 +6,7 @@ use Smr\Player;
 /**
  * @return array<string>
  */
-function shared_channel_msg_op_info(Player $player): array {
+function shared_channel_msg_op_info(Player $player, bool $discord = false): array {
 	// get the op from db
 	$db = Database::getInstance();
 	$dbResult = $db->select('alliance_has_op', $player->getAlliance()->SQLID, ['time']);
@@ -17,7 +17,12 @@ function shared_channel_msg_op_info(Player $player): array {
 	// check if the op has already started
 	$opTime = $dbResult->record()->getInt('time');
 	if ($opTime < time()) {
-		return ['The op started ' . format_time(time() - $opTime, true) . ' ago!'];
+		if ($discord) {
+			$when = format_time_discord($opTime);
+		} else {
+			$when = format_time(time() - $opTime, true) . ' ago';
+		}
+		return ['The op started ' . $when . '!'];
 	}
 
 	// function to return op info message for each player
@@ -57,7 +62,12 @@ function shared_channel_msg_op_info(Player $player): array {
 	$result = array_map($getOpInfoMessage, $player->getSharingPlayers(true));
 
 	// Prepend the time left until the op
-	array_unshift($result, 'The next scheduled op is ' . in_time_or_now($opTime - time(), true) . '.');
+	if ($discord) {
+		$when = format_time_discord($opTime);
+	} else {
+		$when = in_time_or_now($opTime - time(), true);
+	}
+	array_unshift($result, 'The next scheduled op is ' . $when . '.');
 
 	return $result;
 }

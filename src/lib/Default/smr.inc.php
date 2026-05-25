@@ -812,6 +812,14 @@ function format_time(int $seconds, bool $short = false): string {
 	return $result;
 }
 
+/**
+ * Convert a time epoch to a special relative time display on Discord
+ */
+function format_time_discord(int $epoch): string {
+	// R = relative format (gives full local date and time on hover)
+	return '<t:' . $epoch . ':R>';
+}
+
 function number_colour_format(float $number, bool $justSign = false): string {
 	$formatted = '<span';
 	if ($number > 0) {
