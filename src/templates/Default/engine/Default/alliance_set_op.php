@@ -32,7 +32,7 @@ if (isset($OpDate)) { ?>
 	<div class="buttonA"><a class="buttonA" href="<?php echo $OpProcessingHREF; ?>">Cancel</a></div>
 	<?php
 } else { ?>
-	<p>Schedule the next alliance operation:<br><small>Enter the date in server time (example: Dec 12 18:30)</small></p>
+	<p>Schedule the next alliance operation:<br><small>Enter the date in server time (example: Dec 12 18:30) or a specified timezone (example: Next monday 7 pm EST)</small></p>
 	<form method="POST" action="<?php echo $OpProcessingHREF; ?>">
 		<input type="text" name="date" required />
 		<?php echo create_submit_display('Confirm'); ?>
