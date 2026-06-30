@@ -120,6 +120,17 @@ class CommandTest extends TestCase {
 	}
 
 	public function test_register_command(): void {
+		// Mock the message to pass to a registered Command's callback.
+		// This isn't part of registration, but PHPUnit can't assert that a
+		// specific closure is returned; instead, we can only validate the
+		// closure by executing it.
+		$mockMessage = $this->createMock(Message::class);
+		$mockMessage
+			->expects(self::once())
+			->method('reply')
+			->with('Do you have a question for the magic 8-ball?')
+			->seal();
+
 		// Register a command through the client
 		$command = new MagicEightBall();
 		$mockClient = $this->createMock(DiscordCommandClient::class);
@@ -128,7 +139,11 @@ class CommandTest extends TestCase {
 			->method('registerCommand')
 			->with(
 				'8ball',
-				$command->callback(...),
+				self::callback(function ($fn) use ($mockMessage) {
+					$this->assertIsCallable($fn);
+					$fn($mockMessage, []);
+					return true;
+				}),
 				['description' => $command->description(), 'usage' => '.8ball [question]'],
 			)
 			->seal();
