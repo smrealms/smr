@@ -45,7 +45,7 @@ class AdminMessageSend extends AccountPage {
 			foreach ($dbResult->records() as $dbRecord) {
 				$gamePlayers[] = [
 					'AccountID' => $dbRecord->getInt('account_id'),
-					'Name' => $dbRecord->getString('player_name') . ' (' . $dbRecord->getInt('player_id') . ')',
+					'Name' => htmlentities($dbRecord->getString('player_name')) . ' (' . $dbRecord->getInt('player_id') . ')',
 				];
 			}
 			$template->assign('GamePlayers', $gamePlayers);
