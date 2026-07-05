@@ -26,7 +26,6 @@
 			<text outputFile="php://stdout" showOnlySummary="true" />
 			<html
 				outputDirectory="test/coverage/html"
-				customCssFile="test/coverage-report.css"
 			/>
 		</report>
 	</coverage>
