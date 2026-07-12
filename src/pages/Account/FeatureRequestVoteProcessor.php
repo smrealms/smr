@@ -53,6 +53,11 @@ class FeatureRequestVoteProcessor extends AccountPageProcessor {
 			$setStatusIDs = Request::getIntArray('set_status_ids');
 
 			foreach ($setStatusIDs as $featureID) {
+				$db->update(
+					'feature_request',
+					['status' => $status],
+					['feature_request_id' => $featureID],
+				);
 				$db->insert('feature_request_comments', [
 					'feature_request_id' => $featureID,
 					'poster_id' => $account->getAccountID(),
