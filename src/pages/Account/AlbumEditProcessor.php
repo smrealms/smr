@@ -25,7 +25,6 @@ function isUrlReachable(string $url): bool {
 	]);
 	curl_exec($ch);
 	$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-	curl_close($ch);
 
 	$statusClass = IFloor($statusCode / 100);
 	return $statusClass === 2 || $statusClass === 3;
