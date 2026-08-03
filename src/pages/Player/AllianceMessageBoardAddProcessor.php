@@ -121,6 +121,12 @@ class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
 			'time' => Epoch::time() + 2,
 		]);
 
+		// Clear preview now that we've submitted
+		$this->lastPage->preview = null;
+		if (property_exists($this->lastPage, 'topic')) {
+			$this->lastPage->topic = null;
+		}
+
 		$this->lastPage->go();
 	}
 
