@@ -201,8 +201,9 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 			//will use these variables in current sector and port after successful trade
 			$tradeMessage = 'You have just ' . $msg_transaction . ' <span class="yellow">' . number_format($amount) . '</span> ' . pluralise($amount, 'unit', false) . ' of <span class="yellow">' . $good_name . '</span>';
 			if ($bargain_price > 0) {
-				$tradeMessage .= ' for <span class="creds">' . number_format($bargain_price) . '</span> ' . pluralise($bargain_price, 'credit', false) . '.';
+				$tradeMessage .= ' for <span class="creds">' . number_format($bargain_price) . '</span> ' . pluralise($bargain_price, 'credit', false);
 			}
+			$tradeMessage .= '.';
 
 			if ($gained_exp > 0) {
 				if ($stealing) {
