@@ -158,7 +158,7 @@ try {
 	$db->replace('multi_checking_cookie', [
 		'account_id' => $account->getAccountID(),
 		'array' => $new,
-		'`use`' => $db->escapeBoolean(count($multiIDs) > 1),
+		'shared' => $db->escapeBoolean(count($multiIDs) > 1),
 	]);
 	//now we update their cookie with the newest info
 	setcookie('Session_Info', $new, Epoch::time() + 157680000);
