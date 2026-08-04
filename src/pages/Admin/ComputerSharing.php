@@ -24,7 +24,7 @@ class ComputerSharing extends AccountPage {
 
 		//check the db and get the info we need
 		$db = Database::getInstance();
-		$dbResult = $db->select('multi_checking_cookie', ['use' => $db->escapeBoolean(true)]);
+		$dbResult = $db->select('multi_checking_cookie', ['shared' => $db->escapeBoolean(true)]);
 		$tables = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			//get info about linked IDs
