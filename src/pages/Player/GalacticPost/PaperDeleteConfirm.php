@@ -40,7 +40,10 @@ class PaperDeleteConfirm extends PlayerPage {
 		$template->assign('Articles', $articles);
 
 		$container = new PaperDeleteProcessor($this->paperID);
-		$template->assign('SubmitHREF', $container->href());
+		$template->assign('ConfirmHREF', $container->href());
+
+		$container = new EditorOptions();
+		$template->assign('CancelHREF', $container->href());
 	}
 
 }

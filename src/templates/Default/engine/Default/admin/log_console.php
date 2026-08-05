@@ -7,7 +7,7 @@
 </p><?php
 
 if (count($LoggedAccounts) > 0) { ?>
-	<form method="POST" action="<?php echo $LogConsoleFormHREF; ?>">
+	<form method="POST" action="<?php echo $LogConsoleFormPage->href(); ?>">
 		<table class="standard">
 			<tr>
 				<th>Login</th>
@@ -28,7 +28,7 @@ if (count($LoggedAccounts) > 0) { ?>
 			<tr>
 				<td colspan="3">&nbsp;</td>
 				<td>
-					<?php echo create_submit('action', 'View'); ?>&nbsp;&nbsp;<?php echo create_submit('action', 'Delete'); ?>
+					<?php echo $LogConsoleFormPage->actionView->html(); ?>&nbsp;&nbsp;<?php echo $LogConsoleFormPage->actionDelete->html(); ?>
 				</td>
 			</tr>
 		</table>

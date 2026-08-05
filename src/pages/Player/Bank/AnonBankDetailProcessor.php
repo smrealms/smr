@@ -5,19 +5,29 @@ namespace Smr\Pages\Player\Bank;
 use Exception;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Html\Submit;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
 use Smr\Request;
 
 class AnonBankDetailProcessor extends PlayerPageProcessor {
 
+	private const string ACTION = 'action';
+
+	public readonly Submit $actionDeposit;
+	public readonly Submit $actionPayment;
+
 	public function __construct(
 		private readonly int $anonBankID,
-	) {}
+	) {
+		// Values are database enums and must not change
+		$this->actionDeposit = new Submit(self::ACTION, 'Deposit');
+		$this->actionPayment = new Submit(self::ACTION, 'Payment');
+	}
 
 	public function build(Player $player): never {
-		$action = Request::get('action');
-		if (!in_array($action, ['Deposit', 'Payment'], true)) {
+		$action = Request::get(self::ACTION);
+		if (!in_array($action, [$this->actionDeposit->value, $this->actionPayment->value], true)) {
 			throw new Exception('Invalid action submitted: ' . $action);
 		}
 
@@ -45,7 +55,7 @@ class AnonBankDetailProcessor extends PlayerPageProcessor {
 		$anonAmount = $dbResult->record()->getInt('amount');
 
 		// Update the credit amounts for the player and the bank
-		if ($action === 'Deposit') {
+		if ($action === $this->actionDeposit->value) {
 			if ($player->getCredits() < $amount) {
 				create_error('You don\'t own that much money!');
 			}

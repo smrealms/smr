@@ -5,6 +5,7 @@ namespace Smr\Pages\Player;
 use Smr\Alliance;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Html\Submit;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Page\ReusableTrait;
 use Smr\Player;
@@ -12,13 +13,21 @@ use Smr\Request;
 
 class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
 
+	private const string ACTION = 'action';
+
 	use ReusableTrait;
+
+	public readonly Submit $actionPreview;
+	public readonly Submit $actionCreate;
 
 	public function __construct(
 		private readonly int $allianceID,
 		private readonly AllianceMessageBoard|AllianceMessageBoardView $lastPage,
 		private readonly ?int $threadID = null,
-	) {}
+	) {
+		$this->actionPreview = new Submit(self::ACTION, 'preview');
+		$this->actionCreate = new Submit(self::ACTION, 'create');
+	}
 
 	public function build(Player $player): never {
 		$db = Database::getInstance();
@@ -30,8 +39,8 @@ class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
 		$alliance_id = $this->allianceID;
 		$alliance = Alliance::getAlliance($alliance_id, $player->getGameID());
 
-		$action = Request::get('action');
-		if ($action === 'Preview Thread' || $action === 'Preview Reply') {
+		$action = Request::get(self::ACTION);
+		if ($action === $this->actionPreview->value) {
 			$container = $this->lastPage;
 			$container->preview = $body;
 			if ($container instanceof AllianceMessageBoard) {

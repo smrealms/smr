@@ -2,8 +2,12 @@
 
 use Smr\Pages\Admin\AdminMessageSend;
 
+/**
+ * @var Smr\Pages\Admin\AdminMessageSendProcessor $AdminMessageSendForm
+ */
+
 if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Preview, $MessageGameID); ?></td></tr></table><?php } ?>
-<form name="AdminMessageSendForm" method="POST" action="<?php echo $AdminMessageSendFormHref; ?>">
+<form name="AdminMessageSendForm" method="POST" action="<?php echo $AdminMessageSendForm->href(); ?>">
 	<p>
 	<b>From: </b><span class="admin">Administrator</span><br />
 	<b>To: </b><?php
@@ -20,7 +24,7 @@ if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Previ
 	<textarea required spellcheck="true" name="message"><?php if (isset($Preview)) { echo $Preview; } ?></textarea><br />
 	Hours Till Expire: <input required type="number" step="0.01" name="expire" value="<?php echo $ExpireTime; ?>" min="0" size="2"> (0 = never expire)<br />
 	<br />
-	<?php echo create_submit('action', 'Send message'); ?>&nbsp;<?php echo create_submit('action', 'Preview message'); ?>
+	<?php echo $AdminMessageSendForm->actionSend->html('Send message'); ?>&nbsp;<?php echo $AdminMessageSendForm->actionPreview->html('Preview message'); ?>
 </form>
 <br /><br />
 <a href="<?php echo $BackHREF; ?>">&lt;&lt; Back</a>

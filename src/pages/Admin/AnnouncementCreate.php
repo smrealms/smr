@@ -16,7 +16,7 @@ class AnnouncementCreate extends AccountPage {
 
 	public function build(Account $account, Template $template): void {
 		$template->assign('PageTopic', 'Create Announcement');
-		$template->assign('AnnouncementCreateFormHref', (new AnnouncementCreateProcessor())->href());
+		$template->assign('AnnouncementCreateForm', new AnnouncementCreateProcessor());
 		if ($this->preview !== null) {
 			$template->assign('Preview', htmlentities($this->preview));
 		}

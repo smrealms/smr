@@ -73,7 +73,7 @@ use Smr\Request;
 			<a href="<?php echo WIKI_URL; ?>/privacy" target="_blank" style="font-weight:bold;">Privacy Policy</a>.
 		</div>
 
-		<p><?php echo create_submit('create_login', 'Create Login', fields: ['class' => 'InputFields']); ?></p>
+		<p><?php echo create_submit_display('Create Login', fields: ['class' => 'InputFields']); ?></p>
 	</form>
 </div>
 

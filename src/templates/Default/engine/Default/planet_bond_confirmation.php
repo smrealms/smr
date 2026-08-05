@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
 
 /**
- * @var string $ReturnHREF
+ * @var string $CancelHREF
+ * @var string $ConfirmHREF
  * @var string $BondDuration
  */
 
@@ -15,11 +16,9 @@ the bond matures in <?php echo $BondDuration; ?>.</p>
 
 <p>Please confirm to proceed.</p>
 
-<form id="BondConfirmForm" method="POST" action="<?php echo $ReturnHREF; ?>">
-	<table>
-		<tr>
-			<td><?php echo create_submit('action', 'Confirm'); ?></td>
-			<td><?php echo create_submit('action', 'Cancel'); ?></td>
-		</tr>
-	</table>
-</form>
+<table>
+	<tr>
+		<td><?php echo create_submit_link($ConfirmHREF, 'Confirm'); ?></td>
+		<td><?php echo create_submit_link($CancelHREF, 'Cancel'); ?></td>
+	</tr>
+</table>

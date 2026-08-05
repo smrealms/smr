@@ -6,8 +6,8 @@ use Smr\Race;
 /**
  * @var Smr\Account $ThisAccount
  * @var Smr\Player $ThisPlayer
- * @var array<int, array{VoteHREF: string, VetoPage: ?Smr\Page\Page, Type: string, EndTime: int, For: bool, Against: bool, NoVotes: int, YesVotes: int}> $VoteTreaties
- * @var array<int, array{HREF: string, Increased: bool, Decreased: bool, Relations: int}> $VoteRelations
+ * @var array<int, array{VotePage: Smr\Pages\Player\Council\VotingCenterProcessor, VetoPage: ?Smr\Page\Page, Type: string, EndTime: int, For: bool, Against: bool, NoVotes: int, YesVotes: int}> $VoteTreaties
+ * @var array<int, array{VotePage: Smr\Pages\Player\Council\VotingCenterProcessor, Increased: bool, Decreased: bool, Relations: int}> $VoteRelations
  */
 
 ?>
@@ -34,15 +34,16 @@ if (count($VoteTreaties) === 0) { ?>
 			<th>End Time</th>
 		</tr><?php
 
-	foreach ($VoteTreaties as $RaceID => $VoteInfo) { ?>
+	foreach ($VoteTreaties as $RaceID => $VoteInfo) {
+		$VotePage = $VoteInfo['VotePage']; ?>
 		<tr>
 			<td><?php echo $ThisPlayer->getColouredRaceName($RaceID, true); ?></td>
 			<td><?php echo $VoteInfo['Type']; ?></td>
 			<td class="noWrap">
-				<form method="POST" action="<?php echo $VoteInfo['VoteHREF']; ?>">
-					<?php echo create_submit('action', 'Yes', fields: ($VoteInfo['For'] ? ['style' => 'background-color:green'] : [])); ?>
+				<form method="POST" action="<?php echo $VotePage->href(); ?>">
+					<?php echo $VotePage->actionTreatyYes->html('Yes', ($VoteInfo['For'] ? ['style' => 'background-color:green'] : [])); ?>
 					&nbsp;
-					<?php echo create_submit('action', 'No', fields: ($VoteInfo['Against'] ? ['style' => 'background-color:green'] : []));
+					<?php echo $VotePage->actionTreatyNo->html('No', ($VoteInfo['Against'] ? ['style' => 'background-color:green'] : []));
 					if ($VoteInfo['VetoPage'] !== null) { ?>
 						&nbsp;
 						<?php echo create_submit_link($VoteInfo['VetoPage'], 'Veto');
@@ -73,7 +74,8 @@ if (count($VoteTreaties) === 0) { ?>
 		<th>Relations</th>
 	</tr><?php
 
-	foreach ($VoteRelations as $RaceID => $VoteInfo) { ?>
+	foreach ($VoteRelations as $RaceID => $VoteInfo) {
+		$VotePage = $VoteInfo['VotePage']; ?>
 		<tr>
 			<td>
 				<a href="<?php echo Globals::getCouncilHREF($RaceID); ?>">
@@ -82,10 +84,10 @@ if (count($VoteTreaties) === 0) { ?>
 				</a>
 			</td>
 			<td>
-				<form method="POST" action="<?php echo $VoteInfo['HREF']; ?>">
-					<?php echo create_submit('action', 'Increase', fields: ($VoteInfo['Increased'] ? ['style' => 'background-color:green'] : [])); ?>
+				<form method="POST" action="<?php echo $VotePage->href(); ?>">
+					<?php echo $VotePage->actionRelationsIncrease->html('Increase', ($VoteInfo['Increased'] ? ['style' => 'background-color:green'] : [])); ?>
 					&nbsp;
-					<?php echo create_submit('action', 'Decrease', fields: ($VoteInfo['Decreased'] ? ['style' => 'background-color:green'] : [])); ?>
+					<?php echo $VotePage->actionRelationsDecrease->html('Decrease', ($VoteInfo['Decreased'] ? ['style' => 'background-color:green'] : [])); ?>
 				</form>
 			</td>
 			<td><?php echo get_colored_text($VoteInfo['Relations']); ?></td>

@@ -5,22 +5,32 @@ namespace Smr\Pages\Admin;
 use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Html\Submit;
 use Smr\Page\AccountPageProcessor;
 use Smr\Player;
 use Smr\Request;
 
 class AdminMessageSendProcessor extends AccountPageProcessor {
 
+	private const string ACTION = 'action';
+
+	public readonly Submit $actionPreview;
+	public readonly Submit $actionSend;
+
 	public function __construct(
 		private readonly int $sendGameID,
-	) {}
+	) {
+		$this->actionPreview = new Submit(self::ACTION, 'preview');
+		$this->actionSend = new Submit(self::ACTION, 'send');
+	}
 
 	public function build(Account $account): never {
 		$message = Request::get('message');
 		$expire = Request::getFloat('expire');
 		$game_id = $this->sendGameID;
 
-		if (Request::get('action') === 'Preview message') {
+		$action = Request::get(self::ACTION);
+		if ($action === $this->actionPreview->value) {
 			if ($game_id !== AdminMessageSend::ALL_GAMES_ID) {
 				$sendAccountID = Request::getInt('account_id');
 			} else {

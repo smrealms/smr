@@ -68,7 +68,7 @@ class CreateWarps extends AccountPage {
 		}
 		$template->assign('GalLinks', $galLinks);
 
-		$container = new SaveProcessor($this->gameID, $this->galaxyID, $this->returnTo);
+		$container = new CreateWarpsProcessor($this->gameID, $this->galaxyID, $this->returnTo);
 		$template->assign('SubmitHREF', $container->href());
 
 		$template->assign('CancelHREF', $this->returnTo->href());

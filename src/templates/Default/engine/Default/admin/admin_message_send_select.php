@@ -11,5 +11,5 @@ use Smr\Pages\Admin\AdminMessageSend;
 			?><option value="<?php echo $Game->getGameID(); ?>"><?php echo $Game->getDisplayName(); ?></option><?php
 		} ?>
 	</select>&nbsp;&nbsp;
-	<?php echo create_submit('action', 'Select'); ?>
+	<?php echo create_submit_display('Select'); ?>
 </form>

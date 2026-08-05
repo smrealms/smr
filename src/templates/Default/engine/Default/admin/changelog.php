@@ -13,7 +13,7 @@ $this->includeTemplate('changelog_view.php', ['Versions' => [$FirstVersion]]); ?
 
 <ul>
 	<li>
-		<form method="POST" action="<?php echo $AddHREF; ?>">
+<form method="POST" action="<?php echo $AddPage->href(); ?>">
 			<table>
 				<tr>
 					<td colspan="2"><small>Title:</small></td>
@@ -32,8 +32,8 @@ $this->includeTemplate('changelog_view.php', ['Versions' => [$FirstVersion]]); ?
 				<tr>
 					<td></td>
 					<td class="right">
-						<?php echo create_submit('action', 'Preview'); ?>&nbsp;
-						<?php echo create_submit('action', 'Add'); ?>
+						<?php echo $AddPage->actionPreview->html(); ?>&nbsp;
+						<?php echo $AddPage->actionAdd->html(); ?>
 					</td>
 				</tr>
 			</table>

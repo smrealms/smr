@@ -6,7 +6,7 @@
 
 ?>
 Enter the amount of cargo you wish to jettison.<br />
-Please keep in mind that you will lose experience and one turn!<br /><br />
+Please keep in mind that you will lose experience and <?php echo pluralise(TURNS_TO_DUMP_CARGO, 'turn'); ?>!<br /><br />
 
 <?php
 if (count($Goods) === 0) { ?>
@@ -27,7 +27,7 @@ if (count($Goods) === 0) { ?>
 						<input type="number" name="amount" value="<?php echo $good['amount']; ?>" maxlength="5" size="5" class="center" />
 					</td>
 					<td class="center">
-						<?php echo create_submit('action', 'Dump (' . TURNS_TO_DUMP_CARGO . ')'); ?>
+						<?php echo create_submit_display('Dump (' . TURNS_TO_DUMP_CARGO . ')'); ?>
 					</td>
 				</tr>
 			</form><?php

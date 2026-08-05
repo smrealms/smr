@@ -31,7 +31,7 @@ class Stockpile extends PlanetPage {
 				'ShipAmount' => $ship->getCargo($goodID),
 				'PlanetAmount' => $planet->getStockpile($goodID),
 				'DefaultAmount' => min($ship->getCargo($goodID), $planet->getRemainingStockpile($goodID)),
-				'HREF' => $container->href(),
+				'Page' => $container,
 			];
 		}
 

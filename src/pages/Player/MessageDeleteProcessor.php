@@ -18,7 +18,7 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 		$db = Database::getInstance();
 
 		// If not deleting marked messages, we are deleting entire folders
-		if (Request::get('action') === 'All Messages') {
+		if (Request::get('marked_or_all') === 'All Messages') {
 			$container = new MessageBoxDeleteProcessor($this->folderID);
 			$container->go();
 		}

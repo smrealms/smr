@@ -44,7 +44,7 @@ class CombatSimulator extends AccountPage {
 
 		$template->assign('Duplicates', $duplicates);
 
-		$template->assign('CombatSimHREF', (new CombatSimulatorProcessor())->href());
+		$template->assign('CombatSimPage', new CombatSimulatorProcessor());
 
 		$template->assign('TraderCombatResults', $this->results);
 		$template->assign('MinimalDisplay', false);

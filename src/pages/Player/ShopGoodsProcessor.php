@@ -3,6 +3,7 @@
 namespace Smr\Pages\Player;
 
 use Exception;
+use Smr\Html\Submit;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
 use Smr\Port;
@@ -12,6 +13,10 @@ use Smr\TransactionType;
 
 class ShopGoodsProcessor extends PlayerPageProcessor {
 
+	private const string ACTION = 'action';
+
+	public readonly Submit $actionSteal;
+
 	public function __construct(
 		private readonly int $goodID,
 		private readonly ?int $amount = null,
@@ -19,7 +24,9 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 		private readonly ?int $bargainPrice = null, // only for NPC
 		private readonly ?int $offeredPrice = null,
 		private readonly ?int $idealPrice = null,
-	) {}
+	) {
+		$this->actionSteal = new Submit(self::ACTION, TransactionType::STEAL);
+	}
 
 	public function build(Player $player): never {
 		$ship = $player->getShip();
@@ -84,7 +91,7 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 			create_error('Port calculation error...buy more goods.');
 		}
 
-		$stealing = Request::get('action', '') === TransactionType::STEAL;
+		$stealing = Request::get(self::ACTION, '') === $this->actionSteal->value;
 
 		if (!$stealing && $this->bargainNumber === 0) {
 			$container = new ShopGoodsNegotiate(

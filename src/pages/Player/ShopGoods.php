@@ -109,7 +109,7 @@ class ShopGoods extends PlayerPage {
 		foreach ($port->getVisibleGoodsBought($player) as $goodID => $good) {
 			$portAmount = $port->getGoodAmount($goodID);
 			$boughtGoods[$goodID] = [
-				'HREF' => (new ShopGoodsProcessor($goodID))->href(),
+				'Page' => new ShopGoodsProcessor($goodID),
 				'Image' => $good->getImageHTML(),
 				'Name' => $good->name,
 				'BasePrice' => $good->basePrice,
@@ -122,7 +122,7 @@ class ShopGoods extends PlayerPage {
 		foreach ($port->getVisibleGoodsSold($player) as $goodID => $good) {
 			$portAmount = $port->getGoodAmount($goodID);
 			$soldGoods[$goodID] = [
-				'HREF' => (new ShopGoodsProcessor($goodID))->href(),
+				'Page' => new ShopGoodsProcessor($goodID),
 				'Image' => $good->getImageHTML(),
 				'Name' => $good->name,
 				'BasePrice' => $good->basePrice,

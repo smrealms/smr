@@ -8,10 +8,10 @@ use Smr\Race;
  * @var Smr\Account $ThisAccount
  * @var Smr\Player $ThisPlayer
  * @var Smr\Template $this
- * @var string $PlayerPreferencesFormHREF
- * @var string $AccountPreferencesFormHREF
+ * @var Smr\Pages\Player\PreferencesProcessor $PlayerPreferencesForm
+ * @var Smr\Pages\Account\PreferencesProcessor $AccountPreferencesForm
  * @var string $ChatSharingHREF
- * @var string $PreferencesConfirmFormHREF
+ * @var string $TransferConfirmFormHREF
  * @var array<int, string> $TransferAccounts
  */
 
@@ -20,7 +20,7 @@ if (isset($Reason)) {
 }
 
 if (isset($GameID)) { ?>
-	<form class="standard" id="PlayerPreferencesForm" method="POST" action="<?php echo $PlayerPreferencesFormHREF; ?>">
+	<form class="standard" id="PlayerPreferencesForm" method="POST" action="<?php echo $PlayerPreferencesForm->href(); ?>">
 		<table>
 			<tr>
 				<th colspan="2">Player Preferences (For Current Game)</th>
@@ -36,7 +36,7 @@ if (isset($GameID)) { ?>
 
 			<tr>
 				<td>&nbsp;</td>
-				<td><?php echo create_submit('action', 'Change Kamikaze Setting'); ?></td>
+				<td><?php echo $PlayerPreferencesForm->actionKamikaze->html('Change Kamikaze Setting'); ?></td>
 			</tr>
 
 			<tr>
@@ -49,7 +49,7 @@ if (isset($GameID)) { ?>
 
 			<tr>
 				<td>&nbsp;</td>
-				<td><?php echo create_submit('action', 'Change Message Setting'); ?></td>
+				<td><?php echo $PlayerPreferencesForm->actionForceMessages->html('Change Message Setting'); ?></td>
 			</tr>
 
 			<tr>
@@ -70,7 +70,7 @@ if (isset($GameID)) { ?>
 
 			<tr>
 				<td>&nbsp;</td>
-				<td><?php echo create_submit('action', 'change_name', 'Alter Player Name' . ($ThisPlayer->isNameChanged() ? ' (' . CREDITS_PER_NAME_CHANGE . ' SMR Credits)' : '')); ?></td>
+				<td><?php echo $PlayerPreferencesForm->actionPlayerName->html('Alter Player Name' . ($ThisPlayer->isNameChanged() ? ' (' . CREDITS_PER_NAME_CHANGE . ' SMR Credits)' : '')); ?></td>
 			</tr>
 
 			<tr>
@@ -93,7 +93,7 @@ if (isset($GameID)) { ?>
 
 				<tr>
 					<td>&nbsp;</td>
-					<td><?php echo create_submit('action', 'change_race', 'Alter Player Race'); ?></td>
+					<td><?php echo $PlayerPreferencesForm->actionPlayerRace->html('Alter Player Race'); ?></td>
 				</tr>
 				<tr>
 					<td colspan="2">&nbsp;</td>
@@ -113,7 +113,7 @@ if (isset($GameID)) { ?>
 	</form>
 	<br /><?php
 } ?>
-<form id="AccountPreferencesForm" method="POST" action="<?php echo $AccountPreferencesFormHREF; ?>">
+<form id="AccountPreferencesForm" method="POST" action="<?php echo $AccountPreferencesForm->href(); ?>">
 	<table>
 		<tr>
 			<th colspan="2">Account Preferences</th>
@@ -172,7 +172,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><?php echo create_submit('action', 'Update Colours'); ?></td>
+			<td><?php echo $AccountPreferencesForm->actionColors->html('Update Colours'); ?></td>
 		</tr>
 
 		<tr>
@@ -192,7 +192,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><?php echo create_submit('action', 'Change Password'); ?></td>
+			<td><?php echo $AccountPreferencesForm->actionPassword->html('Change Password'); ?></td>
 		</tr>
 
 		<tr><td colspan="2">&nbsp;</td></tr>
@@ -204,7 +204,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><?php echo create_submit('action', 'Save and resend validation code'); ?></td>
+			<td><?php echo $AccountPreferencesForm->actionEmail->html('Save and resend validation code'); ?></td>
 		</tr>
 
 		<tr><td colspan="2">&nbsp;</td></tr>
@@ -216,7 +216,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><?php echo create_submit('action', 'Change Name'); ?></td>
+			<td><?php echo $AccountPreferencesForm->actionHofName->html('Change Name'); ?></td>
 		</tr>
 
 		<tr>
@@ -230,7 +230,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><?php echo create_submit('action', 'Change Discord ID'); ?></td>
+			<td><?php echo $AccountPreferencesForm->actionDiscordId->html('Change Discord ID'); ?></td>
 		</tr>
 
 		<tr>
@@ -240,7 +240,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><?php echo create_submit('action', 'Change IRC Nick'); ?></td>
+			<td><?php echo $AccountPreferencesForm->actionIrcNick->html('Change IRC Nick'); ?></td>
 		</tr>
 
 		<tr>
@@ -262,7 +262,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><?php echo create_submit('action', 'Change Timezone'); ?></td>
+			<td><?php echo $AccountPreferencesForm->actionTimezone->html('Change Timezone'); ?></td>
 		</tr>
 
 		<tr>
@@ -281,7 +281,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><?php echo create_submit('action', 'Change Date Formats'); ?></td>
+			<td><?php echo $AccountPreferencesForm->actionDateFormat->html('Change Date Formats'); ?></td>
 		</tr>
 
 		<tr>
@@ -291,7 +291,7 @@ if (isset($GameID)) { ?>
 		<tr>
 			<td>Use AJAX (Auto&nbsp;Refresh):</td>
 			<td>
-				<?php echo create_submit('action', 'Toggle Ajax', ($ThisAccount->isUseAJAX() ? 'Disable' : 'Enable') . ' AJAX'); ?> (Currently <?php echo $ThisAccount->isUseAJAX() ? 'Enabled' : 'Disabled'; ?>)<br />
+				<?php echo $AccountPreferencesForm->actionAjax->html(($ThisAccount->isUseAJAX() ? 'Disable' : 'Enable') . ' AJAX'); ?> (Currently <?php echo $ThisAccount->isUseAJAX() ? 'Enabled' : 'Disabled'; ?>)<br />
 			</td>
 		</tr>
 
@@ -309,7 +309,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><?php echo create_submit('action', 'Change Images'); ?></td>
+			<td><?php echo $AccountPreferencesForm->actionShipImages->html('Change Images'); ?></td>
 		</tr>
 
 		<tr>
@@ -326,7 +326,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><?php echo create_submit('action', 'Change Centering'); ?></td>
+			<td><?php echo $AccountPreferencesForm->actionGalMapCenter->html('Change Centering'); ?></td>
 		</tr>
 
 		<tr>
@@ -340,7 +340,7 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><?php echo create_submit('action', 'Change Size'); ?></td>
+			<td><?php echo $AccountPreferencesForm->actionFontSize->html('Change Size'); ?></td>
 		</tr>
 
 		<tr>
@@ -379,12 +379,12 @@ if (isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><?php echo create_submit('action', 'Change CSS Options'); ?></td>
+			<td><?php echo $AccountPreferencesForm->actionCss->html('Change CSS Options'); ?></td>
 		</tr>
 	</table>
 </form><br />
 
-<form id="HotkeyPreferencesForm" method="POST" action="<?php echo $AccountPreferencesFormHREF; ?>">
+<form id="HotkeyPreferencesForm" method="POST" action="<?php echo $AccountPreferencesForm->href(); ?>">
 	<table>
 		<tr>
 			<th colspan="2">Hotkeys (Use space to separate multiple hotkeys)</th>
@@ -446,12 +446,12 @@ if (isset($GameID)) { ?>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td><?php echo create_submit('action', 'Save Hotkeys'); ?></td>
+			<td><?php echo $AccountPreferencesForm->actionHotkeys->html('Save Hotkeys'); ?></td>
 		</tr>
 	</table>
 </form><br />
 
-<form id="TransferSMRCreditsForm" method="POST" action="<?php echo $PreferencesConfirmFormHREF; ?>">
+<form id="TransferSMRCreditsForm" method="POST" action="<?php echo $TransferConfirmFormHREF; ?>">
 	<table>
 		<tr>
 			<th colspan="2">Transfer SMR Credits</th>
@@ -465,7 +465,7 @@ if (isset($GameID)) { ?>
 			<td><input type="number" name="amount" class="center" required /></td>
 		</tr>
 		<tr>
-			<td><?php echo create_submit('action', 'Transfer'); ?></td>
+			<td><?php echo create_submit_display('Transfer'); ?></td>
 		</tr>
 	</table>
 </form>

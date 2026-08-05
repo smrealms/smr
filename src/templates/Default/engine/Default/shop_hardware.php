@@ -2,7 +2,7 @@
 
 /**
  * @var Smr\Ship $ThisShip
- * @var ?array<int, array{HREF: string, Cost: int, Name: string}> $HardwareSold
+ * @var ?array<int, array{Page: Smr\Pages\Player\ShopHardwareProcessor, Cost: int, Name: string}> $HardwareSold
  */
 
 if (isset($HardwareSold)) { ?>
@@ -24,8 +24,8 @@ if (isset($HardwareSold)) { ?>
 				<td class="center"><?php echo number_format($Hardware['Cost']); ?></td>
 				<td><input form="buy<?php echo $HardwareTypeID; ?>" type="number" name="total" disabled="disabled" value="<?php echo $AmountToBuy * $Hardware['Cost']; ?>" size="7" class="center"></td>
 				<td class="center">
-					<form method="POST" id="buy<?php echo $HardwareTypeID; ?>" action="<?php echo $Hardware['HREF']; ?>">
-						<?php echo create_submit('action', 'Buy'); ?>
+					<form method="POST" id="buy<?php echo $HardwareTypeID; ?>" action="<?php echo $Hardware['Page']->href(); ?>">
+						<?php echo $Hardware['Page']->actionBuy->html(); ?>
 					</form>
 				</td>
 			</tr><?php
@@ -52,8 +52,8 @@ if (isset($HardwareSold)) { ?>
 				<td class="center"><?php echo number_format($UnitRefund); ?></td>
 				<td><input form="sell<?php echo HARDWARE_COMBAT; ?>" type="number" name="total" disabled="disabled" value="<?php echo $MaxAmountToSell * $UnitRefund; ?>" size="7" class="center"></td>
 				<td class="center">
-					<form method="POST" id="sell<?php echo HARDWARE_COMBAT; ?>" action="<?php echo $Hardware['HREF']; ?>">
-						<?php echo create_submit('action', 'Sell'); ?>
+					<form method="POST" id="sell<?php echo HARDWARE_COMBAT; ?>" action="<?php echo $Hardware['Page']->href(); ?>">
+						<?php echo $Hardware['Page']->actionSell->html(); ?>
 					</form>
 				</td>
 			</tr>

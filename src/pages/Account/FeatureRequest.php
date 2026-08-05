@@ -87,7 +87,7 @@ class FeatureRequest extends AccountPage {
 		if ($dbResult->hasRecord()) {
 			$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
 			$template->assign('FeatureModerator', $featureModerator);
-			$template->assign('FeatureRequestVoteFormHREF', (new FeatureRequestVoteProcessor($this))->href());
+			$template->assign('FeatureRequestVoteFormPage', new FeatureRequestVoteProcessor($this));
 
 			$featureRequests = [];
 			foreach ($dbResult->records() as $dbRecord) {

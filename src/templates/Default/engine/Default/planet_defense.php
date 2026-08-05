@@ -3,10 +3,10 @@
 /**
  * @var Smr\Planet $ThisPlanet
  * @var Smr\Ship $ThisShip
- * @var string $TransferShieldsHref
- * @var string $TransferCDsHref
- * @var string $TransferArmourHref
- * @var string $WeaponProcessingHREF
+ * @var Smr\Pages\Player\Planet\DefenseProcessor $TransferShields
+ * @var Smr\Pages\Player\Planet\DefenseProcessor $TransferCDs
+ * @var Smr\Pages\Player\Planet\DefenseProcessor $TransferArmour
+ * @var Smr\Pages\Player\Planet\DefenseWeaponProcessor $WeaponProcessingPage
  */
 
 if ($ThisPlanet->getMaxShields() + $ThisPlanet->getMaxCDs() + $ThisPlanet->getMaxArmour() === 0) { ?>
@@ -30,8 +30,8 @@ if ($ThisPlanet->getMaxShields() + $ThisPlanet->getMaxCDs() + $ThisPlanet->getMa
 			<td class="center"><?php echo $ThisPlanet->getShields(); ?></td>
 			<td class="center"><input form="TransferShieldsForm" type="number" name="amount" value="<?php echo min($ThisShip->getShields(), $ThisPlanet->getMaxShields() - $ThisPlanet->getShields()); ?>" class="center" size="4"></td>
 			<td>
-				<form id="TransferShieldsForm" method="POST" action="<?php echo $TransferShieldsHref; ?>">
-					<?php echo create_submit('action', 'Ship'); ?>&nbsp;<?php echo create_submit('action', 'Planet'); ?>
+				<form id="TransferShieldsForm" method="POST" action="<?php echo $TransferShields->href(); ?>">
+					<?php echo $TransferShields->actionToShip->html(); ?>&nbsp;<?php echo $TransferShields->actionToPlanet->html(); ?>
 				</form>
 			</td>
 		</tr>
@@ -42,8 +42,8 @@ if ($ThisPlanet->getMaxShields() + $ThisPlanet->getMaxCDs() + $ThisPlanet->getMa
 			<td class="center"><?php echo $ThisPlanet->getCDs(); ?></td>
 			<td class="center"><input form="TransferCDsForm" type="number" name="amount" value="<?php echo min($ThisShip->getCDs(), $ThisPlanet->getMaxCDs() - $ThisPlanet->getCDs()); ?>" class="center" size="4"></td>
 			<td>
-				<form id="TransferCDsForm" method="POST" action="<?php echo $TransferCDsHref; ?>">
-					<?php echo create_submit('action', 'Ship'); ?>&nbsp;<?php echo create_submit('action', 'Planet'); ?>
+				<form id="TransferCDsForm" method="POST" action="<?php echo $TransferCDs->href(); ?>">
+					<?php echo $TransferCDs->actionToShip->html(); ?>&nbsp;<?php echo $TransferCDs->actionToPlanet->html(); ?>
 				</form>
 			</td>
 		</tr>
@@ -55,8 +55,8 @@ if ($ThisPlanet->getMaxShields() + $ThisPlanet->getMaxCDs() + $ThisPlanet->getMa
 			<td class="center"><?php echo $ThisPlanet->getArmour(); ?></td>
 			<td class="center"><input form="TransferArmourForm" type="number" name="amount" value="<?php echo min($ThisShip->getArmour() - 1, $ThisPlanet->getMaxArmour() - ($ThisPlanet->getArmour())); ?>" class="center" size="4"></td>
 			<td>
-				<form id="TransferArmourForm" method="POST" action="<?php echo $TransferArmourHref; ?>">
-					<?php echo create_submit('action', 'Ship'); ?>&nbsp;<?php echo create_submit('action', 'Planet'); ?>
+				<form id="TransferArmourForm" method="POST" action="<?php echo $TransferArmour->href(); ?>">
+					<?php echo $TransferArmour->actionToShip->html(); ?>&nbsp;<?php echo $TransferArmour->actionToPlanet->html(); ?>
 				</form>
 			</td>
 		</tr>
@@ -67,7 +67,7 @@ if ($ThisPlanet->getMaxShields() + $ThisPlanet->getMaxCDs() + $ThisPlanet->getMa
 
 if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 	<p>You can uninstall weapons from your ship and mount them on the planet. Once mounted, a weapon cannot be removed without destroying it. The weapons will fire in the order specified here.</p>
-	<form method="POST" action="<?php echo $WeaponProcessingHREF; ?>">
+	<form method="POST" action="<?php echo $WeaponProcessingPage->href(); ?>">
 		<table class="standard">
 			<tr>
 				<th>Order</th>
@@ -99,7 +99,7 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 						<td><?php
 							if (count($weapons) === $ThisPlanet->getMaxMountedWeapons()) {
 								// Only allow destroying mounted weapons when all slots are filled
-								echo create_submit('destroy', (string)$i, 'Destroy');
+								echo $WeaponProcessingPage->destroySubmit($i)->html('Destroy');
 							} ?>
 						</td><?php
 					} else { ?>
@@ -131,7 +131,7 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 									<div class="weapon<?php echo $i . '-' . $orderID; ?> hide"><?php echo $weapon->getPowerLevel(); ?></div><?php
 								} ?>
 							</div>
-						<td><?php echo create_submit('transfer', (string)$i, 'Transfer'); ?></td><?php
+						<td><?php echo $WeaponProcessingPage->transferSubmit($i)->html('Transfer'); ?></td><?php
 					} ?>
 				</tr><?php
 			} ?>

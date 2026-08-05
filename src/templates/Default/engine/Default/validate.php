@@ -2,12 +2,12 @@
 
 /**
  * @var Smr\Account $ThisAccount
- * @var string $ValidateFormHref
+ * @var Smr\Pages\Account\ValidateProcessor $ValidatePage
  * @var string $PreferencesLink
  */
 
 ?>
-<form name="FORM" method="POST" action="<?php echo $ValidateFormHref ?>">
+<form name="FORM" method="POST" action="<?php echo $ValidatePage->href(); ?>">
 
 <p>
 	Thank you for trying out Space Merchant Realms! We hope that you are enjoying the game. However,
@@ -33,11 +33,11 @@
 	<input type="text" name="validation_code" maxlength="10" size="10" class="center">
 </p>
 <p class="center">
-	<?php echo create_submit('action', 'Validate me now!'); ?>
+	<?php echo $ValidatePage->actionValidate->html('Validate me now!'); ?>
 	&nbsp;&nbsp;
-	<?php echo create_submit('action', 'resend', 'Resend code'); ?>
+	<?php echo $ValidatePage->actionResend->html('Resend code'); ?>
 	&nbsp;&nbsp;
-	<?php echo create_submit('action', 'skip', 'I\'ll validate later'); ?>
+	<?php echo $ValidatePage->actionSkip->html('I\'ll validate later'); ?>
 </p>
 </form>
 

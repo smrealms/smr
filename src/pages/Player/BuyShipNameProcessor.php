@@ -4,6 +4,7 @@ namespace Smr\Pages\Player;
 
 use DOMDocument;
 use Smr\Globals;
+use Smr\Html\Submit;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
 use Smr\Request;
@@ -105,27 +106,39 @@ function checkHtmlShipName(string $name): void {
 
 class BuyShipNameProcessor extends PlayerPageProcessor {
 
+	private const string ACTION = 'action';
+
+	public readonly Submit $actionText;
+	public readonly Submit $actionHtml;
+	public readonly Submit $actionLogo;
+
+	public function __construct() {
+		$this->actionText = new Submit(self::ACTION, 'text');
+		$this->actionHtml = new Submit(self::ACTION, 'html');
+		$this->actionLogo = new Submit(self::ACTION, 'logo');
+	}
+
 	public function build(Player $player): never {
 		$account = $player->getAccount();
 
-		$action = Request::get('action');
+		$action = Request::get(self::ACTION);
 
 		$cred_cost = Globals::getBuyShipNameCosts()[$action];
 		if ($account->getTotalSmrCredits() < $cred_cost) {
 			create_error('You don\'t have enough SMR Credits. These can be earned by donating to SMR!');
 		}
 
-		if ($action === 'logo') {
+		if ($action === $this->actionLogo->value) {
 			$filename = $player->getAccountID() . 'logo' . $player->getGameID();
 			checkShipLogo($filename);
 			$name = '<img style="padding:3px;" src="upload/' . $filename . '">';
 		} else {
 			// Player submitted a text or HTML ship name
 			$name = Request::get('ship_name');
-			if ($action === 'text') {
+			if ($action === $this->actionText->value) {
 				checkTextShipName($name, 48);
 				$name = htmlentities($name, ENT_NOQUOTES, 'utf-8');
-			} elseif ($action === 'html') {
+			} elseif ($action === $this->actionHtml->value) {
 				checkTextShipName($name, 128);
 				checkHtmlShipName($name);
 				$container = new BuyShipNamePreview($name, $cred_cost);

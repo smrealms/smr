@@ -281,8 +281,8 @@ function create_link(Page|string $container, string $text, ?string $class = null
 	return '<a' . ($class === null ? '' : ' class="' . $class . '"') . ' href="' . (is_string($container) ? $container : $container->href()) . '">' . $text . '</a>';
 }
 
-function create_submit_link(Page $container, string $text): string {
-	return '<a href="' . $container->href() . '" class="submitStyle">' . $text . '</a>';
+function create_submit_link(Page|string $container, string $text): string {
+	return create_link($container, $text, 'submitStyle');
 }
 
 /**
@@ -308,6 +308,8 @@ function create_submit_display(string $display, array $fields = []): string {
 
 /**
  * Create a submit element that will add a name-value field to the submitted form data.
+ * Avoid calling this with hard-coded values for name/value because these specific
+ * values need to be handled by the backend when the submitted form is processed.
  *
  * @param array<string, string | int | true> $fields
  */
@@ -878,4 +880,22 @@ function getWeightedRandom(array $choices): string|int {
 
 function signed_sqrt(float $x): float {
 	return ($x <=> 0) * sqrt(abs($x));
+}
+
+/**
+ * Randomly choose a sector that matches a given condition from a list of sectors.
+ *
+ * @param array<int, Sector> $sectors
+ * @param callable(Sector): bool $condition True if sector is valid
+ */
+function findValidSector(array $sectors, callable $condition): Sector {
+	while (count($sectors) > 0) {
+		$key = array_rand($sectors);
+		$sector = $sectors[$key];
+		if ($condition($sector) === true) {
+			return $sector;
+		}
+		unset($sectors[$key]);
+	}
+	create_error('There are no eligible sectors meeting this condition!');
 }

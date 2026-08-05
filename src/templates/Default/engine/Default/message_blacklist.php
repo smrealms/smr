@@ -32,7 +32,7 @@ if (count($Blacklist) > 0) { ?>
 				</tr><?php
 			} ?>
 		</table><br />
-		<?php echo create_submit('action', 'Remove Selected'); ?>
+		<?php echo create_submit_display('Remove Selected'); ?>
 	</form>
 	<br /><?php
 } else { ?>
@@ -47,5 +47,5 @@ if (count($Blacklist) > 0) { ?>
 			<td class="mb"><input type="text" name="PlayerName" required size="30"></td>
 		</tr>
 	</table><br />
-	<?php echo create_submit('action', 'Blacklist'); ?>
+	<?php echo create_submit_display('Blacklist'); ?>
 </form>

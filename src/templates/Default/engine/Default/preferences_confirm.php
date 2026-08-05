@@ -4,7 +4,8 @@
  * @var int $Amount
  * @var int $ToAccountID
  * @var string $HofName
- * @var string $SubmitHREF
+ * @var string $ConfirmHREF
+ * @var string $CancelHREF
  */
 
 ?>
@@ -12,7 +13,5 @@
 account <?php echo $ToAccountID; ?> with Hall of Fame name <?php echo $HofName; ?>?</p>
 
 <p class="bold">Please make sure this is definitely the correct person before confirming.</p>
-<form method="POST" action="<?php echo $SubmitHREF; ?>">
-	<?php echo create_submit('action', 'Yes'); ?>&nbsp;&nbsp;
-	<?php echo create_submit('action', 'No'); ?>
-</form>
+<?php echo create_submit_link($ConfirmHREF, 'Yes'); ?>&nbsp;&nbsp;
+<?php echo create_submit_link($CancelHREF, 'No');

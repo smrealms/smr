@@ -40,5 +40,5 @@ use Smr\Alliance;
 		</tr>
 	</table>
 	<br /><br />
-	<?php echo create_submit('action', 'Create'); ?>
+	<?php echo create_submit_display('Create'); ?>
 </form>

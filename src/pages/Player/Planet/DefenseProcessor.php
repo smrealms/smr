@@ -2,15 +2,24 @@
 
 namespace Smr\Pages\Player\Planet;
 
+use Smr\Html\Submit;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
 use Smr\Request;
 
 class DefenseProcessor extends PlayerPageProcessor {
 
+	private const string ACTION = 'action';
+
+	public readonly Submit $actionToShip;
+	public readonly Submit $actionToPlanet;
+
 	public function __construct(
 		private readonly int $hardwareTypeID,
-	) {}
+	) {
+		$this->actionToShip = new Submit(self::ACTION, 'Ship');
+		$this->actionToPlanet = new Submit(self::ACTION, 'Planet');
+	}
 
 	public function build(Player $player): never {
 		$ship = $player->getShip();
@@ -27,9 +36,9 @@ class DefenseProcessor extends PlayerPageProcessor {
 		$planet = $player->getSectorPlanet();
 
 		$type_id = $this->hardwareTypeID;
-		$action = Request::get('action');
+		$action = Request::get(self::ACTION);
 		// transfer to ship
-		if ($action === 'Ship') {
+		if ($action === $this->actionToShip->value) {
 			if ($type_id === HARDWARE_SHIELDS) {
 				// do we want transfer more than we have?
 				if ($amount > $planet->getShields()) {
@@ -77,7 +86,7 @@ class DefenseProcessor extends PlayerPageProcessor {
 				$player->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' armour from planet.');
 			}
 
-		} elseif ($action === 'Planet') {
+		} elseif ($action === $this->actionToPlanet->value) {
 			if ($type_id === HARDWARE_SHIELDS) {
 				// does the user wants to transfer shields?
 

@@ -13,6 +13,7 @@ class Financial extends PlanetPage {
 	public string $file = 'planet_financial.php';
 
 	protected function buildPlanetPage(Player $player, Template $template): void {
+		$template->assign('ProcessorPage', new FinancialProcessor());
 	}
 
 }

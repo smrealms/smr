@@ -10,7 +10,7 @@
 <form method="POST" action="<?php echo $UpdateNumGalsHREF; ?>">
 	Number of Galaxies:
 	<input class="center" type="number" min="1" max="30" name="num_gals" value="<?php echo $NumGals; ?>" />
-	<?php echo create_submit('submit', 'Update'); ?>
+	<?php echo create_submit_display('Update'); ?>
 </form>
 <br />
 <?php $this->includeTemplate('admin/unigen/GalaxyDetails.inc.php'); ?>
@@ -19,7 +19,7 @@
 <form method="POST" enctype="multipart/form-data" action="<?php echo $UploadSmrFileHREF; ?>">
 	Or generate the universe from a SMR file:<br />
 	<input type="file" name="smr_file" />&nbsp;
-	<?php echo create_submit('submit', 'Upload SMR File'); ?>
+	<?php echo create_submit_display('Upload SMR File'); ?>
 </form>
 
 <br /><br />

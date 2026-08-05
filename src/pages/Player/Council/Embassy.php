@@ -40,9 +40,9 @@ class Embassy extends PlayerPage {
 			if ($dbResult->hasRecord()) {
 				continue;
 			}
-			$voteRaces[$raceID] = (new EmbassyProcessor($raceID))->href();
+			$voteRaces[$raceID] = new EmbassyProcessor($raceID);
 		}
-		$template->assign('VoteRaceHrefs', $voteRaces);
+		$template->assign('VoteRacePages', $voteRaces);
 	}
 
 }

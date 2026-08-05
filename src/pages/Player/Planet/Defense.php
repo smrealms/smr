@@ -14,16 +14,16 @@ class Defense extends PlanetPage {
 
 	protected function buildPlanetPage(Player $player, Template $template): void {
 		$container = new DefenseProcessor(HARDWARE_SHIELDS);
-		$template->assign('TransferShieldsHref', $container->href());
+		$template->assign('TransferShields', $container);
 
 		$container = new DefenseProcessor(HARDWARE_COMBAT);
-		$template->assign('TransferCDsHref', $container->href());
+		$template->assign('TransferCDs', $container);
 
 		$container = new DefenseProcessor(HARDWARE_ARMOUR);
-		$template->assign('TransferArmourHref', $container->href());
+		$template->assign('TransferArmour', $container);
 
 		$container = new DefenseWeaponProcessor();
-		$template->assign('WeaponProcessingHREF', $container->href());
+		$template->assign('WeaponProcessingPage', $container);
 	}
 
 }

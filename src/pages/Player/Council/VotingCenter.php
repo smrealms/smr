@@ -46,7 +46,7 @@ class VotingCenter extends PlayerPage {
 			}
 			$container = new VotingCenterProcessor($raceID);
 			$voteRelations[$raceID] = [
-				'HREF' => $container->href(),
+				'VotePage' => $container,
 				'Increased' => $votedForRace === $raceID && $votedFor === 'INC',
 				'Decreased' => $votedForRace === $raceID && $votedFor === 'DEC',
 				'Relations' => $raceRelations[$raceID],
@@ -68,7 +68,7 @@ class VotingCenter extends PlayerPage {
 			$otherRaceID = $dbRecord->getInt('race_id_2');
 			$voteType = $dbRecord->getString('type');
 
-			$voteHref = (new VotingCenterProcessor($otherRaceID))->href();
+			$votePage = new VotingCenterProcessor($otherRaceID);
 
 			$votes = CouncilVoting::countVotes(
 				race_id_1: $player->getRaceID(),
@@ -99,7 +99,7 @@ class VotingCenter extends PlayerPage {
 			}
 
 			$voteTreaties[$otherRaceID] = [
-				'VoteHREF' => $voteHref,
+				'VotePage' => $votePage,
 				'VetoPage' => $vetoPage,
 				'Type' => $voteType,
 				'EndTime' => $dbRecord->getInt('end_time'),

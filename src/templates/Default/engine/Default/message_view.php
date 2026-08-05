@@ -4,24 +4,31 @@ use Smr\ScoutMessageGroupType;
 
 /**
  * @var Smr\Player $ThisPlayer
- * @var ?string $PreferencesFormHREF
+ * @var ?Smr\Pages\Player\MessagePreferenceScoutGroupProcessor $PreferencesScoutGroupPage
+ * @var ?Smr\Pages\Player\MessagePreferenceIgnoreGlobalsProcessor $PreferencesIgnoreGlobalsPage
  * @var array{UnreadMessages: int, TotalMessages: int, Type: int, Name: string, DeleteFormHref: string, NumberMessages: int, Messages: array<mixed>, ShowAllHref?: string, GroupedMessages?: array<mixed>} $MessageBox
  */
 
 $styleGreen = ['style' => 'background-color:green'];
-if ($MessageBox['Type'] === MSG_GLOBAL) { ?>
-	<form name="FORM" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
+if ($MessageBox['Type'] === MSG_GLOBAL) {
+	if ($PreferencesIgnoreGlobalsPage === null) {
+		throw new Exception('Expected non-null PreferencesIgnoreGlobalsPage');
+	} ?>
+	<form name="FORM" method="POST" action="<?php echo $PreferencesIgnoreGlobalsPage->href(); ?>">
 		<div class="center">Ignore global messages?&nbsp;&nbsp;
-			<?php echo create_submit('ignore_globals', 'Yes', fields: ($ThisPlayer->isIgnoreGlobals() ? $styleGreen : [])); ?>&nbsp;
-			<?php echo create_submit('ignore_globals', 'No', fields: ($ThisPlayer->isIgnoreGlobals() ? [] : $styleGreen)); ?>
+			<?php echo $PreferencesIgnoreGlobalsPage->actionYes->html(fields: ($ThisPlayer->isIgnoreGlobals() ? $styleGreen : [])); ?>&nbsp;
+			<?php echo $PreferencesIgnoreGlobalsPage->actionNo->html(fields: ($ThisPlayer->isIgnoreGlobals() ? [] : $styleGreen)); ?>
 		</div>
 	</form><?php
-} elseif ($MessageBox['Type'] === MSG_SCOUT) { ?>
-	<form name="FORM" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
+} elseif ($MessageBox['Type'] === MSG_SCOUT) {
+	if ($PreferencesScoutGroupPage === null) {
+		throw new Exception('Expected non-null PreferencesScoutGroupPage');
+	} ?>
+	<form name="FORM" method="POST" action="<?php echo $PreferencesScoutGroupPage->href(); ?>">
 		<div class="center">
 			Group scout messages?&nbsp;&nbsp;<?php
 			foreach (ScoutMessageGroupType::cases() as $groupType) {
-				echo create_submit('group_scouts', $groupType->value, $groupType->name, fields: ($ThisPlayer->getScoutMessageGroupType() === $groupType ? $styleGreen : []));
+				echo $PreferencesScoutGroupPage->actionScoutGroup[$groupType->value]->html($groupType->name, ($ThisPlayer->getScoutMessageGroupType() === $groupType ? $styleGreen : []));
 			} ?>
 		</div>
 	</form><?php
@@ -36,7 +43,7 @@ if ($MessageBox['Type'] === MSG_GLOBAL) { ?>
 				} ?>
 			</td>
 			<td>
-				<?php echo create_submit('action', 'Delete'); ?>&nbsp;<select name="action" size="1">
+				<?php echo create_submit_display('Delete'); ?>&nbsp;<select name="marked_or_all" size="1">
 					<option>Marked Messages</option>
 					<option>All Messages</option>
 				</select>

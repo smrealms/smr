@@ -2,23 +2,33 @@
 
 namespace Smr\Pages\Account;
 
+use Exception;
 use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Html\Submit;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
 
 class FeatureRequestVoteProcessor extends AccountPageProcessor {
 
+	private const string ACTION = 'action';
+
+	public readonly Submit $actionSetStatus;
+	public readonly Submit $actionVote;
+
 	public function __construct(
 		private readonly FeatureRequest|FeatureRequestComments $previousPage,
-	) {}
+	) {
+		$this->actionSetStatus = new Submit(self::ACTION, 'Set Status');
+		$this->actionVote = new Submit(self::ACTION, 'Vote');
+	}
 
 	public function build(Account $account): never {
 		$db = Database::getInstance();
 
-		$action = Request::get('action');
-		if ($action === 'Vote') {
+		$action = Request::get(self::ACTION);
+		if ($action === $this->actionVote->value) {
 			if ($account->isNHL()) {
 				create_error('This account is not allowed to cast a vote!');
 			}
@@ -39,7 +49,7 @@ class FeatureRequestVoteProcessor extends AccountPageProcessor {
 				]);
 			}
 
-		} elseif ($action === 'Set Status') {
+		} elseif ($action === $this->actionSetStatus->value) {
 			if (!$account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST)) {
 				create_error('You do not have permission to do that');
 			}
@@ -66,6 +76,8 @@ class FeatureRequestVoteProcessor extends AccountPageProcessor {
 					'text' => $status,
 				]);
 			}
+		} else {
+			throw new Exception('Unknown action: ' . $action);
 		}
 
 		$this->previousPage->go();

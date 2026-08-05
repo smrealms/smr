@@ -41,7 +41,7 @@ questions to the admin team of Space Merchant Realms!</p>
 		<tr>
 			<td></td>
 			<td>
-				<?php echo create_submit('action', 'Submit'); ?>
+				<?php echo create_submit_display('Submit'); ?>
 			</td>
 		</tr>
 

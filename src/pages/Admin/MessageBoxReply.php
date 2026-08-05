@@ -30,7 +30,7 @@ class MessageBoxReply extends AccountPage {
 			gameID: $this->gameID,
 			boxTypeID: $this->boxTypeID,
 		);
-		$template->assign('BoxReplyFormHref', $container->href());
+		$template->assign('BoxReplyFormPage', $container);
 		$template->assign('Sender', Player::getPlayer($this->senderAccountID, $this->gameID));
 		$template->assign('SenderAccount', Account::getAccount($this->senderAccountID));
 		$template->assign('Preview', $this->preview);

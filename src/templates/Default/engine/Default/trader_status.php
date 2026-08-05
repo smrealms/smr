@@ -178,7 +178,7 @@ use Smr\Race;
 	</table>
 
 	<br />
-	<?php echo create_submit('action', 'Delete Selected'); ?>
+	<?php echo create_submit_display('Delete Selected'); ?>
 </form>
 <br />
 
@@ -193,6 +193,6 @@ use Smr\Race;
 		</tr>
 	</table>
 	<br />
-	<?php echo create_submit('action', 'Create New Note'); ?>
+	<?php echo create_submit_display('Create New Note'); ?>
 	<small>&nbsp;&nbsp;&nbsp;Maximum note length is 1000 characters</small>
 </form>

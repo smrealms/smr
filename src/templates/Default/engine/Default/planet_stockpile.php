@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
- * @var array<array{Name: string, ImageHTML: string, ShipAmount: int, PlanetAmount: int, DefaultAmount: int, HREF: string}> $GoodInfo
+ * @var array<array{Name: string, ImageHTML: string, ShipAmount: int, PlanetAmount: int, DefaultAmount: int, Page: Smr\Pages\Player\Planet\StockpileProcessor}> $GoodInfo
  */
 
 if (count($GoodInfo) === 0) { ?>
@@ -22,7 +22,7 @@ if (count($GoodInfo) === 0) { ?>
 
 	<?php
 	foreach ($GoodInfo as $info) { ?>
-		<form method="POST" action="<?php echo $info['HREF']; ?>">
+		<form method="POST" action="<?php echo $info['Page']->href(); ?>">
 			<tr>
 				<td class="left"><?php echo $info['ImageHTML']; ?></td>
 				<td><?php echo $info['Name']; ?></td>
@@ -30,8 +30,8 @@ if (count($GoodInfo) === 0) { ?>
 				<td class="center"><?php echo $info['PlanetAmount']; ?></td>
 				<td><input type="number" name="amount" value="<?php echo $info['DefaultAmount']; ?>" class="center" size="4" /></td>
 				<td class="center">
-					<?php echo create_submit('action', 'Ship'); ?>&thinsp;
-					<?php echo create_submit('action', 'Planet'); ?>
+					<?php echo $info['Page']->actionShip->html(); ?>&thinsp;
+					<?php echo $info['Page']->actionPlanet->html(); ?>
 				</td>
 			</tr>
 		</form><?php

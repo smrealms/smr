@@ -4,21 +4,30 @@ namespace Smr\Pages\Player;
 
 use Exception;
 use Smr\HardwareType;
+use Smr\Html\Submit;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
 use Smr\Request;
 
 class ShopHardwareProcessor extends PlayerPageProcessor {
 
+	private const string ACTION = 'action'; // submit name
+
+	public readonly Submit $actionBuy;
+	public readonly Submit $actionSell;
+
 	public function __construct(
 		private readonly int $hardwareID,
 		private readonly int $locationID,
-	) {}
+	) {
+		$this->actionBuy = new Submit(self::ACTION, 'Buy');
+		$this->actionSell = new Submit(self::ACTION, 'Sell');
+	}
 
 	public function build(Player $player): never {
 		$ship = $player->getShip();
 
-		$action = Request::get('action');
+		$action = Request::get(self::ACTION);
 		$amount = Request::getInt('amount');
 
 		$hardware_id = $this->hardwareID;
@@ -31,7 +40,7 @@ class ShopHardwareProcessor extends PlayerPageProcessor {
 			create_error('You must actually enter an amount greater than zero!');
 		}
 
-		if ($action === 'Buy') {
+		if ($action === $this->actionBuy->value) {
 			// do we have enough cash?
 			if ($player->getCredits() < $cost * $amount) {
 				create_error('You don\'t have enough credits to buy ' . $amount . ' items!');
@@ -55,7 +64,7 @@ class ShopHardwareProcessor extends PlayerPageProcessor {
 			if ($hardware_id === HARDWARE_MINE) {
 				$player->increaseHOF($amount, ['Forces', 'Bought', 'Mines'], HOF_ALLIANCE);
 			}
-		} elseif ($action === 'Sell') {
+		} elseif ($action === $this->actionSell->value) {
 			// We only allow selling combat drones
 			if ($hardware_id !== HARDWARE_COMBAT) {
 				throw new Exception('This item cannot be sold!');

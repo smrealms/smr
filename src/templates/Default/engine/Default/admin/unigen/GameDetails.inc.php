@@ -92,7 +92,7 @@ use Smr\Game;
 	</tr>
 	<tr>
 		<td class="center" colspan="2">
-			<?php echo create_submit('submit', $SubmitValue); ?>
+			<?php echo create_submit_display($SubmitValue); ?>
 		</td>
 	</tr>
 	</table>

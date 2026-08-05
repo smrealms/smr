@@ -3,11 +3,24 @@
 namespace Smr\Pages\Player\Planet;
 
 use Smr\Database;
+use Smr\Html\Submit;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
 use Smr\Request;
 
 class OwnershipProcessor extends PlayerPageProcessor {
+
+	private const string ACTION = 'action';
+
+	public readonly Submit $actionTakeOwnership;
+	public readonly Submit $actionSetPassword;
+	public readonly Submit $actionRename;
+
+	public function __construct() {
+		$this->actionTakeOwnership = new Submit(self::ACTION, 'Take Ownership');
+		$this->actionSetPassword = new Submit(self::ACTION, 'Set Password');
+		$this->actionRename = new Submit(self::ACTION, 'Rename');
+	}
 
 	public function build(Player $player): never {
 		if (!$player->isLandedOnPlanet()) {
@@ -15,9 +28,9 @@ class OwnershipProcessor extends PlayerPageProcessor {
 		}
 		// get a planet from the sector where the player is in
 		$planet = $player->getSectorPlanet();
-		$action = Request::get('action');
+		$action = Request::get(self::ACTION);
 
-		if ($action === 'Take Ownership') {
+		if ($action === $this->actionTakeOwnership->value) {
 			if ($planet->hasOwner() && $planet->getPassword() !== Request::get('password')) {
 				create_error('You entered an incorrect password for this planet!');
 			}
@@ -40,7 +53,7 @@ class OwnershipProcessor extends PlayerPageProcessor {
 			$planet->setOwnerID($player->getAccountID());
 			$planet->removePassword();
 			$player->log(LOG_TYPE_PLANETS, 'Player takes ownership of planet.');
-		} elseif ($action === 'Rename') {
+		} elseif ($action === $this->actionRename->value) {
 			$name = Request::get('name');
 			if ($name === '') {
 				create_error('You cannot leave your planet nameless!');
@@ -49,7 +62,7 @@ class OwnershipProcessor extends PlayerPageProcessor {
 			$planet->setName($name);
 			$player->log(LOG_TYPE_PLANETS, 'Player renames planet to ' . $name . '.');
 
-		} elseif ($action === 'Set Password') {
+		} elseif ($action === $this->actionSetPassword->value) {
 			// set password
 			$password = Request::get('password');
 			$planet->setPassword($password);

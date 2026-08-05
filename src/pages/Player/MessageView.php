@@ -78,9 +78,12 @@ class MessageView extends PlayerPage {
 		$messageBox['Name'] = Messages::getMessageTypeNames($folderID);
 		$template->assign('PageTopic', 'Viewing ' . $messageBox['Name']);
 
-		if ($messageBox['Type'] === MSG_GLOBAL || $messageBox['Type'] === MSG_SCOUT) {
-			$container = new MessagePreferenceProcessor($folderID);
-			$template->assign('PreferencesFormHREF', $container->href());
+		if ($messageBox['Type'] === MSG_GLOBAL) {
+			$container = new MessagePreferenceIgnoreGlobalsProcessor($folderID);
+			$template->assign('PreferencesIgnoreGlobalsPage', $container);
+		} elseif ($messageBox['Type'] === MSG_SCOUT) {
+			$container = new MessagePreferenceScoutGroupProcessor($folderID);
+			$template->assign('PreferencesScoutGroupPage', $container);
 		}
 
 		$container = new MessageDeleteProcessor($folderID);

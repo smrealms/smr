@@ -43,10 +43,10 @@ if (count($Threads) > 0) { ?>
 	$this->listjsInclude = 'alliance_message';
 }
 
-if (isset($CreateNewThreadFormHref)) { ?>
+if (isset($CreateNewThreadFormPage)) { ?>
 	<h2>Create Thread</h2><br /><?php
 	if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Preview); ?></td></tr></table><?php } ?>
-	<form class="standard" id="CreateNewThreadForm" method="POST" action="<?php echo $CreateNewThreadFormHref; ?>">
+	<form class="standard" id="CreateNewThreadForm" method="POST" action="<?php echo $CreateNewThreadFormPage->href(); ?>">
 	<table class="standardnobord nohpad">
 		<tr>
 			<td class="top">Topic:&nbsp;</td>
@@ -58,6 +58,6 @@ if (isset($CreateNewThreadFormHref)) { ?>
 			<td colspan="2"><textarea spellcheck="true" name="body" required><?php if (isset($Preview)) { echo $Preview; } ?></textarea></td>
 		</tr>
 	</table><br />
-	<?php echo create_submit('action', 'New Thread'); ?>&nbsp;<?php echo create_submit('action', 'Preview Thread'); ?>
+	<?php echo $CreateNewThreadFormPage->actionCreate->html('New Thread'); ?>&nbsp;<?php echo $CreateNewThreadFormPage->actionPreview->html('Preview Thread'); ?>
 	</form><?php
 }

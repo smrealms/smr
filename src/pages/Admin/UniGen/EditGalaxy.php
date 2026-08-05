@@ -115,8 +115,8 @@ class EditGalaxy extends AccountPage {
 		$template->assign('UniGen', $this->canEdit);
 
 		if ($this->canEdit) {
-			$container = new SaveProcessor($this->gameID, $this->galaxyID, $returnTo);
-			$template->assign('SubmitChangesHREF', $container->href());
+			$container = new RedoConnectionsProcessor($this->gameID, $this->galaxyID, $returnTo);
+			$template->assign('RedoConnectionsHREF', $container->href());
 
 			$container = new ToggleLinkProcessor($this->gameID, $returnTo);
 			$container->allowAjax = true;

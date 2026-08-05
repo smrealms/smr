@@ -45,7 +45,7 @@ class FeatureRequestComments extends AccountPage {
 			// variables needed to set the status for this feature request
 			if ($featureModerator) {
 				$template->assign('FeatureRequestId', $this->featureRequestID);
-				$template->assign('FeatureRequestStatusFormHREF', (new FeatureRequestVoteProcessor($this))->href());
+				$template->assign('FeatureRequestStatusFormPage', new FeatureRequestVoteProcessor($this));
 			}
 
 			$featureRequestComments = [];

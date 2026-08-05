@@ -7,7 +7,6 @@ use Smr\BountyType;
 use Smr\Location;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
-use Smr\Request;
 
 class BountyPlaceConfirmProcessor extends PlayerPageProcessor {
 
@@ -31,11 +30,6 @@ class BountyPlaceConfirmProcessor extends PlayerPageProcessor {
 			default => throw new Exception('Location is not HQ or UG'),
 		};
 		$container = new $body($this->locationID);
-
-		// if we don't have a yes we leave immediatly
-		if (Request::get('action') !== 'Yes') {
-			$container->go();
-		}
 
 		// get values from container (validated in bounty_place_processing.php)
 		$amount = $this->credits;

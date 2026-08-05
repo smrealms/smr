@@ -4,6 +4,7 @@ namespace Smr\Pages\Admin;
 
 use Smr\Account;
 use Smr\DummyShip;
+use Smr\Html\Submit;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
 
@@ -31,6 +32,20 @@ function runAnAttack(array $realAttackers, array $realDefenders): array {
 }
 
 class CombatSimulatorProcessor extends AccountPageProcessor {
+
+	private const string ACTION = 'action';
+
+	public readonly Submit $actionUpdate;
+	public readonly Submit $actionRepair;
+	public readonly Submit $actionRun;
+	public readonly Submit $actionRunAll;
+
+	public function __construct() {
+		$this->actionUpdate = new Submit(self::ACTION, 'update');
+		$this->actionRepair = new Submit(self::ACTION, 'repair');
+		$this->actionRun = new Submit(self::ACTION, 'run');
+		$this->actionRunAll = new Submit(self::ACTION, 'run_all');
+	}
 
 	public function build(Account $account): never {
 		$usedNames = [];
@@ -63,8 +78,8 @@ class CombatSimulatorProcessor extends AccountPageProcessor {
 			++$i;
 		}
 
-		$action = Request::get('action');
-		if ($action === 'repair') {
+		$action = Request::get(self::ACTION);
+		if ($action === $this->actionRepair->value) {
 			foreach ([...$attackers, ...$defenders] as $player) {
 				$player->setDead(false);
 				$player->getShip()->setHardwareToMax();
@@ -72,8 +87,8 @@ class CombatSimulatorProcessor extends AccountPageProcessor {
 		}
 
 		$results = null;
-		if ($action === 'run' || $action === 'death_run') {
-			if ($action === 'death_run') {
+		if ($action === $this->actionRun->value || $action === $this->actionRunAll->value) {
+			if ($action === $this->actionRunAll->value) {
 				$maxRounds = 100;
 			} else {
 				$maxRounds = 1;
@@ -99,7 +114,7 @@ class CombatSimulatorProcessor extends AccountPageProcessor {
 		}
 
 		// Save ships unless we're just updating the dummy list
-		if ($action !== 'update') {
+		if ($action !== $this->actionUpdate->value) {
 			DummyShip::saveDummyShips();
 		}
 

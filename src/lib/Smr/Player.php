@@ -8,6 +8,7 @@ use Smr\Exceptions\MissionNotPossible;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Exceptions\UserError;
 use Smr\MissionActions\EnterSector;
+use Smr\Pages\Account\HallOfFamePersonal;
 use Smr\Pages\Player\ExamineTrader;
 use Smr\Pages\Player\NewbieLeaveProcessor;
 use Smr\Pages\Player\Planet\KickProcessor;
@@ -3003,6 +3004,11 @@ class Player {
 	public function getToggleWeaponHidingHREF(bool $ajax = false): string {
 		$container = new WeaponDisplayToggleProcessor();
 		$container->allowAjax = $ajax;
+		return $container->href();
+	}
+
+	public function getPersonalHofHREF(): string {
+		$container = new HallOfFamePersonal($this->getAccountID(), $this->getGameID());
 		return $container->href();
 	}
 

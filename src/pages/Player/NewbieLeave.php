@@ -18,6 +18,9 @@ class NewbieLeave extends PlayerPage {
 			create_error('You cannot leave newbie protection before the game begins!');
 		}
 
+		$template->assign('CancelHREF', new CurrentSector()->href());
+		$template->assign('ConfirmHREF', $player->getLeaveNewbieProtectionHREF());
+
 		$template->assign('PageTopic', 'Leave Newbie Protection');
 	}
 

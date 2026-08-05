@@ -15,7 +15,7 @@
 		</small>
 	</p>
 
-	<textarea spellcheck="true" name="message"></textarea>
+	<textarea spellcheck="true" name="message" required></textarea>
 	<br /><br />
-	<?php echo create_submit('action', 'Send message'); ?>
+	<?php echo create_submit_display('Send message'); ?>
 </form>

@@ -48,7 +48,7 @@ use Smr\Galaxy;
 		} ?>
 		<tr>
 			<td class="center" colspan="6">
-				<?php echo create_submit('submit', $Submit['value']); ?>
+				<?php echo create_submit_display($Submit['value']); ?>
 			</td>
 		</tr>
 	</table>

@@ -22,7 +22,7 @@ class PersonalBank extends PlayerPage {
 		Menu::bank();
 
 		$container = new PersonalBankProcessor();
-		$template->assign('ProcessingHREF', $container->href());
+		$template->assign('ProcessingPage', $container);
 	}
 
 }

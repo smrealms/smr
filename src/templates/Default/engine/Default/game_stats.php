@@ -11,14 +11,17 @@
  * @var int $TotalAlliances
  * @var array<int, array{Alliance: Smr\Alliance, Class: string, Value: int, AllianceName: string}> $AllianceExpRankings
  * @var array<int, array{Alliance: Smr\Alliance, Class: string, Value: int, AllianceName: string}> $AllianceKillRankings
+ * @var ?array{Name: string, HofHref: string, Race: string, Alliance: string} $PlayerInfo
+ * @var string $BackHref
  */
 
 ?>
+<a href="<?php echo $BackHref; ?>">&lt;&lt;Back</a>
+<br /><br />
 <h2>Description</h2>
 <?php echo bbify($StatsGame->getDescription(), $StatsGame->getGameID()); ?>
 <br /><br />
-
-<div class="center">
+<div>
 	<table class="center standard">
 		<tr>
 			<td>General Info</td>
@@ -145,6 +148,29 @@
 	</table>
 	<br />
 
+<?php
+if ($PlayerInfo !== null) { ?>
+	<br />
+	<h2>Your Trader</h2>
+	<br />
+	<table class="center standard">
+		<tr><?php
+			foreach (array_keys($PlayerInfo) as $colName) { ?>
+				<th><?php echo $colName; ?></th><?php
+			} ?>
+		</tr>
+		<tr><?php
+			foreach (array_values($PlayerInfo) as $colValue) { ?>
+				<td><?php echo $colValue; ?></td><?php
+			} ?>
+		</tr>
+	</table>
+	<br /><?php
+} ?>
+
+
+<h2>Rankings</h2>
+<div>
 	<table class="center standard">
 		<tr>
 			<td>Top 10 Players in Experience</td>

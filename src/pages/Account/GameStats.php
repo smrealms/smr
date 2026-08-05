@@ -3,11 +3,13 @@
 namespace Smr\Pages\Account;
 
 use Smr\Account;
+use Smr\Alliance;
 use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Game;
 use Smr\Page\AccountPage;
 use Smr\Player;
+use Smr\Race;
 use Smr\Rankings;
 use Smr\Template;
 
@@ -41,6 +43,20 @@ class GameStats extends AccountPage {
 
 		$template->assign('TotalAlliances', $db->count('alliance', ['game_id' => $gameID]));
 
+		// Handle details about when to provide a linked alliance name
+		$getAllianceLink = function(Alliance $alliance) use ($statsGame): string {
+			if ($statsGame->hasEnded()) {
+				// If game has ended, offer a link to alliance roster details
+				$allianceName = create_link(
+					new PreviousGameAllianceDetail($alliance->getGameID(), $alliance->getAllianceID()),
+					$alliance->getAllianceDisplayName(includeAllianceID: true),
+				);
+			} else {
+				$allianceName = $alliance->getAllianceDisplayName();
+			}
+			return $allianceName;
+		};
+
 		// Get current account's player for this game (if any)
 		try {
 			$player = Player::getPlayer($account->getAccountID(), $gameID);
@@ -56,24 +72,44 @@ class GameStats extends AccountPage {
 		$playerKillRanks = Rankings::collectRankings($playerKillRecords, $player);
 		$template->assign('KillRankings', $playerKillRanks);
 
-		$allianceTopTen = function(string $stat) use ($statsGame, $gameID, $player): array {
+		$allianceTopTen = function(string $stat) use ($getAllianceLink, $gameID, $player): array {
 			$allianceRecords = Rankings::allianceStats($stat, $gameID, 10);
 			$allianceRanks = Rankings::collectAllianceRankings($allianceRecords, $player);
 			foreach ($allianceRanks as $rank => $info) {
-				$alliance = $info['Alliance'];
-				if ($statsGame->hasEnded()) {
-					// If game has ended, offer a link to alliance roster details
-					$href = (new PreviousGameAllianceDetail($gameID, $alliance->getAllianceID()))->href();
-					$allianceName = create_link($href, $alliance->getAllianceDisplayName());
-				} else {
-					$allianceName = $alliance->getAllianceDisplayName();
-				}
-				$allianceRanks[$rank]['AllianceName'] = $allianceName;
+				$allianceRanks[$rank]['AllianceName'] = $getAllianceLink($info['Alliance']);
 			}
 			return $allianceRanks;
 		};
 		$template->assign('AllianceExpRankings', $allianceTopTen('experience'));
 		$template->assign('AllianceKillRankings', $allianceTopTen('kills'));
+
+		if ($player !== null) {
+			$playerInfo = [
+				'Name' => $player->getLevelName() . ' ' . $player->getDisplayName(),
+				'Race' => Race::getName($player->getRaceID()),
+				'Alliance' => (
+					$player->hasAlliance() ?
+					$getAllianceLink($player->getAlliance()) :
+					$player->getAllianceDisplayName()
+				),
+				'Experience' => number_format($player->getExperience()),
+				'Kills' => number_format($player->getKills()),
+				'Hall Of Fame' => create_link($player->getPersonalHofHREF(), 'View'),
+				'News' => create_link(
+					new NewsReadAdvanced(
+						gameID: $gameID,
+						submit: 'Search For Player',
+						accountIDs: [$player->getAccountID()],
+					),
+					'View',
+				),
+			];
+		} else {
+			$playerInfo = null;
+		}
+		$template->assign('PlayerInfo', $playerInfo);
+
+		$template->assign('BackHref', (new GamePlay())->href());
 	}
 
 }

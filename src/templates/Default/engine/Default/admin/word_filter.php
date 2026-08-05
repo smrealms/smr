@@ -28,7 +28,7 @@ if (count($FilteredWords) === 0) { ?>
 				</tr><?php
 			} ?>
 		</table><br />
-		<?php echo create_submit('action', 'Remove Selected'); ?>
+		<?php echo create_submit_display('Remove Selected'); ?>
 	</form><br /><?php
 } ?>
 
@@ -44,7 +44,7 @@ if (count($FilteredWords) === 0) { ?>
 			<td class="mb"><input type="text" name="WordReplacement" required size="30"></td>
 		</tr>
 	</table><br />
-	<?php echo create_submit('action', 'Add'); ?>
+	<?php echo create_submit_display('Add'); ?>
 </form>
 <br />
 

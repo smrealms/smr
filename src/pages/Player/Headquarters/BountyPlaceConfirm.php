@@ -36,7 +36,10 @@ class BountyPlaceConfirm extends PlayerPage {
 			credits: $this->credits,
 			smrCredits: $this->smrCredits,
 		);
-		$template->assign('ProcessingHREF', $container->href());
+		$template->assign('ConfirmHREF', $container->href());
+
+		$container = new BountyPlace($this->locationID);
+		$template->assign('CancelHREF', $container->href());
 	}
 
 }

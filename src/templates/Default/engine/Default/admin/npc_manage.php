@@ -20,7 +20,7 @@ if ($Message !== null) { ?>
 			<option <?php if ($Game['Selected']) { ?>selected<?php } ?> value="<?php echo $Game['ID']; ?>"><?php echo $Game['Name']; ?></option><?php
 		} ?>
 	</select>&nbsp;
-	<?php echo create_submit('action', 'Select'); ?>
+	<?php echo create_submit_display('Select'); ?>
 </form>
 
 <?php
@@ -86,7 +86,7 @@ if ($SelectedGameID !== 0) { ?>
 			} ?>
 		</select>
 		<br /><br />
-		<?php echo create_submit('action', 'Setup Galaxy'); ?>
+		<?php echo create_submit_display('Setup Galaxy'); ?>
 	</form><?php
 } ?>
 

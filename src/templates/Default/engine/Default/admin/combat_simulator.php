@@ -1,11 +1,15 @@
 <?php declare(strict_types=1);
 
+/**
+ * @var Smr\Pages\Admin\CombatSimulatorProcessor $CombatSimPage
+ */
+
 ?>
 <a href="<?php echo $EditDummysLink ?>">Edit Combat Dummys</a><br /><br />
 
 <?php if ($Duplicates) { ?><h1>Do not use duplicate dummy names, they would interfere with each other</h1><?php } ?>
 
-<form action="<?php echo $CombatSimHREF ?>" method="POST">
+<form action="<?php echo $CombatSimPage->href() ?>" method="POST">
 	<table class="fullwidth">
 		<tr>
 			<th>Attackers</th>
@@ -21,10 +25,10 @@
 		<tr>
 			<td colspan="2" class="center">
 				<br />All drones, shields, armour assumed full at the start of the simulation<br /><br />
-				<?php echo create_submit('action', 'update', 'Update Details'); ?>&nbsp;
-				<?php echo create_submit('action', 'repair', 'Repair All'); ?>&nbsp;
-				<?php echo create_submit('action', 'run', 'Run Simulation'); ?>&nbsp;
-				<?php echo create_submit('action', 'death_run', 'Run Simulation TO THE DEATH!!'); ?>
+				<?php echo $CombatSimPage->actionUpdate->html('Update Details'); ?>&nbsp;
+				<?php echo $CombatSimPage->actionRepair->html('Repair All'); ?>&nbsp;
+				<?php echo $CombatSimPage->actionRun->html('Run Simulation'); ?>&nbsp;
+				<?php echo $CombatSimPage->actionRunAll->html('Run Simulation TO THE DEATH!!'); ?>
 			</td>
 		</tr>
 	</table>

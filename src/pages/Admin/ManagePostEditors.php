@@ -57,7 +57,7 @@ class ManagePostEditors extends AccountPage {
 
 			// Create the link to the processing file
 			$linkContainer = new ManagePostEditorsProcessor($selectedGameID);
-			$template->assign('PostEditorHREF', $linkContainer->href());
+			$template->assign('PostEditorPage', $linkContainer);
 		}
 	}
 

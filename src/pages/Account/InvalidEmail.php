@@ -22,7 +22,7 @@ class InvalidEmail extends AccountPage {
 		}
 
 		$container = new InvalidEmailProcessor();
-		$template->assign('ReopenLink', $container->href());
+		$template->assign('ReopenPage', $container);
 	}
 
 }

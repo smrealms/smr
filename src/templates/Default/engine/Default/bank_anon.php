@@ -22,7 +22,7 @@ echo $Message; ?>
 	</tr>
 </table>
 <br />
-<?php echo create_submit('action', 'Access Account'); ?>
+<?php echo create_submit_display('Access Account'); ?>
 </form>
 
 <?php

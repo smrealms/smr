@@ -35,7 +35,7 @@ class PlotCourse extends PlayerPage {
 
 		if ($player->getShip()->hasJump()) {
 			$container = new SectorJumpProcessor();
-			$template->assign('JumpDriveFormLink', $container->href());
+			$template->assign('JumpDrivePage', $container);
 		}
 
 		$container = new self();

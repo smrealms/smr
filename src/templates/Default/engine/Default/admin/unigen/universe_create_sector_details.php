@@ -104,7 +104,7 @@ use Smr\TransactionType;
 	</table>
 	<br /><br />
 
-	<?php echo create_submit('submit', 'Edit Sector'); ?>
+	<?php echo create_submit_display('Edit Sector'); ?>
 	<br /><br />
 </form>
 

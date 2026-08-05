@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Player\Planet;
 
+use Smr\Html\Submit;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Planet;
 use Smr\Player;
@@ -10,9 +11,17 @@ use Smr\TradeGood;
 
 class StockpileProcessor extends PlayerPageProcessor {
 
+	private const string ACTION = 'action';
+
+	public readonly Submit $actionShip;
+	public readonly Submit $actionPlanet;
+
 	public function __construct(
 		private readonly int $goodID,
-	) {}
+	) {
+		$this->actionShip = new Submit(self::ACTION, 'Ship');
+		$this->actionPlanet = new Submit(self::ACTION, 'Planet');
+	}
 
 	public function build(Player $player): never {
 		$ship = $player->getShip();
@@ -30,8 +39,8 @@ class StockpileProcessor extends PlayerPageProcessor {
 
 		// get a planet from the sector where the player is in
 		$planet = $player->getSectorPlanet();
-		$action = Request::get('action');
-		if ($action === 'Ship') {
+		$action = Request::get(self::ACTION);
+		if ($action === $this->actionShip->value) {
 			// transfer to ship
 
 			// do we want transfer more than we have?
@@ -49,7 +58,7 @@ class StockpileProcessor extends PlayerPageProcessor {
 			$ship->increaseCargo($goodID, $amount);
 			$player->log(LOG_TYPE_PLANETS, 'Player takes ' . $amount . ' ' . TradeGood::get($goodID)->name . ' from planet.');
 
-		} elseif ($action === 'Planet') {
+		} elseif ($action === $this->actionPlanet->value) {
 			// transfer to planet
 
 			// do we want transfer more than we have?

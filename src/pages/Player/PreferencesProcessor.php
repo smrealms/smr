@@ -5,6 +5,7 @@ namespace Smr\Pages\Player;
 use Exception;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Html\Submit;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
 use Smr\Request;
@@ -12,21 +13,35 @@ use Smr\SectorLock;
 
 class PreferencesProcessor extends PlayerPageProcessor {
 
+	private const string ACTION = 'action';
+
+	public readonly Submit $actionKamikaze;
+	public readonly Submit $actionForceMessages;
+	public readonly Submit $actionPlayerName;
+	public readonly Submit $actionPlayerRace;
+
+	public function __construct() {
+		$this->actionKamikaze = new Submit(self::ACTION, 'kamikaze');
+		$this->actionForceMessages = new Submit(self::ACTION, 'force_messages');
+		$this->actionPlayerName = new Submit(self::ACTION, 'player_name');
+		$this->actionPlayerRace = new Submit(self::ACTION, 'player_race');
+	}
+
 	public function build(Player $player): never {
 		$db = Database::getInstance();
 		$account = $player->getAccount();
 
-		$action = Request::get('action');
+		$action = Request::get(self::ACTION);
 
-		if ($action === 'Change Kamikaze Setting') {
+		if ($action === $this->actionKamikaze->value) {
 			$player->setCombatDronesKamikazeOnMines(Request::getBool('kamikaze'));
 			$message = '<span class="green">SUCCESS: </span>You have changed your combat drones options.';
 
-		} elseif ($action === 'Change Message Setting') {
+		} elseif ($action === $this->actionForceMessages->value) {
 			$player->setForceDropMessages(Request::getBool('forceDropMessages'));
 			$message = '<span class="green">SUCCESS: </span>You have changed your message options.';
 
-		} elseif ($action === 'change_name') {
+		} elseif ($action === $this->actionPlayerName->value) {
 			$old_name = $player->getDisplayName();
 			$player_name = Request::get('PlayerName');
 
@@ -49,7 +64,7 @@ class PreferencesProcessor extends PlayerPageProcessor {
 			]);
 			$message = '<span class="green">SUCCESS: </span>You have changed your player name.';
 
-		} elseif ($action === 'change_race') {
+		} elseif ($action === $this->actionPlayerRace->value) {
 			if (!$player->canChangeRace()) {
 				throw new Exception('Player is not allowed to change their race!');
 			}

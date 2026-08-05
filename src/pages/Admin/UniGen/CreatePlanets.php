@@ -54,7 +54,7 @@ class CreatePlanets extends AccountPage {
 		$template->assign('NumberOfPlanets', $numberOfPlanets);
 
 		// Form to make planet changes
-		$container = new SaveProcessor($this->gameID, $this->galaxyID, $this->returnTo);
+		$container = new CreatePlanetsProcessor($this->gameID, $this->galaxyID, $this->returnTo);
 		$template->assign('CreatePlanetsFormHREF', $container->href());
 
 		// HREF to cancel and return to the previous page

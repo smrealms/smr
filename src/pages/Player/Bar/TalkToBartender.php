@@ -39,8 +39,11 @@ class TalkToBartender extends PlayerPage {
 		$container = new self($this->locationID);
 		$template->assign('ListenHREF', $container->href());
 
-		$container = new TalkToBartenderProcessor($this->locationID);
-		$template->assign('ProcessingHREF', $container->href());
+		$container = new TalkToBartenderGossipProcessor($this->locationID);
+		$template->assign('ProcessGossipHREF', $container->href());
+
+		$container = new TalkToBartenderTipProcessor($this->locationID);
+		$template->assign('ProcessTipHREF', $container->href());
 
 		$container = new BarMain($this->locationID);
 		$template->assign('BackHREF', $container->href());

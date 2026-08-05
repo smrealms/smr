@@ -6,7 +6,6 @@ use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
-use Smr\Pages\Account\HallOfFamePersonal;
 use Smr\Pages\Account\NewsReadAdvanced;
 use Smr\Pages\Player\Council\ViewCouncil;
 use Smr\Player;
@@ -83,8 +82,7 @@ class SearchForTraderResult extends PlayerPage {
 			$container = new BountyView($linkPlayer->getAccountID());
 			$result['BountyHREF'] = $container->href();
 
-			$container = new HallOfFamePersonal($linkPlayer->getAccountID(), $linkPlayer->getGameID());
-			$result['HofHREF'] = $container->href();
+			$result['HofHREF'] = $linkPlayer->getPersonalHofHREF();
 
 			$container = new NewsReadAdvanced(
 				gameID: $linkPlayer->getGameID(),
