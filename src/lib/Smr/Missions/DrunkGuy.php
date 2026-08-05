@@ -57,7 +57,7 @@ readonly class DrunkGuy extends Mission {
 	/**
 	 * @param array<int> $excludeSectorIDs Sectors to exclude from picking.
 	 */
-	private function pickSector(int|string $loc, int $fromSectorID, ?array $excludeSectorIDs = null): int {
+	private function pickSector(string|int $loc, int $fromSectorID, ?array $excludeSectorIDs = null): int {
 		$toFind = Plotter::getX(PlotGroup::Locations, $loc, $this->gameID);
 		$fromSector = Sector::getSector($this->gameID, $fromSectorID);
 		try {

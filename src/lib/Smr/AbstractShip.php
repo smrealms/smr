@@ -652,7 +652,7 @@ class AbstractShip {
 	/**
 	 * @return ($goodID is null ? array<int, int> : int)
 	 */
-	public function getCargo(?int $goodID = null): int|array {
+	public function getCargo(?int $goodID = null): array|int {
 		if ($goodID === null) {
 			return $this->cargo;
 		}

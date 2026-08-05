@@ -6,7 +6,6 @@ use Smr\Player;
 use Smr\ShipClass;
 
 function hit_sector_mines(Player $player): void {
-
 	// Get sector forces sorted by decreasing mines (largest mine stacks first)
 	$sectorForces = $player->getSector()->getForces();
 	uasort($sectorForces, fn($a, $b) => $b->getMines() <=> $a->getMines());

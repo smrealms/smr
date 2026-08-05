@@ -315,7 +315,7 @@ class Database {
 	 * @param T $num
 	 * @return T
 	 */
-	public function escapeNumber(int|float $num): int|float {
+	public function escapeNumber(float|int $num): float|int {
 		return $num;
 	}
 

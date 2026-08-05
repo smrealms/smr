@@ -582,7 +582,7 @@ class Planet {
 	/**
 	 * @return ($goodID is null ? array<int, int> : int)
 	 */
-	public function getStockpile(?int $goodID = null): int|array {
+	public function getStockpile(?int $goodID = null): array|int {
 		if (!isset($this->stockpile)) {
 			// initialize cargo array
 			$this->stockpile = [];
@@ -730,7 +730,7 @@ class Planet {
 	/**
 	 * @return ($buildingTypeID is null ? array<int, int> : int)
 	 */
-	public function getMaxBuildings(?int $buildingTypeID = null): int|array {
+	public function getMaxBuildings(?int $buildingTypeID = null): array|int {
 		if ($buildingTypeID === null) {
 			$maxBuildings = [];
 			foreach ($this->getStructureTypes() as $ID => $type) {

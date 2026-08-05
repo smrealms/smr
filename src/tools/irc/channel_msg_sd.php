@@ -7,7 +7,6 @@ use Smr\Player;
  * @param resource $fp
  */
 function channel_msg_sd($fp, Message $msg): bool {
-
 	if (preg_match('/^!sd(\s*help)?$/i', $msg->text) === 1) {
 
 		$nick = $msg->nick;
@@ -31,7 +30,6 @@ function channel_msg_sd($fp, Message $msg): bool {
  * @param resource $fp
  */
 function channel_msg_sd_set($fp, Message $msg): bool {
-
 	if (preg_match('/^!sd set (\d+) (\d+)$/i', $msg->text, $args) === 1) {
 
 		global $sds;
@@ -71,7 +69,6 @@ function channel_msg_sd_set($fp, Message $msg): bool {
  * @param resource $fp
  */
 function channel_msg_sd_del($fp, Message $msg): bool {
-
 	if (preg_match('/^!sd del (\d+)$/i', $msg->text, $args) === 1) {
 
 		global $sds;
@@ -105,7 +102,6 @@ function channel_msg_sd_del($fp, Message $msg): bool {
  * @param resource $fp
  */
 function channel_msg_sd_list($fp, Message $msg, Player $player): bool {
-
 	if ($msg->text === '!sd list') {
 
 		global $sds;

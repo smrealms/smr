@@ -558,8 +558,10 @@ class Sector {
 	 * a consistent 2-way warp.
 	 */
 	public function setWarp(Sector $warp): void {
-		if ($this->getWarp() === $warp->getSectorID() &&
-		    $warp->getWarp() === $this->getSectorID()) {
+		if (
+			$this->getWarp() === $warp->getSectorID() &&
+			$warp->getWarp() === $this->getSectorID()
+		) {
 			// Warps are already set correctly!
 			return;
 		}

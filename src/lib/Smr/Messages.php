@@ -55,7 +55,7 @@ class Messages {
 		];
 	}
 
-	public static function getMessagePlayer(int $accountID, int $gameID, ?int $messageType = null): string|Player {
+	public static function getMessagePlayer(int $accountID, int $gameID, ?int $messageType = null): Player|string {
 		if ($accountID === ACCOUNT_ID_PORT) {
 			$return = '<span class="yellow">Port Defenses</span>';
 		} elseif ($accountID === ACCOUNT_ID_ADMIN) {

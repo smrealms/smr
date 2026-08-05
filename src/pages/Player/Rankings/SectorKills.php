@@ -17,7 +17,6 @@ class SectorKills extends PlayerPage {
 	public string $file = 'rankings_sector_kill.php';
 
 	public function build(Player $player, Template $template): void {
-
 		$template->pageTopic = 'Sector Death Rankings';
 
 		Menu::rankings(3, 0);
