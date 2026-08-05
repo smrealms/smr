@@ -19,7 +19,7 @@ class DatabaseCleanup extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Database Cleanup');
+		$template->pageTopic = 'Database Cleanup';
 
 		$bytesToMB = function(int $bytes): string {
 			return round($bytes / (1024 * 1024), 1) . ' MB';

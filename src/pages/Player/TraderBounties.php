@@ -16,7 +16,7 @@ class TraderBounties extends PlayerPage {
 	public string $file = 'trader_bounties.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Bounties');
+		$template->pageTopic = 'Bounties';
 
 		Menu::trader();
 

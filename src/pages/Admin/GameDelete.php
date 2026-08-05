@@ -12,7 +12,7 @@ class GameDelete extends AccountPage {
 	public string $file = 'admin/game_delete.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Deleting A Game');
+		$template->pageTopic = 'Deleting A Game';
 
 		$container = new GameDeleteConfirm();
 		$template->assign('ConfirmHREF', $container->href());

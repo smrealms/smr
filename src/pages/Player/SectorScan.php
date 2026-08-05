@@ -26,7 +26,7 @@ class SectorScan extends PlayerPage {
 		// initialize vars
 		$scanSector = Sector::getSector($player->getGameID(), $this->targetSectorID);
 
-		$template->assign('PageTopic', 'Sector Scan of #' . $scanSector->getSectorID() . ' (' . $scanSector->getGalaxy()->getDisplayName() . ')');
+		$template->pageTopic = 'Sector Scan of #' . $scanSector->getSectorID() . ' (' . $scanSector->getGalaxy()->getDisplayName() . ')';
 		Menu::navigation($player);
 
 		$friendly_forces = 0;

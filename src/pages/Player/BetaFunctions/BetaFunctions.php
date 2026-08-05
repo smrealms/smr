@@ -23,7 +23,7 @@ class BetaFunctions extends PlayerPage {
 
 		$sector = $player->getSector();
 
-		$template->assign('PageTopic', 'Beta Functions');
+		$template->pageTopic = 'Beta Functions';
 
 		// let them map all
 		$container = new RevealMapProcessor();

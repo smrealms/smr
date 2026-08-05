@@ -23,7 +23,7 @@ class MessageCouncil extends PlayerPage {
 		$raceName = Race::getName($this->raceID);
 		$template->assign('RaceName', $raceName);
 
-		$template->assign('PageTopic', 'Send message to Ruling Council of the ' . $raceName);
+		$template->pageTopic = 'Send message to Ruling Council of the ' . $raceName;
 
 		Menu::messages();
 

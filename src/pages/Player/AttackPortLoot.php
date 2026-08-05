@@ -11,7 +11,7 @@ class AttackPortLoot extends PlayerPage {
 	public string $file = 'port_loot.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Looting The Port');
+		$template->pageTopic = 'Looting The Port';
 		$template->assign('ThisPort', $player->getSectorPort());
 	}
 

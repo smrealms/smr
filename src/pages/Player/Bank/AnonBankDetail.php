@@ -98,7 +98,7 @@ class AnonBankDetail extends PlayerPage {
 		$container = new AnonBankDetailProcessor($account_num);
 		$template->assign('TransactionPage', $container);
 
-		$template->assign('PageTopic', 'Anonymous Account #' . $account_num);
+		$template->pageTopic = 'Anonymous Account #' . $account_num;
 		Menu::bank();
 	}
 

@@ -18,10 +18,10 @@ class ForcesDrop extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		if ($this->ownerAccountID !== null) {
 			$owner = Player::getPlayer($this->ownerAccountID, $player->getGameID());
-			$template->assign('PageTopic', 'Change ' . htmlentities($owner->getPlayerName()) . '\'s Forces');
+			$template->pageTopic = 'Change ' . htmlentities($owner->getPlayerName()) . '\'s Forces';
 			$owner_id = $this->ownerAccountID;
 		} else {
-			$template->assign('PageTopic', 'Drop Forces');
+			$template->pageTopic = 'Drop Forces';
 			$owner_id = $player->getAccountID();
 		}
 

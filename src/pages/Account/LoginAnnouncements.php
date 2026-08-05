@@ -18,7 +18,7 @@ class LoginAnnouncements extends AccountPage {
 	public function build(Account $account, Template $template): void {
 		$db = Database::getInstance();
 
-		$template->assign('PageTopic', 'Announcements');
+		$template->pageTopic = 'Announcements';
 
 		if (!$this->viewAll) {
 			$dbResult = $db->read('SELECT time, msg

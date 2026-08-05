@@ -17,7 +17,7 @@ class LottoBuyTicket extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Galactic Lotto');
+		$template->pageTopic = 'Galactic Lotto';
 		Menu::bar($this->locationID);
 
 		Lotto::checkForLottoWinner($player->getGameID());

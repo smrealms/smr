@@ -20,7 +20,7 @@ class MessageSend extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Send Message');
+		$template->pageTopic = 'Send Message';
 
 		Menu::messages();
 

@@ -20,7 +20,7 @@ class ManageDraftLeaders extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Manage Draft Leaders');
+		$template->pageTopic = 'Manage Draft Leaders';
 
 		$container = new ManageDraftLeadersSelectProcessor();
 		$template->assign('SelectGameHREF', $container->href());

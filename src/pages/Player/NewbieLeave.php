@@ -21,7 +21,7 @@ class NewbieLeave extends PlayerPage {
 		$template->assign('CancelHREF', new CurrentSector()->href());
 		$template->assign('ConfirmHREF', $player->getLeaveNewbieProtectionHREF());
 
-		$template->assign('PageTopic', 'Leave Newbie Protection');
+		$template->pageTopic = 'Leave Newbie Protection';
 	}
 
 }

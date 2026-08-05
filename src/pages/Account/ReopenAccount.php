@@ -22,7 +22,7 @@ class ReopenAccount extends AccountPage {
 			create_error('You are not allowed to re-open your account!');
 		}
 
-		$template->assign('PageTopic', 'Re-Open Account?');
+		$template->pageTopic = 'Re-Open Account?';
 
 		$container = new ReopenAccountProcessor();
 		$template->assign('ReopenLink', $container->href());

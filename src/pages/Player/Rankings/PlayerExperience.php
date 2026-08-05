@@ -16,7 +16,7 @@ class PlayerExperience extends PlayerPage {
 	public string $file = 'rankings_player_experience.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Experience Rankings');
+		$template->pageTopic = 'Experience Rankings';
 
 		Menu::rankings(0, 0);
 

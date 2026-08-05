@@ -24,7 +24,7 @@ class AnonBank extends PlayerPage {
 			create_error('You are not validated so you cannot use banks.');
 		}
 
-		$template->assign('PageTopic', 'Anonymous Account');
+		$template->pageTopic = 'Anonymous Account';
 		Menu::bank();
 
 		$container = new AnonBankProcessor();

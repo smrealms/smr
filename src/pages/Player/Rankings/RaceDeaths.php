@@ -16,7 +16,7 @@ class RaceDeaths extends PlayerPage {
 	public string $file = 'rankings_race_death.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Racial Standings');
+		$template->pageTopic = 'Racial Standings';
 
 		Menu::rankings(2, 2);
 

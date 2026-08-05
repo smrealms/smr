@@ -18,7 +18,7 @@ class AllianceInvitePlayer extends PlayerPage {
 		$alliance = $player->getAlliance();
 		$game = $player->getGame();
 
-		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
+		$template->pageTopic = $alliance->getAllianceDisplayName(false, true);
 		Menu::alliance($alliance->getAllianceID());
 
 		// Get list of pending invitations

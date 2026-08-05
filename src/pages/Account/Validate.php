@@ -16,7 +16,7 @@ class Validate extends AccountPage {
 
 	public function build(Account $account, Template $template): void {
 		$template->assign('Message', $this->message);
-		$template->assign('PageTopic', 'Validation Reminder');
+		$template->pageTopic = 'Validation Reminder';
 		$template->assign('ValidateFormHref', (new ValidateProcessor())->href());
 	}
 

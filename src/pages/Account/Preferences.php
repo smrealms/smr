@@ -17,7 +17,7 @@ class Preferences extends AccountPage {
 	public string $file = 'preferences.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Preferences');
+		$template->pageTopic = 'Preferences';
 
 		$session = Session::getInstance();
 		if ($session->hasGame()) {

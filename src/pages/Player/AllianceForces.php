@@ -27,7 +27,7 @@ class AllianceForces extends PlayerPage {
 		$allianceID = $this->allianceID;
 
 		$alliance = Alliance::getAlliance($allianceID, $player->getGameID());
-		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
+		$template->pageTopic = $alliance->getAllianceDisplayName(false, true);
 		Menu::alliance($alliance->getAllianceID());
 
 		$db = Database::getInstance();

@@ -15,7 +15,7 @@ class ReportedMessageView extends AccountPage {
 	public string $file = 'admin/notify_view.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Viewing Reported Messages');
+		$template->pageTopic = 'Viewing Reported Messages';
 
 		$container = new ReportedMessageDeleteProcessor();
 		$template->assign('DeleteHREF', $container->href());

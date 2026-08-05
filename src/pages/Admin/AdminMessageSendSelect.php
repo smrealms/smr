@@ -14,7 +14,7 @@ class AdminMessageSendSelect extends AccountPage {
 	public string $file = 'admin/admin_message_send_select.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Send Admin Message');
+		$template->pageTopic = 'Send Admin Message';
 
 		$template->assign('AdminMessageChooseGameFormHref', (new AdminMessageSend())->href());
 

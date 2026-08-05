@@ -13,7 +13,7 @@ class PlayerAssists extends PlayerPage {
 	public string $file = 'rankings_player_assists.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Assist Rankings');
+		$template->pageTopic = 'Assist Rankings';
 
 		Menu::rankings(0, 4);
 

@@ -16,7 +16,7 @@ class ComputerSharing extends AccountPage {
 	public string $file = 'admin/comp_share.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Computer Sharing');
+		$template->pageTopic = 'Computer Sharing';
 
 		$unusedAfter = 86400 * 365; // 1 year
 

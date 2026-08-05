@@ -18,7 +18,7 @@ class AllianceOptions extends PlayerPage {
 
 	public function build(Player $player, Template $template): void {
 		$alliance = $player->getAlliance();
-		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
+		$template->pageTopic = $alliance->getAllianceDisplayName(false, true);
 		Menu::alliance($alliance->getAllianceID());
 
 		// Create an array of links with descriptions

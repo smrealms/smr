@@ -98,7 +98,7 @@ class NewsReadAdvanced extends AccountPage {
 
 		$template->assign('NewsItems', News::getNewsItems($dbResult));
 
-		$template->assign('PageTopic', 'Advanced News');
+		$template->pageTopic = 'Advanced News';
 		Menu::news($gameID);
 	}
 

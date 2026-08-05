@@ -38,7 +38,7 @@ class AllianceMessageBoardView extends PlayerPage {
 		$thread_index = $this->threadIndex;
 		$thread_id = $this->threadIDs[$thread_index];
 
-		$template->assign('PageTopic', htmlentities($this->threadTopics[$thread_index]));
+		$template->pageTopic = htmlentities($this->threadTopics[$thread_index]);
 		Menu::alliance($alliance->getAllianceID());
 
 		$db = Database::getInstance();

@@ -22,7 +22,7 @@ class HireTrader extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Hire Trader');
+		$template->pageTopic = 'Hire Trader';
 
 		Menu::headquarters($this->locationID);
 

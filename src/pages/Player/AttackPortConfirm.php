@@ -22,7 +22,7 @@ class AttackPortConfirm extends PlayerPage {
 			(new AttackPort())->go();
 		}
 
-		$template->assign('PageTopic', 'Port Raid: Sector #' . $port->getSectorID());
+		$template->pageTopic = 'Port Raid: Sector #' . $port->getSectorID();
 
 		$template->assign('PortAttackHREF', (new AttackPortProcessor())->href());
 		$template->assign('Port', $port);

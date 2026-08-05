@@ -16,7 +16,7 @@ class AllianceExemptAuthorize extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$alliance = $player->getAlliance();
 
-		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
+		$template->pageTopic = $alliance->getAllianceDisplayName(false, true);
 		Menu::alliance($alliance->getAllianceID());
 
 		//get rid of already approved entries

@@ -11,7 +11,7 @@ class Death extends PlayerPage {
 	public string $file = 'death.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Death');
+		$template->pageTopic = 'Death';
 	}
 
 }

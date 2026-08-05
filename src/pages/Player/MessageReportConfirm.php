@@ -33,7 +33,7 @@ class MessageReportConfirm extends PlayerPage {
 		$container = new MessageView($this->folderID);
 		$template->assign('CancelHREF', $container->href());
 
-		$template->assign('PageTopic', 'Report a Message');
+		$template->pageTopic = 'Report a Message';
 		Menu::messages();
 	}
 

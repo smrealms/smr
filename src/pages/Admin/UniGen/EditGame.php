@@ -18,7 +18,7 @@ class EditGame extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Edit Game Details');
+		$template->pageTopic = 'Edit Game Details';
 
 		$gameID = $this->gameID;
 

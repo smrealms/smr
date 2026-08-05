@@ -51,6 +51,15 @@ class Template {
 		unset($this->data[$var]);
 	}
 
+	public ?string $pageTopic = null {
+		set {
+			if ($this->pageTopic !== null) {
+				throw new Exception('Cannot re-assign pageTopic: ' . $this->pageTopic);
+			}
+			$this->pageTopic = $value;
+		}
+	}
+
 	/**
 	 * Displays the template HTML. Stores any ajax-enabled elements for future
 	 * comparison, and outputs modified elements in XML for ajax if requested.

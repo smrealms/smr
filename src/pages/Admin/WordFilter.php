@@ -19,7 +19,7 @@ class WordFilter extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Word Filter');
+		$template->pageTopic = 'Word Filter';
 
 		$template->assign('Message', $this->message);
 

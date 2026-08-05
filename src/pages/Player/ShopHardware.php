@@ -21,7 +21,7 @@ class ShopHardware extends PlayerPage {
 		}
 
 		$location = Location::getLocation($player->getGameID(), $this->locationID);
-		$template->assign('PageTopic', $location->getName());
+		$template->pageTopic = $location->getName();
 
 		if ($location->isHardwareSold()) {
 			$hardwareSold = [];

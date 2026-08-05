@@ -25,7 +25,7 @@ class MessageBoxView extends AccountPage {
 		$db = Database::getInstance();
 
 		if ($this->boxTypeID === null) {
-			$template->assign('PageTopic', 'Viewing Message Boxes');
+			$template->pageTopic = 'Viewing Message Boxes';
 
 			$boxes = [];
 			foreach (Messages::getAdminBoxNames() as $boxTypeID => $boxName) {
@@ -45,7 +45,7 @@ class MessageBoxView extends AccountPage {
 			$template->assign('Boxes', $boxes);
 		} else {
 			$boxName = Messages::getAdminBoxNames()[$this->boxTypeID];
-			$template->assign('PageTopic', 'Viewing ' . $boxName);
+			$template->pageTopic = 'Viewing ' . $boxName;
 
 			$template->assign('BackHREF', (new self())->href());
 			$dbResult = $db->select(

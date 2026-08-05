@@ -52,7 +52,7 @@ class CombatLogViewer extends PlayerPage {
 			$template->assign('NextLogHREF', $container->href());
 		}
 
-		$template->assign('PageTopic', 'Combat Logs');
+		$template->pageTopic = 'Combat Logs';
 		Menu::combatLog();
 	}
 

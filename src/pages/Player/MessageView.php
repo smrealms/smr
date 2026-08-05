@@ -76,7 +76,7 @@ class MessageView extends PlayerPage {
 		}
 
 		$messageBox['Name'] = Messages::getMessageTypeNames($folderID);
-		$template->assign('PageTopic', 'Viewing ' . $messageBox['Name']);
+		$template->pageTopic = 'Viewing ' . $messageBox['Name'];
 
 		if ($messageBox['Type'] === MSG_GLOBAL) {
 			$container = new MessagePreferenceIgnoreGlobalsProcessor($folderID);

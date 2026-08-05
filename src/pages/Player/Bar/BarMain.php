@@ -21,7 +21,7 @@ class BarMain extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		//get bar name
 		$location = Location::getLocation($player->getGameID(), $this->locationID);
-		$template->assign('PageTopic', 'Welcome to ' . $location->getName());
+		$template->pageTopic = 'Welcome to ' . $location->getName();
 		Menu::bar($this->locationID);
 
 		if ($this->message !== null) {

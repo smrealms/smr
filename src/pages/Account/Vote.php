@@ -13,7 +13,7 @@ class Vote extends AccountPage {
 	public string $file = 'vote.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Voting');
+		$template->pageTopic = 'Voting';
 
 		$db = Database::getInstance();
 		$dbResult = $db->select('voting', orderBy: ['end'], order: ['DESC']);

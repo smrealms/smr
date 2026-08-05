@@ -28,7 +28,7 @@ class CheckMap extends AccountPage {
 
 	public function build(Account $account, Template $template): void {
 		$game = Game::getGame($this->gameID);
-		$template->assign('PageTopic', 'Check Map : ' . $game->getDisplayName());
+		$template->pageTopic = 'Check Map : ' . $game->getDisplayName();
 
 		$template->assign('BackHREF', $this->returnTo->href());
 

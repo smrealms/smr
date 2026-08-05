@@ -15,7 +15,7 @@ class ErrorDisplay extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Error');
+		$template->pageTopic = 'Error';
 		$template->assign('Message', $this->message);
 	}
 

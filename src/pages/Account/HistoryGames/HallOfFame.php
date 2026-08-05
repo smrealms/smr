@@ -18,7 +18,7 @@ class HallOfFame extends HistoryPage {
 	) {}
 
 	protected function buildHistory(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Hall of Fame : ' . $this->historyGameName);
+		$template->pageTopic = 'Hall of Fame : ' . $this->historyGameName;
 		$this->addMenu($template);
 
 		$db = Database::getInstance();

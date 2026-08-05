@@ -16,7 +16,7 @@ class PlayBlackjackBet extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'BlackJack');
+		$template->pageTopic = 'BlackJack';
 		Menu::bar($this->locationID);
 
 		if ($player->hasNewbieTurns()) {

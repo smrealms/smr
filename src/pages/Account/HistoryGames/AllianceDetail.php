@@ -36,7 +36,7 @@ class AllianceDetail extends HistoryPage {
 		);
 		$dbRecord = $dbResult->record();
 		$leaderID = $dbRecord->getInt('leader_id');
-		$template->assign('PageTopic', 'Alliance Roster: ' . htmlentities($dbRecord->getString('alliance_name')));
+		$template->pageTopic = 'Alliance Roster: ' . htmlentities($dbRecord->getString('alliance_name'));
 
 		//get alliance members
 		$oldAccountID = $account->getOldAccountID($this->historyDatabase);

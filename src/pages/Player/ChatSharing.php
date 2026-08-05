@@ -18,7 +18,7 @@ class ChatSharing extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Chat Sharing Settings');
+		$template->pageTopic = 'Chat Sharing Settings';
 
 		$template->assign('Message', $this->message);
 

@@ -37,7 +37,7 @@ class EditionRead extends PlayerPage {
 				['title'],
 			);
 			$paper_name = bbify($dbResult->record()->getString('title'), $this->gameID);
-			$template->assign('PageTopic', 'Reading <i>Galactic Post</i> Edition : ' . $paper_name);
+			$template->pageTopic = 'Reading <i>Galactic Post</i> Edition : ' . $paper_name;
 
 			//now get the articles in this paper.
 			$dbResult = $db->read('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article USING(game_id, article_id) WHERE paper_id = :paper_id AND game_id = :game_id', [
@@ -66,7 +66,7 @@ class EditionRead extends PlayerPage {
 			}
 			$template->assign('ArticleLayout', $articleLayout);
 		} else {
-			$template->assign('PageTopic', 'Galactic Post');
+			$template->pageTopic = 'Galactic Post';
 		}
 	}
 

@@ -12,7 +12,7 @@ class GameNews extends HistoryPage {
 	public string $file = 'history_games_news.php';
 
 	protected function buildHistory(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Game News : ' . $this->historyGameName);
+		$template->pageTopic = 'Game News : ' . $this->historyGameName;
 		$this->addMenu($template);
 
 		$min = Request::getInt('min', 1);

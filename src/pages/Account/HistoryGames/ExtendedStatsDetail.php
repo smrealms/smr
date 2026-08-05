@@ -20,7 +20,7 @@ class ExtendedStatsDetail extends HistoryPage {
 
 	protected function buildHistory(Account $account, Template $template): void {
 		$game_id = $this->historyGameID;
-		$template->assign('PageTopic', 'Extended Stats : ' . $this->historyGameName);
+		$template->pageTopic = 'Extended Stats : ' . $this->historyGameName;
 		$this->addMenu($template, ExtendedStats::class);
 
 		$oldAccountID = $account->getOldAccountID($this->historyDatabase);

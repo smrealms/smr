@@ -97,8 +97,8 @@ use Smr\Globals;
 
 					<td class="centerContent">
 						<div id="middle_panel" class="MainContentArea<?php if (isset($SpaceView) && $SpaceView) { ?> stars<?php } ?>"><?php
-							if (isset($PageTopic)) {
-								?><h1><?php echo $PageTopic; ?></h1><br /><?php
+							if ($this->pageTopic !== null) {
+								?><h1><?php echo $this->pageTopic; ?></h1><br /><?php
 							}
 							$this->includeTemplate('includes/menu.inc.php');
 							$this->includeTemplate($TemplateBody); ?>

@@ -21,7 +21,7 @@ class ShopShip extends PlayerPage {
 
 	public function build(Player $player, Template $template): void {
 		$location = Location::getLocation($player->getGameID(), $this->locationID);
-		$template->assign('PageTopic', $location->getName());
+		$template->pageTopic = $location->getName();
 
 		$shipsSold = $location->getShipsSold();
 

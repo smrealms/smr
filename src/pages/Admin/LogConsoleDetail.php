@@ -23,7 +23,7 @@ class LogConsoleDetail extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Log Console - Detail');
+		$template->pageTopic = 'Log Console - Detail';
 
 		// get the account_ids from last form
 		$account_ids = $this->accountIDs;

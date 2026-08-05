@@ -27,7 +27,7 @@ class ShopGoods extends PlayerPage {
 		}
 
 		// topic
-		$template->assign('PageTopic', 'Port In Sector #' . $player->getSectorID());
+		$template->pageTopic = 'Port In Sector #' . $player->getSectorID();
 		$template->assign('Port', $port);
 
 		$player->log(LOG_TYPE_TRADING, 'Player examines port');

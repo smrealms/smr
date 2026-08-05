@@ -25,11 +25,11 @@ class PlanetList {
 		$template->assign('PlayerOnly', $playerOnly);
 
 		if ($playerOnly) {
-			$template->assign('PageTopic', 'Planet');
+			$template->pageTopic = 'Planet';
 		} else {
 			$alliance = Alliance::getAlliance($allianceId, $player->getGameID());
 			$template->assign('Alliance', $alliance);
-			$template->assign('PageTopic', 'Planets : ' . $alliance->getAllianceDisplayName());
+			$template->pageTopic = 'Planets : ' . $alliance->getAllianceDisplayName();
 		}
 
 		// We might not assign the planet lists if the info is private.

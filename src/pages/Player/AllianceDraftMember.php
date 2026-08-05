@@ -27,7 +27,7 @@ class AllianceDraftMember extends PlayerPage {
 		$db = Database::getInstance();
 		$alliance = $player->getAlliance();
 
-		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
+		$template->pageTopic = $alliance->getAllianceDisplayName(false, true);
 		Menu::alliance($alliance->getAllianceID());
 
 		// Get the current teams

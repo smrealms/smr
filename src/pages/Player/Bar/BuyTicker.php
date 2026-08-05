@@ -17,7 +17,7 @@ class BuyTicker extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Buy System');
+		$template->pageTopic = 'Buy System';
 		Menu::bar($this->locationID);
 
 		//they can buy the ticker...first we need to find out what they want

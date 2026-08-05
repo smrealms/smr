@@ -16,7 +16,7 @@ class AllianceDeaths extends PlayerPage {
 	public string $file = 'rankings_alliance_death.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Alliance Death Rankings');
+		$template->pageTopic = 'Alliance Death Rankings';
 		Menu::rankings(1, 3);
 
 		$rankedStats = Rankings::allianceStats('deaths', $player->getGameID());

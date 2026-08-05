@@ -21,8 +21,8 @@
 				</td>
 				<td class="m0" colspan="2">
 					<div id="middle_panel"><?php
-						if (isset($PageTopic)) {
-							?><h1><?php echo $PageTopic; ?></h1><br /><?php
+						if ($this->pageTopic !== null) {
+							?><h1><?php echo $this->pageTopic; ?></h1><br /><?php
 						}
 						$this->includeTemplate('includes/menu.inc.php');
 						$this->includeTemplate($TemplateBody); ?>

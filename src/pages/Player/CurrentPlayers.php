@@ -18,7 +18,7 @@ class CurrentPlayers extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$inactiveTime = Epoch::time() - TIME_BEFORE_INACTIVE;
 
-		$template->assign('PageTopic', 'Current Players');
+		$template->pageTopic = 'Current Players';
 		$db = Database::getInstance();
 		$db->write('DELETE FROM cpl_tag WHERE expires > 0 AND expires < :now', [
 			'now' => $db->escapeNumber(Epoch::time()),

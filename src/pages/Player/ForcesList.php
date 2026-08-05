@@ -17,7 +17,7 @@ class ForcesList extends PlayerPage {
 	public string $file = 'forces_list.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'View Forces');
+		$template->pageTopic = 'View Forces';
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT *

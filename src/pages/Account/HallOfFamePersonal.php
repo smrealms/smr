@@ -47,10 +47,10 @@ class HallOfFamePersonal extends AccountPage {
 			} catch (PlayerNotFound) {
 				create_error('That player has not yet joined this game.');
 			}
-			$template->assign('PageTopic', htmlentities($hofPlayer->getPlayerName()) . '\'s Personal Hall of Fame: ' . Game::getGame($game_id)->getDisplayName());
+			$template->pageTopic = htmlentities($hofPlayer->getPlayerName()) . '\'s Personal Hall of Fame: ' . Game::getGame($game_id)->getDisplayName();
 		} else {
 			$hofName = Account::getAccount($account_id)->getHofDisplayName();
-			$template->assign('PageTopic', $hofName . '\'s All Time Personal Hall of Fame');
+			$template->pageTopic = $hofName . '\'s All Time Personal Hall of Fame';
 		}
 
 		$breadcrumb = HallOfFame::buildBreadcrumb($this, 'Personal HoF');

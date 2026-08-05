@@ -18,7 +18,7 @@ class SearchForTrader extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Search For Trader');
+		$template->pageTopic = 'Search For Trader';
 		$template->assign('TraderSearchHREF', (new SearchForTraderResult())->href());
 
 		$template->assign('EmptyResult', $this->emptyResult);

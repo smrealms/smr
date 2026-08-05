@@ -15,7 +15,7 @@ class FormOpen extends AccountPage {
 	public string $file = 'admin/form_open.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Open/Close Forms');
+		$template->pageTopic = 'Open/Close Forms';
 
 		$container = new FormOpenProcessor(
 			isOpen: Globals::isFeatureRequestOpen(),

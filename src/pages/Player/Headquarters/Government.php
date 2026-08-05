@@ -39,7 +39,7 @@ class Government extends PlayerPage {
 			create_error('We are at WAR with your race! Get outta here before I call the guards!');
 		}
 
-		$template->assign('PageTopic', $location->getName());
+		$template->pageTopic = $location->getName();
 
 		// header menu
 		Menu::headquarters($this->locationID);

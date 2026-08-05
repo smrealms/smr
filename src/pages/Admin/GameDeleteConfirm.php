@@ -17,7 +17,7 @@ class GameDeleteConfirm extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Delete Game - Confirmation');
+		$template->pageTopic = 'Delete Game - Confirmation';
 
 		$this->deleteGameID ??= Request::getInt('delete_game_id');
 		$template->assign('Game', Game::getGame($this->deleteGameID));

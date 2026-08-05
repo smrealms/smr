@@ -14,7 +14,7 @@ class UserRankingView extends AccountPage {
 	public string $file = 'rankings_view.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Extended User Rankings');
+		$template->pageTopic = 'Extended User Rankings';
 	}
 
 }

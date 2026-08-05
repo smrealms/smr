@@ -22,7 +22,7 @@ class AllianceGovernance extends PlayerPage {
 
 		$alliance = Alliance::getAlliance($alliance_id, $player->getGameID());
 		$account = $player->getAccount();
-		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
+		$template->pageTopic = $alliance->getAllianceDisplayName(false, true);
 		Menu::alliance($alliance_id);
 
 		$role_id = $player->getAllianceRole($alliance->getAllianceID());

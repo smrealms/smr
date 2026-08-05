@@ -23,7 +23,7 @@ class MessageBoxReply extends AccountPage {
 
 	public function build(Account $account, Template $template): void {
 		$boxName = Messages::getAdminBoxNames()[$this->boxTypeID];
-		$template->assign('PageTopic', 'Reply To ' . $boxName);
+		$template->pageTopic = 'Reply To ' . $boxName;
 
 		$container = new MessageBoxReplyProcessor(
 			senderAccountID: $this->senderAccountID,

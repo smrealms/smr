@@ -26,7 +26,7 @@ class FeatureRequestComments extends AccountPage {
 			create_error('Feature requests are currently not being accepted.');
 		}
 
-		$template->assign('PageTopic', 'Feature Request Comments');
+		$template->pageTopic = 'Feature Request Comments';
 
 		$template->assign('BackHref', $this->previousPage->href());
 

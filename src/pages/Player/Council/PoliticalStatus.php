@@ -23,7 +23,7 @@ class PoliticalStatus extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$raceID = $this->raceID;
 
-		$template->assign('PageTopic', 'Ruling Council Of ' . Race::getName($raceID));
+		$template->pageTopic = 'Ruling Council Of ' . Race::getName($raceID);
 
 		// echo menu
 		Menu::council($raceID);

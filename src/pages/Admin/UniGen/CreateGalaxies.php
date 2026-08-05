@@ -23,7 +23,7 @@ class CreateGalaxies extends AccountPage {
 		$numGals = $session->getRequestVarInt('num_gals', 12);
 
 		$game = Game::getGame($this->gameID);
-		$template->assign('PageTopic', 'Create Galaxies : ' . $game->getDisplayName());
+		$template->pageTopic = 'Create Galaxies : ' . $game->getDisplayName();
 		$template->assign('GameEnabled', $game->isEnabled());
 
 		// Link for updating the number of galaxies

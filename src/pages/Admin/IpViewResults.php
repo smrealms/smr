@@ -274,7 +274,7 @@ class IpViewResults extends AccountPage {
 
 		}
 
-		$template->assign('PageTopic', 'IP Search Results');
+		$template->pageTopic = 'IP Search Results';
 	}
 
 }

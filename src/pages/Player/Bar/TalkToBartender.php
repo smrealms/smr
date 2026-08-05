@@ -18,7 +18,7 @@ class TalkToBartender extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Talk to Bartender');
+		$template->pageTopic = 'Talk to Bartender';
 		Menu::bar($this->locationID);
 
 		// We save the displayed message in session since it is randomized

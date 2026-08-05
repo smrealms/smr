@@ -21,7 +21,7 @@ class AlbumEdit extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Edit Photo');
+		$template->pageTopic = 'Edit Photo';
 
 		try {
 			$album = new Album($account->getAccountID());

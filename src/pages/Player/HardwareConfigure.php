@@ -17,7 +17,7 @@ class HardwareConfigure extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$ship = $player->getShip();
 
-		$template->assign('PageTopic', 'Configure Hardware');
+		$template->pageTopic = 'Configure Hardware';
 
 		if ($ship->hasCloak()) {
 			$container = new HardwareConfigureCloakProcessor(disable: $ship->isCloaked());

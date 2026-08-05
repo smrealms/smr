@@ -23,7 +23,7 @@ class Embassy extends PlayerPage {
 			create_error('Only the president can view the embassy.');
 		}
 
-		$template->assign('PageTopic', 'Ruling Council Of ' . $player->getRaceName());
+		$template->pageTopic = 'Ruling Council Of ' . $player->getRaceName();
 
 		Menu::council($player->getRaceID());
 
