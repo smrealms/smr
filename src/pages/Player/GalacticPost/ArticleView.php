@@ -20,7 +20,7 @@ class ArticleView extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$db = Database::getInstance();
 
-		$template->assign('PageTopic', 'Viewing Articles');
+		$template->pageTopic = 'Viewing Articles';
 		Menu::galacticPost();
 
 		// Get the articles that are not already in a paper

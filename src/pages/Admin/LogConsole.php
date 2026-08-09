@@ -19,7 +19,7 @@ class LogConsole extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Log Console');
+		$template->pageTopic = 'Log Console';
 
 		$loggedAccounts = [];
 

@@ -23,7 +23,7 @@ class BuyGalaxyMap extends PlayerPage {
 			create_error('You cannot buy maps for another ' . format_time($timeUntilMaps) . '!');
 		}
 
-		$template->assign('PageTopic', 'Buy Galaxy Maps');
+		$template->pageTopic = 'Buy Galaxy Maps';
 		Menu::bar($this->locationID);
 
 		//find what gal they want

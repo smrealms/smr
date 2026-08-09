@@ -17,7 +17,7 @@ class TraderSavings extends PlayerPage {
 	public string $file = 'trader_savings.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Savings');
+		$template->pageTopic = 'Savings';
 
 		Menu::trader();
 

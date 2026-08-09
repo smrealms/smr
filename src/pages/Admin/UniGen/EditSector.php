@@ -33,7 +33,7 @@ class EditSector extends AccountPage {
 	public function build(Account $account, Template $template): void {
 		$this->sectorID ??= Request::getInt('sector_edit');
 		$editSector = Sector::getSector($this->gameID, $this->sectorID);
-		$template->assign('PageTopic', 'Edit Sector #' . $editSector->getSectorID() . ' (' . $editSector->getGalaxy()->getDisplayName() . ')');
+		$template->pageTopic = 'Edit Sector #' . $editSector->getSectorID() . ' (' . $editSector->getGalaxy()->getDisplayName() . ')';
 		$template->assign('EditSector', $editSector);
 
 		$template->assign('LastSector', Game::getGame($this->gameID)->getLastSectorID());

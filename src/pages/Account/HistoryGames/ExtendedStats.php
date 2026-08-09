@@ -16,7 +16,7 @@ class ExtendedStats extends HistoryPage {
 	) {}
 
 	protected function buildHistory(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Extended Stats : ' . $this->historyGameName);
+		$template->pageTopic = 'Extended Stats : ' . $this->historyGameName;
 		$this->addMenu($template);
 
 		$categories = [

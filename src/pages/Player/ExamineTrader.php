@@ -24,7 +24,7 @@ class ExamineTrader extends PlayerPage {
 			$container->go();
 		}
 
-		$template->assign('PageTopic', 'Examine Ship');
+		$template->pageTopic = 'Examine Ship';
 		$template->assign('TargetPlayer', $targetPlayer);
 		$template->assign('NewbieKill', $targetPlayer->isNewbieCombatant($player));
 	}

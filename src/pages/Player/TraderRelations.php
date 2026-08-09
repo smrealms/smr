@@ -17,7 +17,7 @@ class TraderRelations extends PlayerPage {
 	public string $file = 'trader_relations.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Trader Relations');
+		$template->pageTopic = 'Trader Relations';
 
 		Menu::trader();
 

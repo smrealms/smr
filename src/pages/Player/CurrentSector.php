@@ -39,7 +39,7 @@ class CurrentSector extends PlayerPage {
 
 		$template->assign('SpaceView', true);
 
-		$template->assign('PageTopic', 'Current Sector: ' . $player->getSectorID() . ' (' . $sector->getGalaxy()->getDisplayName() . ')');
+		$template->pageTopic = 'Current Sector: ' . $player->getSectorID() . ' (' . $sector->getGalaxy()->getDisplayName() . ')';
 
 		Menu::navigation($player);
 

@@ -39,7 +39,7 @@ class HallOfFameAll extends AccountPage {
 		} else {
 			$topic = 'Hall of Fame: ' . Game::getGame($game_id)->getDisplayName();
 		}
-		$template->assign('PageTopic', $topic);
+		$template->pageTopic = $topic;
 
 		$container = new HallOfFamePersonal($account->getAccountID(), $game_id);
 		$template->assign('PersonalHofHREF', $container->href());

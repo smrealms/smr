@@ -33,7 +33,7 @@ class FeatureRequest extends AccountPage {
 
 		$thisStatus = self::statusFromCategory($this->category);
 
-		$template->assign('PageTopic', 'Feature Requests - ' . $this->category);
+		$template->pageTopic = 'Feature Requests - ' . $this->category;
 
 		$requestCategories = [
 			self::CATEGORY_NEW => 'Open requests active within the past ' . self::NEW_REQUEST_DAYS . ' days',

@@ -17,7 +17,7 @@ class AccountEditSearch extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Edit Account');
+		$template->pageTopic = 'Edit Account';
 
 		$games = [];
 		$db = Database::getInstance();

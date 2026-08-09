@@ -22,7 +22,7 @@ class AllianceBroadcast extends PlayerPage {
 
 	public function build(Player $player, Template $template): void {
 		$alliance = Alliance::getAlliance($this->allianceID, $player->getGameID());
-		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
+		$template->pageTopic = $alliance->getAllianceDisplayName(false, true);
 		Menu::alliance($alliance->getAllianceID());
 
 		$container = new MessageSendProcessor(allianceID: $this->allianceID);

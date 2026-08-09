@@ -14,7 +14,7 @@ class AlbumApprove extends AccountPage {
 	public string $file = 'admin/album_approve.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Approve Album Entries');
+		$template->pageTopic = 'Approve Album Entries';
 
 		try {
 			$album = Album::getNextUnapproved();

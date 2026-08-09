@@ -23,7 +23,7 @@ abstract class PlanetPage extends PlayerPage {
 
 		$planet = $player->getSectorPlanet();
 		$template->assign('ThisPlanet', $planet);
-		$template->assign('PageTopic', 'Planet : ' . $planet->getDisplayName() . ' [Sector #' . $player->getSectorID() . ']');
+		$template->pageTopic = 'Planet : ' . $planet->getDisplayName() . ' [Sector #' . $player->getSectorID() . ']';
 
 		$this->addMenu($template, $planet);
 

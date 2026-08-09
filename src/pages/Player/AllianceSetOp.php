@@ -21,7 +21,7 @@ class AllianceSetOp extends PlayerPage {
 		$account = $player->getAccount();
 		$alliance = $player->getAlliance();
 
-		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
+		$template->pageTopic = $alliance->getAllianceDisplayName(false, true);
 		Menu::alliance($alliance->getAllianceID());
 
 		// Print any error messages that may have been created

@@ -19,7 +19,7 @@ class ChangelogView extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Change Log');
+		$template->pageTopic = 'Change Log';
 
 		if ($this->lastLogin !== null) {
 			$container = new LoginProcessor();

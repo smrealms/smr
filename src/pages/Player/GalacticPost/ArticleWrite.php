@@ -25,7 +25,7 @@ class ArticleWrite extends PlayerPage {
 		$text = $this->previewText;
 
 		if ($this->articleID !== null) {
-			$template->assign('PageTopic', 'Editing An Article');
+			$template->pageTopic = 'Editing An Article';
 			if ($this->previewText === null) {
 				$db = Database::getInstance();
 				$dbResult = $db->select(
@@ -43,7 +43,7 @@ class ArticleWrite extends PlayerPage {
 				}
 			}
 		} else {
-			$template->assign('PageTopic', 'Writing An Article');
+			$template->pageTopic = 'Writing An Article';
 		}
 
 		$template->assign('PreviewTitle', $title);

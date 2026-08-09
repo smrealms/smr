@@ -16,7 +16,7 @@ class AnonBankView extends AccountPage {
 		$session = Session::getInstance();
 
 		//view anon acct activity.
-		$template->assign('PageTopic', 'View Anonymous Account Info');
+		$template->pageTopic = 'View Anonymous Account Info';
 
 		$container = new AnonBankViewSelect();
 		$template->assign('BackHREF', $container->href());

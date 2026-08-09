@@ -31,7 +31,7 @@ class Underground extends PlayerPage {
 			create_error('There is no underground here.');
 		}
 
-		$template->assign('PageTopic', $location->getName());
+		$template->pageTopic = $location->getName();
 
 		Menu::headquarters($this->locationID);
 

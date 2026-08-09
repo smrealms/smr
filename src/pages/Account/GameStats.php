@@ -28,7 +28,7 @@ class GameStats extends AccountPage {
 		$statsGame = Game::getGame($gameID);
 		$template->assign('StatsGame', $statsGame);
 
-		$template->assign('PageTopic', 'Game Stats: ' . $statsGame->getName() . ' (' . $gameID . ')');
+		$template->pageTopic = 'Game Stats: ' . $statsGame->getName() . ' (' . $gameID . ')';
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT count(*) total_players, IFNULL(MAX(experience),0) max_exp, IFNULL(MAX(alignment),0) max_align, IFNULL(MIN(alignment),0) min_align, IFNULL(MAX(kills),0) max_kills FROM player WHERE game_id = :game_id', [

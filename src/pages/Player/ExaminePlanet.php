@@ -15,7 +15,7 @@ class ExaminePlanet extends PlayerPage {
 		$planet = $player->getSectorPlanet();
 		$template->assign('ThisPlanet', $planet);
 
-		$template->assign('PageTopic', 'Examine Planet: Sector #' . $planet->getSectorID());
+		$template->pageTopic = 'Examine Planet: Sector #' . $planet->getSectorID();
 
 		$planetLand =
 			!$planet->hasOwner()

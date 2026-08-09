@@ -65,7 +65,7 @@ class GameJoin extends AccountPage {
 			create_error('This game has no races assigned yet!');
 		}
 
-		$template->assign('PageTopic', 'Join Game: ' . $game->getDisplayName());
+		$template->pageTopic = 'Join Game: ' . $game->getDisplayName();
 		$template->assign('Game', $game);
 
 		if (Epoch::time() >= $game->getJoinTime()) {

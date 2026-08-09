@@ -19,7 +19,7 @@ class AlbumModerate extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Moderate Photo Album');
+		$template->pageTopic = 'Moderate Photo Album';
 
 		$account_id = $this->albumAccountID;
 

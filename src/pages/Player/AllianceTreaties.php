@@ -21,7 +21,7 @@ class AllianceTreaties extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$alliance = $player->getAlliance();
 
-		$template->assign('PageTopic', 'Alliance Treaties');
+		$template->pageTopic = 'Alliance Treaties';
 		Menu::alliance($alliance->getAllianceID());
 
 		$alliances = [];

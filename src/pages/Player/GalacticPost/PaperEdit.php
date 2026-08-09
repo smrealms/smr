@@ -17,7 +17,7 @@ class PaperEdit extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Edit Paper');
+		$template->pageTopic = 'Edit Paper';
 		Menu::galacticPost();
 
 		$db = Database::getInstance();

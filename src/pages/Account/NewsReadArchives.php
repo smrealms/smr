@@ -32,7 +32,7 @@ class NewsReadArchives extends AccountPage {
 		$template->assign('MinNews', $min_news);
 		$template->assign('MaxNews', $max_news);
 
-		$template->assign('PageTopic', 'Reading The News');
+		$template->pageTopic = 'Reading The News';
 
 		Menu::news($gameID);
 

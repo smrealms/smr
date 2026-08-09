@@ -17,7 +17,7 @@ class PastEditionSelect extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Past <i>Galactic Post</i> Editions');
+		$template->pageTopic = 'Past <i>Galactic Post</i> Editions';
 		Menu::galacticPost();
 
 		$container = new PastEditionSelectProcessor();

@@ -18,7 +18,7 @@ class EditorOptions extends PlayerPage {
 			throw new Exception('Only the GP Editor is allowed to view this page!');
 		}
 
-		$template->assign('PageTopic', 'Galactic Post');
+		$template->pageTopic = 'Galactic Post';
 		Menu::galacticPost();
 
 		$db = Database::getInstance();

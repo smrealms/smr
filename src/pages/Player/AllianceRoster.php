@@ -30,7 +30,7 @@ class AllianceRoster extends PlayerPage {
 		$alliance = Alliance::getAlliance($allianceID, $player->getGameID());
 		$template->assign('Alliance', $alliance);
 
-		$template->assign('PageTopic', $alliance->getAllianceDisplayName(false, true));
+		$template->pageTopic = $alliance->getAllianceDisplayName(false, true);
 		Menu::alliance($alliance->getAllianceID());
 
 		if ($this->showRoles) {

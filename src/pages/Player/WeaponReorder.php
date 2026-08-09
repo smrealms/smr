@@ -14,7 +14,7 @@ class WeaponReorder extends PlayerPage {
 	public string $file = 'weapon_reorder.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Weapon Reorder');
+		$template->pageTopic = 'Weapon Reorder';
 	}
 
 }

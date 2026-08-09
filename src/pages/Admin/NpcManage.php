@@ -20,7 +20,7 @@ class NpcManage extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Manage NPCs');
+		$template->pageTopic = 'Manage NPCs';
 
 		$selectedGameID = $this->selectedGameID;
 

@@ -23,7 +23,7 @@ class AdminMessageSend extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Send Admin Message');
+		$template->pageTopic = 'Send Admin Message';
 
 		$this->sendGameID ??= Request::getInt('SendGameID');
 		$gameID = $this->sendGameID;

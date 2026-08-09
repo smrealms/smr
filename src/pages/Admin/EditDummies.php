@@ -16,7 +16,7 @@ class EditDummies extends AccountPage {
 	public string $file = 'admin/edit_dummys.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Edit Dummys');
+		$template->pageTopic = 'Edit Dummys';
 
 		$template->assign('CombatSimLink', (new CombatSimulator())->href());
 		$template->assign('ShipTypes', ShipType::getAll());

@@ -17,7 +17,7 @@ class PersonalBank extends PlayerPage {
 			create_error('You are not validated so you cannot use banks.');
 		}
 
-		$template->assign('PageTopic', 'Bank');
+		$template->pageTopic = 'Bank';
 
 		Menu::bank();
 

@@ -12,7 +12,7 @@ class CheatingShipCheck extends AccountPage {
 	public string $file = 'admin/ship_check.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Ship Integrity Check');
+		$template->pageTopic = 'Ship Integrity Check';
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM ship_type_support_hardware, player, ship_has_hardware, hardware_type '

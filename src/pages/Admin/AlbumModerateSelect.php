@@ -12,7 +12,7 @@ class AlbumModerateSelect extends AccountPage {
 	public string $file = 'admin/album_moderate_select.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Moderate Photo Album');
+		$template->pageTopic = 'Moderate Photo Album';
 
 		$moderateHREF = (new AlbumModerateSelectProcessor())->href();
 		$template->assign('ModerateHREF', $moderateHREF);

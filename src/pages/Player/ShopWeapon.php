@@ -18,7 +18,7 @@ class ShopWeapon extends PlayerPage {
 
 	public function build(Player $player, Template $template): void {
 		$location = Location::getLocation($player->getGameID(), $this->locationID);
-		$template->assign('PageTopic', $location->getName());
+		$template->pageTopic = $location->getName();
 		$template->assign('ThisLocation', $location);
 
 		$weaponsSold = $location->getWeaponsSold();

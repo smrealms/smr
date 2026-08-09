@@ -17,7 +17,7 @@ class MessageBlacklist extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Player Blacklist');
+		$template->pageTopic = 'Player Blacklist';
 
 		Menu::messages();
 

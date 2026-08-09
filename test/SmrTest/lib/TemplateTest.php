@@ -41,6 +41,20 @@ class TemplateTest extends TestCase {
 		}
 	}
 
+	public function test_pageTopic(): void {
+		$template = Template::getInstance();
+		$template->pageTopic = 'foo';
+		self::assertSame($template->pageTopic, 'foo');
+	}
+
+	public function test_pageTopic_set_twice_throws(): void {
+		$template = Template::getInstance();
+		$template->pageTopic = 'foo';
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Cannot re-assign pageTopic: foo');
+		$template->pageTopic = 'bar';
+	}
+
 	public function test_doAn(): void {
 		$template = Template::getInstance();
 		$method = TestUtils::getPrivateMethod($template, 'doAn');

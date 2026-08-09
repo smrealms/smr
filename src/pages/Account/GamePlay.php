@@ -25,7 +25,7 @@ class GamePlay extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Play Game');
+		$template->pageTopic = 'Play Game';
 
 		$template->assign('ErrorMessage', $this->errorMessage);
 		$template->assign('Message', $this->message);

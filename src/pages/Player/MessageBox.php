@@ -21,7 +21,7 @@ class MessageBox extends PlayerPage {
 
 		Menu::messages();
 
-		$template->assign('PageTopic', 'View Messages');
+		$template->pageTopic = 'View Messages';
 
 		$messageBoxes = [];
 		foreach (Messages::getMessageTypeNames() as $message_type_id => $message_type_name) {

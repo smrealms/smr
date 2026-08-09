@@ -15,7 +15,7 @@ class UserRankingView extends PlayerPage {
 	public string $file = 'rankings_view.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Extended User Rankings');
+		$template->pageTopic = 'Extended User Rankings';
 		Menu::trader();
 	}
 

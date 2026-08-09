@@ -11,7 +11,7 @@ class NewbieWarning extends PlayerPage {
 	public string $file = 'newbie_warning.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Warning!');
+		$template->pageTopic = 'Warning!';
 	}
 
 }

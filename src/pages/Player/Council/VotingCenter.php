@@ -24,7 +24,7 @@ class VotingCenter extends PlayerPage {
 			create_error('You have to be on the council in order to vote.');
 		}
 
-		$template->assign('PageTopic', 'Ruling Council Of ' . $player->getRaceName());
+		$template->pageTopic = 'Ruling Council Of ' . $player->getRaceName();
 		Menu::council($player->getRaceID());
 
 		// determine for what we voted

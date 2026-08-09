@@ -18,7 +18,7 @@ class ChatJoin extends AccountPage {
 		$session = Session::getInstance();
 		$player = $session->hasGame() ? $session->getPlayer() : null;
 
-		$template->assign('PageTopic', 'Space Merchant Realms Chat');
+		$template->pageTopic = 'Space Merchant Realms Chat';
 
 		$autoChannels = '#SMR';
 		$nick = 'SMR-';

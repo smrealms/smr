@@ -117,7 +117,7 @@ class SearchForTraderResult extends PlayerPage {
 			$template->assign('SimilarPlayersLinks', $similarPlayersLinks);
 		}
 
-		$template->assign('PageTopic', 'Search For Trader Results');
+		$template->pageTopic = 'Search For Trader Results';
 	}
 
 }

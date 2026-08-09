@@ -31,7 +31,7 @@ class CreateWarps extends AccountPage {
 		$galaxies = Galaxy::getGameGalaxies($this->gameID);
 		$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 
-		$template->assign('PageTopic', 'Warps for Galaxy : ' . $galaxy->getDisplayName() . ' (' . $galaxy->getGalaxyID() . ')');
+		$template->pageTopic = 'Warps for Galaxy : ' . $galaxy->getDisplayName() . ' (' . $galaxy->getGalaxyID() . ')';
 
 		// Initialize warps array
 		$warps = [];

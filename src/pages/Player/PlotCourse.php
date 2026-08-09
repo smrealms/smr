@@ -23,7 +23,7 @@ class PlotCourse extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$session = Session::getInstance();
 
-		$template->assign('PageTopic', 'Plot A Course');
+		$template->pageTopic = 'Plot A Course';
 
 		Menu::navigation($player);
 

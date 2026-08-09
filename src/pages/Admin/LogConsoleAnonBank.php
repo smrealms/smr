@@ -12,7 +12,7 @@ class LogConsoleAnonBank extends AccountPage {
 	public string $file = 'admin/log_anonymous_account.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Anonymous Account Access');
+		$template->pageTopic = 'Anonymous Account Access';
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT account_id FROM account_has_logs GROUP BY account_id');

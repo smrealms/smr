@@ -30,7 +30,7 @@ class AllianceBank extends PlayerPage {
 		$allianceID = $this->allianceID;
 
 		$alliance = Alliance::getAlliance($allianceID, $player->getGameID());
-		$template->assign('PageTopic', 'Bank');
+		$template->pageTopic = 'Bank';
 
 		Menu::bank();
 

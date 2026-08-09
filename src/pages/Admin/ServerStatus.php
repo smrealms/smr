@@ -17,10 +17,10 @@ class ServerStatus extends AccountPage {
 		$db = Database::getInstance();
 		$dbResult = $db->select('game_disable');
 		if (!$dbResult->hasRecord()) {
-			$template->assign('PageTopic', 'Close Server');
+			$template->pageTopic = 'Close Server';
 			$template->assign('ServerIsOpen', true);
 		} else {
-			$template->assign('PageTopic', 'Open Server');
+			$template->pageTopic = 'Open Server';
 			$template->assign('ServerIsOpen', false);
 		}
 	}

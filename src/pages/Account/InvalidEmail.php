@@ -12,7 +12,7 @@ class InvalidEmail extends AccountPage {
 	public string $file = 'invalid_email.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Invalid E-mail Address');
+		$template->pageTopic = 'Invalid E-mail Address';
 
 		// This page should only be accessed by players whose accounts
 		// have been closed due to an invalid e-mail.

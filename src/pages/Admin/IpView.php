@@ -14,7 +14,7 @@ class IpView extends AccountPage {
 	public string $file = 'admin/ip_view.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'IP Search');
+		$template->pageTopic = 'IP Search';
 
 		$template->assign('IpFormHref', (new IpViewResults())->href());
 	}

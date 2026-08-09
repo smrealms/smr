@@ -17,7 +17,7 @@ class BountyClaim extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Bounty Payout');
+		$template->pageTopic = 'Bounty Payout';
 
 		Menu::headquarters($this->locationID);
 

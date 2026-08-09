@@ -19,7 +19,7 @@ class BountyPlaceConfirm extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Place Bounty');
+		$template->pageTopic = 'Place Bounty';
 
 		Menu::headquarters($this->locationID);
 

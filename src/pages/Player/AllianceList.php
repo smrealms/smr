@@ -17,7 +17,7 @@ class AllianceList extends PlayerPage {
 	public string $file = 'alliance_list.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'List Of Alliances');
+		$template->pageTopic = 'List Of Alliances';
 
 		$allowCreate = !$player->hasAlliance() && (!$player->getGame()->isGameType(Game::GAME_TYPE_DRAFT) || $player->isDraftLeader());
 		if ($allowCreate) {

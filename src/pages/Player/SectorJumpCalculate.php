@@ -18,7 +18,7 @@ class SectorJumpCalculate extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Jump Drive');
+		$template->pageTopic = 'Jump Drive';
 		Menu::navigation($player);
 
 		$targetSector = Sector::getSector($player->getGameID(), $this->targetSectorID);

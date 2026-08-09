@@ -14,7 +14,7 @@ class BugReport extends AccountPage {
 	public string $file = 'bug_report.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Report a Bug');
+		$template->pageTopic = 'Report a Bug';
 	}
 
 }

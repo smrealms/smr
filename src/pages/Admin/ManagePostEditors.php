@@ -20,7 +20,7 @@ class ManagePostEditors extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Manage Galactic Post Editors');
+		$template->pageTopic = 'Manage Galactic Post Editors';
 
 		$container = new ManagePostEditorsSelectProcessor();
 		$template->assign('SelectGameHREF', $container->href());

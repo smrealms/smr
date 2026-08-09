@@ -12,7 +12,7 @@ class NewsletterSend extends AccountPage {
 	public string $file = 'admin/newsletter_send.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Newsletter');
+		$template->pageTopic = 'Newsletter';
 
 		$template->assign('CurrentEmail', $account->getEmail());
 

@@ -22,7 +22,7 @@ class ShopGoodsNegotiate extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Negotiate Price');
+		$template->pageTopic = 'Negotiate Price';
 
 		// creates needed objects
 		$port = $player->getSectorPort();

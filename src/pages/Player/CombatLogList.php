@@ -26,7 +26,7 @@ class CombatLogList extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$db = Database::getInstance();
 
-		$template->assign('PageTopic', 'Combat Logs');
+		$template->pageTopic = 'Combat Logs';
 		Menu::combatLog();
 
 		// Do we have a message from the processing page?

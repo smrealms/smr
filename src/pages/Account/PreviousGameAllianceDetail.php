@@ -24,7 +24,7 @@ class PreviousGameAllianceDetail extends AccountPage {
 		$alliance = Alliance::getAlliance($allianceID, $gameID);
 		$template->assign('Alliance', $alliance);
 
-		$template->assign('PageTopic', 'Alliance Roster: ' . $alliance->getAllianceDisplayName(false, true));
+		$template->pageTopic = 'Alliance Roster: ' . $alliance->getAllianceDisplayName(false, true);
 
 		// Offer a back button
 		$container = new GameStats($gameID);

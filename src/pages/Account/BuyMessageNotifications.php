@@ -18,7 +18,7 @@ class BuyMessageNotifications extends AccountPage {
 	public function build(Account $account, Template $template): void {
 		$template->assign('Message', $this->message);
 
-		$template->assign('PageTopic', 'Message Notifications');
+		$template->pageTopic = 'Message Notifications';
 
 		// Presently only player messages are eligible for notifications
 		$notifyTypeIDs = [MSG_PLAYER];

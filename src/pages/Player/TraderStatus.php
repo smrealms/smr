@@ -17,7 +17,7 @@ class TraderStatus extends PlayerPage {
 	public string $file = 'trader_status.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Trader Status');
+		$template->pageTopic = 'Trader Status';
 
 		Menu::trader();
 

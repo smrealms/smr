@@ -27,7 +27,7 @@ class AllianceVsAlliance extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Alliance VS Alliance Rankings');
+		$template->pageTopic = 'Alliance VS Alliance Rankings';
 
 		Menu::rankings(1, 4);
 		$db = Database::getInstance();

@@ -64,7 +64,7 @@ class PlayBlackjack extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'BlackJack');
+		$template->pageTopic = 'BlackJack';
 		Menu::bar($this->locationID);
 
 		$table = $this->table;

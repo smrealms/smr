@@ -13,7 +13,7 @@ class PlayerNpcKills extends PlayerPage {
 	public string $file = 'rankings_player_npc_kills.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'NPC Kill Rankings');
+		$template->pageTopic = 'NPC Kill Rankings';
 
 		Menu::rankings(0, 5);
 

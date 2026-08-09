@@ -18,7 +18,7 @@ class MatchList extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$chessGames = ChessGame::getOngoingPlayerGames($player);
 		$template->assign('ChessGames', $chessGames);
-		$template->assign('PageTopic', 'Casino');
+		$template->pageTopic = 'Casino';
 
 		$playersChallenged = [$player->getAccountID() => true];
 		foreach ($chessGames as $chessGame) {

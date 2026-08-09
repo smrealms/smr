@@ -33,7 +33,7 @@ class PreferencesTransferConfirm extends AccountPage {
 			create_error('You cannot send SMR credits to unvalidated accounts.');
 		}
 
-		$template->assign('PageTopic', 'Confirmation');
+		$template->pageTopic = 'Confirmation';
 		$template->assign('Amount', $amount);
 		$template->assign('ToAccountID', $account_id);
 		$template->assign('HofName', $toAccount->getHofDisplayName());

@@ -14,7 +14,7 @@ class ContactForm extends AccountPage {
 	public string $file = 'contact.php';
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Contact Form');
+		$template->pageTopic = 'Contact Form';
 
 		$container = new ContactFormProcessor();
 		$template->assign('ProcessingHREF', $container->href());

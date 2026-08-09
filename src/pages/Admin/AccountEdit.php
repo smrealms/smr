@@ -22,7 +22,7 @@ class AccountEdit extends AccountPage {
 	public function build(Account $account, Template $template): void {
 		$db = Database::getInstance();
 
-		$template->assign('PageTopic', 'Edit Account');
+		$template->pageTopic = 'Edit Account';
 
 		$account_id = $this->editAccountID;
 		$curr_account = Account::getAccount($account_id);

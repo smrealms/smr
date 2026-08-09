@@ -11,7 +11,7 @@ class AllianceCreate extends PlayerPage {
 	public string $file = 'alliance_create.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Create Alliance');
+		$template->pageTopic = 'Create Alliance';
 
 		$container = new AllianceCreateProcessor();
 		$template->assign('CreateHREF', $container->href());

@@ -16,7 +16,7 @@ class BountyView extends PlayerPage {
 
 	public function build(Player $player, Template $template): void {
 		$bountyPlayer = Player::getPlayer($this->otherAccountID, $player->getGameID());
-		$template->assign('PageTopic', 'Viewing Bounties');
+		$template->pageTopic = 'Viewing Bounties';
 		$template->assign('BountyPlayer', $bountyPlayer);
 	}
 

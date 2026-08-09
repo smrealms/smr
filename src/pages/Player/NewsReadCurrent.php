@@ -23,7 +23,7 @@ class NewsReadCurrent extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$gameID = $player->getGameID();
 
-		$template->assign('PageTopic', 'Current News');
+		$template->pageTopic = 'Current News';
 		Menu::news($gameID);
 
 		News::doBreakingNewsAssign($gameID);

@@ -87,7 +87,7 @@ class AllianceBankReport extends PlayerPage {
 			$template->assign('SendReportHREF', $container->href());
 		}
 
-		$template->assign('PageTopic', 'Alliance Bank Report');
+		$template->pageTopic = 'Alliance Bank Report';
 		Menu::bank();
 	}
 

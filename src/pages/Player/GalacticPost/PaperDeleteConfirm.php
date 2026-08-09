@@ -18,7 +18,7 @@ class PaperDeleteConfirm extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$db = Database::getInstance();
 
-		$template->assign('PageTopic', 'Delete Paper - Confirm');
+		$template->pageTopic = 'Delete Paper - Confirm';
 		$dbResult = $db->select(
 			'galactic_post_paper',
 			[

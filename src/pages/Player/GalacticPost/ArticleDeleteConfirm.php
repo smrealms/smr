@@ -18,7 +18,7 @@ class ArticleDeleteConfirm extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$db = Database::getInstance();
 
-		$template->assign('PageTopic', 'Delete Article - Confirm');
+		$template->pageTopic = 'Delete Article - Confirm';
 		$dbResult = $db->select(
 			'galactic_post_article',
 			['article_id' => $this->articleID, 'game_id' => $player->getGameID()],

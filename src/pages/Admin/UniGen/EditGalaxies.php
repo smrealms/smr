@@ -18,7 +18,7 @@ class EditGalaxies extends AccountPage {
 
 	public function build(Account $account, Template $template): void {
 		$game = Game::getGame($this->gameID);
-		$template->assign('PageTopic', 'Edit Galaxies : ' . $game->getDisplayName());
+		$template->pageTopic = 'Edit Galaxies : ' . $game->getDisplayName();
 		$template->assign('GameEnabled', $game->isEnabled());
 
 		$container = new EditGalaxiesProcessor($this->gameID, $this->returnTo);

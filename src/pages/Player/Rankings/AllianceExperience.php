@@ -16,7 +16,7 @@ class AllianceExperience extends PlayerPage {
 	public string $file = 'rankings_alliance_experience.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Alliance Experience Rankings');
+		$template->pageTopic = 'Alliance Experience Rankings';
 		Menu::rankings(1, 0);
 
 		$rankedStats = Rankings::allianceStats('experience', $player->getGameID());

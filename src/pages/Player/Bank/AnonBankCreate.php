@@ -12,7 +12,7 @@ class AnonBankCreate extends PlayerPage {
 	public string $file = 'bank_anon_create.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Create Anonymous Account');
+		$template->pageTopic = 'Create Anonymous Account';
 		Menu::bank();
 
 		$container = new AnonBankCreateProcessor();

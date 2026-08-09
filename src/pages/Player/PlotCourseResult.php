@@ -20,7 +20,7 @@ class PlotCourseResult extends PlayerPage {
 		$path = $this->path;
 		$fullPath = implode(' - ', $path->getPath());
 
-		$template->assign('PageTopic', 'Plot A Course');
+		$template->pageTopic = 'Plot A Course';
 		Menu::navigation($player);
 
 		$template->assign('Path', $path);

@@ -17,7 +17,7 @@ class CargoDump extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$ship = $player->getShip();
 
-		$template->assign('PageTopic', 'Dump Cargo');
+		$template->pageTopic = 'Dump Cargo';
 
 		$goods = [];
 		foreach ($ship->getCargo() as $goodID => $amount) {

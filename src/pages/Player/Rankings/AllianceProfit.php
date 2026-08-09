@@ -13,7 +13,7 @@ class AllianceProfit extends PlayerPage {
 	public string $file = 'rankings_alliance_profit.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Alliance Profit Rankings');
+		$template->pageTopic = 'Alliance Profit Rankings';
 		Menu::rankings(1, 1);
 
 		$hofCategory = ['Trade', 'Money', 'Profit'];

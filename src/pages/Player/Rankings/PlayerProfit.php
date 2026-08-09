@@ -16,7 +16,7 @@ class PlayerProfit extends PlayerPage {
 	public string $file = 'rankings_player_profit.php';
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Profit Rankings');
+		$template->pageTopic = 'Profit Rankings';
 
 		Menu::rankings(0, 1);
 

@@ -17,7 +17,7 @@ class MilitaryPaymentClaim extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Military Payment Center');
+		$template->pageTopic = 'Military Payment Center';
 
 		Menu::headquarters($this->locationID);
 

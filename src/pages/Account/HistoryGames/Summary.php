@@ -14,7 +14,7 @@ class Summary extends HistoryPage {
 		//topic
 		$game_name = $this->historyGameName;
 		$game_id = $this->historyGameID;
-		$template->assign('PageTopic', 'Old SMR Game : ' . $game_name);
+		$template->pageTopic = 'Old SMR Game : ' . $game_name;
 		$this->addMenu($template);
 
 		$db = Database::getInstance();

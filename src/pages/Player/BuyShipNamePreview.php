@@ -16,7 +16,7 @@ class BuyShipNamePreview extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('PageTopic', 'Naming Your Ship');
+		$template->pageTopic = 'Naming Your Ship';
 
 		$container = new BuyShipNamePreviewProcessor($this->shipName, $this->cost);
 		$template->assign('ContinueHREF', $container->href());

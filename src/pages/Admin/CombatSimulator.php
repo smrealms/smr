@@ -23,7 +23,7 @@ class CombatSimulator extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('PageTopic', 'Combat Simulator');
+		$template->pageTopic = 'Combat Simulator';
 
 		$template->assign('EditDummysLink', (new EditDummies())->href());
 		$template->assign('DummyNames', DummyShip::getDummyNames());
