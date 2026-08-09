@@ -409,7 +409,7 @@ class Galaxy {
 	/**
 	 * Check if the galaxy contains a specific sector.
 	 */
-	public function contains(int|Sector $sectorID): bool {
+	public function contains(Sector|int $sectorID): bool {
 		if ($sectorID instanceof Sector) {
 			return $sectorID->getGalaxyID() === $this->getGalaxyID();
 		}

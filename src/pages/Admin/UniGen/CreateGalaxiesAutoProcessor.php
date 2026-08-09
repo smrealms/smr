@@ -19,7 +19,6 @@ class CreateGalaxiesAutoProcessor extends AccountPageProcessor {
 	) {}
 
 	public function build(Account $account): never {
-
 		// Prepare locations
 		//***********************************
 

@@ -162,7 +162,6 @@ function channel_msg_with_registration($fp, Message $msg): bool {
  * @param resource $fp
  */
 function channel_msg_seen($fp, Message $msg): bool {
-
 	// <Caretaker> MrSpock, Azool (Azool@smrealms.rulez) was last seen quitting #smr
 	// 2 days 10 hours 43 minutes ago (05.10. 05:04) stating 'Some people follow their dreams,
 	// others hunt them down and mercessly beat them into submission' after spending 1 hour 54 minutes there.
@@ -242,7 +241,6 @@ function channel_msg_seen($fp, Message $msg): bool {
  * @param resource $fp
  */
 function channel_msg_money($fp, Message $msg, Player $player): bool {
-
 	if ($msg->text === '!money') {
 
 		$nick = $msg->nick;
@@ -266,7 +264,6 @@ function channel_msg_money($fp, Message $msg, Player $player): bool {
  * @param resource $fp
  */
 function channel_msg_timer($fp, Message $msg): bool {
-
 	if (preg_match('/^!timer(\s\d+)?(\s.+)?$/i', $msg->text, $args) === 1) {
 
 		global $events;
@@ -357,7 +354,6 @@ function channel_msg_forces($fp, Message $msg, Player $player): bool {
  * @param resource $fp
  */
 function channel_msg_help($fp, Message $msg): bool {
-
 	// global help?
 	if ($msg->text === '!help') {
 

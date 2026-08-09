@@ -7,7 +7,7 @@ use Smr\Exceptions\PathNotFound;
 
 class Plotter {
 
-	public static function getX(PlotGroup $xType, int|string $X, int $gameID, ?Player $player = null): mixed {
+	public static function getX(PlotGroup $xType, string|int $X, int $gameID, ?Player $player = null): mixed {
 		// Special case for Location categories (i.e. Bar, HQ, SafeFed)
 		if (!is_numeric($X)) {
 			if ($xType !== PlotGroup::Locations) {
@@ -115,7 +115,7 @@ class Plotter {
 		int $lowLimit = 0,
 		int $highLimit = 100000,
 		?array $excludeSectorIDs = null,
-	): array|Path {
+	): Path|array {
 		$warpAddIndex = TURNS_WARP_SECTOR_EQUIVALENCE - 1;
 
 		$checkSector = $sector;

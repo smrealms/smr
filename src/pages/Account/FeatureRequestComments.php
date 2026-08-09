@@ -21,7 +21,6 @@ class FeatureRequestComments extends AccountPage {
 	) {}
 
 	public function build(Account $account, Template $template): void {
-
 		if (!Globals::isFeatureRequestOpen()) {
 			create_error('Feature requests are currently not being accepted.');
 		}

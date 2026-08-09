@@ -17,7 +17,6 @@ class BuyGalaxyMap extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-
 		$timeUntilMaps = $player->getGame()->getStartTime() + TIME_MAP_BUY_WAIT - Epoch::time();
 		if ($timeUntilMaps > 0) {
 			create_error('You cannot buy maps for another ' . format_time($timeUntilMaps) . '!');

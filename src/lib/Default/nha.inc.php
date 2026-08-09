@@ -9,7 +9,6 @@ use Smr\Player;
  * Create the Newbie Help Alliance and populate its Message Board
  */
 function createNHA(int $gameID): void {
-
 	$alliance = Alliance::createAlliance($gameID, NHA_ALLIANCE_NAME, true);
 	$alliance->createDefaultRoles();
 	$alliance->setAllianceDescription('Newbie Help Alliance');

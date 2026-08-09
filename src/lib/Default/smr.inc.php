@@ -79,7 +79,7 @@ function linkCombatLog(int $logID): string {
  *
  * @param array<string, string> $tagParams
  */
-function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $default, array $tagParams, string $tagContent): bool|string {
+function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $default, array $tagParams, string $tagContent): string|bool {
 	global $overrideGameID, $disableBBLinks;
 	$session = Session::getInstance();
 	$linked = $disableBBLinks === false && $session->hasGame() && $overrideGameID === $session->getGameID();
@@ -383,7 +383,7 @@ function word_filter(string $string): string {
 }
 
 // choose correct pluralization based on amount
-function pluralise(int|float $amount, string $word, bool $includeAmount = true): string {
+function pluralise(float|int $amount, string $word, bool $includeAmount = true): string {
 	$result = $word;
 	if ((float)$amount !== 1.) {
 		$result .= 's';

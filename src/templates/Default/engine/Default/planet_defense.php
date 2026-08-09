@@ -89,7 +89,7 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 						}
 						if ($i !== $ThisPlanet->getMaxMountedWeapons() - 1) { ?>
 							<button type="submit" title="Move Down" style="padding:0px; height:20px; border:none;" name="move_down" value="<?php echo $i; ?>"><img src="images/down.gif" alt="" height="20" width="20" /></button><?php
-					} ?>
+						} ?>
 					</td><?php
 					if (isset($weapons[$i])) { ?>
 						<td class="left"><?php echo $weapons[$i]->getName(); ?></td>

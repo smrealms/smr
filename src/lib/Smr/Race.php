@@ -25,7 +25,7 @@ class Race {
 	 * @return array<int>
 	 */
 	public static function getAllIDs(): array {
-		return \array_keys(self::RACE_NAMES);
+		return array_keys(self::RACE_NAMES);
 	}
 
 	/**
@@ -47,7 +47,7 @@ class Race {
 	 * @return array<int>
 	 */
 	public static function getPlayableIDs(): array {
-		return \array_keys(self::getPlayableNames());
+		return array_keys(self::getPlayableNames());
 	}
 
 	/**

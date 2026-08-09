@@ -39,8 +39,8 @@ use Smr\TransactionType;
 
 	<select name="port_race"><?php
 		foreach (Race::getAllNames() as $raceID => $raceName) { ?>
-		<option value="<?php echo $raceID; ?>" <?php echo ($raceID === $SelectedPortRaceID ? 'selected' : ''); ?>><?php echo $raceName; ?></option><?php
-	} ?>
+			<option value="<?php echo $raceID; ?>" <?php echo ($raceID === $SelectedPortRaceID ? 'selected' : ''); ?>><?php echo $raceName; ?></option><?php
+		} ?>
 	</select>
 	<br />
 

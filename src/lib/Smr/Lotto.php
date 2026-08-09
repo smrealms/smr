@@ -11,7 +11,6 @@ class Lotto {
 	public const float WIN_FRAC = 0.9; // fraction of ticket sales returned to winner
 
 	public static function checkForLottoWinner(int $gameID): void {
-
 		// No more lotto winners after the game has ended
 		if (Game::getGame($gameID)->hasEnded()) {
 			return;

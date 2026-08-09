@@ -4,7 +4,6 @@
  * @param resource $fp
  */
 function invite($fp, string $rdata): bool {
-
 	// :MrSpock!mrspock@coldfront-425DB813.dip.t-dialin.net INVITE Caretaker :#fe
 	if (preg_match('/^:(.*)!(.*)@(.*) INVITE ' . IRC_BOT_NICK . ' :(.*)\s$/i', $rdata, $msg) === 1) {
 

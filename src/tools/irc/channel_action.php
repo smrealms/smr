@@ -6,7 +6,6 @@ use Smr\Irc\Message;
  * @param resource $fp
  */
 function channel_action_slap($fp, Message $msg): bool {
-
 	// :MrSpock!mrspock@coldfront-25B201B9.dip.t-dialin.net PRIVMSG #rod : ACTION slaps Caretaker around a bit with a large trout
 	if (preg_match('/^ACTION slaps ' . IRC_BOT_NICK . '/i', $msg->text) === 1) {
 

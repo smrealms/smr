@@ -9,7 +9,6 @@ use Smr\Player;
  * This function is called by "Conventional" and "Plot To Nearest" pages.
  */
 function course_plot_forward(Player $player, Path $path): never {
-
 	if ($player->getSectorID() === $path->getStartSectorID()) {
 		$player->setPlottedCourse($path);
 

@@ -168,7 +168,7 @@ class HallOfFame {
 		return $rank;
 	}
 
-	public static function displayHOFRow(int $rank, int $accountID, ?int $gameID, float|string $amount): string {
+	public static function displayHOFRow(int $rank, int $accountID, ?int $gameID, string|float $amount): string {
 		$account = Session::getInstance()->getAccount();
 		if ($gameID !== null && Game::gameExists($gameID)) {
 			try {

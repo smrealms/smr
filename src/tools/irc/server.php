@@ -37,7 +37,6 @@ function server_ping($fp, string $rdata): bool {
  * @param resource $fp
  */
 function server_msg_307($fp, string $rdata): bool {
-
 	// :alpha.theairlock.net 307 Caretaker MrSpock :is identified for this nick
 	if (preg_match('/^:(.*) 307 ' . IRC_BOT_NICK . ' (.*) :is identified for this nick\s/i', $rdata, $msg) === 1) {
 
@@ -70,7 +69,6 @@ function server_msg_307($fp, string $rdata): bool {
  * @param resource $fp
  */
 function server_msg_318($fp, string $rdata): bool {
-
 	// :ice.coldfront.net 318 Caretaker MrSpock :End of /WHOIS list.
 	if (preg_match('/^:(.*) 318 ' . IRC_BOT_NICK . ' (.*) :End of \/WHOIS list\.\s/i', $rdata, $msg) === 1) {
 
@@ -138,7 +136,6 @@ function server_msg_318($fp, string $rdata): bool {
  * @param resource $fp
  */
 function server_msg_352($fp, string $rdata): bool {
-
 	// :ice.coldfront.net 352 Caretaker #KMFDM caretaker coldfront-425DB813.dip.t-dialin.net ice.coldfront.net Caretaker Hr :0 Official SMR bot
 	if (preg_match('/^:(.*?) 352 ' . IRC_BOT_NICK . ' (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?)$/i', $rdata, $msg) === 1) {
 
@@ -192,7 +189,6 @@ function server_msg_352($fp, string $rdata): bool {
  * @param resource $fp
  */
 function server_msg_401($fp, string $rdata): bool {
-
 	// :ice.coldfront.net 401 Caretaker MrSpock :No such nick/channel
 	if (preg_match('/^:(.*) 401 ' . IRC_BOT_NICK . ' (.*) :No such nick\/channel\s/i', $rdata, $msg) === 1) {
 

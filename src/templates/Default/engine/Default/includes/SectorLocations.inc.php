@@ -24,6 +24,6 @@ if ($ThisSector->hasLocation()) { ?>
 					</td><?php
 				} ?>
 			</tr><?php
-			} ?>
+		} ?>
 	</table><br /><?php
 }

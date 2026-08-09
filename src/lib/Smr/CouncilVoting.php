@@ -10,7 +10,6 @@ use Exception;
 class CouncilVoting {
 
 	public static function modifyRelations(int $race_id_1, int $gameID): void {
-
 		// Process any votes that ended prior to the start of today
 		$endtime = strtotime(date('Y-m-d'));
 		if ($endtime === false) {
@@ -113,7 +112,6 @@ class CouncilVoting {
 	}
 
 	public static function checkPacts(int $race_id_1, int $gameID): void {
-
 		$db = Database::getInstance();
 
 		$dbResult = $db->read('SELECT * FROM race_has_voting

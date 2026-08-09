@@ -43,8 +43,8 @@ try {
 		1 => ['pipe', 'w'], // stdout is a pipe that the child will write to
 	];
 	proc_open(UCI_CHESS_ENGINE, $descriptorSpec, $pipes);
-	$toEngine =& $pipes[0];
-	$fromEngine =& $pipes[1];
+	$toEngine = &$pipes[0];
+	$fromEngine = &$pipes[1];
 
 	function readFromEngine(bool $block = true): void {
 		global $fromEngine;

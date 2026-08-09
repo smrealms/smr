@@ -132,7 +132,6 @@ class NpcActor {
 	}
 
 	public function getNextAction(): PlayerPageProcessor {
-
 		// Avoid infinite loops by restricting the number of actions
 		if ($this->actions >= NPC_MAX_ACTIONS) {
 			debug('Reached maximum number of actions: ' . NPC_MAX_ACTIONS);

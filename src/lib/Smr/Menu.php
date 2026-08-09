@@ -89,7 +89,7 @@ class Menu {
 		$menuItems[] = ['Link' => Globals::getPlanetListHREF($alliance_id), 'Text' => 'Defense'];
 		$menuItems[] = ['Link' => Globals::getPlanetListFinancialHREF($alliance_id), 'Text' => 'Financial'];
 		// make the selected index bold
-		$boldItem =& $menuItems[$selected_index]['Text'];
+		$boldItem = &$menuItems[$selected_index]['Text'];
 		$boldItem = '<span class="bold">' . $boldItem . '</span>';
 
 		$template = Template::getInstance();
@@ -228,7 +228,6 @@ class Menu {
 	 * $active_level1 - the id of the active menu on the second level
 	 */
 	public static function rankings(int $active_level1 = 0, int $active_level2 = 0): void {
-
 		$menu = [
 			// player rankings
 			[

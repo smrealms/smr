@@ -58,7 +58,7 @@ if (isset($Locations)) {
 		</td>
 		<td>
 			<table><?php
-			foreach ($Location->getShipsSold() as $ShipTypeSold) { ?>
+				foreach ($Location->getShipsSold() as $ShipTypeSold) { ?>
 					<tr>
 						<td><?php echo $ShipTypeSold->getName(); ?></td>
 						<td><input type="checkbox" name="remove_ships[]" value="<?php echo $ShipTypeSold->getTypeID(); ?>" /></td>
@@ -79,7 +79,7 @@ if (isset($Locations)) {
 		</td>
 		<td>
 			<table><?php
-			foreach ($Location->getWeaponsSold() as $WeaponSold) { ?>
+				foreach ($Location->getWeaponsSold() as $WeaponSold) { ?>
 					<tr>
 						<td><?php echo $WeaponSold->getName(); ?></td>
 						<td><input type="checkbox" name="remove_weapons[]" value="<?php echo $WeaponSold->getWeaponTypeID(); ?>" /></td>
