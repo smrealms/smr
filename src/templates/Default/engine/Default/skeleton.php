@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 /**
+ * @var string $timeDisplay
  * @var Smr\Template $this
  * @var string $TemplateBody
  */
@@ -16,7 +17,12 @@
 			<tr>
 				<td class="l0" rowspan="2">
 					<div class="l1">
+						<span class="yellow">
+							<span id="tod"><?php echo $timeDisplay; ?></span>
+						</span>
+						<br /><br />
 						<?php $this->includeTemplate('includes/LeftPanel.inc.php'); ?>
+						<br />
 					</div>
 				</td>
 				<td class="m0" colspan="2">

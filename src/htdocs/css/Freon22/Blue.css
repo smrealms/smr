@@ -20,11 +20,11 @@ html {
 	background-color: #00002D;
 	border-color: #1154A6;
 }
-.LeftNavOne {
+div#LeftNavOne {
 	background-color: #00002D;
 	border-color: #1154A6;
 }
-.LeftNavTwo {
+div#LeftNavTwo {
 	background-color: #00002D;
 	border-color: #1154A6;
 }
@@ -58,10 +58,10 @@ a.white {
 a {
 	color: #9DCEFF;
 }
-a.leftNav {
+div.leftNav a {
 	color: #9DCEFF;
 }
-a:hover.leftNav {
+div.leftNav a:hover {
 	color: #CC3300;
 }
 a.nav {

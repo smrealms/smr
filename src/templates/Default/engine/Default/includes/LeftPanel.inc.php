@@ -5,7 +5,6 @@ use Smr\Globals;
 /**
  * @var Smr\Account $ThisAccount
  * @var Smr\Player $ThisPlayer
- * @var string $timeDisplay
  * @var string $PlotCourseLink
  * @var string $TraderLink
  * @var string $PoliticsLink
@@ -30,12 +29,9 @@ use Smr\Globals;
  * @var string $DonateLink
  */
 
-?>
-<span class="yellow">
-	<span id="tod"><?php echo $timeDisplay; ?></span>
-</span><br />
-<br /><?php
 if (isset($GameID)) {
+?>
+<div id="LeftNavOne" class="leftNav noWrap"><?php
 	// Use the current sector link for Planet Main to enable the hotkey
 	if ($ThisPlayer->isLandedOnPlanet()) { ?>
 		<a class="big bold" href="<?php echo Globals::getCurrentSectorHREF(); ?>">Planet Main</a><br /><?php
@@ -64,18 +60,22 @@ if (isset($GameID)) {
 	<br />
 	<a href="<?php echo $RankingsLink; ?>">Rankings</a><br />
 	<a href="<?php echo $CurrentHallOfFameLink; ?>">Current HoF</a><br />
+</div>
 	<?php
 }
+?>
+<div id="LeftNavTwo" class="leftNav nowrap">
+<?php
 if (isset($AccountID)) { ?>
-	<a href="<?php echo $HallOfFameLink; ?>">Hall of Fame</a><br />
-	<br />
 	<a href="<?php echo $PlayGameLink; ?>">Play Game</a><br />
 	<a href="<?php echo $PreferencesLink; ?>">Preferences</a><br /><?php
 	if ($ThisAccount->hasPermission()) { ?>
 		<a href="<?php echo $AdminToolsLink; ?>">Admin Tools</a><br /><?php
 	}
 	?><a href="<?php echo $LogoutLink; ?>">Logout</a><br />
-	<br /><?php
+	<br />
+	<a href="<?php echo $HallOfFameLink; ?>">Hall of Fame</a><br />
+	<?php
 } else {
 	?><a href="login.php">Login</a><br /><?php
 }
@@ -93,5 +93,5 @@ if (Globals::isFeatureRequestOpen()) {
 <a href="<?php echo WIKI_URL; ?>/rules" target="policy">User Policy</a><br />
 <a href="<?php echo WIKI_URL; ?>" target="_blank">SMR Wiki</a><br />
 <a href="http://smrcnn.smrealms.de/" target="webboard">Webboard</a><br />
-<a href="<?php echo $DonateLink; ?>">Donate</a><br />
-<br />
+<a href="<?php echo $DonateLink; ?>">Donate</a>
+</div>

@@ -130,6 +130,9 @@ div#middle_panel {
 div#right_panel {
 	width: 13em;
 }
+div#LeftNavOne {
+	margin-bottom: 1em;
+}
 
 /* Weapon Drag Drop */
 ul.sortable li {
