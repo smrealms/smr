@@ -1,13 +1,20 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Shared\Admin\Unigen;
+
 use Smr\Galaxy;
 
-/**
- * @var array<int, array{Name: string, Width: int, Height: int, Type: Galaxy::TYPE_*, ForceMaxHours: float, DelHREF?: string}> $Galaxies
- * @var bool $GameEnabled
- * @var array{value: string, href: string} $Submit
- */
+class GalaxyDetailsRenderer {
 
+/**
+ * @param array<int, array{Name: string, Width: int, Height: int, Type: string, ForceMaxHours: float, DelHREF?: string}> $Galaxies
+ * @param array{value: string, href: string} $Submit
+ */
+public static function render(
+	array $Galaxies,
+	bool $GameEnabled,
+	array $Submit,
+): void {
 ?>
 <form method="POST" action="<?php echo $Submit['href']; ?>">
 	<table class="standard">
@@ -53,3 +60,8 @@ use Smr\Galaxy;
 		</tr>
 	</table>
 </form>
+
+<?php
+}
+
+}

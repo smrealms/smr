@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var ?int $PaperGameID
- * @var ?string $BackHREF
- * @var ?array<int, array<int, array{title: string, text: string}>> $ArticleLayout
- */
+namespace Smr\Pages\Player\GalacticPost;
 
+class EditionReadRenderer {
+
+/**
+ * @param ?array<int, array<int, array{title: string, text: string}>> $ArticleLayout
+ */
+public static function render(?int $PaperGameID, ?string $BackHREF, ?array $ArticleLayout): void {
 if (isset($BackHREF)) { ?>
 	<a href="<?php echo $BackHREF; ?>"><b>&lt;&lt;Back</b></a><?php
 }
@@ -25,4 +27,8 @@ if (!isset($ArticleLayout)) { ?>
 			</tr><?php
 		} ?>
 	</table><?php
+}
+
+}
+
 }

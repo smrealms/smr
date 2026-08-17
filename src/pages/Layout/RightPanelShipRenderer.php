@@ -1,18 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Layout;
+
 use Smr\Globals;
 use Smr\TradeGood;
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Ship $ThisShip
- * @var string $HardwareLink
- * @var string $ForceDropLink
- * @var string $CargoJettisonLink
- * @var string $WeaponReorderLink
- */
+class RightPanelShipRenderer {
 
-if (isset($GameID)) { ?>
+public static function render(RightPanelData $data): void {
+	$ThisPlayer = $data->player;
+	$ThisShip = $ThisPlayer->getShip();
+	$HardwareLink = $data->hardwareLink;
+	$ForceDropLink = $data->forcesDropLink;
+	$CargoJettisonLink = $data->cargoJettisonLink;
+	$WeaponReorderLink = $data->weaponReorderLink;
+	$DropMineLink = $data->dropMineLink;
+	$DropCDLink = $data->dropCDLink;
+	$DropSDLink = $data->dropSDLink;
+	?>
 	<span id="flagship"><?php
 	if ($ThisPlayer->isFlagship()) {
 		?><img title="Alliance Flagship" alt="Alliance Flagship" src="images/flagship.png" width="16" height="12" />&nbsp;<span style="color:#06F">Flagship</span><br /><?php
@@ -101,4 +106,6 @@ if (isset($GameID)) { ?>
 	if (ENABLE_BETA) {
 		?><a href="<?php echo Globals::getBetaFunctionsHREF(); ?>"><span class="bold">Beta Functions</span></a><?php
 	}
+}
+
 }

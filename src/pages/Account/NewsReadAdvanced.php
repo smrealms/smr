@@ -13,9 +13,6 @@ use Smr\Template;
 class NewsReadAdvanced extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'news_read_advanced.php';
-
 	/**
 	 * @param array<int> $accountIDs
 	 * @param array<int> $allianceIDs
@@ -38,31 +35,28 @@ class NewsReadAdvanced extends AccountPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$newsAlliances[$dbRecord->getInt('alliance_id')] = htmlentities($dbRecord->getString('alliance_name'));
 		}
-		$template->assign('NewsAlliances', $newsAlliances);
 
 		$processor = new NewsReadAdvancedProcessor($this->gameID);
-		$template->assign('AdvancedNewsForm', $processor);
-		$template->assign('AdvancedNewsFormHref', $processor->href());
 
 		// No submit value when first navigating to the page
 		$submit_value = $this->submit;
 
 		if ($submit_value === $processor->actionSearchPlayer->value) {
-			$template->assign('ResultsFor', $this->label);
+			$resultsFor = $this->label;
 			$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND (killer_id IN (:account_ids) OR dead_id IN (:account_ids)) ORDER BY news_id DESC', [
 				'game_id' => $db->escapeNumber($gameID),
 				'account_ids' => $db->escapeArray($this->accountIDs),
 			]);
 		} elseif ($submit_value === $processor->actionSearchAlliance->value) {
 			$allianceID = $this->allianceIDs[0];
-			$template->assign('ResultsFor', $newsAlliances[$allianceID]);
+			$resultsFor = $newsAlliances[$allianceID];
 			$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND ((killer_alliance = :alliance_id AND killer_id != :account_id_port) OR (dead_alliance = :alliance_id AND dead_id != :account_id_port)) ORDER BY news_id DESC', [
 				'game_id' => $db->escapeNumber($gameID),
 				'account_id_port' => $db->escapeNumber(ACCOUNT_ID_PORT),
 				'alliance_id' => $db->escapeNumber($allianceID),
 			]);
 		} elseif ($submit_value === $processor->actionSearchPlayers->value) {
-			$template->assign('ResultsFor', $this->label);
+			$resultsFor = $this->label;
 			$dbResult = $db->read('SELECT * FROM news
 						WHERE game_id = :game_id
 							AND (
@@ -74,7 +68,7 @@ class NewsReadAdvanced extends AccountPage {
 		} elseif ($submit_value === $processor->actionSearchAlliances->value) {
 			$allianceID1 = $this->allianceIDs[0];
 			$allianceID2 = $this->allianceIDs[1];
-			$template->assign('ResultsFor', $newsAlliances[$allianceID1] . ' vs. ' . $newsAlliances[$allianceID2]);
+			$resultsFor = $newsAlliances[$allianceID1] . ' vs. ' . $newsAlliances[$allianceID2];
 			$dbResult = $db->read('SELECT * FROM news
 						WHERE game_id = :game_id
 							AND (
@@ -87,6 +81,7 @@ class NewsReadAdvanced extends AccountPage {
 				'alliance_id_2' => $db->escapeNumber($allianceID2),
 			]);
 		} else {
+			$resultsFor = null;
 			$dbResult = $db->select(
 				'news',
 				['game_id' => $gameID],
@@ -96,10 +91,15 @@ class NewsReadAdvanced extends AccountPage {
 			);
 		}
 
-		$template->assign('NewsItems', News::getNewsItems($dbResult));
-
 		$template->pageTopic = 'Advanced News';
 		Menu::news($gameID);
+
+		$template->pageRenderer = fn() => NewsReadAdvancedRenderer::render(
+			NewsAlliances: $newsAlliances,
+			AdvancedNewsForm: $processor,
+			ResultsFor: $resultsFor,
+			NewsItems: News::getNewsItems($dbResult),
+		);
 	}
 
 }

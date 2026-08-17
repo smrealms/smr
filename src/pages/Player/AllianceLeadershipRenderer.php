@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var string $HandoverHREF
- * @var array<int, Smr\Player> $AlliancePlayers
- */
+namespace Smr\Pages\Player;
 
+use Smr\Player;
+
+class AllianceLeadershipRenderer {
+
+/** @param array<int, Player> $AlliancePlayers */
+public static function render(Player $ThisPlayer, string $HandoverHREF, array $AlliancePlayers): void {
 ?>
 Please select the new Leader:
 
@@ -23,3 +25,7 @@ Please select the new Leader:
 	<br /><br />
 	<?php echo create_submit_display('Handover Leadership'); ?>
 </form>
+<?php
+}
+
+}

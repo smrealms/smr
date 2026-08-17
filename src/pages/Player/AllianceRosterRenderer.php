@@ -1,23 +1,36 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use Smr\Account;
 use Smr\Alliance;
+use Smr\Player;
+use Smr\Template;
+
+class AllianceRosterRenderer {
 
 /**
- * @var Smr\Account $ThisAccount
- * @var Smr\Alliance $Alliance
- * @var Smr\Player $ThisPlayer
- * @var Smr\Template $this
- * @var bool $CanChangeRoles
- * @var ?string $SaveAllianceRolesHREF
- * @var ?array<int, string> $Roles
- * @var ?string $ToggleRolesHREF
- * @var int $AllianceExp
- * @var int $AllianceAverageExp
- * @var array<int, Smr\Player> $AlliancePlayers
- * @var string|bool $JoinRestriction
- * @var ?string $JoinHREF
+ * @param ?array<int, string> $Roles
+ * @param array<int, \Smr\Player> $AlliancePlayers
+ * @param ?array<int> $ActiveIDs
  */
-
+public static function render(
+	Template $template,
+	Alliance $Alliance,
+	?array $Roles,
+	?string $SaveAllianceRolesHREF,
+	int $AllianceExp,
+	int $AllianceAverageExp,
+	?string $EditAllianceDescriptionHREF,
+	bool $CanChangeRoles,
+	array $AlliancePlayers,
+	?array $ActiveIDs,
+	?string $ToggleRolesHREF,
+	string|bool $JoinRestriction,
+	?string $JoinHREF,
+	Account $ThisAccount,
+	Player $ThisPlayer,
+): void {
 ?>
 <div class="center">
 	<div id="alliance-desc" class="ajax"><?php
@@ -125,7 +138,7 @@ use Smr\Alliance;
 	</table>
 </div><?php
 
-$this->listjsInclude = 'alliance_roster';
+$template->listjsInclude = 'alliance_roster';
 
 if ($Alliance->getAllianceID() === $ThisPlayer->getAllianceID()) { ?>
 	<br /><h2>Options</h2><br />
@@ -154,4 +167,8 @@ if ($JoinRestriction === false) { ?>
 	</form><?php
 } elseif ($JoinRestriction !== true) { ?>
 	<p><?php echo $JoinRestriction; ?></p><?php
+}
+
+}
+
 }

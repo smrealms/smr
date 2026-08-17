@@ -1,14 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Shared;
+
+use Exception;
 use Smr\PlanetStructureType;
+use Smr\Player;
+use Smr\Template;
+
+class PlanetTraderTeamCombatResultsRenderer {
 
 /**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Template $this
- * @var bool $MinimalDisplay
- * @var PlanetAttackerCombatResults $TraderTeamCombatResults
+ * @param PlanetAttackerCombatResults $TraderTeamCombatResults
  */
-
+public static function render(
+	Template $template,
+	Player $ThisPlayer,
+	bool $MinimalDisplay,
+	array $TraderTeamCombatResults,
+): void {
 $AllTraderResults = $TraderTeamCombatResults['Traders'];
 foreach ($AllTraderResults as $TraderResults) {
 	$ShootingPlayer = $TraderResults['Player'];
@@ -55,15 +64,12 @@ foreach ($AllTraderResults as $TraderResults) {
 						?> but it cannot do any damage<?php
 					}
 				} else {
-					?> destroying <?php echo $this->displayTakenDamage($ActualDamage);
+					?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
 				}
 			} ?>.
 			<br /><?php
 			if ($ShotHit && $ActualDamage['KillingShot']) {
-				if (!isset($WeaponResults['KillResults'])) {
-					throw new Exception('KillingShot did not provide KillResults!');
-				}
-				$this->includeTemplate('includes/PlanetKillMessage.inc.php', ['KillResults' => $WeaponResults['KillResults'], 'TargetPlanet' => $TargetPlanet]);
+				PlanetKillMessageRenderer::render(TargetPlanet: $TargetPlanet);
 			}
 		}
 		if (isset($TraderResults['Drones'])) {
@@ -99,16 +105,13 @@ foreach ($AllTraderResults as $TraderResults) {
 							?> but they cannot do any damage<?php
 						}
 					} else {
-						?> destroying <?php echo $this->displayTakenDamage($ActualDamage);
+						?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
 					}
 				}
 			} ?>.
 			<br /><?php
 			if ($ActualDamage['KillingShot']) {
-				if (!isset($Drones['KillResults'])) {
-					throw new Exception('KillingShot did not provide KillResults!');
-				}
-				$this->includeTemplate('includes/PlanetKillMessage.inc.php', ['KillResults' => $Drones['KillResults'], 'TargetPlanet' => $TargetPlanet]);
+				PlanetKillMessageRenderer::render(TargetPlanet: $TargetPlanet);
 			}
 		}
 	}
@@ -126,4 +129,8 @@ $TotalDamage = $TraderTeamCombatResults['TotalDamage']; ?>
 This fleet <?php if ($TotalDamage > 0) { ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php } else { ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.<br /><?php
 foreach ($TraderTeamCombatResults['Downgrades'] as $structureID => $numDestroyed) { ?>
 	This team destroys <span class="red"><?php echo pluralise($numDestroyed, (new PlanetStructureType($structureID, []))->name()); ?></span>.<br /><?php
+}
+
+}
+
 }

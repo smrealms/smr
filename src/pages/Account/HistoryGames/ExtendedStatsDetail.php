@@ -9,8 +9,6 @@ use Smr\Template;
 
 class ExtendedStatsDetail extends HistoryPage {
 
-	public string $file = 'history_games_extended_stats_detail.php';
-
 	public function __construct(
 		protected readonly string $historyDatabase,
 		protected readonly int $historyGameID,
@@ -24,9 +22,6 @@ class ExtendedStatsDetail extends HistoryPage {
 		$this->addMenu($template, ExtendedStats::class);
 
 		$oldAccountID = $account->getOldAccountID($this->historyDatabase);
-
-		$container = new ExtendedStats($this->historyDatabase, $this->historyGameID, $this->historyGameName);
-		$template->assign('BackHREF', $container->href());
 
 		$rankings = [];
 		$db = Database::getInstance();
@@ -108,8 +103,16 @@ class ExtendedStatsDetail extends HistoryPage {
 		} else {
 			throw new Exception('Unknown category: ' . $this->category);
 		}
-		$template->assign('Rankings', $rankings);
-		$template->assign('Headers', $headers);
+
+		$template->pageRenderer = fn() => ExtendedStatsDetailRenderer::render(
+			BackHREF: new ExtendedStats(
+				$this->historyDatabase,
+				$this->historyGameID,
+				$this->historyGameName,
+			)->href(),
+			Rankings: $rankings,
+			Headers: $headers,
+		);
 	}
 
 }

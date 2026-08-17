@@ -7,7 +7,7 @@ use Smr\Player;
  * Returns an array with all relevant information about draft teams,
  * including their current size and if the leader can pick teammates.
  *
- * @return array<int, array<string, mixed>>
+ * @return array<int, array{Leader: Player, Size: int, Alliance?: \Smr\Alliance, CanPick: bool}>
  */
 function get_draft_teams(int $gameId): array {
 	$db = Database::getInstance();

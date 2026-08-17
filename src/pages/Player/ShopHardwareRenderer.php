@@ -1,11 +1,16 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Ship $ThisShip
- * @var ?array<int, array{Page: Smr\Pages\Player\ShopHardwareProcessor, Cost: int, Name: string}> $HardwareSold
- */
+namespace Smr\Pages\Player;
 
-if (isset($HardwareSold)) { ?>
+use Smr\AbstractShip;
+
+class ShopHardwareRenderer {
+
+/**
+ * @param array<int, array{Page: \Smr\Pages\Player\ShopHardwareProcessor, Cost: int, Name: string}> $HardwareSold
+ */
+public static function render(array $HardwareSold, AbstractShip $ThisShip): void {
+if (count($HardwareSold) > 0) { ?>
 	<h2>Buy Hardware</h2>
 	<table class="standard">
 		<tr>
@@ -61,4 +66,8 @@ if (isset($HardwareSold)) { ?>
 	}
 } else {
 	?>I have nothing to sell to you. Get out of here!<?php
+}
+
+}
+
 }

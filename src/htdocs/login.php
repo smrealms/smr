@@ -2,6 +2,8 @@
 
 use Smr\Database;
 use Smr\Pages\Account\LoginCheckValidatedProcessor;
+use Smr\Pages\Login\LoginRenderer;
+use Smr\Pages\Login\SkeletonRenderer;
 use Smr\Request;
 use Smr\Session;
 use Smr\Template;
@@ -25,13 +27,13 @@ try {
 		exit;
 	}
 
-	$template = Template::getInstance();
+	$message = null;
 	if (Request::has('msg')) {
-		$template->assign('Message', htmlentities(Request::get('msg'), ENT_COMPAT, 'utf-8'));
+		$message = htmlentities(Request::get('msg'), ENT_COMPAT, 'utf-8');
 	} elseif (Request::has('status')) {
 		session_start();
 		if (isset($_SESSION['login_msg'])) {
-			$template->assign('Message', $_SESSION['login_msg']);
+			$message = $_SESSION['login_msg'];
 		}
 		session_destroy();
 	}
@@ -49,7 +51,6 @@ try {
 			),
 		];
 	}
-	$template->assign('GameNews', $gameNews);
 
 	// SMR game blurb
 	$story = [
@@ -59,10 +60,11 @@ try {
 		'This is the universe you find yourself in.',
 		'Space Merchant Realms is a game of speed, skill, and strategy. To make it to the top ranks, it takes a combination of leadership, persistence, courage, and cooperation. Will you quest for riches as a tradeship captain? Or seek fame and glory as an alliance fleet commander? Is the life of a pirate what you are after? Where will your destiny take you?',
 	];
-	$template->assign('Story', $story);
 
-	$template->assign('Body', 'login/login.php');
-	$template->display('login/skeleton.php');
+	$body = fn() => LoginRenderer::render($gameNews, $story);
+	Template::getInstance()->display(
+		fn() => SkeletonRenderer::render($body, $message),
+	);
 
 } catch (Throwable $e) {
 	handleException($e);

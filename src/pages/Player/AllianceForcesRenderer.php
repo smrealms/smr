@@ -1,13 +1,18 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<Smr\Force> $Forces
- * @var Smr\Account $ThisAccount
- * @var Smr\Template $this
- * @var array{Mines: int, CDs: int, SDs: int} $Total
- * @var array{Mines: int, CDs: int, SDs: int} $TotalCost
- */
+namespace Smr\Pages\Player;
 
+use Smr\Account;
+use Smr\Template;
+
+class AllianceForcesRenderer {
+
+/**
+ * @param array{Mines: int, CDs: int, SDs: int} $Total
+ * @param array{Mines: int, CDs: int, SDs: int} $TotalCost
+ * @param array<\Smr\Force> $Forces
+ */
+public static function render(Template $template, array $Total, array $TotalCost, array $Forces, Account $ThisAccount): void {
 if (count($Forces) === 0) { ?>
 	Your alliance has no deployed forces.
 	<a href="<?php echo WIKI_URL; ?>/game-guide/forces" target="_blank">
@@ -71,5 +76,9 @@ if (count($Forces) === 0) { ?>
 	} ?>
 	</table>
 
-	<?php $this->listjsInclude = 'alliance_forces';
+	<?php $template->listjsInclude = 'alliance_forces';
+}
+
+}
+
 }

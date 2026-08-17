@@ -14,8 +14,6 @@ class CreateWarps extends AccountPage {
 
 	use ReusableTrait;
 
-	public string $file = 'admin/unigen/universe_create_warps.php';
-
 	public function __construct(
 		private readonly int $gameID,
 		private readonly int $galaxyID,
@@ -25,8 +23,6 @@ class CreateWarps extends AccountPage {
 
 	public function build(Account $account, Template $template): void {
 		$db = Database::getInstance();
-
-		$template->assign('Message', $this->message);
 
 		$galaxies = Galaxy::getGameGalaxies($this->gameID);
 		$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
@@ -68,16 +64,16 @@ class CreateWarps extends AccountPage {
 			$container = new self($this->gameID, $gal->getGalaxyID(), $this->returnTo);
 			$galLinks[$gal->getGalaxyID()] = $container->href();
 		}
-		$template->assign('GalLinks', $galLinks);
 
-		$container = new CreateWarpsProcessor($this->gameID, $this->galaxyID, $this->returnTo);
-		$template->assign('SubmitHREF', $container->href());
-
-		$template->assign('CancelHREF', $this->returnTo->href());
-
-		$template->assign('Galaxy', $galaxy);
-		$template->assign('Galaxies', $galaxies);
-		$template->assign('Warps', $warps);
+		$template->pageRenderer = fn() => CreateWarpsRenderer::render(
+			Message: $this->message,
+			GalLinks: $galLinks,
+			SubmitHREF: new CreateWarpsProcessor($this->gameID, $this->galaxyID, $this->returnTo)->href(),
+			CancelHREF: $this->returnTo->href(),
+			Galaxy: $galaxy,
+			Galaxies: $galaxies,
+			Warps: $warps,
+		);
 	}
 
 }

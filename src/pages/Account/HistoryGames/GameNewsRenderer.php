@@ -1,12 +1,11 @@
 <?php declare(strict_types=1);
 
-/**
- * @var int $Max
- * @var int $Min
- * @var string $ShowHREF
- * @var array<array{time: string, news: string}> $Rows
- */
+namespace Smr\Pages\Account\HistoryGames;
 
+class GameNewsRenderer {
+
+/** @param array<array{time: string, news: string}> $Rows */
+public static function render(int $Max, int $Min, string $ShowHREF, array $Rows): void {
 ?>
 <div class="center">
 	<form method="POST" action="<?php echo $ShowHREF; ?>">
@@ -28,3 +27,7 @@
 		} ?>
 	</table>
 </div>
+<?php
+}
+
+}

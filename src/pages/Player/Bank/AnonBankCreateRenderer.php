@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $CreateHREF
- */
+namespace Smr\Pages\Player\Bank;
 
+class AnonBankCreateRenderer {
+
+public static function render(string $CreateHREF): void {
 ?>
 Please enter the desired password for your new account.<br /><br />
 <form method="POST" action="<?php echo $CreateHREF; ?>">
@@ -16,3 +17,7 @@ Please enter the desired password for your new account.<br /><br />
 	<br />
 	<?php echo create_submit_display('Create Account'); ?>
 </form>
+<?php
+}
+
+}

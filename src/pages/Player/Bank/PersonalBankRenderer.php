@@ -1,10 +1,12 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Pages\Player\Bank\PersonalBankProcessor $ProcessingPage
- */
+namespace Smr\Pages\Player\Bank;
 
+use Smr\Player;
+
+class PersonalBankRenderer {
+
+public static function render(PersonalBankProcessor $ProcessingPage, Player $ThisPlayer): void {
 ?>
 Hello <?php echo $ThisPlayer->getDisplayName(); ?>
 <br /><br />
@@ -23,3 +25,8 @@ if ($ThisPlayer->getBank() >= MAX_MONEY) { ?>
 	&nbsp;&nbsp;
 	<?php echo $ProcessingPage->actionWithdraw->html(); ?>
 </form>
+
+<?php
+}
+
+}

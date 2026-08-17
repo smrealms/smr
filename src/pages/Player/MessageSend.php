@@ -5,15 +5,13 @@ namespace Smr\Pages\Player;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Pages\Shared\CommonMessageSendRenderer;
 use Smr\Player;
 use Smr\Template;
 
 class MessageSend extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'message_send.php';
-
 	public function __construct(
 		private readonly ?int $receiverAccountID = null,
 		private readonly ?string $preview = null,
@@ -25,17 +23,17 @@ class MessageSend extends PlayerPage {
 		Menu::messages();
 
 		if ($this->receiverAccountID !== null) {
-			$template->assign('Receiver', Player::getPlayer($this->receiverAccountID, $player->getGameID())->getDisplayName());
+			$receiver = Player::getPlayer($this->receiverAccountID, $player->getGameID())->getDisplayName();
 		} else {
-			$template->assign('Receiver', 'All Online');
+			$receiver = 'All Online';
 		}
 
-		$container = new MessageSendProcessor($this->receiverAccountID);
-		$template->assign('MessageSendPage', $container);
-
-		if ($this->preview !== null) {
-			$template->assign('Preview', $this->preview);
-		}
+		$template->pageRenderer = fn() => CommonMessageSendRenderer::render(
+			Receiver: $receiver,
+			MessageSendPage: new MessageSendProcessor($this->receiverAccountID),
+			Preview: $this->preview,
+			ThisPlayer: $player,
+		);
 	}
 
 }

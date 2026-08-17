@@ -1,16 +1,23 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $BackHref
- * @var ?bool $FeatureModerator
- * @var ?int $FeatureRequestId
- * @var ?Smr\Pages\Account\FeatureRequestVoteProcessor $FeatureRequestStatusFormPage
- * @var string $FeatureRequestCommentFormHREF
- */
+namespace Smr\Pages\Account;
 
+class FeatureRequestCommentsRenderer {
+
+/**
+ * @param array<int, array{CommentID: int, Message: string, Time: string, Name: string}> $Comments
+ */
+public static function render(
+	string $BackHref,
+	bool $FeatureModerator,
+	int $FeatureRequestId,
+	?FeatureRequestVoteProcessor $FeatureRequestStatusFormPage,
+	array $Comments,
+	string $FeatureRequestCommentFormHREF,
+): void {
 ?>
 <p><a href="<?php echo $BackHref; ?>">Back</a></p><?php
-if (isset($Comments)) { ?>
+if (count($Comments) > 0) { ?>
 	<table class="standard fullwidth">
 		<tr>
 			<th>Poster</th>
@@ -19,15 +26,7 @@ if (isset($Comments)) { ?>
 		</tr><?php
 		foreach ($Comments as $Comment) { ?>
 			<tr class="center">
-				<td class="shrink noWrap top"><?php
-				if ($Comment['Anonymous']) {
-					?>Anonymous<?php
-				} else {
-					echo $Comment['PosterAccount']->getHofDisplayName();
-				}
-				if ($FeatureModerator) {
-					?> - <?php echo $Comment['PosterAccount']->getLogin(); ?>&nbsp;(<?php echo $Comment['PosterAccount']->getAccountID(); ?>)</td><?php
-				} ?>
+				<td class="shrink noWrap top"><?php echo $Comment['Name']; ?></td>
 				<td class="left"><?php echo bbify(htmlentities($Comment['Message'])); ?></td>
 				<td class="shrink noWrap top"><?php echo $Comment['Time']; ?></td>
 			</tr><?php
@@ -69,3 +68,8 @@ if ($FeatureModerator && $FeatureRequestStatusFormPage !== null) { ?>
 		</tr>
 	</table>
 </form>
+
+<?php
+}
+
+}

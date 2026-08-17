@@ -1,14 +1,12 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var string $Message
- * @var string $ProcessGossipHREF
- * @var string $ProcessTipHREF
- * @var string $BackHREF
- * @var string $ListenHREF
- */
+namespace Smr\Pages\Player\Bar;
 
+use Smr\Player;
+
+class TalkToBartenderRenderer {
+
+public static function render(Player $ThisPlayer, string $Message, string $ProcessGossipHREF, string $ProcessTipHREF, string $BackHREF, string $ListenHREF): void {
 ?>
 <p><?php echo $Message; ?></p>
 <br />
@@ -27,3 +25,7 @@
 <a href="<?php echo $BackHREF; ?>" class="submitStyle">Enough talk</a>
 &nbsp;&nbsp;
 <a href="<?php echo $ListenHREF; ?>" class="submitStyle">Keep listening</a>
+<?php
+}
+
+}

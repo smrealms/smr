@@ -1,10 +1,21 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array{Nick: string, PageViews: int, ImgSrc: string, Location: string, Email: string, Website: string, Birthdate: string, OtherInfo: string, AccountID: int} $Entry
- * @var array<array{id: int, date: string, commenter: string, msg: string}> $Comments
- */
+namespace Smr\Pages\Album;
 
+class EntryRenderer {
+
+/**
+ * @param array{Nick: string, PageViews: int, ImgSrc: string, Location: string, Email: string, Website: string, Birthdate: string, OtherInfo: string, AccountID: int} $Entry
+ * @param array<array{id: int, date: string, commenter: string, msg: string}> $Comments
+ */
+public static function render(
+	?string $PrevNick,
+	?string $NextNick,
+	array $Entry,
+	array $Comments,
+	bool $CanModerate,
+	?string $ViewerDisplayName,
+): void {
 ?>
 <table border="0" cellpadding="5" cellspacing="0">
 	<tr>
@@ -94,7 +105,7 @@
 								<br />
 								<?php echo create_submit('action', 'Send'); ?>
 							</td><?php
-							if (isset($CanModerate) && $CanModerate) { ?>
+							if ($CanModerate) { ?>
 								<td>
 									<br />
 									<?php echo create_submit('action', 'Moderate', fields: ['formnovalidate' => true]); ?>
@@ -109,3 +120,7 @@
 		</td>
 	</tr>
 </table>
+<?php
+}
+
+}

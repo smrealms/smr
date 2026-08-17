@@ -1,13 +1,25 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Alliance $Alliance
- * @var Smr\Template $this
- * @var array<Smr\Planet> $AllPlanets
- * @var bool $PlayerOnly
- * @var string $ExtraInclude
- */
+namespace Smr\Pages\Shared;
 
+use Smr\Alliance;
+use Smr\Planet;
+use Smr\Player;
+use Smr\Template;
+
+class PlanetListRenderer {
+
+/**
+ * @param array<\Smr\Planet> $AllPlanets
+ */
+public static function render(
+	Template $template,
+	?Alliance $Alliance,
+	array $AllPlanets,
+	?Planet $PlayerPlanet,
+	Player $ThisPlayer,
+	bool $Financial,
+): void {
 ?>
 <div class="center">
 	<?php
@@ -16,7 +28,7 @@
 	}
 
 	if (count($AllPlanets) === 0) {
-		if ($PlayerOnly) { ?>
+		if ($Alliance === null) { ?>
 			You do not own a planet!
 			<a href="<?php echo WIKI_URL; ?>/game-guide/locations#planets" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Planets"/></a>
 			<?php
@@ -26,9 +38,26 @@
 			<?php
 		}
 	} else {
-		if (!$PlayerOnly) { ?>
+		if ($Alliance !== null) { ?>
 			<?php echo $Alliance->getAllianceDisplayName(true); ?> currently has <span id="numplanets"><?php echo pluralise(count($AllPlanets), 'planet'); ?></span> in the universe!<br /><br /><?php
 		}
-		$this->includeTemplate($ExtraInclude, ['Planets' => $AllPlanets]);
+		if ($Financial) {
+			PlanetListFinancialRenderer::render(
+				template: $template,
+				Planets: $AllPlanets,
+				ThisPlayer: $ThisPlayer,
+			);
+		} else {
+			PlanetListDefenseRenderer::render(
+				template: $template,
+				Planets: $AllPlanets,
+				ThisPlayer: $ThisPlayer,
+			);
+		}
 	} ?>
 </div>
+
+<?php
+}
+
+}

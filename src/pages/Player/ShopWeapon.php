@@ -10,8 +10,6 @@ use Smr\Template;
 
 class ShopWeapon extends PlayerPage {
 
-	public string $file = 'shop_weapon.php';
-
 	public function __construct(
 		private readonly int $locationID,
 	) {}
@@ -19,7 +17,6 @@ class ShopWeapon extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$location = Location::getLocation($player->getGameID(), $this->locationID);
 		$template->pageTopic = $location->getName();
-		$template->assign('ThisLocation', $location);
 
 		$weaponsSold = $location->getWeaponsSold();
 
@@ -30,7 +27,13 @@ class ShopWeapon extends PlayerPage {
 			$weaponsSold[$weapon->getWeaponTypeID()] = $weapon;
 		}
 
-		$template->assign('WeaponsSold', $weaponsSold);
+		$template->pageRenderer = fn() => ShopWeaponRenderer::render(
+			template: $template,
+			ThisLocation: $location,
+			WeaponsSold: $weaponsSold,
+			ThisPlayer: $player,
+			ThisShip: $player->getShip(),
+		);
 	}
 
 }

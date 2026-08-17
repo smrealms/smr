@@ -1,10 +1,12 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var string $BuyHREF
- */
+namespace Smr\Pages\Player\Bar;
 
+use Smr\Player;
+
+class BuyGalaxyMapRenderer {
+
+public static function render(Player $ThisPlayer, string $BuyHREF): void {
 ?>
 <div class="center">
 	<p>What galaxy do you want maps for?</p>
@@ -19,3 +21,7 @@
 		<?php echo create_submit_display('Buy the map'); ?>
 	</form>
 </div>
+<?php
+}
+
+}

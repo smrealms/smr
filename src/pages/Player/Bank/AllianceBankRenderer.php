@@ -1,25 +1,36 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bank;
+
+use Smr\Account;
 use Smr\Globals;
+use Smr\Player;
+
+class AllianceBankRenderer {
 
 /**
- * @var Smr\Account $ThisAccount
- * @var Smr\Player $ThisPlayer
- * @var array<int, Smr\Alliance> $AlliedAllianceBanks
- * @var bool $CanExempt
- * @var ?int $TotalWithdrawn
- * @var ?int $WithdrawalPerDay
- * @var ?int $RemainingWithdrawal
- * @var array<int, array{Time: int, Player: Smr\Player, Reason: string, TransactionType: string, Withdrawal: string, Deposit: string, Exempt: bool}> $BankTransactions
- * @var ?string $EndingBalance
- * @var ?int $MinValue
- * @var ?int $MaxValue
- * @var ?string $FilterTransactionsFormHREF
- * @var ?string $ExemptTransactionsFormHREF
- * @var string $BankReportHREF
- * @var Smr\Pages\Player\Bank\AllianceBankProcessor $BankTransactionForm
+ * @param array<int, \Smr\Alliance> $AlliedAllianceBanks
+ * @param array<int, array{Time: int, Player: \Smr\Player, Reason: string, TransactionType: string, Withdrawal: string, Deposit: string, Exempt: bool}> $BankTransactions
  */
-
+public static function render(
+	array $AlliedAllianceBanks,
+	bool $CanExempt,
+	?int $PositiveWithdrawal,
+	bool $UnlimitedWithdrawal,
+	int $WithdrawalPerDay,
+	?int $RemainingWithdrawal,
+	?int $TotalWithdrawn,
+	array $BankTransactions,
+	?int $MinValue,
+	?int $MaxValue,
+	?string $FilterTransactionsFormHREF,
+	?string $ExemptTransactionsFormHREF,
+	string $EndingBalance,
+	string $BankReportHREF,
+	AllianceBankProcessor $BankTransactionForm,
+	Account $ThisAccount,
+	Player $ThisPlayer,
+): void {
 if (count($AlliedAllianceBanks) > 0) { ?>
 	<ul><?php
 	foreach ($AlliedAllianceBanks as $AlliedAlliance) { ?>
@@ -31,11 +42,11 @@ if (count($AlliedAllianceBanks) > 0) { ?>
 } ?>
 
 Hello <?php echo $ThisPlayer->getDisplayName(); ?>,<br /><?php
-if (isset($UnlimitedWithdrawal) && $UnlimitedWithdrawal === true) {
+if ($UnlimitedWithdrawal) {
 	?>You can withdraw an unlimited amount from this account.<?php
 } elseif (isset($PositiveWithdrawal)) {
 	?>You can only withdraw <?php echo number_format($PositiveWithdrawal); ?> more credits based on your deposits.<?php
-} elseif (isset($WithdrawalPerDay) && isset($TotalWithdrawn) && isset($RemainingWithdrawal)) { ?>
+} elseif (isset($TotalWithdrawn) && isset($RemainingWithdrawal)) { ?>
 	You can withdraw up to <?php echo number_format($WithdrawalPerDay); ?> credits per 24 hours.<br />
 	So far you have withdrawn <?php echo number_format($TotalWithdrawn); ?> credits in the past 24 hours. You can withdraw <?php echo number_format($RemainingWithdrawal); ?> more credits.<?php
 } ?>
@@ -133,3 +144,8 @@ if (count($BankTransactions) > 0) { ?>
 	<?php echo $BankTransactionForm->actionDeposit->html(); ?>&nbsp;&nbsp;
 	<?php echo $BankTransactionForm->actionWithdraw->html(); ?>
 </form>
+
+<?php
+}
+
+}

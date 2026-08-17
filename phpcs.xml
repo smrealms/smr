@@ -58,6 +58,9 @@
         <!-- We do not demand that all constants have a docstring. -->
         <exclude name="PhpCollective.Commenting.DocBlockConst" />
 
+        <!-- Erroneous sniff. False positive on nullable array shape (?array{...}). -->
+        <exclude name="PhpCollective.Commenting.DocBlockReturnNull.MissingNullable" />
+
         <!-- Docstring for return void is redundant with typehint. -->
         <exclude name="PhpCollective.Commenting.DocBlockReturnVoid" />
 
@@ -115,21 +118,21 @@
 
     <!-- PHP/HTML intermixing in templates breaks indentation depth calculation. -->
     <rule ref="Generic.WhiteSpace.ScopeIndent">
-        <exclude-pattern>src/templates/*</exclude-pattern>
+        <exclude-pattern>src/pages/*Renderer\.php</exclude-pattern>
     </rule>
 
     <!-- Inline control structures useful in templates for HTML formatting. -->
     <rule ref="PEAR.ControlStructures.ControlSignature">
-        <exclude-pattern>src/templates/*</exclude-pattern>
+        <exclude-pattern>src/pages/*Renderer\.php</exclude-pattern>
     </rule>
     <rule ref="Generic.ControlStructures.InlineControlStructure">
-        <exclude-pattern>src/templates/*</exclude-pattern>
+        <exclude-pattern>src/pages/*Renderer\.php</exclude-pattern>
     </rule>
     <rule ref="PhpCollective.ControlStructures.NoInlineAssignment">
-        <exclude-pattern>src/templates/*</exclude-pattern>
+        <exclude-pattern>src/pages/*Renderer\.php</exclude-pattern>
     </rule>
     <rule ref="Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace">
-        <exclude-pattern>src/templates/*</exclude-pattern>
+        <exclude-pattern>src/pages/*Renderer\.php</exclude-pattern>
     </rule>
 
     <!-- Ignore unknown docstring tags. -->
@@ -154,11 +157,6 @@
     </rule>
     <rule ref="PhpCollective.Commenting.DocBlockReturnNullableType.ReturnNullableMissing">
         <severity>0</severity>
-    </rule>
-
-    <!-- Allow assignment in else-if where it is really needed. -->
-    <rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition">
-        <exclude-pattern>src/templates/Default/engine/Default/alliance_roster\.php</exclude-pattern>
     </rule>
 
     <!-- Ignore unused variable warnings for bad global variables. Fix ASAP! -->

@@ -1,12 +1,17 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Planet $ThisPlanet
- * @var Smr\Player $ThisPlayer
- * @var Smr\Ship $ThisShip
- * @var array<int, Smr\TradeGood> $Goods
- */
+namespace Smr\Pages\Player\Planet;
 
+use Smr\AbstractShip;
+use Smr\Planet;
+use Smr\Player;
+
+class ConstructionRenderer {
+
+/**
+ * @param array<int, \Smr\TradeGood> $Goods
+ */
+public static function render(array $Goods, Planet $ThisPlanet, Player $ThisPlayer, AbstractShip $ThisShip): void {
 ?>
 You are currently building: <?php
 	if ($ThisPlanet->hasCurrentlyBuilding()) {
@@ -75,4 +80,8 @@ if ($ThisPlanet->hasStockpile()) { ?>
 	</ul><?php
 } else { ?>
 	Nothing!</p><?php
+}
+
+}
+
 }

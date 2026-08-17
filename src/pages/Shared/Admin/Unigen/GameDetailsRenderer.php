@@ -1,7 +1,19 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Shared\Admin\Unigen;
+
 use Smr\Game;
 
+class GameDetailsRenderer {
+
+/**
+ * @param array{name: string, description: string, speed: float, maxTurns: int, startTurnHours: int, maxPlayers: int, joinDate: string, startDate: string, endDate: string, smrCredits: int, gameType: string, allianceMax: int, allianceMaxVets: int, startCredits: int, ignoreStats: bool, relations: int, destroyPorts: bool} $Game
+ */
+public static function render(
+	array $Game,
+	string $ProcessingHREF,
+	string $SubmitValue,
+): void {
 ?>
 <form method="POST" action="<?php echo $ProcessingHREF; ?>">
 	<table class="standard">
@@ -97,3 +109,8 @@ use Smr\Game;
 	</tr>
 	</table>
 </form>
+
+<?php
+}
+
+}

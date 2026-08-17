@@ -1,16 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
+class BuyMessageNotificationsRenderer {
+
+/** @param array<array{Name: string, MessagesRemaining: int, MessagesPerCredit: int, BuyHref: string}> $MessageBoxes */
+public static function render(?string $Message, array $MessageBoxes): void {
 if (isset($Message)) {
 	echo $Message; ?>
 	<br /><br /><?php
 }
+
 ?>
 
 <span class="red">WARNING:</span> You will only receive message notifications after you log out or are inactive for <?php echo format_time(TIME_BEFORE_INACTIVE); ?>.<br />
 Messages will be sent to your currently validated email, so make sure that is the email address to which you wish to receive emails.<br />
 <br />
 <?php
-if (isset($MessageBoxes)) { ?>
+if (count($MessageBoxes) > 0) { ?>
 	<table class="standard">
 		<tr>
 			<th>Message Type</th>
@@ -31,4 +38,8 @@ if (isset($MessageBoxes)) { ?>
 			</tr><?php
 		} ?>
 	</table><?php
+}
+
+}
+
 }

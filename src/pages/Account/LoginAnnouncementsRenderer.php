@@ -1,11 +1,15 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Account $ThisAccount
- * @var array<array{Time: int, Msg: string}> $Announcements
- * @var string $ContinueHREF
- */
+namespace Smr\Pages\Account;
 
+use Smr\Account;
+
+class LoginAnnouncementsRenderer {
+
+/**
+ * @param array<array{Time: int, Msg: string}> $Announcements
+ */
+public static function render(array $Announcements, string $ContinueHREF, Account $ThisAccount): void {
 ?>
 <table class="standard fullwidth">
 	<tr>
@@ -31,3 +35,8 @@
 <div class="buttonA">
 	<a class="buttonA" href="<?php echo $ContinueHREF; ?>">Continue</a>
 </div>
+
+<?php
+}
+
+}

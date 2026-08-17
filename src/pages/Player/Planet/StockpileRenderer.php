@@ -1,9 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<array{Name: string, ImageHTML: string, ShipAmount: int, PlanetAmount: int, DefaultAmount: int, Page: Smr\Pages\Player\Planet\StockpileProcessor}> $GoodInfo
- */
+namespace Smr\Pages\Player\Planet;
 
+class StockpileRenderer {
+
+/**
+ * @param array<array{Name: string, ImageHTML: string, ShipAmount: int, PlanetAmount: int, DefaultAmount: int, Page: \Smr\Pages\Player\Planet\StockpileProcessor}> $GoodInfo
+ */
+public static function render(array $GoodInfo): void {
 if (count($GoodInfo) === 0) { ?>
 	<p>There are no goods present on your ship or the planet!</p><?php
 	return;
@@ -37,3 +41,8 @@ if (count($GoodInfo) === 0) { ?>
 		</form><?php
 	} ?>
 </table>
+
+<?php
+}
+
+}

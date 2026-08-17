@@ -10,8 +10,6 @@ use Smr\Template;
 
 class PlotCourseResult extends PlayerPage {
 
-	public string $file = 'course_plot_result.php';
-
 	public function __construct(
 		private readonly Path $path,
 	) {}
@@ -23,8 +21,7 @@ class PlotCourseResult extends PlayerPage {
 		$template->pageTopic = 'Plot A Course';
 		Menu::navigation($player);
 
-		$template->assign('Path', $path);
-		$template->assign('FullPath', $fullPath);
+		$template->pageRenderer = fn() => PlotCourseResultRenderer::render($path, $fullPath);
 	}
 
 }

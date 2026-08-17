@@ -1,14 +1,21 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\AdminPermissions;
 
+class AdminToolsRenderer {
+
+/**
+ * @param array<int, list<array{Link: string|false, Name: string}>> $AdminPermissions
+ */
+public static function render(?string $ErrorMessage, ?string $Message, array $AdminPermissions): void {
 if (isset($ErrorMessage)) {
 	echo $ErrorMessage; ?><br /><br /><?php
 }
 if (isset($Message)) {
 	echo $Message; ?><br /><br /><?php
 }
-if (isset($AdminPermissions)) {
 	foreach ($AdminPermissions as $CategoryID => $Permissions) { ?>
 		<h2><?php echo AdminPermissions::getCategoryName($CategoryID); ?></h2>
 		<ul><?php
@@ -23,4 +30,7 @@ if (isset($AdminPermissions)) {
 		} ?>
 		</ul><?php
 	}
+
+}
+
 }

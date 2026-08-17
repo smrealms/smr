@@ -1,14 +1,30 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use Smr\Combat\Results\PlanetFullCombatResults;
 use Smr\Globals;
+use Smr\Pages\Shared\PlanetFullCombatResultsRenderer;
+use Smr\Planet;
+use Smr\Player;
+use Smr\Template;
 
-/**
- * @var Smr\Planet $Planet
- * @var Smr\Template $this
- * @var bool $OverrideDeath
- */
+class AttackPlanetRenderer {
 
-$this->includeTemplate('includes/PlanetFullCombatResults.inc.php'); ?><br />
+public static function render(
+	Template $template,
+	PlanetFullCombatResults $FullPlanetCombatResults,
+	bool $OverrideDeath,
+	Planet $Planet,
+	Player $ThisPlayer,
+): void {
+PlanetFullCombatResultsRenderer::render(
+	template: $template,
+	MinimalDisplay: false,
+	FullPlanetCombatResults: $FullPlanetCombatResults,
+	ThisPlayer: $ThisPlayer,
+	AttackLogLink: null,
+); ?><br />
 <br />
 <div class="center"><?php
 if (!$OverrideDeath && !$Planet->isBusted()) { ?>
@@ -34,3 +50,8 @@ if (!$OverrideDeath && !$Planet->isBusted()) { ?>
 	</div><?php
 } ?>
 </div>
+
+<?php
+}
+
+}

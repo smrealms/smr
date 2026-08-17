@@ -1,10 +1,19 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Template $this
- * @var ForceAttackerCombatResults $TraderTeamCombatResults
- */
+namespace Smr\Pages\Shared;
 
+use Exception;
+use Smr\Template;
+
+class ForceTraderTeamCombatResultsRenderer {
+
+/**
+ * @param ForceAttackerCombatResults $TraderTeamCombatResults
+ */
+public static function render(
+	Template $template,
+	array $TraderTeamCombatResults,
+): void {
 $AllTraderResults = $TraderTeamCombatResults['Traders'];
 foreach ($AllTraderResults as $TraderResults) {
 	$ShootingPlayer = $TraderResults['Player'];
@@ -36,7 +45,7 @@ foreach ($AllTraderResults as $TraderResults) {
 						?> but it cannot do any damage<?php
 					}
 				} else {
-					?> destroying <?php echo $this->displayForceTakenDamage($ActualDamage);
+					?> destroying <?php echo $template->displayForceTakenDamage($ActualDamage);
 				}
 			} ?>.
 			<br />
@@ -81,7 +90,7 @@ foreach ($AllTraderResults as $TraderResults) {
 								?> whilst the others destroy <?php
 							}
 						}
-						echo $this->displayForceTakenDamage($ActualDamage, $WeaponDamage['Kamikaze']);
+						echo $template->displayForceTakenDamage($ActualDamage, $WeaponDamage['Kamikaze']);
 					}
 				}
 			}?>.
@@ -103,3 +112,8 @@ foreach ($AllTraderResults as $TraderResults) {
 }
 $TotalDamage = $TraderTeamCombatResults['TotalDamage']; ?>
 This fleet <?php if ($TotalDamage > 0) { ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php } else { ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.
+
+<?php
+}
+
+}

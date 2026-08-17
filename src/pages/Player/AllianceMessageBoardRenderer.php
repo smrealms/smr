@@ -1,11 +1,24 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Account $ThisAccount
- * @var Smr\Template $this
- * @var array<int, array{DeleteHref?: string, Replies: int, Sender: string, SendTime: int, ThreadID: int, Topic: string, Unread: bool, ViewHref: string}> $Threads
- */
+namespace Smr\Pages\Player;
 
+use Smr\Account;
+use Smr\Template;
+
+class AllianceMessageBoardRenderer {
+
+/**
+ * @param array<int, array{DeleteHref?: string, Replies: int, Sender: string, SendTime: int, ThreadID: int, Topic: string, Unread: bool, ViewHref: string}> $Threads
+ */
+public static function render(
+	Template $template,
+	array $Threads,
+	?AllianceMessageBoardAddProcessor $CreateNewThreadFormPage,
+	?string $Preview,
+	?string $Topic,
+	?bool $AllianceEyesOnly,
+	Account $ThisAccount,
+): void {
 if (count($Threads) > 0) { ?>
 	<table id="topic-list" class="centered standard inset">
 		<thead>
@@ -40,7 +53,7 @@ if (count($Threads) > 0) { ?>
 			} ?>
 		</tbody>
 	</table><br /><?php
-	$this->listjsInclude = 'alliance_message';
+	$template->listjsInclude = 'alliance_message';
 }
 
 if (isset($CreateNewThreadFormPage)) { ?>
@@ -60,4 +73,8 @@ if (isset($CreateNewThreadFormPage)) { ?>
 	</table><br />
 	<?php echo $CreateNewThreadFormPage->actionCreate->html('New Thread'); ?>&nbsp;<?php echo $CreateNewThreadFormPage->actionPreview->html('Preview Thread'); ?>
 	</form><?php
+}
+
+}
+
 }

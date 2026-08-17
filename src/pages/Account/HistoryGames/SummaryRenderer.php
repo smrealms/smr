@@ -1,23 +1,31 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $GameName
- * @var string $Start
- * @var string $End
- * @var string $Type
- * @var float $Speed
- * @var int $NumAlliances
- * @var int $NumPlayers
- * @var int $MaxExp
- * @var int $MaxAlign
- * @var int $MinAlign
- * @var int $MaxKills
- * @var array<array{bold: string, exp: int, name: string}> $PlayerExp
- * @var array<array{bold: string, kills: int, name: string}> $PlayerKills
- * @var array<array{bold: string, exp: int, link: string}> $AllianceExp
- * @var array<array{bold: string, kills: int, link: string}> $AllianceKills
- */
+namespace Smr\Pages\Account\HistoryGames;
 
+class SummaryRenderer {
+
+/**
+ * @param array<array{bold: string, exp: int, name: string}> $PlayerExp
+ * @param array<array{bold: string, kills: int, name: string}> $PlayerKills
+ * @param array<array{bold: string, exp: int, link: string}> $AllianceExp
+ * @param array<array{bold: string, kills: int, link: string}> $AllianceKills
+ */
+public static function render(
+	string $GameName,
+	string $Start,
+	string $End,
+	string $Type,
+	float $Speed,
+	int $NumPlayers,
+	int $MaxExp,
+	int $MaxAlign,
+	int $MinAlign,
+	int $NumAlliances,
+	array $PlayerExp,
+	array $PlayerKills,
+	array $AllianceExp,
+	array $AllianceKills,
+): void {
 ?>
 <table class="center">
 	<tr>
@@ -165,3 +173,8 @@
 	</tr>
 </table>
 <br />
+
+<?php
+}
+
+}

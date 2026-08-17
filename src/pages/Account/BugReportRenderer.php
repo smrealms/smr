@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
+use Smr\Account;
 use Smr\Globals;
 
-/**
- * @var Smr\Account $ThisAccount
- */
+class BugReportRenderer {
 
+public static function render(Account $ThisAccount): void {
 ?>
 All information on this page will be sent to the admin team.<br />
 Be as accurate as possible with your bug description.
@@ -52,3 +54,8 @@ Be as accurate as possible with your bug description.
 
 	</table>
 </form>
+
+<?php
+}
+
+}

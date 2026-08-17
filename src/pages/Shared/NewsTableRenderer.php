@@ -1,9 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<array{Date: string, Message: string}> $NewsItems
- */
+namespace Smr\Pages\Shared;
 
+class NewsTableRenderer {
+
+/**
+ * @param array<array{Date: string, Message: string}> $NewsItems
+ */
+public static function render(array $NewsItems): void {
 ?>
 <table class="standard fullwidth">
 	<tr>
@@ -18,3 +22,8 @@
 		</tr><?php
 	} ?>
 </table>
+
+<?php
+}
+
+}

@@ -1,15 +1,18 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Account $ThisAccount
- * @var Smr\Template $this
- * @var array<int, array<string, mixed>> $Teams
- * @var int $PlayerID
- * @var bool $CanPick
- * @var array<array{Player: Smr\Player, HREF: string}> $PickPlayers
- * @var array<array{Leader: Smr\Player, Player: Smr\Player, Time: int}> $History
- */
+namespace Smr\Pages\Player;
 
+use Smr\Account;
+use Smr\Template;
+
+class AllianceDraftMemberRenderer {
+
+/**
+ * @param array<int, array{Leader: \Smr\Player, Size: int, Alliance?: \Smr\Alliance, CanPick: bool}> $Teams
+ * @param array<array{Player: \Smr\Player, HREF: string}> $PickPlayers
+ * @param array<array{Leader: \Smr\Player, Player: \Smr\Player, Time: int}> $History
+ */
+public static function render(Template $template, array $Teams, int $PlayerID, bool $CanPick, array $PickPlayers, array $History, Account $ThisAccount): void {
 ?>
 <table class="standard">
 	<tr>
@@ -82,7 +85,7 @@ if (count($PickPlayers) > 0) { ?>
 			} ?>
 		</tbody>
 	</table><?php
-	$this->listjsInclude = 'alliance_pick';
+	$template->listjsInclude = 'alliance_pick';
 } else {
 	?>No one left to pick.<?php
 } ?>
@@ -115,4 +118,8 @@ if (count($History) > 0) { ?>
 	</table><?php
 } else { ?>
 	No picks have been made yet.<?php
+}
+
+}
+
 }

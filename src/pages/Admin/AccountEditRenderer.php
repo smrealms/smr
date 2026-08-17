@@ -1,12 +1,31 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+use Smr\Account;
 use Smr\Epoch;
 
-/**
- * @var Smr\Account $EditingAccount
- * @var Smr\Account $ThisAccount
- */
+class AccountEditRenderer {
 
+/**
+ * @param array<int, \Smr\Player> $EditingPlayers
+ * @param array<int, string> $BanReasons
+ * @param array<array{Time: int, Action: string, AdminName: string}> $ClosingHistory
+ * @param array<array{IP: string, Time: int, Host: string}> $RecentIPs
+ * @param array{Reason: string, ReasonID: int, Time: int}|false $Disabled
+ */
+public static function render(
+	Account $EditingAccount,
+	string $EditFormHREF,
+	string $ResetFormHREF,
+	array $EditingPlayers,
+	array|false $Disabled,
+	array $BanReasons,
+	array $ClosingHistory,
+	?string $Exception,
+	array $RecentIPs,
+	Account $ThisAccount,
+): void {
 ?>
 <form name="form_acc" method="POST" action="<?php echo $EditFormHREF; ?>">
 	<table cellpadding="3" border="0">
@@ -299,3 +318,8 @@ use Smr\Epoch;
 	<?php echo create_submit_display('Edit Account'); ?>&nbsp;&nbsp;
 	<div class="buttonA"><a class="buttonA" href="<?php echo $ResetFormHREF; ?>">Reset Form</a></div>
 </form>
+
+<?php
+}
+
+}

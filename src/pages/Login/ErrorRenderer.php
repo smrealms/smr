@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $ErrorMessage
- */
+namespace Smr\Pages\Login;
 
+class ErrorRenderer {
+
+public static function render(string $ErrorMessage): void {
 ?>
 <div class="centered" style="width: 510px;">
 	<h1><span class="red">ERROR</span></h1>
@@ -20,3 +21,7 @@
 
 	<p><img src="images/escape_pod.jpg"></p>
 </div>
+<?php
+}
+
+}

@@ -13,17 +13,12 @@ class AllianceRemoveMember extends PlayerPage {
 
 	use ReusableTrait;
 
-	public string $file = 'alliance_remove_member.php';
-
 	public function build(Player $player, Template $template): void {
 		$account = $player->getAccount();
 		$alliance = $player->getAlliance();
 
 		$template->pageTopic = $alliance->getAllianceDisplayName(false, true);
 		Menu::alliance($alliance->getAllianceID());
-
-		$container = new AllianceRemoveMemberProcessor();
-		$template->assign('BanishHREF', $container->href());
 
 		// Get alliance members sorted by most active first
 		$alliancePlayers = $alliance->getMembers(includeNpc: false);
@@ -46,7 +41,10 @@ class AllianceRemoveMember extends PlayerPage {
 				'account_id' => $alliancePlayer->getAccountID(),
 			];
 		}
-		$template->assign('Members', $members);
+		$template->pageRenderer = fn() => AllianceRemoveMemberRenderer::render(
+			Members: $members,
+			BanishHREF: new AllianceRemoveMemberProcessor()->href(),
+		);
 	}
 
 }

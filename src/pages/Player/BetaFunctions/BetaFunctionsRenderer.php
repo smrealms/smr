@@ -1,32 +1,42 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\BetaFunctions;
+
+use Smr\Player;
 use Smr\Race;
+use Smr\Sector;
+
+class BetaFunctionsRenderer {
 
 /**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Sector $ThisSector
- * @var string $MapHREF
- * @var string $MoneyHREF
- * @var string $UnoHREF
- * @var string $RemoveWeaponsHREF
- * @var string $AddWeaponHREF
- * @var array<int, string> $WeaponList
- * @var string $ShipHREF
- * @var array<int, string> $ShipList
- * @var string $HardwareHREF
- * @var array<int, string> $Hardware
- * @var string $WarpHREF
- * @var string $TurnsHREF
- * @var string $ExperienceHREF
- * @var string $AlignmentHREF
- * @var string $PersonalRelationsHREF
- * @var string $RaceRelationsHREF
- * @var string $ChangeRaceHREF
- * @var ?string $MaxBuildingsHREF
- * @var ?string $MaxDefensesHREF
- * @var ?string $MaxStockpileHREF
+ * @param array<int, string> $ShipList
+ * @param array<int, string> $WeaponList
+ * @param array<int, string> $Hardware
  */
-
+public static function render(
+	string $MapHREF,
+	string $MoneyHREF,
+	string $ShipHREF,
+	array $ShipList,
+	string $AddWeaponHREF,
+	array $WeaponList,
+	string $RemoveWeaponsHREF,
+	string $UnoHREF,
+	string $WarpHREF,
+	string $TurnsHREF,
+	string $ExperienceHREF,
+	string $AlignmentHREF,
+	string $HardwareHREF,
+	array $Hardware,
+	string $PersonalRelationsHREF,
+	string $RaceRelationsHREF,
+	string $ChangeRaceHREF,
+	?string $MaxBuildingsHREF,
+	?string $MaxDefensesHREF,
+	?string $MaxStockpileHREF,
+	Player $ThisPlayer,
+	Sector $ThisSector,
+): void {
 ?>
 <span class="bold red">WARNING! Please be reasonable with the changes you make! For example, do not load more onto a ship than it is supposed to have, don't put yourself in a sector that doesn't exist, etc.</span><br />
 
@@ -131,4 +141,8 @@ if ($ThisSector->hasPlanet()) { ?>
 	<p><a href="<?php echo $MaxBuildingsHREF; ?>">Set buildings to max</a></p>
 	<p><a href="<?php echo $MaxDefensesHREF; ?>">Set defenses to max</a></p>
 	<p><a href="<?php echo $MaxStockpileHREF; ?>">Set stockpile to max</a></p><?php
+}
+
+}
+
 }

@@ -1,10 +1,14 @@
 <?php declare(strict_types=1);
 
-/**
- * @var ?bool $HideAlliedForces
- * @var ?bool $ShowSeedlistSectors
- */
+namespace Smr\Pages\Shared;
 
+class SectorMapOptionsRenderer {
+
+public static function render(
+	?bool $HideAlliedForces,
+	?bool $ShowSeedlistSectors,
+	?string $CheckboxFormHREF,
+): void {
 if (isset($CheckboxFormHREF)) { ?>
 	<form method="POST" action="<?php echo $CheckboxFormHREF; ?>">
 		<table>
@@ -19,4 +23,8 @@ if (isset($CheckboxFormHREF)) { ?>
 		</table>
 		<input type=hidden name="change_settings" />
 	</form><?php
+}
+
+}
+
 }

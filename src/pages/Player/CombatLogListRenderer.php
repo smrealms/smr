@@ -1,16 +1,28 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Account $ThisAccount
- * @var Smr\Template $this
- * @var string $LogType
- * @var int $TotalLogs
- * @var ?bool $CanSave
- * @var ?bool $CanDelete
- * @var ?Smr\Pages\Player\CombatLogListProcessor $LogFormPage
- * @var array<int, array{Attacker: string, Defender: string, Time: int, Sector: int}> $Logs
- */
+namespace Smr\Pages\Player;
 
+use Smr\Account;
+use Smr\Template;
+
+class CombatLogListRenderer {
+
+/**
+ * @param array<int, array{Attacker: string, Defender: string, Time: int, Sector: int}> $Logs
+ */
+public static function render(
+	Template $template,
+	?string $Message,
+	int $TotalLogs,
+	string $LogType,
+	CombatLogListProcessor $LogFormPage,
+	?string $PreviousPage,
+	?string $NextPage,
+	bool $CanDelete,
+	bool $CanSave,
+	array $Logs,
+	Account $ThisAccount,
+): void {
 if (isset($Message)) {?>
 	<div class="center"><?php echo $Message; ?></div><br /><?php
 } ?>
@@ -18,9 +30,7 @@ if (isset($Message)) {?>
 <div class="center"><?php
 	$NumLogs = count($Logs);
 	if ($NumLogs > 0) {
-		if ($LogFormPage === null) {
-			throw new Exception('Expected non-null LogFormPage');
-		} ?>
+		?>
 		You have <span id="total-logs"><?php echo pluralise($TotalLogs, $LogType . ' log'); ?></span> available for viewing (<?php echo $NumLogs; ?> shown).<br /><br />
 		<form class="standard" method="POST" action="<?php echo $LogFormPage->href(); ?>">
 			<table class="fullwidth center">
@@ -72,8 +82,13 @@ if (isset($Message)) {?>
 				</tbody>
 			</table>
 		</form>
-		<?php $this->listjsInclude = 'combat_log_list';
+		<?php $template->listjsInclude = 'combat_log_list';
 	} else { ?>
 		No <?php echo $LogType; ?> combat logs found<?php
 	} ?>
 </div>
+
+<?php
+}
+
+}

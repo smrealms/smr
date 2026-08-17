@@ -1,13 +1,18 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Location $ThisLocation
- * @var Smr\Player $ThisPlayer
- * @var Smr\Ship $ThisShip
- * @var Smr\Template $this
- * @var array<int, Smr\Combat\Weapon\Weapon> $WeaponsSold
- */
+namespace Smr\Pages\Player;
 
+use Smr\AbstractShip;
+use Smr\Location;
+use Smr\Player;
+use Smr\Template;
+
+class ShopWeaponRenderer {
+
+/**
+ * @param array<int, \Smr\Combat\Weapon\Weapon> $WeaponsSold
+ */
+public static function render(Template $template, Location $ThisLocation, array $WeaponsSold, Player $ThisPlayer, AbstractShip $ThisShip): void {
 if ($ThisLocation->isWeaponSold()) { ?>
 	<h2>Buy weapons:</h2><br />
 	<table id="weapon-list" class="center standard">
@@ -40,7 +45,7 @@ if ($ThisLocation->isWeaponSold()) { ?>
 		</tbody>
 	</table>
 
-	<?php $this->listjsInclude = 'shop_weapon';
+	<?php $template->listjsInclude = 'shop_weapon';
 }
 
 if ($ThisShip->hasWeapons()) { ?>
@@ -68,4 +73,8 @@ if ($ThisShip->hasWeapons()) { ?>
 			</tr><?php
 		} ?>
 	</table><?php
+}
+
+}
+
 }

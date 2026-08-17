@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
-/**
- * @var ?string $ProcessingMsg
- * @var array<int, string> $DisabledGames
- */
+namespace Smr\Pages\Admin;
 
+class EnableGameRenderer {
+
+/** @param array<int, string> $DisabledGames */
+public static function render(?string $ProcessingMsg, array $DisabledGames, string $EnableGameHREF): void {
 // This var is passed by the processing file if we enabled a game
 if (isset($ProcessingMsg)) {
 	echo $ProcessingMsg;
@@ -35,4 +36,8 @@ if (count($DisabledGames) === 0) { ?>
 			</tr>
 		</table>
 	</form> <?php
+}
+
+}
+
 }

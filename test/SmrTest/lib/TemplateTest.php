@@ -20,27 +20,6 @@ class TemplateTest extends TestCase {
 		DiContainer::initialize(false);
 	}
 
-	public function test_assign_unassign(): void {
-		$template = Template::getInstance();
-		$template->assign('foo', 'bar');
-		self::assertTrue($template->hasTemplateVar('foo'));
-		$template->unassign('foo');
-		self::assertFalse($template->hasTemplateVar('foo'));
-	}
-
-	public function test_assign_same_variable_twice_throws(): void {
-		$template = Template::getInstance();
-		$template->assign('foo', 'bar');
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Cannot re-assign template variable \'foo\'!');
-		try {
-			$template->assign('foo', 'barbar');
-		} catch (Exception $err) {
-			$template->unassign('foo'); // avoid destructor warning
-			throw $err;
-		}
-	}
-
 	public function test_pageTopic(): void {
 		$template = Template::getInstance();
 		$template->pageTopic = 'foo';

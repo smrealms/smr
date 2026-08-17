@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<array{type: string, player: string, reason: string, amount: string, transactionID: int}> $Transactions
- * @var string $ExemptHREF
- */
+namespace Smr\Pages\Player;
 
+class AllianceExemptAuthorizeRenderer {
+
+/** @param array<array{type: string, player: string, reason: string, amount: string, transactionID: int}> $Transactions */
+public static function render(array $Transactions, string $ExemptHREF): void {
 ?>
 <h2>Exemption Requests</h2>
 <br /><?php
@@ -34,4 +35,8 @@ if (count($Transactions) > 0) { ?>
 	</form><?php
 } else { ?>
 	Nothing to authorize.<?php
+}
+
+}
+
 }

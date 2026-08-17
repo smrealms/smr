@@ -1,15 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Shared;
+
 use Smr\Epoch;
 use Smr\Globals;
 use Smr\PlanetMenuOption;
+use Smr\Player;
+use Smr\Template;
+
+class PlanetListFinancialRenderer {
 
 /**
- * @var array<Smr\Planet> $Planets
- * @var Smr\Player $ThisPlayer
- * @var Smr\Template $this
+ * @param array<\Smr\Planet> $Planets
  */
-
+public static function render(
+	Template $template,
+	array $Planets,
+	Player $ThisPlayer,
+): void {
 if (count($Planets) > 0) { ?>
 	<table id="planet-list" class="standard inset center">
 		<thead>
@@ -59,5 +67,9 @@ if (count($Planets) > 0) { ?>
 			} ?>
 		</tbody>
 	</table><br/>
-	<?php $this->listjsInclude = 'PlanetListFinancial';
+	<?php $template->listjsInclude = 'PlanetListFinancial';
+}
+
+}
+
 }

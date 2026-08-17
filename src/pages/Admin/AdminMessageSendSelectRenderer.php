@@ -1,7 +1,11 @@
 <?php declare(strict_types=1);
 
-use Smr\Pages\Admin\AdminMessageSend;
+namespace Smr\Pages\Admin;
 
+class AdminMessageSendSelectRenderer {
+
+/** @param array<\Smr\Game> $ActiveGames */
+public static function render(string $AdminMessageChooseGameFormHref, array $ActiveGames): void {
 ?>
 <form name="AdminMessageChooseGameForm" method="POST" action="<?php echo $AdminMessageChooseGameFormHref; ?>">
 	<p>Please select a game:</p>
@@ -13,3 +17,7 @@ use Smr\Pages\Admin\AdminMessageSend;
 	</select>&nbsp;&nbsp;
 	<?php echo create_submit_display('Select'); ?>
 </form>
+<?php
+}
+
+}

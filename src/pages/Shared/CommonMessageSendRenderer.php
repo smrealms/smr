@@ -1,11 +1,18 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var string $Receiver
- * @var Smr\Pages\Player\MessageSendProcessor $MessageSendPage
- */
+namespace Smr\Pages\Shared;
 
+use Smr\Pages\Player\MessageSendProcessor;
+use Smr\Player;
+
+class CommonMessageSendRenderer {
+
+public static function render(
+	Player $ThisPlayer,
+	string $Receiver,
+	MessageSendProcessor $MessageSendPage,
+	?string $Preview,
+): void {
 if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Preview); ?></td></tr></table><?php } ?>
 <form name="MessageSendForm" method="POST" action="<?php echo $MessageSendPage->href(); ?>">
 	<p>
@@ -16,3 +23,8 @@ if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Previ
 	<br />
 	<?php echo $MessageSendPage->actionSend->html('Send message'); ?>&nbsp;<?php echo $MessageSendPage->actionPreview->html('Preview message'); ?>
 </form>
+
+<?php
+}
+
+}

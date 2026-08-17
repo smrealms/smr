@@ -1,5 +1,21 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+use Smr\Account;
+use Smr\Player;
+
+class MessageBoxReplyRenderer {
+
+public static function render(
+	MessageBoxReplyProcessor $BoxReplyFormPage,
+	Player $Sender,
+	Account $SenderAccount,
+	?string $Preview,
+	int $BanPoints,
+	int $RewardCredits,
+	string $BackHREF,
+): void {
 ?>
 <a href="<?php echo $BackHREF; ?>">&lt;&lt; Back</a><br /><br />
 <?php if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Preview); ?></td></tr></table><br /><?php } ?>
@@ -13,3 +29,8 @@
 	<p>Sending the message will add ban points or reward credits, if specified above.</p>
 	<?php echo $BoxReplyFormPage->actionSend->html(); ?>&nbsp;<?php echo $BoxReplyFormPage->actionPreview->html(); ?>
 </form>
+
+<?php
+}
+
+}

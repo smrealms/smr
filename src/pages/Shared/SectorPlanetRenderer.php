@@ -1,9 +1,12 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Sector $ThisSector
- */
+namespace Smr\Pages\Shared;
 
+use Smr\Sector;
+
+class SectorPlanetRenderer {
+
+public static function render(Sector $ThisSector): void {
 if ($ThisSector->hasPlanet()) {
 	$Planet = $ThisSector->getPlanet(); ?>
 	<table class="standard csl">
@@ -32,3 +35,7 @@ if ($ThisSector->hasPlanet()) {
 		</tr>
 	</table><br />
 <?php }
+
+}
+
+}

@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+class LogConsoleAnonBankRenderer {
+
+/**
+ * @param array<int, array<int, list<array{login: string, amount: string, date: string, type: string, color: string}>>> $AnonLogs
+ */
+public static function render(array $AnonLogs, string $BackHREF): void {
 ?>
 <a href="<?php echo $BackHREF; ?>"><b>&lt; Back</b></a>
 
@@ -29,4 +37,8 @@ foreach ($AnonLogs as $gameID => $AnonAccounts) { ?>
 			} ?>
 		</table><br /><?php
 	}
+}
+
+}
+
 }

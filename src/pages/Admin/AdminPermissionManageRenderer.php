@@ -1,7 +1,16 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+use Smr\Account;
 use Smr\AdminPermissions;
 
+class AdminPermissionManageRenderer {
+
+/**
+ * @param array<int, array{href: string, name: string}> $AdminLinks
+ */
+private static function renderAdminList(array $AdminLinks): void {
 ?>
 List of Accounts with Permissions:<br />
 <small>Click to select</small>
@@ -16,7 +25,18 @@ foreach ($AdminLinks as $AdminLink) { ?>
 <br />
 
 <?php
-if (!isset($EditAccount)) { ?>
+}
+
+/**
+ * @param array<int, array{href: string, name: string}> $AdminLinks
+ * @param array<int, string> $ValidatedAccounts
+ */
+public static function renderSelect(
+	array $AdminLinks,
+	array $ValidatedAccounts,
+	string $SelectAdminHREF,
+): void {
+	self::renderAdminList($AdminLinks); ?>
 	Select an Account to add Permissions:
 	<br /><br />
 	<form method="POST" action="<?php echo $SelectAdminHREF; ?>">
@@ -28,7 +48,20 @@ if (!isset($EditAccount)) { ?>
 		&nbsp;&nbsp;&nbsp;
 		<?php echo create_submit_display('Select'); ?>
 	</form><?php
-} else { ?>
+}
+
+/**
+ * @param array<int, array{href: string, name: string}> $AdminLinks
+ * @param array<int, array<int, string>> $PermissionCategories
+ */
+public static function renderEdit(
+	array $AdminLinks,
+	Account $EditAccount,
+	string $ProcessingHREF,
+	string $CancelHREF,
+	array $PermissionCategories,
+): void {
+	self::renderAdminList($AdminLinks); ?>
 	Change permissions for the Account of <u><?php echo $EditAccount->getLogin(); ?></u>!
 	<form method="POST" action="<?php echo $ProcessingHREF; ?>"><?php
 		foreach ($PermissionCategories as $categoryID => $permissions) { ?>
@@ -46,4 +79,6 @@ if (!isset($EditAccount)) { ?>
 		&nbsp;&nbsp;&nbsp;
 		<?php echo create_submit_link($CancelHREF, 'Select Another User'); ?>
 	</form><?php
+}
+
 }

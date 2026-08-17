@@ -11,15 +11,13 @@ class ContactForm extends AccountPage {
 
 	use ReusableTrait;
 
-	public string $file = 'contact.php';
-
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Contact Form';
 
-		$container = new ContactFormProcessor();
-		$template->assign('ProcessingHREF', $container->href());
-
-		$template->assign('From', $account->getLogin());
+		$template->pageRenderer = fn() => ContactFormRenderer::render(
+			ProcessingHREF: new ContactFormProcessor()->href(),
+			From: $account->getLogin(),
+		);
 	}
 
 }

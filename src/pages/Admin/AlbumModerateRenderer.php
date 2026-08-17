@@ -1,5 +1,26 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+class AlbumModerateRenderer {
+
+/**
+ * @param array{disabled: bool, location: string, email: string, website: string, birthdate: string, other: string, nickname: string, upload: string} $Entry
+ * @param array<array{id: int, date: string, commenter: string, msg: string}> $Comments
+ */
+public static function render(
+	array $Entry,
+	string $BackHREF,
+	string $ResetImageHREF,
+	string $ResetLocationHREF,
+	string $ResetEmailHREF,
+	string $ResetWebsiteHREF,
+	string $ResetBirthdateHREF,
+	string $ResetOtherHREF,
+	string $DeleteCommentHREF,
+	string $DisableEmail,
+	array $Comments,
+): void {
 ?>
 <a href="<?php echo $BackHREF; ?>">&lt;&lt; Back</a>
 <table class="nobord" cellpadding="5" cellspacing="0">
@@ -97,3 +118,8 @@
 	</form>
 
 </table>
+
+<?php
+}
+
+}

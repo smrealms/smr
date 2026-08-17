@@ -1,15 +1,14 @@
 <?php declare(strict_types=1);
 
-/**
- * @var int $Balance
- * @var Smr\Pages\Player\Bank\AnonBankDetailProcessor $TransactionPage
- * @var ?string $ShowHREF
- * @var ?int $MinValue
- * @var ?int $MaxValue
- * @var ?array<int, array{date: string, payment: string, deposit: string, link: string}> $Transactions
- */
+namespace Smr\Pages\Player\Bank;
 
-if (isset($Transactions)) { ?>
+class AnonBankDetailRenderer {
+
+/**
+ * @param array<int, array{date: string, payment: string, deposit: string, link: string}> $Transactions
+ */
+public static function render(int $Balance, ?int $MinValue, ?int $MaxValue, ?string $ShowHREF, array $Transactions, AnonBankDetailProcessor $TransactionPage): void {
+if (count($Transactions) > 0) { ?>
 	<form method="POST" action="<?php echo $ShowHREF; ?>">
 		<table cellspacing="5" cellpadding="0" class="nobord center">
 			<tr>
@@ -55,3 +54,8 @@ if (isset($Transactions)) { ?>
 	&nbsp;&nbsp;
 	<?php echo $TransactionPage->actionPayment->html('Withdraw'); ?>
 </form>
+
+<?php
+}
+
+}

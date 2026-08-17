@@ -1,10 +1,15 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Template $this
- * @var array<array{Name: string, HasUnread: bool, MessageCount: int, ViewHref: string, DeleteHref: string}> $MessageBoxes
- */
+namespace Smr\Pages\Player;
 
+use Smr\Template;
+
+class MessageBoxRenderer {
+
+/**
+ * @param array<array{Name: string, HasUnread: bool, MessageCount: int, ViewHref: string, DeleteHref: string}> $MessageBoxes
+ */
+public static function render(Template $template, array $MessageBoxes): void {
 ?>
 <p>Please choose your Message folder!</p>
 
@@ -28,4 +33,8 @@
 		} ?>
 	</tbody>
 </table>
-<?php $this->listjsInclude = 'message_box';
+<?php $template->listjsInclude = 'message_box';
+
+}
+
+}

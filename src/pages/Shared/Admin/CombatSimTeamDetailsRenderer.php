@@ -1,5 +1,18 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Shared\Admin;
+
+class CombatSimTeamDetailsRenderer {
+
+/**
+ * @param array<?\Smr\Player> $Team
+ * @param array<string> $DummyNames
+ */
+public static function render(
+	array $Team,
+	string $MemberInputName,
+	array $DummyNames,
+): void {
 ?>
 <table><?php
 	foreach ($Team as $OrderID => $Dummy) { ?>
@@ -31,3 +44,8 @@
 	</tr><?php
 	} ?>
 </table>
+
+<?php
+}
+
+}

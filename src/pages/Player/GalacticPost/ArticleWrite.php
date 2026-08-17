@@ -10,8 +10,6 @@ use Smr\Template;
 
 class ArticleWrite extends PlayerPage {
 
-	public string $file = 'galactic_post_write_article.php';
-
 	public function __construct(
 		private readonly ?int $articleID = null,
 		private readonly ?string $previewTitle = null,
@@ -46,11 +44,11 @@ class ArticleWrite extends PlayerPage {
 			$template->pageTopic = 'Writing An Article';
 		}
 
-		$template->assign('PreviewTitle', $title);
-		$template->assign('Preview', $text);
-
-		$container = new ArticleWriteProcessor($this->articleID);
-		$template->assign('SubmitArticlePage', $container);
+		$template->pageRenderer = fn() => ArticleWriteRenderer::render(
+			PreviewTitle: $title,
+			Preview: $text,
+			SubmitArticlePage: new ArticleWriteProcessor($this->articleID),
+		);
 	}
 
 }

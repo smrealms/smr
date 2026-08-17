@@ -13,9 +13,6 @@ use Smr\Template;
 class AllianceRoster extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'alliance_roster.php';
-
 	public function __construct(
 		private readonly ?int $allianceID = null,
 		private readonly bool $showRoles = false,
@@ -28,7 +25,6 @@ class AllianceRoster extends PlayerPage {
 		$allianceID = $this->allianceID ?? $player->getAllianceID();
 
 		$alliance = Alliance::getAlliance($allianceID, $player->getGameID());
-		$template->assign('Alliance', $alliance);
 
 		$template->pageTopic = $alliance->getAllianceDisplayName(false, true);
 		Menu::alliance($alliance->getAllianceID());
@@ -42,10 +38,11 @@ class AllianceRoster extends PlayerPage {
 			foreach ($dbResult->records() as $dbRecord) {
 				$roles[$dbRecord->getInt('role_id')] = $dbRecord->getString('role');
 			}
-			$template->assign('Roles', $roles);
 
-			$container = new AllianceRolesSaveProcessor($allianceID);
-			$template->assign('SaveAllianceRolesHREF', $container->href());
+			$saveAllianceRolesHREF = new AllianceRolesSaveProcessor($allianceID)->href();
+		} else {
+			$roles = null;
+			$saveAllianceRolesHREF = null;
 		}
 
 		$dbResult = $db->read(
@@ -60,12 +57,10 @@ class AllianceRoster extends PlayerPage {
 		);
 		$dbRecord = $dbResult->record();
 
-		$template->assign('AllianceExp', $dbRecord->getInt('alliance_xp'));
-		$template->assign('AllianceAverageExp', $dbRecord->getInt('alliance_avg'));
-
 		if ($account->getAccountID() === $alliance->getLeaderID() || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION)) {
-			$container = new AllianceGovernance($allianceID);
-			$template->assign('EditAllianceDescriptionHREF', $container->href());
+			$editAllianceDescriptionHREF = new AllianceGovernance($allianceID)->href();
+		} else {
+			$editAllianceDescriptionHREF = null;
 		}
 
 		$dbResult = $db->select('alliance_has_roles', [
@@ -74,26 +69,44 @@ class AllianceRoster extends PlayerPage {
 			'role_id' => $player->getAllianceRole(),
 		]);
 		$allowed = $dbResult->hasRecord();
-		$template->assign('CanChangeRoles', $allowed);
 
 		$alliancePlayers = $alliance->getMembers(includeNpc: true);
-		$template->assign('AlliancePlayers', $alliancePlayers);
 
 		if ($alliance->getAllianceID() === $player->getAllianceID()) {
 			// Alliance members get to see active/inactive status of members
-			$template->assign('ActiveIDs', $alliance->getActiveIDs());
-			$container = new self($this->allianceID, !$this->showRoles);
-			$template->assign('ToggleRolesHREF', $container->href());
+			$activeIDs = $alliance->getActiveIDs();
+			$toggleRolesHREF = new self($this->allianceID, !$this->showRoles)->href();
+		} else {
+			$activeIDs = null;
+			$toggleRolesHREF = null;
 		}
 
 		// If the player is already in an alliance, we don't want to print
 		// any messages, so we simply omit the "join alliance" section.
 		$joinRestriction = $player->hasAlliance() ? true : $alliance->getJoinRestriction($player);
-		$template->assign('JoinRestriction', $joinRestriction);
 		if ($joinRestriction === false) {
-			$container = new AllianceJoinProcessor($allianceID);
-			$template->assign('JoinHREF', $container->href());
+			$joinHREF = new AllianceJoinProcessor($allianceID)->href();
+		} else {
+			$joinHREF = null;
 		}
+
+		$template->pageRenderer = fn() => AllianceRosterRenderer::render(
+			template: $template,
+			Alliance: $alliance,
+			Roles: $roles,
+			SaveAllianceRolesHREF: $saveAllianceRolesHREF,
+			AllianceExp: $dbRecord->getInt('alliance_xp'),
+			AllianceAverageExp: $dbRecord->getInt('alliance_avg'),
+			EditAllianceDescriptionHREF: $editAllianceDescriptionHREF,
+			CanChangeRoles: $allowed,
+			AlliancePlayers: $alliancePlayers,
+			ActiveIDs: $activeIDs,
+			ToggleRolesHREF: $toggleRolesHREF,
+			JoinRestriction: $joinRestriction,
+			JoinHREF: $joinHREF,
+			ThisAccount: $account,
+			ThisPlayer: $player,
+		);
 	}
 
 }

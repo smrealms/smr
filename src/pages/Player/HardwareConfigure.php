@@ -11,22 +11,17 @@ use Smr\Template;
 class HardwareConfigure extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'configure_hardware.php';
-
 	public function build(Player $player, Template $template): void {
 		$ship = $player->getShip();
 
 		$template->pageTopic = 'Configure Hardware';
 
-		if ($ship->hasCloak()) {
-			$container = new HardwareConfigureCloakProcessor(disable: $ship->isCloaked());
-			$template->assign('ToggleCloakHREF', $container->href());
-		}
+		$toggleCloakHREF = $ship->hasCloak() ?
+			new HardwareConfigureCloakProcessor(disable: $ship->isCloaked())->href() : null;
 
 		if ($ship->hasIllusion()) {
-			$container = new HardwareConfigureIllusionProcessor(disable: false);
-			$template->assign('SetIllusionFormHREF', $container->href());
+			$setIllusionFormHREF = new HardwareConfigureIllusionProcessor(disable: false)->href();
+			$disableIllusionHREF = new HardwareConfigureIllusionProcessor(disable: true)->href();
 
 			$ships = [];
 			$db = Database::getInstance();
@@ -34,15 +29,22 @@ class HardwareConfigure extends PlayerPage {
 			foreach ($dbResult->records() as $dbRecord) {
 				$ships[$dbRecord->getInt('ship_type_id')] = $dbRecord->getString('ship_name');
 			}
-			$template->assign('IllusionShips', $ships);
-			$container = new HardwareConfigureIllusionProcessor(disable: true);
-			$template->assign('DisableIllusionHref', $container->href());
+		} else {
+			$setIllusionFormHREF = null;
+			$disableIllusionHREF = null;
+			$ships = null;
 		}
 
-		if ($ship->hasJump()) {
-			$container = new SectorJumpProcessor();
-			$template->assign('JumpDrivePage', $container);
-		}
+		$jumpDrivePage = $ship->hasJump() ? new SectorJumpProcessor() : null;
+
+		$template->pageRenderer = fn() => HardwareConfigureRenderer::render(
+			ToggleCloakHREF: $toggleCloakHREF,
+			SetIllusionFormHREF: $setIllusionFormHREF,
+			IllusionShips: $ships,
+			DisableIllusionHref: $disableIllusionHREF,
+			JumpDrivePage: $jumpDrivePage,
+			ThisShip: $player->getShip(),
+		);
 	}
 
 }

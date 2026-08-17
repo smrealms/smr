@@ -2,6 +2,8 @@
 
 use Smr\Account;
 use Smr\Exceptions\AccountNotFound;
+use Smr\Pages\Login\LoginSocialCreateRenderer;
+use Smr\Pages\Login\SkeletonRenderer;
 use Smr\Template;
 
 try {
@@ -18,20 +20,21 @@ try {
 	/** @var Smr\SocialLogin\SocialIdentity $socialId */
 	$socialId = $_SESSION['socialId'];
 
-	$template = Template::getInstance();
-
 	// Pre-populate the login field if an account with this email exists.
 	// (Also disable creating a new account because they would just get
 	// an "Email already registered" error anyway.)
 	try {
 		$account = Account::getAccountByEmail($socialId->email);
-		$template->assign('MatchingLogin', $account->getLogin());
+		$matchingLogin = $account->getLogin();
 	} catch (AccountNotFound) {
 		// Proceed without matching account
+		$matchingLogin = null;
 	}
 
-	$template->assign('Body', 'login/login_social_create.php');
-	$template->display('login/skeleton.php');
+	$body = fn() => LoginSocialCreateRenderer::render($matchingLogin);
+	Template::getInstance()->display(
+		fn() => SkeletonRenderer::render($body),
+	);
 
 } catch (Throwable $e) {
 	handleException($e);

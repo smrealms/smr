@@ -1,10 +1,12 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Account $ThisAccount
- * @var Smr\Pages\Account\InvalidEmailProcessor $ReopenPage
- */
+namespace Smr\Pages\Account;
 
+use Smr\Account;
+
+class InvalidEmailRenderer {
+
+public static function render(Account $ThisAccount, InvalidEmailProcessor $ReopenPage): void {
 ?>
 <p>Your account was closed because we detected that your e-mail address is
 invalid. To re-open your account, please either re-validate your current
@@ -30,3 +32,7 @@ away!</p>
 
 	<p><?php echo $ReopenPage->actionChange->html(); ?></p>
 </form>
+<?php
+}
+
+}

@@ -1,11 +1,10 @@
 <?php declare(strict_types=1);
 
-/**
- * @var ?string $PreviewTitle
- * @var ?string $Preview
- * @var Smr\Pages\Player\GalacticPost\ArticleWriteProcessor $SubmitArticlePage
- */
+namespace Smr\Pages\Player\GalacticPost;
 
+class ArticleWriteRenderer {
+
+public static function render(?string $PreviewTitle, ?string $Preview, ArticleWriteProcessor $SubmitArticlePage): void {
 if (isset($PreviewTitle) && isset($Preview)) { ?>
 	<table class="standard">
 		<tr>
@@ -25,3 +24,8 @@ What is the title?<br />
 	<textarea spellcheck="true" name="message" required><?php if (isset($Preview)) { echo $Preview; } ?></textarea><br /><br />
 	<?php echo $SubmitArticlePage->actionSubmit->html(); ?>&nbsp;<?php echo $SubmitArticlePage->actionPreview->html(); ?>
 </form>
+
+<?php
+}
+
+}

@@ -1,16 +1,26 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Standalone;
+
 use Smr\Race;
 use Smr\ShipClass;
 
-/**
- * @var array<int> $Speeds
- * @var array<int> $Hardpoints
- * @var array<string> $BooleanFields
- * @var array<string> $AllLocs
- * @var array<array<string, string|int>> $shipArray
- */
+class ShipListRenderer {
 
+/**
+ * @param array<string|int> $Speeds
+ * @param array<string|int> $Hardpoints
+ * @param array<string> $BooleanFields
+ * @param array<string> $AllLocs
+ * @param array<array<string, string|int>> $shipArray
+ */
+public static function render(
+	array $Speeds,
+	array $Hardpoints,
+	array $BooleanFields,
+	array $AllLocs,
+	array $shipArray,
+): void {
 ?>
 <!DOCTYPE html>
 <html>
@@ -141,3 +151,7 @@ use Smr\ShipClass;
 		</script>
 	</body>
 </html>
+<?php
+}
+
+}

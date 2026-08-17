@@ -1,10 +1,15 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Template $this
- * @var array<array{Name: string, TotalExperience: int, AverageExperience: int, Members: int, OpenRecruitment: bool}> $Alliances
- */
+namespace Smr\Pages\Player;
 
+use Smr\Template;
+
+class AllianceListRenderer {
+
+/**
+ * @param array<array{Name: string, TotalExperience: int, AverageExperience: int, Members: int, OpenRecruitment: bool}> $Alliances
+ */
+public static function render(Template $template, ?string $CreateAllianceHREF, array $Alliances): void {
 if (isset($CreateAllianceHREF)) { ?>
 	<div class="center">
 		<div class="buttonA">
@@ -40,7 +45,11 @@ if (count($Alliances) > 0) { ?>
 	</table>
 	<p class="center">Click column table to reorder!</p>
 
-	<?php $this->listjsInclude = 'alliance_list';
+	<?php $template->listjsInclude = 'alliance_list';
 } else { ?>
 	<p class="center">Currently there are no alliances.</p><?php
+}
+
+}
+
 }

@@ -1,13 +1,23 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Template $this
- * @var bool $MinimalDisplay
- * @var ?string $AttackLogLink
- * @var PlanetCombatResults $PlanetCombatResults
- */
+namespace Smr\Pages\Shared;
 
+use Exception;
+use Smr\Player;
+use Smr\Template;
+
+class PlanetCombatResultsRenderer {
+
+/**
+ * @param PlanetCombatResults $PlanetCombatResults
+ */
+public static function render(
+	Template $template,
+	Player $ThisPlayer,
+	bool $MinimalDisplay,
+	?string $AttackLogLink,
+	array $PlanetCombatResults,
+): void {
 $CombatPlanet = $PlanetCombatResults['Planet'];
 $TotalDamage = $PlanetCombatResults['TotalDamage'];
 if ($MinimalDisplay) {
@@ -49,7 +59,7 @@ if (isset($PlanetCombatResults['Weapons'])) {
 					?> but it cannot do any damage<?php
 				}
 			} else {
-				?> destroying <?php echo $this->displayTakenDamage($ActualDamage);
+				?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
 			}
 		} ?>.
 		<br /><?php
@@ -57,7 +67,11 @@ if (isset($PlanetCombatResults['Weapons'])) {
 			if (!isset($WeaponResults['KillResults'])) {
 				throw new Exception('KillingShot did not provide KillResults!');
 			}
-			$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', ['KillResults' => $WeaponResults['KillResults'], 'TargetPlayer' => $TargetPlayer]);
+			TraderCombatKillMessageRenderer::render(
+				KillResults: $WeaponResults['KillResults'],
+				TargetPlayer: $TargetPlayer,
+				ShootingPlayer: null,
+			);
 		}
 	}
 }
@@ -89,7 +103,7 @@ if (isset($PlanetCombatResults['Drones'])) {
 					?> but they cannot do any damage<?php
 				}
 			} else {
-				?> destroying <?php echo $this->displayTakenDamage($ActualDamage);
+				?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
 			}
 		}
 	} ?>.
@@ -98,7 +112,11 @@ if (isset($PlanetCombatResults['Drones'])) {
 		if (!isset($Drones['KillResults'])) {
 			throw new Exception('KillingShot did not provide KillResults!');
 		}
-		$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', ['KillResults' => $Drones['KillResults'], 'TargetPlayer' => $TargetPlayer]);
+		TraderCombatKillMessageRenderer::render(
+			KillResults: $Drones['KillResults'],
+			TargetPlayer: $TargetPlayer,
+			ShootingPlayer: null,
+		);
 	}
 }
 
@@ -108,3 +126,8 @@ if ($TotalDamage > 0) {
 } else {
 	?> does no damage this round. You call that a planet? It needs a better builder<?php
 } ?>.
+
+<?php
+}
+
+}

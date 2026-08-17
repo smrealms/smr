@@ -1,11 +1,10 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $MessageText
- * @var string $ConfirmHREF
- * @var string $CancelHREF
- */
+namespace Smr\Pages\Player;
 
+class MessageReportConfirmRenderer {
+
+public static function render(string $MessageText, string $ConfirmHREF, string $CancelHREF): void {
 ?>
 You have selected the following message:<br /><br />
 <table class="standard">
@@ -20,3 +19,6 @@ You have selected the following message:<br /><br />
 <?php echo create_submit_link($ConfirmHREF, 'Yes'); ?>
 &nbsp;&nbsp;
 <?php echo create_submit_link($CancelHREF, 'No');
+}
+
+}

@@ -1,5 +1,25 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin\UniGen;
+
+use Smr\Galaxy;
+
+class CreateWarpsRenderer {
+
+/**
+ * @param array<int, string> $GalLinks
+ * @param array<Galaxy> $Galaxies
+ * @param array<int, array<int, int>> $Warps
+ */
+public static function render(
+	?string $Message,
+	array $GalLinks,
+	string $SubmitHREF,
+	string $CancelHREF,
+	Galaxy $Galaxy,
+	array $Galaxies,
+	array $Warps,
+): void {
 if (isset($Message)) {
 	echo $Message; ?><br /><br /><?php
 } ?>
@@ -83,4 +103,8 @@ p.vert {
 			<th><?php echo array_sum($Warps[$galRow->getGalaxyID()]); ?></th>
 		</tr><?php
 	} ?>
-</table>
+</table><?php
+
+}
+
+}

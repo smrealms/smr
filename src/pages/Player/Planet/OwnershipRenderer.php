@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Planet;
+
+use Smr\Planet;
 use Smr\Player;
 
-/**
- * @var Smr\Planet $Planet
- * @var Smr\Player $ThisPlayer
- * @var Smr\Pages\Player\Planet\OwnershipProcessor $ProcessingPage
- */
+class OwnershipRenderer {
 
+public static function render(OwnershipProcessor $ProcessingPage, Planet $Planet, ?int $PlayerPlanet, Player $ThisPlayer): void {
 $ProcessingHREF = $ProcessingPage->href();
 if (!$Planet->hasOwner()) { ?>
 	<p>
@@ -46,4 +46,8 @@ if (!$Planet->hasOwner()) { ?>
 			<?php echo $ProcessingPage->actionRename->html(); ?>
 		</form><?php
 	}
+}
+
+}
+
 }

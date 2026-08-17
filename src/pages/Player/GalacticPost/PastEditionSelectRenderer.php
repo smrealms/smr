@@ -1,12 +1,14 @@
 <?php declare(strict_types=1);
 
-/**
- * @var int $SelectedGame
- * @var string $SelectGameHREF
- * @var array<array{game_name: string, game_id: int}> $PublishedGames
- * @var array<array{title: string, online_since: int, href: string}> $PastEditions
- */
+namespace Smr\Pages\Player\GalacticPost;
 
+class PastEditionSelectRenderer {
+
+/**
+ * @param array<array{game_name: string, game_id: int}> $PublishedGames
+ * @param array<array{title: string, online_since: int, href: string}> $PastEditions
+ */
+public static function render(int $SelectedGame, string $SelectGameHREF, array $PublishedGames, array $PastEditions): void {
 ?>
 Select Game:&nbsp;
 <form class="standard" id="SelectGameForm" method="POST" action="<?php echo $SelectGameHREF; ?>">
@@ -32,4 +34,8 @@ if (count($PastEditions) === 0) { ?>
 			<li><a href="<?php echo $edition['href']; ?>"><?php echo date('Y/m/d', $edition['online_since']) . ' - ' . $edition['title']; ?></a></li><?php
 		} ?>
 	</ul><?php
+}
+
+}
+
 }

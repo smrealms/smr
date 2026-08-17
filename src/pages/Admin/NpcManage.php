@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Admin;
 
+use Exception;
 use Smr\Account;
 use Smr\Database;
 use Smr\Galaxy;
@@ -12,8 +13,6 @@ use Smr\Template;
 
 class NpcManage extends AccountPage {
 
-	public string $file = 'admin/npc_manage.php';
-
 	public function __construct(
 		private readonly ?int $selectedGameID = null,
 		private readonly ?string $message = null,
@@ -23,11 +22,6 @@ class NpcManage extends AccountPage {
 		$template->pageTopic = 'Manage NPCs';
 
 		$selectedGameID = $this->selectedGameID;
-
-		$container = new NpcManageSelectProcessor();
-		$template->assign('SelectGameHREF', $container->href());
-
-		$template->assign('Message', $this->message);
 
 		$games = [];
 		foreach (Game::getActiveGames() as $gameID => $game) {
@@ -41,12 +35,6 @@ class NpcManage extends AccountPage {
 			];
 		}
 		$selectedGameID ??= 0; // no valid games found
-
-		$template->assign('Games', $games);
-		$template->assign('SelectedGameID', $selectedGameID);
-
-		$container = new NpcManageAddAccountProcessor($selectedGameID);
-		$template->assign('AddAccountHREF', $container->href());
 
 		$npcs = [];
 		$db = Database::getInstance();
@@ -74,7 +62,6 @@ class NpcManage extends AccountPage {
 
 		// Set the login name for the next NPC to create
 		$nextNpcID = count($npcs) + 1;
-		$template->assign('NextLogin', 'npc' . $nextNpcID);
 
 		// Get the existing NPC players for the selected game
 		$dbResult = $db->select('player', [
@@ -85,14 +72,15 @@ class NpcManage extends AccountPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$accountID = $dbRecord->getInt('account_id');
 			$npc = Player::getPlayer($accountID, $selectedGameID, false, $dbRecord);
+			if (!array_key_exists($accountID, $npcs)) {
+				throw new Exception('Found NPC not associated with login!');
+			}
 			$npcs[$accountID]['player'] = $npc;
 			if (($npc->hasAlliance() && $npc->getAlliance()->isNpcForHire()) || $npc->isHiredNPC()) {
 				$npcs[$accountID]['disable_active_toggle'] = true;
 			}
 			$npcPlayers[] = $npc;
 		}
-
-		$template->assign('Npcs', $npcs);
 
 		// Get galaxy/alliance options for NPC galaxies
 		$npcGalaxyChoices = [];
@@ -103,7 +91,6 @@ class NpcManage extends AccountPage {
 				}
 			}
 		}
-		$template->assign('NpcGalaxyChoices', $npcGalaxyChoices);
 		$npcGalaxyAllianceChoices = [];
 		foreach ($npcPlayers as $npc) {
 			if (!$npc->hasAlliance()) {
@@ -114,8 +101,19 @@ class NpcManage extends AccountPage {
 				$npcGalaxyAllianceChoices[$alliance->getAllianceID()] = $alliance->getAllianceDisplayName();
 			}
 		}
-		$template->assign('NpcGalaxyAllianceChoices', $npcGalaxyAllianceChoices);
-		$template->assign('SetupNpcGalaxyHref', (new NpcManageSetupGalaxyProcessor($selectedGameID))->href());
+
+		$template->pageRenderer = fn() => NpcManageRenderer::render(
+			SelectGameHREF: new NpcManageSelectProcessor()->href(),
+			Message: $this->message,
+			Games: $games,
+			SelectedGameID: $selectedGameID,
+			AddAccountHREF: new NpcManageAddAccountProcessor($selectedGameID)->href(),
+			NextLogin: 'npc' . $nextNpcID,
+			Npcs: $npcs,
+			NpcGalaxyChoices: $npcGalaxyChoices,
+			NpcGalaxyAllianceChoices: $npcGalaxyAllianceChoices,
+			SetupNpcGalaxyHref: (new NpcManageSetupGalaxyProcessor($selectedGameID))->href(),
+		);
 	}
 
 }

@@ -1,15 +1,31 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+use Smr\Template;
+
+class IpViewResultsRenderer {
+
+/**
+ * @param array<int, array<string, mixed>> $Rows
+ */
+public static function render(
+	Template $template,
+	string $BackHREF,
+	string $CloseHREF,
+	string $type,
+	array $Rows,
+	?int $BanAccountID,
+	?string $Summary,
+	?string $Exception,
+	?string $CloseReason,
+): void {
 ?>
 <a href="<?php echo $BackHREF; ?>">&lt;&lt;Back</a>
 
 <?php
 
-//another script for comp share
-if ($type === 'comp_share') {
-	$this->includeTemplate('admin/comp_share.php');
-
-} elseif ($type === 'list') { ?>
+if ($type === 'list') { ?>
 	<form method="POST" action="<?php echo $CloseHREF; ?>">
 		<table class="standard">
 			<tr>
@@ -111,5 +127,9 @@ if ($type === 'comp_share') {
 			<input type=hidden name=first value="first">
 		</form>
 	</center><?php
+
+}
+
+}
 
 }

@@ -1,13 +1,17 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Standalone;
+
 use Smr\Race;
 
-/**
- * @var array<int> $PowerLevels
- * @var array<string> $AllLocs
- * @var array<array{restriction: array<string>, weapon_name: string, race_id: int, race_name: string, cost: string, shield_damage: int, armour_damage: int, accuracy: int, power_level: int, locs: array<string>}> $Weapons
- */
+class WeaponListRenderer {
 
+/**
+ * @param array<int> $PowerLevels
+ * @param array<string> $AllLocs
+ * @param array<array{restriction: array<string>, weapon_name: string, race_id: int, race_name: string, cost: string, shield_damage: int, armour_damage: int, accuracy: int, power_level: int, locs: array<string>}> $Weapons
+ */
+public static function render(array $PowerLevels, array $AllLocs, array $Weapons): void {
 ?>
 <!DOCTYPE html>
 <html>
@@ -133,3 +137,7 @@ use Smr\Race;
 		</script>
 	</body>
 </html>
+<?php
+}
+
+}

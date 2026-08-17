@@ -35,7 +35,7 @@ abstract class HistoryPage extends AccountPage {
 				'Text' => $text,
 			];
 		}
-		$template->assign('MenuItems', $menuItems);
+		$template->menuItems = $menuItems;
 	}
 
 	public function build(Account $account, Template $template): void {

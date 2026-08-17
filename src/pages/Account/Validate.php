@@ -8,16 +8,19 @@ use Smr\Template;
 
 class Validate extends AccountPage {
 
-	public string $file = 'validate.php';
-
 	public function __construct(
 		private readonly ?string $message = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('Message', $this->message);
 		$template->pageTopic = 'Validation Reminder';
-		$template->assign('ValidateFormHref', (new ValidateProcessor())->href());
+
+		$template->pageRenderer = fn() => ValidateRenderer::render(
+			Message: $this->message,
+			ValidatePage: new ValidateProcessor(),
+			ThisAccount: $account,
+			PreferencesLink: new Preferences()->href(),
+		);
 	}
 
 }

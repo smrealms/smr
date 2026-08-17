@@ -29,11 +29,6 @@ class Page {
 	protected bool $underAttack = false;
 
 	/**
-	 * Template file associated with page (for display pages only).
-	 */
-	public string $file = '';
-
-	/**
 	 * Defines if the page is is always available, or if it is invalid after one
 	 * use (i.e. if you get a back button error when navigating back to it).
 	 * Only relevant to pages stored as links in the session.

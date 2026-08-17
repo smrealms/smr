@@ -1,9 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var list<array{name: string, race: string, lastActive: string, dismissHref: string}> $Npcs
- */
+namespace Smr\Pages\Player;
 
+class AllianceManageNpcsRenderer {
+
+/**
+ * @param list<array{name: string, race: string, lastActive: string, dismissHref: string}> $Npcs
+ */
+public static function render(array $Npcs): void {
 if (count($Npcs) > 0) { ?>
 	<table class="standard center">
 		<tr>
@@ -27,4 +31,8 @@ if (count($Npcs) > 0) { ?>
 	</table><?php
 } else { ?>
 	<div>Your alliance does not have any hired NPCs at this time.</div><?php
+}
+
+}
+
 }

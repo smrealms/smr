@@ -10,8 +10,6 @@ use Smr\TransactionType;
 
 class ShopGoodsNegotiate extends PlayerPage {
 
-	public string $file = 'shop_goods_trade.php';
-
 	public function __construct(
 		private readonly int $goodID,
 		private readonly int $amount,
@@ -33,36 +31,35 @@ class ShopGoodsNegotiate extends PlayerPage {
 
 		// Has the player failed a bargain?
 		if ($this->bargainNumber > 0) {
-			$template->assign('OfferToo', match ($transaction) {
+			$offerToo = match ($transaction) {
 				TransactionType::Sell => 'high',
 				TransactionType::Buy => 'low',
-			});
+			};
+		} else {
+			$offerToo = null;
 		}
 
-		$template->assign('PortAction', strtolower($transaction->opposite()->value));
-
-		$container = new ShopGoodsProcessor(
+		$bargainHREF = new ShopGoodsProcessor(
 			goodID: $this->goodID,
 			amount: $this->amount,
 			bargainNumber: $this->bargainNumber + 1,
-			bargainPrice: null,
 			offeredPrice: $this->offeredPrice,
 			idealPrice: $this->idealPrice,
+		)->href();
+
+		$template->pageRenderer = fn() => ShopGoodsNegotiateRenderer::render(
+			OfferToo: $offerToo,
+			PortAction: strtolower($transaction->opposite()->value),
+			BargainHREF: $bargainHREF,
+			BargainPrice: $this->bargainPrice,
+			OfferedPrice: $this->offeredPrice,
+			Good: $portGood,
+			Amount: $this->amount,
+			Port: $port,
+			ShopHREF: new ShopGoods()->href(),
+			LeaveHREF: new CurrentSector()->href(),
+			ThisPlayer: $player,
 		);
-		$template->assign('BargainHREF', $container->href());
-
-		$template->assign('BargainPrice', $this->bargainPrice);
-		$template->assign('OfferedPrice', $this->offeredPrice);
-		$template->assign('Transaction', $transaction);
-		$template->assign('Good', $portGood);
-		$template->assign('Amount', $this->amount);
-		$template->assign('Port', $port);
-
-		$container = new ShopGoods();
-		$template->assign('ShopHREF', $container->href());
-
-		$container = new CurrentSector();
-		$template->assign('LeaveHREF', $container->href());
 	}
 
 }

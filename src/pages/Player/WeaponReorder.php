@@ -10,11 +10,13 @@ use Smr\Template;
 class WeaponReorder extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'weapon_reorder.php';
-
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Weapon Reorder';
+
+		$template->pageRenderer = fn() => WeaponReorderRenderer::render(
+			template: $template,
+			ThisShip: $player->getShip(),
+		);
 	}
 
 }

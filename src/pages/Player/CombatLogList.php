@@ -14,9 +14,6 @@ use Smr\Template;
 class CombatLogList extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'combat_log_list.php';
-
 	public function __construct(
 		private readonly CombatLogType $action = CombatLogType::Personal,
 		private readonly int $page = 0,
@@ -28,11 +25,6 @@ class CombatLogList extends PlayerPage {
 
 		$template->pageTopic = 'Combat Logs';
 		Menu::combatLog();
-
-		// Do we have a message from the processing page?
-		if ($this->message !== null) {
-			$template->assign('Message', $this->message);
-		}
 
 		$action = $this->action;
 
@@ -60,7 +52,6 @@ class CombatLogList extends PlayerPage {
 		$page = $this->page;
 		$dbResult = $db->read('SELECT count(*) as count FROM combat_logs c WHERE ' . $query);
 		$totalLogs = $dbResult->record()->getInt('count'); // count always returns a record
-		$template->assign('TotalLogs', $totalLogs);
 
 		$dbResult = $db->read('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs c WHERE ' . $query . ' ORDER BY log_id DESC, sector_id LIMIT ' . ($page * COMBAT_LOGS_PER_PAGE) . ', ' . COMBAT_LOGS_PER_PAGE);
 
@@ -74,29 +65,18 @@ class CombatLogList extends PlayerPage {
 			return Player::getPlayer($accountID, $player->getGameID())->getLinkedDisplayName(false);
 		};
 
-		// For display purposes, describe the type of log
-		$template->assign('LogType', strtolower($action->name));
-
 		// Construct the list of logs of this type
 		$logs = [];
+		$previousPage = null;
+		$nextPage = null;
 		if ($dbResult->hasRecord()) {
-			// 'View' and 'Save' share the same form, so we use 'action' as a
-			// way to return to this page when we only want to save the logs.
-			$container = new CombatLogListProcessor($action);
-			$template->assign('LogFormPage', $container);
-
 			// Set the links for the "view next/previous log list" buttons
 			if ($page > 0) {
-				$container = new self($action, $page - 1);
-				$template->assign('PreviousPage', $container->href());
+				$previousPage = new self($action, $page - 1)->href();
 			}
 			if (($page + 1) * COMBAT_LOGS_PER_PAGE < $totalLogs) {
-				$container = new self($action, $page + 1);
-				$template->assign('NextPage', $container->href());
+				$nextPage = new self($action, $page + 1)->href();
 			}
-			// Saved logs
-			$template->assign('CanDelete', $action === CombatLogType::Saved);
-			$template->assign('CanSave', $action !== CombatLogType::Saved);
 
 			foreach ($dbResult->records() as $dbRecord) {
 				$sectorID = $dbRecord->getInt('sector_id');
@@ -108,7 +88,20 @@ class CombatLogList extends PlayerPage {
 				];
 			}
 		}
-		$template->assign('Logs', $logs);
+
+		$template->pageRenderer = fn() => CombatLogListRenderer::render(
+			template: $template,
+			Message: $this->message,
+			TotalLogs: $totalLogs,
+			LogType: strtolower($action->name),
+			LogFormPage: new CombatLogListProcessor($action),
+			PreviousPage: $previousPage,
+			NextPage: $nextPage,
+			CanDelete: $action === CombatLogType::Saved,
+			CanSave: $action !== CombatLogType::Saved,
+			Logs: $logs,
+			ThisAccount: $player->getAccount(),
+		);
 	}
 
 }

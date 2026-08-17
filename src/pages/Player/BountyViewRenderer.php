@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
 use Smr\BountyType;
+use Smr\Player;
 
-/**
- * @var Smr\Player $BountyPlayer
- */
+class BountyViewRenderer {
 
+public static function render(Player $BountyPlayer): void {
 if ($BountyPlayer->hasBounties()) {
 	$Bounties = $BountyPlayer->getBounties();
 	foreach (BountyType::cases() as $BountyType) {
@@ -27,4 +29,8 @@ if ($BountyPlayer->hasBounties()) {
 	}
 } else {
 	echo $BountyPlayer->getDisplayName(); ?> has no bounties<br /><?php
+}
+
+}
+
 }

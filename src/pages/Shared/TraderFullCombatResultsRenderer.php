@@ -1,12 +1,20 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Template $this
- * @var bool $MinimalDisplay
- * @var array{Attackers: TraderTeamCombatResults, Defenders: TraderTeamCombatResults} $TraderCombatResults
- * @var ?string $AttackLogLink
- */
+namespace Smr\Pages\Shared;
 
+use Smr\Combat\Results\TraderFullCombatResults;
+use Smr\Player;
+use Smr\Template;
+
+class TraderFullCombatResultsRenderer {
+
+public static function render(
+	Template $template,
+	bool $MinimalDisplay,
+	TraderFullCombatResults $TraderCombatResults,
+	?string $AttackLogLink,
+	?Player $ThisPlayer,
+): void {
 if ($MinimalDisplay) { ?>
 	<h2>Attacker Results</h2><?php
 } else { ?>
@@ -14,10 +22,12 @@ if ($MinimalDisplay) { ?>
 } ?>
 <br /><?php
 
-$this->includeTemplate('includes/TraderTeamCombatResults.inc.php', [
-	'TraderTeamCombatResults' => $TraderCombatResults['Attackers'],
-	'MinimalDisplay' => $MinimalDisplay,
-]); ?>
+TraderTeamCombatResultsRenderer::render(
+	template: $template,
+	TraderTeamCombatResults: $TraderCombatResults->attackers,
+	MinimalDisplay: $MinimalDisplay,
+	ThisPlayer: $ThisPlayer,
+); ?>
 
 <br /><br /><?php
 if ($MinimalDisplay) { ?>
@@ -29,11 +39,17 @@ if ($MinimalDisplay) { ?>
 } ?>
 <br /><?php
 
-$this->includeTemplate('includes/TraderTeamCombatResults.inc.php', [
-	'TraderTeamCombatResults' => $TraderCombatResults['Defenders'],
-	'MinimalDisplay' => $MinimalDisplay,
-]);
+TraderTeamCombatResultsRenderer::render(
+	template: $template,
+	TraderTeamCombatResults: $TraderCombatResults->defenders,
+	MinimalDisplay: $MinimalDisplay,
+	ThisPlayer: $ThisPlayer,
+);
 
 if ($MinimalDisplay) {
 	echo $AttackLogLink;
+}
+
+}
+
 }

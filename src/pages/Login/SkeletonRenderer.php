@@ -1,10 +1,12 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Template $this
- * @var string $Body
- */
+namespace Smr\Pages\Login;
 
+use Closure;
+
+class SkeletonRenderer {
+
+public static function render(Closure $body, ?string $Message = null): void {
 ?>
 <!DOCTYPE html>
 <html>
@@ -66,7 +68,11 @@
 			} ?>
 		</div>
 
-		<?php $this->includeTemplate($Body); ?>
+		<?php $body(); ?>
 
 	</body>
 </html>
+<?php
+}
+
+}

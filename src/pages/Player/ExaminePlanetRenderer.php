@@ -1,11 +1,25 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Planet $ThisPlanet
- * @var Smr\Template $this
- * @var bool $PlanetLand
- */
+namespace Smr\Pages\Player;
 
+use Smr\Account;
+use Smr\Pages\Shared\SectorPlayersRenderer;
+use Smr\Planet;
+use Smr\Player;
+
+class ExaminePlanetRenderer {
+
+/**
+ * @param array<int, Player> $VisiblePlayers
+ */
+public static function render(
+	Planet $ThisPlanet,
+	bool $PlanetLand,
+	array $VisiblePlayers,
+	string $SectorPlayersLabel,
+	Account $ThisAccount,
+	Player $ThisPlayer,
+): void {
 ?>
 <table>
 	<tr>
@@ -72,7 +86,14 @@ if ($ThisPlanet->hasPermanentDestruction()) { ?>
 <br />
 
 <?php
-$this->includeTemplate('includes/SectorPlayers.inc.php');
+SectorPlayersRenderer::render(
+	ThisAccount: $ThisAccount,
+	ThisPlanet: $ThisPlanet,
+	ThisPlayer: $ThisPlayer,
+	VisiblePlayers: $VisiblePlayers,
+	CloakedPlayers: [],
+	SectorPlayersLabel: $SectorPlayersLabel,
+);
 ?>
 
 <div class="center ajax"><?php
@@ -84,3 +105,8 @@ $this->includeTemplate('includes/SectorPlayers.inc.php');
 		The planet is <span class="uninhab">uninhabitable</span> at this time.<?php
 	} ?>
 </div>
+
+<?php
+}
+
+}

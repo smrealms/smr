@@ -8,13 +8,12 @@ use Smr\Template;
 
 class AllianceCreate extends PlayerPage {
 
-	public string $file = 'alliance_create.php';
-
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Create Alliance';
 
-		$container = new AllianceCreateProcessor();
-		$template->assign('CreateHREF', $container->href());
+		$template->pageRenderer = fn() => AllianceCreateRenderer::render(
+			new AllianceCreateProcessor()->href(),
+		);
 	}
 
 }

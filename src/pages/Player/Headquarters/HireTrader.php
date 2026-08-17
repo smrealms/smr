@@ -12,8 +12,6 @@ use Smr\Template;
 
 class HireTrader extends PlayerPage {
 
-	public string $file = 'hire_trader.php';
-
 	public const int BASE_HIRE_COST = 150_000;
 	public const int MAX_NPCS_PER_ALLIANCE = 3;
 
@@ -45,7 +43,6 @@ class HireTrader extends PlayerPage {
 		} catch (AllianceNotFound) {
 			// No NPCs because alliance has not been created yet
 		}
-		$template->assign('Npcs', $npcs);
 
 		$disableReason = null;
 		if (!$player->hasAlliance()) {
@@ -67,7 +64,12 @@ class HireTrader extends PlayerPage {
 				$disableReason = 'There are no traders available for hire at this time.';
 			}
 		}
-		$template->assign('DisableReason', $disableReason);
+
+		$template->pageRenderer = fn() => HireTraderRenderer::render(
+			Npcs: $npcs,
+			DisableReason: $disableReason,
+			ThisPlayer: $player,
+		);
 	}
 
 }

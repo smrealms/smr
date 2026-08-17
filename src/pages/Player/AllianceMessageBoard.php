@@ -14,9 +14,6 @@ use Smr\Template;
 class AllianceMessageBoard extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'alliance_message.php';
-
 	public function __construct(
 		private readonly int $allianceID,
 		public ?string $preview = null,
@@ -142,20 +139,27 @@ class AllianceMessageBoard extends PlayerPage {
 				++$i;
 			}
 
-			for ($j = 0; $j < $i; $j++) {
+			foreach ($threads as $j => $thread) {
 				$container = new AllianceMessageBoardView($this->allianceID, $thread_ids, $thread_topics, $alliance_eyes, $j);
 				$threads[$j]['ViewHref'] = $container->href();
 			}
 		}
-		$template->assign('Threads', $threads);
 
 		if ($mbWrite || $player->isObserver()) {
-			$container = new AllianceMessageBoardAddProcessor($allianceID, $this);
-			$template->assign('CreateNewThreadFormPage', $container);
-			$template->assign('Preview', $this->preview);
-			$template->assign('Topic', $this->topic);
-			$template->assign('AllianceEyesOnly', $this->allianceEyesOnly);
+			$createNewThreadPage = new AllianceMessageBoardAddProcessor($allianceID, $this);
+		} else {
+			$createNewThreadPage = null;
 		}
+
+		$template->pageRenderer = fn() => AllianceMessageBoardRenderer::render(
+			template: $template,
+			Threads: $threads,
+			CreateNewThreadFormPage: $createNewThreadPage,
+			Preview: $this->preview,
+			Topic: $this->topic,
+			AllianceEyesOnly: $this->allianceEyesOnly,
+			ThisAccount: $player->getAccount(),
+		);
 	}
 
 }

@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Player;
 
+use Smr\Combat\Results\TraderFullCombatResults;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
@@ -90,12 +91,12 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 			return $results;
 		};
 
-		$results = [
-			'Attackers' => $teamAttack('Attackers', 'Defenders'),
-			'Defenders' => $teamAttack('Defenders', 'Attackers'),
-		];
+		$results = new TraderFullCombatResults(
+			attackers: $teamAttack('Attackers', 'Defenders'),
+			defenders: $teamAttack('Defenders', 'Attackers'),
+		);
 
-		$account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'] . ' and the other team does ' . $results['Defenders']['TotalDamage'], $sector->getSectorID());
+		$account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results->attackers['TotalDamage'] . ' and the other team does ' . $results->defenders['TotalDamage'], $sector->getSectorID());
 
 		$db = Database::getInstance();
 		$logId = $db->insertAutoIncrement('combat_logs', [

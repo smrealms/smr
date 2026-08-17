@@ -8,8 +8,6 @@ use Smr\Template;
 
 class ExamineTrader extends PlayerPage {
 
-	public string $file = 'trader_examine.php';
-
 	public function __construct(
 		private readonly int $targetAccountID,
 	) {}
@@ -25,8 +23,14 @@ class ExamineTrader extends PlayerPage {
 		}
 
 		$template->pageTopic = 'Examine Ship';
-		$template->assign('TargetPlayer', $targetPlayer);
-		$template->assign('NewbieKill', $targetPlayer->isNewbieCombatant($player));
+
+		$template->pageRenderer = fn() => ExamineTraderRenderer::render(
+			TargetPlayer: $targetPlayer,
+			NewbieKill: $targetPlayer->isNewbieCombatant($player),
+			ThisPlayer: $player,
+			ThisSector: $player->getSector(),
+			ThisShip: $player->getShip(),
+		);
 	}
 
 }

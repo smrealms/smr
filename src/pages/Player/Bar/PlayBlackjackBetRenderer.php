@@ -1,15 +1,11 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $MaxBetMsg
- * @var string $PlayHREF
- * @var int $MaxBet
- */
+namespace Smr\Pages\Player\Bar;
 
-if (isset($Message)) {
-	echo $Message;
-	return;
-} ?>
+class PlayBlackjackBetRenderer {
+
+public static function render(int $MaxBet, string $MaxBetMsg, string $PlayHREF): void {
+?>
 
 <div class=center>
 	How much do you want to bet? <?php echo $MaxBetMsg; ?><br />
@@ -35,3 +31,8 @@ if (isset($Message)) {
 <p>After you have drawn, the dealer's remaining card is exposed. Under SMR rules, a dealer with a total less than 17 must "hit" (take a card); with 17 or more, dealer must stand.</p>
 <p>If dealer "busts" by going over 21, any players still in the game win. Otherwise, players with totals higher than the dealer win, while players with totals less than the dealer lose. In case of a tie, or "push" the player's bet is returned (no money changes hands).</p>
 <p>If your or the dealer's first two cards total 21 (an ace and a 10 or face card), the holding is known as a blackjack. A player with blackjack is paid extra--two and a half times the original bet--unless dealer also has blackjack, in which case the player loses.</p>
+
+<?php
+}
+
+}

@@ -1,16 +1,35 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Planet $ThisPlanet
- * @var Smr\Template $this
- * @var string $LaunchLink
- */
+namespace Smr\Pages\Player\Planet;
 
+use Smr\Account;
+use Smr\Pages\Shared\SectorPlayersRenderer;
+use Smr\Pages\Shared\TickerRenderer;
+use Smr\Planet;
+use Smr\Player;
+
+class MainRenderer {
+
+/**
+ * @param array<int, Player> $VisiblePlayers
+ * @param ?array<array{Time: string, Message: string}> $Ticker
+ */
+public static function render(
+	?string $ErrorMsg,
+	?string $Msg,
+	string $LaunchLink,
+	array $VisiblePlayers,
+	string $SectorPlayersLabel,
+	Planet $ThisPlanet,
+	Account $ThisAccount,
+	Player $ThisPlayer,
+	?array $Ticker,
+): void {
 if (isset($ErrorMsg)) {
 	echo $ErrorMsg; ?><br /><?php
 }
 if (isset($Msg)) {
-	echo $Msg; ?><br /><?php
+	echo bbify($Msg); ?><br /><?php
 }
 ?>
 
@@ -99,11 +118,22 @@ if (isset($Msg)) {
 		</td><?php
 		if (isset($Ticker)) { ?>
 			<td><?php
-				$this->includeTemplate('includes/Ticker.inc.php'); ?>
+				TickerRenderer::render($Ticker); ?>
 			</td><?php
 		} ?>
 	</tr>
 </table>
 <p><a href="<?php echo $LaunchLink; ?>" class="submitStyle">Launch</a></p>
 <?php
-$this->includeTemplate('includes/SectorPlayers.inc.php');
+SectorPlayersRenderer::render(
+	ThisAccount: $ThisAccount,
+	ThisPlanet: $ThisPlanet,
+	ThisPlayer: $ThisPlayer,
+	VisiblePlayers: $VisiblePlayers,
+	CloakedPlayers: $VisiblePlayers,
+	SectorPlayersLabel: $SectorPlayersLabel,
+);
+
+}
+
+}

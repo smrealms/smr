@@ -1,5 +1,9 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Shared;
+
+use Smr\Account;
+use Smr\Planet;
 use Smr\Player;
 
 function getPlayerOptionClass(Player $player, Player $other): string {
@@ -11,14 +15,20 @@ function getPlayerOptionClass(Player $player, Player $other): string {
 	};
 }
 
-/**
- * @var Smr\Account $ThisAccount
- * @var Smr\Planet $ThisPlanet
- * @var Smr\Player $ThisPlayer
- * @var array<Smr\Player> $VisiblePlayers
- * @var string $SectorPlayersLabel
- */
+class SectorPlayersRenderer {
 
+/**
+ * @param array<\Smr\Player> $VisiblePlayers
+ * @param array<\Smr\Player> $CloakedPlayers
+ */
+public static function render(
+	Account $ThisAccount,
+	?Planet $ThisPlanet,
+	Player $ThisPlayer,
+	array $VisiblePlayers,
+	array $CloakedPlayers,
+	string $SectorPlayersLabel,
+): void {
 ?>
 <div id="players_cs" class="ajax"><?php
 	if (count($VisiblePlayers) > 0) { ?>
@@ -74,24 +84,29 @@ function getPlayerOptionClass(Player $player, Player $other): string {
 					<td class="shrink center noWrap"><?php echo $Player->getLevelID() ?></td>
 					<td class="shrink center noWrap">
 						<div class="buttonA"><?php
-							if ($ThisPlayer->isLandedOnPlanet()) {
+				if ($ThisPlayer->isLandedOnPlanet() && $ThisPlanet !== null) {
 								if ($ThisPlanet->getOwnerID() === $ThisPlayer->getAccountID()) {
 									?><a href="<?php echo $Player->getPlanetKickHREF() ?>" class="<?php
 										echo getPlayerOptionClass($ThisPlayer, $Player);
 										?>"> Kick </a><?php
 								}
-							} else {
+				} else {
 								?><a href="<?php echo $Player->getExamineTraderHREF() ?>" class="<?php
 									echo getPlayerOptionClass($ThisPlayer, $Player);
 								?>"> Examine </a><?php
-							} ?>
+				} ?>
 						</div>
 					</td>
 				</tr><?php
 			} ?>
 		</table><?php
 	}
-	if (isset($CloakedPlayers) && count($CloakedPlayers) > 0) {
+	if (count($CloakedPlayers) > 0) {
 		?><p><span class="red bold">WARNING:</span> Sensors have detected the presence of cloaked vessels in this sector</p><?php
 	} ?>
 </div><br />
+
+<?php
+}
+
+}

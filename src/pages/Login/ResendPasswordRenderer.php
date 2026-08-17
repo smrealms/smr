@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Login;
+
+class ResendPasswordRenderer {
+
+public static function render(): void {
 ?>
 <div class="center centered">
 	<h1>Forgot Your Password?</h1>
@@ -19,3 +24,7 @@
 		</div>
 	</form>
 </div>
+<?php
+}
+
+}

@@ -1,12 +1,22 @@
 <?php declare(strict_types=1);
 
-/**
- * @var ?Smr\Player $ThisPlayer
- * @var Smr\Template $this
- * @var bool $MinimalDisplay
- * @var TraderTeamCombatResults $TraderTeamCombatResults
- */
+namespace Smr\Pages\Shared;
 
+use Exception;
+use Smr\Player;
+use Smr\Template;
+
+class TraderTeamCombatResultsRenderer {
+
+/**
+ * @param TraderTeamCombatResults $TraderTeamCombatResults
+ */
+public static function render(
+	Template $template,
+	?Player $ThisPlayer,
+	bool $MinimalDisplay,
+	array $TraderTeamCombatResults,
+): void {
 $CombatTeamResults = $TraderTeamCombatResults['Traders'];
 foreach ($CombatTeamResults as $TraderResults) {
 	$ShootingPlayer = $TraderResults['Player'];
@@ -58,7 +68,7 @@ foreach ($CombatTeamResults as $TraderResults) {
 						?> but it cannot do any damage<?php
 					}
 				} else {
-					?> destroying <?php echo $this->displayTakenDamage($ActualDamage);
+					?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
 				}
 			} ?>.
 			<br /><?php
@@ -66,7 +76,7 @@ foreach ($CombatTeamResults as $TraderResults) {
 				if (!isset($WeaponResults['KillResults'])) {
 					throw new Exception('KillingShot did not provide KillResults!');
 				}
-				$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', ['KillResults' => $WeaponResults['KillResults'], 'TargetPlayer' => $TargetPlayer, 'ShootingPlayer' => $ShootingPlayer]);
+				TraderCombatKillMessageRenderer::render(KillResults: $WeaponResults['KillResults'], TargetPlayer: $TargetPlayer, ShootingPlayer: $ShootingPlayer);
 			}
 		}
 		if (isset($TraderResults['Drones'])) {
@@ -102,7 +112,7 @@ foreach ($CombatTeamResults as $TraderResults) {
 							?> but they cannot do any damage<?php
 						}
 					} else {
-						?> destroying <?php echo $this->displayTakenDamage($ActualDamage);
+						?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
 					}
 				}
 			} ?>.
@@ -111,7 +121,7 @@ foreach ($CombatTeamResults as $TraderResults) {
 				if (!isset($Drones['KillResults'])) {
 					throw new Exception('KillingShot did not provide KillResults!');
 				}
-				$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', ['KillResults' => $Drones['KillResults'], 'TargetPlayer' => $TargetPlayer, 'ShootingPlayer' => $ShootingPlayer]);
+				TraderCombatKillMessageRenderer::render(KillResults: $Drones['KillResults'], TargetPlayer: $TargetPlayer, ShootingPlayer: $ShootingPlayer);
 			}
 		}
 	}
@@ -147,3 +157,8 @@ if ($TotalDamage > 0) { ?>
 } else { ?>
 	does no damage this round. You call that a fleet? They need a better recruiter<?php
 } ?>.
+
+<?php
+}
+
+}

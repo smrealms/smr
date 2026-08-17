@@ -1,7 +1,11 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $ClaimText
- */
+namespace Smr\Pages\Player\Headquarters;
 
-echo $ClaimText;
+class BountyClaimRenderer {
+
+public static function render(string $ClaimText): void {
+	echo $ClaimText;
+}
+
+}

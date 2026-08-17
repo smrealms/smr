@@ -10,8 +10,6 @@ use Smr\Template;
 
 class TalkToBartender extends PlayerPage {
 
-	public string $file = 'bar_talk_bartender.php';
-
 	public function __construct(
 		private readonly int $locationID,
 		private ?string $message = null,
@@ -34,19 +32,14 @@ class TalkToBartender extends PlayerPage {
 			}
 			$this->message = $message;
 		}
-		$template->assign('Message', bbify($this->message));
-
-		$container = new self($this->locationID);
-		$template->assign('ListenHREF', $container->href());
-
-		$container = new TalkToBartenderGossipProcessor($this->locationID);
-		$template->assign('ProcessGossipHREF', $container->href());
-
-		$container = new TalkToBartenderTipProcessor($this->locationID);
-		$template->assign('ProcessTipHREF', $container->href());
-
-		$container = new BarMain($this->locationID);
-		$template->assign('BackHREF', $container->href());
+		$template->pageRenderer = fn() => TalkToBartenderRenderer::render(
+			ThisPlayer: $player,
+			Message: bbify($this->message),
+			ProcessGossipHREF: new TalkToBartenderGossipProcessor($this->locationID)->href(),
+			ProcessTipHREF: new TalkToBartenderTipProcessor($this->locationID)->href(),
+			BackHREF: new BarMain($this->locationID)->href(),
+			ListenHREF: new self($this->locationID)->href(),
+		);
 	}
 
 }

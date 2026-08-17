@@ -11,8 +11,6 @@ use Smr\Template;
 
 class AllianceExemptAuthorize extends PlayerPage {
 
-	public string $file = 'alliance_exempt_authorize.php';
-
 	public function build(Player $player, Template $template): void {
 		$alliance = $player->getAlliance();
 
@@ -34,9 +32,6 @@ class AllianceExemptAuthorize extends PlayerPage {
 		]);
 		$transactions = [];
 		if ($dbResult->hasRecord()) {
-			$container = new AllianceBankExemptProcessor($this);
-			$template->assign('ExemptHREF', $container->href());
-
 			foreach ($dbResult->records() as $dbRecord) {
 				$recPlayer = Player::getPlayer($dbRecord->getInt('payee_id'), $player->getGameID());
 				$transactions[] = [
@@ -48,7 +43,10 @@ class AllianceExemptAuthorize extends PlayerPage {
 				];
 			}
 		}
-		$template->assign('Transactions', $transactions);
+		$template->pageRenderer = fn() => AllianceExemptAuthorizeRenderer::render(
+			Transactions: $transactions,
+			ExemptHREF: new AllianceBankExemptProcessor($this)->href(),
+		);
 	}
 
 }

@@ -1,13 +1,17 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Alliance $ThisAlliance
- * @var Smr\Game $ThisGame
- * @var array<Smr\Player> $InvitePlayers
- * @var string $InviteHREF
- * @var array<int, array{invited: string, invited_by: string, expires: string, cancelHREF: string}> $PendingInvites
- */
+namespace Smr\Pages\Player;
 
+use Smr\Alliance;
+use Smr\Game;
+
+class AllianceInvitePlayerRenderer {
+
+/**
+ * @param array<int, array{invited: string, invited_by: string, expires: string, cancelHREF: string}> $PendingInvites
+ * @param array<\Smr\Player> $InvitePlayers
+ */
+public static function render(array $PendingInvites, array $InvitePlayers, Game $ThisGame, Alliance $ThisAlliance, string $InviteHREF): void {
 ?>
 <table class="standard">
 	<tr>
@@ -83,3 +87,8 @@ if (count($PendingInvites) === 0) { ?>
 	</table><?php
 } ?>
 </div>
+
+<?php
+}
+
+}

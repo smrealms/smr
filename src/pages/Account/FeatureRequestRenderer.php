@@ -1,13 +1,21 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<string, array{Selected: bool, HREF: string, Count: int, Description: string}> $CategoryTable
- * @var bool $CanVote
- * @var string $FeatureRequestFormHREF
- * @var ?Smr\Pages\Account\FeatureRequestVoteProcessor $FeatureRequestVoteFormPage
- * @var ?bool $FeatureModerator
- */
+namespace Smr\Pages\Account;
 
+class FeatureRequestRenderer {
+
+/**
+ * @param array<string, array{Selected: bool, HREF: string, Count: int, Description: string}> $CategoryTable
+ * @param array<int, array{RequestID: int, Message: string, Votes: non-empty-array<string, int>, VotedFor: string|false, RequestAccount?: \Smr\Account, Comments: int, CommentsHREF: string}> $FeatureRequests
+ */
+public static function render(
+	array $CategoryTable,
+	bool $CanVote,
+	bool $FeatureModerator,
+	FeatureRequestVoteProcessor $FeatureRequestVoteFormPage,
+	array $FeatureRequests,
+	string $FeatureRequestFormHREF,
+): void {
 ?>
 <table>
 	<tr>
@@ -27,10 +35,7 @@
 </table>
 
 <?php
-if (isset($FeatureRequests)) {
-	if ($FeatureRequestVoteFormPage === null) {
-		throw new Exception('Expected non-null FeatureRequestVoteFormPage');
-	} ?>
+if (count($FeatureRequests) > 0) { ?>
 	<form name="FeatureRequestVoteForm" method="POST" action="<?php echo $FeatureRequestVoteFormPage->href(); ?>">
 		<div class="right"><?php
 			if ($CanVote) {
@@ -57,6 +62,7 @@ if (isset($FeatureRequests)) {
 			foreach ($FeatureRequests as $FeatureRequest) { ?>
 				<tr class="center"><?php
 					if ($FeatureModerator) {
+						assert(isset($FeatureRequest['RequestAccount']));
 						?><td><?php echo $FeatureRequest['RequestAccount']->getLogin(); ?>&nbsp;(<?php echo $FeatureRequest['RequestAccount']->getAccountID(); ?>)</td><?php
 					} ?>
 					<td><span class="bold green"><?php echo $FeatureRequest['Votes']['FAVOURITE']; ?></span> / <span class="green"><?php echo $FeatureRequest['Votes']['YES'] + $FeatureRequest['Votes']['FAVOURITE']; ?></span> / <span class="red"><?php echo $FeatureRequest['Votes']['NO']; ?></span></td>
@@ -108,3 +114,8 @@ if (isset($FeatureRequests)) {
 		</tr>
 	</table>
 </form>
+
+<?php
+}
+
+}

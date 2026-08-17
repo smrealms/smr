@@ -1,17 +1,35 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Galaxy $ThisGalaxy
- * @var Smr\Template $this
- * @var array<int, Smr\Galaxy> $GameGalaxies
- * @var int $LastSector
- */
+namespace Smr\Pages\Standalone;
 
+use Smr\Galaxy;
+use Smr\Pages\Layout\HeadRenderer;
+use Smr\Pages\Shared\SectorMapOptionsRenderer;
+use Smr\Pages\Shared\SectorMapRenderer;
+use Smr\Player;
+
+class GalaxyMapRenderer {
+
+/**
+ * @param array<int, \Smr\Galaxy> $GameGalaxies
+ * @param array<int, array<int, \Smr\Sector>> $MapSectors
+ */
+public static function render(
+	Galaxy $ThisGalaxy,
+	array $GameGalaxies,
+	int $LastSector,
+	?int $FocusSector,
+	bool $HideAlliedForces,
+	bool $ShowSeedlistSectors,
+	?string $CheckboxFormHREF,
+	Player $ThisPlayer,
+	array $MapSectors,
+): void {
 ?>
 <!DOCTYPE html>
 <html>
 	<head><?php
-		$this->includeTemplate('includes/Head.inc.php');
+		HeadRenderer::render($ThisPlayer->getAccount(), $ThisPlayer->getGame()->getName());
 		if (isset($FocusSector)) { ?>
 			<script>
 				$(function() {
@@ -59,14 +77,29 @@
 						</form>
 					</td>
 					<td class="bottom">
-						<?php $this->includeTemplate('includes/SectorMapOptions.inc.php'); ?>
+						<?php SectorMapOptionsRenderer::render(
+							CheckboxFormHREF: $CheckboxFormHREF,
+							HideAlliedForces: $HideAlliedForces,
+							ShowSeedlistSectors: $ShowSeedlistSectors,
+						); ?>
 					</td>
 				</tr>
 			</table>
 		</div>
 
 		<div class="gal_map_main">
-			<?php $this->includeTemplate('includes/SectorMap.inc.php', ['GalaxyMap' => true]); ?>
+			<?php SectorMapRenderer::render(
+				GalaxyMap: true,
+				ThisPlayer: $ThisPlayer,
+				HideAlliedForces: $HideAlliedForces,
+				ShowSeedlistSectors: $ShowSeedlistSectors,
+				MapSectors: $MapSectors,
+			); ?>
 		</div>
 	</body>
 </html>
+
+<?php
+}
+
+}

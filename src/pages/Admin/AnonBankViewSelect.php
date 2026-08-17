@@ -8,8 +8,6 @@ use Smr\Template;
 
 class AnonBankViewSelect extends AccountPage {
 
-	public string $file = 'admin/anon_acc_view_select.php';
-
 	public function __construct(
 		private readonly ?string $message = null,
 	) {}
@@ -18,10 +16,10 @@ class AnonBankViewSelect extends AccountPage {
 		//view anon acct activity.
 		$template->pageTopic = 'View Anonymous Account Info';
 
-		$container = new AnonBankView();
-		$template->assign('AnonViewHREF', $container->href());
-
-		$template->assign('Message', $this->message);
+		$template->pageRenderer = fn() => AnonBankViewSelectRenderer::render(
+			Message: $this->message,
+			AnonViewHREF: new AnonBankView()->href(),
+		);
 	}
 
 }

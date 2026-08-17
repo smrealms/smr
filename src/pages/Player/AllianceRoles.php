@@ -10,8 +10,6 @@ use Smr\Template;
 
 class AllianceRoles extends PlayerPage {
 
-	public string $file = 'alliance_roles.php';
-
 	public function __construct(
 		private readonly ?int $roleID = null,
 	) {}
@@ -51,9 +49,8 @@ class AllianceRoles extends PlayerPage {
 			}
 			$allianceRoles[$roleID]['HREF'] = $container->href();
 		}
-		$template->assign('AllianceRoles', $allianceRoles);
 
-		$template->assign('CreateRole', [
+		$CreateRole = [
 			'HREF' => (new AllianceRolesProcessor())->href(),
 			'RoleID' => '',
 			'Name' => '',
@@ -73,7 +70,12 @@ class AllianceRoles extends PlayerPage {
 			'OpLeader' => false,
 			'ViewBondsInPlanetList' => false,
 			'ManageNpcs' => true,
-		]);
+		];
+
+		$template->pageRenderer = fn() => AllianceRolesRenderer::render(
+			AllianceRoles: $allianceRoles,
+			CreateRole: $CreateRole,
+		);
 	}
 
 }

@@ -1,12 +1,13 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Planet;
+
 use Smr\Epoch;
+use Smr\Planet;
 
-/**
- * @var Smr\Planet $ThisPlanet
- * @var Smr\Pages\Player\Planet\FinancialProcessor $ProcessorPage
- */
+class FinancialRenderer {
 
+public static function render(FinancialProcessor $ProcessorPage, Planet $ThisPlanet): void {
 ?>
 <p>Balance: <b><span id="planet_credits"><?php echo number_format($ThisPlanet->getCredits()); ?></span></b><?php if ($ThisPlanet->getCredits() >= MAX_MONEY) { ?> (Account is Full)<?php } ?></p>
 
@@ -48,4 +49,8 @@ if ($ThisPlanet->hasOwner()) { ?>
 	<div class="buttonA">
 		<a id="bondFunds" class="buttonA" href="<?php echo $ThisPlanet->getBondConfirmationHREF(); ?>">Bond Funds</a>
 	</div>&nbsp; <?php
+}
+
+}
+
 }

@@ -1,10 +1,17 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Account $ThisAccount
- * @var array{AllianceEyesOnly: bool, CanDelete: bool, Replies: array<int, array{Sender: string, Message: string, SendTime: int, DeleteHref?: string}>, CreateThreadReplyFormPage?: Smr\Pages\Player\AllianceMessageBoardAddProcessor} $Thread
- */
+namespace Smr\Pages\Player;
 
+use Smr\Account;
+
+class AllianceMessageBoardViewRenderer {
+
+/**
+ * @param ?array{Topic: string, Href: string} $PrevThread
+ * @param ?array{Topic: string, Href: string} $NextThread
+ * @param array{AllianceEyesOnly: bool, CanDelete: bool, Replies: array<int, array{Sender: string, Message: string, SendTime: int, DeleteHref?: string}>, CreateThreadReplyFormPage?: \Smr\Pages\Player\AllianceMessageBoardAddProcessor} $Thread
+ */
+public static function render(?array $PrevThread, ?array $NextThread, array $Thread, ?string $Preview, Account $ThisAccount): void {
 if (isset($PrevThread) || isset($NextThread)) { ?>
 	<h2>Switch Topic</h2><br />
 	<table class="nobord fullwidth">
@@ -66,4 +73,8 @@ if (isset($Thread['CreateThreadReplyFormPage'])) { ?>
 		</table><br />
 		<?php echo $Thread['CreateThreadReplyFormPage']->actionCreate->html('Create Reply'); ?>&nbsp;<?php echo $Thread['CreateThreadReplyFormPage']->actionPreview->html('Preview Reply'); ?>
 	</form><?php
+}
+
+}
+
 }

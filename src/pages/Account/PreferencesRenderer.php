@@ -1,25 +1,30 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
+use Smr\Account;
 use Smr\Epoch;
 use Smr\Globals;
 use Smr\Race;
+use Smr\Template;
+
+class PreferencesRenderer {
 
 /**
- * @var Smr\Account $ThisAccount
- * @var Smr\Player $ThisPlayer
- * @var Smr\Template $this
- * @var Smr\Pages\Player\PreferencesProcessor $PlayerPreferencesForm
- * @var Smr\Pages\Account\PreferencesProcessor $AccountPreferencesForm
- * @var string $ChatSharingHREF
- * @var string $TransferConfirmFormHREF
- * @var array<int, string> $TransferAccounts
+ * @param ?array{Form: \Smr\Pages\Player\PreferencesProcessor, ChatSharingHREF: string, Player: \Smr\Player} $PlayerPreferences
  */
-
-if (isset($Reason)) {
-	?><p><span class="big bold red"><?php echo $Reason; ?></span></p><?php
-}
-
-if (isset($GameID)) { ?>
+public static function render(
+	Template $template,
+	?array $PlayerPreferences,
+	PreferencesProcessor $AccountPreferencesForm,
+	string $TransferConfirmFormHREF,
+	Account $ThisAccount,
+): void {
+if ($PlayerPreferences !== null) {
+	$PlayerPreferencesForm = $PlayerPreferences['Form'];
+	$ThisPlayer = $PlayerPreferences['Player'];
+	$ChatSharingHREF = $PlayerPreferences['ChatSharingHREF'];
+	?>
 	<form class="standard" id="PlayerPreferencesForm" method="POST" action="<?php echo $PlayerPreferencesForm->href(); ?>">
 		<table>
 			<tr>
@@ -470,4 +475,8 @@ if (isset($GameID)) { ?>
 	</table>
 </form>
 
-<?php $this->addJavascriptSource('/js/colorpicker.js');
+<?php $template->addJavascriptSource('/js/colorpicker.js');
+
+}
+
+}

@@ -1,10 +1,18 @@
 <?php declare(strict_types=1);
 
-/*
- * @var ?int $OffenderBanPoints
- * @var ?int $OffendedBanPoints
- */
+namespace Smr\Pages\Admin;
 
+class ReportedMessageReplyRenderer {
+
+public static function render(
+	ReportedMessageReplyProcessor $NotifyReplyFormPage,
+	string $Offender,
+	string $Offended,
+	?string $PreviewOffender,
+	?int $OffenderBanPoints,
+	?string $PreviewOffended,
+	?int $OffendedBanPoints,
+): void {
 ?>
 Leave a message box blank to not reply to that player.<br />
 <br />
@@ -23,3 +31,8 @@ Leave a message box blank to not reply to that player.<br />
 
 	<?php echo $NotifyReplyFormPage->actionSend->html(); ?>&nbsp;<?php echo $NotifyReplyFormPage->actionPreview->html(); ?>
 </form>
+
+<?php
+}
+
+}

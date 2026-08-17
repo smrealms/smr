@@ -12,8 +12,6 @@ use Smr\Treaty;
 
 class AllianceTreaties extends PlayerPage {
 
-	public string $file = 'alliance_treaties.php';
-
 	public function __construct(
 		private readonly ?string $message = null,
 	) {}
@@ -32,9 +30,6 @@ class AllianceTreaties extends PlayerPage {
 			$alliance = Alliance::getAlliance($allianceID, $player->getGameID(), false, $dbRecord);
 			$alliances[$allianceID] = $alliance->getAllianceDisplayName();
 		}
-		$template->assign('Alliances', $alliances);
-
-		$template->assign('Message', $this->message);
 
 		$offers = [];
 		$dbResult = $db->select('alliance_treaties', [
@@ -62,10 +57,15 @@ class AllianceTreaties extends PlayerPage {
 				'RejectHREF' => $rejectHREF,
 			];
 		}
-		$template->assign('Offers', $offers);
 
 		$container = new AllianceTreatiesConfirm();
-		$template->assign('SendOfferHREF', $container->href());
+
+		$template->pageRenderer = fn() => AllianceTreatiesRenderer::render(
+			Alliances: $alliances,
+			Message: $this->message,
+			Offers: $offers,
+			SendOfferHREF: $container->href(),
+		);
 	}
 
 }

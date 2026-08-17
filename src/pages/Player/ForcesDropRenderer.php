@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Force $Forces
- * @var Smr\Ship $ThisShip
- * @var string $SubmitHREF
- */
+namespace Smr\Pages\Player;
 
+use Smr\AbstractShip;
+use Smr\Force;
+
+class ForcesDropRenderer {
+
+public static function render(Force $Forces, string $SubmitHREF, AbstractShip $ThisShip): void {
 ?>
 <form method="POST" action="<?php echo $SubmitHREF; ?>">
 	<table class="standard">
@@ -50,3 +52,8 @@
 
 	</table>
 </form>
+
+<?php
+}
+
+}

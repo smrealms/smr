@@ -14,9 +14,6 @@ use Smr\Template;
 class NewsReadArchives extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'news_read.php';
-
 	public function __construct(
 		private readonly int $gameID,
 	) {}
@@ -29,17 +26,10 @@ class NewsReadArchives extends AccountPage {
 		if ($min_news > $max_news) {
 			create_error('The first number must be lower than the second number!');
 		}
-		$template->assign('MinNews', $min_news);
-		$template->assign('MaxNews', $max_news);
 
 		$template->pageTopic = 'Reading The News';
 
 		Menu::news($gameID);
-
-		News::doBreakingNewsAssign($gameID);
-		News::doLottoNewsAssign($gameID);
-
-		$template->assign('ViewNewsFormHref', (new self($this->gameID))->href());
 
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND type != \'lotto\' ORDER BY news_id DESC LIMIT :limit_offset, :limit_count', [
@@ -47,7 +37,16 @@ class NewsReadArchives extends AccountPage {
 			'limit_count' => $max_news - $min_news + 1,
 			'limit_offset' => $min_news - 1,
 		]);
-		$template->assign('NewsItems', News::getNewsItems($dbResult));
+
+		$template->pageRenderer = fn() => NewsReadArchivesRenderer::render(
+			MinNews: $min_news,
+			MaxNews: $max_news,
+			ViewNewsFormHref: (new self($this->gameID))->href(),
+			NewsItems: News::getNewsItems($dbResult),
+			ThisAccount: $account,
+			BreakingNews: News::getBreakingNews($gameID),
+			LottoNews: News::getLottoNews($gameID),
+		);
 	}
 
 }

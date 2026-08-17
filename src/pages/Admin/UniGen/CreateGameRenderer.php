@@ -1,11 +1,30 @@
 <?php declare(strict_types=1);
 
-use Smr\Game;
+namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Game;
+use Smr\Pages\Shared\Admin\Unigen\GameDetailsRenderer;
+use Smr\Template;
+
+class CreateGameRenderer {
+
+/**
+ * @param array{name: string, description: string, speed: float, maxTurns: int, startTurnHours: int, maxPlayers: int, joinDate: string, startDate: string, endDate: string, smrCredits: int, gameType: string, allianceMax: int, allianceMaxVets: int, startCredits: int, ignoreStats: bool, relations: int, destroyPorts: bool} $Game
+ * @param list<array{ID: int, Name: string, Creator: string, CreateDate: string, ReadyDate: string, ViewHREF: string, EditHREF: ?string, DeleteHREF: ?string}> $DevGames
+ */
+public static function render(
+	Template $template,
+	string $CreateGalaxiesHREF,
+	string $EditGameHREF,
+	string $ViewGameHREF,
+	bool $CanEditEnabledGames,
+	array $Game,
+	array $DevGames,
+): void {
 ?>
 
 <h1>Create New Game</h1>
-<?php $this->includeTemplate('admin/unigen/GameDetails.inc.php', ['ProcessingHREF' => $CreateGalaxiesHREF]); ?>
+<?php GameDetailsRenderer::render(Game: $Game, ProcessingHREF: $CreateGalaxiesHREF, SubmitValue: 'Create Game'); ?>
 <br />
 
 <h1>Past Games</h1>
@@ -76,4 +95,8 @@ if (count($DevGames) === 0) { ?>
 	</table><?php
 }
 
-$this->listjsInclude = 'dev_games';
+$template->listjsInclude = 'dev_games';
+
+}
+
+}

@@ -12,8 +12,6 @@ class CargoDump extends PlayerPage {
 
 	use ReusableTrait;
 
-	public string $file = 'cargo_dump.php';
-
 	public function build(Player $player, Template $template): void {
 		$ship = $player->getShip();
 
@@ -30,7 +28,8 @@ class CargoDump extends PlayerPage {
 				'dump_href' => $container->href(),
 			];
 		}
-		$template->assign('Goods', $goods);
+
+		$template->pageRenderer = fn() => CargoDumpRenderer::render($goods);
 	}
 
 }

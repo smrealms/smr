@@ -1,14 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Shared;
+
+use Smr\AbstractShip;
 use Smr\Globals;
+use Smr\Player;
+use Smr\Sector;
+
+class SectorNavigationRenderer {
 
 /**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Sector $ThisSector
- * @var Smr\Ship $ThisShip
- * @var array<string, array{ID: int, Class: string}> $Sectors
+ * @param array<string, array{ID: int, Class: string}> $Sectors
  */
-
+public static function render(
+	Player $ThisPlayer,
+	Sector $ThisSector,
+	AbstractShip $ThisShip,
+	array $Sectors,
+): void {
 if (count($Sectors) > 0) { ?>
 	<div class="secNavBox">
 		<div class="<?php if ($ThisShip->hasScanner()) { ?>scan<?php } else { ?>no_scan<?php } ?>">
@@ -121,4 +130,8 @@ if (count($Sectors) > 0) { ?>
 			}?>
 		</div>
 	</div><?php
+}
+
+}
+
 }

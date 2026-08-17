@@ -1,11 +1,12 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
 use Smr\Alliance;
 
-/**
- * @var string $CreateHREF
- */
+class AllianceCreateRenderer {
 
+public static function render(string $CreateHREF): void {
 ?>
 <form method="POST" action="<?php echo $CreateHREF; ?>">
 	<table class="standard">
@@ -42,3 +43,7 @@ use Smr\Alliance;
 	<br /><br />
 	<?php echo create_submit_display('Create'); ?>
 </form>
+<?php
+}
+
+}

@@ -1,11 +1,19 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Player $TargetPlayer
- * @var ?Smr\Player $ShootingPlayer
- * @var array<string, int> $KillResults
- */
+namespace Smr\Pages\Shared;
 
+use Smr\Player;
+
+class TraderCombatKillMessageRenderer {
+
+/**
+ * @param array<string, int> $KillResults
+ */
+public static function render(
+	Player $TargetPlayer,
+	?Player $ShootingPlayer,
+	array $KillResults,
+): void {
 echo $TargetPlayer->getDisplayName(); ?> has been <span class="red">DESTROYED</span>, losing <span class="exp"><?php echo number_format($KillResults['DeadExp'])?></span> experience.<br /><?php
 if (isset($ShootingPlayer)) {
 	// Killed by another player
@@ -15,4 +23,8 @@ if (isset($ShootingPlayer)) {
 	echo 'The <span class="creds"> ' . number_format($KillResults['LostCredits'])
 		. '</span> credits that were onboard ' . $TargetPlayer->getDisplayName()
 		. "'s ship are lost in the wreckage.<br />";
+}
+
+}
+
 }

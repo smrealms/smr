@@ -1,15 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Sector $ScanSector
- * @var int $EnemyVessel
- * @var int $FriendlyVessel
- * @var int $EnemyForces
- * @var int $FriendlyForces
- * @var int $Turns
- */
+namespace Smr\Pages\Player;
 
+use Smr\Player;
+use Smr\Sector;
+
+class SectorScanRenderer {
+
+public static function render(int $FriendlyVessel, int $FriendlyForces, int $EnemyVessel, int $EnemyForces, Sector $ScanSector, int $Turns, Player $ThisPlayer): void {
 ?>
 <table class="standard">
 	<tr>
@@ -48,3 +46,8 @@
 
 <a href="<?php echo $ScanSector->getSectorScanHREF($ThisPlayer); ?>" class="submitStyle">Rescan #<?php echo $ScanSector->getSectorID(); ?></a>&nbsp;
 <a href="<?php echo $ScanSector->getCurrentSectorMoveHREF($ThisPlayer); ?>" class="submitStyle">Enter #<?php echo $ScanSector->getSectorID(); ?> (<?php echo $Turns; ?>)</a>
+
+<?php
+}
+
+}

@@ -1,13 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use Smr\Combat\Results\TraderFullCombatResults;
 use Smr\Globals;
+use Smr\Pages\Shared\TraderFullCombatResultsRenderer;
+use Smr\Player;
+use Smr\Template;
 
-/**
- * @var Smr\Template $this
- * @var bool $OverrideDeath
- */
+class AttackPlayerRenderer {
 
-$this->includeTemplate('includes/TraderFullCombatResults.inc.php'); ?><br />
+public static function render(Template $template, TraderFullCombatResults $TraderCombatResults, ?Player $Target, bool $OverrideDeath, Player $ThisPlayer): void {
+TraderFullCombatResultsRenderer::render(
+	template: $template,
+	MinimalDisplay: false,
+	TraderCombatResults: $TraderCombatResults,
+	AttackLogLink: null,
+	ThisPlayer: $ThisPlayer,
+); ?><br />
 <br />
 <div class="center"><?php
 	if (isset($Target)) { ?>
@@ -25,3 +35,8 @@ $this->includeTemplate('includes/TraderFullCombatResults.inc.php'); ?><br />
 		</div><?php
 	} ?>
 </div>
+
+<?php
+}
+
+}

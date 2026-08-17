@@ -1,12 +1,22 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Account $ThisAccount
- * @var string $Breadcrumb
- * @var ?array<string> $Rows
- * @var ?array<array{link: string, subcategories: string}> $Categories
- */
+namespace Smr\Pages\Shared;
 
+use Smr\Account;
+
+class HallOfFameRenderer {
+
+/**
+ * @param ?array<string> $Rows
+ * @param ?array<array{link: string, subcategories: string}> $Categories
+ */
+public static function render(
+	Account $ThisAccount,
+	string $Breadcrumb,
+	?array $Rows,
+	?array $Categories,
+	?string $PersonalHofHREF,
+): void {
 ?>
 <div class="center">
 	Welcome to the Hall of Fame, <?php echo $ThisAccount->getHofDisplayName(); ?>!<br />
@@ -44,4 +54,8 @@ if (isset($Categories)) { ?>
 			echo $Row;
 		} ?>
 	</table><?php
+}
+
+}
+
 }

@@ -12,8 +12,6 @@ use Smr\Template;
 
 class AllianceInvitePlayer extends PlayerPage {
 
-	public string $file = 'alliance_invite_player.php';
-
 	public function build(Player $player, Template $template): void {
 		$alliance = $player->getAlliance();
 		$game = $player->getGame();
@@ -34,7 +32,6 @@ class AllianceInvitePlayer extends PlayerPage {
 				'cancelHREF' => $container->href(),
 			];
 		}
-		$template->assign('PendingInvites', $pendingInvites);
 
 		// Get list of players eligible to join this alliance.
 		// List those who joined the game most recently first.
@@ -61,11 +58,14 @@ class AllianceInvitePlayer extends PlayerPage {
 				}
 			}
 		}
-		$template->assign('InvitePlayers', $invitePlayers);
 
-		$template->assign('ThisGame', $game);
-		$template->assign('ThisAlliance', $alliance);
-		$template->assign('InviteHREF', (new AllianceInvitePlayerProcessor())->href());
+		$template->pageRenderer = fn() => AllianceInvitePlayerRenderer::render(
+			PendingInvites: $pendingInvites,
+			InvitePlayers: $invitePlayers,
+			ThisGame: $game,
+			ThisAlliance: $alliance,
+			InviteHREF: new AllianceInvitePlayerProcessor()->href(),
+		);
 	}
 
 }

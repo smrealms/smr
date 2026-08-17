@@ -1,10 +1,16 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $RankingStat
- * @var array<int, array{Alliance: Smr\Alliance, Class: string, Value: int}> $Rankings
- */
+namespace Smr\Pages\Shared;
 
+class AllianceRankingsListRenderer {
+
+/**
+ * @param array<int, array{Alliance: \Smr\Alliance, Class: string, Value: int}> $Rankings
+ */
+public static function render(
+	string $RankingStat,
+	array $Rankings,
+): void {
 ?>
 <table class="standard center inset">
 	<tr>
@@ -24,3 +30,8 @@
 		</tr><?php
 	} ?>
 </table>
+
+<?php
+}
+
+}

@@ -1,5 +1,25 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin\UniGen;
+
+use Smr\Galaxy;
+
+class CreatePlanetsRenderer {
+
+/**
+ * @param array<int, Galaxy> $Galaxies
+ * @param array<int, string> $AllowedTypes
+ * @param array<int, int> $NumberOfPlanets
+ */
+public static function render(
+	array $Galaxies,
+	string $JumpGalaxyHREF,
+	array $AllowedTypes,
+	Galaxy $Galaxy,
+	array $NumberOfPlanets,
+	string $CreatePlanetsFormHREF,
+	string $CancelHREF,
+): void {
 ?>
 <form method="POST" action="<?php echo $JumpGalaxyHREF; ?>">
 	Working on Galaxy:
@@ -37,3 +57,8 @@
 
 <span class="small">Note: When you press "Create Planets" this will rearrange all current planets.<br />
 To add new planets without rearranging everything use the edit sector feature.</span>
+
+<?php
+}
+
+}

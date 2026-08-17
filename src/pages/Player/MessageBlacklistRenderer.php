@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<array<string, string>> $Blacklist
- * @var string $BlacklistDeleteHREF
- * @var string $BlacklistAddHREF
- */
+namespace Smr\Pages\Player;
 
+class MessageBlacklistRenderer {
+
+/** @param array<array<string, string>> $Blacklist */
+public static function render(?string $Message, array $Blacklist, string $BlacklistDeleteHREF, string $BlacklistAddHREF): void {
 if (isset($Message)) {
 	echo $Message; ?><br /><br /><?php
 } ?>
@@ -49,3 +49,7 @@ if (count($Blacklist) > 0) { ?>
 	</table><br />
 	<?php echo create_submit_display('Blacklist'); ?>
 </form>
+<?php
+}
+
+}

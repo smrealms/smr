@@ -1,14 +1,23 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Ship $ThisShip
- * @var Smr\Template $this
- * @var ?string $ToggleCloakHREF
- * @var ?string $SetIllusionFormHREF
- * @var ?string $DisableIllusionHref
- * @var ?array<int, string> $IllusionShips
- */
+namespace Smr\Pages\Player;
 
+use Smr\AbstractShip;
+use Smr\Pages\Shared\JumpDriveRenderer;
+
+class HardwareConfigureRenderer {
+
+/**
+ * @param ?array<int, string> $IllusionShips
+ */
+public static function render(
+	?string $ToggleCloakHREF,
+	?string $SetIllusionFormHREF,
+	?array $IllusionShips,
+	?string $DisableIllusionHref,
+	?SectorJumpProcessor $JumpDrivePage,
+	AbstractShip $ThisShip,
+): void {
 if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()) {
 	?>You have no configurable hardware installed!<?php
 } else { ?>
@@ -45,5 +54,12 @@ if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()
 			</table>
 		</form><?php
 	}
-	$this->includeTemplate('includes/JumpDrive.inc.php');
+	JumpDriveRenderer::render(
+		ThisShip: $ThisShip,
+		JumpDrivePage: $JumpDrivePage,
+	);
+}
+
+}
+
 }

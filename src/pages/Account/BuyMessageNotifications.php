@@ -9,15 +9,11 @@ use Smr\Template;
 
 class BuyMessageNotifications extends AccountPage {
 
-	public string $file = 'buy_message_notifications.php';
-
 	public function __construct(
 		private readonly ?string $message = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('Message', $this->message);
-
 		$template->pageTopic = 'Message Notifications';
 
 		// Presently only player messages are eligible for notifications
@@ -35,7 +31,10 @@ class BuyMessageNotifications extends AccountPage {
 			$messageBox['BuyHref'] = $container->href();
 			$messageBoxes[] = $messageBox;
 		}
-		$template->assign('MessageBoxes', $messageBoxes);
+		$template->pageRenderer = fn() => BuyMessageNotificationsRenderer::render(
+			Message: $this->message,
+			MessageBoxes: $messageBoxes,
+		);
 	}
 
 }

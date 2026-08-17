@@ -10,18 +10,17 @@ use Smr\Template;
 class SearchForTrader extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'trader_search.php';
-
 	public function __construct(
 		private readonly bool $emptyResult = false,
 	) {}
 
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Search For Trader';
-		$template->assign('TraderSearchHREF', (new SearchForTraderResult())->href());
 
-		$template->assign('EmptyResult', $this->emptyResult);
+		$template->pageRenderer = fn() => SearchForTraderRenderer::render(
+			TraderSearchHREF: new SearchForTraderResult()->href(),
+			EmptyResult: $this->emptyResult,
+		);
 	}
 
 }

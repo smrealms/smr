@@ -1,12 +1,26 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Template $this
- * @var string $MapExpandHREF
- * @var string $MapShrinkHREF
- * @var string $GalaxyName
- */
+namespace Smr\Pages\Player;
 
+use Smr\Pages\Shared\SectorMapOptionsRenderer;
+use Smr\Pages\Shared\SectorMapRenderer;
+use Smr\Player;
+
+class LocalMapRenderer {
+
+/**
+ * @param array<int, array<int, \Smr\Sector>> $MapSectors
+ */
+public static function render(
+	bool $ShowSeedlistSectors,
+	bool $HideAlliedForces,
+	?string $CheckboxFormHREF,
+	string $MapExpandHREF,
+	string $MapShrinkHREF,
+	string $GalaxyName,
+	array $MapSectors,
+	?Player $ThisPlayer = null,
+): void {
 ?>
 <table class="nobord fullwidth">
 	<tr>
@@ -20,12 +34,25 @@
 		<td style="width: 80%" class="center">
 			Local Map of the Known <span class="big bold"><?php echo $GalaxyName ?></span> Galaxy
 			<br /><br />
-			<?php if (isset($Error)) echo $Error; ?>
 		</td>
 		<td style="width: 10%"></td>
 	</tr>
 </table>
 
 <?php
-$this->includeTemplate('includes/SectorMap.inc.php');
-$this->includeTemplate('includes/SectorMapOptions.inc.php');
+SectorMapRenderer::render(
+	ThisPlayer: $ThisPlayer,
+	MapSectors: $MapSectors,
+	GalaxyMap: false,
+	HideAlliedForces: $HideAlliedForces,
+	ShowSeedlistSectors: $ShowSeedlistSectors,
+);
+SectorMapOptionsRenderer::render(
+	HideAlliedForces: $HideAlliedForces,
+	ShowSeedlistSectors: $ShowSeedlistSectors,
+	CheckboxFormHREF: $CheckboxFormHREF,
+);
+
+}
+
+}

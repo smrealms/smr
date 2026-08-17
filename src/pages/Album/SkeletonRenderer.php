@@ -1,13 +1,16 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Album;
+
+use Closure;
 use Smr\Epoch;
 
-/**
- * @var array<string> $Letters
- * @var string $Body
- * @var Smr\Template $this
- */
+class SkeletonRenderer {
 
+/**
+ * @param array<string> $Letters
+ */
+public static function render(Closure $body, array $Letters): void {
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,7 +40,7 @@ use Smr\Epoch;
 					</form>
 				</div>
 				<hr class="center">
-				<?php $this->includeTemplate($Body); ?>
+				<?php $body(); ?>
 			</div>
 			<br />
 			<div class="left" style="font-size: 65%;">
@@ -47,3 +50,7 @@ use Smr\Epoch;
 		</div>
 	</body>
 </html>
+<?php
+}
+
+}

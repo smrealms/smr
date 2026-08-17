@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Pages\Admin\AnnouncementCreateProcessor $AnnouncementCreateForm
- * @var ?string $Preview
- */
+namespace Smr\Pages\Admin;
 
+class AnnouncementCreateRenderer {
+
+public static function render(AnnouncementCreateProcessor $AnnouncementCreateForm, ?string $Preview): void {
 ?>
 Announcements are displayed to all users the next time they log in.<br />
 You may use BBCode in your message, but not HTML.<br /><br />
@@ -14,3 +14,7 @@ You may use BBCode in your message, but not HTML.<br /><br />
 	<?php echo $AnnouncementCreateForm->actionCreate->html('Create announcement'); ?>&nbsp;
 	<?php echo $AnnouncementCreateForm->actionPreview->html('Preview announcement'); ?>
 </form>
+<?php
+}
+
+}

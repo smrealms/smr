@@ -1,11 +1,16 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Account $ThisAccount
- * @var Smr\Template $this
- * @var array<Smr\Force> $Forces
- */
+namespace Smr\Pages\Player;
 
+use Smr\Account;
+use Smr\Template;
+
+class ForcesListRenderer {
+
+/**
+ * @param array<\Smr\Force> $Forces
+ */
+public static function render(Template $template, array $Forces, Account $ThisAccount): void {
 if (count($Forces) === 0) { ?>
 	You have no deployed forces.
 	<a href="<?php echo WIKI_URL; ?>/game-guide/forces" target="_blank">
@@ -39,5 +44,9 @@ if (count($Forces) === 0) { ?>
 		</tbody>
 	</table>
 
-	<?php $this->listjsInclude = 'forces_list';
+	<?php $template->listjsInclude = 'forces_list';
+}
+
+}
+
 }

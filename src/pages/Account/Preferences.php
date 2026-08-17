@@ -13,20 +13,27 @@ use Smr\Template;
 class Preferences extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'preferences.php';
-
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Preferences';
 
 		$session = Session::getInstance();
 		if ($session->hasGame()) {
-			$template->assign('PlayerPreferencesForm', new PlayerPreferencesProcessor());
-			$template->assign('ChatSharingHREF', (new ChatSharing())->href());
+			$playerPreferences = [
+				'Form' => new PlayerPreferencesProcessor(),
+				'ChatSharingHREF' => (new ChatSharing())->href(),
+				'Player' => $session->getPlayer(),
+			];
+		} else {
+			$playerPreferences = null;
 		}
-		$template->assign('AccountPreferencesForm', new PreferencesProcessor());
 
-		$template->assign('TransferConfirmFormHREF', (new PreferencesTransferConfirm())->href());
+		$template->pageRenderer = fn() => PreferencesRenderer::render(
+			template: $template,
+			PlayerPreferences: $playerPreferences,
+			AccountPreferencesForm: new PreferencesProcessor(),
+			TransferConfirmFormHREF: (new PreferencesTransferConfirm())->href(),
+			ThisAccount: $account,
+		);
 	}
 
 }

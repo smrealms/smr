@@ -12,8 +12,6 @@ use Smr\Template;
 
 class ManagePostEditors extends AccountPage {
 
-	public string $file = 'admin/manage_post_editors.php';
-
 	public function __construct(
 		private readonly ?int $selectedGameID = null,
 		private readonly ?string $processingMsg = null,
@@ -21,9 +19,6 @@ class ManagePostEditors extends AccountPage {
 
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Manage Galactic Post Editors';
-
-		$container = new ManagePostEditorsSelectProcessor();
-		$template->assign('SelectGameHREF', $container->href());
 
 		// Get the list of active games ordered by reverse start date
 		$activeGames = [];
@@ -37,12 +32,10 @@ class ManagePostEditors extends AccountPage {
 				'game_id' => $dbRecord->getInt('game_id'),
 			];
 		}
-		$template->assign('ActiveGames', $activeGames);
 
 		if (count($activeGames) > 0) {
 			// Set the selected game (or the first in the list if not selected yet)
 			$selectedGameID = $this->selectedGameID ?? $activeGames[0]['game_id'];
-			$template->assign('SelectedGame', $selectedGameID);
 
 			// Get the list of current editors for the selected game
 			$currentEditors = [];
@@ -50,14 +43,17 @@ class ManagePostEditors extends AccountPage {
 				$editor = Player::getPlayer($editorID, $selectedGameID);
 				$currentEditors[] = $editor->getDisplayName();
 			}
-			$template->assign('CurrentEditors', $currentEditors);
 
-			// If we have just forwarded from the processing file, pass its message.
-			$template->assign('ProcessingMsg', $this->processingMsg);
-
-			// Create the link to the processing file
-			$linkContainer = new ManagePostEditorsProcessor($selectedGameID);
-			$template->assign('PostEditorPage', $linkContainer);
+			$template->pageRenderer = fn() => ManagePostEditorsRenderer::render(
+				SelectGameHREF: new ManagePostEditorsSelectProcessor()->href(),
+				ActiveGames: $activeGames,
+				SelectedGame: $selectedGameID,
+				CurrentEditors: $currentEditors,
+				ProcessingMsg: $this->processingMsg,
+				PostEditorPage: new ManagePostEditorsProcessor($selectedGameID),
+			);
+		} else {
+			$template->pageRenderer = fn() => ManagePostEditorsRenderer::renderEmpty();
 		}
 	}
 

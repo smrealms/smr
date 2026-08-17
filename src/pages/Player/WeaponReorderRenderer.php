@@ -1,12 +1,14 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use Smr\AbstractShip;
 use Smr\Globals;
+use Smr\Template;
 
-/**
- * @var Smr\Ship $ThisShip
- * @var Smr\Template $this
- */
+class WeaponReorderRenderer {
 
+public static function render(Template $template, AbstractShip $ThisShip): void {
 if ($ThisShip->hasWeapons()) { ?>
 	<div class="center">
 		<p>To reorder your weapons simply drag and drop them into the desired order.</p>
@@ -45,7 +47,11 @@ if ($ThisShip->hasWeapons()) { ?>
 			<?php echo create_submit_display('Update Weapon Order'); ?>
 		</form>
 	</div>
-	<?php $this->addJavascriptSource('/js/weapon_reorder.js');
+	<?php $template->addJavascriptSource('/js/weapon_reorder.js');
 } else {
 	?>You don't have any weapons!<?php
+}
+
+}
+
 }

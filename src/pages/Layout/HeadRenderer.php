@@ -1,13 +1,16 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Account $ThisAccount
- * @var string $CSSLink
- * @var string $CSSColourLink
- * @var ?string $ExtraCSSLink
- * @var int $FontSize
- */
+namespace Smr\Pages\Layout;
 
+use Smr\Account;
+
+class HeadRenderer {
+
+public static function render(Account $ThisAccount, ?string $GameName): void {
+	$CSSLink = $ThisAccount->getCssUrl();
+	$CSSColourLink = $ThisAccount->getCssColourUrl();
+	$ExtraCSSLink = $ThisAccount->getCssLink();
+	$FontSize = $ThisAccount->getFontSize() - 20;
 ?>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <title><?php echo PAGE_TITLE; ?><?php if (isset($GameName)) echo ": $GameName"; ?></title>
@@ -49,3 +52,7 @@ if (isset($ExtraCSSLink) && $ExtraCSSLink !== '') {
 <script src="<?php echo JQUERY_URL; ?>"></script>
 <script src="<?php echo JQUERYUI_URL; ?>"></script>
 <script src="/js/smr15.js"></script>
+<?php
+}
+
+}

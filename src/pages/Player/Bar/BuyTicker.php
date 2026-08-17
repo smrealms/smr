@@ -10,8 +10,6 @@ use Smr\Template;
 
 class BuyTicker extends PlayerPage {
 
-	public string $file = 'bar_ticker_buy.php';
-
 	public function __construct(
 		private readonly int $locationID,
 	) {}
@@ -35,10 +33,10 @@ class BuyTicker extends PlayerPage {
 			}
 			$tickers[$type] = $ticker['Expires'] - Epoch::time();
 		}
-		$template->assign('Tickers', $tickers);
-
-		$container = new BuyTickerProcessor($this->locationID);
-		$template->assign('BuyHREF', $container->href());
+		$template->pageRenderer = fn() => BuyTickerRenderer::render(
+			BuyHREF: new BuyTickerProcessor($this->locationID)->href(),
+			Tickers: $tickers,
+		);
 	}
 
 }

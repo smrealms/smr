@@ -1,15 +1,29 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Template $this
- * @var bool $MinimalDisplay
- * @var array{Attackers: PlanetAttackerCombatResults, Planet: PlanetCombatResults} $FullPlanetCombatResults
- */
+namespace Smr\Pages\Shared;
 
+use Smr\Combat\Results\PlanetFullCombatResults;
+use Smr\Player;
+use Smr\Template;
+
+class PlanetFullCombatResultsRenderer {
+
+public static function render(
+	Template $template,
+	bool $MinimalDisplay,
+	PlanetFullCombatResults $FullPlanetCombatResults,
+	Player $ThisPlayer,
+	?string $AttackLogLink,
+): void {
 if (!$MinimalDisplay) { ?>
 	<h1>Attacker Results</h1><br /><?php
 }
-$this->includeTemplate('includes/PlanetTraderTeamCombatResults.inc.php', ['TraderTeamCombatResults' => $FullPlanetCombatResults['Attackers'], 'MinimalDisplay' => $MinimalDisplay]);
+PlanetTraderTeamCombatResultsRenderer::render(
+	template: $template,
+	TraderTeamCombatResults: $FullPlanetCombatResults->attackers,
+	MinimalDisplay: $MinimalDisplay,
+	ThisPlayer: $ThisPlayer,
+);
 ?><br /><?php
 if (!$MinimalDisplay) { ?>
 	<br />
@@ -17,4 +31,14 @@ if (!$MinimalDisplay) { ?>
 	<br />
 	<h1>Planet Results</h1><br /><?php
 }
-$this->includeTemplate('includes/PlanetCombatResults.inc.php', ['PlanetCombatResults' => $FullPlanetCombatResults['Planet'], 'MinimalDisplay' => $MinimalDisplay]);
+PlanetCombatResultsRenderer::render(
+	template: $template,
+	PlanetCombatResults: $FullPlanetCombatResults->planet,
+	MinimalDisplay: $MinimalDisplay,
+	ThisPlayer: $ThisPlayer,
+	AttackLogLink: $AttackLogLink,
+);
+
+}
+
+}

@@ -2,6 +2,10 @@
 
 use Smr\Album;
 use Smr\Database;
+use Smr\Pages\Album\EntryRenderer;
+use Smr\Pages\Album\MainRenderer;
+use Smr\Pages\Album\SearchResultsRenderer;
+use Smr\Pages\Album\SkeletonRenderer;
 use Smr\Request;
 use Smr\Session;
 use Smr\Template;
@@ -9,7 +13,6 @@ use Smr\Template;
 try {
 	require_once('../../bootstrap.php');
 
-	$template = new Template();
 	$session = Session::getInstance();
 	$db = Database::getInstance();
 
@@ -21,7 +24,6 @@ try {
 	}
 	$letters = array_unique($letters);
 	sort($letters);
-	$template->assign('Letters', $letters);
 
 	$matches = [];
 	if (Request::has('nick')) {
@@ -33,15 +35,12 @@ try {
 	}
 
 	if (count($matches) === 0) {
-		$template->assign('Body', 'album/main.php');
-
 		// Sort entries by descending page views, then take top 5
 		uasort($albums, fn(Album $a, Album $b) => $b->pageViews <=> $a->pageViews);
 		$mostViewed = [];
 		foreach (array_slice($albums, 0, 5, true) as $nick => $album) {
 			$mostViewed[$nick] = $album->pageViews;
 		}
-		$template->assign('MostViewed', $mostViewed);
 
 		// Sort entries by descending creation date, then take top 5
 		uasort($albums, fn(Album $a, Album $b) => $b->created <=> $a->created);
@@ -50,10 +49,13 @@ try {
 		foreach (array_slice($albums, 0, 5, true) as $nick => $album) {
 			$newest[$nick] = date($dateFormat, $album->created);
 		}
-		$template->assign('Newest', $newest);
+
+		$body = fn() => MainRenderer::render(
+			MostViewed: $mostViewed,
+			Newest: $newest,
+		);
 
 	} elseif (count($matches) === 1) {
-		$template->assign('Body', 'album/entry.php');
 
 		$nick = key($matches);
 		$album = $matches[$nick];
@@ -78,7 +80,9 @@ try {
 			'hof_name' => $db->escapeString($nick),
 		]);
 		if ($dbResult->hasRecord()) {
-			$template->assign('PrevNick', $dbResult->record()->getString('hof_name'));
+			$prevNick = $dbResult->record()->getString('hof_name');
+		} else {
+			$prevNick = null;
 		}
 
 		// Get the next entry
@@ -91,7 +95,9 @@ try {
 			'hof_name' => $db->escapeString($nick),
 		]);
 		if ($dbResult->hasRecord()) {
-			$template->assign('NextNick', $dbResult->record()->getString('hof_name'));
+			$nextNick = $dbResult->record()->getString('hof_name');
+		} else {
+			$nextNick = null;
 		}
 
 		$entry = [
@@ -105,23 +111,35 @@ try {
 			'OtherInfo' => $album->getDisplayOtherInfo(),
 			'AccountID' => $album->accountID,
 		];
-		$template->assign('Entry', $entry);
 
 		$dateFormat = $session->hasAccount() ? $session->getAccount()->getDateTimeFormat() : DEFAULT_DATE_TIME_FORMAT;
-		$template->assign('Comments', $album->getComments($dateFormat));
+		$comments = $album->getComments($dateFormat);
 
 		if ($session->hasAccount()) {
-			$template->assign('ViewerDisplayName', $session->getAccount()->getHofDisplayName());
+			$viewerDisplayName = $session->getAccount()->getHofDisplayName();
 			$canModerate = $session->getAccount()->hasPermission(PERMISSION_MODERATE_PHOTO_ALBUM);
-			$template->assign('CanModerate', $canModerate);
+		} else {
+			$viewerDisplayName = null;
+			$canModerate = false;
 		}
 
+		$body = fn() => EntryRenderer::render(
+			PrevNick: $prevNick,
+			NextNick: $nextNick,
+			Entry: $entry,
+			Comments: $comments,
+			CanModerate: $canModerate,
+			ViewerDisplayName: $viewerDisplayName,
+		);
+
 	} else {
-		$template->assign('Body', 'album/search_results.php');
-		$template->assign('Nicks', array_keys($matches));
+		$nicks = array_keys($matches);
+		$body = fn() => SearchResultsRenderer::render($nicks);
 	}
 
-	$template->display('album/skeleton.php');
+	Template::getInstance()->display(
+		fn() => SkeletonRenderer::render($body, $letters),
+	);
 
 } catch (Throwable $e) {
 	handleException($e);

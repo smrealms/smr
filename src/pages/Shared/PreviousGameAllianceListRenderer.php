@@ -1,10 +1,16 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $BackHREF
- * @var array<array{leader: string, bold: string, player_name: string, experience: int, alignment: int, race: string, kills: int, deaths: int, bounty: int}> $Players
- */
+namespace Smr\Pages\Shared;
 
+class PreviousGameAllianceListRenderer {
+
+/**
+ * @param array<array{leader: string, bold: string, player_name: string, experience: int, alignment: int, race: string, kills: int, deaths: int, bounty: int}> $Players
+ */
+public static function render(
+	string $BackHREF,
+	array $Players,
+): void {
 ?>
 <div class="center">
 	<a href="<?php echo $BackHREF; ?>"><b>&lt;&lt;Back</b></a>
@@ -34,3 +40,8 @@
 		} ?>
 	</table>
 </div>
+
+<?php
+}
+
+}

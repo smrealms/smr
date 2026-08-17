@@ -1,28 +1,39 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use Smr\AbstractShip;
+use Smr\Account;
 use Smr\BountyType;
 use Smr\Epoch;
 use Smr\Globals;
+use Smr\Player;
+use Smr\PlayerLevel;
 use Smr\Race;
 
-/**
- * @var Smr\Account $ThisAccount
- * @var Smr\Player $ThisPlayer
- * @var Smr\Ship $ThisShip
- * @var ?string $LeaveNewbieHREF
- * @var string $RelationsHREF
- * @var string $SavingsHREF
- * @var string $BountiesHREF
- * @var int $BountiesClaimable
- * @var string $HardwareHREF
- * @var array<string> $Hardware
- * @var Smr\PlayerLevel $NextLevel
- * @var string $UserRankingsHREF
- * @var string $NoteDeleteHREF
- * @var string $NoteAddHREF
- * @var array<int, string> $Notes
- */
+class TraderStatusRenderer {
 
+/**
+ * @param array<string> $Hardware
+ * @param array<int, string> $Notes
+ */
+public static function render(
+	?string $LeaveNewbieHREF,
+	string $RelationsHREF,
+	string $SavingsHREF,
+	string $BountiesHREF,
+	int $BountiesClaimable,
+	string $HardwareHREF,
+	array $Hardware,
+	PlayerLevel $NextLevel,
+	string $UserRankingsHREF,
+	string $NoteDeleteHREF,
+	array $Notes,
+	string $NoteAddHREF,
+	Account $ThisAccount,
+	Player $ThisPlayer,
+	AbstractShip $ThisShip,
+): void {
 ?>
 <table class="standard fullwidth">
 	<tr>
@@ -196,3 +207,8 @@ use Smr\Race;
 	<?php echo create_submit_display('Create New Note'); ?>
 	<small>&nbsp;&nbsp;&nbsp;Maximum note length is 1000 characters</small>
 </form>
+
+<?php
+}
+
+}

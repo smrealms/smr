@@ -1,10 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Pages\Player\BuyShipNameProcessor $ProcessorPage
- * @var array{text: int, html: int, logo: int} $Costs
- */
+namespace Smr\Pages\Player;
 
+class BuyShipNameRenderer {
+
+/**
+ * @param array{text: int, html: int, logo: int} $Costs
+ */
+public static function render(array $Costs, BuyShipNameProcessor $ProcessorPage): void {
 ?>
 <div class="center">
 	So you want to name your ship?  Great!
@@ -25,3 +28,8 @@
 		<?php echo $ProcessorPage->actionLogo->html('Paint A Logo (' . $Costs['logo'] . ' SMR Credits)'); ?>
 	</form>
 </div>
+
+<?php
+}
+
+}

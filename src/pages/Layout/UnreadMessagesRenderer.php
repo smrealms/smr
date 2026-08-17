@@ -1,9 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<array{href: string, num: int, alt: string, img: string}> $UnreadMessages
- */
+namespace Smr\Pages\Layout;
 
+class UnreadMessagesRenderer {
+
+/**
+ * @param array<array{href: string, num: int, alt: string, img: string}> $UnreadMessages
+ */
+public static function render(array $UnreadMessages): void {
 ?>
 <span id="message_area"><?php
 	foreach ($UnreadMessages as $UnreadMessage) { ?>
@@ -14,3 +18,7 @@
 		<br /><?php
 	} ?>
 </span>
+<?php
+}
+
+}

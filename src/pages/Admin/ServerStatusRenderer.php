@@ -1,5 +1,12 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+class ServerStatusRenderer {
+
+public static function render(ServerStatusProcessor $ProcessingPage, bool $ServerIsOpen): void {
+?>
+
 ?>
 <form method="POST" action="<?php echo $ProcessingPage->href(); ?>">
 <?php
@@ -16,3 +23,7 @@ if ($ServerIsOpen) { ?>
 	<?php echo $ProcessingPage->actionOpen->html();
 } ?>
 </form>
+<?php
+}
+
+}

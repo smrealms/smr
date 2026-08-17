@@ -16,9 +16,6 @@ use Smr\Template;
 class AllianceForces extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'alliance_forces.php';
-
 	public function __construct(
 		private readonly int $allianceID,
 	) {}
@@ -52,7 +49,6 @@ class AllianceForces extends PlayerPage {
 			'CDs' => $dbRecord->getInt('tot_cds'),
 			'SDs' => $dbRecord->getInt('tot_sds'),
 		];
-		$template->assign('Total', $total);
 
 			// Get total cost of forces
 		$totalCost = [
@@ -60,7 +56,6 @@ class AllianceForces extends PlayerPage {
 			'CDs' => $total['CDs'] * HardwareType::get(HARDWARE_COMBAT)->cost,
 			'SDs' => $total['SDs'] * HardwareType::get(HARDWARE_SCOUT)->cost,
 		];
-		$template->assign('TotalCost', $totalCost);
 
 		$dbResult = $db->read('
 		SELECT sector_has_forces.*
@@ -79,7 +74,14 @@ class AllianceForces extends PlayerPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$forces[] = Force::getForce($player->getGameID(), $dbRecord->getInt('sector_id'), $dbRecord->getInt('owner_id'), false, $dbRecord);
 		}
-		$template->assign('Forces', $forces);
+
+		$template->pageRenderer = fn() => AllianceForcesRenderer::render(
+			template: $template,
+			Total: $total,
+			TotalCost: $totalCost,
+			Forces: $forces,
+			ThisAccount: $player->getAccount(),
+		);
 	}
 
 }

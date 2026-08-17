@@ -12,9 +12,7 @@ const ROOT = __DIR__ . '/../';
 const LIB = ROOT . 'src/lib/';
 const WWW = ROOT . 'src/htdocs/';
 const UPLOAD = WWW . 'upload/';
-const ADMIN = ROOT . 'src/admin/';
 const TOOLS = ROOT . 'src/tools/';
-const TEMPLATES = ROOT . 'src/templates/';
 
 // Define server-specific constants
 require_once(ROOT . 'config/config.specific.php');
@@ -521,5 +519,6 @@ const CSS_COLOUR_URLS = [
 const DEFAULT_CSS = CSS_URLS['Default'];
 const DEFAULT_CSS_COLOUR = CSS_COLOUR_URLS['Default']['Default'];
 
+// Refresh intervals in milliseconds
 const AJAX_DEFAULT_REFRESH_TIME = 1500;
 const AJAX_UNPROTECTED_REFRESH_TIME = 800;

@@ -1,14 +1,24 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use Exception;
+use Smr\Player;
 use Smr\ScoutMessageGroupType;
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var ?Smr\Pages\Player\MessagePreferenceScoutGroupProcessor $PreferencesScoutGroupPage
- * @var ?Smr\Pages\Player\MessagePreferenceIgnoreGlobalsProcessor $PreferencesIgnoreGlobalsPage
- * @var array{UnreadMessages: int, TotalMessages: int, Type: int, Name: string, DeleteFormHref: string, NumberMessages: int, Messages: array<mixed>, ShowAllHref?: string, GroupedMessages?: array<mixed>} $MessageBox
- */
+class MessageViewRenderer {
 
+/**
+ * @param array{UnreadMessages: int, TotalMessages: int, Type: int, Name: string, DeleteFormHref: string, NumberMessages: int, Messages: array<PlayerMessage>, ShowAllHref?: string} $MessageBox
+ */
+public static function render(
+	?string $PreviousPageHREF,
+	?string $NextPageHREF,
+	?MessagePreferenceIgnoreGlobalsProcessor $PreferencesIgnoreGlobalsPage,
+	?MessagePreferenceScoutGroupProcessor $PreferencesScoutGroupPage,
+	array $MessageBox,
+	Player $ThisPlayer,
+): void {
 $styleGreen = ['style' => 'background-color:green'];
 if ($MessageBox['Type'] === MSG_GLOBAL) {
 	if ($PreferencesIgnoreGlobalsPage === null) {
@@ -63,7 +73,7 @@ if ($MessageBox['Type'] === MSG_GLOBAL) {
 	<table class="standard fullwidth"><?php
 		foreach ($MessageBox['Messages'] as $Message) {
 			if ($MessageBox['Type'] === MSG_SCOUT) {
-				if (isset($MessageBox['GroupedMessages'])) {
+				if (isset($Message['GroupedMessages'])) {
 					$InputName = 'group_id[]';
 				} else {
 					$InputName = 'message_id[]';
@@ -73,14 +83,14 @@ if ($MessageBox['Type'] === MSG_GLOBAL) {
 					<td><?php echo bbify($Message['Text']); ?></td>
 					<td class="noWrap"><?php echo $Message['SendTime']; ?></td>
 				</tr><?php
-				if (isset($MessageBox['GroupedMessages'])) { ?>
+				if (isset($Message['GroupedMessages'])) { ?>
 					<tr>
 						<td colspan="3"><?php
-							$SubMessages = $MessageBox['GroupedMessages'][$Message['SenderID']]; ?>
-							<div class="shrink noWrap pointer" id="toggle-recent<?php echo $Message['SenderID']; ?>" onclick="toggleScoutGroup(<?php echo $Message['SenderID']; ?>);">
+							$SubMessages = $Message['GroupedMessages']; ?>
+							<div class="shrink noWrap pointer" onclick="toggleScoutGroup('<?php echo $Message['ID']; ?>');">
 								Show/Hide Recent (<?php echo count($SubMessages); ?>)
 							</div>
-							<table id="group<?php echo $Message['SenderID']; ?>" class="standard fullwidth" style="display:none;margin:5px 0 2px 0;"><?php
+							<table id="group<?php echo $Message['ID']; ?>" class="standard fullwidth" style="display:none;margin:5px 0 2px 0;"><?php
 								foreach ($SubMessages as $SubMessage) { ?>
 									<tr>
 										<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $SubMessage['ID']; ?>" /><?php if ($SubMessage['Unread']) { ?>*<?php } ?></td>
@@ -98,21 +108,21 @@ if ($MessageBox['Type'] === MSG_GLOBAL) {
 					<td class="noWrap" width="100%"><?php
 						if (isset($Message['ReceiverDisplayName'])) {
 							?>To: <?php echo $Message['ReceiverDisplayName'];
-						} else {
+						} elseif (isset($Message['SenderDisplayName'])) {
 							?>From: <?php echo $Message['SenderDisplayName'];
 						} ?>
 					</td>
-					<td class="noWrap"<?php if (!isset($Message['ReplyHref'])) { ?> colspan="4"<?php } ?>>Date: <?php echo $Message['SendTime']; ?></td>
+					<td class="noWrap"<?php if (!isset($Message['Actions'])) { ?> colspan="4"<?php } ?>>Date: <?php echo $Message['SendTime']; ?></td>
 					<?php
-					if (isset($Message['ReplyHref'])) { ?>
+					if (isset($Message['Actions'])) { ?>
 						<td>
-							<a href="<?php echo $Message['ReportHref']; ?>"><img class="bottom" src="images/report.png" width="16" height="16" border="0" title="Report this message to an admin" /></a>
+							<a href="<?php echo $Message['Actions']['ReportHref']; ?>"><img class="bottom" src="images/report.png" width="16" height="16" border="0" title="Report this message to an admin" /></a>
 						</td>
 						<td>
-							<a href="<?php echo $Message['BlacklistHref']; ?>">Blacklist Player</a>
+							<a href="<?php echo $Message['Actions']['BlacklistHref']; ?>">Blacklist Player</a>
 						</td>
 						<td>
-							<a href="<?php echo $Message['ReplyHref']; ?>">Reply</a>
+							<a href="<?php echo $Message['Actions']['ReplyHref']; ?>">Reply</a>
 						</td><?php
 					} ?>
 				</tr>
@@ -140,3 +150,8 @@ if ($MessageBox['Type'] === MSG_GLOBAL) {
 		</td>
 	</tr>
 </table>
+
+<?php
+}
+
+}

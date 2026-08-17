@@ -1,9 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var ?int $Days
- */
+namespace Smr\Pages\Admin;
 
+class VoteCreateRenderer {
+
+/**
+ * @param array<int, array{ID: int, Question: string}> $CurrentVotes
+ */
+public static function render(VoteCreateProcessor $VoteFormPage, array $CurrentVotes, ?string $PreviewVote, ?int $Days, ?string $PreviewOption, ?int $VoteID): void {
 if (isset($PreviewVote)) { ?><table class="standard"><tr><td><?php echo bbify(htmlentities($PreviewVote)); ?></td></tr></table><?php } ?>
 <form name="VoteForm" method="POST" action="<?php echo $VoteFormPage->href(); ?>">
 	Question: <input type="text" name="question" required value="<?php if (isset($PreviewVote)) { echo bbify(htmlentities($PreviewVote)); } ?>" /><br />
@@ -22,3 +26,8 @@ if (isset($PreviewVote)) { ?><table class="standard"><tr><td><?php echo bbify(ht
 	Option: <input type="text" name="option" required value="<?php if (isset($PreviewOption)) { echo htmlspecialchars($PreviewOption); } ?>" /><br />
 	<?php echo $VoteFormPage->actionAddOption->html(); ?>&nbsp;<?php echo $VoteFormPage->actionPreviewOption->html(); ?>
 </form>
+
+<?php
+}
+
+}

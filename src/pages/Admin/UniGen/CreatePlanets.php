@@ -13,9 +13,6 @@ use Smr\Template;
 class CreatePlanets extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'admin/unigen/universe_create_planets.php';
-
 	public function __construct(
 		private readonly int $gameID,
 		private readonly EditGalaxy $returnTo,
@@ -24,17 +21,12 @@ class CreatePlanets extends AccountPage {
 
 	public function build(Account $account, Template $template): void {
 		$this->galaxyID ??= Request::getInt('gal_on');
-		$template->assign('Galaxies', Galaxy::getGameGalaxies($this->gameID));
-
-		$container = new self($this->gameID, $this->returnTo);
-		$template->assign('JumpGalaxyHREF', $container->href());
 
 		// Get a list of all available planet types
 		$allowedTypes = [];
 		foreach (array_keys(PlanetType::PLANET_TYPES) as $PlanetTypeID) {
 			$allowedTypes[$PlanetTypeID] = PlanetType::getTypeInfo($PlanetTypeID)->name();
 		}
-		$template->assign('AllowedTypes', $allowedTypes);
 
 		// Initialize all planet counts to zero
 		$numberOfPlanets = [];
@@ -50,15 +42,19 @@ class CreatePlanets extends AccountPage {
 			}
 		}
 
-		$template->assign('Galaxy', $galaxy);
-		$template->assign('NumberOfPlanets', $numberOfPlanets);
-
-		// Form to make planet changes
-		$container = new CreatePlanetsProcessor($this->gameID, $this->galaxyID, $this->returnTo);
-		$template->assign('CreatePlanetsFormHREF', $container->href());
-
-		// HREF to cancel and return to the previous page
-		$template->assign('CancelHREF', $this->returnTo->href());
+		$template->pageRenderer = fn() => CreatePlanetsRenderer::render(
+			Galaxies: Galaxy::getGameGalaxies($this->gameID),
+			JumpGalaxyHREF: new self($this->gameID, $this->returnTo)->href(),
+			AllowedTypes: $allowedTypes,
+			Galaxy: $galaxy,
+			NumberOfPlanets: $numberOfPlanets,
+			CreatePlanetsFormHREF: new CreatePlanetsProcessor(
+				$this->gameID,
+				$this->galaxyID,
+				$this->returnTo,
+			)->href(),
+			CancelHREF: $this->returnTo->href(),
+		);
 	}
 
 }

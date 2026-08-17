@@ -9,11 +9,8 @@ use Smr\Template;
 
 class ExaminePlanet extends PlayerPage {
 
-	public string $file = 'planet_examine.php';
-
 	public function build(Player $player, Template $template): void {
 		$planet = $player->getSectorPlanet();
-		$template->assign('ThisPlanet', $planet);
 
 		$template->pageTopic = 'Examine Planet: Sector #' . $planet->getSectorID();
 
@@ -42,15 +39,21 @@ class ExaminePlanet extends PlayerPage {
 			]);
 			$planetLand = $dbResult->hasRecord();
 		}
-		$template->assign('PlanetLand', $planetLand);
 
 		if ($planetLand) {
 			$eligibleAttackers = []; // no option to attack if we can land
 		} else {
 			$eligibleAttackers = $player->getSector()->getFightingTradersAgainstPlanet($player, $planet, allEligible: true);
 		}
-		$template->assign('VisiblePlayers', $eligibleAttackers);
-		$template->assign('SectorPlayersLabel', 'Attackers');
+
+		$template->pageRenderer = fn() => ExaminePlanetRenderer::render(
+			ThisPlanet: $planet,
+			PlanetLand: $planetLand,
+			VisiblePlayers: $eligibleAttackers,
+			SectorPlayersLabel: 'Attackers',
+			ThisAccount: $player->getAccount(),
+			ThisPlayer: $player,
+		);
 	}
 
 }

@@ -1,13 +1,14 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<array{ID: int, Password: string}> $AnonAccounts
- * @var int $LottoTickets
- * @var array{Prize: int, TimeRemaining: int} $LottoInfo
- * @var float $LottoWinChance
- * @var int $WinningTickets
- */
+namespace Smr\Pages\Player;
 
+class TraderSavingsRenderer {
+
+/**
+ * @param array<array{ID: int, Password: string}> $AnonAccounts
+ * @param array{Prize: int, TimeRemaining: int} $LottoInfo
+ */
+public static function render(array $AnonAccounts, int $LottoTickets, array $LottoInfo, float|int $LottoWinChance, int $WinningTickets): void {
 ?>
 <div>
 	<h2>Anonymous Accounts</h2>
@@ -34,3 +35,7 @@
 		<br /><br />You own <?php echo $WinningTickets; ?> winning tickets. You should go to the bar to claim your prize.<?php
 	} ?>
 </div>
+<?php
+}
+
+}

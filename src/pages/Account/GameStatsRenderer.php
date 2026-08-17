@@ -1,20 +1,35 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Account $ThisAccount
- * @var Smr\Game $StatsGame
- * @var int $TotalPlayers
- * @var int $HighestExp
- * @var int $HighestAlign
- * @var int $LowestAlign
- * @var int $HighestKills
- * @var int $TotalAlliances
- * @var array<int, array{Alliance: Smr\Alliance, Class: string, Value: int, AllianceName: string}> $AllianceExpRankings
- * @var array<int, array{Alliance: Smr\Alliance, Class: string, Value: int, AllianceName: string}> $AllianceKillRankings
- * @var ?array{Name: string, HofHref: string, Race: string, Alliance: string} $PlayerInfo
- * @var string $BackHref
- */
+namespace Smr\Pages\Account;
 
+use Smr\Account;
+use Smr\Game;
+
+class GameStatsRenderer {
+
+/**
+ * @param array<int, array{Alliance: \Smr\Alliance, Class: string, Value: int, AllianceName: string}> $AllianceExpRankings
+ * @param array<int, array{Alliance: \Smr\Alliance, Class: string, Value: int, AllianceName: string}> $AllianceKillRankings
+ * @param array<int, array{Class: string, Player: \Smr\Player, Value: int}> $ExperienceRankings
+ * @param array<int, array{Class: string, Player: \Smr\Player, Value: int}> $KillRankings
+ * @param ?array<string, string> $PlayerInfo
+ */
+public static function render(
+	Game $StatsGame,
+	int $TotalPlayers,
+	int $HighestExp,
+	int $HighestAlign,
+	int $LowestAlign,
+	int $HighestKills,
+	int $TotalAlliances,
+	array $ExperienceRankings,
+	array $KillRankings,
+	array $AllianceExpRankings,
+	array $AllianceKillRankings,
+	?array $PlayerInfo,
+	string $BackHref,
+	Account $ThisAccount,
+): void {
 ?>
 <a href="<?php echo $BackHref; ?>">&lt;&lt;Back</a>
 <br /><br />
@@ -178,7 +193,7 @@ if ($PlayerInfo !== null) { ?>
 		</tr>
 		<tr>
 			<td><?php
-				if (isset($ExperienceRankings)) { ?>
+				if (count($ExperienceRankings) > 0) { ?>
 					<table class="nobord">
 						<tr>
 							<th>Rank</th>
@@ -196,7 +211,7 @@ if ($PlayerInfo !== null) { ?>
 				} ?>
 			</td>
 			<td><?php
-				if (isset($KillRankings)) { ?>
+				if (count($KillRankings) > 0) { ?>
 					<table class="nobord">
 						<tr>
 							<th>Rank</th>
@@ -258,3 +273,8 @@ if ($PlayerInfo !== null) { ?>
 		</tr>
 	</table>
 </div>
+
+<?php
+}
+
+}

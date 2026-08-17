@@ -1,15 +1,26 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
 use Smr\Epoch;
+use Smr\Template;
+
+class GamePlayRenderer {
 
 /**
- * @var Smr\Template $this
- * @var string $UserRankName
- * @var string $UserRankingLink
- * @var string $VotingHref
- * @var string $OldAnnouncementsLink
+ * @param array{Play?: array<int, array{ID: int, Name: string, Type: string, EndDate: string, Speed: float, PlayGameLink: string, NumberPlaying: int, GameStatsLink: string, Turns: int, LastMovement: string}>, Join?: array<int, array{ID: int, Name: string, JoinTime: int, StartDate: string, EndDate: string, Players: int, Type: string, Speed: float, Credits: int, JoinGameLink: string}>, Previous?: array<int|string, array{ID: int, Name: string, StartDate: string, EndDate: string, Type: string, Speed: float, PreviousGameHOFLink: string, PreviousGameNewsLink: string, PreviousGameLink: string, PreviousGameStatsLink?: string}>} $Games
+ * @param array<int, array{ID: int, HREF: string, Question: string, TimeRemaining: string, Options: array<int, array{ID: int, Text: string, Chosen: bool, Votes: int}>}> $Voting
  */
-
+public static function render(
+	?string $ErrorMessage,
+	?string $Message,
+	string $UserRankingLink,
+	string $UserRankName,
+	array $Games,
+	string $VotingHref,
+	array $Voting,
+	string $OldAnnouncementsLink,
+): void {
 if (isset($ErrorMessage)) {
 	echo $ErrorMessage; ?><br /><br /><?php
 }
@@ -17,7 +28,7 @@ if (isset($Message)) {
 	echo $Message; ?><br /><br /><?php
 } ?>
 
-You are ranked as <?php echo $this->doAn($UserRankName); ?> <a style="font-size: 125%; color: greenyellow;" href="<?php echo $UserRankingLink; ?>"><?php echo $UserRankName ?></a> player.<br /><br />
+You are ranked as <?php echo Template::doAn($UserRankName); ?> <a style="font-size: 125%; color: greenyellow;" href="<?php echo $UserRankingLink; ?>"><?php echo $UserRankName ?></a> player.<br /><br />
 
 <div id="playGames" class="ajax"><?php
 	if (isset($Games['Play'])) { ?>
@@ -94,7 +105,7 @@ You are ranked as <?php echo $this->doAn($UserRankName); ?> <a style="font-size:
 <br />
 <br />
 <h1><a href="<?php echo $VotingHref; ?>">Voting</a></h1><?php
-if (isset($Voting)) {
+if (count($Voting) > 0) {
 	?>Please take a couple of seconds to answer the following question(s) for the SMR Admin team. Thanks!<?php
 	foreach ($Voting as $Vote) {
 		?><br /><br />
@@ -129,7 +140,7 @@ if (isset($Voting)) {
 			</tr><?php
 			foreach ($Games['Previous'] as $Game) { ?>
 				<tr>
-					<td width="35%"><?php if (isset($Game['PreviousGameLink'])) { ?><a href="<?php echo $Game['PreviousGameLink']; ?>"><?php } echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)<?php if (isset($Game['PreviousGameLink'])) { ?></a><?php } ?></td>
+					<td width="35%"><a href="<?php echo $Game['PreviousGameLink']; ?>"><?php echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)</a></td>
 					<td class="noWrap"><?php echo $Game['StartDate'] ?></td>
 					<td class="noWrap"><?php echo $Game['EndDate'] ?></td>
 					<td class="center"><?php echo $Game['Type']; ?></td>
@@ -143,4 +154,8 @@ if (isset($Voting)) {
 	} else {
 		?><p>There are no previous games.</p><?php
 	} ?>
-</div>
+</div><?php
+
+}
+
+}

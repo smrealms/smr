@@ -1,5 +1,25 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+class LogConsoleDetailRenderer {
+
+/**
+ * @param array<array{color: string, name: string}> $Colors
+ * @param array<int, string> $LogTypes
+ * @param list<int> $LogTypesChecked
+ * @param array<array{color: string, date: string, type: string, sectorID: int, message: string}> $Logs
+ */
+public static function render(
+	array $Colors,
+	string $UpdateHREF,
+	array $LogTypes,
+	array $LogTypesChecked,
+	string $SaveHREF,
+	string $FlatNotes,
+	array $Logs,
+	string $BackHREF,
+): void {
 ?>
 <a href="<?php echo $BackHREF; ?>"><b>&lt; Back</b></a>
 <table>
@@ -52,3 +72,8 @@ The following colors will be used:
 		</tr><?php
 	} ?>
 </table>
+
+<?php
+}
+
+}

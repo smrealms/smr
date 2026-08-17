@@ -1,20 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Bar;
+
 use Smr\Globals;
 
-/**
- * @var string $Message
- * @var string $GossipHREF
- * @var string $BuyDrinkHREF
- * @var string $BuyWaterHREF
- * @var int|false $WinningTicket
- * @var ?string $LottoClaimHREF
- * @var string $LottoBuyHREF
- * @var string $BlackjackHREF
- * @var string $BuySystemHREF
- * @var string $BuyGalMapHREF
- */
+class BarMainRenderer {
 
+public static function render(
+	?string $Message,
+	?string $LottoClaimHREF,
+	int|false $WinningTicket,
+	string $GossipHREF,
+	string $BuyDrinkHREF,
+	string $BuyWaterHREF,
+	string $BuySystemHREF,
+	string $BuyGalMapHREF,
+	string $LottoBuyHREF,
+	string $BlackjackHREF,
+): void {
 echo $Message; ?>
 
 <p>What can I do for ya?</p>
@@ -85,3 +88,8 @@ New intelligence has just come in!  We now have full maps of EVERY galaxy!  We a
 <div class="buttonA">
 	<a class="buttonA" href="<?php echo $BuyGalMapHREF; ?>">Buy a Galaxy Map (<?php echo CREDITS_PER_GAL_MAP; ?> SMR Credits)</a>
 </div><br /><br />
+
+<?php
+}
+
+}

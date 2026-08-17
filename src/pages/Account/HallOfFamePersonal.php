@@ -8,15 +8,13 @@ use Smr\Game;
 use Smr\HallOfFame;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
+use Smr\Pages\Shared\HallOfFameRenderer;
 use Smr\Player;
 use Smr\Template;
 
 class HallOfFamePersonal extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'hall_of_fame_player_detail.php';
-
 	public function __construct(
 		private readonly int $hofAccountID,
 		private readonly ?int $gameID = null,
@@ -54,7 +52,6 @@ class HallOfFamePersonal extends AccountPage {
 		}
 
 		$breadcrumb = HallOfFame::buildBreadcrumb($this, 'Personal HoF');
-		$template->assign('Breadcrumb', $breadcrumb);
 
 		$viewType = $this->viewType ?? '';
 		$hofVis = Player::getHOFVis();
@@ -69,10 +66,11 @@ class HallOfFamePersonal extends AccountPage {
 				$allowedVis[] = HOF_ALLIANCE;
 			}
 			$categories = HallOfFame::getHofCategories($this, $allowedVis, $game_id, $account_id);
-			$template->assign('Categories', $categories);
+			$rows = null;
 
 		} else {
 			// Rankings page
+			$categories = null;
 			$hofRank = HallOfFame::getHofRank($viewType, $account_id, $game_id);
 			$rows = [HallOfFame::displayHOFRow($hofRank['Rank'], $account_id, $game_id, $hofRank['Amount'])];
 
@@ -86,8 +84,15 @@ class HallOfFamePersonal extends AccountPage {
 					array_unshift($rows, $row);
 				}
 			}
-			$template->assign('Rows', $rows);
 		}
+
+		$template->pageRenderer = fn() => HallOfFameRenderer::render(
+			Breadcrumb: $breadcrumb,
+			Categories: $categories,
+			Rows: $rows,
+			ThisAccount: $account,
+			PersonalHofHREF: null, // already on the Personal page
+		);
 	}
 
 }

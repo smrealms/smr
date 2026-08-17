@@ -254,9 +254,22 @@ class Rankings {
 	}
 
 	/**
+	 * @param array<int, \Smr\DatabaseRecord> $rankedStats
+	 */
+	public static function ourAllianceRank(array $rankedStats, Player $player): ?int {
+		if (!$player->hasAlliance()) {
+			return null;
+		}
+		return self::ourRank($rankedStats, $player->getAllianceID());
+	}
+
+	/**
 	 * @return array{int, int}
 	 */
-	public static function calculateMinMaxRanks(int $ourRank, int $totalRanks): array {
+	public static function calculateMinMaxRanks(?int $ourRank, int $totalRanks): array {
+		if ($ourRank === null) {
+			$ourRank = 0; // If we have no rank, just show top 5
+		}
 		$session = Session::getInstance();
 		$minRank = $session->getRequestVarInt('min_rank', $ourRank - 5);
 		$maxRank = $session->getRequestVarInt('max_rank', $ourRank + 5);
@@ -271,11 +284,6 @@ class Rankings {
 		}
 
 		$maxRank = min($maxRank, $totalRanks);
-
-		$template = Template::getInstance();
-		$template->assign('MinRank', $minRank);
-		$template->assign('MaxRank', $maxRank);
-		$template->assign('TotalRanks', $totalRanks);
 
 		return [$minRank, $maxRank];
 	}

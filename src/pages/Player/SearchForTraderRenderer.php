@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-/**
- * @var bool $EmptyResult
- * @var string $TraderSearchHREF
- */
+namespace Smr\Pages\Player;
 
+class SearchForTraderRenderer {
+
+public static function render(string $TraderSearchHREF, bool $EmptyResult): void {
 if ($EmptyResult) { ?>
 	<p><span class="bold red">No trader found that matches your search!</span></p><?php
 } ?>
@@ -21,3 +21,8 @@ if ($EmptyResult) { ?>
 
 </p>
 </form>
+
+<?php
+}
+
+}

@@ -1,11 +1,14 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Port $ThisPort
- * @var Smr\Ship $ThisShip
- */
+namespace Smr\Pages\Player;
 
+use Smr\AbstractShip;
+use Smr\Player;
+use Smr\Port;
+
+class AttackPortLootRenderer {
+
+public static function render(Player $ThisPlayer, Port $ThisPort, AbstractShip $ThisShip): void {
 ?>
 <table class="center standard">
 	<tr>
@@ -31,3 +34,7 @@
 		</form><?php
 	} ?>
 </table>
+<?php
+}
+
+}

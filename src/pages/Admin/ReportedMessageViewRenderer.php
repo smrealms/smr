@@ -1,9 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<array{notifyID: int, senderName: string, receiverName: string, gameName: string, sentDate: string, reportDate: string, text: string}> $Messages
- */
+namespace Smr\Pages\Admin;
 
+class ReportedMessageViewRenderer {
+
+/**
+ * @param array<array{notifyID: int, senderName: string, receiverName: string, gameName: string, sentDate: string, reportDate: string, text: string}> $Messages
+ */
+public static function render(string $DeleteHREF, array $Messages): void {
 if (count($Messages) === 0) { ?>
 	<p>There are no reported Messages.</p><?php
 	return;
@@ -35,3 +39,8 @@ if (count($Messages) === 0) { ?>
 	<br />
 	<?php echo create_submit_display('Delete'); ?>
 </form>
+
+<?php
+}
+
+}

@@ -1,14 +1,17 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
+use Smr\Account;
 use Smr\Epoch;
+use Smr\Game;
+
+class GameJoinRenderer {
 
 /**
- * @var Smr\Account $ThisAccount
- * @var Smr\Game $Game
- * @var array<int, array{Name: string, ShortDescription: string, LongDescription: string, NumberOfPlayers: int, Selected: bool}> $Races
- * @var int $SelectedRaceID
+ * @param array<int, array{Name: string, ShortDescription: string, LongDescription: string, NumberOfPlayers: int, Selected: bool}> $Races
  */
-
+public static function render(Game $Game, ?string $JoinGameFormHref, int $SelectedRaceID, array $Races, Account $ThisAccount): void {
 ?>
 Each Space Merchant Realms round requires you to create a new Trader.<br />
 To do this you must choose a name for yourself and select your race.<br />
@@ -159,3 +162,8 @@ if (!isset($JoinGameFormHref)) { ?>
 		<div id="graphframe"></div>
 	</div>
 </form>
+
+<?php
+}
+
+}

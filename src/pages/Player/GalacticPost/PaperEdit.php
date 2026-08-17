@@ -10,8 +10,6 @@ use Smr\Template;
 
 class PaperEdit extends PlayerPage {
 
-	public string $file = 'galactic_post_paper_edit.php';
-
 	public function __construct(
 		private readonly int $paperID,
 	) {}
@@ -26,7 +24,7 @@ class PaperEdit extends PlayerPage {
 			'game_id' => $player->getGameID(),
 		];
 		$dbResult = $db->select('galactic_post_paper', $sqlParams, ['title']);
-		$template->assign('PaperTitle', bbify($dbResult->record()->getString('title')));
+		$title = bbify($dbResult->record()->getString('title'));
 
 		$dbResult = $db->read('SELECT * FROM galactic_post_paper_content JOIN galactic_post_article USING (game_id, article_id) WHERE paper_id = :paper_id AND game_id = :game_id', $sqlParams);
 
@@ -39,7 +37,11 @@ class PaperEdit extends PlayerPage {
 				'editHREF' => $container->href(),
 			];
 		}
-		$template->assign('Articles', $articles);
+
+		$template->pageRenderer = fn() => PaperEditRenderer::render(
+			PaperTitle: $title,
+			Articles: $articles,
+		);
 	}
 
 }

@@ -1,17 +1,35 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin\UniGen;
+
+use Smr\Account;
 use Smr\Location;
+use Smr\Planet;
 use Smr\PlanetTypes\PlanetType;
 use Smr\Port;
 use Smr\Race;
+use Smr\Sector;
 use Smr\TradeGood;
 use Smr\TransactionType;
 
-/**
- * @var Smr\Account $ThisAccount
- * @var Smr\Sector $EditSector
- */
+class EditSectorRenderer {
 
+/**
+ * @param list<int> $SectorLocationIDs
+ */
+public static function render(
+	Sector $EditSector,
+	int $LastSector,
+	string $EditHREF,
+	?Planet $Planet,
+	?Port $Port,
+	array $SectorLocationIDs,
+	string $WarpGal,
+	int $WarpSectorID,
+	string $CancelHREF,
+	?string $Message,
+	Account $ThisAccount,
+): void {
 ?>
 <a href="<?php echo $CancelHREF; ?>">&lt;&lt; Back</a><br /><br />
 <form method="POST" action="<?php echo $EditHREF; ?>">
@@ -20,10 +38,10 @@ use Smr\TransactionType;
 	<select name="plan_type">
 		<option value="0">No Planet</option><?php
 		foreach (array_keys(PlanetType::PLANET_TYPES) as $type) { ?>
-			<option value="<?php echo $type; ?>" <?php echo ($type === $SelectedPlanetType ? 'selected' : ''); ?>><?php echo PlanetType::getTypeInfo($type)->name(); ?></option><?php
+			<option value="<?php echo $type; ?>" <?php echo ($type === $Planet?->getTypeID() ? 'selected' : ''); ?>><?php echo PlanetType::getTypeInfo($type)->name(); ?></option><?php
 		} ?>
 	</select><br /><?php
-	if ($SelectedPlanetType) { ?>
+	if ($Planet !== null) { ?>
 		<b>Habitable: </b><?php echo date($ThisAccount->getDateTimeFormat(), $Planet->getInhabitableTime()); ?><br /><?php
 	} ?>
 	<br />
@@ -33,19 +51,19 @@ use Smr\TransactionType;
 		<option value="0">No Port</option><?php
 		$MaxPortLevel = Port::getMaxLevelByGame($EditSector->getGameID());
 		for ($i = 1; $i <= $MaxPortLevel; $i++) { ?>
-			<option value="<?php echo $i; ?>" <?php echo ($i === $SelectedPortLevel ? 'selected' : ''); ?>>Level <?php echo $i; ?></option><?php
+			<option value="<?php echo $i; ?>" <?php echo ($i === $Port?->getLevel() ? 'selected' : ''); ?>>Level <?php echo $i; ?></option><?php
 		} ?>
 	</select>&nbsp;
 
 	<select name="port_race"><?php
 		foreach (Race::getAllNames() as $raceID => $raceName) { ?>
-			<option value="<?php echo $raceID; ?>" <?php echo ($raceID === $SelectedPortRaceID ? 'selected' : ''); ?>><?php echo $raceName; ?></option><?php
+			<option value="<?php echo $raceID; ?>" <?php echo ($raceID === $Port?->getRaceID() ? 'selected' : ''); ?>><?php echo $raceName; ?></option><?php
 		} ?>
 	</select>
 	<br />
 
 	<?php
-	if ($SelectedPortLevel) { ?>
+	if ($Port !== null) { ?>
 		<br /><span class="bold red">WARNING: </span>Ports should only have (Level + 2) number of goods.
 		These options will be ignored if you are changing the port level.
 		<input type="hidden" name="select_goods" value="1" />
@@ -83,12 +101,12 @@ use Smr\TransactionType;
 		<tr>
 			<td class="center noWrap">
 				<?php
-				for ($i = 0; $i < UNI_GEN_LOCATION_SLOTS; $i++) { ?>
+				foreach ($SectorLocationIDs as $i => $SectorLocationID) { ?>
 					<b><?php echo ($i + 1); ?>. </b>
 					<select name="loc_type<?php echo $i; ?>">
 						<option value="0">No Location</option><?php
 						foreach (Location::getAllLocations($EditSector->getGameID()) as $id => $location) { ?>
-							<option value="<?php echo $id ?>" <?php echo ($id === $SectorLocationIDs[$i] ? 'selected' : ''); ?>><?php echo $location->getName(); ?></option><?php
+							<option value="<?php echo $id ?>" <?php echo ($id === $SectorLocationID ? 'selected' : ''); ?>><?php echo $location->getName(); ?></option><?php
 						} ?>
 					</select>
 					<br /><?php
@@ -111,4 +129,8 @@ use Smr\TransactionType;
 <?php
 if (isset($Message)) {
 	echo $Message;
+}
+
+}
+
 }

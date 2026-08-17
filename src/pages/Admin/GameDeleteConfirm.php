@@ -10,8 +10,6 @@ use Smr\Template;
 
 class GameDeleteConfirm extends AccountPage {
 
-	public string $file = 'admin/game_delete_confirm.php';
-
 	public function __construct(
 		private ?int $deleteGameID = null,
 	) {}
@@ -20,13 +18,11 @@ class GameDeleteConfirm extends AccountPage {
 		$template->pageTopic = 'Delete Game - Confirmation';
 
 		$this->deleteGameID ??= Request::getInt('delete_game_id');
-		$template->assign('Game', Game::getGame($this->deleteGameID));
-
-		$container = new GameDeleteProcessor($this->deleteGameID);
-		$template->assign('ConfirmHREF', $container->href());
-
-		$container = new AdminTools();
-		$template->assign('CancelHREF', $container->href());
+		$template->pageRenderer = fn() => GameDeleteConfirmRenderer::render(
+			CancelHREF: new AdminTools()->href(),
+			ConfirmHREF: new GameDeleteProcessor($this->deleteGameID)->href(),
+			Game: Game::getGame($this->deleteGameID),
+		);
 	}
 
 }

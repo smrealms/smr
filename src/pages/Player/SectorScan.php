@@ -10,8 +10,6 @@ use Smr\Template;
 
 class SectorScan extends PlayerPage {
 
-	public string $file = 'sector_scan.php';
-
 	public function __construct(
 		private readonly int $targetSectorID,
 	) {}
@@ -55,11 +53,6 @@ class SectorScan extends PlayerPage {
 			}
 		}
 
-		$template->assign('FriendlyVessel', $friendly_vessel);
-		$template->assign('FriendlyForces', $friendly_forces);
-		$template->assign('EnemyVessel', $enemy_vessel);
-		$template->assign('EnemyForces', $enemy_forces);
-
 		// is it a warp or a normal move?
 		if ($sector->getWarp() === $this->targetSectorID) {
 			$turns = TURNS_PER_WARP;
@@ -67,8 +60,15 @@ class SectorScan extends PlayerPage {
 			$turns = TURNS_PER_SECTOR;
 		}
 
-		$template->assign('ScanSector', $scanSector);
-		$template->assign('Turns', $turns);
+		$template->pageRenderer = fn() => SectorScanRenderer::render(
+			FriendlyVessel: $friendly_vessel,
+			FriendlyForces: $friendly_forces,
+			EnemyVessel: $enemy_vessel,
+			EnemyForces: $enemy_forces,
+			ScanSector: $scanSector,
+			Turns: $turns,
+			ThisPlayer: $player,
+		);
 	}
 
 }

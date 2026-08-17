@@ -13,9 +13,6 @@ use Smr\Template;
 class ListPlanetFinancial extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'planet_list_financial.php';
-
 	public function __construct(
 		private readonly int $allianceID,
 	) {}
@@ -37,9 +34,20 @@ class ListPlanetFinancial extends PlayerPage {
 			]);
 			$viewBonds = $dbResult->hasRecord();
 		}
-		$template->assign('CanViewBonds', $viewBonds);
 
-		PlanetList::common($this->allianceID, $viewBonds);
+		$planetList = PlanetList::common($this->allianceID, $viewBonds);
+		$template->pageTopic = ($planetList['Alliance'] === null)
+			? 'Planet'
+			: 'Planets : ' . $planetList['Alliance']->getAllianceDisplayName();
+
+		$template->pageRenderer = fn() => ListPlanetFinancialRenderer::render(
+			template: $template,
+			CanViewBonds: $viewBonds,
+			Alliance: $planetList['Alliance'],
+			AllPlanets: $planetList['AllPlanets'],
+			PlayerPlanet: $planetList['PlayerPlanet'],
+			ThisPlayer: $player,
+		);
 	}
 
 }

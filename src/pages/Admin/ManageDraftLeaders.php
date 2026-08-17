@@ -12,8 +12,6 @@ use Smr\Template;
 
 class ManageDraftLeaders extends AccountPage {
 
-	public string $file = 'admin/manage_draft_leaders.php';
-
 	public function __construct(
 		private readonly ?int $selectedGameID = null,
 		private readonly ?string $processingMsg = null,
@@ -21,9 +19,6 @@ class ManageDraftLeaders extends AccountPage {
 
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Manage Draft Leaders';
-
-		$container = new ManageDraftLeadersSelectProcessor();
-		$template->assign('SelectGameHREF', $container->href());
 
 		// Get the list of active Draft games ordered by reverse start date
 		$activeGames = [];
@@ -38,20 +33,18 @@ class ManageDraftLeaders extends AccountPage {
 				'game_id' => $dbRecord->getInt('game_id'),
 			];
 		}
-		$template->assign('ActiveGames', $activeGames);
 
 		if (count($activeGames) > 0) {
 			// Set the selected game (or the first in the list if not selected yet)
 			$selectedGameID = $this->selectedGameID ?? $activeGames[0]['game_id'];
-			$template->assign('SelectedGame', $selectedGameID);
 
 			// Get the list of current draft leaders for the selected game
-			$currentLeaders = [];
 			$dbResult = $db->select(
 				'draft_leaders',
 				['game_id' => $selectedGameID],
 				['account_id', 'home_sector_id'],
 			);
+			$currentLeaders = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$homeSectorID = $dbRecord->getInt('home_sector_id');
 				$leader = Player::getPlayer($dbRecord->getInt('account_id'), $selectedGameID);
@@ -60,15 +53,19 @@ class ManageDraftLeaders extends AccountPage {
 					'HomeSectorID' => $homeSectorID === 0 ? 'None' : $homeSectorID,
 				];
 			}
-			$template->assign('CurrentLeaders', $currentLeaders);
 
-			// If we have just forwarded from the processing file, pass its message.
-			$template->assign('ProcessingMsg', $this->processingMsg);
-
-			// Create the link to the processing file
-			$linkContainer = new ManageDraftLeadersProcessor($selectedGameID);
-			$template->assign('ProcessingPage', $linkContainer);
+			$template->pageRenderer = fn() => ManageDraftLeadersRenderer::render(
+				SelectGameHREF: new ManageDraftLeadersSelectProcessor()->href(),
+				ActiveGames: $activeGames,
+				SelectedGame: $selectedGameID,
+				CurrentLeaders: $currentLeaders,
+				ProcessingMsg: $this->processingMsg,
+				ProcessingPage: new ManageDraftLeadersProcessor($selectedGameID),
+			);
+		} else {
+			$template->pageRenderer = fn() => ManageDraftLeadersRenderer::renderEmpty();
 		}
+
 	}
 
 }

@@ -9,11 +9,11 @@ use Smr\Template;
 class Financial extends PlanetPage {
 
 	use ReusableTrait;
-
-	public string $file = 'planet_financial.php';
-
 	protected function buildPlanetPage(Player $player, Template $template): void {
-		$template->assign('ProcessorPage', new FinancialProcessor());
+		$template->pageRenderer = fn() => FinancialRenderer::render(
+			ProcessorPage: new FinancialProcessor(),
+			ThisPlanet: $player->getSectorPlanet(),
+		);
 	}
 
 }

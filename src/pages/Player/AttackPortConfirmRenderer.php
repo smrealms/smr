@@ -1,15 +1,31 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use Smr\AbstractShip;
+use Smr\Account;
 use Smr\Epoch;
 use Smr\Globals;
+use Smr\Pages\Shared\SectorPlayersRenderer;
+use Smr\Planet;
+use Smr\Player;
+use Smr\Port;
+
+class AttackPortConfirmRenderer {
 
 /**
- * @var Smr\Port $Port
- * @var Smr\Ship $ThisShip
- * @var Smr\Template $this
- * @var string $PortAttackHREF
+ * @param array<int, Player> $VisiblePlayers
  */
-
+public static function render(
+	string $PortAttackHREF,
+	Port $Port,
+	array $VisiblePlayers,
+	string $SectorPlayersLabel,
+	AbstractShip $ThisShip,
+	Account $ThisAccount,
+	Planet $ThisPlanet,
+	Player $ThisPlayer,
+): void {
 ?>
 <span class="red">WARNING WARNING</span> port assault about to commence!!<br />
 
@@ -49,7 +65,14 @@ if ($ThisShip->hasScanner()) { ?>
 
 <br />
 <?php
-$this->includeTemplate('includes/SectorPlayers.inc.php');
+SectorPlayersRenderer::render(
+	ThisAccount: $ThisAccount,
+	ThisPlanet: $ThisPlanet,
+	ThisPlayer: $ThisPlayer,
+	VisiblePlayers: $VisiblePlayers,
+	CloakedPlayers: [],
+	SectorPlayersLabel: $SectorPlayersLabel,
+);
 ?>
 
 Are you sure you want to attack this port?<br /><br />
@@ -69,3 +92,8 @@ if ($Port->isUnderAttack()) { ?>
 	<?php echo format_time($Port->getReinforceTime() - Epoch::time()) . '.';
 }
 ?></span>
+
+<?php
+}
+
+}

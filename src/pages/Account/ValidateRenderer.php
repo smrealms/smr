@@ -1,11 +1,12 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Account $ThisAccount
- * @var Smr\Pages\Account\ValidateProcessor $ValidatePage
- * @var string $PreferencesLink
- */
+namespace Smr\Pages\Account;
 
+use Smr\Account;
+
+class ValidateRenderer {
+
+public static function render(?string $Message, Account $ThisAccount, ValidateProcessor $ValidatePage, string $PreferencesLink): void {
 ?>
 <form name="FORM" method="POST" action="<?php echo $ValidatePage->href(); ?>">
 
@@ -44,4 +45,8 @@
 <?php
 if (isset($Message)) { ?>
 	<p class="center"><?php echo $Message; ?></p><?php
+}
+
+}
+
 }

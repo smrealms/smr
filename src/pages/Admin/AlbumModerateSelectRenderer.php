@@ -1,9 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<int, string> $Approved
- */
+namespace Smr\Pages\Admin;
 
+class AlbumModerateSelectRenderer {
+
+/**
+ * @param array<int, string> $Approved
+ */
+public static function render(string $ModerateHREF, array $Approved): void {
 if (count($Approved) === 0) { ?>
 	<p>There are no entries that can be moderated at this time.</p><?php
 } else { ?>
@@ -18,4 +22,8 @@ if (count($Approved) === 0) { ?>
 		&nbsp;
 		<?php echo create_submit_display('Submit'); ?>
 	</form><?php
+}
+
+}
+
 }

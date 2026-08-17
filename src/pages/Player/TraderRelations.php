@@ -13,9 +13,6 @@ use Smr\Template;
 class TraderRelations extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'trader_relations.php';
-
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Trader Relations';
 
@@ -29,8 +26,11 @@ class TraderRelations extends PlayerPage {
 			$politicalRelations[$raceName] = $raceRelations[$raceID];
 			$personalRelations[$raceName] = $player->getPersonalRelation($raceID);
 		}
-		$template->assign('PoliticalRelations', $politicalRelations);
-		$template->assign('PersonalRelations', $personalRelations);
+
+		$template->pageRenderer = fn() => TraderRelationsRenderer::render(
+			PoliticalRelations: $politicalRelations,
+			PersonalRelations: $personalRelations,
+		);
 	}
 
 }

@@ -1,16 +1,29 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Ship $ThisShip
- * @var array<int, Smr\ShipType> $ShipsSold
- * @var array<int, string> $ShipsSoldHREF
- * @var array<array{Name: string, TimeUntilUnlock: int}> $ShipsUnavailable
- * @var ?array<string, array{Old: int, New: int}> $ShipDiffs
- * @var ?int $TradeInValue
- * @var ?int $TotalCost
- * @var ?string $BuyHREF
- */
+namespace Smr\Pages\Player;
 
+use Smr\AbstractShip;
+use Smr\ShipType;
+
+class ShopShipRenderer {
+
+/**
+ * @param array<array{Name: string, TimeUntilUnlock: int}> $ShipsUnavailable
+ * @param array<int, \Smr\ShipType> $ShipsSold
+ * @param array<int, string> $ShipsSoldHREF
+ * @param ?array<string, array{Old: float|int, New: float|int}> $ShipDiffs
+ */
+public static function render(
+	array $ShipsUnavailable,
+	array $ShipsSold,
+	array $ShipsSoldHREF,
+	?array $ShipDiffs,
+	?string $BuyHREF,
+	?ShipType $CompareShip,
+	?int $TradeInValue,
+	?int $TotalCost,
+	AbstractShip $ThisShip,
+): void {
 if (count($ShipsSold) > 0) { ?>
 	<h2>Available Ships</h2>
 	<table class="standard">
@@ -105,4 +118,8 @@ if (isset($CompareShip) && isset($ShipDiffs) && isset($TradeInValue) && isset($T
 			</td>
 		</tr>
 	</table><?php
+}
+
+}
+
 }

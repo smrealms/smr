@@ -10,8 +10,6 @@ use Smr\Template;
 
 class MessageBoxReply extends AccountPage {
 
-	public string $file = 'admin/box_reply.php';
-
 	public function __construct(
 		private readonly int $boxTypeID,
 		private readonly int $senderAccountID,
@@ -25,20 +23,19 @@ class MessageBoxReply extends AccountPage {
 		$boxName = Messages::getAdminBoxNames()[$this->boxTypeID];
 		$template->pageTopic = 'Reply To ' . $boxName;
 
-		$container = new MessageBoxReplyProcessor(
-			senderAccountID: $this->senderAccountID,
-			gameID: $this->gameID,
-			boxTypeID: $this->boxTypeID,
+		$template->pageRenderer = fn() => MessageBoxReplyRenderer::render(
+			BoxReplyFormPage: new MessageBoxReplyProcessor(
+				senderAccountID: $this->senderAccountID,
+				gameID: $this->gameID,
+				boxTypeID: $this->boxTypeID,
+			),
+			Sender: Player::getPlayer($this->senderAccountID, $this->gameID),
+			SenderAccount: Account::getAccount($this->senderAccountID),
+			Preview: $this->preview,
+			BanPoints: $this->banPoints,
+			RewardCredits: $this->rewardCredits,
+			BackHREF: new MessageBoxView($this->boxTypeID)->href(),
 		);
-		$template->assign('BoxReplyFormPage', $container);
-		$template->assign('Sender', Player::getPlayer($this->senderAccountID, $this->gameID));
-		$template->assign('SenderAccount', Account::getAccount($this->senderAccountID));
-		$template->assign('Preview', $this->preview);
-		$template->assign('BanPoints', $this->banPoints);
-		$template->assign('RewardCredits', $this->rewardCredits);
-
-		$container = new MessageBoxView($this->boxTypeID);
-		$template->assign('BackHREF', $container->href());
 	}
 
 }

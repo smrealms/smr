@@ -1,11 +1,18 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Ship $ThisShip
- * @var Smr\Pages\Player\SectorJumpProcessor $JumpDrivePage
- */
+namespace Smr\Pages\Shared;
 
-if ($ThisShip->hasJump()) { ?>
+use Smr\AbstractShip;
+use Smr\Pages\Player\SectorJumpProcessor;
+
+class JumpDriveRenderer {
+
+public static function render(
+	AbstractShip $ThisShip,
+	?SectorJumpProcessor $JumpDrivePage,
+): void {
+if ($ThisShip->hasJump()) {
+	assert($JumpDrivePage !== null); ?>
 	<br />
 	<form class="standard" id="JumpDriveForm" method="POST" action="<?php echo $JumpDrivePage->href(); ?>">
 		<h2>Jump Drive</h2><br />
@@ -18,4 +25,8 @@ if ($ThisShip->hasJump()) { ?>
 			</tr>
 		</table>
 	</form><?php
+}
+
+}
+
 }

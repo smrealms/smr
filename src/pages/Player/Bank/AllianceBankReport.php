@@ -11,8 +11,6 @@ use Smr\Template;
 
 class AllianceBankReport extends PlayerPage {
 
-	public string $file = 'bank_report.php';
-
 	private const int WITHDRAW = 0;
 	private const int DEPOSIT = 1;
 
@@ -80,15 +78,20 @@ class AllianceBankReport extends PlayerPage {
 		}
 		$text .= '</table>';
 		$text = '<div class="center"><br />Ending Balance: ' . number_format($balance) . '</div><br />' . $text;
-		$template->assign('BankReport', $text);
 
 		if (!$this->reportSent) {
-			$container = new AllianceBankReportProcessor($alliance_id, $text);
-			$template->assign('SendReportHREF', $container->href());
+			$sendReportHREF = new AllianceBankReportProcessor($alliance_id, $text)->href();
+		} else {
+			$sendReportHREF = null;
 		}
 
 		$template->pageTopic = 'Alliance Bank Report';
 		Menu::bank();
+
+		$template->pageRenderer = fn() => AllianceBankReportRenderer::render(
+			BankReport: $text,
+			SendReportHREF: $sendReportHREF,
+		);
 	}
 
 }

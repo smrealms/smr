@@ -1,14 +1,22 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Shared;
+
 use Smr\Globals;
+use Smr\Player;
+use Smr\Template;
 use Smr\TradeGood;
 
-/**
- * @var array<Smr\Planet> $Planets
- * @var Smr\Player $ThisPlayer
- * @var Smr\Template $this
- */
+class PlanetListDefenseRenderer {
 
+/**
+ * @param array<\Smr\Planet> $Planets
+ */
+public static function render(
+	Template $template,
+	array $Planets,
+	Player $ThisPlayer,
+): void {
 if (count($Planets) > 0) { ?>
 	<table id="planet-list" class="standard inset left centered">
 		<thead>
@@ -80,5 +88,9 @@ if (count($Planets) > 0) { ?>
 			} ?>
 		</tbody>
 	</table><br />
-	<?php $this->listjsInclude = 'PlanetList';
+	<?php $template->listjsInclude = 'PlanetList';
+}
+
+}
+
 }

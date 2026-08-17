@@ -10,13 +10,12 @@ use Smr\Template;
 
 class Vote extends AccountPage {
 
-	public string $file = 'vote.php';
-
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Voting';
 
 		$db = Database::getInstance();
 		$dbResult = $db->select('voting', orderBy: ['end'], order: ['DESC']);
+		$voting = [];
 		if ($dbResult->hasRecord()) {
 			$votedFor = [];
 			$dbResult2 = $db->select('voting_results', [
@@ -26,17 +25,18 @@ class Vote extends AccountPage {
 				$votedFor[$dbRecord2->getInt('vote_id')] = $dbRecord2->getInt('option_id');
 			}
 
-			$voting = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$voteID = $dbRecord->getInt('vote_id');
 				$voting[$voteID]['ID'] = $voteID;
 				$container = new VoteProcessor($voteID, new self());
 				$voting[$voteID]['HREF'] = $container->href();
 				$voting[$voteID]['Question'] = $dbRecord->getString('question');
-				if ($dbRecord->getInt('end') > Epoch::time()) {
-					$voting[$voteID]['TimeRemaining'] = format_time($dbRecord->getInt('end') - Epoch::time(), true);
+				$active = $dbRecord->getInt('end') > Epoch::time();
+				$voting[$voteID]['Active'] = $active;
+				if ($active) {
+					$voting[$voteID]['EndInfo'] = format_time($dbRecord->getInt('end') - Epoch::time(), true) . ' Remaining';
 				} else {
-					$voting[$voteID]['EndDate'] = date($account->getDateFormat(), $dbRecord->getInt('end'));
+					$voting[$voteID]['EndInfo'] = 'Ended ' . date($account->getDateFormat(), $dbRecord->getInt('end'));
 				}
 
 				$voting[$voteID]['Options'] = [];
@@ -50,8 +50,11 @@ class Vote extends AccountPage {
 					$voting[$voteID]['Options'][$dbRecord2->getInt('option_id')]['Votes'] = $dbRecord2->getInt('count(account_id)');
 				}
 			}
-			$template->assign('Voting', $voting);
 		}
+
+		$template->pageRenderer = fn() => VoteRenderer::render(
+			Voting: $voting,
+		);
 	}
 
 }

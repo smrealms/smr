@@ -81,7 +81,7 @@ class Menu {
 			];
 		}
 		$template = Template::getInstance();
-		$template->assign('MenuItems', $menuItems);
+		$template->menuItems = $menuItems;
 	}
 
 	public static function planetList(int $alliance_id, int $selected_index): void {
@@ -93,7 +93,7 @@ class Menu {
 		$boldItem = '<span class="bold">' . $boldItem . '</span>';
 
 		$template = Template::getInstance();
-		$template->assign('MenuItems', $menuItems);
+		$template->menuItems = $menuItems;
 	}
 
 	public static function alliance(int $alliance_id): void {
@@ -164,7 +164,7 @@ class Menu {
 		$menuItems[] = ['Link' => Globals::getAllianceNewsHREF($player->getGameID(), $alliance_id), 'Text' => 'View News'];
 
 		$template = Template::getInstance();
-		$template->assign('MenuItems', $menuItems);
+		$template->menuItems = $menuItems;
 	}
 
 	public static function galacticPost(): void {
@@ -179,7 +179,7 @@ class Menu {
 		}
 
 		$template = Template::getInstance();
-		$template->assign('MenuItems', $menuItems);
+		$template->menuItems = $menuItems;
 	}
 
 	public static function messages(): void {
@@ -194,7 +194,7 @@ class Menu {
 		$menuItems[] = ['Link' => Globals::getManageBlacklistHREF(), 'Text' => 'Manage Blacklist'];
 
 		$template = Template::getInstance();
-		$template->assign('MenuItems', $menuItems);
+		$template->menuItems = $menuItems;
 	}
 
 	public static function combatLog(): void {
@@ -206,21 +206,21 @@ class Menu {
 		}
 
 		$template = Template::getInstance();
-		$template->assign('MenuItems', $menuItems);
+		$template->menuItems = $menuItems;
 	}
 
 	public static function trader(): void {
 		$player = Session::getInstance()->getPlayer();
 
 		$template = Template::getInstance();
-		$template->assign('MenuItems', [
+		$template->menuItems = [
 			['Link' => Globals::getTraderStatusHREF(), 'Text' => 'Trader Status'],
 			['Link' => Globals::getPlanetListHREF($player->getAllianceID()), 'Text' => 'Planets'],
 			['Link' => Globals::getAllianceHREF($player->getAllianceID()), 'Text' => 'Alliance'],
 			['Link' => Globals::getCouncilHREF($player->getRaceID()), 'Text' => 'Politics'],
 			['Link' => Globals::getTraderRelationsHREF(), 'Text' => 'Relations'],
 			['Link' => Globals::getTraderBountiesHREF(), 'Text' => 'Bounties'],
-		]);
+		];
 	}
 
 	/*
@@ -292,7 +292,7 @@ class Menu {
 		}
 
 		$template = Template::getInstance();
-		$template->assign('MenuItems', $menuItems);
+		$template->menuItems = $menuItems;
 	}
 
 	public static function council(int $race_id): void {
@@ -335,16 +335,16 @@ class Menu {
 		}
 
 		$template = Template::getInstance();
-		$template->assign('MenuItems', $menu_items);
+		$template->menuItems = $menu_items;
 	}
 
 	public static function bar(int $locationID): void {
 		$template = Template::getInstance();
-		$template->assign('MenuItems', [
+		$template->menuItems = [
 			['Link' => (new BarMain($locationID))->href(), 'Text' => 'Bar Main'],
 			['Link' => (new LottoBuyTicket($locationID))->href(), 'Text' => 'Lotto'],
 			['Link' => (new PlayBlackjackBet($locationID))->href(), 'Text' => 'BlackJack'],
-		]);
+		];
 	}
 
 	public static function news(int $gameID): void {
@@ -367,7 +367,7 @@ class Menu {
 		];
 
 		$template = Template::getInstance();
-		$template->assign('MenuItems', $menuItems);
+		$template->menuItems = $menuItems;
 	}
 
 	public static function navigation(Player $player): void {
@@ -379,7 +379,7 @@ class Menu {
 		$menuItems[] = ['Link' => 'map_galaxy.php" target="gal_map', 'Text' => 'Galaxy Map'];
 
 		$template = Template::getInstance();
-		$template->assign('MenuItems', $menuItems);
+		$template->menuItems = $menuItems;
 	}
 
 }
@@ -441,6 +441,6 @@ function create_sub_menu(array $menu, int $active_level1, int $active_level2): v
 	$return .= ('</table>');
 
 	$template = Template::getInstance();
-	$template->unassign('MenuItems');
-	$template->assign('SubMenuBar', $return);
+	$template->menuItems = null;
+	$template->subMenuBar = $return;
 }

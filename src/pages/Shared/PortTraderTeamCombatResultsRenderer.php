@@ -1,12 +1,22 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Template $this
- * @var bool $MinimalDisplay
- * @var PortAttackerCombatResults $TraderTeamCombatResults
- */
+namespace Smr\Pages\Shared;
 
+use Exception;
+use Smr\Player;
+use Smr\Template;
+
+class PortTraderTeamCombatResultsRenderer {
+
+/**
+ * @param PortAttackerCombatResults $TraderTeamCombatResults
+ */
+public static function render(
+	Template $template,
+	Player $ThisPlayer,
+	bool $MinimalDisplay,
+	array $TraderTeamCombatResults,
+): void {
 $AllTraderResults = $TraderTeamCombatResults['Traders'];
 foreach ($AllTraderResults as $TraderResults) {
 	$ShootingPlayer = $TraderResults['Player'];
@@ -53,7 +63,7 @@ foreach ($AllTraderResults as $TraderResults) {
 						?> but it cannot do any damage<?php
 					}
 				} else {
-					?> destroying <?php echo $this->displayTakenDamage($ActualDamage);
+					?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
 				}
 			} ?>.
 			<br /><?php
@@ -61,7 +71,7 @@ foreach ($AllTraderResults as $TraderResults) {
 				if (!isset($WeaponResults['KillResults'])) {
 					throw new Exception('KillingShot did not provide KillResults!');
 				}
-				$this->includeTemplate('includes/PortKillMessage.inc.php', ['KillResults' => $WeaponResults['KillResults'], 'TargetPort' => $TargetPort, 'ShootingPlayer' => $ShootingPlayer]);
+				PortKillMessageRenderer::render(KillResults: $WeaponResults['KillResults'], TargetPort: $TargetPort, ShootingPlayer: $ShootingPlayer);
 			}
 		}
 		if (isset($TraderResults['Drones'])) {
@@ -98,7 +108,7 @@ foreach ($AllTraderResults as $TraderResults) {
 							?> but they cannot do any damage<?php
 						}
 					} else {
-						?> destroying <?php echo $this->displayTakenDamage($ActualDamage);
+						?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
 					}
 				}
 			} ?>.
@@ -107,7 +117,7 @@ foreach ($AllTraderResults as $TraderResults) {
 				if (!isset($Drones['KillResults'])) {
 					throw new Exception('KillingShot did not provide KillResults!');
 				}
-				$this->includeTemplate('includes/PortKillMessage.inc.php', ['KillResults' => $Drones['KillResults'], 'TargetPort' => $TargetPort, 'ShootingPlayer' => $ShootingPlayer]);
+				PortKillMessageRenderer::render(KillResults: $Drones['KillResults'], TargetPort: $TargetPort, ShootingPlayer: $ShootingPlayer);
 			}
 		}
 	}
@@ -128,4 +138,8 @@ This fleet <?php if ($TotalDamage > 0) { ?>hits for a total of <span class="red"
 $Downgrades = $TraderTeamCombatResults['Downgrades'];
 if ($Downgrades !== 0) {
 	?>The port has lost <?php echo pluralise($Downgrades, 'level'); ?>.<?php
+}
+
+}
+
 }

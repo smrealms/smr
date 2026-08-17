@@ -1,20 +1,32 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Chess;
+
+use Smr\Account;
+use Smr\Chess\ChessGame;
 use Smr\Chess\Loc;
+use Smr\Pages\Shared\ChessMovesRenderer;
+use Smr\Player;
+use Smr\Template;
+
+class MatchPlayRenderer {
 
 /**
- * @var Smr\Account $ThisAccount
- * @var Smr\Chess\ChessGame $ChessGame
- * @var Smr\Player $ThisPlayer
- * @var Smr\Template $this
- * @var array<int, array<int, ?Smr\Chess\ChessPiece>> $Board
- * @var array<string> $FileCoords
- * @var string $MoveMessage
- * @var string $ChessMoveHREF
- * @var bool $Ended
- * @var ?string $Winner
+ * @param array<int, array<int, ?\Smr\Chess\ChessPiece>> $Board
+ * @param array<string> $FileCoords
  */
-
+public static function render(
+	Template $template,
+	ChessGame $ChessGame,
+	array $Board,
+	bool $Ended,
+	?string $Winner,
+	array $FileCoords,
+	string $MoveMessage,
+	string $ChessMoveHREF,
+	Account $ThisAccount,
+	Player $ThisPlayer,
+): void {
 ?>
 <p><span id="chess_status">
 	<?php if ($Ended) { ?>
@@ -55,7 +67,7 @@ use Smr\Chess\Loc;
 		<td>
 			<div class="chat" style="height: 484px; width: 160px; overflow-y:scroll;">
 				<table id="moveTable" class="ajax chessFont">
-					<?php $this->includeTemplate('includes/ChessMoves.inc.php'); ?>
+					<?php ChessMovesRenderer::render(ChessGame: $ChessGame); ?>
 				</table>
 			</div>
 		</td>
@@ -82,9 +94,13 @@ use Smr\Chess\Loc;
 			$AvailableMoves[$Piece->loc->y][$Piece->loc->x] = implode(',', $Moves);
 		}
 	} ?>
-	var submitMoveHREF = <?php echo $this->addJavascriptForAjax('submitMoveHREF', $ChessMoveHREF); ?>;
-	var availableMoves = <?php echo $this->addJavascriptForAjax('availableMoves', $AvailableMoves); ?>;
+	var submitMoveHREF = <?php echo $template->addJavascriptForAjax('submitMoveHREF', $ChessMoveHREF); ?>;
+	var availableMoves = <?php echo $template->addJavascriptForAjax('availableMoves', $AvailableMoves); ?>;
 </script>
 
 <?php
-$this->addJavascriptSource('/js/chess_play.js');
+$template->addJavascriptSource('/js/chess_play.js');
+
+}
+
+}

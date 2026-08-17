@@ -1,15 +1,19 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Council;
+
 use Smr\Globals;
+use Smr\Player;
 use Smr\Race;
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var array<int> $PeaceRaces
- * @var array<int> $NeutralRaces
- * @var array<int> $WarRaces
- */
+class PoliticalStatusRenderer {
 
+/**
+ * @param array<int> $PeaceRaces
+ * @param array<int> $NeutralRaces
+ * @param array<int> $WarRaces
+ */
+public static function render(array $PeaceRaces, array $NeutralRaces, array $WarRaces, Player $ThisPlayer): void {
 ?>
 <a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
 <div class="center">
@@ -60,3 +64,8 @@ use Smr\Race;
 		</tr>
 	</table>
 </div>
+
+<?php
+}
+
+}

@@ -1,12 +1,10 @@
 <?php declare(strict_types=1);
 
-/**
- * @var int $Target
- * @var int $TurnCost
- * @var int $MaxMisjump
- * @var string $JumpProcessingHREF
- */
+namespace Smr\Pages\Player;
 
+class SectorJumpCalculateRenderer {
+
+public static function render(int $Target, int $TurnCost, int $MaxMisjump, string $JumpProcessingHREF): void {
 ?>
 You punch the destination sector into your Jump Drive console.
 Within moments, the onboard computer dictates the report in a reassuringly confident voice.
@@ -28,3 +26,7 @@ if ($MaxMisjump > 0) { ?>
 
 <br />
 <p class="center"><img src="images/logoff.jpg" width="324" height="216" alt=""></p>
+<?php
+}
+
+}

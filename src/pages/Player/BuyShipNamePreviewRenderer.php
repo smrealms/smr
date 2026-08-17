@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
 use Smr\Globals;
 
-/**
- * @var string $ContinueHREF
- * @var string $ShipName
- */
+class BuyShipNamePreviewRenderer {
 
+public static function render(string $ContinueHREF, string $ShipName): void {
 ?>
 <div class="center">
 	If you ship is found to use HTML inappropriately you may be banned.
@@ -24,3 +24,8 @@ use Smr\Globals;
 	&nbsp;&nbsp;
 	<a href="<?php echo Globals::getBuyShipNameHREF(); ?>" class="submitStyle">Back</a>
 </div>
+
+<?php
+}
+
+}

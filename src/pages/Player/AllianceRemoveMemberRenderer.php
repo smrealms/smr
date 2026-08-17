@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<array{last_active: string, display_name: string, account_id: int}> $Members
- * @var string $BanishHREF
- */
+namespace Smr\Pages\Player;
 
+class AllianceRemoveMemberRenderer {
+
+/** @param array<array{last_active: string, display_name: string, account_id: int}> $Members */
+public static function render(array $Members, string $BanishHREF): void {
 ?>
 <div class="center"><?php
 	if (count($Members) === 0) { ?>
@@ -32,3 +33,7 @@
 		</form><?php
 	} ?>
 </div>
+<?php
+}
+
+}

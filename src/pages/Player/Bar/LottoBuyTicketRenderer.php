@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $BuyTicketHREF
- * @var array{Prize: int, TimeRemaining: int} $LottoInfo
- */
+namespace Smr\Pages\Player\Bar;
 
+class LottoBuyTicketRenderer {
+
+/** @param array{Prize: int, TimeRemaining: int} $LottoInfo */
+public static function render(string $BuyTicketHREF, array $LottoInfo): void {
 ?>
 <br />
 <div class="center">
@@ -22,3 +23,7 @@
 		<a class="buttonA" href="<?php echo $BuyTicketHREF; ?>">Buy a Ticket ($1,000,000)</a>
 	</div>
 </div>
+<?php
+}
+
+}

@@ -1,17 +1,21 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $PlayerStatus
- * @var string $DealerStatus
- * @var string $PlayerHand
- * @var string $DealerHand
- * @var string $ResultMsg
- * @var ?string $HitHREF
- * @var ?string $StayHREF
- * @var ?string $BetHREF
- * @var ?int $Bet
- */
+namespace Smr\Pages\Player\Bar;
 
+class PlayBlackjackRenderer {
+
+public static function render(
+	string $ResultMsg,
+	string $DealerHand,
+	string $DealerStatus,
+	string $PlayerHand,
+	string $PlayerStatus,
+	string $Winnings,
+	?string $BetHREF,
+	int $Bet,
+	?string $HitHREF,
+	?string $StayHREF,
+): void {
 ?>
 <div class="center">
 	<?php echo $ResultMsg; ?>
@@ -22,7 +26,7 @@
 	<div>Your cards are</div><br />
 	<?php echo $PlayerHand; ?>
 	<div><?php echo $PlayerStatus; ?></div><br />
-	<?php echo $Winnings ?? ''; ?>
+	<?php echo $Winnings; ?>
 	<?php if (isset($BetHREF)) { ?>
 		<p><a class="submitStyle" href="<?php echo $BetHREF; ?>">Play Some More ($<?php echo $Bet; ?>)</a></p><?php
 	} else { ?>
@@ -31,3 +35,8 @@
 		<a class="submitStyle" href="<?php echo $StayHREF; ?>">STAY</a><?php
 	} ?>
 </div>
+
+<?php
+}
+
+}

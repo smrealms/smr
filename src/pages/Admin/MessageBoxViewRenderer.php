@@ -1,6 +1,14 @@
 <?php declare(strict_types=1);
 
-if (isset($Boxes)) { ?>
+namespace Smr\Pages\Admin;
+
+class MessageBoxViewRenderer {
+
+/**
+ * @param array<int, array{ViewHREF: string, BoxName: string, TotalMessages: int}> $Boxes
+ */
+public static function renderBoxes(array $Boxes): void {
+?>
 	<table class="standard">
 		<tr>
 			<th>Folder</th>
@@ -13,9 +21,15 @@ if (isset($Boxes)) { ?>
 			</tr><?php
 		} ?>
 	</table><?php
-} else { ?>
+}
+
+/**
+ * @param array<int, array{ID: int, ReplyHREF?: string, SenderName: string, GameName: string, SendTime: string, Message: string}> $Messages
+ */
+public static function renderMessages(string $BackHREF, string $DeleteHREF, array $Messages): void {
+?>
 	<a href="<?php echo $BackHREF; ?>">&lt;&lt; Back</a><br /><br /><?php
-	if (isset($Messages)) { ?>
+	if (count($Messages) > 0) { ?>
 		<form method="POST" action="<?php echo $DeleteHREF; ?>">
 			<?php echo create_submit_display('Delete'); ?>
 			&nbsp;
@@ -54,4 +68,6 @@ if (isset($Boxes)) { ?>
 	} else {
 		?>There are currently no messages in this box.<?php
 	}
+}
+
 }

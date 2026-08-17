@@ -1,30 +1,35 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Shared;
+
 use Smr\Globals;
+use Smr\Player;
 use Smr\Sector;
 
-/**
- * @var ?Smr\Player $ThisPlayer Player to view map as (null if admin view)
- * @var array<array<Smr\Sector>> $MapSectors
- * @var bool $UniGen If true, enables map editing links
- * @var ?string $DragLocationHREF
- * @var ?string $DragPlanetHREF
- * @var ?string $DragPortHREF
- * @var ?string $DragWarpHREF
- * @var ?string $ModifySectorHREF
- */
+class SectorMapRenderer {
 
+/**
+ * @param array<array<\Smr\Sector>> $MapSectors
+ * @param ?array{ModifySector: string, ToggleLink: string, DragLocation: string, DragPlanet: string, DragPort: string, DragWarp: string} $EditLinks
+ */
+public static function render(
+	?Player $ThisPlayer,
+	array $MapSectors,
+	bool $GalaxyMap,
+	bool $HideAlliedForces,
+	bool $ShowSeedlistSectors,
+	?array $EditLinks = null,
+): void {
 ?>
 <table class="lmt centered"><?php
-	$GalaxyMap = isset($GalaxyMap) && $GalaxyMap;
-	$MapPlayer = $UniGen ? null : $ThisPlayer;
+	$MapPlayer = $EditLinks === null ? $ThisPlayer : null;
 	$MovementTypes = Sector::getLinkDirs();
 	foreach ($MapSectors as $MapSector) { ?>
 		<tr><?php
 			foreach ($MapSector as $Sector) {
 				$isCurrentSector = $MapPlayer?->getSector()->equals($Sector) ?? false;
 				$isLinkedSector = $MapPlayer?->getSector()->isLinkedSector($Sector) ?? false;
-				$isSeedlistSector = isset($ShowSeedlistSectors) && $ShowSeedlistSectors && $MapPlayer?->getAlliance()->isInSeedlist($Sector) === true;
+				$isSeedlistSector = $ShowSeedlistSectors && $MapPlayer?->getAlliance()->isInSeedlist($Sector) === true;
 				$isVisited = $Sector->isVisited($MapPlayer); ?>
 				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax">
 					<div class="lm_sector galaxy<?php echo $Sector->getGalaxyID();
@@ -40,11 +45,11 @@ use Smr\Sector;
 						if ($isVisited) {
 							foreach ($MovementTypes as $MovementType) { ?>
 								<div class="lm<?php echo $MovementType; ?> <?php echo $Sector->hasLink($MovementType) ? 'con' : 'wall'; ?>"><?php
-									if (isset($ToggleLinkHREF)) { ?>
+									if ($EditLinks !== null) { ?>
 										<div
 											class="toggle_link"
 											onclick="toggleLink(this)"
-											data-href="<?php echo $ToggleLinkHREF; ?>"
+											data-href="<?php echo $EditLinks['ToggleLink']; ?>"
 											data-sector="<?php echo $Sector->getSectorID(); ?>"
 											data-dir="<?php echo $MovementType; ?>"
 										></div><?php
@@ -58,9 +63,9 @@ use Smr\Sector;
 											?><a href="<?php echo $Location->getExamineHREF() ?>"><?php
 										} ?>
 										<img src="<?php echo $Location->getImage() ?>" width="16" height="16" alt="<?php echo $Location->getName() ?>" title="<?php echo $Location->getName() ?>" <?php
-											if ($UniGen) { ?>
+											if ($EditLinks !== null) { ?>
 												class="drag_loc"
-												data-href="<?php echo $DragLocationHREF; ?>"
+												data-href="<?php echo $EditLinks['DragLocation']; ?>"
 												data-sector="<?php echo $Sector->getSectorID(); ?>"
 												data-loc="<?php echo $Location->getTypeID(); ?>" <?php
 											} ?>
@@ -73,9 +78,9 @@ use Smr\Sector;
 											?><a href="<?php echo $planet->getExamineHREF(); ?>"><?php
 										} ?>
 										<img title="<?php echo $planet->getTypeName() ?>" alt="Planet" src="<?php echo $planet->getTypeImage() ?>" width="16" height="16" <?php
-											if ($UniGen) { ?>
+											if ($EditLinks !== null) { ?>
 												class="drag_loc"
-												data-href="<?php echo $DragPlanetHREF; ?>"
+												data-href="<?php echo $EditLinks['DragPlanet']; ?>"
 												data-sector="<?php echo $Sector->getSectorID(); ?>" <?php
 											} ?>
 										/><?php
@@ -92,10 +97,10 @@ use Smr\Sector;
 							if ($Port !== null) { ?>
 								<div class="lmport <?php if ($Sector->getLinkLeft() !== 0) { ?>a<?php } else { ?>b<?php } ?>
 									"><?php
-									if ($UniGen) { ?>
+									if ($EditLinks !== null) { ?>
 										<div
 											class="drag_loc"
-											data-href="<?php echo $DragPortHREF; ?>"
+											data-href="<?php echo $EditLinks['DragPort']; ?>"
 											data-sector="<?php echo $Sector->getSectorID(); ?>"
 										><?php
 									}
@@ -113,7 +118,7 @@ use Smr\Sector;
 									foreach ($Port->getVisibleGoodsSold($MapPlayer) as $Good) {
 										echo $Good->getImageHTML();
 									}
-									if ($UniGen) { ?></div><?php }
+									if ($EditLinks !== null) { ?></div><?php }
 									if ($isCurrentSector && !$GalaxyMap) { ?></a><?php } ?>
 								</div><?php
 							}
@@ -129,9 +134,9 @@ use Smr\Sector;
 											<img src="images/warp.png" width="16" height="16"
 												title="Warp to #<?php echo $Sector->getWarp(); ?> (<?php echo $Sector->getWarpSector()->getGalaxy()->getDisplayName(); ?>)"
 												alt="Warp to #<?php echo $Sector->getWarp(); ?>" <?php
-												if ($UniGen) { ?>
+												if ($EditLinks !== null) { ?>
 													class="drag_loc"
-													data-href="<?php echo $DragWarpHREF; ?>"
+													data-href="<?php echo $EditLinks['DragWarp']; ?>"
 													data-sector="<?php echo $Sector->getSectorID(); ?>" <?php
 												} ?>
 											/><?php
@@ -143,7 +148,7 @@ use Smr\Sector;
 						if ($MapPlayer !== null) { // skip in UniGen
 							$CanScanSector = ($MapPlayer->getShip()->hasScanner() && $isLinkedSector) || $isCurrentSector;
 							$ShowFriendlyForces = (
-								(isset($HideAlliedForces) && $HideAlliedForces) ?
+								$HideAlliedForces ?
 								$Sector->hasPlayerForces($MapPlayer) :
 								$Sector->hasFriendlyForces($MapPlayer)
 							);
@@ -173,8 +178,8 @@ use Smr\Sector;
 							}
 						} ?>
 						<div class="lmsector"><?php echo $Sector->getSectorID(); ?></div><?php
-						if ($UniGen) { ?>
-							<form action="<?php echo $ModifySectorHREF; ?>" method="POST">
+						if ($EditLinks !== null) { ?>
+							<form action="<?php echo $EditLinks['ModifySector']; ?>" method="POST">
 								<button class="move_hack" name="sector_edit" value="<?php echo $Sector->getSectorID(); ?>"></button>
 							</form><?php
 						} elseif ($GalaxyMap) { ?>
@@ -193,3 +198,8 @@ use Smr\Sector;
 		// for sectors that we have already processed.
 	} ?>
 </table>
+
+<?php
+}
+
+}

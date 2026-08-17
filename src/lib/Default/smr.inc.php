@@ -13,36 +13,25 @@ use Smr\Globals;
 use Smr\Messages;
 use Smr\MissionState;
 use Smr\Page\Page;
-use Smr\Pages\Account\AlbumEdit;
-use Smr\Pages\Account\BugReport;
 use Smr\Pages\Account\ChangelogView;
-use Smr\Pages\Account\ChatJoin;
-use Smr\Pages\Account\ContactForm;
-use Smr\Pages\Account\Donation;
 use Smr\Pages\Account\ErrorDisplay;
 use Smr\Pages\Account\GameLeaveProcessor;
 use Smr\Pages\Account\GamePlay;
-use Smr\Pages\Account\HallOfFameAll;
-use Smr\Pages\Account\LogoffProcessor;
-use Smr\Pages\Account\Preferences;
-use Smr\Pages\Admin\AdminTools;
+use Smr\Pages\Layout\DefaultSkeletonRenderer;
+use Smr\Pages\Layout\Freon22SkeletonRenderer;
+use Smr\Pages\Layout\RightPanelData;
+use Smr\Pages\Layout\SkeletonData;
 use Smr\Pages\Player\AllianceInviteAcceptProcessor;
 use Smr\Pages\Player\AllianceMotd;
 use Smr\Pages\Player\CargoDump;
-use Smr\Pages\Player\CombatLogList;
 use Smr\Pages\Player\CombatLogViewerVerifyProcessor;
 use Smr\Pages\Player\CurrentSector;
 use Smr\Pages\Player\DeathProcessor;
 use Smr\Pages\Player\ForcesDrop;
 use Smr\Pages\Player\ForcesDropProcessor;
-use Smr\Pages\Player\ForcesList;
-use Smr\Pages\Player\GalacticPost\CurrentEditionProcessor;
 use Smr\Pages\Player\HardwareConfigure;
 use Smr\Pages\Player\MessageView;
 use Smr\Pages\Player\NewbieWarningProcessor;
-use Smr\Pages\Player\NewsReadCurrent;
-use Smr\Pages\Player\Rankings\PlayerExperience;
-use Smr\Pages\Player\SearchForTrader;
 use Smr\Pages\Player\SearchForTraderResult;
 use Smr\Pages\Player\WeaponReorder;
 use Smr\Planet;
@@ -406,6 +395,7 @@ function do_voodoo(): never {
 	// create account object
 	$account = $session->getAccount();
 
+	$player = null;
 	if ($session->hasGame()) {
 		// Get the nominal player information (this may change after locking).
 		// We don't force a reload here in case we don't need to lock.
@@ -466,23 +456,11 @@ function do_voodoo(): never {
 
 	// Populate the template
 	$template = Template::getInstance();
-	if (isset($player)) {
-		$template->assign('UnderAttack', $var->showUnderAttack($player, $session->ajax));
-	}
+
+	$skeletonData = getSkeletonData($template);
 
 	//Nothing below this point should require the lock.
 	saveAllAndReleaseLock();
-
-	$template->assign('TemplateBody', $var->file);
-	if (isset($player)) {
-		$template->assign('ThisSector', $player->getSector());
-		$template->assign('ThisPlayer', $player);
-		$template->assign('ThisShip', $player->getShip());
-	}
-	$template->assign('ThisAccount', $account);
-	$template->assign('ExtraCSSLink', $account->getCssLink());
-
-	doSkeletonAssigns($template);
 
 	// Set ajax refresh time
 	$ajaxRefresh = $account->isUseAJAX();
@@ -494,9 +472,15 @@ function do_voodoo(): never {
 			$ajaxRefresh = AJAX_DEFAULT_REFRESH_TIME;
 		}
 	}
-	$template->assign('AJAX_ENABLE_REFRESH', $ajaxRefresh);
+	$template->ajaxRefreshInterval = $ajaxRefresh;
 
-	$template->display('skeleton.php', $session->ajax);
+	$skeletonRenderer = match ($account->getTemplate()) {
+		'Default' => DefaultSkeletonRenderer::render(...),
+		'Freon22' => Freon22SkeletonRenderer::render(...),
+		default => throw new Exception('Unknown template: ' . $account->getTemplate()),
+	};
+
+	$template->display(fn() => $skeletonRenderer($skeletonData), $session->ajax);
 
 	$session->update();
 
@@ -523,7 +507,10 @@ function saveAllAndReleaseLock(bool $updateSession = true): void {
 	}
 }
 
-function doTickerAssigns(Template $template, Player $player, Database $db): void {
+/**
+ * @return ?array<array{Time: string, Message: string}>
+ */
+function getDisplayTickers(Template $template, Player $player, Database $db): ?array {
 	//any ticker news?
 	if ($player->hasTickers()) {
 		$ticker = [];
@@ -563,85 +550,20 @@ function doTickerAssigns(Template $template, Player $player, Database $db): void
 				];
 			}
 		}
-		$template->assign('Ticker', $ticker);
+		return $ticker;
 	}
+	return null;
 }
 
-function doSkeletonAssigns(Template $template): void {
+function getSkeletonData(Template $template): SkeletonData {
 	$session = Session::getInstance();
 	$account = $session->getAccount();
+	$accountID = $account->getAccountID();
 	$db = Database::getInstance();
-
-	$template->assign('CSSLink', $account->getCssUrl());
-	$template->assign('CSSColourLink', $account->getCssColourUrl());
-
-	$template->assign('FontSize', $account->getFontSize() - 20);
-	$template->assign('timeDisplay', date($account->getDateTimeFormatSplit(), Epoch::time()));
-
-	$container = new HallOfFameAll();
-	$template->assign('HallOfFameLink', $container->href());
-
-	$template->assign('AccountID', $account->getAccountID());
-	$template->assign('PlayGameLink', (new GameLeaveProcessor(new GamePlay()))->href());
-
-	$template->assign('LogoutLink', (new LogoffProcessor())->href());
-
-	$container = new GameLeaveProcessor(new AdminTools());
-	$template->assign('AdminToolsLink', $container->href());
-
-	$container = new Preferences();
-	$template->assign('PreferencesLink', $container->href());
-
-	$container = new AlbumEdit();
-	$template->assign('EditPhotoLink', $container->href());
-
-	$container = new BugReport();
-	$template->assign('ReportABugLink', $container->href());
-
-	$container = new ContactForm();
-	$template->assign('ContactFormLink', $container->href());
-
-	$container = new ChatJoin();
-	$template->assign('IRCLink', $container->href());
-
-	$container = new Donation();
-	$template->assign('DonateLink', $container->href());
 
 	if ($session->hasGame()) {
 		$player = $session->getPlayer();
-		$template->assign('GameName', Game::getGame($session->getGameID())->getName());
-		$template->assign('GameID', $session->getGameID());
-
-		$template->assign('PlotCourseLink', Globals::getPlotCourseHREF());
-
-		$template->assign('TraderLink', Globals::getTraderStatusHREF());
-
-		$template->assign('PoliticsLink', Globals::getCouncilHREF($player->getRaceID()));
-
-		$container = new CombatLogList();
-		$template->assign('CombatLogsLink', $container->href());
-
-		$template->assign('PlanetLink', Globals::getPlanetListHREF($player->getAllianceID()));
-
-		$container = new ForcesList();
-		$template->assign('ForcesLink', $container->href());
-
-		$template->assign('MessagesLink', Globals::getViewMessageBoxesHREF());
-
-		$container = new NewsReadCurrent();
-		$template->assign('ReadNewsLink', $container->href());
-
-		$container = new CurrentEditionProcessor();
-		$template->assign('GalacticPostLink', $container->href());
-
-		$container = new SearchForTrader();
-		$template->assign('SearchForTraderLink', $container->href());
-
-		$container = new PlayerExperience();
-		$template->assign('RankingsLink', $container->href());
-
-		$container = new HallOfFameAll($player->getGameID());
-		$template->assign('CurrentHallOfFameLink', $container->href());
+		$gameName = Game::getGame($session->getGameID())->getName();
 
 		$unreadMessages = [];
 		$dbResult = $db->read('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . Player::SQL . ' GROUP BY message_type_id', $player->SQLID);
@@ -655,56 +577,48 @@ function doSkeletonAssigns(Template $template): void {
 				'img' => Messages::getMessageTypeImage($messageTypeID),
 			];
 		}
-		$template->assign('UnreadMessages', $unreadMessages);
-
-		$container = new SearchForTraderResult($player->getPlayerID());
-		$template->assign('PlayerNameLink', $container->href());
-
-		$template->assign('PlayerInvisible', $player->isObserver());
-
-		// ******* Hardware *******
-		$container = new HardwareConfigure();
-		$template->assign('HardwareLink', $container->href());
-
-		// ******* Forces *******
-		$template->assign('ForceDropLink', (new ForcesDrop())->href());
 
 		$ship = $player->getShip();
-		$var = Session::getInstance()->getCurrentVar();
-		if ($ship->hasMines()) {
-			$container = new ForcesDropProcessor($player->getAccountID(), referrer: $var::class, dropMines: 1);
-			$template->assign('DropMineLink', $container->href());
-		}
-		if ($ship->hasCDs()) {
-			$container = new ForcesDropProcessor($player->getAccountID(), referrer: $var::class, dropCDs: 1);
-			$template->assign('DropCDLink', $container->href());
-		}
-		if ($ship->hasSDs()) {
-			$container = new ForcesDropProcessor($player->getAccountID(), referrer: $var::class, dropSDs: 1);
-			$template->assign('DropSDLink', $container->href());
-		}
+		$var = $session->getCurrentVar();
+		$dropMineLink = $ship->hasMines() ?
+			new ForcesDropProcessor($accountID, referrer: $var::class, dropMines: 1)->href() : null;
+		$dropCDLink = $ship->hasCDs() ?
+			new ForcesDropProcessor($accountID, referrer: $var::class, dropCDs: 1)->href() : null;
+		$dropSDLink = $ship->hasSDs() ?
+			new ForcesDropProcessor($accountID, referrer: $var::class, dropSDs: 1)->href() : null;
 
-		$template->assign('CargoJettisonLink', (new CargoDump())->href());
-
-		$template->assign('WeaponReorderLink', (new WeaponReorder())->href());
-
+		$rightPanelData = new RightPanelData(
+			player: $player,
+			underAttack: $var->showUnderAttack($player, $session->ajax),
+			unreadMessages: $unreadMessages,
+			playerNameLink: new SearchForTraderResult($player->getPlayerID())->href(),
+			hardwareLink: new HardwareConfigure()->href(),
+			forcesDropLink: new ForcesDrop()->href(),
+			cargoJettisonLink: new CargoDump()->href(),
+			weaponReorderLink: new WeaponReorder()->href(),
+			dropMineLink: $dropMineLink,
+			dropCDLink: $dropCDLink,
+			dropSDLink: $dropSDLink,
+		);
+	} else {
+		$player = null;
+		$gameName = null;
+		$rightPanelData = null;
 	}
 
 	// ------- VOTING --------
 	$voteLinks = [];
 	foreach (VoteSite::cases() as $site) {
-		$link = new VoteLink($site, $account->getAccountID(), $session->getGameID());
+		$link = new VoteLink($site, $accountID, $session->getGameID());
 		$voteLinks[] = [
 			'img' => $link->getImg(),
 			'url' => $link->getUrl(),
 			'sn' => $link->getSN(),
 		];
 	}
-	$template->assign('VoteLinks', $voteLinks);
 
 	// Determine the minimum time until the next vote across all sites
-	$minVoteWait = VoteLink::getMinTimeUntilFreeTurns($account->getAccountID(), $session->getGameID());
-	$template->assign('TimeToNextVote', in_time_or_now($minVoteWait, true));
+	$minVoteWait = VoteLink::getMinTimeUntilFreeTurns($accountID, $session->getGameID());
 
 	// ------- VERSION --------
 	$dbResult = $db->select('version', orderBy: ['went_live'], order: ['DESC'], limit: 1);
@@ -715,8 +629,18 @@ function doSkeletonAssigns(Template $template): void {
 		$version = create_link($container, 'v' . $dbRecord->getInt('major_version') . '.' . $dbRecord->getInt('minor_version') . '.' . $dbRecord->getInt('patch_level'));
 	}
 
-	$template->assign('Version', $version);
-	$template->assign('CurrentYear', date('Y', Epoch::time()));
+	return new SkeletonData(
+		template: $template,
+		timeDisplay: date($account->getDateTimeFormatSplit(), Epoch::time()),
+		account: $account,
+		player: $player,
+		gameName: $gameName,
+		rightPanelData: $rightPanelData,
+		voteLinks: $voteLinks,
+		timeToNextVote: $minVoteWait,
+		version: $version,
+	);
+
 }
 
 /**

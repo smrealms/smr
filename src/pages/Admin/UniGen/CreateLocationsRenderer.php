@@ -1,5 +1,27 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin\UniGen;
+
+use Smr\Galaxy;
+
+class CreateLocationsRenderer {
+
+/**
+ * @param array<int, Galaxy> $Galaxies
+ * @param array<int, int> $TotalLocs
+ * @param array<int, string> $LocText
+ * @param array<string, array<int>> $LocTypes
+ */
+public static function render(
+	array $Galaxies,
+	string $JumpGalaxyHREF,
+	Galaxy $Galaxy,
+	array $TotalLocs,
+	array $LocText,
+	array $LocTypes,
+	string $CreateLocationsFormHREF,
+	string $CancelHREF,
+): void {
 ?>
 <form method="POST" action="<?php echo $JumpGalaxyHREF; ?>">
 	Working on Galaxy:
@@ -65,3 +87,8 @@ Click a category heading to toggle its display.
 
 <span class="small">Note: When you press "Create Locations" this will rearrange all current locations.<br />
 To add new locations without rearranging everything use the edit sector feature.</span>
+
+<?php
+}
+
+}

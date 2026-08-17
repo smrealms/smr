@@ -1,9 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<Smr\Bounty> $Bounties
- */
+namespace Smr\Pages\Shared;
 
+class BountyListRenderer {
+
+/**
+ * @param array<\Smr\Bounty> $Bounties
+ */
+public static function render(array $Bounties): void {
 ?>
 <table class="standard center">
 	<tr>
@@ -21,3 +25,8 @@
 	} ?>
 </table>
 <p>&nbsp;</p>
+
+<?php
+}
+
+}

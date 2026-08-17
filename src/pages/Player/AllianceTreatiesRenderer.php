@@ -1,13 +1,16 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
 use Smr\Treaty;
 
-/**
- * @var array<array{Alliance: Smr\Alliance, Terms: array<string>, AcceptHREF: string, RejectHREF: string}> $Offers
- * @var array<int, string> $Alliances
- * @var string $SendOfferHREF
- */
+class AllianceTreatiesRenderer {
 
+/**
+ * @param array<int, string> $Alliances
+ * @param array<array{Alliance: \Smr\Alliance, Terms: array<string>, AcceptHREF: string, RejectHREF: string}> $Offers
+ */
+public static function render(array $Alliances, ?string $Message, array $Offers, string $SendOfferHREF): void {
 ?>
 <div class="center">
 	<?php
@@ -61,3 +64,8 @@ use Smr\Treaty;
 		</table>
 	</form>
 </div>
+
+<?php
+}
+
+}

@@ -1,13 +1,17 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $SaveChangesHREF
- */
+namespace Smr\Pages\Admin;
 
-if (!isset($Locations)) {
-	?><a href="<?php echo $ViewAllLocationsLink; ?>">View All Locations</a><br /><br />
-	<form action="<?php echo $SaveChangesHREF; ?>" method="POST"><?php
-} ?>
+use Smr\Location;
+use Smr\Pages\Shared\Admin\ViewLocationsRenderer;
+
+class EditLocationsRenderer {
+
+/**
+ * @param array<int, \Smr\Location> $Locations
+ */
+public static function renderSelect(array $Locations): void {
+?>
 <table>
 	<tr>
 		<th>Name</th>
@@ -23,12 +27,44 @@ if (!isset($Locations)) {
 		<th>Weapons</th>
 		<th>Edit</th>
 	</tr><?php
-if (isset($Locations)) {
-	$this->includeTemplate('admin/includes/ViewLocations.inc.php', ['Locations' => $Locations]);
-} else { ?>
+	ViewLocationsRenderer::render(Locations: $Locations); ?>
+</table>
+<?php
+}
+
+/**
+ * @param array<int, \Smr\ShipType> $ShipTypes
+ * @param array<int, \Smr\WeaponType> $Weapons
+ * @param array<int, \Smr\HardwareType> $AllHardware
+ */
+public static function renderEdit(
+	string $ViewAllLocationsLink,
+	string $SaveChangesHREF,
+	Location $Location,
+	array $ShipTypes,
+	array $Weapons,
+	array $AllHardware,
+): void {
+	?><a href="<?php echo $ViewAllLocationsLink; ?>">View All Locations</a><br /><br />
+	<form action="<?php echo $SaveChangesHREF; ?>" method="POST">
+<table>
+	<tr>
+		<th>Name</th>
+		<th>Action</th>
+		<th>Image</th>
+		<th>Fed</th>
+		<th>Bar</th>
+		<th>Bank</th>
+		<th>HQ</th>
+		<th>UG</th>
+		<th>Hardware</th>
+		<th>Ships</th>
+		<th>Weapons</th>
+		<th>Edit</th>
+	</tr>
 	<tr>
 		<td><input name="name" type="text" value="<?php echo htmlspecialchars($Location->getName()); ?>" /></td>
-		<td><input name="action" type="text" value="<?php echo htmlspecialchars($Location->getAction()); ?>" /></td>
+		<td><input name="action" type="text" value="<?php echo htmlspecialchars($Location->getAction() ?? ''); ?>" /></td>
 		<td><input name="image" type="text" value="<?php echo htmlspecialchars($Location->getImage()); ?>" /></td>
 		<td><input name="fed" type="checkbox" <?php if ($Location->isFed()) { ?>checked="checked"<?php } ?> /></td>
 		<td><input name="bar" type="checkbox" <?php if ($Location->isBar()) { ?>checked="checked"<?php } ?> /></td>
@@ -101,10 +137,10 @@ if (isset($Locations)) {
 		<td>
 			<?php echo create_submit_display('Save'); ?>
 		</td>
-	</tr><?php
-} ?>
+	</tr>
 </table>
+</form>
 <?php
-if (!isset($Locations)) {
-	?></form><?php
+}
+
 }

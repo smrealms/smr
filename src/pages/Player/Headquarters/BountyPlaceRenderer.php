@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $SubmitHREF
- * @var array<int, string> $BountyPlayers
- */
+namespace Smr\Pages\Player\Headquarters;
 
+class BountyPlaceRenderer {
+
+/** @param array<int, string> $BountyPlayers */
+public static function render(string $SubmitHREF, array $BountyPlayers): void {
 ?>
 <form method="POST" action="<?php echo $SubmitHREF; ?>">
 	Select the player you want to add the bounty to<br />
@@ -33,3 +34,7 @@
 	<br /><br />
 	<?php echo create_submit_display('Place'); ?>
 </form>
+<?php
+}
+
+}

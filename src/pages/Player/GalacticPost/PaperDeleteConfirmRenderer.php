@@ -1,12 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $CancelHREF
- * @var string $ConfirmHREF
- * @var string $PaperTitle
- * @var array<string> $Articles
- */
+namespace Smr\Pages\Player\GalacticPost;
 
+class PaperDeleteConfirmRenderer {
+
+/**
+ * @param array<string> $Articles
+ */
+public static function render(string $PaperTitle, array $Articles, string $ConfirmHREF, string $CancelHREF): void {
 ?>
 Are you sure you want to delete the paper titled <b><?php echo $PaperTitle; ?></b>?<?php
 if (count($Articles) > 0) { ?>
@@ -30,3 +31,8 @@ if (count($Articles) > 0) { ?>
 	<?php echo create_submit_display('Yes'); ?>&nbsp;
 	<?php echo create_submit_link($CancelHREF, 'No') ?>
 </form>
+
+<?php
+}
+
+}

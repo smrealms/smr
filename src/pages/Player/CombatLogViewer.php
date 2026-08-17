@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Player;
 
+use Smr\Combat\Results\FullCombatResults;
 use Smr\Database;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
@@ -12,9 +13,6 @@ use Smr\Template;
 class CombatLogViewer extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'combat_log_viewer.php';
-
 	/**
 	 * @param non-empty-array<int> $logIDs
 	 */
@@ -34,26 +32,34 @@ class CombatLogViewer extends PlayerPage {
 		);
 
 		$dbRecord = $dbResult->record();
-		$template->assign('CombatLogSector', $dbRecord->getInt('sector_id'));
-		$template->assign('CombatLogTimestamp', date($player->getAccount()->getDateTimeFormat(), $dbRecord->getInt('timestamp')));
-		$results = $dbRecord->getObject('result', true);
-		$template->assign('CombatResultsType', $dbRecord->getString('type'));
-		$template->assign('CombatResults', $results);
+		$results = $dbRecord->getClass('result', FullCombatResults::class, true);
 
 		// Create a container for the next/previous log.
 		// We initialize it with the current $var, then modify it to set
 		// which log to view when we press the next/previous log buttons.
 		if ($this->currentLog > 0) {
-			$container = new self($this->logIDs, $this->currentLog - 1);
-			$template->assign('PreviousLogHREF', $container->href());
+			$previousLogHREF = new self($this->logIDs, $this->currentLog - 1)->href();
+		} else {
+			$previousLogHREF = null;
 		}
 		if ($this->currentLog < count($this->logIDs) - 1) {
-			$container = new self($this->logIDs, $this->currentLog + 1);
-			$template->assign('NextLogHREF', $container->href());
+			$nextLogHREF = new self($this->logIDs, $this->currentLog + 1)->href();
+		} else {
+			$nextLogHREF = null;
 		}
 
 		$template->pageTopic = 'Combat Logs';
 		Menu::combatLog();
+
+		$template->pageRenderer = fn() => CombatLogViewerRenderer::render(
+			template: $template,
+			CombatLogSector: $dbRecord->getInt('sector_id'),
+			CombatLogTimestamp: date($player->getAccount()->getDateTimeFormat(), $dbRecord->getInt('timestamp')),
+			CombatResults: $results,
+			PreviousLogHREF: $previousLogHREF,
+			NextLogHREF: $nextLogHREF,
+			ThisPlayer: $player,
+		);
 	}
 
 }

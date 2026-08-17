@@ -9,8 +9,6 @@ use Smr\Template;
 
 class AccountEditSearch extends AccountPage {
 
-	public string $file = 'admin/account_edit_search.php';
-
 	public function __construct(
 		private readonly ?string $message = null,
 		private readonly ?string $errorMessage = null,
@@ -32,11 +30,13 @@ class AccountEditSearch extends AccountPage {
 			$gameID = $dbRecord->getInt('game_id');
 			$games[$gameID] = $dbRecord->getString('game_name') . ' (' . $gameID . ')';
 		}
-		$template->assign('Games', $games);
-		$template->assign('SearchHREF', (new AccountEditSearchProcessor())->href());
 
-		$template->assign('ErrorMessage', $this->errorMessage);
-		$template->assign('Message', $this->message);
+		$template->pageRenderer = fn() => AccountEditSearchRenderer::render(
+			Games: $games,
+			SearchHREF: new AccountEditSearchProcessor()->href(),
+			ErrorMessage: $this->errorMessage,
+			Message: $this->message,
+		);
 	}
 
 }

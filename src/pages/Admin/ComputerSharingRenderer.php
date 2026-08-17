@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+class ComputerSharingRenderer {
+
+/**
+ * @param list<list<array{name: string, account_id: int, associated_ids: string, style: string, color: string, common_ip: string, last_login: string, suspicion: string, exception: string, email: string}>> $Tables
+ */
+public static function render(array $Tables, string $CloseHREF): void {
 ?>
 <form method="POST" action="<?php echo $CloseHREF; ?>">
 	<?php
@@ -29,3 +37,8 @@
 	}
 	echo create_submit_display('Close Accounts'); ?>
 </form>
+
+<?php
+}
+
+}

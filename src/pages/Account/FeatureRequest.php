@@ -13,9 +13,6 @@ use Smr\Template;
 class FeatureRequest extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'feature_request.php';
-
 	// Feature Requests show up as new for this many days
 	private const int NEW_REQUEST_DAYS = 30;
 	private const string CATEGORY_NEW = 'New';
@@ -55,11 +52,9 @@ class FeatureRequest extends AccountPage {
 				'Description' => $description,
 			];
 		}
-		$template->assign('CategoryTable', $categoryTable);
 
 		// Can the players vote for features on the current page?
 		$canVote = $thisStatus === 'Opened';
-		$template->assign('CanVote', $canVote);
 
 		if ($canVote) {
 			$featureVotes = [];
@@ -84,12 +79,10 @@ class FeatureRequest extends AccountPage {
 			'category_is_not_new' => $this->category !== self::CATEGORY_NEW,
 			'new_post_time' => Epoch::time() - self::NEW_REQUEST_DAYS * 86400,
 		]);
+		$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
+		$featureRequestVoteFormPage = new FeatureRequestVoteProcessor($this);
+		$featureRequests = [];
 		if ($dbResult->hasRecord()) {
-			$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
-			$template->assign('FeatureModerator', $featureModerator);
-			$template->assign('FeatureRequestVoteFormPage', new FeatureRequestVoteProcessor($this));
-
-			$featureRequests = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$featureRequestID = $dbRecord->getInt('feature_request_id');
 				$featureRequests[$featureRequestID] = [
@@ -122,10 +115,16 @@ class FeatureRequest extends AccountPage {
 				$commentsContainer = new FeatureRequestComments($featureRequestID, $this);
 				$featureRequests[$featureRequestID]['CommentsHREF'] = $commentsContainer->href();
 			}
-			$template->assign('FeatureRequests', $featureRequests);
 		}
 
-		$template->assign('FeatureRequestFormHREF', (new FeatureRequestProcessor())->href());
+		$template->pageRenderer = fn() => FeatureRequestRenderer::render(
+			CategoryTable: $categoryTable,
+			CanVote: $canVote,
+			FeatureModerator: $featureModerator,
+			FeatureRequestVoteFormPage: $featureRequestVoteFormPage,
+			FeatureRequests: $featureRequests,
+			FeatureRequestFormHREF: new FeatureRequestProcessor()->href(),
+		);
 	}
 
 	private static function statusFromCategory(string $category): string {

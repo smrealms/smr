@@ -13,8 +13,6 @@ use Smr\Template;
 
 class AllianceBank extends PlayerPage {
 
-	public string $file = 'bank_alliance.php';
-
 	public function __construct(
 		private readonly int $allianceID,
 	) {}
@@ -46,7 +44,6 @@ class AllianceBank extends PlayerPage {
 			$alliedAllianceBanks[$dbRecord->getInt('alliance_id_2')] = Alliance::getAlliance($dbRecord->getInt('alliance_id_2'), $alliance->getGameID());
 			$alliedAllianceBanks[$dbRecord->getInt('alliance_id_1')] = Alliance::getAlliance($dbRecord->getInt('alliance_id_1'), $alliance->getGameID());
 		}
-		$template->assign('AlliedAllianceBanks', $alliedAllianceBanks);
 
 		$dbResult = $db->read('SELECT transaction, sum(amount) as total FROM alliance_bank_transactions
 					WHERE ' . Alliance::SQL . ' AND payee_id = :payee_id
@@ -68,13 +65,17 @@ class AllianceBank extends PlayerPage {
 			$dbResult = $db->select($table, [...$alliance->SQLID, 'role' => $role]);
 		}
 		$dbRecord = $dbResult->record();
-		$template->assign('CanExempt', $dbRecord->getBoolean('exempt_with'));
+		$canExempt = $dbRecord->getBoolean('exempt_with');
 		$withdrawalPerDay = $dbRecord->getInt('with_per_day');
 
+		$positiveWithdrawal = null;
+		$unlimitedWithdrawal = false;
+		$remainingWithdrawal = null;
+		$totalWithdrawn = null;
 		if ($dbRecord->getBoolean('positive_balance')) {
-			$template->assign('PositiveWithdrawal', $withdrawalPerDay + $playerTrans['Deposit'] - $playerTrans['Payment']);
+			$positiveWithdrawal = $withdrawalPerDay + $playerTrans['Deposit'] - $playerTrans['Payment'];
 		} elseif ($withdrawalPerDay === ALLIANCE_BANK_UNLIMITED) {
-			$template->assign('UnlimitedWithdrawal', true);
+			$unlimitedWithdrawal = true;
 		} else {
 			$dbResult = $db->read('SELECT IFNULL(sum(amount), 0) as total FROM alliance_bank_transactions
 						WHERE ' . Alliance::SQL . '
@@ -85,9 +86,8 @@ class AllianceBank extends PlayerPage {
 				'one_day_ago' => $db->escapeNumber(Epoch::time() - 86400),
 			]);
 			$totalWithdrawn = $dbResult->record()->getInt('total');
-			$template->assign('WithdrawalPerDay', $withdrawalPerDay);
-			$template->assign('RemainingWithdrawal', $withdrawalPerDay - $totalWithdrawn);
-			$template->assign('TotalWithdrawn', $totalWithdrawn);
+			$remainingWithdrawal = $withdrawalPerDay - $totalWithdrawn;
+			$totalWithdrawn = $totalWithdrawn;
 		}
 
 		$maxValue = $session->getRequestVarInt('maxValue', 0);
@@ -128,26 +128,35 @@ class AllianceBank extends PlayerPage {
 			];
 			$transactionIDs[] = $dbRecord->getInt('transaction_id');
 		}
-		$template->assign('BankTransactions', $bankTransactions);
 
 		// only if we have at least one result
 		if (count($bankTransactions) > 0) {
-			$template->assign('MinValue', $minValue);
-			$template->assign('MaxValue', $maxValue);
-			$container = new self($allianceID);
-			$template->assign('FilterTransactionsFormHREF', $container->href());
-
-			$container = new AllianceBankExemptProcessor($this, $transactionIDs);
-			$template->assign('ExemptTransactionsFormHREF', $container->href());
-
-			$template->assign('EndingBalance', number_format($alliance->getBank()));
+			$filterTransactionsFormHREF = new self($allianceID)->href();
+			$exemptTransactionsFormHREF = new AllianceBankExemptProcessor($this, $transactionIDs)->href();
+		} else {
+			$filterTransactionsFormHREF = null;
+			$exemptTransactionsFormHREF = null;
 		}
 
-		$container = new AllianceBankReport($allianceID);
-		$template->assign('BankReportHREF', $container->href());
-
-		$container = new AllianceBankProcessor($allianceID);
-		$template->assign('BankTransactionForm', $container);
+		$template->pageRenderer = fn() => AllianceBankRenderer::render(
+			AlliedAllianceBanks: $alliedAllianceBanks,
+			CanExempt: $canExempt,
+			PositiveWithdrawal: $positiveWithdrawal,
+			UnlimitedWithdrawal: $unlimitedWithdrawal,
+			WithdrawalPerDay: $withdrawalPerDay,
+			RemainingWithdrawal: $remainingWithdrawal,
+			TotalWithdrawn: $totalWithdrawn,
+			BankTransactions: $bankTransactions,
+			MinValue: $minValue,
+			MaxValue: $maxValue,
+			FilterTransactionsFormHREF: $filterTransactionsFormHREF,
+			ExemptTransactionsFormHREF: $exemptTransactionsFormHREF,
+			EndingBalance: number_format($alliance->getBank()),
+			BankReportHREF: new AllianceBankReport($allianceID)->href(),
+			BankTransactionForm: new AllianceBankProcessor($allianceID),
+			ThisAccount: $player->getAccount(),
+			ThisPlayer: $player,
+		);
 	}
 
 }

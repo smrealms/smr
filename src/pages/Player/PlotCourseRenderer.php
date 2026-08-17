@@ -1,17 +1,32 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Template $this
- * @var string $PlotCourseFormLink
- * @var string $PlotNearestFormLink
- * @var string $PlotToNearestHREF
- * @var array<\Smr\PlotGroup> $AllXTypes
- * @var array<int|string, string> $XTypeOptions
- * @var array<int, \Smr\StoredDestination> $StoredDestinations
- * @var string $ManageDestination
- */
+namespace Smr\Pages\Player;
 
+use Smr\Pages\Shared\JumpDriveRenderer;
+use Smr\Player;
+use Smr\PlotGroup;
+use Smr\Template;
+
+class PlotCourseRenderer {
+
+/**
+ * @param array<int|string, string> $XTypeOptions
+ * @param array<int, \Smr\StoredDestination> $StoredDestinations
+ * @param array<\Smr\PlotGroup> $AllXTypes
+ */
+public static function render(
+	Template $template,
+	string $PlotCourseFormLink,
+	string $PlotNearestFormLink,
+	?SectorJumpProcessor $JumpDrivePage,
+	string $PlotToNearestHREF,
+	PlotGroup $XType,
+	array $AllXTypes,
+	array $XTypeOptions,
+	array $StoredDestinations,
+	string $ManageDestination,
+	Player $ThisPlayer,
+): void {
 ?>
 <a href="<?php echo WIKI_URL; ?>/game-guide/how-your-ship-works" target="_blank"><img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: How Your Ship Works"/></a>
 <form class="standard" id="PlotCourseForm" method="POST" action="<?php echo $PlotCourseFormLink; ?>">
@@ -28,7 +43,10 @@
 	</table>
 </form><?php
 
-$this->includeTemplate('includes/JumpDrive.inc.php'); ?>
+JumpDriveRenderer::render(
+	ThisShip: $ThisPlayer->getShip(),
+	JumpDrivePage: $JumpDrivePage,
+); ?>
 
 <br />
 <h2>Plot To Nearest</h2>
@@ -36,12 +54,12 @@ $this->includeTemplate('includes/JumpDrive.inc.php'); ?>
 <form class="standard" id="SelectXTypeForm" method="POST" action="<?php echo $PlotToNearestHREF; ?>">
 	<select name="xtype" onchange="this.form.submit()"><?php
 	foreach ($AllXTypes as $EachXType) {
-		?><option value="<?php echo $EachXType->value; ?>"<?php if (isset($XType) && $EachXType === $XType) { ?> selected="selected"<?php } ?>><?php echo $EachXType->value; ?></option><?php
+		?><option value="<?php echo $EachXType->value; ?>"<?php if ($EachXType === $XType) { ?> selected="selected"<?php } ?>><?php echo $EachXType->value; ?></option><?php
 	} ?>
 	</select>&nbsp;
 	<?php echo create_submit_display('Select'); ?>
-</form><?php
-if (isset($XType)) { ?>
+</form>
+
 	<form class="standard" id="PlotNearestForm" method="POST" action="<?php echo $PlotNearestFormLink; ?>">
 		<input type="hidden" name="xtype" value="<?php echo $XType->value; ?>" /><br />
 		<select name="X" onchange="this.form.submit()"><?php
@@ -50,8 +68,7 @@ if (isset($XType)) { ?>
 			} ?>
 		</select>&nbsp;
 		<?php echo create_submit_display('Go'); ?>
-	</form><?php
-} ?>
+	</form>
 
 <br />
 <br />
@@ -68,7 +85,7 @@ Add new destinations below. Stored destinations can be organized by dragging.
 		</div><?php
 	} ?>
 </div>
-<?php $this->addJavascriptSource('/js/course_plot.js'); ?>
+<?php $template->addJavascriptSource('/js/course_plot.js'); ?>
 
 <br/><br/>
 <h2>Add new destination</h2>
@@ -86,3 +103,8 @@ Add new destinations below. Stored destinations can be organized by dragging.
 	<input type="hidden" name="from" value="<?php echo $ThisPlayer->getSectorID(); ?>"/>
 	<input type="hidden" name="to" value="1"/>
 </form>
+
+<?php
+}
+
+}

@@ -1,35 +1,44 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Layout;
+
+use Smr\Account;
 use Smr\Globals;
+use Smr\Pages\Account\AlbumEdit;
+use Smr\Pages\Account\BugReport;
+use Smr\Pages\Account\ChatJoin;
+use Smr\Pages\Account\ContactForm;
+use Smr\Pages\Account\Donation;
+use Smr\Pages\Account\GameLeaveProcessor;
+use Smr\Pages\Account\GamePlay;
+use Smr\Pages\Account\HallOfFameAll;
+use Smr\Pages\Account\LogoffProcessor;
+use Smr\Pages\Account\Preferences;
+use Smr\Pages\Admin\AdminTools;
+use Smr\Pages\Player\CombatLogList;
+use Smr\Pages\Player\ForcesList;
+use Smr\Pages\Player\GalacticPost\CurrentEditionProcessor;
+use Smr\Pages\Player\NewsReadCurrent;
+use Smr\Pages\Player\Rankings\PlayerExperience;
+use Smr\Pages\Player\SearchForTrader;
+use Smr\Player;
 
-/**
- * @var Smr\Account $ThisAccount
- * @var Smr\Player $ThisPlayer
- * @var string $PlotCourseLink
- * @var string $TraderLink
- * @var string $PoliticsLink
- * @var string $CombatLogsLink
- * @var string $PlanetLink
- * @var string $ForcesLink
- * @var string $MessagesLink
- * @var string $ReadNewsLink
- * @var string $GalacticPostLink
- * @var string $SearchForTraderLink
- * @var string $RankingsLink
- * @var string $CurrentHallOfFameLink
- * @var string $HallOfFameLink
- * @var string $PlayGameLink
- * @var string $PreferencesLink
- * @var string $AdminToolsLink
- * @var string $LogoutLink
- * @var string $EditPhotoLink
- * @var string $ReportABugLink
- * @var string $ContactFormLink
- * @var string $IRCLink
- * @var string $DonateLink
- */
+class LeftPanelRenderer {
 
-if (isset($GameID)) {
+public static function render(?Account $ThisAccount, ?Player $ThisPlayer): void {
+if ($ThisPlayer !== null) {
+	$PlotCourseLink = Globals::getPlotCourseHREF();
+	$TraderLink = Globals::getTraderStatusHREF();
+	$PoliticsLink = Globals::getCouncilHREF($ThisPlayer->getRaceID());
+	$CombatLogsLink = new CombatLogList()->href();
+	$PlanetLink = Globals::getPlanetListHREF($ThisPlayer->getAllianceID());
+	$ForcesLink = new ForcesList()->href();
+	$MessagesLink = Globals::getViewMessageBoxesHREF();
+	$ReadNewsLink = new NewsReadCurrent()->href();
+	$GalacticPostLink = new CurrentEditionProcessor()->href();
+	$SearchForTraderLink = new SearchForTrader()->href();
+	$RankingsLink = new PlayerExperience()->href();
+	$CurrentHallOfFameLink = new HallOfFameAll($ThisPlayer->getGameID())->href();
 ?>
 <div id="LeftNavOne" class="leftNav noWrap"><?php
 	// Use the current sector link for Planet Main to enable the hotkey
@@ -66,10 +75,16 @@ if (isset($GameID)) {
 ?>
 <div id="LeftNavTwo" class="leftNav nowrap">
 <?php
-if (isset($AccountID)) { ?>
+if ($ThisAccount !== null) {
+	$PlayGameLink = new GameLeaveProcessor(new GamePlay())->href();
+	$PreferencesLink = new Preferences()->href();
+	$LogoutLink = new LogoffProcessor()->href();
+	$HallOfFameLink = new HallOfFameAll()->href();
+	?>
 	<a href="<?php echo $PlayGameLink; ?>">Play Game</a><br />
 	<a href="<?php echo $PreferencesLink; ?>">Preferences</a><br /><?php
-	if ($ThisAccount->hasPermission()) { ?>
+	if ($ThisAccount->hasPermission()) {
+		$AdminToolsLink = new GameLeaveProcessor(new AdminTools())->href(); ?>
 		<a href="<?php echo $AdminToolsLink; ?>">Admin Tools</a><br /><?php
 	}
 	?><a href="<?php echo $LogoutLink; ?>">Logout</a><br />
@@ -80,6 +95,11 @@ if (isset($AccountID)) { ?>
 	?><a href="login.php">Login</a><br /><?php
 }
 //<a href="http://www.azool.us/baalz/" target="manual">Help Pages</a><br />
+$EditPhotoLink = new AlbumEdit()->href();
+$ReportABugLink = new BugReport()->href();
+$ContactFormLink = new ContactForm()->href();
+$IRCLink = new ChatJoin()->href();
+$DonateLink = new Donation()->href();
 ?>
 <a href="<?php echo $EditPhotoLink; ?>">Edit Photo</a><br />
 <a href="album/" target="album">View Album</a><br /><br /><?php
@@ -95,3 +115,7 @@ if (Globals::isFeatureRequestOpen()) {
 <a href="http://smrcnn.smrealms.de/" target="webboard">Webboard</a><br />
 <a href="<?php echo $DonateLink; ?>">Donate</a>
 </div>
+<?php
+}
+
+}

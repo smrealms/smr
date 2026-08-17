@@ -1,10 +1,14 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<string, int> $PoliticalRelations
- * @var array<string, int> $PersonalRelations
- */
+namespace Smr\Pages\Player;
 
+class TraderRelationsRenderer {
+
+/**
+ * @param array<string, int> $PoliticalRelations
+ * @param array<string, int> $PersonalRelations
+ */
+public static function render(array $PoliticalRelations, array $PersonalRelations): void {
 ?>
 <table width="50%" class="standard center">
 	<tr>
@@ -22,3 +26,8 @@
 		</tr><?php
 	} ?>
 </table>
+
+<?php
+}
+
+}

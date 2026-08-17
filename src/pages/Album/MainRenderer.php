@@ -1,10 +1,14 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<string, int> $MostViewed
- * @var array<string, int> $Newest
- */
+namespace Smr\Pages\Album;
 
+class MainRenderer {
+
+/**
+ * @param array<string, int> $MostViewed
+ * @param array<string, string> $Newest
+ */
+public static function render(array $MostViewed, array $Newest): void {
 ?>
 <p>
 	<u>Space Merchant Realms Photo Album Rules</u>
@@ -39,3 +43,7 @@
 		</span><br /><?php
 	} ?>
 </p>
+<?php
+}
+
+}

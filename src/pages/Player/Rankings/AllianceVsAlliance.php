@@ -15,9 +15,6 @@ use Smr\Template;
 class AllianceVsAlliance extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'rankings_alliance_vs_alliance.php';
-
 	/**
 	 * @param array<int> $versusAllianceIDs
 	 */
@@ -31,8 +28,6 @@ class AllianceVsAlliance extends PlayerPage {
 
 		Menu::rankings(1, 4);
 		$db = Database::getInstance();
-		$container = new self($this->detailsAllianceID);
-		$template->assign('SubmitHREF', $container->href());
 
 		$this->versusAllianceIDs ??= Request::getIntArray('alliancer', []);
 		$this->detailsAllianceID ??= Request::getInt('alliance_id', $player->getAllianceID());
@@ -46,7 +41,6 @@ class AllianceVsAlliance extends PlayerPage {
 			$allianceID = $dbRecord->getInt('alliance_id');
 			$activeAlliances[$allianceID] = Alliance::getAlliance($allianceID, $player->getGameID(), false, $dbRecord);
 		}
-		$template->assign('ActiveAlliances', $activeAlliances);
 
 		// Get list of alliances to display (max of 5)
 		// These must be a subset of the active alliances
@@ -80,7 +74,6 @@ class AllianceVsAlliance extends PlayerPage {
 				'Style' => $style,
 			];
 		}
-		$template->assign('AllianceVs', $alliance_vs);
 
 		$alliance_vs_table = [];
 		foreach ($alliance_vs_ids as $curr_id) {
@@ -123,7 +116,6 @@ class AllianceVsAlliance extends PlayerPage {
 				];
 			}
 		}
-		$template->assign('AllianceVsTable', $alliance_vs_table);
 
 		// Show details for a specific alliance
 		if ($this->detailsAllianceID === 0) {
@@ -132,7 +124,6 @@ class AllianceVsAlliance extends PlayerPage {
 			$main_alliance = Alliance::getAlliance($this->detailsAllianceID, $player->getGameID());
 			$mainName = $main_alliance->getAllianceDisplayName();
 		}
-		$template->assign('DetailsName', $mainName);
 
 		$kills = [];
 		$dbResult = $db->select(
@@ -160,7 +151,6 @@ class AllianceVsAlliance extends PlayerPage {
 				'Kills' => $dbRecord->getInt('kills'),
 			];
 		}
-		$template->assign('Kills', $kills);
 
 		$deaths = [];
 		$dbResult = $db->select(
@@ -188,7 +178,16 @@ class AllianceVsAlliance extends PlayerPage {
 				'Deaths' => $dbRecord->getInt('kills'),
 			];
 		}
-		$template->assign('Deaths', $deaths);
+
+		$template->pageRenderer = fn() => AllianceVsAllianceRenderer::render(
+			SubmitHREF: new self($this->detailsAllianceID)->href(),
+			ActiveAlliances: $activeAlliances,
+			AllianceVs: $alliance_vs,
+			AllianceVsTable: $alliance_vs_table,
+			DetailsName: $mainName,
+			Kills: $kills,
+			Deaths: $deaths,
+		);
 	}
 
 }

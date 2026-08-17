@@ -13,8 +13,6 @@ use Smr\Treaty;
 
 class AllianceTreatiesConfirm extends PlayerPage {
 
-	public string $file = 'alliance_treaties_confirm.php';
-
 	public function build(Player $player, Template $template): void {
 		$alliance_id_1 = $player->getAllianceID();
 		$alliance_id_2 = Request::getInt('proposedAlliance');
@@ -33,7 +31,6 @@ class AllianceTreatiesConfirm extends PlayerPage {
 
 		$alliance1 = Alliance::getAlliance($alliance_id_1, $player->getGameID());
 		$alliance2 = Alliance::getAlliance($alliance_id_2, $player->getGameID());
-		$template->assign('AllianceName', $alliance2->getAllianceDisplayName());
 
 		$template->pageTopic = 'Alliance Treaty Confirmation';
 		Menu::alliance($alliance1->getAllianceID());
@@ -48,14 +45,13 @@ class AllianceTreatiesConfirm extends PlayerPage {
 		$terms['trader_nap'] = $terms['trader_nap'] || $terms['trader_defend'] || $terms['trader_assist'];
 		$terms['planet_land'] = $terms['planet_land'] || $terms['planet_nap'];
 		$terms['mb_read'] = $terms['mb_read'] || $terms['mb_write'];
-		$template->assign('Terms', $terms);
 
-		// Create links for yes/no response
-		$container = new AllianceTreatiesConfirmProcessor($alliance_id_2, $terms);
-		$template->assign('YesHREF', $container->href());
-
-		$container = new AllianceTreaties();
-		$template->assign('NoHREF', $container->href());
+		$template->pageRenderer = fn() => AllianceTreatiesConfirmRenderer::render(
+			AllianceName: $alliance2->getAllianceDisplayName(),
+			Terms: $terms,
+			YesHREF: new AllianceTreatiesConfirmProcessor($alliance_id_2, $terms)->href(),
+			NoHREF: new AllianceTreaties()->href(),
+		);
 	}
 
 }

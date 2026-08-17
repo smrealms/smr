@@ -1,12 +1,15 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Account $ThisAccount
- * @var string $AlbumEditHref
- * @var string $AlbumDeleteHref
- * @var array{Location: string, Email: string, Website: string, Day: int|'', Month: int|'', Year: int|'', Other: string, Status: string, Image?: string} $AlbumEntry
- */
+namespace Smr\Pages\Account;
 
+use Smr\Account;
+
+class AlbumEditRenderer {
+
+/**
+ * @param array{Location: string, Email: string, Website: string, Day: int|'', Month: int|'', Year: int|'', Other: string, Status: string, Image?: string} $AlbumEntry
+ */
+public static function render(array $AlbumEntry, string $AlbumEditHref, string $AlbumDeleteHref, ?string $SuccessMsg, Account $ThisAccount): void {
 ?>
 <p><span style="font-size:80%;">Here you have a chance to add an entry to the Space Merchant Realms - The Photo Album!<br />
 We only accept jpg or gif images to a maximum of 500 x 500 in size.<br />
@@ -78,3 +81,8 @@ Your image will be posted under your <i>Hall Of Fame</i> nick!<br />
 
 	</table>
 </form>
+
+<?php
+}
+
+}

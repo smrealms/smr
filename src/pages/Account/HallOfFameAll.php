@@ -9,15 +9,13 @@ use Smr\Game;
 use Smr\HallOfFame;
 use Smr\Page\AccountPage;
 use Smr\Page\ReusableTrait;
+use Smr\Pages\Shared\HallOfFameRenderer;
 use Smr\Player;
 use Smr\Template;
 
 class HallOfFameAll extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'hall_of_fame_new.php';
-
 	public function __construct(
 		private readonly ?int $gameID = null,
 		public readonly ?string $viewType = null,
@@ -42,10 +40,8 @@ class HallOfFameAll extends AccountPage {
 		$template->pageTopic = $topic;
 
 		$container = new HallOfFamePersonal($account->getAccountID(), $game_id);
-		$template->assign('PersonalHofHREF', $container->href());
 
 		$breadcrumb = HallOfFame::buildBreadcrumb($this, isset($game_id) ? 'Current HoF' : 'Global HoF');
-		$template->assign('Breadcrumb', $breadcrumb);
 
 		$viewType = $this->viewType;
 		$hofVis = Player::getHOFVis();
@@ -54,10 +50,11 @@ class HallOfFameAll extends AccountPage {
 			// Not a complete HOF type, so continue to show categories
 			$allowedVis = [HOF_PUBLIC, HOF_ALLIANCE];
 			$categories = HallOfFame::getHofCategories($this, $allowedVis, $game_id, $account->getAccountID());
-			$template->assign('Categories', $categories);
+			$rows = null;
 
 		} else {
 			// Rankings page
+			$categories = null;
 			$db = Database::getInstance();
 			$gameIDSql = ' AND IF(:game_id IS NULL, game_id IN (SELECT game_id FROM game WHERE end_time < :now AND ignore_stats = \'FALSE\'), game_id = :game_id)';
 			$gameIDParams = [
@@ -97,8 +94,15 @@ class HallOfFameAll extends AccountPage {
 				$rank = HallOfFame::getHofRank($viewType, $account->getAccountID(), $game_id);
 				$rows[] = HallOfFame::displayHOFRow($rank['Rank'], $account->getAccountID(), $game_id, $rank['Amount']);
 			}
-			$template->assign('Rows', $rows);
 		}
+
+		$template->pageRenderer = fn() => HallOfFameRenderer::render(
+			PersonalHofHREF: $container->href(),
+			Breadcrumb: $breadcrumb,
+			Categories: $categories,
+			Rows: $rows,
+			ThisAccount: $account,
+		);
 	}
 
 }

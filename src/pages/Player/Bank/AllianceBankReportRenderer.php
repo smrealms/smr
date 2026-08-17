@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $BankReport
- */
+namespace Smr\Pages\Player\Bank;
 
+class AllianceBankReportRenderer {
+
+public static function render(string $BankReport, ?string $SendReportHREF): void {
 ?>
 <div class="center"><?php
 	if (isset($SendReportHREF)) { ?>
@@ -15,3 +16,7 @@
 	} ?>
 </div>
 <?php echo $BankReport;
+
+}
+
+}

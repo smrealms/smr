@@ -14,23 +14,10 @@ use Smr\Template;
 class CreateGame extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'admin/unigen/game_create.php';
-
 	public function build(Account $account, Template $template): void {
 		$db = Database::getInstance();
 
-		//get information
-		$container = new CreateGameProcessor();
-		$template->assign('CreateGalaxiesHREF', $container->href());
-
-		$container = new EditGalaxy(canEdit: true);
-		$template->assign('EditGameHREF', $container->href());
-		$container = new EditGalaxy(canEdit: false);
-		$template->assign('ViewGameHREF', $container->href());
-
 		$canEditEnabledGames = $account->hasPermission(PERMISSION_EDIT_ENABLED_GAMES);
-		$template->assign('CanEditEnabledGames', $canEditEnabledGames);
 
 		$defaultGame = [
 			'name' => '',
@@ -51,8 +38,6 @@ class CreateGame extends AccountPage {
 			'relations' => MIN_POLITICAL_RELATIONS,
 			'destroyPorts' => false,
 		];
-		$template->assign('Game', $defaultGame);
-		$template->assign('SubmitValue', 'Create Game');
 
 		// Get information for "In Development" game table
 		$devGames = [];
@@ -90,7 +75,16 @@ class CreateGame extends AccountPage {
 				'DeleteHREF' => $deleteHREF,
 			];
 		}
-		$template->assign('DevGames', $devGames);
+
+		$template->pageRenderer = fn() => CreateGameRenderer::render(
+			template: $template,
+			CreateGalaxiesHREF: new CreateGameProcessor()->href(),
+			EditGameHREF: new EditGalaxy(canEdit: true)->href(),
+			ViewGameHREF: new EditGalaxy(canEdit: false)->href(),
+			CanEditEnabledGames: $canEditEnabledGames,
+			Game: $defaultGame,
+			DevGames: $devGames,
+		);
 	}
 
 }

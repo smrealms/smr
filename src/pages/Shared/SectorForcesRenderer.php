@@ -1,14 +1,21 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Shared;
+
+use Smr\AbstractShip;
+use Smr\Account;
 use Smr\Force;
+use Smr\Player;
+use Smr\Sector;
 
-/**
- * @var Smr\Account $ThisAccount
- * @var Smr\Player $ThisPlayer
- * @var Smr\Sector $ThisSector
- * @var Smr\Ship $ThisShip
- */
+class SectorForcesRenderer {
 
+public static function render(
+	Account $ThisAccount,
+	Player $ThisPlayer,
+	Sector $ThisSector,
+	AbstractShip $ThisShip,
+): void {
 ?>
 <div id="sector_forces" class="ajax"><?php
 	if ($ThisSector->hasForces()) {
@@ -100,3 +107,8 @@ use Smr\Force;
 		</table><?php
 	} ?>
 </div>
+
+<?php
+}
+
+}

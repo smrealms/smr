@@ -33,7 +33,10 @@ class News {
 		return $newsItems;
 	}
 
-	public static function doBreakingNewsAssign(int $gameID): void {
+	/**
+	 * @return ?array{Time: int, Message: string}
+	 */
+	public static function getBreakingNews(int $gameID): ?array {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND type = \'breaking\' AND time > :breaking_news_time  ORDER BY time DESC LIMIT 1', [
 			'game_id' => $db->escapeNumber($gameID),
@@ -41,15 +44,18 @@ class News {
 		]);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
-			$template = Template::getInstance();
-			$template->assign('BreakingNews', [
+			return [
 				'Time' => $dbRecord->getInt('time'),
 				'Message' => bbify($dbRecord->getString('news_message'), $gameID),
-			]);
+			];
 		}
+		return null;
 	}
 
-	public static function doLottoNewsAssign(int $gameID): void {
+	/**
+	 * @return ?array{Time: int, Message: string}
+	 */
+	public static function getLottoNews(int $gameID): ?array {
 		Lotto::checkForLottoWinner($gameID);
 		$db = Database::getInstance();
 		$dbResult = $db->select(
@@ -61,12 +67,12 @@ class News {
 		);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
-			$template = Template::getInstance();
-			$template->assign('LottoNews', [
+			return [
 				'Time' => $dbRecord->getInt('time'),
 				'Message' => bbify($dbRecord->getString('news_message'), $gameID),
-			]);
+			];
 		}
+		return null;
 	}
 
 }

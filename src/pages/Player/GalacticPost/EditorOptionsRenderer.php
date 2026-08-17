@@ -1,12 +1,15 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var string $ViewArticlesHREF
- * @var string $MakePaperHREF
- * @var array<array{title: string, num_articles: int, color: string, published: bool, PublishHREF?: string, DeleteHREF: string, EditHREF: string}> $Papers
- */
+namespace Smr\Pages\Player\GalacticPost;
 
+use Smr\Player;
+
+class EditorOptionsRenderer {
+
+/**
+ * @param array<array{title: string, num_articles: int, color: string, published: bool, PublishHREF?: string, DeleteHREF: string, EditHREF: string}> $Papers
+ */
+public static function render(string $ViewArticlesHREF, string $MakePaperHREF, array $Papers, Player $ThisPlayer): void {
 ?>
 Welcome <?php echo $ThisPlayer->getDisplayName(); ?>, your position is <i>Editor</i><br /><br />
 <b>EDITOR OPTIONS</b>
@@ -35,3 +38,8 @@ foreach ($Papers as $Paper) { ?>
 	<br /><br /><?php
 } ?>
 <p>Note: If you wish to edit an article you must first view it.</p>
+
+<?php
+}
+
+}

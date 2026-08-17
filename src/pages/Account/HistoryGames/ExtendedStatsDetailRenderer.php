@@ -1,11 +1,14 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $BackHREF
- * @var array<string> $Headers
- * @var array<array{bold: string, data: array<float|int|string>}> $Rankings
- */
+namespace Smr\Pages\Account\HistoryGames;
 
+class ExtendedStatsDetailRenderer {
+
+/**
+ * @param array<array{bold: string, data: array<float|int|string>}> $Rankings
+ * @param array<string> $Headers
+ */
+public static function render(string $BackHREF, array $Rankings, array $Headers): void {
 ?>
 <div class="center">
 	<a href="<?php echo $BackHREF; ?>"><b>&lt;&lt;Back</b></a>
@@ -26,3 +29,8 @@
 		} ?>
 	</table>
 </div>
+
+<?php
+}
+
+}

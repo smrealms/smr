@@ -12,9 +12,6 @@ use Smr\Template;
 class CurrentPlayers extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'current_players.php';
-
 	public function build(Player $player, Template $template): void {
 		$inactiveTime = Epoch::time() - TIME_BEFORE_INACTIVE;
 
@@ -66,8 +63,6 @@ class CurrentPlayers extends PlayerPage {
 
 		$summary .= '<br />The traders listed in <span class="italic">italics</span> are still ranked as Newbie or Beginner.';
 
-		$template->assign('Summary', $summary);
-
 		$allRows = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$row = [];
@@ -112,7 +107,12 @@ class CurrentPlayers extends PlayerPage {
 			$allRows[] = $row;
 		}
 
-		$template->assign('AllRows', $allRows);
+		$template->pageRenderer = fn() => CurrentPlayersRenderer::render(
+			template: $template,
+			Summary: $summary,
+			AllRows: $allRows,
+			ThisPlayer: $player,
+		);
 	}
 
 }

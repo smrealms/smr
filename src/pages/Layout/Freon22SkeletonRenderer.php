@@ -1,19 +1,19 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Layout;
+
 use Smr\Globals;
 
-/**
- * @var Smr\Template $this
- * @var int $timeDisplay
- * @var string $PlayerNameLink
- * @var string $TemplateBody
- */
+class Freon22SkeletonRenderer extends AbstractSkeletonRenderer {
+
+public static function render(SkeletonData $data): void {
+	$timeDisplay = $data->timeDisplay;
 
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head><?php
-		$this->includeTemplate('includes/Head.inc.php'); ?>
+		HeadRenderer::render($data->account, $data->gameName); ?>
 	</head>
 	<body>
 		<div id="Container">
@@ -25,7 +25,10 @@ use Smr\Globals;
 						<span id="tod"><?php echo $timeDisplay; ?></span>
 					</td>
 					<td class="topcenterCell"><?php
-						if (isset($ThisPlayer)) { ?>
+						if ($data->rightPanelData !== null) {
+							$ThisPlayer = $data->rightPanelData->player;
+							$PlayerNameLink = $data->rightPanelData->playerNameLink;
+							?>
 							<div class="TopInfo">
 								<table class="fullwidth">
 									<tr>
@@ -83,44 +86,50 @@ use Smr\Globals;
 						} ?>
 					</td>
 					<td class="rightCell bottom"><?php
-						if (isset($ThisPlayer)) { ?>
+						if ($data->rightPanelData !== null) { ?>
 							<div class="rightInfoMail noWrap"><?php
-								$this->includeTemplate('includes/UnreadMessages.inc.php'); ?>
+								UnreadMessagesRenderer::render($data->rightPanelData->unreadMessages); ?>
 							</div><?php
 						} ?>
 					</td>
 				</tr>
 				<tr>
 					<td class="leftCell">
-						<?php $this->includeTemplate('includes/LeftPanel.inc.php'); ?>
+						<?php LeftPanelRenderer::render($data->account, $data->player); ?>
 					</td>
 
 					<td class="centerContent">
-						<div id="middle_panel" class="MainContentArea<?php if (isset($SpaceView) && $SpaceView) { ?> stars<?php } ?>"><?php
-							if ($this->pageTopic !== null) {
-								?><h1><?php echo $this->pageTopic; ?></h1><br /><?php
+						<div id="middle_panel" class="MainContentArea<?php if ($data->template->spaceView) { ?> stars<?php } ?>"><?php
+							if ($data->template->pageTopic !== null) {
+								?><h1><?php echo $data->template->pageTopic; ?></h1><br /><?php
 							}
-							$this->includeTemplate('includes/menu.inc.php');
-							$this->includeTemplate($TemplateBody); ?>
+							MenuRenderer::render($data->template);
+							if ($data->template->pageRenderer !== null) {
+								($data->template->pageRenderer)();
+							} ?>
 						</div>
 						<div class="footer_left">
-							<?php $this->includeTemplate('includes/VoteLinks.inc.php'); ?>
+							<?php VoteLinksRenderer::render($data->voteLinks, $data->timeToNextVote); ?>
 						</div>
 						<div class="footer_right">
-							<?php $this->includeTemplate('includes/copyright.inc.php'); ?>
+							<?php CopyrightRenderer::render($data->version); ?>
 						</div>
 					</td>
 
 					<td class="rightCell top"><?php
-						if (isset($ThisPlayer)) { ?>
+						if ($data->rightPanelData !== null) { ?>
 							<div class="rightInfoShip noWrap">
-								<?php $this->includeTemplate('includes/RightPanelShip.inc.php'); ?>
+								<?php RightPanelShipRenderer::render($data->rightPanelData); ?>
 							</div><?php
 						} ?>
 					</td>
 				</tr>
 			</table>
 		</div>
-		<?php $this->includeTemplate('includes/EndingJavascript.inc.php'); ?>
+		<?php EndingJavascriptRenderer::render($data->template, $data->account); ?>
 	</body>
 </html>
+<?php
+}
+
+}

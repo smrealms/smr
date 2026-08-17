@@ -1,14 +1,26 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<array{game_name: string, game_id: int}> $ActiveGames
- * @var Smr\Pages\Admin\ManageDraftLeadersProcessor $ProcessingPage
- */
+namespace Smr\Pages\Admin;
 
-if (count($ActiveGames) === 0) {
+class ManageDraftLeadersRenderer {
+
+public static function renderEmpty(): void {
 	echo '<p>There are no active Draft games at this time!</p>';
-} else { ?>
+}
 
+/**
+ * @param array<array{game_name: string, game_id: int}> $ActiveGames
+ * @param array<array{Name: string, HomeSectorID: string|int}> $CurrentLeaders
+ */
+public static function render(
+	string $SelectGameHREF,
+	array $ActiveGames,
+	int $SelectedGame,
+	array $CurrentLeaders,
+	?string $ProcessingMsg,
+	ManageDraftLeadersProcessor $ProcessingPage,
+): void {
+?>
 	<p>Specify the Game and Player ID to assign or remove a Draft Leader.</p>
 
 	Select Game:&nbsp;
@@ -48,7 +60,7 @@ if (count($ActiveGames) === 0) {
 		echo "<p>$ProcessingMsg</p>";
 	}
 
-	if (!isset($CurrentLeaders) || count($CurrentLeaders) === 0) {
+	if (count($CurrentLeaders) === 0) {
 		echo '<p>No current Draft Leaders for this game!</p>';
 	} else { ?>
 		<br />
@@ -59,5 +71,7 @@ if (count($ActiveGames) === 0) {
 		} ?>
 		</ul><?php
 	}
+
+}
 
 }

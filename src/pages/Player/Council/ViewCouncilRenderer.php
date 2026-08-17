@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Council;
+
 use Smr\Council;
 use Smr\Player;
 use Smr\Race;
+use Smr\Template;
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Template $this
- * @var int $RaceID
- */
+class ViewCouncilRenderer {
 
+public static function render(Template $template, int $RaceID, Player $ThisPlayer): void {
 ?>
 <div class="center">
 	<a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
@@ -68,7 +68,7 @@ use Smr\Race;
 				} ?>
 			</tbody>
 		</table><?php
-		$this->listjsInclude = 'council_list';
+		$template->listjsInclude = 'council_list';
 	} else { ?>
 		This council doesn't have any members!<?php
 	} ?>
@@ -80,4 +80,8 @@ foreach (Race::getPlayableIDs() as $RaceID) { ?>
 	<span class="smallFont"><?php
 		echo $ThisPlayer->getColouredRaceName($RaceID, true); ?>
 	</span><br /><?php
+}
+
+}
+
 }

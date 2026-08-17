@@ -1,12 +1,21 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Template $this
- * @var array<int, string> $NewsAlliances
- * @var array<array{Date: string, Message: string}> $NewsItems
- * @var Smr\Pages\Account\NewsReadAdvancedProcessor $AdvancedNewsForm
- */
+namespace Smr\Pages\Account;
 
+use Smr\Pages\Shared\NewsTableRenderer;
+
+class NewsReadAdvancedRenderer {
+
+/**
+ * @param array<int, string> $NewsAlliances
+ * @param array<array{Date: string, Message: string}> $NewsItems
+ */
+public static function render(
+	array $NewsAlliances,
+	NewsReadAdvancedProcessor $AdvancedNewsForm,
+	?string $ResultsFor,
+	array $NewsItems,
+): void {
 ?>
 <div class="center">
 	<table class="standardnobord fullwidth">
@@ -77,7 +86,11 @@ if (count($NewsItems) > 0) { ?>
 	<div class="center">
 		Showing most recent <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />
 	</div><?php
-	$this->includeTemplate('includes/NewsTable.inc.php');
+	NewsTableRenderer::render(NewsItems: $NewsItems);
 } else {
 	?>No news to read.<?php
+}
+
+}
+
 }

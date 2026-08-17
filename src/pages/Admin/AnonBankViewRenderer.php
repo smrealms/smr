@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+class AnonBankViewRenderer {
+
+/** @param array<array{player_name: string, transaction: string, amount: int}> $Rows */
+public static function render(string $BackHREF, array $Rows, int $AnonID, int $ViewGameID): void {
 ?>
 <a href="<?php echo $BackHREF; ?>">&lt;&lt;Back</a>
 <p>Transactions from Anonymous Account #<?php echo $AnonID; ?> in Game <?php echo $ViewGameID; ?></p>
@@ -17,3 +23,8 @@
 		</tr><?php
 	} ?>
 </table>
+
+<?php
+}
+
+}

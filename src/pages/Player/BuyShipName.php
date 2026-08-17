@@ -9,14 +9,15 @@ use Smr\Template;
 
 class BuyShipName extends PlayerPage {
 
-	public string $file = 'buy_ship_name.php';
-
 	public function build(Player $player, Template $template): void {
 		$costs = Globals::getBuyShipNameCosts();
 
 		$template->pageTopic = 'Naming Your Ship';
-		$template->assign('Costs', $costs);
-		$template->assign('ProcessorPage', new BuyShipNameProcessor());
+
+		$template->pageRenderer = fn() => BuyShipNameRenderer::render(
+			Costs: $costs,
+			ProcessorPage: new BuyShipNameProcessor(),
+		);
 	}
 
 }

@@ -1,14 +1,21 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use Smr\AbstractShip;
+use Smr\Combat\Results\ForceFullCombatResults;
+use Smr\Force;
 use Smr\Globals;
+use Smr\Pages\Shared\ForceFullCombatResultsRenderer;
+use Smr\Template;
 
-/**
- * @var Smr\Ship $ThisShip
- * @var Smr\Template $this
- * @var bool $OverrideDeath
- */
+class AttackForcesRenderer {
 
-$this->includeTemplate('includes/ForceFullCombatResults.inc.php'); ?><br />
+public static function render(Template $template, ForceFullCombatResults $FullForceCombatResults, ?Force $Target, bool $OverrideDeath, AbstractShip $ThisShip): void {
+ForceFullCombatResultsRenderer::render(
+	template: $template,
+	FullForceCombatResults: $FullForceCombatResults,
+); ?><br />
 <br />
 <div class="center"><?php
 	if (isset($Target)) { ?>
@@ -31,3 +38,8 @@ $this->includeTemplate('includes/ForceFullCombatResults.inc.php'); ?><br />
 		</div><?php
 	} ?>
 </div>
+
+<?php
+}
+
+}

@@ -1,15 +1,17 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $SubmitHREF
- * @var array<array{ID: int, DetailsHREF: string, Name: string, Style: string}> $AllianceVs
- * @var string $DetailsName
- * @var array<int, array<int, array{Value: string|int, Style: string}>> $AllianceVsTable
- * @var array<array{Name: string, Kills: int}> $Kills
- * @var array<array{Name: string, Deaths: int}> $Deaths
- * @var array<int, Smr\Alliance> $ActiveAlliances
- */
+namespace Smr\Pages\Player\Rankings;
 
+class AllianceVsAllianceRenderer {
+
+/**
+ * @param array<int, \Smr\Alliance> $ActiveAlliances
+ * @param array<array{ID: int, DetailsHREF: string, Name: string, Style: string}> $AllianceVs
+ * @param array<int, array<int, array{Value: string|int, Style: string}>> $AllianceVsTable
+ * @param array<array{Name: string, Kills: int}> $Kills
+ * @param array<array{Name: string, Deaths: int}> $Deaths
+ */
+public static function render(string $SubmitHREF, array $ActiveAlliances, array $AllianceVs, array $AllianceVsTable, string $DetailsName, array $Kills, array $Deaths): void {
 ?>
 <div class="center">
 <form method="POST" action="<?php echo $SubmitHREF; ?>">
@@ -101,3 +103,8 @@
 		</td>
 	</tr>
 </table>
+
+<?php
+}
+
+}

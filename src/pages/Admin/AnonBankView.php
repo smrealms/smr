@@ -10,16 +10,11 @@ use Smr\Template;
 
 class AnonBankView extends AccountPage {
 
-	public string $file = 'admin/anon_acc_view.php';
-
 	public function build(Account $account, Template $template): void {
 		$session = Session::getInstance();
 
 		//view anon acct activity.
 		$template->pageTopic = 'View Anonymous Account Info';
-
-		$container = new AnonBankViewSelect();
-		$template->assign('BackHREF', $container->href());
 
 		$anonID = $session->getRequestVarInt('anon_account');
 		$gameID = $session->getRequestVarInt('view_game_id');
@@ -47,9 +42,13 @@ class AnonBankView extends AccountPage {
 			$container = new AnonBankViewSelect($message);
 			$container->go();
 		}
-		$template->assign('Rows', $rows);
-		$template->assign('AnonID', $anonID);
-		$template->assign('ViewGameID', $gameID);
+
+		$template->pageRenderer = fn() => AnonBankViewRenderer::render(
+			BackHREF: new AnonBankViewSelect()->href(),
+			Rows: $rows,
+			AnonID: $anonID,
+			ViewGameID: $gameID,
+		);
 	}
 
 }

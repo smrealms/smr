@@ -2,19 +2,15 @@
 
 namespace Smr\Pages\Player;
 
+use Smr\Combat\Results\PortFullCombatResults;
 use Smr\Page\PlayerPage;
 use Smr\Player;
 use Smr\Template;
 
 class AttackPort extends PlayerPage {
 
-	public string $file = 'port_attack.php';
-
-	/**
-	 * @param ?array{Attackers: PortAttackerCombatResults, Port: PortCombatResults} $results
-	 */
 	public function __construct(
-		private readonly ?array $results = null,
+		private readonly ?PortFullCombatResults $results = null,
 		bool $playerDied = false,
 	) {
 		// If the player died, make sure they see combat results
@@ -29,17 +25,22 @@ class AttackPort extends PlayerPage {
 		$port = $sector->getPort();
 
 		if ($this->results !== null) {
-			$template->assign('FullPortCombatResults', $this->results);
-			$template->assign('AlreadyDestroyed', false);
-			$template->assign('CreditedAttacker', true);
+			$alreadyDestroyed = false;
+			$creditedAttacker = false;
 		} else {
-			$template->assign('AlreadyDestroyed', true);
-			$template->assign('CreditedAttacker', $port->isCreditedAttacker($player));
+			$alreadyDestroyed = true;
+			$creditedAttacker = $port->isCreditedAttacker($player);
 		}
-		$template->assign('MinimalDisplay', false);
 
-		$template->assign('OverrideDeath', $player->isDead());
-		$template->assign('Port', $port);
+		$template->pageRenderer = fn() => AttackPortRenderer::render(
+			template: $template,
+			FullPortCombatResults: $this->results,
+			AlreadyDestroyed: $alreadyDestroyed,
+			CreditedAttacker: $creditedAttacker,
+			OverrideDeath: $player->isDead(),
+			Port: $port,
+			ThisPlayer: $player,
+		);
 	}
 
 }

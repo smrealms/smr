@@ -1,28 +1,33 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Template $this
- */
+namespace Smr\Pages\Layout;
 
+use Smr\Template;
+
+class MenuRenderer {
+
+public static function render(Template $template): void {
 // If there are no menu items, we still want a blank menu bar if there is a page topic
-if (isset($MenuItems) || isset($SubMenuBar) || $this->pageTopic !== null) { ?>
+if ($template->menuItems !== null || $template->subMenuBar || $template->pageTopic !== null) { ?>
 	<div class="bar1">
 		<div><?php
-			if (isset($MenuItems)) { ?>
+			if ($template->menuItems !== null) { ?>
 				<span class="noWrap"><?php
-					foreach ($MenuItems as $number => $MenuItem) {
-						if (isset($MenuItem['Link'])) {
-							if ($number > 0) {
-								?></span> | <span class="noWrap"><?php
-							}
-							?><a class="nav" href="<?php echo $MenuItem['Link']; ?>"><?php echo $MenuItem['Text']; ?></a><?php
+					foreach ($template->menuItems as $number => $MenuItem) {
+						if ($number > 0) {
+							?></span> | <span class="noWrap"><?php
 						}
+						?><a class="nav" href="<?php echo $MenuItem['Link']; ?>"><?php echo $MenuItem['Text']; ?></a><?php
 					}?>
 				</span><?php
-			} elseif (isset($SubMenuBar)) {
-				echo $SubMenuBar;
+			} elseif ($template->subMenuBar !== null) {
+				echo $template->subMenuBar;
 			} ?>
 		</div>
 	</div>
 	<br /><?php
+}
+
+}
+
 }

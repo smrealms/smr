@@ -9,8 +9,6 @@ use Smr\Template;
 
 class EnableGame extends AccountPage {
 
-	public string $file = 'admin/enable_game.php';
-
 	public function __construct(
 		private readonly ?string $processingMessage = null,
 	) {}
@@ -19,8 +17,6 @@ class EnableGame extends AccountPage {
 		$template->pageTopic = 'Enable New Games';
 
 		// If we have just forwarded from the processing file, pass its message.
-		$template->assign('ProcessingMsg', $this->processingMessage);
-
 		// Get the list of disabled games
 		$db = Database::getInstance();
 		$dbResult = $db->select(
@@ -33,11 +29,11 @@ class EnableGame extends AccountPage {
 			$disabledGames[$dbRecord->getInt('game_id')] = $dbRecord->getString('game_name');
 		}
 		krsort($disabledGames);
-		$template->assign('DisabledGames', $disabledGames);
-
-		// Create the link to the processing file
-		$linkContainer = new EnableGameProcessor();
-		$template->assign('EnableGameHREF', $linkContainer->href());
+		$template->pageRenderer = fn() => EnableGameRenderer::render(
+			ProcessingMsg: $this->processingMessage,
+			DisabledGames: $disabledGames,
+			EnableGameHREF: new EnableGameProcessor()->href(),
+		);
 	}
 
 }

@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $YesHREF
- * @var string $NoHREF
- */
+namespace Smr\Pages\Player;
 
+class AllianceLeaveConfirmRenderer {
+
+public static function render(string $YesHREF, string $NoHREF): void {
 ?>
 Do you really want to leave this alliance?<br /><br />
 
@@ -13,3 +13,6 @@ Do you really want to leave this alliance?<br /><br />
 	&nbsp;&nbsp;&nbsp;
 	<a class="buttonA" href="<?php echo $NoHREF; ?>">No</a>
 </div>
+<?php }
+
+}

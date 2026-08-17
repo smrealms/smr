@@ -1,19 +1,29 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use Smr\AbstractShip;
+use Smr\Player;
+use Smr\Port;
 use Smr\TransactionType;
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Port $Port
- * @var Smr\Ship $ThisShip
- * @var array<int, array{Page: Smr\Pages\Player\ShopGoodsProcessor, Image: string, Name: string, BasePrice: int, PortAmount: int, Amount: int}> $BoughtGoods
- * @var array<int, array{Page: Smr\Pages\Player\ShopGoodsProcessor, Image: string, Name: string, BasePrice: int, PortAmount: int, Amount: int}> $SoldGoods
- * @var bool $SearchedByFeds
- * @var ?int $TotalFine
- * @var string $LeavePortHREF
- * @var ?string $TradeMessage
- */
+class ShopGoodsRenderer {
 
+/**
+ * @param array<int, array{Page: \Smr\Pages\Player\ShopGoodsProcessor, Image: string, Name: string, BasePrice: int, PortAmount: int, Amount: int}> $BoughtGoods
+ * @param array<int, array{Page: \Smr\Pages\Player\ShopGoodsProcessor, Image: string, Name: string, BasePrice: int, PortAmount: int, Amount: int}> $SoldGoods
+ */
+public static function render(
+	Port $Port,
+	?string $TradeMsg,
+	?int $TotalFine,
+	bool $SearchedByFeds,
+	array $BoughtGoods,
+	array $SoldGoods,
+	string $LeavePortHREF,
+	Player $ThisPlayer,
+	AbstractShip $ThisShip,
+): void {
 ?>
 <p>This is a level <?php echo $Port->getLevel(); ?> port run by the <?php echo $ThisPlayer->getColouredRaceName($Port->getRaceID(), true); ?>.<br />
 Your relations with them are <?php echo get_colored_text($ThisPlayer->getRelation($Port->getRaceID())); ?>.</p>
@@ -100,3 +110,8 @@ if (count($SoldGoods) > 0) { ?>
 } ?>
 
 <a href="<?php echo $LeavePortHREF; ?>" class="submitStyle">Leave Port</a>
+
+<?php
+}
+
+}

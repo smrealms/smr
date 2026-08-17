@@ -1,16 +1,17 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $timeDisplay
- * @var Smr\Template $this
- * @var string $TemplateBody
- */
+namespace Smr\Pages\Layout;
+
+class DefaultSkeletonRenderer extends AbstractSkeletonRenderer {
+
+public static function render(SkeletonData $data): void {
+	$timeDisplay = $data->timeDisplay;
 
 ?>
 <!DOCTYPE html>
 <html>
 	<head><?php
-		$this->includeTemplate('includes/Head.inc.php'); ?>
+		HeadRenderer::render($data->account, $data->gameName); ?>
 	</head>
 	<body>
 		<table class="m centered">
@@ -21,37 +22,45 @@
 							<span id="tod"><?php echo $timeDisplay; ?></span>
 						</span>
 						<br /><br />
-						<?php $this->includeTemplate('includes/LeftPanel.inc.php'); ?>
+						<?php LeftPanelRenderer::render($data->account, $data->player); ?>
 						<br />
 					</div>
 				</td>
 				<td class="m0" colspan="2">
 					<div id="middle_panel"><?php
-						if ($this->pageTopic !== null) {
-							?><h1><?php echo $this->pageTopic; ?></h1><br /><?php
+						if ($data->template->pageTopic !== null) {
+							?><h1><?php echo $data->template->pageTopic; ?></h1><br /><?php
 						}
-						$this->includeTemplate('includes/menu.inc.php');
-						$this->includeTemplate($TemplateBody); ?>
+						MenuRenderer::render($data->template);
+						if ($data->template->pageRenderer !== null) {
+							($data->template->pageRenderer)();
+						} ?>
 					</div>
 				</td>
 				<td class="r0">
 					<div id="right_panel">
-						<?php $this->includeTemplate('includes/RightPanelPlayer.inc.php'); ?>
+						<?php
+						if ($data->rightPanelData !== null) {
+							RightPanelPlayerRenderer::render($data->rightPanelData); ?>
 						<br />
-						<?php $this->includeTemplate('includes/RightPanelShip.inc.php'); ?>
+							<?php RightPanelShipRenderer::render($data->rightPanelData);
+						} ?>
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<td class="footer_left">
-					<?php $this->includeTemplate('includes/VoteLinks.inc.php'); ?>
+					<?php VoteLinksRenderer::render($data->voteLinks, $data->timeToNextVote); ?>
 				</td>
 				<td class="footer_right">
-					<?php $this->includeTemplate('includes/copyright.inc.php'); ?>
+					<?php CopyrightRenderer::render($data->version); ?>
 				</td>
 				<td></td>
 			</tr>
 		</table>
-		<?php $this->includeTemplate('includes/EndingJavascript.inc.php'); ?>
+		<?php EndingJavascriptRenderer::render($data->template, $data->account); ?>
 	</body>
 </html>
+<?php }
+
+}

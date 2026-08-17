@@ -7,6 +7,9 @@ use Smr\Player;
 
 class LocalMapProcessor extends PlayerPageProcessor {
 
+	/**
+	 * @param 'Expand'|'Shrink' $zoomDir
+	 */
 	public function __construct(
 		private readonly string $zoomDir,
 	) {}

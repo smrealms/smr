@@ -10,11 +10,13 @@ use Smr\TradeGood;
 class Construction extends PlanetPage {
 
 	use ReusableTrait;
-
-	public string $file = 'planet_construction.php';
-
 	protected function buildPlanetPage(Player $player, Template $template): void {
-		$template->assign('Goods', TradeGood::getAll());
+		$template->pageRenderer = fn() => ConstructionRenderer::render(
+			Goods: TradeGood::getAll(),
+			ThisPlanet: $player->getSectorPlanet(),
+			ThisPlayer: $player,
+			ThisShip: $player->getShip(),
+		);
 	}
 
 }

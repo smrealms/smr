@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $DelHREF
- * @var string $AddHREF
- * @var array<array<string>> $FilteredWords
- */
+namespace Smr\Pages\Admin;
 
+class WordFilterRenderer {
+
+/** @param array<array<string>> $FilteredWords */
+public static function render(string $DelHREF, string $AddHREF, array $FilteredWords, ?string $Message): void {
 ?>
 <h2>Filtered Words</h2><br />
 
@@ -51,4 +51,8 @@ if (count($FilteredWords) === 0) { ?>
 <?php
 if (isset($Message)) {
 	echo $Message;
+}
+
+}
+
 }

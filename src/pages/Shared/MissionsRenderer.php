@@ -1,15 +1,23 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Shared;
+
 use Smr\Pages\Player\Mission\AbandonProcessor;
 use Smr\Pages\Player\Mission\AcceptProcessor;
 use Smr\Pages\Player\Mission\ClaimProcessor;
 use Smr\Pages\Player\Mission\DeclineProcessor;
+use Smr\Player;
+
+class MissionsRenderer {
 
 /**
- * @var Smr\Player $ThisPlayer
- * @var array<int, ?string> $UnreadMissions
+ * @param array<int, ?string> $UnreadMissions
  */
-
+public static function render(
+	Player $ThisPlayer,
+	array $UnreadMissions,
+	?string $MissionMessage,
+): void {
 if (isset($MissionMessage)) { ?>
 	<span class="green">Mission Complete: </span><?php
 	echo $MissionMessage;
@@ -42,4 +50,8 @@ foreach ($ThisPlayer->getActiveMissionStates() as $MissionID => $MissionState) {
 			<p><a href="<?php echo (new ClaimProcessor($MissionState->mission))->href(); ?>" class="buttonA">Claim Reward</a></p>
 		</div><?php
 	}
+}
+
+}
+
 }

@@ -1,9 +1,24 @@
 <?php declare(strict_types=1);
 
-/**
- * @var list<Smr\Sector> $UnreachableSectors
- */
+namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Routes\RouteGenerator;
+
+class CheckMapRenderer {
+
+/**
+ * @param list<string> $MissingLocNames
+ * @param list<\Smr\Sector> $UnreachableSectors
+ * @param array<string, array<RouteGenerator::*_ROUTE, array<numeric-string, array<\Smr\Routes\MultiplePortRoute>>>> $AllGalaxyRoutes
+ * @param array<string, string> $MaxSellMultipliers
+ */
+public static function render(
+	string $BackHREF,
+	array $MissingLocNames,
+	array $UnreachableSectors,
+	array $AllGalaxyRoutes,
+	array $MaxSellMultipliers,
+): void {
 ?>
 <a href="<?php echo $BackHREF; ?>" class="submitStyle">&lt;&lt; Back to Map</a>
 <br /><br />
@@ -23,6 +38,10 @@ if (count($UnreachableSectors) === 0) { ?>
 <br />
 
 <?php
+$RouteTypes = [
+	RouteGenerator::EXP_ROUTE => 'Experience',
+	RouteGenerator::MONEY_ROUTE => 'Profit',
+];
 foreach ($RouteTypes as $RouteTypeID => $RouteType) { ?>
 	<h2>Top <?php echo $RouteType; ?> Routes</h2>
 	<table class="standard">
@@ -56,3 +75,8 @@ foreach ($RouteTypes as $RouteTypeID => $RouteType) { ?>
 		</tr><?php
 	} ?>
 </table>
+
+<?php
+}
+
+}

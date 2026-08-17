@@ -1,15 +1,19 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $AddHREF
- * @var string $BackHREF
- * @var bool $GameEnabled
- * @var int $MaxAddId
- */
+namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Pages\Shared\Admin\Unigen\GalaxyDetailsRenderer;
+
+class EditGalaxiesRenderer {
+
+/**
+ * @param array{value: string, href: string} $Submit
+ * @param array<int, array{Name: string, Width: int, Height: int, Type: string, ForceMaxHours: float, DelHREF: string}> $Galaxies
+ */
+public static function render(bool $GameEnabled, array $Submit, array $Galaxies, string $BackHREF, string $AddHREF, int $MaxAddId): void {
 ?>
 
-<?php $this->includeTemplate('admin/unigen/GalaxyDetails.inc.php'); ?>
+<?php GalaxyDetailsRenderer::render(Galaxies: $Galaxies, GameEnabled: $GameEnabled, Submit: $Submit); ?>
 
 <?php
 if ($GameEnabled) { ?>
@@ -32,3 +36,8 @@ if ($GameEnabled) { ?>
 
 <br />
 <a href="<?php echo $BackHREF; ?>">&lt;&lt; Back</a>
+
+<?php
+}
+
+}

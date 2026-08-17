@@ -4,12 +4,11 @@ namespace Smr\Pages\Account\HistoryGames;
 
 use Smr\Account;
 use Smr\Database;
+use Smr\Pages\Shared\PreviousGameAllianceListRenderer;
 use Smr\Race;
 use Smr\Template;
 
 class AllianceDetail extends HistoryPage {
-
-	public string $file = 'history_alliance_detail.php';
 
 	public function __construct(
 		protected readonly string $historyDatabase,
@@ -23,7 +22,6 @@ class AllianceDetail extends HistoryPage {
 		$this->addMenu($template, $this->previousPage::class);
 
 		//offer a back button
-		$template->assign('BackHREF', $this->previousPage->href());
 
 		$game_id = $this->historyGameID;
 		$id = $this->allianceID;
@@ -64,7 +62,11 @@ class AllianceDetail extends HistoryPage {
 				'bounty' => $dbRecord->getInt('bounty'),
 			];
 		}
-		$template->assign('Players', $players);
+
+		$template->pageRenderer = fn() => PreviousGameAllianceListRenderer::render(
+			BackHREF: $this->previousPage->href(),
+			Players: $players,
+		);
 	}
 
 }

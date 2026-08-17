@@ -18,9 +18,6 @@ use Smr\TradeGood;
 class CheckMap extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'admin/unigen/check_map.php';
-
 	public function __construct(
 		private readonly int $gameID,
 		private readonly EditGalaxy $returnTo,
@@ -29,8 +26,6 @@ class CheckMap extends AccountPage {
 	public function build(Account $account, Template $template): void {
 		$game = Game::getGame($this->gameID);
 		$template->pageTopic = 'Check Map : ' . $game->getDisplayName();
-
-		$template->assign('BackHREF', $this->returnTo->href());
 
 		$galaxies = $game->getGalaxies();
 
@@ -56,7 +51,6 @@ class CheckMap extends AccountPage {
 		foreach ($missingLocs as $locID) {
 			$missingLocNames[] = Location::getLocation($this->gameID, $locID)->getName();
 		}
-		$template->assign('MissingLocNames', $missingLocNames);
 
 		// Find unreachable sectors
 		$unreachableSectors = [];
@@ -73,7 +67,6 @@ class CheckMap extends AccountPage {
 				$unreachableSectors[] = $checkSector;
 			}
 		}
-		$template->assign('UnreachableSectors', $unreachableSectors);
 
 		// Calculate the best trade routes for each galaxy
 		$tradeGoods = [GOODS_NOTHING => true];
@@ -96,13 +89,6 @@ class CheckMap extends AccountPage {
 			$distances = Plotter::calculatePortToPortDistances($ports, $tradeRaces, $maxDistance, $galaxy->getStartSector(), $galaxy->getEndSector());
 			$allGalaxyRoutes[$galaxy->getDisplayName()] = RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $ports, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
 		}
-		$template->assign('AllGalaxyRoutes', $allGalaxyRoutes);
-
-		$routeTypes = [
-			RouteGenerator::EXP_ROUTE => 'Experience',
-			RouteGenerator::MONEY_ROUTE => 'Profit',
-		];
-		$template->assign('RouteTypes', $routeTypes);
 
 		// Largest port sell multipliers per galaxy
 		$maxSellMultipliers = [];
@@ -126,8 +112,14 @@ class CheckMap extends AccountPage {
 				$maxSellMultipliers[$galaxy->getDisplayName()] = $output;
 			}
 		}
-		$template->assign('MaxSellMultipliers', $maxSellMultipliers);
 
+		$template->pageRenderer = fn() => CheckMapRenderer::render(
+			BackHREF: $this->returnTo->href(),
+			MissingLocNames: $missingLocNames,
+			UnreachableSectors: $unreachableSectors,
+			AllGalaxyRoutes: $allGalaxyRoutes,
+			MaxSellMultipliers: $maxSellMultipliers,
+		);
 	}
 
 }

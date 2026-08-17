@@ -11,8 +11,6 @@ use Smr\Template;
 
 class AllianceGovernance extends PlayerPage {
 
-	public string $file = 'alliance_stat.php';
-
 	public function __construct(
 		private readonly int $allianceID,
 	) {}
@@ -43,14 +41,16 @@ class AllianceGovernance extends PlayerPage {
 		$change_chat = $player->getAllianceID() === $alliance_id && $player->isAllianceLeader();
 
 		$container = new AllianceGovernanceProcessor($alliance_id);
-		$template->assign('FormHREF', $container->href());
-		$template->assign('Alliance', $alliance);
 
-		$template->assign('CanChangeDescription', $change_mod || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION));
-		$template->assign('CanChangePassword', $change_pass);
-		$template->assign('CanChangeChatChannel', $change_chat);
-		$template->assign('CanChangeMOTD', $change_mod);
-		$template->assign('HidePassword', $alliance->getRecruitType() !== Alliance::RECRUIT_PASSWORD);
+		$template->pageRenderer = fn() => AllianceGovernanceRenderer::render(
+			FormHREF: $container->href(),
+			Alliance: $alliance,
+			CanChangeDescription: $change_mod || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION),
+			CanChangePassword: $change_pass,
+			CanChangeChatChannel: $change_chat,
+			CanChangeMOTD: $change_mod,
+			HidePassword: $alliance->getRecruitType() !== Alliance::RECRUIT_PASSWORD,
+		);
 	}
 
 }

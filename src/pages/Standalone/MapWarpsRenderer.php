@@ -1,10 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $GameName
- * @var non-empty-string $GraphData
- */
+namespace Smr\Pages\Standalone;
 
+class MapWarpsRenderer {
+
+/**
+ * @param non-empty-string $GraphData
+ */
+public static function render(string $GameName, string $GraphData): void {
 ?>
 <!DOCTYPE html>
 <html>
@@ -25,3 +28,7 @@
 		<script src="/js/map_warps.js"></script>
 	</body>
 </html>
+<?php
+}
+
+}

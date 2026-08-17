@@ -11,9 +11,6 @@ use Smr\Template;
 class AlbumModerate extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'admin/album_moderate.php';
-
 	public function __construct(
 		private readonly int $albumAccountID,
 	) {}
@@ -36,24 +33,6 @@ class AlbumModerate extends AccountPage {
 			'nickname' => Account::getAccount($account_id)->getHofDisplayName(),
 			'upload' => $album->getImageSrc(),
 		];
-		$template->assign('Entry', $entry);
-
-		$template->assign('BackHREF', (new AlbumModerateSelect())->href());
-
-		$container = new AlbumModerateProcessor($account_id, 'reset_image');
-		$template->assign('ResetImageHREF', $container->href());
-		$container = new AlbumModerateProcessor($account_id, 'reset_location');
-		$template->assign('ResetLocationHREF', $container->href());
-		$container = new AlbumModerateProcessor($account_id, 'reset_email');
-		$template->assign('ResetEmailHREF', $container->href());
-		$container = new AlbumModerateProcessor($account_id, 'reset_website');
-		$template->assign('ResetWebsiteHREF', $container->href());
-		$container = new AlbumModerateProcessor($account_id, 'reset_birthdate');
-		$template->assign('ResetBirthdateHREF', $container->href());
-		$container = new AlbumModerateProcessor($account_id, 'reset_other');
-		$template->assign('ResetOtherHREF', $container->href());
-		$container = new AlbumModerateProcessor($account_id, 'delete_comment');
-		$template->assign('DeleteCommentHREF', $container->href());
 
 		$default_email = 'Dear Photo Album User,' . EOL . EOL
 			. 'You have received this email as notification that the picture you submitted to the Space Merchant Realms Photo Album has been temporarily disabled due to a Photo Album Rules violation.' . EOL
@@ -62,9 +41,20 @@ class AlbumModerate extends AccountPage {
 			. 'Note: Please allow up to 48 hours for changes to occur.' . EOL
 			. 'Thanks,' . EOL . EOL
 			. 'Admin Team';
-		$template->assign('DisableEmail', $default_email);
 
-		$template->assign('Comments', $album->getComments($account->getDateTimeFormat()));
+		$template->pageRenderer = fn() => AlbumModerateRenderer::render(
+			Entry: $entry,
+			BackHREF: new AlbumModerateSelect()->href(),
+			ResetImageHREF: new AlbumModerateProcessor($account_id, 'reset_image')->href(),
+			ResetLocationHREF: new AlbumModerateProcessor($account_id, 'reset_location')->href(),
+			ResetEmailHREF: new AlbumModerateProcessor($account_id, 'reset_email')->href(),
+			ResetWebsiteHREF: new AlbumModerateProcessor($account_id, 'reset_website')->href(),
+			ResetBirthdateHREF: new AlbumModerateProcessor($account_id, 'reset_birthdate')->href(),
+			ResetOtherHREF: new AlbumModerateProcessor($account_id, 'reset_other')->href(),
+			DeleteCommentHREF: new AlbumModerateProcessor($account_id, 'delete_comment')->href(),
+			DisableEmail: $default_email,
+			Comments: $album->getComments($account->getDateTimeFormat()),
+		);
 	}
 
 }

@@ -7,14 +7,14 @@ use Smr\Template;
 
 class BondConfirm extends PlanetPage {
 
-	public string $file = 'planet_bond_confirmation.php';
-
 	protected function buildPlanetPage(Player $player, Template $template): void {
 		$planet = $player->getSectorPlanet();
 
-		$template->assign('BondDuration', format_time($planet->getBondTime()));
-		$template->assign('ConfirmHREF', (new BondProcessor())->href());
-		$template->assign('CancelHREF', (new Financial())->href());
+		$template->pageRenderer = fn() => BondConfirmRenderer::render(
+			CancelHREF: new Financial()->href(),
+			ConfirmHREF: new BondProcessor()->href(),
+			BondDuration: format_time($planet->getBondTime()),
+		);
 	}
 
 }

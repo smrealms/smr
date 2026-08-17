@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $ProcessingHREF
- * @var string $From
- */
+namespace Smr\Pages\Account;
 
+class ContactFormRenderer {
+
+public static function render(string $ProcessingHREF, string $From): void {
 ?>
 <p>Please use this form to send your feedback or
 questions to the admin team of Space Merchant Realms!</p>
@@ -47,3 +47,7 @@ questions to the admin team of Space Merchant Realms!</p>
 
 	</table>
 </form>
+<?php
+}
+
+}

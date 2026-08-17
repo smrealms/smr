@@ -9,19 +9,16 @@ use Smr\Template;
 
 class AllianceLeaveConfirm extends PlayerPage {
 
-	public string $file = 'alliance_leave_confirm.php';
-
 	public function build(Player $player, Template $template): void {
 		$alliance = $player->getAlliance();
 
 		$template->pageTopic = $alliance->getAllianceDisplayName(false, true);
 		Menu::alliance($alliance->getAllianceID());
 
-		$container = new AllianceLeaveProcessor();
-		$template->assign('YesHREF', $container->href());
-
-		$container = new CurrentSector();
-		$template->assign('NoHREF', $container->href());
+		$template->pageRenderer = fn() => AllianceLeaveConfirmRenderer::render(
+			YesHREF: new AllianceLeaveProcessor()->href(),
+			NoHREF: new CurrentSector()->href(),
+		);
 	}
 
 }

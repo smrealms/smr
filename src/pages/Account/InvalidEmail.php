@@ -9,8 +9,6 @@ use Smr\Template;
 
 class InvalidEmail extends AccountPage {
 
-	public string $file = 'invalid_email.php';
-
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Invalid E-mail Address';
 
@@ -21,8 +19,10 @@ class InvalidEmail extends AccountPage {
 			throw new Exception('Account not disabled for invalid email');
 		}
 
-		$container = new InvalidEmailProcessor();
-		$template->assign('ReopenPage', $container);
+		$template->pageRenderer = fn() => InvalidEmailRenderer::render(
+			$account,
+			new InvalidEmailProcessor(),
+		);
 	}
 
 }

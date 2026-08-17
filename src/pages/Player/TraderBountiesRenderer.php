@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<array<Smr\Bounty>> $AllClaims
- * @var string $BountyHQ
- * @var string $BountyUG
- */
+namespace Smr\Pages\Player;
 
+class TraderBountiesRenderer {
+
+/**
+ * @param array<array<\Smr\Bounty>> $AllClaims
+ */
+public static function render(array $AllClaims, string $BountyHQ, string $BountyUG): void {
 ?>
 You have the following bounties on your head:<br /><br />
 <table>
@@ -42,3 +44,8 @@ You have the following bounties on your head:<br /><br />
 		} ?>
 	</tr>
 </table>
+
+<?php
+}
+
+}

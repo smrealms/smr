@@ -1,10 +1,12 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
 use Smr\Epoch;
 use Smr\Player;
 
 /**
- * @param array<array<string, mixed>> $Links
+ * @param list<array{Player: Player, SearchHREF: string, RaceHREF: string, MessageHREF: string, BountyHREF: string, HofHREF: string, NewsHREF: string, JumpHREF?: string}> $Links
  */
 function DisplayResult(array $Links, Player $Player): void { ?>
 	<table class="standard" width="88%">
@@ -63,7 +65,7 @@ function DisplayResult(array $Links, Player $Player): void { ?>
 					<a href="<?php echo $Link['NewsHREF']; ?>">
 						<span class="yellow">View News</span>
 					</a><?php
-					if ($Player->isObserver()) { ?>
+					if (isset($Link['JumpHREF'])) { ?>
 						<br />
 						<a href="<?php echo $Link['JumpHREF']; ?>">
 							<span class="yellow">Jump to Sector</span>
@@ -75,14 +77,21 @@ function DisplayResult(array $Links, Player $Player): void { ?>
 	</table><?php
 }
 
-/**
- * @var Smr\Player $ThisPlayer
- */
+class SearchForTraderResultRenderer {
 
+/**
+ * @param ?array{Player: Player, SearchHREF: string, RaceHREF: string, MessageHREF: string, BountyHREF: string, HofHREF: string, NewsHREF: string, JumpHREF?: string} $ResultPlayerLinks
+ * @param ?list<array{Player: Player, SearchHREF: string, RaceHREF: string, MessageHREF: string, BountyHREF: string, HofHREF: string, NewsHREF: string, JumpHREF?: string}> $SimilarPlayersLinks
+ */
+public static function render(?array $ResultPlayerLinks, ?array $SimilarPlayersLinks, Player $ThisPlayer): void {
 if (isset($ResultPlayerLinks)) {
 	DisplayResult([$ResultPlayerLinks], $ThisPlayer);
 	echo '<br /><br />';
 }
 if (isset($SimilarPlayersLinks)) {
 	DisplayResult($SimilarPlayersLinks, $ThisPlayer);
+}
+
+}
+
 }

@@ -1,23 +1,31 @@
 <?php declare(strict_types=1);
 
-/**
- * @var ?string $BackHREF
- * @var ?string $StatName
- * @var ?array<array{bold: string, name: string, stat: int}> $Rankings
- */
+namespace Smr\Pages\Account\HistoryGames;
 
-if (isset($Links)) { ?>
+class HallOfFameRenderer {
+
+/**
+ * @param list<string> $Links
+ */
+public static function renderCategories(array $Links): void {
+?>
 	<table class="center standard">
 		<tr><th>Categories</th></tr><?php
 		foreach ($Links as $link) { ?>
 			<tr><td><?php echo $link; ?></td></tr><?php
 		} ?>
 	</table><?php
-} else { ?>
+}
+
+/**
+ * @param array<array{bold: string, name: string, stat: int}> $Rankings
+ */
+public static function renderRankings(string $BackHREF, string $StatName, array $Rankings): void {
+?>
 	<div class="center"><a href="<?php echo $BackHREF; ?>">&lt;&lt;Back</a></div>
 
 	<?php
-	if (isset($Rankings) && count($Rankings) > 0) { ?>
+	if (count($Rankings) > 0) { ?>
 		<table class="shrink center standard">
 			<tr>
 				<th>Rank</th>
@@ -35,4 +43,6 @@ if (isset($Links)) { ?>
 	} else { ?>
 		<p class="center">We apologize, but this stat does not exist for this game!</p><?php
 	}
+}
+
 }

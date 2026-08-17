@@ -1,15 +1,21 @@
 <?php declare(strict_types=1);
 
-/**
- * @var ?string $Message
- * @var ?string $OpDate
- * @var ?string $OpCountdown
- * @var string $OpProcessingHREF
- * @var string $FlagshipHREF
- * @var int $FlagshipID
- * @var array<int, Smr\Player> $AlliancePlayers
- */
+namespace Smr\Pages\Player;
 
+class AllianceSetOpRenderer {
+
+/**
+ * @param array<int, \Smr\Player> $AlliancePlayers
+ */
+public static function render(
+	?string $Message,
+	?string $OpDate,
+	?string $OpCountdown,
+	string $OpProcessingHREF,
+	int $FlagshipID,
+	array $AlliancePlayers,
+	string $FlagshipHREF,
+): void {
 ?>
 <h2>Alliance Operation Schedule</h2>
 <?php
@@ -58,3 +64,8 @@ if (isset($OpDate)) { ?>
 	<br /><br />
 	<?php echo create_submit_display('Designate Flagship'); ?>
 </form>
+
+<?php
+}
+
+}

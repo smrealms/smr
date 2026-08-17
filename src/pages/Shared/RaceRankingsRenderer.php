@@ -1,11 +1,19 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var string $RankingStat
- * @var array<int, array{style: string, race_id: int, amount: int, amount_avg: int, num_players: int}> $Ranks
- */
+namespace Smr\Pages\Shared;
 
+use Smr\Player;
+
+class RaceRankingsRenderer {
+
+/**
+ * @param array<int, array{style: string, race_id: int, amount: int, amount_avg: int, num_players: int}> $Ranks
+ */
+public static function render(
+	Player $ThisPlayer,
+	string $RankingStat,
+	array $Ranks,
+): void {
 ?>
 <p class="center">Here are the rankings of the races by their <?php echo $RankingStat; ?>.</p>
 <table class="standard center inset">
@@ -28,3 +36,8 @@
 		</tr><?php
 	} ?>
 </table>
+
+<?php
+}
+
+}

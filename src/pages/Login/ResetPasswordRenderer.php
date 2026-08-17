@@ -1,7 +1,12 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Login;
+
 use Smr\Request;
 
+class ResetPasswordRenderer {
+
+public static function render(): void {
 ?>
 <div class="center centered">
 	<h1>Password Reset</h1>
@@ -32,3 +37,7 @@ use Smr\Request;
 			</div>
 	</form>
 </div>
+<?php
+}
+
+}

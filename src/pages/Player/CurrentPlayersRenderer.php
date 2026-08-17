@@ -1,14 +1,17 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
 use Smr\Globals;
+use Smr\Player;
+use Smr\Template;
+
+class CurrentPlayersRenderer {
 
 /**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Template $this
- * @var string $Summary
- * @var array<array{player: Smr\Player, tr_class: string, name_link: string}> $AllRows
+ * @param array<array{player: \Smr\Player, tr_class: string, name_link: string}> $AllRows
  */
-
+public static function render(Template $template, string $Summary, array $AllRows, Player $ThisPlayer): void {
 ?>
 <br />
 <div class="center">
@@ -46,6 +49,11 @@ use Smr\Globals;
 			</tbody>
 		</table>
 
-		<?php $this->listjsInclude = 'current_players';
+		<?php $template->listjsInclude = 'current_players';
 	} ?>
 </div>
+
+<?php
+}
+
+}

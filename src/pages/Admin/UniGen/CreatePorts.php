@@ -14,9 +14,6 @@ use Smr\Template;
 class CreatePorts extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'admin/unigen/universe_create_ports.php';
-
 	public function __construct(
 		private readonly int $gameID,
 		private readonly EditGalaxy $returnTo,
@@ -25,13 +22,8 @@ class CreatePorts extends AccountPage {
 
 	public function build(Account $account, Template $template): void {
 		$this->galaxyID ??= Request::getInt('gal_on');
-		$template->assign('Galaxies', Galaxy::getGameGalaxies($this->gameID));
-
-		$container = new self($this->gameID, $this->returnTo);
-		$template->assign('JumpGalaxyHREF', $container->href());
 
 		$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
-		$template->assign('Galaxy', $galaxy);
 
 		// initialize totals
 		$totalPorts = array_fill(1, Port::getMaxLevelByGame($this->gameID), 0);
@@ -51,17 +43,18 @@ class CreatePorts extends AccountPage {
 				$racePercents[$raceID] = round($totalRace / $total * 100);
 			}
 		}
-		$template->assign('RacePercents', $racePercents);
-		$template->assign('TotalPercent', array_sum($racePercents));
 
-		$template->assign('TotalPorts', $totalPorts);
-		$template->assign('Total', array_sum($totalPorts));
-
-		$container = new CreatePortsProcessor($this->gameID, $this->galaxyID, $this->returnTo);
-		$template->assign('CreateHREF', $container->href());
-
-		// HREF to cancel and return to the previous page
-		$template->assign('CancelHREF', $this->returnTo->href());
+		$template->pageRenderer = fn() => CreatePortsRenderer::render(
+			Galaxies: Galaxy::getGameGalaxies($this->gameID),
+			JumpGalaxyHREF: new self($this->gameID, $this->returnTo)->href(),
+			Galaxy: $galaxy,
+			RacePercents: $racePercents,
+			TotalPercent: array_sum($racePercents),
+			TotalPorts: $totalPorts,
+			Total: array_sum($totalPorts),
+			CreateHREF: new CreatePortsProcessor($this->gameID, $this->galaxyID, $this->returnTo)->href(),
+			CancelHREF: $this->returnTo->href(),
+		);
 	}
 
 }

@@ -1,13 +1,18 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Login;
+
 use Smr\SocialLogin\Facebook;
 use Smr\SocialLogin\Google;
 use Smr\SocialLogin\Twitter;
 
-/**
- * @var array<array{Time: string, Message: string}> $GameNews
- */
+class LoginRenderer {
 
+/**
+ * @param array<array{Time: string, Message: string}> $GameNews
+ * @param array<string> $Story
+ */
+public static function render(array $GameNews, array $Story): void {
 ?>
 <table class="center nobord" style="width:690px; border-spacing:30px;">
 	<tr>
@@ -106,7 +111,7 @@ if (count($GameNews) > 0) { ?>
 
 <br /><?php
 
-if (isset($Story)) { ?>
+if (count($Story) > 0) { ?>
 	<table class="center nobord" style="width:640px;">
 		<tr>
 			<td><?php
@@ -129,3 +134,7 @@ if (isset($Story)) { ?>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 <script src="<?php echo JQUERY_URL; ?>"></script>
 <script src="/js/login.js"></script>
+<?php
+}
+
+}

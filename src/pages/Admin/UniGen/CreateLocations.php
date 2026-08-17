@@ -14,9 +14,6 @@ use Smr\Template;
 class CreateLocations extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'admin/unigen/universe_create_locations.php';
-
 	public function __construct(
 		private readonly int $gameID,
 		private readonly EditGalaxy $returnTo,
@@ -25,10 +22,6 @@ class CreateLocations extends AccountPage {
 
 	public function build(Account $account, Template $template): void {
 		$this->galaxyID ??= Request::getInt('gal_on');
-		$template->assign('Galaxies', Galaxy::getGameGalaxies($this->gameID));
-
-		$container = new self($this->gameID, $this->returnTo);
-		$template->assign('JumpGalaxyHREF', $container->href());
 
 		$locations = Location::getAllLocations($this->gameID);
 
@@ -39,7 +32,6 @@ class CreateLocations extends AccountPage {
 		}
 
 		$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
-		$template->assign('Galaxy', $galaxy);
 
 		// Determine the current amount of each location
 		foreach ($galaxy->getSectors() as $galSector) {
@@ -47,7 +39,6 @@ class CreateLocations extends AccountPage {
 				$totalLocs[$sectorLocation->getTypeID()]++;
 			}
 		}
-		$template->assign('TotalLocs', $totalLocs);
 
 		// Remove any linked locations, as they will be added automatically
 		// with any corresponding HQs.
@@ -100,15 +91,21 @@ class CreateLocations extends AccountPage {
 
 			$locText[$location->getTypeID()] = $location->getName() . $extra;
 		}
-		$template->assign('LocText', $locText);
-		$template->assign('LocTypes', $categories->locTypes);
 
-		// Form to make location changes
-		$container = new CreateLocationsProcessor($this->gameID, $this->galaxyID, $this->returnTo);
-		$template->assign('CreateLocationsFormHREF', $container->href());
-
-		// HREF to cancel and return to the previous page
-		$template->assign('CancelHREF', $this->returnTo->href());
+		$template->pageRenderer = fn() => CreateLocationsRenderer::render(
+			Galaxies: Galaxy::getGameGalaxies($this->gameID),
+			JumpGalaxyHREF: new self($this->gameID, $this->returnTo)->href(),
+			Galaxy: $galaxy,
+			TotalLocs: $totalLocs,
+			LocText: $locText,
+			LocTypes: $categories->locTypes,
+			CreateLocationsFormHREF: new CreateLocationsProcessor(
+				$this->gameID,
+				$this->galaxyID,
+				$this->returnTo,
+			)->href(),
+			CancelHREF: $this->returnTo->href(),
+		);
 	}
 
 }

@@ -1,13 +1,14 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Account;
+
+use Smr\Account;
 use Smr\Globals;
+use Smr\Session;
 
-/**
- * @var Smr\Account $ThisAccount
- * @var int $TotalDonation
- * @var string $ContactFormLink
- */
+class DonationRenderer {
 
+public static function render(int $TotalDonation, Account $ThisAccount, string $ContactFormLink): void {
 ?>
 <p style="width:60%; text-align:justify;">Do you enjoy Space Merchant Realms?
 Would you like to see the game grow? If your answer is yes, then consider
@@ -47,7 +48,7 @@ Current donation rate is: $<?php echo number_format($TotalDonation / 3, 2); ?> p
 </div>
 
 <?php
-if (isset($GameID)) { ?>
+if (Session::getInstance()->hasGame()) { ?>
 	<br />
 	<br />
 	<br />
@@ -56,4 +57,8 @@ if (isset($GameID)) { ?>
 	<div class="buttonA">
 		<a class="buttonA" href="<?php echo Globals::getBuyShipNameHREF(); ?>">Customize Ship Name (<?php echo min(Globals::getBuyShipNameCosts()); ?>-<?php echo max(Globals::getBuyShipNameCosts()); ?> SMR Credits)</a>
 	</div><?php
+}
+
+}
+
 }

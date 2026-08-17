@@ -2,19 +2,15 @@
 
 namespace Smr\Pages\Player;
 
+use Smr\Combat\Results\TraderFullCombatResults;
 use Smr\Page\PlayerPage;
 use Smr\Player;
 use Smr\Template;
 
 class AttackPlayer extends PlayerPage {
 
-	public string $file = 'trader_attack.php';
-
-	/**
-	 * @param array{Attackers: TraderTeamCombatResults, Defenders: TraderTeamCombatResults} $results
-	 */
 	public function __construct(
-		private readonly array $results,
+		private readonly TraderFullCombatResults $results,
 		private readonly ?int $targetAccountID,
 		bool $playerDied,
 	) {
@@ -22,12 +18,19 @@ class AttackPlayer extends PlayerPage {
 	}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('TraderCombatResults', $this->results);
-		$template->assign('MinimalDisplay', false);
 		if ($this->targetAccountID !== null) {
-			$template->assign('Target', Player::getPlayer($this->targetAccountID, $player->getGameID()));
+			$target = Player::getPlayer($this->targetAccountID, $player->getGameID());
+		} else {
+			$target = null;
 		}
-		$template->assign('OverrideDeath', $player->isDead());
+
+		$template->pageRenderer = fn() => AttackPlayerRenderer::render(
+			template: $template,
+			TraderCombatResults: $this->results,
+			Target: $target,
+			OverrideDeath: $player->isDead(),
+			ThisPlayer: $player,
+		);
 	}
 
 }

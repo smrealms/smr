@@ -9,8 +9,6 @@ use Smr\Template;
 
 class MatchPlay extends PlayerPage {
 
-	public string $file = 'chess_play.php';
-
 	public function __construct(
 		private readonly int $chessGameID,
 		private readonly string $moveMessage = '',
@@ -18,7 +16,6 @@ class MatchPlay extends PlayerPage {
 
 	public function build(Player $player, Template $template): void {
 		$chessGame = ChessGame::getChessGame($this->chessGameID);
-		$template->assign('ChessGame', $chessGame);
 
 		$topic = $chessGame->getWhitePlayer()->getPlayerName() . ' vs. ' . $chessGame->getBlackPlayer()->getPlayerName();
 		$template->pageTopic = htmlentities($topic);
@@ -26,13 +23,13 @@ class MatchPlay extends PlayerPage {
 		// Board orientation depends on the player's color.
 		$playerIsWhite = $chessGame->getWhiteID() === $player->getAccountID();
 		$board = $chessGame->getBoard()->getBoardDisplay($playerIsWhite);
-		$template->assign('Board', $board);
 
 		// Check if there is a winner
-		$template->assign('Ended', $chessGame->hasEnded());
 		if ($chessGame->hasWinner()) {
 			$winningPlayer = Player::getPlayer($chessGame->getWinner(), $player->getGameID());
-			$template->assign('Winner', $winningPlayer->getLinkedDisplayName(false));
+			$winner = $winningPlayer->getLinkedDisplayName(false);
+		} else {
+			$winner = null;
 		}
 
 		// File coordinates depend on the player's color.
@@ -41,12 +38,22 @@ class MatchPlay extends PlayerPage {
 		if (!$playerIsWhite) {
 			$fileCoords = array_reverse($fileCoords);
 		}
-		$template->assign('FileCoords', $fileCoords);
 
-		$template->assign('MoveMessage', $this->moveMessage);
 		$container = new MovePieceProcessor($this->chessGameID);
 		$container->allowAjax = true;
-		$template->assign('ChessMoveHREF', $container->href());
+
+		$template->pageRenderer = fn() => MatchPlayRenderer::render(
+			template: $template,
+			ChessGame: $chessGame,
+			Board: $board,
+			Ended: $chessGame->hasEnded(),
+			Winner: $winner,
+			FileCoords: $fileCoords,
+			MoveMessage: $this->moveMessage,
+			ChessMoveHREF: $container->href(),
+			ThisAccount: $player->getAccount(),
+			ThisPlayer: $player,
+		);
 	}
 
 }

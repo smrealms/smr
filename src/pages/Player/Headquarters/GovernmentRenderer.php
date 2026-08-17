@@ -1,12 +1,17 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<Smr\Bounty> $AllBounties
- * @var array<Smr\Bounty> $MyBounties
- * @var Smr\Template $this
- * @var array<string> $WarRaces
- */
+namespace Smr\Pages\Player\Headquarters;
 
+use Smr\Pages\Shared\BountyListRenderer;
+
+class GovernmentRenderer {
+
+/**
+ * @param array<string> $WarRaces
+ * @param array<\Smr\Bounty> $AllBounties
+ * @param array<\Smr\Bounty> $MyBounties
+ */
+public static function render(array $WarRaces, array $AllBounties, array $MyBounties, ?string $JoinHREF): void {
 ?>
 <div class="center"><?php
 	if (count($WarRaces) > 0) { ?>
@@ -20,14 +25,19 @@
 
 	if (count($AllBounties) > 0) { ?>
 		<div class="center">Most wanted by the Federal Government</div><br /><?php
-		$this->includeTemplate('includes/BountyList.inc.php', ['Bounties' => $AllBounties]);
+		BountyListRenderer::render(Bounties: $AllBounties);
 	}
 	if (count($MyBounties) > 0) { ?>
 		<div class="center">Claimable Bounties</div><br /><?php
-		$this->includeTemplate('includes/BountyList.inc.php', ['Bounties' => $MyBounties]);
+		BountyListRenderer::render(Bounties: $MyBounties);
 	}
 
 	if (isset($JoinHREF)) { ?>
 		<p><a href="<?php echo $JoinHREF; ?>" class="submitStyle">Become a deputy</a></p><?php
 	} ?>
 </div>
+
+<?php
+}
+
+}

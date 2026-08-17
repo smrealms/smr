@@ -1,15 +1,20 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Shared;
+
+use Smr\AbstractShip;
 use Smr\Pages\Player\PlotCourseCancelProcessor;
 use Smr\Pages\Player\PlotCourseConventionalProcessor;
+use Smr\Player;
 use Smr\Sector;
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Sector $ThisSector
- * @var Smr\Ship $ThisShip
- */
+class PlottedCourseRenderer {
 
+public static function render(
+	Player $ThisPlayer,
+	Sector $ThisSector,
+	AbstractShip $ThisShip,
+): void {
 if ($ThisPlayer->hasPlottedCourse()) {
 	$PlottedCourse = $ThisPlayer->getPlottedCourse();
 	$CancelCourseHREF = (new PlotCourseCancelProcessor())->href();
@@ -46,4 +51,8 @@ if ($ThisPlayer->hasPlottedCourse()) {
 			</td>
 		</tr>
 	</table><?php
+}
+
+}
+
 }

@@ -1,10 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $PaperTitle
- * @var array<array{title: string, text: string, editHREF: string}> $Articles
- */
+namespace Smr\Pages\Player\GalacticPost;
 
+class PaperEditRenderer {
+
+/**
+ * @param array<array{title: string, text: string, editHREF: string}> $Articles
+ */
+public static function render(string $PaperTitle, array $Articles): void {
 ?>
 <span class="bold"><?php echo $PaperTitle; ?></span>
 <br /><br /><?php
@@ -21,4 +24,8 @@ if (count($Articles) === 0) { ?>
 			<br /><br /><?php
 		} ?>
 	</ul><?php
+}
+
+}
+
 }

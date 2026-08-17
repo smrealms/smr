@@ -1,17 +1,20 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
 use Smr\Alliance;
 
-/**
- * @var Smr\Alliance $Alliance
- * @var string $FormHREF
- * @var bool $CanChangePassword
- * @var bool $HidePassword
- * @var bool $CanChangeDescription
- * @var bool $CanChangeChatChannel
- * @var bool $CanChangeMOTD
- */
+class AllianceGovernanceRenderer {
 
+public static function render(
+	string $FormHREF,
+	Alliance $Alliance,
+	bool $CanChangeDescription,
+	bool $CanChangePassword,
+	bool $CanChangeChatChannel,
+	bool $CanChangeMOTD,
+	bool $HidePassword,
+): void {
 ?>
 <form method="POST" action="<?php echo $FormHREF; ?>">
 <table cellspacing="0" cellpadding="0" class="nobord nohpad">
@@ -86,3 +89,8 @@ if ($CanChangeMOTD) { ?>
 <br />
 <?php echo create_submit_display('Change'); ?>
 </form>
+
+<?php
+}
+
+}

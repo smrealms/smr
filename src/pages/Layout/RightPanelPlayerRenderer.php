@@ -1,21 +1,21 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Layout;
+
 use Smr\Globals;
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Template $this
- * @var string $PlayerNameLink
- * @var bool $UnderAttack
- * @var bool $PlayerInvisible
- */
+class RightPanelPlayerRenderer {
 
-if (isset($GameID)) { ?>
+public static function render(RightPanelData $data): void {
+	$ThisPlayer = $data->player;
+	$PlayerNameLink = $data->playerNameLink;
+	$UnderAttack = $data->underAttack;
+	?>
 	<span id="attack_area"><?php if ($UnderAttack) { ?><p class="attack_warning">You Are Under Attack!</p><script>triggerAttackBlink('3B1111');</script><?php } ?></span><?php
-	$this->includeTemplate('includes/UnreadMessages.inc.php'); ?>
+	UnreadMessagesRenderer::render($data->unreadMessages); ?>
 	<a href="level_requirements.php" target="levelRequirements"><span id="lvlName"><?php echo $ThisPlayer->getLevelName(); ?></span></a><br />
 	<a class="big" href="<?php echo $PlayerNameLink; ?>"><?php echo $ThisPlayer->getDisplayName(); ?></a><br /><?php
-	if ($PlayerInvisible) { ?>
+	if ($ThisPlayer->isObserver()) { ?>
 		<span class="smallFont smallCaps red">INVISIBLE</span><br /><?php
 	} ?>
 	<br />
@@ -49,4 +49,6 @@ if (isset($GameID)) { ?>
 	Alliance : <span id="alliance"><a href="<?php echo Globals::getAllianceHREF($ThisPlayer->getAllianceID()); ?>"><?php echo $ThisPlayer->getAllianceDisplayName(false, true); ?></a></span><br />
 	<br />
 	<?php
+}
+
 }

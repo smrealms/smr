@@ -14,9 +14,6 @@ use Smr\Template;
 class MessageBoxView extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'admin/box_view.php';
-
 	public function __construct(
 		private readonly ?int $boxTypeID = null,
 	) {}
@@ -27,27 +24,27 @@ class MessageBoxView extends AccountPage {
 		if ($this->boxTypeID === null) {
 			$template->pageTopic = 'Viewing Message Boxes';
 
+			$totalMessages = [];
+			$dbResult = $db->read('SELECT count(message_id), box_type_id
+						FROM message_boxes
+						GROUP BY box_type_id');
+			foreach ($dbResult->records() as $dbRecord) {
+				$totalMessages[$dbRecord->getInt('box_type_id')] = $dbRecord->getInt('count(message_id)');
+			}
 			$boxes = [];
 			foreach (Messages::getAdminBoxNames() as $boxTypeID => $boxName) {
 				$container = new self($boxTypeID);
 				$boxes[$boxTypeID] = [
 					'ViewHREF' => $container->href(),
 					'BoxName' => $boxName,
-					'TotalMessages' => 0,
+					'TotalMessages' => $totalMessages[$boxTypeID],
 				];
 			}
-			$dbResult = $db->read('SELECT count(message_id), box_type_id
-						FROM message_boxes
-						GROUP BY box_type_id');
-			foreach ($dbResult->records() as $dbRecord) {
-				$boxes[$dbRecord->getInt('box_type_id')]['TotalMessages'] = $dbRecord->getInt('count(message_id)');
-			}
-			$template->assign('Boxes', $boxes);
+			$template->pageRenderer = fn() => MessageBoxViewRenderer::renderBoxes($boxes);
 		} else {
 			$boxName = Messages::getAdminBoxNames()[$this->boxTypeID];
 			$template->pageTopic = 'Viewing ' . $boxName;
 
-			$template->assign('BackHREF', (new self())->href());
 			$dbResult = $db->select(
 				'message_boxes',
 				['box_type_id' => $this->boxTypeID],
@@ -56,8 +53,6 @@ class MessageBoxView extends AccountPage {
 			);
 			$messages = [];
 			if ($dbResult->hasRecord()) {
-				$container = new MessageBoxDeleteProcessor($this->boxTypeID);
-				$template->assign('DeleteHREF', $container->href());
 				foreach ($dbResult->records() as $dbRecord) {
 					$gameID = $dbRecord->getInt('game_id');
 					$validGame = $gameID > 0 && Game::gameExists($gameID);
@@ -98,9 +93,14 @@ class MessageBoxView extends AccountPage {
 					$messages[$messageID]['SendTime'] = date($account->getDateTimeFormat(), $dbRecord->getInt('send_time'));
 					$messages[$messageID]['Message'] = nl2br(htmlentities($dbRecord->getString('message_text')));
 				}
-				$template->assign('Messages', $messages);
 			}
+			$template->pageRenderer = fn() => MessageBoxViewRenderer::renderMessages(
+				BackHREF: new self()->href(),
+				DeleteHREF: new MessageBoxDeleteProcessor($this->boxTypeID)->href(),
+				Messages: $messages,
+			);
 		}
+
 	}
 
 }

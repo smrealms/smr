@@ -1,9 +1,20 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Account $ThisAccount
- */
+namespace Smr\Pages\Shared;
 
+use Smr\Account;
+
+class CommonNewsRenderer {
+
+/**
+ * @param ?array{Time: int, Message: string} $BreakingNews
+ * @param ?array{Time: int, Message: string} $LottoNews
+ */
+public static function render(
+	Account $ThisAccount,
+	?array $BreakingNews,
+	?array $LottoNews,
+): void {
 if (isset($BreakingNews)) {
 	?><b>MAJOR NEWS! - <?php echo date($ThisAccount->getDateTimeFormat(), $BreakingNews['Time']); ?></b><br />
 	<table class="standard">
@@ -32,4 +43,8 @@ if (isset($LottoNews)) { ?>
 	    </tr>
     </table>
 	<br /><br /><?php
+}
+
+}
+
 }

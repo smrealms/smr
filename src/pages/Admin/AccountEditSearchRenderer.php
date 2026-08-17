@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+class AccountEditSearchRenderer {
+
+/**
+ * @param array<int, string> $Games
+ */
+public static function render(array $Games, string $SearchHREF, ?string $ErrorMessage, ?string $Message): void {
 ?>
 <form name="form_acc" method="POST" action="<?php echo $SearchHREF; ?>">
 	<table cellpadding="3" border="0">
@@ -60,4 +68,8 @@ if (isset($ErrorMessage)) { ?>
 }
 if (isset($Message)) { ?>
 	<div class="center"><?php echo $Message; ?></div><?php
+}
+
+}
+
 }

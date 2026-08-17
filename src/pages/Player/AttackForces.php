@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Player;
 
+use Smr\Combat\Results\ForceFullCombatResults;
 use Smr\Force;
 use Smr\Page\PlayerPage;
 use Smr\Player;
@@ -9,14 +10,9 @@ use Smr\Template;
 
 class AttackForces extends PlayerPage {
 
-	public string $file = 'forces_attack.php';
-
-	/**
-	 * @param array{Attackers: ForceAttackerCombatResults, Forces: ForceCombatResults, Forced: bool} $results
-	 */
 	public function __construct(
 		private readonly int $ownerAccountID,
-		private readonly array $results,
+		private readonly ForceFullCombatResults $results,
 		bool $playerDied,
 	) {
 		// If the player died, make sure they see combat results
@@ -24,13 +20,19 @@ class AttackForces extends PlayerPage {
 	}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('FullForceCombatResults', $this->results);
-
 		if ($this->ownerAccountID > 0) {
-			$template->assign('Target', Force::getForce($player->getGameID(), $player->getSectorID(), $this->ownerAccountID));
+			$target = Force::getForce($player->getGameID(), $player->getSectorID(), $this->ownerAccountID);
+		} else {
+			$target = null;
 		}
 
-		$template->assign('OverrideDeath', $player->isDead());
+		$template->pageRenderer = fn() => AttackForcesRenderer::render(
+			template: $template,
+			FullForceCombatResults: $this->results,
+			Target: $target,
+			OverrideDeath: $player->isDead(),
+			ThisShip: $player->getShip(),
+		);
 	}
 
 }

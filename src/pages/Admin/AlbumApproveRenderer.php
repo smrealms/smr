@@ -1,9 +1,27 @@
 <?php declare(strict_types=1);
 
-if (!isset($Nick)) { ?>
+namespace Smr\Pages\Admin;
+
+class AlbumApproveRenderer {
+
+public static function renderEmpty(): void {
+	?>
 	<p>Nothing to approve!</p><?php
-	return;
-} ?>
+}
+
+public static function render(
+	string $Location,
+	string $Email,
+	string $Website,
+	string $Other,
+	string $ImgSrc,
+	string $Birthdate,
+	string $Nick,
+	int $TimePassed,
+	string $ApproveHREF,
+	string $RejectHREF,
+): void {
+?>
 
 <div class="center">
 	<p style="font-size:150%;"><?php echo $Nick; ?></p>
@@ -38,3 +56,8 @@ if (!isset($Nick)) { ?>
 <a href="<?php echo $ApproveHREF; ?>" class="submitStyle">Approve</a>
 &nbsp;&nbsp;&nbsp;
 <a href="<?php echo $RejectHREF; ?>" class="submitStyle">Reject</a>
+
+<?php
+}
+
+}

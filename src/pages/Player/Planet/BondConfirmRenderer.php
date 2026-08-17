@@ -1,11 +1,10 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $CancelHREF
- * @var string $ConfirmHREF
- * @var string $BondDuration
- */
+namespace Smr\Pages\Player\Planet;
 
+class BondConfirmRenderer {
+
+public static function render(string $CancelHREF, string $ConfirmHREF, string $BondDuration): void {
 ?>
 <h2>Planetary Bond Confirmation</h2>
 
@@ -22,3 +21,7 @@ the bond matures in <?php echo $BondDuration; ?>.</p>
 		<td><?php echo create_submit_link($CancelHREF, 'Cancel'); ?></td>
 	</tr>
 </table>
+<?php
+}
+
+}

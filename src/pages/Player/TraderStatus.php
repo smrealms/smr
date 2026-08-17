@@ -13,34 +13,10 @@ use Smr\Template;
 class TraderStatus extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'trader_status.php';
-
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Trader Status';
 
 		Menu::trader();
-
-		if ($player->hasNewbieTurns()) {
-			$container = new NewbieLeave();
-			$template->assign('LeaveNewbieHREF', $container->href());
-		}
-
-		$container = new TraderRelations();
-		$template->assign('RelationsHREF', $container->href());
-
-		$container = new TraderSavings();
-		$template->assign('SavingsHREF', $container->href());
-
-		// Bounties
-		$container = new TraderBounties();
-		$template->assign('BountiesHREF', $container->href());
-
-		$template->assign('BountiesClaimable', count($player->getClaimableBounties()));
-
-		// Ship
-		$container = new HardwareConfigure();
-		$template->assign('HardwareHREF', $container->href());
 
 		$shipType = $player->getShip()->getType();
 		$hardwareChecks = [
@@ -59,15 +35,6 @@ class TraderStatus extends PlayerPage {
 		if (count($hardware) === 0) {
 			$hardware[] = 'none';
 		}
-		$template->assign('Hardware', $hardware);
-
-		$template->assign('NextLevel', $player->getLevel()->next());
-
-		$container = new UserRankingView();
-		$template->assign('UserRankingsHREF', $container->href());
-
-		$container = new TraderNoteDeleteProcessor();
-		$template->assign('NoteDeleteHREF', $container->href());
 
 		$notes = [];
 		$db = Database::getInstance();
@@ -76,10 +43,25 @@ class TraderStatus extends PlayerPage {
 			$note = $dbRecord->getObject('note', true);
 			$notes[$dbRecord->getInt('note_id')] = htmlentities($note);
 		}
-		$template->assign('Notes', array_reverse($notes, true)); // display newest first
+		$notes = array_reverse($notes, true); // display newest first
 
-		$container = new TraderNoteAddProcessor();
-		$template->assign('NoteAddHREF', $container->href());
+		$template->pageRenderer = fn() => TraderStatusRenderer::render(
+			LeaveNewbieHREF: $player->hasNewbieTurns() ? new NewbieLeave()->href() : null,
+			RelationsHREF: new TraderRelations()->href(),
+			SavingsHREF: new TraderSavings()->href(),
+			BountiesHREF: new TraderBounties()->href(),
+			BountiesClaimable: count($player->getClaimableBounties()),
+			HardwareHREF: new HardwareConfigure()->href(),
+			Hardware: $hardware,
+			NextLevel: $player->getLevel()->next(),
+			UserRankingsHREF: new UserRankingView()->href(),
+			NoteDeleteHREF: new TraderNoteDeleteProcessor()->href(),
+			Notes: $notes,
+			NoteAddHREF: new TraderNoteAddProcessor()->href(),
+			ThisAccount: $player->getAccount(),
+			ThisPlayer: $player,
+			ThisShip: $player->getShip(),
+		);
 	}
 
 }

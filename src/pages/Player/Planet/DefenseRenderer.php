@@ -1,14 +1,20 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Planet $ThisPlanet
- * @var Smr\Ship $ThisShip
- * @var Smr\Pages\Player\Planet\DefenseProcessor $TransferShields
- * @var Smr\Pages\Player\Planet\DefenseProcessor $TransferCDs
- * @var Smr\Pages\Player\Planet\DefenseProcessor $TransferArmour
- * @var Smr\Pages\Player\Planet\DefenseWeaponProcessor $WeaponProcessingPage
- */
+namespace Smr\Pages\Player\Planet;
 
+use Smr\AbstractShip;
+use Smr\Planet;
+
+class DefenseRenderer {
+
+public static function render(
+	DefenseProcessor $TransferShields,
+	DefenseProcessor $TransferCDs,
+	DefenseProcessor $TransferArmour,
+	DefenseWeaponProcessor $WeaponProcessingPage,
+	Planet $ThisPlanet,
+	AbstractShip $ThisShip,
+): void {
 if ($ThisPlanet->getMaxShields() + $ThisPlanet->getMaxCDs() + $ThisPlanet->getMaxArmour() === 0) { ?>
 	<p>This planet cannot yet store any shields, combat drones, or armour.</p>
 <?php } else { ?>
@@ -137,4 +143,8 @@ if ($ThisPlanet->getMaxMountedWeapons() > 0) { ?>
 			} ?>
 		</table>
 	</form><?php
+}
+
+}
+
 }

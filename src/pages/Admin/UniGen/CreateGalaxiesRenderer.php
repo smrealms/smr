@@ -1,11 +1,24 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $UpdateNumGalsHREF
- * @var string $UploadSmrFileHREF
- * @var string $GenerateHREF
- */
+namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Pages\Shared\Admin\Unigen\GalaxyDetailsRenderer;
+
+class CreateGalaxiesRenderer {
+
+/**
+ * @param array{value: string, href: string} $Submit
+ * @param array<int, array{Name: string, Width: int, Height: int, Type: string, ForceMaxHours: float}> $Galaxies
+ */
+public static function render(
+	bool $GameEnabled,
+	string $UpdateNumGalsHREF,
+	array $Submit,
+	string $GenerateHREF,
+	string $UploadSmrFileHREF,
+	int $NumGals,
+	array $Galaxies,
+): void {
 ?>
 <form method="POST" action="<?php echo $UpdateNumGalsHREF; ?>">
 	Number of Galaxies:
@@ -13,7 +26,7 @@
 	<?php echo create_submit_display('Update'); ?>
 </form>
 <br />
-<?php $this->includeTemplate('admin/unigen/GalaxyDetails.inc.php'); ?>
+<?php GalaxyDetailsRenderer::render(Galaxies: $Galaxies, GameEnabled: $GameEnabled, Submit: $Submit); ?>
 
 <br /><br />
 <form method="POST" enctype="multipart/form-data" action="<?php echo $UploadSmrFileHREF; ?>">
@@ -26,3 +39,8 @@
 Or automatically generate a pre-populated map: <a href="<?php echo $GenerateHREF; ?>" class="submitStyle">Generate</a>
 <br />
 <small><span class="bold">WARNING: </span> This is slow!</small>
+
+<?php
+}
+
+}

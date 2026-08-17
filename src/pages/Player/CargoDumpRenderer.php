@@ -1,9 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<array{image: string, name: string, amount: int, dump_href: string}> $Goods
- */
+namespace Smr\Pages\Player;
 
+class CargoDumpRenderer {
+
+/**
+ * @param array<array{image: string, name: string, amount: int, dump_href: string}> $Goods
+ */
+public static function render(array $Goods): void {
 ?>
 Enter the amount of cargo you wish to jettison.<br />
 Please keep in mind that you will lose experience and <?php echo pluralise(TURNS_TO_DUMP_CARGO, 'turn'); ?>!<br /><br />
@@ -33,4 +37,8 @@ if (count($Goods) === 0) { ?>
 			</form><?php
 		} ?>
 	</table><?php
+}
+
+}
+
 }

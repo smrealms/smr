@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+class LogConsoleRenderer {
+
+/**
+ * @param array<int, array{AccountID: int, Login: string, TotalEntries: int, Checked: bool, Notes: string}> $LoggedAccounts
+ */
+public static function render(array $LoggedAccounts, LogConsoleProcessor $LogConsoleFormPage, string $AnonAccessHREF): void {
 ?>
 <p>
 	Choose the log files you wish to view or delete!<br />
@@ -43,4 +51,8 @@ if (count($LoggedAccounts) > 0) { ?>
 	</ul><?php
 } else { ?>
 	There are no log entries at all!<?php
+}
+
+}
+
 }

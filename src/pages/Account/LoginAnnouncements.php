@@ -9,8 +9,6 @@ use Smr\Template;
 
 class LoginAnnouncements extends AccountPage {
 
-	public string $file = 'announcements.php';
-
 	public function __construct(
 		private readonly bool $viewAll = false,
 	) {}
@@ -40,9 +38,12 @@ class LoginAnnouncements extends AccountPage {
 				'Msg' => htmlentities($dbRecord->getString('msg')),
 			];
 		}
-		$template->assign('Announcements', $announcements);
 
-		$template->assign('ContinueHREF', $container->href());
+		$template->pageRenderer = fn() => LoginAnnouncementsRenderer::render(
+			Announcements: $announcements,
+			ContinueHREF: $container->href(),
+			ThisAccount: $account,
+		);
 	}
 
 }

@@ -1,15 +1,29 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
 use Smr\Race;
 
-/**
- * @var int $SelectedGameID
- * @var list<Smr\Galaxy> $NpcGalaxyChoices
- * @var array<int, string> $NpcGalaxyAllianceChoices
- * @var string $SetupNpcGalaxyHref
- * @var ?string $Message
- */
+class NpcManageRenderer {
 
+/**
+ * @param list<array{Name: string, ID: int, Selected: bool}> $Games
+ * @param array<int, array{login: string, default_player_name: string, default_alliance: string, active: bool, working: bool, href: string, disable_active_toggle: bool, player?: \Smr\Player}> $Npcs
+ * @param list<\Smr\Galaxy> $NpcGalaxyChoices
+ * @param array<int, string> $NpcGalaxyAllianceChoices
+ */
+public static function render(
+	string $SelectGameHREF,
+	?string $Message,
+	array $Games,
+	int $SelectedGameID,
+	string $AddAccountHREF,
+	string $NextLogin,
+	array $Npcs,
+	array $NpcGalaxyChoices,
+	array $NpcGalaxyAllianceChoices,
+	string $SetupNpcGalaxyHref,
+): void {
 if ($Message !== null) { ?>
 	<p><?php echo $Message; ?></p><?php
 } ?>
@@ -99,3 +113,8 @@ if ($SelectedGameID !== 0) { ?>
 	Default Alliance: <input required name="default_alliance" /><br />
 	<?php echo create_submit_display('Submit'); ?>
 </form>
+
+<?php
+}
+
+}

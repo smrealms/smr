@@ -1,5 +1,11 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+class GameDeleteRenderer {
+
+/** @param array<array{game_id: int, display: string}> $Games */
+public static function render(string $ConfirmHREF, array $Games): void {
 ?>
 <p>
 	What game do you want to delete?<br />
@@ -16,3 +22,6 @@
 	&nbsp;&nbsp;
 	<?php echo create_submit_display('Delete'); ?>
 </form>
+<?php }
+
+}

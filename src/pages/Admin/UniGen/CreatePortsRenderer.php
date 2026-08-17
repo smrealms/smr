@@ -1,7 +1,28 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin\UniGen;
+
+use Smr\Galaxy;
 use Smr\Race;
 
+class CreatePortsRenderer {
+
+/**
+ * @param array<int, Galaxy> $Galaxies
+ * @param array<int, float> $RacePercents
+ * @param array<int, int> $TotalPorts
+ */
+public static function render(
+	array $Galaxies,
+	string $JumpGalaxyHREF,
+	Galaxy $Galaxy,
+	array $RacePercents,
+	float|int $TotalPercent,
+	array $TotalPorts,
+	?int $Total,
+	string $CreateHREF,
+	string $CancelHREF,
+): void {
 ?>
 <form method="POST" action="<?php echo $JumpGalaxyHREF; ?>">
 	Working on Galaxy:
@@ -85,3 +106,8 @@ use Smr\Race;
 
 <span class="small">Note: When you press "Create Ports" this will rearrange all current ports.<br />
 To add new ports without rearranging everything use the Edit Sector feature.</span>
+
+<?php
+}
+
+}

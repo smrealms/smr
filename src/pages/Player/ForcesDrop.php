@@ -9,8 +9,6 @@ use Smr\Template;
 
 class ForcesDrop extends PlayerPage {
 
-	public string $file = 'forces_drop.php';
-
 	public function __construct(
 		private readonly ?int $ownerAccountID = null,
 	) {}
@@ -27,10 +25,11 @@ class ForcesDrop extends PlayerPage {
 
 		$forces = Force::getForce($player->getGameID(), $player->getSectorID(), $owner_id);
 
-		$container = new ForcesDropProcessor($owner_id);
-
-		$template->assign('Forces', $forces);
-		$template->assign('SubmitHREF', $container->href());
+		$template->pageRenderer = fn() => ForcesDropRenderer::render(
+			Forces: $forces,
+			SubmitHREF: new ForcesDropProcessor($owner_id)->href(),
+			ThisShip: $player->getShip(),
+		);
 	}
 
 }

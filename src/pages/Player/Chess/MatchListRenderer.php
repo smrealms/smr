@@ -1,12 +1,17 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Chess;
+
 use Smr\Globals;
 
-/**
- * @var array<Smr\Chess\ChessGame> $ChessGames
- * @var array<int, string> $PlayerList
- */
+class MatchListRenderer {
 
+/**
+ * @param array<\Smr\Chess\ChessGame> $ChessGames
+ * @param array<int, string> $PlayerList
+ * @param ?array<int, string> $NPCList
+ */
+public static function render(array $ChessGames, array $PlayerList, ?array $NPCList): void {
 ?>
 <p style="width: 60%">Challenge other traders to a round of <i>Faster Than Knight</i>,
 a game of chess played over the super-photonic transponder aboard your ship.</p>
@@ -65,4 +70,8 @@ if (isset($NPCList)) {
 	} else { ?>
 		<p>You have challenged every NPC.</p><?php
 	}
+}
+
+}
+
 }

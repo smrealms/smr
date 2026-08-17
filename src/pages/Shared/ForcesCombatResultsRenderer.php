@@ -1,10 +1,19 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Template $this
- * @var ForceCombatResults $ForcesCombatResults
- */
+namespace Smr\Pages\Shared;
 
+use Exception;
+use Smr\Template;
+
+class ForcesCombatResultsRenderer {
+
+/**
+ * @param ForceCombatResults $ForcesCombatResults
+ */
+public static function render(
+	Template $template,
+	array $ForcesCombatResults,
+): void {
 $CombatForces = $ForcesCombatResults['Results'];
 foreach ($CombatForces as $ForceType => $ForceResults) {
 	$ShotHit = $ForceResults['Hit'];
@@ -42,7 +51,7 @@ foreach ($CombatForces as $ForceType => $ForceResults) {
 				?> but it cannot do any damage<?php
 			}
 		} else {
-			?> destroying <?php echo $this->displayTakenDamage($ActualDamage);
+			?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
 		}
 	} ?>.
 	<br /><?php
@@ -50,7 +59,11 @@ foreach ($CombatForces as $ForceType => $ForceResults) {
 		if (!isset($ForceResults['KillResults'])) {
 			throw new Exception('KillingShot did not provide KillResults!');
 		}
-		$this->includeTemplate('includes/TraderCombatKillMessage.inc.php', ['KillResults' => $ForceResults['KillResults'], 'TargetPlayer' => $TargetPlayer]);
+		TraderCombatKillMessageRenderer::render(
+			KillResults: $ForceResults['KillResults'],
+			TargetPlayer: $TargetPlayer,
+			ShootingPlayer: null,
+		);
 	}
 }
 if (isset($ForcesCombatResults['ForcesDestroyed']) && $ForcesCombatResults['ForcesDestroyed']) {
@@ -59,3 +72,8 @@ if (isset($ForcesCombatResults['ForcesDestroyed']) && $ForcesCombatResults['Forc
 
 $TotalDamage = $ForcesCombatResults['TotalDamage'] ?>
 The forces <?php if ($TotalDamage > 0) { ?>hit for a total of <span class="red"><?php echo number_format($TotalDamage) ?></span> damage in this round of combat<?php } else { ?>do no damage this round<?php } ?>.
+
+<?php
+}
+
+}

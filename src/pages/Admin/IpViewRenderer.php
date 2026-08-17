@@ -1,5 +1,10 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+class IpViewRenderer {
+
+public static function render(string $IpFormHref): void {
 ?>
 <script>
 	function go() {
@@ -65,3 +70,8 @@ Please select the type of IP search you would like.<br />
 	window.document.form_ip.variable.select();
 	window.document.form_ip.variable.focus();
 </script>
+
+<?php
+}
+
+}

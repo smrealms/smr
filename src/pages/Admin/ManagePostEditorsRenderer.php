@@ -1,14 +1,26 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<array{game_name: string, game_id: int}> $ActiveGames
- * @var ?array<string> $CurrentEditors
- */
+namespace Smr\Pages\Admin;
 
-if (count($ActiveGames) === 0) {
+class ManagePostEditorsRenderer {
+
+public static function renderEmpty(): void {
 	echo '<p>There are no active games at this time!</p>';
-} else { ?>
+}
 
+/**
+ * @param array<array{game_name: string, game_id: int}> $ActiveGames
+ * @param array<string> $CurrentEditors
+ */
+public static function render(
+	string $SelectGameHREF,
+	array $ActiveGames,
+	int $SelectedGame,
+	array $CurrentEditors,
+	?string $ProcessingMsg,
+	ManagePostEditorsProcessor $PostEditorPage,
+): void {
+?>
 	<p>Specify the Game and Player ID to assign or remove a Galactic Post editor.</p>
 
 	Select Game:&nbsp;
@@ -24,7 +36,7 @@ if (count($ActiveGames) === 0) {
 	</form><br />
 
 	Player ID:&nbsp;
-<form method="POST" action="<?php echo $PostEditorPage->href(); ?>">
+	<form method="POST" action="<?php echo $PostEditorPage->href(); ?>">
 		<input type="number" name="player_id" class="center">
 		<br /><br />
 		<?php echo $PostEditorPage->actionAssign->html(); ?>&nbsp;
@@ -39,7 +51,7 @@ if (count($ActiveGames) === 0) {
 	<br /><br />
 
 	<?php
-	if (!isset($CurrentEditors) || count($CurrentEditors) === 0) {
+	if (count($CurrentEditors) === 0) {
 		echo 'No current editors for this game!';
 	} else { ?>
 		Current Editors:
@@ -49,5 +61,7 @@ if (count($ActiveGames) === 0) {
 		} ?>
 		</ul><?php
 	}
+
+}
 
 }

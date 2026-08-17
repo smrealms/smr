@@ -1,15 +1,19 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Council;
+
+use Smr\Account;
 use Smr\Globals;
+use Smr\Player;
 use Smr\Race;
 
-/**
- * @var Smr\Account $ThisAccount
- * @var Smr\Player $ThisPlayer
- * @var array<int, array{VotePage: Smr\Pages\Player\Council\VotingCenterProcessor, VetoPage: ?Smr\Page\Page, Type: string, EndTime: int, For: bool, Against: bool, NoVotes: int, YesVotes: int}> $VoteTreaties
- * @var array<int, array{VotePage: Smr\Pages\Player\Council\VotingCenterProcessor, Increased: bool, Decreased: bool, Relations: int}> $VoteRelations
- */
+class VotingCenterRenderer {
 
+/**
+ * @param array<int, array{VotePage: \Smr\Pages\Player\Council\VotingCenterProcessor, Increased: bool, Decreased: bool, Relations: int}> $VoteRelations
+ * @param array<int, array{VotePage: \Smr\Pages\Player\Council\VotingCenterProcessor, VetoPage: ?\Smr\Page\Page, Type: string, EndTime: int, For: bool, Against: bool, NoVotes: int, YesVotes: int}> $VoteTreaties
+ */
+public static function render(array $VoteRelations, array $VoteTreaties, Account $ThisAccount, Player $ThisPlayer): void {
 ?>
 <a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
 
@@ -94,3 +98,8 @@ if (count($VoteTreaties) === 0) { ?>
 		</tr><?php
 	} ?>
 </table>
+
+<?php
+}
+
+}

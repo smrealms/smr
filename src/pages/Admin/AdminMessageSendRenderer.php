@@ -1,17 +1,27 @@
 <?php declare(strict_types=1);
 
-use Smr\Pages\Admin\AdminMessageSend;
+namespace Smr\Pages\Admin;
+
+class AdminMessageSendRenderer {
 
 /**
- * @var Smr\Pages\Admin\AdminMessageSendProcessor $AdminMessageSendForm
+ * @param ?list<array{AccountID: int, Name: string}> $GamePlayers
  */
-
+public static function render(
+	AdminMessageSendProcessor $AdminMessageSendForm,
+	?int $MessageGameID,
+	?float $ExpireTime,
+	?array $GamePlayers,
+	int $SelectedAccountID,
+	?string $Preview,
+	string $BackHREF,
+): void {
 if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Preview, $MessageGameID); ?></td></tr></table><?php } ?>
 <form name="AdminMessageSendForm" method="POST" action="<?php echo $AdminMessageSendForm->href(); ?>">
 	<p>
 	<b>From: </b><span class="admin">Administrator</span><br />
 	<b>To: </b><?php
-		if ($MessageGameID !== AdminMessageSend::ALL_GAMES_ID) { ?>
+		if ($GamePlayers !== null) { ?>
 			<select name="account_id" required size="1"><?php
 				foreach ($GamePlayers as $GamePlayer) {
 					?><option <?php if ($SelectedAccountID === $GamePlayer['AccountID']) { echo 'selected'; } ?> value="<?php echo $GamePlayer['AccountID']; ?>"><?php echo $GamePlayer['Name']; ?></option><?php
@@ -28,3 +38,8 @@ if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Previ
 </form>
 <br /><br />
 <a href="<?php echo $BackHREF; ?>">&lt;&lt; Back</a>
+
+<?php
+}
+
+}

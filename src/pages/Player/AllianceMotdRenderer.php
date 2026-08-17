@@ -1,21 +1,30 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use Smr\Account;
+use Smr\Alliance;
 use Smr\Epoch;
 
-/**
- * @var Smr\Account $ThisAccount
- * @var Smr\Alliance $Alliance
- * @var ?string $OpResponseHREF
- * @var ?int $OpTime
- * @var ?array<string, array<string, string>> $ResponseInputs
- * @var ?string $DiscordServer
- */
+class AllianceMotdRenderer {
 
+/**
+ * @param array<string, array<string, string>> $ResponseInputs
+ */
+public static function render(
+	Alliance $Alliance,
+	?int $OpTime,
+	?string $OpResponseHREF,
+	array $ResponseInputs,
+	?string $EditHREF,
+	?string $DiscordServer,
+	Account $ThisAccount,
+): void {
 ?>
 <div class="center">
 
 <?php
-if (isset($OpTime) && isset($ResponseInputs)) { ?>
+if (isset($OpTime)) { ?>
 	<table class="center nobord opResponse">
 		<tr><th>ENCRYPTED ALLIANCE TELEGRAM</th></tr>
 		<tr><td>Your leader has scheduled an important alliance operation for <?php echo date($ThisAccount->getDateTimeFormat(), $OpTime); ?></td></tr>
@@ -55,3 +64,8 @@ if (isset($DiscordServer)) { ?>
 } ?>
 
 </div>
+
+<?php
+}
+
+}

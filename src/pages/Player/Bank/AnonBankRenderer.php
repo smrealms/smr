@@ -1,12 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var string $Message
- * @var string $AccessHREF
- * @var string $CreateHREF
- * @var array<array{anon_id: int, password: string, amount: int, last_transaction: string, href: string}> $OwnedAnon
- */
+namespace Smr\Pages\Player\Bank;
 
+class AnonBankRenderer {
+
+/**
+ * @param array<array{anon_id: int, password: string, amount: int, last_transaction: string, href: string}> $OwnedAnon
+ */
+public static function render(string $AccessHREF, string $Message, array $OwnedAnon, string $CreateHREF): void {
 echo $Message; ?>
 
 <h2>Access accounts</h2><br />
@@ -56,3 +57,8 @@ if (count($OwnedAnon) > 0) { ?>
 <div class="buttonA">
 	<a class="buttonA" href="<?php echo $CreateHREF; ?>">Create an account</a>
 </div>
+
+<?php
+}
+
+}

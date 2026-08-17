@@ -1,9 +1,11 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<array{player: string, game_id: int, hardware: string, amount: int, max_amount: int, fixHREF: string}> $ExcessHardware
- */
+namespace Smr\Pages\Admin;
 
+class CheatingShipCheckRenderer {
+
+/** @param array<array{player: string, game_id: int, hardware: string, amount: int, max_amount: int, fixHREF: string}> $ExcessHardware */
+public static function render(array $ExcessHardware): void {
 if (count($ExcessHardware) === 0) { ?>
 	<p>No overpowered ships!</p><?php
 } else { ?>
@@ -29,4 +31,8 @@ if (count($ExcessHardware) === 0) { ?>
 			</tr><?php
 		} ?>
 	</table><?php
+}
+
+}
+
 }

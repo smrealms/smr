@@ -1,18 +1,26 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Port $Port
- * @var Smr\TradeGood $Good
- * @var int $Amount
- * @var int $OfferedPrice
- * @var int $BargainPrice
- * @var string $ShopHREF
- * @var string $LeaveHREF
- * @var string $BargainHREF
- * @var string $PortAction
- */
+namespace Smr\Pages\Player;
 
+use Smr\Player;
+use Smr\Port;
+use Smr\TradeGood;
+
+class ShopGoodsNegotiateRenderer {
+
+public static function render(
+	?string $OfferToo,
+	string $PortAction,
+	string $BargainHREF,
+	int $BargainPrice,
+	int $OfferedPrice,
+	TradeGood $Good,
+	int $Amount,
+	Port $Port,
+	string $ShopHREF,
+	string $LeaveHREF,
+	Player $ThisPlayer,
+): void {
 // Create an array for use later
 $TradeCalcInfo = [
 	$Amount,
@@ -43,3 +51,8 @@ Note: In order to maximize your experience you have to bargain with the port own
 <h2>Or do you want to:</h2>
 <p><a href="<?php echo $ShopHREF; ?>" class="submitStyle">Select a different good</a></p>
 <p><a href="<?php echo $LeaveHREF; ?>" class="submitStyle">Leave Port</a></p>
+
+<?php
+}
+
+}

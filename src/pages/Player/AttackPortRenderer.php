@@ -1,17 +1,35 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
+use Smr\Combat\Results\PortFullCombatResults;
 use Smr\Globals;
+use Smr\Pages\Shared\PortFullCombatResultsRenderer;
+use Smr\Player;
 use Smr\Port;
 use Smr\PortPayoutType;
+use Smr\Template;
 
-/**
- * @var Smr\Port $Port
- * @var Smr\Template $this
- * @var bool $OverrideDeath
- * @var bool $CreditedAttacker
- */
+class AttackPortRenderer {
 
-$this->includeTemplate('includes/PortFullCombatResults.inc.php'); ?><br />
+public static function render(
+	Template $template,
+	?PortFullCombatResults $FullPortCombatResults,
+	bool $AlreadyDestroyed,
+	bool $CreditedAttacker,
+	bool $OverrideDeath,
+	Port $Port,
+	Player $ThisPlayer,
+): void {
+PortFullCombatResultsRenderer::render(
+	template: $template,
+	MinimalDisplay: false,
+	AlreadyDestroyed: $AlreadyDestroyed,
+	FullPortCombatResults: $FullPortCombatResults,
+	ThisPlayer: $ThisPlayer,
+	AttackLogLink: null,
+);
+?><br />
 <br />
 <div class="center"><?php
 	if (!$OverrideDeath && !$Port->isBusted()) { ?>
@@ -40,3 +58,8 @@ $this->includeTemplate('includes/PortFullCombatResults.inc.php'); ?><br />
 		}
 	} ?>
 </div>
+
+<?php
+}
+
+}

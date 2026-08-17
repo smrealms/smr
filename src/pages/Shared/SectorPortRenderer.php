@@ -1,13 +1,18 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Shared;
+
 use Smr\Globals;
+use Smr\Player;
+use Smr\Sector;
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var Smr\Sector $ThisSector
- * @var ?bool $PortIsAtWar
- */
+class SectorPortRenderer {
 
+public static function render(
+	Player $ThisPlayer,
+	Sector $ThisSector,
+	?bool $PortIsAtWar,
+): void {
 ?>
 <div id="sector_port" class="ajax">
 	<?php if ($ThisSector->hasPort()) {
@@ -57,3 +62,8 @@ use Smr\Globals;
 		</table><br /><?php
 	} ?>
 </div>
+
+<?php
+}
+
+}

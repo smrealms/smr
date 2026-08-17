@@ -1,5 +1,29 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+use Smr\DummyShip;
+use Smr\Player;
+
+class EditDummiesRenderer {
+
+/**
+ * @param array<int, \Smr\ShipType> $ShipTypes
+ * @param array<int, \Smr\WeaponType> $Weapons
+ * @param array<int, \Smr\PlayerLevel> $Levels
+ * @param array<string> $DummyNames
+ */
+public static function render(
+	string $CombatSimLink,
+	array $ShipTypes,
+	array $Weapons,
+	string $SelectDummysLink,
+	string $EditDummysLink,
+	Player $DummyPlayer,
+	DummyShip $DummyShip,
+	array $Levels,
+	array $DummyNames,
+): void {
 ?>
 <a href="<?php echo $CombatSimLink; ?>">Combat Simulator</a><br /><br />
 
@@ -64,3 +88,8 @@
 		</td>
 	</tr>
 </table>
+
+<?php
+}
+
+}

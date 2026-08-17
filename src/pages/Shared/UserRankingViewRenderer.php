@@ -1,13 +1,14 @@
 <?php declare(strict_types=1);
 
-use Smr\Session;
+namespace Smr\Pages\Shared;
+
+use Smr\Account;
+use Smr\Player;
 use Smr\UserRanking;
 
-/**
- * @var Smr\Account $ThisAccount
- * @var Smr\Player $ThisPlayer
- */
+class UserRankingViewRenderer {
 
+public static function render(Account $ThisAccount, ?Player $ThisPlayer): void {
 ?>
 You are ranked as a <span style="font-size: 125%; color: greenyellow;"><?php echo $ThisAccount->getRank()->name; ?></span> player with a score of <span class="green"><?php echo number_format($ThisAccount->getScore()); ?></span>.<br /><br />
 
@@ -32,7 +33,7 @@ foreach ($ThisAccount->getIndividualScores() as $statScore) {
 	echo implode(' - ', $statScore['Stat']); ?>, has a stat of <?php echo number_format($ThisAccount->getHOF($statScore['Stat'])); ?> and a score of <span class="green"><?php echo number_format(round($statScore['Score'])); ?></span><br /><?php
 }
 
-if (Session::getInstance()->hasGame()) { ?>
+if ($ThisPlayer !== null) { ?>
 	<br />
 	<b>Current Game Extended Stats</b>
 	<br /><?php
@@ -42,3 +43,8 @@ if (Session::getInstance()->hasGame()) { ?>
 } ?>
 
 <br />Note: The total score will be lower than the sum of the individual scores as the points you get for each stat is reduced as you do it more (people who are good at all parts of the game get more points than someone who is only good at one part).
+
+<?php
+}
+
+}

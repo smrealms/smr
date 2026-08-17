@@ -12,20 +12,19 @@ class FormOpen extends AccountPage {
 
 	use ReusableTrait;
 
-	public string $file = 'admin/form_open.php';
-
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Open/Close Forms';
 
-		$container = new FormOpenProcessor(
-			isOpen: Globals::isFeatureRequestOpen(),
-			type: 'FEATURE',
+		$isOpen = Globals::isFeatureRequestOpen();
+		$template->pageRenderer = fn() => FormOpenRenderer::render(
+			Color: $isOpen ? 'green' : 'red',
+			Status: $isOpen ? 'OPEN' : 'CLOSED',
+			ToggleHREF: new FormOpenProcessor(
+				isOpen: $isOpen,
+				type: 'FEATURE',
+			)->href(),
+			Action: $isOpen ? 'Close' : 'Open',
 		);
-		$template->assign('ToggleHREF', $container->href());
-
-		$template->assign('Color', Globals::isFeatureRequestOpen() ? 'green' : 'red');
-		$template->assign('Status', Globals::isFeatureRequestOpen() ? 'OPEN' : 'CLOSED');
-		$template->assign('Action', Globals::isFeatureRequestOpen() ? 'Close' : 'Open');
 	}
 
 }

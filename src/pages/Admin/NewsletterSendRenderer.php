@@ -1,8 +1,22 @@
 <?php declare(strict_types=1);
 
-if (!isset($NewsletterId)) { ?>
-	No newsletters in the database!<?php
-} else { ?>
+namespace Smr\Pages\Admin;
+
+class NewsletterSendRenderer {
+
+public static function renderEmpty(): void {
+	echo 'No newsletters in the database!';
+}
+
+public static function render(
+	string $CurrentEmail,
+	int $NewsletterId,
+	string $DefaultSubject,
+	string $NewsletterHtml,
+	string $NewsletterText,
+	string $ProcessingHREF,
+): void {
+?>
 	<h2>Send Newsletter</h2>
 	<p>This sends the latest newsletter added to the DB: Newsletter #<?php echo $NewsletterId; ?></p>
 
@@ -40,4 +54,6 @@ if (!isset($NewsletterId)) { ?>
 	</table>
 
 <?php
+}
+
 }

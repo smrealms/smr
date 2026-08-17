@@ -1,11 +1,15 @@
 <?php declare(strict_types=1);
 
-/**
- * @var list<array{player: Smr\Player, hireCost: int, hireHref: string}> $Npcs
- * @var ?string $DisableReason
- * @var Smr\Player $ThisPlayer
- */
+namespace Smr\Pages\Player\Headquarters;
 
+use Smr\Player;
+
+class HireTraderRenderer {
+
+/**
+ * @param list<array{player: \Smr\Player, hireCost: int, hireHref: string}> $Npcs
+ */
+public static function render(array $Npcs, ?string $DisableReason, Player $ThisPlayer): void {
 if ($DisableReason !== null) { ?>
 	<div><?php echo $DisableReason; ?></div><br /><?php
 }
@@ -33,4 +37,8 @@ if (count($Npcs) > 0) { ?>
 			</tr><?php
 		} ?>
 	</table><?php
+}
+
+}
+
 }

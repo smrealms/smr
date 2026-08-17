@@ -1,18 +1,20 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Template $this
- * @var string $SubmitHREF
- * @var int $MinRank
- * @var int $MaxRank
- * @var array<int, array{Class: string, SectorID: int, Value: int}> $TopTen
- * @var array<int, array{Class: string, SectorID: int, Value: int}> $TopCustom
- */
+namespace Smr\Pages\Player\Rankings;
 
+use Smr\Pages\Shared\SectorKillListRenderer;
+
+class SectorKillsRenderer {
+
+/**
+ * @param array<int, array{Class: string, SectorID: int, Value: int}> $TopTen
+ * @param array<int, array{Class: string, SectorID: int, Value: int}> $TopCustom
+ */
+public static function render(array $TopTen, string $SubmitHREF, array $TopCustom, int $MinRank, int $MaxRank): void {
 ?>
 <div class="center">
 	<p>Here are the most deadly Sectors!</p>
-	<?php $this->includeTemplate('includes/SectorKillList.inc.php', ['Rankings' => $TopTen]); ?>
+	<?php SectorKillListRenderer::render(Rankings: $TopTen); ?>
 
 	<form method="POST" action="<?php echo $SubmitHREF; ?>">
 		<p>
@@ -22,5 +24,10 @@
 		</p>
 	</form>
 
-	<?php $this->includeTemplate('includes/SectorKillList.inc.php', ['Rankings' => $TopCustom]); ?>
+	<?php SectorKillListRenderer::render(Rankings: $TopCustom); ?>
 </div>
+
+<?php
+}
+
+}

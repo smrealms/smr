@@ -1,8 +1,13 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Login;
+
 use Smr\Epoch;
 use Smr\Request;
 
+class LoginCreateRenderer {
+
+public static function render(): void {
 ?>
 <div class="centered" style="width: 630px;">
 	<h1>Create Login</h1>
@@ -78,3 +83,8 @@ use Smr\Request;
 </div>
 
 <script src="https://www.google.com/recaptcha/api.js"></script>
+<?php
+
+}
+
+}

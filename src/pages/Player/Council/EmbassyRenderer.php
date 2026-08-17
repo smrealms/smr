@@ -1,12 +1,16 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player\Council;
+
+use Smr\Player;
 use Smr\Race;
 
-/**
- * @var Smr\Player $ThisPlayer
- * @var array<int, Smr\Pages\Player\Council\EmbassyProcessor> $VoteRacePages
- */
+class EmbassyRenderer {
 
+/**
+ * @param array<int, \Smr\Pages\Player\Council\EmbassyProcessor> $VoteRacePages
+ */
+public static function render(array $VoteRacePages, Player $ThisPlayer): void {
 ?>
 <a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
 <div class="center bold">Diplomatic Treaties</div><br />
@@ -34,3 +38,8 @@ use Smr\Race;
 		</tr><?php
 	} ?>
 </table>
+
+<?php
+}
+
+}

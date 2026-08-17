@@ -1,8 +1,13 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Login;
+
 use Smr\Epoch;
 use Smr\Request;
 
+class LoginSocialCreateRenderer {
+
+public static function render(?string $MatchingLogin): void {
 ?>
 <div class="centered" style="width: 630px;">
 	<h1>Link To Existing Login</h1>
@@ -93,3 +98,7 @@ use Smr\Request;
 		</form><?php
 	} ?>
 </div>
+<?php
+}
+
+}

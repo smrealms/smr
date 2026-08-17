@@ -10,8 +10,6 @@ use Smr\Template;
 
 class AnonBank extends PlayerPage {
 
-	public string $file = 'bank_anon.php';
-
 	public function __construct(
 		private readonly ?string $message = null,
 	) {}
@@ -26,11 +24,6 @@ class AnonBank extends PlayerPage {
 
 		$template->pageTopic = 'Anonymous Account';
 		Menu::bank();
-
-		$container = new AnonBankProcessor();
-		$template->assign('AccessHREF', $container->href());
-
-		$template->assign('Message', $this->message ?? '');
 
 		$db = Database::getInstance();
 		$dbResult = $db->select('anon_bank', [
@@ -63,10 +56,13 @@ class AnonBank extends PlayerPage {
 
 			$ownedAnon[] = $anon;
 		}
-		$template->assign('OwnedAnon', $ownedAnon);
 
-		$container = new AnonBankCreate();
-		$template->assign('CreateHREF', $container->href());
+		$template->pageRenderer = fn() => AnonBankRenderer::render(
+			AccessHREF: new AnonBankProcessor()->href(),
+			Message: $this->message ?? '',
+			OwnedAnon: $ownedAnon,
+			CreateHREF: new AnonBankCreate()->href(),
+		);
 	}
 
 }

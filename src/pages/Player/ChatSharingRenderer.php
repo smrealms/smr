@@ -1,12 +1,14 @@
 <?php declare(strict_types=1);
 
-/**
- * @var ?string $Message
- * @var string $ProcessingHREF
- * @var array<int, array{"Player ID": string|int, "Player Name": string, "All Games": string, "Game ID": int}> $ShareFrom
- * @var array<int, array{"Player ID": string|int, "Player Name": string, "All Games": string, "Game ID": int}> $ShareTo
- */
+namespace Smr\Pages\Player;
 
+class ChatSharingRenderer {
+
+/**
+ * @param array<int, array{"Player ID": string|int, "Player Name": string, "All Games": string, "Game ID": int}> $ShareFrom
+ * @param array<int, array{"Player ID": string|int, "Player Name": string, "All Games": string, "Game ID": int}> $ShareTo
+ */
+public static function render(?string $Message, array $ShareFrom, array $ShareTo, string $ProcessingHREF): void {
 if (isset($Message)) { ?>
 	<?php echo $Message; ?><?php
 } ?>
@@ -80,4 +82,8 @@ if (count($ShareFrom) > 0) { ?>
 	</table><?php
 } else { ?>
 	None<?php
+}
+
+}
+
 }

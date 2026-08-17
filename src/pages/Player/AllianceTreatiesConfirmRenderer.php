@@ -1,14 +1,15 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Player;
+
 use Smr\Treaty;
 
-/**
- * @var string $YesHREF
- * @var string $NoHREF
- * @var string $AllianceName
- * @var array<string, bool> $Terms
- */
+class AllianceTreatiesConfirmRenderer {
 
+/**
+ * @param array<string, bool> $Terms
+ */
+public static function render(string $AllianceName, array $Terms, string $YesHREF, string $NoHREF): void {
 ?>
 <br />
 <div class="center">
@@ -29,3 +30,8 @@ use Smr\Treaty;
 		<a class="buttonA" href="<?php echo $NoHREF; ?>">No</a>
 	</div>
 </div>
+
+<?php
+}
+
+}

@@ -1,9 +1,13 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<string, mixed> $Role
- */
+namespace Smr\Pages\Shared;
 
+class AllianceRoleRenderer {
+
+/**
+ * @param array<string, mixed> $Role
+ */
+public static function render(array $Role): void {
 ?>
 <form class="standard" id="RoleEditForm<?php echo $Role['RoleID']; ?>" method="POST" action="<?php echo $Role['HREF']; ?>">
 	<table class="standard">
@@ -76,3 +80,8 @@
 		</tr>
 	</table>
 </form><br />
+
+<?php
+}
+
+}

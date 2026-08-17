@@ -1,11 +1,25 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Admin;
+
+class DatabaseCleanupRenderer {
+
+/**
+ * @param array<string, int> $Results
+ * @param array<int> $EndedGames
+ */
+public static function renderResults(
+	string $DbSizeMB,
+	array $Results,
+	string $DiffMB,
+	bool $Preview,
+	array $EndedGames,
+	string $BackHREF,
+): void {
 ?>
 Current database size: <?php echo $DbSizeMB; ?>
 <br /><br />
 
-<?php
-if (isset($Results)) { ?>
 	<h2>Results<?php echo $Preview ? ' (Preview)' : ''; ?></h2>
 	<p>Size of data deleted: <?php echo $DiffMB; ?></p>
 	<p>Ended games: <?php echo implode(', ', $EndedGames); ?></p>
@@ -23,7 +37,16 @@ if (isset($Results)) { ?>
 	</table>
 	<p><a href="<?php echo $BackHREF; ?>">&lt;&lt; Back</a></p>
 	<?php
-} else { ?>
+}
+
+public static function render(
+	string $DbSizeMB,
+	string $DeleteHREF,
+	string $PreviewHREF,
+): void {
+?>
+Current database size: <?php echo $DbSizeMB; ?>
+<br /><br />
 	<span class="red bold">WARNING: </span>Please back up the database before
 	performing this operation!
 
@@ -33,4 +56,6 @@ if (isset($Results)) { ?>
 	<p><a class="submitStyle" href="<?php echo $PreviewHREF; ?>">Preview</a></p>
 	<p><a class="submitStyle" href="<?php echo $DeleteHREF; ?>">Delete</a></p>
 	<?php
+}
+
 }

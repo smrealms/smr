@@ -11,9 +11,6 @@ use Smr\Template;
 class ChangelogView extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'changelog_view.php';
-
 	public function __construct(
 		private readonly ?int $lastLogin = null,
 	) {}
@@ -22,15 +19,20 @@ class ChangelogView extends AccountPage {
 		$template->pageTopic = 'Change Log';
 
 		if ($this->lastLogin !== null) {
-			$container = new LoginProcessor();
-			$template->assign('ContinueHREF', $container->href());
+			$continueHREF = new LoginProcessor()->href();
+		} else {
+			$continueHREF = null;
 		}
 
 		$versions = Changelog::getDisplayVersions(
 			since: $this->lastLogin ?? 0,
 			dateFormat: $account->getDateTimeFormat(),
 		);
-		$template->assign('Versions', $versions);
+
+		$template->pageRenderer = fn() => ChangelogViewRenderer::render(
+			ContinueHREF: $continueHREF,
+			Versions: $versions,
+		);
 	}
 
 }

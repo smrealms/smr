@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Player;
 
+use Smr\Combat\Results\ForceFullCombatResults;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Force;
@@ -84,8 +85,6 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 		// Sending occurs after the attack so we can link the combat log.
 		$sendMessage = $forces->hasSDs();
 
-		$results = ['Forced' => $bump];
-
 		//decloak all attackers
 		foreach ($attackers as $attacker) {
 			$attacker->getShip()->decloak();
@@ -99,18 +98,23 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 			$forceResults = $forces->shootPlayers($attackers, $bump);
 		}
 
-		$results['Attackers'] = ['TotalDamage' => 0];
+		$attackerResults = ['TotalDamage' => 0];
 		foreach ($attackers as $attacker) {
 			$playerResults = $attacker->getShip()->shootForces($forces);
-			$results['Attackers']['Traders'][$attacker->getAccountID()] = $playerResults;
-			$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
+			$attackerResults['Traders'][$attacker->getAccountID()] = $playerResults;
+			$attackerResults['TotalDamage'] += $playerResults['TotalDamage'];
 		}
 
 		if (!$bump) {
 			$forceResults = $forces->shootPlayers($attackers, $bump);
 			$forces->updateExpire();
 		}
-		$results['Forces'] = $forceResults;
+
+		$results = new ForceFullCombatResults(
+			attackers: $attackerResults,
+			forces: $forceResults,
+			bump: $bump,
+		);
 
 		// Add this log to the `combat_logs` database table
 		$db = Database::getInstance();

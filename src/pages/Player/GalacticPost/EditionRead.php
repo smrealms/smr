@@ -10,8 +10,6 @@ use Smr\Template;
 
 class EditionRead extends PlayerPage {
 
-	public string $file = 'galactic_post_read.php';
-
 	public function __construct(
 		private readonly int $gameID,
 		private readonly ?int $paperID,
@@ -21,13 +19,12 @@ class EditionRead extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		Menu::galacticPost();
 
+		$backHREF = null;
 		if ($this->paperID !== null) {
-			$template->assign('PaperGameID', $this->gameID);
 
 			// Create link back to past editions
 			if ($this->showBackButton) {
-				$container = new PastEditionSelect($this->gameID);
-				$template->assign('BackHREF', $container->href());
+				$backHREF = new PastEditionSelect($this->gameID)->href();
 			}
 
 			$db = Database::getInstance();
@@ -64,10 +61,16 @@ class EditionRead extends PlayerPage {
 					$row++;
 				}
 			}
-			$template->assign('ArticleLayout', $articleLayout);
 		} else {
 			$template->pageTopic = 'Galactic Post';
+			$articleLayout = null;
 		}
+
+		$template->pageRenderer = fn() => EditionReadRenderer::render(
+			PaperGameID: $this->gameID,
+			BackHREF: $backHREF,
+			ArticleLayout: $articleLayout,
+		);
 	}
 
 }

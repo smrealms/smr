@@ -2,6 +2,7 @@
 
 use Smr\Database;
 use Smr\Location;
+use Smr\Pages\Standalone\ShipListRenderer;
 use Smr\Race;
 use Smr\ShipType;
 use Smr\Template;
@@ -27,26 +28,28 @@ try {
 	// Get a list of all locations that sell ships
 	$allLocs = array_unique(array_merge(...$shipLocs));
 	sort($allLocs);
-	$template->assign('AllLocs', $allLocs);
 
 	$shipArray = [];
 	foreach (ShipType::getAll() as $shipType) {
 		$shipArray[] = buildShipStats($shipType, $shipLocs[$shipType->getTypeID()] ?? []);
 	}
-	$template->assign('shipArray', $shipArray);
 
 	$speeds = array_unique(array_column($shipArray, 'speed'));
 	rsort($speeds);
-	$template->assign('Speeds', $speeds);
 
 	$hardpoints = array_unique(array_column($shipArray, 'hardpoint'));
 	rsort($hardpoints);
-	$template->assign('Hardpoints', $hardpoints);
 
 	$booleanFields = ['Scanner', 'Cloak', 'Illusion', 'Jump', 'Scrambler'];
-	$template->assign('BooleanFields', $booleanFields);
 
-	$template->display('ship_list.php');
+	$renderer = fn() => ShipListRenderer::render(
+		Speeds: $speeds,
+		Hardpoints: $hardpoints,
+		BooleanFields: $booleanFields,
+		AllLocs: $allLocs,
+		shipArray: $shipArray,
+	);
+	$template->display($renderer);
 } catch (Throwable $e) {
 	handleException($e);
 }

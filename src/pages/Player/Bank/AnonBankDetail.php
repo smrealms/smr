@@ -11,8 +11,6 @@ use Smr\Template;
 
 class AnonBankDetail extends PlayerPage {
 
-	public string $file = 'bank_anon_detail.php';
-
 	public function __construct(
 		private readonly int $anonBankID,
 	) {}
@@ -32,7 +30,6 @@ class AnonBankDetail extends PlayerPage {
 		$dbRecord = $dbResult->record();
 
 		$balance = $dbRecord->getInt('amount');
-		$template->assign('Balance', $balance);
 
 		if ($maxValue <= 0) {
 			$dbResult = $db->read('SELECT IFNULL(MAX(transaction_id), 5) as max_transaction_id FROM anon_bank_transactions
@@ -74,13 +71,10 @@ class AnonBankDetail extends PlayerPage {
 		}
 
 		// only if we have at least one result
+		$transactions = [];
 		if ($dbResult->hasRecord()) {
-			$template->assign('MinValue', $minValue);
-			$template->assign('MaxValue', $maxValue);
-			$container = new self($account_num);
-			$template->assign('ShowHREF', $container->href());
+			$showHREF = new self($account_num)->href();
 
-			$transactions = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$transactionPlayer = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 				$transaction = $dbRecord->getString('transaction');
@@ -92,14 +86,21 @@ class AnonBankDetail extends PlayerPage {
 					'link' => $transactionPlayer->getLinkedDisplayName(),
 				];
 			}
-			$template->assign('Transactions', $transactions);
+		} else {
+			$showHREF = null;
 		}
-
-		$container = new AnonBankDetailProcessor($account_num);
-		$template->assign('TransactionPage', $container);
 
 		$template->pageTopic = 'Anonymous Account #' . $account_num;
 		Menu::bank();
+
+		$template->pageRenderer = fn() => AnonBankDetailRenderer::render(
+			Balance: $balance,
+			MinValue: $minValue,
+			MaxValue: $maxValue,
+			ShowHREF: $showHREF,
+			Transactions: $transactions,
+			TransactionPage: new AnonBankDetailProcessor($account_num),
+		);
 	}
 
 }

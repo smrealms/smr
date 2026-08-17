@@ -1,5 +1,13 @@
 <?php declare(strict_types=1);
 
+namespace Smr\Pages\Shared\Admin;
+
+class ViewLocationsRenderer {
+
+/**
+ * @param array<int, \Smr\Location> $Locations
+ */
+public static function render(array $Locations): void {
 foreach ($Locations as $Location) { ?>
 <tr>
 	<td><?php echo $Location->getName() ?></td>
@@ -31,4 +39,8 @@ foreach ($Locations as $Location) { ?>
 		</div>
 	</td>
 </tr><?php
+}
+
+}
+
 }

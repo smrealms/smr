@@ -1,15 +1,30 @@
 <?php declare(strict_types=1);
 
-/**
- * @var array<array{version: string, went_live: string, changes: array<array{title: string, message: string}>}> $Versions
- */
+namespace Smr\Pages\Admin;
 
-if (count($Versions) === 0) { ?>
+use Smr\Pages\Account\ChangelogViewRenderer;
+
+class ChangelogAddRenderer {
+
+public static function renderEmpty(): void {
+?>
 	Must add an initial version in the database first!<?php
-	return;
 }
 
-$this->includeTemplate('changelog_view.php', ['Versions' => [$FirstVersion]]); ?>
+/**
+ * @param array<array{version: string, went_live: ?string, changes: array<array{title: string, message: string}>}> $Versions
+ * @param array{version: string, went_live: string, changes: array<array{title: string, message: string}>} $FirstVersion
+ */
+public static function render(
+	string $ChangeTitle,
+	string $ChangeMessage,
+	string $AffectedDb,
+	ChangelogAddProcessor $AddPage,
+	array $FirstVersion,
+	array $Versions,
+): void {
+ChangelogViewRenderer::render(ContinueHREF: null, Versions: [$FirstVersion]);
+?>
 
 <ul>
 	<li>
@@ -42,4 +57,8 @@ $this->includeTemplate('changelog_view.php', ['Versions' => [$FirstVersion]]); ?
 </ul>
 
 <?php
-$this->includeTemplate('changelog_view.php');
+ChangelogViewRenderer::render(ContinueHREF: null, Versions: $Versions);
+
+}
+
+}

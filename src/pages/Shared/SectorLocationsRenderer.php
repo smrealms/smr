@@ -1,9 +1,12 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Sector $ThisSector
- */
+namespace Smr\Pages\Shared;
 
+use Smr\Sector;
+
+class SectorLocationsRenderer {
+
+public static function render(Sector $ThisSector): void {
 if ($ThisSector->hasLocation()) { ?>
 	<table class="standard csl">
 		<tr>
@@ -26,4 +29,8 @@ if ($ThisSector->hasLocation()) { ?>
 			</tr><?php
 		} ?>
 	</table><br /><?php
+}
+
+}
+
 }

@@ -8,12 +8,12 @@ use Smr\Template;
 
 class AlbumDeleteConfirm extends AccountPage {
 
-	public string $file = 'album_delete_confirmation.php';
-
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Delete Album Entry - Confirmation';
-		$template->assign('CancelHref', (new AlbumEdit())->href());
-		$template->assign('ConfirmHref', (new AlbumDeleteProcessor())->href());
+		$template->pageRenderer = fn() => AlbumDeleteConfirmRenderer::render(
+			CancelHref: new AlbumEdit()->href(),
+			ConfirmHref: new AlbumDeleteProcessor()->href(),
+		);
 	}
 
 }

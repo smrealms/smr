@@ -9,8 +9,6 @@ use Smr\Template;
 
 class AdminTools extends AccountPage {
 
-	public string $file = 'admin/admin_tools.php';
-
 	public function __construct(
 		private readonly ?string $message = null,
 		private readonly ?string $errorMessage = null,
@@ -18,8 +16,6 @@ class AdminTools extends AccountPage {
 
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Admin Tools';
-		$template->assign('ErrorMessage', $this->errorMessage);
-		$template->assign('Message', $this->message);
 
 		$adminPermissions = [];
 		foreach (array_keys($account->getPermissions()) as $permissionID) {
@@ -30,7 +26,11 @@ class AdminTools extends AccountPage {
 			];
 		}
 
-		$template->assign('AdminPermissions', $adminPermissions);
+		$template->pageRenderer = fn() => AdminToolsRenderer::render(
+			ErrorMessage: $this->errorMessage,
+			Message: $this->message,
+			AdminPermissions: $adminPermissions,
+		);
 	}
 
 }

@@ -1,14 +1,15 @@
 <?php declare(strict_types=1);
 
-use Smr\Session;
+namespace Smr\Pages\Layout;
+
+class VoteLinksRenderer {
 
 /**
- * @var array<array{img: string, url: string, sn: string|false}> $VoteLinks
- * @var string $TimeToNextVote
+ * @param array<array{img: string, url: string, sn: string|false}> $VoteLinks
  */
-
-if (Session::getInstance()->hasGame()) { ?>
-	<div>Get <b><u>FREE TURNS</u></b> for voting if you see the star, available <span id="v"><?php echo $TimeToNextVote ?></span>.</div><?php
+public static function render(array $VoteLinks, ?int $TimeToNextVote): void {
+if ($TimeToNextVote !== null) { ?>
+	<div>Get <b><u>FREE TURNS</u></b> for voting if you see the star, available <span id="v"><?php echo in_time_or_now($TimeToNextVote, short: true) ?></span>.</div><?php
 } ?>
 <span id="vote_links"><?php
 	foreach ($VoteLinks as $VoteLink) { ?>
@@ -17,3 +18,7 @@ if (Session::getInstance()->hasGame()) { ?>
 		</a><?php
 	} ?>
 </span>
+<?php
+}
+
+}

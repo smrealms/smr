@@ -1,15 +1,41 @@
 <?php declare(strict_types=1);
 
-/**
- * @var Smr\Galaxy $Galaxy
- * @var ?array{name: string, href: string} $NextGalaxy
- * @var ?array{name: string, href: string} $PrevGalaxy
- * @var Smr\Template $this
- * @var string $GameName
- * @var string $BackButtonHREF
- * @var bool $UniGen True if editing, false if view-only
- */
+namespace Smr\Pages\Admin\UniGen;
 
+use Smr\Galaxy;
+use Smr\Pages\Shared\SectorMapRenderer;
+use Smr\Template;
+
+class EditGalaxyRenderer {
+
+/**
+ * @param array<int, Galaxy> $Galaxies
+ * @param array<int, array<int, \Smr\Sector>> $MapSectors
+ * @param ?array{name: string, href: string} $PrevGalaxy
+ * @param ?array{name: string, href: string} $NextGalaxy
+ * @param ?array{RedoConnections: string, ModifySector: string, ModifyLocations: string, ModifyPlanets: string, ModifyPorts: string, ModifyWarps: string, EditGameDetails: string, EditGalaxyDetails: string, ResetGalaxy: string, CreateStatus: string, ToggleLink: string, DragLocation: string, DragPlanet: string, DragPort: string, DragWarp: string} $EditLinks
+ */
+public static function render(
+	Template $template,
+	float $ActualConnectivity,
+	?int $FocusSector,
+	string $GameName,
+	Galaxy $Galaxy,
+	array $Galaxies,
+	array $MapSectors,
+	?array $PrevGalaxy,
+	?array $NextGalaxy,
+	int $LastSector,
+	?string $Message,
+	string $JumpGalaxyHREF,
+	string $RecenterHREF,
+	string $BackButtonHREF,
+	string $SMRFileHREF,
+	string $CheckMapHREF,
+	?array $EditLinks,
+	?bool $MapReady,
+	?bool $AllEdit,
+): void {
 ?>
 
 <a href="<?php echo $BackButtonHREF; ?>">&lt;&lt; Exit game: <?php echo $GameName; ?></a><br /><br />
@@ -75,7 +101,11 @@
 		</td>
 
 		<td class="top"><?php
-			if ($UniGen) { ?>
+			if ($EditLinks !== null) {
+				$CreateStatusHREF = $EditLinks['CreateStatus'];
+				$EditGameDetailsHREF = $EditLinks['EditGameDetails'];
+				$EditGalaxyDetailsHREF = $EditLinks['EditGalaxyDetails'];
+				?>
 				<form id="create_status" method="POST" action="<?php echo $CreateStatusHREF; ?>"></form>
 				<table class="center standard">
 					<tr><th>Modify Game</th></tr>
@@ -92,7 +122,12 @@
 		</td>
 
 		<td class="top"><?php
-			if ($UniGen) { ?>
+			if ($EditLinks !== null) {
+				$ModifyLocationsHREF = $EditLinks['ModifyLocations'];
+				$ModifyPlanetsHREF = $EditLinks['ModifyPlanets'];
+				$ModifyPortsHREF = $EditLinks['ModifyPorts'];
+				$ModifyWarpsHREF = $EditLinks['ModifyWarps'];
+				?>
 				<table class="center standard">
 					<tr><th>Modify Galaxy</th></tr>
 					<tr><td><a href="<?php echo $ModifyLocationsHREF; ?>">Locations</a></td></tr>
@@ -104,7 +139,9 @@
 		</td>
 
 		<td class="top"><?php
-			if ($UniGen) { ?>
+			if ($EditLinks !== null) {
+				$ModifySectorHREF = $EditLinks['ModifySector'];
+				?>
 				<form method="POST" action="<?php echo $ModifySectorHREF; ?>">
 					<input required type="number" min="1" max="<?php echo $LastSector; ?>" name="sector_edit" placeholder="Sector ID" class="center" style="width:140px" /><br />
 					<?php echo create_submit_display('Modify Sector'); ?>
@@ -119,7 +156,10 @@
 		</td>
 
 		<td class="top"><?php
-			if ($UniGen) { ?>
+			if ($EditLinks !== null) {
+				$ResetGalaxyHREF = $EditLinks['ResetGalaxy'];
+				$RedoConnectionsHREF = $EditLinks['RedoConnections'];
+				?>
 				<span class="red bold">DANGEROUS OPTIONS</span>
 				<p><a href="<?php echo $ResetGalaxyHREF; ?>" class="submitStyle">Reset Current Galaxy</a></p>
 				<form method="POST" action="<?php echo $RedoConnectionsHREF; ?>">
@@ -137,5 +177,16 @@ if (isset($Message)) { ?>
 } ?>
 
 <?php
-$this->includeTemplate('includes/SectorMap.inc.php');
-$this->addJavascriptSource('/js/uni_gen.js');
+SectorMapRenderer::render(
+	GalaxyMap: false,
+	ThisPlayer: null,
+	HideAlliedForces: false,
+	ShowSeedlistSectors: false,
+	MapSectors: $MapSectors,
+	EditLinks: $EditLinks,
+);
+$template->addJavascriptSource('/js/uni_gen.js');
+
+}
+
+}
