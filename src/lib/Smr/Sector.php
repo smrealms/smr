@@ -226,12 +226,7 @@ class Sector {
 	}
 
 	public function offersFederalProtection(): bool {
-		foreach ($this->getLocations() as $location) {
-			if ($location->isFed()) {
-				return true;
-			}
-		}
-		return false;
+		return array_any($this->getLocations(), fn($location) => $location->isFed());
 	}
 
 	/**
@@ -654,19 +649,10 @@ class Sector {
 	}
 
 	public function hasLocation(?int $locationTypeID = null): bool {
-		$locations = $this->getLocations();
-		if (count($locations) === 0) {
-			return false;
-		}
-		if ($locationTypeID === null) {
-			return true;
-		}
-		foreach ($locations as $location) {
-			if ($location->getTypeID() === $locationTypeID) {
-				return true;
-			}
-		}
-		return false;
+		return array_any(
+			$this->getLocations(),
+			fn($location) => $locationTypeID === null || $location->getTypeID() === $locationTypeID,
+		);
 	}
 
 	/**
@@ -759,16 +745,11 @@ class Sector {
 		return count($this->getForces()) > 0;
 	}
 
-	public function hasEnemyForces(?Player $player = null): bool {
-		if ($player === null || !$this->hasForces()) {
-			return false;
-		}
-		foreach ($this->getForces() as $force) {
-			if (!$player->forceNAPAlliance($force->getOwner())) {
-				return true;
-			}
-		}
-		return false;
+	public function hasEnemyForces(Player $player): bool {
+		return array_any(
+			$this->getForces(),
+			fn($force) => !$player->forceNAPAlliance($force->getOwner()),
+		);
 	}
 
 	/**
@@ -788,27 +769,17 @@ class Sector {
 	 * Returns true if any forces in this sector belong to $player.
 	 */
 	public function hasPlayerForces(Player $player): bool {
-		foreach ($this->getForces() as $force) {
-			if ($player->getAccountID() === $force->getOwnerID()) {
-				return true;
-			}
-		}
-		return false;
+		return array_any(
+			$this->getForces(),
+			fn($force) => $player->getAccountID() === $force->getOwnerID(),
+		);
 	}
 
-	/**
-	 * @phpstan-assert-if-true =Player $player
-	 */
-	public function hasFriendlyForces(?Player $player = null): bool {
-		if ($player === null || !$this->hasForces()) {
-			return false;
-		}
-		foreach ($this->getForces() as $force) {
-			if ($player->forceNAPAlliance($force->getOwner())) {
-				return true;
-			}
-		}
-		return false;
+	public function hasFriendlyForces(Player $player): bool {
+		return array_any(
+			$this->getForces(),
+			fn($force) => $player->forceNAPAlliance($force->getOwner()),
+		);
 	}
 
 	/**
@@ -855,62 +826,42 @@ class Sector {
 		return count($this->getOtherTraders($player)) > 0;
 	}
 
-	public function hasEnemyTraders(?Player $player = null): bool {
-		if ($player === null || !$this->hasOtherTraders($player)) {
-			return false;
-		}
-		$otherPlayers = $this->getOtherTraders($player);
-		foreach ($otherPlayers as $otherPlayer) {
-			if (!$player->traderNAPAlliance($otherPlayer)
+	public function hasEnemyTraders(Player $player): bool {
+		return array_any(
+			$this->getOtherTraders($player),
+			fn($otherPlayer) => !$player->traderNAPAlliance($otherPlayer)
 				&& !$otherPlayer->hasNewbieTurns()
-				&& !$otherPlayer->hasFederalProtection()) {
-				return true;
-			}
-		}
-		return false;
+				&& !$otherPlayer->hasFederalProtection(),
+		);
 	}
 
-	public function hasFriendlyTraders(?Player $player = null): bool {
-		if ($player === null || !$this->hasOtherTraders($player)) {
-			return false;
-		}
-		$otherPlayers = $this->getOtherTraders($player);
-		foreach ($otherPlayers as $otherPlayer) {
-			if ($player->traderNAPAlliance($otherPlayer)) {
-				return true;
-			}
-		}
-		return false;
+	public function hasFriendlyTraders(Player $player): bool {
+		return array_any(
+			$this->getOtherTraders($player),
+			fn($otherPlayer) => $player->traderNAPAlliance($otherPlayer),
+		);
 	}
 
 	/**
 	 * Is the $player's alliance flagship in this sector?
 	 */
-	public function hasAllianceFlagship(?Player $player = null): bool {
-		if ($player === null || !$player->hasAlliance() || !$player->getAlliance()->hasFlagship()) {
+	public function hasAllianceFlagship(Player $player): bool {
+		if (!$player->hasAlliance() || !$player->getAlliance()->hasFlagship()) {
 			return false;
 		}
 		$flagshipID = $player->getAlliance()->getFlagshipID();
-		foreach ($this->getPlayers() as $sectorPlayer) {
-			if ($sectorPlayer->getAccountID() === $flagshipID) {
-				return true;
-			}
-		}
-		return false;
+		return array_any(
+			$this->getPlayers(),
+			fn($sectorPlayer) => $sectorPlayer->getAccountID() === $flagshipID,
+		);
 	}
 
-	public function hasProtectedTraders(?Player $player = null): bool {
-		if ($player === null || !$this->hasOtherTraders($player)) {
-			return false;
-		}
-		$otherPlayers = $this->getOtherTraders($player);
-		foreach ($otherPlayers as $otherPlayer) {
-			if (!$player->traderNAPAlliance($otherPlayer)
-				&& ($otherPlayer->hasNewbieTurns() || $otherPlayer->hasFederalProtection())) {
-				return true;
-			}
-		}
-		return false;
+	public function hasProtectedTraders(Player $player): bool {
+		return array_any(
+			$this->getOtherTraders($player),
+			fn($otherPlayer) => !$player->traderNAPAlliance($otherPlayer)
+				&& ($otherPlayer->hasNewbieTurns() || $otherPlayer->hasFederalProtection()),
+		);
 	}
 
 	/**

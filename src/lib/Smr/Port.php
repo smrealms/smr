@@ -1447,12 +1447,7 @@ class Port {
 	 * Identifies if the given $player is a credited attacker of this port.
 	 */
 	public function isCreditedAttacker(Player $player): bool {
-		foreach (self::getAttackersToCredit() as $attacker) {
-			if ($player->equals($attacker)) {
-				return true;
-			}
-		}
-		return false;
+		return array_any(self::getAttackersToCredit(), fn($attacker) => $player->equals($attacker));
 	}
 
 	protected function creditCurrentAttackersForKill(): void {

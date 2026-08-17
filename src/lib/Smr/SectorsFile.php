@@ -156,7 +156,7 @@ class SectorsFile {
 					}
 					$file .= substr($locationsString, 0, -1) . EOL;
 				}
-				if ($adminCreate === false && $sector->hasFriendlyForces($player)) {
+				if ($player !== null && $sector->hasFriendlyForces($player)) {
 					$forcesString = 'FriendlyForces=';
 					foreach ($sector->getFriendlyForces($player) as $forces) {
 						$forcesString .= inify($forces->getOwner()->getPlayerName()) . '=' . inify(HardwareType::get(HARDWARE_MINE)->name) . '=' . $forces->getMines() . ';' . inify(HardwareType::get(HARDWARE_COMBAT)->name) . '=' . $forces->getCDs() . ';' . inify(HardwareType::get(HARDWARE_SCOUT)->name) . '=' . $forces->getSDs() . ',';

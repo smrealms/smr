@@ -320,14 +320,10 @@ class ChessGame {
 		}
 		$otherColour = $forColour->opposite();
 
-		$moves = $p->getPossibleMoves($this->board);
-		$moveIsLegal = false;
-		foreach ($moves as $move) {
-			if ($move->same($toLoc)) {
-				$moveIsLegal = true;
-				break;
-			}
-		}
+		$moveIsLegal = array_any(
+			$p->getPossibleMoves($this->board),
+			fn($move) => $move->same($toLoc),
+		);
 		if (!$moveIsLegal) {
 			throw new UserError('That move is not legal');
 		}

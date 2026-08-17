@@ -1206,29 +1206,17 @@ class Planet {
 	}
 
 	public function hasEnemyTraders(Player $player): bool {
-		if (!$this->hasOtherTraders($player)) {
-			return false;
-		}
-		$otherPlayers = $this->getOtherTraders($player);
-		foreach ($otherPlayers as $otherPlayer) {
-			if (!$player->traderNAPAlliance($otherPlayer)) {
-				return true;
-			}
-		}
-		return false;
+		return array_any(
+			$this->getOtherTraders($player),
+			fn($otherPlayer) => !$player->traderNAPAlliance($otherPlayer),
+		);
 	}
 
 	public function hasFriendlyTraders(Player $player): bool {
-		if (!$this->hasOtherTraders($player)) {
-			return false;
-		}
-		$otherPlayers = $this->getOtherTraders($player);
-		foreach ($otherPlayers as $otherPlayer) {
-			if ($player->traderNAPAlliance($otherPlayer)) {
-				return true;
-			}
-		}
-		return false;
+		return array_any(
+			$this->getOtherTraders($player),
+			fn($otherPlayer) => $player->traderNAPAlliance($otherPlayer),
+		);
 	}
 
 	/**
