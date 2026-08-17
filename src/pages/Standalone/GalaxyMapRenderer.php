@@ -30,7 +30,7 @@ class GalaxyMapRenderer {
 		<html>
 			<head><?php
 				HeadRenderer::render($ThisPlayer->getAccount(), $ThisPlayer->getGame()->getName());
-				if (isset($FocusSector)) { ?>
+				if ($FocusSector !== null) { ?>
 					<script>
 						$(function() {
 							var focusSector = $('#sector<?php echo $FocusSector; ?>'),

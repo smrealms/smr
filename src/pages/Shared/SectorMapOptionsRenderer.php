@@ -9,7 +9,7 @@ class SectorMapOptionsRenderer {
 		?bool $ShowSeedlistSectors,
 		?string $CheckboxFormHREF,
 	): void {
-		if (isset($CheckboxFormHREF)) { ?>
+		if ($CheckboxFormHREF !== null) { ?>
 			<form method="POST" action="<?php echo $CheckboxFormHREF; ?>">
 				<table>
 					<tr>

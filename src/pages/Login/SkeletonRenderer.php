@@ -63,7 +63,7 @@ class SkeletonRenderer {
 					</div>
 
 					<?php
-					if (isset($Message)) { ?>
+					if ($Message !== null) { ?>
 						<h4 style="margin-bottom: 0px;"><?php echo $Message ?></h4><?php
 					} ?>
 				</div>

@@ -18,7 +18,7 @@ class AttackForcesRenderer {
 		); ?><br />
 		<br />
 		<div class="center"><?php
-			if (isset($Target)) { ?>
+			if ($Target !== null) { ?>
 				<div class="buttonA">
 					<a href="<?php echo $Target->getAttackForcesHREF() ?>" class="buttonA">Continue Attack (<?php echo $Target->getAttackTurnCost($ThisShip); ?>)</a>
 				</div><?php

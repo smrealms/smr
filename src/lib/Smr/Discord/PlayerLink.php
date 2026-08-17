@@ -47,6 +47,7 @@ class PlayerLink {
 			if ($game_id === null) {
 				throw new UserError('Could not find any games!');
 			}
+			$alliance = null;
 		} else {
 			// Find the alliance associated with this public channel
 			// force update in case the ID has been changed in-game
@@ -67,7 +68,7 @@ class PlayerLink {
 		}
 
 		// Prevent players from leaking sensitive data in other alliance channels
-		if (isset($alliance) && $player->getAllianceID() !== $alliance->getAllianceID()) {
+		if ($alliance !== null && $player->getAllianceID() !== $alliance->getAllianceID()) {
 			throw new UserError('Player `' . $player->getPlayerName() . '` is not a member of alliance `' . $alliance->getAllianceName() . '`');
 		}
 

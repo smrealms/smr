@@ -33,6 +33,8 @@ function logException(Throwable $err): void {
 
 		$var = $session->hasCurrentVar() ? $session->getCurrentVar() : null;
 		$message .= '$var: ' . print_r($var, true) . $delim;
+	} else {
+		$session = null;
 	}
 
 	// Don't display passwords input by users in the log message!
@@ -86,9 +88,9 @@ function logException(Throwable $err): void {
 	// Send error message to the in-game auto bugs mailbox
 	// (Truncate the message if necessary to avoid database errors)
 	$boxMessage = substr($message, 0, SQL_MAX_TEXT_LENGTH);
-	if (isset($session) && $session->hasGame()) {
+	if ($session?->hasGame()) {
 		$session->getPlayer()->sendMessageToBox(BOX_BUGS_AUTO, $boxMessage);
-	} elseif (isset($session) && $session->hasAccount()) {
+	} elseif ($session?->hasAccount()) {
 		// Will be logged without a game_id
 		$session->getAccount()->sendMessageToBox(BOX_BUGS_AUTO, $boxMessage);
 	} else {

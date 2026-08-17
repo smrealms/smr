@@ -26,12 +26,12 @@ class CombatLogViewerRenderer {
 		?string $NextLogHREF,
 		Player $ThisPlayer,
 	): void {
-		if (isset($PreviousLogHREF) || isset($NextLogHREF)) { ?>
+		if ($PreviousLogHREF !== null || $NextLogHREF !== null) { ?>
 			<div class="center"><?php
-			if (isset($PreviousLogHREF)) {
+			if ($PreviousLogHREF !== null) {
 				?><a href="<?php echo $PreviousLogHREF ?>"><img title="Previous" alt="Previous" src="images/album/rew.jpg" /></a><?php
 			}
-			if (isset($NextLogHREF)) {
+			if ($NextLogHREF !== null) {
 				?><a href="<?php echo $NextLogHREF ?>"><img title="Next" alt="Next" src="images/album/fwd.jpg" /></a><?php
 			} ?>
 			</div><?php

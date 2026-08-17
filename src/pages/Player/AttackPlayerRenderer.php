@@ -20,7 +20,7 @@ class AttackPlayerRenderer {
 		); ?><br />
 		<br />
 		<div class="center"><?php
-			if (isset($Target)) { ?>
+			if ($Target !== null) { ?>
 				<div class="buttonA">
 					<a href="<?php echo $Target->getAttackTraderHREF(); ?>" class="buttonA">Continue Attack</a>
 				</div><?php

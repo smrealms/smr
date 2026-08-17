@@ -8,11 +8,11 @@ class EditionReadRenderer {
 	 * @param ?array<int, array<int, array{title: string, text: string}>> $ArticleLayout
 	 */
 	public static function render(?int $PaperGameID, ?string $BackHREF, ?array $ArticleLayout): void {
-		if (isset($BackHREF)) { ?>
+		if ($BackHREF !== null) { ?>
 			<a href="<?php echo $BackHREF; ?>"><b>&lt;&lt;Back</b></a><?php
 		}
 
-		if (!isset($ArticleLayout)) { ?>
+		if ($ArticleLayout === null) { ?>
 			There is no current edition of the Galactic Post for this game.<?php
 		} else { ?>
 			<table class="center" spacepadding="20" cellspacing="20"><?php

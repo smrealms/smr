@@ -63,10 +63,10 @@ class AccountEditSearchRenderer {
 			</table>
 		</form><?php
 
-		if (isset($ErrorMessage)) { ?>
+		if ($ErrorMessage !== null) { ?>
 			<div class="center red"><?php echo $ErrorMessage; ?></div><?php
 		}
-		if (isset($Message)) { ?>
+		if ($Message !== null) { ?>
 			<div class="center"><?php echo $Message; ?></div><?php
 		}
 

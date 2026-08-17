@@ -13,13 +13,13 @@ class HeadRenderer {
 		$FontSize = $ThisAccount->getFontSize() - 20;
 		?>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-		<title><?php echo PAGE_TITLE; ?><?php if (isset($GameName)) echo ": $GameName"; ?></title>
+		<title><?php echo PAGE_TITLE; ?><?php if ($GameName !== null) echo ": $GameName"; ?></title>
 		<meta http-equiv="pragma" content="no-cache" /><?php
 		if ($ThisAccount->isDefaultCSSEnabled()) { ?>
 			<link rel="stylesheet" type="text/css" href="<?php echo $CSSLink; ?>" />
 			<link rel="stylesheet" type="text/css" href="<?php echo $CSSColourLink; ?>" /><?php
 		}
-		if (isset($ExtraCSSLink) && $ExtraCSSLink !== '') {
+		if ($ExtraCSSLink !== null && $ExtraCSSLink !== '') {
 			?><link rel="stylesheet" type="text/css" href="<?php echo $ExtraCSSLink; ?>" /><?php
 		} ?>
 		<style>

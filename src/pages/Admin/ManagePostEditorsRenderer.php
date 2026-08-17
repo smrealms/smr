@@ -45,7 +45,7 @@ class ManagePostEditorsRenderer {
 		<?php
 
 		// This var is passed by the processing file if we enabled a game
-		if (isset($ProcessingMsg)) {
+		if ($ProcessingMsg !== null) {
 			echo '<br />' . $ProcessingMsg;
 		} ?>
 		<br /><br />

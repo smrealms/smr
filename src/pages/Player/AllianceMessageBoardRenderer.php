@@ -56,19 +56,19 @@ class AllianceMessageBoardRenderer {
 			$template->listjsInclude = 'alliance_message';
 		}
 
-		if (isset($CreateNewThreadFormPage)) { ?>
+		if ($CreateNewThreadFormPage !== null) { ?>
 			<h2>Create Thread</h2><br /><?php
-			if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Preview); ?></td></tr></table><?php } ?>
+			if ($Preview !== null) { ?><table class="standard"><tr><td><?php echo bbify($Preview); ?></td></tr></table><?php } ?>
 			<form class="standard" id="CreateNewThreadForm" method="POST" action="<?php echo $CreateNewThreadFormPage->href(); ?>">
 			<table class="standardnobord nohpad">
 				<tr>
 					<td class="top">Topic:&nbsp;</td>
-					<td class="mb"><input type="text" name="topic" required size="30" value="<?php if (isset($Topic)) { echo htmlspecialchars($Topic); } ?>"></td>
-					<td>For Alliance Eyes Only:<input name="allEyesOnly" type="checkbox"<?php if (isset($AllianceEyesOnly) && $AllianceEyesOnly) { ?>checked="checked" <?php } ?>></td>
+					<td class="mb"><input type="text" name="topic" required size="30" value="<?php if ($Topic !== null) { echo htmlspecialchars($Topic); } ?>"></td>
+					<td>For Alliance Eyes Only:<input name="allEyesOnly" type="checkbox"<?php if ($AllianceEyesOnly !== null && $AllianceEyesOnly) { ?>checked="checked" <?php } ?>></td>
 				</tr>
 				<tr>
 					<td class="top">Body:&nbsp;</td>
-					<td colspan="2"><textarea spellcheck="true" name="body" required><?php if (isset($Preview)) { echo $Preview; } ?></textarea></td>
+					<td colspan="2"><textarea spellcheck="true" name="body" required><?php if ($Preview !== null) { echo $Preview; } ?></textarea></td>
 				</tr>
 			</table><br />
 			<?php echo $CreateNewThreadFormPage->actionCreate->html('New Thread'); ?>&nbsp;<?php echo $CreateNewThreadFormPage->actionPreview->html('Preview Thread'); ?>

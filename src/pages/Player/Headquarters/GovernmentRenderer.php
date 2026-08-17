@@ -32,7 +32,7 @@ class GovernmentRenderer {
 				BountyListRenderer::render(Bounties: $MyBounties);
 			}
 
-			if (isset($JoinHREF)) { ?>
+			if ($JoinHREF !== null) { ?>
 				<p><a href="<?php echo $JoinHREF; ?>" class="submitStyle">Become a deputy</a></p><?php
 			} ?>
 		</div>

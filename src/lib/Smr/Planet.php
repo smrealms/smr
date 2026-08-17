@@ -540,15 +540,13 @@ class Planet {
 
 	private function swapMountedWeapons(int $orderID1, int $orderID2): void {
 		$this->getMountedWeapons(); // Make sure array is initialized
-		if (isset($this->mountedWeapons[$orderID1])) {
-			$saveWeapon = $this->mountedWeapons[$orderID1];
-		}
+		$saveWeapon = $this->mountedWeapons[$orderID1] ?? null;
 		if (isset($this->mountedWeapons[$orderID2])) {
 			$this->mountedWeapons[$orderID1] = $this->mountedWeapons[$orderID2];
 		} else {
 			unset($this->mountedWeapons[$orderID1]);
 		}
-		if (isset($saveWeapon)) {
+		if ($saveWeapon !== null) {
 			$this->mountedWeapons[$orderID2] = $saveWeapon;
 		} else {
 			unset($this->mountedWeapons[$orderID2]);

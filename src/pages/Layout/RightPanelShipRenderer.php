@@ -60,19 +60,19 @@ class RightPanelShipRenderer {
 			<br /><?php
 		} ?>
 		<a href="<?php echo $ForceDropLink; ?>"><span class="bold">Forces</span></a><br /><?php
-		if (isset($DropMineLink)) { ?>
+		if ($DropMineLink !== null) { ?>
 			<a href="<?php echo $DropMineLink; ?>">
 				<span class="bold">[X]</span>
 			</a><?php
 		} ?>Mines : <?php echo $ThisShip->getMines(); ?>/<?php echo $ThisShip->getMaxMines(); ?><br /><?php
 
-		if (isset($DropCDLink)) { ?>
+		if ($DropCDLink !== null) { ?>
 			<a href="<?php echo $DropCDLink; ?>">
 				<span class="bold">[X]</span>
 			</a><?php
 		} ?>Combat : <span id="cds"><?php echo get_colored_text_range($ThisShip->getCDs(), $ThisShip->getMaxCDs(), number_format($ThisShip->getCDs()) . '/' . number_format($ThisShip->getMaxCDs())); ?></span><br /><?php
 
-		if (isset($DropSDLink)) { ?>
+		if ($DropSDLink !== null) { ?>
 			<a href="<?php echo $DropSDLink; ?>">
 				<span class="bold">[X]</span>
 			</a><?php

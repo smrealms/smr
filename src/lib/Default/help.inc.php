@@ -27,6 +27,8 @@ function echo_nav(int $topic_id): void {
 			'parent_topic_id' => $dbRecord->getInt('parent_topic_id'),
 			'order_id' => $dbRecord->getInt('order_id'),
 		];
+	} else {
+		$parent = null;
 	}
 
 	echo ('<table>');
@@ -46,11 +48,11 @@ function echo_nav(int $topic_id): void {
 			'id' => $dbRecord->getInt('topic_id'),
 			'topic' => stripslashes($dbRecord->getString('topic')),
 		];
-	} elseif (isset($parent)) {
+	} else {
 		$previous = $parent;
 	}
 
-	if (isset($previous)) {
+	if ($previous !== null) {
 		echo ('<a href="/manual.php?' . $previous['id'] . '"><img src="/images/help/previous.jpg" width="32" height="32" border="0"></a>');
 	} else {
 		echo ('<img src="/images/help/empty.jpg" width="32" height="32">');
@@ -61,10 +63,11 @@ function echo_nav(int $topic_id): void {
 	// **  UP
 	// **************************
 	echo ('<th width="32">');
-	if (isset($parent)) {
-		$up = $parent;
+	$up = $parent;
+	if ($up !== null) {
 		echo ('<a href="/manual.php?' . $up['id'] . '"><img src="/images/help/up.jpg" width="32" height="32" border="0"></a>');
 	} else {
+
 		echo ('<img src="/images/help/empty.jpg" width="32" height="32">');
 	}
 	echo ('</th>');
@@ -84,7 +87,7 @@ function echo_nav(int $topic_id): void {
 		]);
 	}
 
-	if (!$dbResult->hasRecord() && isset($parent)) {
+	if (!$dbResult->hasRecord() && $parent !== null) {
 		$dbResult = $db->select('manual', [
 			'parent_topic_id' => $parent['parent_topic_id'],
 			'order_id' => $parent['order_id'] + 1,
@@ -100,6 +103,7 @@ function echo_nav(int $topic_id): void {
 		];
 		echo ('<a href="/manual.php?' . $next['id'] . '"><img src="/images/help/next.jpg" width="32" height="32" border="0"></a>');
 	} else {
+		$next = null;
 		echo ('<img src="/images/help/empty.jpg" width="32" height="32">');
 	}
 	echo ('</th>');
@@ -111,13 +115,13 @@ function echo_nav(int $topic_id): void {
 
 	echo ('<tr>');
 	echo ('<td colspan="5">');
-	if (isset($previous) && $previous['id'] > 0) {
+	if ($previous !== null && $previous['id'] > 0) {
 		echo ('<b>Previous:</b> <a href="/manual.php?' . $previous['id'] . '">' . get_numbering($previous['id']) . $previous['topic'] . '</a>&nbsp;&nbsp;&nbsp;');
 	}
-	if (isset($up) && $up['id'] > 0) {
+	if ($up !== null && $up['id'] > 0) {
 		echo ('<b>Up:</b> <a href="/manual.php?' . $up['id'] . '">' . get_numbering($up['id']) . $up['topic'] . '</a>&nbsp;&nbsp;&nbsp;');
 	}
-	if (isset($next) && $next['id'] > 0) {
+	if ($next !== null && $next['id'] > 0) {
 		echo ('<b>Next:</b> <a href="/manual.php?' . $next['id'] . '">' . get_numbering($next['id']) . $next['topic'] . '</a>');
 	}
 	echo ('</tr>');

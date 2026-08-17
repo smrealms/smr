@@ -26,7 +26,7 @@ class UndergroundRenderer {
 			BountyListRenderer::render(Bounties: $MyBounties);
 		}
 
-		if (isset($JoinHREF)) { ?>
+		if ($JoinHREF !== null) { ?>
 			<p class="center">
 				<a href="<?php echo $JoinHREF; ?>" class="submitStyle">Become a smuggler</a>
 			</p><?php

@@ -53,7 +53,7 @@ class CombatSimulatorRenderer {
 				</tr>
 			</table>
 		</form><?php
-		if (isset($TraderCombatResults)) {
+		if ($TraderCombatResults !== null) {
 			TraderFullCombatResultsRenderer::render(
 				template: $template,
 				MinimalDisplay: false,

@@ -64,7 +64,7 @@ class ShopShipRenderer {
 			?>We've got nothing for you here! Get outta here!<br /><?php
 		}
 		?><br /><?php
-		if (isset($CompareShip) && isset($ShipDiffs) && isset($TradeInValue) && isset($TotalCost)) { ?>
+		if ($CompareShip !== null && $ShipDiffs !== null && $TradeInValue !== null && $TotalCost !== null) { ?>
 			<h2>Details</h2>
 			<table class="standard">
 				<tr>

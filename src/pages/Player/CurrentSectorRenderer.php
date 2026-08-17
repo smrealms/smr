@@ -84,22 +84,22 @@ class CurrentSectorRenderer {
 						MissionMessage: $MissionMessage,
 					); ?>
 					<span id="secmess"><?php
-						if (isset($ErrorMessage)) {
+						if ($ErrorMessage !== null) {
 							echo $ErrorMessage; ?><br /><?php
 						}
-						if (isset($ProtectionMessage)) {
+						if ($ProtectionMessage !== null) {
 							echo $ProtectionMessage; ?><br /><?php
 						}
-						if (isset($TurnsMessage)) {
+						if ($TurnsMessage !== null) {
 							echo $TurnsMessage; ?><br /><?php
 						}
-						if (isset($TradeMessage)) {
+						if ($TradeMessage !== null) {
 							echo $TradeMessage; ?><br /><?php
 						}
-						if (isset($ForceRefreshMessage)) {
+						if ($ForceRefreshMessage !== null) {
 							echo $ForceRefreshMessage; ?><br /><?php
 						}
-						if (isset($AttackResults)) {
+						if ($AttackResults !== null) {
 							$results = $AttackResults['Results'];
 							if ($results instanceof TraderFullCombatResults) {
 								TraderFullCombatResultsRenderer::render(
@@ -135,7 +135,7 @@ class CurrentSectorRenderer {
 								throw new Exception('Unknown combat result type');
 							} ?><br /><?php
 						}
-						if (isset($VarMessage)) {
+						if ($VarMessage !== null) {
 							echo bbify($VarMessage); ?><br /><?php
 						} ?>
 					</span>

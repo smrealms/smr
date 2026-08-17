@@ -56,7 +56,7 @@ class ManageDraftLeadersRenderer {
 			<?php
 
 			// This var is passed by the processing file if there was an error
-			if (isset($ProcessingMsg)) {
+			if ($ProcessingMsg !== null) {
 				echo "<p>$ProcessingMsg</p>";
 			}
 

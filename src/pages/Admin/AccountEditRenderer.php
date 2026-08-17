@@ -251,7 +251,7 @@ class AccountEditRenderer {
 				<tr>
 					<td valign="top" class="right bold">Exception:</td>
 					<td><?php
-						if (isset($Exception)) {
+						if ($Exception !== null) {
 							echo $Exception;
 						} else { ?>
 							This account is not listed.<br /><input type="text" name="exception_add" placeholder="Add An Exception"><?php

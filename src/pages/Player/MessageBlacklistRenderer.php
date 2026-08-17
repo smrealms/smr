@@ -6,7 +6,7 @@ class MessageBlacklistRenderer {
 
 	/** @param array<array<string, string>> $Blacklist */
 	public static function render(?string $Message, array $Blacklist, string $BlacklistDeleteHREF, string $BlacklistAddHREF): void {
-		if (isset($Message)) {
+		if ($Message !== null) {
 			echo $Message; ?><br /><br /><?php
 		} ?>
 

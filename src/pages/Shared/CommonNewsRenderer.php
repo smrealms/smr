@@ -15,7 +15,7 @@ class CommonNewsRenderer {
 		?array $BreakingNews,
 		?array $LottoNews,
 	): void {
-		if (isset($BreakingNews)) {
+		if ($BreakingNews !== null) {
 			?><b>MAJOR NEWS! - <?php echo date($ThisAccount->getDateTimeFormat(), $BreakingNews['Time']); ?></b><br />
 			<table class="standard">
 				<tr>
@@ -30,7 +30,7 @@ class CommonNewsRenderer {
 			<br /><br /><?php
 		}
 
-		if (isset($LottoNews)) { ?>
+		if ($LottoNews !== null) { ?>
 			<b>Lotto News</b><br />
 			<table class="standard">
 				<tr>

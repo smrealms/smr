@@ -24,7 +24,7 @@ class AllianceMotdRenderer {
 		<div class="center">
 
 		<?php
-		if (isset($OpTime)) { ?>
+		if ($OpTime !== null) { ?>
 			<table class="center nobord opResponse">
 				<tr><th>ENCRYPTED ALLIANCE TELEGRAM</th></tr>
 				<tr><td>Your leader has scheduled an important alliance operation for <?php echo date($ThisAccount->getDateTimeFormat(), $OpTime); ?></td></tr>
@@ -51,13 +51,13 @@ class AllianceMotdRenderer {
 		<p><?php echo bbify($Alliance->getMotD()); ?></p>
 
 		<?php
-		if (isset($EditHREF)) { ?>
+		if ($EditHREF !== null) { ?>
 			<div class="buttonA">
 				<a class="buttonA" href="<?php echo $EditHREF; ?>">Edit</a>
 			</div><?php
 		}
 
-		if (isset($DiscordServer)) { ?>
+		if ($DiscordServer !== null) { ?>
 			<br /><br />
 			<iframe src="https://discordapp.com/widget?id=<?php echo $DiscordServer; ?>&amp;theme=dark" width="350" height="375" allowtransparency="true" frameborder="0"></iframe>
 			<?php

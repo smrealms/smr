@@ -28,7 +28,7 @@ class HardwareConfigureRenderer {
 				<?php
 			}
 
-			if (isset($IllusionShips)) { ?>
+			if ($IllusionShips !== null) { ?>
 				<form id="SetIllusionForm" method="POST" action="<?php echo $SetIllusionFormHREF; ?>">
 					<b>Illusion Generator:</b><br /><br />
 					<table class="nobord">

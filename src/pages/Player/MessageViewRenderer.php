@@ -48,7 +48,7 @@ class MessageViewRenderer {
 			<table class="fullwidth center">
 				<tr>
 					<td style="width: 30%" valign="middle"><?php
-						if (isset($PreviousPageHREF)) {
+						if ($PreviousPageHREF !== null) {
 							?><a href="<?php echo $PreviousPageHREF; ?>"><img src="images/album/rew.jpg" alt="Previous Page" border="0"></a><?php
 						} ?>
 					</td>
@@ -60,7 +60,7 @@ class MessageViewRenderer {
 						<p>You have <span class="yellow"><?php echo $MessageBox['TotalMessages']; ?></span> <?php echo pluralise($MessageBox['TotalMessages'], 'message', false); if ($MessageBox['TotalMessages'] !== $MessageBox['NumberMessages']) { ?> (<?php echo $MessageBox['NumberMessages']; ?> displayed)<?php } ?>.</p>
 					</td>
 					<td style="width: 30%" valign="middle"><?php
-						if (isset($NextPageHREF)) {
+						if ($NextPageHREF !== null) {
 							?><a href="<?php echo $NextPageHREF; ?>"><img src="images/album/fwd.jpg" alt="Next Page" border="0"></a><?php
 						} ?>
 					</td>
@@ -137,14 +137,14 @@ class MessageViewRenderer {
 		<table class="fullwidth center">
 			<tr>
 				<td style="width: 30%" valign="middle"><?php
-					if (isset($PreviousPageHREF)) {
+					if ($PreviousPageHREF !== null) {
 						?><a href="<?php echo $PreviousPageHREF; ?>"><img src="images/album/rew.jpg" alt="Previous Page" border="0"></a><?php
 					} ?>
 				</td>
 				<td>
 				</td>
 				<td style="width: 30%" valign="middle"><?php
-					if (isset($NextPageHREF)) {
+					if ($NextPageHREF !== null) {
 						?><a href="<?php echo $NextPageHREF; ?>"><img src="images/album/fwd.jpg" alt="Next Page" border="0"></a><?php
 					} ?>
 				</td>

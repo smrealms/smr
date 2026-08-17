@@ -23,7 +23,7 @@ class ArticleViewRenderer {
 		} ?>
 
 		<br /><br /><?php
-		if (isset($SelectedArticle)) { ?>
+		if ($SelectedArticle !== null) { ?>
 			<h2><?php echo $SelectedArticle['title']; ?></h2>
 			<p><?php echo $SelectedArticle['text']; ?></p>
 			<a href="<?php echo $SelectedArticle['editHREF']; ?>"><b>Edit this article</b></a>

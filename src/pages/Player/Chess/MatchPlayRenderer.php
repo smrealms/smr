@@ -31,7 +31,7 @@ class MatchPlayRenderer {
 		<p><span id="chess_status">
 			<?php if ($Ended) { ?>
 				The game has ended.<?php
-				if (isset($Winner)) { ?>
+				if ($Winner !== null) { ?>
 					<?php echo $Winner; ?> has won!<?php
 				}
 			} else { ?>

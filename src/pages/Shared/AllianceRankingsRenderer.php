@@ -21,7 +21,7 @@ class AllianceRankingsRenderer {
 		?>
 		<div class="center">
 			<p>Here are the rankings of alliances by their <?php echo $RankingStat; ?>.</p><?php
-			if (isset($OurRank)) { ?>
+			if ($OurRank !== null) { ?>
 				<p>Your alliance is ranked <?php echo number_format($OurRank); ?> out of <?php echo number_format($TotalRanks); ?> alliances.</p><?php
 			}
 			AllianceRankingsListRenderer::render(RankingStat: $RankingStat, Rankings: $Rankings); ?>

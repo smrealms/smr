@@ -25,10 +25,13 @@ class PlanetList {
 		}
 		if (!$playerOnly) {
 			$alliance = Alliance::getAlliance($allianceId, $player->getGameID());
+		} else {
+			$alliance = null;
 		}
 
 		// We might not assign the planet lists if the info is private.
 		$allPlanets = [];
+		$playerPlanet = null;
 		if ($getPlanets) {
 			// Get this player's planet if no alliance or viewing own alliance
 			if ($playerOnly || $player->getAllianceID() === $allianceId) {
@@ -36,16 +39,16 @@ class PlanetList {
 			}
 
 			// Get full list of planets
-			if (isset($alliance)) {
+			if ($alliance !== null) {
 				$allPlanets = $alliance->getPlanets();
-			} elseif (isset($playerPlanet)) {
+			} elseif ($playerPlanet !== null) {
 				$allPlanets[] = $playerPlanet;
 			}
 		}
 
 		return [
-			'Alliance' => $alliance ?? null,
-			'PlayerPlanet' => $playerPlanet ?? null,
+			'Alliance' => $alliance,
+			'PlayerPlanet' => $playerPlanet,
 			'AllPlanets' => $allPlanets,
 		];
 	}

@@ -33,7 +33,7 @@ class HallOfFamePersonal extends AccountPage {
 		$account_id = $this->hofAccountID;
 		$game_id = $this->gameID;
 
-		if (isset($game_id)) {
+		if ($game_id !== null) {
 			try {
 				$player = Player::getPlayer($account->getAccountID(), $game_id);
 			} catch (PlayerNotFound) {

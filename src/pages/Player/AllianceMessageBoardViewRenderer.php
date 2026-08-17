@@ -12,11 +12,11 @@ class AllianceMessageBoardViewRenderer {
 	 * @param array{AllianceEyesOnly: bool, CanDelete: bool, Replies: array<int, array{Sender: string, Message: string, SendTime: int, DeleteHref?: string}>, CreateThreadReplyFormPage?: \Smr\Pages\Player\AllianceMessageBoardAddProcessor} $Thread
 	 */
 	public static function render(?array $PrevThread, ?array $NextThread, array $Thread, ?string $Preview, Account $ThisAccount): void {
-		if (isset($PrevThread) || isset($NextThread)) { ?>
+		if ($PrevThread !== null || $NextThread !== null) { ?>
 			<h2>Switch Topic</h2><br />
 			<table class="nobord fullwidth">
 				<tr><?php
-				if (isset($PrevThread)) { ?>
+				if ($PrevThread !== null) { ?>
 					<td>
 						<a href="<?php echo $PrevThread['Href']; ?>"><img src="images/album/rew.jpg" alt="Previous" title="Previous"></a>
 						&nbsp;&nbsp;<?php echo htmlentities($PrevThread['Topic']); ?>
@@ -24,7 +24,7 @@ class AllianceMessageBoardViewRenderer {
 				} else {
 					?><td>&nbsp;</td><?php
 				}
-				if (isset($NextThread)) { ?>
+				if ($NextThread !== null) { ?>
 					<td class="right">
 					<?php echo htmlentities($NextThread['Topic']); ?>&nbsp;&nbsp;
 					<a href="<?php echo $NextThread['Href']; ?>"><img src="images/album/fwd.jpg" alt="Next" title="Next"></a>
@@ -63,12 +63,12 @@ class AllianceMessageBoardViewRenderer {
 		</div><?php
 		if (isset($Thread['CreateThreadReplyFormPage'])) { ?>
 			<br /><h2>Create Reply</h2><br /><?php
-			if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Preview); ?></td></tr></table><?php } ?>
+			if ($Preview !== null) { ?><table class="standard"><tr><td><?php echo bbify($Preview); ?></td></tr></table><?php } ?>
 			<form class="standard" id="CreateThreadReplyForm" method="POST" action="<?php echo $Thread['CreateThreadReplyFormPage']->href(); ?>">
 				<table class="nobord nohpad">
 					<tr>
 						<td class="top">Body:&nbsp;</td>
-						<td><textarea spellcheck="true" name="body" required><?php if (isset($Preview)) { echo $Preview; } ?></textarea></td>
+						<td><textarea spellcheck="true" name="body" required><?php if ($Preview !== null) { echo $Preview; } ?></textarea></td>
 					</tr>
 				</table><br />
 				<?php echo $Thread['CreateThreadReplyFormPage']->actionCreate->html('Create Reply'); ?>&nbsp;<?php echo $Thread['CreateThreadReplyFormPage']->actionPreview->html('Preview Reply'); ?>
