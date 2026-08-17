@@ -24,7 +24,7 @@ class AllianceOpResponseProcessor extends PlayerPageProcessor {
 			'response' => $response,
 		]);
 
-		(new AllianceMotd($this->allianceID))->go();
+		new AllianceMotd($this->allianceID)->go();
 	}
 
 }

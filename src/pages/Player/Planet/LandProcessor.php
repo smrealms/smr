@@ -46,7 +46,7 @@ class LandProcessor extends PlayerPageProcessor {
 		$player->setLandedOnPlanet(true);
 		$player->takeTurns(TURNS_TO_LAND, TURNS_TO_LAND);
 		$player->log(LOG_TYPE_MOVEMENT, 'Player lands at planet');
-		(new Main())->go();
+		new Main()->go();
 	}
 
 }

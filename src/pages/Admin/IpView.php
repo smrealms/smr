@@ -14,7 +14,7 @@ class IpView extends AccountPage {
 		$template->pageTopic = 'IP Search';
 
 		$template->pageRenderer = fn() => IpViewRenderer::render(
-			IpFormHref: (new IpViewResults())->href(),
+			IpFormHref: new IpViewResults()->href(),
 		);
 	}
 

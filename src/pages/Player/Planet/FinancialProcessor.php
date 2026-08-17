@@ -52,7 +52,7 @@ class FinancialProcessor extends PlayerPageProcessor {
 		}
 		$player->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits at planet');
 
-		(new Financial())->go();
+		new Financial()->go();
 	}
 
 }

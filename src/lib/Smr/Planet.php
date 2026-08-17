@@ -1105,15 +1105,15 @@ class Planet {
 	}
 
 	public function getExamineHREF(): string {
-		return (new ExaminePlanet())->href();
+		return new ExaminePlanet()->href();
 	}
 
 	public function getLandHREF(): string {
-		return (new LandProcessor())->href();
+		return new LandProcessor()->href();
 	}
 
 	public function getAttackHREF(): string {
-		return (new AttackPlanetProcessor())->href();
+		return new AttackPlanetProcessor()->href();
 	}
 
 	public function getBuildHREF(int $structureID): string {
@@ -1127,7 +1127,7 @@ class Planet {
 	}
 
 	public function getBondConfirmationHREF(): string {
-		return (new BondConfirm())->href();
+		return new BondConfirm()->href();
 	}
 
 	/**

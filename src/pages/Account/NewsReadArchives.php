@@ -41,7 +41,7 @@ class NewsReadArchives extends AccountPage {
 		$template->pageRenderer = fn() => NewsReadArchivesRenderer::render(
 			MinNews: $min_news,
 			MaxNews: $max_news,
-			ViewNewsFormHref: (new self($this->gameID))->href(),
+			ViewNewsFormHref: new self($this->gameID)->href(),
 			NewsItems: News::getNewsItems($dbResult),
 			ThisAccount: $account,
 			BreakingNews: News::getBreakingNews($gameID),

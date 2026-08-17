@@ -144,7 +144,7 @@ class DefenseProcessor extends PlayerPageProcessor {
 			create_error('You must choose if you want to transfer to planet or to the ship!');
 		}
 
-		(new Defense())->go();
+		new Defense()->go();
 	}
 
 }

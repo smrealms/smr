@@ -1451,7 +1451,7 @@ class Account {
 	}
 
 	public function getPersonalHofHREF(): string {
-		return (new HallOfFamePersonal($this->getAccountID()))->href();
+		return new HallOfFamePersonal($this->getAccountID())->href();
 	}
 
 }

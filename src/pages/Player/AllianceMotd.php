@@ -49,7 +49,7 @@ class AllianceMotd extends PlayerPage {
 			);
 
 			$response = $dbResult2->hasRecord() ? $dbResult2->record()->getString('response') : null;
-			$responseHREF = (new AllianceOpResponseProcessor($this->allianceID))->href();
+			$responseHREF = new AllianceOpResponseProcessor($this->allianceID)->href();
 
 			foreach (['Yes', 'Maybe', 'No'] as $option) {
 				$fields = strtoupper($option) === $response ? ['style' => 'background: green'] : [];

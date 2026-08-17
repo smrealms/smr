@@ -16,7 +16,7 @@ class ClaimProcessor extends PlayerPageProcessor {
 	public function build(Player $player): never {
 		$rewardText = $this->mission->claimReward($player);
 
-		(new CurrentSector(missionMessage: $rewardText))->go();
+		new CurrentSector(missionMessage: $rewardText)->go();
 	}
 
 }

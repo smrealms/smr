@@ -153,23 +153,23 @@ class Globals {
 	}
 
 	public static function getFeatureRequestHREF(): string {
-		return (new FeatureRequest())->href();
+		return new FeatureRequest()->href();
 	}
 
 	public static function getCurrentSectorHREF(): string {
-		return self::$AVAILABLE_LINKS['CurrentSector'] = (new CurrentSector())->href();
+		return self::$AVAILABLE_LINKS['CurrentSector'] = new CurrentSector()->href();
 	}
 
 	public static function getLocalMapHREF(): string {
-		return self::$AVAILABLE_LINKS['LocalMap'] = (new LocalMap())->href();
+		return self::$AVAILABLE_LINKS['LocalMap'] = new LocalMap()->href();
 	}
 
 	public static function getCurrentPlayersHREF(): string {
-		return self::$AVAILABLE_LINKS['CurrentPlayers'] = (new CurrentPlayers())->href();
+		return self::$AVAILABLE_LINKS['CurrentPlayers'] = new CurrentPlayers()->href();
 	}
 
 	public static function getTradeHREF(): string {
-		return self::$AVAILABLE_LINKS['EnterPort'] = (new ShopGoods())->href();
+		return self::$AVAILABLE_LINKS['EnterPort'] = new ShopGoods()->href();
 	}
 
 	public static function getAttackTraderHREF(int $accountID): string {
@@ -178,11 +178,11 @@ class Globals {
 	}
 
 	public static function getBetaFunctionsHREF(): string { //BETA
-		return (new BetaFunctions())->href();
+		return new BetaFunctions()->href();
 	}
 
 	public static function getBugReportProcessingHREF(): string {
-		return (new BugReportProcessor())->href();
+		return new BugReportProcessor()->href();
 	}
 
 	public static function getWeaponReorderHREF(int $weaponOrderID, string $direction): string {
@@ -211,9 +211,9 @@ class Globals {
 
 	public static function getPlotCourseHREF(?int $fromSector = null, ?int $toSector = null): string {
 		if ($fromSector === null && $toSector === null) {
-			return self::$AVAILABLE_LINKS['PlotCourse'] = (new PlotCourse())->href();
+			return self::$AVAILABLE_LINKS['PlotCourse'] = new PlotCourse()->href();
 		}
-		return (new PlotCourseConventionalProcessor(from: $fromSector, to: $toSector))->href();
+		return new PlotCourseConventionalProcessor(from: $fromSector, to: $toSector)->href();
 	}
 
 	public static function getAllianceHREF(?int $allianceID = null): string {
@@ -229,55 +229,55 @@ class Globals {
 	}
 
 	public static function getAllianceRosterHREF(?int $allianceID = null): string {
-		return (new AllianceRoster($allianceID))->href();
+		return new AllianceRoster($allianceID)->href();
 	}
 
 	public static function getAllianceListHREF(): string {
-		return (new AllianceList())->href();
+		return new AllianceList()->href();
 	}
 
 	public static function getAllianceNewsHREF(int $gameID, int $allianceID): string {
-		return (new NewsReadAdvanced(gameID: $gameID, submit: 'Search For Alliance', allianceIDs: [$allianceID]))->href();
+		return new NewsReadAdvanced(gameID: $gameID, submit: 'Search For Alliance', allianceIDs: [$allianceID])->href();
 	}
 
 	public static function getAllianceMotdHREF(int $allianceID): string {
-		return (new AllianceMotd($allianceID))->href();
+		return new AllianceMotd($allianceID)->href();
 	}
 
 	public static function getAllianceMessageHREF(int $allianceID): string {
-		return (new AllianceBroadcast($allianceID))->href();
+		return new AllianceBroadcast($allianceID)->href();
 	}
 
 	public static function getAllianceMessageBoardHREF(int $allianceID): string {
-		return (new AllianceMessageBoard($allianceID))->href();
+		return new AllianceMessageBoard($allianceID)->href();
 	}
 
 	public static function getAllianceForcesHREF(int $allianceID): string {
-		return (new AllianceForces($allianceID))->href();
+		return new AllianceForces($allianceID)->href();
 	}
 
 	public static function getAllianceOptionsHREF(): string {
-		return (new AllianceOptions())->href();
+		return new AllianceOptions()->href();
 	}
 
 	public static function getPlanetListHREF(int $allianceID): string {
-		return (new ListPlanetDefense($allianceID))->href();
+		return new ListPlanetDefense($allianceID)->href();
 	}
 
 	public static function getPlanetListFinancialHREF(int $allianceID): string {
-		return (new ListPlanetFinancial($allianceID))->href();
+		return new ListPlanetFinancial($allianceID)->href();
 	}
 
 	public static function getViewMessageBoxesHREF(): string {
-		return (new MessageBox())->href();
+		return new MessageBox()->href();
 	}
 
 	public static function getSendGlobalMessageHREF(): string {
-		return (new MessageSend())->href();
+		return new MessageSend()->href();
 	}
 
 	public static function getManageBlacklistHREF(): string {
-		return (new MessageBlacklist())->href();
+		return new MessageBlacklist()->href();
 	}
 
 	public static function getSendCouncilMessageHREF(int $raceID): string {
@@ -286,7 +286,7 @@ class Globals {
 	}
 
 	public static function getTraderStatusHREF(): string {
-		return (new TraderStatus())->href();
+		return new TraderStatus()->href();
 	}
 
 	public static function getCouncilHREF(int $raceID): string {
@@ -295,31 +295,31 @@ class Globals {
 	}
 
 	public static function getTraderRelationsHREF(): string {
-		return (new TraderRelations())->href();
+		return new TraderRelations()->href();
 	}
 
 	public static function getTraderBountiesHREF(): string {
-		return (new TraderBounties())->href();
+		return new TraderBounties()->href();
 	}
 
 	public static function getCasinoHREF(): string {
-		return (new MatchList())->href();
+		return new MatchList()->href();
 	}
 
 	public static function getChessHREF(): string {
-		return (new MatchList())->href();
+		return new MatchList()->href();
 	}
 
 	public static function getChessCreateHREF(): string {
-		return (new MatchStartProcessor())->href();
+		return new MatchStartProcessor()->href();
 	}
 
 	public static function getBuyMessageNotificationsHREF(): string {
-		return (new BuyMessageNotifications())->href();
+		return new BuyMessageNotifications()->href();
 	}
 
 	public static function getBuyShipNameHREF(): string {
-		return (new BuyShipName())->href();
+		return new BuyShipName()->href();
 	}
 
 	/**

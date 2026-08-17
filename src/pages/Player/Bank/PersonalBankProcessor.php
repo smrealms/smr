@@ -45,7 +45,7 @@ class PersonalBankProcessor extends PlayerPageProcessor {
 		// log action
 		$player->log(LOG_TYPE_BANK, $action . ' ' . $amount . ' credits for personal account');
 
-		(new PersonalBank())->go();
+		new PersonalBank()->go();
 	}
 
 }

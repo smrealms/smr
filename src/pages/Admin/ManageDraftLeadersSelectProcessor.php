@@ -10,7 +10,7 @@ class ManageDraftLeadersSelectProcessor extends AccountPageProcessor {
 
 	public function build(Account $account): never {
 		$selectedGameID = Request::getInt('selected_game_id');
-		(new ManageDraftLeaders($selectedGameID))->go();
+		new ManageDraftLeaders($selectedGameID)->go();
 	}
 
 }

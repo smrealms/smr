@@ -10,7 +10,7 @@ class NpcManageSelectProcessor extends AccountPageProcessor {
 
 	public function build(Account $account): never {
 		$selectedGameID = Request::getInt('selected_game_id');
-		(new NpcManage($selectedGameID))->go();
+		new NpcManage($selectedGameID)->go();
 	}
 
 }

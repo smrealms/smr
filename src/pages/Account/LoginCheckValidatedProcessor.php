@@ -10,10 +10,10 @@ class LoginCheckValidatedProcessor extends AccountPageProcessor {
 	public function build(Account $account): never {
 		// is account validated?
 		if (!$account->isValidated()) {
-			(new Validate())->go();
+			new Validate()->go();
 		}
 
-		(new LoginCheckAnnouncementsProcessor())->go();
+		new LoginCheckAnnouncementsProcessor()->go();
 	}
 
 }

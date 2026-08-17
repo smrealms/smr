@@ -25,7 +25,7 @@ class VotingCenterVetoProcessor extends PlayerPageProcessor {
 			type: $this->voteType,
 		);
 
-		(new VotingCenter())->go();
+		new VotingCenter()->go();
 	}
 
 }

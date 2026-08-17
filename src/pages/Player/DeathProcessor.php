@@ -15,7 +15,7 @@ class DeathProcessor extends PlayerPageProcessor {
 		$player->setDead(false);
 
 		$player->log(LOG_TYPE_TRADER_COMBAT, 'Player sees death screen');
-		(new Death())->go();
+		new Death()->go();
 	}
 
 }

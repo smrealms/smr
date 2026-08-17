@@ -20,11 +20,11 @@ class EditDummies extends AccountPage {
 		$dummyShip = DummyShip::getCachedDummyShip($name);
 
 		$template->pageRenderer = fn() => EditDummiesRenderer::render(
-			CombatSimLink: (new CombatSimulator())->href(),
+			CombatSimLink: new CombatSimulator()->href(),
 			ShipTypes: ShipType::getAll(),
 			Weapons: WeaponType::getAllWeaponTypes(),
-			SelectDummysLink: (new self())->href(),
-			EditDummysLink: (new EditDummiesProcessor())->href(),
+			SelectDummysLink: new self()->href(),
+			EditDummysLink: new EditDummiesProcessor()->href(),
 			DummyPlayer: $dummyShip->getPlayer(),
 			DummyShip: $dummyShip,
 			Levels: PlayerLevel::getAll(),

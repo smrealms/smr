@@ -34,7 +34,7 @@ class ConstructionProcessor extends PlayerPageProcessor {
 			$player->log(LOG_TYPE_PLANETS, 'Player cancels planet construction');
 		}
 
-		(new Construction())->go();
+		new Construction()->go();
 	}
 
 }

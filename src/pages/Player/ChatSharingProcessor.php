@@ -67,12 +67,12 @@ class ChatSharingProcessor extends PlayerPageProcessor {
 			]);
 		}
 
-		(new ChatSharing())->go();
+		new ChatSharing()->go();
 	}
 
 }
 
 function error_on_page(string $message): never {
 	$message = '<span class="bold red">ERROR:</span> ' . $message;
-	(new ChatSharing($message))->go();
+	new ChatSharing($message)->go();
 }

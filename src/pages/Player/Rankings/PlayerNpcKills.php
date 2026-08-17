@@ -29,7 +29,7 @@ class PlayerNpcKills extends PlayerPage {
 			RankingStat: 'NPC Kills',
 			OurRank: $ourRank,
 			Rankings: Rankings::collectRankings($rankedStats, $player),
-			FilterRankingsHREF: (new self())->href(),
+			FilterRankingsHREF: new self()->href(),
 			FilteredRankings: Rankings::collectRankings($rankedStats, $player, $minRank, $maxRank),
 			MinRank: $minRank,
 			MaxRank: $maxRank,

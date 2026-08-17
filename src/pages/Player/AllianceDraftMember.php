@@ -52,7 +52,7 @@ class AllianceDraftMember extends PlayerPage {
 			$pickPlayer = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
 			$players[] = [
 				'Player' => $pickPlayer,
-				'HREF' => (new AllianceDraftMemberProcessor($pickPlayer->getAccountID()))->href(),
+				'HREF' => new AllianceDraftMemberProcessor($pickPlayer->getAccountID())->href(),
 			];
 		}
 

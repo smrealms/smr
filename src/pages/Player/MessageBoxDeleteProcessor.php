@@ -37,7 +37,7 @@ class MessageBoxDeleteProcessor extends PlayerPageProcessor {
 			);
 		}
 
-		(new MessageBox())->go();
+		new MessageBox()->go();
 	}
 
 }

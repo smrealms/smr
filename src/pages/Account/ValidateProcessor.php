@@ -27,14 +27,14 @@ class ValidateProcessor extends AccountPageProcessor {
 		if ($action === $this->actionResend->value) {
 			$account->sendValidationEmail();
 			$message = '<span class="green">The validation code has been resent to your e-mail address!</span>';
-			(new Validate($message))->go();
+			new Validate($message)->go();
 		}
 
 		// Only skip validation check if we explicitly chose to validate later
 		if ($action !== $this->actionSkip->value) {
 			if ($account->getValidationCode() !== Request::get('validation_code')) {
 				$message = '<span class="red">The validation code you entered is incorrect!</span>';
-				(new Validate($message))->go();
+				new Validate($message)->go();
 			}
 
 			$account->setValidated(true);

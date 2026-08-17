@@ -21,7 +21,7 @@ class BuyMessageNotificationsProcessor extends AccountPageProcessor {
 		$account->update();
 
 		$message = '<span class="green">SUCCESS</span>: You have purchased ' . MESSAGES_PER_CREDIT[$this->messageTypeID] . ' message notifications.';
-		(new BuyMessageNotifications($message))->go();
+		new BuyMessageNotifications($message)->go();
 	}
 
 }

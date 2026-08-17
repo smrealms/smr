@@ -21,7 +21,7 @@ class AdminTools extends AccountPage {
 		foreach (array_keys($account->getPermissions()) as $permissionID) {
 			[$name, $link, $categoryID] = AdminPermissions::getPermissionInfo($permissionID);
 			$adminPermissions[$categoryID][] = [
-				'Link' => $link === null ? false : (new $link())->href(),
+				'Link' => $link === null ? false : new $link()->href(),
 				'Name' => $name,
 			];
 		}

@@ -69,7 +69,7 @@ class OwnershipProcessor extends PlayerPageProcessor {
 			$player->log(LOG_TYPE_PLANETS, 'Player sets planet password to ' . $password);
 		}
 
-		(new Ownership())->go();
+		new Ownership()->go();
 	}
 
 }

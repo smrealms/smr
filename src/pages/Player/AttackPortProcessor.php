@@ -42,7 +42,7 @@ class AttackPortProcessor extends PlayerPageProcessor {
 		}
 
 		if ($port->isBusted()) {
-			(new AttackPort())->go();
+			new AttackPort()->go();
 		}
 
 		$attackers = $sector->getFightingTradersAgainstPort($player, $port);

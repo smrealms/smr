@@ -21,7 +21,7 @@ class LocalMapProcessor extends PlayerPageProcessor {
 			$player->increaseZoom(1);
 		}
 
-		(new LocalMap())->go();
+		new LocalMap()->go();
 	}
 
 }

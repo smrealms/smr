@@ -126,7 +126,7 @@ class NewsletterSendProcessor extends AccountPageProcessor {
 			}
 		}
 
-		(new NewsletterSend())->go();
+		new NewsletterSend()->go();
 	}
 
 }

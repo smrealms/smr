@@ -2975,7 +2975,7 @@ class Player {
 	}
 
 	public function getLeaveNewbieProtectionHREF(): string {
-		return (new NewbieLeaveProcessor())->href();
+		return new NewbieLeaveProcessor()->href();
 	}
 
 	public function getExamineTraderHREF(): string {

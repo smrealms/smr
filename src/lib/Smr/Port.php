@@ -1104,11 +1104,11 @@ class Port {
 	}
 
 	public function getRaidWarningHREF(): string {
-		return (new AttackPortConfirm())->href();
+		return new AttackPortConfirm()->href();
 	}
 
 	public function getAttackHREF(): string {
-		return (new AttackPortProcessor())->href();
+		return new AttackPortProcessor()->href();
 	}
 
 	public function getPayoutHREF(PortPayoutType $payoutType): string {

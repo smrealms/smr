@@ -12,7 +12,7 @@ class AlbumModerateSelect extends AccountPage {
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Moderate Photo Album';
 
-		$moderateHREF = (new AlbumModerateSelectProcessor())->href();
+		$moderateHREF = new AlbumModerateSelectProcessor()->href();
 
 		// Get all accounts that are eligible for moderation
 		$approved = [];

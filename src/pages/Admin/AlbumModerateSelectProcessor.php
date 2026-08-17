@@ -10,7 +10,7 @@ class AlbumModerateSelectProcessor extends AccountPageProcessor {
 
 	public function build(Account $account): never {
 		$albumAccountID = Request::getInt('account_id');
-		(new AlbumModerate($albumAccountID))->go();
+		new AlbumModerate($albumAccountID)->go();
 	}
 
 }

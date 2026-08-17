@@ -23,7 +23,7 @@ class AlbumApproveProcessor extends AccountPageProcessor {
 			['account_id' => $this->albumAccountID],
 		);
 
-		(new AlbumApprove())->go();
+		new AlbumApprove()->go();
 	}
 
 }

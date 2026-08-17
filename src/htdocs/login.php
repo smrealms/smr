@@ -20,7 +20,7 @@ try {
 
 	$session = Session::getInstance();
 	if ($session->hasAccount()) {
-		$href = (new LoginCheckValidatedProcessor())->href(true);
+		$href = new LoginCheckValidatedProcessor()->href(true);
 		$session->update();
 
 		header('Location: ' . $href);

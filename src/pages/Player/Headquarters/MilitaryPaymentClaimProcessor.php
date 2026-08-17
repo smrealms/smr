@@ -25,7 +25,7 @@ class MilitaryPaymentClaimProcessor extends PlayerPageProcessor {
 			$claimText = ('You have done nothing worthy of military payment.');
 		}
 
-		(new MilitaryPaymentClaim($this->locationID, $claimText))->go();
+		new MilitaryPaymentClaim($this->locationID, $claimText)->go();
 	}
 
 }

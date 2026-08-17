@@ -17,7 +17,7 @@ class ForcesRefreshProcessor extends PlayerPageProcessor {
 
 		$forces->updateExpire();
 
-		(new CurrentSector())->go();
+		new CurrentSector()->go();
 	}
 
 }

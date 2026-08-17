@@ -17,7 +17,7 @@ class AbandonProcessor extends PlayerPageProcessor {
 		// Delete the mission so that it can be accepted again later.
 		$this->missionState->delete();
 
-		(new CurrentSector())->go();
+		new CurrentSector()->go();
 	}
 
 }

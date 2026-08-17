@@ -10,7 +10,7 @@ class PlotCourseCancelProcessor extends PlayerPageProcessor {
 	public function build(Player $player): never {
 		$player->deletePlottedCourse();
 
-		(new CurrentSector())->go();
+		new CurrentSector()->go();
 	}
 
 }

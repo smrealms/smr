@@ -600,11 +600,11 @@ class ChessGame {
 	}
 
 	public function getPlayGameHREF(): string {
-		return (new MatchPlay($this->chessGameID))->href();
+		return new MatchPlay($this->chessGameID)->href();
 	}
 
 	public function getResignHREF(): string {
-		return (new MatchResignProcessor($this->chessGameID))->href();
+		return new MatchResignProcessor($this->chessGameID)->href();
 	}
 
 }

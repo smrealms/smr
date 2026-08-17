@@ -25,7 +25,7 @@ class Main extends PlanetPage {
 		$template->pageRenderer = fn() => MainRenderer::render(
 			ErrorMsg: $this->errorMessage,
 			Msg: $this->message,
-			LaunchLink: (new LaunchProcessor())->href(),
+			LaunchLink: new LaunchProcessor()->href(),
 			VisiblePlayers: $planet->getOtherTraders($player),
 			SectorPlayersLabel: 'Ships',
 			ThisPlanet: $player->getSectorPlanet(),

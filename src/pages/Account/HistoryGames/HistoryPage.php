@@ -31,7 +31,7 @@ abstract class HistoryPage extends AccountPage {
 				$text = '<b>' . $text . '</b>';
 			}
 			$menuItems[] = [
-				'Link' => (new $class($this->historyDatabase, $this->historyGameID, $this->historyGameName))->href(),
+				'Link' => new $class($this->historyDatabase, $this->historyGameID, $this->historyGameName)->href(),
 				'Text' => $text,
 			];
 		}

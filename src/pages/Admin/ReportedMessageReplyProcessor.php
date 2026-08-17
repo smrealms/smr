@@ -64,7 +64,7 @@ class ReportedMessageReplyProcessor extends AccountPageProcessor {
 				$offendedAccount->addPoints($offendedBanPoints, $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
 			}
 		}
-		(new ReportedMessageView())->go();
+		new ReportedMessageView()->go();
 	}
 
 }

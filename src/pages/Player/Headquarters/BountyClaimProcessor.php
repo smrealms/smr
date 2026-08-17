@@ -54,7 +54,7 @@ class BountyClaimProcessor extends PlayerPageProcessor {
 			$claimText = ('You have no claimable bounties<br /><br />');
 		}
 
-		(new BountyClaim($this->locationID, $claimText))->go();
+		new BountyClaim($this->locationID, $claimText)->go();
 	}
 
 }

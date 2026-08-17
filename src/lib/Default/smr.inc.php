@@ -439,13 +439,13 @@ function do_voodoo(): never {
 		// Check if we need to redirect to a different page
 		if (!$var->skipRedirect && !$session->ajax) {
 			if ($player->getGame()->hasEnded()) {
-				(new GameLeaveProcessor(new GamePlay(errorMessage: 'The game has ended.')))->go();
+				new GameLeaveProcessor(new GamePlay(errorMessage: 'The game has ended.'))->go();
 			}
 			if ($player->isDead()) {
-				(new DeathProcessor())->go();
+				new DeathProcessor()->go();
 			}
 			if ($player->getNewbieWarning() && $player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT) {
-				(new NewbieWarningProcessor())->go();
+				new NewbieWarningProcessor()->go();
 			}
 		}
 	}

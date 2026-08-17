@@ -40,7 +40,7 @@ class HireTraderProcessor extends PlayerPageProcessor {
 			['login' => $npc->getAccount()->getLogin()],
 		);
 
-		(new HireTrader($this->locationID))->go();
+		new HireTrader($this->locationID)->go();
 	}
 
 }

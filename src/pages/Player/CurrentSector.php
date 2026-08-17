@@ -32,7 +32,7 @@ class CurrentSector extends PlayerPage {
 
 		// If on a planet, forward to planet_main.php
 		if ($player->isLandedOnPlanet()) {
-			(new PlanetMain($this->message, $this->errorMessage))->go();
+			new PlanetMain($this->message, $this->errorMessage)->go();
 		}
 
 		$template->spaceView = true;

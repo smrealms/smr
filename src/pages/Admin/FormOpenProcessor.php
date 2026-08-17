@@ -21,7 +21,7 @@ class FormOpenProcessor extends AccountPageProcessor {
 			['type' => $this->type],
 		);
 
-		(new FormOpen())->go();
+		new FormOpen()->go();
 	}
 
 }

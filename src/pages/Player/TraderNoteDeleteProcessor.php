@@ -22,7 +22,7 @@ class TraderNoteDeleteProcessor extends PlayerPageProcessor {
 			]);
 		}
 
-		(new TraderStatus())->go();
+		new TraderStatus()->go();
 	}
 
 }

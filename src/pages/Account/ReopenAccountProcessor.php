@@ -11,7 +11,7 @@ class ReopenAccountProcessor extends AccountPageProcessor {
 		// The user has requested to reopen their account
 		$account->unbanAccount($account);
 
-		(new LoginCheckValidatedProcessor())->go();
+		new LoginCheckValidatedProcessor()->go();
 	}
 
 }

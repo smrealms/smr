@@ -64,7 +64,7 @@ class AllianceDraftMemberProcessor extends PlayerPageProcessor {
 			'time' => Epoch::time(),
 		]);
 
-		(new AllianceDraftMember())->go();
+		new AllianceDraftMember()->go();
 	}
 
 }

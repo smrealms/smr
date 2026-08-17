@@ -28,7 +28,7 @@ class AllianceExperience extends PlayerPage {
 			OurRank: $ourRank,
 			Rankings: Rankings::collectAllianceRankings($rankedStats, $player),
 			FilteredRankings: Rankings::collectAllianceRankings($rankedStats, $player, $minRank, $maxRank),
-			FilterRankingsHREF: (new self())->href(),
+			FilterRankingsHREF: new self()->href(),
 			MinRank: $minRank,
 			MaxRank: $maxRank,
 			TotalRanks: $numAlliances,
