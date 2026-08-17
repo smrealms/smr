@@ -4,8 +4,8 @@ namespace Smr\Pages\Player\Headquarters;
 
 class MilitaryPaymentClaimRenderer {
 
-public static function render(string $ClaimText): void {
-	echo $ClaimText;
-}
+	public static function render(string $ClaimText): void {
+		echo $ClaimText;
+	}
 
 }

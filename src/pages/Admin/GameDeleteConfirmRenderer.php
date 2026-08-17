@@ -6,15 +6,15 @@ use Smr\Game;
 
 class GameDeleteConfirmRenderer {
 
-public static function render(string $CancelHREF, string $ConfirmHREF, Game $Game): void {
-?>
-Are you sure you want to delete the game: <i><?php echo $Game->getDisplayName(); ?></i>?
-<br /><br />
+	public static function render(string $CancelHREF, string $ConfirmHREF, Game $Game): void {
+		?>
+		Are you sure you want to delete the game: <i><?php echo $Game->getDisplayName(); ?></i>?
+		<br /><br />
 
-<?php echo create_submit_link($ConfirmHREF, 'Yes'); ?>
-&nbsp;&nbsp;
-<?php echo create_submit_link($CancelHREF, 'No');
+		<?php echo create_submit_link($ConfirmHREF, 'Yes'); ?>
+		&nbsp;&nbsp;
+		<?php echo create_submit_link($CancelHREF, 'No');
 
-}
+	}
 
 }

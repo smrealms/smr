@@ -6,33 +6,33 @@ use Smr\Account;
 
 class InvalidEmailRenderer {
 
-public static function render(Account $ThisAccount, InvalidEmailProcessor $ReopenPage): void {
-?>
-<p>Your account was closed because we detected that your e-mail address is
-invalid. To re-open your account, please either re-validate your current
-address, or change your address. A new validation code will be sent right
-away!</p>
+	public static function render(Account $ThisAccount, InvalidEmailProcessor $ReopenPage): void {
+		?>
+		<p>Your account was closed because we detected that your e-mail address is
+		invalid. To re-open your account, please either re-validate your current
+		address, or change your address. A new validation code will be sent right
+		away!</p>
 
-<p><b>Current e-mail address:</b> <?php echo $ThisAccount->getEmail(); ?></p>
-<br />
+		<p><b>Current e-mail address:</b> <?php echo $ThisAccount->getEmail(); ?></p>
+		<br />
 
-<form method="POST" action="<?php echo $ReopenPage->href(); ?>">
-	<h2>Re-validate current address</h2>
-	<p>
-		If you believe that your current e-mail address is correct, you can simply
-		re-validate this address.
-	</p>
+		<form method="POST" action="<?php echo $ReopenPage->href(); ?>">
+			<h2>Re-validate current address</h2>
+			<p>
+				If you believe that your current e-mail address is correct, you can simply
+				re-validate this address.
+			</p>
 
-	<p><?php echo $ReopenPage->actionResend->html(); ?></p>
-	<br />
+			<p><?php echo $ReopenPage->actionResend->html(); ?></p>
+			<br />
 
-	<h2>Enter new address</h2>
-	<p>If your current address is no longer valid, please enter a new one.</p>
-	<p>New e-mail address: <input type="email" name="email" size="40" maxlength="128"></p>
+			<h2>Enter new address</h2>
+			<p>If your current address is no longer valid, please enter a new one.</p>
+			<p>New e-mail address: <input type="email" name="email" size="40" maxlength="128"></p>
 
-	<p><?php echo $ReopenPage->actionChange->html(); ?></p>
-</form>
-<?php
-}
+			<p><?php echo $ReopenPage->actionChange->html(); ?></p>
+		</form>
+		<?php
+	}
 
 }

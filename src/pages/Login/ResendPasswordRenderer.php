@@ -4,27 +4,27 @@ namespace Smr\Pages\Login;
 
 class ResendPasswordRenderer {
 
-public static function render(): void {
-?>
-<div class="center centered">
-	<h1>Forgot Your Password?</h1>
+	public static function render(): void {
+		?>
+		<div class="center centered">
+			<h1>Forgot Your Password?</h1>
 
-	Please enter the e-mail address associated with your account:
-	<br /><br />
+			Please enter the e-mail address associated with your account:
+			<br /><br />
 
-	<form action="resend_password_processing.php" method="POST">
-		<div class="center">
-			<table class="center" border="0">
-				<tr>
-					<th class="right">Email:</th>
-					<td><input required type="email" name="email" class="InputFields"></td>
-				</tr>
-			</table>
-			<p><?php echo create_submit_display('Resend my password', ['class' => 'InputFields']); ?></p>
+			<form action="resend_password_processing.php" method="POST">
+				<div class="center">
+					<table class="center" border="0">
+						<tr>
+							<th class="right">Email:</th>
+							<td><input required type="email" name="email" class="InputFields"></td>
+						</tr>
+					</table>
+					<p><?php echo create_submit_display('Resend my password', ['class' => 'InputFields']); ?></p>
+				</div>
+			</form>
 		</div>
-	</form>
-</div>
-<?php
-}
+		<?php
+	}
 
 }

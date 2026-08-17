@@ -4,39 +4,39 @@ namespace Smr\Pages\Account;
 
 class ChangelogViewRenderer {
 
-/**
- * @param array<array{version: string, went_live: ?string, changes: array<array{title: string, message: string}>}> $Versions
- */
-public static function render(?string $ContinueHREF, array $Versions): void {
-if (isset($ContinueHREF)) {
-	// Make the login changelog scroll if it is larger than 420px ?>
-	<style>div.login_scroll {height: 420px; overflow-y: auto;}</style>
+	/**
+	 * @param array<array{version: string, went_live: ?string, changes: array<array{title: string, message: string}>}> $Versions
+	 */
+	public static function render(?string $ContinueHREF, array $Versions): void {
+		if (isset($ContinueHREF)) {
+			// Make the login changelog scroll if it is larger than 420px ?>
+			<style>div.login_scroll {height: 420px; overflow-y: auto;}</style>
 
-	<div class="buttonA">
-		<a class="buttonA" href="<?php echo $ContinueHREF; ?>">Continue</a>
-	</div>
-	<br /><br />
-	<span class="big">Here are the updates that have gone live since your last visit, enjoy!</span>
-	<br /><br /><?php
-} ?>
+			<div class="buttonA">
+				<a class="buttonA" href="<?php echo $ContinueHREF; ?>">Continue</a>
+			</div>
+			<br /><br />
+			<span class="big">Here are the updates that have gone live since your last visit, enjoy!</span>
+			<br /><br /><?php
+		} ?>
 
-<div class="login_scroll"><?php
-	foreach ($Versions as $data) { ?>
-		<br />
-		<b><?php echo $data['version']; ?> (<?php echo $data['went_live']; ?>):</b>
+		<div class="login_scroll"><?php
+			foreach ($Versions as $data) { ?>
+				<br />
+				<b><?php echo $data['version']; ?> (<?php echo $data['went_live']; ?>):</b>
 
-		<ul><?php
-			foreach ($data['changes'] as $change) { ?>
-				<li>
-					<span style="font-size:125%;color:greenyellow;"><?php echo $change['title']; ?></span>
-					<br /><?php echo $change['message']; ?><br /><br />
-				</li><?php
+				<ul><?php
+					foreach ($data['changes'] as $change) { ?>
+						<li>
+							<span style="font-size:125%;color:greenyellow;"><?php echo $change['title']; ?></span>
+							<br /><?php echo $change['message']; ?><br /><br />
+						</li><?php
+					} ?>
+				</ul><?php
 			} ?>
-		</ul><?php
-	} ?>
-</div>
+		</div>
 
-<?php
-}
+		<?php
+	}
 
 }

@@ -4,41 +4,41 @@ namespace Smr\Pages\Admin;
 
 class LogConsoleAnonBankRenderer {
 
-/**
- * @param array<int, array<int, list<array{login: string, amount: string, date: string, type: string, color: string}>>> $AnonLogs
- */
-public static function render(array $AnonLogs, string $BackHREF): void {
-?>
-<a href="<?php echo $BackHREF; ?>"><b>&lt; Back</b></a>
+	/**
+	 * @param array<int, array<int, list<array{login: string, amount: string, date: string, type: string, color: string}>>> $AnonLogs
+	 */
+	public static function render(array $AnonLogs, string $BackHREF): void {
+		?>
+		<a href="<?php echo $BackHREF; ?>"><b>&lt; Back</b></a>
 
-<?php
-if (!$AnonLogs) { ?>
-	<p>None of the entries in all the log files contains anonymous bank transaction!</p><?php
-	return;
-} ?>
+		<?php
+		if (!$AnonLogs) { ?>
+			<p>None of the entries in all the log files contains anonymous bank transaction!</p><?php
+			return;
+		} ?>
 
-<p>The following anonymous bank accounts were accessed by logged players:</p>
+		<p>The following anonymous bank accounts were accessed by logged players:</p>
 
-<?php
-foreach ($AnonLogs as $gameID => $AnonAccounts) { ?>
-	<h2>Game <?php echo $gameID; ?></h2><?php
-	foreach ($AnonAccounts as $anonID => $logs) { ?>
-		<table>
-			<tr>
-				<th colspan="4">Anon Account #<?php echo $anonID; ?></th>
-			</tr><?php
-			foreach ($logs as $log) { ?>
-				<tr>
-					<td><?php echo $log['date']; ?></td>
-					<td><?php echo $log['login']; ?></td>
-					<td style="color:<?php echo $log['color']; ?>"><?php echo $log['type']; ?></td>
-					<td><?php echo $log['amount']; ?> credits</td>
-				</tr><?php
-			} ?>
-		</table><br /><?php
+		<?php
+		foreach ($AnonLogs as $gameID => $AnonAccounts) { ?>
+			<h2>Game <?php echo $gameID; ?></h2><?php
+			foreach ($AnonAccounts as $anonID => $logs) { ?>
+				<table>
+					<tr>
+						<th colspan="4">Anon Account #<?php echo $anonID; ?></th>
+					</tr><?php
+					foreach ($logs as $log) { ?>
+						<tr>
+							<td><?php echo $log['date']; ?></td>
+							<td><?php echo $log['login']; ?></td>
+							<td style="color:<?php echo $log['color']; ?>"><?php echo $log['type']; ?></td>
+							<td><?php echo $log['amount']; ?> credits</td>
+						</tr><?php
+					} ?>
+				</table><br /><?php
+			}
+		}
+
 	}
-}
-
-}
 
 }

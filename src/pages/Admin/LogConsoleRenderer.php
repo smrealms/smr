@@ -4,55 +4,55 @@ namespace Smr\Pages\Admin;
 
 class LogConsoleRenderer {
 
-/**
- * @param array<int, array{AccountID: int, Login: string, TotalEntries: int, Checked: bool, Notes: string}> $LoggedAccounts
- */
-public static function render(array $LoggedAccounts, LogConsoleProcessor $LogConsoleFormPage, string $AnonAccessHREF): void {
-?>
-<p>
-	Choose the log files you wish to view or delete!<br />
-	Don't keep unnecessary data!
-</p><?php
+	/**
+	 * @param array<int, array{AccountID: int, Login: string, TotalEntries: int, Checked: bool, Notes: string}> $LoggedAccounts
+	 */
+	public static function render(array $LoggedAccounts, LogConsoleProcessor $LogConsoleFormPage, string $AnonAccessHREF): void {
+		?>
+		<p>
+			Choose the log files you wish to view or delete!<br />
+			Don't keep unnecessary data!
+		</p><?php
 
-if (count($LoggedAccounts) > 0) { ?>
-	<form method="POST" action="<?php echo $LogConsoleFormPage->href(); ?>">
-		<table class="standard">
-			<tr>
-				<th>Login</th>
-				<th>Entries</th>
-				<th>Action</th>
-				<th>Notes</th>
-			</tr><?php
+		if (count($LoggedAccounts) > 0) { ?>
+			<form method="POST" action="<?php echo $LogConsoleFormPage->href(); ?>">
+				<table class="standard">
+					<tr>
+						<th>Login</th>
+						<th>Entries</th>
+						<th>Action</th>
+						<th>Notes</th>
+					</tr><?php
 
-			foreach ($LoggedAccounts as $LoggedAccount) { ?>
-				<tr>
-					<td valign="top"><?php echo $LoggedAccount['Login']; ?></td>
-					<td valign="top" class="center"><?php echo $LoggedAccount['TotalEntries']; ?></td>
-					<td valign="middle" class="center"><input type="checkbox" name="account_ids[]" value="<?php echo $LoggedAccount['AccountID']; ?>"<?php if ($LoggedAccount['Checked']) { ?> checked="checked"<?php } ?>></td>
-					<td><?php echo $LoggedAccount['Notes']; ?></td>
-				</tr><?php
-			} ?>
+					foreach ($LoggedAccounts as $LoggedAccount) { ?>
+						<tr>
+							<td valign="top"><?php echo $LoggedAccount['Login']; ?></td>
+							<td valign="top" class="center"><?php echo $LoggedAccount['TotalEntries']; ?></td>
+							<td valign="middle" class="center"><input type="checkbox" name="account_ids[]" value="<?php echo $LoggedAccount['AccountID']; ?>"<?php if ($LoggedAccount['Checked']) { ?> checked="checked"<?php } ?>></td>
+							<td><?php echo $LoggedAccount['Notes']; ?></td>
+						</tr><?php
+					} ?>
 
-			<tr>
-				<td colspan="3">&nbsp;</td>
-				<td>
-					<?php echo $LogConsoleFormPage->actionView->html(); ?>&nbsp;&nbsp;<?php echo $LogConsoleFormPage->actionDelete->html(); ?>
-				</td>
-			</tr>
-		</table>
+					<tr>
+						<td colspan="3">&nbsp;</td>
+						<td>
+							<?php echo $LogConsoleFormPage->actionView->html(); ?>&nbsp;&nbsp;<?php echo $LogConsoleFormPage->actionDelete->html(); ?>
+						</td>
+					</tr>
+				</table>
 
-	</form>
+			</form>
 
-	<p>&nbsp;</p>
+			<p>&nbsp;</p>
 
-	<p>Check for:</p>
-	<ul>
-		<li><a href="<?php echo $AnonAccessHREF; ?>">Anonymous Account access</a></li>
-	</ul><?php
-} else { ?>
-	There are no log entries at all!<?php
-}
+			<p>Check for:</p>
+			<ul>
+				<li><a href="<?php echo $AnonAccessHREF; ?>">Anonymous Account access</a></li>
+			</ul><?php
+		} else { ?>
+			There are no log entries at all!<?php
+		}
 
-}
+	}
 
 }

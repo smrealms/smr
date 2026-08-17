@@ -79,19 +79,19 @@ function DisplayResult(array $Links, Player $Player): void { ?>
 
 class SearchForTraderResultRenderer {
 
-/**
- * @param ?array{Player: Player, SearchHREF: string, RaceHREF: string, MessageHREF: string, BountyHREF: string, HofHREF: string, NewsHREF: string, JumpHREF?: string} $ResultPlayerLinks
- * @param ?list<array{Player: Player, SearchHREF: string, RaceHREF: string, MessageHREF: string, BountyHREF: string, HofHREF: string, NewsHREF: string, JumpHREF?: string}> $SimilarPlayersLinks
- */
-public static function render(?array $ResultPlayerLinks, ?array $SimilarPlayersLinks, Player $ThisPlayer): void {
-if (isset($ResultPlayerLinks)) {
-	DisplayResult([$ResultPlayerLinks], $ThisPlayer);
-	echo '<br /><br />';
-}
-if (isset($SimilarPlayersLinks)) {
-	DisplayResult($SimilarPlayersLinks, $ThisPlayer);
-}
+	/**
+	 * @param ?array{Player: Player, SearchHREF: string, RaceHREF: string, MessageHREF: string, BountyHREF: string, HofHREF: string, NewsHREF: string, JumpHREF?: string} $ResultPlayerLinks
+	 * @param ?list<array{Player: Player, SearchHREF: string, RaceHREF: string, MessageHREF: string, BountyHREF: string, HofHREF: string, NewsHREF: string, JumpHREF?: string}> $SimilarPlayersLinks
+	 */
+	public static function render(?array $ResultPlayerLinks, ?array $SimilarPlayersLinks, Player $ThisPlayer): void {
+		if (isset($ResultPlayerLinks)) {
+			DisplayResult([$ResultPlayerLinks], $ThisPlayer);
+			echo '<br /><br />';
+		}
+		if (isset($SimilarPlayersLinks)) {
+			DisplayResult($SimilarPlayersLinks, $ThisPlayer);
+		}
 
-}
+	}
 
 }

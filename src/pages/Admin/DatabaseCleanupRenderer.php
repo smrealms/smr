@@ -4,58 +4,58 @@ namespace Smr\Pages\Admin;
 
 class DatabaseCleanupRenderer {
 
-/**
- * @param array<string, int> $Results
- * @param array<int> $EndedGames
- */
-public static function renderResults(
-	string $DbSizeMB,
-	array $Results,
-	string $DiffMB,
-	bool $Preview,
-	array $EndedGames,
-	string $BackHREF,
-): void {
-?>
-Current database size: <?php echo $DbSizeMB; ?>
-<br /><br />
+	/**
+	 * @param array<string, int> $Results
+	 * @param array<int> $EndedGames
+	 */
+	public static function renderResults(
+		string $DbSizeMB,
+		array $Results,
+		string $DiffMB,
+		bool $Preview,
+		array $EndedGames,
+		string $BackHREF,
+	): void {
+		?>
+		Current database size: <?php echo $DbSizeMB; ?>
+		<br /><br />
 
-	<h2>Results<?php echo $Preview ? ' (Preview)' : ''; ?></h2>
-	<p>Size of data deleted: <?php echo $DiffMB; ?></p>
-	<p>Ended games: <?php echo implode(', ', $EndedGames); ?></p>
-	<table class="standard">
-		<tr>
-			<th>Table Name</th>
-			<th>Rows<br /><?php echo $Preview ? 'To Delete' : 'Deleted'; ?></th>
-		</tr><?php
-		foreach ($Results as $table => $rowsDeleted) { ?>
+		<h2>Results<?php echo $Preview ? ' (Preview)' : ''; ?></h2>
+		<p>Size of data deleted: <?php echo $DiffMB; ?></p>
+		<p>Ended games: <?php echo implode(', ', $EndedGames); ?></p>
+		<table class="standard">
 			<tr>
-				<td><?php echo $table; ?></td>
-				<td class="center"><?php echo $rowsDeleted; ?></td>
+				<th>Table Name</th>
+				<th>Rows<br /><?php echo $Preview ? 'To Delete' : 'Deleted'; ?></th>
 			</tr><?php
-		} ?>
-	</table>
-	<p><a href="<?php echo $BackHREF; ?>">&lt;&lt; Back</a></p>
-	<?php
-}
+			foreach ($Results as $table => $rowsDeleted) { ?>
+				<tr>
+					<td><?php echo $table; ?></td>
+					<td class="center"><?php echo $rowsDeleted; ?></td>
+				</tr><?php
+			} ?>
+		</table>
+		<p><a href="<?php echo $BackHREF; ?>">&lt;&lt; Back</a></p>
+		<?php
+	}
 
-public static function render(
-	string $DbSizeMB,
-	string $DeleteHREF,
-	string $PreviewHREF,
-): void {
-?>
-Current database size: <?php echo $DbSizeMB; ?>
-<br /><br />
-	<span class="red bold">WARNING: </span>Please back up the database before
-	performing this operation!
+	public static function render(
+		string $DbSizeMB,
+		string $DeleteHREF,
+		string $PreviewHREF,
+	): void {
+		?>
+		Current database size: <?php echo $DbSizeMB; ?>
+		<br /><br />
+		<span class="red bold">WARNING: </span>Please back up the database before
+		performing this operation!
 
-	<p>By proceeding, you will delete all rows for some large tables
-	corresponding to games that have already ended.</p>
+		<p>By proceeding, you will delete all rows for some large tables
+		corresponding to games that have already ended.</p>
 
-	<p><a class="submitStyle" href="<?php echo $PreviewHREF; ?>">Preview</a></p>
-	<p><a class="submitStyle" href="<?php echo $DeleteHREF; ?>">Delete</a></p>
-	<?php
-}
+		<p><a class="submitStyle" href="<?php echo $PreviewHREF; ?>">Preview</a></p>
+		<p><a class="submitStyle" href="<?php echo $DeleteHREF; ?>">Delete</a></p>
+		<?php
+	}
 
 }
