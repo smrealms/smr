@@ -6,7 +6,9 @@ use Override;
 
 class DummyPlayer extends Player {
 
+	#[Override]
 	protected readonly int $accountID;
+	#[Override]
 	protected readonly int $gameID;
 
 	public function __construct(string $playerName, int $experience = 1000, int $shipTypeID = 60) {

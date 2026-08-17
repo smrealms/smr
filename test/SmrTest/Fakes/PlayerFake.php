@@ -2,11 +2,13 @@
 
 namespace SmrTest\Fakes;
 
+use Override;
 use Smr\DatabaseRecord;
 use Smr\Player;
 
 class PlayerFake extends Player {
 
+	#[Override]
 	public readonly array $SQLID;
 
 	public function __construct(

@@ -3,6 +3,7 @@
 namespace Smr\Combat\Weapon;
 
 use Exception;
+use Override;
 use Smr\BuyerRestriction;
 use Smr\DatabaseRecord;
 use Smr\Force;
@@ -30,6 +31,7 @@ class Weapon extends AbstractWeapon {
 	protected readonly WeaponType $weaponType;
 	protected bool $bonusAccuracy = false; // default
 	protected bool $bonusDamage = false; // default
+	#[Override]
 	protected bool $damageRollover = false; // fixed for all Weapons
 
 	public static function getWeapon(int $weaponTypeID, ?DatabaseRecord $dbRecord = null): self {
