@@ -227,12 +227,7 @@ class Board {
 		}
 		// Draw by insufficient material
 		// (Consider only the case where Kings remain, others too complex)
-		foreach ($this->getPieces() as $piece) {
-			if ($piece->pieceID !== ChessPiece::KING) {
-				return false;
-			}
-		}
-		return true;
+		return array_all($this->getPieces(), fn($piece) => $piece->pieceID === ChessPiece::KING);
 	}
 
 	/**
