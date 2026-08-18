@@ -133,7 +133,7 @@ class LoginRenderer {
 
 		<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 		<script src="<?php echo JQUERY_URL; ?>"></script>
-		<script src="/js/login.js"></script>
+		<script src="<?php echo asset_url('/js/login.js'); ?>"></script>
 		<?php
 	}
 

@@ -173,7 +173,7 @@ class Template {
 	 * Registers a JS target for inclusion at the end of the HTML body.
 	 */
 	public function addJavascriptSource(string $src): void {
-		$this->jsSources[] = $src;
+		$this->jsSources[] = asset_url($src);
 	}
 
 	protected function convertHtmlToAjaxXml(string $str, bool $returnXml): string {

@@ -333,7 +333,7 @@ div.gal_map_main {
 
 /* Local Map */
 .currentSeclm {
-	background-image: url('../../images/currentsector.png');
+	background-image: url('/images/currentsector.png');
 }
 div.lm_seedlist {
 	background-image:
@@ -347,7 +347,7 @@ div.lm_seedlist {
 }
 div.currentSeclm_seedlist {
 	background-image:
-		url('../../images/currentsector.png'),
+		url('/images/currentsector.png'),
 		repeating-linear-gradient(
 			45deg,
 			transparent,
@@ -365,10 +365,10 @@ table.lmt td {
 }
 /* Connecting icons */
 div.lmUp.con, div.lmDown.con {
-	background: url('../images/link_hor.gif') no-repeat center;
+	background: url('/images/link_hor.gif') no-repeat center;
 }
 div.lmLeft.con, div.lmRight.con {
-	background: url('../images/link_ver.gif') no-repeat center;
+	background: url('/images/link_ver.gif') no-repeat center;
 }
 
 /* Walls */

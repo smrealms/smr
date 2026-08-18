@@ -1,17 +1,19 @@
-FROM node:alpine AS builder
+FROM node:24-alpine AS builder
 
 WORKDIR /smr/
 
-RUN npm i --save grunt grunt-contrib-uglify grunt-contrib-cssmin grunt-cache-bust@1.7.0
+COPY package.json ./
+RUN npm install
 
 # Copy the SMR source code directories
 COPY src src
 
 # Perform CSS/JS minification and cache busting
-COPY Gruntfile.js .
-RUN npx grunt
+COPY scripts scripts
+RUN npm run build:assets
 
-# Remove local grunt install so it is not copied to the next build stage
+# Remove build-only dependencies before copying to the runtime image.
+# Source js/css are retained so SMR_DEV_ASSETS can select them at runtime.
 RUN rm -rf node_modules
 
 #---------------------------
@@ -59,9 +61,10 @@ RUN rm -rf /var/www/html/ && ln -s "$(pwd)/src/htdocs" /var/www/html
 # Make the upload directory writable by the apache user
 RUN chown www-data ./src/htdocs/upload
 
-# Leverage browser caching of static assets using apache's mod_headers
+# Serve generated assets from outside the source tree and leverage browser
+# caching of content-hashed assets.
 COPY apache/cache-static.conf /etc/apache2/conf-enabled/cache-static.conf
-RUN a2enmod headers
+RUN a2enmod alias headers
 
 # Store the git commit hash of the repo in the final image
 COPY .git/HEAD .git/HEAD

@@ -23,6 +23,7 @@ services:
         environment:
             XDEBUG_MODE:
             DISABLE_PHPDI_COMPILATION:
+            SMR_DEV_ASSETS:
         volumes:
             - ./vol_upload:/smr/src/htdocs/upload:rw
             - ./config:/smr/config:ro

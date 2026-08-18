@@ -1,0 +1,9 @@
+{
+	"private": true,
+	"scripts": {
+		"build:assets": "node scripts/build-assets.mjs"
+	},
+	"devDependencies": {
+		"esbuild": "0.28.2"
+	}
+}

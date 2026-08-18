@@ -48,10 +48,10 @@ class HeadRenderer {
 				background-color: #<?php echo $ThisAccount->getNeutralColour(); ?>;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/colorpicker.css" />
+		<link rel="stylesheet" href="<?php echo asset_url('/css/colorpicker.css'); ?>" />
 		<script src="<?php echo JQUERY_URL; ?>"></script>
 		<script src="<?php echo JQUERYUI_URL; ?>"></script>
-		<script src="/js/smr15.js"></script>
+		<script src="<?php echo asset_url('/js/smr15.js'); ?>"></script>
 		<?php
 	}
 
