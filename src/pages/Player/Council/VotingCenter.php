@@ -16,9 +16,6 @@ use Smr\Template;
 class VotingCenter extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'council_vote.php';
-
 	public function build(Player $player, Template $template): void {
 		if (!$player->isOnCouncil()) {
 			create_error('You have to be on the council in order to vote.');
@@ -52,7 +49,6 @@ class VotingCenter extends PlayerPage {
 				'Relations' => $raceRelations[$raceID],
 			];
 		}
-		$template->assign('VoteRelations', $voteRelations);
 
 		$voteTreaties = [];
 		$dbResult = $db->read('SELECT * FROM race_has_voting
@@ -109,7 +105,13 @@ class VotingCenter extends PlayerPage {
 				'YesVotes' => $votes['YES'],
 			];
 		}
-		$template->assign('VoteTreaties', $voteTreaties);
+
+		$template->pageRenderer = fn() => VotingCenterRenderer::render(
+			VoteRelations: $voteRelations,
+			VoteTreaties: $voteTreaties,
+			ThisAccount: $player->getAccount(),
+			ThisPlayer: $player,
+		);
 	}
 
 }

@@ -9,8 +9,6 @@ use Smr\Template;
 
 class DatabaseCleanup extends AccountPage {
 
-	public string $file = 'admin/db_cleanup.php';
-
 	/**
 	 * @param ?array{preview: bool, rowsDeleted: array<string, int>, diffBytes: int, endedGameIDs: array<int>} $results
 	 */
@@ -26,22 +24,25 @@ class DatabaseCleanup extends AccountPage {
 		};
 
 		$db = Database::getInstance();
-		$template->assign('DbSizeMB', $bytesToMB($db->getDbBytes()));
+		$dbSizeMB = $bytesToMB($db->getDbBytes());
 
 		if ($this->results !== null) {
 			// Display the results
-			$template->assign('Results', $this->results['rowsDeleted']);
-			$template->assign('DiffMB', $bytesToMB($this->results['diffBytes']));
-			$template->assign('Preview', $this->results['preview']);
-			$template->assign('EndedGames', $this->results['endedGameIDs']);
-			$container = new self();
-			$template->assign('BackHREF', $container->href());
+			$template->pageRenderer = fn() => DatabaseCleanupRenderer::renderResults(
+				DbSizeMB: $dbSizeMB,
+				Results: $this->results['rowsDeleted'],
+				DiffMB: $bytesToMB($this->results['diffBytes']),
+				Preview: $this->results['preview'],
+				EndedGames: $this->results['endedGameIDs'],
+				BackHREF: new self()->href(),
+			);
 		} else {
 			// Create processing links
-			$container = new DatabaseCleanupProcessor('delete');
-			$template->assign('DeleteHREF', $container->href());
-			$container = new DatabaseCleanupProcessor('preview');
-			$template->assign('PreviewHREF', $container->href());
+			$template->pageRenderer = fn() => DatabaseCleanupRenderer::render(
+				DbSizeMB: $dbSizeMB,
+				DeleteHREF: new DatabaseCleanupProcessor('delete')->href(),
+				PreviewHREF: new DatabaseCleanupProcessor('preview')->href(),
+			);
 		}
 	}
 

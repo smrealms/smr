@@ -9,8 +9,6 @@ use Smr\Template;
 
 class PlayBlackjackBet extends PlayerPage {
 
-	public string $file = 'bar_gambling_bet.php';
-
 	public function __construct(
 		private readonly int $locationID,
 	) {}
@@ -26,11 +24,12 @@ class PlayBlackjackBet extends PlayerPage {
 			$maxBet = 10000;
 			$maxBetMsg = 'Max bet is ' . $maxBet . '.';
 		}
-		$template->assign('MaxBet', $maxBet);
-		$template->assign('MaxBetMsg', $maxBetMsg);
 
-		$container = new PlayBlackjackProcessor($this->locationID, 'new game');
-		$template->assign('PlayHREF', $container->href());
+		$template->pageRenderer = fn() => PlayBlackjackBetRenderer::render(
+			MaxBet: $maxBet,
+			MaxBetMsg: $maxBetMsg,
+			PlayHREF: new PlayBlackjackProcessor($this->locationID, 'new game')->href(),
+		);
 	}
 
 }

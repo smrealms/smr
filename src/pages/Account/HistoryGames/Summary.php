@@ -8,8 +8,6 @@ use Smr\Template;
 
 class Summary extends HistoryPage {
 
-	public string $file = 'history_games.php';
-
 	protected function buildHistory(Account $account, Template $template): void {
 		//topic
 		$game_name = $this->historyGameName;
@@ -20,23 +18,19 @@ class Summary extends HistoryPage {
 		$db = Database::getInstance();
 		$dbResult = $db->select('game', ['game_id' => $game_id]);
 		$dbRecord = $dbResult->record();
-		$template->assign('GameName', $game_name);
-		$template->assign('Start', date($account->getDateFormat(), $dbRecord->getInt('start_date')));
-		$template->assign('End', date($account->getDateFormat(), $dbRecord->getInt('end_date')));
-		$template->assign('Type', $dbRecord->getString('type'));
-		$template->assign('Speed', $dbRecord->getFloat('speed'));
+		$startDate = date($account->getDateFormat(), $dbRecord->getInt('start_date'));
+		$endDate = date($account->getDateFormat(), $dbRecord->getInt('end_date'));
+		$gameType = $dbRecord->getString('type');
+		$gameSpeed = $dbRecord->getFloat('speed');
 
 		$dbResult = $db->read('SELECT count(*) total_players, IFNULL(max(experience),0) max_exp, IFNULL(max(alignment),0) max_align, IFNULL(min(alignment),0) min_align, IFNULL(max(kills),0) max_kills FROM player WHERE game_id = :game_id', [
 			'game_id' => $db->escapeNumber($game_id),
 		]);
 		$dbRecord = $dbResult->record();
-		$template->assign('NumPlayers', $dbRecord->getInt('total_players'));
-		$template->assign('MaxExp', $dbRecord->getInt('max_exp'));
-		$template->assign('MaxAlign', $dbRecord->getInt('max_align'));
-		$template->assign('MinAlign', $dbRecord->getInt('min_align'));
-		$template->assign('MaxKills', $dbRecord->getInt('max_kills'));
-
-		$template->assign('NumAlliances', $db->count('alliance', ['game_id' => $game_id]));
+		$numPlayers = $dbRecord->getInt('total_players');
+		$maxExp = $dbRecord->getInt('max_exp');
+		$maxAlign = $dbRecord->getInt('max_align');
+		$minAlign = $dbRecord->getInt('min_align');
 
 		// Get linked player information, if available
 		$oldAccountID = $account->getOldAccountID($this->historyDatabase);
@@ -62,7 +56,6 @@ class Summary extends HistoryPage {
 				'name' => $dbRecord->getString('player_name'),
 			];
 		}
-		$template->assign('PlayerExp', $playerExp);
 
 		$playerKills = [];
 		$dbResult = $db->select(
@@ -79,7 +72,6 @@ class Summary extends HistoryPage {
 				'name' => $dbRecord->getString('player_name'),
 			];
 		}
-		$template->assign('PlayerKills', $playerKills);
 
 		//now for the alliance stuff
 		$allianceExp = [];
@@ -98,7 +90,6 @@ class Summary extends HistoryPage {
 				'link' => create_link($container, $alliance),
 			];
 		}
-		$template->assign('AllianceExp', $allianceExp);
 
 		$allianceKills = [];
 		$dbResult = $db->select(
@@ -119,7 +110,23 @@ class Summary extends HistoryPage {
 				'link' => create_link($container, $alliance),
 			];
 		}
-		$template->assign('AllianceKills', $allianceKills);
+
+		$template->pageRenderer = fn() => SummaryRenderer::render(
+			GameName: $game_name,
+			Start: $startDate,
+			End: $endDate,
+			Type: $gameType,
+			Speed: $gameSpeed,
+			NumPlayers: $numPlayers,
+			MaxExp: $maxExp,
+			MaxAlign: $maxAlign,
+			MinAlign: $minAlign,
+			NumAlliances: $db->count('alliance', ['game_id' => $game_id]),
+			PlayerExp: $playerExp,
+			PlayerKills: $playerKills,
+			AllianceExp: $allianceExp,
+			AllianceKills: $allianceKills,
+		);
 	}
 
 }

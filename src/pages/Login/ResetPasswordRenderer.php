@@ -1,0 +1,43 @@
+<?php declare(strict_types=1);
+
+namespace Smr\Pages\Login;
+
+use Smr\Request;
+
+class ResetPasswordRenderer {
+
+	public static function render(): void {
+		?>
+		<div class="center centered">
+			<h1>Password Reset</h1>
+
+			For security reasons, please enter your username and the password reset code you received.
+
+			<form action="reset_password_processing.php" method="POST">
+					<div class="center">
+							<table class="center" border="0">
+								<tr>
+										<th class="right">Username:</th>
+										<td><input required name="login" type="text" class="InputFields" value="<?php echo Request::has('login') ? htmlspecialchars(Request::get('login')) : ''; ?>" /></td>
+								</tr>
+								<tr>
+										<th class="right">Password Reset Code:</th>
+										<td><input required name="password_reset" type="text" class="InputFields" value="<?php echo Request::has('resetcode') ? htmlspecialchars(Request::get('resetcode')) : ''; ?>" /></td>
+								</tr>
+								<tr>
+										<th class="right">New Password:</th>
+										<td><input required name="password" type="password" class="InputFields" /></td>
+								</tr>
+								<tr>
+										<th class="right">Verify New Password:</th>
+										<td><input required name="pass_verify" type="password" class="InputFields" /></td>
+								</tr>
+							</table>
+							<p><?php echo create_submit_display('Reset my password', ['class' => 'InputFields']); ?></p>
+					</div>
+			</form>
+		</div>
+		<?php
+	}
+
+}

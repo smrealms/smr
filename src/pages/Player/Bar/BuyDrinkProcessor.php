@@ -11,6 +11,9 @@ use Smr\Player;
 
 class BuyDrinkProcessor extends PlayerPageProcessor {
 
+	/**
+	 * @param 'drink'|'water' $action
+	 */
 	public function __construct(
 		private readonly int $locationID,
 		private readonly string $action,

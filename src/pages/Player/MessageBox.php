@@ -13,9 +13,6 @@ use Smr\Template;
 class MessageBox extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'message_box.php';
-
 	public function build(Player $player, Template $template): void {
 		$db = Database::getInstance();
 
@@ -70,7 +67,10 @@ class MessageBox extends PlayerPage {
 			$messageBoxes[] = $messageBox;
 		}
 
-		$template->assign('MessageBoxes', $messageBoxes);
+		$template->pageRenderer = fn() => MessageBoxRenderer::render(
+			template: $template,
+			MessageBoxes: $messageBoxes,
+		);
 	}
 
 }

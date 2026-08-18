@@ -10,8 +10,6 @@ use Smr\Template;
 
 class ArticleView extends PlayerPage {
 
-	public string $file = 'galactic_post_view_article.php';
-
 	public function __construct(
 		private readonly ?int $articleID = null,
 		private readonly bool $addedToNews = false,
@@ -38,7 +36,6 @@ class ArticleView extends PlayerPage {
 				'link' => $container->href(),
 			];
 		}
-		$template->assign('Articles', $articles);
 
 		// Details about a selected article
 		if ($this->articleID !== null) {
@@ -48,19 +45,14 @@ class ArticleView extends PlayerPage {
 			]);
 			$dbRecord = $dbResult->record();
 
-			$container = new ArticleWrite($this->articleID);
-			$editHREF = $container->href();
-
-			$container = new ArticleDeleteConfirm($this->articleID);
-			$deleteHREF = $container->href();
-
 			$selectedArticle = [
 				'title' => $dbRecord->getString('title'),
 				'text' => $dbRecord->getString('text'),
-				'editHREF' => $editHREF,
-				'deleteHREF' => $deleteHREF,
+				'editHREF' => new ArticleWrite($this->articleID)->href(),
+				'deleteHREF' => new ArticleDeleteConfirm($this->articleID)->href(),
+				'makePaperHREF' => new PaperMake()->href(),
+				'addToNewsHREF' => $this->addedToNews ? null : new ArticleAddToNewsProcessor($this->articleID)->href(),
 			];
-			$template->assign('SelectedArticle', $selectedArticle);
 
 			$papers = [];
 			$dbResult = $db->select('galactic_post_paper', [
@@ -70,23 +62,18 @@ class ArticleView extends PlayerPage {
 				$container = new ArticleAddToPaperProcessor($dbRecord->getInt('paper_id'), $this->articleID);
 				$papers[] = [
 					'title' => $dbRecord->getString('title'),
-					'addHREF' => $container->href(),
+					'addToPaperHREF' => $container->href(),
 				];
 			}
-			$template->assign('Papers', $papers);
-
-			if (count($papers) === 0) {
-				$container = new PaperMake();
-				$template->assign('MakePaperHREF', $container->href());
-			}
-
-			// breaking news options
-			$template->assign('AddedToNews', $this->addedToNews);
-			if (!$this->addedToNews) {
-				$container = new ArticleAddToNewsProcessor($this->articleID);
-				$template->assign('AddToNewsHREF', $container->href());
-			}
+			$selectedArticle['papers'] = $papers;
+		} else {
+			$selectedArticle = null;
 		}
+
+		$template->pageRenderer = fn() => ArticleViewRenderer::render(
+			Articles: $articles,
+			SelectedArticle: $selectedArticle,
+		);
 	}
 
 }

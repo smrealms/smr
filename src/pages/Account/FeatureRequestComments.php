@@ -12,9 +12,6 @@ use Smr\Template;
 class FeatureRequestComments extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'feature_request_comments.php';
-
 	public function __construct(
 		private readonly int $featureRequestID,
 		private readonly FeatureRequest $previousPage,
@@ -27,8 +24,6 @@ class FeatureRequestComments extends AccountPage {
 
 		$template->pageTopic = 'Feature Request Comments';
 
-		$template->assign('BackHref', $this->previousPage->href());
-
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT *
 					FROM feature_request
@@ -37,34 +32,42 @@ class FeatureRequestComments extends AccountPage {
 					ORDER BY comment_id ASC', [
 			'feature_request_id' => $db->escapeNumber($this->featureRequestID),
 		]);
-		if ($dbResult->hasRecord()) {
-			$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
-			$template->assign('FeatureModerator', $featureModerator);
 
-			// variables needed to set the status for this feature request
+		// variables needed to set the status for this feature request
+		$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
+		$featureRequestStatusFormPage = $featureModerator ?
+			new FeatureRequestVoteProcessor($this) : null;
+
+		$featureRequestComments = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$commentAccountID = $dbRecord->getInt('poster_id');
+			if ($dbRecord->getBoolean('anonymous')) {
+				$displayName = 'Anonymous';
+			} else {
+				$displayName = Account::getAccount($commentAccountID)->getHofDisplayName();
+			}
 			if ($featureModerator) {
-				$template->assign('FeatureRequestId', $this->featureRequestID);
-				$template->assign('FeatureRequestStatusFormPage', new FeatureRequestVoteProcessor($this));
+				$commentLogin = Account::getAccount($commentAccountID)->getLogin();
+				$displayName .= ' - ' . $commentLogin . ' (' . $commentAccountID . ')';
 			}
 
-			$featureRequestComments = [];
-			foreach ($dbResult->records() as $dbRecord) {
-				$commentID = $dbRecord->getInt('comment_id');
-				$featureRequestComments[$commentID] = [
-					'CommentID' => $commentID,
-					'Message' => $dbRecord->getString('text'),
-					'Time' => date($account->getDateTimeFormat(), $dbRecord->getInt('posting_time')),
-					'Anonymous' => $dbRecord->getBoolean('anonymous'),
-				];
-				if ($featureModerator || !$dbRecord->getBoolean('anonymous')) {
-					$featureRequestComments[$commentID]['PosterAccount'] = Account::getAccount($dbRecord->getInt('poster_id'));
-				}
-			}
-			$template->assign('Comments', $featureRequestComments);
+			$commentID = $dbRecord->getInt('comment_id');
+			$featureRequestComments[$commentID] = [
+				'CommentID' => $commentID,
+				'Message' => $dbRecord->getString('text'),
+				'Time' => date($account->getDateTimeFormat(), $dbRecord->getInt('posting_time')),
+				'Name' => $displayName,
+			];
 		}
 
-		$container = new FeatureRequestCommentProcessor($this->featureRequestID, $this);
-		$template->assign('FeatureRequestCommentFormHREF', $container->href());
+		$template->pageRenderer = fn() => FeatureRequestCommentsRenderer::render(
+			BackHref: $this->previousPage->href(),
+			FeatureModerator: $featureModerator,
+			FeatureRequestId: $this->featureRequestID,
+			FeatureRequestStatusFormPage: $featureRequestStatusFormPage,
+			Comments: $featureRequestComments,
+			FeatureRequestCommentFormHREF: new FeatureRequestCommentProcessor($this->featureRequestID, $this)->href(),
+		);
 	}
 
 }

@@ -12,23 +12,22 @@ use Smr\Template;
 class MessageCouncil extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'council_send_message.php';
-
 	public function __construct(
 		private readonly int $raceID,
 	) {}
 
 	public function build(Player $player, Template $template): void {
 		$raceName = Race::getName($this->raceID);
-		$template->assign('RaceName', $raceName);
 
 		$template->pageTopic = 'Send message to Ruling Council of the ' . $raceName;
 
 		Menu::messages();
 
-		$container = new MessageCouncilProcessor($this->raceID);
-		$template->assign('SendHREF', $container->href());
+		$template->pageRenderer = fn() => MessageCouncilRenderer::render(
+			RaceName: $raceName,
+			SendHREF: new MessageCouncilProcessor($this->raceID)->href(),
+			ThisPlayer: $player,
+		);
 	}
 
 }

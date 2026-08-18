@@ -9,20 +9,19 @@ use Smr\Template;
 
 class ServerStatus extends AccountPage {
 
-	public string $file = 'admin/game_status.php';
-
 	public function build(Account $account, Template $template): void {
-		$template->assign('ProcessingPage', new ServerStatusProcessor());
-
 		$db = Database::getInstance();
 		$dbResult = $db->select('game_disable');
-		if (!$dbResult->hasRecord()) {
+		$serverIsOpen = !$dbResult->hasRecord();
+		if ($serverIsOpen) {
 			$template->pageTopic = 'Close Server';
-			$template->assign('ServerIsOpen', true);
 		} else {
 			$template->pageTopic = 'Open Server';
-			$template->assign('ServerIsOpen', false);
 		}
+		$template->pageRenderer = fn() => ServerStatusRenderer::render(
+			ProcessingPage: new ServerStatusProcessor(),
+			ServerIsOpen: $serverIsOpen,
+		);
 	}
 
 }

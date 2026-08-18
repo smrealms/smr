@@ -9,14 +9,13 @@ use Smr\Template;
 
 class AnonBankCreate extends PlayerPage {
 
-	public string $file = 'bank_anon_create.php';
-
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Create Anonymous Account';
 		Menu::bank();
 
-		$container = new AnonBankCreateProcessor();
-		$template->assign('CreateHREF', $container->href());
+		$template->pageRenderer = fn() => AnonBankCreateRenderer::render(
+			new AnonBankCreateProcessor()->href(),
+		);
 	}
 
 }

@@ -9,8 +9,6 @@ use Smr\Template;
 
 class PaperDeleteConfirm extends PlayerPage {
 
-	public string $file = 'galactic_post_paper_delete_confirm.php';
-
 	public function __construct(
 		private readonly int $paperID,
 	) {}
@@ -27,7 +25,6 @@ class PaperDeleteConfirm extends PlayerPage {
 			],
 			['title'],
 		);
-		$template->assign('PaperTitle', $dbResult->record()->getString('title'));
 
 		$articles = [];
 		$dbResult = $db->read('SELECT title FROM galactic_post_paper_content JOIN galactic_post_article USING (game_id, article_id) WHERE game_id = :game_id AND paper_id = :paper_id', [
@@ -37,13 +34,13 @@ class PaperDeleteConfirm extends PlayerPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$articles[] = bbify($dbRecord->getString('title'));
 		}
-		$template->assign('Articles', $articles);
 
-		$container = new PaperDeleteProcessor($this->paperID);
-		$template->assign('ConfirmHREF', $container->href());
-
-		$container = new EditorOptions();
-		$template->assign('CancelHREF', $container->href());
+		$template->pageRenderer = fn() => PaperDeleteConfirmRenderer::render(
+			PaperTitle: $dbResult->record()->getString('title'),
+			Articles: $articles,
+			ConfirmHREF: new PaperDeleteProcessor($this->paperID)->href(),
+			CancelHREF: new EditorOptions()->href(),
+		);
 	}
 
 }

@@ -11,36 +11,35 @@ use Smr\Template;
 
 class AlbumApprove extends AccountPage {
 
-	public string $file = 'admin/album_approve.php';
-
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Approve Album Entries';
 
 		try {
 			$album = Album::getNextUnapproved();
 
-			$template->assign('Location', $album->getDisplayLocation());
-			$template->assign('Email', $album->getDisplayEmail());
-			$template->assign('Website', $album->getDisplayWebsite());
-			$template->assign('Other', $album->getDisplayOtherInfo());
-			$template->assign('ImgSrc', $album->getImageSrc());
-			$template->assign('Birthdate', $album->getDisplayBirthdate());
-
 			// get this user's nick
 			$nick = Account::getAccount($album->accountID)->getHofDisplayName();
-			$template->assign('Nick', $nick);
 
 			// get the time that passed since the entry was last changed
 			$time_passed = Epoch::time() - $album->lastChanged;
-			$template->assign('TimePassed', $time_passed);
 
-			$container = new AlbumApproveProcessor($album->accountID, approved: true);
-			$template->assign('ApproveHREF', $container->href());
-			$container = new AlbumApproveProcessor($album->accountID, approved: false);
-			$template->assign('RejectHREF', $container->href());
+			$template->pageRenderer = fn() => AlbumApproveRenderer::render(
+				Location: $album->getDisplayLocation(),
+				Email: $album->getDisplayEmail(),
+				Website: $album->getDisplayWebsite(),
+				Other: $album->getDisplayOtherInfo(),
+				ImgSrc: $album->getImageSrc(),
+				Birthdate: $album->getDisplayBirthdate(),
+				Nick: $nick,
+				TimePassed: $time_passed,
+				ApproveHREF: new AlbumApproveProcessor($album->accountID, approved: true)->href(),
+				RejectHREF: new AlbumApproveProcessor($album->accountID, approved: false)->href(),
+			);
 		} catch (AlbumNotFound) {
 			// No albums to approve
+			$template->pageRenderer = fn() => AlbumApproveRenderer::renderEmpty();
 		}
+
 	}
 
 }

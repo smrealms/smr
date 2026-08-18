@@ -14,8 +14,6 @@ class AllianceOptions extends PlayerPage {
 
 	use ReusableTrait;
 
-	public string $file = 'alliance_option.php';
-
 	public function build(Player $player, Template $template): void {
 		$alliance = $player->getAlliance();
 		$template->pageTopic = $alliance->getAllianceDisplayName(false, true);
@@ -123,7 +121,7 @@ class AllianceOptions extends PlayerPage {
 			];
 		}
 
-		$template->assign('Links', $links);
+		$template->pageRenderer = fn() => AllianceOptionsRenderer::render($links);
 	}
 
 }

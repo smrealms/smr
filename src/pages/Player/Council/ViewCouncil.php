@@ -13,9 +13,6 @@ use Smr\Template;
 class ViewCouncil extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'council_list.php';
-
 	public function __construct(
 		private readonly int $raceID,
 	) {}
@@ -24,13 +21,18 @@ class ViewCouncil extends PlayerPage {
 		$raceID = $this->raceID;
 
 		$template->pageTopic = 'Ruling Council Of ' . Race::getName($raceID);
-		$template->assign('RaceID', $raceID);
 
 		Menu::council($raceID);
 
 		// check for relations here
 		CouncilVoting::modifyRelations($raceID, $player->getGameID());
 		CouncilVoting::checkPacts($raceID, $player->getGameID());
+
+		$template->pageRenderer = fn() => ViewCouncilRenderer::render(
+			template: $template,
+			RaceID: $raceID,
+			ThisPlayer: $player,
+		);
 	}
 
 }

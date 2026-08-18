@@ -13,9 +13,6 @@ use Smr\Template;
 class PoliticalStatus extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'council_politics.php';
-
 	public function __construct(
 		private readonly int $raceID,
 	) {}
@@ -45,9 +42,12 @@ class PoliticalStatus extends PlayerPage {
 			}
 		}
 
-		$template->assign('PeaceRaces', $peaceRaces);
-		$template->assign('NeutralRaces', $neutralRaces);
-		$template->assign('WarRaces', $warRaces);
+		$template->pageRenderer = fn() => PoliticalStatusRenderer::render(
+			PeaceRaces: $peaceRaces,
+			NeutralRaces: $neutralRaces,
+			WarRaces: $warRaces,
+			ThisPlayer: $player,
+		);
 	}
 
 }

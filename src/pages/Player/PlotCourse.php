@@ -17,9 +17,6 @@ use Smr\WeaponType;
 class PlotCourse extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'course_plot.php';
-
 	public function build(Player $player, Template $template): void {
 		$session = Session::getInstance();
 
@@ -27,24 +24,10 @@ class PlotCourse extends PlayerPage {
 
 		Menu::navigation($player);
 
-		$container = new PlotCourseConventionalProcessor();
-		$template->assign('PlotCourseFormLink', $container->href());
-
-		$container = new PlotCourseNearestProcessor();
-		$template->assign('PlotNearestFormLink', $container->href());
-
-		if ($player->getShip()->hasJump()) {
-			$container = new SectorJumpProcessor();
-			$template->assign('JumpDrivePage', $container);
-		}
-
-		$container = new self();
-		$template->assign('PlotToNearestHREF', $container->href());
+		$jumpDrivePage = $player->getShip()->hasJump() ? new SectorJumpProcessor() : null;
 
 		$xtype = $session->getRequestVar('xtype', PlotGroup::Technology->value);
 		$xtype = PlotGroup::from($xtype);
-		$template->assign('XType', $xtype);
-		$template->assign('AllXTypes', PlotGroup::cases());
 
 		$options = [];
 		switch ($xtype) {
@@ -105,12 +88,20 @@ class PlotCourse extends PlayerPage {
 				}
 				break;
 		}
-		$template->assign('XTypeOptions', $options);
 
-		// get saved destinations
-		$template->assign('StoredDestinations', $player->getStoredDestinations());
-		$container = new PlotCourseDestinationProcessor();
-		$template->assign('ManageDestination', $container->href());
+		$template->pageRenderer = fn() => PlotCourseRenderer::render(
+			template: $template,
+			PlotCourseFormLink: new PlotCourseConventionalProcessor()->href(),
+			PlotNearestFormLink: new PlotCourseNearestProcessor()->href(),
+			JumpDrivePage: $jumpDrivePage,
+			PlotToNearestHREF: new self()->href(),
+			XType: $xtype,
+			AllXTypes: PlotGroup::cases(),
+			XTypeOptions: $options,
+			StoredDestinations: $player->getStoredDestinations(),
+			ManageDestination: new PlotCourseDestinationProcessor()->href(),
+			ThisPlayer: $player,
+		);
 	}
 
 }

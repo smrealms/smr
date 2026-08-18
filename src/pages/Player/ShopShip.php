@@ -12,8 +12,6 @@ use Smr\Template;
 
 class ShopShip extends PlayerPage {
 
-	public string $file = 'shop_ship.php';
-
 	public function __construct(
 		private readonly int $locationID,
 		private readonly ?int $shipTypeID = null,
@@ -38,15 +36,12 @@ class ShopShip extends PlayerPage {
 				unset($shipsSold[$shipTypeID]); // remove from available ships
 			}
 		}
-		$template->assign('ShipsUnavailable', $shipsUnavailable);
-		$template->assign('ShipsSold', $shipsSold);
 
 		$shipsSoldHREF = [];
 		foreach (array_keys($shipsSold) as $shipTypeID) {
 			$container = new self($this->locationID, $shipTypeID);
 			$shipsSoldHREF[$shipTypeID] = $container->href();
 		}
-		$template->assign('ShipsSoldHREF', $shipsSoldHREF);
 
 		if ($this->shipTypeID !== null) {
 			$ship = $player->getShip();
@@ -71,15 +66,30 @@ class ShopShip extends PlayerPage {
 				'Old' => $player->getTurns(),
 				'New' => round($player->getTurns() * $compareShip->getSpeed() / $ship->getType()->getSpeed()),
 			];
-			$template->assign('ShipDiffs', $shipDiffs);
 
-			$container = new ShopShipProcessor($this->shipTypeID);
-			$template->assign('BuyHREF', $container->href());
+			$buyHREF = new ShopShipProcessor($this->shipTypeID)->href();
 
-			$template->assign('CompareShip', $compareShip);
-			$template->assign('TradeInValue', $ship->getRefundValue());
-			$template->assign('TotalCost', $ship->getCostToUpgrade($compareShip->getTypeID()));
+			$tradeInValue = $ship->getRefundValue();
+			$totalCost = $ship->getCostToUpgrade($compareShip->getTypeID());
+		} else {
+			$compareShip = null;
+			$shipDiffs = null;
+			$buyHREF = null;
+			$tradeInValue = null;
+			$totalCost = null;
 		}
+
+		$template->pageRenderer = fn() => ShopShipRenderer::render(
+			ShipsUnavailable: $shipsUnavailable,
+			ShipsSold: $shipsSold,
+			ShipsSoldHREF: $shipsSoldHREF,
+			ShipDiffs: $shipDiffs,
+			BuyHREF: $buyHREF,
+			CompareShip: $compareShip,
+			TradeInValue: $tradeInValue,
+			TotalCost: $totalCost,
+			ThisShip: $player->getShip(),
+		);
 	}
 
 }

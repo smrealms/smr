@@ -11,8 +11,6 @@ use Smr\Template;
 
 class SectorJumpCalculate extends PlayerPage {
 
-	public string $file = 'sector_jump_calculate.php';
-
 	public function __construct(
 		private readonly int $targetSectorID,
 	) {}
@@ -28,12 +26,12 @@ class SectorJumpCalculate extends PlayerPage {
 			create_error('Unable to plot from ' . $player->getSectorID() . ' to ' . $targetSector->getSectorID());
 		}
 
-		$template->assign('Target', $targetSector->getSectorID());
-		$template->assign('TurnCost', $jumpInfo['turn_cost']);
-		$template->assign('MaxMisjump', $jumpInfo['max_misjump']);
-
-		$container = new SectorJumpProcessor($targetSector->getSectorID());
-		$template->assign('JumpProcessingHREF', $container->href());
+		$template->pageRenderer = fn() => SectorJumpCalculateRenderer::render(
+			Target: $targetSector->getSectorID(),
+			TurnCost: $jumpInfo['turn_cost'],
+			MaxMisjump: $jumpInfo['max_misjump'],
+			JumpProcessingHREF: new SectorJumpProcessor($targetSector->getSectorID())->href(),
+		);
 	}
 
 }

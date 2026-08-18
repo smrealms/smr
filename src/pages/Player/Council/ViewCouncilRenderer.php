@@ -1,0 +1,87 @@
+<?php declare(strict_types=1);
+
+namespace Smr\Pages\Player\Council;
+
+use Smr\Council;
+use Smr\Player;
+use Smr\Race;
+use Smr\Template;
+
+class ViewCouncilRenderer {
+
+	public static function render(Template $template, int $RaceID, Player $ThisPlayer): void {
+		?>
+		<div class="center">
+			<a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
+			<h3>President</h3><br/><?php
+			$PresidentID = Council::getPresidentID($ThisPlayer->getGameID(), $RaceID);
+			if ($PresidentID !== false) {
+				$President = Player::getPlayer($PresidentID, $ThisPlayer->getGameID()); ?>
+				<table class="center standard" width="75%">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Race</th>
+							<th>Alliance</th>
+							<th>Experience</th>
+						</tr>
+					</thead>
+					<tbody id="president" class="ajax">
+						<tr>
+							<td class="left">President <?php echo $President->getLinkedDisplayName(false); ?></td>
+							<td><?php echo $ThisPlayer->getColouredRaceName($President->getRaceID(), true); ?></td>
+							<td><?php echo $President->getAllianceDisplayName(true); ?></td>
+							<td class="right"><?php echo number_format($President->getExperience()); ?></td>
+						</tr>
+					</tbody>
+				</table><?php
+			} else {
+				?>This council doesn't have a president!<?php
+			} ?>
+			<br /><br />
+
+			<img src="<?php echo Race::getImage($RaceID); ?>" width="212" height="270" /><br /><br />
+
+			<h3>Council Members</h3><br /><?php
+			$CouncilMembers = Council::getRaceCouncil($ThisPlayer->getGameID(), $RaceID);
+			if (count($CouncilMembers) > 0) { ?>
+				<table id="council-members" class="center standard" width="85%">
+					<thead>
+						<tr>
+							<th>&nbsp;</th>
+							<th class="sort" data-sort="sort_name">Name</th>
+							<th>Race</th>
+							<th class="sort" data-sort="sort_alliance">Alliance</th>
+							<th class="sort" data-sort="sort_experience">Experience</th>
+						</tr>
+					</thead>
+					<tbody class="list"><?php
+						foreach ($CouncilMembers as $Ranking => $AccountID) {
+							$CouncilPlayer = Player::getPlayer($AccountID, $ThisPlayer->getGameID()); ?>
+							<tr id="player-<?php echo $CouncilPlayer->getPlayerID(); ?>" class="ajax<?php if ($ThisPlayer->equals($CouncilPlayer)) { ?> bold<?php } ?>">
+								<td><?php echo $Ranking; ?></td>
+								<td class="sort_name left" data-name="<?php echo htmlentities($CouncilPlayer->getPlayerName()); ?>"><?php echo $CouncilPlayer->getLevelName(); ?> <?php echo $CouncilPlayer->getLinkedDisplayName(false); ?></td>
+								<td><?php echo $ThisPlayer->getColouredRaceName($CouncilPlayer->getRaceID(), true); ?></td>
+								<td class="sort_alliance"><?php echo $CouncilPlayer->getAllianceDisplayName(true); ?></td>
+								<td class="sort_experience right"><?php echo number_format($CouncilPlayer->getExperience()); ?></td>
+							</tr><?php
+						} ?>
+					</tbody>
+				</table><?php
+				$template->listjsInclude = 'council_list';
+			} else { ?>
+				This council doesn't have any members!<?php
+			} ?>
+		</div>
+		<br /><br />
+
+		<b>View Council For:</b><br /><?php
+		foreach (Race::getPlayableIDs() as $RaceID) { ?>
+			<span class="smallFont"><?php
+				echo $ThisPlayer->getColouredRaceName($RaceID, true); ?>
+			</span><br /><?php
+		}
+
+	}
+
+}

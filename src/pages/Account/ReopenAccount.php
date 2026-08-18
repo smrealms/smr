@@ -8,8 +8,6 @@ use Smr\Template;
 
 class ReopenAccount extends AccountPage {
 
-	public string $file = 'reopen_account.php';
-
 	public function build(Account $account, Template $template): void {
 		// This page should only be accessed by players whose accounts
 		// have been closed at their own request.
@@ -24,8 +22,9 @@ class ReopenAccount extends AccountPage {
 
 		$template->pageTopic = 'Re-Open Account?';
 
-		$container = new ReopenAccountProcessor();
-		$template->assign('ReopenLink', $container->href());
+		$template->pageRenderer = fn() => ReopenAccountRenderer::render(
+			new ReopenAccountProcessor()->href(),
+		);
 	}
 
 }

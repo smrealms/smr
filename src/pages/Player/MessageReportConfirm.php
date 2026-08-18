@@ -10,8 +10,6 @@ use Smr\Template;
 
 class MessageReportConfirm extends PlayerPage {
 
-	public string $file = 'message_notify_confirm.php';
-
 	public function __construct(
 		private readonly int $folderID,
 		private readonly int $messageID,
@@ -25,16 +23,13 @@ class MessageReportConfirm extends PlayerPage {
 			create_error('Could not find the message you selected!');
 		}
 
-		$template->assign('MessageText', $dbResult->record()->getString('message_text'));
-
-		$container = new MessageReportProcessor($this->folderID, $this->messageID);
-		$template->assign('ConfirmHREF', $container->href());
-
-		$container = new MessageView($this->folderID);
-		$template->assign('CancelHREF', $container->href());
-
 		$template->pageTopic = 'Report a Message';
 		Menu::messages();
+		$template->pageRenderer = fn() => MessageReportConfirmRenderer::render(
+			MessageText: $dbResult->record()->getString('message_text'),
+			ConfirmHREF: new MessageReportProcessor($this->folderID, $this->messageID)->href(),
+			CancelHREF: new MessageView($this->folderID)->href(),
+		);
 	}
 
 }

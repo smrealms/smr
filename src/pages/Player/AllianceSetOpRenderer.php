@@ -1,0 +1,71 @@
+<?php declare(strict_types=1);
+
+namespace Smr\Pages\Player;
+
+class AllianceSetOpRenderer {
+
+	/**
+	 * @param array<int, \Smr\Player> $AlliancePlayers
+	 */
+	public static function render(
+		?string $Message,
+		?string $OpDate,
+		?string $OpCountdown,
+		string $OpProcessingHREF,
+		int $FlagshipID,
+		array $AlliancePlayers,
+		string $FlagshipHREF,
+	): void {
+		?>
+		<h2>Alliance Operation Schedule</h2>
+		<?php
+		if (isset($Message)) {
+			echo "<p>$Message</p>";
+		}
+		if (isset($OpDate)) { ?>
+			<p>The next alliance operation is scheduled for:</p>
+			<table class="nobord">
+				<tr>
+					<td><b>Date:</b></td>
+					<td><?php echo $OpDate; ?></td>
+				</tr>
+				<tr>
+					<td><b>Countdown:</b></td>
+					<td><span id="countdown"><?php echo $OpCountdown; ?></span></td>
+				</tr>
+			</table>
+			<br />
+			<div class="buttonA"><a class="buttonA" href="<?php echo $OpProcessingHREF; ?>">Cancel</a></div>
+			<?php
+		} else { ?>
+			<p>Schedule the next alliance operation:<br><small>Enter the date in server time (example: Dec 12 18:30) or a specified timezone (example: Next monday 7 pm EST)</small></p>
+			<form method="POST" action="<?php echo $OpProcessingHREF; ?>">
+				<input type="text" name="date" required />
+				<?php echo create_submit_display('Confirm'); ?>
+			</form><?php
+		}
+		?>
+
+		<br /><br />
+		<h2>Alliance Flagship</h2>
+		<p>The Flagship's location <img src="images/flagship.png" /> will be visible to all alliance members on the Local Map.</p>
+		<form method="POST" action="<?php echo $FlagshipHREF; ?>">
+			<select name="flagship_id" size="1">
+				<option value="0">-- None --</option>
+				<?php
+				foreach ($AlliancePlayers as $alliancePlayer) {
+					$selected = $alliancePlayer->getAccountID() === $FlagshipID ? 'selected' : '';
+					?>
+					<option value="<?php echo $alliancePlayer->getAccountID(); ?>" <?php echo $selected; ?>>
+						<?php echo $alliancePlayer->getDisplayName(); ?>
+					</option><?php
+				} ?>
+			</select>
+			<br /><br />
+			<?php echo create_submit_display('Designate Flagship'); ?>
+		</form>
+
+		<?php
+	}
+
+}

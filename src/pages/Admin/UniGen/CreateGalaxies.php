@@ -12,8 +12,6 @@ use Smr\Template;
 
 class CreateGalaxies extends AccountPage {
 
-	public string $file = 'admin/unigen/universe_create_galaxies.php';
-
 	public function __construct(
 		private readonly int $gameID,
 	) {}
@@ -24,11 +22,6 @@ class CreateGalaxies extends AccountPage {
 
 		$game = Game::getGame($this->gameID);
 		$template->pageTopic = 'Create Galaxies : ' . $game->getDisplayName();
-		$template->assign('GameEnabled', $game->isEnabled());
-
-		// Link for updating the number of galaxies
-		$container = new self($this->gameID);
-		$template->assign('UpdateNumGalsHREF', $container->href());
 
 		// Link for creating galaxies
 		$container = new CreateGalaxiesProcessor($this->gameID, $numGals);
@@ -36,21 +29,11 @@ class CreateGalaxies extends AccountPage {
 			'value' => 'Create Galaxies',
 			'href' => $container->href(),
 		];
-		$template->assign('Submit', $submit);
-
-		// Link for auto-generating the galaxies
-		$container = new CreateGalaxiesAutoProcessor($this->gameID);
-		$template->assign('GenerateHREF', $container->href());
-
-		// Link for creating universe from SMR file
-		$container = new UploadSmrFileProcessor($this->gameID);
-		$template->assign('UploadSmrFileHREF', $container->href());
 
 		// Create default list of galaxy names (starting with race names)
 		$raceNames = Race::getPlayableNames();
 		sort($raceNames);
 		$defaultNames = [...$raceNames, ...self::GALAXY_NAMES];
-		$template->assign('NumGals', $numGals);
 
 		//Galaxy Creation area
 		$galaxies = [];
@@ -64,7 +47,16 @@ class CreateGalaxies extends AccountPage {
 				'ForceMaxHours' => $isRacial ? 12 : 60,
 			];
 		}
-		$template->assign('Galaxies', $galaxies);
+
+		$template->pageRenderer = fn() => CreateGalaxiesRenderer::render(
+			GameEnabled: $game->isEnabled(),
+			UpdateNumGalsHREF: new self($this->gameID)->href(),
+			Submit: $submit,
+			GenerateHREF: new CreateGalaxiesAutoProcessor($this->gameID)->href(),
+			UploadSmrFileHREF: new UploadSmrFileProcessor($this->gameID)->href(),
+			NumGals: $numGals,
+			Galaxies: $galaxies,
+		);
 	}
 
 	public const array GALAXY_NAMES = [

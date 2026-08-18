@@ -3,6 +3,7 @@
 use Smr\Exceptions\GalaxyNotFound;
 use Smr\Exceptions\SectorNotFound;
 use Smr\Galaxy;
+use Smr\Pages\Standalone\GalaxyMapRenderer;
 use Smr\Request;
 use Smr\Session;
 use Smr\Template;
@@ -30,6 +31,7 @@ try {
 		exit;
 	}
 
+	$sectorID = null;
 	if (Request::has('sector_id')) {
 		$sectorID = Request::getInt('sector_id');
 		try {
@@ -66,15 +68,16 @@ try {
 		}
 		$showSeedlistSectors = $_SESSION['show_seedlist_sectors'] ?? false;
 		$hideAlliedForces = $_SESSION['hide_allied_forces'] ?? false;
-		$template->assign('ShowSeedlistSectors', $showSeedlistSectors);
-		$template->assign('HideAlliedForces', $hideAlliedForces);
-		$template->assign('CheckboxFormHREF', ''); // Submit to same page
+		$CheckboxFormHREF = ''; // Submit to same page
+	} else {
+		$showSeedlistSectors = false;
+		$hideAlliedForces = true;
+		$CheckboxFormHREF = null;
 	}
 
 	// Get the last sector in the last galaxy for form validation
 	$galaxies = Galaxy::getGameGalaxies($session->getGameID());
-	$template->assign('GameGalaxies', $galaxies);
-	$template->assign('LastSector', $player->getGame()->getLastSectorID());
+	$lastSector = $player->getGame()->getLastSectorID();
 
 	if (!isset($galaxy)) {
 		$galaxy = Galaxy::getGalaxyContaining($player->getGameID(), $player->getSectorID());
@@ -91,30 +94,24 @@ try {
 	$galaxy->getPlayers();
 
 	if (isset($sectorID)) {
-		$template->assign('FocusSector', $sectorID);
 		$mapSectors = $galaxy->getMapSectors($sectorID);
 	} else {
 		$mapSectors = $galaxy->getMapSectors();
 	}
 
-	$template->assign('Title', 'Galaxy Map');
+	$renderer = fn() => GalaxyMapRenderer::render(
+		ThisGalaxy: $galaxy,
+		GameGalaxies: $galaxies,
+		LastSector: $lastSector,
+		FocusSector: $sectorID,
+		HideAlliedForces: $hideAlliedForces,
+		ShowSeedlistSectors: $showSeedlistSectors,
+		CheckboxFormHREF: $CheckboxFormHREF,
+		ThisPlayer: $player,
+		MapSectors: $mapSectors,
+	);
 
-	$template->assign('ExtraCSSLink', $account->getCssLink());
-	$template->assign('CSSLink', $account->getCssUrl());
-	$template->assign('CSSColourLink', $account->getCssColourUrl());
-	$template->assign('FontSize', $account->getFontSize() - 20);
-	$template->assign('ThisGalaxy', $galaxy);
-	$template->assign('ThisAccount', $account);
-	$template->assign('ThisSector', $player->getSector());
-	$template->assign('MapSectors', $mapSectors);
-	$template->assign('ThisShip', $player->getShip());
-	$template->assign('ThisPlayer', $player);
-	$template->assign('UniGen', false); // we are not editing the map here!
-
-	// AJAX updates are not set up for the galaxy map at this time
-	$template->assign('AJAX_ENABLE_REFRESH', false);
-
-	$template->display('GalaxyMap.inc.php');
+	$template->display($renderer);
 } catch (Throwable $e) {
 	handleException($e);
 }

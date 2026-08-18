@@ -9,8 +9,6 @@ use Smr\Template;
 
 class ShopHardware extends PlayerPage {
 
-	public string $file = 'shop_hardware.php';
-
 	public function __construct(
 		private readonly int $locationID,
 	) {}
@@ -23,18 +21,20 @@ class ShopHardware extends PlayerPage {
 		$location = Location::getLocation($player->getGameID(), $this->locationID);
 		$template->pageTopic = $location->getName();
 
-		if ($location->isHardwareSold()) {
-			$hardwareSold = [];
-			foreach ($location->getHardwareSold() as $hardwareTypeID => $hardwareType) {
-				$container = new ShopHardwareProcessor($hardwareTypeID, $this->locationID);
-				$hardwareSold[$hardwareTypeID] = [
-					'Page' => $container,
-					'Cost' => $hardwareType->cost,
-					'Name' => $hardwareType->name,
-				];
-			}
-			$template->assign('HardwareSold', $hardwareSold);
+		$hardwareSold = [];
+		foreach ($location->getHardwareSold() as $hardwareTypeID => $hardwareType) {
+			$container = new ShopHardwareProcessor($hardwareTypeID, $this->locationID);
+			$hardwareSold[$hardwareTypeID] = [
+				'Page' => $container,
+				'Cost' => $hardwareType->cost,
+				'Name' => $hardwareType->name,
+			];
 		}
+
+		$template->pageRenderer = fn() => ShopHardwareRenderer::render(
+			HardwareSold: $hardwareSold,
+			ThisShip: $player->getShip(),
+		);
 	}
 
 }

@@ -10,9 +10,6 @@ use Smr\TradeGood;
 class Stockpile extends PlanetPage {
 
 	use ReusableTrait;
-
-	public string $file = 'planet_stockpile.php';
-
 	protected function buildPlanetPage(Player $player, Template $template): void {
 		$planet = $player->getSectorPlanet();
 		$ship = $player->getShip();
@@ -35,7 +32,9 @@ class Stockpile extends PlanetPage {
 			];
 		}
 
-		$template->assign('GoodInfo', $goodInfo);
+		$template->pageRenderer = fn() => StockpileRenderer::render(
+			GoodInfo: $goodInfo,
+		);
 	}
 
 }

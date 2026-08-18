@@ -10,8 +10,6 @@ use Smr\Template;
 
 class PastEditionSelect extends PlayerPage {
 
-	public string $file = 'galactic_post_past.php';
-
 	public function __construct(
 		private readonly int $gameID,
 	) {}
@@ -19,12 +17,6 @@ class PastEditionSelect extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Past <i>Galactic Post</i> Editions';
 		Menu::galacticPost();
-
-		$container = new PastEditionSelectProcessor();
-		$template->assign('SelectGameHREF', $container->href());
-
-		// View past editions of current game by default
-		$template->assign('SelectedGame', $this->gameID);
 
 		// Get the list of games with published papers
 		// Add the current game to this list no matter what
@@ -39,8 +31,6 @@ class PastEditionSelect extends PlayerPage {
 				'game_id' => $dbRecord->getInt('game_id'),
 			];
 		}
-		$template->assign('PublishedGames', $publishedGames);
-
 		// Get the list of published papers for the selected game
 		$dbResult = $db->read('SELECT * FROM galactic_post_paper WHERE online_since IS NOT NULL AND game_id = :game_id', [
 			'game_id' => $db->escapeNumber($this->gameID),
@@ -55,7 +45,12 @@ class PastEditionSelect extends PlayerPage {
 				'href' => $container->href(),
 			];
 		}
-		$template->assign('PastEditions', $pastEditions);
+		$template->pageRenderer = fn() => PastEditionSelectRenderer::render(
+			SelectedGame: $this->gameID,
+			SelectGameHREF: new PastEditionSelectProcessor()->href(),
+			PublishedGames: $publishedGames,
+			PastEditions: $pastEditions,
+		);
 	}
 
 }

@@ -9,8 +9,6 @@ use Smr\Template;
 
 class ArticleDeleteConfirm extends PlayerPage {
 
-	public string $file = 'galactic_post_article_delete_confirm.php';
-
 	public function __construct(
 		private readonly int $articleID,
 	) {}
@@ -24,13 +22,11 @@ class ArticleDeleteConfirm extends PlayerPage {
 			['article_id' => $this->articleID, 'game_id' => $player->getGameID()],
 			['title'],
 		);
-		$template->assign('ArticleTitle', $dbResult->record()->getString('title'));
-
-		$container = new ArticleDeleteProcessor($this->articleID);
-		$template->assign('ConfirmHREF', $container->href());
-
-		$container = new ArticleView($this->articleID);
-		$template->assign('CancelHREF', $container->href());
+		$template->pageRenderer = fn() => ArticleDeleteConfirmRenderer::render(
+			ConfirmHREF: new ArticleDeleteProcessor($this->articleID)->href(),
+			CancelHREF: new ArticleView($this->articleID)->href(),
+			ArticleTitle: $dbResult->record()->getString('title'),
+		);
 	}
 
 }

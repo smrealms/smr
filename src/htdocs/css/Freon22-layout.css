@@ -24,7 +24,7 @@ h3 {
 }
 /* ----- End Heading styles ----- */
 span.smrBanner {
-	font-size: 72px;
+	font-size: 50px; /* max size to match topleftCell size */
 }
 #Container {
 	width: 100%;
@@ -35,14 +35,14 @@ span.smrBanner {
 	width: 95%;
 }
 tr.topRow {
-	height:0%;
+	height: 1px; /* shrink to fit content */
 }
 .topleftCell {
 	font-family: 'Bookman Old Style', serif;
 	width: 20%;
 	text-align: right;
 	vertical-align: top;
-	padding: 0px;
+	padding: 0 1em 1em 0;
 	margin: 0px;
 }
 .topcenterCell {
@@ -101,7 +101,7 @@ tr.topRow {
 	font-weight: bold;
 }
 /* This starts the borders for the left nav area one */
-.LeftNavOne {
+div#LeftNavOne {
 	text-align: right;
 	padding: 10px;
 	margin: 0px 8px 10px 50px;
@@ -109,10 +109,10 @@ tr.topRow {
 	border-radius: 4px;
 }
 /* This starts the borders for the left nav area two */
-.LeftNavTwo {
+div#LeftNavTwo {
 	text-align: right;
 	padding: 10px;
-	margin: 5px 8px 5px 50px;
+	margin: 0px 8px 5px 50px;
 	border: 4px solid;
 	border-radius: 4px;
 }
@@ -176,7 +176,7 @@ a {
 	padding: 0px;
 	margin: 0px;
 }
-a.leftNav {
+div.leftNav a {
 	text-decoration: none;
 	padding: 0px;
 	margin: 0px;

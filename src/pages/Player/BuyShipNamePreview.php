@@ -8,8 +8,6 @@ use Smr\Template;
 
 class BuyShipNamePreview extends PlayerPage {
 
-	public string $file = 'buy_ship_name_preview.php';
-
 	public function __construct(
 		private readonly string $shipName,
 		private readonly int $cost,
@@ -18,10 +16,10 @@ class BuyShipNamePreview extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Naming Your Ship';
 
-		$container = new BuyShipNamePreviewProcessor($this->shipName, $this->cost);
-		$template->assign('ContinueHREF', $container->href());
-
-		$template->assign('ShipName', $this->shipName);
+		$template->pageRenderer = fn() => BuyShipNamePreviewRenderer::render(
+			ContinueHREF: new BuyShipNamePreviewProcessor($this->shipName, $this->cost)->href(),
+			ShipName: $this->shipName,
+		);
 	}
 
 }

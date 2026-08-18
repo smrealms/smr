@@ -10,8 +10,6 @@ use Smr\Template;
 
 class PreferencesTransferConfirm extends AccountPage {
 
-	public string $file = 'preferences_confirm.php';
-
 	public function build(Account $account, Template $template): void {
 		$session = Session::getInstance();
 		$amount = $session->getRequestVarInt('amount');
@@ -34,15 +32,13 @@ class PreferencesTransferConfirm extends AccountPage {
 		}
 
 		$template->pageTopic = 'Confirmation';
-		$template->assign('Amount', $amount);
-		$template->assign('ToAccountID', $account_id);
-		$template->assign('HofName', $toAccount->getHofDisplayName());
-
-		$container = new PreferencesTransferProcessor($amount, $account_id);
-		$template->assign('ConfirmHREF', $container->href());
-
-		$container = new Preferences();
-		$template->assign('CancelHREF', $container->href());
+		$template->pageRenderer = fn() => PreferencesTransferConfirmRenderer::render(
+			Amount: $amount,
+			ToAccountID: $account_id,
+			HofName: $toAccount->getHofDisplayName(),
+			ConfirmHREF: new PreferencesTransferProcessor($amount, $account_id)->href(),
+			CancelHREF: new Preferences()->href(),
+		);
 	}
 
 }

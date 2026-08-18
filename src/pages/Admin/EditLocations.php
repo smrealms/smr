@@ -12,30 +12,27 @@ use Smr\WeaponType;
 
 class EditLocations extends AccountPage {
 
-	public string $file = 'admin/location_edit.php';
-
 	public function __construct(
 		private readonly ?int $locationTypeID = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {
-		$template->assign('ViewAllLocationsLink', (new self())->href());
-
 		// For the purposes of editing, the game ID doesn't matter (yet)
 		$gameID = 0;
 
 		if ($this->locationTypeID !== null) {
-			$location = Location::getLocation($gameID, $this->locationTypeID);
-
-			$container = new EditLocationProcessor($this->locationTypeID);
-			$template->assign('SaveChangesHREF', $container->href());
-
-			$template->assign('Location', $location);
-			$template->assign('ShipTypes', ShipType::getAll());
-			$template->assign('Weapons', WeaponType::getAllWeaponTypes());
-			$template->assign('AllHardware', HardwareType::getAll());
+			$template->pageRenderer = fn() => EditLocationsRenderer::renderEdit(
+				ViewAllLocationsLink: new self()->href(),
+				SaveChangesHREF: new EditLocationProcessor($this->locationTypeID)->href(),
+				Location: Location::getLocation($gameID, $this->locationTypeID),
+				ShipTypes: ShipType::getAll(),
+				Weapons: WeaponType::getAllWeaponTypes(),
+				AllHardware: HardwareType::getAll(),
+			);
 		} else {
-			$template->assign('Locations', Location::getAllLocations($gameID));
+			$template->pageRenderer = fn() => EditLocationsRenderer::renderSelect(
+				Locations: Location::getAllLocations($gameID),
+			);
 		}
 	}
 

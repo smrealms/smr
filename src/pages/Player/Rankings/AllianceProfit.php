@@ -4,13 +4,12 @@ namespace Smr\Pages\Player\Rankings;
 
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Pages\Shared\AllianceRankingsRenderer;
 use Smr\Player;
 use Smr\Rankings;
 use Smr\Template;
 
 class AllianceProfit extends PlayerPage {
-
-	public string $file = 'rankings_alliance_profit.php';
 
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Alliance Profit Rankings';
@@ -18,20 +17,21 @@ class AllianceProfit extends PlayerPage {
 
 		$hofCategory = ['Trade', 'Money', 'Profit'];
 		$rankedStats = Rankings::allianceStatsFromHOF($hofCategory, $player->getGameID());
-		$ourRank = 0;
-		if ($player->hasAlliance()) {
-			$ourRank = Rankings::ourRank($rankedStats, $player->getAllianceID());
-			$template->assign('OurRank', $ourRank);
-		}
-
-		$template->assign('Rankings', Rankings::collectAllianceRankings($rankedStats, $player));
+		$ourRank = Rankings::ourAllianceRank($rankedStats, $player);
 
 		$numAlliances = count($rankedStats);
 		[$minRank, $maxRank] = Rankings::calculateMinMaxRanks($ourRank, $numAlliances);
 
-		$template->assign('FilteredRankings', Rankings::collectAllianceRankings($rankedStats, $player, $minRank, $maxRank));
-
-		$template->assign('FilterRankingsHREF', (new self())->href());
+		$template->pageRenderer = fn() => AllianceRankingsRenderer::render(
+			RankingStat: 'Profit',
+			OurRank: $ourRank,
+			Rankings: Rankings::collectAllianceRankings($rankedStats, $player),
+			FilteredRankings: Rankings::collectAllianceRankings($rankedStats, $player, $minRank, $maxRank),
+			FilterRankingsHREF: (new self())->href(),
+			MinRank: $minRank,
+			MaxRank: $maxRank,
+			TotalRanks: $numAlliances,
+		);
 	}
 
 }

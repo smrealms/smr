@@ -2,6 +2,7 @@
 
 namespace Smr;
 
+use Closure;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
@@ -11,14 +12,22 @@ use Smr\Container\DiContainer;
 class Template {
 
 	/** @var array<string, mixed> */
-	private array $data = [];
-	private int $nestedIncludes = 0;
-	/** @var array<string, mixed> */
 	private array $ajaxJS = [];
 	/** @var array<string> */
-	protected array $jsAlerts = [];
+	public array $jsAlerts = [];
 	/** @var array<string> */
-	protected array $jsSources = [];
+	public array $jsSources = [];
+	/** @var ?array<array{Link: string, Text: string}> */
+	public ?array $menuItems = null;
+	public ?string $subMenuBar = null;
+	public ?int $addRaceRadarChartJS = null;
+	public bool $spaceView = false; // add stars to Freon22 background?
+	public int|false $ajaxRefreshInterval = false;
+
+	/**
+	 * Holds the Renderer for the skeleton middle panel.
+	 */
+	public ?Closure $pageRenderer = null;
 
 	/**
 	 * Defines a listjs_include.js function to call at the end of the HTML body.
@@ -34,26 +43,10 @@ class Template {
 		return DiContainer::getClass(self::class);
 	}
 
-	public function hasTemplateVar(string $var): bool {
-		return isset($this->data[$var]);
-	}
-
-	public function assign(string $var, mixed $value): void {
-		if (!isset($this->data[$var])) {
-			$this->data[$var] = $value;
-		} else {
-			// We insist that template variables not change once they are set
-			throw new Exception("Cannot re-assign template variable '$var'!");
-		}
-	}
-
-	public function unassign(string $var): void {
-		unset($this->data[$var]);
-	}
-
 	public ?string $pageTopic = null {
 		set {
 			if ($this->pageTopic !== null) {
+				// We insist that pageTopic does not change once set
 				throw new Exception('Cannot re-assign pageTopic: ' . $this->pageTopic);
 			}
 			$this->pageTopic = $value;
@@ -64,7 +57,7 @@ class Template {
 	 * Displays the template HTML. Stores any ajax-enabled elements for future
 	 * comparison, and outputs modified elements in XML for ajax if requested.
 	 */
-	public function display(string $templateName, bool $outputXml = false): void {
+	public function display(Closure $renderer, bool $outputXml = false): void {
 		// If we already started output buffering before calling `display`,
 		// we may have unwanted content in the buffer that we need to remove
 		// before we send the Content-Type headers below.
@@ -75,14 +68,13 @@ class Template {
 			}
 		}
 		ob_start();
-		$this->includeTemplate($templateName);
+		$renderer();
 		$output = ob_get_clean();
 		if ($output === false) {
 			throw new Exception('Output buffering is not active!');
 		}
 
-		$ajaxEnabled = ($this->data['AJAX_ENABLE_REFRESH'] ?? false) !== false;
-		if ($ajaxEnabled) {
+		if ($this->ajaxRefreshInterval !== false) {
 			$ajaxXml = $this->convertHtmlToAjaxXml($output, $outputXml);
 			if ($outputXml) {
 				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
@@ -99,45 +91,6 @@ class Template {
 			header('Content-Type: text/html; charset=utf-8');
 		}
 		echo $output;
-	}
-
-	protected function getTemplateLocation(string $templateName): string {
-		if (isset($this->data['ThisAccount'])) {
-			$templateDir = $this->data['ThisAccount']->getTemplate() . '/';
-		} else {
-			$templateDir = 'Default/';
-		}
-		$templateDirs = array_unique([$templateDir, 'Default/']);
-
-		foreach ($templateDirs as $templateDir) {
-			$filePath = TEMPLATES . $templateDir . 'engine/Default/' . $templateName;
-			if (is_file($filePath)) {
-				return $filePath;
-			}
-		}
-		foreach ($templateDirs as $templateDir) {
-			$filePath = TEMPLATES . $templateDir . $templateName;
-			if (is_file($filePath)) {
-				return $filePath;
-			}
-		}
-		throw new Exception('No template found for ' . $templateName);
-	}
-
-	/**
-	 * @param ?array<string, mixed> $assignVars
-	 */
-	protected function includeTemplate(string $templateName, ?array $assignVars = null): void {
-		if ($this->nestedIncludes > 15) {
-			throw new Exception('Nested more than 15 template includes, is something wrong?');
-		}
-		extract($this->data);
-		if ($assignVars !== null) {
-			extract($assignVars);
-		}
-		$this->nestedIncludes++;
-		require($this->getTemplateLocation($templateName));
-		$this->nestedIncludes--;
 	}
 
 	/**
@@ -186,7 +139,7 @@ class Template {
 		return format_list($strings);
 	}
 
-	protected function doAn(string $wordAfter): string {
+	public static function doAn(string $wordAfter): string {
 		$char = strtoupper($wordAfter[0]);
 		return str_contains('AEIOU', $char) ? 'an' : 'a';
 	}
@@ -219,7 +172,7 @@ class Template {
 	/**
 	 * Registers a JS target for inclusion at the end of the HTML body.
 	 */
-	protected function addJavascriptSource(string $src): void {
+	public function addJavascriptSource(string $src): void {
 		$this->jsSources[] = $src;
 	}
 

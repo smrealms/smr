@@ -11,8 +11,6 @@ use Smr\Template;
 
 class AdminMessageSend extends AccountPage {
 
-	public string $file = 'admin/admin_message_send.php';
-
 	public const ALL_GAMES_ID = 20000;
 
 	public function __construct(
@@ -27,10 +25,6 @@ class AdminMessageSend extends AccountPage {
 
 		$this->sendGameID ??= Request::getInt('SendGameID');
 		$gameID = $this->sendGameID;
-		$container = new AdminMessageSendProcessor($gameID);
-		$template->assign('AdminMessageSendForm', $container);
-		$template->assign('MessageGameID', $gameID);
-		$template->assign('ExpireTime', $this->expireHours);
 
 		if ($gameID !== self::ALL_GAMES_ID) {
 			$game = Game::getGame($gameID);
@@ -48,13 +42,19 @@ class AdminMessageSend extends AccountPage {
 					'Name' => htmlentities($dbRecord->getString('player_name')) . ' (' . $dbRecord->getInt('player_id') . ')',
 				];
 			}
-			$template->assign('GamePlayers', $gamePlayers);
-			$template->assign('SelectedAccountID', $this->sendAccountID);
+		} else {
+			$gamePlayers = null;
 		}
-		$template->assign('Preview', $this->preview);
 
-		$container = new AdminMessageSendSelect();
-		$template->assign('BackHREF', $container->href());
+		$template->pageRenderer = fn() => AdminMessageSendRenderer::render(
+			AdminMessageSendForm: new AdminMessageSendProcessor($gameID),
+			MessageGameID: $gameID,
+			ExpireTime: $this->expireHours,
+			GamePlayers: $gamePlayers,
+			SelectedAccountID: $this->sendAccountID,
+			Preview: $this->preview,
+			BackHREF: new AdminMessageSendSelect()->href(),
+		);
 	}
 
 }

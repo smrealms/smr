@@ -17,8 +17,6 @@ use Smr\Template;
 
 class GamePlay extends AccountPage {
 
-	public string $file = 'game_play.php';
-
 	public function __construct(
 		private readonly ?string $message = null,
 		private readonly ?string $errorMessage = null,
@@ -27,18 +25,11 @@ class GamePlay extends AccountPage {
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Play Game';
 
-		$template->assign('ErrorMessage', $this->errorMessage);
-		$template->assign('Message', $this->message);
-
-		$template->assign('UserRankingLink', (new UserRankingView())->href());
-		$template->assign('UserRankName', $account->getRank()->name);
-
 		// ***************************************
 		// ** Play Games
 		// ***************************************
 
 		$games = [];
-		$games['Play'] = [];
 		$game_id_list = [];
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT end_time, game_id, game_name, game_speed, game_type
@@ -85,10 +76,6 @@ class GamePlay extends AccountPage {
 			$games['Play'][$game_id]['GameStatsLink'] = $container_game->href();
 			$games['Play'][$game_id]['Turns'] = $curr_player->getTurns();
 			$games['Play'][$game_id]['LastMovement'] = format_time(Epoch::time() - $curr_player->getLastActive(), true);
-		}
-
-		if (count($games['Play']) === 0) {
-			unset($games['Play']);
 		}
 
 		// ***************************************
@@ -142,8 +129,6 @@ class GamePlay extends AccountPage {
 		// ** Previous Games
 		// ***************************************
 
-		$games['Previous'] = [];
-
 		//New previous games
 		foreach (Game::getPastGames() as $game_id => $game) {
 			$games['Previous'][$game_id]['ID'] = $game_id;
@@ -188,14 +173,10 @@ class GamePlay extends AccountPage {
 		}
 		$db->switchDatabaseToLive(); // restore database
 
-		$template->assign('Games', $games);
-
 		// ***************************************
 		// ** Voting
 		// ***************************************
-		$container = new Vote();
-		$template->assign('VotingHref', $container->href());
-
+		$voting = [];
 		$dbResult = $db->read('SELECT * FROM voting WHERE end > :now ORDER BY end DESC', [
 			'now' => $db->escapeNumber(Epoch::time()),
 		]);
@@ -207,7 +188,6 @@ class GamePlay extends AccountPage {
 			foreach ($dbResult2->records() as $dbRecord2) {
 				$votedFor[$dbRecord2->getInt('vote_id')] = $dbRecord2->getInt('option_id');
 			}
-			$voting = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$voteID = $dbRecord->getInt('vote_id');
 				$voting[$voteID]['ID'] = $voteID;
@@ -226,14 +206,21 @@ class GamePlay extends AccountPage {
 					$voting[$voteID]['Options'][$dbRecord2->getInt('option_id')]['Votes'] = $dbRecord2->getInt('count(account_id)');
 				}
 			}
-			$template->assign('Voting', $voting);
 		}
 
 		// ***************************************
-		// ** Announcements View
-		// ***************************************
-		$container = new LoginAnnouncements(viewAll: true);
-		$template->assign('OldAnnouncementsLink', $container->href());
+
+		$template->pageRenderer = fn() => GamePlayRenderer::render(
+			ErrorMessage: $this->errorMessage,
+			Message: $this->message,
+			UserRankingLink: new UserRankingView()->href(),
+			UserRankName: $account->getRank()->name,
+			Games: $games,
+			VotingHref: new Vote()->href(),
+			Voting: $voting,
+			OldAnnouncementsLink: new LoginAnnouncements(viewAll: true)->href(),
+		);
+
 	}
 
 }

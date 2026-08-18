@@ -12,8 +12,6 @@ class ChatJoin extends AccountPage {
 
 	use ReusableTrait;
 
-	public string $file = 'chat_rules.php';
-
 	public function build(Account $account, Template $template): void {
 		$session = Session::getInstance();
 		$player = $session->hasGame() ? $session->getPlayer() : null;
@@ -33,7 +31,7 @@ class ChatJoin extends AccountPage {
 		}
 
 		$ircURL = 'http://widget.mibbit.com/?settings=5f6a385735f22a3138c5cc6059dab2f4&server=irc.theairlock.net&autoconnect=true&channel=' . urlencode($autoChannels) . '&nick=' . urlencode(str_replace(' ', '_', $nick));
-		$template->assign('IrcURL', $ircURL);
+		$template->pageRenderer = fn() => ChatJoinRenderer::render($ircURL);
 	}
 
 }

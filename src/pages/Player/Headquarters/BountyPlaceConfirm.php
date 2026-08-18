@@ -9,8 +9,6 @@ use Smr\Template;
 
 class BountyPlaceConfirm extends PlayerPage {
 
-	public string $file = 'bounty_place_confirm.php';
-
 	public function __construct(
 		private readonly int $locationID,
 		private readonly int $otherPlayerID,
@@ -26,20 +24,18 @@ class BountyPlaceConfirm extends PlayerPage {
 		// get this guy from db
 		$bountyPlayer = Player::getPlayerByPlayerID($this->otherPlayerID, $player->getGameID());
 
-		$template->assign('Amount', number_format($this->credits));
-		$template->assign('SmrCredits', number_format($this->smrCredits));
-		$template->assign('BountyPlayer', $bountyPlayer->getLinkedDisplayName());
-
-		$container = new BountyPlaceConfirmProcessor(
-			locationID: $this->locationID,
-			otherAccountID: $bountyPlayer->getAccountID(),
-			credits: $this->credits,
-			smrCredits: $this->smrCredits,
+		$template->pageRenderer = fn() => BountyPlaceConfirmRenderer::render(
+			Amount: number_format($this->credits),
+			SmrCredits: number_format($this->smrCredits),
+			BountyPlayer: $bountyPlayer->getLinkedDisplayName(),
+			ConfirmHREF: new BountyPlaceConfirmProcessor(
+				locationID: $this->locationID,
+				otherAccountID: $bountyPlayer->getAccountID(),
+				credits: $this->credits,
+				smrCredits: $this->smrCredits,
+			)->href(),
+			CancelHREF: new BountyPlace($this->locationID)->href(),
 		);
-		$template->assign('ConfirmHREF', $container->href());
-
-		$container = new BountyPlace($this->locationID);
-		$template->assign('CancelHREF', $container->href());
 	}
 
 }

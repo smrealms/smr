@@ -11,12 +11,8 @@ use Smr\Template;
 
 class AdminMessageSendSelect extends AccountPage {
 
-	public string $file = 'admin/admin_message_send_select.php';
-
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Send Admin Message';
-
-		$template->assign('AdminMessageChooseGameFormHref', (new AdminMessageSend())->href());
 
 		// Get a list of all games that have not yet ended
 		$activeGames = [];
@@ -27,7 +23,10 @@ class AdminMessageSendSelect extends AccountPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$activeGames[] = Game::getGame($dbRecord->getInt('game_id'));
 		}
-		$template->assign('ActiveGames', $activeGames);
+		$template->pageRenderer = fn() => AdminMessageSendSelectRenderer::render(
+			AdminMessageChooseGameFormHref: new AdminMessageSend()->href(),
+			ActiveGames: $activeGames,
+		);
 	}
 
 }

@@ -11,8 +11,6 @@ use Smr\Template;
 
 class AllianceSetOp extends PlayerPage {
 
-	public string $file = 'alliance_set_op.php';
-
 	public function __construct(
 		private readonly ?string $message = null,
 	) {}
@@ -25,7 +23,6 @@ class AllianceSetOp extends PlayerPage {
 		Menu::alliance($alliance->getAllianceID());
 
 		// Print any error messages that may have been created
-		$template->assign('Message', $this->message);
 
 		// get the op from db
 		$db = Database::getInstance();
@@ -34,23 +31,26 @@ class AllianceSetOp extends PlayerPage {
 		if ($dbResult->hasRecord()) {
 			// An op is already scheduled, so get the time
 			$time = $dbResult->record()->getInt('time');
-			$template->assign('OpDate', date($account->getDateTimeFormat(), $time));
-			$template->assign('OpCountdown', format_time($time - Epoch::time()));
+			$opDate = date($account->getDateTimeFormat(), $time);
+			$opCountdown = format_time($time - Epoch::time());
 
 			// Add a cancel button
 			$cancel = true;
 		} else {
+			$opDate = null;
+			$opCountdown = null;
 			$cancel = false;
 		}
-		$container = new AllianceSetOpProcessor($cancel);
-		$template->assign('OpProcessingHREF', $container->href());
 
-		// Stuff for designating a flagship
-		$template->assign('FlagshipID', $alliance->getFlagshipID());
-		$template->assign('AlliancePlayers', $alliance->getMembers(includeNpc: false));
-
-		$container = new AllianceSetFlagshipProcessor();
-		$template->assign('FlagshipHREF', $container->href());
+		$template->pageRenderer = fn() => AllianceSetOpRenderer::render(
+			Message: $this->message,
+			OpDate: $opDate,
+			OpCountdown: $opCountdown,
+			OpProcessingHREF: new AllianceSetOpProcessor($cancel)->href(),
+			FlagshipID: $alliance->getFlagshipID(),
+			AlliancePlayers: $alliance->getMembers(includeNpc: false),
+			FlagshipHREF: new AllianceSetFlagshipProcessor()->href(),
+		);
 	}
 
 }

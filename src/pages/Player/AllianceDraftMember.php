@@ -16,9 +16,6 @@ use Smr\Template;
 class AllianceDraftMember extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'alliance_pick.php';
-
 	public function build(Player $player, Template $template): void {
 		if (!$player->getGame()->isGameType(Game::GAME_TYPE_DRAFT)) {
 			throw new Exception('This page is only allowed in Draft games!');
@@ -33,11 +30,8 @@ class AllianceDraftMember extends PlayerPage {
 		// Get the current teams
 		require_once(LIB . 'Default/alliance_pick.inc.php');
 		$teams = get_draft_teams($player->getGameID());
-		$template->assign('Teams', $teams);
 
 		// Add information about current player
-		$template->assign('PlayerID', $player->getPlayerID());
-		$template->assign('CanPick', $teams[$player->getAccountID()]['CanPick']);
 
 		// If players were placed into the NHA, they are still eligible to be picked
 		try {
@@ -62,8 +56,6 @@ class AllianceDraftMember extends PlayerPage {
 			];
 		}
 
-		$template->assign('PickPlayers', $players);
-
 		// Get the draft history
 		$history = [];
 		$dbResult = $db->select('draft_history', ['game_id' => $player->getGameID()], orderBy: ['draft_id']);
@@ -77,7 +69,15 @@ class AllianceDraftMember extends PlayerPage {
 			];
 		}
 
-		$template->assign('History', $history);
+		$template->pageRenderer = fn() => AllianceDraftMemberRenderer::render(
+			template: $template,
+			Teams: $teams,
+			PlayerID: $player->getPlayerID(),
+			CanPick: $teams[$player->getAccountID()]['CanPick'],
+			PickPlayers: $players,
+			History: $history,
+			ThisAccount: $player->getAccount(),
+		);
 	}
 
 }

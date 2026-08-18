@@ -9,8 +9,6 @@ use Smr\Template;
 
 class EditGalaxies extends AccountPage {
 
-	public string $file = 'admin/unigen/galaxies_edit.php';
-
 	public function __construct(
 		private readonly int $gameID,
 		public readonly EditGalaxy $returnTo,
@@ -19,14 +17,12 @@ class EditGalaxies extends AccountPage {
 	public function build(Account $account, Template $template): void {
 		$game = Game::getGame($this->gameID);
 		$template->pageTopic = 'Edit Galaxies : ' . $game->getDisplayName();
-		$template->assign('GameEnabled', $game->isEnabled());
 
 		$container = new EditGalaxiesProcessor($this->gameID, $this->returnTo);
 		$submit = [
 			'value' => 'Edit Galaxies',
 			'href' => $container->href(),
 		];
-		$template->assign('Submit', $submit);
 
 		$galaxies = [];
 		foreach ($game->getGalaxies() as $galaxyId => $galaxy) {
@@ -44,13 +40,17 @@ class EditGalaxies extends AccountPage {
 				'DelHREF' => $container->href(),
 			];
 		}
-		$template->assign('Galaxies', $galaxies);
-
-		$template->assign('BackHREF', $this->returnTo->href());
 
 		$container = new EditGalaxiesAddProcessor($this->gameID, $this);
-		$template->assign('AddHREF', $container->href());
-		$template->assign('MaxAddId', $game->getNumberOfGalaxies() + 1);
+
+		$template->pageRenderer = fn() => EditGalaxiesRenderer::render(
+			GameEnabled: $game->isEnabled(),
+			Submit: $submit,
+			Galaxies: $galaxies,
+			BackHREF: $this->returnTo->href(),
+			AddHREF: $container->href(),
+			MaxAddId: $game->getNumberOfGalaxies() + 1,
+		);
 	}
 
 }

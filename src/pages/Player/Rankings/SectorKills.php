@@ -13,9 +13,6 @@ use Smr\Template;
 class SectorKills extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'rankings_sector_kill.php';
-
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Sector Death Rankings';
 
@@ -29,7 +26,6 @@ class SectorKills extends PlayerPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$rankedStats[$dbRecord->getInt('sector_id')] = $dbRecord;
 		}
-		$template->assign('TopTen', Rankings::collectSectorRankings($rankedStats, $player));
 
 		// Calculate the rank of the sector the player is currently in
 		$ourRank = Rankings::ourRank($rankedStats, $player->getSectorID());
@@ -37,10 +33,13 @@ class SectorKills extends PlayerPage {
 		$totalSectors = count($rankedStats);
 		[$minRank, $maxRank] = Rankings::calculateMinMaxRanks($ourRank, $totalSectors);
 
-		$container = new self();
-		$template->assign('SubmitHREF', $container->href());
-
-		$template->assign('TopCustom', Rankings::collectSectorRankings($rankedStats, $player, $minRank, $maxRank));
+		$template->pageRenderer = fn() => SectorKillsRenderer::render(
+			TopTen: Rankings::collectSectorRankings($rankedStats, $player),
+			SubmitHREF: new self()->href(),
+			TopCustom: Rankings::collectSectorRankings($rankedStats, $player, $minRank, $maxRank),
+			MinRank: $minRank,
+			MaxRank: $maxRank,
+		);
 	}
 
 }

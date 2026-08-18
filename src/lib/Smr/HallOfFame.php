@@ -13,7 +13,7 @@ class HallOfFame {
 
 	/**
 	 * @param array<string> $allowedVis
-	 * @return array<array<string, string>>
+	 * @return array<array{link: string, subcategories: string}>
 	 */
 	public static function getHofCategories(HallOfFameAll|HallOfFamePersonal $page, array $allowedVis, ?int $game_id, int $account_id): array {
 		// Get the HOF type that we're currently viewing

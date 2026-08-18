@@ -3,6 +3,7 @@
 use Smr\Database;
 use Smr\Galaxy;
 use Smr\Game;
+use Smr\Pages\Standalone\MapWarpsRenderer;
 use Smr\Request;
 use Smr\Sector;
 use Smr\Session;
@@ -59,9 +60,11 @@ try {
 	], JSON_THROW_ON_ERROR);
 
 	$template = Template::getInstance();
-	$template->assign('GameName', $game->getName());
-	$template->assign('GraphData', $data);
-	$template->display('map_warps.php');
+	$renderer = fn() => MapWarpsRenderer::render(
+		GameName: $game->getName(),
+		GraphData: $data,
+	);
+	$template->display($renderer);
 } catch (Throwable $e) {
 	handleException($e);
 }

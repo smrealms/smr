@@ -1,0 +1,43 @@
+<?php declare(strict_types=1);
+
+namespace Smr\Pages\Shared;
+
+use Smr\Player;
+
+class RaceRankingsRenderer {
+
+	/**
+	 * @param array<int, array{style: string, race_id: int, amount: int, amount_avg: int, num_players: int}> $Ranks
+	 */
+	public static function render(
+		Player $ThisPlayer,
+		string $RankingStat,
+		array $Ranks,
+	): void {
+		?>
+		<p class="center">Here are the rankings of the races by their <?php echo $RankingStat; ?>.</p>
+		<table class="standard center inset">
+			<tr>
+				<th class="shrink">Rank</th>
+				<th>Race</th>
+				<th>Total <?php echo $RankingStat; ?></th>
+				<th>Average <?php echo $RankingStat; ?></th>
+				<th>Total Players</th>
+			</tr>
+
+			<?php
+			foreach ($Ranks as $rank => $data) { ?>
+				<tr>
+					<td <?php echo $data['style']; ?>><?php echo $rank; ?></td>
+					<td <?php echo $data['style']; ?>><?php echo $ThisPlayer->getColouredRaceName($data['race_id'], true); ?></td>
+					<td <?php echo $data['style']; ?>><?php echo number_format($data['amount']); ?></td>
+					<td <?php echo $data['style']; ?>><?php echo number_format($data['amount_avg']); ?></td>
+					<td <?php echo $data['style']; ?>><?php echo $data['num_players']; ?></td>
+				</tr><?php
+			} ?>
+		</table>
+
+		<?php
+	}
+
+}

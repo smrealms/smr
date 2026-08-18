@@ -9,20 +9,19 @@ use Smr\Template;
 
 class AllianceLeadership extends PlayerPage {
 
-	public string $file = 'alliance_leadership.php';
-
 	public function build(Player $player, Template $template): void {
 		$alliance = $player->getAlliance();
 
 		$template->pageTopic = $alliance->getAllianceDisplayName(false, true);
 		Menu::alliance($player->getAllianceID());
 
-		$container = new AllianceLeadershipProcessor();
-		$template->assign('HandoverHREF', $container->href());
-
 		$members = $alliance->getMembers(includeNpc: false);
 		unset($members[$alliance->getLeaderID()]); // don't show current leader
-		$template->assign('AlliancePlayers', $members);
+		$template->pageRenderer = fn() => AllianceLeadershipRenderer::render(
+			$player,
+			new AllianceLeadershipProcessor()->href(),
+			$members,
+		);
 	}
 
 }

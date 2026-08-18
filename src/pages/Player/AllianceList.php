@@ -13,17 +13,11 @@ use Smr\Template;
 class AllianceList extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'alliance_list.php';
-
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'List Of Alliances';
 
 		$allowCreate = !$player->hasAlliance() && (!$player->getGame()->isGameType(Game::GAME_TYPE_DRAFT) || $player->isDraftLeader());
-		if ($allowCreate) {
-			$container = new AllianceCreate();
-			$template->assign('CreateAllianceHREF', $container->href());
-		}
+		$createAllianceHREF = $allowCreate ? new AllianceCreate()->href() : null;
 
 		// get list of alliances
 		$db = Database::getInstance();
@@ -54,7 +48,12 @@ class AllianceList extends PlayerPage {
 				'OpenRecruitment' => $alliance->getRecruitType() === Alliance::RECRUIT_OPEN,
 			];
 		}
-		$template->assign('Alliances', $alliances);
+
+		$template->pageRenderer = fn() => AllianceListRenderer::render(
+			template: $template,
+			CreateAllianceHREF: $createAllianceHREF,
+			Alliances: $alliances,
+		);
 	}
 
 }

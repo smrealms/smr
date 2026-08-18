@@ -1,0 +1,67 @@
+<?php declare(strict_types=1);
+
+namespace Smr\Pages\Shared\Admin\Unigen;
+
+use Smr\Galaxy;
+
+class GalaxyDetailsRenderer {
+
+	/**
+	 * @param array<int, array{Name: string, Width: int, Height: int, Type: string, ForceMaxHours: float, DelHREF?: string}> $Galaxies
+	 * @param array{value: string, href: string} $Submit
+	 */
+	public static function render(
+		array $Galaxies,
+		bool $GameEnabled,
+		array $Submit,
+	): void {
+		?>
+		<form method="POST" action="<?php echo $Submit['href']; ?>">
+			<table class="standard">
+				<tr>
+					<th>Galaxy ID</th>
+					<th>Name</th>
+					<th>Width</th>
+					<th>Height</th>
+					<th>Type</th>
+					<th>
+						Max Hours Before<br />
+						Forces Expire<br />
+						(Decimals Allowed)
+					</th>
+				</tr><?php
+				foreach ($Galaxies as $i => $gal) { ?>
+					<tr>
+						<td class="center"><?php echo $i; ?></td>
+						<td><input required type="text" value="<?php echo $gal['Name']; ?>" name="gal<?php echo $i; ?>"></td>
+						<td><input required <?php if ($GameEnabled) { ?>disabled<?php } ?> class="center" type="number" min="1" max="100" value="<?php echo $gal['Width']; ?>" name="width<?php echo $i; ?>"></td>
+						<td><input required <?php if ($GameEnabled) { ?>disabled<?php } ?> class="center" type="number" min="1" max="100" value="<?php echo $gal['Height']; ?>" name="height<?php echo $i; ?>"></td>
+						<td>
+							<select name="type<?php echo $i; ?>"><?php
+							foreach (Galaxy::TYPES as $GalaxyType) { ?>
+								<option value="<?php echo htmlspecialchars($GalaxyType); ?>" <?php if ($GalaxyType === $gal['Type']) { ?>selected<?php } ?>><?php echo $GalaxyType; ?></option><?php
+							} ?>
+							</select>
+						</td>
+						<td class="center"><input required size="3" type="text" value="<?php echo $gal['ForceMaxHours']; ?>" name="forces<?php echo $i; ?>"></td><?php
+						if (!$GameEnabled && isset($gal['DelHREF'])) { ?>
+							<td>
+								<a href="<?php echo $gal['DelHREF']; ?>">
+									<img class="bottom" src="images/silk/cross.png" width="16" height="16" alt="Delete" title="Delete Galaxy <?php echo $i; ?>" />
+								</a>
+							</td><?php
+						} ?>
+					</tr><?php
+				} ?>
+				<tr>
+					<td class="center" colspan="6">
+						<?php echo create_submit_display($Submit['value']); ?>
+					</td>
+				</tr>
+			</table>
+		</form>
+
+		<?php
+	}
+
+}

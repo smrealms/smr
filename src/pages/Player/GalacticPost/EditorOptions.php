@@ -11,8 +11,6 @@ use Smr\Template;
 
 class EditorOptions extends PlayerPage {
 
-	public string $file = 'galactic_post.php';
-
 	public function build(Player $player, Template $template): void {
 		if (!$player->isGPEditor()) {
 			throw new Exception('Only the GP Editor is allowed to view this page!');
@@ -22,13 +20,6 @@ class EditorOptions extends PlayerPage {
 		Menu::galacticPost();
 
 		$db = Database::getInstance();
-
-		$container = new ArticleView();
-		$template->assign('ViewArticlesHREF', $container->href());
-
-		$container = new PaperMake();
-		$template->assign('MakePaperHREF', $container->href());
-
 		$dbResult = $db->select('galactic_post_paper', [
 			'game_id' => $player->getGameID(),
 		]);
@@ -63,7 +54,13 @@ class EditorOptions extends PlayerPage {
 
 			$papers[] = $paper;
 		}
-		$template->assign('Papers', $papers);
+
+		$template->pageRenderer = fn() => EditorOptionsRenderer::render(
+			ViewArticlesHREF: new ArticleView()->href(),
+			MakePaperHREF: new PaperMake()->href(),
+			Papers: $papers,
+			ThisPlayer: $player,
+		);
 	}
 
 }

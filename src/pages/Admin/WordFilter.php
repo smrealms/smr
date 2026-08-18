@@ -12,8 +12,6 @@ class WordFilter extends AccountPage {
 
 	use ReusableTrait;
 
-	public string $file = 'admin/word_filter.php';
-
 	public function __construct(
 		private readonly ?string $message = null,
 	) {}
@@ -21,23 +19,18 @@ class WordFilter extends AccountPage {
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Word Filter';
 
-		$template->assign('Message', $this->message);
-
 		$db = Database::getInstance();
 		$dbResult = $db->select('word_filter');
-		if ($dbResult->hasRecord()) {
-			$container = new WordFilterDeleteProcessor();
-			$template->assign('DelHREF', $container->href());
-		}
-
 		$filteredWords = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$filteredWords[] = $dbRecord->getRow();
 		}
-		$template->assign('FilteredWords', $filteredWords);
-
-		$container = new WordFilterAddProcessor();
-		$template->assign('AddHREF', $container->href());
+		$template->pageRenderer = fn() => WordFilterRenderer::render(
+			DelHREF: new WordFilterDeleteProcessor()->href(),
+			AddHREF: new WordFilterAddProcessor()->href(),
+			FilteredWords: $filteredWords,
+			Message: $this->message,
+		);
 	}
 
 }

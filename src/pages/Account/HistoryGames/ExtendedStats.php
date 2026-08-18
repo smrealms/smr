@@ -7,8 +7,6 @@ use Smr\Template;
 
 class ExtendedStats extends HistoryPage {
 
-	public string $file = 'history_games_extended_stats.php';
-
 	public function __construct(
 		protected readonly string $historyDatabase,
 		protected readonly int $historyGameID,
@@ -31,7 +29,7 @@ class ExtendedStats extends HistoryPage {
 			$container = new ExtendedStatsDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $category);
 			$links[$category] = $container->href();
 		}
-		$template->assign('Links', $links);
+		$template->pageRenderer = fn() => ExtendedStatsRenderer::render($links);
 	}
 
 }

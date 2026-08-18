@@ -27,7 +27,7 @@ class RouteGenerator {
 	 * @param array<int, bool> $goods
 	 * @param array<int, bool> $races
 	 * @param array<int, array<int, \Smr\Path>> $distances
-	 * @return array<int, array<numeric-string, array<MultiplePortRoute>>>
+	 * @return array<self::*_ROUTE, array<numeric-string, array<MultiplePortRoute>>>
 	 */
 	public static function generateMultiPortRoutes(int $maxNumPorts, array $ports, array $goods, array $races, array $distances, int $routesForPort, int $numberOfRoutes): array {
 		self::initialize();

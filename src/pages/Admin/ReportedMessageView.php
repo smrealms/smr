@@ -12,13 +12,8 @@ use Smr\Template;
 
 class ReportedMessageView extends AccountPage {
 
-	public string $file = 'admin/notify_view.php';
-
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Viewing Reported Messages';
-
-		$container = new ReportedMessageDeleteProcessor();
-		$template->assign('DeleteHREF', $container->href());
 
 		$db = Database::getInstance();
 		$dbResult = $db->select('message_notify');
@@ -63,7 +58,11 @@ class ReportedMessageView extends AccountPage {
 				'text' => bbify($dbRecord->getString('text'), $gameID),
 			];
 		}
-		$template->assign('Messages', $messages);
+
+		$template->pageRenderer = fn() => ReportedMessageViewRenderer::render(
+			DeleteHREF: new ReportedMessageDeleteProcessor()->href(),
+			Messages: $messages,
+		);
 	}
 
 }

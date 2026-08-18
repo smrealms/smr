@@ -9,13 +9,8 @@ use Smr\Template;
 
 class GameDelete extends AccountPage {
 
-	public string $file = 'admin/game_delete.php';
-
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Deleting A Game';
-
-		$container = new GameDeleteConfirm();
-		$template->assign('ConfirmHREF', $container->href());
 
 		$db = Database::getInstance();
 		// Only allow deleting games that haven't been enabled yet
@@ -35,7 +30,10 @@ class GameDelete extends AccountPage {
 				'display' => '(' . $game_id . ') ' . $name,
 			];
 		}
-		$template->assign('Games', $games);
+		$template->pageRenderer = fn() => GameDeleteRenderer::render(
+			ConfirmHREF: new GameDeleteConfirm()->href(),
+			Games: $games,
+		);
 	}
 
 }

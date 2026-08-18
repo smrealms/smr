@@ -11,15 +11,15 @@ class NewbieLeave extends PlayerPage {
 
 	use ReusableTrait;
 
-	public string $file = 'leave_newbie.php';
-
 	public function build(Player $player, Template $template): void {
 		if (!$player->getGame()->hasStarted()) {
 			create_error('You cannot leave newbie protection before the game begins!');
 		}
 
-		$template->assign('CancelHREF', new CurrentSector()->href());
-		$template->assign('ConfirmHREF', $player->getLeaveNewbieProtectionHREF());
+		$template->pageRenderer = fn() => NewbieLeaveRenderer::render(
+			CancelHREF: new CurrentSector()->href(),
+			ConfirmHREF: $player->getLeaveNewbieProtectionHREF(),
+		);
 
 		$template->pageTopic = 'Leave Newbie Protection';
 	}

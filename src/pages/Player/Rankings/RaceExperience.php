@@ -5,6 +5,7 @@ namespace Smr\Pages\Player\Rankings;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Pages\Shared\RaceRankingsRenderer;
 use Smr\Player;
 use Smr\Rankings;
 use Smr\Template;
@@ -12,16 +13,18 @@ use Smr\Template;
 class RaceExperience extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'rankings_race.php';
-
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Racial Standings';
 
 		Menu::rankings(2, 0);
 
 		$rankedStats = Rankings::raceStats('experience', $player->getGameID());
-		$template->assign('Ranks', Rankings::collectRaceRankings($rankedStats, $player));
+
+		$template->pageRenderer = fn() => RaceRankingsRenderer::render(
+			RankingStat: 'Experience',
+			Ranks: Rankings::collectRaceRankings($rankedStats, $player),
+			ThisPlayer: $player,
+		);
 	}
 
 }

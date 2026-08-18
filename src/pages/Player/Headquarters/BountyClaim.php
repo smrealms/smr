@@ -9,8 +9,6 @@ use Smr\Template;
 
 class BountyClaim extends PlayerPage {
 
-	public string $file = 'bounty_claim.php';
-
 	public function __construct(
 		private readonly int $locationID,
 		private readonly string $claimText,
@@ -21,7 +19,7 @@ class BountyClaim extends PlayerPage {
 
 		Menu::headquarters($this->locationID);
 
-		$template->assign('ClaimText', $this->claimText);
+		$template->pageRenderer = fn() => BountyClaimRenderer::render($this->claimText);
 	}
 
 }

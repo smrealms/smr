@@ -10,11 +10,12 @@ use Smr\Template;
 class BugReport extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'bug_report.php';
-
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Report a Bug';
+
+		$template->pageRenderer = fn() => BugReportRenderer::render(
+			ThisAccount: $account,
+		);
 	}
 
 }

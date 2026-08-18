@@ -12,9 +12,6 @@ use Smr\Template;
 class AdminPermissionManage extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'admin/permission_manage.php';
-
 	public function __construct(
 		private readonly ?int $adminAccountID = null,
 	) {}
@@ -37,7 +34,6 @@ class AdminPermissionManage extends AccountPage {
 				'name' => $dbRecord->getString('login'),
 			];
 		}
-		$template->assign('AdminLinks', $adminLinks);
 
 		if ($admin_id === null) {
 			// If we don't have an account_id here display an account list
@@ -54,21 +50,23 @@ class AdminPermissionManage extends AccountPage {
 					$validatedAccounts[$accountID] = $dbRecord->getString('login');
 				}
 			}
-			$template->assign('ValidatedAccounts', $validatedAccounts);
 
-			$template->assign('SelectAdminHREF', (new AdminPermissionManageSelectProcessor())->href());
+			$template->pageRenderer = fn() => AdminPermissionManageRenderer::renderSelect(
+				AdminLinks: $adminLinks,
+				ValidatedAccounts: $validatedAccounts,
+				SelectAdminHREF: (new AdminPermissionManageSelectProcessor())->href(),
+			);
 		} else {
 			// get the account that we're editing
-			$editAccount = Account::getAccount($admin_id);
-			$template->assign('EditAccount', $editAccount);
-
-			$container = new AdminPermissionManageProcessor($admin_id);
-			$template->assign('ProcessingHREF', $container->href());
-			$container = new self();
-			$template->assign('CancelHREF', $container->href());
-
-			$template->assign('PermissionCategories', AdminPermissions::getPermissionsByCategory());
+			$template->pageRenderer = fn() => AdminPermissionManageRenderer::renderEdit(
+				AdminLinks: $adminLinks,
+				EditAccount: Account::getAccount($admin_id),
+				ProcessingHREF: new AdminPermissionManageProcessor($admin_id)->href(),
+				CancelHREF: new self()->href(),
+				PermissionCategories: AdminPermissions::getPermissionsByCategory(),
+			);
 		}
+
 	}
 
 }

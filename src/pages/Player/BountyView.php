@@ -8,8 +8,6 @@ use Smr\Template;
 
 class BountyView extends PlayerPage {
 
-	public string $file = 'bounty_view.php';
-
 	public function __construct(
 		private readonly int $otherAccountID,
 	) {}
@@ -17,7 +15,7 @@ class BountyView extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$bountyPlayer = Player::getPlayer($this->otherAccountID, $player->getGameID());
 		$template->pageTopic = 'Viewing Bounties';
-		$template->assign('BountyPlayer', $bountyPlayer);
+		$template->pageRenderer = fn() => BountyViewRenderer::render($bountyPlayer);
 	}
 
 }

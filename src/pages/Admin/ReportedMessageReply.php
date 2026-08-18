@@ -9,8 +9,6 @@ use Smr\Template;
 
 class ReportedMessageReply extends AccountPage {
 
-	public string $file = 'admin/notify_reply.php';
-
 	public function __construct(
 		private readonly int $offenderAccountID,
 		private readonly int $offendedAccountID,
@@ -29,25 +27,26 @@ class ReportedMessageReply extends AccountPage {
 			offenderAccountID: $this->offenderAccountID,
 			offendedAccountID: $this->offendedAccountID,
 		);
-		$template->assign('NotifyReplyFormPage', $container);
 
 		$offender = Messages::getMessagePlayer($this->offenderAccountID, $this->gameID);
 		if (is_object($offender)) {
 			$offender = $offender->getDisplayName() . ' (Login: ' . $offender->getAccount()->getLogin() . ')';
 		}
-		$template->assign('Offender', $offender);
 
 		$offended = Messages::getMessagePlayer($this->offendedAccountID, $this->gameID);
 		if (is_object($offended)) {
 			$offended = $offended->getDisplayName() . ' (Login: ' . $offended->getAccount()->getLogin() . ')';
 		}
-		$template->assign('Offended', $offended);
 
-		$template->assign('PreviewOffender', $this->offenderPreview);
-		$template->assign('OffenderBanPoints', $this->offenderBanPoints);
-
-		$template->assign('PreviewOffended', $this->offendedPreview);
-		$template->assign('OffendedBanPoints', $this->offendedBanPoints);
+		$template->pageRenderer = fn() => ReportedMessageReplyRenderer::render(
+			NotifyReplyFormPage: $container,
+			Offender: $offender,
+			Offended: $offended,
+			PreviewOffender: $this->offenderPreview,
+			OffenderBanPoints: $this->offenderBanPoints,
+			PreviewOffended: $this->offendedPreview,
+			OffendedBanPoints: $this->offendedBanPoints,
+		);
 	}
 
 }

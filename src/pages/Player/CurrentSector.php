@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Player;
 
+use Smr\Combat\Results\FullCombatResults;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Game;
@@ -16,9 +17,6 @@ use Smr\TurnsLevel;
 class CurrentSector extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'current_sector.php';
-
 	private ?string $attackMessage = null;
 
 	public function __construct(
@@ -37,7 +35,7 @@ class CurrentSector extends PlayerPage {
 			(new PlanetMain($this->message, $this->errorMessage))->go();
 		}
 
-		$template->assign('SpaceView', true);
+		$template->spaceView = true;
 
 		$template->pageTopic = 'Current Sector: ' . $player->getSectorID() . ' (' . $sector->getGalaxy()->getDisplayName() . ')';
 
@@ -71,7 +69,7 @@ class CurrentSector extends PlayerPage {
 
 		$links = [];
 		foreach ($linkSectorIDs as $dir => $linkSectorID) {
-			$links[$dir]['ID'] = $linkSectorID;
+			$links[$dir] = ['ID' => $linkSectorID, 'Class' => ''];
 			if ($linkSectorID > 0 && $linkSectorID !== $player->getSectorID()) {
 				if ($player->getLastSectorID() === $linkSectorID) {
 					$class = 'lastVisited';
@@ -83,15 +81,13 @@ class CurrentSector extends PlayerPage {
 				$links[$dir]['Class'] = $class;
 			}
 		}
-		$template->assign('Sectors', $links);
 
-		doTickerAssigns($template, $player, $db);
+		$ticker = getDisplayTickers($template, $player, $db);
 
 		$unreadMissions = [];
 		foreach ($player->getActiveMissionStates() as $missionID => $missionState) {
 			$unreadMissions[$missionID] = $missionState->getUnreadMessage();
 		}
-		$template->assign('UnreadMissions', $unreadMissions);
 
 		// *******************************************
 		// *
@@ -103,12 +99,9 @@ class CurrentSector extends PlayerPage {
 			$turnsMessage = 'The game will start in ' . format_time($game->getStartTime() - Epoch::time()) . '!';
 		} else {
 			$turnsMessage = $player->getTurnsLevel()->message();
-			if ($player->getTurnsLevel() === TurnsLevel::None) {
+			if ($turnsMessage !== null && $player->getTurnsLevel() === TurnsLevel::None) {
 				$turnsMessage .= ' You will gain another turn in ' . format_time($player->getTimeUntilNextTurn()) . '.';
 			}
-		}
-		if ($turnsMessage !== '') {
-			$template->assign('TurnsMessage', $turnsMessage);
 		}
 
 		$protectionMessage = null;
@@ -124,10 +117,6 @@ class CurrentSector extends PlayerPage {
 			$protectionMessage = '<span class="blue">PROTECTION</span>: You are <span class="red">NOT</span> under protection.';
 		}
 
-		if ($protectionMessage !== null) {
-			$template->assign('ProtectionMessage', $protectionMessage);
-		}
-
 		//enableProtectionDependantRefresh($template,$player);
 
 		// Do we have an unseen attack message to store in this var?
@@ -135,34 +124,6 @@ class CurrentSector extends PlayerPage {
 		if ($dbResult->hasRecord()) {
 			$this->attackMessage = $dbResult->record()->getString('message');
 			$db->delete('sector_message', $player->SQLID);
-		}
-
-		if ($this->attackMessage !== null) {
-			checkForAttackMessage($this->attackMessage, $player);
-		}
-		if ($this->showForceRefreshMessage) {
-			$template->assign('ForceRefreshMessage', getForceRefreshMessage($player));
-		}
-		if ($this->missionMessage !== null) {
-			$template->assign('MissionMessage', $this->missionMessage);
-		}
-		if ($this->message !== null) {
-			$template->assign('VarMessage', bbify($this->message));
-		}
-
-		//error msgs take precedence
-		if ($this->errorMessage !== null) {
-			$template->assign('ErrorMessage', $this->errorMessage);
-		}
-
-		// *******************************************
-		// *
-		// * Trade Result
-		// *
-		// *******************************************
-
-		if ($this->tradeMessage !== null) {
-			$template->assign('TradeMessage', $this->tradeMessage);
 		}
 
 		// *******************************************
@@ -173,7 +134,9 @@ class CurrentSector extends PlayerPage {
 
 		if ($sector->hasPort()) {
 			$port = $sector->getPort();
-			$template->assign('PortIsAtWar', $player->getRelation($port->getRaceID()) < RELATIONS_WAR);
+			$portIsAtWar = $player->getRelation($port->getRaceID()) < RELATIONS_WAR;
+		} else {
+			$portIsAtWar = null;
 		}
 
 		// *******************************************
@@ -191,14 +154,38 @@ class CurrentSector extends PlayerPage {
 				$cloakedPlayers[$accountID] = $otherPlayer;
 			}
 		}
-		$template->assign('VisiblePlayers', $visiblePlayers);
-		$template->assign('CloakedPlayers', $cloakedPlayers);
-		$template->assign('SectorPlayersLabel', 'Ships');
+
+		$template->pageRenderer = fn() => CurrentSectorRenderer::render(
+			template: $template,
+			Sectors: $links,
+			UnreadMissions: $unreadMissions,
+			TurnsMessage: $turnsMessage,
+			ProtectionMessage: $protectionMessage,
+			ForceRefreshMessage: getForceRefreshMessage($this->showForceRefreshMessage, $player),
+			MissionMessage: $this->missionMessage,
+			VarMessage: $this->message,
+			ErrorMessage: $this->errorMessage,
+			TradeMessage: $this->tradeMessage,
+			PortIsAtWar: $portIsAtWar,
+			VisiblePlayers: $visiblePlayers,
+			CloakedPlayers: $cloakedPlayers,
+			SectorPlayersLabel: 'Ships',
+			AttackResults: checkForAttackMessage($this->attackMessage, $player),
+			ThisAccount: $player->getAccount(),
+			ThisPlanet: $sector->hasPlanet() ? $sector->getPlanet() : null,
+			ThisPlayer: $player,
+			ThisSector: $sector,
+			ThisShip: $player->getShip(),
+			Ticker: $ticker,
+		);
 	}
 
 }
 
-function getForceRefreshMessage(Player $player): string {
+function getForceRefreshMessage(bool $showMessage, Player $player): ?string {
+	if (!$showMessage) {
+		return null;
+	}
 	$db = Database::getInstance();
 	$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at > :now AND sector_id = :sector_id AND game_id = :game_id AND refresher = :account_id ORDER BY refresh_at DESC LIMIT 1', [
 		'now' => $db->escapeNumber(Epoch::time()),
@@ -214,24 +201,30 @@ function getForceRefreshMessage(Player $player): string {
 	return $forceRefreshMessage;
 }
 
-function checkForAttackMessage(string $msg, Player $player): void {
+/**
+ * @return ?array{Results: FullCombatResults, Link: string}
+ */
+function checkForAttackMessage(?string $msg, Player $player): ?array {
+	if ($msg === null) {
+		return null;
+	}
 	$contains = 0;
 	$msg = str_replace('[ATTACK_RESULTS]', '', $msg, $contains);
 	if ($contains > 0) {
 		// $msg now contains only the log_id, if there is one
 		$logID = str2int($msg);
 
-		$template = Template::getInstance();
 		$db = Database::getInstance();
-		$dbResult = $db->select('combat_logs', ['log_id' => $logID], ['sector_id', 'result', 'type']);
+		$dbResult = $db->select('combat_logs', ['log_id' => $logID], ['sector_id', 'result']);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
 			if ($player->getSectorID() === $dbRecord->getInt('sector_id')) {
-				$results = $dbRecord->getObject('result', true);
-				$template->assign('AttackResultsType', $dbRecord->getString('type'));
-				$template->assign('AttackResults', $results);
-				$template->assign('AttackLogLink', linkCombatLog($logID));
+				return [
+					'Results' => $dbRecord->getClass('result', FullCombatResults::class, true),
+					'Link' => linkCombatLog($logID),
+				];
 			}
 		}
 	}
+	return null;
 }

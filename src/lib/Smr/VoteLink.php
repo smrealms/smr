@@ -35,7 +35,10 @@ class VoteLink {
 	 * Returns the earliest time (in seconds) until free turns
 	 * are available across all voting sites.
 	 */
-	public static function getMinTimeUntilFreeTurns(int $accountID, int $gameID): int {
+	public static function getMinTimeUntilFreeTurns(int $accountID, int $gameID): ?int {
+		if ($gameID === 0) {
+			return null;
+		}
 		$waitTimes = [];
 		foreach (VoteSite::cases() as $site) {
 			$link = new self($site, $accountID, $gameID);

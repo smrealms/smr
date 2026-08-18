@@ -9,8 +9,6 @@ use Smr\Template;
 
 class CheatingShipCheck extends AccountPage {
 
-	public string $file = 'admin/ship_check.php';
-
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Ship Integrity Check';
 
@@ -41,7 +39,7 @@ class CheatingShipCheck extends AccountPage {
 				'fixHREF' => $container->href(),
 			];
 		}
-		$template->assign('ExcessHardware', $excessHardware);
+		$template->pageRenderer = fn() => CheatingShipCheckRenderer::render($excessHardware);
 	}
 
 }

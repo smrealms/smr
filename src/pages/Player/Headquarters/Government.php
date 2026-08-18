@@ -14,8 +14,6 @@ use Smr\Template;
 
 class Government extends PlayerPage {
 
-	public string $file = 'government.php';
-
 	public function __construct(
 		private readonly int $locationID,
 	) {}
@@ -53,15 +51,16 @@ class Government extends PlayerPage {
 				}
 			}
 		}
-		$template->assign('WarRaces', $warRaces);
 
-		$template->assign('AllBounties', Bounty::getMostWanted(BountyType::HQ, $player->getGameID()));
-		$template->assign('MyBounties', $player->getClaimableBounties(BountyType::HQ));
+		$joinHREF = $player->hasNeutralAlignment() ?
+			new GovernmentProcessor($this->locationID)->href() : null;
 
-		if ($player->hasNeutralAlignment()) {
-			$container = new GovernmentProcessor($this->locationID);
-			$template->assign('JoinHREF', $container->href());
-		}
+		$template->pageRenderer = fn() => GovernmentRenderer::render(
+			WarRaces: $warRaces,
+			AllBounties: Bounty::getMostWanted(BountyType::HQ, $player->getGameID()),
+			MyBounties: $player->getClaimableBounties(BountyType::HQ),
+			JoinHREF: $joinHREF,
+		);
 	}
 
 }

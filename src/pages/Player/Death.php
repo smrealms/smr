@@ -8,10 +8,9 @@ use Smr\Template;
 
 class Death extends PlayerPage {
 
-	public string $file = 'death.php';
-
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Death';
+		$template->pageRenderer = DeathRenderer::render(...);
 	}
 
 }

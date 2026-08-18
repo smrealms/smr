@@ -11,16 +11,12 @@ use Smr\Template;
 
 class ChatSharing extends PlayerPage {
 
-	public string $file = 'chat_sharing.php';
-
 	public function __construct(
 		private readonly ?string $message = null,
 	) {}
 
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Chat Sharing Settings';
-
-		$template->assign('Message', $this->message);
 
 		$shareFrom = [];
 		$db = Database::getInstance();
@@ -69,11 +65,12 @@ class ChatSharing extends PlayerPage {
 			];
 		}
 
-		$template->assign('ShareFrom', $shareFrom);
-		$template->assign('ShareTo', $shareTo);
-
-		$container = new ChatSharingProcessor(array_keys($shareTo));
-		$template->assign('ProcessingHREF', $container->href());
+		$template->pageRenderer = fn() => ChatSharingRenderer::render(
+			Message: $this->message,
+			ShareFrom: $shareFrom,
+			ShareTo: $shareTo,
+			ProcessingHREF: new ChatSharingProcessor(array_keys($shareTo))->href(),
+		);
 	}
 
 }

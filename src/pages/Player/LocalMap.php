@@ -12,9 +12,6 @@ use Smr\Template;
 class LocalMap extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'map_local.php';
-
 	public function build(Player $player, Template $template): void {
 		if ($player->isLandedOnPlanet()) {
 			create_error('You are on a planet!');
@@ -34,26 +31,29 @@ class LocalMap extends PlayerPage {
 			}
 			$showSeedlistSectors = $_SESSION['show_seedlist_sectors'] ?? false;
 			$hideAlliedForces = $_SESSION['hide_allied_forces'] ?? false;
-			$template->assign('ShowSeedlistSectors', $showSeedlistSectors);
-			$template->assign('HideAlliedForces', $hideAlliedForces);
-			$template->assign('CheckboxFormHREF', ''); // Submit to same page
+			$CheckboxFormHREF = ''; // Submit to same page
+		} else {
+			$hideAlliedForces = true;
+			$showSeedlistSectors = false;
+			$CheckboxFormHREF = null;
 		}
 
-		$template->assign('SpaceView', true);
-
-		$container = new LocalMapProcessor('Expand');
-		$template->assign('MapExpandHREF', $container->href());
-		$container = new LocalMapProcessor('Shrink');
-		$template->assign('MapShrinkHREF', $container->href());
+		$template->spaceView = true;
 
 		$galaxy = $player->getSector()->getGalaxy();
 
-		$template->assign('GalaxyName', $galaxy->getDisplayName());
-
 		$mapSectors = $galaxy->getMapSectors($player->getSectorID(), $player->getZoom());
-		$template->assign('MapSectors', $mapSectors);
 
-		$template->assign('UniGen', false); // we are not editing the map here!
+		$template->pageRenderer = fn() => LocalMapRenderer::render(
+			ShowSeedlistSectors: $showSeedlistSectors,
+			HideAlliedForces: $hideAlliedForces,
+			CheckboxFormHREF: $CheckboxFormHREF,
+			MapExpandHREF: new LocalMapProcessor('Expand')->href(),
+			MapShrinkHREF: new LocalMapProcessor('Shrink')->href(),
+			GalaxyName: $galaxy->getDisplayName(),
+			MapSectors: $mapSectors,
+			ThisPlayer: $player,
+		);
 	}
 
 }

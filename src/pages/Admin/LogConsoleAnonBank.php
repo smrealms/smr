@@ -9,8 +9,6 @@ use Smr\Template;
 
 class LogConsoleAnonBank extends AccountPage {
 
-	public string $file = 'admin/log_anonymous_account.php';
-
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Anonymous Account Access';
 
@@ -39,10 +37,11 @@ class LogConsoleAnonBank extends AccountPage {
 				'color' => $transaction === 'payment' ? 'tomato' : 'green',
 			];
 		}
-		$template->assign('AnonLogs', $anon_logs);
 
-		$container = new LogConsole();
-		$template->assign('BackHREF', $container->href());
+		$template->pageRenderer = fn() => LogConsoleAnonBankRenderer::render(
+			AnonLogs: $anon_logs,
+			BackHREF: new LogConsole()->href(),
+		);
 	}
 
 }

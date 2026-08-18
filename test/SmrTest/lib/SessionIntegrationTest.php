@@ -128,9 +128,8 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		$var = $session->getCurrentVar();
 		self::assertEquals($page, $var);
 
-		// We can now change the current var
+		// We can now change the current var (even if same object)
 		$page2 = new Page();
-		$page2->file = 'another file';
 		$session->setCurrentVar($page2);
 		// Old references to $var should not be modified
 		self::assertEquals($page, $var);
@@ -161,8 +160,8 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		$page = new Page();
 		$sn = $this->session->addLink($page);
 
-		$page2 = new Page();
-		$page2->file = 'another_page';
+		$page2 = clone $page;
+		$page2->allowAjax = !$page->allowAjax; // modify object
 		self::assertNotEquals($sn, $this->session->addLink($page2));
 	}
 

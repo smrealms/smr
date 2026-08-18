@@ -35,10 +35,10 @@ table.nobord td {
 .TopInfo {
 	border-color: #0B8D35;
 }
-.LeftNavOne {
+#LeftNavOne {
 	border-color: #0B2121;
 }
-.LeftNavTwo {
+#LeftNavTwo {
 	border-color: #0B2121;
 }
 .MainContentArea {

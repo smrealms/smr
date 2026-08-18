@@ -9,8 +9,6 @@ use Smr\Template;
 
 class MilitaryPaymentClaim extends PlayerPage {
 
-	public string $file = 'military_payment_claim.php';
-
 	public function __construct(
 		private readonly int $locationID,
 		private readonly string $claimText,
@@ -21,7 +19,7 @@ class MilitaryPaymentClaim extends PlayerPage {
 
 		Menu::headquarters($this->locationID);
 
-		$template->assign('ClaimText', $this->claimText);
+		$template->pageRenderer = fn() => MilitaryPaymentClaimRenderer::render($this->claimText);
 	}
 
 }

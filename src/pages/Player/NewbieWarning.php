@@ -8,10 +8,9 @@ use Smr\Template;
 
 class NewbieWarning extends PlayerPage {
 
-	public string $file = 'newbie_warning.php';
-
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Warning!';
+		$template->pageRenderer = NewbieWarningRenderer::render(...);
 	}
 
 }

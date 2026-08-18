@@ -13,8 +13,6 @@ use Smr\Template;
 
 class GameJoin extends AccountPage {
 
-	public string $file = 'game_join.php';
-
 	public function __construct(
 		private readonly int $gameID,
 	) {}
@@ -66,11 +64,11 @@ class GameJoin extends AccountPage {
 		}
 
 		$template->pageTopic = 'Join Game: ' . $game->getDisplayName();
-		$template->assign('Game', $game);
 
 		if (Epoch::time() >= $game->getJoinTime()) {
-			$container = new GameJoinProcessor($this->gameID);
-			$template->assign('JoinGameFormHref', $container->href());
+			$joinGameFormHref = new GameJoinProcessor($this->gameID)->href();
+		} else {
+			$joinGameFormHref = null;
 		}
 
 		// Pick an initial race to display (prefer *not* Alskant)
@@ -78,12 +76,18 @@ class GameJoin extends AccountPage {
 			$raceKey = array_rand($races);
 		} while ($raceKey === RACE_ALSKANT && count($races) > 1);
 		$races[$raceKey]['Selected'] = true;
-		$template->assign('SelectedRaceID', $raceKey);
-		$template->assign('Races', $races);
 
 		// This instructs EndingJavascript.inc.php to include the javascript to display
 		// the Plotly.js radar charts.
-		$template->assign('AddRaceRadarChartJS', true);
+		$template->addRaceRadarChartJS = $raceKey;
+
+		$template->pageRenderer = fn() => GameJoinRenderer::render(
+			Game: $game,
+			JoinGameFormHref: $joinGameFormHref,
+			SelectedRaceID: $raceKey,
+			Races: $races,
+			ThisAccount: $account,
+		);
 	}
 
 }

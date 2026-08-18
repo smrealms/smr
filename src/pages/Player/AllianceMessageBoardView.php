@@ -14,9 +14,6 @@ use Smr\Template;
 class AllianceMessageBoardView extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'alliance_message_view.php';
-
 	/**
 	 * @param array<int> $threadIDs
 	 * @param array<int, string> $threadTopics
@@ -66,12 +63,16 @@ class AllianceMessageBoardView extends PlayerPage {
 		if (isset($this->threadIDs[$thread_index - 1])) {
 			$container = clone($this);
 			$container->threadIndex -= 1;
-			$template->assign('PrevThread', ['Topic' => $this->threadTopics[$thread_index - 1], 'Href' => $container->href()]);
+			$prevThread = ['Topic' => $this->threadTopics[$thread_index - 1], 'Href' => $container->href()];
+		} else {
+			$prevThread = null;
 		}
 		if (isset($this->threadIDs[$thread_index + 1])) {
 			$container = clone($this);
 			$container->threadIndex += 1;
-			$template->assign('NextThread', ['Topic' => $this->threadTopics[$thread_index + 1], 'Href' => $container->href()]);
+			$nextThread = ['Topic' => $this->threadTopics[$thread_index + 1], 'Href' => $container->href()];
+		} else {
+			$nextThread = null;
 		}
 
 		$thread = [];
@@ -125,8 +126,14 @@ class AllianceMessageBoardView extends PlayerPage {
 			$container = new AllianceMessageBoardAddProcessor($allianceID, $this, $thread_id);
 			$thread['CreateThreadReplyFormPage'] = $container;
 		}
-		$template->assign('Thread', $thread);
-		$template->assign('Preview', $this->preview);
+
+		$template->pageRenderer = fn() => AllianceMessageBoardViewRenderer::render(
+			PrevThread: $prevThread,
+			NextThread: $nextThread,
+			Thread: $thread,
+			Preview: $this->preview,
+			ThisAccount: $player->getAccount(),
+		);
 	}
 
 }

@@ -12,9 +12,6 @@ use Smr\Template;
 class ComputerSharing extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'admin/comp_share.php';
-
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Computer Sharing';
 
@@ -107,7 +104,11 @@ class ComputerSharing extends AccountPage {
 				$tables[] = $rows;
 			}
 		}
-		$template->assign('Tables', $tables);
+
+		$template->pageRenderer = fn() => ComputerSharingRenderer::render(
+			Tables: $tables,
+			CloseHREF: new AccountCloseProcessor()->href(),
+		);
 	}
 
 }

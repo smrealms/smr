@@ -15,9 +15,6 @@ use Smr\Template;
 class SearchForTraderResult extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'trader_search_result.php';
-
 	public function __construct(
 		private ?int $playerID = null,
 		private ?string $playerName = null,
@@ -65,7 +62,7 @@ class SearchForTraderResult extends PlayerPage {
 		}
 
 		/**
-		 * @return array<string, Player|string>
+		 * @return array{Player: Player, SearchHREF: string, RaceHREF: string, MessageHREF: string, BountyHREF: string, HofHREF: string, NewsHREF: string, JumpHREF?: string}
 		 */
 		$playerLinks = function(Player $linkPlayer) use ($player): array {
 			$result = ['Player' => $linkPlayer];
@@ -106,7 +103,8 @@ class SearchForTraderResult extends PlayerPage {
 
 		if (isset($resultPlayer)) {
 			$resultPlayerLinks = $playerLinks($resultPlayer);
-			$template->assign('ResultPlayerLinks', $resultPlayerLinks);
+		} else {
+			$resultPlayerLinks = null;
 		}
 
 		if (count($similarPlayers) > 0) {
@@ -114,10 +112,17 @@ class SearchForTraderResult extends PlayerPage {
 			foreach ($similarPlayers as $similarPlayer) {
 				$similarPlayersLinks[] = $playerLinks($similarPlayer);
 			}
-			$template->assign('SimilarPlayersLinks', $similarPlayersLinks);
+		} else {
+			$similarPlayersLinks = null;
 		}
 
 		$template->pageTopic = 'Search For Trader Results';
+
+		$template->pageRenderer = fn() => SearchForTraderResultRenderer::render(
+			ResultPlayerLinks: $resultPlayerLinks,
+			SimilarPlayersLinks: $similarPlayersLinks,
+			ThisPlayer: $player,
+		);
 	}
 
 }

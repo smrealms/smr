@@ -53,8 +53,6 @@ function display_hand(Hand $hand, bool $revealHand): string {
 
 class PlayBlackjack extends PlayerPage {
 
-	public string $file = 'bar_gambling.php';
-
 	public function __construct(
 		private readonly int $locationID,
 		private readonly Table $table,
@@ -80,11 +78,9 @@ class PlayBlackjack extends PlayerPage {
 				Result::Lose => '<h1 class="red">Dealer Wins</h1>',
 			};
 		}
-		$template->assign('ResultMsg', $resultMsg);
 
 		// Display the dealer side
 		$dealerHand = $table->dealerHand;
-		$template->assign('DealerHand', display_hand($dealerHand, $gameEnded));
 
 		$result = [];
 		if ($gameEnded) {
@@ -98,11 +94,9 @@ class PlayBlackjack extends PlayerPage {
 		} elseif ($dealerHand->hasBusted()) {
 			$result[] = 'Dealer <span class="red"><b>BUSTED</b></span>';
 		}
-		$template->assign('DealerStatus', implode('<br />', $result));
 
 		// Display the player side
 		$playerHand = $table->playerHand;
-		$template->assign('PlayerHand', display_hand($playerHand, true));
 
 		$result = ['You have a total of ' . $playerHand->getValue()];
 		if ($playerHand->hasBlackjack()) {
@@ -110,35 +104,45 @@ class PlayBlackjack extends PlayerPage {
 		} elseif ($playerHand->hasBusted()) {
 			$result[] = 'You have <span class="red"><b>BUSTED</b></span>';
 		}
-		$template->assign('PlayerStatus', implode('<br />', $result));
 
 		// Create action buttons
 		if ($gameEnded) {
-			$container = new PlayBlackjackProcessor(
+			$betHREF = new PlayBlackjackProcessor(
 				locationID: $this->locationID,
 				action: 'new game',
 				bet: $this->bet,
-			);
-			$template->assign('Winnings', $this->winningsMsg);
-			$template->assign('BetHREF', $container->href());
-			$template->assign('Bet', $this->bet);
+			)->href();
+			$hitHREF = null;
+			$stayHREF = null;
 		} else {
-			$container = new PlayBlackjackProcessor(
+			$betHREF = null;
+			$hitHREF = new PlayBlackjackProcessor(
 				locationID: $this->locationID,
 				action: 'HIT',
 				table: $table,
 				bet: $this->bet,
-			);
-			$template->assign('HitHREF', $container->href());
+			)->href();
 
-			$container = new PlayBlackjackProcessor(
+			$stayHREF = new PlayBlackjackProcessor(
 				locationID: $this->locationID,
 				action: 'STAY',
 				table: $table,
 				bet: $this->bet,
-			);
-			$template->assign('StayHREF', $container->href());
+			)->href();
 		}
+
+		$template->pageRenderer = fn() => PlayBlackjackRenderer::render(
+			ResultMsg: $resultMsg,
+			DealerHand: display_hand($dealerHand, $gameEnded),
+			DealerStatus: implode('<br />', $result),
+			PlayerHand: display_hand($playerHand, true),
+			PlayerStatus: implode('<br />', $result),
+			Winnings: $this->winningsMsg,
+			BetHREF: $betHREF,
+			Bet: $this->bet,
+			HitHREF: $hitHREF,
+			StayHREF: $stayHREF,
+		);
 	}
 
 }

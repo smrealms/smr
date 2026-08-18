@@ -1,0 +1,42 @@
+<?php declare(strict_types=1);
+
+namespace Smr\Pages\Player;
+
+class AllianceExemptAuthorizeRenderer {
+
+	/** @param array<array{type: string, player: string, reason: string, amount: string, transactionID: int}> $Transactions */
+	public static function render(array $Transactions, string $ExemptHREF): void {
+		?>
+		<h2>Exemption Requests</h2>
+		<br /><?php
+		if (count($Transactions) > 0) { ?>
+			Alliance members have requested exemptions for the following transactions.<br /><br />
+			<form method="POST" action="<?php echo $ExemptHREF; ?>">
+				<table class="standard">
+					<tr>
+						<th>Player Name</th>
+						<th>Type</th>
+						<th>Reason</th>
+						<th>Amount</th>
+						<th>Approve</th>
+					</tr><?php
+					foreach ($Transactions as $Trans) { ?>
+						<tr>
+							<td><?php echo $Trans['player']; ?></td>
+							<td><?php echo $Trans['type']; ?></td>
+							<td><?php echo htmlentities($Trans['reason']); ?></td>
+							<td><?php echo $Trans['amount']; ?></td>
+							<td><input type="checkbox" name="exempt[<?php echo $Trans['transactionID']; ?>]"></td>
+						</tr><?php
+					} ?>
+				</table>
+				<br />
+				<?php echo create_submit_display('Make Exempt'); ?>
+			</form><?php
+		} else { ?>
+			Nothing to authorize.<?php
+		}
+
+	}
+
+}

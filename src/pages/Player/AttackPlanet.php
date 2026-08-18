@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Player;
 
+use Smr\Combat\Results\PlanetFullCombatResults;
 use Smr\Page\PlayerPage;
 use Smr\Planet;
 use Smr\Player;
@@ -9,14 +10,9 @@ use Smr\Template;
 
 class AttackPlanet extends PlayerPage {
 
-	public string $file = 'planet_attack.php';
-
-	/**
-	 * @param array{Attackers: PlanetAttackerCombatResults, Planet: PlanetCombatResults} $results
-	 */
 	public function __construct(
 		private readonly Planet $planet,
-		private readonly array $results,
+		private readonly PlanetFullCombatResults $results,
 		bool $playerDied,
 	) {
 		// If the player died, make sure they see combat results
@@ -24,10 +20,13 @@ class AttackPlanet extends PlayerPage {
 	}
 
 	public function build(Player $player, Template $template): void {
-		$template->assign('FullPlanetCombatResults', $this->results);
-		$template->assign('MinimalDisplay', false);
-		$template->assign('OverrideDeath', $player->isDead());
-		$template->assign('Planet', $this->planet);
+		$template->pageRenderer = fn() => AttackPlanetRenderer::render(
+			template: $template,
+			FullPlanetCombatResults: $this->results,
+			OverrideDeath: $player->isDead(),
+			Planet: $this->planet,
+			ThisPlayer: $player,
+		);
 	}
 
 }

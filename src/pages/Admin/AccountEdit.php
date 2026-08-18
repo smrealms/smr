@@ -12,9 +12,6 @@ use Smr\Template;
 class AccountEdit extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'admin/account_edit.php';
-
 	public function __construct(
 		private readonly int $editAccountID,
 	) {}
@@ -27,18 +24,11 @@ class AccountEdit extends AccountPage {
 		$account_id = $this->editAccountID;
 		$curr_account = Account::getAccount($account_id);
 
-		$template->assign('EditingAccount', $curr_account);
-		$template->assign('EditFormHREF', (new AccountEditProcessor($account_id))->href());
-		$template->assign('ResetFormHREF', (new AccountEditSearch())->href());
-
 		$editingPlayers = [];
 		$dbResult = $db->select('player', $curr_account->SQLID, orderBy: ['game_id']);
 		foreach ($dbResult->records() as $dbRecord) {
 			$editingPlayers[] = Player::getPlayer($curr_account->getAccountID(), $dbRecord->getInt('game_id'), false, $dbRecord);
 		}
-		$template->assign('EditingPlayers', $editingPlayers);
-
-		$template->assign('Disabled', $curr_account->isDisabled());
 
 		$banReasons = [];
 		$dbResult = $db->select('closing_reason');
@@ -49,7 +39,6 @@ class AccountEdit extends AccountPage {
 			}
 			$banReasons[$dbRecord->getInt('reason_id')] = $reason;
 		}
-		$template->assign('BanReasons', $banReasons);
 
 		$closingHistory = [];
 		$dbResult = $db->select(
@@ -72,13 +61,14 @@ class AccountEdit extends AccountPage {
 				'AdminName' => $admin,
 			];
 		}
-		$template->assign('ClosingHistory', $closingHistory);
 
 		$dbResult = $db->select('account_exceptions', [
 			'account_id' => $curr_account->getAccountID(),
 		]);
 		if ($dbResult->hasRecord()) {
-			$template->assign('Exception', $dbResult->record()->getString('reason'));
+			$exception = $dbResult->record()->getString('reason');
+		} else {
+			$exception = null;
 		}
 
 		$recentIPs = [];
@@ -96,7 +86,19 @@ class AccountEdit extends AccountPage {
 				'Host' => $dbRecord->getString('host'),
 			];
 		}
-		$template->assign('RecentIPs', $recentIPs);
+
+		$template->pageRenderer = fn() => AccountEditRenderer::render(
+			EditingAccount: $curr_account,
+			EditFormHREF: new AccountEditProcessor($account_id)->href(),
+			ResetFormHREF: new AccountEditSearch()->href(),
+			EditingPlayers: $editingPlayers,
+			Disabled: $curr_account->isDisabled(),
+			BanReasons: $banReasons,
+			ClosingHistory: $closingHistory,
+			Exception: $exception,
+			RecentIPs: $recentIPs,
+			ThisAccount: $account,
+		);
 	}
 
 }

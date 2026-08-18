@@ -11,8 +11,6 @@ use Smr\Template;
 
 class LogConsoleDetail extends AccountPage {
 
-	public string $file = 'admin/log_console_detail.php';
-
 	/**
 	 * @param array<int> $accountIDs
 	 * @param array<int> $logTypeIDs
@@ -53,20 +51,16 @@ class LogConsoleDetail extends AccountPage {
 				];
 			}
 		}
-		$template->assign('Colors', $colors);
 
 		// *********************************
 		// * L o g   T y p e s
 		// *********************************
-		$container = new LogConsoleDetailProcessor($account_ids);
-		$template->assign('UpdateHREF', $container->href());
 
 		$logTypes = [];
 		$dbResult = $db->select('log_type');
 		foreach ($dbResult->records() as $dbRecord) {
 			$logTypes[$dbRecord->getInt('log_type_id')] = $dbRecord->getString('log_type_entry');
 		}
-		$template->assign('LogTypes', $logTypes);
 
 		$log_type_id_list = [0];
 		foreach ($logTypes as $id => $entry) {
@@ -74,13 +68,10 @@ class LogConsoleDetail extends AccountPage {
 				$log_type_id_list[] = $id;
 			}
 		}
-		$template->assign('LogTypesChecked', $log_type_id_list);
 
 		// *********************************
 		// * N o t e s
 		// *********************************
-		$container = new LogConsoleNotesProcessor($account_ids, $log_type_ids);
-		$template->assign('SaveHREF', $container->href());
 
 		// get notes from db
 		$log_notes = [];
@@ -96,7 +87,6 @@ class LogConsoleDetail extends AccountPage {
 
 		// flattens array
 		$flat_notes = implode(EOL, $log_notes);
-		$template->assign('FlatNotes', $flat_notes);
 
 		// *********************************
 		// * L o g   T a b l e
@@ -128,10 +118,17 @@ class LogConsoleDetail extends AccountPage {
 				'color' => $colors[$account_id]['color'],
 			];
 		}
-		$template->assign('Logs', $logs);
 
-		$container = new LogConsole($account_ids);
-		$template->assign('BackHREF', $container->href());
+		$template->pageRenderer = fn() => LogConsoleDetailRenderer::render(
+			Colors: $colors,
+			UpdateHREF: new LogConsoleDetailProcessor($account_ids)->href(),
+			LogTypes: $logTypes,
+			LogTypesChecked: $log_type_id_list,
+			SaveHREF: new LogConsoleNotesProcessor($account_ids, $log_type_ids)->href(),
+			FlatNotes: $flat_notes,
+			Logs: $logs,
+			BackHREF: new LogConsole($account_ids)->href(),
+		);
 	}
 
 }

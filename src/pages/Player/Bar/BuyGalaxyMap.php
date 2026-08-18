@@ -10,8 +10,6 @@ use Smr\Template;
 
 class BuyGalaxyMap extends PlayerPage {
 
-	public string $file = 'bar_galmap_buy.php';
-
 	public function __construct(
 		private readonly int $locationID,
 	) {}
@@ -25,9 +23,10 @@ class BuyGalaxyMap extends PlayerPage {
 		$template->pageTopic = 'Buy Galaxy Maps';
 		Menu::bar($this->locationID);
 
-		//find what gal they want
-		$container = new BuyGalaxyMapProcessor($this->locationID);
-		$template->assign('BuyHREF', $container->href());
+		$template->pageRenderer = fn() => BuyGalaxyMapRenderer::render(
+			ThisPlayer: $player,
+			BuyHREF: new BuyGalaxyMapProcessor($this->locationID)->href(),
+		);
 	}
 
 }

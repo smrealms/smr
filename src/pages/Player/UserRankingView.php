@@ -5,18 +5,21 @@ namespace Smr\Pages\Player;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Pages\Shared\UserRankingViewRenderer;
 use Smr\Player;
 use Smr\Template;
 
 class UserRankingView extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'rankings_view.php';
-
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Extended User Rankings';
 		Menu::trader();
+
+		$template->pageRenderer = fn() => UserRankingViewRenderer::render(
+			ThisAccount: $player->getAccount(),
+			ThisPlayer: $player,
+		);
 	}
 
 }

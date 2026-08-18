@@ -9,8 +9,6 @@ use Smr\Template;
 
 class LogConsole extends AccountPage {
 
-	public string $file = 'admin/log_console.php';
-
 	/**
 	 * @param array<int> $accountIDs
 	 */
@@ -43,12 +41,12 @@ class LogConsole extends AccountPage {
 				$loggedAccounts[$accountID]['Notes'] = nl2br($dbResult2->record()->getString('notes'));
 			}
 		}
-		$template->assign('LoggedAccounts', $loggedAccounts);
 
-		if (count($loggedAccounts) > 0) {
-			$template->assign('LogConsoleFormPage', new LogConsoleProcessor());
-			$template->assign('AnonAccessHREF', (new LogConsoleAnonBank())->href());
-		}
+		$template->pageRenderer = fn() => LogConsoleRenderer::render(
+			LoggedAccounts: $loggedAccounts,
+			LogConsoleFormPage: new LogConsoleProcessor(),
+			AnonAccessHREF: new LogConsoleAnonBank()->href(),
+		);
 	}
 
 }

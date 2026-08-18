@@ -9,8 +9,6 @@ use Smr\Template;
 
 class AllianceManageNpcs extends PlayerPage {
 
-	public string $file = 'alliance_manage_npcs.php';
-
 	public function build(Player $player, Template $template): void {
 		$alliance = $player->getAlliance();
 
@@ -26,7 +24,10 @@ class AllianceManageNpcs extends PlayerPage {
 				'dismissHref' => (new AllianceManageNpcsDismissProcessor($npc->getAccountID()))->href(),
 			];
 		}
-		$template->assign('Npcs', $npcs);
+
+		$template->pageRenderer = fn() => AllianceManageNpcsRenderer::render(
+			Npcs: $npcs,
+		);
 	}
 
 }

@@ -9,8 +9,6 @@ use Smr\Template;
 
 class PersonalBank extends PlayerPage {
 
-	public string $file = 'bank_personal.php';
-
 	public function build(Player $player, Template $template): void {
 		// is account validated?
 		if (!$player->getAccount()->isValidated()) {
@@ -22,7 +20,11 @@ class PersonalBank extends PlayerPage {
 		Menu::bank();
 
 		$container = new PersonalBankProcessor();
-		$template->assign('ProcessingPage', $container);
+
+		$template->pageRenderer = fn() => PersonalBankRenderer::render(
+			ProcessingPage: $container,
+			ThisPlayer: $player,
+		);
 	}
 
 }

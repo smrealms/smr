@@ -15,8 +15,6 @@ use Smr\Template;
 
 class GameStats extends AccountPage {
 
-	public string $file = 'game_stats.php';
-
 	public function __construct(
 		private readonly int $gameID,
 	) {}
@@ -26,7 +24,6 @@ class GameStats extends AccountPage {
 		$gameID = $this->gameID;
 
 		$statsGame = Game::getGame($gameID);
-		$template->assign('StatsGame', $statsGame);
 
 		$template->pageTopic = 'Game Stats: ' . $statsGame->getName() . ' (' . $gameID . ')';
 
@@ -35,13 +32,6 @@ class GameStats extends AccountPage {
 			'game_id' => $gameID,
 		]);
 		$dbRecord = $dbResult->record();
-		$template->assign('TotalPlayers', $dbRecord->getInt('total_players'));
-		$template->assign('HighestExp', $dbRecord->getInt('max_exp'));
-		$template->assign('HighestAlign', $dbRecord->getInt('max_align'));
-		$template->assign('LowestAlign', $dbRecord->getInt('min_align'));
-		$template->assign('HighestKills', $dbRecord->getInt('max_kills'));
-
-		$template->assign('TotalAlliances', $db->count('alliance', ['game_id' => $gameID]));
 
 		// Handle details about when to provide a linked alliance name
 		$getAllianceLink = function(Alliance $alliance) use ($statsGame): string {
@@ -66,11 +56,9 @@ class GameStats extends AccountPage {
 
 		$playerExpRecords = Rankings::playerStats('experience', $gameID, 10);
 		$playerExpRanks = Rankings::collectRankings($playerExpRecords, $player);
-		$template->assign('ExperienceRankings', $playerExpRanks);
 
 		$playerKillRecords = Rankings::playerStats('kills', $gameID, 10);
 		$playerKillRanks = Rankings::collectRankings($playerKillRecords, $player);
-		$template->assign('KillRankings', $playerKillRanks);
 
 		$allianceTopTen = function(string $stat) use ($getAllianceLink, $gameID, $player): array {
 			$allianceRecords = Rankings::allianceStats($stat, $gameID, 10);
@@ -80,8 +68,6 @@ class GameStats extends AccountPage {
 			}
 			return $allianceRanks;
 		};
-		$template->assign('AllianceExpRankings', $allianceTopTen('experience'));
-		$template->assign('AllianceKillRankings', $allianceTopTen('kills'));
 
 		if ($player !== null) {
 			$playerInfo = [
@@ -107,9 +93,23 @@ class GameStats extends AccountPage {
 		} else {
 			$playerInfo = null;
 		}
-		$template->assign('PlayerInfo', $playerInfo);
 
-		$template->assign('BackHref', (new GamePlay())->href());
+		$template->pageRenderer = fn() => GameStatsRenderer::render(
+			StatsGame: $statsGame,
+			TotalPlayers: $dbRecord->getInt('total_players'),
+			HighestExp: $dbRecord->getInt('max_exp'),
+			HighestAlign: $dbRecord->getInt('max_align'),
+			LowestAlign: $dbRecord->getInt('min_align'),
+			HighestKills: $dbRecord->getInt('max_kills'),
+			TotalAlliances: $db->count('alliance', ['game_id' => $gameID]),
+			ExperienceRankings: $playerExpRanks,
+			KillRankings: $playerKillRanks,
+			AllianceExpRankings: $allianceTopTen('experience'),
+			AllianceKillRankings: $allianceTopTen('kills'),
+			PlayerInfo: $playerInfo,
+			BackHref: new GamePlay()->href(),
+			ThisAccount: $account,
+		);
 	}
 
 }

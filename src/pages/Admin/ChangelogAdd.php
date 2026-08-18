@@ -11,9 +11,6 @@ use Smr\Template;
 class ChangelogAdd extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'admin/changelog.php';
-
 	public function __construct(
 		private readonly string $changeTitle = '',
 		private readonly string $changeMessage = '',
@@ -23,17 +20,18 @@ class ChangelogAdd extends AccountPage {
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Change Log';
 
-		$template->assign('ChangeTitle', $this->changeTitle);
-		$template->assign('ChangeMessage', $this->changeMessage);
-		$template->assign('AffectedDb', $this->affectedDb);
-
 		$versions = Changelog::getDisplayVersions(
 			since: -1, // include draft versions
 			dateFormat: $account->getDateTimeFormat(),
 		);
+		if (count($versions) === 0) {
+			$template->pageRenderer = fn() => ChangelogAddRenderer::renderEmpty();
+			return;
+		}
 
 		$first_entry = true;
-
+		$addPage = null;
+		$firstVersion = null;
 		foreach ($versions as $version_id => $version) {
 			if ($version['went_live'] === null) {
 				$container = new ChangelogSetLiveProcessor($version_id);
@@ -42,8 +40,7 @@ class ChangelogAdd extends AccountPage {
 
 			if ($first_entry) {
 				$first_entry = false;
-				$container = new ChangelogAddProcessor($version_id);
-				$template->assign('AddPage', $container);
+				$addPage = new ChangelogAddProcessor($version_id);
 
 				if ($this->changeTitle !== '') {
 					$version['changes'][] = [
@@ -51,11 +48,19 @@ class ChangelogAdd extends AccountPage {
 						'message' => bbify(htmlentities($this->changeMessage)),
 					];
 				}
-				$template->assign('FirstVersion', $version);
+				$firstVersion = $version;
 				unset($versions[$version_id]);
 			}
 		}
-		$template->assign('Versions', $versions);
+
+		$template->pageRenderer = fn() => ChangelogAddRenderer::render(
+			ChangeTitle: $this->changeTitle,
+			ChangeMessage: $this->changeMessage,
+			AffectedDb: $this->affectedDb,
+			AddPage: $addPage,
+			FirstVersion: $firstVersion,
+			Versions: $versions,
+		);
 	}
 
 }

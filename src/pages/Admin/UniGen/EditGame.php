@@ -10,8 +10,6 @@ use Smr\Template;
 
 class EditGame extends AccountPage {
 
-	public string $file = 'admin/unigen/game_edit.php';
-
 	public function __construct(
 		private readonly int $gameID,
 		private readonly EditGalaxy $returnTo,
@@ -45,13 +43,13 @@ class EditGame extends AccountPage {
 			'relations' => $relations,
 			'destroyPorts' => $game->canDestroyPorts(),
 		];
-		$template->assign('Game', $gameArray);
 
-		$container = new EditGameProcessor($this->gameID, $this->returnTo);
-		$template->assign('ProcessingHREF', $container->href());
-		$template->assign('SubmitValue', 'Modify Game');
-
-		$template->assign('CancelHREF', $this->returnTo->href());
+		$template->pageRenderer = fn() => EditGameRenderer::render(
+			Game: $gameArray,
+			ProcessingHREF: new EditGameProcessor($this->gameID, $this->returnTo)->href(),
+			SubmitValue: 'Modify Game',
+			CancelHREF: $this->returnTo->href(),
+		);
 	}
 
 }

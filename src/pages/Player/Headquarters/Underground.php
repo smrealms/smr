@@ -12,8 +12,6 @@ use Smr\Template;
 
 class Underground extends PlayerPage {
 
-	public string $file = 'underground.php';
-
 	public function __construct(
 		private readonly int $locationID,
 	) {}
@@ -35,13 +33,14 @@ class Underground extends PlayerPage {
 
 		Menu::headquarters($this->locationID);
 
-		$template->assign('AllBounties', Bounty::getMostWanted(BountyType::UG, $player->getGameID()));
-		$template->assign('MyBounties', $player->getClaimableBounties(BountyType::UG));
+		$joinHREF = $player->hasNeutralAlignment() ?
+			new GovernmentProcessor($this->locationID)->href() : null;
 
-		if ($player->hasNeutralAlignment()) {
-			$container = new GovernmentProcessor($this->locationID);
-			$template->assign('JoinHREF', $container->href());
-		}
+		$template->pageRenderer = fn() => UndergroundRenderer::render(
+			AllBounties: Bounty::getMostWanted(BountyType::UG, $player->getGameID()),
+			MyBounties: $player->getClaimableBounties(BountyType::UG),
+			JoinHREF: $joinHREF,
+		);
 	}
 
 }

@@ -13,9 +13,6 @@ use Smr\Template;
 class Embassy extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'council_embassy.php';
-
 	public function build(Player $player, Template $template): void {
 		$db = Database::getInstance();
 
@@ -42,7 +39,11 @@ class Embassy extends PlayerPage {
 			}
 			$voteRaces[$raceID] = new EmbassyProcessor($raceID);
 		}
-		$template->assign('VoteRacePages', $voteRaces);
+
+		$template->pageRenderer = fn() => EmbassyRenderer::render(
+			VoteRacePages: $voteRaces,
+			ThisPlayer: $player,
+		);
 	}
 
 }

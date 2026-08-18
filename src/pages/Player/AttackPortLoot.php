@@ -8,11 +8,13 @@ use Smr\Template;
 
 class AttackPortLoot extends PlayerPage {
 
-	public string $file = 'port_loot.php';
-
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Looting The Port';
-		$template->assign('ThisPort', $player->getSectorPort());
+		$template->pageRenderer = fn() => AttackPortLootRenderer::render(
+			ThisPlayer: $player,
+			ThisPort: $player->getSectorPort(),
+			ThisShip: $player->getShip(),
+		);
 	}
 
 }

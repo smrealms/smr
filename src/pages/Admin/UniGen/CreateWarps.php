@@ -14,8 +14,6 @@ class CreateWarps extends AccountPage {
 
 	use ReusableTrait;
 
-	public string $file = 'admin/unigen/universe_create_warps.php';
-
 	public function __construct(
 		private readonly int $gameID,
 		private readonly int $galaxyID,
@@ -25,8 +23,6 @@ class CreateWarps extends AccountPage {
 
 	public function build(Account $account, Template $template): void {
 		$db = Database::getInstance();
-
-		$template->assign('Message', $this->message);
 
 		$galaxies = Galaxy::getGameGalaxies($this->gameID);
 		$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
@@ -49,15 +45,17 @@ class CreateWarps extends AccountPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$warp1 = Sector::getSector($this->gameID, $dbRecord->getInt('sector_id'));
 			$warp2 = Sector::getSector($this->gameID, $dbRecord->getInt('warp'));
-			if ($warp1->getGalaxyID() === $warp2->getGalaxyID()) {
+			if (
+				$warp1->getGalaxyID() === $warp2->getGalaxyID() &&
+				$warp1->getSectorID() > $warp2->getSectorID()
+			) {
 				// For warps within the same galaxy, even though there will be two
 				// sectors with warps, we still consider this as "one warp" (pair).
 				// Since we're looping over all sectors, we'll hit this twice for each
-				// same-galaxy warp pair, so only add 0.5 to avoid double counting.
-				$warps[$warp1->getGalaxyID()][$warp2->getGalaxyID()] += 0.5;
-			} else {
-				$warps[$warp1->getGalaxyID()][$warp2->getGalaxyID()]++;
+				// same-galaxy warp pair, so skip one of them.
+				continue;
 			}
+			$warps[$warp1->getGalaxyID()][$warp2->getGalaxyID()]++;
 		}
 
 		// Get links to other pages
@@ -66,16 +64,16 @@ class CreateWarps extends AccountPage {
 			$container = new self($this->gameID, $gal->getGalaxyID(), $this->returnTo);
 			$galLinks[$gal->getGalaxyID()] = $container->href();
 		}
-		$template->assign('GalLinks', $galLinks);
 
-		$container = new CreateWarpsProcessor($this->gameID, $this->galaxyID, $this->returnTo);
-		$template->assign('SubmitHREF', $container->href());
-
-		$template->assign('CancelHREF', $this->returnTo->href());
-
-		$template->assign('Galaxy', $galaxy);
-		$template->assign('Galaxies', $galaxies);
-		$template->assign('Warps', $warps);
+		$template->pageRenderer = fn() => CreateWarpsRenderer::render(
+			Message: $this->message,
+			GalLinks: $galLinks,
+			SubmitHREF: new CreateWarpsProcessor($this->gameID, $this->galaxyID, $this->returnTo)->href(),
+			CancelHREF: $this->returnTo->href(),
+			Galaxy: $galaxy,
+			Galaxies: $galaxies,
+			Warps: $warps,
+		);
 	}
 
 }

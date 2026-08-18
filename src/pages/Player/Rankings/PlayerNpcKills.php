@@ -4,13 +4,12 @@ namespace Smr\Pages\Player\Rankings;
 
 use Smr\Menu;
 use Smr\Page\PlayerPage;
+use Smr\Pages\Shared\PlayerRankingsRenderer;
 use Smr\Player;
 use Smr\Rankings;
 use Smr\Template;
 
 class PlayerNpcKills extends PlayerPage {
-
-	public string $file = 'rankings_player_npc_kills.php';
 
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'NPC Kill Rankings';
@@ -22,16 +21,21 @@ class PlayerNpcKills extends PlayerPage {
 
 		// what rank are we?
 		$ourRank = Rankings::ourRank($rankedStats, $player->getPlayerID());
-		$template->assign('OurRank', $ourRank);
-
-		$template->assign('Rankings', Rankings::collectRankings($rankedStats, $player));
 
 		$totalPlayers = count($rankedStats);
 		[$minRank, $maxRank] = Rankings::calculateMinMaxRanks($ourRank, $totalPlayers);
 
-		$template->assign('FilterRankingsHREF', (new self())->href());
-
-		$template->assign('FilteredRankings', Rankings::collectRankings($rankedStats, $player, $minRank, $maxRank));
+		$template->pageRenderer = fn() => PlayerRankingsRenderer::render(
+			RankingStat: 'NPC Kills',
+			OurRank: $ourRank,
+			Rankings: Rankings::collectRankings($rankedStats, $player),
+			FilterRankingsHREF: (new self())->href(),
+			FilteredRankings: Rankings::collectRankings($rankedStats, $player, $minRank, $maxRank),
+			MinRank: $minRank,
+			MaxRank: $maxRank,
+			TotalRanks: $totalPlayers,
+			ThisPlayer: $player,
+		);
 	}
 
 }

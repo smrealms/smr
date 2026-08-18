@@ -13,9 +13,6 @@ use Smr\Template;
 class ForcesList extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'forces_list.php';
-
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'View Forces';
 
@@ -35,7 +32,12 @@ class ForcesList extends PlayerPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$forces[] = Force::getForce($player->getGameID(), $dbRecord->getInt('sector_id'), $dbRecord->getInt('owner_id'), false, $dbRecord);
 		}
-		$template->assign('Forces', $forces);
+
+		$template->pageRenderer = fn() => ForcesListRenderer::render(
+			template: $template,
+			Forces: $forces,
+			ThisAccount: $player->getAccount(),
+		);
 	}
 
 }

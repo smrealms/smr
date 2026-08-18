@@ -8,8 +8,6 @@ use Smr\Template;
 
 class AttackPortConfirm extends PlayerPage {
 
-	public string $file = 'port_attack_warning.php';
-
 	public function build(Player $player, Template $template): void {
 		$sector = $player->getSector();
 
@@ -24,12 +22,18 @@ class AttackPortConfirm extends PlayerPage {
 
 		$template->pageTopic = 'Port Raid: Sector #' . $port->getSectorID();
 
-		$template->assign('PortAttackHREF', (new AttackPortProcessor())->href());
-		$template->assign('Port', $port);
-
 		$eligibleAttackers = $sector->getFightingTradersAgainstPort($player, $port, allEligible: true);
-		$template->assign('VisiblePlayers', $eligibleAttackers);
-		$template->assign('SectorPlayersLabel', 'Attackers');
+
+		$template->pageRenderer = fn() => AttackPortConfirmRenderer::render(
+			PortAttackHREF: new AttackPortProcessor()->href(),
+			Port: $port,
+			VisiblePlayers: $eligibleAttackers,
+			SectorPlayersLabel: 'Attackers',
+			ThisShip: $player->getShip(),
+			ThisAccount: $player->getAccount(),
+			ThisPlanet: $sector->getPlanet(),
+			ThisPlayer: $player,
+		);
 	}
 
 }

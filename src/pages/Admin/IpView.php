@@ -10,13 +10,12 @@ use Smr\Template;
 class IpView extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'admin/ip_view.php';
-
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'IP Search';
 
-		$template->assign('IpFormHref', (new IpViewResults())->href());
+		$template->pageRenderer = fn() => IpViewRenderer::render(
+			IpFormHref: (new IpViewResults())->href(),
+		);
 	}
 
 }

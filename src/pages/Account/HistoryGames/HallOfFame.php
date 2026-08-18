@@ -8,8 +8,6 @@ use Smr\Template;
 
 class HallOfFame extends HistoryPage {
 
-	public string $file = 'history_games_hof.php';
-
 	public function __construct(
 		protected readonly string $historyDatabase,
 		protected readonly int $historyGameID,
@@ -35,14 +33,13 @@ class HallOfFame extends HistoryPage {
 				$container = new self($this->historyDatabase, $this->historyGameID, $this->historyGameName, $stat);
 				$links[] = create_link($container, $statDisplay);
 			}
-			$template->assign('Links', $links);
+			$template->pageRenderer = fn() => HallOfFameRenderer::renderCategories($links);
 		} else {
 			// Link back to overview page
 			$container = new self($this->historyDatabase, $this->historyGameID, $this->historyGameName);
-			$template->assign('BackHREF', $container->href());
+			$backHREF = $container->href();
 
 			$statDisplay = ucwords(str_replace('_', ' ', $this->stat));
-			$template->assign('StatName', $statDisplay);
 
 			// Rankings display
 			$oldAccountId = $account->getOldAccountID($this->historyDatabase);
@@ -57,7 +54,11 @@ class HallOfFame extends HistoryPage {
 					'stat' => $dbRecord->getInt($this->stat),
 				];
 			}
-			$template->assign('Rankings', $rankings);
+			$template->pageRenderer = fn() => HallOfFameRenderer::renderRankings(
+				BackHREF: $backHREF,
+				StatName: $statDisplay,
+				Rankings: $rankings,
+			);
 		}
 	}
 

@@ -6,11 +6,10 @@ use Smr\Account;
 use Smr\Alliance;
 use Smr\BountyType;
 use Smr\Page\AccountPage;
+use Smr\Pages\Shared\PreviousGameAllianceListRenderer;
 use Smr\Template;
 
 class PreviousGameAllianceDetail extends AccountPage {
-
-	public string $file = 'previous_game_alliance_detail.php';
 
 	public function __construct(
 		private readonly int $gameID,
@@ -22,13 +21,11 @@ class PreviousGameAllianceDetail extends AccountPage {
 		$allianceID = $this->allianceID;
 
 		$alliance = Alliance::getAlliance($allianceID, $gameID);
-		$template->assign('Alliance', $alliance);
 
 		$template->pageTopic = 'Alliance Roster: ' . $alliance->getAllianceDisplayName(false, true);
 
 		// Offer a back button
 		$container = new GameStats($gameID);
-		$template->assign('BackHREF', $container->href());
 
 		$players = [];
 		foreach ($alliance->getMembers(includeNpc: false) as $player) {
@@ -44,7 +41,11 @@ class PreviousGameAllianceDetail extends AccountPage {
 				'bounty' => $player->getActiveBounty(BountyType::UG)->getCredits() + $player->getActiveBounty(BountyType::HQ)->getCredits(),
 			];
 		}
-		$template->assign('Players', $players);
+
+		$template->pageRenderer = fn() => PreviousGameAllianceListRenderer::render(
+			BackHREF: $container->href(),
+			Players: $players,
+		);
 	}
 
 }

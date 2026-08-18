@@ -12,12 +12,8 @@ use Smr\Template;
 class MatchList extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'chess.php';
-
 	public function build(Player $player, Template $template): void {
 		$chessGames = ChessGame::getOngoingPlayerGames($player);
-		$template->assign('ChessGames', $chessGames);
 		$template->pageTopic = 'Casino';
 
 		$playersChallenged = [$player->getAccountID() => true];
@@ -37,7 +33,6 @@ class MatchList extends PlayerPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$players[$dbRecord->getInt('player_id')] = htmlentities($dbRecord->getString('player_name'));
 		}
-		$template->assign('PlayerList', $players);
 
 		if (ENABLE_NPCS_CHESS) {
 			$npcs = [];
@@ -49,8 +44,15 @@ class MatchList extends PlayerPage {
 			foreach ($dbResult->records() as $dbRecord) {
 				$npcs[$dbRecord->getInt('player_id')] = htmlentities($dbRecord->getString('player_name'));
 			}
-			$template->assign('NPCList', $npcs);
+		} else {
+			$npcs = null;
 		}
+
+		$template->pageRenderer = fn() => MatchListRenderer::render(
+			ChessGames: $chessGames,
+			PlayerList: $players,
+			NPCList: $npcs,
+		);
 	}
 
 }

@@ -10,8 +10,6 @@ use Smr\Template;
 
 class LottoBuyTicket extends PlayerPage {
 
-	public string $file = 'bar_lotto_buy.php';
-
 	public function __construct(
 		private readonly int $locationID,
 	) {}
@@ -22,10 +20,10 @@ class LottoBuyTicket extends PlayerPage {
 
 		Lotto::checkForLottoWinner($player->getGameID());
 		$lottoInfo = Lotto::getLottoInfo($player->getGameID());
-		$template->assign('LottoInfo', $lottoInfo);
-
-		$container = new LottoBuyTicketProcessor($this->locationID);
-		$template->assign('BuyTicketHREF', $container->href());
+		$template->pageRenderer = fn() => LottoBuyTicketRenderer::render(
+			BuyTicketHREF: new LottoBuyTicketProcessor($this->locationID)->href(),
+			LottoInfo: $lottoInfo,
+		);
 	}
 
 }

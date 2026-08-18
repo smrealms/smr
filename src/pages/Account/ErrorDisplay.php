@@ -8,15 +8,13 @@ use Smr\Template;
 
 class ErrorDisplay extends AccountPage {
 
-	public string $file = 'error.php';
-
 	public function __construct(
 		public readonly string $message,
 	) {}
 
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Error';
-		$template->assign('Message', $this->message);
+		$template->pageRenderer = fn() => ErrorDisplayRenderer::render($this->message);
 	}
 
 }

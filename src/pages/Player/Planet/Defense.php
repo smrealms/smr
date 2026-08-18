@@ -9,21 +9,15 @@ use Smr\Template;
 class Defense extends PlanetPage {
 
 	use ReusableTrait;
-
-	public string $file = 'planet_defense.php';
-
 	protected function buildPlanetPage(Player $player, Template $template): void {
-		$container = new DefenseProcessor(HARDWARE_SHIELDS);
-		$template->assign('TransferShields', $container);
-
-		$container = new DefenseProcessor(HARDWARE_COMBAT);
-		$template->assign('TransferCDs', $container);
-
-		$container = new DefenseProcessor(HARDWARE_ARMOUR);
-		$template->assign('TransferArmour', $container);
-
-		$container = new DefenseWeaponProcessor();
-		$template->assign('WeaponProcessingPage', $container);
+		$template->pageRenderer = fn() => DefenseRenderer::render(
+			TransferShields: new DefenseProcessor(HARDWARE_SHIELDS),
+			TransferCDs: new DefenseProcessor(HARDWARE_COMBAT),
+			TransferArmour: new DefenseProcessor(HARDWARE_ARMOUR),
+			WeaponProcessingPage: new DefenseWeaponProcessor(),
+			ThisPlanet: $player->getSectorPlanet(),
+			ThisShip: $player->getShip(),
+		);
 	}
 
 }

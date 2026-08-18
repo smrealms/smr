@@ -9,14 +9,11 @@ use Smr\Template;
 
 class PaperMake extends PlayerPage {
 
-	public string $file = 'galactic_post_make_paper.php';
-
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Making A Paper';
 		Menu::galacticPost();
 
-		$container = new PaperMakeProcessor();
-		$template->assign('SubmitHREF', $container->href());
+		$template->pageRenderer = fn() => PaperMakeRenderer::render(new PaperMakeProcessor()->href());
 	}
 
 }

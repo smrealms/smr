@@ -3,6 +3,7 @@
 use Smr\Combat\Weapon\Weapon;
 use Smr\Database;
 use Smr\Location;
+use Smr\Pages\Standalone\WeaponListRenderer;
 use Smr\Template;
 use Smr\WeaponType;
 
@@ -25,7 +26,6 @@ try {
 	// Get a list of all locations that sell weapons
 	$allLocs = array_unique(array_merge(...$weaponLocs));
 	sort($allLocs);
-	$template->assign('AllLocs', $allLocs);
 
 	// Get all the properties to display for each weapon
 	$weapons = [];
@@ -47,13 +47,16 @@ try {
 			'locs' => $weaponLocs[$weapon->getWeaponTypeID()] ?? [],
 		];
 	}
-	$template->assign('Weapons', $weapons);
 
 	$powerLevels = array_unique(array_column($weapons, 'power_level'));
 	rsort($powerLevels);
-	$template->assign('PowerLevels', $powerLevels);
 
-	$template->display('weapon_list.php');
+	$renderer = fn() => WeaponListRenderer::render(
+		PowerLevels: $powerLevels,
+		AllLocs: $allLocs,
+		Weapons: $weapons,
+	);
+	$template->display($renderer);
 } catch (Throwable $e) {
 	handleException($e);
 }

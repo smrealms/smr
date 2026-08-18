@@ -9,8 +9,6 @@ use Smr\TradeGood;
 
 class ShopGoods extends PlayerPage {
 
-	public string $file = 'shop_goods.php';
-
 	public function __construct(
 		private readonly ?string $tradeMessage = null,
 	) {}
@@ -28,14 +26,13 @@ class ShopGoods extends PlayerPage {
 
 		// topic
 		$template->pageTopic = 'Port In Sector #' . $player->getSectorID();
-		$template->assign('Port', $port);
 
 		$player->log(LOG_TYPE_TRADING, 'Player examines port');
 		$searchedByFeds = false;
 
 		//The player is sent here after trading and sees this if his offer is accepted.
-		$template->assign('TradeMsg', $this->tradeMessage);
 
+		$totalFine = null;
 		if ($player->getLastPort() !== $player->getSectorID()) {
 			// test if we are searched, but only if we hadn't a previous trade here
 
@@ -69,7 +66,6 @@ class ShopGoods extends PlayerPage {
 					);
 					$player->increaseHOF($ship->getCargo(GOODS_SLAVES) + $ship->getCargo(GOODS_WEAPONS) + $ship->getCargo(GOODS_NARCOTICS), ['Trade', 'Search', 'Caught', 'Goods Confiscated'], HOF_PUBLIC);
 					$player->increaseHOF($totalFine, ['Trade', 'Search', 'Caught', 'Amount Fined'], HOF_PUBLIC);
-					$template->assign('TotalFine', $totalFine);
 
 					if ($fine > $player->getCredits()) {
 						$fine -= $player->getCredits();
@@ -101,7 +97,6 @@ class ShopGoods extends PlayerPage {
 				}
 			}
 		}
-		$template->assign('SearchedByFeds', $searchedByFeds);
 
 		$player->setLastPort($player->getSectorID());
 
@@ -131,11 +126,19 @@ class ShopGoods extends PlayerPage {
 			];
 		}
 
-		$template->assign('BoughtGoods', $boughtGoods);
-		$template->assign('SoldGoods', $soldGoods);
-
 		$container = new CurrentSector();
-		$template->assign('LeavePortHREF', $container->href());
+
+		$template->pageRenderer = fn() => ShopGoodsRenderer::render(
+			Port: $port,
+			TradeMsg: $this->tradeMessage,
+			TotalFine: $totalFine,
+			SearchedByFeds: $searchedByFeds,
+			BoughtGoods: $boughtGoods,
+			SoldGoods: $soldGoods,
+			LeavePortHREF: $container->href(),
+			ThisPlayer: $player,
+			ThisShip: $player->getShip(),
+		);
 	}
 
 }

@@ -12,14 +12,12 @@ use Smr\Template;
 class TraderBounties extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'trader_bounties.php';
-
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Bounties';
 
 		Menu::trader();
 
+		$bounties = [];
 		foreach (BountyType::cases() as $type) {
 			if ($player->hasActiveBounty($type)) {
 				$bounty = $player->getActiveBounty($type);
@@ -27,14 +25,19 @@ class TraderBounties extends PlayerPage {
 			} else {
 				$msg = 'None';
 			}
-			$template->assign('Bounty' . $type->value, $msg);
+			$bounties[$type->value] = $msg;
 		}
 
 		$allClaims = [
 			$player->getClaimableBounties(BountyType::HQ),
 			$player->getClaimableBounties(BountyType::UG),
 		];
-		$template->assign('AllClaims', $allClaims);
+
+		$template->pageRenderer = fn() => TraderBountiesRenderer::render(
+			AllClaims: $allClaims,
+			BountyHQ: $bounties[BountyType::HQ->value],
+			BountyUG: $bounties[BountyType::UG->value],
+		);
 	}
 
 }

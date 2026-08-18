@@ -14,8 +14,6 @@ class TraderSavings extends PlayerPage {
 
 	use ReusableTrait;
 
-	public string $file = 'trader_savings.php';
-
 	public function build(Player $player, Template $template): void {
 		$template->pageTopic = 'Savings';
 
@@ -33,16 +31,12 @@ class TraderSavings extends PlayerPage {
 				'Password' => $dbRecord->getString('password'),
 			];
 		}
-		$template->assign('AnonAccounts', $anonAccounts);
-
 		Lotto::checkForLottoWinner($player->getGameID());
-		$template->assign('LottoInfo', Lotto::getLottoInfo($player->getGameID()));
+		$lottoInfo = Lotto::getLottoInfo($player->getGameID());
 
 		// Number of active lotto tickets this player has
 		$dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE ' . Player::SQL . ' AND time > 0', $player->SQLID);
 		$tickets = $dbResult->record()->getInt('count(*)');
-		$template->assign('LottoTickets', $tickets);
-
 		// Number of active lotto tickets all players have
 		$dbResult = $db->read('SELECT count(*) FROM player_has_ticket WHERE game_id = :game_id AND time > 0', [
 			'game_id' => $db->escapeNumber($player->getGameID()),
@@ -53,11 +47,15 @@ class TraderSavings extends PlayerPage {
 		} else {
 			$win_chance = round(100 * $tickets / $tickets_tot, 2);
 		}
-		$template->assign('LottoWinChance', $win_chance);
-
 		// Number of winning lotto tickets this player has to claim
 		$numToClaim = $db->count('player_has_ticket', ['time' => 0, ...$player->SQLID]);
-		$template->assign('WinningTickets', $numToClaim);
+		$template->pageRenderer = fn() => TraderSavingsRenderer::render(
+			AnonAccounts: $anonAccounts,
+			LottoTickets: $tickets,
+			LottoInfo: $lottoInfo,
+			LottoWinChance: $win_chance,
+			WinningTickets: $numToClaim,
+		);
 	}
 
 }

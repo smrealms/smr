@@ -13,9 +13,6 @@ use Smr\Template;
 class NewsReadCurrent extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'news_read_current.php';
-
 	public function __construct(
 		private ?int $lastNewsUpdate = null,
 	) {}
@@ -26,9 +23,6 @@ class NewsReadCurrent extends PlayerPage {
 		$template->pageTopic = 'Current News';
 		Menu::news($gameID);
 
-		News::doBreakingNewsAssign($gameID);
-		News::doLottoNewsAssign($gameID);
-
 		if ($this->lastNewsUpdate === null) {
 			$this->lastNewsUpdate = $player->getLastNewsUpdate();
 		}
@@ -38,9 +32,16 @@ class NewsReadCurrent extends PlayerPage {
 			'game_id' => $db->escapeNumber($gameID),
 			'last_news_update' => $db->escapeNumber($this->lastNewsUpdate),
 		]);
-		$template->assign('NewsItems', News::getNewsItems($dbResult));
+		$newsItems = News::getNewsItems($dbResult);
 
 		$player->updateLastNewsUpdate();
+
+		$template->pageRenderer = fn() => NewsReadCurrentRenderer::render(
+			NewsItems: $newsItems,
+			ThisAccount: $player->getAccount(),
+			BreakingNews: News::getBreakingNews($gameID),
+			LottoNews: News::getLottoNews($gameID),
+		);
 	}
 
 }

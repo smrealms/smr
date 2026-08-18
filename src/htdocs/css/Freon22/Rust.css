@@ -20,11 +20,11 @@ html {
 	background-color: #7B5121;
 	border-color: #A3692D;
 }
-.LeftNavOne {
+div#LeftNavOne {
 	background-color: #140F0B;
 	border-color: #A3692D;
 }
-.LeftNavTwo {
+div#LeftNavTwo {
 	background-color: #140F0B;
 	border-color: #A3692D;
 }

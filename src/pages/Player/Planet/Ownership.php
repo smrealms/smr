@@ -9,20 +9,18 @@ use Smr\Template;
 class Ownership extends PlanetPage {
 
 	use ReusableTrait;
-
-	public string $file = 'planet_ownership.php';
-
 	protected function buildPlanetPage(Player $player, Template $template): void {
 		$container = new OwnershipProcessor();
-		$template->assign('ProcessingPage', $container);
-
-		$template->assign('Planet', $player->getSectorPlanet());
 
 		// Check if this player already owns a planet
-		$playerPlanet = $player->getPlanet();
-		if ($playerPlanet !== null) {
-			$template->assign('PlayerPlanet', $playerPlanet->getSectorID());
-		}
+		$playerPlanet = $player->getPlanet()?->getSectorID();
+
+		$template->pageRenderer = fn() => OwnershipRenderer::render(
+			ProcessingPage: $container,
+			Planet: $player->getSectorPlanet(),
+			PlayerPlanet: $playerPlanet,
+			ThisPlayer: $player,
+		);
 	}
 
 }

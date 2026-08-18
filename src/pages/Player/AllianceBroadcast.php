@@ -6,15 +6,13 @@ use Smr\Alliance;
 use Smr\Menu;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
+use Smr\Pages\Shared\CommonMessageSendRenderer;
 use Smr\Player;
 use Smr\Template;
 
 class AllianceBroadcast extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'alliance_broadcast.php';
-
 	public function __construct(
 		private readonly int $allianceID,
 		private readonly ?string $preview = null,
@@ -25,13 +23,12 @@ class AllianceBroadcast extends PlayerPage {
 		$template->pageTopic = $alliance->getAllianceDisplayName(false, true);
 		Menu::alliance($alliance->getAllianceID());
 
-		$container = new MessageSendProcessor(allianceID: $this->allianceID);
-		$template->assign('MessageSendFormHref', $container->href());
-
-		$template->assign('Receiver', 'Whole Alliance');
-		if ($this->preview !== null) {
-			$template->assign('Preview', $this->preview);
-		}
+		$template->pageRenderer = fn() => CommonMessageSendRenderer::render(
+			Receiver: 'Whole Alliance',
+			Preview: $this->preview,
+			ThisPlayer: $player,
+			MessageSendPage: new MessageSendProcessor(allianceID: $this->allianceID),
+		);
 	}
 
 }

@@ -10,8 +10,6 @@ use Smr\Template;
 
 class VoteCreate extends AccountPage {
 
-	public string $file = 'admin/vote_create.php';
-
 	public function __construct(
 		private readonly ?string $previewVote = null,
 		private readonly ?int $days = null,
@@ -21,8 +19,6 @@ class VoteCreate extends AccountPage {
 
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Create Vote';
-
-		$template->assign('VoteFormPage', new VoteCreateProcessor());
 
 		$voting = [];
 		$db = Database::getInstance();
@@ -34,11 +30,15 @@ class VoteCreate extends AccountPage {
 			$voting[$voteID]['ID'] = $voteID;
 			$voting[$voteID]['Question'] = $dbRecord->getString('question');
 		}
-		$template->assign('CurrentVotes', $voting);
-		$template->assign('PreviewVote', $this->previewVote);
-		$template->assign('Days', $this->days);
-		$template->assign('PreviewOption', $this->previewOption);
-		$template->assign('VoteID', $this->voteID);
+
+		$template->pageRenderer = fn() => VoteCreateRenderer::render(
+			VoteFormPage: new VoteCreateProcessor(),
+			CurrentVotes: $voting,
+			PreviewVote: $this->previewVote,
+			Days: $this->days,
+			PreviewOption: $this->previewOption,
+			VoteID: $this->voteID,
+		);
 	}
 
 }

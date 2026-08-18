@@ -1,0 +1,59 @@
+<?php declare(strict_types=1);
+
+namespace Smr\Pages\Player;
+
+use Smr\Globals;
+use Smr\Player;
+use Smr\Template;
+
+class CurrentPlayersRenderer {
+
+	/**
+	 * @param array<array{player: \Smr\Player, tr_class: string, name_link: string}> $AllRows
+	 */
+	public static function render(Template $template, string $Summary, array $AllRows, Player $ThisPlayer): void {
+		?>
+		<br />
+		<div class="center">
+			<?php echo $Summary; ?>
+			<br /><br />
+
+			<div class="buttonA">
+				<a class="buttonA" href="<?php echo Globals::getSendGlobalMessageHREF(); ?>">Send Global Message</a>
+			</div>
+			<br /><br />
+
+			<?php
+			if (count($AllRows) > 0) { ?>
+				<table id="cpl" class="center standard inset">
+					<thead>
+						<tr>
+							<th class="sort" data-sort="sort_name">Player</th>
+							<th class="sort" data-sort="sort_race">Race</th>
+							<th class="sort" data-sort="sort_alliance">Alliance</th>
+							<th class="sort" data-sort="sort_exp">Experience</th>
+						</tr>
+					</thead>
+
+					<tbody class="list"><?php
+						foreach ($AllRows as $Row) { ?>
+							<tr <?php echo $Row['tr_class']; ?>>
+								<td class="sort_name left" data-name="<?php echo htmlentities($Row['player']->getPlayerName()); ?>" valign="top"><?php echo $Row['name_link']; ?></td>
+								<td class="sort_race">
+									<?php echo $ThisPlayer->getColouredRaceName($Row['player']->getRaceID(), true); ?>
+								</td>
+								<td class="sort_alliance"><?php echo $Row['player']->getAllianceDisplayName(true); ?></td>
+								<td class="sort_exp right"><?php echo number_format($Row['player']->getExperience()); ?></td>
+							</tr><?php
+						} ?>
+					</tbody>
+				</table>
+
+				<?php $template->listjsInclude = 'current_players';
+			} ?>
+		</div>
+
+		<?php
+	}
+
+}

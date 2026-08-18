@@ -9,19 +9,12 @@ use Smr\Template;
 
 class GameNews extends HistoryPage {
 
-	public string $file = 'history_games_news.php';
-
 	protected function buildHistory(Account $account, Template $template): void {
 		$template->pageTopic = 'Game News : ' . $this->historyGameName;
 		$this->addMenu($template);
 
 		$min = Request::getInt('min', 1);
 		$max = Request::getInt('max', 50);
-		$template->assign('Max', $max);
-		$template->assign('Min', $min);
-
-		$template->assign('ShowHREF', $this->href());
-
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND news_id >= :min_news_id AND news_id <= :max_news_id', [
 			'game_id' => $db->escapeNumber($this->historyGameID),
@@ -35,7 +28,12 @@ class GameNews extends HistoryPage {
 				'news' => $dbRecord->getString('message'),
 			];
 		}
-		$template->assign('Rows', $rows);
+		$template->pageRenderer = fn() => GameNewsRenderer::render(
+			Max: $max,
+			Min: $min,
+			ShowHREF: $this->href(),
+			Rows: $rows,
+		);
 	}
 
 }

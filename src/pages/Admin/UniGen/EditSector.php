@@ -13,9 +13,6 @@ use Smr\Template;
 class EditSector extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'admin/unigen/universe_create_sector_details.php';
-
 	public function __construct(
 		private readonly int $gameID,
 		private readonly EditGalaxy $returnTo,
@@ -34,36 +31,15 @@ class EditSector extends AccountPage {
 		$this->sectorID ??= Request::getInt('sector_edit');
 		$editSector = Sector::getSector($this->gameID, $this->sectorID);
 		$template->pageTopic = 'Edit Sector #' . $editSector->getSectorID() . ' (' . $editSector->getGalaxy()->getDisplayName() . ')';
-		$template->assign('EditSector', $editSector);
 
-		$template->assign('LastSector', Game::getGame($this->gameID)->getLastSectorID());
-
-		$container = new EditSectorProcessor($this->gameID, $this->sectorID, $this->returnTo());
-		$template->assign('EditHREF', $container->href());
-
-		$selectedPlanetType = 0;
-		if ($editSector->hasPlanet()) {
-			$selectedPlanetType = $editSector->getPlanet()->getTypeID();
-			$template->assign('Planet', $editSector->getPlanet());
-		}
-		$template->assign('SelectedPlanetType', $selectedPlanetType);
-
-		$selectedPortLevel = null;
-		$selectedPortRaceID = null;
-		if ($editSector->hasPort()) {
-			$selectedPortLevel = $editSector->getPort()->getLevel();
-			$selectedPortRaceID = $editSector->getPort()->getRaceID();
-			$template->assign('Port', $editSector->getPort());
-		}
-		$template->assign('SelectedPortLevel', $selectedPortLevel);
-		$template->assign('SelectedPortRaceID', $selectedPortRaceID);
+		$planet = $editSector->hasPlanet() ? $editSector->getPlanet() : null;
+		$port = $editSector->hasPort() ? $editSector->getPort() : null;
 
 		$sectorLocationIDs = array_pad(
 			array_keys($editSector->getLocations()),
 			UNI_GEN_LOCATION_SLOTS,
 			0,
 		);
-		$template->assign('SectorLocationIDs', $sectorLocationIDs);
 
 		if ($editSector->hasWarp()) {
 			$warpSector = $editSector->getWarpSector();
@@ -73,12 +49,20 @@ class EditSector extends AccountPage {
 			$warpSectorID = 0;
 			$warpGal = 'No Warp';
 		}
-		$template->assign('WarpGal', $warpGal);
-		$template->assign('WarpSectorID', $warpSectorID);
 
-		$template->assign('CancelHREF', $this->returnTo->href());
-
-		$template->assign('Message', $this->message);
+		$template->pageRenderer = fn() => EditSectorRenderer::render(
+			EditSector: $editSector,
+			LastSector: Game::getGame($this->gameID)->getLastSectorID(),
+			EditHREF: new EditSectorProcessor($this->gameID, $this->sectorID, $this->returnTo())->href(),
+			Planet: $planet,
+			Port: $port,
+			SectorLocationIDs: $sectorLocationIDs,
+			WarpGal: $warpGal,
+			WarpSectorID: $warpSectorID,
+			CancelHREF: $this->returnTo->href(),
+			Message: $this->message,
+			ThisAccount: $account,
+		);
 	}
 
 }

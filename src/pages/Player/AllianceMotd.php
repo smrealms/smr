@@ -15,16 +15,12 @@ use Smr\Template;
 class AllianceMotd extends PlayerPage {
 
 	use ReusableTrait;
-
-	public string $file = 'alliance_mod.php';
-
 	public function __construct(
 		private readonly int $allianceID,
 	) {}
 
 	public function build(Player $player, Template $template): void {
 		$alliance = Alliance::getAlliance($this->allianceID, $player->getGameID());
-		$template->assign('Alliance', $alliance);
 
 		Globals::canAccessPage('AllianceMOTD', $player, ['AllianceID' => $alliance->getAllianceID()]);
 
@@ -38,8 +34,9 @@ class AllianceMotd extends PlayerPage {
 			...$alliance->SQLID,
 			'expire_time' => $db->escapeNumber(Epoch::time() - 3600),
 		]);
+		$responseInputs = [];
 		if ($dbResult->hasRecord()) {
-			$template->assign('OpTime', $dbResult->record()->getInt('time'));
+			$opTime = $dbResult->record()->getInt('time');
 
 			// Has player responded yet?
 			$dbResult2 = $db->select(
@@ -53,14 +50,14 @@ class AllianceMotd extends PlayerPage {
 
 			$response = $dbResult2->hasRecord() ? $dbResult2->record()->getString('response') : null;
 			$responseHREF = (new AllianceOpResponseProcessor($this->allianceID))->href();
-			$template->assign('OpResponseHREF', $responseHREF);
 
-			$responseInputs = [];
 			foreach (['Yes', 'Maybe', 'No'] as $option) {
 				$fields = strtoupper($option) === $response ? ['style' => 'background: green'] : [];
 				$responseInputs[$option] = $fields;
 			}
-			$template->assign('ResponseInputs', $responseInputs);
+		} else {
+			$opTime = null;
+			$responseHREF = null;
 		}
 
 		// Does the player have edit permission?
@@ -72,10 +69,20 @@ class AllianceMotd extends PlayerPage {
 		$dbRecord = $dbResult->record();
 		if ($dbRecord->getBoolean('change_mod') || $dbRecord->getBoolean('change_pass')) {
 			$container = new AllianceGovernance($alliance->getAllianceID());
-			$template->assign('EditHREF', $container->href());
+			$editHREF = $container->href();
+		} else {
+			$editHREF = null;
 		}
 
-		$template->assign('DiscordServer', $alliance->getDiscordServer());
+		$template->pageRenderer = fn() => AllianceMotdRenderer::render(
+			Alliance: $alliance,
+			OpTime: $opTime,
+			OpResponseHREF: $responseHREF,
+			ResponseInputs: $responseInputs,
+			EditHREF: $editHREF,
+			DiscordServer: $alliance->getDiscordServer(),
+			ThisAccount: $player->getAccount(),
+		);
 	}
 
 }

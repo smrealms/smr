@@ -13,9 +13,6 @@ use Smr\Template;
 class AlbumEdit extends AccountPage {
 
 	use ReusableTrait;
-
-	public string $file = 'album_edit.php';
-
 	public function __construct(
 		private readonly ?string $successMsg = null,
 	) {}
@@ -59,12 +56,13 @@ class AlbumEdit extends AccountPage {
 			$albumEntry['Image'] = '/upload/' . $account->getAccountID();
 		}
 
-		$template->assign('AlbumEntry', $albumEntry);
-
-		$template->assign('AlbumEditHref', (new AlbumEditProcessor())->href());
-		$template->assign('AlbumDeleteHref', (new AlbumDeleteConfirm())->href());
-
-		$template->assign('SuccessMsg', $this->successMsg);
+		$template->pageRenderer = fn() => AlbumEditRenderer::render(
+			AlbumEntry: $albumEntry,
+			AlbumEditHref: new AlbumEditProcessor()->href(),
+			AlbumDeleteHref: new AlbumDeleteConfirm()->href(),
+			SuccessMsg: $this->successMsg,
+			ThisAccount: $account,
+		);
 	}
 
 }
