@@ -51,7 +51,7 @@ class AllianceRoles extends PlayerPage {
 		}
 
 		$CreateRole = [
-			'HREF' => (new AllianceRolesProcessor())->href(),
+			'HREF' => new AllianceRolesProcessor()->href(),
 			'RoleID' => '',
 			'Name' => '',
 			'CreatingRole' => true,

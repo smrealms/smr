@@ -36,7 +36,7 @@ class GameDeleteProcessor extends AccountPageProcessor {
 
 		$message = '<span class="green">SUCCESS: </span>deleted game: ' . $game->getDisplayName();
 
-		(new AdminTools(message: $message))->go();
+		new AdminTools(message: $message)->go();
 	}
 
 }

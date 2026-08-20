@@ -23,7 +23,7 @@ class TraderNoteAddProcessor extends PlayerPageProcessor {
 			'note' => $db->escapeObject($note, true),
 		]);
 
-		(new TraderStatus())->go();
+		new TraderStatus()->go();
 	}
 
 }

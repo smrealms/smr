@@ -31,13 +31,10 @@ class ChessPiece {
 	 * Check if the piece is attacking a specific square
 	 */
 	public function isAttacking(Board $board, Loc $loc): bool {
-		$moves = $this->getPossibleMoves($board, attackingCheck: true);
-		foreach ($moves as $toLoc) {
-			if ($toLoc->same($loc)) {
-				return true;
-			}
-		}
-		return false;
+		return array_any(
+			$this->getPossibleMoves($board, attackingCheck: true),
+			fn($toLoc) => $toLoc->same($loc),
+		);
 	}
 
 	/**

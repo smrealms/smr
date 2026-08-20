@@ -14,7 +14,7 @@ class MatchStartProcessor extends PlayerPageProcessor {
 		$challengePlayer = Player::getPlayerByPlayerID(Request::getInt('player_id'), $player->getGameID());
 		ChessGame::insertNewGame(Epoch::time(), $player, $challengePlayer);
 
-		(new MatchList())->go();
+		new MatchList()->go();
 	}
 
 }

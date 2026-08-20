@@ -17,10 +17,10 @@ class LoginCheckChangelogProcessor extends AccountPageProcessor {
 		]);
 		// do we have updates?
 		if ($dbResult->hasRecord()) {
-			(new ChangelogView($lastLogin))->go();
+			new ChangelogView($lastLogin)->go();
 		}
 
-		(new LoginProcessor())->go();
+		new LoginProcessor()->go();
 	}
 
 }

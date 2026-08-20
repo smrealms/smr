@@ -49,19 +49,19 @@ $discord->on('init', function($discord) {
 });
 
 // Register commands
-(new Forces())->register($discord);
-(new Game())->register($discord);
-(new Invite($discord))->register($discord);
-(new MagicEightBall())->register($discord);
-(new Money())->register($discord);
-$opCmd = (new Op())->register($discord);
-(new OpList())->register($opCmd);
-(new OpTurns())->register($opCmd);
-(new Seed())->register($discord);
-$seedlistCmd = (new Seedlist())->register($discord);
-(new SeedlistAdd())->register($seedlistCmd);
-(new SeedlistDel())->register($seedlistCmd);
-(new Turns())->register($discord);
+new Forces()->register($discord);
+new Game()->register($discord);
+new Invite($discord)->register($discord);
+new MagicEightBall()->register($discord);
+new Money()->register($discord);
+$opCmd = new Op()->register($discord);
+new OpList()->register($opCmd);
+new OpTurns()->register($opCmd);
+new Seed()->register($discord);
+$seedlistCmd = new Seedlist()->register($discord);
+new SeedlistAdd()->register($seedlistCmd);
+new SeedlistDel()->register($seedlistCmd);
+new Turns()->register($discord);
 
 // Close the connection we may have opened during startup
 // to avoid a mysql timeout.

@@ -53,7 +53,7 @@ class DefenseWeaponProcessor extends PlayerPageProcessor {
 			$planet->moveMountedWeaponDown(Request::getInt('move_down'));
 		}
 
-		(new Defense())->go();
+		new Defense()->go();
 	}
 
 }

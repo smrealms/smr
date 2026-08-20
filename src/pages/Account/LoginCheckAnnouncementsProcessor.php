@@ -17,9 +17,9 @@ class LoginCheckAnnouncementsProcessor extends AccountPageProcessor {
 		]);
 		// do we have announcements?
 		if ($dbResult->hasRecord()) {
-			(new LoginAnnouncements())->go();
+			new LoginAnnouncements()->go();
 		}
-		(new LoginCheckChangelogProcessor())->go();
+		new LoginCheckChangelogProcessor()->go();
 	}
 
 }

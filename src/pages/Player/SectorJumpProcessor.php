@@ -38,7 +38,7 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 			$player->setSectorID($target);
 			$player->update();
 			$sector->markVisited($player);
-			(new CurrentSector())->go();
+			new CurrentSector()->go();
 		}
 
 		// you can't move while on planet
@@ -137,7 +137,7 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 		require_once(LIB . 'Default/sector_mines.inc.php');
 		hit_sector_mines($player);
 
-		(new CurrentSector())->go();
+		new CurrentSector()->go();
 	}
 
 }

@@ -16,7 +16,7 @@ class LaunchProcessor extends PlayerPageProcessor {
 		$player->setLandedOnPlanet(false);
 		$player->update();
 		$player->log(LOG_TYPE_MOVEMENT, 'Player launches from planet');
-		(new CurrentSector())->go();
+		new CurrentSector()->go();
 	}
 
 }

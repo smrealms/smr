@@ -17,7 +17,7 @@ class LogConsoleDetailProcessor extends AccountPageProcessor {
 
 	public function build(Account $account): never {
 		$logTypeIDs = Request::getIntArray('log_type_ids');
-		(new LogConsoleDetail($this->accountIDs, $logTypeIDs))->go();
+		new LogConsoleDetail($this->accountIDs, $logTypeIDs)->go();
 	}
 
 }

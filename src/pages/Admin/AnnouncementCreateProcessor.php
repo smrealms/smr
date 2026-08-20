@@ -36,7 +36,7 @@ class AnnouncementCreateProcessor extends AccountPageProcessor {
 			'msg' => $message,
 		]);
 
-		(new AdminTools())->go();
+		new AdminTools()->go();
 	}
 
 }

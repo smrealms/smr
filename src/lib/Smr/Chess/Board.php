@@ -209,12 +209,10 @@ class Board {
 	 */
 	public function isChecked(Colour $colour): bool {
 		$king = $this->getKing($colour);
-		foreach ($this->getPieces($colour->opposite()) as $piece) {
-			if ($piece->isAttacking($this, $king->loc)) {
-				return true;
-			}
-		}
-		return false;
+		return array_any(
+			$this->getPieces($colour->opposite()),
+			fn($piece) => $piece->isAttacking($this, $king->loc),
+		);
 	}
 
 	public function isCheckmated(Colour $colour): bool {
@@ -229,24 +227,17 @@ class Board {
 		}
 		// Draw by insufficient material
 		// (Consider only the case where Kings remain, others too complex)
-		foreach ($this->getPieces() as $piece) {
-			if ($piece->pieceID !== ChessPiece::KING) {
-				return false;
-			}
-		}
-		return true;
+		return array_all($this->getPieces(), fn($piece) => $piece->pieceID === ChessPiece::KING);
 	}
 
 	/**
 	 * Can $colour make any legal moves in the current position?
 	 */
 	private function hasLegalMoves(Colour $colour): bool {
-		foreach ($this->getPieces($colour) as $piece) {
-			if (count($piece->getPossibleMoves($this)) > 0) {
-				return true;
-			}
-		}
-		return false;
+		return array_any(
+			$this->getPieces($colour),
+			fn($piece) => count($piece->getPossibleMoves($this)) > 0,
+		);
 	}
 
 	/**

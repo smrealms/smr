@@ -2106,12 +2106,10 @@ class Player {
 	}
 
 	public function hasActiveBounty(BountyType $type): bool {
-		foreach ($this->getBounties() as $bounty) {
-			if ($bounty->isActive() && $bounty->type === $type) {
-				return true;
-			}
-		}
-		return false;
+		return array_any(
+			$this->getBounties(),
+			fn($bounty) => $bounty->isActive() && $bounty->type === $type,
+		);
 	}
 
 	/**
@@ -2854,12 +2852,7 @@ class Player {
 	 * @param array<self> $otherPlayerArray
 	 */
 	public function canSeeAny(array $otherPlayerArray): bool {
-		foreach ($otherPlayerArray as $otherPlayer) {
-			if ($this->canSee($otherPlayer)) {
-				return true;
-			}
-		}
-		return false;
+		return array_any($otherPlayerArray, fn($otherPlayer) => $this->canSee($otherPlayer));
 	}
 
 	public function canSee(self $otherPlayer): bool {
@@ -2975,7 +2968,7 @@ class Player {
 	}
 
 	public function getLeaveNewbieProtectionHREF(): string {
-		return (new NewbieLeaveProcessor())->href();
+		return new NewbieLeaveProcessor()->href();
 	}
 
 	public function getExamineTraderHREF(): string {

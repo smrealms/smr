@@ -61,7 +61,7 @@ class VotingCenterProcessor extends PlayerPageProcessor {
 			throw new Exception('Unexpected action: ' . $action);
 		}
 
-		(new VotingCenter())->go();
+		new VotingCenter()->go();
 	}
 
 }

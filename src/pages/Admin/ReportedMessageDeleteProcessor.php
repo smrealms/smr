@@ -19,7 +19,7 @@ class ReportedMessageDeleteProcessor extends AccountPageProcessor {
 			'notify_ids' => $db->escapeArray(Request::getIntArray('notify_id')),
 		]);
 
-		(new ReportedMessageView())->go();
+		new ReportedMessageView()->go();
 	}
 
 }

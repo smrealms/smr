@@ -37,7 +37,7 @@ class FeatureRequestProcessor extends AccountPageProcessor {
 			'vote_type' => 'YES',
 		]);
 
-		(new FeatureRequest())->go();
+		new FeatureRequest()->go();
 	}
 
 }

@@ -49,7 +49,7 @@ class AllianceShareMapsProcessor extends PlayerPageProcessor {
 			$cachedPort->addCachePorts($alliance_ids);
 		}
 
-		(new AllianceRoster())->go();
+		new AllianceRoster()->go();
 	}
 
 }

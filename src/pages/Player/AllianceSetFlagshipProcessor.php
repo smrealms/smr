@@ -16,7 +16,7 @@ class AllianceSetFlagshipProcessor extends PlayerPageProcessor {
 		$alliance->setFlagshipID($flagshipID);
 		$alliance->update();
 
-		(new AllianceSetOp())->go();
+		new AllianceSetOp()->go();
 	}
 
 }

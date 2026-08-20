@@ -45,7 +45,7 @@ function shared_channel_msg_seed(Player $player): array {
 	}
 
 	// Get seed status for each player we have access to
-	$result = array_map('get_seed_message', $player->getSharingPlayers(true));
+	$result = array_map(get_seed_message(...), $player->getSharingPlayers(true));
 
 	// Prepend the total number of sectors to seed
 	array_unshift($result, "There are $numSectors sectors in the seedlist.");

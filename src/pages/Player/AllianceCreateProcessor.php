@@ -52,7 +52,7 @@ class AllianceCreateProcessor extends PlayerPageProcessor {
 		$player->joinAlliance($alliance->getAllianceID());
 		$player->update();
 
-		(new AllianceRoster())->go();
+		new AllianceRoster()->go();
 	}
 
 }

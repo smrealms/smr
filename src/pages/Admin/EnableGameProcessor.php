@@ -20,7 +20,7 @@ class EnableGameProcessor extends AccountPageProcessor {
 
 		$msg = '<span class="green">SUCCESS: </span>Enabled game ' . $game->getDisplayName();
 
-		(new EnableGame($msg))->go();
+		new EnableGame($msg)->go();
 	}
 
 }

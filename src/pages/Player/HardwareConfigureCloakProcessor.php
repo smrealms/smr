@@ -26,7 +26,7 @@ class HardwareConfigureCloakProcessor extends PlayerPageProcessor {
 			$ship->enableCloak();
 		}
 
-		(new CurrentSector())->go();
+		new CurrentSector()->go();
 	}
 
 }

@@ -112,7 +112,7 @@ class NpcManage extends AccountPage {
 			Npcs: $npcs,
 			NpcGalaxyChoices: $npcGalaxyChoices,
 			NpcGalaxyAllianceChoices: $npcGalaxyAllianceChoices,
-			SetupNpcGalaxyHref: (new NpcManageSetupGalaxyProcessor($selectedGameID))->href(),
+			SetupNpcGalaxyHref: new NpcManageSetupGalaxyProcessor($selectedGameID)->href(),
 		);
 	}
 

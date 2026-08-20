@@ -10,7 +10,7 @@ class ManagePostEditorsSelectProcessor extends AccountPageProcessor {
 
 	public function build(Account $account): never {
 		$selectedGameID = Request::getInt('selected_game_id');
-		(new ManagePostEditors($selectedGameID))->go();
+		new ManagePostEditors($selectedGameID)->go();
 	}
 
 }

@@ -58,7 +58,7 @@ class VoteCreateProcessor extends AccountPageProcessor {
 				'text' => $option,
 			]);
 		}
-		(new VoteCreate())->go();
+		new VoteCreate()->go();
 	}
 
 }

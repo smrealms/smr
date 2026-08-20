@@ -15,7 +15,7 @@ class AllianceInviteCancelProcessor extends PlayerPageProcessor {
 	public function build(Player $player): never {
 		// Delete the alliance invitation
 		$this->invite->delete();
-		(new AllianceInvitePlayer())->go();
+		new AllianceInvitePlayer()->go();
 	}
 
 }

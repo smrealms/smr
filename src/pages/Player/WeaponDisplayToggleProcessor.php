@@ -20,7 +20,7 @@ class WeaponDisplayToggleProcessor extends PlayerPageProcessor {
 			exit;
 		}
 
-		(new CurrentSector())->go();
+		new CurrentSector()->go();
 	}
 
 }

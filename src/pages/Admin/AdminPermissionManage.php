@@ -54,7 +54,7 @@ class AdminPermissionManage extends AccountPage {
 			$template->pageRenderer = fn() => AdminPermissionManageRenderer::renderSelect(
 				AdminLinks: $adminLinks,
 				ValidatedAccounts: $validatedAccounts,
-				SelectAdminHREF: (new AdminPermissionManageSelectProcessor())->href(),
+				SelectAdminHREF: new AdminPermissionManageSelectProcessor()->href(),
 			);
 		} else {
 			// get the account that we're editing

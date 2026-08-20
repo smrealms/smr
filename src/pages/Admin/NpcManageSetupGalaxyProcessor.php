@@ -72,7 +72,7 @@ class NpcManageSetupGalaxyProcessor extends AccountPageProcessor {
 		$planet->update();
 
 		$message = '<span class="green">SUCCESS: </span> Set up galaxy ' . $galaxy->getDisplayName() . ' for alliance ' . $alliance->getAllianceDisplayName();
-		(new NpcManage($this->selectedGameID, $message))->go();
+		new NpcManage($this->selectedGameID, $message)->go();
 	}
 
 }

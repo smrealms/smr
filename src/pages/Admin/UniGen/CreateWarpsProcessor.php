@@ -55,7 +55,7 @@ class CreateWarpsProcessor extends AccountPageProcessor {
 		}
 		Sector::saveSectors();
 		$message = '<span class="green">Success</span> : added warps.';
-		(new CreateWarps($this->gameID, $this->galaxyID, $this->returnTo, $message))->go();
+		new CreateWarps($this->gameID, $this->galaxyID, $this->returnTo, $message)->go();
 
 	}
 

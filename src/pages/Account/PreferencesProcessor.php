@@ -57,7 +57,7 @@ class PreferencesProcessor extends AccountPageProcessor {
 			$account->update();
 
 			$message = '<span class="green">SUCCESS: </span>You have changed your email address, you will now need to revalidate with the code sent to the new email address.';
-			(new Validate($message))->go();
+			new Validate($message)->go();
 		}
 
 		if ($action === $this->actionPassword->value) {

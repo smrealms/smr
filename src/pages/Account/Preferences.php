@@ -20,7 +20,7 @@ class Preferences extends AccountPage {
 		if ($session->hasGame()) {
 			$playerPreferences = [
 				'Form' => new PlayerPreferencesProcessor(),
-				'ChatSharingHREF' => (new ChatSharing())->href(),
+				'ChatSharingHREF' => new ChatSharing()->href(),
 				'Player' => $session->getPlayer(),
 			];
 		} else {
@@ -31,7 +31,7 @@ class Preferences extends AccountPage {
 			template: $template,
 			PlayerPreferences: $playerPreferences,
 			AccountPreferencesForm: new PreferencesProcessor(),
-			TransferConfirmFormHREF: (new PreferencesTransferConfirm())->href(),
+			TransferConfirmFormHREF: new PreferencesTransferConfirm()->href(),
 			ThisAccount: $account,
 		);
 	}

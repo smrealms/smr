@@ -74,7 +74,7 @@ try {
 	}
 
 	// this sn identifies our container later
-	$href = (new LoginCheckValidatedProcessor())->href(true);
+	$href = new LoginCheckValidatedProcessor()->href(true);
 	$session->update();
 
 	// get this user from db

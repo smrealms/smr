@@ -17,7 +17,7 @@ class AcceptProcessor extends PlayerPageProcessor {
 	public function build(Player $player): never {
 		MissionState::addPlayerMission($player, $this->mission);
 
-		(new CurrentSector())->go();
+		new CurrentSector()->go();
 	}
 
 }

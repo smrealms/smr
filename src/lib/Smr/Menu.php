@@ -171,11 +171,11 @@ class Menu {
 		$player = Session::getInstance()->getPlayer();
 
 		$menuItems = [];
-		$menuItems[] = ['Link' => (new CurrentEditionProcessor())->href(), 'Text' => 'Current Edition'];
-		$menuItems[] = ['Link' => (new PastEditionSelect($player->getGameID()))->href(), 'Text' => 'Past Editions'];
-		$menuItems[] = ['Link' => (new ArticleWrite())->href(), 'Text' => 'Write an article'];
+		$menuItems[] = ['Link' => new CurrentEditionProcessor()->href(), 'Text' => 'Current Edition'];
+		$menuItems[] = ['Link' => new PastEditionSelect($player->getGameID())->href(), 'Text' => 'Past Editions'];
+		$menuItems[] = ['Link' => new ArticleWrite()->href(), 'Text' => 'Write an article'];
 		if ($player->isGPEditor()) {
-			$menuItems[] = ['Link' => (new EditorOptions())->href(), 'Text' => 'Editor Options'];
+			$menuItems[] = ['Link' => new EditorOptions()->href(), 'Text' => 'Editor Options'];
 		}
 
 		$template = Template::getInstance();
@@ -341,9 +341,9 @@ class Menu {
 	public static function bar(int $locationID): void {
 		$template = Template::getInstance();
 		$template->menuItems = [
-			['Link' => (new BarMain($locationID))->href(), 'Text' => 'Bar Main'],
-			['Link' => (new LottoBuyTicket($locationID))->href(), 'Text' => 'Lotto'],
-			['Link' => (new PlayBlackjackBet($locationID))->href(), 'Text' => 'BlackJack'],
+			['Link' => new BarMain($locationID)->href(), 'Text' => 'Bar Main'],
+			['Link' => new LottoBuyTicket($locationID)->href(), 'Text' => 'Lotto'],
+			['Link' => new PlayBlackjackBet($locationID)->href(), 'Text' => 'BlackJack'],
 		];
 	}
 
@@ -353,16 +353,16 @@ class Menu {
 		$menuItems = [];
 		if ($session->getGameID() === $gameID) {
 			$menuItems[] = [
-				'Link' => (new NewsReadCurrent())->href(),
+				'Link' => new NewsReadCurrent()->href(),
 				'Text' => 'Read Current News',
 			];
 		}
 		$menuItems[] = [
-			'Link' => (new NewsReadArchives($gameID))->href(),
+			'Link' => new NewsReadArchives($gameID)->href(),
 			'Text' => 'Read Latest News',
 		];
 		$menuItems[] = [
-			'Link' => (new NewsReadAdvanced($gameID))->href(),
+			'Link' => new NewsReadAdvanced($gameID)->href(),
 			'Text' => 'Advanced News',
 		];
 

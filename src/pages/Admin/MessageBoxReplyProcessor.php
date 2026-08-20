@@ -51,7 +51,7 @@ class MessageBoxReplyProcessor extends AccountPageProcessor {
 			$senderAccount->addPoints($banPoints, $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
 		}
 
-		(new MessageBoxView())->go();
+		new MessageBoxView()->go();
 	}
 
 }

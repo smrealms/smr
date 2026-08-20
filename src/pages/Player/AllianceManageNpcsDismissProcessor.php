@@ -31,7 +31,7 @@ class AllianceManageNpcsDismissProcessor extends PlayerPageProcessor {
 
 		self::dismissNpc($npc, $player);
 
-		(new AllianceManageNpcs())->go();
+		new AllianceManageNpcs()->go();
 	}
 
 	public static function dismissNpc(Player $npc, Player $kickedBy): void {

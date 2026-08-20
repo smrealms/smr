@@ -17,8 +17,8 @@ class PlottedCourseRenderer {
 	): void {
 		if ($ThisPlayer->hasPlottedCourse()) {
 			$PlottedCourse = $ThisPlayer->getPlottedCourse();
-			$CancelCourseHREF = (new PlotCourseCancelProcessor())->href();
-			$ReplotCourseHREF = (new PlotCourseConventionalProcessor(to: $PlottedCourse->getEndSectorID(), from: $ThisSector->getSectorID()))->href();
+			$CancelCourseHREF = new PlotCourseCancelProcessor()->href();
+			$ReplotCourseHREF = new PlotCourseConventionalProcessor(to: $PlottedCourse->getEndSectorID(), from: $ThisSector->getSectorID())->href();
 			$NextSector = Sector::getSector($ThisPlayer->getGameID(), $PlottedCourse->getNextOnPath()); ?>
 			<table class="nobord fullwidth">
 				<tr>

@@ -29,7 +29,7 @@ class KickProcessor extends PlayerPageProcessor {
 		$planetPlayer->setLandedOnPlanet(false);
 		$planetPlayer->update();
 
-		(new Main())->go();
+		new Main()->go();
 	}
 
 }

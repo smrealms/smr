@@ -12,7 +12,7 @@ class NewbieLeaveProcessor extends PlayerPageProcessor {
 		$player->setNewbieWarning(false);
 
 		$player->log(LOG_TYPE_MOVEMENT, 'Player drops newbie turns.');
-		(new CurrentSector())->go();
+		new CurrentSector()->go();
 	}
 
 }

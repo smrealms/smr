@@ -42,7 +42,7 @@ class AllianceRemoveMemberProcessor extends PlayerPageProcessor {
 			$currPlayer->update(); // we need better locking here
 		}
 
-		(new AllianceRoster())->go();
+		new AllianceRoster()->go();
 	}
 
 }

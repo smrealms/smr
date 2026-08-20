@@ -21,7 +21,7 @@ class AllianceManageNpcs extends PlayerPage {
 				'name' => $npc->getDisplayName(),
 				'race' => $player->getColouredRaceName($npc->getRaceID(), true),
 				'lastActive' => date($player->getAccount()->getDateTimeFormat(), $npc->getLastCPLAction()),
-				'dismissHref' => (new AllianceManageNpcsDismissProcessor($npc->getAccountID()))->href(),
+				'dismissHref' => new AllianceManageNpcsDismissProcessor($npc->getAccountID())->href(),
 			];
 		}
 

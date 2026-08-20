@@ -21,7 +21,7 @@ class HardwareConfigureIllusionProcessor extends PlayerPageProcessor {
 			$ship->setIllusion(Request::getInt('ship_type_id'), Request::getInt('attack'), Request::getInt('defense'));
 		}
 
-		(new CurrentSector())->go();
+		new CurrentSector()->go();
 	}
 
 }

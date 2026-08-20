@@ -13,7 +13,7 @@ class NewbieWarningProcessor extends PlayerPageProcessor {
 
 	public function build(Player $player): never {
 		$player->setNewbieWarning(false);
-		(new NewbieWarning())->go();
+		new NewbieWarning()->go();
 	}
 
 }

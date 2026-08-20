@@ -59,12 +59,12 @@ class AllianceSetOpProcessor extends PlayerPageProcessor {
 			}
 		}
 
-		(new AllianceSetOp())->go();
+		new AllianceSetOp()->go();
 	}
 
 	public function error(string $error): never {
 		$message = '<span class="bold red">ERROR:</span> ' . $error;
-		(new AllianceSetOp($message))->go();
+		new AllianceSetOp($message)->go();
 	}
 
 }

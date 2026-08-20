@@ -16,7 +16,7 @@ class DeclineProcessor extends PlayerPageProcessor {
 	public function build(Player $player): never {
 		$player->declineMission($this->mission);
 
-		(new CurrentSector())->go();
+		new CurrentSector()->go();
 	}
 
 }

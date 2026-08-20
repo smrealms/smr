@@ -22,7 +22,7 @@ class GovernmentProcessor extends PlayerPageProcessor {
 			$player->setAlignment(ALIGNMENT_SMUGGLER);
 		}
 
-		(new CurrentSector())->go();
+		new CurrentSector()->go();
 	}
 
 }

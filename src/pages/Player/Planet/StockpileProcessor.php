@@ -76,7 +76,7 @@ class StockpileProcessor extends PlayerPageProcessor {
 			$ship->decreaseCargo($goodID, $amount);
 		}
 
-		(new Stockpile())->go();
+		new Stockpile()->go();
 	}
 
 }

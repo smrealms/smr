@@ -175,7 +175,7 @@ class VoteLink {
 			return false;
 		}
 		// This page will prepare the account for the voting callback.
-		return (new VoteLinkProcessor($this->site))->href();
+		return new VoteLinkProcessor($this->site)->href();
 	}
 
 }

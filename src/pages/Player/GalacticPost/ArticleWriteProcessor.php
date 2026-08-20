@@ -53,7 +53,7 @@ class ArticleWriteProcessor extends PlayerPageProcessor {
 					'article_id' => $this->articleID,
 				],
 			);
-			(new ArticleView($this->articleID))->go();
+			new ArticleView($this->articleID)->go();
 		} else {
 			// Adding a new article
 			$editorMsg = 'Dear Galactic Post editors,<br /><br />[player=' . $player->getPlayerID() . '] has just submitted an article to the Galactic Post!';

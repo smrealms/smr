@@ -28,7 +28,7 @@ class WeaponReorderProcessor extends PlayerPageProcessor {
 			$ship->setWeaponLocations(Request::getIntArray('weapon_reorder'));
 		}
 
-		(new WeaponReorder())->go();
+		new WeaponReorder()->go();
 	}
 
 }

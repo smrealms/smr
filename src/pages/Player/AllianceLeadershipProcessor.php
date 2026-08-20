@@ -39,7 +39,7 @@ class AllianceLeadershipProcessor extends PlayerPageProcessor {
 		$playerMessage = 'You are now the leader of ' . $alliance->getAllianceBBLink() . '!';
 		$player->sendMessageFromAllianceCommand($leader_id, $playerMessage);
 
-		(new AllianceRoster())->go();
+		new AllianceRoster()->go();
 	}
 
 }

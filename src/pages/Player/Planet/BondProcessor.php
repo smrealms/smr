@@ -18,7 +18,7 @@ class BondProcessor extends PlayerPageProcessor {
 
 		$player->log(LOG_TYPE_BANK, 'Player bonds ' . $planet->getBonds() . ' credits at planet.');
 
-		(new Financial())->go();
+		new Financial()->go();
 	}
 
 }

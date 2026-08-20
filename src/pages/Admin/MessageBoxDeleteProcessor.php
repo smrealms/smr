@@ -33,7 +33,7 @@ class MessageBoxDeleteProcessor extends AccountPageProcessor {
 			]);
 		}
 
-		(new MessageBoxView())->go();
+		new MessageBoxView()->go();
 	}
 
 }

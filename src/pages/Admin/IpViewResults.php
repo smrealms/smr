@@ -22,7 +22,7 @@ class IpViewResults extends AccountPage {
 		$db = Database::getInstance();
 
 		if ($type === 'comp_share') {
-			(new ComputerSharing())->go();
+			new ComputerSharing()->go();
 		}
 
 		$accountID = null; // BanAccountID

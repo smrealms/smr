@@ -30,7 +30,7 @@ class InvalidEmailProcessor extends AccountPageProcessor {
 			throw new Exception('Unknown action: ' . $action);
 		}
 		$account->update();
-		(new Validate())->go();
+		new Validate()->go();
 	}
 
 }

@@ -51,7 +51,7 @@ class AdminPermissionManageProcessor extends AccountPageProcessor {
 			]);
 		}
 
-		(new AdminPermissionManage())->go();
+		new AdminPermissionManage()->go();
 	}
 
 }

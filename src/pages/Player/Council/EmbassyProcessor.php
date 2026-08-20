@@ -98,7 +98,7 @@ class EmbassyProcessor extends PlayerPageProcessor {
 			}
 		}
 
-		(new Embassy())->go();
+		new Embassy()->go();
 	}
 
 }

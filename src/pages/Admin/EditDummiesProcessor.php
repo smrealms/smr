@@ -27,7 +27,7 @@ class EditDummiesProcessor extends AccountPageProcessor {
 		}
 		$dummyShip->cacheDummyShip();
 
-		(new EditDummies())->go();
+		new EditDummies()->go();
 	}
 
 }
