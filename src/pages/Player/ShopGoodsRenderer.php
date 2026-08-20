@@ -29,13 +29,13 @@ class ShopGoodsRenderer {
 		Your relations with them are <?php echo get_colored_text($ThisPlayer->getRelation($Port->getRaceID())); ?>.</p>
 
 		<?php
-		if (isset($TradeMsg)) { ?>
+		if ($TradeMsg !== null) { ?>
 			<p><?php echo $TradeMsg; ?></p><?php
 		}
 
 		if ($SearchedByFeds) { ?>
 			<p><?php
-				if (isset($TotalFine)) { ?>
+				if ($TotalFine !== null) { ?>
 					<span class="red">
 						The Federation searched your ship and illegal goods were found!<br />
 						All illegal goods have been removed from your ship and you have been fined <?php echo number_format($TotalFine); ?> credits.

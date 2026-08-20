@@ -15,7 +15,7 @@ class LoginSocialCreateRenderer {
 				<table border="0" cellspacing="0" cellpadding="1">
 					<tr>
 						<td width="27%">User name:</td>
-						<td width="73%"><input required type="text" name="login" size="20" maxlength="32" class="InputFields" value="<?php if (isset($MatchingLogin)) { echo $MatchingLogin; } ?>"></td>
+						<td width="73%"><input required type="text" name="login" size="20" maxlength="32" class="InputFields" value="<?php if ($MatchingLogin !== null) { echo $MatchingLogin; } ?>"></td>
 					</tr>
 					<tr>
 						<td width="27%">Password:</td>
@@ -27,7 +27,7 @@ class LoginSocialCreateRenderer {
 			<br/>
 
 			<?php
-			if (!isset($MatchingLogin)) { ?>
+			if ($MatchingLogin === null) { ?>
 				<h1>Or Create New Login</h1>
 
 				<div class="register-note">

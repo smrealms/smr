@@ -20,7 +20,7 @@ class CreateWarpsRenderer {
 		array $Galaxies,
 		array $Warps,
 	): void {
-		if (isset($Message)) {
+		if ($Message !== null) {
 			echo $Message; ?><br /><br /><?php
 		} ?>
 

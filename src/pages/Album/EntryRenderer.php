@@ -24,7 +24,7 @@ class EntryRenderer {
 						<table style="width: 100%">
 							<tr>
 								<td class="center" style="width: 30%" valign="middle"><?php
-									if (isset($PrevNick)) { ?>
+									if ($PrevNick !== null) { ?>
 										<a href="?nick=<?php echo urlencode($PrevNick); ?>">
 											<img src="/images/album/rew.jpg" alt="<?php echo htmlentities($PrevNick); ?>" border="0">
 										</a>&nbsp;&nbsp;&nbsp;<?php
@@ -36,7 +36,7 @@ class EntryRenderer {
 									<span style="font-size: 75%;">Views: <?php echo $Entry['PageViews']; ?></span>
 								</td>
 								<td class="center" style="width: 30%" valign="middle"><?php
-									if (isset($NextNick)) { ?>
+									if ($NextNick !== null) { ?>
 										&nbsp;&nbsp;&nbsp;
 										<a href="?nick=<?php echo urlencode($NextNick); ?>">
 											<img src="/images/album/fwd.jpg" alt="<?php echo htmlentities($NextNick); ?>" border="0">
@@ -87,7 +87,7 @@ class EntryRenderer {
 						<span style="font-size: 85%;">[<?php echo $Comment['date']; ?>] <b>&lt;<?php echo $Comment['commenter']; ?>&gt;</b> <?php echo $Comment['msg']; ?></span><br /><?php
 					}
 
-					if (isset($ViewerDisplayName)) { ?>
+					if ($ViewerDisplayName !== null) { ?>
 						<form action="album_comment_processing.php">
 							<input type="hidden" name="album_id" value="<?php echo $Entry['AccountID']; ?>" />
 							<input type="hidden" name="album_nick" value="<?php echo $Entry['Nick']; ?>" />

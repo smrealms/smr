@@ -22,7 +22,7 @@ class HallOfFameRenderer {
 			Welcome to the Hall of Fame, <?php echo $ThisAccount->getHofDisplayName(); ?>!<br />
 			The Hall of Fame is a comprehensive list of player accomplishments.
 			Here you can view how players rank in many different aspects of the game.<?php
-			if (isset($PersonalHofHREF)) { ?>
+			if ($PersonalHofHREF !== null) { ?>
 				<a href="<?php echo $PersonalHofHREF; ?>">You can also view your Personal Hall of Fame here.</a><?php
 			} ?>
 			<br /><br />
@@ -30,7 +30,7 @@ class HallOfFameRenderer {
 		</div>
 
 		<?php
-		if (isset($Categories)) { ?>
+		if ($Categories !== null) { ?>
 			<table class="standard center" width="75%">
 				<tr>
 					<th>Category</th>
@@ -43,7 +43,7 @@ class HallOfFameRenderer {
 					</tr><?php
 				} ?>
 			</table><?php
-		} elseif (isset($Rows)) { ?>
+		} elseif ($Rows !== null) { ?>
 			<table class="standard center">
 				<tr>
 					<th>Rank</th>

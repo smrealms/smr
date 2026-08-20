@@ -72,7 +72,7 @@ class AlbumEditRenderer {
 				</tr>
 
 				<?php
-				if (isset($SuccessMsg)) { ?>
+				if ($SuccessMsg !== null) { ?>
 					<tr>
 						<td></td>
 						<td><p class="green"><?php echo $SuccessMsg; ?></p></td>

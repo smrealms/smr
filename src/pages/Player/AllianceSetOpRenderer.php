@@ -19,10 +19,10 @@ class AllianceSetOpRenderer {
 		?>
 		<h2>Alliance Operation Schedule</h2>
 		<?php
-		if (isset($Message)) {
+		if ($Message !== null) {
 			echo "<p>$Message</p>";
 		}
-		if (isset($OpDate)) { ?>
+		if ($OpDate !== null) { ?>
 			<p>The next alliance operation is scheduled for:</p>
 			<table class="nobord">
 				<tr>

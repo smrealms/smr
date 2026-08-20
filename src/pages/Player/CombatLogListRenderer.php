@@ -23,7 +23,7 @@ class CombatLogListRenderer {
 		array $Logs,
 		Account $ThisAccount,
 	): void {
-		if (isset($Message)) {?>
+		if ($Message !== null) {?>
 			<div class="center"><?php echo $Message; ?></div><br /><?php
 		} ?>
 
@@ -36,7 +36,7 @@ class CombatLogListRenderer {
 					<table class="fullwidth center">
 						<tr>
 							<td id="prev" class="ajax" style="width: 30%" valign="middle"><?php
-								if (isset($PreviousPage)) { ?>
+								if ($PreviousPage !== null) { ?>
 									<a href="<?php echo $PreviousPage; ?>"><img src="images/album/rew.jpg" width="25" height="25" alt="Previous Page" border="0"></a><?php
 								} ?>
 							</td>
@@ -50,7 +50,7 @@ class CombatLogListRenderer {
 								} ?>
 							</td>
 							<td id="next" class="ajax" style="width: 30%" valign="middle"><?php
-								if (isset($NextPage)) { ?>
+								if ($NextPage !== null) { ?>
 									<a href="<?php echo $NextPage; ?>"><img src="images/album/fwd.jpg" width="25" height="25" alt="Next Page" border="0"></a><?php
 								} ?>
 							</td>

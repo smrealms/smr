@@ -49,7 +49,7 @@ class WordFilterRenderer {
 		<br />
 
 		<?php
-		if (isset($Message)) {
+		if ($Message !== null) {
 			echo $Message;
 		}
 

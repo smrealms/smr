@@ -94,7 +94,7 @@ class HallOfFame {
 			($vis === HOF_PRIVATE && $account->getAccountID() !== $accountID) ||
 			(
 				$vis === HOF_ALLIANCE &&
-				isset($gameID) &&
+				$gameID !== null &&
 				!Game::getGame($gameID)->hasEnded() &&
 				!Player::getPlayer($accountID, $gameID)->sameAlliance($session->getPlayer())
 			)
@@ -172,13 +172,13 @@ class HallOfFame {
 		$account = Session::getInstance()->getAccount();
 		if ($gameID !== null && Game::gameExists($gameID)) {
 			try {
-				$hofPlayer = Player::getPlayer($accountID, $gameID);
+				$hofName = htmlentities(Player::getPlayer($accountID, $gameID)->getPlayerName());
 			} catch (PlayerNotFound) {
-				$hofAccount = Account::getAccount($accountID);
+				// Must be in the global HoF, use account HoF name
 			}
-		} else {
-			$hofAccount = Account::getAccount($accountID);
 		}
+		$hofName ??= Account::getAccount($accountID)->getHofDisplayName();
+
 		$bold = '';
 		if ($accountID === $account->getAccountID()) {
 			$bold = 'class="bold"';
@@ -187,14 +187,7 @@ class HallOfFame {
 		$return .= ('<td ' . $bold . '>' . $rank . '</td>');
 
 		$container = new HallOfFamePersonal($accountID, $gameID);
-
-		if (isset($hofPlayer)) {
-			$return .= ('<td ' . $bold . '>' . create_link($container, htmlentities($hofPlayer->getPlayerName())) . '</td>');
-		} elseif (isset($hofAccount)) {
-			$return .= ('<td ' . $bold . '>' . create_link($container, $hofAccount->getHofDisplayName()) . '</td>');
-		} else {
-			$return .= ('<td ' . $bold . '>Unknown</td>');
-		}
+		$return .= ('<td ' . $bold . '>' . create_link($container, $hofName) . '</td>');
 		$return .= ('<td ' . $bold . '>' . $amount . '</td>');
 		$return .= ('</tr>');
 		return $return;

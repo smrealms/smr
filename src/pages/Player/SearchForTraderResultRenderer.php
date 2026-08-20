@@ -84,11 +84,11 @@ class SearchForTraderResultRenderer {
 	 * @param ?list<array{Player: Player, SearchHREF: string, RaceHREF: string, MessageHREF: string, BountyHREF: string, HofHREF: string, NewsHREF: string, JumpHREF?: string}> $SimilarPlayersLinks
 	 */
 	public static function render(?array $ResultPlayerLinks, ?array $SimilarPlayersLinks, Player $ThisPlayer): void {
-		if (isset($ResultPlayerLinks)) {
+		if ($ResultPlayerLinks !== null) {
 			DisplayResult([$ResultPlayerLinks], $ThisPlayer);
 			echo '<br /><br />';
 		}
-		if (isset($SimilarPlayersLinks)) {
+		if ($SimilarPlayersLinks !== null) {
 			DisplayResult($SimilarPlayersLinks, $ThisPlayer);
 		}
 

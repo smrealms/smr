@@ -31,7 +31,7 @@ class ShopGoodsNegotiateRenderer {
 			$ThisPlayer->getRelation($Port->getRaceID()),
 		];
 
-		if (isset($OfferToo)) { ?>
+		if ($OfferToo !== null) { ?>
 			<p class="red">I can't accept your offer. It's too <?php echo $OfferToo; ?>.</p><?php
 		} ?>
 

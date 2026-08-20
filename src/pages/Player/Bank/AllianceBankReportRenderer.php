@@ -7,7 +7,7 @@ class AllianceBankReportRenderer {
 	public static function render(string $BankReport, ?string $SendReportHREF): void {
 		?>
 		<div class="center"><?php
-			if (isset($SendReportHREF)) { ?>
+			if ($SendReportHREF !== null) { ?>
 				<div class="buttonA">
 					<a class="buttonA" href="<?php echo $SendReportHREF; ?>">Send Report to Alliance</a>
 				</div><?php

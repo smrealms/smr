@@ -46,6 +46,8 @@ try {
 		} catch (GalaxyNotFound) {
 			create_error('Invalid galaxy ID');
 		}
+	} else {
+		$galaxy = null;
 	}
 
 	$player = $session->getPlayer();
@@ -79,7 +81,7 @@ try {
 	$galaxies = Galaxy::getGameGalaxies($session->getGameID());
 	$lastSector = $player->getGame()->getLastSectorID();
 
-	if (!isset($galaxy)) {
+	if ($galaxy === null) {
 		$galaxy = Galaxy::getGalaxyContaining($player->getGameID(), $player->getSectorID());
 		if ($account->isCenterGalaxyMapOnPlayer()) {
 			$sectorID = $player->getSectorID();
@@ -93,11 +95,7 @@ try {
 	$galaxy->getForces();
 	$galaxy->getPlayers();
 
-	if (isset($sectorID)) {
-		$mapSectors = $galaxy->getMapSectors($sectorID);
-	} else {
-		$mapSectors = $galaxy->getMapSectors();
-	}
+	$mapSectors = $galaxy->getMapSectors($sectorID);
 
 	$renderer = fn() => GalaxyMapRenderer::render(
 		ThisGalaxy: $galaxy,

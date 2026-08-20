@@ -8,7 +8,7 @@ class TickerRenderer {
 	 * @param ?array<array{Time: string, Message: string}> $Ticker
 	 */
 	public static function render(?array $Ticker): void {
-		if (isset($Ticker)) { ?>
+		if ($Ticker !== null) { ?>
 			<div id="ticker" class="ajax left" style="overflow:auto;height:8em;border:2px solid #0b8d45;"><?php
 				if (count($Ticker) > 0) {
 					foreach ($Ticker as $Tick) {

@@ -179,7 +179,7 @@ function inify(string $text): string {
 
 function bbify(string $message, ?int $gameID = null, bool $noLinks = false): string {
 	static $bbParser;
-	if (!isset($bbParser)) {
+	if ($bbParser === null) {
 		$bbParser = new BBCode();
 		$bbParser->setEnableSmileys(false);
 		$bbParser->removeRule('wiki');
@@ -466,7 +466,7 @@ function do_voodoo(): never {
 	$ajaxRefresh = $account->isUseAJAX();
 	if ($ajaxRefresh) {
 		// If we can refresh, specify the refresh interval in millisecs
-		if (isset($player) && $player->canFight()) {
+		if ($player !== null && $player->canFight()) {
 			$ajaxRefresh = AJAX_UNPROTECTED_REFRESH_TIME;
 		} else {
 			$ajaxRefresh = AJAX_DEFAULT_REFRESH_TIME;

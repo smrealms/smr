@@ -36,7 +36,7 @@ class AllianceRosterRenderer {
 			<div id="alliance-desc" class="ajax"><?php
 				echo bbify($Alliance->getDescription()); ?>
 			</div><?php
-			if (isset($EditAllianceDescriptionHREF)) { ?>
+			if ($EditAllianceDescriptionHREF !== null) { ?>
 				<br />
 				<div class="buttonA"><a class="buttonA" href="<?php echo $EditAllianceDescriptionHREF; ?>">Edit</a></div>
 				<br /><?php
@@ -69,10 +69,10 @@ class AllianceRosterRenderer {
 						<th class="sort" data-sort="sort_name">Trader Name</th>
 						<th class="sort" data-sort="sort_race">Race</th>
 						<th class="sort" data-sort="sort_experience">Experience</th><?php
-						if (isset($Roles)) { ?>
+						if ($Roles !== null) { ?>
 							<th class="sort shrink" data-sort="sort_role">Role</th><?php
 						}
-						if (isset($ActiveIDs)) { ?>
+						if ($ActiveIDs !== null) { ?>
 							<th class="sort shrink" data-sort="sort_status">Status</th><?php
 						} ?>
 					</tr>
@@ -102,7 +102,7 @@ class AllianceRosterRenderer {
 							<td class="sort_experience"><?php
 								echo number_format($AlliancePlayer->getExperience()); ?>
 							</td><?php
-							if (isset($Roles)) { ?>
+							if ($Roles !== null) { ?>
 								<td class="sort_role"><?php
 									$PlayerRole = $AlliancePlayer->getAllianceRole();
 									if ($CanChangeRoles && !$AlliancePlayer->isAllianceLeader()) { ?>
@@ -121,7 +121,7 @@ class AllianceRosterRenderer {
 									} ?>
 								</td><?php
 							}
-							if (isset($ActiveIDs)) { ?>
+							if ($ActiveIDs !== null) { ?>
 								<td class="sort_status center"><?php
 									if (in_array($AlliancePlayer->getAccountID(), $ActiveIDs, true)) { ?>
 										<span class="green">Online</span><?php
@@ -144,10 +144,10 @@ class AllianceRosterRenderer {
 			<br /><h2>Options</h2><br />
 			<div class="buttonA">
 				<a class="buttonA" href="<?php echo $ToggleRolesHREF; ?>"><?php
-					if (isset($Roles)) { ?>Hide Alliance Roles<?php } else { ?>Show Alliance Roles<?php } ?>
+					if ($Roles !== null) { ?>Hide Alliance Roles<?php } else { ?>Show Alliance Roles<?php } ?>
 				</a>
 			</div><?php
-			if (isset($Roles) && $CanChangeRoles) { ?>
+			if ($Roles !== null && $CanChangeRoles) { ?>
 				&nbsp;&nbsp;
 				<form id="roles" style="display: inline;" method="POST" action="<?php echo $SaveAllianceRolesHREF; ?>">
 					<?php echo create_submit_display('Save Alliance Roles'); ?>

@@ -25,10 +25,10 @@ class MainRenderer {
 		Player $ThisPlayer,
 		?array $Ticker,
 	): void {
-		if (isset($ErrorMsg)) {
+		if ($ErrorMsg !== null) {
 			echo $ErrorMsg; ?><br /><?php
 		}
-		if (isset($Msg)) {
+		if ($Msg !== null) {
 			echo bbify($Msg); ?><br /><?php
 		}
 		?>
@@ -116,7 +116,7 @@ class MainRenderer {
 						</table>
 					<?php } ?>
 				</td><?php
-				if (isset($Ticker)) { ?>
+				if ($Ticker !== null) { ?>
 					<td><?php
 						TickerRenderer::render($Ticker); ?>
 					</td><?php

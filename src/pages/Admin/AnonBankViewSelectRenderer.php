@@ -5,7 +5,7 @@ namespace Smr\Pages\Admin;
 class AnonBankViewSelectRenderer {
 
 	public static function render(?string $Message, string $AnonViewHREF): void {
-		if (isset($Message)) { ?>
+		if ($Message !== null) { ?>
 			<p><span class="red"><?php echo $Message; ?></span></p><?php
 		} ?>
 		<p>What account would you like to view?</p>

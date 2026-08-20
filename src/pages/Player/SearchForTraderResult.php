@@ -38,12 +38,14 @@ class SearchForTraderResult extends PlayerPage {
 				$resultPlayer = Player::getPlayerByPlayerID($player_id, $player->getGameID());
 			} catch (PlayerNotFound) {
 				// No player found, we'll return an empty result
+				$resultPlayer = null;
 			}
 		} else {
 			try {
 				$resultPlayer = Player::getPlayerByPlayerName($player_name, $player->getGameID());
 			} catch (PlayerNotFound) {
 				// No exact match, but that's okay
+				$resultPlayer = null;
 			}
 
 			$db = Database::getInstance();
@@ -96,12 +98,12 @@ class SearchForTraderResult extends PlayerPage {
 			return $result;
 		};
 
-		if (!isset($resultPlayer) && count($similarPlayers) === 0) {
+		if ($resultPlayer === null && count($similarPlayers) === 0) {
 			$container = new SearchForTrader(emptyResult: true);
 			$container->go();
 		}
 
-		if (isset($resultPlayer)) {
+		if ($resultPlayer !== null) {
 			$resultPlayerLinks = $playerLinks($resultPlayer);
 		} else {
 			$resultPlayerLinks = null;

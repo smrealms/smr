@@ -127,7 +127,7 @@ class EditSectorRenderer {
 		</form>
 
 		<?php
-		if (isset($Message)) {
+		if ($Message !== null) {
 			echo $Message;
 		}
 

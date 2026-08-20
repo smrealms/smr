@@ -27,7 +27,7 @@ class PlayBlackjackRenderer {
 			<?php echo $PlayerHand; ?>
 			<div><?php echo $PlayerStatus; ?></div><br />
 			<?php echo $Winnings; ?>
-			<?php if (isset($BetHREF)) { ?>
+			<?php if ($BetHREF !== null) { ?>
 				<p><a class="submitStyle" href="<?php echo $BetHREF; ?>">Play Some More ($<?php echo $Bet; ?>)</a></p><?php
 			} else { ?>
 				<a class="submitStyle" href="<?php echo $HitHREF; ?>">HIT</a>

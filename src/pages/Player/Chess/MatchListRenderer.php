@@ -57,7 +57,7 @@ class MatchListRenderer {
 			<p>You have challenged every player.</p><?php
 		}
 
-		if (isset($NPCList)) {
+		if ($NPCList !== null) {
 			if (count($NPCList) > 0) { ?>
 				<form action="<?php echo Globals::getChessCreateHREF(); ?>" method="POST">
 					<label for="player_id">Challenge NPC: </label>

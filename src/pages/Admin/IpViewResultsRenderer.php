@@ -62,10 +62,10 @@ class IpViewResultsRenderer {
 		} elseif ($type === 'account_ips') { ?>
 			<center><?php
 				echo $Summary;
-				if (isset($Exception) && $Exception !== '') { ?>
+				if ($Exception !== null && $Exception !== '') { ?>
 					<br />This account has an exception: <?php echo $Exception;
 				}
-				if (isset($CloseReason) && $CloseReason !== '') { ?>
+				if ($CloseReason !== null && $CloseReason !== '') { ?>
 					<br />This account is closed: <?php echo $CloseReason;
 				} ?>
 				<br /><br />

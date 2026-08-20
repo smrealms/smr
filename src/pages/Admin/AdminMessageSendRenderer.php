@@ -16,7 +16,7 @@ class AdminMessageSendRenderer {
 		?string $Preview,
 		string $BackHREF,
 	): void {
-		if (isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbify($Preview, $MessageGameID); ?></td></tr></table><?php } ?>
+		if ($Preview !== null) { ?><table class="standard"><tr><td><?php echo bbify($Preview, $MessageGameID); ?></td></tr></table><?php } ?>
 		<form name="AdminMessageSendForm" method="POST" action="<?php echo $AdminMessageSendForm->href(); ?>">
 			<p>
 			<b>From: </b><span class="admin">Administrator</span><br />
@@ -31,7 +31,7 @@ class AdminMessageSendRenderer {
 					All Players (All Games)<?php
 				} ?>
 			</p>
-			<textarea required spellcheck="true" name="message"><?php if (isset($Preview)) { echo $Preview; } ?></textarea><br />
+			<textarea required spellcheck="true" name="message"><?php if ($Preview !== null) { echo $Preview; } ?></textarea><br />
 			Hours Till Expire: <input required type="number" step="0.01" name="expire" value="<?php echo $ExpireTime; ?>" min="0" size="2"> (0 = never expire)<br />
 			<br />
 			<?php echo $AdminMessageSendForm->actionSend->html('Send message'); ?>&nbsp;<?php echo $AdminMessageSendForm->actionPreview->html('Preview message'); ?>

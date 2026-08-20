@@ -44,9 +44,9 @@ class AllianceBankRenderer {
 		Hello <?php echo $ThisPlayer->getDisplayName(); ?>,<br /><?php
 		if ($UnlimitedWithdrawal) {
 			?>You can withdraw an unlimited amount from this account.<?php
-		} elseif (isset($PositiveWithdrawal)) {
+		} elseif ($PositiveWithdrawal !== null) {
 			?>You can only withdraw <?php echo number_format($PositiveWithdrawal); ?> more credits based on your deposits.<?php
-		} elseif (isset($TotalWithdrawn) && isset($RemainingWithdrawal)) { ?>
+		} elseif ($TotalWithdrawn !== null && $RemainingWithdrawal !== null) { ?>
 			You can withdraw up to <?php echo number_format($WithdrawalPerDay); ?> credits per 24 hours.<br />
 			So far you have withdrawn <?php echo number_format($TotalWithdrawn); ?> credits in the past 24 hours. You can withdraw <?php echo number_format($RemainingWithdrawal); ?> more credits.<?php
 		} ?>

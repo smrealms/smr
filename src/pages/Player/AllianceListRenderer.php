@@ -10,7 +10,7 @@ class AllianceListRenderer {
 	 * @param array<array{Name: string, TotalExperience: int, AverageExperience: int, Members: int, OpenRecruitment: bool}> $Alliances
 	 */
 	public static function render(Template $template, ?string $CreateAllianceHREF, array $Alliances): void {
-		if (isset($CreateAllianceHREF)) { ?>
+		if ($CreateAllianceHREF !== null) { ?>
 			<div class="center">
 				<div class="buttonA">
 					<a class="buttonA" href="<?php echo $CreateAllianceHREF; ?>">Create your own alliance!</a>

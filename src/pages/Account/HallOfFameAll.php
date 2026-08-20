@@ -41,7 +41,7 @@ class HallOfFameAll extends AccountPage {
 
 		$container = new HallOfFamePersonal($account->getAccountID(), $game_id);
 
-		$breadcrumb = HallOfFame::buildBreadcrumb($this, isset($game_id) ? 'Current HoF' : 'Global HoF');
+		$breadcrumb = HallOfFame::buildBreadcrumb($this, $game_id !== null ? 'Current HoF' : 'Global HoF');
 
 		$viewType = $this->viewType;
 		$hofVis = Player::getHOFVis();

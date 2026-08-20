@@ -14,7 +14,7 @@ class AllianceTreatiesRenderer {
 		?>
 		<div class="center">
 			<?php
-			if (isset($Message)) {
+			if ($Message !== null) {
 				echo $Message . '<br /><br />';
 			} ?>
 

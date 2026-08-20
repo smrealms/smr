@@ -24,7 +24,7 @@ class Plotter {
 		// Helper function for plots to trade goods
 		$getGoodWithTransaction = function(int $goodID) use ($xType, $player) {
 			$good = TradeGood::get($goodID);
-			if (isset($player) && !$player->meetsAlignmentRestriction($good->alignRestriction)) {
+			if ($player !== null && !$player->meetsAlignmentRestriction($good->alignRestriction)) {
 				throw new Exception('Player trying to access alignment-restricted good!');
 			}
 			return new TradeGoodTransaction(

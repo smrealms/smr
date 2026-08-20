@@ -21,10 +21,10 @@ class GamePlayRenderer {
 		array $Voting,
 		string $OldAnnouncementsLink,
 	): void {
-		if (isset($ErrorMessage)) {
+		if ($ErrorMessage !== null) {
 			echo $ErrorMessage; ?><br /><br /><?php
 		}
-		if (isset($Message)) {
+		if ($Message !== null) {
 			echo $Message; ?><br /><br /><?php
 		} ?>
 

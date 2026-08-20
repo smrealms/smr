@@ -68,7 +68,7 @@ class GameJoinRenderer {
 		</table><br />
 
 		<?php
-		if (!isset($JoinGameFormHref)) { ?>
+		if ($JoinGameFormHref === null) { ?>
 			<p class="bold big">
 				Time until you can join this game: <?php echo format_time($Game->getJoinTime() - Epoch::time()); ?>
 				<br /><br /><?php

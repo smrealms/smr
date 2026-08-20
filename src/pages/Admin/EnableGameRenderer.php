@@ -7,7 +7,7 @@ class EnableGameRenderer {
 	/** @param array<int, string> $DisabledGames */
 	public static function render(?string $ProcessingMsg, array $DisabledGames, string $EnableGameHREF): void {
 		// This var is passed by the processing file if we enabled a game
-		if (isset($ProcessingMsg)) {
+		if ($ProcessingMsg !== null) {
 			echo $ProcessingMsg;
 		}
 

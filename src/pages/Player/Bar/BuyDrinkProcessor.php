@@ -80,25 +80,25 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 			$num_drinks = $db->count('player_has_drinks', $player->SQLID);
 			//display woozy message
 			$message .= '<br />You feel a little W' . str_repeat('oO', $num_drinks) . 'zy<br />';
+
+			//see if the player blacksout or not
+			if ($num_drinks > 15) {
+				$percent = rand(1, 25);
+				$lostCredits = IRound($player->getCredits() * $percent / 100);
+
+				$message .= '<span class="red">You decide you need to go to the restroom.  So you stand up and try to start walking but immediately collapse!<br />About 10 minutes later you wake up and find yourself missing ' . number_format($lostCredits) . ' credits</span><br />';
+
+				$player->decreaseCredits($lostCredits);
+				$player->increaseHOF(1, ['Bar', 'Robbed', 'Number Of Times'], HOF_PUBLIC);
+				$player->increaseHOF($lostCredits, ['Bar', 'Robbed', 'Money Lost'], HOF_PUBLIC);
+
+				$db->delete('player_has_drinks', $player->SQLID);
+			}
 		}
 
 		$action = new BuyDrink(sectorID: $player->getSectorID(), drink: $drinkName);
 		$player->actionTaken($action);
 
-		//see if the player blacksout or not
-		if (isset($num_drinks) && $num_drinks > 15) {
-			$percent = rand(1, 25);
-			$lostCredits = IRound($player->getCredits() * $percent / 100);
-
-			$message .= '<span class="red">You decide you need to go to the restroom.  So you stand up and try to start walking but immediately collapse!<br />About 10 minutes later you wake up and find yourself missing ' . number_format($lostCredits) . ' credits</span><br />';
-
-			$player->decreaseCredits($lostCredits);
-			$player->increaseHOF(1, ['Bar', 'Robbed', 'Number Of Times'], HOF_PUBLIC);
-			$player->increaseHOF($lostCredits, ['Bar', 'Robbed', 'Money Lost'], HOF_PUBLIC);
-
-			$db->delete('player_has_drinks', $player->SQLID);
-
-		}
 		$player->increaseHOF(1, ['Bar', 'Drinks', 'Total'], HOF_PUBLIC);
 		$message .= '</div>';
 

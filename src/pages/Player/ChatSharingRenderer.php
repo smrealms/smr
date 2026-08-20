@@ -9,7 +9,7 @@ class ChatSharingRenderer {
 	 * @param array<int, array{"Player ID": string|int, "Player Name": string, "All Games": string, "Game ID": int}> $ShareTo
 	 */
 	public static function render(?string $Message, array $ShareFrom, array $ShareTo, string $ProcessingHREF): void {
-		if (isset($Message)) { ?>
+		if ($Message !== null) { ?>
 			<?php echo $Message; ?><?php
 		} ?>
 

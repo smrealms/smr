@@ -12,7 +12,7 @@ class OwnershipRenderer {
 		if (!$Planet->hasOwner()) { ?>
 			<p>
 				This planet is unclaimed.<?php
-				if (isset($PlayerPlanet)) { ?>
+				if ($PlayerPlanet !== null) { ?>
 					<br />If you claim it, you will lose ownership of the planet in Sector #<?php echo $PlayerPlanet; ?>!<?php
 				} ?>
 			</p>
@@ -25,7 +25,7 @@ class OwnershipRenderer {
 				<p><?php echo Player::getPlayer($Planet->getOwnerID(), $Planet->getGameID())->getLinkedDisplayName(false); ?> owns this planet.</p>
 				<p>
 					You can claim the planet when you enter the correct password.<?php
-					if (isset($PlayerPlanet)) { ?>
+					if ($PlayerPlanet !== null) { ?>
 						<br />If you do, you will lose ownership of the planet in Sector #<?php echo $PlayerPlanet; ?>!<?php
 					} ?>
 				</p>

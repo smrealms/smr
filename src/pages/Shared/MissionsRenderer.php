@@ -18,7 +18,7 @@ class MissionsRenderer {
 		array $UnreadMissions,
 		?string $MissionMessage,
 	): void {
-		if (isset($MissionMessage)) { ?>
+		if ($MissionMessage !== null) { ?>
 			<span class="green">Mission Complete: </span><?php
 			echo $MissionMessage;
 		}

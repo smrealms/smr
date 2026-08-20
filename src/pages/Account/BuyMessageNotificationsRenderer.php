@@ -6,7 +6,7 @@ class BuyMessageNotificationsRenderer {
 
 	/** @param array<array{Name: string, MessagesRemaining: int, MessagesPerCredit: int, BuyHref: string}> $MessageBoxes */
 	public static function render(?string $Message, array $MessageBoxes): void {
-		if (isset($Message)) {
+		if ($Message !== null) {
 			echo $Message; ?>
 			<br /><br /><?php
 		}

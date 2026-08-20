@@ -23,7 +23,7 @@ class PlanetListRenderer {
 		?>
 		<div class="center">
 			<?php
-			if (isset($PlayerPlanet)) { ?>
+			if ($PlayerPlanet !== null) { ?>
 				You own the planet in sector <a href="#planet-<?php echo $PlayerPlanet->getSectorID(); ?>" target="_self">#<?php echo $PlayerPlanet->getSectorID(); ?></a>.<br /><?php
 			}
 

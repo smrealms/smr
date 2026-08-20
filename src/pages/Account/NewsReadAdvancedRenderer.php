@@ -76,7 +76,7 @@ class NewsReadAdvancedRenderer {
 				</tr>
 			</table>
 			<br /><br /><?php
-			if (isset($ResultsFor)) { ?>
+			if ($ResultsFor !== null) { ?>
 				Returning results for <?php echo htmlentities($ResultsFor); ?>.<br /><?php
 			} ?>
 		</div>

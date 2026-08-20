@@ -111,10 +111,10 @@ class EditGalaxyRenderer {
 							<tr><th>Modify Game</th></tr>
 							<tr><td><a href="<?php echo $EditGameDetailsHREF; ?>">Game Settings</a></td></tr>
 							<tr><td><a href="<?php echo $EditGalaxyDetailsHREF; ?>">Universe Layout</a></td></tr><?php
-							if (isset($AllEdit)) { ?>
+							if ($AllEdit !== null) { ?>
 								<tr><td><input type="checkbox" <?php if ($AllEdit) { ?>checked<?php } ?> name="all_edit" form="create_status" onchange="this.form.submit()" title="Check this box to let all map editors modify this game" /> Anyone edit?</td></tr><?php
 							}
-							if (isset($MapReady)) { ?>
+							if ($MapReady !== null) { ?>
 								<tr><td><input type="checkbox" <?php if ($MapReady) { ?>checked<?php } ?> name="map_ready" form="create_status" onchange="this.form.submit()" title="Check this box if the map is ready to be enabled" /> Map ready?</td></tr><?php
 							} ?>
 						</table><?php
@@ -172,7 +172,7 @@ class EditGalaxyRenderer {
 		</table>
 
 		<?php
-		if (isset($Message)) { ?>
+		if ($Message !== null) { ?>
 			<p class="center"><?php echo $Message; ?></p><?php
 		} ?>
 

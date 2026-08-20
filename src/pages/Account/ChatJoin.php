@@ -20,7 +20,7 @@ class ChatJoin extends AccountPage {
 
 		$autoChannels = '#SMR';
 		$nick = 'SMR-';
-		if (isset($player) && $player->hasAlliance()) {
+		if ($player !== null && $player->hasAlliance()) {
 			$allianceChan = $player->getAlliance()->getIrcChannel();
 			if ($allianceChan !== '') {
 				$autoChannels .= ',' . $allianceChan;

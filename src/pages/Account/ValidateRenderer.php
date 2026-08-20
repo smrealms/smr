@@ -43,7 +43,7 @@ class ValidateRenderer {
 		</form>
 
 		<?php
-		if (isset($Message)) { ?>
+		if ($Message !== null) { ?>
 			<p class="center"><?php echo $Message; ?></p><?php
 		}
 

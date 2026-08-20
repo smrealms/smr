@@ -10,10 +10,10 @@ class AdminToolsRenderer {
 	 * @param array<int, list<array{Link: string|false, Name: string}>> $AdminPermissions
 	 */
 	public static function render(?string $ErrorMessage, ?string $Message, array $AdminPermissions): void {
-		if (isset($ErrorMessage)) {
+		if ($ErrorMessage !== null) {
 			echo $ErrorMessage; ?><br /><br /><?php
 		}
-		if (isset($Message)) {
+		if ($Message !== null) {
 			echo $Message; ?><br /><br /><?php
 		}
 		foreach ($AdminPermissions as $CategoryID => $Permissions) { ?>
