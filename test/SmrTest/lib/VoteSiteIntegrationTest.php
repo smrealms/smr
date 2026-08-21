@@ -76,11 +76,6 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 				'url' => 'https://topwebgames.com/in.aspx?ID=136&account=7&game=42&link=3&alwaysreward=1',
 				'sn' => LOADER_URI . '?sn=gbuyay',
 			],
-			VoteSite::DOG->value => [
-				'img' => 'dog_vote.png',
-				'url' => 'https://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315&votedef=7,42,4',
-				'sn' => LOADER_URI . '?sn=wnpclr',
-			],
 			VoteSite::PBBG->value => [
 				'img' => 'pbbg.png',
 				'url' => 'https://pbbg.com/games/space-merchant-realms',
@@ -101,11 +96,6 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 			VoteSite::TWG->value => [
 				'img' => 'twg.png',
 				'url' => 'https://topwebgames.com/in.aspx?ID=136',
-				'sn' => false,
-			],
-			VoteSite::DOG->value => [
-				'img' => 'dog.png',
-				'url' => 'https://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315',
 				'sn' => false,
 			],
 			VoteSite::PBBG->value => [
@@ -131,19 +121,10 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame(0, VoteLink::getMinTimeUntilFreeTurns($accountID, $gameID));
 	}
 
-	public function test_getMinTimeUntilFreeTurns_some_links_clicked(): void {
-		// Test that min time is still zero if we claim turns on one site
-		$accountID = 9;
-		$gameID = 17;
-		$link = new VoteLink(VoteSite::DOG, $accountID, $gameID);
-		$link->setClicked();
-		$link->setFreeTurnsAwarded();
-		VoteLink::clearCache();
-		self::assertSame(0, VoteLink::getMinTimeUntilFreeTurns($accountID, $gameID));
-	}
-
 	public function test_getMinTimeUntilFreeTurns_all_links_clicked(): void {
 		// Test that the min time is positive if we claim turns on all sites
+		// (Note: we currently only have one free-turns-ready vote site, so we
+		// can't test this function with only some links clicked.)
 		$accountID = 9;
 		$gameID = 17;
 		foreach (VoteSite::cases() as $site) {
