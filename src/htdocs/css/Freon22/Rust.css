@@ -224,5 +224,5 @@ table.csForces th.header {
 
 /* Starry background */
 .stars {
-	background-image: url(../../images/stars2.png);
+	background-image: url('/images/stars2.png');
 }

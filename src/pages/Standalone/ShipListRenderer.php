@@ -41,7 +41,7 @@ class ShipListRenderer {
 					color: #80C870;
 				}
 				</style>
-				<script src="/js/filter_list.js"></script>
+				<script src="<?php echo asset_url('/js/filter_list.js'); ?>"></script>
 			</head>
 
 			<body>

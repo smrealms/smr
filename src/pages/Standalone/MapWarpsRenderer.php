@@ -25,7 +25,7 @@ class MapWarpsRenderer {
 				<script>
 					const graph = <?php echo $GraphData; ?>;
 				</script>
-				<script src="/js/map_warps.js"></script>
+				<script src="<?php echo asset_url('/js/map_warps.js'); ?>"></script>
 			</body>
 		</html>
 		<?php

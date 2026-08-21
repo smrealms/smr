@@ -13,6 +13,7 @@ const LIB = ROOT . 'src/lib/';
 const WWW = ROOT . 'src/htdocs/';
 const UPLOAD = WWW . 'upload/';
 const TOOLS = ROOT . 'src/tools/';
+const ASSET_MANIFEST = ROOT . 'assets/asset-manifest.json';
 
 // Define server-specific constants
 require_once(ROOT . 'config/config.specific.php');
@@ -498,21 +499,20 @@ const EOL = "\n";
 
 const LOADER_URI = '/loader.php';
 
-// These CSS URLs must be hard-coded here so that grunt-cache-bust
-// can replace them with the hashed filenames.
+// Local asset paths are resolved to content-hashed URLs by asset_url().
 const CSS_URLS = [
-	'Default' => 'css/Default.css',
-	'Freon22' => 'css/Freon22.css',
+	'Default' => '/css/Default.css',
+	'Freon22' => '/css/Freon22.css',
 ];
 const CSS_COLOUR_URLS = [
 	'Default' => [
-		'Default' => 'css/Default/Default.css',
+		'Default' => '/css/Default/Default.css',
 	],
 	'Freon22' => [
-		'Rust' => 'css/Freon22/Rust.css',
-		'Blue' => 'css/Freon22/Blue.css',
-		'ClassicGreen' => 'css/Freon22/ClassicGreen.css',
-		'None' => 'css/Freon22/None.css',
+		'Rust' => '/css/Freon22/Rust.css',
+		'Blue' => '/css/Freon22/Blue.css',
+		'ClassicGreen' => '/css/Freon22/ClassicGreen.css',
+		'None' => '/css/Freon22/None.css',
 	],
 ];
 

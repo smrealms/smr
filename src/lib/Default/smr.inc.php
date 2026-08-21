@@ -47,6 +47,30 @@ use Smr\VoteLink;
 use Smr\VoteSite;
 use Smr\WeightedRandom;
 
+/**
+ * Given a source URL of a local static asset, return the display URL.
+ */
+function asset_url(string $url): string {
+	// Source mode is for development builds to use the original asset path.
+	// This allows seeing changes to the assets without rebuilding.
+	if (getenv('SMR_DEV_ASSETS') === 'true') {
+		return $url;
+	}
+
+	// Hashed mode maps the input URL to the content-hashed URL, which are
+	// auto-generated during the image build.
+	static $manifest = null;
+	if ($manifest === null) {
+		$json = file_get_contents(ASSET_MANIFEST);
+		assert($json !== false);
+		$manifest = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
+	}
+	if (!array_key_exists($url, $manifest)) {
+		throw new Exception('Asset not in manifest: ' . $url);
+	}
+	return $manifest[$url];
+}
+
 function parseBoolean(mixed $check): bool {
 	// Only negative strings are not implicitly converted to the correct bool
 	if (is_string($check) && (strcasecmp($check, 'NO') === 0 || strcasecmp($check, 'FALSE') === 0)) {

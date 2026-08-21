@@ -902,12 +902,12 @@ class Account {
 
 	// gets the CSS URL based on the template name specified in preferences
 	public function getCssUrl(): string {
-		return CSS_URLS[$this->getTemplate()];
+		return asset_url(CSS_URLS[$this->getTemplate()]);
 	}
 
 	// gets the CSS_COLOUR URL based on the template and color scheme specified in preferences
 	public function getCssColourUrl(): string {
-		return CSS_COLOUR_URLS[$this->getTemplate()][$this->getColourScheme()];
+		return asset_url(CSS_COLOUR_URLS[$this->getTemplate()][$this->getColourScheme()]);
 	}
 
 	/**

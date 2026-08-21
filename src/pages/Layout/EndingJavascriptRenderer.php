@@ -10,8 +10,8 @@ class EndingJavascriptRenderer {
 
 	public static function render(Template $template, Account $ThisAccount): void {
 		?>
-		<script src="/js/jquery.hotkeys.js"></script>
-		<script src="/js/ajax.js"></script>
+		<script src="<?php echo asset_url('/js/jquery.hotkeys.js'); ?>"></script>
+		<script src="<?php echo asset_url('/js/ajax.js'); ?>"></script>
 
 		<?php
 		foreach ($template->jsSources as $src) { ?>
@@ -24,7 +24,7 @@ class EndingJavascriptRenderer {
 
 		if ($template->listjsInclude !== null) { ?>
 			<script src="<?php echo LISTJS_URL; ?>"></script>
-			<script src="/js/listjs_include.js"></script>
+			<script src="<?php echo asset_url('/js/listjs_include.js'); ?>"></script>
 			<script>
 				listjs.<?php echo $template->listjsInclude; ?>();
 			</script><?php

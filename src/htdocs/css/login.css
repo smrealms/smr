@@ -107,10 +107,10 @@ table.nobord {
 /* AD-MONO webfont */
 @font-face {
     font-family: 'AD-MONO';
-    src: url('fonts/AD-MONO.ttf.woff') format('woff'),
-         url('fonts/AD-MONO.ttf.svg#AD-MONO') format('svg'),
-         url('fonts/AD-MONO.ttf.eot'),
-         url('fonts/AD-MONO.ttf.eot?#iefix') format('embedded-opentype');
+    src: url('/css/fonts/AD-MONO.ttf.woff') format('woff'),
+         url('/css/fonts/AD-MONO.ttf.svg#AD-MONO') format('svg'),
+         url('/css/fonts/AD-MONO.ttf.eot'),
+         url('/css/fonts/AD-MONO.ttf.eot?#iefix') format('embedded-opentype');
     font-weight: normal;
     font-style: normal;
 }
