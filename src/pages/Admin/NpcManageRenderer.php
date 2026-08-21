@@ -3,6 +3,7 @@
 namespace Smr\Pages\Admin;
 
 use Smr\Race;
+use Smr\ShipType;
 
 class NpcManageRenderer {
 
@@ -48,6 +49,7 @@ class NpcManageRenderer {
 					<th>Player Name</th>
 					<th>Race</th>
 					<th>Alliance</th>
+					<th>Ship</th>
 					<th>Status</th>
 				</tr><?php
 				foreach ($Npcs as $npc) { ?>
@@ -71,12 +73,21 @@ class NpcManageRenderer {
 									</select>
 								</td>
 								<td><input name="player_alliance" value="<?php echo $npc['default_alliance']; ?>" /></td>
+								<td>
+									<select name="player_ship">
+										<option value="-1">&lt;default&gt;</option><?php
+										foreach (ShipType::getAll() as $shipTypeID => $shipType) { ?>
+											<option value="<?php echo $shipTypeID; ?>"><?php echo $shipType->getName(); ?></option><?php
+										} ?>
+									</select>
+								</td>
 								<td><?php echo create_submit('create_npc_player', 'Create'); ?></td>
 							</form><?php
 						} else { ?>
 							<td><?php echo $npc['player']->getDisplayName(); ?></td>
 							<td><?php echo $npc['player']->getRaceName(); ?></td>
 							<td><?php echo $npc['player']->getAllianceDisplayName(); ?></td>
+							<td><?php echo $npc['player']->getShip()->getName(); ?></td>
 							<td class="center"><?php echo $npc['working'] ? 'Working' : 'Idle'; ?></td><?php
 						} ?>
 					</tr><?php
