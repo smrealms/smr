@@ -289,7 +289,7 @@ class Port {
 	 *
 	 * @return array<int, TradeGood>
 	 */
-	public function getVisibleGoodsSold(?Player $player = null): array {
+	public function getVisibleGoodsPlayerSells(?Player $player = null): array {
 		return $this->getVisibleGoods($this->getSellGoodIDs(), $player);
 	}
 
@@ -298,7 +298,7 @@ class Port {
 	 *
 	 * @return array<int, TradeGood>
 	 */
-	public function getVisibleGoodsBought(?Player $player = null): array {
+	public function getVisibleGoodsPlayerBuys(?Player $player = null): array {
 		return $this->getVisibleGoods($this->getBuyGoodIDs(), $player);
 	}
 

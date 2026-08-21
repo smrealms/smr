@@ -101,7 +101,7 @@ class ShopGoods extends PlayerPage {
 		$player->setLastPort($player->getSectorID());
 
 		$boughtGoods = [];
-		foreach ($port->getVisibleGoodsBought($player) as $goodID => $good) {
+		foreach ($port->getVisibleGoodsPlayerBuys($player) as $goodID => $good) {
 			$portAmount = $port->getGoodAmount($goodID);
 			$boughtGoods[$goodID] = [
 				'Page' => new ShopGoodsProcessor($goodID),
@@ -114,7 +114,7 @@ class ShopGoods extends PlayerPage {
 		}
 
 		$soldGoods = [];
-		foreach ($port->getVisibleGoodsSold($player) as $goodID => $good) {
+		foreach ($port->getVisibleGoodsPlayerSells($player) as $goodID => $good) {
 			$portAmount = $port->getGoodAmount($goodID);
 			$soldGoods[$goodID] = [
 				'Page' => new ShopGoodsProcessor($goodID),

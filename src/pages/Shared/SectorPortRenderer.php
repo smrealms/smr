@@ -26,15 +26,15 @@ class SectorPortRenderer {
 						<td style="border-right:none">
 							<a href="<?php echo Globals::getTraderRelationsHREF(); ?>"><?php echo $ThisPlayer->getColouredRaceName($Port->getRaceID()); ?></a> Port <?php echo $Port->getSectorID(); ?> (Level <?php echo $Port->getLevel(); ?>)<br />
 								<div class="goods">
-									<img src="images/port/sell.png" width="5" height="16" alt="Sell (<?php echo $Port->getRaceName(); ?>)"
-										title="Sell (<?php echo $Port->getRaceName(); ?>)" class="port<?php echo $Port->getRaceID(); ?>"/><?php
-									foreach ($Port->getVisibleGoodsBought($ThisPlayer) as $Good) {
+									<img src="images/port/buy.png" width="5" height="16" alt="Buy (<?php echo $Port->getRaceName(); ?>)"
+										title="Buy (<?php echo $Port->getRaceName(); ?>)" class="port<?php echo $Port->getRaceID(); ?>"/><?php
+									foreach ($Port->getVisibleGoodsPlayerBuys($ThisPlayer) as $Good) {
 										echo $Good->getImageHTML();
 									} ?>
 									<br />
-									<img src="images/port/buy.png" width="5" height="16" alt="Buy (<?php echo $Port->getRaceName(); ?>)"
-										title="Buy (<?php echo $Port->getRaceName(); ?>)" class="port<?php echo $Port->getRaceID(); ?>"/><?php
-									foreach ($Port->getVisibleGoodsSold($ThisPlayer) as $Good) {
+									<img src="images/port/sell.png" width="5" height="16" alt="Sell (<?php echo $Port->getRaceName(); ?>)"
+										title="Sell (<?php echo $Port->getRaceName(); ?>)" class="port<?php echo $Port->getRaceID(); ?>"/><?php
+									foreach ($Port->getVisibleGoodsPlayerSells($ThisPlayer) as $Good) {
 										echo $Good->getImageHTML();
 									} ?>
 								</div>

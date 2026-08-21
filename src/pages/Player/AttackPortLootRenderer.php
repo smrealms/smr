@@ -19,7 +19,7 @@ class AttackPortLootRenderer {
 				<th>Amount to Trade</th>
 				<th>Action</th>
 			</tr><?php
-			$BoughtGoodIDs = $ThisPort->getVisibleGoodsBought($ThisPlayer);
+			$BoughtGoodIDs = $ThisPort->getVisibleGoodsPlayerBuys($ThisPlayer);
 			foreach ($BoughtGoodIDs as $GoodID => $Good) {
 				$Amount = $ThisPort->getGoodAmount($GoodID); ?>
 				<form method="POST" action="<?php echo $ThisPort->getLootGoodHREF($GoodID); ?>">
