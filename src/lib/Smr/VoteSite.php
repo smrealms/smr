@@ -9,13 +9,14 @@ enum VoteSite: int {
 
 	// NOTE: site IDs should never be changed!
 	case TWG = 3;
-	case DOG = 4;
 	case PBBG = 5;
 
 	// MPOGD no longer exists
-	//1 => array('default_img' => 'mpogd.png', 'star_img' => 'mpogd_vote.png', 'base_url' => 'http://www.mpogd.com/games/game.asp?ID=1145'),
+	//    1 => http://www.mpogd.com/games/game.asp?ID=1145
 	// OMGN no longer do voting - the link actually just redirects to archive site.
-	//2 => array('default_img' => 'omgn.png', 'star_img' => 'omgn_vote.png', 'base_url' => 'http://www.omgn.com/topgames/vote.php?Game_ID=30'),
+	//    2 => http://www.omgn.com/topgames/vote.php?Game_ID=30
+	// DOG domain went up for sale
+	//    4 => https://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315
 
 	/**
 	 * @return array<string, mixed>
@@ -30,15 +31,6 @@ enum VoteSite: int {
 				'url_func' => function($baseUrl, $accountId, $gameId) {
 					$query = ['account' => $accountId, 'game' => $gameId, 'link' => $this->value, 'alwaysreward' => 1];
 					return $baseUrl . '&' . http_build_query($query);
-				},
-			],
-			self::DOG => [
-				'img_default' => 'dog.png',
-				'img_star' => 'dog_vote.png',
-				'url_base' => 'https://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315',
-				'url_func' => function($baseUrl, $accountId, $gameId) {
-					$params = implode(',', [$accountId, $gameId, $this->value]);
-					return $baseUrl . '&votedef=' . $params;
 				},
 			],
 			self::PBBG => [
