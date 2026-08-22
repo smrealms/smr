@@ -2,29 +2,22 @@
 
 namespace Smr\Pages\Shared;
 
-use Exception;
+use Smr\Combat\Results\Combatant\ForceCombatResults;
 use Smr\Template;
 
 class ForcesCombatResultsRenderer {
 
-	/**
-	 * @param ForceCombatResults $ForcesCombatResults
-	 */
 	public static function render(
 		Template $template,
-		array $ForcesCombatResults,
+		ForceCombatResults $ForcesCombatResults,
 	): void {
-		$CombatForces = $ForcesCombatResults['Results'];
-		foreach ($CombatForces as $ForceType => $ForceResults) {
-			$ShotHit = $ForceResults['Hit'];
-			$ActualDamage = $ForceResults['ActualDamage'];
-			$WeaponDamage = $ForceResults['WeaponDamage'];
-			if (!isset($WeaponDamage['Launched'])) {
-				throw new Exception('Force weapons must specify Launched');
-			}
-			$TargetPlayer = $ForceResults['Target'];
+		$CombatForces = $ForcesCombatResults->results;
+		foreach ($CombatForces as $ForceType => $ForceResult) {
+			$ActualDamage = $ForceResult->actualDamage;
+			$WeaponDamage = $ForceResult->weaponDamage;
+			$TargetPlayer = $ForceResult->target;
 			?>
-			<span class="cds"><?php echo $WeaponDamage['Launched']; ?></span><?php
+			<span class="cds"><?php echo $WeaponDamage->launched; ?></span><?php
 			if ($ForceType === 'Mines') {
 				?> mines kamikaze themselves against <?php
 			} elseif ($ForceType === 'Drones') {
@@ -33,19 +26,17 @@ class ForcesCombatResultsRenderer {
 				?> scout drones kamikaze themselves against <?php
 			}
 
-			if ($ShotHit && $ActualDamage['TargetAlreadyDead']) { ?> the debris that was once <?php }
-			echo $TargetPlayer->getDisplayName();
-			if (!$ShotHit || !$ActualDamage['TargetAlreadyDead']) {
-				if (!$ShotHit) {
-					?> and misses<?php
-				} elseif ($ActualDamage['TotalDamage'] === 0) {
-					if ($WeaponDamage['Shield'] > 0) {
-						if ($ActualDamage['HasCDs']) {
+			if ($ActualDamage->targetAlreadyDead) { ?> the debris that was once <?php }
+			echo $TargetPlayer->getCombatName();
+			if (!$ActualDamage->targetAlreadyDead) {
+				if ($ActualDamage->totalDamage === 0) {
+					if ($WeaponDamage->shieldDamage > 0) {
+						if ($ActualDamage->hasCombatDrones) {
 							?> which proves ineffective against their combat drones<?php
 						} else {
 							?> which washes harmlessly over their hull<?php
 						}
-					} elseif ($WeaponDamage['Armour'] > 0) {
+					} elseif ($WeaponDamage->armourDamage > 0) {
 						?> which is deflected by their shields<?php
 					} else {
 						?> but it cannot do any damage<?php
@@ -55,22 +46,15 @@ class ForcesCombatResultsRenderer {
 				}
 			} ?>.
 			<br /><?php
-			if ($ShotHit && $ActualDamage['KillingShot']) {
-				if (!isset($ForceResults['KillResults'])) {
-					throw new Exception('KillingShot did not provide KillResults!');
-				}
-				TraderCombatKillMessageRenderer::render(
-					KillResults: $ForceResults['KillResults'],
-					TargetPlayer: $TargetPlayer,
-					ShootingPlayer: null,
-				);
+			if ($ForceResult->killResult !== null) {
+				CombatKillMessageRenderer::render($ForceResult->killResult);
 			}
 		}
-		if (isset($ForcesCombatResults['ForcesDestroyed']) && $ForcesCombatResults['ForcesDestroyed']) {
+		if ($ForcesCombatResults->forceDestroyed) {
 			?>Forces are <span class="red">DESTROYED!</span><br /><?php
 		}
 
-		$TotalDamage = $ForcesCombatResults['TotalDamage'] ?>
+		$TotalDamage = $ForcesCombatResults->totalDamage ?>
 		The forces <?php if ($TotalDamage > 0) { ?>hit for a total of <span class="red"><?php echo number_format($TotalDamage) ?></span> damage in this round of combat<?php } else { ?>do no damage this round<?php } ?>.
 
 		<?php

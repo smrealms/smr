@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Shared;
 
-use Smr\Combat\Results\ForceFullCombatResults;
+use Smr\Combat\Results\Full\ForceFullCombatResults;
 use Smr\Template;
 
 class ForceFullCombatResultsRenderer {

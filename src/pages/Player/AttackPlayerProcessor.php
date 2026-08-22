@@ -2,7 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\Combat\Results\TraderFullCombatResults;
+use Smr\Combat\Results\Combatant\TeamCombatResults;
+use Smr\Combat\Results\Full\TraderFullCombatResults;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
@@ -68,17 +69,18 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 		$player->takeTurns(TURNS_TO_SHOOT_SHIP);
 		$player->update();
 
-		$teamAttack = function(string $attack, string $defend) use ($fightingPlayers): array {
-			$results = ['Traders' => [], 'TotalDamage' => 0];
+		$teamAttack = function(string $attack, string $defend) use ($fightingPlayers): TeamCombatResults {
+			$traders = [];
+			$totalDamage = 0;
 			foreach ($fightingPlayers[$attack] as $teamPlayer) {
 				$playerResults = $teamPlayer->getShip()->shootPlayers($fightingPlayers[$defend]);
-				$results['Traders'][$teamPlayer->getAccountID()] = $playerResults;
-				$results['TotalDamage'] += $playerResults['TotalDamage'];
+				$traders[$teamPlayer->getAccountID()] = $playerResults;
+				$totalDamage += $playerResults->getTotalDamage();
 
 				// Award assists (if there are multiple attackers)
 				if (count($fightingPlayers[$attack]) > 1) {
-					foreach ($playerResults['Weapons'] as $weaponResults) {
-						if (isset($weaponResults['KillResults'])) {
+					foreach ($playerResults->weaponResults as $weaponResult) {
+						if (isset($weaponResult->killResult)) {
 							foreach ($fightingPlayers[$attack] as $assistPlayer) {
 								if (!$assistPlayer->equals($teamPlayer)) {
 									$assistPlayer->increaseAssists(1);
@@ -88,7 +90,7 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 					}
 				}
 			}
-			return $results;
+			return new TeamCombatResults($totalDamage, $traders);
 		};
 
 		$results = new TraderFullCombatResults(
@@ -96,7 +98,7 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 			defenders: $teamAttack('Defenders', 'Attackers'),
 		);
 
-		$account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results->attackers['TotalDamage'] . ' and the other team does ' . $results->defenders['TotalDamage'], $sector->getSectorID());
+		$account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results->attackers->totalDamage . ' and the other team does ' . $results->defenders->totalDamage, $sector->getSectorID());
 
 		$db = Database::getInstance();
 		$logId = $db->insertAutoIncrement('combat_logs', [

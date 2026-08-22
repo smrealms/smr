@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\Combat\Results\PlanetFullCombatResults;
+use Smr\Combat\Results\Full\PlanetFullCombatResults;
 use Smr\Globals;
 use Smr\Pages\Shared\PlanetFullCombatResultsRenderer;
 use Smr\Planet;

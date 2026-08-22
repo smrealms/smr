@@ -3,7 +3,8 @@
 namespace Smr\Pages\Admin;
 
 use Smr\Account;
-use Smr\Combat\Results\TraderFullCombatResults;
+use Smr\Combat\Results\Combatant\TeamCombatResults;
+use Smr\Combat\Results\Full\TraderFullCombatResults;
 use Smr\DummyShip;
 use Smr\Html\Submit;
 use Smr\Page\AccountPageProcessor;
@@ -14,21 +15,23 @@ use Smr\Request;
  * @param array<int, \Smr\Player> $realDefenders
  */
 function runAnAttack(array $realAttackers, array $realDefenders): TraderFullCombatResults {
-	$attackerResults = ['Traders' => [], 'TotalDamage' => 0];
-	$defenderResults = ['Traders' => [], 'TotalDamage' => 0];
+	$attackerResults = [];
+	$attackerTotalDamage = 0;
+	$defenderResults = [];
+	$defenderTotalDamage = 0;
 	foreach ($realAttackers as $teamPlayer) {
 		$playerResults = $teamPlayer->getShip()->shootPlayers($realDefenders);
-		$attackerResults['Traders'][] = $playerResults;
-		$attackerResults['TotalDamage'] += $playerResults['TotalDamage'];
+		$attackerResults[] = $playerResults;
+		$attackerTotalDamage += $playerResults->getTotalDamage();
 	}
 	foreach ($realDefenders as $teamPlayer) {
 		$playerResults = $teamPlayer->getShip()->shootPlayers($realAttackers);
-		$defenderResults['Traders'][] = $playerResults;
-		$defenderResults['TotalDamage'] += $playerResults['TotalDamage'];
+		$defenderResults[] = $playerResults;
+		$defenderTotalDamage += $playerResults->getTotalDamage();
 	}
 	return new TraderFullCombatResults(
-		attackers: $attackerResults,
-		defenders: $defenderResults,
+		attackers: new TeamCombatResults($attackerTotalDamage, $attackerResults),
+		defenders: new TeamCombatResults($defenderTotalDamage, $defenderResults),
 	);
 }
 

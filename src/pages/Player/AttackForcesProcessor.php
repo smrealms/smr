@@ -2,7 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\Combat\Results\ForceFullCombatResults;
+use Smr\Combat\Results\Combatant\TeamCombatResults;
+use Smr\Combat\Results\Full\ForceFullCombatResults;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Force;
@@ -98,11 +99,12 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 			$forceResults = $forces->shootPlayers($attackers, $bump);
 		}
 
-		$attackerResults = ['TotalDamage' => 0];
+		$attackerResults = [];
+		$totalDamage = 0;
 		foreach ($attackers as $attacker) {
 			$playerResults = $attacker->getShip()->shootForces($forces);
-			$attackerResults['Traders'][$attacker->getAccountID()] = $playerResults;
-			$attackerResults['TotalDamage'] += $playerResults['TotalDamage'];
+			$attackerResults[$attacker->getAccountID()] = $playerResults;
+			$totalDamage += $playerResults->getTotalDamage();
 		}
 
 		if (!$bump) {
@@ -111,7 +113,7 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 		}
 
 		$results = new ForceFullCombatResults(
-			attackers: $attackerResults,
+			attackers: new TeamCombatResults($totalDamage, $attackerResults),
 			forces: $forceResults,
 			bump: $bump,
 		);

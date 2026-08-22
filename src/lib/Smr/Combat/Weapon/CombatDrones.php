@@ -2,10 +2,13 @@
 
 namespace Smr\Combat\Weapon;
 
-use Exception;
+use Smr\AbstractShip;
+use Smr\Combat\CombatantInterface;
+use Smr\Combat\Results\Damage\WeaponDamage;
+use Smr\Combat\Results\Weapon\HitWeaponResult;
+use Smr\Combat\WeaponShotAtCombatant;
 use Smr\Force;
 use Smr\Planet;
-use Smr\Player;
 use Smr\Port;
 
 class CombatDrones extends AbstractWeapon {
@@ -13,6 +16,7 @@ class CombatDrones extends AbstractWeapon {
 	use ForcesTrait;
 
 	protected const int MAX_CDS_RAND = 54;
+	protected const int MIN_CDS_RAND = 3;
 
 	public function __construct(int $numberOfCDs, bool $portPlanetDrones = false) {
 		$this->amount = $numberOfCDs;
@@ -28,236 +32,78 @@ class CombatDrones extends AbstractWeapon {
 		$this->damageRollover = true;
 	}
 
-	public function getModifiedAccuracy(): float {
-		return $this->getBaseAccuracy();
-	}
+	public function getModifiedAccuracyAgainstTarget(CombatantInterface $shooter, CombatantInterface $target): float {
+		if ($shooter instanceof Planet || $shooter instanceof Port) {
+			// Ports/planets launch all their CDs
+			return 100;
+		}
 
-	protected function getModifiedAccuracyAgainstForcesUsingRandom(Player $weaponPlayer, Force $forces, int $random): float {
-		$modifiedAccuracy = $this->getModifiedAccuracy();
-		$modifiedAccuracy += $random;
+		$modifiedAccuracy = $this->getBaseAccuracy();
+		$random = rand(self::MIN_CDS_RAND, self::MAX_CDS_RAND);
 
-		return max(0, min(100, $modifiedAccuracy));
-	}
+		if (($shooter instanceof Force) || !($target instanceof AbstractShip)) {
+			$modifiedAccuracy += $random;
+		} else {
+			// Player vs. Player
+			assert($shooter instanceof AbstractShip);
+			$levelRand = rand(IFloor($shooter->getLevel() / 2), $shooter->getLevel());
+			$modifiedAccuracy += ($random + $levelRand - ($target->getLevel() - $shooter->getLevel()) / 3) / 1.5;
 
-	public function getModifiedAccuracyAgainstForces(Player $weaponPlayer, Force $forces): float {
-		return $this->getModifiedAccuracyAgainstForcesUsingRandom($weaponPlayer, $forces, rand(3, self::MAX_CDS_RAND));
-	}
-
-	protected function getModifiedAccuracyAgainstPortUsingRandom(Player $weaponPlayer, Port $port, int $random): float {
-		$modifiedAccuracy = $this->getModifiedAccuracy();
-		$modifiedAccuracy += $random;
-
-		return max(0, min(100, $modifiedAccuracy));
-	}
-
-	public function getModifiedAccuracyAgainstPort(Player $weaponPlayer, Port $port): float {
-		return $this->getModifiedAccuracyAgainstPortUsingRandom($weaponPlayer, $port, rand(3, self::MAX_CDS_RAND));
-	}
-
-	protected function getModifiedAccuracyAgainstPlanetUsingRandom(Player $weaponPlayer, Planet $planet, int $random): float {
-		$modifiedAccuracy = $this->getModifiedAccuracy();
-		$modifiedAccuracy += $random;
-
-		return max(0, min(100, $modifiedAccuracy));
-	}
-
-	public function getModifiedAccuracyAgainstPlanet(Player $weaponPlayer, Planet $planet): float {
-		return $this->getModifiedAccuracyAgainstPlanetUsingRandom($weaponPlayer, $planet, rand(3, self::MAX_CDS_RAND));
-	}
-
-	public function getModifiedAccuracyAgainstPlayer(Player $weaponPlayer, Player $targetPlayer): float {
-		return $this->getModifiedAccuracyAgainstPlayerUsingRandom($weaponPlayer, $targetPlayer, rand(3, self::MAX_CDS_RAND));
-	}
-
-	protected function getModifiedAccuracyAgainstPlayerUsingRandom(Player $weaponPlayer, Player $targetPlayer, int $random): float {
-		$modifiedAccuracy = $this->getModifiedAccuracy();
-		$levelRand = rand(IFloor($weaponPlayer->getLevelID() / 2), $weaponPlayer->getLevelID());
-		$modifiedAccuracy += ($random + $levelRand - ($targetPlayer->getLevelID() - $weaponPlayer->getLevelID()) / 3) / 1.5;
-
-		$weaponShip = $weaponPlayer->getShip();
-		$targetShip = $targetPlayer->getShip();
-		$mrDiff = $targetShip->getMR() - $weaponShip->getMR();
-		if ($mrDiff > 0) {
-			$modifiedAccuracy -= $this->getBaseAccuracy() * ($mrDiff / MR_FACTOR) / 100;
+			$mrDiff = $target->getMR() - $shooter->getMR();
+			if ($mrDiff > 0) {
+				$modifiedAccuracy -= $this->getBaseAccuracy() * ($mrDiff / MR_FACTOR) / 100;
+			}
 		}
 
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	public function getModifiedForceAccuracyAgainstPlayer(Force $forces, Player $targetPlayer): float {
-		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces, $targetPlayer, rand(3, self::MAX_CDS_RAND));
-	}
-
-	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(Force $forces, Player $targetPlayer, int $random): float {
-		$modifiedAccuracy = $this->getModifiedAccuracy();
-		$modifiedAccuracy += $random;
-
-		return max(0, min(100, $modifiedAccuracy));
-	}
-
-	protected function getModifiedPortAccuracyAgainstPlayer(Port $port, Player $targetPlayer): float {
-		return 100;
-	}
-
-	protected function getModifiedPlanetAccuracyAgainstPlayer(Planet $planet, Player $targetPlayer): float {
-		return 100;
-	}
-
-	public function getModifiedDamageAgainstForces(Player $weaponPlayer, Force $forces): array {
-		if (!$this->canShootForces()) {
-			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
-			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
+	public function getModifiedDamageAgainstTarget(
+		CombatantInterface $shooter,
+		CombatantInterface $target,
+	): WeaponDamage {
+		if (!$this->canShootTarget($target)) {
+			return new WeaponDamage(
+				shieldDamage: 0,
+				armourDamage: 0,
+				damageRollover: $this->isDamageRollover(),
+			);
 		}
-		$damage = $this->getDamage();
-		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedAccuracyAgainstForces($weaponPlayer, $forces) / 100);
-		$damage['Kamikaze'] = 0;
-		if ($weaponPlayer->isCombatDronesKamikazeOnMines()) { // If kamikaze then damage is same as MINE_ARMOUR
-			$damage['Kamikaze'] = min($damage['Launched'], $forces->getMines());
-			$damage['Launched'] -= $damage['Kamikaze'];
-		}
-		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
-		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);
+		$baseDamage = $this->getDamage();
+		$launched = ICeil($this->getAmount() * $this->getModifiedAccuracyAgainstTarget($shooter, $target) / 100);
 
-		$damage['Launched'] += $damage['Kamikaze'];
-		$damage['Shield'] += $damage['Kamikaze'] * MINE_ARMOUR;
-		$damage['Armour'] += $damage['Kamikaze'] * MINE_ARMOUR;
+		$isKamikaze = ($shooter instanceof AbstractShip) && ($target instanceof Force) && $shooter->getPlayer()->isCombatDronesKamikazeOnMines();
+		$kamikaze = $isKamikaze ? min($launched, $target->getMines()) : 0;
 
-		return $damage;
-	}
+		// Compute damage modifier
+		$mod = match (true) {
+			$target instanceof Planet => self::PLANET_DAMAGE_MOD,
+			$target instanceof AbstractShip && $target->hasDCS() => $shooter->reduceDamageDoneDCS(),
+			default => 1,
+		};
 
-	public function getModifiedDamageAgainstPort(Player $weaponPlayer, Port $port): array {
-		if (!$this->canShootPorts()) {
-			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
-			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-		}
-		$damage = $this->getDamage();
-		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedAccuracyAgainstPort($weaponPlayer, $port) / 100);
-		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
-		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);
-
-		return $damage;
-	}
-
-	public function getModifiedDamageAgainstPlanet(Player $weaponPlayer, Planet $planet): array {
-		if (!$this->canShootPlanets()) {
-			// If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
-			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-		}
-		$damage = $this->getDamage();
-		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedAccuracyAgainstPlanet($weaponPlayer, $planet) / 100);
-		$planetMod = self::PLANET_DAMAGE_MOD;
-		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield'] * $planetMod);
-		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour'] * $planetMod);
-
-		return $damage;
-	}
-
-	public function getModifiedDamageAgainstPlayer(Player $weaponPlayer, Player $targetPlayer): array {
-		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
-			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-		}
-		$damage = $this->getDamage();
-		$dcsMod = $targetPlayer->getShip()->hasDCS() ? DCS_PLAYER_DAMAGE_DECIMAL_PERCENT : 1;
-		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedAccuracyAgainstPlayer($weaponPlayer, $targetPlayer) / 100);
-		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield'] * $dcsMod);
-		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour'] * $dcsMod);
-		return $damage;
-	}
-
-	public function getModifiedForceDamageAgainstPlayer(Force $forces, Player $targetPlayer): array {
-		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
-			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-		}
-		$damage = $this->getDamage();
-		$dcsMod = $targetPlayer->getShip()->hasDCS() ? DCS_FORCE_DAMAGE_DECIMAL_PERCENT : 1;
-		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer) / 100);
-		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield'] * $dcsMod);
-		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour'] * $dcsMod);
-		return $damage;
-	}
-
-	public function getModifiedPortDamageAgainstPlayer(Port $port, Player $targetPlayer): array {
-		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
-			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-		}
-		$damage = $this->getDamage();
-		$dcsMod = $targetPlayer->getShip()->hasDCS() ? DCS_PORT_DAMAGE_DECIMAL_PERCENT : 1;
-		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedPortAccuracyAgainstPlayer($port, $targetPlayer) / 100);
-		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield'] * $dcsMod);
-		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour'] * $dcsMod);
-		return $damage;
-	}
-
-	public function getModifiedPlanetDamageAgainstPlayer(Planet $planet, Player $targetPlayer): array {
-		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
-			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
-		}
-		$damage = $this->getDamage();
-		$dcsMod = $targetPlayer->getShip()->hasDCS() ? DCS_PLANET_DAMAGE_DECIMAL_PERCENT : 1;
-		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedPlanetAccuracyAgainstPlayer($planet, $targetPlayer) / 100);
-		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield'] * $dcsMod);
-		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour'] * $dcsMod);
-		return $damage;
+		$normalLaunched = $launched - $kamikaze;
+		return new WeaponDamage(
+			shieldDamage: ICeil($mod * $baseDamage->shieldDamage * $normalLaunched),
+			armourDamage: ICeil($mod * $baseDamage->armourDamage * $normalLaunched + $kamikaze * MINE_ARMOUR),
+			damageRollover: $baseDamage->damageRollover,
+			launched: $launched, // includes both normal and kamikaze
+			kamikaze: $kamikaze,
+		);
 	}
 
 	/**
-	 * @return array{Weapon: parent, Target: \Smr\Force, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: ForceTakenDamageData, KillResults?: array{}}
+	 * @template TTarget of CombatantInterface
+	 * @param WeaponShotAtCombatant<TTarget> $shot
+	 * @return HitWeaponResult<TTarget>
 	 */
-	public function shootForces(Player $weaponPlayer, Force $forces): array {
-		$return = ['Weapon' => $this, 'Target' => $forces, 'Hit' => true];
-		$return = $this->doPlayerDamageToForce($return, $weaponPlayer, $forces);
-		if (!isset($return['WeaponDamage']['Kamikaze'])) {
-			throw new Exception('CombatDrone WeaponDamage against Force must include Kamikaze field!');
-		}
-		if ($return['WeaponDamage']['Kamikaze'] > 0) {
-			$weaponPlayer->getShip()->decreaseCDs($return['WeaponDamage']['Kamikaze']);
+	public function shoot(WeaponShotAtCombatant $shot): HitWeaponResult {
+		$shooter = $shot->shooter;
+		$return = $this->hitTarget($shot);
+		if ($return->weaponDamage->kamikaze > 0) {
+			$shooter->decreaseCDs($return->weaponDamage->kamikaze);
 		}
 		return $return;
-	}
-
-	/**
-	 * @return array{Weapon: parent, Target: \Smr\Port, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{}}
-	 */
-	public function shootPort(Player $weaponPlayer, Port $port): array {
-		$return = ['Weapon' => $this, 'Target' => $port, 'Hit' => true];
-		return $this->doPlayerDamageToPort($return, $weaponPlayer, $port);
-	}
-
-	/**
-	 * @return array{Weapon: parent, Target: \Smr\Planet, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{}}
-	 */
-	public function shootPlanet(Player $weaponPlayer, Planet $planet): array {
-		$return = ['Weapon' => $this, 'Target' => $planet, 'Hit' => true];
-		return $this->doPlayerDamageToPlanet($return, $weaponPlayer, $planet);
-	}
-
-	/**
-	 * @return array{Weapon: parent, Target: \Smr\Player, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, KillerExp: int, KillerCredits: int}}
-	 */
-	public function shootPlayer(Player $weaponPlayer, Player $targetPlayer): array {
-		$return = ['Weapon' => $this, 'Target' => $targetPlayer, 'Hit' => true];
-		return $this->doPlayerDamageToPlayer($return, $weaponPlayer, $targetPlayer);
-	}
-
-	public function shootPlayerAsForce(Force $forces, Player $targetPlayer): array {
-		$return = ['Weapon' => $this, 'Target' => $targetPlayer, 'Hit' => true];
-		return $this->doForceDamageToPlayer($return, $forces, $targetPlayer);
-	}
-
-	/**
-	 * @return array{Weapon: parent, Target: \Smr\Player, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
-	 */
-	public function shootPlayerAsPort(Port $forces, Player $targetPlayer): array {
-		$return = ['Weapon' => $this, 'Target' => $targetPlayer, 'Hit' => true];
-		return $this->doPortDamageToPlayer($return, $forces, $targetPlayer);
-	}
-
-	/**
-	 * @return array{Weapon: parent, Target: \Smr\Player, Hit: bool, WeaponDamage: WeaponDamageData, ActualDamage: TakenDamageData, KillResults?: array{DeadExp: int, LostCredits: int}}
-	 */
-	public function shootPlayerAsPlanet(Planet $forces, Player $targetPlayer): array {
-		$return = ['Weapon' => $this, 'Target' => $targetPlayer, 'Hit' => true];
-		return $this->doPlanetDamageToPlayer($return, $forces, $targetPlayer);
 	}
 
 }

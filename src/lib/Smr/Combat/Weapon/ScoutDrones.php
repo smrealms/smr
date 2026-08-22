@@ -3,10 +3,12 @@
 namespace Smr\Combat\Weapon;
 
 use Exception;
+use Smr\AbstractShip;
+use Smr\Combat\CombatantInterface;
+use Smr\Combat\Results\Damage\WeaponDamage;
+use Smr\Combat\Results\Weapon\HitWeaponResult;
+use Smr\Combat\WeaponShotAtCombatant;
 use Smr\Force;
-use Smr\Planet;
-use Smr\Player;
-use Smr\Port;
 
 class ScoutDrones extends AbstractWeapon {
 
@@ -21,71 +23,55 @@ class ScoutDrones extends AbstractWeapon {
 		$this->damageRollover = false;
 	}
 
-	public function getModifiedAccuracy(): float {
-		return $this->getBaseAccuracy();
-	}
-
-	public function getModifiedForceAccuracyAgainstPlayer(Force $forces, Player $targetPlayer): float {
-		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces, $targetPlayer, rand(1, 7) * rand(1, 7));
-	}
-
-	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(Force $forces, Player $targetPlayer, int $random): float {
-		$modifiedAccuracy = $this->getModifiedAccuracy();
-		$modifiedAccuracy -= $targetPlayer->getLevelID() + $random;
+	public function getModifiedAccuracyAgainstTarget(CombatantInterface $shooter, CombatantInterface $target): float {
+		$random = rand(1, 7) * rand(1, 7);
+		$modifiedAccuracy = $this->getBaseAccuracy() - $target->getLevel() - $random;
 
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	public function getModifiedDamageAgainstForces(Player $weaponPlayer, Force $forces): never {
-		throw new Exception('This weapon should not be used in this context');
-	}
-
-	public function getModifiedDamageAgainstPort(Player $weaponPlayer, Port $port): never {
-		throw new Exception('This weapon should not be used in this context');
-	}
-
-	public function getModifiedDamageAgainstPlanet(Player $weaponPlayer, Planet $planet): never {
-		throw new Exception('This weapon should not be used in this context');
-	}
-
-	public function getModifiedDamageAgainstPlayer(Player $weaponPlayer, Player $targetPlayer): never {
-		throw new Exception('This weapon should not be used in this context');
-	}
-
-	public function getModifiedPortDamageAgainstPlayer(Port $port, Player $targetPlayer): never {
-		throw new Exception('This weapon should not be used in this context');
-	}
-
-	public function getModifiedPlanetDamageAgainstPlayer(Planet $planet, Player $targetPlayer): never {
-		throw new Exception('This weapon should not be used in this context');
-	}
-
-	public function getModifiedForceDamageAgainstPlayer(Force $forces, Player $targetPlayer): array {
-		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
-			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
+	public function getModifiedDamageAgainstTarget(
+		CombatantInterface $shooter,
+		CombatantInterface $target,
+	): WeaponDamage {
+		if (!$this->canShootTarget($target)) {
+			return new WeaponDamage(
+				shieldDamage: 0,
+				armourDamage: 0,
+				damageRollover: $this->isDamageRollover(),
+			);
 		}
-		$damage = $this->getDamage();
-		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer) / 100);
-		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
-		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);
+		$baseDamage = $this->getDamage();
+		$damage = new WeaponDamage(
+			shieldDamage: $baseDamage->shieldDamage,
+			armourDamage: $baseDamage->armourDamage,
+			damageRollover: $baseDamage->damageRollover,
+			launched: ICeil(
+				$this->getAmount() * $this->getModifiedAccuracyAgainstTarget($shooter, $target) / 100,
+			),
+		);
+		$damage->shieldDamage = ICeil($damage->launched * $damage->shieldDamage);
+		$damage->armourDamage = ICeil($damage->launched * $damage->armourDamage);
 		return $damage;
 	}
 
-	public function shootForces(Player $weaponPlayer, Force $forces): never {
-		throw new Exception('This weapon should not be used in this context');
-	}
-
-	public function shootPlayer(Player $weaponPlayer, Player $targetPlayer): never {
-		throw new Exception('This weapon should not be used in this context');
-	}
-
-	public function shootPlayerAsForce(Force $forces, Player $targetPlayer): array {
-		$return = ['Weapon' => $this, 'Target' => $targetPlayer, 'Hit' => true];
-		$return = $this->doForceDamageToPlayer($return, $forces, $targetPlayer);
-		if (!isset($return['WeaponDamage']['Launched'])) {
-			throw new Exception('ScoutDrones must report the number launched');
+	/**
+	 * @template TTarget of CombatantInterface
+	 * @param WeaponShotAtCombatant<TTarget> $shot
+	 * @return HitWeaponResult<TTarget>
+	 */
+	public function shoot(WeaponShotAtCombatant $shot): HitWeaponResult {
+		$shooter = $shot->shooter;
+		$target = $shot->target;
+		if (
+			(!($shooter instanceof Force)) ||
+			(!($target instanceof AbstractShip))
+		) {
+			throw new Exception('ScoutDrones should not be used in this context');
 		}
-		$this->amount -= $return['WeaponDamage']['Launched']; // kamikaze
+
+		$return = $this->hitTarget($shot);
+		$this->amount -= $return->weaponDamage->launched; // kamikaze
 		return $return;
 	}
 

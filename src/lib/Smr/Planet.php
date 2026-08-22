@@ -3,6 +3,13 @@
 namespace Smr;
 
 use Exception;
+use Smr\Combat\CombatantInterface;
+use Smr\Combat\NormalCombatantInterface;
+use Smr\Combat\NormalDamageCombatResolver;
+use Smr\Combat\Results\Combatant\CombatantResult;
+use Smr\Combat\Results\Damage\NormalTakenDamage;
+use Smr\Combat\Results\Damage\WeaponDamage;
+use Smr\Combat\Results\Kill\PlanetDestroyedByPlayer;
 use Smr\Combat\Weapon\CombatDrones;
 use Smr\Combat\Weapon\Weapon;
 use Smr\Exceptions\UserError;
@@ -13,7 +20,8 @@ use Smr\Pages\Player\Planet\ConstructionProcessor;
 use Smr\Pages\Player\Planet\LandProcessor;
 use Smr\PlanetTypes\PlanetType;
 
-class Planet {
+/** @implements NormalCombatantInterface<AbstractShip> */
+class Planet implements NormalCombatantInterface {
 
 	/** @var array<int, array<int, self>> */
 	protected static array $CACHE_PLANETS = [];
@@ -946,7 +954,7 @@ class Planet {
 	 * Only used for display purposes.
 	 */
 	public function getTurretAccuracy(): float {
-		return Weapon::getWeapon(WEAPON_PLANET_TURRET)->getModifiedPlanetAccuracy($this);
+		return Weapon::getWeapon(WEAPON_PLANET_TURRET)->getPlanetAccuracy($this);
 	}
 
 	/**
@@ -1096,6 +1104,10 @@ class Planet {
 		return '<span style="color:yellow;font-variant:small-caps">' . $this->getDisplayName() . ' (#' . $this->getSectorID() . ')</span>';
 	}
 
+	public function getCombatID(): int {
+		return $this->sectorID;
+	}
+
 	public function isInhabitable(): bool {
 		return $this->inhabitableTime <= Epoch::time();
 	}
@@ -1220,7 +1232,7 @@ class Planet {
 	}
 
 	/**
-	 * @return array<Weapon>
+	 * @return array<int, Weapon>
 	 */
 	public function getWeapons(): array {
 		return array_merge(
@@ -1231,38 +1243,21 @@ class Planet {
 
 	/**
 	 * @param array<Player> $targetPlayers
-	 * @return PlanetCombatResults
+	 * @return CombatantResult<\Smr\Combat\NormalCombatantInterface>
 	 */
-	public function shootPlayers(array $targetPlayers): array {
-		$results = ['Planet' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => []];
-		foreach ($targetPlayers as $targetPlayer) {
-			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
-		}
-		if ($this->isBusted()) {
-			$results['DeadBeforeShot'] = true;
-			return $results;
-		}
-		$results['DeadBeforeShot'] = false;
-		$weapons = $this->getWeapons();
-		foreach ($weapons as $orderID => $weapon) {
-			$results['Weapons'][$orderID] = $weapon->shootPlayerAsPlanet($this, array_rand_value($targetPlayers));
-			if ($results['Weapons'][$orderID]['Hit']) {
-				if (!isset($results['Weapons'][$orderID]['ActualDamage'])) {
-					throw new Exception('Weapon hit without providing ActualDamage!');
-				}
-				$totalDamage = $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
-				$results['TotalDamage'] += $totalDamage;
-				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['Target']->getAccountID()] += $totalDamage;
-			}
-		}
-		if ($this->hasCDs()) {
-			$thisCDs = new CombatDrones($this->getCDs(), true);
-			$results['Drones'] = $thisCDs->shootPlayerAsPlanet($this, array_rand_value($targetPlayers));
-			$totalDamage = $results['Drones']['ActualDamage']['TotalDamage'];
-			$results['TotalDamage'] += $totalDamage;
-			$results['TotalDamagePerTargetPlayer'][$results['Drones']['Target']->getAccountID()] += $totalDamage;
-		}
-		return $results;
+	public function shootPlayers(array $targetPlayers): CombatantResult {
+		return NormalDamageCombatResolver::shoot(
+			$this,
+			fn() => array_rand_value($targetPlayers)->getShip(),
+		);
+	}
+
+	public function isDestroyed(): bool {
+		return $this->isBusted();
+	}
+
+	public function createCombatDrones(): CombatDrones {
+		return new CombatDrones($this->getCDs(), true);
 	}
 
 	/**
@@ -1300,26 +1295,22 @@ class Planet {
 		return $results;
 	}
 
-	/**
-	 * @param WeaponDamageData $damage
-	 * @return TakenDamageData
-	 */
-	public function takeDamage(array $damage): array {
+	public function takeDamage(WeaponDamage $damage): NormalTakenDamage {
 		$alreadyDead = $this->isBusted();
 		$killingShot = $alreadyDead && !$this->hasBeenAttackedByWeapon; // no defenses before 1st shot
 		$shieldDamage = 0;
 		$cdDamage = 0;
 		$armourDamage = 0;
 		if (!$alreadyDead) {
-			$shieldDamage = $this->takeDamageToShields($damage['Shield']);
-			if ($shieldDamage === 0 || $damage['Rollover']) {
-				$cdMaxDamage = $damage['Armour'] - $shieldDamage;
+			$shieldDamage = $this->takeDamageToShields($damage->shieldDamage);
+			if ($shieldDamage === 0 || $damage->damageRollover) {
+				$cdMaxDamage = $damage->armourDamage - $shieldDamage;
 				if ($shieldDamage === 0 && $this->hasShields()) {
 					$cdMaxDamage = IFloor($cdMaxDamage * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT);
 				}
 				$cdDamage = $this->takeDamageToCDs($cdMaxDamage);
-				if (!$this->hasShields() && ($cdDamage === 0 || $damage['Rollover'])) {
-					$armourMaxDamage = $damage['Armour'] - $shieldDamage - $cdDamage;
+				if (!$this->hasShields() && ($cdDamage === 0 || $damage->damageRollover)) {
+					$armourMaxDamage = $damage->armourDamage - $shieldDamage - $cdDamage;
 					$armourDamage = $this->takeDamageToArmour($armourMaxDamage);
 				}
 			}
@@ -1327,16 +1318,16 @@ class Planet {
 		}
 		$this->hasBeenAttackedByWeapon = true;
 
-		return [
-			'KillingShot' => $killingShot,
-			'TargetAlreadyDead' => $alreadyDead,
-			'Shield' => $shieldDamage,
-			'CDs' => $cdDamage,
-			'NumCDs' => $cdDamage / CD_ARMOUR,
-			'HasCDs' => $this->hasCDs(),
-			'Armour' => $armourDamage,
-			'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
-		];
+		return new NormalTakenDamage(
+			killingShot: $killingShot,
+			targetAlreadyDead: $alreadyDead,
+			shieldDamage: $shieldDamage,
+			combatDroneDamage: $cdDamage,
+			numCombatDrones: $cdDamage / CD_ARMOUR,
+			hasCombatDrones: $this->hasCDs(),
+			armourDamage: $armourDamage,
+			totalDamage: $shieldDamage + $cdDamage + $armourDamage,
+		);
 	}
 
 	protected function takeDamageToShields(int $damage): int {
@@ -1372,10 +1363,7 @@ class Planet {
 		$db->delete('player_attacks_planet', $this->SQLID);
 	}
 
-	/**
-	 * @return array{}
-	 */
-	public function killPlanetByPlayer(Player $killer): array {
+	public function killBy(CombatantInterface $killer): PlanetDestroyedByPlayer {
 		$this->creditCurrentAttackersForKill();
 
 		if ($this->hasPermanentDestruction()) {
@@ -1388,7 +1376,11 @@ class Planet {
 			$this->removeOwner();
 			$this->removePassword();
 		}
-		return [];
+		return new PlanetDestroyedByPlayer($this, $killer);
+	}
+
+	public function reduceDamageDoneDCS(): float {
+		return DCS_PLANET_DAMAGE_DECIMAL_PERCENT;
 	}
 
 }

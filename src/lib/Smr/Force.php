@@ -3,16 +3,26 @@
 namespace Smr;
 
 use Exception;
+use Smr\Combat\CombatantInterface;
+use Smr\Combat\ForceCombatantInterface;
+use Smr\Combat\Results\Combatant\ForceCombatResults;
+use Smr\Combat\Results\Damage\ForceTakenDamage;
+use Smr\Combat\Results\Damage\WeaponDamage;
+use Smr\Combat\Results\Kill\ForcesDestroyedByPlayer;
 use Smr\Combat\Weapon\CombatDrones;
 use Smr\Combat\Weapon\Mines;
 use Smr\Combat\Weapon\ScoutDrones;
+use Smr\Combat\WeaponShotAtCombatant;
 use Smr\Pages\Player\AttackForcesProcessor;
 use Smr\Pages\Player\ForcesDrop;
 use Smr\Pages\Player\ForcesDropProcessor;
 use Smr\Pages\Player\ForcesRefreshAllProcessor;
 use Smr\Pages\Player\ForcesRefreshProcessor;
 
-class Force {
+/**
+ * @implements ForceCombatantInterface<AbstractShip>
+ */
+class Force implements ForceCombatantInterface {
 
 	/** @var array<int, array<int, array<int, self>>> */
 	protected static array $CACHE_FORCES = [];
@@ -235,21 +245,21 @@ class Force {
 		$this->setSDs($this->getSDs() + $amount);
 	}
 
-	public function takeMines(int $amount): void {
+	public function decreaseMines(int $amount): void {
 		if ($amount < 0) {
 			throw new Exception('Cannot take negative mines.');
 		}
 		$this->setMines($this->getMines() - $amount);
 	}
 
-	public function takeCDs(int $amount): void {
+	public function decreaseCDs(int $amount): void {
 		if ($amount < 0) {
 			throw new Exception('Cannot take negative CDs.');
 		}
 		$this->setCDs($this->getCDs() - $amount);
 	}
 
-	public function takeSDs(int $amount): void {
+	public function decreaseSDs(int $amount): void {
 		if ($amount < 0) {
 			throw new Exception('Cannot take negative SDs.');
 		}
@@ -501,47 +511,46 @@ class Force {
 
 	/**
 	 * @param array<Player> $targetPlayers
-	 * @return ForceCombatResults
 	 */
-	public function shootPlayers(array $targetPlayers, bool $minesAreAttacker): array {
-		$results = ['TotalDamage' => 0, 'Results' => []];
+	public function shootPlayers(array $targetPlayers, bool $minesAreAttacker): ForceCombatResults {
+		$results = [];
 		if (!$this->exists()) {
-			$results['DeadBeforeShot'] = true;
-			return $results;
+			return new ForceCombatResults([], deadBeforeShot: true, forceDestroyed: true);
 		}
-		$results['DeadBeforeShot'] = false;
 
 		if ($this->hasMines()) {
 			$thisMines = new Mines($this->getMines());
-			$results['Results']['Mines'] = $thisMines->shootPlayerAsForce($this, array_rand_value($targetPlayers), $minesAreAttacker);
+			$target = array_rand_value($targetPlayers)->getShip();
+			$results['Mines'] = $thisMines->shoot(
+				new WeaponShotAtCombatant($this, $target, fn() => $target->killBy($this)),
+				$minesAreAttacker,
+			);
 			$this->setMines($thisMines->getAmount()); // kamikaze
-			$results['TotalDamage'] += $results['Results']['Mines']['ActualDamage']['TotalDamage'];
 		}
 
 		if ($this->hasCDs()) {
 			$thisCDs = new CombatDrones($this->getCDs());
-			$results['Results']['Drones'] = $thisCDs->shootPlayerAsForce($this, array_rand_value($targetPlayers));
-			$results['TotalDamage'] += $results['Results']['Drones']['ActualDamage']['TotalDamage'];
+			$target = array_rand_value($targetPlayers)->getShip();
+			$results['Drones'] = $thisCDs->shoot(
+				new WeaponShotAtCombatant($this, $target, fn() => $target->killBy($this)),
+			);
 		}
 
 		if (!$minesAreAttacker) {
 			if ($this->hasSDs()) {
 				$thisSDs = new ScoutDrones($this->getSDs());
-				$results['Results']['Scouts'] = $thisSDs->shootPlayerAsForce($this, array_rand_value($targetPlayers));
+				$target = array_rand_value($targetPlayers)->getShip();
+				$results['Scouts'] = $thisSDs->shoot(
+					new WeaponShotAtCombatant($this, $target, fn() => $target->killBy($this)),
+				);
 				$this->setSDs($thisSDs->getAmount()); // kamikaze
-				$results['TotalDamage'] += $results['Results']['Scouts']['ActualDamage']['TotalDamage'];
 			}
 		}
 
-		$results['ForcesDestroyed'] = !$this->exists();
-		return $results;
+		return new ForceCombatResults($results, deadBeforeShot: false, forceDestroyed: !$this->exists());
 	}
 
-	/**
-	 * @param WeaponDamageData $damage
-	 * @return ForceTakenDamageData
-	 */
-	public function takeDamage(array $damage): array {
+	public function takeDamage(WeaponDamage $damage): ForceTakenDamage {
 		$alreadyDead = !$this->exists();
 		$numMines = 0;
 		$numCDs = 0;
@@ -550,33 +559,33 @@ class Force {
 		$cdDamage = 0;
 		$sdDamage = 0;
 		if (!$alreadyDead) {
-			$numMines = $this->takeDamageToMines($damage['Armour']);
+			$numMines = $this->takeDamageToMines($damage->armourDamage);
 			$minesDamage = $numMines * MINE_ARMOUR;
-			if (!$this->hasMines() && ($minesDamage === 0 || $damage['Rollover'])) {
-				$cdMaxDamage = $damage['Armour'] - $minesDamage;
+			if (!$this->hasMines() && ($minesDamage === 0 || $damage->damageRollover)) {
+				$cdMaxDamage = $damage->armourDamage - $minesDamage;
 				$numCDs = $this->takeDamageToCDs($cdMaxDamage);
 				$cdDamage = $numCDs * CD_ARMOUR;
-				if (!$this->hasCDs() && ($cdDamage === 0 || $damage['Rollover'])) {
-					$sdMaxDamage = $damage['Armour'] - $minesDamage - $cdDamage;
+				if (!$this->hasCDs() && ($cdDamage === 0 || $damage->damageRollover)) {
+					$sdMaxDamage = $damage->armourDamage - $minesDamage - $cdDamage;
 					$numSDs = $this->takeDamageToSDs($sdMaxDamage);
 					$sdDamage = $numSDs * SD_ARMOUR;
 				}
 			}
 		}
-		return [
-			'KillingShot' => !$alreadyDead && !$this->exists(),
-			'TargetAlreadyDead' => $alreadyDead,
-			'Mines' => $minesDamage,
-			'NumMines' => $numMines,
-			'HasMines' => $this->hasMines(),
-			'CDs' => $cdDamage,
-			'NumCDs' => $numCDs,
-			'HasCDs' => $this->hasCDs(),
-			'SDs' => $sdDamage,
-			'NumSDs' => $numSDs,
-			'HasSDs' => $this->hasSDs(),
-			'TotalDamage' => $minesDamage + $cdDamage + $sdDamage,
-		];
+		return new ForceTakenDamage(
+			killingShot: !$alreadyDead && !$this->exists(),
+			targetAlreadyDead: $alreadyDead,
+			minesDamage: $minesDamage,
+			numMines: $numMines,
+			hasMines: $this->hasMines(),
+			combatDroneDamage: $cdDamage,
+			numCombatDrones: $numCDs,
+			hasCombatDrones: $this->hasCDs(),
+			scoutDroneDamage: $sdDamage,
+			numScoutDrones: $numSDs,
+			hasScoutDrones: $this->hasSDs(),
+			totalDamage: $minesDamage + $cdDamage + $sdDamage,
+		);
 	}
 
 	/**
@@ -586,7 +595,7 @@ class Force {
 	 */
 	protected function takeDamageToMines(int $damage): int {
 		$numMines = min($this->getMines(), IFloor($damage / MINE_ARMOUR));
-		$this->takeMines($numMines);
+		$this->decreaseMines($numMines);
 		return $numMines;
 	}
 
@@ -597,7 +606,7 @@ class Force {
 	 */
 	protected function takeDamageToCDs(int $damage): int {
 		$numCDs = min($this->getCDs(), IFloor($damage / CD_ARMOUR));
-		$this->takeCDs($numCDs);
+		$this->decreaseCDs($numCDs);
 		return $numCDs;
 	}
 
@@ -608,15 +617,28 @@ class Force {
 	 */
 	protected function takeDamageToSDs(int $damage): int {
 		$numSDs = min($this->getSDs(), IFloor($damage / SD_ARMOUR));
-		$this->takeSDs($numSDs);
+		$this->decreaseSDs($numSDs);
 		return $numSDs;
 	}
 
-	/**
-	 * @return array{}
-	 */
-	public function killForcesByPlayer(Player $killer): array {
-		return [];
+	public function killBy(CombatantInterface $killer): ForcesDestroyedByPlayer {
+		return new ForcesDestroyedByPlayer($this, $killer);
+	}
+
+	public function reduceDamageDoneDCS(): float {
+		return DCS_FORCE_DAMAGE_DECIMAL_PERCENT;
+	}
+
+	public function getCombatID(): int {
+		return $this->ownerID;
+	}
+
+	public function getCombatName(): string {
+		return 'forces'; // unused, should not matter
+	}
+
+	public function getLevel(): int {
+		return 1; // unused, should not matter
 	}
 
 }

@@ -23,6 +23,9 @@ class WeightedRandom {
 
 	protected bool $hasChanged = false;
 
+	/**
+	 * @param 'Weapon'|'PortWeapon'|'PlanetWeapon' $type
+	 */
 	public static function getWeightedRandom(int $gameID, int $accountID, string $type, int $typeID, bool $forceUpdate = false): self {
 		if ($forceUpdate || !isset(self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID])) {
 			self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID] = new self($gameID, $accountID, $type, $typeID);
@@ -30,6 +33,9 @@ class WeightedRandom {
 		return self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID];
 	}
 
+	/**
+	 * @param 'Weapon'|'PlanetWeapon'|'PortWeapon' $type
+	 */
 	public static function getWeightedRandomForPlayer(Player $player, string $type, int $typeID, bool $forceUpdate = false): self {
 		return self::getWeightedRandom($player->getGameID(), $player->getAccountID(), $type, $typeID, $forceUpdate);
 	}

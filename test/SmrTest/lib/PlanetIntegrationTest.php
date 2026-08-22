@@ -5,6 +5,8 @@ namespace SmrTest\lib;
 use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Smr\Combat\Results\Damage\NormalTakenDamage;
+use Smr\Combat\Results\Damage\WeaponDamage;
 use Smr\Planet;
 use Smr\TradeGood;
 use SmrTest\BaseIntegrationSpec;
@@ -374,11 +376,11 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 	}
 
 	/**
-	 * @param WeaponDamageData $damage
-	 * @param TakenDamageData $expected
+	 * @param \Smr\Combat\Results\Damage\WeaponDamage $damage
+	 * @param \Smr\Combat\Results\Damage\NormalTakenDamage $expected
 	 */
 	#[DataProvider('dataProvider_takeDamage')]
-	public function test_takeDamage(string $case, array $damage, array $expected, int $shields, int $cds, int $armour): void {
+	public function test_takeDamage(string $case, WeaponDamage $damage, NormalTakenDamage $expected, int $shields, int $cds, int $armour): void {
 		// Set up a port with a fixed amount of defenses
 		$planet = Planet::createPlanet(1, 1, 4, 1);
 		$planet->setBuilding(PLANET_GENERATOR, 1);
@@ -389,164 +391,164 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 		$planet->setArmour($armour);
 		// Test taking damage
 		$result = $planet->takeDamage($damage);
-		self::assertSame($expected, $result, $case);
+		self::assertEquals($expected, $result, $case);
 	}
 
 	/**
-	 * @return array<array{0: string, 1: WeaponDamageData, 2: TakenDamageData, 3: int, 4: int, 5: int}>
+	 * @return array<array{0: string, 1: \Smr\Combat\Results\Damage\WeaponDamage, 2: \Smr\Combat\Results\Damage\NormalTakenDamage, 3: int, 4: int, 5: int}>
 	 */
 	public static function dataProvider_takeDamage(): array {
 		return [
 			[
 				'Do overkill damage (e.g. 1000 drone damage)',
-				[
-					'Shield' => 1000,
-					'Armour' => 1000,
-					'Rollover' => true,
-				],
-				[
-					'KillingShot' => true,
-					'TargetAlreadyDead' => false,
-					'Shield' => 100,
-					'CDs' => 30,
-					'NumCDs' => 10,
-					'HasCDs' => false,
-					'Armour' => 100,
-					'TotalDamage' => 230,
-				],
+				new WeaponDamage(
+					shieldDamage: 1000,
+					armourDamage: 1000,
+					damageRollover: true,
+				),
+				new NormalTakenDamage(
+					killingShot: true,
+					targetAlreadyDead: false,
+					shieldDamage: 100,
+					combatDroneDamage: 30,
+					numCombatDrones: 10,
+					hasCombatDrones: false,
+					armourDamage: 100,
+					totalDamage: 230,
+				),
 				100, 10, 100,
 			],
 			[
 				'Do exactly lethal damage (e.g. 230 drone damage)',
-				[
-					'Shield' => 230,
-					'Armour' => 230,
-					'Rollover' => true,
-				],
-				[
-					'KillingShot' => true,
-					'TargetAlreadyDead' => false,
-					'Shield' => 100,
-					'CDs' => 30,
-					'NumCDs' => 10,
-					'HasCDs' => false,
-					'Armour' => 100,
-					'TotalDamage' => 230,
-				],
+				new WeaponDamage(
+					shieldDamage: 230,
+					armourDamage: 230,
+					damageRollover: true,
+				),
+				new NormalTakenDamage(
+					killingShot: true,
+					targetAlreadyDead: false,
+					shieldDamage: 100,
+					combatDroneDamage: 30,
+					numCombatDrones: 10,
+					hasCombatDrones: false,
+					armourDamage: 100,
+					totalDamage: 230,
+				),
 				100, 10, 100,
 			],
 			[
 				'Do damage to drones behind shields (e.g. armour-only weapon)',
-				[
-					'Shield' => 0,
-					'Armour' => 100,
-					'Rollover' => false,
-				],
-				[
-					'KillingShot' => false,
-					'TargetAlreadyDead' => false,
-					'Shield' => 0,
-					'CDs' => 18,
-					'NumCDs' => 6,
-					'HasCDs' => true,
-					'Armour' => 0,
-					'TotalDamage' => 18,
-				],
+				new WeaponDamage(
+					shieldDamage: 0,
+					armourDamage: 100,
+					damageRollover: false,
+				),
+				new NormalTakenDamage(
+					killingShot: false,
+					targetAlreadyDead: false,
+					shieldDamage: 0,
+					combatDroneDamage: 18,
+					numCombatDrones: 6,
+					hasCombatDrones: true,
+					armourDamage: 0,
+					totalDamage: 18,
+				),
 				100, 10, 100,
 			],
 			[
 				'Do NOT do damage to armour behind shields (e.g. armour-only weapon)',
-				[
-					'Shield' => 0,
-					'Armour' => 100,
-					'Rollover' => false,
-				],
-				[
-					'KillingShot' => false,
-					'TargetAlreadyDead' => false,
-					'Shield' => 0,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => false,
-					'Armour' => 0,
-					'TotalDamage' => 0,
-				],
+				new WeaponDamage(
+					shieldDamage: 0,
+					armourDamage: 100,
+					damageRollover: false,
+				),
+				new NormalTakenDamage(
+					killingShot: false,
+					targetAlreadyDead: false,
+					shieldDamage: 0,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: false,
+					armourDamage: 0,
+					totalDamage: 0,
+				),
 				100, 0, 100,
 			],
 			[
 				'Overkill shield damage only (e.g. shield/armour weapon)',
-				[
-					'Shield' => 150,
-					'Armour' => 150,
-					'Rollover' => false,
-				],
-				[
-					'KillingShot' => false,
-					'TargetAlreadyDead' => false,
-					'Shield' => 100,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => true,
-					'Armour' => 0,
-					'TotalDamage' => 100,
-				],
+				new WeaponDamage(
+					shieldDamage: 150,
+					armourDamage: 150,
+					damageRollover: false,
+				),
+				new NormalTakenDamage(
+					killingShot: false,
+					targetAlreadyDead: false,
+					shieldDamage: 100,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: true,
+					armourDamage: 0,
+					totalDamage: 100,
+				),
 				100, 10, 100,
 			],
 			[
 				'Overkill CD damage only (e.g. shield/armour weapon)',
-				[
-					'Shield' => 150,
-					'Armour' => 150,
-					'Rollover' => false,
-				],
-				[
-					'KillingShot' => false,
-					'TargetAlreadyDead' => false,
-					'Shield' => 0,
-					'CDs' => 30,
-					'NumCDs' => 10,
-					'HasCDs' => false,
-					'Armour' => 0,
-					'TotalDamage' => 30,
-				],
+				new WeaponDamage(
+					shieldDamage: 150,
+					armourDamage: 150,
+					damageRollover: false,
+				),
+				new NormalTakenDamage(
+					killingShot: false,
+					targetAlreadyDead: false,
+					shieldDamage: 0,
+					combatDroneDamage: 30,
+					numCombatDrones: 10,
+					hasCombatDrones: false,
+					armourDamage: 0,
+					totalDamage: 30,
+				),
 				0, 10, 100,
 			],
 			[
 				'Overkill armour damage only (e.g. shield/armour weapon)',
-				[
-					'Shield' => 150,
-					'Armour' => 150,
-					'Rollover' => false,
-				],
-				[
-					'KillingShot' => true,
-					'TargetAlreadyDead' => false,
-					'Shield' => 0,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => false,
-					'Armour' => 100,
-					'TotalDamage' => 100,
-				],
+				new WeaponDamage(
+					shieldDamage: 150,
+					armourDamage: 150,
+					damageRollover: false,
+				),
+				new NormalTakenDamage(
+					killingShot: true,
+					targetAlreadyDead: false,
+					shieldDamage: 0,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: false,
+					armourDamage: 100,
+					totalDamage: 100,
+				),
 				0, 0, 100,
 			],
 			[
 				'Target is already dead',
-				[
-					'Shield' => 100,
-					'Armour' => 100,
-					'Rollover' => true,
-				],
-				[
-					'KillingShot' => true,
-					'TargetAlreadyDead' => true,
-					'Shield' => 0,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => false,
-					'Armour' => 0,
-					'TotalDamage' => 0,
-				],
+				new WeaponDamage(
+					shieldDamage: 100,
+					armourDamage: 100,
+					damageRollover: true,
+				),
+				new NormalTakenDamage(
+					killingShot: true,
+					targetAlreadyDead: true,
+					shieldDamage: 0,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: false,
+					armourDamage: 0,
+					totalDamage: 0,
+				),
 				0, 0, 0,
 			],
 		];

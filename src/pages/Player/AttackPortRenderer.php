@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\Combat\Results\PortFullCombatResults;
+use Smr\Combat\Results\Full\PortFullCombatResults;
 use Smr\Globals;
 use Smr\Pages\Shared\PortFullCombatResultsRenderer;
 use Smr\Player;

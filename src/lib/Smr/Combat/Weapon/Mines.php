@@ -3,11 +3,12 @@
 namespace Smr\Combat\Weapon;
 
 use Exception;
-use Override;
+use Smr\AbstractShip;
+use Smr\Combat\CombatantInterface;
+use Smr\Combat\Results\Damage\WeaponDamage;
+use Smr\Combat\Results\Weapon\HitWeaponResult;
+use Smr\Combat\WeaponShotAtCombatant;
 use Smr\Force;
-use Smr\Planet;
-use Smr\Player;
-use Smr\Port;
 
 class Mines extends AbstractWeapon {
 
@@ -26,24 +27,16 @@ class Mines extends AbstractWeapon {
 		$this->damageRollover = false;
 	}
 
-	public function getModifiedAccuracy(): float {
-		return $this->getBaseAccuracy();
-	}
-
-	public function getModifiedForceAccuracyAgainstPlayer(Force $forces, Player $targetPlayer, bool $minesAreAttacker): float {
-		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces, $targetPlayer, rand(1, 7) * rand(1, 7), $minesAreAttacker);
-	}
-
-	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(Force $forces, Player $targetPlayer, int $random, bool $minesAreAttacker): float {
-		$modifiedAccuracy = $this->getModifiedAccuracy();
-		$modifiedAccuracy -= $targetPlayer->getLevelID() + $random;
+	public function getModifiedForceAccuracyAgainstPlayer(Force $forces, AbstractShip $target, bool $minesAreAttacker): float {
+		$random = rand(1, 7) * rand(1, 7);
+		$modifiedAccuracy = $this->getBaseAccuracy() - $target->getLevel() - $random;
 		if ($minesAreAttacker) {
 			$modifiedAccuracy /= pow($forces->getSector()->getNumberOfConnections(), 0.6);
 		}
 
 		if (self::TOTAL_ENEMY_MINES_MODIFIER > 0) {
 			$enemyMines = 0;
-			$enemyForces = $forces->getSector()->getEnemyForces($targetPlayer);
+			$enemyForces = $forces->getSector()->getEnemyForces($target->getPlayer());
 			foreach ($enemyForces as $enemyForce) {
 				$enemyMines += $enemyForce->getMines();
 			}
@@ -52,81 +45,81 @@ class Mines extends AbstractWeapon {
 		return max(0, min(100, $modifiedAccuracy));
 	}
 
-	public function getModifiedDamageAgainstForces(Player $weaponPlayer, Force $forces): never {
-		throw new Exception('This weapon should not be used in this context');
-	}
-
-	public function getModifiedDamageAgainstPort(Player $weaponPlayer, Port $port): never {
-		throw new Exception('This weapon should not be used in this context');
-	}
-
-	public function getModifiedDamageAgainstPlanet(Player $weaponPlayer, Planet $planet): never {
-		throw new Exception('This weapon should not be used in this context');
-	}
-
-	public function getModifiedDamageAgainstPlayer(Player $weaponPlayer, Player $targetPlayer): never {
-		throw new Exception('This weapon should not be used in this context');
-	}
-
-	public function getModifiedPortDamageAgainstPlayer(Port $port, Player $targetPlayer): never {
-		throw new Exception('This weapon should not be used in this context');
-	}
-
-	public function getModifiedPlanetDamageAgainstPlayer(Planet $planet, Player $targetPlayer): never {
-		throw new Exception('This weapon should not be used in this context');
-	}
-
-	public function getModifiedForceDamageAgainstPlayer(Force $forces, Player $targetPlayer, bool $minesAreAttacker = false): array {
-		if (!$this->canShootTraders()) { // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
-			return ['Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover()];
+	public function getModifiedDamageAgainstTarget(
+		CombatantInterface $shooter,
+		CombatantInterface $target,
+		bool $minesAreAttacker = false,
+	): WeaponDamage {
+		if (!$this->canShootTarget($target)) {
+			return new WeaponDamage(
+				shieldDamage: 0,
+				armourDamage: 0,
+				damageRollover: $this->isDamageRollover(),
+			);
 		}
-		$damage = $this->getDamage();
-		if ($targetPlayer->getShip()->isFederal()) { // do less damage to fed ships
-			$damage['Shield'] = IRound($damage['Shield'] * self::FED_SHIP_DAMAGE_MODIFIER);
-			$damage['Armour'] = IRound($damage['Armour'] * self::FED_SHIP_DAMAGE_MODIFIER);
+		assert($target instanceof AbstractShip);
+		$baseDamage = $this->getDamage();
+
+		// Compute damage modifier
+		$mod = 1;
+		if ($target->isFederal()) {
+			$mod *= self::FED_SHIP_DAMAGE_MODIFIER;
+		}
+		if ($target->hasDCS()) {
+			$mod *= self::DCS_DAMAGE_MODIFIER;
 		}
 
-		if ($targetPlayer->getShip()->hasDCS()) { // do less damage to DCS (Drone Scrambler)
-			$damage['Shield'] = IRound($damage['Shield'] * self::DCS_DAMAGE_MODIFIER);
-			$damage['Armour'] = IRound($damage['Armour'] * self::DCS_DAMAGE_MODIFIER);
+		assert($shooter instanceof Force);
+		$launched = ICeil($this->getAmount() * $this->getModifiedForceAccuracyAgainstPlayer($shooter, $target, $minesAreAttacker) / 100);
+		return new WeaponDamage(
+			shieldDamage: ICeil(IRound($mod * $baseDamage->shieldDamage) * $launched),
+			armourDamage: ICeil(IRound($mod * $baseDamage->armourDamage) * $launched),
+			damageRollover: $baseDamage->damageRollover,
+			launched: $launched,
+		);
+	}
+
+	/**
+	 * @param WeaponShotAtCombatant<AbstractShip> $shot
+	 * @return HitWeaponResult<AbstractShip>
+	 */
+	public function shoot(
+		WeaponShotAtCombatant $shot,
+		bool $minesAreAttacker = false,
+	): HitWeaponResult {
+		$shooter = $shot->shooter;
+		if (!($shooter instanceof Force)) {
+			throw new Exception('Mines should not be used in this context');
 		}
-		$damage['Launched'] = ICeil($this->getAmount() * $this->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer, $minesAreAttacker) / 100);
-		$damage['Shield'] = ICeil($damage['Launched'] * $damage['Shield']);
-		$damage['Armour'] = ICeil($damage['Launched'] * $damage['Armour']);
-		return $damage;
+		return $this->hitShipTarget($shot, $minesAreAttacker);
 	}
 
-	public function shootForces(Player $weaponPlayer, Force $forces): never {
-		throw new Exception('This weapon should not be used in this context');
-	}
-
-	public function shootPlayer(Player $weaponPlayer, Player $targetPlayer): never {
-		throw new Exception('This weapon should not be used in this context');
-	}
-
-	public function shootPlayerAsForce(Force $forces, Player $targetPlayer, bool $minesAreAttacker = false): array {
-		$return = ['Weapon' => $this, 'Target' => $targetPlayer, 'Hit' => true];
-		return $this->doForceDamageToPlayer($return, $forces, $targetPlayer, $minesAreAttacker);
-	}
-
-	#[Override]
-	protected function doForceDamageToPlayer(array $return, Force $forces, Player $targetPlayer, bool $minesAreAttacker = false): array {
-		$return['WeaponDamage'] = $this->getModifiedForceDamageAgainstPlayer($forces, $targetPlayer, $minesAreAttacker);
-		$return['ActualDamage'] = $targetPlayer->getShip()->takeDamageFromMines($return['WeaponDamage']);
+	/**
+	 * @param WeaponShotAtCombatant<AbstractShip> $shot
+	 * @return HitWeaponResult<AbstractShip>
+	 */
+	private function hitShipTarget(
+		WeaponShotAtCombatant $shot,
+		bool $minesAreAttacker = false,
+	): HitWeaponResult {
+		$shooter = $shot->shooter;
+		$target = $shot->target;
+		$weaponDamage = $this->getModifiedDamageAgainstTarget($shooter, $target, $minesAreAttacker);
+		$actualDamage = $target->takeDamageFromMines($weaponDamage);
 
 		// Update the number of mines launched so that we don't detonate more than needed
-		if (!isset($return['WeaponDamage']['Launched'])) {
-			throw new Exception('Mines must report the number launched');
-		}
-		$return['WeaponDamage']['Launched'] = ICeil($return['WeaponDamage']['Launched'] * $return['ActualDamage']['TotalDamage'] / $return['WeaponDamage']['Shield']); // assumes mines do the same shield/armour damage
+		$weaponDamage->launched = ICeil($weaponDamage->launched * $actualDamage->totalDamage / $weaponDamage->shieldDamage); // assumes mines do the same shield/armour damage
 
 		// Launched mines are lost
-		$this->amount -= $return['WeaponDamage']['Launched'];
+		$this->amount -= $weaponDamage->launched;
 
-		if ($return['ActualDamage']['KillingShot']) {
-			$return['KillResults'] = $targetPlayer->killPlayerByForces($forces);
-		}
-		return $return;
+		return new HitWeaponResult(
+			weapon: $this,
+			target: $target,
+			weaponDamage: $weaponDamage,
+			actualDamage: $actualDamage,
+			killResult: $actualDamage->killingShot ? $shot->resolveKill() : null,
+		);
 	}
 
 }

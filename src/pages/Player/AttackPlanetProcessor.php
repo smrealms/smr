@@ -2,7 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\Combat\Results\PlanetFullCombatResults;
+use Smr\Combat\Results\Combatant\PlanetAttackerCombatResults;
+use Smr\Combat\Results\Full\PlanetFullCombatResults;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
@@ -59,7 +60,8 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 		// *
 		// ********************************
 
-		$attackerResults = ['TotalDamage' => 0];
+		$attackerResults = [];
+		$totalDamage = 0;
 
 		// take the turns
 		$player->takeTurns(TURNS_TO_SHOOT_PLANET);
@@ -74,25 +76,25 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 		$totalShieldDamage = 0;
 		foreach ($attackers as $attacker) {
 			$playerResults = $attacker->getShip()->shootPlanet($planet);
-			$attackerResults['Traders'][$attacker->getAccountID()] = $playerResults;
-			$attackerResults['TotalDamage'] += $playerResults['TotalDamage'];
-			foreach ($playerResults['Weapons'] as $weapon) {
-				if (isset($weapon['ActualDamage'])) { // Only set if the weapon hits
-					$totalShieldDamage += $weapon['ActualDamage']['Shield'];
+			$attackerResults[$attacker->getAccountID()] = $playerResults;
+			$totalDamage += $playerResults->getTotalDamage();
+			foreach ($playerResults->weaponResults as $weapon) {
+				if (isset($weapon->actualDamage)) { // Only set if the weapon hits
+					$totalShieldDamage += $weapon->actualDamage->shieldDamage;
 				}
 			}
 		}
 
 		// Planet downgrades only occur on non-shield damage
-		$downgradeDamage = $attackerResults['TotalDamage'] - $totalShieldDamage;
-		$attackerResults['Downgrades'] = $planet->checkForDowngrade($downgradeDamage);
+		$downgradeDamage = $totalDamage - $totalShieldDamage;
+		$attackerResults = new PlanetAttackerCombatResults($totalDamage, $attackerResults, $planet->checkForDowngrade($downgradeDamage));
 
 		$results = new PlanetFullCombatResults(
 			attackers: $attackerResults,
 			planet: $planet->shootPlayers($attackers),
 		);
 
-		$account->log(LOG_TYPE_PLANET_BUSTING, 'Player attacks planet, the planet does ' . $results->planet['TotalDamage'] . ', their team does ' . $results->attackers['TotalDamage'] . ' and downgrades: ' . var_export($results->attackers['Downgrades'], true), $planet->getSectorID());
+		$account->log(LOG_TYPE_PLANET_BUSTING, 'Player attacks planet, the planet does ' . $results->planet->getTotalDamage() . ', their team does ' . $results->attackers->totalDamage . ' and downgrades: ' . var_export($results->attackers->downgrades, true), $planet->getSectorID());
 
 		// Add this log to the `combat_logs` database table
 		$db = Database::getInstance();

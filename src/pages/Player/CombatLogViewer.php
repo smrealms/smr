@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\Combat\Results\FullCombatResults;
+use Smr\Combat\Results\Full\FullCombatResults;
 use Smr\Database;
 use Smr\Menu;
 use Smr\Page\PlayerPage;

@@ -3,14 +3,27 @@
 namespace Smr;
 
 use Exception;
+use Smr\Combat\CombatantInterface;
+use Smr\Combat\NormalCombatantInterface;
+use Smr\Combat\NormalDamageCombatResolver;
+use Smr\Combat\Results\Combatant\CombatantResult;
+use Smr\Combat\Results\Damage\NormalTakenDamage;
+use Smr\Combat\Results\Damage\WeaponDamage;
+use Smr\Combat\Results\Kill\KillResultInterface;
+use Smr\Combat\Results\Kill\PlayerKilledByEnvironment;
+use Smr\Combat\Results\Kill\PlayerKilledByPlayer;
+use Smr\Combat\Results\Weapon\HitWeaponResult;
 use Smr\Combat\Weapon\CombatDrones;
 use Smr\Combat\Weapon\Weapon;
+use Smr\Combat\WeaponShotAtCombatant;
 
 /**
  * Properties and methods for a ship instance.
  * Does not include the database layer (see Ship).
+ *
+ * @implements NormalCombatantInterface<CombatantInterface>
  */
-class AbstractShip {
+class AbstractShip implements NormalCombatantInterface {
 
 	// Player exp gained for each point of damage done
 	protected const float EXP_PER_DAMAGE_PLAYER = 0.375;
@@ -146,6 +159,14 @@ class AbstractShip {
 			return $this->getIllusion()->getName();
 		}
 		return $this->getName();
+	}
+
+	public function getCombatName(): string {
+		return $this->player->getDisplayName();
+	}
+
+	public function getCombatID(): int {
+		return $this->player->getAccountID();
 	}
 
 	public function getAttackRating(): int {
@@ -768,130 +789,98 @@ class AbstractShip {
 
 	/**
 	 * @param array<Player> $targetPlayers
-	 * @return TraderCombatResult
+	 * @return CombatantResult<\Smr\Combat\NormalCombatantInterface>
 	 */
-	public function shootPlayers(array $targetPlayers): array {
+	public function shootPlayers(array $targetPlayers): CombatantResult {
 		$thisPlayer = $this->getPlayer();
-		$results = [
-			'Player' => $thisPlayer,
-			'TotalDamage' => 0,
-			'TotalDamagePerTargetPlayer' => [],
-			'Weapons' => [],
-		];
-		foreach ($targetPlayers as $targetPlayer) {
-			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
-		}
-		if ($thisPlayer->isDead()) {
-			$results['DeadBeforeShot'] = true;
-			return $results;
-		}
-		$results['DeadBeforeShot'] = false;
-		foreach ($this->weapons as $orderID => $weapon) {
-			$results['Weapons'][$orderID] = $weapon->shootPlayer($thisPlayer, array_rand_value($targetPlayers));
-			if ($results['Weapons'][$orderID]['Hit']) {
-				if (!isset($results['Weapons'][$orderID]['ActualDamage'])) {
-					throw new Exception('Weapon hit without providing ActualDamage!');
-				}
-				$totalDamage = $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
-				$results['TotalDamage'] += $totalDamage;
-				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['Target']->getAccountID()] += $totalDamage;
-			}
-		}
-		if ($this->hasCDs()) {
-			$thisCDs = new CombatDrones($this->getCDs());
-			$results['Drones'] = $thisCDs->shootPlayer($thisPlayer, array_rand_value($targetPlayers));
-			$totalDamage = $results['Drones']['ActualDamage']['TotalDamage'];
-			$results['TotalDamage'] += $totalDamage;
-			$results['TotalDamagePerTargetPlayer'][$results['Drones']['Target']->getAccountID()] += $totalDamage;
-		}
-		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLAYER));
-		$thisPlayer->increaseHOF($results['TotalDamage'], ['Combat', 'Player', 'Damage Done'], HOF_PUBLIC);
+		$results = NormalDamageCombatResolver::shoot(
+			$this,
+			fn() => array_rand_value($targetPlayers)->getShip(),
+		);
+		$totalDamage = $results->getTotalDamage();
+		$thisPlayer->increaseExperience(IRound($totalDamage * self::EXP_PER_DAMAGE_PLAYER));
+		$thisPlayer->increaseHOF($totalDamage, ['Combat', 'Player', 'Damage Done'], HOF_PUBLIC);
 		$thisPlayer->increaseHOF(1, ['Combat', 'Player', 'Shots'], HOF_PUBLIC);
 		return $results;
 	}
 
 	/**
-	 * @return ForceAttackerCombatResult
+	 * @return CombatantResult<Force>
 	 */
-	public function shootForces(Force $forces): array {
+	public function shootForces(Force $forces): CombatantResult {
 		$thisPlayer = $this->getPlayer();
-		$results = ['Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []];
 		if ($thisPlayer->isDead()) {
-			$results['DeadBeforeShot'] = true;
-			return $results;
+			/** @var array<int, HitWeaponResult<Force>> $emptyResults */
+			$emptyResults = [];
+			return CombatantResult::create(
+				combatant: $this,
+				deadBeforeShot: true,
+				weaponResults: $emptyResults,
+			);
 		}
-		$results['DeadBeforeShot'] = false;
+		$weaponResults = [];
+		$dronesResult = null;
 		foreach ($this->weapons as $orderID => $weapon) {
-			$results['Weapons'][$orderID] = $weapon->shootForces($thisPlayer, $forces);
-			if ($results['Weapons'][$orderID]['Hit']) {
-				if (!isset($results['Weapons'][$orderID]['ActualDamage'])) {
-					throw new Exception('Weapon hit without providing ActualDamage!');
-				}
-				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumMines'], ['Combat', 'Forces', 'Mines', 'Killed'], HOF_PUBLIC);
-				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['Mines'], ['Combat', 'Forces', 'Mines', 'Damage Done'], HOF_PUBLIC);
-				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumCDs'], ['Combat', 'Forces', 'Combat Drones', 'Killed'], HOF_PUBLIC);
-				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['CDs'], ['Combat', 'Forces', 'Combat Drones', 'Damage Done'], HOF_PUBLIC);
-				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumSDs'], ['Combat', 'Forces', 'Scout Drones', 'Killed'], HOF_PUBLIC);
-				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['SDs'], ['Combat', 'Forces', 'Scout Drones', 'Damage Done'], HOF_PUBLIC);
-				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumMines'] + $results['Weapons'][$orderID]['ActualDamage']['NumCDs'] + $results['Weapons'][$orderID]['ActualDamage']['NumSDs'], ['Combat', 'Forces', 'Killed'], HOF_PUBLIC);
-				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+			$result = $weapon->shoot(
+				new WeaponShotAtCombatant($this, $forces, fn() => $forces->killBy($this)),
+			);
+			$weaponResults[$orderID] = $result;
+			if ($result instanceof HitWeaponResult) {
+				$actualDamage = $result->actualDamage;
+				$thisPlayer->increaseHOF($actualDamage->numMines, ['Combat', 'Forces', 'Mines', 'Killed'], HOF_PUBLIC);
+				$thisPlayer->increaseHOF($actualDamage->minesDamage, ['Combat', 'Forces', 'Mines', 'Damage Done'], HOF_PUBLIC);
+				$thisPlayer->increaseHOF($actualDamage->numCombatDrones, ['Combat', 'Forces', 'Combat Drones', 'Killed'], HOF_PUBLIC);
+				$thisPlayer->increaseHOF($actualDamage->combatDroneDamage, ['Combat', 'Forces', 'Combat Drones', 'Damage Done'], HOF_PUBLIC);
+				$thisPlayer->increaseHOF($actualDamage->numScoutDrones, ['Combat', 'Forces', 'Scout Drones', 'Killed'], HOF_PUBLIC);
+				$thisPlayer->increaseHOF($actualDamage->scoutDroneDamage, ['Combat', 'Forces', 'Scout Drones', 'Damage Done'], HOF_PUBLIC);
+				$thisPlayer->increaseHOF($actualDamage->numMines + $actualDamage->numCombatDrones + $actualDamage->numScoutDrones, ['Combat', 'Forces', 'Killed'], HOF_PUBLIC);
 			}
 		}
 		if ($this->hasCDs()) {
 			$thisCDs = new CombatDrones($this->getCDs());
-			$results['Drones'] = $thisCDs->shootForces($thisPlayer, $forces);
-			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
-			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumMines'], ['Combat', 'Forces', 'Mines', 'Killed'], HOF_PUBLIC);
-			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['Mines'], ['Combat', 'Forces', 'Mines', 'Damage Done'], HOF_PUBLIC);
-			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumCDs'], ['Combat', 'Forces', 'Combat Drones', 'Killed'], HOF_PUBLIC);
-			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['CDs'], ['Combat', 'Forces', 'Combat Drones', 'Damage Done'], HOF_PUBLIC);
-			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumSDs'], ['Combat', 'Forces', 'Scout Drones', 'Killed'], HOF_PUBLIC);
-			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['SDs'], ['Combat', 'Forces', 'Scout Drones', 'Damage Done'], HOF_PUBLIC);
-			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumMines'] + $results['Drones']['ActualDamage']['NumCDs'] + $results['Drones']['ActualDamage']['NumSDs'], ['Combat', 'Forces', 'Killed'], HOF_PUBLIC);
+			$dronesResult = $thisCDs->shoot(
+				new WeaponShotAtCombatant($this, $forces, fn() => $forces->killBy($this)),
+			);
+			$actualDamage = $dronesResult->actualDamage;
+			$thisPlayer->increaseHOF($actualDamage->numMines, ['Combat', 'Forces', 'Mines', 'Killed'], HOF_PUBLIC);
+			$thisPlayer->increaseHOF($actualDamage->minesDamage, ['Combat', 'Forces', 'Mines', 'Damage Done'], HOF_PUBLIC);
+			$thisPlayer->increaseHOF($actualDamage->numCombatDrones, ['Combat', 'Forces', 'Combat Drones', 'Killed'], HOF_PUBLIC);
+			$thisPlayer->increaseHOF($actualDamage->combatDroneDamage, ['Combat', 'Forces', 'Combat Drones', 'Damage Done'], HOF_PUBLIC);
+			$thisPlayer->increaseHOF($actualDamage->numScoutDrones, ['Combat', 'Forces', 'Scout Drones', 'Killed'], HOF_PUBLIC);
+			$thisPlayer->increaseHOF($actualDamage->scoutDroneDamage, ['Combat', 'Forces', 'Scout Drones', 'Damage Done'], HOF_PUBLIC);
+			$thisPlayer->increaseHOF($actualDamage->numMines + $actualDamage->numCombatDrones + $actualDamage->numScoutDrones, ['Combat', 'Forces', 'Killed'], HOF_PUBLIC);
 		}
-		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_FORCE));
-		$thisPlayer->increaseHOF($results['TotalDamage'], ['Combat', 'Forces', 'Damage Done'], HOF_PUBLIC);
+		$results = CombatantResult::create(
+			combatant: $this,
+			weaponResults: $weaponResults,
+			dronesResult: $dronesResult,
+		);
+		$totalDamage = $results->getTotalDamage();
+		$thisPlayer->increaseExperience(IRound($totalDamage * self::EXP_PER_DAMAGE_FORCE));
+		$thisPlayer->increaseHOF($totalDamage, ['Combat', 'Forces', 'Damage Done'], HOF_PUBLIC);
 		$thisPlayer->increaseHOF(1, ['Combat', 'Forces', 'Shots'], HOF_PUBLIC);
 		return $results;
 	}
 
 	/**
-	 * @return PortAttackerCombatResult
+	 * @return CombatantResult<\Smr\Combat\NormalCombatantInterface>
 	 */
-	public function shootPort(Port $port): array {
+	public function shootPort(Port $port): CombatantResult {
 		$thisPlayer = $this->getPlayer();
-		$results = ['Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []];
-		if ($thisPlayer->isDead()) {
-			$results['DeadBeforeShot'] = true;
-			return $results;
-		}
-		$results['DeadBeforeShot'] = false;
-		foreach ($this->weapons as $orderID => $weapon) {
-			$results['Weapons'][$orderID] = $weapon->shootPort($thisPlayer, $port);
-			if ($results['Weapons'][$orderID]['Hit']) {
-				if (!isset($results['Weapons'][$orderID]['ActualDamage'])) {
-					throw new Exception('Weapon hit without providing ActualDamage!');
-				}
-				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
-			}
-		}
-		if ($this->hasCDs()) {
-			$thisCDs = new CombatDrones($this->getCDs());
-			$results['Drones'] = $thisCDs->shootPort($thisPlayer, $port);
-			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
-		}
-		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PORT));
-		$thisPlayer->increaseHOF($results['TotalDamage'], ['Combat', 'Port', 'Damage Done'], HOF_PUBLIC);
+		$results = NormalDamageCombatResolver::shoot($this, fn() => $port);
+		$totalDamage = $results->getTotalDamage();
+		$thisPlayer->increaseExperience(IRound($totalDamage * self::EXP_PER_DAMAGE_PORT));
+		$thisPlayer->increaseHOF($totalDamage, ['Combat', 'Port', 'Damage Done'], HOF_PUBLIC);
 		//$thisPlayer->increaseHOF(1,array('Combat','Port','Shots')); //in Port::attackedBy()
 
 		// Attackers also get a federal bounty
-		$bounty = $results['TotalDamage'] * Port::FED_BOUNTY_PER_DAMAGE;
+		$bounty = $totalDamage * Port::FED_BOUNTY_PER_DAMAGE;
 		$thisPlayer->getActiveBounty(BountyType::HQ)->increaseCredits($bounty);
 		$thisPlayer->increaseHOF($bounty, ['Combat', 'Port', 'Bounties', 'Gained'], HOF_PUBLIC);
 
 		// Change personal relations based on political relations between races
 		$relations = Globals::getRaceRelations($thisPlayer->getGameID(), $port->getRaceID());
-		$relChangeBase = $results['TotalDamage'] / Port::DAMAGE_PER_RELATION_CHANGE;
+		$relChangeBase = $totalDamage / Port::DAMAGE_PER_RELATION_CHANGE;
 		foreach ($relations as $raceID => $politicalRelations) {
 			if ($raceID === $port->getRaceID() || $raceID === $thisPlayer->getRaceID()) {
 				// port race and player race reaction
@@ -911,7 +900,7 @@ class AbstractShip {
 		}
 
 		// Change alignment based on WAR/PEACE status between races
-		$alignChange = IFloor($results['TotalDamage'] / Port::DAMAGE_PER_ALIGNMENT_CHANGE);
+		$alignChange = IFloor($totalDamage / Port::DAMAGE_PER_ALIGNMENT_CHANGE);
 		if ($relations[$thisPlayer->getRaceID()] <= RELATIONS_WAR) {
 			$thisPlayer->increaseAlignment($alignChange);
 			$thisPlayer->increaseHOF($alignChange, ['Combat', 'Port', 'Alignment', 'Gain'], HOF_PUBLIC);
@@ -923,41 +912,19 @@ class AbstractShip {
 	}
 
 	/**
-	 * @return PlanetAttackerCombatResult
+	 * @return CombatantResult<\Smr\Combat\NormalCombatantInterface>
 	 */
-	public function shootPlanet(Planet $planet): array {
+	public function shootPlanet(Planet $planet): CombatantResult {
 		$thisPlayer = $this->getPlayer();
-		$results = ['Player' => $thisPlayer, 'TotalDamage' => 0, 'Weapons' => []];
-		if ($thisPlayer->isDead()) {
-			$results['DeadBeforeShot'] = true;
-			return $results;
-		}
-		$results['DeadBeforeShot'] = false;
-		foreach ($this->weapons as $orderID => $weapon) {
-			$results['Weapons'][$orderID] = $weapon->shootPlanet($thisPlayer, $planet);
-			if ($results['Weapons'][$orderID]['Hit']) {
-				if (!isset($results['Weapons'][$orderID]['ActualDamage'])) {
-					throw new Exception('Weapon hit without providing ActualDamage!');
-				}
-				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
-			}
-		}
-		if ($this->hasCDs()) {
-			$thisCDs = new CombatDrones($this->getCDs());
-			$results['Drones'] = $thisCDs->shootPlanet($thisPlayer, $planet);
-			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
-		}
-		$thisPlayer->increaseExperience(IRound($results['TotalDamage'] * self::EXP_PER_DAMAGE_PLANET));
-		$thisPlayer->increaseHOF($results['TotalDamage'], ['Combat', 'Planet', 'Damage Done'], HOF_PUBLIC);
+		$results = NormalDamageCombatResolver::shoot($this, fn() => $planet);
+		$totalDamage = $results->getTotalDamage();
+		$thisPlayer->increaseExperience(IRound($totalDamage * self::EXP_PER_DAMAGE_PLANET));
+		$thisPlayer->increaseHOF($totalDamage, ['Combat', 'Planet', 'Damage Done'], HOF_PUBLIC);
 		//$thisPlayer->increaseHOF(1,array('Combat','Planet','Shots')); //in Planet::attackedBy()
 		return $results;
 	}
 
-	/**
-	 * @param WeaponDamageData $damage
-	 * @return TakenDamageData
-	 */
-	public function takeDamage(array $damage): array {
+	public function takeDamage(WeaponDamage $damage): NormalTakenDamage {
 		$alreadyDead = $this->getPlayer()->isDead();
 		$armourDamage = 0;
 		$cdDamage = 0;
@@ -967,54 +934,58 @@ class AbstractShip {
 			// player, so alert them that they're under attack.
 			$this->getPlayer()->setUnderAttack(true);
 
-			$shieldDamage = $this->takeDamageToShields($damage['Shield']);
-			if (!$this->hasShields() && ($shieldDamage === 0 || $damage['Rollover'])) {
-				$cdMaxDamage = $damage['Armour'] - $shieldDamage;
+			$shieldDamage = $this->takeDamageToShields($damage->shieldDamage);
+			if (!$this->hasShields() && ($shieldDamage === 0 || $damage->damageRollover)) {
+				$cdMaxDamage = $damage->armourDamage - $shieldDamage;
 				$cdDamage = $this->takeDamageToCDs($cdMaxDamage);
-				if (!$this->hasCDs() && ($cdDamage === 0 || $damage['Rollover'])) {
-					$armourMaxDamage = $damage['Armour'] - $shieldDamage - $cdDamage;
+				if (!$this->hasCDs() && ($cdDamage === 0 || $damage->damageRollover)) {
+					$armourMaxDamage = $damage->armourDamage - $shieldDamage - $cdDamage;
 					$armourDamage = $this->takeDamageToArmour($armourMaxDamage);
 				}
 			}
 		}
-		return [
-			'KillingShot' => !$alreadyDead && $this->isDead(),
-			'TargetAlreadyDead' => $alreadyDead,
-			'Shield' => $shieldDamage,
-			'CDs' => $cdDamage,
-			'NumCDs' => $cdDamage / CD_ARMOUR,
-			'HasCDs' => $this->hasCDs(),
-			'Armour' => $armourDamage,
-			'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
-		];
+		return new NormalTakenDamage(
+			killingShot: !$alreadyDead && $this->isDead(),
+			targetAlreadyDead: $alreadyDead,
+			shieldDamage: $shieldDamage,
+			combatDroneDamage: $cdDamage,
+			numCombatDrones: $cdDamage / CD_ARMOUR,
+			hasCombatDrones: $this->hasCDs(),
+			armourDamage: $armourDamage,
+			totalDamage: $shieldDamage + $cdDamage + $armourDamage,
+		);
 	}
 
-	/**
-	 * @param WeaponDamageData $damage
-	 * @return TakenDamageData
-	 */
-	public function takeDamageFromMines(array $damage): array {
+	public function isDestroyed(): bool {
+		return $this->getPlayer()->isDead();
+	}
+
+	public function createCombatDrones(): CombatDrones {
+		return new CombatDrones($this->getCDs());
+	}
+
+	public function takeDamageFromMines(WeaponDamage $damage): NormalTakenDamage {
 		$alreadyDead = $this->getPlayer()->isDead();
 		$armourDamage = 0;
 		$cdDamage = 0;
 		$shieldDamage = 0;
 		if (!$alreadyDead) {
-			$shieldDamage = $this->takeDamageToShields($damage['Shield']);
-			if (!$this->hasShields() && ($shieldDamage === 0 || $damage['Rollover'])) { //skip CDs if it's mines
-				$armourMaxDamage = $damage['Armour'] - $shieldDamage;
+			$shieldDamage = $this->takeDamageToShields($damage->shieldDamage);
+			if (!$this->hasShields() && ($shieldDamage === 0 || $damage->damageRollover)) { //skip CDs if it's mines
+				$armourMaxDamage = $damage->armourDamage - $shieldDamage;
 				$armourDamage = $this->takeDamageToArmour($armourMaxDamage);
 			}
 		}
-		return [
-			'KillingShot' => !$alreadyDead && $this->isDead(),
-			'TargetAlreadyDead' => $alreadyDead,
-			'Shield' => $shieldDamage,
-			'CDs' => $cdDamage,
-			'NumCDs' => $cdDamage / CD_ARMOUR,
-			'HasCDs' => $this->hasCDs(),
-			'Armour' => $armourDamage,
-			'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
-		];
+		return new NormalTakenDamage(
+			killingShot: !$alreadyDead && $this->isDead(),
+			targetAlreadyDead: $alreadyDead,
+			shieldDamage: $shieldDamage,
+			combatDroneDamage: $cdDamage,
+			numCombatDrones: $cdDamage / CD_ARMOUR,
+			hasCombatDrones: $this->hasCDs(),
+			armourDamage: $armourDamage,
+			totalDamage: $shieldDamage + $cdDamage + $armourDamage,
+		);
 	}
 
 	protected function takeDamageToShields(int $damage): int {
@@ -1033,6 +1004,39 @@ class AbstractShip {
 		$actualDamage = min($this->getArmour(), $damage);
 		$this->decreaseArmour($actualDamage);
 		return $actualDamage;
+	}
+
+	public function killBy(CombatantInterface $killer): KillResultInterface {
+		if ($killer instanceof self) {
+			$result = $this->player->killPlayerByPlayer($killer->getPlayer());
+			return new PlayerKilledByPlayer(
+				target: $this,
+				killer: $killer,
+				deadExp: $result['DeadExp'],
+				killerExp: $result['KillerExp'],
+				killerCredits: $result['KillerCredits'],
+			);
+		}
+		$result = match (true) {
+			$killer instanceof Port => $this->player->killPlayerByPort($killer),
+			$killer instanceof Planet => $this->player->killPlayerByPlanet($killer),
+			$killer instanceof Force => $this->player->killPlayerByForces($killer),
+			default => throw new Exception('Unknown Combatant'),
+		};
+		return new PlayerKilledByEnvironment(
+			target: $this,
+			killer: $killer,
+			deadExp: $result['DeadExp'],
+			lostCredits: $result['LostCredits'],
+		);
+	}
+
+	public function reduceDamageDoneDCS(): float {
+		return DCS_PLAYER_DAMAGE_DECIMAL_PERCENT;
+	}
+
+	public function getLevel(): int {
+		return $this->player->getLevelID();
 	}
 
 	/**

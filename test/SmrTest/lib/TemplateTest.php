@@ -7,6 +7,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
+use Smr\Combat\Results\Damage\ForceTakenDamage;
+use Smr\Combat\Results\Damage\NormalTakenDamage;
 use Smr\Container\DiContainer;
 use Smr\Template;
 use SmrTest\TestUtils;
@@ -50,20 +52,20 @@ class TemplateTest extends TestCase {
 	#[TestWith([0, 2, 0, '<span class="red">2</span> combat drones'])]
 	public function test_displayForceTakenDamage(int $mines, int $cds, int $sds, string $expected): void {
 		$template = Template::getInstance();
-		$damageTaken = [
-			'KillingShot' => false, // unused
-			'TargetAlreadyDead' => false, // unused
-			'Mines' => 0, // unused
-			'NumMines' => $mines,
-			'HasMines' => false, // unused
-			'CDs' => 0, // unused
-			'NumCDs' => $cds,
-			'HasCDs' => false, // unused
-			'SDs' => 0, // unused
-			'NumSDs' => $sds,
-			'HasSDs' => false, // unused
-			'TotalDamage' => 0, // unused
-		];
+		$damageTaken = new ForceTakenDamage(
+			killingShot: false,
+			targetAlreadyDead: false,
+			minesDamage: 0,
+			numMines: $mines,
+			hasMines: false,
+			combatDroneDamage: 0,
+			numCombatDrones: $cds,
+			hasCombatDrones: false,
+			scoutDroneDamage: 0,
+			numScoutDrones: $sds,
+			hasScoutDrones: false,
+			totalDamage: 0,
+		);
 		$result = $template->displayForceTakenDamage($damageTaken, kamikaze: 2);
 		self::assertSame($expected, $result);
 	}
@@ -73,16 +75,16 @@ class TemplateTest extends TestCase {
 	#[TestWith([0, 2, 0, '<span class="cds">2</span> combat drones'])]
 	public function test_displayTakenDamage(int $shields, int $cds, int $armour, string $expected): void {
 		$template = Template::getInstance();
-		$damageTaken = [
-			'KillingShot' => false, // unused
-			'TargetAlreadyDead' => false, // unused
-			'Shield' => $shields,
-			'CDs' => 0, // unused
-			'NumCDs' => $cds,
-			'HasCDs' => false, // unused
-			'Armour' => $armour,
-			'TotalDamage' => 0, // unused
-		];
+		$damageTaken = new NormalTakenDamage(
+			killingShot: false,
+			targetAlreadyDead: false,
+			shieldDamage: $shields,
+			combatDroneDamage: 0,
+			numCombatDrones: $cds,
+			hasCombatDrones: false,
+			armourDamage: $armour,
+			totalDamage: 0,
+		);
 		$result = $template->displayTakenDamage($damageTaken);
 		self::assertSame($expected, $result);
 	}

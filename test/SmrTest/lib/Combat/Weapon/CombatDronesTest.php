@@ -2,11 +2,17 @@
 
 namespace SmrTest\lib\Combat\Weapon;
 
+use LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestWith;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Smr\AbstractShip;
+use Smr\Combat\Results\Damage\ForceTakenDamage;
+use Smr\Combat\Results\Damage\WeaponDamage;
+use Smr\Combat\Results\Weapon\HitWeaponResult;
 use Smr\Combat\Weapon\CombatDrones;
+use Smr\Combat\WeaponShotAtCombatant;
 use Smr\Force;
 use Smr\Planet;
 use Smr\Player;
@@ -47,31 +53,31 @@ class CombatDronesTest extends TestCase {
 
 	public function test_getModifiedAccuracyAgainstForces_adds_random_accuracy(): void {
 		$drones = $this->createDrones();
-		$player = $this->createStub(Player::class);
+		$ship = $this->createShip();
 		$forces = $this->createStub(Force::class);
 		srand(1);
 
-		$result = $drones->getModifiedAccuracyAgainstForces($player, $forces);
+		$result = $drones->getModifiedAccuracyAgainstTarget($ship, $forces);
 		self::assertSame(51.0, $result);
 	}
 
 	public function test_getModifiedAccuracyAgainstPort_adds_random_accuracy(): void {
 		$drones = $this->createDrones();
-		$player = $this->createStub(Player::class);
+		$ship = $this->createShip();
 		$port = $this->createStub(Port::class);
 		srand(1);
 
-		$result = $drones->getModifiedAccuracyAgainstPort($player, $port);
+		$result = $drones->getModifiedAccuracyAgainstTarget($ship, $port);
 		self::assertSame(51.0, $result);
 	}
 
 	public function test_getModifiedAccuracyAgainstPlanet_adds_random_accuracy(): void {
 		$drones = $this->createDrones();
-		$player = $this->createStub(Player::class);
+		$ship = $this->createShip();
 		$planet = $this->createStub(Planet::class);
 		srand(1);
 
-		$result = $drones->getModifiedAccuracyAgainstPlanet($player, $planet);
+		$result = $drones->getModifiedAccuracyAgainstTarget($ship, $planet);
 		self::assertSame(51.0, $result);
 	}
 
@@ -82,21 +88,21 @@ class CombatDronesTest extends TestCase {
 		float $expected,
 	): void {
 		$drones = $this->createDrones();
-		$weaponPlayer = $this->createWeaponPlayer($level);
-		$targetPlayer = $this->createTargetPlayer(hasDcs: false, mr: 15);
+		$weaponShip = $this->createShip($level);
+		$targetShip = $this->createShip(hasDcs: false, mr: 15);
 		srand(1);
 
-		$result = $drones->getModifiedAccuracyAgainstPlayer($weaponPlayer, $targetPlayer);
+		$result = $drones->getModifiedAccuracyAgainstTarget($weaponShip, $targetShip);
 		self::assertEqualsWithDelta($expected, $result, 0.0001);
 	}
 
 	public function test_getModifiedForceAccuracyAgainstPlayer_adds_random_accuracy(): void {
 		$drones = $this->createDrones();
 		$forces = $this->createStub(Force::class);
-		$targetPlayer = $this->createStub(Player::class);
+		$targetShip = $this->createShip();
 		srand(1);
 
-		$result = $drones->getModifiedForceAccuracyAgainstPlayer($forces, $targetPlayer);
+		$result = $drones->getModifiedAccuracyAgainstTarget($forces, $targetShip);
 		self::assertSame(51.0, $result);
 	}
 
@@ -112,48 +118,56 @@ class CombatDronesTest extends TestCase {
 		$drones = $this->createDrones();
 		$player = $this->createStub(Player::class);
 		$player->method('isCombatDronesKamikazeOnMines')->willReturn($kamikazeOnMines);
+		$ship = $this->createShip();
+		$ship->method('getPlayer')->willReturn($player);
 		$forces = $this->createStub(Force::class);
 		$forces->method('getMines')->willReturn(3);
 		srand(1);
 
-		$expected = ['Shield' => $damage, 'Armour' => $damage, 'Rollover' => true, 'Launched' => 6, 'Kamikaze' => $kamikaze];
-		$result = $drones->getModifiedDamageAgainstForces($player, $forces);
-		self::assertSame($expected, $result);
+		$expected = new WeaponDamage(
+			shieldDamage: $kamikazeOnMines ? 6 : $damage,
+			armourDamage: $damage,
+			damageRollover: true,
+			launched: 6,
+			kamikaze: $kamikaze,
+		);
+		$result = $drones->getModifiedDamageAgainstTarget($ship, $forces);
+		self::assertEquals($expected, $result);
 	}
 
 	public function test_getModifiedDamageAgainstPort_applies_launched_drone_damage(): void {
 		$drones = $this->createDrones();
-		$player = $this->createStub(Player::class);
+		$ship = $this->createShip();
 		$port = $this->createStub(Port::class);
 		srand(1);
 
-		$expected = ['Shield' => 12, 'Armour' => 12, 'Rollover' => true, 'Launched' => 6];
-		$result = $drones->getModifiedDamageAgainstPort($player, $port);
-		self::assertSame($expected, $result);
+		$expected = $this->damage(amount: 12, launched: 6);
+		$result = $drones->getModifiedDamageAgainstTarget($ship, $port);
+		self::assertEquals($expected, $result);
 	}
 
 	public function test_getModifiedDamageAgainstPlanet_reduces_damage_for_planet(): void {
 		$drones = $this->createDrones();
-		$player = $this->createStub(Player::class);
+		$ship = $this->createShip();
 		$planet = $this->createStub(Planet::class);
 		srand(1);
 
-		$expected = ['Shield' => 3, 'Armour' => 3, 'Rollover' => true, 'Launched' => 6];
-		$result = $drones->getModifiedDamageAgainstPlanet($player, $planet);
-		self::assertSame($expected, $result);
+		$expected = $this->damage(amount: 3, launched: 6);
+		$result = $drones->getModifiedDamageAgainstTarget($ship, $planet);
+		self::assertEquals($expected, $result);
 	}
 
 	#[TestWith([true, 7])]
 	#[TestWith([false, 10])]
 	public function test_getModifiedDamageAgainstPlayer_applies_dcs_modifier(bool $hasDcs, int $damage): void {
 		$drones = $this->createDrones();
-		$weaponPlayer = $this->createWeaponPlayer();
-		$targetPlayer = $this->createTargetPlayer(hasDcs: $hasDcs);
+		$weaponShip = $this->createShip();
+		$targetShip = $this->createShip(hasDcs: $hasDcs);
 		srand(1);
 
-		$expected = ['Shield' => $damage, 'Armour' => $damage, 'Rollover' => true, 'Launched' => 5];
-		$result = $drones->getModifiedDamageAgainstPlayer($weaponPlayer, $targetPlayer);
-		self::assertSame($expected, $result);
+		$expected = $this->damage(amount: $damage, launched: 5);
+		$result = $drones->getModifiedDamageAgainstTarget($weaponShip, $targetShip);
+		self::assertEquals($expected, $result);
 	}
 
 	#[TestWith([true, 9])]
@@ -161,12 +175,13 @@ class CombatDronesTest extends TestCase {
 	public function test_getModifiedForceDamageAgainstPlayer_applies_dcs_modifier(bool $hasDcs, int $damage): void {
 		$drones = $this->createDrones();
 		$forces = $this->createStub(Force::class);
-		$targetPlayer = $this->createTargetPlayer(hasDcs: $hasDcs);
+		$forces->method('reduceDamageDoneDCS')->willReturn(DCS_FORCE_DAMAGE_DECIMAL_PERCENT);
+		$targetShip = $this->createShip(hasDcs: $hasDcs);
 		srand(1);
 
-		$expected = ['Shield' => $damage, 'Armour' => $damage, 'Rollover' => true, 'Launched' => 6];
-		$result = $drones->getModifiedForceDamageAgainstPlayer($forces, $targetPlayer);
-		self::assertSame($expected, $result);
+		$expected = $this->damage(amount: $damage, launched: 6);
+		$result = $drones->getModifiedDamageAgainstTarget($forces, $targetShip);
+		self::assertEquals($expected, $result);
 	}
 
 	#[TestWith([true, 15])]
@@ -174,11 +189,12 @@ class CombatDronesTest extends TestCase {
 	public function test_getModifiedPortDamageAgainstPlayer_applies_dcs_modifier(bool $hasDcs, int $damage): void {
 		$drones = $this->createDrones();
 		$port = $this->createStub(Port::class);
-		$targetPlayer = $this->createTargetPlayer(hasDcs: $hasDcs);
+		$port->method('reduceDamageDoneDCS')->willReturn(DCS_PORT_DAMAGE_DECIMAL_PERCENT);
+		$targetShip = $this->createShip(hasDcs: $hasDcs);
 
-		$expected = ['Shield' => $damage, 'Armour' => $damage, 'Rollover' => true, 'Launched' => 10];
-		$result = $drones->getModifiedPortDamageAgainstPlayer($port, $targetPlayer);
-		self::assertSame($expected, $result);
+		$expected = $this->damage(amount: $damage, launched: 10);
+		$result = $drones->getModifiedDamageAgainstTarget($port, $targetShip);
+		self::assertEquals($expected, $result);
 	}
 
 	#[TestWith([true, 15])]
@@ -186,32 +202,42 @@ class CombatDronesTest extends TestCase {
 	public function test_getModifiedPlanetDamageAgainstPlayer_applies_dcs_modifier(bool $hasDcs, int $damage): void {
 		$drones = $this->createDrones();
 		$planet = $this->createStub(Planet::class);
-		$targetPlayer = $this->createTargetPlayer(hasDcs: $hasDcs);
+		$planet->method('reduceDamageDoneDCS')->willReturn(DCS_PLANET_DAMAGE_DECIMAL_PERCENT);
+		$targetShip = $this->createShip(hasDcs: $hasDcs);
 
-		$expected = ['Shield' => $damage, 'Armour' => $damage, 'Rollover' => true, 'Launched' => 10];
-		$result = $drones->getModifiedPlanetDamageAgainstPlayer($planet, $targetPlayer);
-		self::assertSame($expected, $result);
+		$expected = $this->damage(amount: $damage, launched: 10);
+		$result = $drones->getModifiedDamageAgainstTarget($planet, $targetShip);
+		self::assertEquals($expected, $result);
 	}
 
-	// Test shoot methods -----------------------------------------------------
-
-	public function test_shootForces_always_reports_hit_and_consumes_kamikaze_drones(): void {
+	public function test_shoot_always_reports_hit_and_consumes_kamikaze_drones(): void {
 		$drones = $this->createDrones();
 		$player = $this->createStub(Player::class);
 		$player->method('isCombatDronesKamikazeOnMines')->willReturn(true);
 		$ship = $this->createMock(AbstractShip::class);
+		$ship->expects($this->once())->method('getPlayer')->willReturn($player);
 		// With kamikaze on mines, CD amount on ship will be decreased by kamikaze amount
 		$ship->expects($this->once())->method('decreaseCDs')->with(3)->seal();
-		$player->method('getShip')->willReturn($ship);
 		$forces = $this->createStub(Force::class);
 		$forces->method('getMines')->willReturn(3);
-		$forces->method('takeDamage')->willReturn(['KillingShot' => false]);
+		$takenDamage = new ForceTakenDamage(false, false, 0, 0, false, 0, 0, false, 0, 0, false, 0);
+		$forces->method('takeDamage')->willReturn($takenDamage);
 		srand(1);
 
-		$result = $drones->shootForces($player, $forces);
+		$result = $drones->shoot(
+			new WeaponShotAtCombatant($ship, $forces, static fn() => throw new LogicException()),
+		);
 
-		self::assertTrue($result['Hit']);
-		self::assertSame(['Shield' => 66, 'Armour' => 66, 'Rollover' => true, 'Launched' => 6, 'Kamikaze' => 3], $result['WeaponDamage']);
+		$expected = new WeaponDamage(
+			shieldDamage: 6,
+			armourDamage: 66,
+			damageRollover: true,
+			launched: 6,
+			kamikaze: 3,
+		);
+		self::assertInstanceOf(HitWeaponResult::class, $result);
+		self::assertEquals($takenDamage, $result->actualDamage);
+		self::assertEquals($expected, $result->weaponDamage);
 	}
 
 	// Private helper functions -----------------------------------------------
@@ -220,23 +246,23 @@ class CombatDronesTest extends TestCase {
 		return new CombatDrones(10);
 	}
 
-	private function createWeaponPlayer(int $level = 10): Player {
-		$ship = $this->createStub(AbstractShip::class);
-		$ship->method('getMR')->willReturn(0);
-		$player = $this->createStub(Player::class);
-		$player->method('getLevelID')->willReturn($level);
-		$player->method('getShip')->willReturn($ship);
-		return $player;
+	private function damage(int $amount, int $launched): WeaponDamage {
+		return new WeaponDamage(
+			shieldDamage: $amount,
+			armourDamage: $amount,
+			damageRollover: true,
+			launched: $launched,
+			kamikaze: 0,
+		);
 	}
 
-	private function createTargetPlayer(bool $hasDcs, int $mr = 0): Player {
+	private function createShip(int $level = 10, int $mr = 0, bool $hasDcs = false): AbstractShip&Stub {
 		$ship = $this->createStub(AbstractShip::class);
 		$ship->method('hasDCS')->willReturn($hasDcs);
+		$ship->method('getLevel')->willReturn($level);
 		$ship->method('getMR')->willReturn($mr);
-		$player = $this->createStub(Player::class);
-		$player->method('getLevelID')->willReturn(10);
-		$player->method('getShip')->willReturn($ship);
-		return $player;
+		$ship->method('reduceDamageDoneDCS')->willReturn(DCS_PLAYER_DAMAGE_DECIMAL_PERCENT);
+		return $ship;
 	}
 
 }

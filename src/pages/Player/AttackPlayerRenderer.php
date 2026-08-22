@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\Combat\Results\TraderFullCombatResults;
+use Smr\Combat\Results\Full\TraderFullCombatResults;
 use Smr\Globals;
 use Smr\Pages\Shared\TraderFullCombatResultsRenderer;
 use Smr\Player;
