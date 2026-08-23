@@ -8,7 +8,6 @@ use Smr\Force;
 use Smr\Planet;
 use Smr\Player;
 use Smr\Port;
-use Smr\Sector;
 
 class Mines extends AbstractWeapon {
 
@@ -39,7 +38,7 @@ class Mines extends AbstractWeapon {
 		$modifiedAccuracy = $this->getModifiedAccuracy();
 		$modifiedAccuracy -= $targetPlayer->getLevelID() + $random;
 		if ($minesAreAttacker) {
-			$modifiedAccuracy /= pow(Sector::getSector($forces->getGameID(), $forces->getSectorID())->getNumberOfConnections(), 0.6);
+			$modifiedAccuracy /= pow($forces->getSector()->getNumberOfConnections(), 0.6);
 		}
 
 		if (self::TOTAL_ENEMY_MINES_MODIFIER > 0) {
