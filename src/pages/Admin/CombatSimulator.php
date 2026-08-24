@@ -3,7 +3,7 @@
 namespace Smr\Pages\Admin;
 
 use Smr\Account;
-use Smr\Combat\Results\TraderFullCombatResults;
+use Smr\Combat\Results\Full\TraderFullCombatResults;
 use Smr\DummyShip;
 use Smr\Page\AccountPage;
 use Smr\Template;

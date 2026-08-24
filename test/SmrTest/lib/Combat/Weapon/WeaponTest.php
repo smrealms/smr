@@ -6,10 +6,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\AbstractShip;
+use Smr\Combat\Results\Damage\WeaponDamage;
 use Smr\Combat\Weapon\Weapon;
 use Smr\Force;
 use Smr\Planet;
-use Smr\Player;
 use Smr\Port;
 
 #[CoversClass(Weapon::class)]
@@ -20,67 +20,66 @@ class WeaponTest extends TestCase {
 	public function test_getModifiedDamageAgainstForces_returns_base_damage(): void {
 		$weapon = $this->createWeapon();
 		$expected = $this->baseDamage();
-		$result = $weapon->getModifiedDamageAgainstForces(
-			$this->createStub(Player::class),
+		$result = $weapon->getModifiedDamageAgainstTarget(
+			$this->createShip(),
 			$this->createStub(Force::class),
 		);
 
-		self::assertSame($expected, $result);
+		self::assertEquals($expected, $result);
 	}
 
 	public function test_getModifiedDamageAgainstPort_returns_base_damage(): void {
 		$weapon = $this->createWeapon();
 		$expected = $this->baseDamage();
-		$result = $weapon->getModifiedDamageAgainstPort(
-			$this->createStub(Player::class),
+		$result = $weapon->getModifiedDamageAgainstTarget(
+			$this->createShip(),
 			$this->createStub(Port::class),
 		);
 
-		self::assertSame($expected, $result);
+		self::assertEquals($expected, $result);
 	}
 
 	public function test_getModifiedDamageAgainstPlanet_reduces_base_damage(): void {
 		$weapon = $this->createWeapon();
-		$expected = ['Shield' => 3, 'Armour' => 2, 'Rollover' => false];
-		$result = $weapon->getModifiedDamageAgainstPlanet(
-			$this->createStub(Player::class),
+		$expected = new WeaponDamage(shieldDamage: 3, armourDamage: 2, damageRollover: false);
+		$result = $weapon->getModifiedDamageAgainstTarget(
+			$this->createShip(),
 			$this->createStub(Planet::class),
 		);
-
-		self::assertSame($expected, $result);
+		self::assertEquals($expected, $result);
 	}
 
 	public function test_getModifiedDamageAgainstPlayer_returns_base_damage(): void {
 		$weapon = $this->createWeapon();
 		$expected = $this->baseDamage();
-		$result = $weapon->getModifiedDamageAgainstPlayer(
-			$this->createStub(Player::class),
-			$this->createStub(Player::class),
+		$result = $weapon->getModifiedDamageAgainstTarget(
+			$this->createShip(),
+			$this->createShip(),
 		);
 
-		self::assertSame($expected, $result);
+		self::assertEquals($expected, $result);
 	}
 
 	public function test_getModifiedPortDamageAgainstPlayer_returns_base_damage(): void {
 		$weapon = $this->createWeapon();
 		$expected = $this->baseDamage();
-		$result = $weapon->getModifiedPortDamageAgainstPlayer(
+		$result = $weapon->getModifiedDamageAgainstTarget(
 			$this->createStub(Port::class),
-			$this->createStub(Player::class),
+			$this->createShip(),
 		);
 
-		self::assertSame($expected, $result);
+		self::assertEquals($expected, $result);
 	}
 
 	public function test_getModifiedPlanetDamageAgainstPlayer_returns_base_damage(): void {
 		$weapon = $this->createWeapon();
 		$expected = $this->baseDamage();
-		$result = $weapon->getModifiedPlanetDamageAgainstPlayer(
+		$result = $weapon->getModifiedDamageAgainstTarget(
 			$this->createStub(Planet::class),
-			$this->createStub(Player::class),
+			$this->createShip(),
 		);
 
-		self::assertSame($expected, $result);
+		self::assertEquals($expected, $result);
 	}
 
 	// Test Accuracy methods --------------------------------------------------
@@ -88,10 +87,9 @@ class WeaponTest extends TestCase {
 	#[TestWith([0, 61.2])]
 	#[TestWith([10, 65.2])]
 	public function test_getModifiedAccuracyAgainstForces_applies_player_level_modifier(int $level, float $expected): void {
-		$weaponPlayer = $this->createPlayer($level);
+		$weaponShip = $this->createShip($level);
 		$force = $this->createStub(Force::class);
-
-		$result = $this->createWeapon()->getModifiedAccuracyAgainstForces($weaponPlayer, $force);
+		$result = $this->createWeapon()->getModifiedAccuracyAgainstTarget($weaponShip, $force);
 		self::assertEqualsWithDelta($expected, $result, 0.0001);
 	}
 
@@ -106,9 +104,9 @@ class WeaponTest extends TestCase {
 	): void {
 		$port = $this->createStub(Port::class);
 		$port->method('getLevel')->willReturn($portLevel);
-		$weaponPlayer = $this->createPlayer($weaponLevel);
+		$weaponShip = $this->createShip($weaponLevel);
 
-		$result = $this->createWeapon()->getModifiedAccuracyAgainstPort($weaponPlayer, $port);
+		$result = $this->createWeapon()->getModifiedAccuracyAgainstTarget($weaponShip, $port);
 		self::assertEqualsWithDelta($expected, $result, 0.0001);
 	}
 
@@ -123,9 +121,9 @@ class WeaponTest extends TestCase {
 	): void {
 		$planet = $this->createStub(Planet::class);
 		$planet->method('getLevel')->willReturn($planetLevel);
-		$weaponPlayer = $this->createPlayer($weaponLevel);
+		$weaponShip = $this->createShip($weaponLevel);
 
-		$result = $this->createWeapon()->getModifiedAccuracyAgainstPlanet($weaponPlayer, $planet);
+		$result = $this->createWeapon()->getModifiedAccuracyAgainstTarget($weaponShip, $planet);
 		self::assertEqualsWithDelta($expected, $result, 0.0001);
 	}
 
@@ -138,10 +136,10 @@ class WeaponTest extends TestCase {
 		int $targetLevel,
 		float $expected,
 	): void {
-		$weaponPlayer = $this->createPlayer(level: $weaponLevel, mr: 0);
-		$targetPlayer = $this->createPlayer(level: $targetLevel, mr: 15);
+		$weaponShip = $this->createShip(level: $weaponLevel, mr: 0);
+		$targetShip = $this->createShip(level: $targetLevel, mr: 15);
 
-		$result = $this->createWeapon()->getModifiedAccuracyAgainstPlayer($weaponPlayer, $targetPlayer);
+		$result = $this->createWeapon()->getModifiedAccuracyAgainstTarget($weaponShip, $targetShip);
 		self::assertEqualsWithDelta($expected, $result, 0.0001);
 	}
 
@@ -152,9 +150,9 @@ class WeaponTest extends TestCase {
 		float $expected,
 	): void {
 		$port = $this->createStub(Port::class);
-		$targetPlayer = $this->createPlayer($targetLevel);
+		$targetShip = $this->createShip($targetLevel);
 
-		$result = $this->createWeapon()->getModifiedPortAccuracyAgainstPlayer($port, $targetPlayer);
+		$result = $this->createWeapon()->getModifiedAccuracyAgainstTarget($port, $targetShip);
 		self::assertEqualsWithDelta($expected, $result, 0.0001);
 	}
 
@@ -164,7 +162,7 @@ class WeaponTest extends TestCase {
 	#[TestWith([false, 20, 10.0, 10, 58.8])] // target player level changes mounted weapon accuracy
 	#[TestWith([true, 0, 0.0, 4, 58.8])]
 	#[TestWith([true, 0, 10.0, 4, 63.8])] // planet level does change turret accuracy
-	#[TestWith([true, 0, 10.0, 10, 63.8])] // accuracy bonus does not turret accuracy
+	#[TestWith([true, 0, 10.0, 10, 63.8])] // accuracy bonus does not change turret accuracy
 	#[TestWith([true, 20, 10.0, 10, 53.8])] // target player level changes turret accuracy
 	public function test_getModifiedPlanetAccuracyAgainstPlayer_reduces_modified_accuracy_for_player_level(
 		bool $isTurret,
@@ -176,10 +174,10 @@ class WeaponTest extends TestCase {
 		$planet = $this->createStub(Planet::class);
 		$planet->method('getLevel')->willReturn($planetLevel);
 		$planet->method('getAccuracyBonus')->willReturn($accuracyBonus);
-		$targetPlayer = $this->createPlayer($playerLevel);
+		$targetShip = $this->createShip($playerLevel);
 
 		$result = $this->createWeapon(isTurret: $isTurret)
-			->getModifiedPlanetAccuracyAgainstPlayer($planet, $targetPlayer);
+			->getModifiedAccuracyAgainstTarget($planet, $targetShip);
 		self::assertEqualsWithDelta($expected, $result, 0.0001);
 	}
 
@@ -187,7 +185,6 @@ class WeaponTest extends TestCase {
 
 	private function createWeapon(bool $isTurret = false): Weapon {
 		return new class ($isTurret) extends Weapon {
-
 			public function __construct(private readonly bool $isTurret) {}
 
 			public function getBaseAccuracy(): int {
@@ -198,26 +195,21 @@ class WeaponTest extends TestCase {
 				return $this->isTurret ? WEAPON_PLANET_TURRET : 0;
 			}
 
-			/** @return array{Shield: int, Armour: int, Rollover: bool} */
-			public function getDamage(): array {
-				return ['Shield' => 11, 'Armour' => 9, 'Rollover' => false];
+			public function getDamage(): WeaponDamage {
+				return new WeaponDamage(shieldDamage: 11, armourDamage: 9, damageRollover: false);
 			}
-
 		};
 	}
 
-	/** @return array{Shield: int, Armour: int, Rollover: bool} */
-	private function baseDamage(): array {
-		return ['Shield' => 11, 'Armour' => 9, 'Rollover' => false];
+	private function baseDamage(): WeaponDamage {
+		return new WeaponDamage(shieldDamage: 11, armourDamage: 9, damageRollover: false);
 	}
 
-	private function createPlayer(int $level, int $mr = 0): Player {
+	private function createShip(int $level = 0, int $mr = 0): AbstractShip {
 		$ship = $this->createStub(AbstractShip::class);
+		$ship->method('getLevel')->willReturn($level);
 		$ship->method('getMR')->willReturn($mr);
-		$player = $this->createStub(Player::class);
-		$player->method('getLevelID')->willReturn($level);
-		$player->method('getShip')->willReturn($ship);
-		return $player;
+		return $ship;
 	}
 
 }

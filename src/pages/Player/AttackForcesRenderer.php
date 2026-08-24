@@ -3,7 +3,7 @@
 namespace Smr\Pages\Player;
 
 use Smr\AbstractShip;
-use Smr\Combat\Results\ForceFullCombatResults;
+use Smr\Combat\Results\Full\ForceFullCombatResults;
 use Smr\Force;
 use Smr\Globals;
 use Smr\Pages\Shared\ForceFullCombatResultsRenderer;

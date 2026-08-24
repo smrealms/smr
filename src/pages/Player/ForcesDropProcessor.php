@@ -141,7 +141,7 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 				$forces->addCDs($change_combat_drones);
 			} else {
 				$ship->increaseCDs(-$change_combat_drones);
-				$forces->takeCDs(-$change_combat_drones);
+				$forces->decreaseCDs(-$change_combat_drones);
 			}
 		}
 
@@ -151,7 +151,7 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 				$forces->addSDs($change_scout_drones);
 			} else {
 				$ship->increaseSDs(-$change_scout_drones);
-				$forces->takeSDs(-$change_scout_drones);
+				$forces->decreaseSDs(-$change_scout_drones);
 			}
 		}
 
@@ -165,7 +165,7 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 				}
 			} else {
 				$ship->increaseMines(-$change_mines);
-				$forces->takeMines(-$change_mines);
+				$forces->decreaseMines(-$change_mines);
 			}
 		}
 

@@ -12,6 +12,11 @@ use ReflectionProperty;
 use Smr\AbstractShip;
 use Smr\Bounty;
 use Smr\BountyType;
+use Smr\Combat\Results\Combatant\CombatantResult;
+use Smr\Combat\Results\Damage\NormalTakenDamage;
+use Smr\Combat\Results\Damage\WeaponDamage;
+use Smr\Combat\Results\Weapon\HitWeaponResult;
+use Smr\Combat\Results\Weapon\MissedWeaponResult;
 use Smr\Combat\Weapon\Weapon;
 use Smr\Globals;
 use Smr\Player;
@@ -257,11 +262,11 @@ class AbstractShipTest extends TestCase {
 	}
 
 	/**
-	 * @param WeaponDamageData $damage
-	 * @param TakenDamageData $expected
+	 * @param \Smr\Combat\Results\Damage\WeaponDamage $damage
+	 * @param \Smr\Combat\Results\Damage\NormalTakenDamage $expected
 	 */
 	#[DataProvider('dataProvider_takeDamage')]
-	public function test_takeDamage(string $case, array $damage, array $expected, int $shields, int $cds, int $armour): void {
+	public function test_takeDamage(string $case, WeaponDamage $damage, NormalTakenDamage $expected, int $shields, int $cds, int $armour): void {
 		// Set up a ship with a fixed amount of defenses
 		$this->player
 			->method('isDead')
@@ -272,174 +277,174 @@ class AbstractShipTest extends TestCase {
 		$ship->setArmour($armour);
 		// Test taking damage
 		$result = $ship->takeDamage($damage);
-		self::assertSame($expected, $result, $case);
+		self::assertEquals($expected, $result, $case);
 	}
 
 	/**
-	 * @return array<array{0: string, 1: WeaponDamageData, 2: TakenDamageData, 3: int, 4: int, 5: int}>
+	 * @return array<array{0: string, 1: \Smr\Combat\Results\Damage\WeaponDamage, 2: \Smr\Combat\Results\Damage\NormalTakenDamage, 3: int, 4: int, 5: int}>
 	 */
 	public static function dataProvider_takeDamage(): array {
 		return [
 			[
 				'Do overkill damage (e.g. 1000 drone damage)',
-				[
-					'Shield' => 1000,
-					'Armour' => 1000,
-					'Rollover' => true,
-				],
-				[
-					'KillingShot' => true,
-					'TargetAlreadyDead' => false,
-					'Shield' => 100,
-					'CDs' => 30,
-					'NumCDs' => 10,
-					'HasCDs' => false,
-					'Armour' => 100,
-					'TotalDamage' => 230,
-				],
+				new WeaponDamage(
+					shieldDamage: 1000,
+					armourDamage: 1000,
+					damageRollover: true,
+				),
+				new NormalTakenDamage(
+					killingShot: true,
+					targetAlreadyDead: false,
+					shieldDamage: 100,
+					combatDroneDamage: 30,
+					numCombatDrones: 10,
+					hasCombatDrones: false,
+					armourDamage: 100,
+					totalDamage: 230,
+				),
 				100, 10, 100,
 			],
 			[
 				'Do exactly lethal damage (e.g. 230 drone damage)',
-				[
-					'Shield' => 230,
-					'Armour' => 230,
-					'Rollover' => true,
-				],
-				[
-					'KillingShot' => true,
-					'TargetAlreadyDead' => false,
-					'Shield' => 100,
-					'CDs' => 30,
-					'NumCDs' => 10,
-					'HasCDs' => false,
-					'Armour' => 100,
-					'TotalDamage' => 230,
-				],
+				new WeaponDamage(
+					shieldDamage: 230,
+					armourDamage: 230,
+					damageRollover: true,
+				),
+				new NormalTakenDamage(
+					killingShot: true,
+					targetAlreadyDead: false,
+					shieldDamage: 100,
+					combatDroneDamage: 30,
+					numCombatDrones: 10,
+					hasCombatDrones: false,
+					armourDamage: 100,
+					totalDamage: 230,
+				),
 				100, 10, 100,
 			],
 			[
 				'Do NOT do damage to drones behind shields (e.g. armour-only weapon)',
-				[
-					'Shield' => 0,
-					'Armour' => 100,
-					'Rollover' => false,
-				],
-				[
-					'KillingShot' => false,
-					'TargetAlreadyDead' => false,
-					'Shield' => 0,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => true,
-					'Armour' => 0,
-					'TotalDamage' => 0,
-				],
+				new WeaponDamage(
+					shieldDamage: 0,
+					armourDamage: 100,
+					damageRollover: false,
+				),
+				new NormalTakenDamage(
+					killingShot: false,
+					targetAlreadyDead: false,
+					shieldDamage: 0,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: true,
+					armourDamage: 0,
+					totalDamage: 0,
+				),
 				100, 10, 100,
 			],
 			[
 				'Do NOT do damage to armour behind shields (e.g. armour-only weapon)',
-				[
-					'Shield' => 0,
-					'Armour' => 100,
-					'Rollover' => false,
-				],
-				[
-					'KillingShot' => false,
-					'TargetAlreadyDead' => false,
-					'Shield' => 0,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => false,
-					'Armour' => 0,
-					'TotalDamage' => 0,
-				],
+				new WeaponDamage(
+					shieldDamage: 0,
+					armourDamage: 100,
+					damageRollover: false,
+				),
+				new NormalTakenDamage(
+					killingShot: false,
+					targetAlreadyDead: false,
+					shieldDamage: 0,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: false,
+					armourDamage: 0,
+					totalDamage: 0,
+				),
 				100, 0, 100,
 			],
 			[
 				'Overkill shield damage only (e.g. shield/armour weapon)',
-				[
-					'Shield' => 150,
-					'Armour' => 150,
-					'Rollover' => false,
-				],
-				[
-					'KillingShot' => false,
-					'TargetAlreadyDead' => false,
-					'Shield' => 100,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => true,
-					'Armour' => 0,
-					'TotalDamage' => 100,
-				],
+				new WeaponDamage(
+					shieldDamage: 150,
+					armourDamage: 150,
+					damageRollover: false,
+				),
+				new NormalTakenDamage(
+					killingShot: false,
+					targetAlreadyDead: false,
+					shieldDamage: 100,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: true,
+					armourDamage: 0,
+					totalDamage: 100,
+				),
 				100, 10, 100,
 			],
 			[
 				'Overkill CD damage only (e.g. shield/armour weapon)',
-				[
-					'Shield' => 150,
-					'Armour' => 150,
-					'Rollover' => false,
-				],
-				[
-					'KillingShot' => false,
-					'TargetAlreadyDead' => false,
-					'Shield' => 0,
-					'CDs' => 30,
-					'NumCDs' => 10,
-					'HasCDs' => false,
-					'Armour' => 0,
-					'TotalDamage' => 30,
-				],
+				new WeaponDamage(
+					shieldDamage: 150,
+					armourDamage: 150,
+					damageRollover: false,
+				),
+				new NormalTakenDamage(
+					killingShot: false,
+					targetAlreadyDead: false,
+					shieldDamage: 0,
+					combatDroneDamage: 30,
+					numCombatDrones: 10,
+					hasCombatDrones: false,
+					armourDamage: 0,
+					totalDamage: 30,
+				),
 				0, 10, 100,
 			],
 			[
 				'Overkill armour damage only (e.g. shield/armour weapon)',
-				[
-					'Shield' => 150,
-					'Armour' => 150,
-					'Rollover' => false,
-				],
-				[
-					'KillingShot' => true,
-					'TargetAlreadyDead' => false,
-					'Shield' => 0,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => false,
-					'Armour' => 100,
-					'TotalDamage' => 100,
-				],
+				new WeaponDamage(
+					shieldDamage: 150,
+					armourDamage: 150,
+					damageRollover: false,
+				),
+				new NormalTakenDamage(
+					killingShot: true,
+					targetAlreadyDead: false,
+					shieldDamage: 0,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: false,
+					armourDamage: 100,
+					totalDamage: 100,
+				),
 				0, 0, 100,
 			],
 			[
 				'Target is already dead',
-				[
-					'Shield' => 100,
-					'Armour' => 100,
-					'Rollover' => true,
-				],
-				[
-					'KillingShot' => false,
-					'TargetAlreadyDead' => true,
-					'Shield' => 0,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => false,
-					'Armour' => 0,
-					'TotalDamage' => 0,
-				],
+				new WeaponDamage(
+					shieldDamage: 100,
+					armourDamage: 100,
+					damageRollover: true,
+				),
+				new NormalTakenDamage(
+					killingShot: false,
+					targetAlreadyDead: true,
+					shieldDamage: 0,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: false,
+					armourDamage: 0,
+					totalDamage: 0,
+				),
 				0, 0, 0,
 			],
 		];
 	}
 
 	/**
-	 * @param TakenDamageData $expected
+	 * @param \Smr\Combat\Results\Damage\NormalTakenDamage $expected
 	 */
 	#[DataProvider('dataProvider_takeDamageFromMines')]
-	public function test_takeDamageFromMines(string $case, int $damage, array $expected, int $shields, int $cds, int $armour): void {
+	public function test_takeDamageFromMines(string $case, int $damage, NormalTakenDamage $expected, int $shields, int $cds, int $armour): void {
 		// Set up a ship with a fixed amount of defenses
 		$this->player
 			->method('isDead')
@@ -449,93 +454,93 @@ class AbstractShipTest extends TestCase {
 		$ship->setCDs($cds);
 		$ship->setArmour($armour);
 		// Test taking damage from mines
-		$damage = [
-			'Shield' => $damage,
-			'Armour' => $damage,
-			'Rollover' => true, // mine damage is always rollover
-		];
-		$result = $ship->takeDamageFromMines($damage);
-		self::assertSame($expected, $result, $case);
+		$result = $ship->takeDamageFromMines(new WeaponDamage(
+			shieldDamage: $damage,
+			armourDamage: $damage,
+			damageRollover: true,
+			launched: 0,
+		));
+		self::assertEquals($expected, $result, $case);
 	}
 
 	/**
-	 * @return array<array{0: string, 1: int, 2: TakenDamageData, 3: int, 4: int, 5: int}>
+	 * @return array<array{0: string, 1: int, 2: \Smr\Combat\Results\Damage\NormalTakenDamage, 3: int, 4: int, 5: int}>
 	 */
 	public static function dataProvider_takeDamageFromMines(): array {
 		return [
 			[
 				'Do overkill damage (e.g. 1000 mine damage)',
 				1000,
-				[
-					'KillingShot' => true,
-					'TargetAlreadyDead' => false,
-					'Shield' => 100,
-					'CDs' => 0, // No damage to CDs
-					'NumCDs' => 0,
-					'HasCDs' => true,
-					'Armour' => 100,
-					'TotalDamage' => 200,
-				],
+				new NormalTakenDamage(
+					killingShot: true,
+					targetAlreadyDead: false,
+					shieldDamage: 100,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: true,
+					armourDamage: 100,
+					totalDamage: 200,
+				),
 				100, 10, 100,
 			],
 			[
 				'Do exactly lethal damage (e.g. 200 mine damage)',
 				200,
-				[
-					'KillingShot' => true,
-					'TargetAlreadyDead' => false,
-					'Shield' => 100,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => true,
-					'Armour' => 100,
-					'TotalDamage' => 200,
-				],
+				new NormalTakenDamage(
+					killingShot: true,
+					targetAlreadyDead: false,
+					shieldDamage: 100,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: true,
+					armourDamage: 100,
+					totalDamage: 200,
+				),
 				100, 10, 100,
 			],
 			[
 				'Only do damage to shields',
 				20,
-				[
-					'KillingShot' => false,
-					'TargetAlreadyDead' => false,
-					'Shield' => 20,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => false, // No CDs to start
-					'Armour' => 0,
-					'TotalDamage' => 20,
-				],
+				new NormalTakenDamage(
+					killingShot: false,
+					targetAlreadyDead: false,
+					shieldDamage: 20,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: false,
+					armourDamage: 0,
+					totalDamage: 20,
+				),
 				100, 0, 100,
 			],
 			[
 				'Only do damage to armour (no shields on ship)',
 				20,
-				[
-					'KillingShot' => false,
-					'TargetAlreadyDead' => false,
-					'Shield' => 0,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => true,
-					'Armour' => 20,
-					'TotalDamage' => 20,
-				],
+				new NormalTakenDamage(
+					killingShot: false,
+					targetAlreadyDead: false,
+					shieldDamage: 0,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: true,
+					armourDamage: 20,
+					totalDamage: 20,
+				),
 				0, 10, 100,
 			],
 			[
 				'Target is already dead',
 				20,
-				[
-					'KillingShot' => false,
-					'TargetAlreadyDead' => true,
-					'Shield' => 0,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => false,
-					'Armour' => 0,
-					'TotalDamage' => 0,
-				],
+				new NormalTakenDamage(
+					killingShot: false,
+					targetAlreadyDead: true,
+					shieldDamage: 0,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: false,
+					armourDamage: 0,
+					totalDamage: 0,
+				),
 				0, 0, 0,
 			],
 		];
@@ -642,82 +647,78 @@ class AbstractShipTest extends TestCase {
 		srand(16); // set rand seed for weapons
 		$result = $ship->shootPort($port);
 
-		// Validate the array returned from shootPort
-		$hhgDamage = [
-			'Shield' => 300,
-			'Armour' => 0,
-			'Rollover' => false,
-		];
-		$hplDamage = [
-			'Shield' => 80,
-			'Armour' => 80,
-			'Rollover' => false,
-		];
-		$lplDamage = [
-			'Shield' => 60,
-			'Armour' => 60,
-			'Rollover' => false,
-		];
-		$getActualDamage = function (int $damage): array {
-			return [
-				'KillingShot' => false,
-				'TargetAlreadyDead' => false,
-				'Shield' => $damage,
-				'CDs' => 0,
-				'NumCDs' => 0,
-				'HasCDs' => true,
-				'Armour' => 0,
-				'TotalDamage' => $damage,
-			];
+		$hhgDamage = new WeaponDamage(
+			shieldDamage: 300,
+			armourDamage: 0,
+			damageRollover: false,
+		);
+		$hplDamage = new WeaponDamage(
+			shieldDamage: 80,
+			armourDamage: 80,
+			damageRollover: false,
+		);
+		$lplDamage = new WeaponDamage(
+			shieldDamage: 60,
+			armourDamage: 60,
+			damageRollover: false,
+		);
+		$getActualDamage = function (int $damage): NormalTakenDamage {
+			return new NormalTakenDamage(
+				killingShot: false,
+				targetAlreadyDead: false,
+				shieldDamage: $damage,
+				combatDroneDamage: 0,
+				numCombatDrones: 0,
+				hasCombatDrones: true,
+				armourDamage: 0,
+				totalDamage: $damage,
+			);
 		};
-		$expected = [
-			'Player' => $player,
-			'TotalDamage' => 560,
-			'Weapons' => [
-				[
-					'Weapon' => $weapons[0],
-					'Target' => $port,
-					'Hit' => true,
-					'WeaponDamage' => $hhgDamage,
-					'ActualDamage' => $getActualDamage(300),
-				],
-				[
-					'Weapon' => $weapons[1],
-					'Target' => $port,
-					'Hit' => true,
-					'WeaponDamage' => $hplDamage,
-					'ActualDamage' => $getActualDamage(80),
-				],
-				[
-					'Weapon' => $weapons[2],
-					'Target' => $port,
-					'Hit' => false,
-				],
-				[
-					'Weapon' => $weapons[3],
-					'Target' => $port,
-					'Hit' => true,
-					'WeaponDamage' => $lplDamage,
-					'ActualDamage' => $getActualDamage(60),
-				],
-				[
-					'Weapon' => $weapons[4],
-					'Target' => $port,
-					'Hit' => true,
-					'WeaponDamage' => $lplDamage,
-					'ActualDamage' => $getActualDamage(60),
-				],
-				[
-					'Weapon' => $weapons[5],
-					'Target' => $port,
-					'Hit' => true,
-					'WeaponDamage' => $lplDamage,
-					'ActualDamage' => $getActualDamage(60),
-				],
+		$expected = CombatantResult::create(
+			$ship,
+			weaponResults: [
+				new HitWeaponResult(
+					$weapons[0],
+					$port,
+					$hhgDamage,
+					$getActualDamage(300),
+					null,
+				),
+				new HitWeaponResult(
+					$weapons[1],
+					$port,
+					$hplDamage,
+					$getActualDamage(80),
+					null,
+				),
+				new MissedWeaponResult($weapons[2], $port),
+				new HitWeaponResult(
+					$weapons[3],
+					$port,
+					$lplDamage,
+					$getActualDamage(60),
+					null,
+				),
+				new HitWeaponResult(
+					$weapons[4],
+					$port,
+					$lplDamage,
+					$getActualDamage(60),
+					null,
+				),
+				new HitWeaponResult(
+					$weapons[5],
+					$port,
+					$lplDamage,
+					$getActualDamage(60),
+					null,
+				),
 			],
-			'DeadBeforeShot' => false,
-		];
-		self::assertSame($expected, $result);
+		);
+		self::assertEquals($expected, $result);
+		self::assertSame(560, $result->getTotalDamage());
+		self::assertCount(6, $result->weaponResults);
+		self::assertFalse($result->deadBeforeShot);
 
 		// Validate the mocked functions called multiple times in shootPort
 		$decreaseRelationsExpected = [

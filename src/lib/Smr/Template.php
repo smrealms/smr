@@ -7,6 +7,8 @@ use DOMDocument;
 use DOMElement;
 use DOMXPath;
 use Exception;
+use Smr\Combat\Results\Damage\ForceTakenDamage;
+use Smr\Combat\Results\Damage\NormalTakenDamage;
 use Smr\Container\DiContainer;
 
 class Template {
@@ -102,26 +104,20 @@ class Template {
 		return preg_match('/<input (?![^>]*(submit|hidden|image))/i', $html) !== 0;
 	}
 
-	/**
-	 * @param ForceTakenDamageData $damageTaken
-	 */
-	public function displayForceTakenDamage(array $damageTaken, int $kamikaze = 0): string {
+	public function displayForceTakenDamage(ForceTakenDamage $damageTaken, int $kamikaze = 0): string {
 		$items = [
-			[$damageTaken['NumMines'] - $kamikaze, 'red', 'mine', ''],
-			[$damageTaken['NumCDs'], 'red', 'combat drone', ''],
-			[$damageTaken['NumSDs'], 'red', 'scout drone', ''],
+			[$damageTaken->numMines - $kamikaze, 'red', 'mine', ''],
+			[$damageTaken->numCombatDrones, 'red', 'combat drone', ''],
+			[$damageTaken->numScoutDrones, 'red', 'scout drone', ''],
 		];
 		return $this->displayDamage($items);
 	}
 
-	/**
-	 * @param TakenDamageData $damageTaken
-	 */
-	public function displayTakenDamage(array $damageTaken): string {
+	public function displayTakenDamage(NormalTakenDamage $damageTaken): string {
 		$items = [
-			[$damageTaken['Shield'], 'shields', 'shield', ''],
-			[$damageTaken['NumCDs'], 'cds', 'combat drone', ''],
-			[$damageTaken['Armour'], 'red', 'plate', ' of armour'],
+			[$damageTaken->shieldDamage, 'shields', 'shield', ''],
+			[$damageTaken->numCombatDrones, 'cds', 'combat drone', ''],
+			[$damageTaken->armourDamage, 'red', 'plate', ' of armour'],
 		];
 		return $this->displayDamage($items);
 	}

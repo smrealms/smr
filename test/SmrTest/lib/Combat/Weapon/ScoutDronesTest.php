@@ -2,13 +2,18 @@
 
 namespace SmrTest\lib\Combat\Weapon;
 
+use LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestWith;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Smr\AbstractShip;
+use Smr\Combat\Results\Damage\NormalTakenDamage;
+use Smr\Combat\Results\Damage\WeaponDamage;
+use Smr\Combat\Results\Weapon\HitWeaponResult;
 use Smr\Combat\Weapon\ScoutDrones;
+use Smr\Combat\WeaponShotAtCombatant;
 use Smr\Force;
-use Smr\Player;
 
 #[CoversClass(ScoutDrones::class)]
 class ScoutDronesTest extends TestCase {
@@ -25,7 +30,7 @@ class ScoutDronesTest extends TestCase {
 
 	public function test_getArmourDamage(): void {
 		$sds = new ScoutDrones(100); // doesn't matter how many
-		self::assertSame(20, $sds->getShieldDamage());
+		self::assertSame(20, $sds->getArmourDamage());
 	}
 
 	public function test_getBaseAccuracy(): void {
@@ -41,46 +46,55 @@ class ScoutDronesTest extends TestCase {
 	): void {
 		$drones = $this->createDrones();
 		$force = $this->createStub(Force::class);
-		$targetPlayer = $this->createStub(Player::class);
-		$targetPlayer->method('getLevelID')->willReturn($level);
+		$targetShip = $this->createShip(level: $level);
 		srand(1);
 
-		$result = $drones->getModifiedForceAccuracyAgainstPlayer($force, $targetPlayer);
+		$result = $drones->getModifiedAccuracyAgainstTarget($force, $targetShip);
 		self::assertSame($expected, $result);
 	}
 
 	public function test_getModifiedForceDamageAgainstPlayer_applies_launched_drone_damage(): void {
 		$drones = $this->createDrones();
-		$targetPlayer = $this->createStub(Player::class);
-		$targetPlayer->method('getLevelID')->willReturn(0);
 		$forces = $this->createStub(Force::class);
+		$targetShip = $this->createShip();
 		srand(1);
 
-		$expected = ['Shield' => 200, 'Armour' => 200, 'Rollover' => false, 'Launched' => 10];
-		$result = $drones->getModifiedForceDamageAgainstPlayer($forces, $targetPlayer);
+		$expected = new WeaponDamage(
+			shieldDamage: 200,
+			armourDamage: 200,
+			damageRollover: false,
+			launched: 10,
+		);
+		$result = $drones->getModifiedDamageAgainstTarget($forces, $targetShip);
 
-		self::assertSame($expected, $result);
+		self::assertEquals($expected, $result);
 	}
 
-	public function test_shootPlayerAsForce_applies_damage_and_consumes_launched_drones(): void {
+	public function test_shoot_applies_damage_and_consumes_launched_drones(): void {
 		$drones = $this->createDrones();
 		$forces = $this->createStub(Force::class);
-		$ship = $this->createStub(AbstractShip::class);
-		$ship->method('takeDamage')
-			->willReturn(['TotalDamage' => 200, 'KillingShot' => false]);
-		$targetPlayer = $this->createStub(Player::class);
-		$targetPlayer->method('getLevelID')->willReturn(0);
-		$targetPlayer->method('getShip')->willReturn($ship);
+		$ship = $this->createShip();
+		$takenDamage = new NormalTakenDamage(false, false, 0, 0, 0, false, 0, 200);
+		$ship->method('takeDamage')->willReturn($takenDamage);
 		srand(1);
 
-		$result = $drones->shootPlayerAsForce($forces, $targetPlayer);
+		$result = $drones->shoot(
+			new WeaponShotAtCombatant($forces, $ship, static fn() => throw new LogicException()),
+		);
 
-		self::assertTrue($result['Hit']);
+		self::assertInstanceOf(HitWeaponResult::class, $result);
+		self::assertEquals($takenDamage, $result->actualDamage);
 		self::assertSame(0, $drones->getAmount());
 	}
 
 	private function createDrones(): ScoutDrones {
 		return new ScoutDrones(10);
+	}
+
+	private function createShip(int $level = 0): AbstractShip&Stub {
+		$ship = $this->createStub(AbstractShip::class);
+		$ship->method('getLevel')->willReturn($level);
+		return $ship;
 	}
 
 }

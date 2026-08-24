@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Admin;
 
-use Smr\Combat\Results\TraderFullCombatResults;
+use Smr\Combat\Results\Full\TraderFullCombatResults;
 use Smr\Pages\Shared\Admin\CombatSimTeamDetailsRenderer;
 use Smr\Pages\Shared\TraderFullCombatResultsRenderer;
 use Smr\Template;

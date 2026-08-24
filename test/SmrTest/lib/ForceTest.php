@@ -7,6 +7,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\AbstractShip;
+use Smr\Combat\Results\Damage\ForceTakenDamage;
+use Smr\Combat\Results\Damage\WeaponDamage;
 use Smr\Epoch;
 use Smr\Force;
 use Smr\Galaxy;
@@ -61,7 +63,7 @@ class ForceTest extends TestCase {
 		self::assertSame(Force::MAX_SDS, $this->force->getSDs());
 		self::assertTrue($this->force->hasSDs());
 		self::assertTrue($this->force->hasMaxSDs());
-		$this->force->takeSDs(1);
+		$this->force->decreaseSDs(1);
 		self::assertSame(Force::MAX_SDS - 1, $this->force->getSDs());
 		self::assertTrue($this->force->hasSDs());
 		self::assertFalse($this->force->hasMaxSDs());
@@ -74,7 +76,7 @@ class ForceTest extends TestCase {
 		self::assertSame(Force::MAX_CDS, $this->force->getCDs());
 		self::assertTrue($this->force->hasCDs());
 		self::assertTrue($this->force->hasMaxCDs());
-		$this->force->takeCDs(1);
+		$this->force->decreaseCDs(1);
 		self::assertSame(Force::MAX_CDS - 1, $this->force->getCDs());
 		self::assertTrue($this->force->hasCDs());
 		self::assertFalse($this->force->hasMaxCDs());
@@ -87,7 +89,7 @@ class ForceTest extends TestCase {
 		self::assertSame(Force::MAX_MINES, $this->force->getMines());
 		self::assertTrue($this->force->hasMines());
 		self::assertTrue($this->force->hasMaxMines());
-		$this->force->takeMines(1);
+		$this->force->decreaseMines(1);
 		self::assertSame(Force::MAX_MINES - 1, $this->force->getMines());
 		self::assertTrue($this->force->hasMines());
 		self::assertFalse($this->force->hasMaxMines());
@@ -104,11 +106,11 @@ class ForceTest extends TestCase {
 	}
 
 	/**
-	 * @param WeaponDamageData $damage
-	 * @param ForceTakenDamageData $expected
+	 * @param \Smr\Combat\Results\Damage\WeaponDamage $damage
+	 * @param \Smr\Combat\Results\Damage\ForceTakenDamage $expected
 	 */
 	#[DataProvider('dataProvider_takeDamage')]
-	public function test_takeDamage(string $case, array $damage, array $expected, int $mines, int $cds, int $sds): void {
+	public function test_takeDamage(string $case, WeaponDamage $damage, ForceTakenDamage $expected, int $mines, int $cds, int $sds): void {
 		// Set up an unexpired stack with a specific number of forces
 		$force = $this->createPartialMock(Force::class, ['hasExpired']);
 		$force
@@ -121,173 +123,173 @@ class ForceTest extends TestCase {
 		$force->setSDs($sds);
 		// Test taking damage
 		$result = $force->takeDamage($damage);
-		self::assertSame($expected, $result, $case);
+		self::assertEquals($expected, $result, $case);
 	}
 
 	/**
-	 * @return array<array{0: string, 1: WeaponDamageData, 2: ForceTakenDamageData, 3: int, 4: int, 5: int}>
+	 * @return array<array{0: string, 1: \Smr\Combat\Results\Damage\WeaponDamage, 2: \Smr\Combat\Results\Damage\ForceTakenDamage, 3: int, 4: int, 5: int}>
 	 */
 	public static function dataProvider_takeDamage(): array {
 		return [
 			[
 				'Do overkill damage (e.g. 1000 drone damage)',
-				[
-					'Shield' => 1000,
-					'Armour' => 1000,
-					'Rollover' => true,
-				],
-				[
-					'KillingShot' => true,
-					'TargetAlreadyDead' => false,
-					'Mines' => 200,
-					'NumMines' => 10,
-					'HasMines' => false,
-					'CDs' => 30,
-					'NumCDs' => 10,
-					'HasCDs' => false,
-					'SDs' => 100,
-					'NumSDs' => 5,
-					'HasSDs' => false,
-					'TotalDamage' => 330,
-				],
+				new WeaponDamage(
+					shieldDamage: 1000,
+					armourDamage: 1000,
+					damageRollover: true,
+				),
+				new ForceTakenDamage(
+					killingShot: true,
+					targetAlreadyDead: false,
+					minesDamage: 200,
+					numMines: 10,
+					hasMines: false,
+					combatDroneDamage: 30,
+					numCombatDrones: 10,
+					hasCombatDrones: false,
+					scoutDroneDamage: 100,
+					numScoutDrones: 5,
+					hasScoutDrones: false,
+					totalDamage: 330,
+				),
 				10, 10, 5,
 			],
 			[
 				'Do exactly lethal damage (e.g. 330 drone damage)',
-				[
-					'Shield' => 330,
-					'Armour' => 330,
-					'Rollover' => true,
-				],
-				[
-					'KillingShot' => true,
-					'TargetAlreadyDead' => false,
-					'Mines' => 200,
-					'NumMines' => 10,
-					'HasMines' => false,
-					'CDs' => 30,
-					'NumCDs' => 10,
-					'HasCDs' => false,
-					'SDs' => 100,
-					'NumSDs' => 5,
-					'HasSDs' => false,
-					'TotalDamage' => 330,
-				],
+				new WeaponDamage(
+					shieldDamage: 330,
+					armourDamage: 330,
+					damageRollover: true,
+				),
+				new ForceTakenDamage(
+					killingShot: true,
+					targetAlreadyDead: false,
+					minesDamage: 200,
+					numMines: 10,
+					hasMines: false,
+					combatDroneDamage: 30,
+					numCombatDrones: 10,
+					hasCombatDrones: false,
+					scoutDroneDamage: 100,
+					numScoutDrones: 5,
+					hasScoutDrones: false,
+					totalDamage: 330,
+				),
 				10, 10, 5,
 			],
 			[
 				'Shield damage does nothing to forces',
-				[
-					'Shield' => 100,
-					'Armour' => 0,
-					'Rollover' => false,
-				],
-				[
-					'KillingShot' => false,
-					'TargetAlreadyDead' => false,
-					'Mines' => 0,
-					'NumMines' => 0,
-					'HasMines' => true,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => true,
-					'SDs' => 0,
-					'NumSDs' => 0,
-					'HasSDs' => true,
-					'TotalDamage' => 0,
-				],
+				new WeaponDamage(
+					shieldDamage: 100,
+					armourDamage: 0,
+					damageRollover: false,
+				),
+				new ForceTakenDamage(
+					killingShot: false,
+					targetAlreadyDead: false,
+					minesDamage: 0,
+					numMines: 0,
+					hasMines: true,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: true,
+					scoutDroneDamage: 0,
+					numScoutDrones: 0,
+					hasScoutDrones: true,
+					totalDamage: 0,
+				),
 				10, 10, 5,
 			],
 			[
 				'Overkill damage to mines only (e.g. armour weapon)',
-				[
-					'Shield' => 0,
-					'Armour' => 1000,
-					'Rollover' => false,
-				],
-				[
-					'KillingShot' => false,
-					'TargetAlreadyDead' => false,
-					'Mines' => 200,
-					'NumMines' => 10,
-					'HasMines' => false,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => true,
-					'SDs' => 0,
-					'NumSDs' => 0,
-					'HasSDs' => true,
-					'TotalDamage' => 200,
-				],
+				new WeaponDamage(
+					shieldDamage: 0,
+					armourDamage: 1000,
+					damageRollover: false,
+				),
+				new ForceTakenDamage(
+					killingShot: false,
+					targetAlreadyDead: false,
+					minesDamage: 200,
+					numMines: 10,
+					hasMines: false,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: true,
+					scoutDroneDamage: 0,
+					numScoutDrones: 0,
+					hasScoutDrones: true,
+					totalDamage: 200,
+				),
 				10, 10, 5,
 			],
 			[
 				'Overkill damage to CDs only (e.g. armour weapon)',
-				[
-					'Shield' => 0,
-					'Armour' => 1000,
-					'Rollover' => false,
-				],
-				[
-					'KillingShot' => false,
-					'TargetAlreadyDead' => false,
-					'Mines' => 0,
-					'NumMines' => 0,
-					'HasMines' => false,
-					'CDs' => 30,
-					'NumCDs' => 10,
-					'HasCDs' => false,
-					'SDs' => 0,
-					'NumSDs' => 0,
-					'HasSDs' => true,
-					'TotalDamage' => 30,
-				],
+				new WeaponDamage(
+					shieldDamage: 0,
+					armourDamage: 1000,
+					damageRollover: false,
+				),
+				new ForceTakenDamage(
+					killingShot: false,
+					targetAlreadyDead: false,
+					minesDamage: 0,
+					numMines: 0,
+					hasMines: false,
+					combatDroneDamage: 30,
+					numCombatDrones: 10,
+					hasCombatDrones: false,
+					scoutDroneDamage: 0,
+					numScoutDrones: 0,
+					hasScoutDrones: true,
+					totalDamage: 30,
+				),
 				0, 10, 5,
 			],
 			[
 				'Overkill damage to SDs only (e.g. armour weapon)',
-				[
-					'Shield' => 0,
-					'Armour' => 1000,
-					'Rollover' => false,
-				],
-				[
-					'KillingShot' => true,
-					'TargetAlreadyDead' => false,
-					'Mines' => 0,
-					'NumMines' => 0,
-					'HasMines' => false,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => false,
-					'SDs' => 100,
-					'NumSDs' => 5,
-					'HasSDs' => false,
-					'TotalDamage' => 100,
-				],
+				new WeaponDamage(
+					shieldDamage: 0,
+					armourDamage: 1000,
+					damageRollover: false,
+				),
+				new ForceTakenDamage(
+					killingShot: true,
+					targetAlreadyDead: false,
+					minesDamage: 0,
+					numMines: 0,
+					hasMines: false,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: false,
+					scoutDroneDamage: 100,
+					numScoutDrones: 5,
+					hasScoutDrones: false,
+					totalDamage: 100,
+				),
 				0, 0, 5,
 			],
 			[
 				'Target is already dead',
-				[
-					'Shield' => 0,
-					'Armour' => 1000,
-					'Rollover' => true,
-				],
-				[
-					'KillingShot' => false,
-					'TargetAlreadyDead' => true,
-					'Mines' => 0,
-					'NumMines' => 0,
-					'HasMines' => false,
-					'CDs' => 0,
-					'NumCDs' => 0,
-					'HasCDs' => false,
-					'SDs' => 0,
-					'NumSDs' => 0,
-					'HasSDs' => false,
-					'TotalDamage' => 0,
-				],
+				new WeaponDamage(
+					shieldDamage: 0,
+					armourDamage: 1000,
+					damageRollover: true,
+				),
+				new ForceTakenDamage(
+					killingShot: false,
+					targetAlreadyDead: true,
+					minesDamage: 0,
+					numMines: 0,
+					hasMines: false,
+					combatDroneDamage: 0,
+					numCombatDrones: 0,
+					hasCombatDrones: false,
+					scoutDroneDamage: 0,
+					numScoutDrones: 0,
+					hasScoutDrones: false,
+					totalDamage: 0,
+				),
 				0, 0, 0,
 			],
 		];

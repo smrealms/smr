@@ -3,11 +3,11 @@
 namespace Smr\Pages\Player;
 
 use Exception;
-use Smr\Combat\Results\ForceFullCombatResults;
-use Smr\Combat\Results\FullCombatResults;
-use Smr\Combat\Results\PlanetFullCombatResults;
-use Smr\Combat\Results\PortFullCombatResults;
-use Smr\Combat\Results\TraderFullCombatResults;
+use Smr\Combat\Results\Full\ForceFullCombatResults;
+use Smr\Combat\Results\Full\FullCombatResults;
+use Smr\Combat\Results\Full\PlanetFullCombatResults;
+use Smr\Combat\Results\Full\PortFullCombatResults;
+use Smr\Combat\Results\Full\TraderFullCombatResults;
 use Smr\Pages\Shared\ForceFullCombatResultsRenderer;
 use Smr\Pages\Shared\PlanetFullCombatResultsRenderer;
 use Smr\Pages\Shared\PortFullCombatResultsRenderer;

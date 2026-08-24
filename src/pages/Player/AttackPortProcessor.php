@@ -2,7 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\Combat\Results\PortFullCombatResults;
+use Smr\Combat\Results\Combatant\PortAttackerCombatResults;
+use Smr\Combat\Results\Full\PortFullCombatResults;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
@@ -56,7 +57,8 @@ class AttackPortProcessor extends PlayerPageProcessor {
 		// *
 		// ********************************
 
-		$attackerResults = ['TotalDamage' => 0];
+		$attackerResults = [];
+		$totalDamage = 0;
 
 		$port->attackedBy($player, $attackers);
 
@@ -69,25 +71,25 @@ class AttackPortProcessor extends PlayerPageProcessor {
 		$totalShieldDamage = 0;
 		foreach ($attackers as $attacker) {
 			$playerResults = $attacker->getShip()->shootPort($port);
-			$attackerResults['Traders'][$attacker->getAccountID()] = $playerResults;
-			$attackerResults['TotalDamage'] += $playerResults['TotalDamage'];
-			foreach ($playerResults['Weapons'] as $weapon) {
-				if (isset($weapon['ActualDamage'])) { // Only set if the weapon hits
-					$totalShieldDamage += $weapon['ActualDamage']['Shield'];
+			$attackerResults[$attacker->getAccountID()] = $playerResults;
+			$totalDamage += $playerResults->getTotalDamage();
+			foreach ($playerResults->weaponResults as $weapon) {
+				if (isset($weapon->actualDamage)) { // Only set if the weapon hits
+					$totalShieldDamage += $weapon->actualDamage->shieldDamage;
 				}
 			}
 		}
 
-		// Planet downgrades only occur on non-shield damage
-		$downgradeDamage = $attackerResults['TotalDamage'] - $totalShieldDamage;
-		$attackerResults['Downgrades'] = $port->checkForDowngrade($downgradeDamage);
+		// Port downgrades only occur on non-shield damage
+		$downgradeDamage = $totalDamage - $totalShieldDamage;
+		$attackerResults = new PortAttackerCombatResults($totalDamage, $attackerResults, $port->checkForDowngrade($downgradeDamage));
 
 		$results = new PortFullCombatResults(
 			attackers: $attackerResults,
 			port: $port->shootPlayers($attackers),
 		);
 
-		$account->log(LOG_TYPE_PORT_RAIDING, 'Player attacks port, the port does ' . $results->port['TotalDamage'] . ', their team does ' . $results->attackers['TotalDamage'] . ' and downgrades ' . $results->attackers['Downgrades'] . ' levels.', $port->getSectorID());
+		$account->log(LOG_TYPE_PORT_RAIDING, 'Player attacks port, the port does ' . $results->port->getTotalDamage() . ', their team does ' . $results->attackers->totalDamage . ' and downgrades ' . $results->attackers->downgrades . ' levels.', $port->getSectorID());
 
 		$port->update();
 

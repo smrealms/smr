@@ -5,10 +5,10 @@ namespace Smr\Pages\Player;
 use Exception;
 use Smr\AbstractShip;
 use Smr\Account;
-use Smr\Combat\Results\ForceFullCombatResults;
-use Smr\Combat\Results\PlanetFullCombatResults;
-use Smr\Combat\Results\PortFullCombatResults;
-use Smr\Combat\Results\TraderFullCombatResults;
+use Smr\Combat\Results\Full\ForceFullCombatResults;
+use Smr\Combat\Results\Full\PlanetFullCombatResults;
+use Smr\Combat\Results\Full\PortFullCombatResults;
+use Smr\Combat\Results\Full\TraderFullCombatResults;
 use Smr\Pages\Shared\ForceFullCombatResultsRenderer;
 use Smr\Pages\Shared\MissionsRenderer;
 use Smr\Pages\Shared\PlanetFullCombatResultsRenderer;
@@ -34,7 +34,7 @@ class CurrentSectorRenderer {
 	 * @param array<int, ?string> $UnreadMissions
 	 * @param array<int, Player> $VisiblePlayers
 	 * @param array<int, Player> $CloakedPlayers
-	 * @param ?array{Results: \Smr\Combat\Results\FullCombatResults, Link: string} $AttackResults
+	 * @param ?array{Results: \Smr\Combat\Results\Full\FullCombatResults, Link: string} $AttackResults
 	 * @param ?array<array{Time: string, Message: string}> $Ticker
 	 */
 	public static function render(

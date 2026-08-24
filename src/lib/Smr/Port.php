@@ -3,6 +3,14 @@
 namespace Smr;
 
 use Exception;
+use Generator;
+use Smr\Combat\CombatantInterface;
+use Smr\Combat\NormalCombatantInterface;
+use Smr\Combat\NormalDamageCombatResolver;
+use Smr\Combat\Results\Combatant\CombatantResult;
+use Smr\Combat\Results\Damage\NormalTakenDamage;
+use Smr\Combat\Results\Damage\WeaponDamage;
+use Smr\Combat\Results\Kill\PortDestroyedByPlayer;
 use Smr\Combat\Weapon\CombatDrones;
 use Smr\Combat\Weapon\Weapon;
 use Smr\Exceptions\CachedPortNotFound;
@@ -14,7 +22,8 @@ use Smr\Pages\Player\AttackPortProcessor;
 use Smr\Pages\Player\CurrentSector;
 use Smr\Traits\RaceID;
 
-class Port {
+/** @implements NormalCombatantInterface<AbstractShip> */
+class Port implements NormalCombatantInterface {
 
 	use RaceID;
 
@@ -727,6 +736,14 @@ class Port {
 		return '<span style="color:yellow;font-variant:small-caps">Port ' . $this->getSectorID() . '</span>';
 	}
 
+	public function getCombatName(): string {
+		return $this->getDisplayName();
+	}
+
+	public function getCombatID(): int {
+		return $this->sectorID;
+	}
+
 	public function setShields(int $shields): void {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
@@ -954,7 +971,7 @@ class Port {
 	}
 
 	/**
-	 * @return array<Weapon>
+	 * @return array<int, Weapon>
 	 */
 	public function getWeapons(): array {
 		$portTurret = Weapon::getWeapon(WEAPON_PORT_TURRET);
@@ -1333,79 +1350,68 @@ class Port {
 
 	/**
 	 * @param non-empty-array<int, Player> $targetPlayers
-	 * @return PortCombatResults
+	 * @return CombatantResult<\Smr\Combat\NormalCombatantInterface>
 	 */
-	public function shootPlayers(array $targetPlayers): array {
-		$results = ['Port' => $this, 'TotalDamage' => 0, 'TotalDamagePerTargetPlayer' => [], 'TotalShotsPerTargetPlayer' => []];
-		foreach ($targetPlayers as $targetPlayer) {
-			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
-			$results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
-		}
-		if ($this->isBusted()) {
-			$results['DeadBeforeShot'] = true;
-			return $results;
-		}
-		$results['DeadBeforeShot'] = false;
-		$weapons = $this->getWeapons();
-		foreach ($weapons as $orderID => $weapon) {
-			do {
-				$targetPlayer = array_rand_value($targetPlayers);
-			} while ($results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()] > min($results['TotalShotsPerTargetPlayer']));
-			$results['Weapons'][$orderID] = $weapon->shootPlayerAsPort($this, $targetPlayer);
-			$results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()]++;
-			if ($results['Weapons'][$orderID]['Hit']) {
-				if (!isset($results['Weapons'][$orderID]['ActualDamage'])) {
-					throw new Exception('Weapon hit without providing ActualDamage!');
-				}
-				$totalDamage = $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
-				$results['TotalDamage'] += $totalDamage;
-				$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] += $totalDamage;
+	public function shootPlayers(array $targetPlayers): CombatantResult {
+		// Select targets for weapons using a random round robin
+		// (i.e. shoot all players before hitting anyone again)
+		$targetGenerator = (static function (array $players): Generator {
+			while (true) {
+				shuffle($players);
+				yield from $players;
 			}
-		}
-		if ($this->hasCDs()) {
-			$thisCDs = new CombatDrones($this->getCDs(), true);
-			$results['Drones'] = $thisCDs->shootPlayerAsPort($this, array_rand_value($targetPlayers));
-			$totalDamage = $results['Drones']['ActualDamage']['TotalDamage'];
-			$results['TotalDamage'] += $totalDamage;
-			$results['TotalDamagePerTargetPlayer'][$results['Drones']['Target']->getAccountID()] += $totalDamage;
-		}
-		return $results;
+		})($targetPlayers);
+
+		$selectWeaponTarget = static function () use ($targetGenerator): AbstractShip {
+			$target = $targetGenerator->current()->getShip();
+			$targetGenerator->next();
+			return $target;
+		};
+		return NormalDamageCombatResolver::shoot(
+			$this,
+			$selectWeaponTarget,
+			fn() => array_rand_value($targetPlayers)->getShip(),
+		);
 	}
 
-	/**
-	 * @param WeaponDamageData $damage
-	 * @return TakenDamageData
-	 */
-	public function takeDamage(array $damage): array {
+	public function isDestroyed(): bool {
+		return $this->isBusted();
+	}
+
+	public function createCombatDrones(): CombatDrones {
+		return new CombatDrones($this->getCDs(), true);
+	}
+
+	public function takeDamage(WeaponDamage $damage): NormalTakenDamage {
 		$alreadyDead = $this->isBusted();
 		$shieldDamage = 0;
 		$cdDamage = 0;
 		$armourDamage = 0;
 		if (!$alreadyDead) {
-			$shieldDamage = $this->takeDamageToShields($damage['Shield']);
-			if ($shieldDamage === 0 || $damage['Rollover']) {
-				$cdMaxDamage = $damage['Armour'] - $shieldDamage;
+			$shieldDamage = $this->takeDamageToShields($damage->shieldDamage);
+			if ($shieldDamage === 0 || $damage->damageRollover) {
+				$cdMaxDamage = $damage->armourDamage - $shieldDamage;
 				if ($shieldDamage === 0 && $this->hasShields()) {
 					$cdMaxDamage = IFloor($cdMaxDamage * DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT);
 				}
 				$cdDamage = $this->takeDamageToCDs($cdMaxDamage);
-				if (!$this->hasShields() && ($cdDamage === 0 || $damage['Rollover'])) {
-					$armourMaxDamage = $damage['Armour'] - $shieldDamage - $cdDamage;
+				if (!$this->hasShields() && ($cdDamage === 0 || $damage->damageRollover)) {
+					$armourMaxDamage = $damage->armourDamage - $shieldDamage - $cdDamage;
 					$armourDamage = $this->takeDamageToArmour($armourMaxDamage);
 				}
 			}
 		}
 
-		return [
-			'KillingShot' => !$alreadyDead && $this->isBusted(),
-			'TargetAlreadyDead' => $alreadyDead,
-			'Shield' => $shieldDamage,
-			'CDs' => $cdDamage,
-			'NumCDs' => $cdDamage / CD_ARMOUR,
-			'HasCDs' => $this->hasCDs(),
-			'Armour' => $armourDamage,
-			'TotalDamage' => $shieldDamage + $cdDamage + $armourDamage,
-		];
+		return new NormalTakenDamage(
+			killingShot: !$alreadyDead && $this->isBusted(),
+			targetAlreadyDead: $alreadyDead,
+			shieldDamage: $shieldDamage,
+			combatDroneDamage: $cdDamage,
+			numCombatDrones: $cdDamage / CD_ARMOUR,
+			hasCombatDrones: $this->hasCDs(),
+			armourDamage: $armourDamage,
+			totalDamage: $shieldDamage + $cdDamage + $armourDamage,
+		);
 	}
 
 	protected function takeDamageToShields(int $damage): int {
@@ -1544,10 +1550,10 @@ class Port {
 		return $this->getGame()->canDestroyPorts() && ($this->getLevel() === 1);
 	}
 
-	/**
-	 * @return array{}
-	 */
-	public function killPortByPlayer(Player $killer): array {
+	public function killBy(CombatantInterface $killer): PortDestroyedByPlayer {
+		$killingShip = $killer;
+		$killer = $killer->getPlayer(); // credit the ship pilot
+
 		// Port is destroyed, so empty the port of all trade goods
 		foreach ($this->getAllGoodIDs() as $goodID) {
 			$this->setGoodAmount($goodID, 0);
@@ -1572,7 +1578,11 @@ class Port {
 			'dead_id' => ACCOUNT_ID_PORT,
 		]);
 
-		return [];
+		return new PortDestroyedByPlayer($this, $killingShip);
+	}
+
+	public function reduceDamageDoneDCS(): float {
+		return DCS_PORT_DAMAGE_DECIMAL_PERCENT;
 	}
 
 }
