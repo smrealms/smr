@@ -1280,7 +1280,8 @@ class Planet implements NormalCombatantInterface {
 			if (flip_coin(self::CHANCE_TO_DOWNGRADE)) {
 				$chanceFactors = [];
 				foreach ($this->getStructureTypes() as $structureID => $structure) {
-					$chanceFactors[$structureID] = ($this->getBuilding($structureID) / $this->getMaxBuildings($structureID)) / $structure->baseTime();
+					// Gracefully handle structures with 0 build time (Sentinel Outpost)
+					$chanceFactors[$structureID] = ($this->getBuilding($structureID) / $this->getMaxBuildings($structureID)) / ($structure->baseTime() + 1);
 				}
 				$destroyID = getWeightedRandom($chanceFactors);
 				$this->destroyBuilding($destroyID, 1);
