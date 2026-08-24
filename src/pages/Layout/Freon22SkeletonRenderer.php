@@ -87,6 +87,12 @@ class Freon22SkeletonRenderer extends AbstractSkeletonRenderer {
 							</td>
 							<td class="rightCell bottom"><?php
 								if ($data->rightPanelData !== null) { ?>
+									<span id="attack_area"><?php
+										if ($data->rightPanelData->underAttack) { ?>
+											<p class="attack_warning">You Are Under Attack!</p>
+											<script>triggerAttackBlink('3B1111');</script><?php
+										} ?>
+									</span>
 									<div class="rightInfoMail noWrap"><?php
 										UnreadMessagesRenderer::render($data->rightPanelData->unreadMessages); ?>
 									</div><?php
