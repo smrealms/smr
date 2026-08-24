@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractShip;
 use Smr\Combat\Results\Full\ForceFullCombatResults;
 use Smr\Force;
 use Smr\Globals;
 use Smr\Pages\Shared\ForceFullCombatResultsRenderer;
+use Smr\Ship;
 use Smr\Template;
 
 class AttackForcesRenderer {
 
-	public static function render(Template $template, ForceFullCombatResults $FullForceCombatResults, ?Force $Target, bool $OverrideDeath, AbstractShip $ThisShip): void {
+	public static function render(Template $template, ForceFullCombatResults $FullForceCombatResults, ?Force $Target, bool $OverrideDeath, Ship $ThisShip): void {
 		ForceFullCombatResultsRenderer::render(
 			template: $template,
 			FullForceCombatResults: $FullForceCombatResults,

@@ -506,7 +506,7 @@ class Player {
 		$this->hasChanged = true;
 	}
 
-	public function getShip(bool $forceUpdate = false): AbstractShip {
+	public function getShip(bool $forceUpdate = false): Ship {
 		return DatabaseShip::getShip($this, $forceUpdate);
 	}
 

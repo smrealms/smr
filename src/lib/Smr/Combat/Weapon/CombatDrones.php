@@ -2,7 +2,6 @@
 
 namespace Smr\Combat\Weapon;
 
-use Smr\AbstractShip;
 use Smr\Combat\CombatantInterface;
 use Smr\Combat\Results\Damage\WeaponDamage;
 use Smr\Combat\Results\Weapon\HitWeaponResult;
@@ -10,6 +9,7 @@ use Smr\Combat\WeaponShotAtCombatant;
 use Smr\Force;
 use Smr\Planet;
 use Smr\Port;
+use Smr\Ship;
 
 class CombatDrones extends AbstractWeapon {
 
@@ -41,11 +41,11 @@ class CombatDrones extends AbstractWeapon {
 		$modifiedAccuracy = $this->getBaseAccuracy();
 		$random = rand(self::MIN_CDS_RAND, self::MAX_CDS_RAND);
 
-		if (($shooter instanceof Force) || !($target instanceof AbstractShip)) {
+		if (($shooter instanceof Force) || !($target instanceof Ship)) {
 			$modifiedAccuracy += $random;
 		} else {
 			// Player vs. Player
-			assert($shooter instanceof AbstractShip);
+			assert($shooter instanceof Ship);
 			$levelRand = rand(IFloor($shooter->getLevel() / 2), $shooter->getLevel());
 			$modifiedAccuracy += ($random + $levelRand - ($target->getLevel() - $shooter->getLevel()) / 3) / 1.5;
 
@@ -72,13 +72,13 @@ class CombatDrones extends AbstractWeapon {
 		$baseDamage = $this->getDamage();
 		$launched = ICeil($this->getAmount() * $this->getModifiedAccuracyAgainstTarget($shooter, $target) / 100);
 
-		$isKamikaze = ($shooter instanceof AbstractShip) && ($target instanceof Force) && $shooter->getPlayer()->isCombatDronesKamikazeOnMines();
+		$isKamikaze = ($shooter instanceof Ship) && ($target instanceof Force) && $shooter->getPlayer()->isCombatDronesKamikazeOnMines();
 		$kamikaze = $isKamikaze ? min($launched, $target->getMines()) : 0;
 
 		// Compute damage modifier
 		$mod = match (true) {
 			$target instanceof Planet => self::PLANET_DAMAGE_MOD,
-			$target instanceof AbstractShip && $target->hasDCS() => $shooter->reduceDamageDoneDCS(),
+			$target instanceof Ship && $target->hasDCS() => $shooter->reduceDamageDoneDCS(),
 			default => 1,
 		};
 

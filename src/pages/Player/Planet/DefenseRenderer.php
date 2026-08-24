@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player\Planet;
 
-use Smr\AbstractShip;
 use Smr\Planet;
+use Smr\Ship;
 
 class DefenseRenderer {
 
@@ -13,7 +13,7 @@ class DefenseRenderer {
 		DefenseProcessor $TransferArmour,
 		DefenseWeaponProcessor $WeaponProcessingPage,
 		Planet $ThisPlanet,
-		AbstractShip $ThisShip,
+		Ship $ThisShip,
 	): void {
 		if ($ThisPlanet->getMaxShields() + $ThisPlanet->getMaxCDs() + $ThisPlanet->getMaxArmour() === 0) { ?>
 			<p>This planet cannot yet store any shields, combat drones, or armour.</p>

@@ -2,16 +2,16 @@
 
 namespace Smr\Pages\Player\Planet;
 
-use Smr\AbstractShip;
 use Smr\Planet;
 use Smr\Player;
+use Smr\Ship;
 
 class ConstructionRenderer {
 
 	/**
 	 * @param array<int, \Smr\TradeGood> $Goods
 	 */
-	public static function render(array $Goods, Planet $ThisPlanet, Player $ThisPlayer, AbstractShip $ThisShip): void {
+	public static function render(array $Goods, Planet $ThisPlanet, Player $ThisPlayer, Ship $ThisShip): void {
 		?>
 		You are currently building: <?php
 			if ($ThisPlanet->hasCurrentlyBuilding()) {

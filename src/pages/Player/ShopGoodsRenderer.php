@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractShip;
 use Smr\Player;
 use Smr\Port;
+use Smr\Ship;
 use Smr\TransactionType;
 
 class ShopGoodsRenderer {
@@ -22,7 +22,7 @@ class ShopGoodsRenderer {
 		array $SoldGoods,
 		string $LeavePortHREF,
 		Player $ThisPlayer,
-		AbstractShip $ThisShip,
+		Ship $ThisShip,
 	): void {
 		?>
 		<p>This is a level <?php echo $Port->getLevel(); ?> port run by the <?php echo $ThisPlayer->getColouredRaceName($Port->getRaceID(), true); ?>.<br />

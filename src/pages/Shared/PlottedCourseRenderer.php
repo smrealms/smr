@@ -2,18 +2,18 @@
 
 namespace Smr\Pages\Shared;
 
-use Smr\AbstractShip;
 use Smr\Pages\Player\PlotCourseCancelProcessor;
 use Smr\Pages\Player\PlotCourseConventionalProcessor;
 use Smr\Player;
 use Smr\Sector;
+use Smr\Ship;
 
 class PlottedCourseRenderer {
 
 	public static function render(
 		Player $ThisPlayer,
 		Sector $ThisSector,
-		AbstractShip $ThisShip,
+		Ship $ThisShip,
 	): void {
 		if ($ThisPlayer->hasPlottedCourse()) {
 			$PlottedCourse = $ThisPlayer->getPlottedCourse();

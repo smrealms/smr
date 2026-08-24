@@ -2,7 +2,7 @@
 
 namespace Smr;
 
-class DummyShip extends AbstractShip {
+class DummyShip extends Ship {
 
 	/** @var array<string, self> */
 	protected static array $CACHED_DUMMY_SHIPS;

@@ -7,13 +7,13 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
-use Smr\AbstractShip;
 use Smr\Combat\Results\Damage\NormalTakenDamage;
 use Smr\Combat\Results\Damage\WeaponDamage;
 use Smr\Combat\Results\Weapon\HitWeaponResult;
 use Smr\Combat\Weapon\ScoutDrones;
 use Smr\Combat\WeaponShotAtCombatant;
 use Smr\Force;
+use Smr\Ship;
 
 #[CoversClass(ScoutDrones::class)]
 class ScoutDronesTest extends TestCase {
@@ -91,8 +91,8 @@ class ScoutDronesTest extends TestCase {
 		return new ScoutDrones(10);
 	}
 
-	private function createShip(int $level = 0): AbstractShip&Stub {
-		$ship = $this->createStub(AbstractShip::class);
+	private function createShip(int $level = 0): Ship&Stub {
+		$ship = $this->createStub(Ship::class);
 		$ship->method('getLevel')->willReturn($level);
 		return $ship;
 	}

@@ -22,7 +22,7 @@ use Smr\Pages\Player\AttackPortProcessor;
 use Smr\Pages\Player\CurrentSector;
 use Smr\Traits\RaceID;
 
-/** @implements NormalCombatantInterface<AbstractShip> */
+/** @implements NormalCombatantInterface<Ship> */
 class Port implements NormalCombatantInterface {
 
 	use RaceID;
@@ -1362,7 +1362,7 @@ class Port implements NormalCombatantInterface {
 			}
 		})($targetPlayers);
 
-		$selectWeaponTarget = static function () use ($targetGenerator): AbstractShip {
+		$selectWeaponTarget = static function () use ($targetGenerator): Ship {
 			$target = $targetGenerator->current()->getShip();
 			$targetGenerator->next();
 			return $target;

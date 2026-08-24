@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractShip;
 use Smr\Account;
 use Smr\Epoch;
 use Smr\Globals;
@@ -10,6 +9,7 @@ use Smr\Pages\Shared\SectorPlayersRenderer;
 use Smr\Planet;
 use Smr\Player;
 use Smr\Port;
+use Smr\Ship;
 
 class AttackPortConfirmRenderer {
 
@@ -21,7 +21,7 @@ class AttackPortConfirmRenderer {
 		Port $Port,
 		array $VisiblePlayers,
 		string $SectorPlayersLabel,
-		AbstractShip $ThisShip,
+		Ship $ThisShip,
 		Account $ThisAccount,
 		Planet $ThisPlanet,
 		Player $ThisPlayer,

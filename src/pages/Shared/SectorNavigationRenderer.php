@@ -2,10 +2,10 @@
 
 namespace Smr\Pages\Shared;
 
-use Smr\AbstractShip;
 use Smr\Globals;
 use Smr\Player;
 use Smr\Sector;
+use Smr\Ship;
 
 class SectorNavigationRenderer {
 
@@ -15,7 +15,7 @@ class SectorNavigationRenderer {
 	public static function render(
 		Player $ThisPlayer,
 		Sector $ThisSector,
-		AbstractShip $ThisShip,
+		Ship $ThisShip,
 		array $Sectors,
 	): void {
 		if (count($Sectors) > 0) { ?>

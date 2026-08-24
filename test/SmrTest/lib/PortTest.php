@@ -7,7 +7,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
-use Smr\AbstractShip;
 use Smr\Combat\Results\Damage\NormalTakenDamage;
 use Smr\Combat\Results\Damage\WeaponDamage;
 use Smr\Combat\Results\Kill\PortDestroyedByPlayer;
@@ -16,6 +15,7 @@ use Smr\Database;
 use Smr\Game;
 use Smr\Port;
 use Smr\Sector;
+use Smr\Ship;
 use Smr\TransactionType;
 
 #[CoversClass(Port::class)]
@@ -396,7 +396,7 @@ class PortTest extends TestCase {
 		// Imitate the scenario of de-leveling a port in the same attack that
 		// destroys the port. While there's a lot we could verify here, most
 		// important is to make sure that it doesn't throw.
-		$ship = $this->createStub(AbstractShip::class);
+		$ship = $this->createStub(Ship::class);
 		$result = $port->killBy($ship);
 		$port->upgradeToLevel($portLevel - 1);
 		$port->update();

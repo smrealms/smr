@@ -23,7 +23,7 @@ use Smr\Combat\WeaponShotAtCombatant;
  *
  * @implements NormalCombatantInterface<CombatantInterface>
  */
-class AbstractShip implements NormalCombatantInterface {
+class Ship implements NormalCombatantInterface {
 
 	// Player exp gained for each point of damage done
 	protected const float EXP_PER_DAMAGE_PLAYER = 0.375;

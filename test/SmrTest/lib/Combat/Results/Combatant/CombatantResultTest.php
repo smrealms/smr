@@ -5,13 +5,13 @@ namespace SmrTest\lib\Combat\Results\Combatant;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
-use Smr\AbstractShip;
 use Smr\Combat\Results\Combatant\CombatantResult;
 use Smr\Combat\Results\Damage\NormalTakenDamage;
 use Smr\Combat\Results\Damage\WeaponDamage;
 use Smr\Combat\Results\Weapon\HitWeaponResult;
 use Smr\Combat\Results\Weapon\MissedWeaponResult;
 use Smr\Combat\Weapon\CombatDrones;
+use Smr\Ship;
 
 #[CoversClass(CombatantResult::class)]
 class CombatantResultTest extends TestCase {
@@ -53,16 +53,16 @@ class CombatantResultTest extends TestCase {
 		self::assertSame(9, $result->getTotalDamage());
 	}
 
-	private function createShip(int $combatID): AbstractShip&Stub {
-		$ship = $this->createStub(AbstractShip::class);
+	private function createShip(int $combatID): Ship&Stub {
+		$ship = $this->createStub(Ship::class);
 		$ship->method('getCombatID')->willReturn($combatID);
 		return $ship;
 	}
 
 	/**
-	 * @return HitWeaponResult<AbstractShip>
+	 * @return HitWeaponResult<Ship>
 	 */
-	private function createHit(AbstractShip $target, int $totalDamage): HitWeaponResult {
+	private function createHit(Ship $target, int $totalDamage): HitWeaponResult {
 		return new HitWeaponResult(
 			weapon: new CombatDrones(1),
 			target: $target,

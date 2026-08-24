@@ -4,7 +4,6 @@ namespace SmrTest\lib\Combat;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use Smr\AbstractShip;
 use Smr\Combat\NormalDamageTeamResultsResolver;
 use Smr\Combat\Results\Combatant\CombatantResult;
 use Smr\Combat\Results\Damage\NormalDamageTeamTotals;
@@ -13,6 +12,7 @@ use Smr\Combat\Results\Damage\WeaponDamage;
 use Smr\Combat\Results\Weapon\HitWeaponResult;
 use Smr\Combat\Results\Weapon\MissedWeaponResult;
 use Smr\Combat\Weapon\CombatDrones;
+use Smr\Ship;
 
 #[CoversClass(NormalDamageTeamResultsResolver::class)]
 #[CoversClass(NormalDamageTeamTotals::class)]
@@ -39,15 +39,15 @@ class NormalDamageTeamResultsResolverTest extends TestCase {
 		self::assertSame(8, $totals->getNonShieldDamage());
 	}
 
-	private function createShip(): AbstractShip {
-		return $this->createStub(AbstractShip::class);
+	private function createShip(): Ship {
+		return $this->createStub(Ship::class);
 	}
 
 	/**
-	 * @return HitWeaponResult<AbstractShip>
+	 * @return HitWeaponResult<Ship>
 	 */
 	private function createHit(
-		AbstractShip $target,
+		Ship $target,
 		int $shieldDamage,
 		int $armourDamage,
 	): HitWeaponResult {

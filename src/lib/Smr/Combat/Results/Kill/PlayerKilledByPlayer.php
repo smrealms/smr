@@ -2,14 +2,14 @@
 
 namespace Smr\Combat\Results\Kill;
 
-use Smr\AbstractShip;
 use Smr\Pages\Shared\CombatKillMessageRenderer;
+use Smr\Ship;
 
 final readonly class PlayerKilledByPlayer implements KillResultInterface {
 
 	public function __construct(
-		public AbstractShip $target,
-		public AbstractShip $killer,
+		public Ship $target,
+		public Ship $killer,
 		public int $deadExp,
 		public int $killerExp,
 		public int $killerCredits,

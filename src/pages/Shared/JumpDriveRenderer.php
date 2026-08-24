@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Shared;
 
-use Smr\AbstractShip;
 use Smr\Pages\Player\SectorJumpProcessor;
+use Smr\Ship;
 
 class JumpDriveRenderer {
 
 	public static function render(
-		AbstractShip $ThisShip,
+		Ship $ThisShip,
 		?SectorJumpProcessor $JumpDrivePage,
 	): void {
 		if ($ThisShip->hasJump()) {

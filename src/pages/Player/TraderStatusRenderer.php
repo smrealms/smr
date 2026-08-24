@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractShip;
 use Smr\Account;
 use Smr\BountyType;
 use Smr\Epoch;
@@ -10,6 +9,7 @@ use Smr\Globals;
 use Smr\Player;
 use Smr\PlayerLevel;
 use Smr\Race;
+use Smr\Ship;
 
 class TraderStatusRenderer {
 
@@ -32,7 +32,7 @@ class TraderStatusRenderer {
 		string $NoteAddHREF,
 		Account $ThisAccount,
 		Player $ThisPlayer,
-		AbstractShip $ThisShip,
+		Ship $ThisShip,
 	): void {
 		?>
 		<table class="standard fullwidth">

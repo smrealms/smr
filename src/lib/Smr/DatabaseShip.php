@@ -5,10 +5,10 @@ namespace Smr;
 use Smr\Combat\Weapon\Weapon;
 
 /**
- * Adds a database layer to an AbstractShip instance.
+ * Adds a database layer to a Ship instance.
  * Loads and saves ship properties from/to the database.
  */
-class DatabaseShip extends AbstractShip {
+class DatabaseShip extends Ship {
 
 	/** @var array<int, array<int, self>> */
 	protected static array $CACHE_SHIPS = [];

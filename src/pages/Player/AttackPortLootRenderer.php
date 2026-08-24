@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractShip;
 use Smr\Player;
 use Smr\Port;
+use Smr\Ship;
 
 class AttackPortLootRenderer {
 
-	public static function render(Player $ThisPlayer, Port $ThisPort, AbstractShip $ThisShip): void {
+	public static function render(Player $ThisPlayer, Port $ThisPort, Ship $ThisShip): void {
 		?>
 		<table class="center standard">
 			<tr>

@@ -9,7 +9,6 @@ use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
-use Smr\AbstractShip;
 use Smr\Bounty;
 use Smr\BountyType;
 use Smr\Combat\Results\Combatant\CombatantResult;
@@ -21,14 +20,15 @@ use Smr\Combat\Weapon\Weapon;
 use Smr\Globals;
 use Smr\Player;
 use Smr\Port;
+use Smr\Ship;
 use Smr\ShipClass;
 use Smr\ShipIllusion;
 
 /**
  * This test is expected to not make any changes to the database.
  */
-#[CoversClass(AbstractShip::class)]
-class AbstractShipTest extends TestCase {
+#[CoversClass(Ship::class)]
+class ShipTest extends TestCase {
 
 	private Player&Stub $player; // will be mocked
 
@@ -54,7 +54,7 @@ class AbstractShipTest extends TestCase {
 	}
 
 	public function test_base_ship_properties_are_set_correctly(): void {
-		$ship = new AbstractShip($this->player);
+		$ship = new Ship($this->player);
 		self::assertSame('Demonica', $ship->getName());
 		self::assertSame(SHIP_TYPE_DEMONICA, $ship->getTypeID());
 		self::assertSame(ShipClass::Hunter, $ship->getClass());
@@ -70,7 +70,7 @@ class AbstractShipTest extends TestCase {
 	#[TestWith([1, [1, 0, 2]])] // Swap first and second
 	#[TestWith([2, [0, 2, 1]])] // Swap second and third
 	public function test_moveWeaponUp(int $moveID, array $expectedIDs): void {
-		$ship = new AbstractShip($this->player);
+		$ship = new Ship($this->player);
 		$weapons = [
 			Weapon::getWeapon(WEAPON_TYPE_LASER),
 			Weapon::getWeapon(WEAPON_TYPE_LARGE_PULSE_LASER),
@@ -92,7 +92,7 @@ class AbstractShipTest extends TestCase {
 	#[TestWith([1, [0, 2, 1]])] // Swap second and third
 	#[TestWith([2, [2, 0, 1]])] // Moving the bottom reorders all
 	public function test_moveWeaponDown(int $moveID, array $expectedIDs): void {
-		$ship = new AbstractShip($this->player);
+		$ship = new Ship($this->player);
 		$weapons = [
 			Weapon::getWeapon(WEAPON_TYPE_LASER),
 			Weapon::getWeapon(WEAPON_TYPE_LARGE_PULSE_LASER),
@@ -108,21 +108,21 @@ class AbstractShipTest extends TestCase {
 	}
 
 	public function test_moveWeaponUp_no_weapons(): void {
-		$ship = new AbstractShip($this->player);
+		$ship = new Ship($this->player);
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('This method cannot be used when there are no weapons');
 		$ship->moveWeaponUp(0);
 	}
 
 	public function test_moveWeaponDown_no_weapons(): void {
-		$ship = new AbstractShip($this->player);
+		$ship = new Ship($this->player);
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('This method cannot be used when there are no weapons');
 		$ship->moveWeaponDown(0);
 	}
 
 	public function test_cloak(): void {
-		$ship = new AbstractShip($this->player);
+		$ship = new Ship($this->player);
 
 		// ships are initially uncloaked
 		self::assertFalse($ship->isCloaked());
@@ -143,14 +143,14 @@ class AbstractShipTest extends TestCase {
 	}
 
 	public function test_cloak_throws_when_missing_hardware(): void {
-		$ship = new AbstractShip($this->player);
+		$ship = new Ship($this->player);
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Ship does not have the supported hardware!');
 		$ship->enableCloak();
 	}
 
 	public function test_illusion_generator(): void {
-		$ship = new AbstractShip($this->player);
+		$ship = new Ship($this->player);
 
 		// ship has no IG initially
 		self::assertFalse($ship->getIllusion());
@@ -176,14 +176,14 @@ class AbstractShipTest extends TestCase {
 	}
 
 	public function test_illusion_throws_when_missing_hardware(): void {
-		$ship = new AbstractShip($this->player);
+		$ship = new Ship($this->player);
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Ship does not have the supported hardware!');
 		$ship->setIllusion(SHIP_TYPE_THIEF, 12, 13);
 	}
 
 	public function test_hardware(): void {
-		$ship = new AbstractShip($this->player);
+		$ship = new Ship($this->player);
 
 		// shields
 		self::assertSame(0, $ship->getShields());
@@ -271,7 +271,7 @@ class AbstractShipTest extends TestCase {
 		$this->player
 			->method('isDead')
 			->willReturn($armour === 0);
-		$ship = new AbstractShip($this->player);
+		$ship = new Ship($this->player);
 		$ship->setShields($shields);
 		$ship->setCDs($cds);
 		$ship->setArmour($armour);
@@ -449,7 +449,7 @@ class AbstractShipTest extends TestCase {
 		$this->player
 			->method('isDead')
 			->willReturn($armour === 0);
-		$ship = new AbstractShip($this->player);
+		$ship = new Ship($this->player);
 		$ship->setShields($shields);
 		$ship->setCDs($cds);
 		$ship->setArmour($armour);
@@ -631,7 +631,7 @@ class AbstractShipTest extends TestCase {
 			],
 		]);
 
-		$ship = new AbstractShip($player);
+		$ship = new Ship($player);
 		$weapons = [
 			Weapon::getWeapon(WEAPON_TYPE_HHG),
 			Weapon::getWeapon(WEAPON_TYPE_HUGE_PULSE_LASER),

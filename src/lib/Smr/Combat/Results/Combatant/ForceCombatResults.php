@@ -7,7 +7,7 @@ final readonly class ForceCombatResults {
 	public int $totalDamage;
 
 	/**
-	 * @param array{Mines?: \Smr\Combat\Results\Weapon\HitWeaponResult<\Smr\AbstractShip>, Drones?: \Smr\Combat\Results\Weapon\HitWeaponResult<\Smr\AbstractShip>, Scouts?: \Smr\Combat\Results\Weapon\HitWeaponResult<\Smr\AbstractShip>} $results
+	 * @param array{Mines?: \Smr\Combat\Results\Weapon\HitWeaponResult<\Smr\Ship>, Drones?: \Smr\Combat\Results\Weapon\HitWeaponResult<\Smr\Ship>, Scouts?: \Smr\Combat\Results\Weapon\HitWeaponResult<\Smr\Ship>} $results
 	 */
 	public function __construct(
 		public array $results,

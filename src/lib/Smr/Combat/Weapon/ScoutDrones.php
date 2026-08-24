@@ -3,12 +3,12 @@
 namespace Smr\Combat\Weapon;
 
 use Exception;
-use Smr\AbstractShip;
 use Smr\Combat\CombatantInterface;
 use Smr\Combat\Results\Damage\WeaponDamage;
 use Smr\Combat\Results\Weapon\HitWeaponResult;
 use Smr\Combat\WeaponShotAtCombatant;
 use Smr\Force;
+use Smr\Ship;
 
 class ScoutDrones extends AbstractWeapon {
 
@@ -65,7 +65,7 @@ class ScoutDrones extends AbstractWeapon {
 		$target = $shot->target;
 		if (
 			(!($shooter instanceof Force)) ||
-			(!($target instanceof AbstractShip))
+			(!($target instanceof Ship))
 		) {
 			throw new Exception('ScoutDrones should not be used in this context');
 		}
