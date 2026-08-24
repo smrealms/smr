@@ -4,10 +4,9 @@ namespace Smr\Pages\Player;
 
 use Smr\Combat\Results\PlanetFullCombatResults;
 use Smr\Page\PlayerPage;
-use Smr\Planet;
 use Smr\Player;
-use Smr\Template;
 use Smr\Sector;
+use Smr\Template;
 
 class AttackPlanet extends PlayerPage {
 
