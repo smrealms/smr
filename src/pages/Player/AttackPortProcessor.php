@@ -44,7 +44,7 @@ class AttackPortProcessor extends PlayerPageProcessor {
 		}
 
 		if ($port->isBusted()) {
-			new AttackPort()->go();
+			new AttackPort($sector->getSectorID())->go();
 		}
 
 		$attackers = $sector->getFightingTradersAgainstPort($player, $port);
@@ -122,7 +122,7 @@ class AttackPortProcessor extends PlayerPageProcessor {
 		}
 
 		// If they died on the shot they get to see the results
-		$container = new AttackPort($results, $player->isDead());
+		$container = new AttackPort($sector->getSectorID(), $results, $player->isDead());
 		$container->go();
 	}
 

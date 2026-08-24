@@ -5,11 +5,13 @@ namespace Smr\Pages\Player;
 use Smr\Combat\Results\Full\PortFullCombatResults;
 use Smr\Page\PlayerPage;
 use Smr\Player;
+use Smr\Sector;
 use Smr\Template;
 
 class AttackPort extends PlayerPage {
 
 	public function __construct(
+		private readonly int $sectorID,
 		private readonly ?PortFullCombatResults $results = null,
 		bool $playerDied = false,
 	) {
@@ -18,7 +20,8 @@ class AttackPort extends PlayerPage {
 	}
 
 	public function build(Player $player, Template $template): void {
-		$sector = $player->getSector();
+		// Either player or port may no longer be in sector
+		$sector = Sector::getSector($player->getGameID(), $this->sectorID);
 		if (!$sector->hasPort()) {
 			new CurrentSector(message: 'The port no longer exists!')->go();
 		}

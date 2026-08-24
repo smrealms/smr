@@ -17,7 +17,7 @@ class AttackPortConfirm extends PlayerPage {
 		$port = $sector->getPort();
 
 		if ($port->isBusted()) {
-			new AttackPort()->go();
+			new AttackPort($sector->getSectorID())->go();
 		}
 
 		$template->pageTopic = 'Port Raid: Sector #' . $port->getSectorID();
