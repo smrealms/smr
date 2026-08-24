@@ -19,7 +19,7 @@ use Smr\Combat\WeaponShotAtCombatant;
 
 /**
  * Properties and methods for a ship instance.
- * Does not include the database layer (see Ship).
+ * Does not include the database layer (see DatabaseShip).
  *
  * @implements NormalCombatantInterface<CombatantInterface>
  */
@@ -1047,11 +1047,11 @@ class AbstractShip implements NormalCombatantInterface {
 	}
 
 	public function update(): void {
-		throw new Exception('Can only call update on Ship objects');
+		throw new Exception('Can only call update on DatabaseShip objects');
 	}
 
 	public function updateCargo(): void {
-		throw new Exception('Can only call updateCargo on Ship objects');
+		throw new Exception('Can only call updateCargo on DatabaseShip objects');
 	}
 
 }

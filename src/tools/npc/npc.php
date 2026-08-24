@@ -5,6 +5,7 @@ use Smr\Account;
 use Smr\Combat\Weapon\Weapon;
 use Smr\Container\DiContainer;
 use Smr\Database;
+use Smr\DatabaseShip;
 use Smr\Epoch;
 use Smr\Exceptions\PathNotFound;
 use Smr\Force;
@@ -32,7 +33,6 @@ use Smr\Routes\RouteGenerator;
 use Smr\Sector;
 use Smr\SectorLock;
 use Smr\Session;
-use Smr\Ship;
 use Smr\TradeGood;
 use Smr\TransactionType;
 
@@ -205,7 +205,7 @@ function clearCaches(): void {
 	Sector::clearCache();
 	Planet::clearCache();
 	Player::clearCache();
-	Ship::clearCache();
+	DatabaseShip::clearCache();
 	Force::clearCache();
 	Port::clearCache();
 }

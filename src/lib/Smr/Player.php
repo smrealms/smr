@@ -507,7 +507,7 @@ class Player {
 	}
 
 	public function getShip(bool $forceUpdate = false): AbstractShip {
-		return Ship::getShip($this, $forceUpdate);
+		return DatabaseShip::getShip($this, $forceUpdate);
 	}
 
 	public function getShipTypeID(): int {
@@ -515,7 +515,7 @@ class Player {
 	}
 
 	/**
-	 * Do not call directly. Use Ship::setTypeID instead.
+	 * Do not call directly. Use DatabaseShip::setTypeID instead.
 	 */
 	public function setShipTypeID(int $shipID): void {
 		if ($this->shipID === $shipID) {

@@ -5,6 +5,7 @@ use Smr\Alliance;
 use Smr\Chess\ChessGame;
 use Smr\Container\DiContainer;
 use Smr\Database;
+use Smr\DatabaseShip;
 use Smr\Epoch;
 use Smr\Exceptions\UserError;
 use Smr\Force;
@@ -41,7 +42,6 @@ use Smr\Race;
 use Smr\Sector;
 use Smr\SectorLock;
 use Smr\Session;
-use Smr\Ship;
 use Smr\Template;
 use Smr\VoteLink;
 use Smr\VoteSite;
@@ -516,7 +516,7 @@ function saveAllAndReleaseLock(bool $updateSession = true): void {
 	$lock = SectorLock::getInstance();
 	if ($lock->isActive()) {
 		Sector::saveSectors();
-		Ship::saveShips();
+		DatabaseShip::saveShips();
 		Player::savePlayers();
 		Force::saveForces();
 		Port::savePorts();

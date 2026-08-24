@@ -8,7 +8,7 @@ use Smr\Combat\Weapon\Weapon;
  * Adds a database layer to an AbstractShip instance.
  * Loads and saves ship properties from/to the database.
  */
-class Ship extends AbstractShip {
+class DatabaseShip extends AbstractShip {
 
 	/** @var array<int, array<int, self>> */
 	protected static array $CACHE_SHIPS = [];
@@ -58,7 +58,7 @@ class Ship extends AbstractShip {
 		$this->updateCargo();
 		$this->updateCloak();
 		$this->updateIllusion();
-		// note: Ship::setTypeID modifies the Player
+		// note: DatabaseShip::setTypeID modifies the Player
 		$this->getPlayer()->update();
 	}
 
