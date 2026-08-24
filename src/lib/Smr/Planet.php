@@ -20,7 +20,7 @@ use Smr\Pages\Player\Planet\ConstructionProcessor;
 use Smr\Pages\Player\Planet\LandProcessor;
 use Smr\PlanetTypes\PlanetType;
 
-/** @implements NormalCombatantInterface<AbstractShip> */
+/** @implements NormalCombatantInterface<Ship> */
 class Planet implements NormalCombatantInterface {
 
 	/** @var array<int, array<int, self>> */

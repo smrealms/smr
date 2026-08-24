@@ -2,8 +2,8 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractShip;
 use Smr\Pages\Shared\JumpDriveRenderer;
+use Smr\Ship;
 
 class HardwareConfigureRenderer {
 
@@ -16,7 +16,7 @@ class HardwareConfigureRenderer {
 		?array $IllusionShips,
 		?string $DisableIllusionHref,
 		?SectorJumpProcessor $JumpDrivePage,
-		AbstractShip $ThisShip,
+		Ship $ThisShip,
 	): void {
 		if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()) {
 			?>You have no configurable hardware installed!<?php

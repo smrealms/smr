@@ -2,9 +2,9 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractShip;
 use Smr\Location;
 use Smr\Player;
+use Smr\Ship;
 use Smr\Template;
 
 class ShopWeaponRenderer {
@@ -12,7 +12,7 @@ class ShopWeaponRenderer {
 	/**
 	 * @param array<int, \Smr\Combat\Weapon\Weapon> $WeaponsSold
 	 */
-	public static function render(Template $template, Location $ThisLocation, array $WeaponsSold, Player $ThisPlayer, AbstractShip $ThisShip): void {
+	public static function render(Template $template, Location $ThisLocation, array $WeaponsSold, Player $ThisPlayer, Ship $ThisShip): void {
 		if ($ThisLocation->isWeaponSold()) { ?>
 			<h2>Buy weapons:</h2><br />
 			<table id="weapon-list" class="center standard">

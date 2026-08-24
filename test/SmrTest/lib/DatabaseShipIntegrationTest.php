@@ -4,12 +4,12 @@ namespace SmrTest\lib;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use Smr\Combat\Weapon\Weapon;
+use Smr\DatabaseShip;
 use Smr\Player;
-use Smr\Ship;
 use SmrTest\BaseIntegrationSpec;
 
-#[CoversClass(Ship::class)]
-class ShipIntegrationTest extends BaseIntegrationSpec {
+#[CoversClass(DatabaseShip::class)]
+class DatabaseShipIntegrationTest extends BaseIntegrationSpec {
 
 	private Player $player; // will be mocked
 
@@ -19,7 +19,7 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 
 	protected function setUp(): void {
 		// Start each test with an empty ship cache
-		Ship::clearCache();
+		DatabaseShip::clearCache();
 
 		// Create mock player that will be needed to create any ship
 		$this->player = $this->createStub(Player::class);
@@ -37,33 +37,33 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 
 	public function test_getShip(): void {
 		// Get the ship associated with this player
-		$original = Ship::getShip($this->player);
+		$original = DatabaseShip::getShip($this->player);
 		self::assertSame($this->player->getAccountID(), $original->getAccountID());
 		self::assertSame($this->player->getGameID(), $original->getGameID());
 		self::assertSame($this->player->getShipTypeID(), $original->getTypeID());
 
 		// Check that we get the exact same object if we get it again
 		$forceUpdate = false;
-		$ship = Ship::getShip($this->player, $forceUpdate);
+		$ship = DatabaseShip::getShip($this->player, $forceUpdate);
 		self::assertSame($original, $ship);
 
 		// Check that we get a different object if we force update
 		$forceUpdate = true;
-		$ship = Ship::getShip($this->player, $forceUpdate);
+		$ship = DatabaseShip::getShip($this->player, $forceUpdate);
 		self::assertNotSame($original, $ship);
 		// but it is still the same ship
 		self::assertEquals($original, $ship);
 	}
 
 	public function test_updateHardware(): void {
-		$original = Ship::getShip($this->player);
+		$original = DatabaseShip::getShip($this->player);
 
 		// Add hardware
 		$original->setHardwareToMax();
 		$original->update();
 
 		// Check that the reloaded ship is equal to the original
-		$ship = Ship::getShip($this->player, true);
+		$ship = DatabaseShip::getShip($this->player, true);
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 
@@ -73,7 +73,7 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		$original->update();
 
 		// Check that the reloaded ship is equal to the original
-		$ship = Ship::getShip($this->player, true);
+		$ship = DatabaseShip::getShip($this->player, true);
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 
@@ -82,13 +82,13 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		$original->update();
 
 		// Check that the reloaded ship is equal to the original
-		$ship = Ship::getShip($this->player, true);
+		$ship = DatabaseShip::getShip($this->player, true);
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 	}
 
 	public function test_updateWeapons(): void {
-		$original = Ship::getShip($this->player);
+		$original = DatabaseShip::getShip($this->player);
 
 		// Add a couple weapons
 		$original->addWeapon(Weapon::getWeapon(WEAPON_TYPE_LASER));
@@ -97,7 +97,7 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		$original->update();
 
 		// Check that the reloaded ship is equal to the original
-		$ship = Ship::getShip($this->player, true);
+		$ship = DatabaseShip::getShip($this->player, true);
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 
@@ -106,7 +106,7 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		$original->update();
 
 		// Check that the reloaded ship is equal to the original
-		$ship = Ship::getShip($this->player, true);
+		$ship = DatabaseShip::getShip($this->player, true);
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 
@@ -115,13 +115,13 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		$original->update();
 
 		// Check that the reloaded ship is equal to the original
-		$ship = Ship::getShip($this->player, true);
+		$ship = DatabaseShip::getShip($this->player, true);
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 	}
 
 	public function test_updateCargo(): void {
-		$original = Ship::getShip($this->player);
+		$original = DatabaseShip::getShip($this->player);
 		$original->setHardwareToMax();
 
 		// Add some cargo
@@ -131,7 +131,7 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		$original->update();
 
 		// Check that the reloaded ship is equal to the original
-		$ship = Ship::getShip($this->player, true);
+		$ship = DatabaseShip::getShip($this->player, true);
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 
@@ -141,7 +141,7 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		$original->update();
 
 		// Check that the reloaded ship is equal to the original
-		$ship = Ship::getShip($this->player, true);
+		$ship = DatabaseShip::getShip($this->player, true);
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 
@@ -150,13 +150,13 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		$original->update();
 
 		// Check that the reloaded ship is equal to the original
-		$ship = Ship::getShip($this->player, true);
+		$ship = DatabaseShip::getShip($this->player, true);
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 	}
 
 	public function test_updateCloak(): void {
-		$original = Ship::getShip($this->player);
+		$original = DatabaseShip::getShip($this->player);
 		$original->setHardwareToMax();
 
 		// Enable cloak
@@ -164,7 +164,7 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		$original->update();
 
 		// Check that the reloaded ship is equal to the original
-		$ship = Ship::getShip($this->player, true);
+		$ship = DatabaseShip::getShip($this->player, true);
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 
@@ -173,7 +173,7 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		$original->update();
 
 		// Check that the reloaded ship is equal to the original
-		$ship = Ship::getShip($this->player, true);
+		$ship = DatabaseShip::getShip($this->player, true);
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 	}
@@ -183,7 +183,7 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 	 * without breaking update.
 	 */
 	public function test_updateCloak_idempotency(): void {
-		$original = Ship::getShip($this->player);
+		$original = DatabaseShip::getShip($this->player);
 		$original->setHardwareToMax();
 
 		// Enable cloak
@@ -196,13 +196,13 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		$original->update();
 
 		// Check that the reloaded ship is equal to the original
-		$ship = Ship::getShip($this->player, true);
+		$ship = DatabaseShip::getShip($this->player, true);
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 	}
 
 	public function test_updateIllusion(): void {
-		$original = Ship::getShip($this->player);
+		$original = DatabaseShip::getShip($this->player);
 		$original->setHardwareToMax();
 
 		// Enable illusion
@@ -210,7 +210,7 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		$original->update();
 
 		// Check that the reloaded ship is equal to the original
-		$ship = Ship::getShip($this->player, true);
+		$ship = DatabaseShip::getShip($this->player, true);
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 
@@ -219,7 +219,7 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		$original->update();
 
 		// Check that the reloaded ship is equal to the original
-		$ship = Ship::getShip($this->player, true);
+		$ship = DatabaseShip::getShip($this->player, true);
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 
@@ -228,7 +228,7 @@ class ShipIntegrationTest extends BaseIntegrationSpec {
 		$original->update();
 
 		// Check that the reloaded ship is equal to the original
-		$ship = Ship::getShip($this->player, true);
+		$ship = DatabaseShip::getShip($this->player, true);
 		self::assertNotSame($original, $ship);
 		self::assertEquals($original, $ship);
 	}

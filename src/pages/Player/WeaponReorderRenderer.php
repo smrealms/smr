@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractShip;
 use Smr\Globals;
+use Smr\Ship;
 use Smr\Template;
 
 class WeaponReorderRenderer {
 
-	public static function render(Template $template, AbstractShip $ThisShip): void {
+	public static function render(Template $template, Ship $ThisShip): void {
 		if ($ThisShip->hasWeapons()) { ?>
 			<div class="center">
 				<p>To reorder your weapons simply drag and drop them into the desired order.</p>

@@ -2,12 +2,12 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractShip;
 use Smr\Force;
+use Smr\Ship;
 
 class ForcesDropRenderer {
 
-	public static function render(Force $Forces, string $SubmitHREF, AbstractShip $ThisShip): void {
+	public static function render(Force $Forces, string $SubmitHREF, Ship $ThisShip): void {
 		?>
 		<form method="POST" action="<?php echo $SubmitHREF; ?>">
 			<table class="standard">

@@ -4,7 +4,6 @@ namespace Smr\Combat\Weapon;
 
 use Exception;
 use Override;
-use Smr\AbstractShip;
 use Smr\BuyerRestriction;
 use Smr\Combat\CombatantInterface;
 use Smr\Combat\Results\Damage\WeaponDamage;
@@ -16,6 +15,7 @@ use Smr\Location;
 use Smr\Pages\Player\ShopWeaponProcessor;
 use Smr\Planet;
 use Smr\Port;
+use Smr\Ship;
 use Smr\Traits\RaceID;
 use Smr\WeaponType;
 use Smr\WeightedRandom;
@@ -156,11 +156,11 @@ class Weapon extends AbstractWeapon {
 	}
 
 	protected function getWeightedRandom(CombatantInterface $shooter, CombatantInterface $target): WeightedRandom {
-		if ($shooter instanceof AbstractShip) {
+		if ($shooter instanceof Ship) {
 			// If shooter is a player, use shooter's weighted random
 			$player = $shooter->getPlayer();
 			$type = 'Weapon';
-		} elseif ($target instanceof AbstractShip) {
+		} elseif ($target instanceof Ship) {
 			// If target is a player and shooter is not, use target's weighted random
 			$player = $target->getPlayer();
 			$type = match (true) {
@@ -186,18 +186,18 @@ class Weapon extends AbstractWeapon {
 		};
 	}
 
-	public static function getPlayerLevelAccuracyMod(AbstractShip $ship): float {
+	public static function getPlayerLevelAccuracyMod(Ship $ship): float {
 		$level = $ship->getLevel();
 		return ($level * $level / 60 + $level / 2 + 2) / 100;
 	}
 
-	public function getModifiedPlayerAccuracy(AbstractShip $shooter, CombatantInterface $target): float {
+	public function getModifiedPlayerAccuracy(Ship $shooter, CombatantInterface $target): float {
 		$modifiedAccuracy = $this->getBaseAccuracy() * (1 + self::getPlayerLevelAccuracyMod($shooter));
 		if ($target instanceof Port) {
 			$modifiedAccuracy -= $this->getBaseAccuracy() * $target->getLevel() / 50;
 		} elseif ($target instanceof Planet) {
 			$modifiedAccuracy -= $this->getBaseAccuracy() * $target->getLevel() / 350;
-		} elseif ($target instanceof AbstractShip) {
+		} elseif ($target instanceof Ship) {
 			$modifiedAccuracy -= $this->getBaseAccuracy() * self::getPlayerLevelAccuracyMod($target) / 2;
 			$mrDiff = $target->getMR() - $shooter->getMR();
 			if ($mrDiff > 0) {
@@ -208,7 +208,7 @@ class Weapon extends AbstractWeapon {
 		return $modifiedAccuracy;
 	}
 
-	public function getModifiedPortAccuracy(Port $port, AbstractShip $target): float {
+	public function getModifiedPortAccuracy(Port $port, Ship $target): float {
 		return $this->getBaseAccuracy() * (1 - self::getPlayerLevelAccuracyMod($target));
 	}
 
@@ -222,17 +222,17 @@ class Weapon extends AbstractWeapon {
 		return $modifiedAccuracy;
 	}
 
-	public function getModifiedPlanetAccuracy(Planet $planet, AbstractShip $target): float {
+	public function getModifiedPlanetAccuracy(Planet $planet, Ship $target): float {
 		$modifiedAccuracy = $this->getPlanetAccuracy($planet);
 		$modifiedAccuracy -= $this->getBaseAccuracy() * self::getPlayerLevelAccuracyMod($target);
 		return $modifiedAccuracy;
 	}
 
 	public function getModifiedAccuracyAgainstTarget(CombatantInterface $shooter, CombatantInterface $target): float {
-		if ($shooter instanceof AbstractShip) {
+		if ($shooter instanceof Ship) {
 			return $this->getModifiedPlayerAccuracy($shooter, $target);
 		}
-		if (!($target instanceof AbstractShip)) {
+		if (!($target instanceof Ship)) {
 			throw new Exception('Combatant not supported');
 		}
 		return match (true) {

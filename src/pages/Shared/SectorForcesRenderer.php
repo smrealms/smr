@@ -2,11 +2,11 @@
 
 namespace Smr\Pages\Shared;
 
-use Smr\AbstractShip;
 use Smr\Account;
 use Smr\Force;
 use Smr\Player;
 use Smr\Sector;
+use Smr\Ship;
 
 class SectorForcesRenderer {
 
@@ -14,7 +14,7 @@ class SectorForcesRenderer {
 		Account $ThisAccount,
 		Player $ThisPlayer,
 		Sector $ThisSector,
-		AbstractShip $ThisShip,
+		Ship $ThisShip,
 	): void {
 		?>
 		<div id="sector_forces" class="ajax"><?php

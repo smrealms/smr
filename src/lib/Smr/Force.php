@@ -20,7 +20,7 @@ use Smr\Pages\Player\ForcesRefreshAllProcessor;
 use Smr\Pages\Player\ForcesRefreshProcessor;
 
 /**
- * @implements ForceCombatantInterface<AbstractShip>
+ * @implements ForceCombatantInterface<Ship>
  */
 class Force implements ForceCombatantInterface {
 
@@ -347,7 +347,7 @@ class Force implements ForceCombatantInterface {
 		return $this->getGalaxy()->getMaxForceTime();
 	}
 
-	public function getBumpTurnCost(AbstractShip $ship): int {
+	public function getBumpTurnCost(Ship $ship): int {
 		$mines = $this->getMines();
 		if ($mines <= 1) {
 			return 0;
@@ -371,7 +371,7 @@ class Force implements ForceCombatantInterface {
 		$this->setSDs(self::MAX_SDS);
 	}
 
-	public function getAttackTurnCost(AbstractShip $ship): int {
+	public function getAttackTurnCost(Ship $ship): int {
 		if ($ship->isFederal() || $ship->hasDCS()) {
 			return 2;
 		}

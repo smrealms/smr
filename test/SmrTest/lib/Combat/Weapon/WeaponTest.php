@@ -5,12 +5,12 @@ namespace SmrTest\lib\Combat\Weapon;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
-use Smr\AbstractShip;
 use Smr\Combat\Results\Damage\WeaponDamage;
 use Smr\Combat\Weapon\Weapon;
 use Smr\Force;
 use Smr\Planet;
 use Smr\Port;
+use Smr\Ship;
 
 #[CoversClass(Weapon::class)]
 class WeaponTest extends TestCase {
@@ -205,8 +205,8 @@ class WeaponTest extends TestCase {
 		return new WeaponDamage(shieldDamage: 11, armourDamage: 9, damageRollover: false);
 	}
 
-	private function createShip(int $level = 0, int $mr = 0): AbstractShip {
-		$ship = $this->createStub(AbstractShip::class);
+	private function createShip(int $level = 0, int $mr = 0): Ship {
+		$ship = $this->createStub(Ship::class);
 		$ship->method('getLevel')->willReturn($level);
 		$ship->method('getMR')->willReturn($mr);
 		return $ship;

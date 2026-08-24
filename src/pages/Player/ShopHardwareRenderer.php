@@ -2,14 +2,14 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractShip;
+use Smr\Ship;
 
 class ShopHardwareRenderer {
 
 	/**
 	 * @param array<int, array{Page: \Smr\Pages\Player\ShopHardwareProcessor, Cost: int, Name: string}> $HardwareSold
 	 */
-	public static function render(array $HardwareSold, AbstractShip $ThisShip): void {
+	public static function render(array $HardwareSold, Ship $ThisShip): void {
 		if (count($HardwareSold) > 0) { ?>
 			<h2>Buy Hardware</h2>
 			<table class="standard">

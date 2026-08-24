@@ -7,7 +7,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
-use Smr\AbstractShip;
 use Smr\Combat\Results\Damage\ForceTakenDamage;
 use Smr\Combat\Results\Damage\WeaponDamage;
 use Smr\Combat\Results\Weapon\HitWeaponResult;
@@ -17,6 +16,7 @@ use Smr\Force;
 use Smr\Planet;
 use Smr\Player;
 use Smr\Port;
+use Smr\Ship;
 
 #[CoversClass(CombatDrones::class)]
 class CombatDronesTest extends TestCase {
@@ -214,7 +214,7 @@ class CombatDronesTest extends TestCase {
 		$drones = $this->createDrones();
 		$player = $this->createStub(Player::class);
 		$player->method('isCombatDronesKamikazeOnMines')->willReturn(true);
-		$ship = $this->createMock(AbstractShip::class);
+		$ship = $this->createMock(Ship::class);
 		$ship->expects($this->once())->method('getPlayer')->willReturn($player);
 		// With kamikaze on mines, CD amount on ship will be decreased by kamikaze amount
 		$ship->expects($this->once())->method('decreaseCDs')->with(3)->seal();
@@ -256,8 +256,8 @@ class CombatDronesTest extends TestCase {
 		);
 	}
 
-	private function createShip(int $level = 10, int $mr = 0, bool $hasDcs = false): AbstractShip&Stub {
-		$ship = $this->createStub(AbstractShip::class);
+	private function createShip(int $level = 10, int $mr = 0, bool $hasDcs = false): Ship&Stub {
+		$ship = $this->createStub(Ship::class);
 		$ship->method('hasDCS')->willReturn($hasDcs);
 		$ship->method('getLevel')->willReturn($level);
 		$ship->method('getMR')->willReturn($mr);

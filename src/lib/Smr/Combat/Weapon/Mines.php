@@ -3,12 +3,12 @@
 namespace Smr\Combat\Weapon;
 
 use Exception;
-use Smr\AbstractShip;
 use Smr\Combat\CombatantInterface;
 use Smr\Combat\Results\Damage\WeaponDamage;
 use Smr\Combat\Results\Weapon\HitWeaponResult;
 use Smr\Combat\WeaponShotAtCombatant;
 use Smr\Force;
+use Smr\Ship;
 
 class Mines extends AbstractWeapon {
 
@@ -27,7 +27,7 @@ class Mines extends AbstractWeapon {
 		$this->damageRollover = false;
 	}
 
-	public function getModifiedForceAccuracyAgainstPlayer(Force $forces, AbstractShip $target, bool $minesAreAttacker): float {
+	public function getModifiedForceAccuracyAgainstPlayer(Force $forces, Ship $target, bool $minesAreAttacker): float {
 		$random = rand(1, 7) * rand(1, 7);
 		$modifiedAccuracy = $this->getBaseAccuracy() - $target->getLevel() - $random;
 		if ($minesAreAttacker) {
@@ -57,7 +57,7 @@ class Mines extends AbstractWeapon {
 				damageRollover: $this->isDamageRollover(),
 			);
 		}
-		assert($target instanceof AbstractShip);
+		assert($target instanceof Ship);
 		$baseDamage = $this->getDamage();
 
 		// Compute damage modifier
@@ -80,8 +80,8 @@ class Mines extends AbstractWeapon {
 	}
 
 	/**
-	 * @param WeaponShotAtCombatant<AbstractShip> $shot
-	 * @return HitWeaponResult<AbstractShip>
+	 * @param WeaponShotAtCombatant<Ship> $shot
+	 * @return HitWeaponResult<Ship>
 	 */
 	public function shoot(
 		WeaponShotAtCombatant $shot,
@@ -95,8 +95,8 @@ class Mines extends AbstractWeapon {
 	}
 
 	/**
-	 * @param WeaponShotAtCombatant<AbstractShip> $shot
-	 * @return HitWeaponResult<AbstractShip>
+	 * @param WeaponShotAtCombatant<Ship> $shot
+	 * @return HitWeaponResult<Ship>
 	 */
 	private function hitShipTarget(
 		WeaponShotAtCombatant $shot,

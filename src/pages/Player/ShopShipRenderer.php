@@ -2,7 +2,7 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractShip;
+use Smr\Ship;
 use Smr\ShipType;
 
 class ShopShipRenderer {
@@ -22,7 +22,7 @@ class ShopShipRenderer {
 		?ShipType $CompareShip,
 		?int $TradeInValue,
 		?int $TotalCost,
-		AbstractShip $ThisShip,
+		Ship $ThisShip,
 	): void {
 		if (count($ShipsSold) > 0) { ?>
 			<h2>Available Ships</h2>

@@ -2,13 +2,13 @@
 
 namespace Smr\Pages\Player;
 
-use Smr\AbstractShip;
 use Smr\Player;
 use Smr\Sector;
+use Smr\Ship;
 
 class ExamineTraderRenderer {
 
-	public static function render(Player $TargetPlayer, bool $NewbieKill, Player $ThisPlayer, Sector $ThisSector, AbstractShip $ThisShip): void {
+	public static function render(Player $TargetPlayer, bool $NewbieKill, Player $ThisPlayer, Sector $ThisSector, Ship $ThisShip): void {
 		$canAttack = false;
 
 		if ($ThisPlayer->hasNewbieTurns()) {

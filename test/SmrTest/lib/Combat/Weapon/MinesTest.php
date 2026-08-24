@@ -7,7 +7,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
-use Smr\AbstractShip;
 use Smr\Combat\Results\Damage\NormalTakenDamage;
 use Smr\Combat\Results\Damage\WeaponDamage;
 use Smr\Combat\Results\Weapon\HitWeaponResult;
@@ -15,6 +14,7 @@ use Smr\Combat\Weapon\Mines;
 use Smr\Combat\WeaponShotAtCombatant;
 use Smr\Force;
 use Smr\Sector;
+use Smr\Ship;
 
 #[CoversClass(Mines::class)]
 class MinesTest extends TestCase {
@@ -120,7 +120,7 @@ class MinesTest extends TestCase {
 
 			public function getModifiedForceAccuracyAgainstPlayer(
 				Force $forces,
-				AbstractShip $target,
+				Ship $target,
 				bool $minesAreAttacker,
 			): float {
 				return $this->fixedAccuracy;
@@ -132,8 +132,8 @@ class MinesTest extends TestCase {
 		int $level = 0,
 		bool $isFederal = false,
 		bool $hasDcs = false,
-	): AbstractShip&Stub {
-		$ship = $this->createStub(AbstractShip::class);
+	): Ship&Stub {
+		$ship = $this->createStub(Ship::class);
 		$ship->method('getLevel')->willReturn($level);
 		$ship->method('isFederal')->willReturn($isFederal);
 		$ship->method('hasDCS')->willReturn($hasDcs);

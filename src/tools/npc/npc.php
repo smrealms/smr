@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-use Smr\AbstractShip;
 use Smr\Account;
 use Smr\Combat\Weapon\Weapon;
 use Smr\Container\DiContainer;
 use Smr\Database;
+use Smr\DatabaseShip;
 use Smr\Epoch;
 use Smr\Exceptions\PathNotFound;
 use Smr\Force;
@@ -205,7 +205,7 @@ function clearCaches(): void {
 	Sector::clearCache();
 	Planet::clearCache();
 	Player::clearCache();
-	Ship::clearCache();
+	DatabaseShip::clearCache();
 	Force::clearCache();
 	Port::clearCache();
 }
@@ -498,7 +498,7 @@ function moveToSector(Player $player, int $targetSector): PlayerPageProcessor {
 	return new SectorMoveProcessor($targetSector, new CurrentSector());
 }
 
-function getCurrentShipTier(AbstractShip $ship): int {
+function getCurrentShipTier(Ship $ship): int {
 	// Determine current ship tier
 	foreach (SHIP_UPGRADE_PATH as $upgradeGroup) {
 		foreach ($upgradeGroup as $tier => $upgradeShipID) {

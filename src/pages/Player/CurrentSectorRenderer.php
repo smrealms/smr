@@ -3,7 +3,6 @@
 namespace Smr\Pages\Player;
 
 use Exception;
-use Smr\AbstractShip;
 use Smr\Account;
 use Smr\Combat\Results\Full\ForceFullCombatResults;
 use Smr\Combat\Results\Full\PlanetFullCombatResults;
@@ -25,6 +24,7 @@ use Smr\Pages\Shared\TraderFullCombatResultsRenderer;
 use Smr\Planet;
 use Smr\Player;
 use Smr\Sector;
+use Smr\Ship;
 use Smr\Template;
 
 class CurrentSectorRenderer {
@@ -55,7 +55,7 @@ class CurrentSectorRenderer {
 		?array $AttackResults,
 		Player $ThisPlayer,
 		Sector $ThisSector,
-		AbstractShip $ThisShip,
+		Ship $ThisShip,
 		Account $ThisAccount,
 		?Planet $ThisPlanet,
 		?array $Ticker,

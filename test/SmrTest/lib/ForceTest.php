@@ -6,12 +6,12 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
-use Smr\AbstractShip;
 use Smr\Combat\Results\Damage\ForceTakenDamage;
 use Smr\Combat\Results\Damage\WeaponDamage;
 use Smr\Epoch;
 use Smr\Force;
 use Smr\Galaxy;
+use Smr\Ship;
 use SmrTest\TestUtils;
 
 #[CoversClass(Force::class)]
@@ -41,7 +41,7 @@ class ForceTest extends TestCase {
 	#[TestWith([25, true, 2])]
 	public function test_getBumpTurnCost(int $mines, bool $hasDCS, int $expected): void {
 		$this->force->setMines($mines);
-		$ship = $this->createStub(AbstractShip::class);
+		$ship = $this->createStub(Ship::class);
 		$ship->method('hasDCS')->willReturn($hasDCS);
 		$ship->method('isFederal')->willReturn(false); // redundant with hasDCS
 		self::assertSame($expected, $this->force->getBumpTurnCost($ship));
@@ -50,7 +50,7 @@ class ForceTest extends TestCase {
 	#[TestWith([false, 3])]
 	#[TestWith([true, 2])]
 	public function test_getAttackTurnCost(bool $hasDCS, int $expected): void {
-		$ship = $this->createStub(AbstractShip::class);
+		$ship = $this->createStub(Ship::class);
 		$ship->method('hasDCS')->willReturn($hasDCS);
 		$ship->method('isFederal')->willReturn(false); // redundant with hasDCS
 		self::assertSame($expected, $this->force->getAttackTurnCost($ship));
