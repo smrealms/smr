@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Player;
 
+use Smr\Combat\NormalDamageTeamResultsResolver;
 use Smr\Combat\Results\Combatant\PlanetAttackerCombatResults;
 use Smr\Combat\Results\Full\PlanetFullCombatResults;
 use Smr\Database;
@@ -61,7 +62,6 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 		// ********************************
 
 		$attackerResults = [];
-		$totalDamage = 0;
 
 		// take the turns
 		$player->takeTurns(TURNS_TO_SHOOT_PLANET);
@@ -73,21 +73,18 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 			$attacker->getShip()->decloak();
 		}
 
-		$totalShieldDamage = 0;
 		foreach ($attackers as $attacker) {
 			$playerResults = $attacker->getShip()->shootPlanet($planet);
 			$attackerResults[$attacker->getAccountID()] = $playerResults;
-			$totalDamage += $playerResults->getTotalDamage();
-			foreach ($playerResults->weaponResults as $weapon) {
-				if (isset($weapon->actualDamage)) { // Only set if the weapon hits
-					$totalShieldDamage += $weapon->actualDamage->shieldDamage;
-				}
-			}
 		}
 
 		// Planet downgrades only occur on non-shield damage
-		$downgradeDamage = $totalDamage - $totalShieldDamage;
-		$attackerResults = new PlanetAttackerCombatResults($totalDamage, $attackerResults, $planet->checkForDowngrade($downgradeDamage));
+		$damageTotals = NormalDamageTeamResultsResolver::resolve($attackerResults);
+		$attackerResults = new PlanetAttackerCombatResults(
+			totalDamage: $damageTotals->totalDamage,
+			traders: $attackerResults,
+			downgrades: $planet->checkForDowngrade($damageTotals->getNonShieldDamage()),
+		);
 
 		$results = new PlanetFullCombatResults(
 			attackers: $attackerResults,

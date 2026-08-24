@@ -34,6 +34,7 @@ class CombatantResultTest extends TestCase {
 		);
 
 		self::assertSame([2 => 7, 3 => 5], $result->getTotalDamagePerTarget());
+		self::assertSame(12, $result->getTotalShieldDamage());
 	}
 
 	public function test_getTotalDamage_sums_damage_across_targets(): void {

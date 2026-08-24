@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Player;
 
+use Smr\Combat\NormalDamageTeamResultsResolver;
 use Smr\Combat\Results\Combatant\TeamCombatResults;
 use Smr\Combat\Results\Full\TraderFullCombatResults;
 use Smr\Database;
@@ -71,11 +72,9 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 
 		$teamAttack = function(string $attack, string $defend) use ($fightingPlayers): TeamCombatResults {
 			$traders = [];
-			$totalDamage = 0;
 			foreach ($fightingPlayers[$attack] as $teamPlayer) {
 				$playerResults = $teamPlayer->getShip()->shootPlayers($fightingPlayers[$defend]);
 				$traders[$teamPlayer->getAccountID()] = $playerResults;
-				$totalDamage += $playerResults->getTotalDamage();
 
 				// Award assists (if there are multiple attackers)
 				if (count($fightingPlayers[$attack]) > 1) {
@@ -90,7 +89,8 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 					}
 				}
 			}
-			return new TeamCombatResults($totalDamage, $traders);
+			$totals = NormalDamageTeamResultsResolver::resolve($traders);
+			return new TeamCombatResults($totals->totalDamage, $traders);
 		};
 
 		$results = new TraderFullCombatResults(

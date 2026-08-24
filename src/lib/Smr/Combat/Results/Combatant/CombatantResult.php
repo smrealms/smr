@@ -3,6 +3,7 @@
 namespace Smr\Combat\Results\Combatant;
 
 use Smr\Combat\CombatantInterface;
+use Smr\Combat\Results\Damage\NormalTakenDamage;
 use Smr\Combat\Results\Weapon\HitWeaponResult;
 
 /**
@@ -48,20 +49,42 @@ class CombatantResult {
 	 */
 	public function getTotalDamagePerTarget(): array {
 		$totals = [];
-		$allResults = $this->weaponResults;
-		if ($this->dronesResult !== null) {
-			$allResults[] = $this->dronesResult;
-		}
-		foreach ($allResults as $result) {
-			if ($result instanceof HitWeaponResult) {
-				$targetID = $result->target->getCombatID();
-				if (!array_key_exists($targetID, $totals)) {
-					$totals[$targetID] = 0;
-				}
-				$totals[$targetID] += $result->actualDamage->totalDamage;
+		foreach ($this->getHitWeaponResults() as $result) {
+			$targetID = $result->target->getCombatID();
+			if (!array_key_exists($targetID, $totals)) {
+				$totals[$targetID] = 0;
 			}
+			$totals[$targetID] += $result->actualDamage->totalDamage;
 		}
 		return $totals;
+	}
+
+	/**
+	 * Returns the total actual damage to shields by this combatant in this round of combat.
+	 * Includes shield damage from both weapon and CD NormalDamage hits.
+	 */
+	public function getTotalShieldDamage(): int {
+		$shieldDamage = 0;
+		foreach ($this->getHitWeaponResults() as $result) {
+			if ($result->actualDamage instanceof NormalTakenDamage) {
+				$shieldDamage += $result->actualDamage->shieldDamage;
+			}
+		}
+		return $shieldDamage;
+	}
+
+	/**
+	 * @return iterable<HitWeaponResult<TTarget>>
+	 */
+	private function getHitWeaponResults(): iterable {
+		foreach ($this->weaponResults as $result) {
+			if ($result instanceof HitWeaponResult) {
+				yield $result;
+			}
+		}
+		if ($this->dronesResult !== null) {
+			yield $this->dronesResult;
+		}
 	}
 
 }

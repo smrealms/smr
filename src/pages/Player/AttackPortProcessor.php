@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Player;
 
+use Smr\Combat\NormalDamageTeamResultsResolver;
 use Smr\Combat\Results\Combatant\PortAttackerCombatResults;
 use Smr\Combat\Results\Full\PortFullCombatResults;
 use Smr\Database;
@@ -58,7 +59,6 @@ class AttackPortProcessor extends PlayerPageProcessor {
 		// ********************************
 
 		$attackerResults = [];
-		$totalDamage = 0;
 
 		$port->attackedBy($player, $attackers);
 
@@ -68,21 +68,18 @@ class AttackPortProcessor extends PlayerPageProcessor {
 			$attacker->getShip()->decloak();
 		}
 
-		$totalShieldDamage = 0;
 		foreach ($attackers as $attacker) {
 			$playerResults = $attacker->getShip()->shootPort($port);
 			$attackerResults[$attacker->getAccountID()] = $playerResults;
-			$totalDamage += $playerResults->getTotalDamage();
-			foreach ($playerResults->weaponResults as $weapon) {
-				if (isset($weapon->actualDamage)) { // Only set if the weapon hits
-					$totalShieldDamage += $weapon->actualDamage->shieldDamage;
-				}
-			}
 		}
 
 		// Port downgrades only occur on non-shield damage
-		$downgradeDamage = $totalDamage - $totalShieldDamage;
-		$attackerResults = new PortAttackerCombatResults($totalDamage, $attackerResults, $port->checkForDowngrade($downgradeDamage));
+		$damageTotals = NormalDamageTeamResultsResolver::resolve($attackerResults);
+		$attackerResults = new PortAttackerCombatResults(
+			totalDamage: $damageTotals->totalDamage,
+			traders: $attackerResults,
+			downgrades: $port->checkForDowngrade($damageTotals->getNonShieldDamage()),
+		);
 
 		$results = new PortFullCombatResults(
 			attackers: $attackerResults,
