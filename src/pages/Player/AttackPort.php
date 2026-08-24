@@ -24,13 +24,15 @@ class AttackPort extends PlayerPage {
 		}
 		$port = $sector->getPort();
 
-		if ($this->results !== null) {
-			$alreadyDestroyed = false;
-			$creditedAttacker = false;
-		} else {
-			$alreadyDestroyed = true;
-			$creditedAttacker = $port->isCreditedAttacker($player);
-		}
+		// Display port already destroyed page content if port is busted and we don't
+		// have existing combat results to display.
+		$hasResults = $this->results !== null;
+		$alreadyDestroyed = $port->isBusted() && !$hasResults;
+
+		// If port is busted and we do have combat results, it means the player has
+		// attacked the port, and we can skip the credited check as an optimization.
+		// (Note: credited attackers may not have been present for kill)
+		$creditedAttacker = $port->isBusted() && ($hasResults || $port->isCreditedAttacker($player));
 
 		$template->pageRenderer = fn() => AttackPortRenderer::render(
 			template: $template,
