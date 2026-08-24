@@ -4,8 +4,8 @@ namespace Smr\Pages\Player;
 
 use Smr\Combat\Results\Full\PlanetFullCombatResults;
 use Smr\Page\PlayerPage;
+use Smr\Planet;
 use Smr\Player;
-use Smr\Sector;
 use Smr\Template;
 
 class AttackPlanet extends PlayerPage {
@@ -20,18 +20,15 @@ class AttackPlanet extends PlayerPage {
 	}
 
 	public function build(Player $player, Template $template): void {
-		// Either player or planet may no longer be in sector
-		$sector = Sector::getSector($player->getGameID(), $this->sectorID);
-		if (!$sector->hasPlanet()) {
-			new CurrentSector(message: 'The planet no longer exists!')->go();
-		}
-		$planet = $sector->getPlanet();
-
+		// Note that either player (due to death) or planet (due to being deleted,
+		// e.g. Sentinel Outpost) may no longer be in sector. In the case of a
+		// deleted planet, Planet::getPlanet returns an empty Planet object, which
+		// will allow the final combat result to be displayed.
 		$template->pageRenderer = fn() => AttackPlanetRenderer::render(
 			template: $template,
 			FullPlanetCombatResults: $this->results,
 			OverrideDeath: $player->isDead(),
-			Planet: $planet,
+			Planet: Planet::getPlanet($player->getGameID(), $this->sectorID),
 			ThisPlayer: $player,
 		);
 	}
