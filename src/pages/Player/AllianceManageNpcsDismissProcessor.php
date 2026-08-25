@@ -21,10 +21,7 @@ class AllianceManageNpcsDismissProcessor extends PlayerPageProcessor {
 
 		// Dismissing an NPC while working could lead to abuse, so forbid it.
 		$db = Database::getInstance();
-		$dbResult = $db->select(
-			'npc_logins',
-			['login' => $npc->getAccount()->getLogin()],
-		);
+		$dbResult = $db->select('npc_players', $npc->SQLID);
 		if ($dbResult->record()->getBoolean('working')) {
 			create_error('You cannot dismiss an NPC while it is on the job! Wait for it to finish working.');
 		}
@@ -46,9 +43,9 @@ class AllianceManageNpcsDismissProcessor extends PlayerPageProcessor {
 		}
 		$db = Database::getInstance();
 		$db->update(
-			'npc_logins',
+			'npc_players',
 			['active' => $db->escapeBoolean(false)],
-			['login' => $npc->getAccount()->getLogin()],
+			$npc->SQLID,
 		);
 	}
 

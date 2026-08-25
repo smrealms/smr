@@ -39,8 +39,7 @@ class ChessGame {
 	public static function getNPCMoveGames(bool $forceUpdate = false): array {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT chess_game_id
-					FROM npc_logins
-					JOIN account USING(login)
+					FROM npc_accounts
 					JOIN chess_game ON account_id = black_id OR account_id = white_id
 					WHERE end_time > :now OR end_time IS NULL', [
 			'now' => Epoch::time(),

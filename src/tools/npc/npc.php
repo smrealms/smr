@@ -290,18 +290,19 @@ function releaseNPC(): void {
 		debug('releaseNPC: no NPC to release');
 		return;
 	}
-	$login = $session->getAccount()->getLogin();
+	$player = $session->getPlayer();
 	$db = Database::getInstance();
 	$changedRows = $db->update(
-		'npc_logins',
+		'npc_players',
 		['working' => $db->escapeBoolean(false)],
-		['login' => $login],
+		$player->SQLID,
 	);
 	if ($changedRows > 0) {
-		debug('Released NPC: ' . $login);
+		$msg = 'Released NPC';
 	} else {
-		debug('Failed to release NPC: ' . $login);
+		$msg = 'Failed to release NPC';
 	}
+	debug($msg, [...$player->SQLID, 'name' => $player->getPlayerName()]);
 
 	// Delete sector lock associated with this NPC
 	SectorLock::resetInstance();
@@ -327,14 +328,20 @@ function changeNPCLogin(): void {
 
 	if ($availableNpcs === null) {
 		// Make sure NPC's have been set up in the database
-		$dbResult = $db->select('npc_logins', limit: 1);
+		$dbResult = $db->select('npc_players', limit: 1);
 		if (!$dbResult->hasRecord()) {
 			debug('No NPCs have been created yet!');
 			exitNPC();
 		}
 
 		// Make sure to select NPCs from active games only
-		$dbResult = $db->read('SELECT account_id, game_id FROM player JOIN account USING(account_id) JOIN npc_logins USING(login) JOIN game USING(game_id) WHERE active=\'TRUE\' AND working=\'FALSE\' AND start_time < :now AND end_time > :now ORDER BY last_turn_update ASC', [
+		$dbResult = $db->read('SELECT npc_players.account_id, npc_players.game_id
+			FROM npc_players
+			JOIN player USING(account_id, game_id)
+			JOIN game USING(game_id)
+			WHERE active=\'TRUE\' AND working=\'FALSE\'
+				AND start_time < :now AND end_time > :now
+			ORDER BY last_turn_update ASC', [
 			'now' => $db->escapeNumber(Epoch::time()),
 		]);
 		$availableNpcs = [];
@@ -359,12 +366,13 @@ function changeNPCLogin(): void {
 	$session->setAccount($account);
 	$session->updateGame($npc['game_id']);
 
+	$player = $session->getPlayer();
 	$db->update(
-		'npc_logins',
+		'npc_players',
 		['working' => $db->escapeBoolean(true)],
-		['login' => $account->getLogin()],
+		$player->SQLID,
 	);
-	debug('Chosen NPC: login = ' . $account->getLogin() . ', game = ' . $session->getGameID() . ', player = ' . $session->getPlayer()->getPlayerName());
+	debug('Chosen NPC:', [...$player->SQLID, 'name' => $player->getPlayerName()]);
 }
 
 function tradeGoods(int $goodID, Player $player, Port $port): PlayerPageProcessor {

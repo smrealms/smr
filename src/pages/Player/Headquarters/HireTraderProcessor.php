@@ -35,9 +35,9 @@ class HireTraderProcessor extends PlayerPageProcessor {
 		// Enable NPC
 		$db = Database::getInstance();
 		$db->update(
-			'npc_logins',
+			'npc_players',
 			['active' => $db->escapeBoolean(true)],
-			['login' => $npc->getAccount()->getLogin()],
+			$npc->SQLID,
 		);
 
 		new HireTrader($this->locationID)->go();

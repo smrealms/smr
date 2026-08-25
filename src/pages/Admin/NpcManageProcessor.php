@@ -16,7 +16,6 @@ class NpcManageProcessor extends AccountPageProcessor {
 	public function __construct(
 		private readonly int $selectedGameID,
 		private readonly int $accountID,
-		private readonly string $login,
 	) {}
 
 	public function build(Account $account): never {
@@ -27,9 +26,12 @@ class NpcManageProcessor extends AccountPageProcessor {
 			// Toggle the activity of this NPC
 			$active = Request::has('active');
 			$db->update(
-				'npc_logins',
+				'npc_players',
 				['active' => $db->escapeBoolean($active)],
-				['login' => $this->login],
+				[
+					'account_id' => $this->accountID,
+					'game_id' => $this->selectedGameID,
+				],
 			);
 		}
 
@@ -40,6 +42,8 @@ class NpcManageProcessor extends AccountPageProcessor {
 			$playerName = Request::get('player_name');
 			$raceID = Request::getInt('race_id');
 			$npcPlayer = Player::createPlayer($accountID, $gameID, $playerName, $raceID, false, true);
+
+			$db->insert('npc_players', $npcPlayer->SQLID);
 
 			$shipTypeID = Request::getInt('player_ship');
 			if ($shipTypeID === -1) {
@@ -61,9 +65,9 @@ class NpcManageProcessor extends AccountPageProcessor {
 			if ($allianceName === NPC_FOR_HIRE_ALLIANCE_NAME) {
 				// For-hire NPCs must start out deactivated
 				$db->update(
-					'npc_logins',
+					'npc_players',
 					['active' => $db->escapeBoolean(false)],
-					['login' => $this->login],
+					$npcPlayer->SQLID,
 				);
 				$allowReserved = true;
 				$allianceDescription = 'Traders for hire.';
