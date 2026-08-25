@@ -61,24 +61,42 @@ class CombatDronesTest extends TestCase {
 		self::assertSame(51.0, $result);
 	}
 
-	public function test_getModifiedAccuracyAgainstPort_adds_random_accuracy(): void {
+	#[TestWith([1, 1, 44.9])]
+	#[TestWith([1, 9, 40.9])]
+	#[TestWith([50, 1, 64.5])]
+	#[TestWith([50, 9, 60.5])]
+	public function test_getModifiedAccuracyAgainstPort_applies_level_modifiers(
+		int $playerLevel,
+		int $portLevel,
+		float $expected,
+	): void {
 		$drones = $this->createDrones();
-		$ship = $this->createShip();
+		$ship = $this->createShip(level: $playerLevel);
 		$port = $this->createStub(Port::class);
+		$port->method('getLevel')->willReturn($portLevel);
 		srand(1);
 
 		$result = $drones->getModifiedAccuracyAgainstTarget($ship, $port);
-		self::assertSame(51.0, $result);
+		self::assertSame($expected, $result);
 	}
 
-	public function test_getModifiedAccuracyAgainstPlanet_adds_random_accuracy(): void {
+	#[TestWith([1, 5.0, 44.9])]
+	#[TestWith([1, 45.0, 40.9])]
+	#[TestWith([50, 5.0, 64.5])]
+	#[TestWith([50, 45.0, 60.5])]
+	public function test_getModifiedAccuracyAgainstPlanet_applies_level_modifiers(
+		int $playerLevel,
+		float $planetLevel,
+		float $expected,
+	): void {
 		$drones = $this->createDrones();
-		$ship = $this->createShip();
+		$ship = $this->createShip(level: $playerLevel);
 		$planet = $this->createStub(Planet::class);
+		$planet->method('getLevel')->willReturn($planetLevel);
 		srand(1);
 
 		$result = $drones->getModifiedAccuracyAgainstTarget($ship, $planet);
-		self::assertSame(51.0, $result);
+		self::assertSame($expected, $result);
 	}
 
 	#[TestWith([0, 32.7477777778])]
@@ -104,6 +122,24 @@ class CombatDronesTest extends TestCase {
 
 		$result = $drones->getModifiedAccuracyAgainstTarget($forces, $targetShip);
 		self::assertSame(51.0, $result);
+	}
+
+	public function test_getModifiedPlanetAccuracyAgainstPlayer(): void {
+		$drones = $this->createDrones();
+		$planet = $this->createStub(Planet::class);
+		$targetShip = $this->createShip();
+
+		$result = $drones->getModifiedAccuracyAgainstTarget($planet, $targetShip);
+		self::assertSame(100.0, $result);
+	}
+
+	public function test_getModifiedPortAccuracyAgainstPlayer(): void {
+		$drones = $this->createDrones();
+		$port = $this->createStub(Port::class);
+		$targetShip = $this->createShip();
+
+		$result = $drones->getModifiedAccuracyAgainstTarget($port, $targetShip);
+		self::assertSame(100.0, $result);
 	}
 
 	// Test Damage methods ----------------------------------------------------
@@ -141,7 +177,7 @@ class CombatDronesTest extends TestCase {
 		$port = $this->createStub(Port::class);
 		srand(1);
 
-		$expected = $this->damage(amount: 12, launched: 6);
+		$expected = $this->damage(amount: 10, launched: 5);
 		$result = $drones->getModifiedDamageAgainstTarget($ship, $port);
 		self::assertEquals($expected, $result);
 	}
@@ -152,7 +188,7 @@ class CombatDronesTest extends TestCase {
 		$planet = $this->createStub(Planet::class);
 		srand(1);
 
-		$expected = $this->damage(amount: 3, launched: 6);
+		$expected = $this->damage(amount: 2, launched: 5);
 		$result = $drones->getModifiedDamageAgainstTarget($ship, $planet);
 		self::assertEquals($expected, $result);
 	}
