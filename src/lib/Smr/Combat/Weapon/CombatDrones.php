@@ -2,6 +2,7 @@
 
 namespace Smr\Combat\Weapon;
 
+use LogicException;
 use Smr\Combat\CombatantInterface;
 use Smr\Combat\Results\Damage\WeaponDamage;
 use Smr\Combat\Results\Weapon\HitWeaponResult;
@@ -41,9 +42,13 @@ class CombatDrones extends AbstractWeapon {
 		$modifiedAccuracy = $this->getBaseAccuracy();
 		$random = rand(self::MIN_CDS_RAND, self::MAX_CDS_RAND);
 
-		if (($shooter instanceof Force) || !($target instanceof Ship)) {
+		if ($target instanceof Force || $shooter instanceof Force) {
 			$modifiedAccuracy += $random;
-		} else {
+		} elseif ($target instanceof Port) {
+			$modifiedAccuracy += $random + 0.4 * $shooter->getLevel() - 6 - $target->getLevel() / 2;
+		} elseif ($target instanceof Planet) {
+			$modifiedAccuracy += $random + 0.4 * $shooter->getLevel() - 6 - $target->getLevel() / 10;
+		} elseif ($target instanceof Ship) {
 			// Player vs. Player
 			assert($shooter instanceof Ship);
 			$levelRand = rand(IFloor($shooter->getLevel() / 2), $shooter->getLevel());
@@ -53,6 +58,8 @@ class CombatDrones extends AbstractWeapon {
 			if ($mrDiff > 0) {
 				$modifiedAccuracy -= $this->getBaseAccuracy() * ($mrDiff / MR_FACTOR) / 100;
 			}
+		} else {
+			throw new LogicException('Should not happen: unhandled combatant types');
 		}
 
 		return max(0, min(100, $modifiedAccuracy));
