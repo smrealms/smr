@@ -2629,11 +2629,16 @@ class Player {
 		if ($take < 0 || $takeNewbie < 0) {
 			throw new Exception('Trying to take negative turns.');
 		}
-		$take = ICeil($take);
 		// Only take up to as many newbie turns as we have remaining
 		$takeNewbie = min($this->getNewbieTurns(), $takeNewbie);
 
-		$this->setTurns($this->getTurns() - $take);
+		// Turns can't go below 0, but we can delay the next turn update
+		$newTurns = $this->getTurns() - $take;
+		if ($newTurns < 0) {
+			$this->setLastTurnUpdateFromTurnsChange(-$newTurns);
+		}
+
+		$this->setTurns($newTurns);
 		$this->setNewbieTurns($this->getNewbieTurns() - $takeNewbie);
 		$this->increaseHOF($take, ['Movement', 'Turns Used', 'Since Last Death'], HOF_ALLIANCE);
 		$this->increaseHOF($take, ['Movement', 'Turns Used', 'Total'], HOF_ALLIANCE);
@@ -2671,7 +2676,13 @@ class Player {
 	public function getTimeUntilNextTurn(): int {
 		$secondsSinceUpdate = Epoch::time() - $this->getLastTurnUpdate();
 		$secondsPerTurn = 3600 / $this->getShip()->getRealSpeed();
-		return ICeil(fmod(abs($secondsSinceUpdate - $secondsPerTurn), $secondsPerTurn));
+		$secondsDiff = $secondsPerTurn - $secondsSinceUpdate;
+		// Handle the case where we're in turn debt
+		if ($secondsSinceUpdate <= 0) {
+			return ICeil($secondsDiff);
+		}
+		// Normal case, next turn comes within one $secondsPerTurn increment
+		return ICeil(fmod(abs($secondsDiff), $secondsPerTurn));
 	}
 
 	/**
@@ -2703,10 +2714,17 @@ class Player {
 		// do we have at least one turn to give?
 		if ($extraTurns > 0) {
 			// recalc the time to avoid rounding errors
-			$newLastTurnUpdate = $this->getLastTurnUpdate() + ICeil($extraTurns * 3600 / $this->getShip()->getRealSpeed());
-			$this->setLastTurnUpdate($newLastTurnUpdate);
+			$this->setLastTurnUpdateFromTurnsChange($extraTurns);
 			$this->giveTurns($extraTurns);
 		}
+	}
+
+	/**
+	 * Set the new lastTurnUpdate time corresponding to a given change in turns.
+	 */
+	protected function setLastTurnUpdateFromTurnsChange(int $turns): void {
+		$newLastTurnUpdate = $this->getLastTurnUpdate() + ICeil($turns * 3600 / $this->getShip()->getRealSpeed());
+		$this->setLastTurnUpdate($newLastTurnUpdate);
 	}
 
 	public function getLastTurnUpdate(): int {
