@@ -55,14 +55,14 @@ class NpcManageSetupGalaxyProcessor extends AccountPageProcessor {
 		$planet->setBuildingsToMax();
 		$planet->setDefensesToMax();
 		$weapons = [
-			Weapon::getWeapon(WEAPON_TYPE_LASER),
-			Weapon::getWeapon(WEAPON_TYPE_LASER),
-			Weapon::getWeapon(WEAPON_TYPE_LASER),
+			Weapon::getWeapon(WEAPON_TYPE_LARGE_PULSE_LASER),
 			Weapon::getWeapon(WEAPON_TYPE_LARGE_PULSE_LASER),
 			Weapon::getWeapon(WEAPON_TYPE_LARGE_PULSE_LASER),
 			Weapon::getWeapon(WEAPON_TYPE_LARGE_PULSE_LASER),
 			Weapon::getWeapon(WEAPON_TYPE_HUGE_PULSE_LASER),
 			Weapon::getWeapon(WEAPON_TYPE_HUGE_PULSE_LASER),
+			Weapon::getWeapon(WEAPON_TYPE_HUGE_PULSE_LASER),
+			Weapon::getWeapon(WEAPON_TYPE_PLANETARY_PULSE_LASER),
 			Weapon::getWeapon(WEAPON_TYPE_PLANETARY_PULSE_LASER),
 			Weapon::getWeapon(WEAPON_TYPE_HELL_BLASTER),
 		];
