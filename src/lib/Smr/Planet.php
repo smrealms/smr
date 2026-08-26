@@ -130,6 +130,51 @@ class Planet implements NormalCombatantInterface {
 		return self::getPlanet($gameID, $sectorID, true);
 	}
 
+	/**
+	 * Move a planet, its completed buildings, mounted weapons, and landed players
+	 * to another sector.
+	 *
+	 * This intentionally does not move other planet companion rows, such as cargo
+	 * and active construction, because it is intended only to be called before a
+	 * game is started (but after, say, an NPC galaxy is set up). Thus it is not
+	 * critical to lock the database for this operation.
+	 */
+	public static function movePlanet(int $gameID, int $origSectorID, int $targetSectorID): void {
+		if ($origSectorID === $targetSectorID) {
+			return;
+		}
+
+		$db = Database::getInstance();
+		$origSQLID = [
+			'game_id' => $db->escapeNumber($gameID),
+			'sector_id' => $db->escapeNumber($origSectorID),
+		];
+		$targetSQLID = [
+			'game_id' => $db->escapeNumber($gameID),
+			'sector_id' => $db->escapeNumber($targetSectorID),
+		];
+		$data = ['sector_id' => $db->escapeNumber($targetSectorID)];
+
+		if (!$db->select('planet', $origSQLID)->hasRecord()) {
+			throw new Exception('Planet does not exist in sector ' . $origSectorID . ' game ' . $gameID);
+		}
+		if ($db->select('planet', $targetSQLID)->hasRecord()) {
+			throw new Exception('Planet already exists in sector ' . $targetSectorID . ' game ' . $gameID);
+		}
+
+		$db->update('planet', $data, $origSQLID);
+		$db->update('planet_has_building', $data, $origSQLID);
+		$db->update('planet_has_weapon', $data, $origSQLID);
+		$db->update(
+			'player',
+			$data,
+			[...$origSQLID, 'land_on_planet' => $db->escapeBoolean(true)],
+		);
+
+		self::clearCache();
+		Player::clearCache();
+	}
+
 	public static function removePlanet(int $gameID, int $sectorID): void {
 		$db = Database::getInstance();
 		$SQLID = [
