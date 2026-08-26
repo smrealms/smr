@@ -121,6 +121,8 @@ class NpcManageRenderer {
 						<option value="<?php echo $allianceID; ?>"><?php echo $allianceName; ?></option><?php
 					} ?>
 				</select>
+				<br />
+				Raid Boss: <input name="raid_boss" type="checkbox" />
 				<br /><br />
 				<?php echo create_submit_display('Setup Galaxy'); ?>
 			</form><?php
