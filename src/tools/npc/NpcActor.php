@@ -3,6 +3,7 @@
 namespace Smr\Npc;
 
 use Exception;
+use Smr\Database;
 use Smr\Force;
 use Smr\Npc\Exceptions\AbandonTradeRoute;
 use Smr\Npc\Exceptions\FinalAction;
@@ -147,6 +148,14 @@ class NpcActor {
 
 			$player->setDead(false); // see death_processing.php
 			$player->setNewbieWarning(false); // undo Player::killPlayer setting this to true
+
+			// If NPC was locked to ship, unlock it so they can upgrade from pod.
+			$db = Database::getInstance();
+			$db->update(
+				'npc_players',
+				['lock_ship' => $db->escapeBoolean(false)],
+				$player->SQLID,
+			);
 
 			// Hired traders quit their job after getting podded while acting.
 			// If no action yet, don't dismiss since this might be a new employer.

@@ -35,6 +35,19 @@ class NpcManageProcessor extends AccountPageProcessor {
 			);
 		}
 
+		// Change lock_ship status of an NPC
+		if (Request::has('lock_ship-submit')) {
+			$lockShip = Request::has('lock_ship');
+			$db->update(
+				'npc_players',
+				['lock_ship' => $db->escapeBoolean($lockShip)],
+				[
+					'account_id' => $this->accountID,
+					'game_id' => $this->selectedGameID,
+				],
+			);
+		}
+
 		// Create a new NPC player in a selected game
 		if (Request::has('create_npc_player')) {
 			$accountID = $this->accountID;

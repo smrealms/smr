@@ -8,7 +8,7 @@ class NpcManageRenderer {
 
 	/**
 	 * @param list<array{Name: string, ID: int, Selected: bool}> $Games
-	 * @param array<int, array{default_player_name: string, default_alliance: string, href: string, player: ?array{active: bool, working: bool, disable_active_toggle: bool, name: string, race: string, alliance: string, ship: string}}> $Npcs
+	 * @param array<int, array{default_player_name: string, default_alliance: string, href: string, player: ?array{active: bool, working: bool, lock_ship: bool, disable_toggles: bool, name: string, race: string, alliance: string, ship: string}}> $Npcs
 	 * @param list<\Smr\Galaxy> $NpcGalaxyChoices
 	 * @param array<int, string> $NpcGalaxyAllianceChoices
 	 * @param array<int, \Smr\ShipType> $ShipTypes
@@ -51,6 +51,7 @@ class NpcManageRenderer {
 					<th>Race</th>
 					<th>Alliance</th>
 					<th>Ship</th>
+					<th>Lock Ship</th>
 					<th>Status</th>
 				</tr><?php
 				foreach ($Npcs as $accountID => $npc) { ?>
@@ -77,13 +78,14 @@ class NpcManageRenderer {
 										} ?>
 									</select>
 								</td>
+								<td></td>
 								<td><?php echo create_submit('create_npc_player', 'Create'); ?></td>
 							</form><?php
 						} else {
 							$npcPlayer = $npc['player']; ?>
 							<td class="center">
 								<form method="POST" action="<?php echo $npc['href']; ?>">
-									<input name="active" type="checkbox" <?php if ($npcPlayer['active']) { ?>checked<?php } ?> onclick="this.form.submit()" <?php if ($npcPlayer['disable_active_toggle']) { ?>disabled<?php } ?> />
+									<input name="active" type="checkbox" <?php if ($npcPlayer['active']) { ?>checked<?php } ?> onclick="this.form.submit()" <?php if ($npcPlayer['disable_toggles']) { ?>disabled<?php } ?> />
 									<input type="hidden" name="active-submit" />
 								</form>
 							</td>
@@ -91,6 +93,12 @@ class NpcManageRenderer {
 							<td><?php echo $npcPlayer['race']; ?></td>
 							<td><?php echo $npcPlayer['alliance']; ?></td>
 							<td><?php echo $npcPlayer['ship']; ?></td>
+							<td class="center">
+								<form method="POST" action="<?php echo $npc['href']; ?>">
+									<input name="lock_ship" type="checkbox" <?php if ($npcPlayer['lock_ship']) { ?>checked<?php } ?> onclick="this.form.submit()" <?php if ($npcPlayer['disable_toggles']) { ?>disabled<?php } ?> />
+									<input type="hidden" name="lock_ship-submit" />
+								</form>
+							</td>
 							<td class="center"><?php echo $npcPlayer['working'] ? 'Working' : 'Idle'; ?></td><?php
 						} ?>
 					</tr><?php

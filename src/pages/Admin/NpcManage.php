@@ -70,6 +70,7 @@ class NpcManage extends AccountPage {
 			$npcPlayerSettings[$dbRecord->getInt('account_id')] = [
 				'active' => $dbRecord->getBoolean('active'),
 				'working' => $dbRecord->getBoolean('working'),
+				'lock_ship' => $dbRecord->getBoolean('lock_ship'),
 			];
 		}
 
@@ -89,7 +90,7 @@ class NpcManage extends AccountPage {
 				'race' => $npc->getRaceName(),
 				'alliance' => $npc->getAllianceDisplayName(),
 				'ship' => ShipType::get($npc->getShipTypeID())->getName(),
-				'disable_active_toggle' => (
+				'disable_toggles' => (
 					($npc->hasAlliance() && $npc->getAlliance()->isNpcForHire())
 					|| $npc->isHiredNPC()
 				),

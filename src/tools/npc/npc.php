@@ -519,9 +519,20 @@ function getCurrentShipTier(Ship $ship): int {
 	return -1;
 }
 
-function checkForShipUpgrade(Player $player): void {
+/**
+ * Roll for ship upgrade (if allowed). Returns true if changed ship.
+ */
+function checkForShipUpgrade(Player $player): bool {
 	// Make sure the ship is up-to-date
 	$ship = $player->getShip(forceUpdate: true);
+
+	// Check if this NPC is locked to its current ship
+	$db = Database::getInstance();
+	$dbResult = $db->select('npc_players', $player->SQLID, ['lock_ship']);
+	if ($dbResult->record()->getBoolean('lock_ship')) {
+		debug('NPC is locked to ship. Not upgrading.');
+		return false;
+	}
 
 	// Select the next tier ship in a random upgrade group
 	$upgradeGroups = [
@@ -540,7 +551,7 @@ function checkForShipUpgrade(Player $player): void {
 	$upgradeTier = $currentTier + 1;
 	if (!array_key_exists($upgradeTier, $upgradeGroup)) {
 		// Already at highest tier, no upgrade
-		return;
+		return false;
 	}
 	$upgradeShipID = $upgradeGroup[$upgradeTier];
 
@@ -555,37 +566,43 @@ function checkForShipUpgrade(Player $player): void {
 	$upgradeFrac = min($maxUpgradeFrac, $baseUpgradeFrac) / $delayFactor;
 	$upgradePercent = IRound(100 * $upgradeFrac);
 	debug('Chance to upgrade ship: ' . $upgradePercent . '%');
-	if (flip_coin($upgradePercent)) {
+
+	$doUpgrade = flip_coin($upgradePercent);
+	if ($doUpgrade) {
 		$oldShipName = $ship->getName();
 		$balance = $player->getCredits() - $cost;
 		$player->setCredits(max(NPC_MINIMUM_RESERVE_CREDITS, $balance));
 		$ship->setTypeID($upgradeShipID);
 		debug('Upgraded ship: old = ' . $oldShipName . ' (T' . $currentTier . '), new = ' . $ship->getName() . ' (T' . $upgradeTier . ')');
 	}
+	return $doUpgrade;
 }
 
 function setupShip(Player $player): void {
 	// Upgrade ships if we can
-	checkForShipUpgrade($player);
+	$upgradedShip = checkForShipUpgrade($player);
 
 	// Start the NPC with max hardware
 	$ship = $player->getShip();
 	$ship->setHardwareToMax();
 
 	// Equip the ship with as many lasers as it can hold
-	$weaponIDs = [
-		WEAPON_TYPE_PLANETARY_PULSE_LASER,
-		WEAPON_TYPE_HUGE_PULSE_LASER,
-		WEAPON_TYPE_HUGE_PULSE_LASER,
-		WEAPON_TYPE_LARGE_PULSE_LASER,
-		WEAPON_TYPE_LARGE_PULSE_LASER,
-		WEAPON_TYPE_LARGE_PULSE_LASER,
-		WEAPON_TYPE_LASER,
-	];
-	$ship->removeAllWeapons();
-	while ($ship->hasOpenWeaponSlots() && count($weaponIDs) > 0) {
-		$weapon = Weapon::getWeapon(array_shift($weaponIDs));
-		$ship->addWeapon($weapon);
+	// Conditions help preserve any custom weapons on ship
+	if ($upgradedShip || $ship->hasOpenWeaponSlots()) {
+		$weaponIDs = [
+			WEAPON_TYPE_PLANETARY_PULSE_LASER,
+			WEAPON_TYPE_HUGE_PULSE_LASER,
+			WEAPON_TYPE_HUGE_PULSE_LASER,
+			WEAPON_TYPE_LARGE_PULSE_LASER,
+			WEAPON_TYPE_LARGE_PULSE_LASER,
+			WEAPON_TYPE_LARGE_PULSE_LASER,
+			WEAPON_TYPE_LASER,
+		];
+		$ship->removeAllWeapons();
+		while ($ship->hasOpenWeaponSlots() && count($weaponIDs) > 0) {
+			$weapon = Weapon::getWeapon(array_shift($weaponIDs));
+			$ship->addWeapon($weapon);
+		}
 	}
 
 	// Enable special hardware
