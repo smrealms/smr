@@ -37,8 +37,9 @@ class CreatePlanets extends AccountPage {
 		// Get the current number of each type of planet
 		$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 		foreach ($galaxy->getSectors() as $galSector) {
-			if ($galSector->hasPlanet()) {
-				$numberOfPlanets[$galSector->getPlanet()->getTypeID()]++;
+			$planet = $galSector->getPlanetOrNull();
+			if ($planet !== null) {
+				$numberOfPlanets[$planet->getTypeID()]++;
 			}
 		}
 

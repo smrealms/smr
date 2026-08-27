@@ -4,6 +4,7 @@ namespace SmrTest\lib;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use Smr\Container\DiContainer;
+use Smr\Planet;
 use Smr\Player;
 use Smr\Port;
 use Smr\Sector;
@@ -14,10 +15,11 @@ use SmrTest\BaseIntegrationSpec;
 class SectorIntegrationTest extends BaseIntegrationSpec {
 
 	protected function tablesToTruncate(): array {
-		return ['player_visited_port', 'port_info_cache'];
+		return ['planet', 'player_visited_port', 'port_info_cache'];
 	}
 
 	protected function tearDown(): void {
+		Planet::clearCache();
 		Port::clearCache();
 		Sector::clearCache();
 		DiContainer::initialize(false);
@@ -55,6 +57,18 @@ class SectorIntegrationTest extends BaseIntegrationSpec {
 		$cachedPort = $sector->getCachedPortOrNull($player);
 		self::assertNotNull($cachedPort);
 		self::assertSame([GOODS_ORE => TransactionType::Sell], $cachedPort->getGoodTransactions());
+	}
+
+	public function test_getPlanetOrNull(): void {
+		$sector = Sector::createSector(1, 1);
+
+		// Returns null when no planet in sector
+		self::assertNull($sector->getPlanetOrNull());
+
+		// Now create a planet
+		$planet = $sector->createPlanet(type: 1, inhabitableTime: 0);
+
+		self::assertSame($planet, $sector->getPlanetOrNull());
 	}
 
 }

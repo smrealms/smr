@@ -168,7 +168,7 @@ class CurrentSector extends PlayerPage {
 			SectorPlayersLabel: 'Ships',
 			AttackResults: checkForAttackMessage($this->attackMessage, $player),
 			ThisAccount: $player->getAccount(),
-			ThisPlanet: $sector->hasPlanet() ? $sector->getPlanet() : null,
+			ThisPlanet: $sector->getPlanetOrNull(),
 			ThisPlayer: $player,
 			ThisSector: $sector,
 			ThisShip: $player->getShip(),

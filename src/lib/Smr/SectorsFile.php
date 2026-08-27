@@ -147,9 +147,9 @@ class SectorsFile {
 						$file .= 'Sells=' . implode(',', $port->getBuyGoodIDs()) . EOL;
 					}
 				}
-				if ($sector->hasPlanet()) {
-					$planetType = $sector->getPlanet()->getTypeID();
-					$file .= 'Planet=' . $planetType . EOL;
+				$planet = $sector->getPlanetOrNull();
+				if ($planet !== null) {
+					$file .= 'Planet=' . $planet->getTypeID() . EOL;
 				}
 				if ($sector->hasLocation()) {
 					$locationsString = 'Locations=';

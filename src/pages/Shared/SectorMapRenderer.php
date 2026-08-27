@@ -58,7 +58,8 @@ class SectorMapRenderer {
 											} ?>
 										</div><?php
 									}
-									if ($Sector->hasLocation() || $Sector->hasPlanet()) { ?>
+									$planet = $Sector->getPlanetOrNull();
+									if ($Sector->hasLocation() || $planet !== null) { ?>
 										<div class="lmlocs"><?php
 											foreach ($Sector->getLocations() as $Location) {
 												if ($isCurrentSector && $Location->hasAction() && !$GalaxyMap) {
@@ -74,8 +75,7 @@ class SectorMapRenderer {
 												/><?php
 												if ($isCurrentSector && $Location->hasAction() && !$GalaxyMap) { ?></a><?php }
 											}
-											if ($Sector->hasPlanet()) {
-												$planet = $Sector->getPlanet();
+											if ($planet !== null) {
 												if ($isCurrentSector && !$GalaxyMap) {
 													?><a href="<?php echo $planet->getExamineHREF(); ?>"><?php
 												} ?>

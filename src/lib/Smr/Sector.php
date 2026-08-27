@@ -719,6 +719,11 @@ class Sector {
 		return Planet::getPlanet($this->getGameID(), $this->getSectorID());
 	}
 
+	public function getPlanetOrNull(): ?Planet {
+		$planet = $this->getPlanet();
+		return $planet->exists() ? $planet : null;
+	}
+
 	public function createPlanet(int $type = 1, ?int $inhabitableTime = null): Planet {
 		return Planet::createPlanet($this->getGameID(), $this->getSectorID(), $type, $inhabitableTime);
 	}
