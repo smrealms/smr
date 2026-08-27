@@ -34,11 +34,7 @@ class EditSectorProcessor extends AccountPageProcessor {
 		//update port
 		$portLevel = Request::getInt('port_level');
 		if ($portLevel > 0) {
-			if (!$editSector->hasPort()) {
-				$port = $editSector->createPort();
-			} else {
-				$port = $editSector->getPort();
-			}
+			$port = $editSector->getPortOrNull() ?? $editSector->createPort();
 			$port->setRaceID(Request::getInt('port_race'));
 			if ($port->getLevel() !== $portLevel) {
 				$port->upgradeToLevel($portLevel);

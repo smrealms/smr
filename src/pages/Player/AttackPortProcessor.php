@@ -37,9 +37,8 @@ class AttackPortProcessor extends PlayerPageProcessor {
 			create_error('You are not allowed to fight!');
 		}
 
-		$port = $sector->getPort();
-
-		if (!$port->exists()) {
+		$port = $sector->getPortOrNull();
+		if ($port === null) {
 			create_error('This port does not exist.');
 		}
 

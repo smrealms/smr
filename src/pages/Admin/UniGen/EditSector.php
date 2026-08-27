@@ -33,7 +33,7 @@ class EditSector extends AccountPage {
 		$template->pageTopic = 'Edit Sector #' . $editSector->getSectorID() . ' (' . $editSector->getGalaxy()->getDisplayName() . ')';
 
 		$planet = $editSector->hasPlanet() ? $editSector->getPlanet() : null;
-		$port = $editSector->hasPort() ? $editSector->getPort() : null;
+		$port = $editSector->getPortOrNull();
 
 		$sectorLocationIDs = array_pad(
 			array_keys($editSector->getLocations()),

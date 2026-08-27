@@ -13,10 +13,10 @@ class SectorPortRenderer {
 		Sector $ThisSector,
 		?bool $PortIsAtWar,
 	): void {
+		$Port = $ThisSector->getPortOrNull();
 		?>
 		<div id="sector_port" class="ajax">
-			<?php if ($ThisSector->hasPort()) {
-				$Port = $ThisSector->getPort(); ?>
+			<?php if ($Port !== null) { ?>
 				<table class="standard csl">
 					<tr>
 						<th colspan="2">Port</th>

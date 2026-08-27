@@ -210,9 +210,7 @@ class Sector {
 	}
 
 	public function markVisited(Player $player): void {
-		if ($this->hasPort()) {
-			$this->getPort()->addCachePort($player->getAccountID());
-		}
+		$this->getPortOrNull()?->addCachePort($player->getAccountID());
 
 		//now delete the entry from visited
 		if (!$this->isVisited($player)) {
@@ -610,6 +608,11 @@ class Sector {
 		return Port::getPort($this->getGameID(), $this->getSectorID());
 	}
 
+	public function getPortOrNull(): ?Port {
+		$port = $this->getPort();
+		return $port->exists() ? $port : null;
+	}
+
 	public function createPort(): Port {
 		return Port::createPort($this->getGameID(), $this->getSectorID());
 	}
@@ -618,13 +621,7 @@ class Sector {
 		Port::removePort($this->getGameID(), $this->getSectorID());
 	}
 
-	/**
-	 * @phpstan-assert-if-true =Player $player
-	 */
-	public function hasCachedPort(?Player $player = null): bool {
-		if ($player === null) {
-			return false;
-		}
+	public function hasCachedPort(Player $player): bool {
 		try {
 			$this->getCachedPort($player);
 			return true;
@@ -635,6 +632,14 @@ class Sector {
 
 	public function getCachedPort(Player $player): Port {
 		return Port::getCachedPort($this->getGameID(), $this->getSectorID(), $player->getAccountID());
+	}
+
+	public function getCachedPortOrNull(Player $player): ?Port {
+		try {
+			return $this->getCachedPort($player);
+		} catch (CachedPortNotFound) {
+			return null;
+		}
 	}
 
 	public function hasAnyLocationsWithAction(): bool {
@@ -1002,10 +1007,7 @@ class Sector {
 		return $otherSector->getGameID() === $this->getGameID() && $this->isLinked($otherSector->getSectorID());
 	}
 
-	public function isVisited(?Player $player = null): bool {
-		if ($player === null) {
-			return true;
-		}
+	public function isVisited(Player $player): bool {
 		if (!isset($this->visited[$player->getAccountID()])) {
 			$db = Database::getInstance();
 			$dbResult = $db->select('player_visited_sector', [
@@ -1051,9 +1053,9 @@ class Sector {
 		}
 		if ($x instanceof TradeGoodTransaction) {
 			if ($player === null) {
-				return $this->hasPort() && $this->getPort()->hasGood($x->goodID, $x->transactionType);
+				return $this->getPortOrNull()?->hasGood($x->goodID, $x->transactionType) ?? false;
 			}
-			return $this->hasCachedPort($player) && $this->getCachedPort($player)->hasGood($x->goodID, $x->transactionType);
+			return $this->getCachedPortOrNull($player)?->hasGood($x->goodID, $x->transactionType) ?? false;
 		}
 
 		//Check if it's possible for location to have X, hacky but nice performance gains
