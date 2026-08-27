@@ -534,7 +534,7 @@ function checkForShipUpgrade(Player $player): bool {
 		return false;
 	}
 
-	// Select the next tier ship in a random upgrade group
+	// Randomly select which upgrade pathway to choose from
 	$upgradeGroups = [
 		SHIP_UPGRADE_PATH[$player->getRaceID()],
 		SHIP_UPGRADE_PATH[RACE_NEUTRAL],
@@ -546,36 +546,45 @@ function checkForShipUpgrade(Player $player): bool {
 	if ($player->hasEvilAlignment() && flip_coin()) {
 		$upgradeGroups[] = SHIP_UPGRADE_PATH['EVIL'];
 	}
-	$currentTier = getCurrentShipTier($ship);
 	$upgradeGroup = array_rand_value($upgradeGroups);
-	$upgradeTier = $currentTier + 1;
-	if (!array_key_exists($upgradeTier, $upgradeGroup)) {
-		// Already at highest tier, no upgrade
-		return false;
-	}
-	$upgradeShipID = $upgradeGroup[$upgradeTier];
 
-	// Base chance to upgrade is percent of cost of ship NPC can afford,
-	// which decreases for higher ship tier (but returns to the base chance
-	// over a number of weeks).
-	$cost = $ship->getCostToUpgrade($upgradeShipID);
+	// Select the maximum tier to try upgrading to. Starts at +1 tier, but will
+	// randomly trend higher with each week, which will be especially relevant
+	// after an NPC is podded in the mid/late-game.
+	$currentTier = getCurrentShipTier($ship);
 	$weekNum = (Epoch::time() - $player->getGame()->getStartTime()) / 604800;
-	$delayFactor = 1 + max(0, 1.5 * $upgradeTier - $weekNum);
-	$baseUpgradeFrac = $player->getCredits() / max($cost, 1); // avoid <=0 denom
-	$maxUpgradeFrac = 1 - 0.1 * $upgradeTier; // -10% max chance per tier
-	$upgradeFrac = min($maxUpgradeFrac, $baseUpgradeFrac) / $delayFactor;
-	$upgradePercent = IRound(100 * $upgradeFrac);
-	debug('Chance to upgrade ship: ' . $upgradePercent . '%');
+	$upgradeTier = min(
+		max(array_keys($upgradeGroup)), // max possible tier
+		max($currentTier + 1, rand(1, IFloor($weekNum))), // max(next tier, random based on week)
+	);
 
-	$doUpgrade = flip_coin($upgradePercent);
-	if ($doUpgrade) {
+	// Try for each upgrade from the selected upgradeTier down to (currentTier+1).
+	// Note that this is an empty range if we are already at the max tier.
+	for (; $upgradeTier > $currentTier; $upgradeTier--) {
+		// Base chance to upgrade is percent of cost of ship NPC can afford,
+		// which decreases for higher ship tier (but returns to the base chance
+		// over a number of weeks).
+		$upgradeShipID = $upgradeGroup[$upgradeTier];
+		$cost = $ship->getCostToUpgrade($upgradeShipID);
+		$delayFactor = 1 + max(0, 1.5 * $upgradeTier - $weekNum);
+		$baseUpgradeFrac = $player->getCredits() / max($cost, 1); // avoid <=0 denom
+		$maxUpgradeFrac = 1 - 0.1 * $upgradeTier; // -10% max chance per tier
+		$upgradeFrac = min($maxUpgradeFrac, $baseUpgradeFrac) / $delayFactor;
+		$upgradePercent = IRound(100 * $upgradeFrac);
+		debug('Chance to upgrade ship to T' . $upgradeTier . ': ' . $upgradePercent . '%');
+
+		if (!flip_coin($upgradePercent)) {
+			continue;
+		}
+
 		$oldShipName = $ship->getName();
 		$balance = $player->getCredits() - $cost;
 		$player->setCredits(max(NPC_MINIMUM_RESERVE_CREDITS, $balance));
 		$ship->setTypeID($upgradeShipID);
 		debug('Upgraded ship: old = ' . $oldShipName . ' (T' . $currentTier . '), new = ' . $ship->getName() . ' (T' . $upgradeTier . ')');
+		return true;
 	}
-	return $doUpgrade;
+	return false;
 }
 
 function setupShip(Player $player): void {
