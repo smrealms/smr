@@ -9,6 +9,7 @@ use Smr\Galaxy;
 use Smr\Game;
 use Smr\Page\AccountPage;
 use Smr\Player;
+use Smr\ShipType;
 use Smr\Template;
 
 class NpcManage extends AccountPage {
@@ -38,47 +39,63 @@ class NpcManage extends AccountPage {
 
 		$npcs = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM npc_logins JOIN account USING(login)');
+		$dbResult = $db->select('npc_accounts');
 		foreach ($dbResult->records() as $dbRecord) {
 			$accountID = $dbRecord->getInt('account_id');
-			$login = $dbRecord->getString('login');
 
 			$container = new NpcManageProcessor(
 				selectedGameID: $selectedGameID,
-				login: $login,
 				accountID: $accountID,
 			);
 
 			$npcs[$accountID] = [
-				'login' => $login,
-				'default_player_name' => htmlentities($dbRecord->getString('player_name')),
-				'default_alliance' => htmlentities($dbRecord->getString('alliance_name')),
-				'active' => $dbRecord->getBoolean('active'),
-				'working' => $dbRecord->getBoolean('working'),
+				'default_player_name' => htmlentities($dbRecord->getString('default_player_name')),
+				'default_alliance' => htmlentities($dbRecord->getString('default_alliance_name')),
 				'href' => $container->href(),
-				'disable_active_toggle' => false,
+				'player' => null,
 			];
 		}
 
 		// Set the login name for the next NPC to create
 		$nextNpcID = count($npcs) + 1;
 
+		// Get a list of all possible ship types for creating NPCs
+		// (Note: do this before getting individual NPC ship names as an optimization)
+		$shipTypes = ShipType::getAll();
+
 		// Get the existing NPC players for the selected game
-		$dbResult = $db->select('player', [
-			'game_id' => $selectedGameID,
-			'npc' => $db->escapeBoolean(true),
-		]);
+		$dbResult = $db->select('npc_players', ['game_id' => $selectedGameID]);
+		$npcPlayerSettings = [];
+		foreach ($dbResult->records() as $dbRecord) {
+			$npcPlayerSettings[$dbRecord->getInt('account_id')] = [
+				'active' => $dbRecord->getBoolean('active'),
+				'working' => $dbRecord->getBoolean('working'),
+				'lock_ship' => $dbRecord->getBoolean('lock_ship'),
+			];
+		}
+
+		$dbResult = $db->select(
+			'player',
+			['game_id' => $selectedGameID, 'npc' => $db->escapeBoolean(true)],
+		);
 		$npcPlayers = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$accountID = $dbRecord->getInt('account_id');
 			$npc = Player::getPlayer($accountID, $selectedGameID, false, $dbRecord);
 			if (!array_key_exists($accountID, $npcs)) {
-				throw new Exception('Found NPC not associated with login!');
+				throw new Exception('Found NPC not associated with account!');
 			}
-			$npcs[$accountID]['player'] = $npc;
-			if (($npc->hasAlliance() && $npc->getAlliance()->isNpcForHire()) || $npc->isHiredNPC()) {
-				$npcs[$accountID]['disable_active_toggle'] = true;
-			}
+			$npcs[$accountID]['player'] = [
+				'name' => $npc->getDisplayName(),
+				'race' => $npc->getRaceName(),
+				'alliance' => $npc->getAllianceDisplayName(),
+				'ship' => ShipType::get($npc->getShipTypeID())->getName(),
+				'disable_toggles' => (
+					($npc->hasAlliance() && $npc->getAlliance()->isNpcForHire())
+					|| $npc->isHiredNPC()
+				),
+				...$npcPlayerSettings[$accountID],
+			];
 			$npcPlayers[] = $npc;
 		}
 
@@ -113,6 +130,7 @@ class NpcManage extends AccountPage {
 			NpcGalaxyChoices: $npcGalaxyChoices,
 			NpcGalaxyAllianceChoices: $npcGalaxyAllianceChoices,
 			SetupNpcGalaxyHref: new NpcManageSetupGalaxyProcessor($selectedGameID)->href(),
+			ShipTypes: $shipTypes,
 		);
 	}
 

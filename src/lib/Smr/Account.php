@@ -465,7 +465,7 @@ class Account {
 	public function isNPC(): bool {
 		if (!isset($this->npc)) {
 			$db = Database::getInstance();
-			$dbResult = $db->select('npc_logins', ['login' => $this->getLogin()]);
+			$dbResult = $db->select('npc_accounts', $this->SQLID);
 			$this->npc = $dbResult->hasRecord();
 		}
 		return $this->npc;

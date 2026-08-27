@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Smr\Combat\Results\Damage\NormalTakenDamage;
 use Smr\Combat\Results\Damage\WeaponDamage;
+use Smr\Database;
 use Smr\Planet;
 use Smr\TradeGood;
 use SmrTest\BaseIntegrationSpec;
@@ -15,7 +16,7 @@ use SmrTest\BaseIntegrationSpec;
 class PlanetIntegrationTest extends BaseIntegrationSpec {
 
 	protected function tablesToTruncate(): array {
-		return ['planet'];
+		return ['planet', 'planet_has_building', 'planet_has_weapon', 'player'];
 	}
 
 	protected function tearDown(): void {
@@ -54,6 +55,73 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 		Planet::removePlanet(1, 1);
 		$planet = Planet::getPlanet(1, 1, true);
 		self::assertFalse($planet->exists());
+	}
+
+	public function test_movePlanet(): void {
+		$gameID = 42;
+		$origSectorID = 1;
+		$targetSectorID = 2;
+		$planet = Planet::createPlanet($gameID, $origSectorID, typeID: 3, inhabitableTime: 5);
+		$planet->setName('NPC planet');
+		$planet->setOwnerID(7);
+		$planet->setCredits(100);
+		$planet->setBuilding(PLANET_GENERATOR, 2);
+		$planet->update();
+
+		$db = Database::getInstance();
+		$db->insert('planet_has_weapon', [
+			'game_id' => $gameID,
+			'sector_id' => $origSectorID,
+			'order_id' => 1,
+			'weapon_type_id' => 1,
+		]);
+		$db->insert('player', [
+			'account_id' => 1,
+			'game_id' => $gameID,
+			'player_id' => 1,
+			'player_name' => 'Landed player',
+			'sector_id' => $origSectorID,
+			'land_on_planet' => $db->escapeBoolean(true),
+			'last_active' => 0,
+		]);
+
+		Planet::movePlanet($gameID, $origSectorID, $targetSectorID);
+
+		$movedPlanet = Planet::getPlanet($gameID, $targetSectorID);
+		self::assertFalse(Planet::getPlanet($gameID, $origSectorID)->exists());
+		self::assertTrue($movedPlanet->exists());
+		self::assertSame('NPC planet', $movedPlanet->getDisplayName());
+		self::assertSame(7, $movedPlanet->getOwnerID());
+		self::assertSame(100, $movedPlanet->getCredits());
+		self::assertSame(3, $movedPlanet->getTypeID());
+		self::assertSame(5, $movedPlanet->getInhabitableTime());
+		self::assertSame(2, $movedPlanet->getBuilding(PLANET_GENERATOR));
+
+		// Completed buildings, mounted weapons are also moved.
+		self::assertSame(1, $db->count('planet_has_building', [
+			'game_id' => $gameID,
+			'sector_id' => $targetSectorID,
+		]));
+		self::assertSame(0, $db->count('planet_has_building', [
+			'game_id' => $gameID,
+			'sector_id' => $origSectorID,
+		]));
+		self::assertSame(1, $db->count('planet_has_weapon', [
+			'game_id' => $gameID,
+			'sector_id' => $targetSectorID,
+		]));
+		self::assertSame(0, $db->count('planet_has_weapon', [
+			'game_id' => $gameID,
+			'sector_id' => $origSectorID,
+		]));
+
+		// Landed players are also moved.
+		$movedPlayer = $db->select('player', [
+			'account_id' => 1,
+			'game_id' => $gameID,
+		])->record();
+		self::assertSame($targetSectorID, $movedPlayer->getInt('sector_id'));
+		self::assertTrue($movedPlayer->getBoolean('land_on_planet'));
 	}
 
 	public function test_name(): void {

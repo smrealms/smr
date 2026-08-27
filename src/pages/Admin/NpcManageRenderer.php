@@ -3,15 +3,15 @@
 namespace Smr\Pages\Admin;
 
 use Smr\Race;
-use Smr\ShipType;
 
 class NpcManageRenderer {
 
 	/**
 	 * @param list<array{Name: string, ID: int, Selected: bool}> $Games
-	 * @param array<int, array{login: string, default_player_name: string, default_alliance: string, active: bool, working: bool, href: string, disable_active_toggle: bool, player?: \Smr\Player}> $Npcs
+	 * @param array<int, array{default_player_name: string, default_alliance: string, href: string, player: ?array{active: bool, working: bool, lock_ship: bool, disable_toggles: bool, name: string, race: string, alliance: string, ship: string}}> $Npcs
 	 * @param list<\Smr\Galaxy> $NpcGalaxyChoices
 	 * @param array<int, string> $NpcGalaxyAllianceChoices
+	 * @param array<int, \Smr\ShipType> $ShipTypes
 	 */
 	public static function render(
 		string $SelectGameHREF,
@@ -24,6 +24,7 @@ class NpcManageRenderer {
 		array $NpcGalaxyChoices,
 		array $NpcGalaxyAllianceChoices,
 		string $SetupNpcGalaxyHref,
+		array $ShipTypes,
 	): void {
 		if ($Message !== null) { ?>
 			<p><?php echo $Message; ?></p><?php
@@ -44,26 +45,22 @@ class NpcManageRenderer {
 			<div><b>Note: </b>For-hire NPCs use alliance name: <?php echo NPC_FOR_HIRE_ALLIANCE_NAME; ?></div>
 			<table class="standard">
 				<tr>
-					<th>Login</th>
+					<th>ID</th>
 					<th>Active</th>
 					<th>Player Name</th>
 					<th>Race</th>
 					<th>Alliance</th>
 					<th>Ship</th>
+					<th>Lock Ship</th>
 					<th>Status</th>
 				</tr><?php
-				foreach ($Npcs as $npc) { ?>
+				foreach ($Npcs as $accountID => $npc) { ?>
 					<tr>
-						<td><?php echo $npc['login']; ?></td>
-						<td class="center">
-							<form method="POST" action="<?php echo $npc['href']; ?>">
-								<input name="active" type="checkbox" <?php if ($npc['active']) { ?>checked<?php } ?> onclick="this.form.submit()" <?php if ($npc['disable_active_toggle']) { ?>disabled<?php } ?> />
-								<input type="hidden" name="active-submit" />
-							</form>
-						</td><?php
-						if (!isset($npc['player'])) {
+						<td><?php echo $accountID; ?></td><?php
+						if ($npc['player'] === null) {
 							// The form wrapping only these columns is invalid HTML, but it works for now... ?>
 							<form method="POST" action="<?php echo $npc['href']; ?>">
+								<td></td>
 								<td><input required name="player_name" value="<?php echo $npc['default_player_name']; ?>" /></td>
 								<td>
 									<select name="race_id"><?php
@@ -76,19 +73,33 @@ class NpcManageRenderer {
 								<td>
 									<select name="player_ship">
 										<option value="-1">&lt;default&gt;</option><?php
-										foreach (ShipType::getAll() as $shipTypeID => $shipType) { ?>
+										foreach ($ShipTypes as $shipTypeID => $shipType) { ?>
 											<option value="<?php echo $shipTypeID; ?>"><?php echo $shipType->getName(); ?></option><?php
 										} ?>
 									</select>
 								</td>
+								<td></td>
 								<td><?php echo create_submit('create_npc_player', 'Create'); ?></td>
 							</form><?php
-						} else { ?>
-							<td><?php echo $npc['player']->getDisplayName(); ?></td>
-							<td><?php echo $npc['player']->getRaceName(); ?></td>
-							<td><?php echo $npc['player']->getAllianceDisplayName(); ?></td>
-							<td><?php echo $npc['player']->getShip()->getName(); ?></td>
-							<td class="center"><?php echo $npc['working'] ? 'Working' : 'Idle'; ?></td><?php
+						} else {
+							$npcPlayer = $npc['player']; ?>
+							<td class="center">
+								<form method="POST" action="<?php echo $npc['href']; ?>">
+									<input name="active" type="checkbox" <?php if ($npcPlayer['active']) { ?>checked<?php } ?> onclick="this.form.submit()" <?php if ($npcPlayer['disable_toggles']) { ?>disabled<?php } ?> />
+									<input type="hidden" name="active-submit" />
+								</form>
+							</td>
+							<td><?php echo $npcPlayer['name']; ?></td>
+							<td><?php echo $npcPlayer['race']; ?></td>
+							<td><?php echo $npcPlayer['alliance']; ?></td>
+							<td><?php echo $npcPlayer['ship']; ?></td>
+							<td class="center">
+								<form method="POST" action="<?php echo $npc['href']; ?>">
+									<input name="lock_ship" type="checkbox" <?php if ($npcPlayer['lock_ship']) { ?>checked<?php } ?> onclick="this.form.submit()" <?php if ($npcPlayer['disable_toggles']) { ?>disabled<?php } ?> />
+									<input type="hidden" name="lock_ship-submit" />
+								</form>
+							</td>
+							<td class="center"><?php echo $npcPlayer['working'] ? 'Working' : 'Idle'; ?></td><?php
 						} ?>
 					</tr><?php
 				} ?>
@@ -110,6 +121,8 @@ class NpcManageRenderer {
 						<option value="<?php echo $allianceID; ?>"><?php echo $allianceName; ?></option><?php
 					} ?>
 				</select>
+				<br />
+				Raid Boss: <input name="raid_boss" type="checkbox" />
 				<br /><br />
 				<?php echo create_submit_display('Setup Galaxy'); ?>
 			</form><?php

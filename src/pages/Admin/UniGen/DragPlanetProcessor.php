@@ -16,18 +16,14 @@ class DragPlanetProcessor extends AccountPageProcessor {
 	) {}
 
 	public function build(Account $account): never {
-		// Move a planet from one sector to another (note that this will
-		// currently only retain the planet type and inhabitable time).
+		// Move a planet from one sector to another.
 		$targetSectorID = Request::getInt('TargetSectorID');
 		$origSectorID = Request::getInt('OrigSectorID');
-		$origPlanet = Planet::getPlanet($this->gameID, $origSectorID);
 		$targetSector = Sector::getSector($this->gameID, $targetSectorID);
 
 		// Skip if target sector already has a planet
 		if (!$targetSector->hasPlanet()) {
-			// Create first so that if there is an error the planet doesn't disappear
-			Planet::createPlanet($this->gameID, $targetSectorID, $origPlanet->getTypeID(), $origPlanet->getInhabitableTime());
-			Planet::removePlanet($this->gameID, $origSectorID);
+			Planet::movePlanet($this->gameID, $origSectorID, $targetSectorID);
 		}
 
 		$this->returnTo->go();

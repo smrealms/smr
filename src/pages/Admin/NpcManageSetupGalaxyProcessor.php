@@ -5,6 +5,7 @@ namespace Smr\Pages\Admin;
 use Smr\Account;
 use Smr\Alliance;
 use Smr\Combat\Weapon\Weapon;
+use Smr\Database;
 use Smr\Force;
 use Smr\Galaxy;
 use Smr\Page\AccountPageProcessor;
@@ -20,6 +21,7 @@ class NpcManageSetupGalaxyProcessor extends AccountPageProcessor {
 	public function build(Account $account): never {
 		$galaxyID = Request::getInt('galaxy_id');
 		$allianceID = Request::getInt('alliance_id');
+		$raidBoss = Request::has('raid_boss');
 
 		$galaxy = Galaxy::getGalaxy($this->selectedGameID, $galaxyID);
 		$alliance = Alliance::getAlliance($allianceID, $this->selectedGameID);
@@ -55,14 +57,14 @@ class NpcManageSetupGalaxyProcessor extends AccountPageProcessor {
 		$planet->setBuildingsToMax();
 		$planet->setDefensesToMax();
 		$weapons = [
-			Weapon::getWeapon(WEAPON_TYPE_LASER),
-			Weapon::getWeapon(WEAPON_TYPE_LASER),
-			Weapon::getWeapon(WEAPON_TYPE_LASER),
+			Weapon::getWeapon(WEAPON_TYPE_LARGE_PULSE_LASER),
 			Weapon::getWeapon(WEAPON_TYPE_LARGE_PULSE_LASER),
 			Weapon::getWeapon(WEAPON_TYPE_LARGE_PULSE_LASER),
 			Weapon::getWeapon(WEAPON_TYPE_LARGE_PULSE_LASER),
 			Weapon::getWeapon(WEAPON_TYPE_HUGE_PULSE_LASER),
 			Weapon::getWeapon(WEAPON_TYPE_HUGE_PULSE_LASER),
+			Weapon::getWeapon(WEAPON_TYPE_HUGE_PULSE_LASER),
+			Weapon::getWeapon(WEAPON_TYPE_PLANETARY_PULSE_LASER),
 			Weapon::getWeapon(WEAPON_TYPE_PLANETARY_PULSE_LASER),
 			Weapon::getWeapon(WEAPON_TYPE_HELL_BLASTER),
 		];
@@ -70,6 +72,29 @@ class NpcManageSetupGalaxyProcessor extends AccountPageProcessor {
 			$planet->addMountedWeapon($weapon, $orderID);
 		}
 		$planet->update();
+
+		// Set up Raid Boss (leader in a Slayer with a Hell Blaster)
+		if ($raidBoss) {
+			$leader = $alliance->getLeader();
+			$ship = $leader->getShip();
+			$ship->setTypeID(SHIP_TYPE_SLAYER);
+			$ship->addWeapon(Weapon::getWeapon(WEAPON_TYPE_HELL_BLASTER));
+
+			// Lock ship so we don't switch back to a starter ship
+			$db = Database::getInstance();
+			$db->update(
+				'npc_players',
+				['lock_ship' => $db->escapeBoolean(true)],
+				$leader->SQLID,
+			);
+
+			// Move leader to their planet since they may currently be in Fed
+			$leader->setSectorID($planet->getSectorID());
+			$leader->setLandedOnPlanet(true);
+
+			$ship->update();
+			$leader->update();
+		}
 
 		$message = '<span class="green">SUCCESS: </span> Set up galaxy ' . $galaxy->getDisplayName() . ' for alliance ' . $alliance->getAllianceDisplayName();
 		new NpcManage($this->selectedGameID, $message)->go();
