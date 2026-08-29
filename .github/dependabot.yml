@@ -38,7 +38,7 @@ updates:
   rebase-strategy: disabled
 
 - package-ecosystem: npm
-    directory: "/"
-    schedule:
-      interval: "weekly"
+  directory: "/"
+  schedule:
+    interval: "weekly"
   rebase-strategy: disabled
