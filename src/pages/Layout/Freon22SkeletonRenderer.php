@@ -118,7 +118,7 @@ class Freon22SkeletonRenderer extends AbstractSkeletonRenderer {
 									<?php VoteLinksRenderer::render($data->voteLinks, $data->timeToNextVote); ?>
 								</div>
 								<div class="footer_right">
-									<?php CopyrightRenderer::render($data->version); ?>
+									<?php CopyrightRenderer::render($data->version, $data->gitCommit); ?>
 								</div>
 							</td>
 
