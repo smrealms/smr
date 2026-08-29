@@ -14,6 +14,7 @@ const WWW = ROOT . 'src/htdocs/';
 const UPLOAD = WWW . 'upload/';
 const TOOLS = ROOT . 'src/tools/';
 const ASSET_MANIFEST = ROOT . 'assets/asset-manifest.json';
+const GIT_COMMIT = ROOT . 'git-commit';
 
 // Define server-specific constants
 require_once(ROOT . 'config/config.specific.php');

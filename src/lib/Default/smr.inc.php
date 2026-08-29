@@ -645,6 +645,7 @@ function getSkeletonData(Template $template): SkeletonData {
 	$minVoteWait = VoteLink::getMinTimeUntilFreeTurns($accountID, $session->getGameID());
 
 	// ------- VERSION --------
+	// Database version
 	$dbResult = $db->select('version', orderBy: ['went_live'], order: ['DESC'], limit: 1);
 	$version = '';
 	if ($dbResult->hasRecord()) {
@@ -652,6 +653,12 @@ function getSkeletonData(Template $template): SkeletonData {
 		$container = new ChangelogView();
 		$version = create_link($container, 'v' . $dbRecord->getInt('major_version') . '.' . $dbRecord->getInt('minor_version') . '.' . $dbRecord->getInt('patch_level'));
 	}
+	// Git commit version (truncate to 16 chars for display purposes)
+	$gitCommit = file_get_contents(GIT_COMMIT);
+	if ($gitCommit === false) {
+		throw new Exception('Missing file: ' . GIT_COMMIT);
+	}
+	$gitCommit = substr($gitCommit, 0, 16);
 
 	return new SkeletonData(
 		template: $template,
@@ -663,6 +670,7 @@ function getSkeletonData(Template $template): SkeletonData {
 		voteLinks: $voteLinks,
 		timeToNextVote: $minVoteWait,
 		version: $version,
+		gitCommit: $gitCommit,
 	);
 
 }

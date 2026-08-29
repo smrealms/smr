@@ -21,6 +21,7 @@ readonly class SkeletonData {
 		public array $voteLinks,
 		public ?int $timeToNextVote,
 		public string $version,
+		public string $gitCommit,
 	) {}
 
 }
