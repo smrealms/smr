@@ -1,15 +1,15 @@
-function processCourse(sectorID) {
+window.processCourse = function(sectorID) {
 	var plotCourseForm = document.getElementById('plotCourseForm');
 	plotCourseForm.to.value = sectorID;
 	plotCourseForm.submit();
-}
+};
 
-function processRemove(sectorID) {
+window.processRemove = function(sectorID) {
 	var manageDestination = document.getElementById('manageDestination');
 	manageDestination.sectorId.value = sectorID;
 	manageDestination.type.value = 'delete';
 	manageDestination.submit();
-}
+};
 
 $(function() {
 	$('.draggableObject').draggable({ containment: 'parent' });

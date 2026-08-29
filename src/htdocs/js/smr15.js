@@ -91,31 +91,31 @@
 })();
 
 // Used by shop_hardware.php
-function recalcOnKeyUp(transaction, hardwareTypeID, cost) {
+window.recalcOnKeyUp = function(transaction, hardwareTypeID, cost) {
 	var form = document.getElementById(transaction + hardwareTypeID);
 	form.total.value = form.amount.value * cost;
-}
+};
 
 // Used by planet_defense.php
-function showWeaponInfo(select) {
+window.showWeaponInfo = function(select) {
 	var target = $(select).data('target');
 	var show = $("option:selected", select).data('show');
 	$(target).children().addClass('hide');
 	$(show).removeClass('hide');
-}
+};
 
 // Used by game_join.php
-function showRaceInfo(select) {
+window.showRaceInfo = function(select) {
 	var race_id = $("option:selected", select).val();
 	document.getElementById('race_image').src = "images/race/race" + race_id + ".jpg";
 	var desc = document.getElementById('race_descr');
 	$(desc).children().addClass('hide');
 	$(".race_descr" + race_id, desc).removeClass('hide');
-	createRaceRadarChart(race_id);
-}
+	window.createRaceRadarChart(race_id);
+};
 
 // Used by game_join.php
-function createRaceRadarChart(race_id) {
+window.createRaceRadarChart = function(race_id) {
 
 	// Each array key is the race ID
 	var races = {
@@ -163,10 +163,10 @@ function createRaceRadarChart(race_id) {
 	};
 
 	Plotly.newPlot('graphframe', data, layout, {staticPlot: true});
-}
+};
 
 // Used by alliance_create.php and alliance_stat.php
-function togglePassword(select) {
+window.togglePassword = function(select) {
 	var showPassword = $(select).val() === "password";
 	// We need to both toggle the element display (for the user) and toggle the
 	// disabled property (for the form submission).
@@ -176,9 +176,9 @@ function togglePassword(select) {
 		$("#password-display").hide();
 	}
 	$("#password-input").prop("disabled", !showPassword);
-}
+};
 
 // Used by message_view.php
-function toggleScoutGroup(senderID) {
+window.toggleScoutGroup = function(senderID) {
 	$('#group'+senderID).toggle();
-}
+};
