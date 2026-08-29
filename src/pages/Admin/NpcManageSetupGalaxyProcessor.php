@@ -78,6 +78,7 @@ class NpcManageSetupGalaxyProcessor extends AccountPageProcessor {
 			$leader = $alliance->getLeader();
 			$ship = $leader->getShip();
 			$ship->setTypeID(SHIP_TYPE_SLAYER);
+			$ship->removeAllWeapons();
 			$ship->addWeapon(Weapon::getWeapon(WEAPON_TYPE_HELL_BLASTER));
 
 			// Lock ship so we don't switch back to a starter ship
