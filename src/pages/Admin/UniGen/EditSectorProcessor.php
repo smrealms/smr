@@ -25,10 +25,13 @@ class EditSectorProcessor extends AccountPageProcessor {
 		$planetTypeID = Request::getInt('plan_type');
 		if ($planetTypeID === 0) {
 			$editSector->removePlanet();
-		} elseif (!$editSector->hasPlanet()) {
-			$editSector->createPlanet($planetTypeID);
 		} else {
-			$editSector->getPlanet()->setTypeID($planetTypeID);
+			$planet = $editSector->getPlanetOrNull();
+			if ($planet === null) {
+				$editSector->createPlanet($planetTypeID);
+			} else {
+				$planet->setTypeID($planetTypeID);
+			}
 		}
 
 		//update port

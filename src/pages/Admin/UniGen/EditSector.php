@@ -32,7 +32,7 @@ class EditSector extends AccountPage {
 		$editSector = Sector::getSector($this->gameID, $this->sectorID);
 		$template->pageTopic = 'Edit Sector #' . $editSector->getSectorID() . ' (' . $editSector->getGalaxy()->getDisplayName() . ')';
 
-		$planet = $editSector->hasPlanet() ? $editSector->getPlanet() : null;
+		$planet = $editSector->getPlanetOrNull();
 		$port = $editSector->getPortOrNull();
 
 		$sectorLocationIDs = array_pad(

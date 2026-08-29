@@ -7,8 +7,8 @@ use Smr\Sector;
 class SectorPlanetRenderer {
 
 	public static function render(Sector $ThisSector): void {
-		if ($ThisSector->hasPlanet()) {
-			$Planet = $ThisSector->getPlanet(); ?>
+		$Planet = $ThisSector->getPlanetOrNull();
+		if ($Planet !== null) { ?>
 			<table class="standard csl">
 				<tr>
 					<th>Planet</th>
