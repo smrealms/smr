@@ -50,7 +50,7 @@ RUN sed -i 's/AllowOverride All/AllowOverride None/g' /etc/apache2/conf-enabled/
 WORKDIR /smr/
 
 RUN curl -sS https://getcomposer.org/installer | \
-	php -- --install-dir=/usr/local/bin --filename=composer --version=2.10.2
+	php -- --install-dir=/usr/local/bin --filename=composer --version=2.10.3
 
 COPY composer.json .
 RUN COMPOSER_NO_DEV=$NO_DEV composer update --no-interaction
