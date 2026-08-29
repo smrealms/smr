@@ -31,9 +31,10 @@ class CreatePorts extends AccountPage {
 		$racePercents = $totalRaces;
 
 		foreach ($galaxy->getSectors() as $galSector) {
-			if ($galSector->hasPort()) {
-				$totalRaces[$galSector->getPort()->getRaceID()]++;
-				$totalPorts[$galSector->getPort()->getLevel()]++;
+			$port = $galSector->getPortOrNull();
+			if ($port !== null) {
+				$totalRaces[$port->getRaceID()]++;
+				$totalPorts[$port->getLevel()]++;
 			}
 		}
 		$total = array_sum($totalPorts);

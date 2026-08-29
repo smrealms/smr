@@ -11,10 +11,10 @@ class AttackPortConfirm extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		$sector = $player->getSector();
 
-		if (!$sector->hasPort()) {
+		$port = $sector->getPortOrNull();
+		if ($port === null) {
 			create_error('This sector does not have a port.');
 		}
-		$port = $sector->getPort();
 
 		if ($port->isBusted()) {
 			new AttackPort($sector->getSectorID())->go();

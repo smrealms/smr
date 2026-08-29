@@ -9,6 +9,8 @@ use Smr\Sector;
 class SectorMapRenderer {
 
 	/**
+	 * Render a grid of sectors. If ThisPlayer is null, render with admin vision.
+	 *
 	 * @param array<array<\Smr\Sector>> $MapSectors
 	 * @param ?array{ModifySector: string, ToggleLink: string, DragLocation: string, DragPlanet: string, DragPort: string, DragWarp: string} $EditLinks
 	 */
@@ -30,7 +32,7 @@ class SectorMapRenderer {
 						$isCurrentSector = $MapPlayer?->getSector()->equals($Sector) ?? false;
 						$isLinkedSector = $MapPlayer?->getSector()->isLinkedSector($Sector) ?? false;
 						$isSeedlistSector = $ShowSeedlistSectors && $MapPlayer?->getAlliance()->isInSeedlist($Sector) === true;
-						$isVisited = $Sector->isVisited($MapPlayer); ?>
+						$isVisited = $MapPlayer === null || $Sector->isVisited($MapPlayer); ?>
 						<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax">
 							<div class="lm_sector galaxy<?php echo $Sector->getGalaxyID();
 								if ($isSeedlistSector) {
@@ -88,11 +90,10 @@ class SectorMapRenderer {
 											} ?>
 										</div><?php
 									}
-									$Port = null;
-									if (($MapPlayer === null || $isCurrentSector) && $Sector->hasPort()) {
-										$Port = $Sector->getPort();
-									} elseif ($Sector->hasCachedPort($MapPlayer)) {
-										$Port = $Sector->getCachedPort($MapPlayer);
+									if ($MapPlayer === null || $isCurrentSector) {
+										$Port = $Sector->getPortOrNull();
+									} else {
+										$Port = $Sector->getCachedPortOrNull($MapPlayer);
 									}
 									if ($Port !== null) { ?>
 										<div class="lmport <?php if ($Sector->getLinkLeft() !== 0) { ?>a<?php } else { ?>b<?php } ?>

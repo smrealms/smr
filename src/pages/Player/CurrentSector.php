@@ -132,12 +132,8 @@ class CurrentSector extends PlayerPage {
 		// *
 		// *******************************************
 
-		if ($sector->hasPort()) {
-			$port = $sector->getPort();
-			$portIsAtWar = $player->getRelation($port->getRaceID()) < RELATIONS_WAR;
-		} else {
-			$portIsAtWar = null;
-		}
+		$port = $sector->getPortOrNull();
+		$portIsAtWar = $port === null ? null : $player->getRelation($port->getRaceID()) < RELATIONS_WAR;
 
 		// *******************************************
 		// *

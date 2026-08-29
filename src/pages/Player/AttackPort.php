@@ -22,10 +22,10 @@ class AttackPort extends PlayerPage {
 	public function build(Player $player, Template $template): void {
 		// Either player or port may no longer be in sector
 		$sector = Sector::getSector($player->getGameID(), $this->sectorID);
-		if (!$sector->hasPort()) {
+		$port = $sector->getPortOrNull();
+		if ($port === null) {
 			new CurrentSector(message: 'The port no longer exists!')->go();
 		}
-		$port = $sector->getPort();
 
 		// Display port already destroyed page content if port is busted and we don't
 		// have existing combat results to display.

@@ -1212,6 +1212,11 @@ class Port implements NormalCombatantInterface {
 				'limit' => count($accountIDs),
 			]);
 
+			// Unset the cache so the next getCachedPort fetches the new entry
+			foreach ($accountIDs as $accountID) {
+				unset(self::$CACHE_CACHED_PORTS[$this->getGameID()][$this->getSectorID()][$accountID]);
+			}
+
 			unset($cache);
 			return true;
 		}

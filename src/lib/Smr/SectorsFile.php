@@ -4,7 +4,10 @@ namespace Smr;
 
 class SectorsFile {
 
-	public static function create(int $gameID, ?Player $player, bool $adminCreate = false): never {
+	/**
+	 * Create a ".smr" sectors file. If player is null, create with admin vision.
+	 */
+	public static function create(int $gameID, ?Player $player): never {
 		// NOTE: If the format of this file is changed in an incompatible way,
 		// make sure to update the SMR_FILE_VERSION!
 
@@ -119,7 +122,7 @@ class SectorsFile {
 			foreach ($galaxy->getSectors() as $sector) {
 				$file .= '[Sector=' . $sector->getSectorID() . ']' . EOL;
 
-				if (!$sector->isVisited($player) && $adminCreate === false) {
+				if ($player !== null && !$sector->isVisited($player)) {
 					continue;
 				}
 
@@ -129,11 +132,10 @@ class SectorsFile {
 				if ($sector->hasWarp()) {
 					$file .= 'Warp=' . $sector->getWarp() . EOL;
 				}
-				$port = null;
-				if ($adminCreate && $sector->hasPort()) {
-					$port = $sector->getPort();
-				} elseif ($sector->hasCachedPort($player)) {
-					$port = $sector->getCachedPort($player);
+				if ($player === null) {
+					$port = $sector->getPortOrNull();
+				} else {
+					$port = $sector->getCachedPortOrNull($player);
 				}
 				if ($port !== null) {
 					$file .= 'Port Level=' . $port->getLevel() . EOL;

@@ -13,7 +13,7 @@ class SectorsFileDownloadProcessor extends AccountPageProcessor {
 	) {}
 
 	public function build(Account $account): never {
-		SectorsFile::create($this->gameID, player: null, adminCreate: true);
+		SectorsFile::create($this->gameID, player: null);
 	}
 
 }
