@@ -53,7 +53,7 @@ class DefaultSkeletonRenderer extends AbstractSkeletonRenderer {
 							<?php VoteLinksRenderer::render($data->voteLinks, $data->timeToNextVote); ?>
 						</td>
 						<td class="footer_right">
-							<?php CopyrightRenderer::render($data->version); ?>
+							<?php CopyrightRenderer::render($data->version, $data->gitCommit); ?>
 						</td>
 						<td></td>
 					</tr>
