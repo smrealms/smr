@@ -3,22 +3,22 @@
 var filter = [];
 
 //reset all check boxes
-function resetBoxes() {
+window.resetBoxes = function() {
 	var toggle = document.getElementById("raceform");
 	for (var i = 0; i < toggle.races.length; i++) {
 		toggle.races[i].checked = true;
 	}
-}
+};
 
-function filterSelect(element) {
+window.filterSelect = function(element) {
 	var selected = element.options[element.selectedIndex].value;
 	var columnId = element.parentElement.cellIndex;
 
 	filter[columnId] = [selected];
 	applyFilter('data-list');
-}
+};
 
-function raceToggle() {
+window.raceToggle = function() {
 	var toggle = document.getElementById("raceform");
 	// 1 is the index of the "Race" column
 	filter[1] = [];
@@ -28,7 +28,7 @@ function raceToggle() {
 		}
 	}
 	applyFilter('data-list');
-}
+};
 
 function applyFilter(tableId) {
 	var table = document.getElementById(tableId);
