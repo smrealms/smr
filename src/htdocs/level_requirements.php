@@ -8,8 +8,8 @@ try {
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS; ?>">
-		<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS_COLOUR; ?>">
+		<link rel="stylesheet" type="text/css" href="<?php echo asset_url(DEFAULT_CSS); ?>">
+		<link rel="stylesheet" type="text/css" href="<?php echo asset_url(DEFAULT_CSS_COLOUR); ?>">
 		<title>Level Requirements</title>
 		<meta http-equiv="pragma" content="no-cache">
 	</head>
