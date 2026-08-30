@@ -1,6 +1,6 @@
 /** global: List */
 
-var listjs = (function() {
+window.listjs = (function() {
 
 	function defaultList(id, names) {
 		var list = new List(id, {
