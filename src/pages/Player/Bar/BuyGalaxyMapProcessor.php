@@ -59,7 +59,7 @@ class BuyGalaxyMapProcessor extends PlayerPageProcessor {
 
 		// add port infos
 		foreach ($galaxy->getPorts() as $port) {
-			$port->addCachePort($player->getAccountID());
+			$port->addCachePort($player->getPlayerID());
 		}
 
 		$message = '<div class="center">Galaxy maps have been added. Enjoy!</div><br />';

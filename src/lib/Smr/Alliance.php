@@ -19,7 +19,7 @@ class Alliance {
 	protected ?string $description;
 	protected string $password;
 	protected bool $recruiting;
-	protected int $leaderID;
+	protected int $leaderPlayerID;
 	protected int $bank;
 	protected int $kills;
 	protected int $deaths;
@@ -28,7 +28,7 @@ class Alliance {
 	protected ?string $discordServer;
 	protected ?string $discordChannel;
 	protected string $ircChannel;
-	protected int $flagshipID;
+	protected int $flagshipPlayerID;
 
 	/** @var array<int> */
 	protected array $seedlist;
@@ -114,7 +114,7 @@ class Alliance {
 		$this->password = $dbRecord->getString('alliance_password');
 		$this->recruiting = $dbRecord->getBoolean('recruiting');
 		$this->description = $dbRecord->getNullableString('alliance_description');
-		$this->leaderID = $dbRecord->getInt('leader_id');
+		$this->leaderPlayerID = $dbRecord->getInt('leader_player_id');
 		$this->bank = $dbRecord->getInt('alliance_account');
 		$this->kills = $dbRecord->getInt('alliance_kills');
 		$this->deaths = $dbRecord->getInt('alliance_deaths');
@@ -122,7 +122,7 @@ class Alliance {
 		$this->imgSrc = $dbRecord->getString('img_src');
 		$this->discordServer = $dbRecord->getNullableString('discord_server');
 		$this->discordChannel = $dbRecord->getNullableString('discord_channel');
-		$this->flagshipID = $dbRecord->getInt('flagship_id');
+		$this->flagshipPlayerID = $dbRecord->getInt('flagship_player_id');
 	}
 
 	/**
@@ -225,19 +225,19 @@ class Alliance {
 	}
 
 	public function hasLeader(): bool {
-		return $this->getLeaderID() !== 0;
+		return $this->getLeaderPlayerID() !== 0;
 	}
 
-	public function getLeaderID(): int {
-		return $this->leaderID;
+	public function getLeaderPlayerID(): int {
+		return $this->leaderPlayerID;
 	}
 
 	public function getLeader(): Player {
-		return Player::getPlayer($this->getLeaderID(), $this->getGameID());
+		return Player::getPlayer($this->getLeaderPlayerID());
 	}
 
-	public function setLeaderID(int $leaderID): void {
-		$this->leaderID = $leaderID;
+	public function setLeaderPlayerID(int $leaderPlayerID): void {
+		$this->leaderPlayerID = $leaderPlayerID;
 	}
 
 	public function getDiscordServer(): ?string {
@@ -462,25 +462,25 @@ class Alliance {
 	}
 
 	public function hasFlagship(): bool {
-		return $this->flagshipID !== 0;
+		return $this->flagshipPlayerID !== 0;
 	}
 
 	/**
-	 * Get account ID of the player designated as the alliance flagship.
+	 * Get the player ID of the player designated as the alliance flagship.
 	 * Returns 0 if no flagship.
 	 */
-	public function getFlagshipID(): int {
-		return $this->flagshipID;
+	public function getFlagshipPlayerID(): int {
+		return $this->flagshipPlayerID;
 	}
 
 	/**
-	 * Designate a player as the alliance flagship by their account ID.
+	 * Designate a player as the alliance flagship by their player ID.
 	 */
-	public function setFlagshipID(int $accountID): void {
-		if ($this->flagshipID === $accountID) {
+	public function setFlagshipPlayerID(int $playerID): void {
+		if ($this->flagshipPlayerID === $playerID) {
 			return;
 		}
-		$this->flagshipID = $accountID;
+		$this->flagshipPlayerID = $playerID;
 	}
 
 	public function getJoinRestriction(Player $player, bool $doAllianceCheck = true, bool $doRecruitingCheck = true): string|false {
@@ -549,8 +549,8 @@ class Alliance {
 				'img_src' => $this->imgSrc,
 				'discord_server' => $this->discordServer,
 				'discord_channel' => $this->discordChannel,
-				'flagship_id' => $this->flagshipID,
-				'leader_id' => $this->leaderID,
+				'flagship_player_id' => $this->flagshipPlayerID,
+				'leader_player_id' => $this->leaderPlayerID,
 			],
 			$this->SQLID,
 		);
@@ -586,7 +586,7 @@ class Alliance {
 		$activeIDs = [];
 
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT account_id
+		$dbResult = $db->read('SELECT player.player_id
 						FROM active_session
 						JOIN player USING(account_id, game_id)
 						WHERE ' . self::SQL . ' AND last_accessed >= :inactive_time', [
@@ -595,7 +595,7 @@ class Alliance {
 		]);
 
 		foreach ($dbResult->records() as $dbRecord) {
-			$activeIDs[] = $dbRecord->getInt('account_id');
+			$activeIDs[] = $dbRecord->getInt('player_id');
 		}
 
 		return $activeIDs;
@@ -610,7 +610,7 @@ class Alliance {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT planet.*
 			FROM player
-			JOIN planet ON player.game_id = planet.game_id AND player.account_id = planet.owner_id
+			JOIN planet ON player.player_id = planet.owner_player_id
 			WHERE player.game_id = :game_id
 			AND player.alliance_id = :alliance_id
 			ORDER BY planet.sector_id

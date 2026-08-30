@@ -22,13 +22,13 @@ class AllianceList extends PlayerPage {
 		// get list of alliances
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT
-		count(account_id) as alliance_member_count,
+		count(player_id) as alliance_member_count,
 		sum(experience) as alliance_xp,
 		floor(avg(experience)) as alliance_avg,
 		alliance.*
 		FROM player
 		JOIN alliance USING (game_id, alliance_id)
-		WHERE leader_id > 0
+		WHERE leader_player_id > 0
 		AND game_id = :game_id
 		GROUP BY alliance_id
 		ORDER BY alliance_name ASC', [

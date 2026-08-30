@@ -27,7 +27,7 @@ class AllianceLeaveProcessor extends PlayerPageProcessor {
 			$db->delete('alliance_thread', $alliance->SQLID);
 			$db->delete('alliance_thread_topic', $alliance->SQLID);
 			$db->delete('alliance_has_roles', $alliance->SQLID);
-			$alliance->setLeaderID(0);
+			$alliance->setLeaderPlayerID(0);
 			$alliance->setDiscordChannel(null);
 			$alliance->update();
 		}

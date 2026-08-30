@@ -9,7 +9,7 @@ use Smr\Port;
 class RevealMapProcessor extends BetaFunctionsPageProcessor {
 
 	public function buildBetaFunctionsProcessor(Player $player): void {
-		$account_id = $player->getAccountID();
+		$playerID = $player->getPlayerID();
 		$game_id = $player->getGameID();
 		// delete all entries from the player_visited_sector/port table
 		$db = Database::getInstance();
@@ -19,7 +19,7 @@ class RevealMapProcessor extends BetaFunctionsPageProcessor {
 		$dbResult = $db->select('port', ['game_id' => $game_id]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$port = Port::getPort($game_id, $dbRecord->getInt('sector_id'), false, $dbRecord);
-			$port->addCachePort($account_id);
+			$port->addCachePort($playerID);
 		}
 	}
 

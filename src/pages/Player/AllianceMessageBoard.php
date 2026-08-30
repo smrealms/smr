@@ -65,12 +65,12 @@ class AllianceMessageBoard extends PlayerPage {
 				),
 				t2 AS (
 					SELECT t1.*,
-						FIRST_VALUE(sender_id) OVER (PARTITION BY thread_id ORDER BY reply_id) as author_account_id
+						FIRST_VALUE(player_id) OVER (PARTITION BY thread_id ORDER BY reply_id) as author_player_id
 					FROM t1
 				)
-			SELECT alliance_only, topic, thread_id, MAX(time) as sendtime, COUNT(reply_id) as num_replies, author_account_id
+			SELECT alliance_only, topic, thread_id, MAX(time) as sendtime, COUNT(reply_id) as num_replies, author_player_id
 			FROM t2
-			GROUP BY thread_id, author_account_id ORDER BY sendtime DESC
+			GROUP BY thread_id, author_player_id ORDER BY sendtime DESC
 		', [
 			'in_alliance' => $db->escapeBoolean($in_alliance),
 			'game_id' => $db->escapeNumber($alliance->getGameID()),
@@ -108,16 +108,16 @@ class AllianceMessageBoard extends PlayerPage {
 				$threads[$i]['Unread'] = !$dbResult2->hasRecord();
 
 				// Determine the thread author display name
-				$authorAccountID = $dbRecord->getInt('author_account_id');
-				if ($authorAccountID === ACCOUNT_ID_PLANET) {
+				$authorPlayerID = $dbRecord->getInt('author_player_id');
+				if ($authorPlayerID === PLAYER_ID_PLANET) {
 					$playerName = 'Planet Reporter';
-				} elseif ($authorAccountID === ACCOUNT_ID_BANK_REPORTER) {
+				} elseif ($authorPlayerID === PLAYER_ID_BANK_REPORTER) {
 					$playerName = 'Bank Reporter';
-				} elseif ($authorAccountID === ACCOUNT_ID_ADMIN) {
+				} elseif ($authorPlayerID === PLAYER_ID_ADMIN) {
 					$playerName = 'Game Admins';
 				} else {
 					try {
-						$author = Player::getPlayer($authorAccountID, $player->getGameID());
+						$author = Player::getPlayer($authorPlayerID);
 						$playerName = $author->getLinkedDisplayName(false);
 					} catch (PlayerNotFound) {
 						$playerName = 'Unknown'; // default
@@ -125,11 +125,11 @@ class AllianceMessageBoard extends PlayerPage {
 				}
 				$threads[$i]['Sender'] = $playerName;
 
-				$dbResult2 = $db->read('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . Player::SQL . ' AND alliance_id = :alliance_id LIMIT 1', [
+				$dbResult2 = $db->read('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE player_id = :player_id AND alliance_id = :alliance_id LIMIT 1', [
 					...$player->SQLID,
 					'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
 				]);
-				$canDelete = $player->getAccountID() === $authorAccountID || $dbResult2->record()->getBoolean('mb_messages');
+				$canDelete = $player->getPlayerID() === $authorPlayerID || $dbResult2->record()->getBoolean('mb_messages');
 				if ($canDelete) {
 					$container = new AllianceMessageBoardDeleteThreadProcessor($allianceID, $this, $threadID);
 					$threads[$i]['DeleteHref'] = $container->href();

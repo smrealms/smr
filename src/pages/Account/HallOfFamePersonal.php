@@ -35,13 +35,13 @@ class HallOfFamePersonal extends AccountPage {
 
 		if ($game_id !== null) {
 			try {
-				$player = Player::getPlayer($account->getAccountID(), $game_id);
+				$player = Player::getPlayerByAccountAndGame($account->getAccountID(), $game_id);
 			} catch (PlayerNotFound) {
 				// Session user is not in this game, $player remains null
 			}
 
 			try {
-				$hofPlayer = Player::getPlayer($account_id, $game_id);
+				$hofPlayer = Player::getPlayerByAccountAndGame($account_id, $game_id);
 			} catch (PlayerNotFound) {
 				create_error('That player has not yet joined this game.');
 			}

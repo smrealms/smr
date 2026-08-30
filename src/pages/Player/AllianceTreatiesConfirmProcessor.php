@@ -44,10 +44,10 @@ class AllianceTreatiesConfirmProcessor extends PlayerPageProcessor {
 		]);
 
 		//send a message to the leader letting them know the offer is waiting.
-		$leader2 = $alliance2->getLeaderID();
+		$leader2 = $alliance2->getLeaderPlayerID();
 		$message = 'An ambassador from ' . $alliance1->getAllianceBBLink() . ' has arrived with a treaty offer.';
 
-		Player::sendMessageFromAllianceAmbassador($player->getGameID(), $leader2, $message);
+		Player::sendMessageFromAllianceAmbassador($leader2, $message);
 
 		$container = new AllianceTreaties('The treaty offer has been sent.');
 		$container->go();

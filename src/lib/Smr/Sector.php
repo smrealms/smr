@@ -210,14 +210,14 @@ class Sector {
 	}
 
 	public function markVisited(Player $player): void {
-		$this->getPortOrNull()?->addCachePort($player->getAccountID());
+		$this->getPortOrNull()?->addCachePort($player->getPlayerID());
 
 		//now delete the entry from visited
 		if (!$this->isVisited($player)) {
 			$db = Database::getInstance();
 			$db->delete('player_visited_sector', [
 				...$this->SQLID,
-				'account_id' => $player->getAccountID(),
+				'player_id' => $player->getPlayerID(),
 			]);
 		}
 		$this->visited[$player->getAccountID()] = true;
@@ -273,10 +273,10 @@ class Sector {
 		$db = Database::getInstance();
 		$db->update(
 			'sector_has_forces',
-			['refresher' => 0],
+			['refresher_player_id' => 0],
 			[
 				...$this->SQLID,
-				'refresher' => $player->getAccountID(),
+				'refresher_player_id' => $player->getPlayerID(),
 			],
 		);
 	}
@@ -631,7 +631,7 @@ class Sector {
 	}
 
 	public function getCachedPort(Player $player): Port {
-		return Port::getCachedPort($this->getGameID(), $this->getSectorID(), $player->getAccountID());
+		return Port::getCachedPort($this->getGameID(), $this->getSectorID(), $player->getPlayerID());
 	}
 
 	public function getCachedPortOrNull(Player $player): ?Port {
@@ -781,7 +781,7 @@ class Sector {
 	public function hasPlayerForces(Player $player): bool {
 		return array_any(
 			$this->getForces(),
-			fn($force) => $player->getAccountID() === $force->getOwnerID(),
+			fn($force) => $player->getPlayerID() === $force->getOwnerPlayerID(),
 		);
 	}
 
@@ -828,7 +828,7 @@ class Sector {
 	 */
 	public function getOtherTraders(Player $player): array {
 		$players = Player::getSectorPlayers($this->getGameID(), $this->getSectorID()); //Do not use & because we unset something and only want that in what we return
-		unset($players[$player->getAccountID()]);
+		unset($players[$player->getPlayerID()]);
 		return $players;
 	}
 
@@ -859,10 +859,10 @@ class Sector {
 		if (!$player->hasAlliance() || !$player->getAlliance()->hasFlagship()) {
 			return false;
 		}
-		$flagshipID = $player->getAlliance()->getFlagshipID();
+		$flagshipPlayerID = $player->getAlliance()->getFlagshipPlayerID();
 		return array_any(
 			$this->getPlayers(),
-			fn($sectorPlayer) => $sectorPlayer->getAccountID() === $flagshipID,
+			fn($sectorPlayer) => $sectorPlayer->getPlayerID() === $flagshipPlayerID,
 		);
 	}
 
@@ -888,10 +888,10 @@ class Sector {
 	public function getFightingTradersAgainstPort(Player $attackingPlayer, Port $defendingPort, bool $allEligible = false): array {
 		$fightingPlayers = [];
 		$alliancePlayers = Player::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
-		foreach ($alliancePlayers as $accountID => $player) {
+		foreach ($alliancePlayers as $playerID => $player) {
 			if ($player->canFight()) {
 				if ($attackingPlayer->traderAttackPortAlliance($player)) {
-					$fightingPlayers[$accountID] = $alliancePlayers[$accountID];
+					$fightingPlayers[$playerID] = $alliancePlayers[$playerID];
 				}
 			}
 		}
@@ -909,10 +909,10 @@ class Sector {
 		$alliancePlayers = Player::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
 		if (count($alliancePlayers) > 0) {
 			$planetOwner = $defendingPlanet->getOwner();
-			foreach ($alliancePlayers as $accountID => $player) {
+			foreach ($alliancePlayers as $playerID => $player) {
 				if ($player->canFight()) {
 					if ($attackingPlayer->traderAttackPlanetAlliance($player) && !$planetOwner->planetNAPAlliance($player)) {
-						$fightingPlayers[$accountID] = $alliancePlayers[$accountID];
+						$fightingPlayers[$playerID] = $alliancePlayers[$playerID];
 					}
 				}
 			}
@@ -932,12 +932,12 @@ class Sector {
 		}
 		$fightingPlayers = ['Attackers' => [], 'Defenders' => []];
 		$alliancePlayers = Player::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID(), $defendingPlayer->getAllianceID()]);
-		foreach ($alliancePlayers as $accountID => $player) {
+		foreach ($alliancePlayers as $playerID => $player) {
 			if ($player->canFight()) {
 				if ($attackingPlayer->traderAttackTraderAlliance($player) && !$defendingPlayer->traderDefendTraderAlliance($player) && !$defendingPlayer->traderNAPAlliance($player)) {
-					$fightingPlayers['Attackers'][$accountID] = $player;
+					$fightingPlayers['Attackers'][$playerID] = $player;
 				} elseif ($defendingPlayer->traderDefendTraderAlliance($player) && !$attackingPlayer->traderAttackTraderAlliance($player) && !$attackingPlayer->traderNAPAlliance($player) && ($checkForCloak === false || $attackingPlayer->canSee($player))) {
-					$fightingPlayers['Defenders'][$accountID] = $player;
+					$fightingPlayers['Defenders'][$playerID] = $player;
 				}
 			}
 		}
@@ -974,10 +974,10 @@ class Sector {
 	public function getPotentialFightingTraders(Player $attackingPlayer): array {
 		$fightingPlayers = ['Attackers' => [], 'Defenders' => []];
 		$alliancePlayers = Player::getSectorPlayersByAlliances($this->getGameID(), $this->getSectorID(), [$attackingPlayer->getAllianceID()]);
-		foreach ($alliancePlayers as $accountID => $player) {
+		foreach ($alliancePlayers as $playerID => $player) {
 			if ($player->canFight()) {
 				if ($attackingPlayer->traderAttackTraderAlliance($player)) {
-					$fightingPlayers['Attackers'][$accountID] = $player;
+					$fightingPlayers['Attackers'][$playerID] = $player;
 				}
 			}
 		}
@@ -1017,7 +1017,7 @@ class Sector {
 			$db = Database::getInstance();
 			$dbResult = $db->select('player_visited_sector', [
 				...$this->SQLID,
-				'account_id' => $player->getAccountID(),
+				'player_id' => $player->getPlayerID(),
 			]);
 			$this->visited[$player->getAccountID()] = !$dbResult->hasRecord();
 		}

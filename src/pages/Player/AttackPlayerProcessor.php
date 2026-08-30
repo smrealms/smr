@@ -14,7 +14,7 @@ use Smr\SectorLock;
 class AttackPlayerProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $targetAccountID,
+		private readonly int $targetPlayerID,
 	) {}
 
 	public function build(Player $player): never {
@@ -37,7 +37,7 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 			create_error('You are not allowed to fight!');
 		}
 
-		$targetPlayer = Player::getPlayer($this->targetAccountID, $player->getGameID());
+		$targetPlayer = Player::getPlayer($this->targetPlayerID);
 
 		if ($player->traderNAPAlliance($targetPlayer)) {
 			create_error('Your alliance does not allow you to attack this trader.');
@@ -74,7 +74,7 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 			$traders = [];
 			foreach ($fightingPlayers[$attack] as $teamPlayer) {
 				$playerResults = $teamPlayer->getShip()->shootPlayers($fightingPlayers[$defend]);
-				$traders[$teamPlayer->getAccountID()] = $playerResults;
+				$traders[$teamPlayer->getPlayerID()] = $playerResults;
 
 				// Award assists (if there are multiple attackers)
 				if (count($fightingPlayers[$attack]) > 1) {
@@ -106,9 +106,9 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 			'type' => 'PLAYER',
 			'sector_id' => $sector->getSectorID(),
 			'timestamp' => Epoch::time(),
-			'attacker_id' => $player->getAccountID(),
+			'attacker_player_id' => $player->getPlayerID(),
 			'attacker_alliance_id' => $player->getAllianceID(),
-			'defender_id' => $this->targetAccountID,
+			'defender_player_id' => $targetPlayer->getPlayerID(),
 			'defender_alliance_id' => $targetPlayer->getAllianceID(),
 			'result' => $db->escapeObject($results, true),
 		]);
@@ -118,7 +118,7 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 			foreach ($teamPlayers as $teamPlayer) {
 				if (!$player->equals($teamPlayer)) {
 					$db->replace('sector_message', [
-						'account_id' => $teamPlayer->getAccountID(),
+						'player_id' => $teamPlayer->getPlayerID(),
 						'game_id' => $teamPlayer->getGameID(),
 						'message' => '[ATTACK_RESULTS]' . $logId,
 					]);
@@ -135,11 +135,11 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 
 		// If player or target is dead there is no continue attack button
 		if ($player->isDead() || $targetPlayer->isDead()) {
-			$targetAccountID = null;
+			$targetPlayerID = null;
 		} else {
-			$targetAccountID = $this->targetAccountID;
+			$targetPlayerID = $this->targetPlayerID;
 		}
-		$container = new AttackPlayer($results, $targetAccountID, $player->isDead());
+		$container = new AttackPlayer($results, $targetPlayerID, $player->isDead());
 		$container->go();
 	}
 

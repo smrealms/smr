@@ -17,7 +17,7 @@ class AllianceSetOpProcessor extends PlayerPageProcessor {
 		$db = Database::getInstance();
 		$account = $player->getAccount();
 		$alliance = $player->getAlliance();
-		$memberIDs = array_keys($alliance->getMembers(includeNpc: false));
+		$memberPlayerIDs = array_keys($alliance->getMembers(includeNpc: false));
 
 		if ($this->cancel) {
 			// just get rid of op
@@ -25,10 +25,9 @@ class AllianceSetOpProcessor extends PlayerPageProcessor {
 			$db->delete('alliance_has_op_response', $alliance->SQLID);
 
 			// Delete the announcement from alliance members message boxes
-			$db->write('DELETE FROM message WHERE game_id = :game_id AND sender_id = :sender_id AND account_id IN (:account_ids)', [
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'sender_id' => $db->escapeNumber(ACCOUNT_ID_OP_ANNOUNCE),
-				'account_ids' => $db->escapeArray($memberIDs),
+			$db->write('DELETE FROM message WHERE sender_player_id = :sender_player_id AND player_id IN (:player_ids)', [
+				'sender_player_id' => $db->escapeNumber(PLAYER_ID_OP_ANNOUNCE),
+				'player_ids' => $db->escapeArray($memberPlayerIDs),
 			]);
 
 			// NOTE: for simplicity we don't touch `player_has_unread_messages` here,
@@ -54,8 +53,12 @@ class AllianceSetOpProcessor extends PlayerPageProcessor {
 			// Send an alliance message that expires at the time of the op.
 			// Since the message is procedural, don't exclude this player.
 			$message = $player->getBBLink() . ' has scheduled an operation for ' . date($account->getDateTimeFormat(), $time) . '. Navigate to your Alliance console to respond!';
-			foreach ($memberIDs as $memberAccountID) {
-				$player->sendMessageFromOpAnnounce($memberAccountID, $message, $time);
+			foreach ($memberPlayerIDs as $memberPlayerID) {
+				$player->sendMessageFromOpAnnounce(
+					receiverPlayerID: $memberPlayerID,
+					message: $message,
+					expires: $time,
+				);
 			}
 		}
 

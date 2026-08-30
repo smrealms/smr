@@ -111,11 +111,12 @@ class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
 			'thread_id' => $thread_id,
 			'reply_id' => $reply_id,
 			'text' => $body,
-			'sender_id' => $player->getAccountID(),
+			'player_id' => $player->getPlayerID(),
 			'time' => Epoch::time(),
 		]);
 		$db->replace('player_read_thread', [
 			...$player->SQLID,
+			'game_id' => $player->getGameID(),
 			'alliance_id' => $alliance_id,
 			'thread_id' => $thread_id,
 			'time' => Epoch::time() + 2,

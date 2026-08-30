@@ -42,10 +42,10 @@ class AllianceInvitePlayerRenderer {
 			<p>Select a player to invite to your alliance:</p>
 
 			<form method="POST" action="<?php echo $InviteHREF; ?>">
-				<select name="account_id" size="1">
+				<select name="player_number" size="1">
 					<?php
 					foreach ($InvitePlayers as $InvitePlayer) { ?>
-						<option value="<?php echo $InvitePlayer->getAccountID(); ?>">
+						<option value="<?php echo $InvitePlayer->getPlayerNumber(); ?>">
 							<?php echo $InvitePlayer->getDisplayName(true); ?>
 						</option><?php
 					} ?>

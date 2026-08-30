@@ -60,7 +60,7 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 
 			$curr_drink_id++;
 			$db->insert('player_has_drinks', [
-				'account_id' => $player->getAccountID(),
+				'player_id' => $player->getPlayerID(),
 				'game_id' => $player->getGameID(),
 				'drink_id' => $curr_drink_id,
 				'time' => Epoch::time(),

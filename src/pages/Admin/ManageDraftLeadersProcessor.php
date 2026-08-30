@@ -32,12 +32,12 @@ class ManageDraftLeadersProcessor extends AccountPageProcessor {
 		$gameId = $this->selectedGameID;
 
 		// Get the POST variables
-		$playerId = Request::getInt('player_id');
+		$playerNumber = Request::getInt('player_number');
 		$homeSectorID = Request::getInt('home_sector_id');
 		$action = Request::get(self::ACTION);
 
 		try {
-			$selectedPlayer = Player::getPlayerByPlayerID($playerId, $gameId);
+			$selectedPlayer = Player::getPlayerByPlayerNumber($playerNumber, $gameId);
 		} catch (PlayerNotFound $e) {
 			$msg = "<span class='red'>ERROR: </span>" . $e->getMessage();
 			$container = new ManageDraftLeaders($this->selectedGameID, $msg);
@@ -54,6 +54,7 @@ class ManageDraftLeadersProcessor extends AccountPageProcessor {
 			} else {
 				$db->insert('draft_leaders', [
 					...$selectedPlayer->SQLID,
+					'game_id' => $selectedPlayer->getGameID(),
 					'home_sector_id' => $homeSectorID,
 				]);
 			}

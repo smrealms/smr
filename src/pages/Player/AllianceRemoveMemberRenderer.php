@@ -4,7 +4,7 @@ namespace Smr\Pages\Player;
 
 class AllianceRemoveMemberRenderer {
 
-	/** @param array<array{last_active: string, display_name: string, account_id: int}> $Members */
+	/** @param array<array{last_active: string, display_name: string, player_id: int}> $Members */
 	public static function render(array $Members, string $BanishHREF): void {
 		?>
 		<div class="center"><?php
@@ -23,7 +23,7 @@ class AllianceRemoveMemberRenderer {
 								<td class="left"><?php echo $Member['display_name']; ?></td>
 								<td class="shrink noWrap"><?php echo $Member['last_active']; ?></td>
 								<td class="shrink">
-									<input type="checkbox" name="account_id[]" value="<?php echo $Member['account_id']; ?>" />
+									<input type="checkbox" name="player_id[]" value="<?php echo $Member['player_id']; ?>" />
 								</td>
 							</tr><?php
 						} ?>

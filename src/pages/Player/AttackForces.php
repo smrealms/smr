@@ -11,7 +11,7 @@ use Smr\Template;
 class AttackForces extends PlayerPage {
 
 	public function __construct(
-		private readonly int $ownerAccountID,
+		private readonly int $ownerPlayerID,
 		private readonly ForceFullCombatResults $results,
 		bool $playerDied,
 	) {
@@ -20,8 +20,8 @@ class AttackForces extends PlayerPage {
 	}
 
 	public function build(Player $player, Template $template): void {
-		if ($this->ownerAccountID > 0) {
-			$target = Force::getForce($player->getGameID(), $player->getSectorID(), $this->ownerAccountID);
+		if ($this->ownerPlayerID > 0) {
+			$target = Force::getForce($player->getGameID(), $player->getSectorID(), $this->ownerPlayerID);
 		} else {
 			$target = null;
 		}

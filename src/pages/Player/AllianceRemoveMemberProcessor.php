@@ -11,22 +11,22 @@ use Smr\Request;
 class AllianceRemoveMemberProcessor extends PlayerPageProcessor {
 
 	public function build(Player $player): never {
-		$accountIDs = Request::getIntArray('account_id', []);
+		$playerIDs = Request::getIntArray('player_id', []);
 
-		if (count($accountIDs) === 0) {
+		if (count($playerIDs) === 0) {
 			create_error('You have to choose someone to remove them!');
 		}
 
-		if (in_array($player->getAlliance()->getLeaderID(), $accountIDs, true)) {
+		if (in_array($player->getAlliance()->getLeaderPlayerID(), $playerIDs, true)) {
 			create_error('You can\'t kick the leader!');
 		}
 
-		if (in_array($player->getAccountID(), $accountIDs, true)) {
+		if (in_array($player->getPlayerID(), $playerIDs, true)) {
 			create_error('You can\'t kick yourself!');
 		}
 
-		foreach ($accountIDs as $accountID) {
-			$currPlayer = Player::getPlayer($accountID, $player->getGameID());
+		foreach ($playerIDs as $playerID) {
+			$currPlayer = Player::getPlayer($playerID);
 			if (!$player->sameAlliance($currPlayer)) {
 				throw new Exception('Cannot kick someone from another alliance!');
 			}

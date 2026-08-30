@@ -10,11 +10,11 @@ use Smr\Player;
 class AllianceManageNpcsDismissProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $npcAccountID,
+		private readonly int $npcPlayerID,
 	) {}
 
 	public function build(Player $player): never {
-		$npc = Player::getPlayer($this->npcAccountID, $player->getGameID());
+		$npc = Player::getPlayer($this->npcPlayerID);
 		if (!$npc->sameAlliance($player)) {
 			create_error('You cannot dismiss an NPC that is not in your alliance!');
 		}
@@ -38,7 +38,7 @@ class AllianceManageNpcsDismissProcessor extends PlayerPageProcessor {
 		$npc->joinAlliance($npcAlliance->getAllianceID());
 		$npc->update();
 		if (!$npcAlliance->hasLeader()) {
-			$npcAlliance->setLeaderID($npc->getAccountID());
+			$npcAlliance->setLeaderPlayerID($npc->getPlayerID());
 			$npcAlliance->update();
 		}
 		$db = Database::getInstance();

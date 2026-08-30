@@ -12,7 +12,7 @@ class AllianceSetOpRenderer {
 		?string $OpDate,
 		?string $OpCountdown,
 		string $OpProcessingHREF,
-		int $FlagshipID,
+		int $FlagshipPlayerID,
 		array $AlliancePlayers,
 		string $FlagshipHREF,
 	): void {
@@ -50,13 +50,13 @@ class AllianceSetOpRenderer {
 		<h2>Alliance Flagship</h2>
 		<p>The Flagship's location <img src="images/flagship.png" /> will be visible to all alliance members on the Local Map.</p>
 		<form method="POST" action="<?php echo $FlagshipHREF; ?>">
-			<select name="flagship_id" size="1">
+			<select name="flagship_player_id" size="1">
 				<option value="0">-- None --</option>
 				<?php
 				foreach ($AlliancePlayers as $alliancePlayer) {
-					$selected = $alliancePlayer->getAccountID() === $FlagshipID ? 'selected' : '';
+					$selected = $alliancePlayer->getPlayerID() === $FlagshipPlayerID ? 'selected' : '';
 					?>
-					<option value="<?php echo $alliancePlayer->getAccountID(); ?>" <?php echo $selected; ?>>
+					<option value="<?php echo $alliancePlayer->getPlayerID(); ?>" <?php echo $selected; ?>>
 						<?php echo $alliancePlayer->getDisplayName(); ?>
 					</option><?php
 				} ?>

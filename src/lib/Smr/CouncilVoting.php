@@ -27,7 +27,7 @@ class CouncilVoting {
 			'race_id_1' => $db->escapeNumber($race_id_1),
 		]);
 		foreach ($dbResult->records() as $dbRecord) {
-			$account_id = $dbRecord->getInt('account_id');
+			$playerID = $dbRecord->getInt('player_id');
 			$race_id_2 = $dbRecord->getInt('race_id_2');
 			$action = $dbRecord->getString('action');
 
@@ -63,8 +63,7 @@ class CouncilVoting {
 			]);
 
 			$db->delete('player_votes_relation', [
-				'account_id' => $account_id,
-				'game_id' => $gameID,
+				'player_id' => $playerID,
 			]);
 		}
 	}
@@ -135,37 +134,42 @@ class CouncilVoting {
 			// more yes than no?
 			if ($votes['YES'] > $votes['NO']) {
 				if ($type === 'WAR') {
-					$currentlyParkedAccountIDs = [];
+					$currentlyParkedPlayerIDs = [];
 					$raceFedSectors = [
 						$race_id_1 => Sector::getLocationSectors($gameID, LOCATION_GROUP_RACIAL_BEACONS + $race_id_1),
 						$race_id_2 => Sector::getLocationSectors($gameID, LOCATION_GROUP_RACIAL_BEACONS + $race_id_2),
 					];
 					foreach ($raceFedSectors as $raceID => $fedSectors) {
-						$currentlyParkedAccountIDs[$raceID] = []; //initialize
+						$currentlyParkedPlayerIDs[$raceID] = []; // initialize
 						$otherRaceID = $raceID === $race_id_1 ? $race_id_2 : $race_id_1;
 						foreach ($fedSectors as $fedSector) {
 							$sectorPlayers = $fedSector->getPlayers();
 							foreach ($sectorPlayers as $sectorPlayer) {
 								if ($sectorPlayer->getRaceID() === $otherRaceID && $sectorPlayer->canBeProtectedByRace($raceID)) {
-									$currentlyParkedAccountIDs[$raceID][] = $sectorPlayer->getAccountID();
+									$currentlyParkedPlayerIDs[$raceID][] = $sectorPlayer->getPlayerID();
 								}
 							}
 						}
 					}
 
-					if (count($currentlyParkedAccountIDs[$race_id_1]) + count($currentlyParkedAccountIDs[$race_id_2]) > 0) {
+					if (count($currentlyParkedPlayerIDs[$race_id_1]) + count($currentlyParkedPlayerIDs[$race_id_2]) > 0) {
 						$expireTime = Epoch::time() + TIME_FOR_WAR_VOTE_FED_SAFETY;
-						$query = 'REPLACE INTO player_can_fed (account_id, game_id, race_id, expiry, allowed) VALUES ';
-						foreach ($currentlyParkedAccountIDs as $raceID => $accountIDs) {
+						$query = 'REPLACE INTO player_can_fed (player_id, game_id, race_id, expiry, allowed) VALUES ';
+						foreach ($currentlyParkedPlayerIDs as $raceID => $parkedPlayerIDs) {
 							if ($raceID === $race_id_1) {
 								$message = 'We have declared war upon your race';
 							} else {
 								$message = 'Your race has declared war upon us';
 							}
 							$message .= ', you have ' . format_time(TIME_FOR_WAR_VOTE_FED_SAFETY) . ' to vacate our federal space, after that time you will no longer be protected (unless you have strong personal relations).';
-							foreach ($accountIDs as $accountID) {
-								$query .= '(' . $db->escapeNumber($accountID) . ',' . $db->escapeNumber($gameID) . ',' . $db->escapeNumber($raceID) . ',' . $db->escapeNumber($expireTime) . ',' . $db->escapeBoolean(true) . '),';
-								Player::sendMessageFromRace($raceID, $gameID, $accountID, $message, $expireTime);
+							foreach ($parkedPlayerIDs as $parkedPlayerID) {
+								$query .= '(' . $db->escapeNumber($parkedPlayerID) . ',' . $db->escapeNumber($gameID) . ',' . $db->escapeNumber($raceID) . ',' . $db->escapeNumber($expireTime) . ',' . $db->escapeBoolean(true) . '),';
+								Player::sendMessageFromRace(
+									raceID: $raceID,
+									receiverPlayerID: $parkedPlayerID,
+									message: $message,
+									expires: $expireTime,
+								);
 							}
 						}
 						$db->write(substr($query, 0, -1));

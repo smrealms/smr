@@ -14,10 +14,10 @@ class AllianceRolesSaveProcessor extends PlayerPageProcessor {
 	) {}
 
 	public function build(Player $player): never {
-		foreach (Request::getIntArray('role', []) as $accountID => $roleID) {
+		foreach (Request::getIntArray('role', []) as $playerID => $roleID) {
 			$db = Database::getInstance();
 			$db->replace('player_has_alliance_role', [
-				'account_id' => $accountID,
+				'player_id' => $playerID,
 				'game_id' => $player->getGameID(),
 				'role_id' => $roleID,
 				'alliance_id' => $this->allianceID,

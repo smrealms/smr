@@ -39,8 +39,8 @@ class ManagePostEditors extends AccountPage {
 
 			// Get the list of current editors for the selected game
 			$currentEditors = [];
-			foreach (Globals::getGalacticPostEditorIDs($selectedGameID) as $editorID) {
-				$editor = Player::getPlayer($editorID, $selectedGameID);
+			foreach (Globals::getGalacticPostEditorPlayerIDs($selectedGameID) as $editorPlayerID) {
+				$editor = Player::getPlayer($editorPlayerID);
 				$currentEditors[] = $editor->getDisplayName();
 			}
 

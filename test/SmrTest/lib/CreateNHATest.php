@@ -35,7 +35,6 @@ class CreateNHATest extends BaseIntegrationSpec {
 
 		// Reload NHA and make sure relevant properties are set
 		$alliance = Alliance::getAllianceByName(NHA_ALLIANCE_NAME, $gameID, true);
-		self::assertSame(ACCOUNT_ID_NHL, $alliance->getLeaderID());
 		self::assertSame('Newbie Help Alliance', $alliance->getAllianceName());
 		self::assertSame(DISCORD_SERVER_ID, $alliance->getDiscordServer());
 		self::assertSame('Alliance message board includes tips and FAQs.', $alliance->getMotD());
@@ -43,7 +42,8 @@ class CreateNHATest extends BaseIntegrationSpec {
 		self::assertFalse($alliance->isRecruiting());
 
 		// Reload NHL and make sure it's set
-		$nhl = Player::getPlayer(ACCOUNT_ID_NHL, $gameID, true);
+		$nhl = Player::getPlayer($alliance->getLeaderPlayerID(), true);
+		self::assertSame(ACCOUNT_ID_NHL, $nhl->getAccountID());
 		self::assertSame('Newbie Help Leader', $nhl->getPlayerName());
 		self::assertSame($alliance->getAllianceID(), $nhl->getAllianceID());
 	}

@@ -127,13 +127,13 @@ class TraderTeamCombatResultsRenderer {
 		$TotalDamageToThisPlayer = 0;
 		foreach ($TraderTeamCombatResults->traders as $TraderResults) {
 			// Check if ThisPlayer was a target in this round of combat
-			$ThisAccountID = $ThisPlayer?->getAccountID();
+			$ThisPlayerID = $ThisPlayer?->getPlayerID();
 			$totalDamagePerTarget = $TraderResults->getTotalDamagePerTarget();
-			if ($ThisAccountID === null || !isset($totalDamagePerTarget[$ThisAccountID])) {
+			if ($ThisPlayerID === null || !isset($totalDamagePerTarget[$ThisPlayerID])) {
 				$TotalDamageToThisPlayer = null;
 				break;
 			}
-			$TotalDamageToThisPlayer += $totalDamagePerTarget[$ThisAccountID];
+			$TotalDamageToThisPlayer += $totalDamagePerTarget[$ThisPlayerID];
 		} ?>
 
 		This fleet <?php

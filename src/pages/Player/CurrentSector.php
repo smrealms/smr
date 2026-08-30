@@ -143,9 +143,9 @@ class CurrentSector extends PlayerPage {
 		$otherPlayers = $sector->getOtherTraders($player);
 		$visiblePlayers = [];
 		$displayCloakedShipMessage = false;
-		foreach ($otherPlayers as $accountID => $otherPlayer) {
+		foreach ($otherPlayers as $playerID => $otherPlayer) {
 			if ($player->canSee($otherPlayer)) {
-				$visiblePlayers[$accountID] = $otherPlayer;
+				$visiblePlayers[$playerID] = $otherPlayer;
 			} else {
 				// Display message if at least one unseen cloaked ship
 				$displayCloakedShipMessage = true;
@@ -184,7 +184,7 @@ function getForceRefreshMessage(bool $showMessage, Player $player): ?string {
 		return null;
 	}
 	$db = Database::getInstance();
-	$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at > :now AND sector_id = :sector_id AND game_id = :game_id AND refresher = :account_id ORDER BY refresh_at DESC LIMIT 1', [
+	$dbResult = $db->read('SELECT refresh_at FROM sector_has_forces WHERE refresh_at > :now AND sector_id = :sector_id AND refresher_player_id = :player_id ORDER BY refresh_at DESC LIMIT 1', [
 		'now' => $db->escapeNumber(Epoch::time()),
 		'sector_id' => $db->escapeNumber($player->getSectorID()),
 		...$player->SQLID,

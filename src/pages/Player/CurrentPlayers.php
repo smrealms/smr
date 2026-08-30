@@ -67,7 +67,7 @@ class CurrentPlayers extends PlayerPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$row = [];
 
-			$curr_player = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
+			$curr_player = Player::getPlayer($dbRecord->getInt('player_id'), dbRecord: $dbRecord);
 			$row['player'] = $curr_player;
 
 			// How should we style the row for this player?
@@ -84,7 +84,7 @@ class CurrentPlayers extends PlayerPage {
 			$row['tr_class'] = $class;
 
 			// What should the player name be displayed as?
-			$container = new SearchForTraderResult($curr_player->getPlayerID());
+			$container = new SearchForTraderResult($curr_player->getPlayerNumber());
 			$name = $curr_player->getLevelName() . ' ' . $curr_player->getDisplayName();
 			$dbResult2 = $db->select(
 				'cpl_tag',

@@ -10,7 +10,7 @@ class Council {
 	protected static array $PRESIDENTS = [];
 
 	/**
-	 * Returns an array of Account ID's of the Council for this race.
+	 * Returns an array of player IDs of the Council for this race.
 	 *
 	 * @return array<int, int>
 	 */
@@ -23,7 +23,7 @@ class Council {
 			// cannot perform council activities before the game starts.
 			$i = 1;
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT account_id, alignment
+			$dbResult = $db->read('SELECT player_id, alignment
 								FROM player
 								WHERE game_id = :game_id
 									AND race_id = :race_id
@@ -37,12 +37,12 @@ class Council {
 			]);
 			foreach ($dbResult->records() as $dbRecord) {
 				// Add this player to the council
-				self::$COUNCILS[$gameID][$raceID][$i++] = $dbRecord->getInt('account_id');
+				self::$COUNCILS[$gameID][$raceID][$i++] = $dbRecord->getInt('player_id');
 
 				// Determine if this player is also the president
 				if (self::$PRESIDENTS[$gameID][$raceID] === false) {
 					if ($dbRecord->getInt('alignment') >= ALIGNMENT_PRESIDENT) {
-						self::$PRESIDENTS[$gameID][$raceID] = $dbRecord->getInt('account_id');
+						self::$PRESIDENTS[$gameID][$raceID] = $dbRecord->getInt('player_id');
 					}
 				}
 			}
@@ -51,15 +51,15 @@ class Council {
 	}
 
 	/**
-	 * Returns the Account ID of the President for this race (or false if no President).
+	 * Returns the player ID of the President for this race (or false if no President).
 	 */
-	public static function getPresidentID(int $gameID, int $raceID): int|false {
+	public static function getPresidentPlayerID(int $gameID, int $raceID): int|false {
 		self::getRaceCouncil($gameID, $raceID); // determines the president
 		return self::$PRESIDENTS[$gameID][$raceID];
 	}
 
-	public static function isOnCouncil(int $gameID, int $raceID, int $accountID): bool {
-		return in_array($accountID, self::getRaceCouncil($gameID, $raceID), true);
+	public static function isOnCouncil(int $gameID, int $raceID, int $playerID): bool {
+		return in_array($playerID, self::getRaceCouncil($gameID, $raceID), true);
 	}
 
 }

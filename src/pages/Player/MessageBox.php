@@ -45,8 +45,7 @@ class MessageBox extends PlayerPage {
 			// get number of msges
 			if ($message_type_id === MSG_SENT) {
 				$count = $db->count('message', [
-					'sender_id' => $player->getAccountID(),
-					'game_id' => $player->getGameID(),
+					'sender_player_id' => $player->getPlayerID(),
 					'message_type_id' => MSG_PLAYER,
 					'sender_delete' => $db->escapeBoolean(false),
 				]);

@@ -49,7 +49,7 @@ class GameStats extends AccountPage {
 
 		// Get current account's player for this game (if any)
 		try {
-			$player = Player::getPlayer($account->getAccountID(), $gameID);
+			$player = Player::getPlayerByAccountAndGame($account->getAccountID(), $gameID);
 		} catch (PlayerNotFound) {
 			$player = null;
 		}
@@ -85,7 +85,7 @@ class GameStats extends AccountPage {
 					new NewsReadAdvanced(
 						gameID: $gameID,
 						submit: 'Search For Player',
-						accountIDs: [$player->getAccountID()],
+						playerIDs: [$player->getPlayerID()],
 					),
 					'View',
 				),

@@ -14,11 +14,11 @@ function get_seed_message(Player $player): string {
 				SELECT sector_id
 				FROM sector_has_forces
 				WHERE game_id = :game_id
-					AND owner_id = :owner_id
+					AND owner_player_id = :owner_player_id
 			)', [
 		'alliance_id' => $db->escapeNumber($player->getAllianceID()),
 		'game_id' => $db->escapeNumber($player->getGameID()),
-		'owner_id' => $db->escapeNumber($player->getAccountID()),
+		'owner_player_id' => $db->escapeNumber($player->getPlayerID()),
 	]);
 
 	$missingSeeds = [];

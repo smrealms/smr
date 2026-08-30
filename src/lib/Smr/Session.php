@@ -226,7 +226,7 @@ class Session {
 	}
 
 	public function getPlayer(bool $forceUpdate = false): Player {
-		return Player::getPlayer($this->accountID, $this->gameID, $forceUpdate);
+		return Player::getPlayerByAccountAndGame($this->accountID, $this->gameID, $forceUpdate);
 	}
 
 	/**

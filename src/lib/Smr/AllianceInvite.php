@@ -11,18 +11,18 @@ class AllianceInvite {
 
 	private readonly int $allianceID;
 	private readonly int $gameID;
-	private readonly int $receiverAccountID;
-	private readonly int $senderAccountID;
+	private readonly int $receiverPlayerID;
+	private readonly int $senderPlayerID;
 	private readonly int $messageID;
 	private readonly int $expires;
 
-	public static function send(int $allianceID, int $gameID, int $receiverAccountID, int $senderAccountID, int $messageID, int $expires): void {
+	public static function send(int $allianceID, int $gameID, int $receiverPlayerID, int $senderPlayerID, int $messageID, int $expires): void {
 		$db = Database::getInstance();
 		$db->insert('alliance_invites_player', [
 			'game_id' => $gameID,
-			'account_id' => $receiverAccountID,
+			'player_id' => $receiverPlayerID,
 			'alliance_id' => $allianceID,
-			'invited_by_id' => $senderAccountID,
+			'invited_by_player_id' => $senderPlayerID,
 			'expires' => $expires,
 			'message_id' => $messageID,
 		]);
@@ -54,7 +54,7 @@ class AllianceInvite {
 	/**
 	 * Get the alliance invitation for a single recipient, if not expired
 	 */
-	public static function get(int $allianceID, int $gameID, int $receiverAccountID): self {
+	public static function get(int $allianceID, int $gameID, int $receiverPlayerID): self {
 		// Remove any expired invitations
 		$db = Database::getInstance();
 		$db->write('DELETE FROM alliance_invites_player WHERE expires < :now', [
@@ -64,7 +64,7 @@ class AllianceInvite {
 		$dbResult = $db->select('alliance_invites_player', [
 			'alliance_id' => $allianceID,
 			'game_id' => $gameID,
-			'account_id' => $receiverAccountID,
+			'player_id' => $receiverPlayerID,
 		]);
 		if ($dbResult->hasRecord()) {
 			return new self($dbResult->record());
@@ -75,8 +75,8 @@ class AllianceInvite {
 	public function __construct(DatabaseRecord $dbRecord) {
 		$this->allianceID = $dbRecord->getInt('alliance_id');
 		$this->gameID = $dbRecord->getInt('game_id');
-		$this->receiverAccountID = $dbRecord->getInt('account_id');
-		$this->senderAccountID = $dbRecord->getInt('invited_by_id');
+		$this->receiverPlayerID = $dbRecord->getInt('player_id');
+		$this->senderPlayerID = $dbRecord->getInt('invited_by_player_id');
 		$this->messageID = $dbRecord->getInt('message_id');
 		$this->expires = $dbRecord->getInt('expires');
 	}
@@ -86,7 +86,7 @@ class AllianceInvite {
 		$db->delete('alliance_invites_player', [
 			'alliance_id' => $this->allianceID,
 			'game_id' => $this->gameID,
-			'account_id' => $this->receiverAccountID,
+			'player_id' => $this->receiverPlayerID,
 		]);
 		$db->delete('message', [
 			'message_id' => $this->messageID,
@@ -94,11 +94,11 @@ class AllianceInvite {
 	}
 
 	public function getSender(): Player {
-		return Player::getPlayer($this->senderAccountID, $this->gameID);
+		return Player::getPlayer($this->senderPlayerID);
 	}
 
 	public function getReceiver(): Player {
-		return Player::getPlayer($this->receiverAccountID, $this->gameID);
+		return Player::getPlayer($this->receiverPlayerID);
 	}
 
 	public function getExpires(): int {

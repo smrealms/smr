@@ -38,7 +38,7 @@ class LandProcessor extends PlayerPageProcessor {
 				'role_id' => $role_id,
 			]);
 			if (!$dbResult->record()->getBoolean('planet_access')) {
-				if ($planet->hasOwner() && $planet->getOwnerID() !== $player->getAccountID()) {
+				if ($planet->hasOwner() && $planet->getOwnerPlayerID() !== $player->getPlayerID()) {
 					create_error('Your alliance doesn\'t allow you to dock at their planet.');
 				}
 			}

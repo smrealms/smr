@@ -46,10 +46,10 @@ class MatchListRenderer {
 
 		if (count($PlayerList) > 0) { ?>
 			<form action="<?php echo Globals::getChessCreateHREF(); ?>" method="POST">
-				<label for="player_id">Challenge: </label>
-				<select id="player_id" name="player_id"><?php
-					foreach ($PlayerList as $PlayerID => $PlayerName) {
-						?><option value="<?php echo $PlayerID; ?>"><?php echo $PlayerName; ?></option><?php
+				<label for="player_number">Challenge: </label>
+				<select id="player_number" name="player_number"><?php
+					foreach ($PlayerList as $PlayerNumber => $PlayerName) {
+						?><option value="<?php echo $PlayerNumber; ?>"><?php echo $PlayerName; ?></option><?php
 					} ?>
 				</select>&nbsp;<?php echo create_submit_display('Submit'); ?>
 			</form><?php
@@ -60,10 +60,10 @@ class MatchListRenderer {
 		if ($NPCList !== null) {
 			if (count($NPCList) > 0) { ?>
 				<form action="<?php echo Globals::getChessCreateHREF(); ?>" method="POST">
-					<label for="player_id">Challenge NPC: </label>
-					<select id="player_id" name="player_id"><?php
-						foreach ($NPCList as $PlayerID => $PlayerName) {
-							?><option value="<?php echo $PlayerID; ?>"><?php echo $PlayerName; ?></option><?php
+					<label for="player_number">Challenge NPC: </label>
+					<select id="player_number" name="player_number"><?php
+						foreach ($NPCList as $PlayerNumber => $PlayerName) {
+							?><option value="<?php echo $PlayerNumber; ?>"><?php echo $PlayerName; ?></option><?php
 						} ?>
 					</select>&nbsp;<?php echo create_submit_display('Submit'); ?>
 				</form><?php

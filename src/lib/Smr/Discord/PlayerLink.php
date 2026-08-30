@@ -62,7 +62,7 @@ class PlayerLink {
 
 		// Get their player associated with this game
 		try {
-			$player = Player::getPlayer($account->getAccountID(), $game_id, true);
+			$player = Player::getPlayerByAccountAndGame($account->getAccountID(), $game_id, true);
 		} catch (PlayerNotFound) {
 			throw new UserError('You have not joined game `' . Game::getGame($game_id)->getName() . '` yet!');
 		}

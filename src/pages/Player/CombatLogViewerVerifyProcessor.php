@@ -28,8 +28,8 @@ class CombatLogViewerVerifyProcessor extends PlayerPageProcessor {
 			$query .= '(attacker_alliance_id = :alliance_id OR defender_alliance_id = :alliance_id)';
 			$params['alliance_id'] = $db->escapeNumber($player->getAllianceID());
 		} else {
-			$query .= '(attacker_id = :account_id OR defender_id = :account_id)';
-			$params['account_id'] = $db->escapeNumber($player->getAccountID());
+			$query .= '(attacker_player_id = :player_id OR defender_player_id = :player_id)';
+			$params['player_id'] = $db->escapeNumber($player->getPlayerID());
 		}
 		$dbResult = $db->read($query . ' LIMIT 1', $params);
 

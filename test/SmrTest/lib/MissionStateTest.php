@@ -22,14 +22,14 @@ class MissionStateTest extends TestCase {
 		$mission = $this->createStub(MissionFake::class);
 		$mission->method('getMissionID')->willReturn($missionID);
 		$player = $this->createStub(Player::class);
-		$player->method('getAccountID')->willReturn(2);
+		$player->method('getPlayerID')->willReturn(2);
 		$player->method('getGameID')->willReturn(3);
 
 		$state = MissionState::addPlayerMission($player, $mission);
 
 		// Check public getters/properties
 		self::assertFalse($state->isComplete());
-		self::assertSame($state->accountID, 2);
+		self::assertSame($state->playerID, 2);
 		self::assertSame($state->gameID, 3);
 		self::assertSame($state->missionID, $missionID);
 		self::assertSame($state->mission, $mission);

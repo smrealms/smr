@@ -24,7 +24,7 @@ class MovePieceProcessor extends PlayerPageProcessor {
 		$toY = Request::getInt('toY');
 		$loc = Loc::validate($x, $y);
 		$toLoc = Loc::validate($toX, $toY);
-		$colour = $chessGame->getColourForAccountID($player->getAccountID());
+		$colour = $chessGame->getColourForPlayerID($player->getPlayerID());
 		try {
 			$message = $chessGame->tryMove($loc, $toLoc, $colour, ChessPiece::QUEEN);
 		} catch (UserError $err) {

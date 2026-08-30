@@ -47,7 +47,7 @@ class AllianceBankReportProcessor extends PlayerPageProcessor {
 			);
 			$db->delete('player_read_thread', [
 				'thread_id' => $thread_id,
-				'game_id' => $player->getGameID(),
+				'player_id' => $player->getPlayerID(),
 				'alliance_id' => $alliance_id,
 			]);
 		} else {
@@ -64,7 +64,7 @@ class AllianceBankReportProcessor extends PlayerPageProcessor {
 				'thread_id' => $thread_id,
 				'reply_id' => 1,
 				'text' => $text,
-				'sender_id' => ACCOUNT_ID_BANK_REPORTER,
+				'player_id' => PLAYER_ID_BANK_REPORTER,
 				'time' => Epoch::time(),
 			]);
 		}

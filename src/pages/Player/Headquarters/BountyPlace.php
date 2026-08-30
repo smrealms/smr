@@ -21,9 +21,12 @@ class BountyPlace extends PlayerPage {
 
 		$bountyPlayers = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT player_id, player_name FROM player JOIN account USING(account_id) WHERE game_id = :game_id AND account_id != :account_id ORDER BY player_name', $player->SQLID);
+		$dbResult = $db->read('SELECT player_number, player_name FROM player WHERE game_id = :game_id AND player_id != :player_id ORDER BY player_name', [
+			...$player->SQLID,
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
-			$bountyPlayers[$dbRecord->getInt('player_id')] = htmlentities($dbRecord->getString('player_name'));
+			$bountyPlayers[$dbRecord->getInt('player_number')] = htmlentities($dbRecord->getString('player_name'));
 		}
 		$template->pageRenderer = fn() => BountyPlaceRenderer::render(
 			SubmitHREF: new BountyPlaceProcessor($this->locationID)->href(),

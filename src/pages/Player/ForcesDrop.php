@@ -10,24 +10,24 @@ use Smr\Template;
 class ForcesDrop extends PlayerPage {
 
 	public function __construct(
-		private readonly ?int $ownerAccountID = null,
+		private readonly ?int $ownerPlayerID = null,
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		if ($this->ownerAccountID !== null) {
-			$owner = Player::getPlayer($this->ownerAccountID, $player->getGameID());
+		if ($this->ownerPlayerID !== null) {
+			$owner = Player::getPlayer($this->ownerPlayerID);
 			$template->pageTopic = 'Change ' . htmlentities($owner->getPlayerName()) . '\'s Forces';
-			$owner_id = $this->ownerAccountID;
+			$ownerPlayerID = $this->ownerPlayerID;
 		} else {
 			$template->pageTopic = 'Drop Forces';
-			$owner_id = $player->getAccountID();
+			$ownerPlayerID = $player->getPlayerID();
 		}
 
-		$forces = Force::getForce($player->getGameID(), $player->getSectorID(), $owner_id);
+		$forces = Force::getForce($player->getGameID(), $player->getSectorID(), $ownerPlayerID);
 
 		$template->pageRenderer = fn() => ForcesDropRenderer::render(
 			Forces: $forces,
-			SubmitHREF: new ForcesDropProcessor($owner_id)->href(),
+			SubmitHREF: new ForcesDropProcessor($ownerPlayerID)->href(),
 			ThisShip: $player->getShip(),
 		);
 	}

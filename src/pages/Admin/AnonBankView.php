@@ -22,7 +22,7 @@ class AnonBankView extends AccountPage {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT *
 					FROM anon_bank_transactions
-					JOIN player USING(account_id, game_id)
+					JOIN player USING(player_id)
 					WHERE anon_id = :anon_id
 						AND game_id = :game_id
 					ORDER BY transaction_id', [

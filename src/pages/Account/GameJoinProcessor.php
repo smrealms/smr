@@ -66,10 +66,10 @@ class GameJoinProcessor extends AccountPageProcessor {
 		// The `player_visited_sector` table holds *unvisited* sectors, so that once
 		// all sectors are visited (the majority of the game), the table is empty.
 		$db = Database::getInstance();
-		$db->write('INSERT INTO player_visited_sector (account_id, game_id, sector_id)
-		            SELECT :account_id, game_id, sector_id
+		$db->write('INSERT INTO player_visited_sector (player_id, game_id, sector_id)
+		            SELECT :player_id, game_id, sector_id
 		              FROM sector WHERE game_id = :game_id', [
-			'account_id' => $db->escapeNumber($account->getAccountID()),
+			'player_id' => $db->escapeNumber($player->getPlayerID()),
 			'game_id' => $db->escapeNumber($gameID),
 		]);
 
@@ -86,7 +86,7 @@ class GameJoinProcessor extends AccountPageProcessor {
 			For more tips to help you get started with the game, check out your alliance message boards. These can be reached by clicking the "Alliance" link on the left side of the page, and then clicking the "Message Board" menu link. The <u><a href="' . WIKI_URL . '" target="_blank">SMR Wiki</a></u> also gives detailed information on all aspects of the game.<br />
 			SMR is integrated with both IRC and Discord. These are free chat services where you can talk to other players and coordinate with your alliance. Simply click the "Join Chat" link at the bottom left panel of the page.';
 
-			Player::sendMessageFromAdmin($gameID, $account->getAccountID(), $message);
+			Player::sendMessageFromAdmin($player->getPlayerID(), $message);
 		}
 
 		// We aren't in a game yet, so updates are not done automatically here
@@ -94,17 +94,17 @@ class GameJoinProcessor extends AccountPageProcessor {
 		$player->getShip()->update();
 
 		// Announce the player joining in the news
-		$news = '[player=' . $player->getPlayerID() . '] has joined the game!';
+		$news = $player->getBBLink() . ' has joined the game!';
 		$db->insert('news', [
 			'time' => Epoch::time(),
 			'news_message' => $news,
 			'game_id' => $gameID,
 			'type' => 'admin',
-			'killer_id' => $player->getAccountID(),
+			'killer_player_id' => $player->getPlayerID(),
 		]);
 
 		// Send the player directly into the game
-		$container = new GamePlayProcessor($this->gameID);
+		$container = new GamePlayProcessor($player->getPlayerID());
 		$container->go();
 	}
 

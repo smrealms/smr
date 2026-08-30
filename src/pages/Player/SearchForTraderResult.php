@@ -16,26 +16,26 @@ class SearchForTraderResult extends PlayerPage {
 
 	use ReusableTrait;
 	public function __construct(
-		private ?int $playerID = null,
+		private ?int $playerNumber = null,
 		private ?string $playerName = null,
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$this->playerID ??= Request::getInt('player_id');
-		$player_id = $this->playerID;
+		$this->playerNumber ??= Request::getInt('player_number');
+		$playerNumber = $this->playerNumber;
 
-		// When clicking on a player name, only the 'player_id' is supplied
+		// When clicking on a player name, only the player number is supplied.
 		$this->playerName ??= Request::get('player_name', '');
 		$player_name = $this->playerName;
 
-		if ($player_name === '' && $player_id === 0) {
-			create_error('You must specify either a player name or ID!');
+		if ($player_name === '' && $playerNumber === 0) {
+			create_error('You must specify either a player name or number!');
 		}
 
 		$similarPlayers = [];
-		if ($player_id !== 0) {
+		if ($playerNumber !== 0) {
 			try {
-				$resultPlayer = Player::getPlayerByPlayerID($player_id, $player->getGameID());
+				$resultPlayer = Player::getPlayerByPlayerNumber($playerNumber, $player->getGameID());
 			} catch (PlayerNotFound) {
 				// No player found, we'll return an empty result
 				$resultPlayer = null;
@@ -59,7 +59,7 @@ class SearchForTraderResult extends PlayerPage {
 				'player_name' => $db->escapeString($player_name),
 			]);
 			foreach ($dbResult->records() as $dbRecord) {
-				$similarPlayers[] = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
+				$similarPlayers[] = Player::getPlayer($dbRecord->getInt('player_id'), dbRecord: $dbRecord);
 			}
 		}
 
@@ -69,16 +69,16 @@ class SearchForTraderResult extends PlayerPage {
 		$playerLinks = function(Player $linkPlayer) use ($player): array {
 			$result = ['Player' => $linkPlayer];
 
-			$container = new self($linkPlayer->getPlayerID());
+			$container = new self($linkPlayer->getPlayerNumber());
 			$result['SearchHREF'] = $container->href();
 
 			$container = new ViewCouncil($linkPlayer->getRaceID());
 			$result['RaceHREF'] = $container->href();
 
-			$container = new MessageSend($linkPlayer->getAccountID());
+			$container = new MessageSend($linkPlayer->getPlayerID());
 			$result['MessageHREF'] = $container->href();
 
-			$container = new BountyView($linkPlayer->getAccountID());
+			$container = new BountyView($linkPlayer->getPlayerID());
 			$result['BountyHREF'] = $container->href();
 
 			$result['HofHREF'] = $linkPlayer->getPersonalHofHREF();
@@ -86,7 +86,7 @@ class SearchForTraderResult extends PlayerPage {
 			$container = new NewsReadAdvanced(
 				gameID: $linkPlayer->getGameID(),
 				submit: 'Search For Player',
-				accountIDs: [$linkPlayer->getAccountID()],
+				playerIDs: [$linkPlayer->getPlayerID()],
 			);
 			$result['NewsHREF'] = $container->href();
 

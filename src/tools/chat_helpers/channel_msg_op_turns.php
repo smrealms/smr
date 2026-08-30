@@ -18,10 +18,13 @@ function shared_channel_msg_op_turns(Player $player): array {
 	$dbResult = $db->select(
 		'alliance_has_op_response',
 		[...$player->getAlliance()->SQLID, 'response' => 'YES'],
-		['account_id'],
+		['player_id'],
 	);
 	foreach ($dbResult->records() as $dbRecord) {
-		$attendeePlayer = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), true);
+		$attendeePlayer = Player::getPlayer(
+			playerID: $dbRecord->getInt('player_id'),
+			forceUpdate: true,
+		);
 		// check that the player is still in this alliance
 		if (!$player->sameAlliance($attendeePlayer)) {
 			continue;

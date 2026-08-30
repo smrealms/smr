@@ -14,12 +14,13 @@ class PlayerFake extends Player {
 	public function __construct(
 		protected readonly int $gameID,
 		protected readonly int $accountID,
+		int $playerID = 1,
 		?DatabaseRecord $dbRecord = null,
 	) {
 		$this->SQLID = [
-			'account_id' => $accountID,
-			'game_id' => $gameID,
+			'player_id' => $playerID,
 		];
+		$this->playerID = $playerID;
 		assert($dbRecord === null); // avoid PHPStan unused argument warning
 	}
 

@@ -20,8 +20,7 @@ class MessageBoxDeleteProcessor extends PlayerPageProcessor {
 				'message',
 				['sender_delete' => $db->escapeBoolean(true)],
 				[
-					'sender_id' => $player->getAccountID(),
-					'game_id' => $player->getGameID(),
+					'sender_player_id' => $player->getPlayerID(),
 				],
 			);
 		} else {
@@ -29,8 +28,7 @@ class MessageBoxDeleteProcessor extends PlayerPageProcessor {
 				'message',
 				['receiver_delete' => $db->escapeBoolean(true)],
 				[
-					'account_id' => $player->getAccountID(),
-					'game_id' => $player->getGameID(),
+					...$player->SQLID,
 					'message_type_id' => $this->folderID,
 					'msg_read' => $db->escapeBoolean(true),
 				],

@@ -30,7 +30,7 @@ function shared_channel_msg_money(Player $player): array {
 	$result[] = 'and keep a total of ' . number_format($dbRecord->getInt('total_onbank')) . ' credits in their personal bank accounts.';
 
 	// get money on planets
-	$dbResult = $db->read('SELECT IFNULL(SUM(credits), 0) AS total_credits, IFNULL(SUM(bonds), 0) AS total_bonds FROM planet WHERE game_id = :game_id AND owner_id IN (SELECT account_id FROM player WHERE alliance_id = :alliance_id AND game_id = :game_id)', [
+	$dbResult = $db->read('SELECT IFNULL(SUM(credits), 0) AS total_credits, IFNULL(SUM(bonds), 0) AS total_bonds FROM planet WHERE game_id = :game_id AND owner_player_id IN (SELECT player_id FROM player WHERE alliance_id = :alliance_id AND game_id = :game_id)', [
 		'alliance_id' => $player->getAllianceID(),
 		'game_id' => $player->getGameID(),
 	]);

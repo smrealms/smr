@@ -21,12 +21,12 @@ class MatchPlay extends PlayerPage {
 		$template->pageTopic = htmlentities($topic);
 
 		// Board orientation depends on the player's color.
-		$playerIsWhite = $chessGame->getWhiteID() === $player->getAccountID();
+		$playerIsWhite = $chessGame->getWhitePlayerID() === $player->getPlayerID();
 		$board = $chessGame->getBoard()->getBoardDisplay($playerIsWhite);
 
 		// Check if there is a winner
 		if ($chessGame->hasWinner()) {
-			$winningPlayer = Player::getPlayer($chessGame->getWinner(), $player->getGameID());
+			$winningPlayer = Player::getPlayer($chessGame->getWinnerPlayerID());
 			$winner = $winningPlayer->getLinkedDisplayName(false);
 		} else {
 			$winner = null;
@@ -51,7 +51,6 @@ class MatchPlay extends PlayerPage {
 			FileCoords: $fileCoords,
 			MoveMessage: $this->moveMessage,
 			ChessMoveHREF: $container->href(),
-			ThisAccount: $player->getAccount(),
 			ThisPlayer: $player,
 		);
 	}

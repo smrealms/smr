@@ -2,6 +2,7 @@
 
 namespace Smr;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Exception;
 use Smr\Exceptions\AccountNotFound;
 use Smr\Exceptions\MissionNotPossible;
@@ -15,6 +16,7 @@ use Smr\Pages\Player\Planet\KickProcessor;
 use Smr\Pages\Player\SearchForTraderResult;
 use Smr\Pages\Player\WeaponDisplayToggleProcessor;
 use Smr\Traits\RaceID;
+use Throwable;
 
 /**
  * @phpstan-type TickerData array{Type: string, Time: int, Expires: int, Recent: string}
@@ -25,6 +27,7 @@ class Player {
 
 	protected const int TIME_FOR_FEDERAL_BOUNTY_ON_PR = 10800;
 	protected const int TIME_FOR_ALLIANCE_SWITCH = 0;
+	protected const int FIRST_RESERVED_PLAYER_ID = 65000;
 
 	protected const float SHIP_INSURANCE_FRACTION = 0.25; // ship value regained on death
 
@@ -37,15 +40,17 @@ class Player {
 	protected static array $CACHE_PLANET_PLAYERS = [];
 	/** @var array<int, array<int, array<int, self>>> */
 	protected static array $CACHE_ALLIANCE_PLAYERS = [];
-	/** @var array<int, array<int, self>> */
+	/** @var array<int, self> */
 	protected static array $CACHE_PLAYERS = [];
 
-	public const string SQL = 'account_id = :account_id AND game_id = :game_id';
-	/** @var array{account_id: int, game_id: int} */
+	public const string SQL = 'player_id = :player_id';
+	/** @var array{player_id: int} */
 	public readonly array $SQLID;
 
 	protected string $playerName;
-	protected int $playerID;
+	protected readonly int $accountID;
+	protected readonly int $playerNumber;
+	protected readonly int $gameID;
 	protected int $sectorID;
 	protected int $lastSectorID;
 	protected int $newbieTurns;
@@ -126,10 +131,8 @@ class Player {
 	}
 
 	public static function savePlayers(): void {
-		foreach (self::$CACHE_PLAYERS as $gamePlayers) {
-			foreach ($gamePlayers as $player) {
-				$player->save();
-			}
+		foreach (self::$CACHE_PLAYERS as $player) {
+			$player->save();
 		}
 	}
 
@@ -139,9 +142,9 @@ class Player {
 	 */
 	public static function getSectorPlayersByAlliances(int $gameID, int $sectorID, array $allianceIDs, bool $forceUpdate = false): array {
 		$players = self::getSectorPlayers($gameID, $sectorID, $forceUpdate); // Don't use & as we do an unset
-		foreach ($players as $accountID => $player) {
+		foreach ($players as $playerID => $player) {
 			if (!in_array($player->getAllianceID(), $allianceIDs, true)) {
-				unset($players[$accountID]);
+				unset($players[$playerID]);
 			}
 		}
 		return $players;
@@ -165,10 +168,10 @@ class Player {
 		$galaxyPlayers = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$sectorID = $dbRecord->getInt('sector_id');
-			$accountID = $dbRecord->getInt('account_id');
-			$player = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
-			self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID][$accountID] = $player;
-			$galaxyPlayers[$sectorID][$accountID] = $player;
+			$playerID = $dbRecord->getInt('player_id');
+			$player = self::getPlayer($playerID, $forceUpdate, $dbRecord);
+			self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID][$playerID] = $player;
+			$galaxyPlayers[$sectorID][$playerID] = $player;
 		}
 		return $galaxyPlayers;
 	}
@@ -187,10 +190,10 @@ class Player {
 			]);
 			$players = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$accountID = $dbRecord->getInt('account_id');
-				$player = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
+				$playerID = $dbRecord->getInt('player_id');
+				$player = self::getPlayer($playerID, $forceUpdate, $dbRecord);
 				if (!$player->isObserver()) {
-					$players[$accountID] = $player;
+					$players[$playerID] = $player;
 				}
 			}
 			self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID] = $players;
@@ -216,10 +219,10 @@ class Player {
 			);
 			$players = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$accountID = $dbRecord->getInt('account_id');
-				$player = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
+				$playerID = $dbRecord->getInt('player_id');
+				$player = self::getPlayer($playerID, $forceUpdate, $dbRecord);
 				if (!$player->isObserver()) {
-					$players[$accountID] = $player;
+					$players[$playerID] = $player;
 				}
 			}
 			self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID] = $players;
@@ -244,32 +247,36 @@ class Player {
 			);
 			$players = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$accountID = $dbRecord->getInt('account_id');
-				$players[$accountID] = self::getPlayer($accountID, $gameID, $forceUpdate, $dbRecord);
+				$playerID = $dbRecord->getInt('player_id');
+				$players[$playerID] = self::getPlayer($playerID, $forceUpdate, $dbRecord);
 			}
 			self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID] = $players;
 		}
 		return self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID];
 	}
 
-	public static function getPlayer(int $accountID, int $gameID, bool $forceUpdate = false, ?DatabaseRecord $dbRecord = null): self {
-		if ($forceUpdate || !isset(self::$CACHE_PLAYERS[$gameID][$accountID])) {
-			self::$CACHE_PLAYERS[$gameID][$accountID] = new self($gameID, $accountID, $dbRecord);
+	public static function getPlayerByAccountAndGame(int $accountID, int $gameID, bool $forceUpdate = false): self {
+		$db = Database::getInstance();
+		$dbResult = $db->select('player', [
+			'account_id' => $accountID,
+			'game_id' => $gameID,
+		]);
+		if ($dbResult->hasRecord()) {
+			return self::getPlayerFromRecord($dbResult->record(), $forceUpdate);
 		}
-		return self::$CACHE_PLAYERS[$gameID][$accountID];
+		throw new PlayerNotFound('Invalid accountID: ' . $accountID . ' OR gameID: ' . $gameID);
 	}
 
-	public static function getPlayerByPlayerID(int $playerID, int $gameID, bool $forceUpdate = false): self {
+	public static function getPlayerByPlayerNumber(int $playerNumber, int $gameID, bool $forceUpdate = false): self {
 		$db = Database::getInstance();
 		$dbResult = $db->select('player', [
 			'game_id' => $gameID,
-			'player_id' => $playerID,
+			'player_number' => $playerNumber,
 		]);
 		if ($dbResult->hasRecord()) {
-			$dbRecord = $dbResult->record();
-			return self::getPlayer($dbRecord->getInt('account_id'), $gameID, $forceUpdate, $dbRecord);
+			return self::getPlayerFromRecord($dbResult->record(), $forceUpdate);
 		}
-		throw new PlayerNotFound('Player ID not found.');
+		throw new PlayerNotFound('Player number not found.');
 	}
 
 	public static function getPlayerByPlayerName(string $playerName, int $gameID, bool $forceUpdate = false): self {
@@ -279,23 +286,34 @@ class Player {
 			'player_name' => $playerName,
 		]);
 		if ($dbResult->hasRecord()) {
-			$dbRecord = $dbResult->record();
-			return self::getPlayer($dbRecord->getInt('account_id'), $gameID, $forceUpdate, $dbRecord);
+			return self::getPlayerFromRecord($dbResult->record(), $forceUpdate);
 		}
 		throw new PlayerNotFound('Player Name not found.');
 	}
 
+	private static function getPlayerFromRecord(DatabaseRecord $dbRecord, bool $forceUpdate): self {
+		$playerID = $dbRecord->getInt('player_id');
+		return self::getPlayer($playerID, $forceUpdate, $dbRecord);
+	}
+
+	public static function getPlayer(
+		int $playerID,
+		bool $forceUpdate = false,
+		?DatabaseRecord $dbRecord = null,
+	): self {
+		if ($forceUpdate || !isset(self::$CACHE_PLAYERS[$playerID])) {
+			self::$CACHE_PLAYERS[$playerID] = new self($playerID, $dbRecord);
+		}
+		return self::$CACHE_PLAYERS[$playerID];
+	}
+
 	protected function __construct(
-		protected readonly int $gameID,
-		protected readonly int $accountID,
+		protected readonly int $playerID,
 		?DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
-		$this->SQLID = [
-			'account_id' => $db->escapeNumber($accountID),
-			'game_id' => $db->escapeNumber($gameID),
-		];
 
+		$this->SQLID = ['player_id' => $playerID];
 		if ($dbRecord === null) {
 			$dbResult = $db->select('player', $this->SQLID);
 			if ($dbResult->hasRecord()) {
@@ -303,11 +321,12 @@ class Player {
 			}
 		}
 		if ($dbRecord === null) {
-			throw new PlayerNotFound('Invalid accountID: ' . $accountID . ' OR gameID: ' . $gameID);
+			throw new PlayerNotFound('Invalid playerID: ' . $playerID);
 		}
-
 		$this->playerName = $dbRecord->getString('player_name');
-		$this->playerID = $dbRecord->getInt('player_id');
+		$this->accountID = $dbRecord->getInt('account_id');
+		$this->playerNumber = $dbRecord->getInt('player_number');
+		$this->gameID = $dbRecord->getInt('game_id');
 		$this->sectorID = $dbRecord->getInt('sector_id');
 		$this->lastSectorID = $dbRecord->getInt('last_sector_id');
 		$this->turns = $dbRecord->getInt('turns');
@@ -352,17 +371,41 @@ class Player {
 	public static function createPlayer(int $accountID, int $gameID, string $playerName, int $raceID, bool $isNewbie, bool $npc = false): self {
 		$time = Epoch::time();
 		$db = Database::getInstance();
-		$db->lockTable('player', ['account']);
+
+		$db->beginTransaction();
 		try {
-			// Player names must be unique within each game
-			try {
-				self::getPlayerByPlayerName($playerName, $gameID);
-				throw new UserError('That player name already exists.');
-			} catch (PlayerNotFound) {
-				// Player name does not yet exist, we may proceed
+			// Get the next available player number (start at 1 if no players yet)
+			$dbResult = $db->select(
+				table: 'player',
+				criteria: ['game_id' => $gameID],
+				returnColumns: ['player_number'],
+				orderBy: ['player_number'],
+				order: ['DESC'],
+				limit: 1,
+				lock: RowLockMode::Update,
+			);
+			$playerNumber = $dbResult->hasRecord() ?
+				$dbResult->record()->getInt('player_number') + 1 : 1;
+
+			$startSectorID = 0; // Temporarily put player into non-existent sector
+			$playerID = $db->insertAutoIncrement('player', [
+				'account_id' => $accountID,
+				'game_id' => $gameID,
+				'player_number' => $playerNumber,
+				'player_name' => $playerName,
+				'race_id' => $raceID,
+				'sector_id' => $startSectorID,
+				'last_cpl_action' => $time,
+				'last_active' => $time,
+				'npc' => $db->escapeBoolean($npc),
+				'newbie_status' => $db->escapeBoolean($isNewbie),
+			]);
+			if ($playerID >= self::FIRST_RESERVED_PLAYER_ID) {
+				throw new Exception('The player ID range is full and must be increased.');
 			}
 
 			// Check if player name is reserved by someone else
+			// (Comes after insertion so we check player_name constraint first)
 			try {
 				$account = Account::getAccountByHofName($playerName);
 				if ($account->getAccountID() !== $accountID) {
@@ -372,30 +415,24 @@ class Player {
 				// Name is not reserved by another account, we may proceed
 			}
 
-			// Get the next available player ID (start at 1 if no players yet)
-			$dbResult = $db->read('SELECT IFNULL(MAX(player_id), 0) AS player_id FROM player WHERE game_id = :game_id', [
-				'game_id' => $db->escapeNumber($gameID),
-			]);
-			$playerID = $dbResult->record()->getInt('player_id') + 1;
+			$db->commit();
+		} catch (UniqueConstraintViolationException $err) {
+			$db->rollBack();
 
-			$startSectorID = 0; // Temporarily put player into non-existent sector
-			$db->insert('player', [
-				'account_id' => $accountID,
-				'game_id' => $gameID,
-				'player_id' => $playerID,
-				'player_name' => $playerName,
-				'race_id' => $raceID,
-				'sector_id' => $startSectorID,
-				'last_cpl_action' => $time,
-				'last_active' => $time,
-				'npc' => $db->escapeBoolean($npc),
-				'newbie_status' => $db->escapeBoolean($isNewbie),
-			]);
-		} finally {
-			$db->unlock();
+			// Player names must be unique within each game
+			try {
+				self::getPlayerByPlayerName($playerName, $gameID);
+				throw new UserError('That player name already exists.');
+			} catch (PlayerNotFound) {
+				// Player name does not yet exist, something else went wrong!
+				throw $err;
+			}
+		} catch (Throwable $err) {
+			$db->rollBack();
+			throw $err;
 		}
 
-		$player = self::getPlayer($accountID, $gameID);
+		$player = self::getPlayer($playerID, forceUpdate: true);
 		$player->setSectorID($player->getHome());
 		return $player;
 	}
@@ -417,10 +454,20 @@ class Player {
 		// Get other players who are sharing info for this game.
 		// NOTE: game_id=0 means that player shares info for all games.
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT from_account_id FROM account_shares_info WHERE to_account_id = :account_id AND (game_id=0 OR game_id = :game_id)', $this->SQLID);
+		$dbResult = $db->read(
+			'SELECT from_account_id FROM account_shares_info WHERE to_account_id = :account_id AND (game_id=0 OR game_id = :game_id)',
+			[
+				'account_id' => $db->escapeNumber($this->accountID),
+				'game_id' => $db->escapeNumber($this->getGameID()),
+			],
+		);
 		foreach ($dbResult->records() as $dbRecord) {
 			try {
-				$otherPlayer = self::getPlayer($dbRecord->getInt('from_account_id'), $this->getGameID(), $forceUpdate);
+				$otherPlayer = self::getPlayerByAccountAndGame(
+					accountID: $dbRecord->getInt('from_account_id'),
+					gameID: $this->getGameID(),
+					forceUpdate: $forceUpdate,
+				);
 			} catch (PlayerNotFound) {
 				// Skip players that have not joined this game
 				continue;
@@ -548,7 +595,8 @@ class Player {
 	public function setCustomShipName(string $name): void {
 		$db = Database::getInstance();
 		$db->replace('ship_has_name', [
-			...$this->SQLID,
+			'player_id' => $this->playerID,
+			'game_id' => $this->gameID,
 			'ship_name' => $name,
 		]);
 	}
@@ -560,8 +608,7 @@ class Player {
 	public function getPlanet(): ?Planet {
 		$db = Database::getInstance();
 		$dbResult = $db->select('planet', [
-			'game_id' => $this->gameID,
-			'owner_id' => $this->accountID,
+			'owner_player_id' => $this->playerID,
 		]);
 		if ($dbResult->hasRecord()) {
 			$dbRecord = $dbResult->record();
@@ -592,7 +639,7 @@ class Player {
 		}
 
 		$port = Port::getPort($this->getGameID(), $this->getSectorID());
-		$port->addCachePort($this->getAccountID()); //Add port of sector we were just in, to make sure it is left totally up to date.
+		$port->addCachePort($this->getPlayerID()); //Add port of sector we were just in, to make sure it is left totally up to date.
 
 		$this->setLastSectorID($this->getSectorID());
 		$this->sectorID = $sectorID;
@@ -600,7 +647,7 @@ class Player {
 		$this->hasChanged = true;
 
 		$port = Port::getPort($this->getGameID(), $this->getSectorID());
-		$port->addCachePort($this->getAccountID()); //Add the port of sector we are now in.
+		$port->addCachePort($this->getPlayerID()); //Add the port of sector we are now in.
 	}
 
 	public function getLastSectorID(): int {
@@ -618,11 +665,13 @@ class Player {
 	public function getHome(): int {
 		// Draft games may have customized home sectors
 		if ($this->getGame()->isGameType(Game::GAME_TYPE_DRAFT) && $this->hasAlliance()) {
-			$leaderID = $this->getAlliance()->getLeaderID();
+			$leaderPlayerID = $this->getAlliance()->getLeaderPlayerID();
 			$db = Database::getInstance();
 			$dbResult = $db->select(
 				'draft_leaders',
-				['account_id' => $leaderID, 'game_id' => $this->getGameID()],
+				[
+					'player_id' => $leaderPlayerID,
+				],
 				['home_sector_id'],
 			);
 			if ($dbResult->hasRecord()) {
@@ -703,15 +752,15 @@ class Player {
 	 * Has this player been designated as the alliance flagship?
 	 */
 	public function isFlagship(): bool {
-		return $this->hasAlliance() && $this->getAlliance()->getFlagshipID() === $this->getAccountID();
+		return $this->hasAlliance() && $this->getAlliance()->getFlagshipPlayerID() === $this->getPlayerID();
 	}
 
 	public function isPresident(): bool {
-		return Council::getPresidentID($this->getGameID(), $this->getRaceID()) === $this->getAccountID();
+		return Council::getPresidentPlayerID($this->getGameID(), $this->getRaceID()) === $this->getPlayerID();
 	}
 
 	public function isOnCouncil(): bool {
-		return Council::isOnCouncil($this->getGameID(), $this->getRaceID(), $this->getAccountID());
+		return Council::isOnCouncil($this->getGameID(), $this->getRaceID(), $this->getPlayerID());
 	}
 
 	public function isDraftLeader(): bool {
@@ -774,16 +823,26 @@ class Player {
 	/**
 	 * @return int Message ID
 	 */
-	protected static function doMessageSending(int $senderID, int $receiverID, int $gameID, int $messageTypeID, string $message, int $expires, bool $senderDelete = false, bool $unread = true): int {
+	protected static function doMessageSending(
+		int $senderPlayerID,
+		int $receiverPlayerID,
+		int $messageTypeID,
+		string $message,
+		int $expires,
+		bool $senderDelete = false,
+		bool $unread = true,
+	): int {
 		$message = trim($message);
 		$db = Database::getInstance();
+		$receiverPlayer = self::getPlayer($receiverPlayerID);
+		$gameID = $receiverPlayer->getGameID();
 		// Keep track of the message_id so it can be returned
 		$insertID = $db->insertAutoIncrement('message', [
-			'account_id' => $receiverID,
 			'game_id' => $gameID,
+			'player_id' => $receiverPlayerID,
 			'message_type_id' => $messageTypeID,
 			'message_text' => $message,
-			'sender_id' => $senderID,
+			'sender_player_id' => $senderPlayerID,
 			'send_time' => Epoch::time(),
 			'msg_read' => $db->escapeBoolean(!$unread),
 			'expire_time' => $expires,
@@ -793,17 +852,17 @@ class Player {
 		if ($unread === true) {
 			// give him the message icon
 			$db->replace('player_has_unread_messages', [
+				'player_id' => $receiverPlayerID,
 				'game_id' => $gameID,
-				'account_id' => $receiverID,
 				'message_type_id' => $messageTypeID,
 			]);
 		}
 
 		switch ($messageTypeID) {
 			case MSG_PLAYER:
-				$receiverAccount = Account::getAccount($receiverID);
+				$receiverAccount = $receiverPlayer->getAccount();
 				if ($receiverAccount->isValidated() && $receiverAccount->isReceivingMessageNotifications($messageTypeID) && !$receiverAccount->isActive()) {
-					$sender = Messages::getMessagePlayer($senderID, $gameID, $messageTypeID);
+					$sender = Messages::getMessagePlayer($senderPlayerID, $messageTypeID);
 					if ($sender instanceof self) {
 						$sender = $sender->getDisplayName();
 					}
@@ -839,27 +898,47 @@ class Player {
 
 		// send to all online player
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT account_id
+		$dbResult = $db->read('SELECT player.player_id
 					FROM active_session
 					JOIN player USING (game_id, account_id)
 					WHERE active_session.last_accessed >= :hidden_time
 						AND game_id = :game_id
 						AND ignore_globals = \'FALSE\'
-						AND account_id != :account_id', [
+						AND player.player_id != :player_id', [
 			'hidden_time' => $db->escapeNumber(Epoch::time() - TIME_BEFORE_INACTIVE),
 			...$this->SQLID,
+			'game_id' => $db->escapeNumber($this->getGameID()),
 		]);
 
 		foreach ($dbResult->records() as $dbRecord) {
-			$this->sendMessage($dbRecord->getInt('account_id'), MSG_GLOBAL, $message, $canBeIgnored);
+			$this->sendMessage(
+				receiverPlayerID: $dbRecord->getInt('player_id'),
+				messageTypeID: MSG_GLOBAL,
+				message: $message,
+				canBeIgnored: $canBeIgnored,
+			);
 		}
-		$this->sendMessage($this->getAccountID(), MSG_GLOBAL, $message, $canBeIgnored, false);
+		$this->sendMessage(
+			receiverPlayerID: $this->getPlayerID(),
+			messageTypeID: MSG_GLOBAL,
+			message: $message,
+			canBeIgnored: $canBeIgnored,
+			unread: false,
+		);
 	}
 
 	/**
 	 * @return ($canBeIgnored is true ? int|false : int) Message ID
 	 */
-	public function sendMessage(int $receiverID, int $messageTypeID, string $message, bool $canBeIgnored = true, bool $unread = true, ?int $expires = null, bool $senderDelete = false): int|false {
+	public function sendMessage(
+		int $receiverPlayerID,
+		int $messageTypeID,
+		string $message,
+		bool $canBeIgnored = true,
+		bool $unread = true,
+		?int $expires = null,
+		bool $senderDelete = false,
+	): int|false {
 		//get expire time
 		if ($canBeIgnored) {
 			if ($this->getAccount()->isMailBanned()) {
@@ -868,8 +947,8 @@ class Player {
 			// Don't send messages to players ignoring us
 			$db = Database::getInstance();
 			$dbResult = $db->select('message_blacklist', [
-				'account_id' => $receiverID,
-				'blacklisted_id' => $this->getAccountID(), // sender
+				'player_id' => $receiverPlayerID,
+				'blacklisted_player_id' => $this->getPlayerID(), // sender
 			]);
 			if ($dbResult->hasRecord()) {
 				return false;
@@ -900,57 +979,119 @@ class Player {
 		}
 
 		// send him the message and return the message_id
-		return self::doMessageSending($this->getAccountID(), $receiverID, $this->getGameID(), $messageTypeID, $message, $expires, $senderDelete, $unread);
+		return self::doMessageSending(
+			senderPlayerID: $this->getPlayerID(),
+			receiverPlayerID: $receiverPlayerID,
+			messageTypeID: $messageTypeID,
+			message: $message,
+			expires: $expires,
+			senderDelete: $senderDelete,
+			unread: $unread,
+		);
 	}
 
-	public function sendMessageFromOpAnnounce(int $receiverID, string $message, ?int $expires = null): void {
+	public function sendMessageFromOpAnnounce(
+		int $receiverPlayerID,
+		string $message,
+		?int $expires = null,
+	): void {
 		// get expire time if not set
 		if ($expires === null) {
 			$expires = Epoch::time() + 86400 * 14;
 		}
-		self::doMessageSending(ACCOUNT_ID_OP_ANNOUNCE, $receiverID, $this->getGameID(), MSG_ALLIANCE, $message, $expires);
+		self::doMessageSending(
+			senderPlayerID: PLAYER_ID_OP_ANNOUNCE,
+			receiverPlayerID: $receiverPlayerID,
+			messageTypeID: MSG_ALLIANCE,
+			message: $message,
+			expires: $expires,
+		);
 	}
 
-	public function sendMessageFromAllianceCommand(int $receiverID, string $message): void {
+	public function sendMessageFromAllianceCommand(int $receiverPlayerID, string $message): void {
 		$expires = Epoch::time() + 86400 * 365;
-		self::doMessageSending(ACCOUNT_ID_ALLIANCE_COMMAND, $receiverID, $this->getGameID(), MSG_PLAYER, $message, $expires);
+		self::doMessageSending(
+			senderPlayerID: PLAYER_ID_ALLIANCE_COMMAND,
+			receiverPlayerID: $receiverPlayerID,
+			messageTypeID: MSG_PLAYER,
+			message: $message,
+			expires: $expires,
+		);
 	}
 
-	public static function sendMessageFromPlanet(int $gameID, int $receiverID, string $message): void {
+	public static function sendMessageFromPlanet(int $receiverPlayerID, string $message): void {
 		//get expire time
 		$expires = Epoch::time() + 86400 * 31;
 		// send him the message
-		self::doMessageSending(ACCOUNT_ID_PLANET, $receiverID, $gameID, MSG_PLANET, $message, $expires);
+		self::doMessageSending(
+			senderPlayerID: PLAYER_ID_PLANET,
+			receiverPlayerID: $receiverPlayerID,
+			messageTypeID: MSG_PLANET,
+			message: $message,
+			expires: $expires,
+		);
 	}
 
-	public static function sendMessageFromPort(int $gameID, int $receiverID, string $message): void {
+	public static function sendMessageFromPort(int $receiverPlayerID, string $message): void {
 		//get expire time
 		$expires = Epoch::time() + 86400 * 31;
 		// send him the message
-		self::doMessageSending(ACCOUNT_ID_PORT, $receiverID, $gameID, MSG_PLAYER, $message, $expires);
+		self::doMessageSending(
+			senderPlayerID: PLAYER_ID_PORT,
+			receiverPlayerID: $receiverPlayerID,
+			messageTypeID: MSG_PLAYER,
+			message: $message,
+			expires: $expires,
+		);
 	}
 
-	public static function sendMessageFromFedClerk(int $gameID, int $receiverID, string $message): void {
+	public static function sendMessageFromFedClerk(int $receiverPlayerID, string $message): void {
 		$expires = Epoch::time() + 86400 * 365;
-		self::doMessageSending(ACCOUNT_ID_FED_CLERK, $receiverID, $gameID, MSG_PLAYER, $message, $expires);
+		self::doMessageSending(
+			senderPlayerID: PLAYER_ID_FED_CLERK,
+			receiverPlayerID: $receiverPlayerID,
+			messageTypeID: MSG_PLAYER,
+			message: $message,
+			expires: $expires,
+		);
 	}
 
-	public static function sendMessageFromAdmin(int $gameID, int $receiverID, string $message, ?int $expires = null): void {
+	public static function sendMessageFromAdmin(
+		int $receiverPlayerID,
+		string $message,
+		?int $expires = null,
+	): void {
 		//get expire time
 		if ($expires === null) {
 			$expires = Epoch::time() + 86400 * 365;
 		}
 		// send him the message
-		self::doMessageSending(ACCOUNT_ID_ADMIN, $receiverID, $gameID, MSG_ADMIN, $message, $expires);
+		self::doMessageSending(
+			senderPlayerID: PLAYER_ID_ADMIN,
+			receiverPlayerID: $receiverPlayerID,
+			messageTypeID: MSG_ADMIN,
+			message: $message,
+			expires: $expires,
+		);
 	}
 
-	public static function sendMessageFromAllianceAmbassador(int $gameID, int $receiverID, string $message, ?int $expires = null): void {
+	public static function sendMessageFromAllianceAmbassador(
+		int $receiverPlayerID,
+		string $message,
+		?int $expires = null,
+	): void {
 		//get expire time
 		if ($expires === null) {
 			$expires = Epoch::time() + 86400 * 31;
 		}
 		// send him the message
-		self::doMessageSending(ACCOUNT_ID_ALLIANCE_AMBASSADOR, $receiverID, $gameID, MSG_ALLIANCE, $message, $expires);
+		self::doMessageSending(
+			senderPlayerID: PLAYER_ID_ALLIANCE_AMBASSADOR,
+			receiverPlayerID: $receiverPlayerID,
+			messageTypeID: MSG_ALLIANCE,
+			message: $message,
+			expires: $expires,
+		);
 	}
 
 	public function sendMessageFromCasino(string $message, ?int $expires = null): void {
@@ -959,16 +1100,33 @@ class Player {
 			$expires = Epoch::time() + 86400 * 7;
 		}
 		// send him the message
-		self::doMessageSending(ACCOUNT_ID_CASINO, $this->getAccountID(), $this->getGameID(), MSG_CASINO, $message, $expires);
+		self::doMessageSending(
+			senderPlayerID: PLAYER_ID_CASINO,
+			receiverPlayerID: $this->getPlayerID(),
+			messageTypeID: MSG_CASINO,
+			message: $message,
+			expires: $expires,
+		);
 	}
 
-	public static function sendMessageFromRace(int $raceID, int $gameID, int $receiverID, string $message, ?int $expires = null): void {
+	public static function sendMessageFromRace(
+		int $raceID,
+		int $receiverPlayerID,
+		string $message,
+		?int $expires = null,
+	): void {
 		//get expire time
 		if ($expires === null) {
 			$expires = Epoch::time() + 86400 * 5;
 		}
 		// send him the message
-		self::doMessageSending(ACCOUNT_ID_GROUP_RACES + $raceID, $receiverID, $gameID, MSG_POLITICAL, $message, $expires);
+		self::doMessageSending(
+			senderPlayerID: PLAYER_ID_GROUP_RACES + $raceID,
+			receiverPlayerID: $receiverPlayerID,
+			messageTypeID: MSG_POLITICAL,
+			message: $message,
+			expires: $expires,
+		);
 	}
 
 	public function setMessagesRead(int $messageTypeID): void {
@@ -1349,6 +1507,13 @@ class Player {
 	}
 
 	/**
+	 * Display ID associated with player, based on game join order.
+	 */
+	public function getPlayerNumber(): int {
+		return $this->playerNumber;
+	}
+
+	/**
 	 * Returns the player name.
 	 * Use getDisplayName or getLinkedDisplayName for HTML-safe versions.
 	 */
@@ -1365,7 +1530,7 @@ class Player {
 	 * Returns the decorated player name, suitable for HTML display.
 	 */
 	public function getDisplayName(bool $includeAlliance = false, bool $colorByAlignment = true): string {
-		$return = htmlentities($this->playerName) . ' (' . $this->getPlayerID() . ')';
+		$return = htmlentities($this->playerName) . ' (' . $this->getPlayerNumber() . ')';
 		if ($colorByAlignment) {
 			$return = get_colored_text($this->getAlignment(), $return);
 		}
@@ -1379,7 +1544,7 @@ class Player {
 	}
 
 	public function getBBLink(): string {
-			return '[player=' . $this->getPlayerID() . ']';
+			return '[player=' . $this->getPlayerNumber() . ']';
 	}
 
 	public function getLinkedDisplayName(bool $includeAlliance = true): string {
@@ -1483,7 +1648,7 @@ class Player {
 	}
 
 	public function isAllianceLeader(bool $forceUpdate = false): bool {
-		return $this->getAccountID() === $this->getAlliance($forceUpdate)->getLeaderID();
+		return $this->getPlayerID() === $this->getAlliance($forceUpdate)->getLeaderPlayerID();
 	}
 
 	public function getAlliance(bool $forceUpdate = false): Alliance {
@@ -1542,18 +1707,32 @@ class Player {
 	public function leaveAlliance(?self $kickedBy = null): void {
 		$alliance = $this->getAlliance();
 		if ($kickedBy !== null && !$kickedBy->equals($this)) {
-			$kickedBy->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were kicked out of the alliance!', false);
+			$kickedBy->sendMessage(
+				receiverPlayerID: $this->getPlayerID(),
+				messageTypeID: MSG_PLAYER,
+				message: 'You were kicked out of the alliance!',
+				canBeIgnored: false,
+			);
 			$this->log(LOG_TYPE_ALLIANCE, 'was kicked from alliance ' . $alliance->getAllianceName() . ' by ' . $kickedBy->getAccount()->getLogin() . ' (' . $kickedBy->getPlayerName() . ')');
 			$kickedBy->log(LOG_TYPE_ALLIANCE, 'kicked ' . $this->getAccount()->getLogin() . ' (' . $this->getPlayerName() . ') from alliance ' . $alliance->getAllianceName());
 			if ($alliance->hasLeader() && !$kickedBy->equals($alliance->getLeader())) {
-				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I was kicked from your alliance by ' . $kickedBy->getBBLink());
+				$this->sendMessage(
+					receiverPlayerID: $alliance->getLeaderPlayerID(),
+					messageTypeID: MSG_PLAYER,
+					message: 'I was kicked from your alliance by ' . $kickedBy->getBBLink(),
+				);
 			}
 		} elseif ($this->isAllianceLeader()) {
 			$this->log(LOG_TYPE_ALLIANCE, 'disbanded alliance ' . $alliance->getAllianceName());
 		} else {
 			$this->log(LOG_TYPE_ALLIANCE, 'left alliance: ' . $alliance->getAllianceName());
 			if ($alliance->hasLeader()) {
-				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I left your alliance!', false);
+				$this->sendMessage(
+					receiverPlayerID: $alliance->getLeaderPlayerID(),
+					messageTypeID: MSG_PLAYER,
+					message: 'I left your alliance!',
+					canBeIgnored: false,
+				);
 			}
 		}
 
@@ -1568,7 +1747,7 @@ class Player {
 		$db->delete('player_has_alliance_role', $this->SQLID);
 
 		// Update the alliance cache
-		unset(self::$CACHE_ALLIANCE_PLAYERS[$this->gameID][$alliance->getAllianceID()][$this->accountID]);
+		unset(self::$CACHE_ALLIANCE_PLAYERS[$this->gameID][$alliance->getAllianceID()][$this->playerID]);
 	}
 
 	/**
@@ -1580,8 +1759,13 @@ class Player {
 		$alliance = $this->getAlliance();
 
 		if (!$this->isAllianceLeader()) {
-			if ($alliance->getLeaderID() !== 0) {
-				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I joined your alliance!', false);
+			if ($alliance->getLeaderPlayerID() !== 0) {
+				$this->sendMessage(
+					receiverPlayerID: $alliance->getLeaderPlayerID(),
+					messageTypeID: MSG_PLAYER,
+					message: 'I joined your alliance!',
+					canBeIgnored: false,
+				);
 			}
 			$roleID = ALLIANCE_ROLE_NEW_MEMBER;
 		} else {
@@ -1589,14 +1773,15 @@ class Player {
 		}
 		$db = Database::getInstance();
 		$db->insert('player_has_alliance_role', [
-			...$this->SQLID,
+			'player_id' => $this->playerID,
+			'game_id' => $this->gameID,
 			'role_id' => $roleID,
 			'alliance_id' => $this->getAllianceID(),
 		]);
 
 		// Update the alliance cache if already populated
 		if (isset(self::$CACHE_ALLIANCE_PLAYERS[$this->gameID][$alliance->getAllianceID()])) {
-			self::$CACHE_ALLIANCE_PLAYERS[$this->gameID][$alliance->getAllianceID()][$this->accountID] = $this;
+			self::$CACHE_ALLIANCE_PLAYERS[$this->gameID][$alliance->getAllianceID()][$this->playerID] = $this;
 		}
 
 		if ($log) {
@@ -1617,15 +1802,34 @@ class Player {
 	}
 
 	/**
-	 * Invites player with $accountID to this player's alliance.
+	 * Invites a player to this player's alliance.
 	 */
-	public function sendAllianceInvitation(int $accountID, string $message, int $expires): void {
+	public function sendAllianceInvitation(
+		int $receiverPlayerID,
+		string $message,
+		int $expires,
+	): void {
 		if (!$this->hasAlliance()) {
 			throw new Exception('Must be in an alliance to send alliance invitations');
 		}
 		// Send message to invited player
-		$messageID = $this->sendMessage($accountID, MSG_PLAYER, $message, false, true, $expires, true);
-		AllianceInvite::send($this->getAllianceID(), $this->getGameID(), $accountID, $this->getAccountID(), $messageID, $expires);
+		$messageID = $this->sendMessage(
+			receiverPlayerID: $receiverPlayerID,
+			messageTypeID: MSG_PLAYER,
+			message: $message,
+			canBeIgnored: false,
+			unread: true,
+			expires: $expires,
+			senderDelete: true,
+		);
+		AllianceInvite::send(
+			allianceID: $this->getAllianceID(),
+			gameID: $this->getGameID(),
+			receiverPlayerID: $receiverPlayerID,
+			senderPlayerID: $this->getPlayerID(),
+			messageID: $messageID,
+			expires: $expires,
+		);
 	}
 
 	public function isCombatDronesKamikazeOnMines(): bool {
@@ -1762,6 +1966,7 @@ class Player {
 		$db = Database::getInstance();
 		$db->replace('player_has_relation', [
 			...$this->SQLID,
+			'game_id' => $this->gameID,
 			'race_id' => $raceID,
 			'relation' => $this->personalRelations[$raceID],
 		]);
@@ -1844,6 +2049,7 @@ class Player {
 		$db = Database::getInstance();
 		$db->replace('player_plotted_course', [
 			...$this->SQLID,
+			'game_id' => $this->gameID,
 			'course' => $db->escapeObject($this->plottedCourse),
 		]);
 	}
@@ -1881,7 +2087,7 @@ class Player {
 	}
 
 	public function __sleep() {
-		return ['accountID', 'gameID', 'sectorID', 'alignment', 'playerID', 'playerName', 'npc'];
+		return ['accountID', 'gameID', 'sectorID', 'alignment', 'playerID', 'playerName', 'playerNumber', 'npc'];
 	}
 
 	/**
@@ -1959,6 +2165,7 @@ class Player {
 		$db = Database::getInstance();
 		$db->insert('player_stored_sector', [
 			...$this->SQLID,
+			'game_id' => $this->gameID,
 			'sector_id' => $sectorID,
 			'label' => $label,
 			'offset_top' => 1,
@@ -1976,7 +2183,7 @@ class Player {
 		$db = Database::getInstance();
 		$db->delete('player_stored_sector', [
 			'sector_id' => $sectorID,
-			...$this->SQLID,
+			'player_id' => $this->playerID,
 		]);
 		unset($this->storedDestinations[$sectorID]);
 	}
@@ -2079,7 +2286,7 @@ class Player {
 
 	protected function createBounty(BountyType $type): Bounty {
 		$bounty = new Bounty(
-			targetID: $this->accountID,
+			targetPlayerID: $this->playerID,
 			bountyID: $this->getNextBountyID(),
 			gameID: $this->gameID,
 			type: $type,
@@ -2118,7 +2325,7 @@ class Player {
 	public function setBountiesClaimable(self $claimer): void {
 		foreach ($this->getBounties() as $bounty) {
 			if ($bounty->isActive()) {
-				$bounty->setClaimable($claimer->getAccountID());
+				$bounty->setClaimable($claimer->getPlayerID());
 			}
 		}
 	}
@@ -2293,14 +2500,14 @@ class Player {
 			'game_id' => $this->getGameID(),
 			'time' => Epoch::time(),
 			'news_message' => $msg,
-			'killer_id' => $killer->getAccountID(),
+			'killer_player_id' => $killer->getPlayerID(),
 			'killer_alliance' => $killer->getAllianceID(),
-			'dead_id' => $this->getAccountID(),
+			'dead_player_id' => $this->getPlayerID(),
 			'dead_alliance' => $this->getAllianceID(),
 		]);
 
-		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by ' . $killer->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()));
-		self::sendMessageFromFedClerk($this->getGameID(), $killer->getAccountID(), 'You <span class="red">DESTROYED</span>&nbsp;' . $this->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()));
+		self::sendMessageFromFedClerk($this->getPlayerID(), 'You were <span class="red">DESTROYED</span> by ' . $killer->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()));
+		self::sendMessageFromFedClerk($killer->getPlayerID(), 'You <span class="red">DESTROYED</span>&nbsp;' . $this->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()));
 
 		// Dead player loses between 5% and 25% experience
 		$expLossPercentage = 0.15 + 0.10 * ($this->getLevelID() - $killer->getLevelID()) / $this->getMaxLevel();
@@ -2354,7 +2561,7 @@ class Player {
 		$query = 'SELECT 1
 					FROM player_attacks_port
 					JOIN port USING(game_id, sector_id)
-					JOIN player USING(game_id, account_id)
+					JOIN player USING(player_id)
 					WHERE armour > 0 AND ' . self::SQL . ' LIMIT 1';
 		$dbResult = $db->read($query, $this->SQLID);
 		if ($dbResult->hasRecord()) {
@@ -2439,8 +2646,8 @@ class Player {
 		$return = [];
 		$owner = $forces->getOwner();
 		// send a message to the person who died
-		self::sendMessageFromFedClerk($this->getGameID(), $owner->getAccountID(), 'Your forces <span class="red">DESTROYED </span>' . $this->getBBLink() . ' in sector ' . Globals::getSectorBBLink($forces->getSectorID()));
-		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by ' . $owner->getBBLink() . '\'s forces in sector ' . Globals::getSectorBBLink($this->getSectorID()));
+		self::sendMessageFromFedClerk($owner->getPlayerID(), 'Your forces <span class="red">DESTROYED </span>' . $this->getBBLink() . ' in sector ' . Globals::getSectorBBLink($forces->getSectorID()));
+		self::sendMessageFromFedClerk($this->getPlayerID(), 'You were <span class="red">DESTROYED</span> by ' . $owner->getBBLink() . '\'s forces in sector ' . Globals::getSectorBBLink($this->getSectorID()));
 
 		$news_message = $this->getBBLink();
 		if ($this->hasCustomShipName()) {
@@ -2454,9 +2661,9 @@ class Player {
 			'game_id' => $this->getGameID(),
 			'time' => Epoch::time(),
 			'news_message' => $news_message,
-			'killer_id' => $owner->getAccountID(),
+			'killer_player_id' => $owner->getPlayerID(),
 			'killer_alliance' => $owner->getAllianceID(),
-			'dead_id' => $this->getAccountID(),
+			'dead_player_id' => $this->getPlayerID(),
 			'dead_alliance' => $this->getAllianceID(),
 		]);
 
@@ -2487,7 +2694,7 @@ class Player {
 	public function killPlayerByPort(Port $port): array {
 		$return = [];
 		// send a message to the person who died
-		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by the defenses of ' . $port->getDisplayName());
+		self::sendMessageFromFedClerk($this->getPlayerID(), 'You were <span class="red">DESTROYED</span> by the defenses of ' . $port->getDisplayName());
 
 		$news_message = $this->getBBLink();
 		if ($this->hasCustomShipName()) {
@@ -2501,8 +2708,8 @@ class Player {
 			'game_id' => $this->getGameID(),
 			'time' => Epoch::time(),
 			'news_message' => $news_message,
-			'killer_id' => ACCOUNT_ID_PORT,
-			'dead_id' => $this->getAccountID(),
+			'killer_player_id' => PLAYER_ID_PORT,
+			'dead_player_id' => $this->getPlayerID(),
 			'dead_alliance' => $this->getAllianceID(),
 		]);
 
@@ -2533,8 +2740,8 @@ class Player {
 		$return = [];
 		// send a message to the person who died
 		$planetOwner = $planet->getOwner();
-		self::sendMessageFromFedClerk($this->getGameID(), $planetOwner->getAccountID(), 'Your planet <span class="red">DESTROYED</span>&nbsp;' . $this->getBBLink() . ' in sector ' . Globals::getSectorBBLink($planet->getSectorID()));
-		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by the planetary defenses of ' . $planet->getCombatName());
+		self::sendMessageFromFedClerk($planetOwner->getPlayerID(), 'Your planet <span class="red">DESTROYED</span>&nbsp;' . $this->getBBLink() . ' in sector ' . Globals::getSectorBBLink($planet->getSectorID()));
+		self::sendMessageFromFedClerk($this->getPlayerID(), 'You were <span class="red">DESTROYED</span> by the planetary defenses of ' . $planet->getCombatName());
 
 		$news_message = $this->getBBLink();
 		if ($this->hasCustomShipName()) {
@@ -2548,9 +2755,9 @@ class Player {
 			'game_id' => $this->getGameID(),
 			'time' => Epoch::time(),
 			'news_message' => $news_message,
-			'killer_id' => $planetOwner->getAccountID(),
+			'killer_player_id' => $planetOwner->getPlayerID(),
 			'killer_alliance' => $planetOwner->getAllianceID(),
-			'dead_id' => $this->getAccountID(),
+			'dead_player_id' => $this->getPlayerID(),
 			'dead_alliance' => $this->getAllianceID(),
 		]);
 
@@ -2990,21 +3197,21 @@ class Player {
 	}
 
 	public function getExamineTraderHREF(): string {
-		$container = new ExamineTrader($this->getAccountID());
+		$container = new ExamineTrader($this->getPlayerID());
 		return $container->href();
 	}
 
 	public function getAttackTraderHREF(): string {
-		return Globals::getAttackTraderHREF($this->getAccountID());
+		return Globals::getAttackTraderHREF($this->getPlayerID());
 	}
 
 	public function getPlanetKickHREF(): string {
-		$container = new KickProcessor($this->getAccountID());
+		$container = new KickProcessor($this->getPlayerID());
 		return $container->href();
 	}
 
 	public function getTraderSearchHREF(): string {
-		$container = new SearchForTraderResult($this->getPlayerID());
+		$container = new SearchForTraderResult($this->getPlayerNumber());
 		return $container->href();
 	}
 
@@ -3126,6 +3333,7 @@ class Player {
 			if ($changeType === self::HOF_NEW) {
 				$db->insert('player_hof', [
 					...$this->SQLID,
+					'game_id' => $this->gameID,
 					'type' => $hofType,
 					'amount' => $amount,
 				]);

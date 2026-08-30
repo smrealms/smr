@@ -9,11 +9,11 @@ use Smr\Player;
 class ForcesRefreshProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $ownerAccountID,
+		private readonly int $ownerPlayerID,
 	) {}
 
 	public function build(Player $player): never {
-		$forces = Force::getForce($player->getGameID(), $player->getSectorID(), $this->ownerAccountID);
+		$forces = Force::getForce($player->getGameID(), $player->getSectorID(), $this->ownerPlayerID);
 
 		$forces->updateExpire();
 

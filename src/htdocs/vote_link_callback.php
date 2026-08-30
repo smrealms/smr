@@ -35,10 +35,10 @@ try {
 
 	// Lock the sector to ensure the player gets the turns
 	// Refresh player after lock is acquired in case any values are stale
-	$player = Player::getPlayer($accountId, $gameId);
+	$player = Player::getPlayerByAccountAndGame($accountId, $gameId);
 	$lock = SectorLock::getInstance();
 	$lock->acquireForPlayer($player);
-	$player = Player::getPlayer($accountId, $gameId, true);
+	$player = Player::getPlayer($player->getPlayerID(), forceUpdate: true);
 
 	//Give turns via added time, no rounding errors.
 	$player->setLastTurnUpdate($player->getLastTurnUpdate() - VOTE_BONUS_TURNS_TIME);

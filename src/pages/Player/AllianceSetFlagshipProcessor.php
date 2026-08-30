@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Player;
 
+use Exception;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
 use Smr\Request;
@@ -11,9 +12,15 @@ class AllianceSetFlagshipProcessor extends PlayerPageProcessor {
 	public function build(Player $player): never {
 		$alliance = $player->getAlliance();
 
-		$flagshipID = Request::getInt('flagship_id');
+		$flagshipPlayerID = Request::getInt('flagship_player_id');
+		if ($flagshipPlayerID !== 0) {
+			$flagshipPlayer = Player::getPlayer($flagshipPlayerID);
+			if (!$player->sameAlliance($flagshipPlayer)) {
+				throw new Exception('Cannot make a player from another alliance the flagship.');
+			}
+		}
 
-		$alliance->setFlagshipID($flagshipID);
+		$alliance->setFlagshipPlayerID($flagshipPlayerID);
 		$alliance->update();
 
 		new AllianceSetOp()->go();

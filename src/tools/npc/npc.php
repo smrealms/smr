@@ -1,6 +1,5 @@
 <?php declare(strict_types=1);
 
-use Smr\Account;
 use Smr\Combat\Weapon\Weapon;
 use Smr\Container\DiContainer;
 use Smr\Database;
@@ -171,7 +170,7 @@ function npcDriver(): bool {
 	$previousContainer = null;
 
 	try {
-		$actor = new NpcActor($session->getGameID(), $session->getAccountID());
+		$actor = new NpcActor($session->getPlayer()->getPlayerID());
 	} catch (FinalAction) {
 		// Startup conditions not satisfied, try another NPC
 		return false;
@@ -335,9 +334,9 @@ function changeNPCLogin(): void {
 		}
 
 		// Make sure to select NPCs from active games only
-		$dbResult = $db->read('SELECT npc_players.account_id, npc_players.game_id
+		$dbResult = $db->read('SELECT npc_players.player_id
 			FROM npc_players
-			JOIN player USING(account_id, game_id)
+			JOIN player USING(player_id)
 			JOIN game USING(game_id)
 			WHERE active=\'TRUE\' AND working=\'FALSE\'
 				AND start_time < :now AND end_time > :now
@@ -346,10 +345,7 @@ function changeNPCLogin(): void {
 		]);
 		$availableNpcs = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$availableNpcs[] = [
-				'account_id' => $dbRecord->getInt('account_id'),
-				'game_id' => $dbRecord->getInt('game_id'),
-			];
+			$availableNpcs[] = $dbRecord->getInt('player_id');
 		}
 	}
 
@@ -359,12 +355,12 @@ function changeNPCLogin(): void {
 	}
 
 	// Pop an NPC off the top of the stack to activate
-	$npc = array_shift($availableNpcs);
+	$npcPlayerID = array_shift($availableNpcs);
 
 	// Update session info for this chosen NPC
-	$account = Account::getAccount($npc['account_id']);
-	$session->setAccount($account);
-	$session->updateGame($npc['game_id']);
+	$npcPlayer = Player::getPlayer($npcPlayerID);
+	$session->setAccount($npcPlayer->getAccount());
+	$session->updateGame($npcPlayer->getGameID());
 
 	$player = $session->getPlayer();
 	$db->update(

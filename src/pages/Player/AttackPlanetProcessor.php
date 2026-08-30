@@ -75,7 +75,7 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 
 		foreach ($attackers as $attacker) {
 			$playerResults = $attacker->getShip()->shootPlanet($planet);
-			$attackerResults[$attacker->getAccountID()] = $playerResults;
+			$attackerResults[$attacker->getPlayerID()] = $playerResults;
 		}
 
 		// Planet downgrades only occur on non-shield damage
@@ -100,9 +100,9 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 			'type' => 'PLANET',
 			'sector_id' => $planet->getSectorID(),
 			'timestamp' => Epoch::time(),
-			'attacker_id' => $player->getAccountID(),
+			'attacker_player_id' => $player->getPlayerID(),
 			'attacker_alliance_id' => $player->getAllianceID(),
-			'defender_id' => $planetOwner->getAccountID(),
+			'defender_player_id' => $planetOwner->getPlayerID(),
 			'defender_alliance_id' => $planetOwner->getAllianceID(),
 			'result' => $db->escapeObject($results, true),
 		]);
@@ -117,17 +117,17 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 		// Send notification to planet owners
 		if ($planetOwner->hasAlliance()) {
 			foreach ($planetOwner->getAlliance()->getMembers(includeNpc: false) as $allyPlayer) {
-				Player::sendMessageFromPlanet($planet->getGameID(), $allyPlayer->getAccountID(), $planetAttackMessage);
+				Player::sendMessageFromPlanet($allyPlayer->getPlayerID(), $planetAttackMessage);
 			}
 		} else {
-			Player::sendMessageFromPlanet($planet->getGameID(), $planetOwner->getAccountID(), $planetAttackMessage);
+			Player::sendMessageFromPlanet($planetOwner->getPlayerID(), $planetAttackMessage);
 		}
 
 		// Update sector messages for attackers
 		foreach ($attackers as $attacker) {
 			if (!$player->equals($attacker)) {
 				$db->replace('sector_message', [
-					'account_id' => $attacker->getAccountID(),
+					'player_id' => $attacker->getPlayerID(),
 					'game_id' => $attacker->getGameID(),
 					'message' => '[ATTACK_RESULTS]' . $logId,
 				]);

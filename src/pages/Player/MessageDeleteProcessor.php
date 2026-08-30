@@ -49,19 +49,19 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 			if ($decoded === false) {
 				throw new Exception('Unexpected encoded group ID: ' . $groupID);
 			}
-			[$senderID, $minTime, $maxTime] = unserialize($decoded);
-			if (!is_int($senderID) || !is_int($minTime) || !is_int($maxTime)) {
+			[$senderPlayerID, $minTime, $maxTime] = unserialize($decoded);
+			if (!is_int($senderPlayerID) || !is_int($minTime) || !is_int($maxTime)) {
 				throw new Exception('Unexpected deserialized types: ' . $decoded);
 			}
 			$db->write('UPDATE message SET receiver_delete = :receiver_delete_new
-						WHERE sender_id = :sender_id
+						WHERE sender_player_id = :sender_player_id
 						AND ' . Player::SQL . '
 						AND send_time >= :min_time
 						AND send_time <= :max_time
 						AND message_type_id = :message_type_id
 						AND receiver_delete = :receiver_delete_old', [
 				'receiver_delete_new' => $db->escapeBoolean(true),
-				'sender_id' => $db->escapeNumber($senderID),
+				'sender_player_id' => $db->escapeNumber($senderPlayerID),
 				...$player->SQLID,
 				'min_time' => $db->escapeNumber($minTime),
 				'max_time' => $db->escapeNumber($maxTime),

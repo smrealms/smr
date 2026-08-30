@@ -10,11 +10,11 @@ use Smr\Combat\Weapon\Weapon;
  */
 class DatabaseShip extends Ship {
 
-	/** @var array<int, array<int, self>> */
+	/** @var array<int, self> */
 	protected static array $CACHE_SHIPS = [];
 
-	public const string SQL = 'account_id = :account_id AND game_id = :game_id';
-	/** @var array{account_id: int, game_id: int} */
+	public const string SQL = 'player_id = :player_id';
+	/** @var array{player_id: int} */
 	public readonly array $SQLID;
 
 	public static function clearCache(): void {
@@ -22,27 +22,24 @@ class DatabaseShip extends Ship {
 	}
 
 	public static function saveShips(): void {
-		foreach (self::$CACHE_SHIPS as $gameShips) {
-			foreach ($gameShips as $ship) {
-				$ship->update();
-			}
+		foreach (self::$CACHE_SHIPS as $ship) {
+			$ship->update();
 		}
 	}
 
 	public static function getShip(Player $player, bool $forceUpdate = false): self {
-		if ($forceUpdate || !isset(self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()])) {
+		if ($forceUpdate || !isset(self::$CACHE_SHIPS[$player->getPlayerID()])) {
 			$s = new self($player);
-			self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()] = $s;
+			self::$CACHE_SHIPS[$player->getPlayerID()] = $s;
 		}
-		return self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()];
+		return self::$CACHE_SHIPS[$player->getPlayerID()];
 	}
 
 	protected function __construct(Player $player) {
 		parent::__construct($player);
 		$db = Database::getInstance();
 		$this->SQLID = [
-			'account_id' => $db->escapeNumber($this->getAccountID()),
-			'game_id' => $db->escapeNumber($this->getGameID()),
+			'player_id' => $db->escapeNumber($player->getPlayerID()),
 		];
 
 		$this->loadHardware();
@@ -131,6 +128,7 @@ class DatabaseShip extends Ship {
 			if ($amount > 0) {
 				$db->replace('ship_has_cargo', [
 					...$this->SQLID,
+					'game_id' => $this->gameID,
 					'good_id' => $id,
 					'amount' => $amount,
 				]);
@@ -158,6 +156,7 @@ class DatabaseShip extends Ship {
 			if ($amount > 0) {
 				$db->replace('ship_has_hardware', [
 					...$this->SQLID,
+					'game_id' => $this->gameID,
 					'hardware_type_id' => $hardwareTypeID,
 					'amount' => $amount,
 				]);
@@ -181,6 +180,7 @@ class DatabaseShip extends Ship {
 		foreach ($this->weapons as $orderID => $weapon) {
 			$db->insert('ship_has_weapon', [
 				...$this->SQLID,
+				'game_id' => $this->gameID,
 				'order_id' => $orderID,
 				'weapon_type_id' => $weapon->getWeaponTypeID(),
 				'bonus_accuracy' => $db->escapeBoolean($weapon->hasBonusAccuracy()),
@@ -208,7 +208,10 @@ class DatabaseShip extends Ship {
 		if ($this->isCloaked === false) {
 			$db->delete('ship_is_cloaked', $this->SQLID);
 		} else {
-			$db->insert('ship_is_cloaked', $this->SQLID);
+			$db->insert('ship_is_cloaked', [
+				...$this->SQLID,
+				'game_id' => $this->gameID,
+			]);
 		}
 		$this->hasChangedCloak = false;
 	}
@@ -240,6 +243,7 @@ class DatabaseShip extends Ship {
 		} else {
 			$db->replace('ship_has_illusion', [
 				...$this->SQLID,
+				'game_id' => $this->gameID,
 				'ship_type_id' => $this->illusionShip->shipTypeID,
 				'attack' => $this->illusionShip->attackRating,
 				'defense' => $this->illusionShip->defenseRating,

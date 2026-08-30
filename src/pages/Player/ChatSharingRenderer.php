@@ -5,8 +5,8 @@ namespace Smr\Pages\Player;
 class ChatSharingRenderer {
 
 	/**
-	 * @param array<int, array{"Player ID": string|int, "Player Name": string, "All Games": string, "Game ID": int}> $ShareFrom
-	 * @param array<int, array{"Player ID": string|int, "Player Name": string, "All Games": string, "Game ID": int}> $ShareTo
+	 * @param array<int, array{"Player Number": string|int, "Player Name": string, "All Games": string, "Game ID": int}> $ShareFrom
+	 * @param array<int, array{"Player Number": string|int, "Player Name": string, "All Games": string, "Game ID": int}> $ShareTo
 	 */
 	public static function render(?string $Message, array $ShareFrom, array $ShareTo, string $ProcessingHREF): void {
 		if ($Message !== null) { ?>
@@ -30,14 +30,14 @@ class ChatSharingRenderer {
 		<br />
 		<table class="standard">
 			<tr class="center">
-				<th>Player ID</th>
+				<th>Player Number</th>
 				<th>Player Name</th>
 				<th>All Games</th>
 				<th>Action</th>
 			</tr><?php
 			foreach ($ShareTo as $accountId => $share) { ?>
 				<tr class="center">
-					<td><?php echo $share['Player ID']; ?></td>
+					<td><?php echo $share['Player Number']; ?></td>
 					<td><?php echo $share['Player Name']; ?></td>
 					<td><?php echo $share['All Games']; ?></td>
 					<form method="POST" action="<?php echo $ProcessingHREF; ?>">
@@ -48,7 +48,7 @@ class ChatSharingRenderer {
 			} ?>
 			<tr>
 				<form method="POST" action="<?php echo $ProcessingHREF; ?>">
-					<td><input class="center" type="number" name="add_player_id" style="width:60px" /></td>
+					<td><input class="center" type="number" name="add_player_number" style="width:60px" /></td>
 					<td>&nbsp;</td>
 					<td class="center"><input type="checkbox" name="all_games"/></td>
 					<td><button type="submit" name="add" style="width:65px">Add</button></td>
@@ -63,14 +63,14 @@ class ChatSharingRenderer {
 		if (count($ShareFrom) > 0) { ?>
 			<table class="standard">
 				<tr class="center">
-					<th>Player ID</th>
+				<th>Player Number</th>
 					<th>Player Name</th>
 					<th>All Games</th>
 					<th>Action</th>
 				</tr><?php
 				foreach ($ShareFrom as $accountId => $share) { ?>
 					<tr class="center">
-						<td><?php echo $share['Player ID']; ?></td>
+					<td><?php echo $share['Player Number']; ?></td>
 						<td><?php echo $share['Player Name']; ?></td>
 						<td><?php echo $share['All Games']; ?></td>
 						<form method="POST" action="<?php echo $ProcessingHREF; ?>">

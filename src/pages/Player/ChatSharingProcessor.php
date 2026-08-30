@@ -22,17 +22,17 @@ class ChatSharingProcessor extends PlayerPageProcessor {
 
 		// Process adding a "share to" account
 		if (Request::has('add')) {
-			$addPlayerID = Request::getInt('add_player_id');
-			if ($addPlayerID === 0) {
-				error_on_page('You must specify a Player ID to share with!');
+			$addPlayerNumber = Request::getInt('add_player_number');
+			if ($addPlayerNumber === 0) {
+				error_on_page('You must specify a player number to share with!');
 			}
 
-			if ($addPlayerID === $player->getPlayerID()) {
+			if ($addPlayerNumber === $player->getPlayerNumber()) {
 				error_on_page('You do not need to share with yourself!');
 			}
 
 			try {
-				$accountId = Player::getPlayerByPlayerID($addPlayerID, $player->getGameID())->getAccountID();
+				$accountId = Player::getPlayerByPlayerNumber($addPlayerNumber, $player->getGameID())->getAccountID();
 			} catch (PlayerNotFound $e) {
 				error_on_page($e->getMessage());
 			}

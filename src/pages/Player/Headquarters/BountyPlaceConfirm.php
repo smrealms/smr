@@ -21,8 +21,7 @@ class BountyPlaceConfirm extends PlayerPage {
 
 		Menu::headquarters($this->locationID);
 
-		// get this guy from db
-		$bountyPlayer = Player::getPlayerByPlayerID($this->otherPlayerID, $player->getGameID());
+		$bountyPlayer = Player::getPlayer($this->otherPlayerID);
 
 		$template->pageRenderer = fn() => BountyPlaceConfirmRenderer::render(
 			Amount: number_format($this->credits),
@@ -30,7 +29,7 @@ class BountyPlaceConfirm extends PlayerPage {
 			BountyPlayer: $bountyPlayer->getLinkedDisplayName(),
 			ConfirmHREF: new BountyPlaceConfirmProcessor(
 				locationID: $this->locationID,
-				otherAccountID: $bountyPlayer->getAccountID(),
+				otherPlayerID: $bountyPlayer->getPlayerID(),
 				credits: $this->credits,
 				smrCredits: $this->smrCredits,
 			)->href(),

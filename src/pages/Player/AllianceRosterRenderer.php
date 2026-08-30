@@ -106,7 +106,7 @@ class AllianceRosterRenderer {
 								<td class="sort_role"><?php
 									$PlayerRole = $AlliancePlayer->getAllianceRole();
 									if ($CanChangeRoles && !$AlliancePlayer->isAllianceLeader()) { ?>
-										<select form="roles" name="role[<?php echo $AlliancePlayer->getAccountID(); ?>]"><?php
+										<select form="roles" name="role[<?php echo $AlliancePlayer->getPlayerID(); ?>]"><?php
 											foreach ($Roles as $RoleID => $Role) { ?>
 												<option value="<?php echo $RoleID; ?>"<?php
 												if ($RoleID === $PlayerRole) { ?>
@@ -123,7 +123,7 @@ class AllianceRosterRenderer {
 							}
 							if ($ActiveIDs !== null) { ?>
 								<td class="sort_status center"><?php
-									if (in_array($AlliancePlayer->getAccountID(), $ActiveIDs, true)) { ?>
+									if (in_array($AlliancePlayer->getPlayerID(), $ActiveIDs, true)) { ?>
 										<span class="green">Online</span><?php
 									} elseif ($ThisPlayer->isAllianceLeader() && $Disabled = $AlliancePlayer->getAccount()->isDisabled()) { ?>
 										<span class="red">Banned Until:<br/><?php echo date($ThisAccount->getDateTimeFormatSplit(), $Disabled['Time']); ?></span><?php

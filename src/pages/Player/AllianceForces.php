@@ -33,7 +33,7 @@ class AllianceForces extends PlayerPage {
 			IFNULL(sum(mines), 0) as tot_mines,
 			IFNULL(sum(combat_drones), 0) as tot_cds,
 			IFNULL(sum(scout_drones), 0) as tot_sds
-		FROM sector_has_forces JOIN player ON player.game_id=sector_has_forces.game_id AND sector_has_forces.owner_id=player.account_id
+		FROM sector_has_forces JOIN player ON player.player_id = sector_has_forces.owner_player_id
 		WHERE player.game_id = :game_id
 			AND player.alliance_id = :alliance_id
 			AND expire_time >= :now', [
@@ -60,7 +60,7 @@ class AllianceForces extends PlayerPage {
 		$dbResult = $db->read('
 		SELECT sector_has_forces.*
 		FROM player
-		JOIN sector_has_forces ON player.game_id = sector_has_forces.game_id AND player.account_id = sector_has_forces.owner_id
+		JOIN sector_has_forces ON player.player_id = sector_has_forces.owner_player_id
 		WHERE player.game_id = :game_id
 		AND player.alliance_id = :alliance_id
 		AND expire_time >= :now
@@ -72,7 +72,7 @@ class AllianceForces extends PlayerPage {
 
 		$forces = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$forces[] = Force::getForce($player->getGameID(), $dbRecord->getInt('sector_id'), $dbRecord->getInt('owner_id'), false, $dbRecord);
+			$forces[] = Force::getForce($player->getGameID(), $dbRecord->getInt('sector_id'), $dbRecord->getInt('owner_player_id'), false, $dbRecord);
 		}
 
 		$template->pageRenderer = fn() => AllianceForcesRenderer::render(

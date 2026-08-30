@@ -57,7 +57,7 @@ class AllianceRoster extends PlayerPage {
 		);
 		$dbRecord = $dbResult->record();
 
-		if ($account->getAccountID() === $alliance->getLeaderID() || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION)) {
+		if ($player->getPlayerID() === $alliance->getLeaderPlayerID() || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION)) {
 			$editAllianceDescriptionHREF = new AllianceGovernance($allianceID)->href();
 		} else {
 			$editAllianceDescriptionHREF = null;

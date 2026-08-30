@@ -27,6 +27,9 @@ class DatabaseShipIntegrationTest extends BaseIntegrationSpec {
 			->method('getAccountID')
 			->willReturn(7);
 		$this->player
+			->method('getPlayerID')
+			->willReturn(7);
+		$this->player
 			->method('getGameID')
 			->willReturn(3);
 		// Use Demonica because it's the only ship with all special hardware

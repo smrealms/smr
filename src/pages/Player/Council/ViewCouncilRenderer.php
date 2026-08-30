@@ -14,9 +14,9 @@ class ViewCouncilRenderer {
 		<div class="center">
 			<a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img style="float: right;" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
 			<h3>President</h3><br/><?php
-			$PresidentID = Council::getPresidentID($ThisPlayer->getGameID(), $RaceID);
-			if ($PresidentID !== false) {
-				$President = Player::getPlayer($PresidentID, $ThisPlayer->getGameID()); ?>
+			$presidentPlayerID = Council::getPresidentPlayerID($ThisPlayer->getGameID(), $RaceID);
+			if ($presidentPlayerID !== false) {
+				$President = Player::getPlayer($presidentPlayerID); ?>
 				<table class="center standard" width="75%">
 					<thead>
 						<tr>
@@ -56,8 +56,8 @@ class ViewCouncilRenderer {
 						</tr>
 					</thead>
 					<tbody class="list"><?php
-						foreach ($CouncilMembers as $Ranking => $AccountID) {
-							$CouncilPlayer = Player::getPlayer($AccountID, $ThisPlayer->getGameID()); ?>
+						foreach ($CouncilMembers as $Ranking => $PlayerID) {
+							$CouncilPlayer = Player::getPlayer($PlayerID); ?>
 							<tr id="player-<?php echo $CouncilPlayer->getPlayerID(); ?>" class="ajax<?php if ($ThisPlayer->equals($CouncilPlayer)) { ?> bold<?php } ?>">
 								<td><?php echo $Ranking; ?></td>
 								<td class="sort_name left" data-name="<?php echo htmlentities($CouncilPlayer->getPlayerName()); ?>"><?php echo $CouncilPlayer->getLevelName(); ?> <?php echo $CouncilPlayer->getLinkedDisplayName(false); ?></td>

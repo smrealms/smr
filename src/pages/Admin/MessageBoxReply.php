@@ -12,8 +12,7 @@ class MessageBoxReply extends AccountPage {
 
 	public function __construct(
 		private readonly int $boxTypeID,
-		private readonly int $senderAccountID,
-		private readonly int $gameID,
+		private readonly int $senderPlayerID,
 		private readonly ?string $preview = null,
 		private readonly int $banPoints = 0,
 		private readonly int $rewardCredits = 0,
@@ -23,14 +22,14 @@ class MessageBoxReply extends AccountPage {
 		$boxName = Messages::getAdminBoxNames()[$this->boxTypeID];
 		$template->pageTopic = 'Reply To ' . $boxName;
 
+		$senderPlayer = Player::getPlayer($this->senderPlayerID);
 		$template->pageRenderer = fn() => MessageBoxReplyRenderer::render(
 			BoxReplyFormPage: new MessageBoxReplyProcessor(
-				senderAccountID: $this->senderAccountID,
-				gameID: $this->gameID,
+				senderPlayerID: $this->senderPlayerID,
 				boxTypeID: $this->boxTypeID,
 			),
-			Sender: Player::getPlayer($this->senderAccountID, $this->gameID),
-			SenderAccount: Account::getAccount($this->senderAccountID),
+			Sender: $senderPlayer,
+			SenderAccount: $senderPlayer->getAccount(),
 			Preview: $this->preview,
 			BanPoints: $this->banPoints,
 			RewardCredits: $this->rewardCredits,

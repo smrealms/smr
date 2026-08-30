@@ -168,12 +168,16 @@ try {
 		'now' => $db->escapeNumber(Epoch::time()),
 	]);
 	//update unread message status (in case changed by expired messages)
-	$db->delete('player_has_unread_messages', [
-		'account_id' => $account->getAccountID(),
+	$db->write('DELETE player_has_unread_messages FROM player_has_unread_messages
+		JOIN player USING (player_id)
+		WHERE player.account_id = :account_id', [
+		'account_id' => $db->escapeNumber($account->getAccountID()),
 	]);
 	$db->write('
-		INSERT INTO player_has_unread_messages (game_id, account_id, message_type_id)
-		SELECT game_id, account_id, message_type_id FROM message WHERE account_id = :account_id AND msg_read = :msg_read AND receiver_delete = :receiver_delete', [
+		INSERT INTO player_has_unread_messages (player_id, game_id, message_type_id)
+		SELECT message.player_id, message.game_id, message.message_type_id
+		FROM message JOIN player USING (player_id)
+		WHERE player.account_id = :account_id AND msg_read = :msg_read AND receiver_delete = :receiver_delete', [
 		'account_id' => $db->escapeNumber($account->getAccountID()),
 		'msg_read' => $db->escapeBoolean(false),
 		'receiver_delete' => $db->escapeBoolean(false),

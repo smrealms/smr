@@ -15,7 +15,7 @@ class MatchResignProcessor extends PlayerPageProcessor {
 
 	public function build(Player $player): never {
 		$chessGame = ChessGame::getChessGame($this->chessGameID);
-		$result = $chessGame->resign($player->getAccountID());
+		$result = $chessGame->resign($player->getPlayerID());
 
 		$msg = match ($result) {
 			ChessGame::END_RESIGN => '[color=green]Success:[/color] You have resigned from [chess=' . $this->chessGameID . '].',

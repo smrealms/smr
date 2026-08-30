@@ -15,8 +15,7 @@ class CheatingShipCheck extends AccountPage {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT * FROM ship_type_support_hardware, player, ship_has_hardware, hardware_type '
 			. 'WHERE ship_type_support_hardware.ship_type_id = player.ship_type_id AND '
-			. 'player.account_id = ship_has_hardware.account_id AND '
-			. 'player.game_id = ship_has_hardware.game_id AND '
+			. 'player.player_id = ship_has_hardware.player_id AND '
 			. 'ship_type_support_hardware.hardware_type_id = ship_has_hardware.hardware_type_id AND '
 			. 'ship_has_hardware.hardware_type_id = hardware_type.hardware_type_id AND '
 			. 'amount > max_amount');
@@ -24,9 +23,8 @@ class CheatingShipCheck extends AccountPage {
 		$excessHardware = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$container = new CheatingShipCheckProcessor(
-				accountID: $dbRecord->getInt('account_id'),
+				playerID: $dbRecord->getInt('player_id'),
 				hardwareTypeID: $dbRecord->getInt('hardware_type_id'),
-				gameID: $dbRecord->getInt('game_id'),
 				maxAmount: $dbRecord->getInt('max_amount'),
 			);
 

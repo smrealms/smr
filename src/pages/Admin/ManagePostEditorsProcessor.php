@@ -32,11 +32,11 @@ class ManagePostEditorsProcessor extends AccountPageProcessor {
 		$game_id = $this->selectedGameID;
 
 		// Get the POST variables
-		$player_id = Request::getInt('player_id');
+		$playerNumber = Request::getInt('player_number');
 		$action = Request::get(self::ACTION);
 
 		try {
-			$selected_player = Player::getPlayerByPlayerID($player_id, $game_id);
+			$selected_player = Player::getPlayerByPlayerNumber($playerNumber, $game_id);
 		} catch (PlayerNotFound $e) {
 			$msg = "<span class='red'>ERROR: </span>" . $e->getMessage();
 			$container = new ManagePostEditors($this->selectedGameID, $msg);
@@ -51,7 +51,10 @@ class ManagePostEditorsProcessor extends AccountPageProcessor {
 			if ($selected_player->isGPEditor()) {
 				$msg = "<span class='red'>ERROR: </span>$name is already an editor in game $game!";
 			} else {
-				$db->insert('galactic_post_writer', $selected_player->SQLID);
+				$db->insert('galactic_post_writer', [
+					...$selected_player->SQLID,
+					'game_id' => $selected_player->getGameID(),
+				]);
 			}
 		} elseif ($action === $this->actionRemove->value) {
 			if (!$selected_player->isGPEditor()) {

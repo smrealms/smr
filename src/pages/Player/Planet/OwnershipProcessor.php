@@ -40,17 +40,16 @@ class OwnershipProcessor extends PlayerPageProcessor {
 			$db->update(
 				'planet',
 				[
-					'owner_id' => 0,
+					'owner_player_id' => 0,
 					'password' => '',
 				],
 				[
-					'owner_id' => $player->getAccountID(),
-					'game_id' => $player->getGameID(),
+					'owner_player_id' => $player->getPlayerID(),
 				],
 			);
 
 			// set ownership
-			$planet->setOwnerID($player->getAccountID());
+			$planet->setOwnerPlayerID($player->getPlayerID());
 			$planet->removePassword();
 			$player->log(LOG_TYPE_PLANETS, 'Player takes ownership of planet.');
 		} elseif ($action === $this->actionRename->value) {

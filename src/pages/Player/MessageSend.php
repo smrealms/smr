@@ -13,7 +13,7 @@ class MessageSend extends PlayerPage {
 
 	use ReusableTrait;
 	public function __construct(
-		private readonly ?int $receiverAccountID = null,
+		private readonly ?int $receiverPlayerID = null,
 		private readonly ?string $preview = null,
 	) {}
 
@@ -22,15 +22,15 @@ class MessageSend extends PlayerPage {
 
 		Menu::messages();
 
-		if ($this->receiverAccountID !== null) {
-			$receiver = Player::getPlayer($this->receiverAccountID, $player->getGameID())->getDisplayName();
+		if ($this->receiverPlayerID !== null) {
+			$receiver = Player::getPlayer($this->receiverPlayerID)->getDisplayName();
 		} else {
 			$receiver = 'All Online';
 		}
 
 		$template->pageRenderer = fn() => CommonMessageSendRenderer::render(
 			Receiver: $receiver,
-			MessageSendPage: new MessageSendProcessor($this->receiverAccountID),
+			MessageSendPage: new MessageSendProcessor($this->receiverPlayerID),
 			Preview: $this->preview,
 			ThisPlayer: $player,
 		);

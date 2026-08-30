@@ -16,8 +16,8 @@ class SearchForTraderRenderer {
 
 			<br /><br /><br />
 
-			Player ID:<br />
-			<input type="number" name="player_id" style="width:50px">&nbsp;<?php echo create_submit_display('Search'); ?>
+			Player number:<br />
+			<input type="number" name="player_number" style="width:50px">&nbsp;<?php echo create_submit_display('Search'); ?>
 
 		</p>
 		</form>

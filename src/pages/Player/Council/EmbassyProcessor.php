@@ -91,10 +91,15 @@ class EmbassyProcessor extends PlayerPageProcessor {
 			. ' You have ' . format_time(TIME_FOR_COUNCIL_VOTE)
 			. ' to cast your vote.';
 
-		foreach ($councilMembers as $accountID) {
+		foreach ($councilMembers as $councilPlayerID) {
 			// don't send to the player who started the vote
-			if ($player->getAccountID() !== $accountID) {
-				Player::sendMessageFromRace($player->getRaceID(), $player->getGameID(), $accountID, $message, $time);
+			if ($player->getPlayerID() !== $councilPlayerID) {
+				Player::sendMessageFromRace(
+					raceID: $player->getRaceID(),
+					receiverPlayerID: $councilPlayerID,
+					message: $message,
+					expires: $time,
+				);
 			}
 		}
 

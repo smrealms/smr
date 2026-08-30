@@ -90,7 +90,7 @@ class AccountEditRenderer {
 										</tr>
 										<tr>
 											<td class="right">Name:</td>
-											<td><input type=text name=player_name[<?php echo $CurrentPlayer->getGameID(); ?>] placeholder="<?php echo htmlentities($CurrentPlayer->getPlayerName()); ?>" />(<?php echo $CurrentPlayer->getPlayerID(); ?>)</td>
+											<td><input type=text name=player_name[<?php echo $CurrentPlayer->getPlayerID(); ?>] placeholder="<?php echo htmlentities($CurrentPlayer->getPlayerName()); ?>" />(<?php echo $CurrentPlayer->getPlayerNumber(); ?>)</td>
 										</tr>
 										<tr>
 											<td class="right">Experience:</td>
@@ -101,7 +101,7 @@ class AccountEditRenderer {
 											<td><?php echo $CurrentShip->getName(); ?> (<?php echo $CurrentShip->getAttackRating(); ?>/<?php echo $CurrentShip->getDefenseRating(); ?>)</td>
 										</tr>
 										<tr>
-											<td><input type="radio" name="delete[<?php echo $CurrentPlayer->getGameID(); ?>]" value="TRUE" unchecked="unchecked">Yes<input type="radio" name="delete[<?php echo $CurrentPlayer->getGameID(); ?>]" value="FALSE" checked="checked">No</td>
+											<td><input type="radio" name="delete[<?php echo $CurrentPlayer->getPlayerID(); ?>]" value="TRUE" unchecked="unchecked">Yes<input type="radio" name="delete[<?php echo $CurrentPlayer->getPlayerID(); ?>]" value="FALSE" checked="checked">No</td>
 											<td>Delete player</td>
 										</tr><?php
 									} ?>

@@ -23,8 +23,14 @@ class MessageCouncilProcessor extends PlayerPageProcessor {
 
 		// send to all council members
 		$councilMembers = Council::getRaceCouncil($player->getGameID(), $this->raceID);
-		foreach ($councilMembers as $accountID) {
-			$player->sendMessage($accountID, MSG_POLITICAL, $message, true, $player->getAccountID() !== $accountID);
+		foreach ($councilMembers as $councilPlayerID) {
+			$player->sendMessage(
+				receiverPlayerID: $councilPlayerID,
+				messageTypeID: MSG_POLITICAL,
+				message: $message,
+				canBeIgnored: true,
+				unread: $player->getPlayerID() !== $councilPlayerID,
+			);
 		}
 
 		$msg = '<span class="green">SUCCESS: </span>Your message has been sent.';

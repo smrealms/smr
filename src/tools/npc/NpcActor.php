@@ -27,8 +27,7 @@ class NpcActor {
 	private bool $isReturningToSafety = false;
 
 	public function __construct(
-		private readonly int $gameID,
-		private readonly int $accountID,
+		private readonly int $playerID,
 	) {
 		$player = $this->refreshPlayer();
 
@@ -92,7 +91,7 @@ class NpcActor {
 	}
 
 	private function refreshPlayer(): Player {
-		return Player::getPlayer($this->accountID, $this->gameID, true);
+		return Player::getPlayer($this->playerID, forceUpdate: true);
 	}
 
 	public function hasTakenActions(): bool {
@@ -256,7 +255,7 @@ class NpcActor {
 		if ($this->npcGalaxyID !== null) {
 			$sector = $player->getSector();
 			if ($this->npcGalaxyID === $sector->getGalaxyID() && !$sector->hasWarp()) {
-				$force = Force::getForce($this->gameID, $sector->getSectorID(), $this->accountID);
+				$force = Force::getForce($player->getGameID(), $sector->getSectorID(), $player->getPlayerID());
 				$force->setForcesToMax();
 				$force->setExpire($player->getGame()->getEndTime());
 				$force->update();

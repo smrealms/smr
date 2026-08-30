@@ -69,7 +69,7 @@ class AttackPortProcessor extends PlayerPageProcessor {
 
 		foreach ($attackers as $attacker) {
 			$playerResults = $attacker->getShip()->shootPort($port);
-			$attackerResults[$attacker->getAccountID()] = $playerResults;
+			$attackerResults[$attacker->getPlayerID()] = $playerResults;
 		}
 
 		// Port downgrades only occur on non-shield damage
@@ -95,9 +95,9 @@ class AttackPortProcessor extends PlayerPageProcessor {
 			'type' => 'PORT',
 			'sector_id' => $port->getSectorID(),
 			'timestamp' => Epoch::time(),
-			'attacker_id' => $player->getAccountID(),
+			'attacker_player_id' => $player->getPlayerID(),
 			'attacker_alliance_id' => $player->getAllianceID(),
-			'defender_id' => ACCOUNT_ID_PORT,
+			'defender_player_id' => PLAYER_ID_PORT,
 			'defender_alliance_id' => PORT_ALLIANCE_ID,
 			'result' => $db->escapeObject($results, true),
 		]);
@@ -106,7 +106,7 @@ class AttackPortProcessor extends PlayerPageProcessor {
 		foreach ($attackers as $attacker) {
 			if (!$player->equals($attacker)) {
 				$db->replace('sector_message', [
-					'account_id' => $attacker->getAccountID(),
+					'player_id' => $attacker->getPlayerID(),
 					'game_id' => $attacker->getGameID(),
 					'message' => $sectorMessage,
 				]);

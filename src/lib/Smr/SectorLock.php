@@ -38,14 +38,18 @@ class SectorLock {
 	private bool $failed = false;
 
 	private ?int $gameID = null;
-	private ?int $accountID = null;
+	private ?int $playerID = null;
 	private ?int $sectorID = null;
 
 	/**
 	 * Convenience wrapper to acquire a lock for the player in their current sector.
 	 */
 	public function acquireForPlayer(Player $player): bool {
-		return $this->acquire($player->getGameID(), $player->getAccountID(), $player->getSectorID());
+		return $this->acquire(
+			gameID: $player->getGameID(),
+			playerID: $player->getPlayerID(),
+			sectorID: $player->getSectorID(),
+		);
 	}
 
 	/**
@@ -53,10 +57,10 @@ class SectorLock {
 	 *
 	 * @return bool True if a new lock is acquired or false if existing lock used.
 	 */
-	public function acquire(int $gameID, int $accountID, int $sectorID): bool {
+	public function acquire(int $gameID, int $playerID, int $sectorID): bool {
 		// Skip if we already have the lock
 		if ($this->isActive()) {
-			if ($gameID !== $this->gameID || $accountID !== $this->accountID || $sectorID !== $this->sectorID) {
+			if ($gameID !== $this->gameID || $playerID !== $this->playerID || $sectorID !== $this->sectorID) {
 				throw new Exception('This instance has an active lock in a different sector!');
 			}
 			return false;
@@ -69,14 +73,14 @@ class SectorLock {
 
 		// Save lock info for sanity checking future calls to this method.
 		$this->gameID = $gameID;
-		$this->accountID = $accountID;
+		$this->playerID = $playerID;
 		$this->sectorID = $sectorID;
 
 		// Insert ourselves into the queue.
 		$db = Database::getInstance();
 		$this->lockID = $db->insertAutoIncrement('locks_queue', [
 			'game_id' => $gameID,
-			'account_id' => $accountID,
+			'player_id' => $playerID,
 			'sector_id' => $sectorID,
 			'timestamp' => Epoch::time(),
 		]);
@@ -109,9 +113,9 @@ class SectorLock {
 			}
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
-			$dbResult = $db->read($query . ' AND account_id = :account_id', [
+			$dbResult = $db->read($query . ' AND player_id = :player_id', [
 				...$sqlParams,
-				'account_id' => $db->escapeNumber($accountID),
+				'player_id' => $db->escapeNumber($playerID),
 			]);
 			if ($dbResult->record()->getInt('COUNT(*)') > 1) {
 				$this->setFailed();

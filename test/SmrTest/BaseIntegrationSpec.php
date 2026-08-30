@@ -36,6 +36,17 @@ abstract class BaseIntegrationSpec extends TestCase {
 	}
 
 	/**
+	 * Release transaction locks before table cleanup can acquire metadata locks.
+	 * This prevents a failed test from blocking later tests.
+	 */
+	#[After(1)]
+	final protected function rollBackActiveTransaction(): void {
+		if (self::$conn->isTransactionActive()) {
+			self::$conn->rollBack();
+		}
+	}
+
+	/**
 	 * Any table that is modified during a test class should be declared in the
 	 * `tablesToTruncate()` method, and those tables will be reset after each
 	 * test method.

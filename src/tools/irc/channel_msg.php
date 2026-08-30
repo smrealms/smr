@@ -66,7 +66,7 @@ function check_for_registration($fp, string $nick, string $channel, Closure $cal
 
 	// get smr player
 	try {
-		$player = Player::getPlayer($account->getAccountID(), $alliance->getGameID(), true);
+		$player = Player::getPlayerByAccountAndGame($account->getAccountID(), $alliance->getGameID(), true);
 	} catch (PlayerNotFound) {
 		if ($validationMessages === true) {
 			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have not joined the game that this channel belongs to.' . EOL);

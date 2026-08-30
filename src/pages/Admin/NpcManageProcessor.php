@@ -29,8 +29,10 @@ class NpcManageProcessor extends AccountPageProcessor {
 				'npc_players',
 				['active' => $db->escapeBoolean($active)],
 				[
-					'account_id' => $this->accountID,
-					'game_id' => $this->selectedGameID,
+					'player_id' => Player::getPlayerByAccountAndGame(
+						accountID: $this->accountID,
+						gameID: $this->selectedGameID,
+					)->getPlayerID(),
 				],
 			);
 		}
@@ -42,8 +44,10 @@ class NpcManageProcessor extends AccountPageProcessor {
 				'npc_players',
 				['lock_ship' => $db->escapeBoolean($lockShip)],
 				[
-					'account_id' => $this->accountID,
-					'game_id' => $this->selectedGameID,
+					'player_id' => Player::getPlayerByAccountAndGame(
+						accountID: $this->accountID,
+						gameID: $this->selectedGameID,
+					)->getPlayerID(),
 				],
 			);
 		}
@@ -56,7 +60,10 @@ class NpcManageProcessor extends AccountPageProcessor {
 			$raceID = Request::getInt('race_id');
 			$npcPlayer = Player::createPlayer($accountID, $gameID, $playerName, $raceID, false, true);
 
-			$db->insert('npc_players', $npcPlayer->SQLID);
+			$db->insert('npc_players', [
+				...$npcPlayer->SQLID,
+				'game_id' => $npcPlayer->getGameID(),
+			]);
 
 			$shipTypeID = Request::getInt('player_ship');
 			if ($shipTypeID === -1) {
@@ -96,7 +103,7 @@ class NpcManageProcessor extends AccountPageProcessor {
 				$alliance->createDefaultRoles();
 			}
 			if (!$alliance->hasLeader()) {
-				$alliance->setLeaderID($npcPlayer->getAccountID());
+				$alliance->setLeaderPlayerID($npcPlayer->getPlayerID());
 			}
 			$npcPlayer->joinAlliance($alliance->getAllianceID());
 

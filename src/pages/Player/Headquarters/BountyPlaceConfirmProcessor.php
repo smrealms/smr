@@ -12,7 +12,7 @@ class BountyPlaceConfirmProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly int $locationID,
-		private readonly int $otherAccountID,
+		private readonly int $otherPlayerID,
 		private readonly int $credits,
 		private readonly int $smrCredits,
 	) {}
@@ -34,7 +34,6 @@ class BountyPlaceConfirmProcessor extends PlayerPageProcessor {
 		// get values from container (validated in bounty_place_processing.php)
 		$amount = $this->credits;
 		$smrCredits = $this->smrCredits;
-		$account_id = $this->otherAccountID;
 
 		// take the bounty from the cash
 		$player->decreaseCredits($amount);
@@ -44,7 +43,7 @@ class BountyPlaceConfirmProcessor extends PlayerPageProcessor {
 		$player->increaseHOF($amount, ['Bounties', 'Placed', 'Money'], HOF_PUBLIC);
 		$player->increaseHOF(1, ['Bounties', 'Placed', 'Number'], HOF_PUBLIC);
 
-		$placed = Player::getPlayer($account_id, $player->getGameID());
+		$placed = Player::getPlayer($this->otherPlayerID);
 		$bounty = $placed->getActiveBounty($type);
 		$bounty->increaseCredits($amount);
 		$bounty->increaseSmrCredits($smrCredits);

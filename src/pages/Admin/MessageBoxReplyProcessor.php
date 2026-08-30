@@ -16,8 +16,7 @@ class MessageBoxReplyProcessor extends AccountPageProcessor {
 	public readonly Submit $actionPreview;
 
 	public function __construct(
-		private readonly int $senderAccountID,
-		private readonly int $gameID,
+		private readonly int $senderPlayerID,
 		private readonly int $boxTypeID,
 	) {
 		$this->actionSend = new Submit(self::ACTION, 'Send message');
@@ -31,8 +30,7 @@ class MessageBoxReplyProcessor extends AccountPageProcessor {
 		if (Request::get(self::ACTION) === $this->actionPreview->value) {
 			$container = new MessageBoxReply(
 				boxTypeID: $this->boxTypeID,
-				senderAccountID: $this->senderAccountID,
-				gameID: $this->gameID,
+				senderPlayerID: $this->senderPlayerID,
 				preview: $message,
 				banPoints: $banPoints,
 				rewardCredits: $rewardCredits,
@@ -40,9 +38,10 @@ class MessageBoxReplyProcessor extends AccountPageProcessor {
 			$container->go();
 		}
 
-		Player::sendMessageFromAdmin($this->gameID, $this->senderAccountID, $message);
+		$senderPlayer = Player::getPlayer($this->senderPlayerID);
+		Player::sendMessageFromAdmin($this->senderPlayerID, $message);
 
-		$senderAccount = Account::getAccount($this->senderAccountID);
+		$senderAccount = $senderPlayer->getAccount();
 		$senderAccount->increaseSmrRewardCredits($rewardCredits);
 
 		//do we have points?

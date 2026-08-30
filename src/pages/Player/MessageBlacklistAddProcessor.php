@@ -11,12 +11,12 @@ use Smr\Request;
 class MessageBlacklistAddProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly ?int $blacklistAccountID = null,
+		private readonly ?int $blacklistPlayerID = null,
 	) {}
 
 	public function build(Player $player): never {
-		if ($this->blacklistAccountID !== null) {
-			$blacklisted = Player::getPlayer($this->blacklistAccountID, $player->getGameID());
+		if ($this->blacklistPlayerID !== null) {
+			$blacklisted = Player::getPlayer($this->blacklistPlayerID);
 		} else {
 			try {
 				$blacklisted = Player::getPlayerByPlayerName(Request::get('PlayerName'), $player->getGameID());
@@ -29,7 +29,8 @@ class MessageBlacklistAddProcessor extends PlayerPageProcessor {
 		$db = Database::getInstance();
 		$params = [
 			...$player->SQLID,
-			'blacklisted_id' => $blacklisted->getAccountID(),
+			'game_id' => $player->getGameID(),
+			'blacklisted_player_id' => $blacklisted->getPlayerID(),
 		];
 		$dbResult = $db->select('message_blacklist', $params);
 

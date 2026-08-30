@@ -91,18 +91,18 @@ class Globals {
 	/**
 	 * @return array<int>
 	 */
-	public static function getGalacticPostEditorIDs(int $gameID): array {
-		$editorIDs = [];
+	public static function getGalacticPostEditorPlayerIDs(int $gameID): array {
+		$editorPlayerIDs = [];
 		$db = Database::getInstance();
 		$dbResult = $db->select(
 			'galactic_post_writer',
 			['position' => 'editor', 'game_id' => $gameID],
-			['account_id'],
+			['player_id'],
 		);
 		foreach ($dbResult->records() as $dbRecord) {
-			$editorIDs[] = $dbRecord->getInt('account_id');
+			$editorPlayerIDs[] = $dbRecord->getInt('player_id');
 		}
-		return $editorIDs;
+		return $editorPlayerIDs;
 	}
 
 	public static function getColouredRaceNameForRace(int $raceID, int $gameID, int $fromRaceID, bool $linked = true): string {
@@ -172,8 +172,8 @@ class Globals {
 		return self::$AVAILABLE_LINKS['EnterPort'] = new ShopGoods()->href();
 	}
 
-	public static function getAttackTraderHREF(int $accountID): string {
-		$container = new AttackPlayerProcessor($accountID);
+	public static function getAttackTraderHREF(int $playerID): string {
+		$container = new AttackPlayerProcessor($playerID);
 		return self::$AVAILABLE_LINKS['AttackTrader'] = $container->href();
 	}
 

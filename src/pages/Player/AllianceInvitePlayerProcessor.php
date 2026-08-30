@@ -13,7 +13,11 @@ class AllianceInvitePlayerProcessor extends PlayerPageProcessor {
 	public function build(Player $player): never {
 		$account = $player->getAccount();
 
-		$receiverID = Request::getInt('account_id');
+		$receiverPlayerNumber = Request::getInt('player_number');
+		$receiverPlayerID = Player::getPlayerByPlayerNumber(
+			playerNumber: $receiverPlayerNumber,
+			gameID: $player->getGameID(),
+		)->getPlayerID();
 		$addMessage = Request::get('message');
 		$expireDays = Request::getInt('expire_days');
 
@@ -22,8 +26,8 @@ class AllianceInvitePlayerProcessor extends PlayerPageProcessor {
 		// If sender is mail banned or blacklisted by receiver, omit the custom message
 		$db = Database::getInstance();
 		$dbResult = $db->select('message_blacklist', [
-			'account_id' => $receiverID,
-			'blacklisted_id' => $player->getAccountID(),
+			'player_id' => $receiverPlayerID,
+			'blacklisted_player_id' => $player->getPlayerID(),
 		]);
 		if ($dbResult->hasRecord() || $account->isMailBanned()) {
 			$addMessage = '';
@@ -40,7 +44,11 @@ class AllianceInvitePlayerProcessor extends PlayerPageProcessor {
 			$msg .= '<br />' . $addMessage;
 		}
 
-		$player->sendAllianceInvitation($receiverID, $msg, $expires);
+		$player->sendAllianceInvitation(
+			receiverPlayerID: $receiverPlayerID,
+			message: $msg,
+			expires: $expires,
+		);
 
 		$container = new AllianceInvitePlayer();
 		$container->go();

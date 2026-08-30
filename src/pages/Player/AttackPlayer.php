@@ -11,15 +11,15 @@ class AttackPlayer extends PlayerPage {
 
 	public function __construct(
 		private readonly TraderFullCombatResults $results,
-		private readonly ?int $targetAccountID,
+		private readonly ?int $targetPlayerID,
 		bool $playerDied,
 	) {
 		$this->skipRedirect = $playerDied;
 	}
 
 	public function build(Player $player, Template $template): void {
-		if ($this->targetAccountID !== null) {
-			$target = Player::getPlayer($this->targetAccountID, $player->getGameID());
+		if ($this->targetPlayerID !== null) {
+			$target = Player::getPlayer($this->targetPlayerID);
 		} else {
 			$target = null;
 		}

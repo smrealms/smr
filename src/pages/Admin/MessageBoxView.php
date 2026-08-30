@@ -68,13 +68,12 @@ class MessageBoxView extends AccountPage {
 						$senderAccount = Account::getAccount($senderID);
 						$senderName = $senderAccount->getLogin() . ' (' . $senderID . ')';
 						if ($validGame) {
-							$senderPlayer = Player::getPlayer($senderID, $gameID);
+							$senderPlayer = Player::getPlayerByAccountAndGame(accountID: $senderID, gameID: $gameID);
 							$senderName .= ' a.k.a ' . $senderPlayer->getDisplayName();
 							if ($account->hasPermission(PERMISSION_SEND_ADMIN_MESSAGE)) {
 								$container = new MessageBoxReply(
 									boxTypeID: $this->boxTypeID,
-									senderAccountID: $senderID,
-									gameID: $gameID,
+									senderPlayerID: $senderPlayer->getPlayerID(),
 								);
 								$messages[$messageID]['ReplyHREF'] = $container->href();
 							}

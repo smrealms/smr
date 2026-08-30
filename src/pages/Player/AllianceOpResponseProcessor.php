@@ -20,7 +20,7 @@ class AllianceOpResponseProcessor extends PlayerPageProcessor {
 		$db->replace('alliance_has_op_response', [
 			'alliance_id' => $this->allianceID,
 			'game_id' => $player->getGameID(),
-			'account_id' => $player->getAccountID(),
+			'player_id' => $player->getPlayerID(),
 			'response' => $response,
 		]);
 

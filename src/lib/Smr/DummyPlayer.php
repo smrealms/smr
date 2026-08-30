@@ -12,6 +12,7 @@ class DummyPlayer extends Player {
 	protected readonly int $gameID;
 
 	public function __construct(string $playerName, int $experience = 1000, int $shipTypeID = 60) {
+		$this->playerID = 0;
 		$this->accountID = 0;
 		$this->gameID = 0;
 		$this->playerName = $playerName;
@@ -26,7 +27,6 @@ class DummyPlayer extends Player {
 	 * be stored in the database.
 	 */
 	protected function setConstantProperties(): void {
-		$this->playerID = 0;
 		$this->turns = 0;
 		$this->alignment = 0;
 		$this->underAttack = false;

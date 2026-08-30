@@ -9,18 +9,16 @@ use Smr\Page\AccountPageProcessor;
 class CheatingShipCheckProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $gameID,
 		private readonly int $hardwareTypeID,
 		private readonly int $maxAmount,
-		private readonly int $accountID,
+		private readonly int $playerID,
 	) {}
 
 	public function build(Account $account): never {
 		//get our variables
-		$game_id = $this->gameID;
 		$hardware_id = $this->hardwareTypeID;
 		$max_amount = $this->maxAmount;
-		$account_id = $this->accountID;
+		$player_id = $this->playerID;
 
 		//update it so they arent cheating
 		$db = Database::getInstance();
@@ -28,8 +26,7 @@ class CheatingShipCheckProcessor extends AccountPageProcessor {
 			'ship_has_hardware',
 			['amount' => $max_amount],
 			[
-				'game_id' => $game_id,
-				'account_id' => $account_id,
+				'player_id' => $player_id,
 				'hardware_type_id' => $hardware_id,
 			],
 		);
