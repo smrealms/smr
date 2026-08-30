@@ -114,14 +114,18 @@ class TemplateTest extends TestCase {
 	}
 
 	#[DataProvider('convertHtmlToAjaxXml_provider')]
-	public function test_convertHtmlToAjaxXml(string $html, string $expected): void {
+	public function test_convertHtmlToAjaxXml(string $html, string $expected, bool $wrap = true): void {
 		$template = Template::getInstance();
 		$method = TestUtils::getPrivateMethod($template, 'convertHtmlToAjaxXml');
+		// Wrap the HTML excerpt in the full document tags, if specified
+		if ($wrap) {
+			$html = self::html($html);
+		}
 		self::assertSame($expected, $method->invoke($template, $html, true));
 	}
 
 	/**
-	 * @return array<array{string, string}>
+	 * @return array<array{string, string}|array{string, string, bool}>
 	 */
 	public static function convertHtmlToAjaxXml_provider(): array {
 		return [
@@ -129,6 +133,8 @@ class TemplateTest extends TestCase {
 			['<span id="foo">Test</span>', '<foo>Test</foo>'],
 			// Non-span with the ajax class
 			['<div id="bar" class="ajax">Hello</div>', '<bar>Hello</bar>'],
+			// The ajax class must be matched exactly (no partial string match)
+			['<div id="bar" class="notajax">Goodbye</div>', ''],
 			// Non-span *without* the ajax class
 			['<div id="bar">Goodbye</div>', ''],
 			// Middle panel with content that doesn't disable ajax
@@ -140,10 +146,16 @@ class TemplateTest extends TestCase {
 			['<div id="middle_panel"><span id="foo">Test</span></div>', '<foo>Test</foo>'],
 			// Middle panel with ajax disabled by the ajax class
 			['<div id="middle_panel"><div id="bar" class="ajax">Hello</div></div>', '<bar>Hello</bar>'],
-			// Empty string
+			// Empty body
 			['', ''],
+			// Empty string
+			['', '', false],
 			// Ajax-enabled elements both outside and inside middle panel
 			['<span id="foo">Test</span><div id="middle_panel">Foo</div>', '<foo>Test</foo><middle_panel>Foo</middle_panel>'],
+			// HTML void elements retain their HTML serialization
+			['<span id="tod">2021-04-24<br />01:39:51</span>', '<tod>2021-04-24&lt;br&gt;01:39:51</tod>'],
+			// HTML5 elements are accepted by the parser
+			['<details><summary>Locations</summary><span id="foo">Test</span></details>', '<foo>Test</foo>'],
 		];
 	}
 
@@ -157,7 +169,7 @@ class TemplateTest extends TestCase {
 
 		// This adds a special hook into convertHtmlToAjaxXml
 		$method = TestUtils::getPrivateMethod($template, 'convertHtmlToAjaxXml');
-		$result = $method->invoke($template, '<body></body>', true);
+		$result = $method->invoke($template, self::html(''), true);
 		self::assertSame('<JS><test>{"a":1,"b":2}</test></JS>', $result);
 	}
 
@@ -168,6 +180,13 @@ class TemplateTest extends TestCase {
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Trying to set javascript val twice: test');
 		$template->addJavascriptForAjax('test', '');
+	}
+
+	/**
+	 * Provide the full HTML document tokens required by HTMLDocument
+	 */
+	private static function html(string $body): string {
+		return '<!DOCTYPE html><html><head></head><body>' . $body . '</body></html>';
 	}
 
 }

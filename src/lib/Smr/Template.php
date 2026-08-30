@@ -3,9 +3,7 @@
 namespace Smr;
 
 use Closure;
-use DOMDocument;
-use DOMElement;
-use DOMXPath;
+use Dom\HTMLDocument;
 use Exception;
 use Smr\Combat\Results\Damage\ForceTakenDamage;
 use Smr\Combat\Results\Damage\NormalTakenDamage;
@@ -179,15 +177,6 @@ class Template {
 
 		$session = Session::getInstance();
 
-		$getInnerHTML = function(DOMElement $node): string {
-			$innerHTML = '';
-			$document = $node->ownerDocument;
-			foreach ($node->childNodes as $child) {
-				$innerHTML .= $document->saveHTML($child);
-			}
-			return $innerHTML;
-		};
-
 		// Helper function to canonicalize making an XML element,
 		// with its inner content properly escaped.
 		$xmlify = function(string $id, string $str): string {
@@ -195,11 +184,9 @@ class Template {
 		};
 
 		$xml = '';
-		$dom = new DOMDocument();
-
 		// Handle libxml errors ourselves to provide more detailed errors
 		$orig = libxml_use_internal_errors(true);
-		$dom->loadHTML($str);
+		$dom = HTMLDocument::createFromString($str);
 		$errors = libxml_get_errors();
 		libxml_use_internal_errors($orig);
 		foreach ($errors as $error) {
@@ -212,26 +199,12 @@ class Template {
 			}
 		}
 
-		$xpath = new DOMXPath($dom);
-
-		// Use relative xpath selectors so that they can be reused when we
-		// pass the middle panel as the xpath query's context node.
-		$ajaxSelectors = ['.//span[@id]', './/*[contains(@class,"ajax")]'];
-
-		foreach ($ajaxSelectors as $selector) {
-			$matchNodes = $xpath->query($selector);
-			if ($matchNodes === false) {
-				throw new Exception('XPath query failed for selector: ' . $selector);
-			}
-			foreach ($matchNodes as $node) {
-				if (!($node instanceof DOMElement)) {
-					throw new Exception('XPath query returned unexpected DOMNode type: ' . $node->nodeType);
-				}
-				$id = $node->getAttribute('id');
-				$inner = $getInnerHTML($node);
-				if (!$session->addAjaxReturns($id, $inner) && $returnXml) {
-					$xml .= $xmlify($id, $inner);
-				}
+		$ajaxSelector = 'span[id], .ajax';
+		foreach ($dom->querySelectorAll($ajaxSelector) as $node) {
+			$id = $node->getAttribute('id') ?? '';
+			$inner = $node->innerHTML;
+			if (!$session->addAjaxReturns($id, $inner) && $returnXml) {
+				$xml .= $xmlify($id, $inner);
 			}
 		}
 
@@ -239,21 +212,11 @@ class Template {
 		$mid = $dom->getElementById('middle_panel');
 		if ($mid !== null) {
 			// Skip if middle_panel has ajax-enabled children.
-			$doAjaxMiddle = true;
-			foreach ($ajaxSelectors as $selector) {
-				$matchNodes = $xpath->query($selector, $mid);
-				if ($matchNodes === false) {
-					throw new Exception('XPath query failed for selector: ' . $selector);
-				}
-				if (count($matchNodes) > 0) {
-					$doAjaxMiddle = false;
-					break;
-				}
-			}
+			$doAjaxMiddle = count($mid->querySelectorAll($ajaxSelector)) === 0;
 			if ($doAjaxMiddle) {
-				$inner = $getInnerHTML($mid);
+				$inner = $mid->innerHTML;
 				if (!$this->checkDisableAJAX($inner)) {
-					$id = $mid->getAttribute('id');
+					$id = $mid->getAttribute('id') ?? '';
 					if (!$session->addAjaxReturns($id, $inner) && $returnXml) {
 						$xml .= $xmlify($id, $inner);
 					}
