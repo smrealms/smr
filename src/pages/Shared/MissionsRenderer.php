@@ -20,7 +20,7 @@ class MissionsRenderer {
 	): void {
 		if ($MissionMessage !== null) { ?>
 			<span class="green">Mission Complete: </span><?php
-			echo $MissionMessage;
+			echo $MissionMessage; ?><br /><br /><?php
 		}
 
 		foreach ($ThisPlayer->getAvailableMissions() as $Mission) { ?>
