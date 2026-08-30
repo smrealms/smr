@@ -163,7 +163,7 @@ class EditGalaxyRenderer {
 						<span class="red bold">DANGEROUS OPTIONS</span>
 						<p><a href="<?php echo $ResetGalaxyHREF; ?>" class="submitStyle">Reset Current Galaxy</a></p>
 						<form method="POST" action="<?php echo $RedoConnectionsHREF; ?>">
-							<input required type="number" name="connect" placeholder="Connectivity %" class="center" style="width:140px" /><br />
+							<input required type="number" name="connect" placeholder="Connectivity %" min="0" max="100" class="center" style="width:140px" /><br />
 							<?php echo create_submit_display('Redo Connections'); ?>
 						</form><?php
 					} ?>

@@ -359,36 +359,39 @@ class Galaxy {
 		// Only set down/right, otherwise we double-hit every link
 		$linkDirs = ['Down', 'Right'];
 
-		$problem = true;
-		$problemTimes = 0;
-		while ($problem) {
-			$problem = false;
+		// Calculate the number of walls we need to add to achieve the desired connectivity.
+		$numWalls = IRound(count($linkDirs) * (1 - $connectivity / 100) * $this->getSize());
 
-			foreach ($this->getSectors() as $galSector) {
-				foreach ($linkDirs as $linkDir) {
-					if (flip_coin($connectivity)) {
-						$galSector->enableLink($linkDir);
-					} else {
-						$galSector->disableLink($linkDir);
-					}
+		// Make the initial condition fully connected.
+		$candidateLinks = [];
+		foreach ($this->getSectors() as $sector) {
+			foreach ($linkDirs as $linkDir) {
+				$sector->enableLink($linkDir);
+				if ($sector->hasLink($linkDir)) {
+					$candidateLinks[] = [$sector, $linkDir];
 				}
-			}
-
-			// Try again if any sector has 0 connections (except 1-sector gals)
-			if ($this->getSize() > 1) {
-				foreach ($this->getSectors() as $galSector) {
-					if ($galSector->getNumberOfConnections() === 0) {
-						$problem = true;
-						break;
-					}
-				}
-			}
-
-			if ($problem && $problemTimes++ > 350) {
-				$connectivity = 100;
 			}
 		}
-		return $problemTimes <= 350;
+
+		// Consider each link at most once so we terminate when no more walls
+		// can be added. The shuffled order keeps the resulting layout random.
+		shuffle($candidateLinks);
+		foreach ($candidateLinks as [$sector, $linkDir]) {
+			if ($numWalls === 0) {
+				break;
+			}
+			// Soft guard against spatially disconnected regions.
+			$linkSector = $sector->getLinkSector($linkDir);
+			if ($sector->getNumberOfLinks() <= 1 || $linkSector->getNumberOfLinks() <= 1) {
+				continue;
+			}
+			$sector->disableLink($linkDir);
+			$numWalls--;
+		}
+
+		// If we were not able to put in all the walls, then the target
+		// connectivity could not be reached.
+		return $numWalls === 0;
 	}
 
 	/**

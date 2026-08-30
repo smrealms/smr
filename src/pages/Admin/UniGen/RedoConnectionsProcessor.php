@@ -20,7 +20,7 @@ class RedoConnectionsProcessor extends AccountPageProcessor {
 		$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
 		$connectivity = Request::getFloat('connect');
 		if (!$galaxy->setConnectivity($connectivity)) {
-			$message = '<span class="red">Error</span> : Regenerating connections failed.';
+			$message = '<span class="red">Error</span> : Failed to reach ' . $connectivity . '% connectivity target!';
 		} else {
 			$message = '<span class="green">Success</span> : Regenerated connectivity with ' . $connectivity . '% target.';
 		}
