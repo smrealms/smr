@@ -25,8 +25,8 @@ class ShipListRenderer {
 		<!DOCTYPE html>
 		<html>
 			<head>
-				<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS; ?>">
-				<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS_COLOUR; ?>">
+				<link rel="stylesheet" type="text/css" href="<?php echo asset_url(DEFAULT_CSS); ?>">
+				<link rel="stylesheet" type="text/css" href="<?php echo asset_url(DEFAULT_CSS_COLOUR); ?>">
 				<title>Space Merchant Realms - Ship List</title>
 				<meta http-equiv="pragma" content="no-cache">
 				<style>
