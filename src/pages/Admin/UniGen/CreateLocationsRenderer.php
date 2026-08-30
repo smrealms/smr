@@ -9,6 +9,7 @@ class CreateLocationsRenderer {
 	/**
 	 * @param array<int, Galaxy> $Galaxies
 	 * @param array<int, int> $TotalLocs
+	 * @param array{Total: int, Categories: list<array{Name: string, Count: int, Locations: list<array{Name: string, Count: int}>}>} $LocationSummary
 	 * @param array<int, string> $LocText
 	 * @param array<string, array<int>> $LocTypes
 	 */
@@ -17,6 +18,7 @@ class CreateLocationsRenderer {
 		string $JumpGalaxyHREF,
 		Galaxy $Galaxy,
 		array $TotalLocs,
+		array $LocationSummary,
 		array $LocText,
 		array $LocTypes,
 		string $CreateLocationsFormHREF,
@@ -33,6 +35,38 @@ class CreateLocationsRenderer {
 				} ?>
 			</select>
 		</form>
+		<br />
+
+		<style>
+			.location-summary-count {
+				display: inline-block;
+				margin-right: 0.75em;
+				text-align: right;
+				width: 2ch;
+			}
+		</style>
+
+		<table class="standard">
+			<tr>
+				<th colspan="2">Existing locations (<?php echo $LocationSummary['Total']; ?>)</th>
+			</tr>
+			<tr>
+				<th>Category</th>
+				<th>Locations</th>
+			</tr><?php
+			foreach ($LocationSummary['Categories'] as $summaryCategory) { ?>
+				<tr>
+					<td class="right"><?php echo $summaryCategory['Name']; ?> (<?php echo $summaryCategory['Count']; ?>)</td>
+					<td><?php
+					foreach ($summaryCategory['Locations'] as $summaryLocation) { ?>
+						<div>
+							<span class="location-summary-count yellow bold"><?php echo $summaryLocation['Count']; ?></span><?php echo $summaryLocation['Name']; ?>
+						</div><?php
+					} ?>
+					</td>
+				</tr><?php
+			} ?>
+		</table>
 		<br />
 
 		<?php

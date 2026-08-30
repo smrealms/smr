@@ -28,8 +28,10 @@ class CreateLocations extends AccountPage {
 
 		// Initialize all location counts to zero
 		$totalLocs = [];
+		$locNames = [];
 		foreach ($locations as $location) {
 			$totalLocs[$location->getTypeID()] = 0;
+			$locNames[$location->getTypeID()] = $location->getName();
 		}
 
 		$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
@@ -93,11 +95,61 @@ class CreateLocations extends AccountPage {
 			$locText[$location->getTypeID()] = $location->getName() . $extra;
 		}
 
+		// Build summary rows for locations that can be configured directly.
+		$locationSummary = [
+			'Total' => array_sum($totalLocs),
+			'Categories' => [],
+		];
+		$shownLocationIDs = [];
+		foreach ($categories->locTypes as $category => $locIDs) {
+			$summaryLocations = [];
+			$categoryLocationCount = 0;
+			foreach ($locIDs as $locID) {
+				$shownLocationIDs[] = $locID;
+				$count = $totalLocs[$locID];
+				if ($count > 0) {
+					$categoryLocationCount += $count;
+					$summaryLocations[] = [
+						'Name' => $locNames[$locID],
+						'Count' => $count,
+					];
+				}
+			}
+			if (count($summaryLocations) > 0) {
+				$locationSummary['Categories'][] = [
+					'Name' => $category,
+					'Count' => $categoryLocationCount,
+					'Locations' => $summaryLocations,
+				];
+			}
+		}
+
+		// Append locations that are created automatically with another location.
+		$linkedLocations = [];
+		$linkedLocationCount = 0;
+		foreach ($totalLocs as $locID => $count) {
+			if ($count > 0 && !in_array($locID, $shownLocationIDs, true)) {
+				$linkedLocationCount += $count;
+				$linkedLocations[] = [
+					'Name' => $locNames[$locID],
+					'Count' => $count,
+				];
+			}
+		}
+		if (count($linkedLocations) > 0) {
+			$locationSummary['Categories'][] = [
+				'Name' => 'Automatically linked',
+				'Count' => $linkedLocationCount,
+				'Locations' => $linkedLocations,
+			];
+		}
+
 		$template->pageRenderer = fn() => CreateLocationsRenderer::render(
 			Galaxies: Galaxy::getGameGalaxies($this->gameID),
 			JumpGalaxyHREF: new self($this->gameID, $this->returnTo)->href(),
 			Galaxy: $galaxy,
 			TotalLocs: $totalLocs,
+			LocationSummary: $locationSummary,
 			LocText: $locText,
 			LocTypes: $categories->locTypes,
 			CreateLocationsFormHREF: new CreateLocationsProcessor(
