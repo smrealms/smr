@@ -15,12 +15,13 @@ class CreatePlanets extends AccountPage {
 	use ReusableTrait;
 	public function __construct(
 		private readonly int $gameID,
-		private readonly EditGalaxy $returnTo,
+		private EditGalaxy $returnTo,
 		private ?int $galaxyID = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {
 		$this->galaxyID ??= Request::getInt('gal_on');
+		$this->returnTo->galaxyID = $this->galaxyID;
 
 		// Get a list of all available planet types
 		$allowedTypes = [];

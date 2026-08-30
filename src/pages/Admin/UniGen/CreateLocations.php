@@ -16,12 +16,13 @@ class CreateLocations extends AccountPage {
 	use ReusableTrait;
 	public function __construct(
 		private readonly int $gameID,
-		private readonly EditGalaxy $returnTo,
+		private EditGalaxy $returnTo,
 		private ?int $galaxyID = null,
 	) {}
 
 	public function build(Account $account, Template $template): void {
 		$this->galaxyID ??= Request::getInt('gal_on');
+		$this->returnTo->galaxyID = $this->galaxyID;
 
 		$locations = Location::getAllLocations($this->gameID);
 
