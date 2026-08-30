@@ -26,7 +26,7 @@ class EndingJavascriptRenderer {
 			<script src="<?php echo LISTJS_URL; ?>"></script>
 			<script src="<?php echo asset_url('/js/listjs_include.js'); ?>"></script>
 			<script>
-				listjs.<?php echo $template->listjsInclude; ?>();
+				window.listjs.<?php echo $template->listjsInclude; ?>();
 			</script><?php
 		}
 
