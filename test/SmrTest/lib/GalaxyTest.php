@@ -12,12 +12,13 @@ use SmrTest\BaseIntegrationSpec;
 class GalaxyTest extends BaseIntegrationSpec {
 
 	protected function tablesToTruncate(): array {
-		return ['game_galaxy'];
+		return ['game_galaxy', 'sector'];
 	}
 
 	protected function setUp(): void {
 		// Start each test with an empty galaxy cache
 		Galaxy::clearCache();
+		Sector::clearCache();
 	}
 
 	public function test_getGalaxy_throws_if_galaxy_does_not_exist(): void {
@@ -46,6 +47,24 @@ class GalaxyTest extends BaseIntegrationSpec {
 		self::assertSame(3, $galaxy->getWidth());
 		self::assertSame(7, $galaxy->getHeight());
 		self::assertSame(21, $galaxy->getSize());
+	}
+
+	public function test_setConnectivity_matches_target_when_candidates_are_available(): void {
+		$galaxy = $this->createSmallGalaxy();
+
+		self::assertTrue($galaxy->setConnectivity(75));
+		self::assertSame(75.0, $galaxy->getConnectivity());
+	}
+
+	public function test_setConnectivity_returns_false_when_candidates_are_exhausted(): void {
+		$galaxy = $this->createSmallGalaxy();
+
+		// A 2-by-2 galaxy has eight links. Removing all eight would leave each
+		// sector isolated, so the local one-link guard must stop first.
+		self::assertFalse($galaxy->setConnectivity(0));
+		foreach ($galaxy->getSectors() as $sector) {
+			self::assertGreaterThanOrEqual(1, $sector->getNumberOfLinks());
+		}
 	}
 
 	public function test_get_galaxy_sector_range(): void {
@@ -90,6 +109,15 @@ class GalaxyTest extends BaseIntegrationSpec {
 		$sector2 = $this->createStub(Sector::class);
 		$sector2->method('getGalaxyID')->willReturn($galaxyID + 1);
 		self::assertFalse($galaxy->contains($sector2));
+	}
+
+	private function createSmallGalaxy(): Galaxy {
+		$galaxy = Galaxy::createGalaxy(1, 1);
+		$galaxy->setWidth(2);
+		$galaxy->setHeight(2);
+		$galaxy->generateSectors();
+
+		return $galaxy;
 	}
 
 }
