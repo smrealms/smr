@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
 use Smr\Database;
 use Smr\DatabaseProperties;
+use Smr\RowLockMode;
 
 /**
  * This is an integration test, but does not need to extend BaseIntegrationTest since we are not writing any data.
@@ -136,6 +137,38 @@ class DatabaseIntegrationTest extends TestCase {
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('order and orderBy must be the same length');
 		$db->select('level', orderBy: ['level_id', 'level_name'], order: ['DESC']);
+	}
+
+	public function test_select_lock_requires_active_transaction(): void {
+		$db = Database::getInstance();
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Row locks require an active transaction');
+		$db->select('player', limit: 1, lock: RowLockMode::Update);
+	}
+
+	public function test_beginTransaction_and_rollBack_change_transaction_state(): void {
+		$db = Database::getInstance();
+		self::assertFalse($db->isTransactionActive());
+
+		$db->beginTransaction();
+		try {
+			self::assertTrue($db->isTransactionActive());
+			$db->select('player', limit: 1, lock: RowLockMode::Update);
+		} finally {
+			$db->rollBack();
+		}
+
+		self::assertFalse($db->isTransactionActive());
+	}
+
+	public function test_commit_deactivates_transaction(): void {
+		$db = Database::getInstance();
+		$db->beginTransaction();
+		self::assertTrue($db->isTransactionActive());
+
+		$db->commit();
+
+		self::assertFalse($db->isTransactionActive());
 	}
 
 	public function test_count(): void {
