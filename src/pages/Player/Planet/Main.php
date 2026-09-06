@@ -26,7 +26,7 @@ class Main extends PlanetPage {
 			ErrorMsg: $this->errorMessage,
 			Msg: $this->message,
 			LaunchLink: new LaunchProcessor()->href(),
-			VisiblePlayers: $planet->getOtherTraders($player),
+			AllPlayers: $planet->getOtherTraders($player),
 			SectorPlayersLabel: 'Ships',
 			ThisPlanet: $player->getSectorPlanet(),
 			ThisAccount: $player->getAccount(),

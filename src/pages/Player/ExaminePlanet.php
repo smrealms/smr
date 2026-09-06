@@ -49,7 +49,7 @@ class ExaminePlanet extends PlayerPage {
 		$template->pageRenderer = fn() => ExaminePlanetRenderer::render(
 			ThisPlanet: $planet,
 			PlanetLand: $planetLand,
-			VisiblePlayers: $eligibleAttackers,
+			EligibleAttackers: $eligibleAttackers,
 			SectorPlayersLabel: 'Attackers',
 			ThisAccount: $player->getAccount(),
 			ThisPlayer: $player,

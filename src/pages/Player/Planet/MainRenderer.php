@@ -11,14 +11,14 @@ use Smr\Player;
 class MainRenderer {
 
 	/**
-	 * @param array<int, Player> $VisiblePlayers
+	 * @param array<int, Player> $AllPlayers
 	 * @param ?array<array{Time: string, Message: string}> $Ticker
 	 */
 	public static function render(
 		?string $ErrorMsg,
 		?string $Msg,
 		string $LaunchLink,
-		array $VisiblePlayers,
+		array $AllPlayers,
 		string $SectorPlayersLabel,
 		Planet $ThisPlanet,
 		Account $ThisAccount,
@@ -129,8 +129,8 @@ class MainRenderer {
 			ThisAccount: $ThisAccount,
 			ThisPlanet: $ThisPlanet,
 			ThisPlayer: $ThisPlayer,
-			VisiblePlayers: $VisiblePlayers,
-			CloakedPlayers: $VisiblePlayers,
+			VisiblePlayers: $AllPlayers,
+			DisplayCloakedShipMessage: false, // landed ships are always visible
 			SectorPlayersLabel: $SectorPlayersLabel,
 		);
 

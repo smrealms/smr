@@ -19,14 +19,13 @@ class SectorPlayersRenderer {
 
 	/**
 	 * @param array<\Smr\Player> $VisiblePlayers
-	 * @param array<\Smr\Player> $CloakedPlayers
 	 */
 	public static function render(
 		Account $ThisAccount,
 		?Planet $ThisPlanet,
 		Player $ThisPlayer,
 		array $VisiblePlayers,
-		array $CloakedPlayers,
+		bool $DisplayCloakedShipMessage,
 		string $SectorPlayersLabel,
 	): void {
 		?>
@@ -101,7 +100,7 @@ class SectorPlayersRenderer {
 					} ?>
 				</table><?php
 			}
-			if (count($CloakedPlayers) > 0) {
+			if ($DisplayCloakedShipMessage) {
 				?><p><span class="red bold">WARNING:</span> Sensors have detected the presence of cloaked vessels in this sector</p><?php
 			} ?>
 		</div><br />
