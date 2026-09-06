@@ -27,7 +27,7 @@ class AttackPortConfirm extends PlayerPage {
 		$template->pageRenderer = fn() => AttackPortConfirmRenderer::render(
 			PortAttackHREF: new AttackPortProcessor()->href(),
 			Port: $port,
-			VisiblePlayers: $eligibleAttackers,
+			EligibleAttackers: $eligibleAttackers,
 			SectorPlayersLabel: 'Attackers',
 			ThisShip: $player->getShip(),
 			ThisAccount: $player->getAccount(),

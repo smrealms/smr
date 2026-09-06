@@ -14,12 +14,12 @@ use Smr\Ship;
 class AttackPortConfirmRenderer {
 
 	/**
-	 * @param array<int, Player> $VisiblePlayers
+	 * @param array<int, Player> $EligibleAttackers
 	 */
 	public static function render(
 		string $PortAttackHREF,
 		Port $Port,
-		array $VisiblePlayers,
+		array $EligibleAttackers,
 		string $SectorPlayersLabel,
 		Ship $ThisShip,
 		Account $ThisAccount,
@@ -69,8 +69,8 @@ class AttackPortConfirmRenderer {
 			ThisAccount: $ThisAccount,
 			ThisPlanet: $ThisPlanet,
 			ThisPlayer: $ThisPlayer,
-			VisiblePlayers: $VisiblePlayers,
-			CloakedPlayers: [],
+			VisiblePlayers: $EligibleAttackers,
+			DisplayCloakedShipMessage: false, // only showing allied ships
 			SectorPlayersLabel: $SectorPlayersLabel,
 		);
 		?>

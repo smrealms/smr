@@ -146,12 +146,13 @@ class CurrentSector extends PlayerPage {
 		// *******************************************
 		$otherPlayers = $sector->getOtherTraders($player);
 		$visiblePlayers = [];
-		$cloakedPlayers = [];
+		$displayCloakedShipMessage = false;
 		foreach ($otherPlayers as $accountID => $otherPlayer) {
 			if ($player->canSee($otherPlayer)) {
 				$visiblePlayers[$accountID] = $otherPlayer;
 			} else {
-				$cloakedPlayers[$accountID] = $otherPlayer;
+				// Display message if at least one unseen cloaked ship
+				$displayCloakedShipMessage = true;
 			}
 		}
 
@@ -168,7 +169,7 @@ class CurrentSector extends PlayerPage {
 			TradeMessage: $this->tradeMessage,
 			PortIsAtWar: $portIsAtWar,
 			VisiblePlayers: $visiblePlayers,
-			CloakedPlayers: $cloakedPlayers,
+			DisplayCloakedShipMessage: $displayCloakedShipMessage,
 			SectorPlayersLabel: 'Ships',
 			AttackResults: checkForAttackMessage($this->attackMessage, $player),
 			ThisAccount: $player->getAccount(),

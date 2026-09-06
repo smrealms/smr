@@ -10,12 +10,12 @@ use Smr\Player;
 class ExaminePlanetRenderer {
 
 	/**
-	 * @param array<int, Player> $VisiblePlayers
+	 * @param array<int, Player> $EligibleAttackers
 	 */
 	public static function render(
 		Planet $ThisPlanet,
 		bool $PlanetLand,
-		array $VisiblePlayers,
+		array $EligibleAttackers,
 		string $SectorPlayersLabel,
 		Account $ThisAccount,
 		Player $ThisPlayer,
@@ -90,8 +90,8 @@ class ExaminePlanetRenderer {
 			ThisAccount: $ThisAccount,
 			ThisPlanet: $ThisPlanet,
 			ThisPlayer: $ThisPlayer,
-			VisiblePlayers: $VisiblePlayers,
-			CloakedPlayers: [],
+			VisiblePlayers: $EligibleAttackers,
+			DisplayCloakedShipMessage: false, // only showing allied ships
 			SectorPlayersLabel: $SectorPlayersLabel,
 		);
 		?>
