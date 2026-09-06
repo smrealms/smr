@@ -33,7 +33,6 @@ class CurrentSectorRenderer {
 	 * @param array<string, array{ID: int, Class: string}> $Sectors
 	 * @param array<int, ?string> $UnreadMissions
 	 * @param array<int, Player> $VisiblePlayers
-	 * @param array<int, Player> $CloakedPlayers
 	 * @param ?array{Results: \Smr\Combat\Results\Full\FullCombatResults, Link: string} $AttackResults
 	 * @param ?array<array{Time: string, Message: string}> $Ticker
 	 */
@@ -50,7 +49,7 @@ class CurrentSectorRenderer {
 		?string $TradeMessage,
 		?bool $PortIsAtWar,
 		array $VisiblePlayers,
-		array $CloakedPlayers,
+		bool $DisplayCloakedShipMessage,
 		string $SectorPlayersLabel,
 		?array $AttackResults,
 		Player $ThisPlayer,
@@ -154,7 +153,7 @@ class CurrentSectorRenderer {
 			ThisPlanet: $ThisPlanet,
 			ThisPlayer: $ThisPlayer,
 			VisiblePlayers: $VisiblePlayers,
-			CloakedPlayers: $CloakedPlayers,
+			DisplayCloakedShipMessage: $DisplayCloakedShipMessage,
 			SectorPlayersLabel: $SectorPlayersLabel,
 		);
 		SectorForcesRenderer::render(
