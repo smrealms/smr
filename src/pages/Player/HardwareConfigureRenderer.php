@@ -45,7 +45,27 @@ class HardwareConfigureRenderer {
 						</tr>
 						<tr>
 							<td>Attack/Defense</td>
-							<td><input type="number" class="center" name="attack" value="<?php if ($ThisShip->hasActiveIllusion()) { echo $ThisShip->getIllusion()->attackRating; } else { ?>0<?php } ?>" size="4">&nbsp;/&nbsp;<input type="number" class="center" name="defense" value="<?php if ($ThisShip->hasActiveIllusion()) { echo $ThisShip->getIllusion()->defenseRating; } else { ?>0<?php } ?>" size="4"></td>
+							<td>
+								<input
+									type="number"
+									class="center"
+									name="attack"
+									min="0"
+									max="<?php echo SQL_MAX_UNSIGNED_SMALLINT; ?>"
+									value="<?php if ($ThisShip->hasActiveIllusion()) { echo $ThisShip->getIllusion()->attackRating; } else { ?>0<?php } ?>"
+									size="4"
+								>
+								&nbsp;/&nbsp;
+								<input
+									type="number"
+									class="center"
+									name="defense"
+									min="0"
+									max="<?php echo SQL_MAX_UNSIGNED_SMALLINT; ?>"
+									value="<?php if ($ThisShip->hasActiveIllusion()) { echo $ThisShip->getIllusion()->defenseRating; } else { ?>0<?php } ?>"
+									size="4"
+								>
+							</td>
 						</tr>
 						<tr>
 							<td>&nbsp;</td>
