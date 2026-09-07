@@ -58,29 +58,27 @@ class NpcManageRenderer {
 					<tr>
 						<td><?php echo $accountID; ?></td><?php
 						if ($npc['player'] === null) {
-							// The form wrapping only these columns is invalid HTML, but it works for now... ?>
-							<form method="POST" action="<?php echo $npc['href']; ?>">
-								<td></td>
-								<td><input required name="player_name" value="<?php echo $npc['default_player_name']; ?>" /></td>
-								<td>
-									<select name="race_id"><?php
-										foreach (Race::getPlayableIDs() as $raceID) { ?>
-											<option value="<?php echo $raceID; ?>"><?php echo Race::getName($raceID); ?></option><?php
-										} ?>
-									</select>
-								</td>
-								<td><input name="player_alliance" value="<?php echo $npc['default_alliance']; ?>" /></td>
-								<td>
-									<select name="player_ship">
-										<option value="-1">&lt;default&gt;</option><?php
-										foreach ($ShipTypes as $shipTypeID => $shipType) { ?>
-											<option value="<?php echo $shipTypeID; ?>"><?php echo $shipType->getName(); ?></option><?php
-										} ?>
-									</select>
-								</td>
-								<td></td>
-								<td><?php echo create_submit('create_npc_player', 'Create'); ?></td>
-							</form><?php
+							$formID = 'npc-create-' . $accountID; ?>
+							<td><form id="<?php echo $formID; ?>" method="POST" action="<?php echo $npc['href']; ?>"></form></td>
+							<td><input form="<?php echo $formID; ?>" required name="player_name" value="<?php echo $npc['default_player_name']; ?>" /></td>
+							<td>
+								<select form="<?php echo $formID; ?>" name="race_id"><?php
+									foreach (Race::getPlayableIDs() as $raceID) { ?>
+										<option value="<?php echo $raceID; ?>"><?php echo Race::getName($raceID); ?></option><?php
+									} ?>
+								</select>
+							</td>
+							<td><input form="<?php echo $formID; ?>" name="player_alliance" value="<?php echo $npc['default_alliance']; ?>" /></td>
+							<td>
+								<select form="<?php echo $formID; ?>" name="player_ship">
+									<option value="-1">&lt;default&gt;</option><?php
+									foreach ($ShipTypes as $shipTypeID => $shipType) { ?>
+										<option value="<?php echo $shipTypeID; ?>"><?php echo $shipType->getName(); ?></option><?php
+									} ?>
+								</select>
+							</td>
+							<td></td>
+							<td><?php echo create_submit('create_npc_player', 'Create', fields: ['form' => $formID]); ?></td><?php
 						} else {
 							$npcPlayer = $npc['player']; ?>
 							<td class="center">
