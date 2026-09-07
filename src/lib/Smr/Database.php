@@ -98,6 +98,34 @@ class Database {
 	}
 
 	/**
+	 * Start a transaction for InnoDB operations.
+	 */
+	public function beginTransaction(): void {
+		$this->dbConn->beginTransaction();
+	}
+
+	/**
+	 * Commit the active InnoDB transaction.
+	 */
+	public function commit(): void {
+		$this->dbConn->commit();
+	}
+
+	/**
+	 * Roll back the active InnoDB transaction.
+	 */
+	public function rollBack(): void {
+		$this->dbConn->rollBack();
+	}
+
+	/**
+	 * Return whether this connection has an active InnoDB transaction.
+	 */
+	public function isTransactionActive(): bool {
+		return $this->dbConn->isTransactionActive();
+	}
+
+	/**
 	 * Perform a write-only query on the database.
 	 * Used for UPDATE, DELETE, REPLACE and INSERT queries, for example.
 	 *
@@ -156,6 +184,7 @@ class Database {
 	 * @param list<string> $returnColumns
 	 * @param list<string> $orderBy Columns to order the result by
 	 * @param list<'ASC'|'DESC'> $order Direction to order the $orderBy columns
+	 * @param ?RowLockMode $lock InnoDB row lock to hold until the transaction ends
 	 */
 	public function select(
 		string $table,
@@ -164,7 +193,11 @@ class Database {
 		array $orderBy = [],
 		array $order = [],
 		?int $limit = null,
+		?RowLockMode $lock = null,
 	): DatabaseResult {
+		if ($lock !== null && !$this->isTransactionActive()) {
+			throw new Exception('Row locks require an active transaction');
+		}
 		$query = 'SELECT ' . implode(',', $returnColumns) . ' FROM ' . $table;
 		if (count($criteria) > 0) {
 			// Create named placeholder SQL using the name of each column in the criteria
@@ -187,6 +220,9 @@ class Database {
 		}
 		if ($limit !== null) {
 			$query .= ' LIMIT ' . $limit;
+		}
+		if ($lock !== null) {
+			$query .= ' ' . $lock->value;
 		}
 		return $this->read($query, $criteria);
 	}
