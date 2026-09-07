@@ -47,7 +47,7 @@ class AnonBankDetail extends PlayerPage {
 
 		$query = 'SELECT *
 					FROM player
-					JOIN anon_bank_transactions USING (game_id, account_id)
+					JOIN anon_bank_transactions USING (game_id, player_id)
 					WHERE player.game_id = :game_id
 					AND anon_bank_transactions.anon_id = :anon_id';
 		$sqlParams = [
@@ -76,7 +76,7 @@ class AnonBankDetail extends PlayerPage {
 			$showHREF = new self($account_num)->href();
 
 			foreach ($dbResult->records() as $dbRecord) {
-				$transactionPlayer = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
+				$transactionPlayer = Player::getPlayer($dbRecord->getInt('player_id'), dbRecord: $dbRecord);
 				$transaction = $dbRecord->getString('transaction');
 				$amount = number_format($dbRecord->getInt('amount'));
 				$transactions[$dbRecord->getInt('transaction_id')] = [

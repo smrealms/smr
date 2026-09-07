@@ -33,29 +33,29 @@ class NewsReadAdvancedProcessor extends AccountPageProcessor {
 		$db = Database::getInstance();
 		if ($submit === $this->actionSearchPlayer->value) {
 			$playerName = Request::get('playerName');
-			$dbResult = $db->read('SELECT account_id FROM player WHERE player_name LIKE :player_name_like AND game_id = :game_id', [
+			$dbResult = $db->read('SELECT player_id FROM player WHERE player_name LIKE :player_name_like AND game_id = :game_id', [
 				'player_name_like' => $db->escapeString('%' . $playerName . '%'),
 				'game_id' => $db->escapeNumber($this->gameID),
 			]);
 			$IDs = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$IDs[] = $dbRecord->getInt('account_id');
+				$IDs[] = $dbRecord->getInt('player_id');
 			}
-			$container = new NewsReadAdvanced($this->gameID, $submit, label: $playerName, accountIDs: $IDs);
+			$container = new NewsReadAdvanced($this->gameID, $submit, label: $playerName, playerIDs: $IDs);
 		} elseif ($submit === $this->actionSearchPlayers->value) {
 			$playerName1 = Request::get('player1');
 			$playerName2 = Request::get('player2');
-			$dbResult = $db->read('SELECT account_id FROM player WHERE (player_name LIKE :player_name_like_1 OR player_name LIKE :player_name_like_2) AND game_id = :game_id', [
+			$dbResult = $db->read('SELECT player_id FROM player WHERE (player_name LIKE :player_name_like_1 OR player_name LIKE :player_name_like_2) AND game_id = :game_id', [
 				'player_name_like_1' => $db->escapeString('%' . $playerName1 . '%'),
 				'player_name_like_2' => $db->escapeString('%' . $playerName2 . '%'),
 				'game_id' => $db->escapeNumber($this->gameID),
 			]);
 			$IDs = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$IDs[] = $dbRecord->getInt('account_id');
+				$IDs[] = $dbRecord->getInt('player_id');
 			}
 			$label = $playerName1 . ' vs. ' . $playerName2;
-			$container = new NewsReadAdvanced($this->gameID, $submit, label: $label, accountIDs: $IDs);
+			$container = new NewsReadAdvanced($this->gameID, $submit, label: $label, playerIDs: $IDs);
 		} elseif ($submit === $this->actionSearchAlliance->value) {
 			$allianceID = Request::getInt('allianceID');
 			$container = new NewsReadAdvanced($this->gameID, $submit, allianceIDs: [$allianceID]);

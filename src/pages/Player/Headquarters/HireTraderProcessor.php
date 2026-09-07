@@ -10,7 +10,7 @@ class HireTraderProcessor extends PlayerPageProcessor {
 
 	public function __construct(
 		private readonly int $locationID,
-		private readonly int $npcAccountID,
+		private readonly int $npcPlayerID,
 		private readonly int $hireCost,
 	) {}
 
@@ -22,10 +22,10 @@ class HireTraderProcessor extends PlayerPageProcessor {
 		$player->decreaseCredits($this->hireCost);
 
 		// Leave NPC alliance and join player's alliance (this should be locked)
-		$npc = Player::getPlayer($this->npcAccountID, $player->getGameID());
+		$npc = Player::getPlayer($this->npcPlayerID);
 		$npcAlliance = $npc->getAlliance();
 		if ($npcAlliance->getNumMembers() === 1) {
-			$npcAlliance->setLeaderID(0);
+			$npcAlliance->setLeaderPlayerID(0);
 			$npcAlliance->update();
 		}
 		$npc->leaveAlliance();

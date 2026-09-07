@@ -46,10 +46,10 @@ class AllianceBank extends PlayerPage {
 		}
 
 		$dbResult = $db->read('SELECT transaction, sum(amount) as total FROM alliance_bank_transactions
-					WHERE ' . Alliance::SQL . ' AND payee_id = :payee_id
+					WHERE ' . Alliance::SQL . ' AND player_id = :player_id
 					GROUP BY transaction', [
 			...$alliance->SQLID,
-			'payee_id' => $db->escapeNumber($player->getAccountID()),
+			'player_id' => $db->escapeNumber($player->getPlayerID()),
 		]);
 		$playerTrans = ['Deposit' => 0, 'Payment' => 0];
 		foreach ($dbResult->records() as $dbRecord) {
@@ -79,10 +79,10 @@ class AllianceBank extends PlayerPage {
 		} else {
 			$dbResult = $db->read('SELECT IFNULL(sum(amount), 0) as total FROM alliance_bank_transactions
 						WHERE ' . Alliance::SQL . '
-						AND payee_id = :payee_id AND transaction = \'Payment\' AND exempt = 0
+						AND player_id = :player_id AND transaction = \'Payment\' AND exempt = 0
 						AND time > :one_day_ago', [
 				...$alliance->SQLID,
-				'payee_id' => $db->escapeNumber($player->getAccountID()),
+				'player_id' => $db->escapeNumber($player->getPlayerID()),
 				'one_day_ago' => $db->escapeNumber(Epoch::time() - 86400),
 			]);
 			$totalWithdrawn = $dbResult->record()->getInt('total');
@@ -119,7 +119,7 @@ class AllianceBank extends PlayerPage {
 			$trans = $dbRecord->getString('transaction');
 			$bankTransactions[$index] = [
 				'Time' => $dbRecord->getInt('time'),
-				'Player' => Player::getPlayer($dbRecord->getInt('payee_id'), $player->getGameID()),
+				'Player' => Player::getPlayer($dbRecord->getInt('player_id')),
 				'Reason' => $dbRecord->getString('reason'),
 				'TransactionType' => $trans,
 				'Withdrawal' => $trans === 'Payment' ? number_format($dbRecord->getInt('amount')) : '',

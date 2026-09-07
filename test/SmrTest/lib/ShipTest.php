@@ -558,7 +558,7 @@ class ShipTest extends TestCase {
 		$player = $this->createMock(Player::class);
 		$player
 			->expects(self::atLeastOnce())
-			->method('getAccountID')
+			->method('getPlayerID')
 			->willReturn(999); // value doesn't matter
 		$player
 			->expects(self::atLeastOnce())

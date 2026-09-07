@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Player;
 
+use Exception;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
@@ -12,8 +13,12 @@ class AllianceLeadershipProcessor extends PlayerPageProcessor {
 	public function build(Player $player): never {
 		$alliance = $player->getAlliance();
 
-		$leader_id = Request::getInt('leader_id');
-		$alliance->setLeaderID($leader_id);
+		$leaderPlayerID = Request::getInt('leader_player_id');
+		$leaderPlayer = Player::getPlayer($leaderPlayerID);
+		if (!$player->sameAlliance($leaderPlayer)) {
+			throw new Exception('Cannot make a player from another alliance its leader.');
+		}
+		$alliance->setLeaderPlayerID($leaderPlayerID);
 		$alliance->update();
 
 		$db = Database::getInstance();
@@ -29,15 +34,14 @@ class AllianceLeadershipProcessor extends PlayerPageProcessor {
 			'player_has_alliance_role',
 			['role_id' => ALLIANCE_ROLE_LEADER],
 			[
-				'account_id' => $leader_id,
-				'game_id' => $player->getGameID(),
+				'player_id' => $leaderPlayerID,
 				'alliance_id' => $player->getAllianceID(),
 			],
 		);
 
 		// Notify the new leader
 		$playerMessage = 'You are now the leader of ' . $alliance->getAllianceBBLink() . '!';
-		$player->sendMessageFromAllianceCommand($leader_id, $playerMessage);
+		$player->sendMessageFromAllianceCommand($leaderPlayerID, $playerMessage);
 
 		new AllianceRoster()->go();
 	}

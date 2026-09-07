@@ -27,7 +27,7 @@ class AccountEdit extends AccountPage {
 		$editingPlayers = [];
 		$dbResult = $db->select('player', $curr_account->SQLID, orderBy: ['game_id']);
 		foreach ($dbResult->records() as $dbRecord) {
-			$editingPlayers[] = Player::getPlayer($curr_account->getAccountID(), $dbRecord->getInt('game_id'), false, $dbRecord);
+			$editingPlayers[] = Player::getPlayer($dbRecord->getInt('player_id'), dbRecord: $dbRecord);
 		}
 
 		$banReasons = [];

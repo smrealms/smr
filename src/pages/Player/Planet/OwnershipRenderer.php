@@ -21,8 +21,8 @@ class OwnershipRenderer {
 				<?php echo $ProcessingPage->actionTakeOwnership->html(); ?>
 			</form><?php
 		} else {
-			if ($Planet->getOwnerID() !== $ThisPlayer->getAccountID()) { ?>
-				<p><?php echo Player::getPlayer($Planet->getOwnerID(), $Planet->getGameID())->getLinkedDisplayName(false); ?> owns this planet.</p>
+			if ($Planet->getOwnerPlayerID() !== $ThisPlayer->getPlayerID()) { ?>
+				<p><?php echo Player::getPlayer($Planet->getOwnerPlayerID())->getLinkedDisplayName(false); ?> owns this planet.</p>
 				<p>
 					You can claim the planet when you enter the correct password.<?php
 					if ($PlayerPlanet !== null) { ?>

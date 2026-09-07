@@ -15,14 +15,14 @@ use Smr\SectorLock;
 class AttackForcesProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $ownerAccountID,
+		private readonly int $ownerPlayerID,
 		private readonly bool $bump = false,
 	) {}
 
 	public function build(Player $player): never {
 		$ship = $player->getShip();
 
-		$forces = Force::getForce($player->getGameID(), $player->getSectorID(), $this->ownerAccountID);
+		$forces = Force::getForce($player->getGameID(), $player->getSectorID(), $this->ownerPlayerID);
 		$forceOwner = $forces->getOwner();
 
 		if ($player->hasNewbieTurns()) {
@@ -103,7 +103,7 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 		$totalDamage = 0;
 		foreach ($attackers as $attacker) {
 			$playerResults = $attacker->getShip()->shootForces($forces);
-			$attackerResults[$attacker->getAccountID()] = $playerResults;
+			$attackerResults[$attacker->getPlayerID()] = $playerResults;
 			$totalDamage += $playerResults->getTotalDamage();
 		}
 
@@ -125,9 +125,9 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 			'type' => 'FORCE',
 			'sector_id' => $forces->getSectorID(),
 			'timestamp' => Epoch::time(),
-			'attacker_id' => $player->getAccountID(),
+			'attacker_player_id' => $player->getPlayerID(),
 			'attacker_alliance_id' => $player->getAllianceID(),
-			'defender_id' => $forceOwner->getAccountID(),
+			'defender_player_id' => $forceOwner->getPlayerID(),
 			'defender_alliance_id' => $forceOwner->getAllianceID(),
 			'result' => $db->escapeObject($results, true),
 		]);
@@ -146,12 +146,12 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 
 		// If player or target is dead there is no continue attack button
 		if ($player->isDead() || !$forces->exists()) {
-			$displayOwnerID = 0;
+			$displayOwnerPlayerID = 0;
 		} else {
-			$displayOwnerID = $forces->getOwnerID();
+			$displayOwnerPlayerID = $forces->getOwnerPlayerID();
 		}
 
-		$container = new AttackForces($displayOwnerID, $results, $player->isDead());
+		$container = new AttackForces($displayOwnerPlayerID, $results, $player->isDead());
 		$container->go();
 	}
 

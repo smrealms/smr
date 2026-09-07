@@ -142,11 +142,11 @@ class AccountEditProcessor extends AccountPageProcessor {
 			$actions[] = 'added the exception ' . $except;
 		}
 
-		foreach ($names as $game_id => $new_name) {
+		foreach ($names as $playerID => $new_name) {
 			if ($new_name === '') {
 				continue;
 			}
-			$editPlayer = Player::getPlayer($account_id, $game_id);
+			$editPlayer = Player::getPlayer($playerID);
 
 			try {
 				$editPlayer->changePlayerName($new_name);
@@ -159,23 +159,25 @@ class AccountEditProcessor extends AccountPageProcessor {
 			$actions[] = 'changed player name to ' . $editPlayer->getDisplayName();
 
 			//insert news message
-			$news = 'Please be advised that player ' . $editPlayer->getPlayerID() . ' has had their name changed to ' . $editPlayer->getBBLink();
+			$news = 'Please be advised that player ' . $editPlayer->getPlayerNumber() . ' has had their name changed to ' . $editPlayer->getBBLink();
 
 			$db->insert('news', [
 				'time' => Epoch::time(),
 				'news_message' => $news,
-				'game_id' => $game_id,
+				'game_id' => $editPlayer->getGameID(),
 				'type' => 'admin',
-				'killer_id' => $account_id,
+				'killer_player_id' => $playerID,
 			]);
 		}
 
-		foreach ($delete as $game_id => $value) {
+		foreach ($delete as $playerID => $value) {
 			if ($value === 'TRUE') {
+				$editPlayer = Player::getPlayer($playerID);
+
 				// Check for bank transactions into the alliance account
 				$dbResult = $db->select(
 					'alliance_bank_transactions',
-					['payee_id' => $account_id, 'game_id' => $game_id],
+					['player_id' => $playerID],
 					limit: 1,
 				);
 				if ($dbResult->hasRecord()) {
@@ -184,37 +186,28 @@ class AccountEditProcessor extends AccountPageProcessor {
 					continue;
 				}
 
-				$sqlParams = [
-					'account_id' => $db->escapeNumber($account_id),
-					'game_id' => $db->escapeNumber($game_id),
-				];
-
 				// Check anon accounts for transactions
-				$dbResult = $db->select('anon_bank_transactions', $sqlParams, limit: 1);
+				$dbResult = $db->select('anon_bank_transactions', $editPlayer->SQLID, limit: 1);
 				if ($dbResult->hasRecord()) {
 					// Can't delete
 					$actions[] = 'player has made anonymous transaction';
 					continue;
 				}
 
-				$db->delete('alliance_thread', [
-					'sender_id' => $account_id,
-					'game_id' => $game_id,
-				]);
-				$db->delete('bounty', $sqlParams);
-				$db->delete('galactic_post_applications', $sqlParams);
+				$db->delete('alliance_thread', $editPlayer->SQLID);
+				$db->delete('bounty', $editPlayer->SQLID);
+				$db->delete('galactic_post_applications', $editPlayer->SQLID);
 				$db->delete('galactic_post_article', [
-					'writer_id' => $account_id,
-					'game_id' => $game_id,
+					'writer_player_id' => $playerID,
 				]);
-				$db->delete('galactic_post_writer', $sqlParams);
-				$db->delete('message', $sqlParams);
+				$db->delete('galactic_post_writer', $editPlayer->SQLID);
+				$db->delete('message', $editPlayer->SQLID);
 				$db->write('DELETE FROM message_notify
-							WHERE (from_id = :account_id OR to_id = :account_id) AND game_id = :game_id', $sqlParams);
+							WHERE (from_player_id = :player_id OR to_player_id = :player_id)', $editPlayer->SQLID);
 				$db->update(
 					'planet',
 					[
-						'owner_id' => 0,
+						'owner_player_id' => 0,
 						'planet_name' => '',
 						'password' => '',
 						'shields' => 0,
@@ -222,35 +215,40 @@ class AccountEditProcessor extends AccountPageProcessor {
 						'credits' => 0,
 						'bonds' => 0,
 					],
+					['owner_player_id' => $playerID],
+				);
+				$db->delete('player_attacks_planet', $editPlayer->SQLID);
+				$db->delete('player_attacks_port', $editPlayer->SQLID);
+				$db->delete('player_has_alliance_role', $editPlayer->SQLID);
+				$db->delete('player_has_drinks', $editPlayer->SQLID);
+				$db->delete('player_has_relation', $editPlayer->SQLID);
+				$db->delete('player_has_notes', $editPlayer->SQLID);
+				$db->delete('player_has_ticker', $editPlayer->SQLID);
+				$db->delete('player_has_ticket', $editPlayer->SQLID);
+				$db->delete('player_has_unread_messages', $editPlayer->SQLID);
+				$db->delete('player_plotted_course', $editPlayer->SQLID);
+				$db->delete('player_read_thread', $editPlayer->SQLID);
+				$db->delete('player_stored_sector', $editPlayer->SQLID);
+				$db->delete('player_visited_sector', $editPlayer->SQLID);
+				$db->delete('player_votes_pact', $editPlayer->SQLID);
+				$db->delete('player_votes_relation', $editPlayer->SQLID);
+				$db->delete('ship_has_cargo', $editPlayer->SQLID);
+				$db->delete('ship_has_hardware', $editPlayer->SQLID);
+				$db->delete('ship_has_illusion', $editPlayer->SQLID);
+				$db->delete('ship_has_name', $editPlayer->SQLID);
+				$db->delete('ship_has_weapon', $editPlayer->SQLID);
+				$db->delete('ship_is_cloaked', $editPlayer->SQLID);
+				$db->delete('player', $editPlayer->SQLID);
+
+				$db->update(
+					'active_session',
+					['game_id' => 0],
 					[
-						'owner_id' => $account_id,
-						'game_id' => $game_id,
+						'account_id' => $account_id,
+						'game_id' => $editPlayer->getGameID(),
 					],
 				);
-				$db->delete('player_attacks_planet', $sqlParams);
-				$db->delete('player_attacks_port', $sqlParams);
-				$db->delete('player_has_alliance_role', $sqlParams);
-				$db->delete('player_has_drinks', $sqlParams);
-				$db->delete('player_has_relation', $sqlParams);
-				$db->delete('player_has_ticker', $sqlParams);
-				$db->delete('player_has_ticket', $sqlParams);
-				$db->delete('player_has_unread_messages', $sqlParams);
-				$db->delete('player_plotted_course', $sqlParams);
-				$db->delete('player_read_thread', $sqlParams);
-				$db->delete('player_visited_port', $sqlParams);
-				$db->delete('player_visited_sector', $sqlParams);
-				$db->delete('player_votes_pact', $sqlParams);
-				$db->delete('player_votes_relation', $sqlParams);
-				$db->delete('ship_has_cargo', $sqlParams);
-				$db->delete('ship_has_hardware', $sqlParams);
-				$db->delete('ship_has_illusion', $sqlParams);
-				$db->delete('ship_has_weapon', $sqlParams);
-				$db->delete('ship_is_cloaked', $sqlParams);
-				$db->delete('player', $sqlParams);
-
-				$db->update('active_session', ['game_id' => 0], $sqlParams);
-
-				$actions[] = 'deleted player from game ' . $game_id;
+				$actions[] = 'deleted player from game ' . $editPlayer->getGameID();
 			}
 		}
 

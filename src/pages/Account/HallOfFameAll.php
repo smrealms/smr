@@ -56,7 +56,7 @@ class HallOfFameAll extends AccountPage {
 			// Rankings page
 			$categories = null;
 			$db = Database::getInstance();
-			$gameIDSql = ' AND IF(:game_id IS NULL, game_id IN (SELECT game_id FROM game WHERE end_time < :now AND ignore_stats = \'FALSE\'), game_id = :game_id)';
+			$gameIDSql = ' AND IF(:game_id IS NULL, player_hof.game_id IN (SELECT game_id FROM game WHERE end_time < :now AND ignore_stats = \'FALSE\'), player_hof.game_id = :game_id)';
 			$gameIDParams = [
 				'game_id' => $game_id,
 				'now' => Epoch::time(),
@@ -70,13 +70,13 @@ class HallOfFameAll extends AccountPage {
 							GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25');
 			} elseif ($viewType === HOF_TYPE_USER_SCORE) {
 				$statements = Account::getUserScoreCaseStatement();
-				$query = 'SELECT account_id, ' . $statements['CASE'] . ' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN (:hof_types)' . $gameIDSql . ' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25';
+				$query = 'SELECT account_id, ' . $statements['CASE'] . ' amount FROM (SELECT player.account_id, type, SUM(amount) amount FROM player_hof JOIN player USING (player_id) WHERE type IN (:hof_types)' . $gameIDSql . ' GROUP BY player.account_id,type) x GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25';
 				$dbResult = $db->read($query, [
 					'hof_types' => $db->escapeArray($statements['IN']),
 					...$gameIDParams,
 				]);
 			} else {
-				$dbResult = $db->read('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type = :hof_type ' . $gameIDSql . ' GROUP BY account_id ORDER BY amount DESC, account_id ASC LIMIT 25', [
+				$dbResult = $db->read('SELECT player.account_id,SUM(amount) amount FROM player_hof JOIN player USING (player_id) WHERE type = :hof_type ' . $gameIDSql . ' GROUP BY player.account_id ORDER BY amount DESC, account_id ASC LIMIT 25', [
 					'hof_type' => $db->escapeString($viewType),
 					...$gameIDParams,
 				]);

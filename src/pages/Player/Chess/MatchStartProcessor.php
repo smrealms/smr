@@ -11,7 +11,8 @@ use Smr\Request;
 class MatchStartProcessor extends PlayerPageProcessor {
 
 	public function build(Player $player): never {
-		$challengePlayer = Player::getPlayerByPlayerID(Request::getInt('player_id'), $player->getGameID());
+		$challengePlayerNumber = Request::getInt('player_number');
+		$challengePlayer = Player::getPlayerByPlayerNumber($challengePlayerNumber, $player->getGameID());
 		ChessGame::insertNewGame(Epoch::time(), $player, $challengePlayer);
 
 		new MatchList()->go();

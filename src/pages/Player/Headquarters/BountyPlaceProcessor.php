@@ -28,9 +28,10 @@ class BountyPlaceProcessor extends PlayerPageProcessor {
 			create_error('You must enter an amount greater than 0!');
 		}
 
+		$otherPlayer = Player::getPlayerByPlayerNumber(Request::getInt('player_number'), $player->getGameID());
 		$container = new BountyPlaceConfirm(
 			locationID: $this->locationID,
-			otherPlayerID: Request::getInt('player_id'),
+			otherPlayerID: $otherPlayer->getPlayerID(),
 			credits: $amount,
 			smrCredits: $smrCredits,
 		);

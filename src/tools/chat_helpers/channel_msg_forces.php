@@ -14,8 +14,8 @@ function shared_channel_msg_forces(Player $player, ?string $option = null): arra
 		$dbResult = $db->read('SELECT sector_has_forces.sector_id AS sector, expire_time
 			FROM sector_has_forces
 			WHERE game_id = :game_id
-				AND owner_id IN (
-					SELECT account_id FROM player
+				AND owner_player_id IN (
+					SELECT player_id FROM player
 					WHERE game_id = :game_id
 					AND alliance_id = :alliance_id
 				)
@@ -33,8 +33,8 @@ function shared_channel_msg_forces(Player $player, ?string $option = null): arra
 			FROM sector_has_forces
 			WHERE game_id = :game_id
 				AND sector_id IN (:sector_ids)
-				AND owner_id IN (
-					SELECT account_id FROM player
+				AND owner_player_id IN (
+					SELECT player_id FROM player
 					WHERE game_id = :game_id
 					AND alliance_id = :alliance_id
 				)
@@ -62,8 +62,8 @@ function shared_channel_msg_forces(Player $player, ?string $option = null): arra
 					LEFT JOIN sector USING (sector_id, game_id)
 					WHERE sector_has_forces.game_id = :game_id
 						AND galaxy_id = :galaxy_id
-						AND owner_id IN (
-							SELECT account_id FROM player
+						AND owner_player_id IN (
+							SELECT player_id FROM player
 							WHERE game_id = :game_id
 								AND alliance_id = :alliance_id
 						)

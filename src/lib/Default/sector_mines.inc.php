@@ -36,7 +36,7 @@ function hit_sector_mines(Player $player): void {
 		$container = new CurrentSector(message: $msg);
 		$container->go();
 	} else {
-		$container = new AttackForcesProcessor($forcesHit->getOwnerID(), bump: true);
+		$container = new AttackForcesProcessor($forcesHit->getOwnerPlayerID(), bump: true);
 		$container->go();
 	}
 

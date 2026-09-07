@@ -41,6 +41,7 @@ class AllianceMessageBoardView extends PlayerPage {
 		$db = Database::getInstance();
 		$db->replace('player_read_thread', [
 			...$player->SQLID,
+			'game_id' => $player->getGameID(),
 			'alliance_id' => $alliance->getAllianceID(),
 			'thread_id' => $thread_id,
 			'time' => Epoch::time() + 2,
@@ -79,8 +80,8 @@ class AllianceMessageBoardView extends PlayerPage {
 		$thread['AllianceEyesOnly'] = $this->allianceEyesOnly[$thread_index];
 		//for report type (system sent) messages
 		$players = [
-			ACCOUNT_ID_PLANET => 'Planet Reporter',
-			ACCOUNT_ID_BANK_REPORTER => 'Bank Reporter',
+			PLAYER_ID_PLANET => 'Planet Reporter',
+			PLAYER_ID_BANK_REPORTER => 'Bank Reporter',
 		];
 		$dbResult = $db->read('SELECT player.*
 					FROM player
@@ -91,11 +92,11 @@ class AllianceMessageBoardView extends PlayerPage {
 			'thread_id' => $db->escapeNumber($thread_id),
 		]);
 		foreach ($dbResult->records() as $dbRecord) {
-			$accountID = $dbRecord->getInt('account_id');
-			$players[$accountID] = Player::getPlayer($accountID, $player->getGameID(), false, $dbRecord)->getLinkedDisplayName(false);
+			$playerID = $dbRecord->getInt('player_id');
+			$players[$playerID] = Player::getPlayer($playerID, dbRecord: $dbRecord)->getLinkedDisplayName(false);
 		}
 
-		$dbResult = $db->read('SELECT mb_messages FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE ' . Player::SQL . ' AND alliance_id = :alliance_id LIMIT 1', [
+		$dbResult = $db->read('SELECT mb_messages FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE player_id = :player_id AND alliance_id = :alliance_id LIMIT 1', [
 			...$player->SQLID,
 			'alliance_id' => $db->escapeNumber($alliance->getAllianceID()),
 		]);
@@ -104,7 +105,7 @@ class AllianceMessageBoardView extends PlayerPage {
 		$dbResult = $db->select(
 			'alliance_thread',
 			[...$alliance->SQLID, 'thread_id' => $thread_id],
-			['text', 'sender_id', 'time', 'reply_id'],
+			['text', 'player_id', 'time', 'reply_id'],
 		);
 
 		$thread['CanDelete'] = $dbResult->getNumRecords() > 1 && $thread['CanDelete'];
@@ -112,7 +113,7 @@ class AllianceMessageBoardView extends PlayerPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$replyID = $dbRecord->getInt('reply_id');
 			$thread['Replies'][$replyID] = [
-				'Sender' => $players[$dbRecord->getInt('sender_id')],
+				'Sender' => $players[$dbRecord->getInt('player_id')],
 				'Message' => $dbRecord->getString('text'),
 				'SendTime' => $dbRecord->getInt('time'),
 			];

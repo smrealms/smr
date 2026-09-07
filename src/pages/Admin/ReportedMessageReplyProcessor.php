@@ -16,9 +16,8 @@ class ReportedMessageReplyProcessor extends AccountPageProcessor {
 	public readonly Submit $actionPreview;
 
 	public function __construct(
-		private readonly int $gameID,
-		private readonly int $offenderAccountID,
-		private readonly int $offendedAccountID,
+		private readonly int $offenderPlayerID,
+		private readonly int $offendedPlayerID,
 	) {
 		$this->actionSend = new Submit(self::ACTION, 'Send messages');
 		$this->actionPreview = new Submit(self::ACTION, 'Preview messages');
@@ -31,9 +30,8 @@ class ReportedMessageReplyProcessor extends AccountPageProcessor {
 		$offendedBanPoints = Request::getInt('offendedBanPoints');
 		if (Request::get(self::ACTION) === $this->actionPreview->value) {
 			$container = new ReportedMessageReply(
-				offenderAccountID: $this->offenderAccountID,
-				offendedAccountID: $this->offendedAccountID,
-				gameID: $this->gameID,
+				offenderPlayerID: $this->offenderPlayerID,
+				offendedPlayerID: $this->offendedPlayerID,
 				offenderPreview: $offenderReply,
 				offenderBanPoints: $offenderBanPoints,
 				offendedPreview: $offendedReply,
@@ -43,24 +41,26 @@ class ReportedMessageReplyProcessor extends AccountPageProcessor {
 		}
 
 		if ($offenderReply !== '') {
-			Player::sendMessageFromAdmin($this->gameID, $this->offenderAccountID, $offenderReply);
+			$offenderPlayer = Player::getPlayer($this->offenderPlayerID);
+			Player::sendMessageFromAdmin($this->offenderPlayerID, $offenderReply);
 
 			//do we have points?
 			if ($offenderBanPoints > 0) {
 				$suspicion = 'Inappropriate In-Game Message';
-				$offenderAccount = Account::getAccount($this->offenderAccountID);
+				$offenderAccount = $offenderPlayer->getAccount();
 				$offenderAccount->addPoints($offenderBanPoints, $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
 			}
 		}
 
 		if ($offendedReply !== '') {
 			//next message
-			Player::sendMessageFromAdmin($this->gameID, $this->offendedAccountID, $offendedReply);
+			$offendedPlayer = Player::getPlayer($this->offendedPlayerID);
+			Player::sendMessageFromAdmin($this->offendedPlayerID, $offendedReply);
 
 			//do we have points?
 			if ($offendedBanPoints > 0) {
 				$suspicion = 'Inappropriate In-Game Message';
-				$offendedAccount = Account::getAccount($this->offendedAccountID);
+				$offendedAccount = $offendedPlayer->getAccount();
 				$offendedAccount->addPoints($offendedBanPoints, $account, BAN_REASON_BAD_BEHAVIOR, $suspicion);
 			}
 		}

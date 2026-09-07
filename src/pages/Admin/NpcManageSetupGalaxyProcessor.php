@@ -40,7 +40,7 @@ class NpcManageSetupGalaxyProcessor extends AccountPageProcessor {
 				$force = Force::getForce(
 					gameID: $this->selectedGameID,
 					sectorID: $sector->getSectorID(),
-					ownerID: $player->getAccountID(),
+					ownerPlayerID: $player->getPlayerID(),
 				);
 				$force->setForcesToMax();
 				$force->setExpire($expireTime);
@@ -52,7 +52,7 @@ class NpcManageSetupGalaxyProcessor extends AccountPageProcessor {
 		$sectors = array_filter($galaxy->getSectors(), fn($sector) => !$sector->hasPlanet());
 		$planetSector = array_rand_value($sectors);
 		$planet = $planetSector->createPlanet(PlanetType::TYPE_OUTPOST, inhabitableTime: 0);
-		$planet->setOwnerID($alliance->getLeaderID());
+		$planet->setOwnerPlayerID($alliance->getLeaderPlayerID());
 		$planet->setName($alliance->getAllianceName() . ' Stronghold');
 		$planet->setBuildingsToMax();
 		$planet->setDefensesToMax();

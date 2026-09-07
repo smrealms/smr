@@ -42,12 +42,12 @@ class ManageDraftLeaders extends AccountPage {
 			$dbResult = $db->select(
 				'draft_leaders',
 				['game_id' => $selectedGameID],
-				['account_id', 'home_sector_id'],
+				['player_id', 'home_sector_id'],
 			);
 			$currentLeaders = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$homeSectorID = $dbRecord->getInt('home_sector_id');
-				$leader = Player::getPlayer($dbRecord->getInt('account_id'), $selectedGameID);
+				$leader = Player::getPlayer($dbRecord->getInt('player_id'));
 				$currentLeaders[] = [
 					'Name' => $leader->getDisplayName(),
 					'HomeSectorID' => $homeSectorID === 0 ? 'None' : $homeSectorID,

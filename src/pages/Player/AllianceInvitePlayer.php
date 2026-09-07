@@ -25,7 +25,7 @@ class AllianceInvitePlayer extends PlayerPage {
 			$container = new AllianceInviteCancelProcessor($invite);
 
 			$invited = $invite->getReceiver();
-			$pendingInvites[$invited->getAccountID()] = [
+			$pendingInvites[$invited->getPlayerID()] = [
 				'invited' => $invited->getDisplayName(true),
 				'invited_by' => $invite->getSender()->getDisplayName(),
 				'expires' => format_time($invite->getExpires() - Epoch::time(), true),
@@ -48,8 +48,11 @@ class AllianceInvitePlayer extends PlayerPage {
 				'npc' => $db->escapeBoolean(false),
 			]);
 			foreach ($dbResult->records() as $dbRecord) {
-				$invitePlayer = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), false, $dbRecord);
-				if (array_key_exists($invitePlayer->getAccountID(), $pendingInvites)) {
+				$invitePlayer = Player::getPlayer(
+					playerID: $dbRecord->getInt('player_id'),
+					dbRecord: $dbRecord,
+				);
+				if (array_key_exists($invitePlayer->getPlayerID(), $pendingInvites)) {
 					// Don't display players we've already invited
 					continue;
 				}

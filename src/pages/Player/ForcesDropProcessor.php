@@ -11,7 +11,7 @@ use Smr\Request;
 class ForcesDropProcessor extends PlayerPageProcessor {
 
 	public function __construct(
-		private readonly int $ownerAccountID,
+		private readonly int $ownerPlayerID,
 		private readonly ?int $dropMines = null,
 		private readonly ?int $takeMines = null,
 		private readonly ?int $dropCDs = null,
@@ -49,7 +49,7 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 		$change_combat_drones = $drop_combat_drones - $take_combat_drones;
 		$change_scout_drones = $drop_scout_drones - $take_scout_drones;
 
-		$forces = Force::getForce($player->getGameID(), $player->getSectorID(), $this->ownerAccountID);
+		$forces = Force::getForce($player->getGameID(), $player->getSectorID(), $this->ownerPlayerID);
 
 		// check max on that stack
 		$at_max = false;
@@ -170,7 +170,7 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 		}
 
 		// message to send out
-		if ($forces->getOwnerID() !== $player->getAccountID() && $forces->getOwner()->isForceDropMessages()) {
+		if ($forces->getOwnerPlayerID() !== $player->getPlayerID() && $forces->getOwner()->isForceDropMessages()) {
 			$msgParts = [];
 			if ($change_mines > 0) {
 				$msgParts[] = 'added ' . pluralise($change_mines, 'mine');
@@ -213,7 +213,12 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 
 			$message .= ' your stack in sector ' . Globals::getSectorBBLink($forces->getSectorID());
 
-			$player->sendMessage($forces->getOwnerID(), MSG_SCOUT, $message, false);
+			$player->sendMessage(
+				receiverPlayerID: $forces->getOwnerPlayerID(),
+				messageTypeID: MSG_SCOUT,
+				message: $message,
+				canBeIgnored: false,
+			);
 		}
 
 		$player->log(LOG_TYPE_FORCES, $change_combat_drones . ' combat drones, ' . $change_scout_drones . ' scout drones, ' . $change_mines . ' mines');

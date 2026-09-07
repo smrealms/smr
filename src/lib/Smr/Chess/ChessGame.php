@@ -3,7 +3,6 @@
 namespace Smr\Chess;
 
 use Exception;
-use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Exceptions\UserError;
@@ -19,12 +18,12 @@ class ChessGame {
 	/** @var array<int, self> */
 	protected static array $CACHE_CHESS_GAMES = [];
 
-	private readonly int $whiteID;
-	private readonly int $blackID;
+	private readonly int $whitePlayerID;
+	private readonly int $blackPlayerID;
 	private readonly int $gameID;
 	private readonly int $startDate;
 	private ?int $endDate;
-	private int $winner;
+	private int $winnerPlayerID;
 
 	private Board $board;
 	/** @var array<string> */
@@ -40,14 +39,15 @@ class ChessGame {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT chess_game_id
 					FROM npc_accounts
-					JOIN chess_game ON account_id = black_id OR account_id = white_id
+					JOIN player USING (account_id)
+					JOIN chess_game ON player.player_id = black_player_id OR player.player_id = white_player_id
 					WHERE end_time > :now OR end_time IS NULL', [
 			'now' => Epoch::time(),
 		]);
 		$games = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$game = self::getChessGame($dbRecord->getInt('chess_game_id'), $forceUpdate);
-			if ($game->getCurrentTurnAccount()->isNPC()) {
+			if ($game->getCurrentTurnPlayer()->isNPC()) {
 				$games[] = $game;
 			}
 		}
@@ -59,9 +59,8 @@ class ChessGame {
 	 */
 	public static function getOngoingPlayerGames(Player $player): array {
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT chess_game_id FROM chess_game WHERE game_id = :game_id AND (black_id = :account_id OR white_id = :account_id) AND (end_time > :now OR end_time IS NULL)', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-			'account_id' => $db->escapeNumber($player->getAccountID()),
+		$dbResult = $db->read('SELECT chess_game_id FROM chess_game WHERE (black_player_id = :player_id OR white_player_id = :player_id) AND (end_time > :now OR end_time IS NULL)', [
+			'player_id' => $db->escapeNumber($player->getPlayerID()),
 			'now' => Epoch::time(),
 		]);
 		$games = [];
@@ -88,9 +87,9 @@ class ChessGame {
 		$this->gameID = $dbRecord->getInt('game_id');
 		$this->startDate = $dbRecord->getInt('start_time');
 		$this->endDate = $dbRecord->getNullableInt('end_time');
-		$this->whiteID = $dbRecord->getInt('white_id');
-		$this->blackID = $dbRecord->getInt('black_id');
-		$this->winner = $dbRecord->getInt('winner_id');
+		$this->whitePlayerID = $dbRecord->getInt('white_player_id');
+		$this->blackPlayerID = $dbRecord->getInt('black_player_id');
+		$this->winnerPlayerID = $dbRecord->getInt('winner_player_id');
 	}
 
 	public function getBoard(): Board {
@@ -169,7 +168,7 @@ class ChessGame {
 			}
 			if (!$mate && $this->hasEnded()) {
 				if ($this->hasWinner()) {
-					$this->moves[] = ($this->getWinner() === $this->getWhiteID() ? 'Black' : 'White') . ' Resigned.';
+					$this->moves[] = $this->getColourForPlayerID($this->getWinnerPlayerID())->value . ' Resigned.';
 				} elseif (count($this->moves) < 2) {
 					$this->moves[] = 'Game Cancelled.';
 				} elseif ($draw) {
@@ -229,8 +228,8 @@ class ChessGame {
 		$db = Database::getInstance();
 		$db->insert('chess_game', [
 			'start_time' => $startDate,
-			'white_id' => $whitePlayer->getAccountID(),
-			'black_id' => $blackPlayer->getAccountID(),
+			'white_player_id' => $whitePlayer->getPlayerID(),
+			'black_player_id' => $blackPlayer->getPlayerID(),
 			'game_id' => $whitePlayer->getGameID(),
 		]);
 	}
@@ -416,7 +415,7 @@ class ChessGame {
 				$otherPlayer->increaseHOF(1, [$chessType, 'Moves', 'Check Received'], HOF_PUBLIC);
 			}
 		}
-		$otherPlayer->sendMessageFromCasino($otherPlayerMsgPrefix . ' [chess=' . $this->getChessGameID() . '] against [player=' . $currentPlayer->getPlayerID() . '].');
+		$otherPlayer->sendMessageFromCasino($otherPlayerMsgPrefix . ' [chess=' . $this->getChessGameID() . '] against ' . $currentPlayer->getBBLink() . '.');
 		$currentPlayer->saveHOF();
 		$otherPlayer->saveHOF();
 		return $message;
@@ -435,45 +434,45 @@ class ChessGame {
 	}
 
 	public function getWhitePlayer(): Player {
-		return Player::getPlayer($this->whiteID, $this->getGameID());
+		return Player::getPlayer($this->whitePlayerID);
 	}
 
-	public function getWhiteID(): int {
-		return $this->whiteID;
+	public function getWhitePlayerID(): int {
+		return $this->whitePlayerID;
 	}
 
 	public function getBlackPlayer(): Player {
-		return Player::getPlayer($this->blackID, $this->getGameID());
+		return Player::getPlayer($this->blackPlayerID);
 	}
 
-	public function getBlackID(): int {
-		return $this->blackID;
+	public function getBlackPlayerID(): int {
+		return $this->blackPlayerID;
 	}
 
-	public function getColourID(Colour $colour): int {
+	public function getColourPlayerID(Colour $colour): int {
 		return match ($colour) {
-			Colour::White => $this->getWhiteID(),
-			Colour::Black => $this->getBlackID(),
+			Colour::White => $this->getWhitePlayerID(),
+			Colour::Black => $this->getBlackPlayerID(),
 		};
 	}
 
 	public function getColourPlayer(Colour $colour): Player {
-		return Player::getPlayer($this->getColourID($colour), $this->getGameID());
+		return Player::getPlayer($this->getColourPlayerID($colour));
 	}
 
-	public function getColourForAccountID(int $accountID): Colour {
-		return match ($accountID) {
-			$this->getWhiteID() => Colour::White,
-			$this->getBlackID() => Colour::Black,
-			default => throw new Exception('Account ID is not in this chess game: ' . $accountID),
+	public function getColourForPlayerID(int $playerID): Colour {
+		return match ($playerID) {
+			$this->getWhitePlayerID() => Colour::White,
+			$this->getBlackPlayerID() => Colour::Black,
+			default => throw new Exception('Player ID is not in this chess game: ' . $playerID),
 		};
 	}
 
 	/**
-	 * Is the given account ID one of the two players of this game?
+	 * Is the given player ID one of the two players of this game?
 	 */
-	public function isPlayer(int $accountID): bool {
-		return $accountID === $this->getWhiteID() || $accountID === $this->getBlackID();
+	public function isPlayer(int $playerID): bool {
+		return $playerID === $this->getWhitePlayerID() || $playerID === $this->getBlackPlayerID();
 	}
 
 	public function hasEnded(): bool {
@@ -481,31 +480,31 @@ class ChessGame {
 	}
 
 	public function hasWinner(): bool {
-		return $this->winner !== 0;
+		return $this->winnerPlayerID !== 0;
 	}
 
-	public function getWinner(): int {
-		return $this->winner;
+	public function getWinnerPlayerID(): int {
+		return $this->winnerPlayerID;
 	}
 
 	public function setWinner(Colour $winnerColour): void {
-		$winnerAccountID = $this->getColourID($winnerColour);
-		$this->updateEndedGame($winnerAccountID);
+		$winnerPlayerID = $this->getColourPlayerID($winnerColour);
+		$this->updateEndedGame($winnerPlayerID);
 	}
 
 	public function setDraw(): void {
 		$this->updateEndedGame(0); // no winner
 	}
 
-	private function updateEndedGame(int $winnerAccountID): void {
-		$this->winner = $winnerAccountID;
+	private function updateEndedGame(int $winnerPlayerID): void {
+		$this->winnerPlayerID = $winnerPlayerID;
 		$this->endDate = Epoch::time();
 		$db = Database::getInstance();
 		$db->update(
 			'chess_game',
 			[
 				'end_time' => Epoch::time(),
-				'winner_id' => $this->winner,
+				'winner_player_id' => $this->winnerPlayerID,
 			],
 			['chess_game_id' => $this->chessGameID],
 		);
@@ -513,8 +512,8 @@ class ChessGame {
 		// Update HOF
 		$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
 		$results = [];
-		if ($this->winner !== 0) {
-			$winnerColour = $this->getColourForAccountID($this->winner);
+		if ($this->winnerPlayerID !== 0) {
+			$winnerColour = $this->getColourForPlayerID($this->winnerPlayerID);
 			$results['Won'] = [$this->getColourPlayer($winnerColour)];
 			$results['Lost'] = [$this->getColourPlayer($winnerColour->opposite())];
 		} else {
@@ -531,42 +530,30 @@ class ChessGame {
 		return $this->getBoard()->getCurrentTurnColour();
 	}
 
-	public function getCurrentTurnAccountID(): int {
+	public function getCurrentTurnPlayerID(): int {
 		return match ($this->getCurrentTurnColour()) {
-			Colour::White => $this->whiteID,
-			Colour::Black => $this->blackID,
+			Colour::White => $this->whitePlayerID,
+			Colour::Black => $this->blackPlayerID,
 		};
 	}
 
 	public function getCurrentTurnPlayer(): Player {
-		return Player::getPlayer($this->getCurrentTurnAccountID(), $this->getGameID());
+		return Player::getPlayer($this->getCurrentTurnPlayerID());
 	}
 
-	public function getCurrentTurnAccount(): Account {
-		return Account::getAccount($this->getCurrentTurnAccountID());
-	}
-
-	public function getWhiteAccount(): Account {
-		return Account::getAccount($this->getWhiteID());
-	}
-
-	public function getBlackAccount(): Account {
-		return Account::getAccount($this->getBlackID());
-	}
-
-	public function isCurrentTurn(int $accountID): bool {
-		return $accountID === $this->getCurrentTurnAccountID();
+	public function isCurrentTurn(int $playerID): bool {
+		return $playerID === $this->getCurrentTurnPlayerID();
 	}
 
 	public function isNPCGame(): bool {
-		return $this->getWhiteAccount()->isNPC() || $this->getBlackAccount()->isNPC();
+		return $this->getWhitePlayer()->isNPC() || $this->getBlackPlayer()->isNPC();
 	}
 
 	/**
 	 * @return self::END_*
 	 */
-	public function resign(int $accountID): int {
-		if ($this->hasEnded() || !$this->isPlayer($accountID)) {
+	public function resign(int $playerID): int {
+		if ($this->hasEnded() || !$this->isPlayer($playerID)) {
 			throw new Exception('Invalid resign conditions');
 		}
 
@@ -582,7 +569,7 @@ class ChessGame {
 			return self::END_CANCEL;
 		}
 
-		$loserColour = $this->getColourForAccountID($accountID);
+		$loserColour = $this->getColourForPlayerID($playerID);
 		$winnerColour = $loserColour->opposite();
 		$this->setWinner($winnerColour);
 
@@ -590,7 +577,7 @@ class ChessGame {
 		$winnerPlayer = $this->getColourPlayer($winnerColour);
 		$loserPlayer = $this->getColourPlayer($loserColour);
 		$loserPlayer->increaseHOF(1, [$chessType, 'Games', 'Resigned'], HOF_PUBLIC);
-		$winnerPlayer->sendMessageFromCasino('[player=' . $loserPlayer->getPlayerID() . '] just resigned against you in [chess=' . $this->getChessGameID() . '].');
+		$winnerPlayer->sendMessageFromCasino($loserPlayer->getBBLink() . ' just resigned against you in [chess=' . $this->getChessGameID() . '].');
 		return self::END_RESIGN;
 	}
 

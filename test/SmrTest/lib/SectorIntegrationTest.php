@@ -41,7 +41,7 @@ class SectorIntegrationTest extends BaseIntegrationSpec {
 	public function test_getCachedPortOrNull(): void {
 		$sector = Sector::createSector(1, 1);
 		$player = $this->createStub(Player::class);
-		$player->method('getAccountID')->willReturn(1);
+		$player->method('getPlayerID')->willReturn(1);
 
 		// Returns null when no port in sector
 		self::assertNull($sector->getCachedPortOrNull($player));
@@ -52,7 +52,7 @@ class SectorIntegrationTest extends BaseIntegrationSpec {
 		$port->addPortGood(GOODS_ORE, TransactionType::Sell);
 		$port->addCachePort(1);
 		$player = $this->createStub(Player::class);
-		$player->method('getAccountID')->willReturn(1);
+		$player->method('getPlayerID')->willReturn(1);
 
 		$cachedPort = $sector->getCachedPortOrNull($player);
 		self::assertNotNull($cachedPort);

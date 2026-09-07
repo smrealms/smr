@@ -482,7 +482,7 @@ class Account {
 		if (!isset($this->HOF)) {
 			//Get Player HOF
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT type,sum(amount) as amount FROM player_hof WHERE ' . self::SQL . ' AND game_id IN (SELECT game_id FROM game WHERE ignore_stats = \'FALSE\') GROUP BY type', $this->SQLID);
+			$dbResult = $db->read('SELECT type,sum(amount) as amount FROM player_hof JOIN player USING (player_id) WHERE player.account_id = :account_id AND player_hof.game_id IN (SELECT game_id FROM game WHERE ignore_stats = \'FALSE\') GROUP BY type', $this->SQLID);
 			$this->HOF = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$this->HOF[$dbRecord->getString('type')] = $dbRecord->getFloat('amount');
@@ -1393,25 +1393,17 @@ class Account {
 			'admin_id' => $admin->getAccountID(),
 			'action' => 'Closed',
 		]);
-		$db->update(
-			'player',
-			['newbie_turns' => 1],
-			[
-				...$this->SQLID,
-				'newbie_turns' => 0,
-				'land_on_planet' => 'FALSE',
-			],
-		);
 
-		$dbResult = $db->read('SELECT game_id FROM game JOIN player USING (game_id)
+		$dbResult = $db->read('SELECT player.* FROM game JOIN player USING (game_id)
 						WHERE ' . self::SQL . '
 						AND end_time >= :now', [
 			...$this->SQLID,
 			'now' => $db->escapeNumber(Epoch::time()),
 		]);
 		foreach ($dbResult->records() as $dbRecord) {
-			$player = Player::getPlayer($this->getAccountID(), $dbRecord->getInt('game_id'));
-			$player->updateTurns();
+			$player = Player::getPlayer($dbRecord->getInt('player_id'), dbRecord: $dbRecord);
+			$player->setNewbieTurns(1);
+			$player->setLandedOnPlanet(false);
 			$player->update();
 		}
 		$this->log(LOG_TYPE_ACCOUNT_CHANGES, 'Account closed by ' . $admin->getLogin() . '.');

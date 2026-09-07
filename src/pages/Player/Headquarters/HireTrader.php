@@ -31,7 +31,7 @@ class HireTrader extends PlayerPage {
 				$hireCost = self::BASE_HIRE_COST + 10 * $npc->getExperience();
 				$container = new HireTraderProcessor(
 					locationID: $this->locationID,
-					npcAccountID: $npc->getAccountID(),
+					npcPlayerID: $npc->getPlayerID(),
 					hireCost: $hireCost,
 				);
 				$npcs[] = [

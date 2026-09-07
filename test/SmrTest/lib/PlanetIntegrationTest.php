@@ -63,7 +63,7 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 		$targetSectorID = 2;
 		$planet = Planet::createPlanet($gameID, $origSectorID, typeID: 3, inhabitableTime: 5);
 		$planet->setName('NPC planet');
-		$planet->setOwnerID(7);
+		$planet->setOwnerPlayerID(7);
 		$planet->setCredits(100);
 		$planet->setBuilding(PLANET_GENERATOR, 2);
 		$planet->update();
@@ -91,7 +91,7 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 		self::assertFalse(Planet::getPlanet($gameID, $origSectorID)->exists());
 		self::assertTrue($movedPlanet->exists());
 		self::assertSame('NPC planet', $movedPlanet->getDisplayName());
-		self::assertSame(7, $movedPlanet->getOwnerID());
+		self::assertSame(7, $movedPlanet->getOwnerPlayerID());
 		self::assertSame(100, $movedPlanet->getCredits());
 		self::assertSame(3, $movedPlanet->getTypeID());
 		self::assertSame(5, $movedPlanet->getInhabitableTime());
@@ -138,18 +138,18 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 		// Check default owner
 		$planet = Planet::createPlanet(1, 1, 1, 1);
 		self::assertFalse($planet->hasOwner());
-		self::assertSame(0, $planet->getOwnerID());
+		self::assertSame(0, $planet->getOwnerPlayerID());
 
 		// Set a new owner
 		$ownerID = 3;
-		$planet->setOwnerID($ownerID);
+		$planet->setOwnerPlayerID($ownerID);
 		self::assertTrue($planet->hasOwner());
-		self::assertSame($ownerID, $planet->getOwnerID());
+		self::assertSame($ownerID, $planet->getOwnerPlayerID());
 
 		// Remove the owner again
 		$planet->removeOwner();
 		self::assertFalse($planet->hasOwner());
-		self::assertSame(0, $planet->getOwnerID());
+		self::assertSame(0, $planet->getOwnerPlayerID());
 	}
 
 	public function test_password(): void {

@@ -109,8 +109,8 @@ function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $defau
 				if ($action === BBCode::BBCODE_CHECK) {
 					return is_numeric($default);
 				}
-				$playerID = (int)$default;
-				$bbPlayer = Player::getPlayerByPlayerID($playerID, $overrideGameID);
+				$playerNumber = (int)$default;
+				$bbPlayer = Player::getPlayerByPlayerNumber($playerNumber, $overrideGameID);
 				$showAlliance = isset($tagParams['showalliance']) ? parseBoolean($tagParams['showalliance']) : false;
 				if ($linked) {
 					return $bbPlayer->getLinkedDisplayName($showAlliance);
@@ -558,7 +558,11 @@ function getDisplayTickers(Template $template, Player $player, Database $db): ?a
 						WHERE ' . Player::SQL . '
 						AND message_type_id = :message_type_id
 						AND send_time >= :max_time
-						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type = :type AND expires > :now AND game_id = :game_id) AND receiver_delete = \'FALSE\'
+						AND sender_player_id NOT IN (
+							SELECT player_id
+							FROM player_has_ticker
+							WHERE type = :type AND expires > :now
+						) AND receiver_delete = \'FALSE\'
 						ORDER BY send_time DESC
 						LIMIT 4', [
 				...$player->SQLID,
@@ -605,17 +609,17 @@ function getSkeletonData(Template $template): SkeletonData {
 		$ship = $player->getShip();
 		$var = $session->getCurrentVar();
 		$dropMineLink = $ship->hasMines() ?
-			new ForcesDropProcessor($accountID, referrer: $var::class, dropMines: 1)->href() : null;
+			new ForcesDropProcessor($player->getPlayerID(), referrer: $var::class, dropMines: 1)->href() : null;
 		$dropCDLink = $ship->hasCDs() ?
-			new ForcesDropProcessor($accountID, referrer: $var::class, dropCDs: 1)->href() : null;
+			new ForcesDropProcessor($player->getPlayerID(), referrer: $var::class, dropCDs: 1)->href() : null;
 		$dropSDLink = $ship->hasSDs() ?
-			new ForcesDropProcessor($accountID, referrer: $var::class, dropSDs: 1)->href() : null;
+			new ForcesDropProcessor($player->getPlayerID(), referrer: $var::class, dropSDs: 1)->href() : null;
 
 		$rightPanelData = new RightPanelData(
 			player: $player,
 			underAttack: $var->showUnderAttack($player, $session->ajax),
 			unreadMessages: $unreadMessages,
-			playerNameLink: new SearchForTraderResult($player->getPlayerID())->href(),
+			playerNameLink: new SearchForTraderResult($player->getPlayerNumber())->href(),
 			hardwareLink: new HardwareConfigure()->href(),
 			forcesDropLink: new ForcesDrop()->href(),
 			cargoJettisonLink: new CargoDump()->href(),

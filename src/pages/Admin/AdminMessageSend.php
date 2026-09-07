@@ -17,7 +17,7 @@ class AdminMessageSend extends AccountPage {
 		private ?int $sendGameID = null,
 		private readonly ?string $preview = null,
 		private readonly float $expireHours = 0.5,
-		private readonly int $sendAccountID = 0,
+		private readonly int $sendPlayerID = 0,
 	) {}
 
 	public function build(Account $account, Template $template): void {
@@ -28,17 +28,17 @@ class AdminMessageSend extends AccountPage {
 
 		if ($gameID !== self::ALL_GAMES_ID) {
 			$game = Game::getGame($gameID);
-			$gamePlayers = [['AccountID' => 0, 'Name' => 'All Players (' . $game->getName() . ')']];
+			$gamePlayers = [['PlayerID' => 0, 'Name' => 'All Players (' . $game->getName() . ')']];
 			$db = Database::getInstance();
 			$dbResult = $db->select(
 				'player',
 				['game_id' => $gameID],
-				['account_id', 'player_id', 'player_name'],
+				['player_id', 'player_name'],
 				orderBy: ['player_name'],
 			);
 			foreach ($dbResult->records() as $dbRecord) {
 				$gamePlayers[] = [
-					'AccountID' => $dbRecord->getInt('account_id'),
+					'PlayerID' => $dbRecord->getInt('player_id'),
 					'Name' => htmlentities($dbRecord->getString('player_name')) . ' (' . $dbRecord->getInt('player_id') . ')',
 				];
 			}
@@ -51,7 +51,7 @@ class AdminMessageSend extends AccountPage {
 			MessageGameID: $gameID,
 			ExpireTime: $this->expireHours,
 			GamePlayers: $gamePlayers,
-			SelectedAccountID: $this->sendAccountID,
+			SelectedPlayerID: $this->sendPlayerID,
 			Preview: $this->preview,
 			BackHREF: new AdminMessageSendSelect()->href(),
 		);

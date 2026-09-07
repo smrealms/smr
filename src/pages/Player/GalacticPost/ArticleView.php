@@ -28,7 +28,7 @@ class ArticleView extends PlayerPage {
 		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$title = $dbRecord->getString('title');
-			$writer = Player::getPlayer($dbRecord->getInt('writer_id'), $player->getGameID());
+			$writer = Player::getPlayer($dbRecord->getInt('writer_player_id'));
 			$container = new self($dbRecord->getInt('article_id'));
 			$articles[] = [
 				'title' => $title,

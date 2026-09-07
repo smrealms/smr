@@ -32,7 +32,7 @@ class AllianceBankReport extends PlayerPage {
 		$trans = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$transType = ($dbRecord->getString('transaction') === 'Payment') ? self::WITHDRAW : self::DEPOSIT;
-			$payeeId = ($dbRecord->getInt('exempt')) ? 0 : $dbRecord->getInt('payee_id');
+			$payeeId = ($dbRecord->getInt('exempt')) ? 0 : $dbRecord->getInt('player_id');
 			// initialize payee if necessary
 			if (!isset($trans[$payeeId])) {
 				$trans[$payeeId] = [self::WITHDRAW => 0, self::DEPOSIT => 0];
@@ -47,14 +47,14 @@ class AllianceBankReport extends PlayerPage {
 			$totals[$accId] = $transArray[self::DEPOSIT] - $transArray[self::WITHDRAW];
 		}
 		arsort($totals, SORT_NUMERIC);
-		$dbResult = $db->read('SELECT * FROM player WHERE account_id IN (:account_ids) AND game_id = :game_id', [
-			'account_ids' => $db->escapeArray($playerIDs),
-			'game_id' => $db->escapeNumber($player->getGameID()),
+		$dbResult = $db->read('SELECT * FROM player WHERE player_id IN (:player_ids)', [
+			'player_ids' => $db->escapeArray($playerIDs),
 		]);
 		$players = [0 => 'Alliance Funds'];
 		foreach ($dbResult->records() as $dbRecord) {
-			$recordPlayer = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), dbRecord: $dbRecord);
-			$players[$recordPlayer->getAccountID()] = $recordPlayer->getDisplayName(colorByAlignment: false);
+			$recordPlayerID = $dbRecord->getInt('player_id');
+			$recordPlayer = Player::getPlayer($recordPlayerID, dbRecord: $dbRecord);
+			$players[$recordPlayerID] = $recordPlayer->getDisplayName(colorByAlignment: false);
 		}
 
 		//format it this way so its easy to send to the alliance MB if requested.

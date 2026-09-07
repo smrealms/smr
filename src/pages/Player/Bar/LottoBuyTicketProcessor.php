@@ -36,13 +36,13 @@ class LottoBuyTicketProcessor extends PlayerPageProcessor {
 
 		$db->insert('player_has_ticket', [
 			'game_id' => $player->getGameID(),
-			'account_id' => $player->getAccountID(),
+			'player_id' => $player->getPlayerID(),
 			'time' => $time,
 		]);
 		$player->decreaseCredits(Lotto::TICKET_COST);
 		$player->increaseHOF(Lotto::TICKET_COST, ['Bar', 'Lotto', 'Money', 'Spent'], HOF_PUBLIC);
 		$player->increaseHOF(1, ['Bar', 'Lotto', 'Tickets Bought'], HOF_PUBLIC);
-		$dbResult = $db->read('SELECT count(*) as num FROM player_has_ticket WHERE ' . Player::SQL . ' AND time > 0 GROUP BY account_id', $player->SQLID);
+		$dbResult = $db->read('SELECT count(*) as num FROM player_has_ticket WHERE ' . Player::SQL . ' AND time > 0', $player->SQLID);
 		$num = $dbResult->record()->getInt('num');
 		$message = ('<div class="center">Thanks for your purchase and good luck!  You currently');
 		$message .= (' own ' . pluralise($num, 'ticket') . '!</div><br />');

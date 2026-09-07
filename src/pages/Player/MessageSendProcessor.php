@@ -16,7 +16,7 @@ class MessageSendProcessor extends PlayerPageProcessor {
 	public readonly Submit $actionPreview;
 
 	public function __construct(
-		private readonly ?int $receiverAccountID = null,
+		private readonly ?int $receiverPlayerID = null,
 		private readonly ?int $allianceID = null,
 	) {
 		$this->actionSend = new Submit(self::ACTION, 'send');
@@ -30,7 +30,7 @@ class MessageSendProcessor extends PlayerPageProcessor {
 			if ($this->allianceID !== null) {
 				$container = new AllianceBroadcast($this->allianceID, $message);
 			} else {
-				$container = new MessageSend($this->receiverAccountID, $message);
+				$container = new MessageSend($this->receiverPlayerID, $message);
 			}
 			$container->go();
 		}
@@ -41,20 +41,35 @@ class MessageSendProcessor extends PlayerPageProcessor {
 
 		if ($this->allianceID !== null) {
 			$db = Database::getInstance();
-			$dbResult = $db->read('SELECT account_id FROM player
+			$dbResult = $db->read('SELECT player_id FROM player
 						WHERE game_id = :game_id
 						AND alliance_id = :alliance_id
-						AND account_id != :account_id', [ //No limit in case they are over limit - ie NHA
+						AND player_id != :player_id', [ //No limit in case they are over limit - ie NHA
 				'game_id' => $db->escapeNumber($player->getGameID()),
 				'alliance_id' => $this->allianceID,
-				'account_id' => $db->escapeNumber($player->getAccountID()),
+				'player_id' => $db->escapeNumber($player->getPlayerID()),
 			]);
 			foreach ($dbResult->records() as $dbRecord) {
-				$player->sendMessage($dbRecord->getInt('account_id'), MSG_ALLIANCE, $message, false);
+				$player->sendMessage(
+					receiverPlayerID: $dbRecord->getInt('player_id'),
+					messageTypeID: MSG_ALLIANCE,
+					message: $message,
+					canBeIgnored: false,
+				);
 			}
-			$player->sendMessage($player->getAccountID(), MSG_ALLIANCE, $message, true, false);
-		} elseif ($this->receiverAccountID !== null) {
-			$player->sendMessage($this->receiverAccountID, MSG_PLAYER, $message);
+			$player->sendMessage(
+				receiverPlayerID: $player->getPlayerID(),
+				messageTypeID: MSG_ALLIANCE,
+				message: $message,
+				canBeIgnored: true,
+				unread: false,
+			);
+		} elseif ($this->receiverPlayerID !== null) {
+			$player->sendMessage(
+				receiverPlayerID: $this->receiverPlayerID,
+				messageTypeID: MSG_PLAYER,
+				message: $message,
+			);
 		} else {
 			$player->sendGlobalMessage($message);
 		}

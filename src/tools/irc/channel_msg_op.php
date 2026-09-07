@@ -185,6 +185,8 @@ function channel_msg_op_response($fp, Message $msg, Player $player): bool {
 
 		$db->replace('alliance_has_op_response', [
 			...$player->SQLID,
+			'player_id' => $player->getPlayerID(),
+			'game_id' => $player->getGameID(),
 			'alliance_id' => $player->getAllianceID(),
 			'response' => $response,
 		]);

@@ -22,10 +22,13 @@ function shared_channel_msg_op_list(Player $player): array {
 	$dbResult = $db->select(
 		'alliance_has_op_response',
 		$player->getAlliance()->SQLID,
-		['account_id', 'response'],
+		['player_id', 'response'],
 	);
 	foreach ($dbResult->records() as $dbRecord) {
-		$respondingPlayer = Player::getPlayer($dbRecord->getInt('account_id'), $player->getGameID(), true);
+		$respondingPlayer = Player::getPlayer(
+			playerID: $dbRecord->getInt('player_id'),
+			forceUpdate: true,
+		);
 		// check that the player is still in this alliance
 		if (!$player->sameAlliance($respondingPlayer)) {
 			continue;

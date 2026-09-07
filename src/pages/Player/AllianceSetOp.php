@@ -47,7 +47,7 @@ class AllianceSetOp extends PlayerPage {
 			OpDate: $opDate,
 			OpCountdown: $opCountdown,
 			OpProcessingHREF: new AllianceSetOpProcessor($cancel)->href(),
-			FlagshipID: $alliance->getFlagshipID(),
+			FlagshipPlayerID: $alliance->getFlagshipPlayerID(),
 			AlliancePlayers: $alliance->getMembers(includeNpc: false),
 			FlagshipHREF: new AllianceSetFlagshipProcessor()->href(),
 		);

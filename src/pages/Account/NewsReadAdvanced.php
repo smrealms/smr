@@ -14,14 +14,14 @@ class NewsReadAdvanced extends AccountPage {
 
 	use ReusableTrait;
 	/**
-	 * @param array<int> $accountIDs
+	 * @param array<int> $playerIDs
 	 * @param array<int> $allianceIDs
 	 */
 	public function __construct(
 		private readonly int $gameID,
 		private readonly ?string $submit = null,
 		private readonly ?string $label = null,
-		private readonly array $accountIDs = [],
+		private readonly array $playerIDs = [],
 		private readonly array $allianceIDs = [],
 	) {}
 
@@ -43,27 +43,24 @@ class NewsReadAdvanced extends AccountPage {
 
 		if ($submit_value === $processor->actionSearchPlayer->value) {
 			$resultsFor = $this->label;
-			$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND (killer_id IN (:account_ids) OR dead_id IN (:account_ids)) ORDER BY news_id DESC', [
-				'game_id' => $db->escapeNumber($gameID),
-				'account_ids' => $db->escapeArray($this->accountIDs),
+			$dbResult = $db->read('SELECT * FROM news WHERE killer_player_id IN (:player_ids) OR dead_player_id IN (:player_ids) ORDER BY news_id DESC', [
+				'player_ids' => $db->escapeArray($this->playerIDs),
 			]);
 		} elseif ($submit_value === $processor->actionSearchAlliance->value) {
 			$allianceID = $this->allianceIDs[0];
 			$resultsFor = $newsAlliances[$allianceID];
-			$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND ((killer_alliance = :alliance_id AND killer_id != :account_id_port) OR (dead_alliance = :alliance_id AND dead_id != :account_id_port)) ORDER BY news_id DESC', [
+			$dbResult = $db->read('SELECT * FROM news WHERE game_id = :game_id AND ((killer_alliance = :alliance_id AND killer_player_id != :player_id_port) OR (dead_alliance = :alliance_id AND dead_player_id != :player_id_port)) ORDER BY news_id DESC', [
 				'game_id' => $db->escapeNumber($gameID),
-				'account_id_port' => $db->escapeNumber(ACCOUNT_ID_PORT),
+				'player_id_port' => $db->escapeNumber(PLAYER_ID_PORT),
 				'alliance_id' => $db->escapeNumber($allianceID),
 			]);
 		} elseif ($submit_value === $processor->actionSearchPlayers->value) {
 			$resultsFor = $this->label;
 			$dbResult = $db->read('SELECT * FROM news
-						WHERE game_id = :game_id
-							AND (
-								killer_id IN (:account_ids) AND dead_id IN (:account_ids)
+						WHERE (
+								killer_player_id IN (:player_ids) AND dead_player_id IN (:player_ids)
 							) ORDER BY news_id DESC', [
-				'game_id' => $db->escapeNumber($gameID),
-				'account_ids' => $db->escapeArray($this->accountIDs),
+				'player_ids' => $db->escapeArray($this->playerIDs),
 			]);
 		} elseif ($submit_value === $processor->actionSearchAlliances->value) {
 			$allianceID1 = $this->allianceIDs[0];

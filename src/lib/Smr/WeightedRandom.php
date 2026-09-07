@@ -14,7 +14,7 @@ namespace Smr;
  */
 class WeightedRandom {
 
-	/** @var array<int, array<int, array<string, array<int, self>>>> */
+	/** @var array<int, array<string, array<int, self>>> */
 	protected static array $CACHE_RANDOMS = [];
 
 	protected const int WEIGHTING_CHANGE = 50; // as a percent
@@ -26,35 +26,37 @@ class WeightedRandom {
 	/**
 	 * @param 'Weapon'|'PortWeapon'|'PlanetWeapon' $type
 	 */
-	public static function getWeightedRandom(int $gameID, int $accountID, string $type, int $typeID, bool $forceUpdate = false): self {
-		if ($forceUpdate || !isset(self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID])) {
-			self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID] = new self($gameID, $accountID, $type, $typeID);
+	public static function getWeightedRandom(int $playerID, string $type, int $typeID, bool $forceUpdate = false): self {
+		if ($forceUpdate || !isset(self::$CACHE_RANDOMS[$playerID][$type][$typeID])) {
+			self::$CACHE_RANDOMS[$playerID][$type][$typeID] = new self($playerID, $type, $typeID);
 		}
-		return self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID];
+		return self::$CACHE_RANDOMS[$playerID][$type][$typeID];
 	}
 
 	/**
 	 * @param 'Weapon'|'PlanetWeapon'|'PortWeapon' $type
 	 */
 	public static function getWeightedRandomForPlayer(Player $player, string $type, int $typeID, bool $forceUpdate = false): self {
-		return self::getWeightedRandom($player->getGameID(), $player->getAccountID(), $type, $typeID, $forceUpdate);
+		return self::getWeightedRandom(
+			playerID: $player->getPlayerID(),
+			type: $type,
+			typeID: $typeID,
+			forceUpdate: $forceUpdate,
+		);
 	}
 
 	public static function saveWeightedRandoms(): void {
-		foreach (self::$CACHE_RANDOMS as $gameRandoms) {
-			foreach ($gameRandoms as $accountRandoms) {
-				foreach ($accountRandoms as $typeRandoms) {
-					foreach ($typeRandoms as $random) {
-						$random->update();
-					}
+		foreach (self::$CACHE_RANDOMS as $playerRandoms) {
+			foreach ($playerRandoms as $typeRandoms) {
+				foreach ($typeRandoms as $random) {
+					$random->update();
 				}
 			}
 		}
 	}
 
 	protected function __construct(
-		protected readonly int $gameID,
-		protected readonly int $accountID,
+		protected readonly int $playerID,
 		protected readonly string $type,
 		protected readonly int $typeID,
 	) {
@@ -62,8 +64,7 @@ class WeightedRandom {
 		$dbResult = $db->select(
 			'weighted_random',
 			[
-				'game_id' => $gameID,
-				'account_id' => $accountID,
+				'player_id' => $playerID,
 				'type' => $type,
 				'type_id' => $typeID,
 			],
@@ -76,12 +77,8 @@ class WeightedRandom {
 		}
 	}
 
-	public function getGameID(): int {
-		return $this->gameID;
-	}
-
-	public function getAccountID(): int {
-		return $this->accountID;
+	public function getPlayerID(): int {
+		return $this->playerID;
 	}
 
 	public function getType(): string {
@@ -123,8 +120,8 @@ class WeightedRandom {
 		if ($this->hasChanged === true) {
 			$db = Database::getInstance();
 			$db->replace('weighted_random', [
-				'game_id' => $this->getGameID(),
-				'account_id' => $this->getAccountID(),
+				'player_id' => $this->getPlayerID(),
+				'game_id' => Player::getPlayer($this->getPlayerID())->getGameID(),
 				'type' => $this->getType(),
 				'type_id' => $this->getTypeID(),
 				'weighting' => $this->getWeighting(),

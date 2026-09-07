@@ -25,7 +25,7 @@ class AnonBankCreateProcessor extends PlayerPageProcessor {
 		$db->insert('anon_bank', [
 			'game_id' => $player->getGameID(),
 			'anon_id' => $nextID,
-			'owner_id' => $player->getAccountID(),
+			'owner_player_id' => $player->getPlayerID(),
 			'password' => $password,
 			'amount' => 0,
 		]);

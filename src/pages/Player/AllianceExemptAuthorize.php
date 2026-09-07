@@ -33,7 +33,7 @@ class AllianceExemptAuthorize extends PlayerPage {
 		$transactions = [];
 		if ($dbResult->hasRecord()) {
 			foreach ($dbResult->records() as $dbRecord) {
-				$recPlayer = Player::getPlayer($dbRecord->getInt('payee_id'), $player->getGameID());
+				$recPlayer = Player::getPlayer($dbRecord->getInt('player_id'));
 				$transactions[] = [
 					'type' => $dbRecord->getString('transaction') === 'Payment' ? 'Withdraw' : 'Deposit',
 					'player' => $recPlayer->getDisplayName(),

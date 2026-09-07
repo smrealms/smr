@@ -21,7 +21,7 @@ class ManageDraftLeadersRenderer {
 		ManageDraftLeadersProcessor $ProcessingPage,
 	): void {
 		?>
-			<p>Specify the Game and Player ID to assign or remove a Draft Leader.</p>
+			<p>Specify the Game and Player number to assign or remove a Draft Leader.</p>
 
 			Select Game:&nbsp;
 			<form class="standard" id="SelectGameForm" method="POST" action="<?php echo $SelectGameHREF; ?>">
@@ -38,11 +38,11 @@ class ManageDraftLeadersRenderer {
 			<form method="POST" action="<?php echo $ProcessingPage->href(); ?>">
 				<table>
 					<tr>
-						<td>Player ID:</td>
+						<td>Player number:</td>
 						<td>Home Sector ID (optional):</td>
 					</tr>
 					<tr>
-						<td><input required type="number" name="player_id" class="center"></td>
+						<td><input required type="number" name="player_number" class="center"></td>
 						<td><input type="number" name="home_sector_id" class="center"></td>
 					</tr>
 					<tr>

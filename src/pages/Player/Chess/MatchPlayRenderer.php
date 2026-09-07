@@ -2,7 +2,6 @@
 
 namespace Smr\Pages\Player\Chess;
 
-use Smr\Account;
 use Smr\Chess\ChessGame;
 use Smr\Chess\Loc;
 use Smr\Pages\Shared\ChessMovesRenderer;
@@ -24,7 +23,6 @@ class MatchPlayRenderer {
 		array $FileCoords,
 		string $MoveMessage,
 		string $ChessMoveHREF,
-		Account $ThisAccount,
 		Player $ThisPlayer,
 	): void {
 		?>
@@ -75,7 +73,7 @@ class MatchPlayRenderer {
 			<tr>
 				<td id="chessMsg" class="ajax"><p><?php echo $MoveMessage; ?></p></td>
 				<td id="chessButtons" class="ajax"><?php
-					if (!$ChessGame->hasEnded() && $ChessGame->isPlayer($ThisPlayer->getAccountID())) {
+					if (!$ChessGame->hasEnded() && $ChessGame->isPlayer($ThisPlayer->getPlayerID())) {
 						?><div class="buttonA"><a class="buttonA" href="<?php echo $ChessGame->getResignHREF(); ?>"><?php if (count($ChessGame->getMoves()) < 2) { ?>Cancel Game<?php } else { ?>Resign<?php } ?></a></div><?php
 					} ?>
 				</td>
@@ -84,8 +82,8 @@ class MatchPlayRenderer {
 
 		<script><?php
 			$AvailableMoves = array_pad([], count($Board), []);
-			if ($ChessGame->isCurrentTurn($ThisAccount->getAccountID())) {
-				$Colour = $ChessGame->getColourForAccountID($ThisAccount->getAccountID());
+			if ($ChessGame->isCurrentTurn($ThisPlayer->getPlayerID())) {
+				$Colour = $ChessGame->getColourForPlayerID($ThisPlayer->getPlayerID());
 				foreach ($ChessGame->getBoard()->getPieces($Colour) as $Piece) {
 					$Moves = [];
 					foreach ($Piece->getPossibleMoves($ChessGame->getBoard()) as $Move) {

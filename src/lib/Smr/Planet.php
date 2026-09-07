@@ -38,7 +38,7 @@ class Planet implements NormalCombatantInterface {
 
 	protected bool $exists = false;
 	protected string $planetName;
-	protected int $ownerID;
+	protected int $ownerPlayerID;
 	protected string $password;
 	protected int $shields;
 	protected int $armour;
@@ -70,7 +70,7 @@ class Planet implements NormalCombatantInterface {
 	protected bool $hasBeenAttackedByWeapon = false;
 
 	public function __sleep() {
-		return ['sectorID', 'gameID', 'planetName', 'ownerID', 'typeID'];
+		return ['sectorID', 'gameID', 'planetName', 'ownerPlayerID', 'typeID'];
 	}
 
 	public static function clearCache(): void {
@@ -213,7 +213,7 @@ class Planet implements NormalCombatantInterface {
 		if ($dbRecord !== null) {
 			$this->exists = true;
 			$this->planetName = $dbRecord->getString('planet_name');
-			$this->ownerID = $dbRecord->getInt('owner_id');
+			$this->ownerPlayerID = $dbRecord->getInt('owner_player_id');
 			$this->password = $dbRecord->getString('password');
 			$this->shields = $dbRecord->getInt('shields');
 			$this->armour = $dbRecord->getInt('armour');
@@ -297,28 +297,28 @@ class Planet implements NormalCombatantInterface {
 		return Galaxy::getGalaxyContaining($this->getGameID(), $this->getSectorID());
 	}
 
-	public function getOwnerID(): int {
-		return $this->ownerID;
+	public function getOwnerPlayerID(): int {
+		return $this->ownerPlayerID;
 	}
 
 	public function hasOwner(): bool {
-		return $this->ownerID !== 0;
+		return $this->ownerPlayerID !== 0;
 	}
 
 	public function removeOwner(): void {
-		$this->setOwnerID(0);
+		$this->setOwnerPlayerID(0);
 	}
 
-	public function setOwnerID(int $claimerID): void {
-		if ($this->ownerID === $claimerID) {
+	public function setOwnerPlayerID(int $ownerPlayerID): void {
+		if ($this->ownerPlayerID === $ownerPlayerID) {
 			return;
 		}
-		$this->ownerID = $claimerID;
+		$this->ownerPlayerID = $ownerPlayerID;
 		$this->hasChanged = true;
 	}
 
 	public function getOwner(): Player {
-		return Player::getPlayer($this->getOwnerID(), $this->getGameID());
+		return Player::getPlayer($this->getOwnerPlayerID());
 	}
 
 	public function getPassword(): string {
@@ -747,7 +747,7 @@ class Planet implements NormalCombatantInterface {
 				$this->currentlyBuilding[$dbRecord->getInt('building_slot_id')] = [
 					'BuildingSlotID' => $dbRecord->getInt('building_slot_id'),
 					'ConstructionID' => $dbRecord->getInt('construction_id'),
-					'ConstructorID' => $dbRecord->getInt('constructor_id'),
+					'ConstructorPlayerID' => $dbRecord->getInt('constructor_player_id'),
 					'Finishes' => $dbRecord->getInt('time_complete'),
 					'TimeRemaining' => $dbRecord->getInt('time_complete') - Epoch::time(),
 				];
@@ -758,7 +758,7 @@ class Planet implements NormalCombatantInterface {
 				if ($building['TimeRemaining'] <= 0) {
 					unset($this->currentlyBuilding[$id]);
 					$expGain = $this->getConstructionExp($building['ConstructionID']);
-					$player = Player::getPlayer($building['ConstructorID'], $this->getGameID());
+					$player = Player::getPlayer($building['ConstructorPlayerID']);
 					$player->increaseHOF(1, ['Planet', 'Buildings', 'Built'], HOF_ALLIANCE);
 					$player->increaseExperience($expGain);
 					$player->increaseHOF($expGain, ['Planet', 'Buildings', 'Experience'], HOF_ALLIANCE);
@@ -891,7 +891,7 @@ class Planet implements NormalCombatantInterface {
 			$db->update(
 				'planet',
 				[
-					'owner_id' => $this->ownerID,
+					'owner_player_id' => $this->ownerPlayerID,
 					'password' => $this->password,
 					'planet_name' => $this->planetName,
 					'shields' => $this->shields,
@@ -1087,14 +1087,14 @@ class Planet implements NormalCombatantInterface {
 			'game_id' => $this->getGameID(),
 			'sector_id' => $this->getSectorID(),
 			'construction_id' => $constructionID,
-			'constructor_id' => $constructor->getAccountID(),
+			'constructor_player_id' => $constructor->getPlayerID(),
 			'time_complete' => $timeComplete,
 		]);
 
 		$this->currentlyBuilding[$insertID] = [
 			'BuildingSlotID' => $insertID,
 			'ConstructionID' => $constructionID,
-			'ConstructorID' => $constructor->getAccountID(),
+			'ConstructorPlayerID' => $constructor->getPlayerID(),
 			'Finishes' => $timeComplete,
 			'TimeRemaining' => $timeComplete - Epoch::time(),
 		];
@@ -1197,7 +1197,7 @@ class Planet implements NormalCombatantInterface {
 			$attacker->increaseHOF(1, ['Combat', 'Planet', 'Number Of Attacks'], HOF_PUBLIC);
 			$db->replace('player_attacks_planet', [
 				'game_id' => $this->getGameID(),
-				'account_id' => $attacker->getAccountID(),
+				'player_id' => $attacker->getPlayerID(),
 				'sector_id' => $this->getSectorID(),
 				'time' => Epoch::time(),
 				'level' => $this->getLevel(),
@@ -1207,9 +1207,8 @@ class Planet implements NormalCombatantInterface {
 		// Add each unique attack to news unless it was already added recently.
 		// Note: Attack uniqueness determined by planet owner.
 		$owner = $this->getOwner();
-		$dbResult = $db->read('SELECT 1 FROM news WHERE type = \'BREAKING\' AND game_id = :game_id AND dead_id = :dead_id AND time > :news_time LIMIT 1', [
-			'game_id' => $db->escapeNumber($trigger->getGameID()),
-			'dead_id' => $db->escapeNumber($owner->getAccountID()),
+		$dbResult = $db->read('SELECT 1 FROM news WHERE type = \'BREAKING\' AND dead_player_id = :dead_player_id AND time > :news_time LIMIT 1', [
+			'dead_player_id' => $db->escapeNumber($owner->getPlayerID()),
 			'news_time' => $db->escapeNumber(Epoch::time() - self::TIME_ATTACK_NEWS_COOLDOWN),
 		]);
 		if (!$dbResult->hasRecord()) {
@@ -1225,9 +1224,9 @@ class Planet implements NormalCombatantInterface {
 					'time' => Epoch::time(),
 					'news_message' => $text,
 					'type' => 'breaking',
-					'killer_id' => $trigger->getAccountID(),
+					'killer_player_id' => $trigger->getPlayerID(),
 					'killer_alliance' => $trigger->getAllianceID(),
-					'dead_id' => $owner->getAccountID(),
+					'dead_player_id' => $owner->getPlayerID(),
 					'dead_alliance' => $owner->getAllianceID(),
 				]);
 			}
@@ -1254,7 +1253,7 @@ class Planet implements NormalCombatantInterface {
 	 */
 	public function getOtherTraders(Player $player): array {
 		$players = Player::getPlanetPlayers($this->getGameID(), $this->getSectorID()); //Do not use & because we unset something and only want that in what we return
-		unset($players[$player->getAccountID()]);
+		unset($players[$player->getPlayerID()]);
 		return $players;
 	}
 
@@ -1397,12 +1396,12 @@ class Planet implements NormalCombatantInterface {
 	public function creditCurrentAttackersForKill(): void {
 		//get all players involved for HoF
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT account_id,level FROM player_attacks_planet WHERE ' . self::SQL . ' AND time > :credit_time', [
+		$dbResult = $db->read('SELECT player_id,level FROM player_attacks_planet WHERE ' . self::SQL . ' AND time > :credit_time', [
 			...$this->SQLID,
 			'credit_time' => $db->escapeNumber(Epoch::time() - self::TIME_TO_CREDIT_BUST),
 		]);
 		foreach ($dbResult->records() as $dbRecord) {
-			$currPlayer = Player::getPlayer($dbRecord->getInt('account_id'), $this->getGameID());
+			$currPlayer = Player::getPlayer($dbRecord->getInt('player_id'));
 			$currPlayer->increaseHOF($dbRecord->getFloat('level'), ['Combat', 'Planet', 'Levels'], HOF_PUBLIC);
 			$currPlayer->increaseHOF(1, ['Combat', 'Planet', 'Completed'], HOF_PUBLIC);
 		}

@@ -20,13 +20,12 @@ class ReportedMessageView extends AccountPage {
 		$messages = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$gameID = $dbRecord->getInt('game_id');
-			$sender = Messages::getMessagePlayer($dbRecord->getInt('from_id'), $gameID);
-			$receiver = Messages::getMessagePlayer($dbRecord->getInt('to_id'), $gameID);
+			$sender = Messages::getMessagePlayer($dbRecord->getInt('from_player_id'));
+			$receiver = Messages::getMessagePlayer($dbRecord->getInt('to_player_id'));
 
 			$container = new ReportedMessageReply(
-				offenderAccountID: $dbRecord->getInt('from_id'),
-				offendedAccountID: $dbRecord->getInt('to_id'),
-				gameID: $gameID,
+				offenderPlayerID: $dbRecord->getInt('from_player_id'),
+				offendedPlayerID: $dbRecord->getInt('to_player_id'),
 			);
 
 			$getName = function(Player|string $messagePlayer) use ($container, $account): string {

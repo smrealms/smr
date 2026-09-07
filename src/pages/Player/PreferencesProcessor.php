@@ -60,7 +60,7 @@ class PreferencesProcessor extends PlayerPageProcessor {
 				'news_message' => $news,
 				'game_id' => $player->getGameID(),
 				'type' => 'admin',
-				'killer_id' => $player->getAccountID(),
+				'killer_player_id' => $player->getPlayerID(),
 			]);
 			$message = '<span class="green">SUCCESS: </span>You have changed your player name.';
 
@@ -104,7 +104,7 @@ class PreferencesProcessor extends PlayerPageProcessor {
 				'news_message' => $news,
 				'game_id' => $player->getGameID(),
 				'type' => 'admin',
-				'killer_id' => $player->getAccountID(),
+				'killer_player_id' => $player->getPlayerID(),
 			]);
 			$message = '<span class="green">SUCCESS: </span>You have changed your player race.';
 		} else {

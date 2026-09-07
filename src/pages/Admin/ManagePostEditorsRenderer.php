@@ -21,7 +21,7 @@ class ManagePostEditorsRenderer {
 		ManagePostEditorsProcessor $PostEditorPage,
 	): void {
 		?>
-		<p>Specify the Game and Player ID to assign or remove a Galactic Post editor.</p>
+		<p>Specify the Game and Player number to assign or remove a Galactic Post editor.</p>
 
 		Select Game:&nbsp;
 		<form class="standard" id="SelectGameForm" method="POST" action="<?php echo $SelectGameHREF; ?>">
@@ -35,9 +35,9 @@ class ManagePostEditorsRenderer {
 			</select>
 		</form><br />
 
-		Player ID:&nbsp;
+		Player number:&nbsp;
 		<form method="POST" action="<?php echo $PostEditorPage->href(); ?>">
-			<input type="number" name="player_id" class="center">
+			<input type="number" name="player_number" class="center">
 			<br /><br />
 			<?php echo $PostEditorPage->actionAssign->html(); ?>&nbsp;
 			<?php echo $PostEditorPage->actionRemove->html(); ?>

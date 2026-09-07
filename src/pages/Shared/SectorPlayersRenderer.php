@@ -84,7 +84,7 @@ class SectorPlayersRenderer {
 							<td class="shrink center noWrap">
 								<div class="buttonA"><?php
 						if ($ThisPlayer->isLandedOnPlanet() && $ThisPlanet !== null) {
-										if ($ThisPlanet->getOwnerID() === $ThisPlayer->getAccountID()) {
+										if ($ThisPlanet->getOwnerPlayerID() === $ThisPlayer->getPlayerID()) {
 											?><a href="<?php echo $Player->getPlanetKickHREF() ?>" class="<?php
 												echo getPlayerOptionClass($ThisPlayer, $Player);
 												?>"> Kick </a><?php

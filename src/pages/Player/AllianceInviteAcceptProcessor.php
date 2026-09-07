@@ -17,7 +17,11 @@ class AllianceInviteAcceptProcessor extends PlayerPageProcessor {
 	public function build(Player $player): never {
 		// Check that the invitation is registered in the database
 		try {
-			$invite = AllianceInvite::get($this->allianceID, $player->getGameID(), $player->getAccountID());
+			$invite = AllianceInvite::get(
+				allianceID: $this->allianceID,
+				gameID: $player->getGameID(),
+				receiverPlayerID: $player->getPlayerID(),
+			);
 		} catch (AllianceInvitationNotFound) {
 			create_error('Your invitation to join this alliance has expired or been canceled!');
 		}

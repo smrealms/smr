@@ -32,11 +32,16 @@ class AdminMessageSendProcessor extends AccountPageProcessor {
 		$action = Request::get(self::ACTION);
 		if ($action === $this->actionPreview->value) {
 			if ($game_id !== AdminMessageSend::ALL_GAMES_ID) {
-				$sendAccountID = Request::getInt('account_id');
+				$sendPlayerID = Request::getInt('player_id');
 			} else {
-				$sendAccountID = 0;
+				$sendPlayerID = 0;
 			}
-			$container = new AdminMessageSend($game_id, $message, $expire, $sendAccountID);
+			$container = new AdminMessageSend(
+				sendGameID: $game_id,
+				preview: $message,
+				expireHours: $expire,
+				sendPlayerID: $sendPlayerID,
+			);
 			$container->go();
 		}
 
@@ -50,28 +55,32 @@ class AdminMessageSendProcessor extends AccountPageProcessor {
 
 		$receivers = [];
 		if ($game_id !== AdminMessageSend::ALL_GAMES_ID) {
-			$account_id = Request::getInt('account_id');
-			if ($account_id === 0) {
+			$playerID = Request::getInt('player_id');
+			if ($playerID === 0) {
 				// Send to all players in the requested game
-				$dbResult = $db->select('player', ['game_id' => $game_id], ['account_id']);
+				$dbResult = $db->select('player', ['game_id' => $game_id], ['player_id']);
 				foreach ($dbResult->records() as $dbRecord) {
-					$receivers[] = [$game_id, $dbRecord->getInt('account_id')];
+					$receivers[] = $dbRecord->getInt('player_id');
 				}
 			} else {
-				$receivers[] = [$game_id, $account_id];
+				$receivers[] = $playerID;
 			}
 		} else {
 			//send to all players in games that haven't ended yet
-			$dbResult = $db->read('SELECT game_id,account_id FROM player JOIN game USING(game_id) WHERE end_time > :now', [
+			$dbResult = $db->read('SELECT player_id FROM player JOIN game USING(game_id) WHERE end_time > :now', [
 				'now' => $db->escapeNumber(Epoch::time()),
 			]);
 			foreach ($dbResult->records() as $dbRecord) {
-				$receivers[] = [$dbRecord->getInt('game_id'), $dbRecord->getInt('account_id')];
+				$receivers[] = $dbRecord->getInt('player_id');
 			}
 		}
 		// Send the messages
-		foreach ($receivers as $receiver) {
-			Player::sendMessageFromAdmin($receiver[0], $receiver[1], $message, $expire);
+		foreach ($receivers as $receiverPlayerID) {
+			Player::sendMessageFromAdmin(
+				receiverPlayerID: $receiverPlayerID,
+				message: $message,
+				expires: $expire,
+			);
 		}
 		$msg = '<span class="green">SUCCESS: </span>Your message has been sent.';
 

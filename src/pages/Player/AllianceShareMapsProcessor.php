@@ -12,11 +12,11 @@ class AllianceShareMapsProcessor extends PlayerPageProcessor {
 	public function build(Player $player): never {
 		// get a list of alliance member (remove current player)
 		$alliance = $player->getAlliance();
-		$memberIDs = array_keys($alliance->getMembers(includeNpc: false));
-		$alliance_ids = array_diff($memberIDs, [$player->getAccountID()]);
+		$memberPlayerIDs = array_keys($alliance->getMembers(includeNpc: false));
+		$alliancePlayerIDs = array_diff($memberPlayerIDs, [$player->getPlayerID()]);
 
 		// end here if we are alone in the alliance
-		if (count($alliance_ids) === 0) {
+		if (count($alliancePlayerIDs) === 0) {
 			create_error('Who exactly are you sharing maps with?');
 		}
 
@@ -26,11 +26,9 @@ class AllianceShareMapsProcessor extends PlayerPageProcessor {
 		$db = Database::getInstance();
 		$query = 'DELETE
 					FROM player_visited_sector
-					WHERE account_id IN (:account_ids)
-						AND game_id = :game_id';
+					WHERE player_id IN (:player_ids)';
 		$sqlParams = [
-			'account_ids' => $db->escapeArray($alliance_ids),
-			'game_id' => $db->escapeNumber($player->getGameID()),
+			'player_ids' => $db->escapeArray($alliancePlayerIDs),
 		];
 		if (count($unvisitedSectors) > 0) {
 			$sqlParams['sector_ids'] = $db->escapeArray($unvisitedSectors);
@@ -45,8 +43,12 @@ class AllianceShareMapsProcessor extends PlayerPageProcessor {
 		// get a list of all visited ports
 		$dbResult = $db->select('player_visited_port', $player->SQLID, ['sector_id']);
 		foreach ($dbResult->records() as $dbRecord) {
-			$cachedPort = Port::getCachedPort($player->getGameID(), $dbRecord->getInt('sector_id'), $player->getAccountID());
-			$cachedPort->addCachePorts($alliance_ids);
+			$cachedPort = Port::getCachedPort(
+				gameID: $player->getGameID(),
+				sectorID: $dbRecord->getInt('sector_id'),
+				playerID: $player->getPlayerID(),
+			);
+			$cachedPort->addCachePorts($alliancePlayerIDs);
 		}
 
 		new AllianceRoster()->go();

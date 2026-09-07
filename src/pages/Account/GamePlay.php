@@ -32,12 +32,12 @@ class GamePlay extends AccountPage {
 		$games = [];
 		$game_id_list = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT end_time, game_id, game_name, game_speed, game_type
+		$dbResult = $db->read('SELECT player.*, game.end_time, game.game_name, game.game_speed, game.game_type
 					FROM game JOIN player USING (game_id)
-					WHERE account_id = :account_id
-						AND enabled = \'TRUE\'
-						AND end_time >= :now
-					ORDER BY start_time, game_id DESC', [
+					WHERE player.account_id = :account_id
+						AND game.enabled = \'TRUE\'
+						AND game.end_time >= :now
+					ORDER BY game.start_time, game.game_id DESC', [
 			'account_id' => $db->escapeNumber($account->getAccountID()),
 			'now' => $db->escapeNumber(Epoch::time()),
 		]);
@@ -49,11 +49,11 @@ class GamePlay extends AccountPage {
 			$games['Play'][$game_id]['EndDate'] = date($account->getDateTimeFormatSplit(), $dbRecord->getInt('end_time'));
 			$games['Play'][$game_id]['Speed'] = $dbRecord->getFloat('game_speed');
 
-			$container = new GamePlayProcessor($game_id);
-			$games['Play'][$game_id]['PlayGameLink'] = $container->href();
-
 			// creates a new player object
-			$curr_player = Player::getPlayer($account->getAccountID(), $game_id);
+			$curr_player = Player::getPlayer($dbRecord->getInt('player_id'), dbRecord: $dbRecord);
+
+			$container = new GamePlayProcessor($curr_player->getPlayerID());
+			$games['Play'][$game_id]['PlayGameLink'] = $container->href();
 
 			// update turns for this game
 			$curr_player->updateTurns();

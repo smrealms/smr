@@ -14,23 +14,23 @@ function get_draft_teams(int $gameId): array {
 	$dbResult = $db->select(
 		'draft_leaders',
 		['game_id' => $gameId],
-		['account_id'],
+		['player_id'],
 	);
 
 	// Get team leader, alliance, and alliance size
 	$teams = [];
 	foreach ($dbResult->records() as $dbRecord) {
-		$leader = Player::getPlayer($dbRecord->getInt('account_id'), $gameId);
+		$leader = Player::getPlayer($dbRecord->getInt('player_id'));
 		if (!$leader->hasAlliance() || $leader->getAlliance()->isNHA()) {
 			// Special case for leaders who haven't made their own alliance yet,
 			// or are still in the Newbie Help Alliance.
-			$teams[$leader->getAccountID()] = [
+			$teams[$leader->getPlayerID()] = [
 				'Leader' => $leader,
 				'Size' => 0,
 			];
 		} else {
 			$alliance = $leader->getAlliance();
-			$teams[$leader->getAccountID()] = [
+			$teams[$leader->getPlayerID()] = [
 				'Leader' => $leader,
 				'Alliance' => $alliance,
 				'Size' => $alliance->getNumMembers(),

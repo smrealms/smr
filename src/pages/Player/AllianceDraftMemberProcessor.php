@@ -15,7 +15,7 @@ class AllianceDraftMemberProcessor extends PlayerPageProcessor {
 	use ReusableTrait;
 
 	public function __construct(
-		private readonly int $pickedAccountID,
+		private readonly int $pickedPlayerID,
 	) {}
 
 	public function build(Player $player): never {
@@ -23,14 +23,12 @@ class AllianceDraftMemberProcessor extends PlayerPageProcessor {
 			throw new Exception('This page is only allowed in Draft games!');
 		}
 
-		$pickedAccountID = $this->pickedAccountID;
-
 		require_once(LIB . 'Default/alliance_pick.inc.php');
 		$teams = get_draft_teams($player->getGameID());
-		if (!$teams[$player->getAccountID()]['CanPick']) {
+		if (!$teams[$player->getPlayerID()]['CanPick']) {
 			create_error('You have to wait for others to pick first.');
 		}
-		$pickedPlayer = Player::getPlayer($pickedAccountID, $player->getGameID());
+		$pickedPlayer = Player::getPlayer($this->pickedPlayerID);
 
 		if ($pickedPlayer->isDraftLeader()) {
 			create_error('You cannot pick another leader.');
@@ -59,8 +57,8 @@ class AllianceDraftMemberProcessor extends PlayerPageProcessor {
 		$db = Database::getInstance();
 		$db->insert('draft_history', [
 			'game_id' => $player->getGameID(),
-			'leader_account_id' => $player->getAccountID(),
-			'picked_account_id' => $pickedPlayer->getAccountID(),
+			'leader_player_id' => $player->getPlayerID(),
+			'picked_player_id' => $pickedPlayer->getPlayerID(),
 			'time' => Epoch::time(),
 		]);
 

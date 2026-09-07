@@ -16,7 +16,7 @@ class AllianceLeadership extends PlayerPage {
 		Menu::alliance($player->getAllianceID());
 
 		$members = $alliance->getMembers(includeNpc: false);
-		unset($members[$alliance->getLeaderID()]); // don't show current leader
+		unset($members[$alliance->getLeaderPlayerID()]); // don't show current leader
 		$template->pageRenderer = fn() => AllianceLeadershipRenderer::render(
 			$player,
 			new AllianceLeadershipProcessor()->href(),

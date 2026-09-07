@@ -67,7 +67,7 @@ class NpcManage extends AccountPage {
 		$dbResult = $db->select('npc_players', ['game_id' => $selectedGameID]);
 		$npcPlayerSettings = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$npcPlayerSettings[$dbRecord->getInt('account_id')] = [
+			$npcPlayerSettings[$dbRecord->getInt('player_id')] = [
 				'active' => $dbRecord->getBoolean('active'),
 				'working' => $dbRecord->getBoolean('working'),
 				'lock_ship' => $dbRecord->getBoolean('lock_ship'),
@@ -80,8 +80,8 @@ class NpcManage extends AccountPage {
 		);
 		$npcPlayers = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$accountID = $dbRecord->getInt('account_id');
-			$npc = Player::getPlayer($accountID, $selectedGameID, false, $dbRecord);
+			$npc = Player::getPlayer($dbRecord->getInt('player_id'), dbRecord: $dbRecord);
+			$accountID = $npc->getAccountID();
 			if (!array_key_exists($accountID, $npcs)) {
 				throw new Exception('Found NPC not associated with account!');
 			}
@@ -94,7 +94,7 @@ class NpcManage extends AccountPage {
 					($npc->hasAlliance() && $npc->getAlliance()->isNpcForHire())
 					|| $npc->isHiredNPC()
 				),
-				...$npcPlayerSettings[$accountID],
+				...$npcPlayerSettings[$npc->getPlayerID()],
 			];
 			$npcPlayers[] = $npc;
 		}

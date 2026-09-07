@@ -28,7 +28,7 @@ class ForceTest extends TestCase {
 	public function test_constructor_properties(): void {
 		self::assertSame(1, $this->force->getGameID());
 		self::assertSame(2, $this->force->getSectorID());
-		self::assertSame(3, $this->force->getOwnerID());
+		self::assertSame(3, $this->force->getOwnerPlayerID());
 	}
 
 	#[TestWith([0, false, 0])]

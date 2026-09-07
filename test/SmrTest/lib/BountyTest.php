@@ -21,12 +21,12 @@ class BountyTest extends BaseIntegrationSpec {
 
 	public function test_max_credits(): void {
 		$bounty = new Bounty(
-			targetID: 1,
+			targetPlayerID: 1,
 			bountyID: 1,
 			gameID: 1,
 			type: BountyType::UG,
 			time: 0,
-			claimerID: 0,
+			claimerPlayerID: 0,
 			credits: 0,
 			smrCredits: 0,
 		);
@@ -41,12 +41,12 @@ class BountyTest extends BaseIntegrationSpec {
 	public function test_update(): void {
 		// Calling update on a new bounty will add it to the database
 		$bounty = new Bounty(
-			targetID: 3,
+			targetPlayerID: 3,
 			bountyID: 4,
 			gameID: 5,
 			type: BountyType::UG,
 			time: 6,
-			claimerID: 0,
+			claimerPlayerID: 0,
 			credits: 8,
 			smrCredits: 9,
 		);
@@ -91,7 +91,7 @@ class BountyTest extends BaseIntegrationSpec {
 	public function test_getPlacedOnPlayer(): void {
 		// Two bounties the same, except which player they're on
 		$bounty1 = new Bounty(
-			targetID: 1,
+			targetPlayerID: 1,
 			bountyID: 7,
 			gameID: 42,
 			type: BountyType::HQ,
@@ -99,7 +99,7 @@ class BountyTest extends BaseIntegrationSpec {
 			credits: 1,
 		);
 		$bounty2 = new Bounty(
-			targetID: 2,
+			targetPlayerID: 2,
 			bountyID: 7,
 			gameID: 42,
 			type: BountyType::HQ,
@@ -113,10 +113,12 @@ class BountyTest extends BaseIntegrationSpec {
 		// Stub player (can't use default mock for enums)
 		$dbRecord = $this->createStub(DatabaseRecord::class);
 		$dbRecord->method('getStringEnum')->willReturn(ScoutMessageGroupType::Auto);
+		$dbRecord->method('getInt')->willReturnCallback(
+			fn(string $column): int => $column === 'player_id' ? 1 : 0,
+		);
 		$player1 = TestUtils::constructPrivateClass(
 			name: Player::class,
-			gameID: 42,
-			accountID: 1,
+			playerID: 1,
 			dbRecord: $dbRecord,
 		);
 
@@ -127,7 +129,7 @@ class BountyTest extends BaseIntegrationSpec {
 
 	public function test_getClaimableByPlayer(): void {
 		$bounty1 = new Bounty(
-			targetID: 2,
+			targetPlayerID: 2,
 			bountyID: 1,
 			gameID: 42,
 			type: BountyType::HQ,
@@ -136,23 +138,23 @@ class BountyTest extends BaseIntegrationSpec {
 		);
 		// Same as bounty1, except claimable by player 1
 		$bounty2 = new Bounty(
-			targetID: 2,
+			targetPlayerID: 2,
 			bountyID: 2,
 			gameID: 42,
 			type: BountyType::HQ,
 			time: 0,
 			credits: 1,
-			claimerID: 1,
+			claimerPlayerID: 1,
 		);
 		// Same as bounty1, except claimable by player 1 and for the UG
 		$bounty3 = new Bounty(
-			targetID: 2,
+			targetPlayerID: 2,
 			bountyID: 3,
 			gameID: 42,
 			type: BountyType::UG,
 			time: 0,
 			credits: 1,
-			claimerID: 1,
+			claimerPlayerID: 1,
 		);
 		// Add bounties to the database
 		$bounty1->update();
@@ -160,7 +162,7 @@ class BountyTest extends BaseIntegrationSpec {
 		$bounty3->update();
 
 		$player1 = $this->createStub(Player::class);
-		$player1->method('getAccountID')->willReturn(1);
+		$player1->method('getPlayerID')->willReturn(1);
 		$player1->method('getGameID')->willReturn(42);
 
 		$bountiesHQ = Bounty::getClaimableByPlayer($player1, BountyType::HQ);

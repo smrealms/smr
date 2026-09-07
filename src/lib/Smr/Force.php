@@ -42,8 +42,8 @@ class Force implements ForceCombatantInterface {
 	public const int MAX_CDS = 50;
 	public const int MAX_SDS = 5;
 
-	public const string SQL = 'game_id = :game_id AND sector_id = :sector_id AND owner_id = :owner_id';
-	/** @var array{game_id: int, sector_id: int, owner_id: int} */
+	public const string SQL = 'sector_id = :sector_id AND owner_player_id = :owner_player_id';
+	/** @var array{sector_id: int, owner_player_id: int} */
 	protected readonly array $SQLID;
 
 	protected int $combatDrones = 0;
@@ -55,7 +55,7 @@ class Force implements ForceCombatantInterface {
 	protected bool $hasChanged = false;
 
 	public function __sleep() {
-		return ['ownerID', 'sectorID', 'gameID'];
+		return ['ownerPlayerID', 'sectorID', 'gameID'];
 	}
 
 	public static function clearCache(): void {
@@ -85,10 +85,10 @@ class Force implements ForceCombatantInterface {
 		$galaxyForces = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$sectorID = $dbRecord->getInt('sector_id');
-			$ownerID = $dbRecord->getInt('owner_id');
-			$force = self::getForce($gameID, $sectorID, $ownerID, $forceUpdate, $dbRecord);
-			self::$CACHE_SECTOR_FORCES[$gameID][$sectorID][$ownerID] = $force;
-			$galaxyForces[$sectorID][$ownerID] = $force;
+			$ownerPlayerID = $dbRecord->getInt('owner_player_id');
+			$force = self::getForce($gameID, $sectorID, $ownerPlayerID, $forceUpdate, $dbRecord);
+			self::$CACHE_SECTOR_FORCES[$gameID][$sectorID][$ownerPlayerID] = $force;
+			$galaxyForces[$sectorID][$ownerPlayerID] = $force;
 		}
 		return $galaxyForces;
 	}
@@ -110,21 +110,21 @@ class Force implements ForceCombatantInterface {
 			);
 			$forces = [];
 			foreach ($dbResult->records() as $dbRecord) {
-				$ownerID = $dbRecord->getInt('owner_id');
-				$forces[$ownerID] = self::getForce($gameID, $sectorID, $ownerID, $forceUpdate, $dbRecord);
+				$ownerPlayerID = $dbRecord->getInt('owner_player_id');
+				$forces[$ownerPlayerID] = self::getForce($gameID, $sectorID, $ownerPlayerID, $forceUpdate, $dbRecord);
 			}
 			self::$CACHE_SECTOR_FORCES[$gameID][$sectorID] = $forces;
 		}
 		return self::$CACHE_SECTOR_FORCES[$gameID][$sectorID];
 	}
 
-	public static function getForce(int $gameID, int $sectorID, int $ownerID, bool $forceUpdate = false, ?DatabaseRecord $dbRecord = null): self {
-		if ($forceUpdate || !isset(self::$CACHE_FORCES[$gameID][$sectorID][$ownerID])) {
+	public static function getForce(int $gameID, int $sectorID, int $ownerPlayerID, bool $forceUpdate = false, ?DatabaseRecord $dbRecord = null): self {
+		if ($forceUpdate || !isset(self::$CACHE_FORCES[$gameID][$sectorID][$ownerPlayerID])) {
 			self::tidyUpForces(Galaxy::getGalaxyContaining($gameID, $sectorID));
-			$p = new self($gameID, $sectorID, $ownerID, $dbRecord);
-			self::$CACHE_FORCES[$gameID][$sectorID][$ownerID] = $p;
+			$p = new self($gameID, $sectorID, $ownerPlayerID, $dbRecord);
+			self::$CACHE_FORCES[$gameID][$sectorID][$ownerPlayerID] = $p;
 		}
-		return self::$CACHE_FORCES[$gameID][$sectorID][$ownerID];
+		return self::$CACHE_FORCES[$gameID][$sectorID][$ownerPlayerID];
 	}
 
 	public static function tidyUpForces(Galaxy $galaxyToTidy): void {
@@ -132,12 +132,12 @@ class Force implements ForceCombatantInterface {
 			self::$TIDIED_UP[$galaxyToTidy->getGameID()][$galaxyToTidy->getGalaxyID()] = true;
 			$db = Database::getInstance();
 			$db->write('UPDATE sector_has_forces
-						SET refresher=0,
+						SET refresher_player_id=0,
 							expire_time = (refresh_at + if(combat_drones+mines=0,
 								LEAST(:scout_expire_lowest, scout_drones * :time_per_scout_only),
 								LEAST(:max_force_time, (combat_drones * :frac_per_cd + scout_drones * :frac_per_scout + mines * :frac_per_mine) * :max_force_time)
 							))
-						WHERE game_id = :game_id AND sector_id >= :start_sector AND sector_id <= :end_sector AND refresher != 0 AND refresh_at <= :now', [
+						WHERE game_id = :game_id AND sector_id >= :start_sector AND sector_id <= :end_sector AND refresher_player_id != 0 AND refresh_at <= :now', [
 				'scout_expire_lowest' => $db->escapeNumber(self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY),
 				'time_per_scout_only' => $db->escapeNumber(self::TIME_PER_SCOUT_ONLY),
 				'max_force_time' => $db->escapeNumber($galaxyToTidy->getMaxForceTime()),
@@ -158,14 +158,13 @@ class Force implements ForceCombatantInterface {
 	protected function __construct(
 		protected readonly int $gameID,
 		protected readonly int $sectorID,
-		protected readonly int $ownerID,
+		protected readonly int $ownerPlayerID,
 		?DatabaseRecord $dbRecord = null,
 	) {
 		$db = Database::getInstance();
 		$this->SQLID = [
-			'game_id' => $db->escapeNumber($gameID),
 			'sector_id' => $db->escapeNumber($sectorID),
-			'owner_id' => $db->escapeNumber($ownerID),
+			'owner_player_id' => $db->escapeNumber($ownerPlayerID),
 		];
 
 		if ($dbRecord === null) {
@@ -378,8 +377,8 @@ class Force implements ForceCombatantInterface {
 		return 3;
 	}
 
-	public function getOwnerID(): int {
-		return $this->ownerID;
+	public function getOwnerPlayerID(): int {
+		return $this->ownerPlayerID;
 	}
 
 	public function getGameID(): int {
@@ -400,7 +399,12 @@ class Force implements ForceCombatantInterface {
 		}
 		$owner = $this->getOwner();
 		if (!$playerPinging->sameAlliance($owner)) {
-			$playerPinging->sendMessage($owner->getAccountID(), MSG_SCOUT, $pingMessage, false);
+			$playerPinging->sendMessage(
+				receiverPlayerID: $owner->getPlayerID(),
+				messageTypeID: MSG_SCOUT,
+				message: $pingMessage,
+				canBeIgnored: false,
+			);
 		}
 	}
 
@@ -409,7 +413,7 @@ class Force implements ForceCombatantInterface {
 	}
 
 	public function getOwner(): Player {
-		return Player::getPlayer($this->getOwnerID(), $this->getGameID());
+		return Player::getPlayer($this->getOwnerPlayerID());
 	}
 
 	public function update(): void {
@@ -433,6 +437,7 @@ class Force implements ForceCombatantInterface {
 		} elseif ($this->exists()) {
 			$db->insert('sector_has_forces', [
 				...$this->SQLID,
+				'game_id' => $this->gameID,
 				'combat_drones' => $this->combatDrones,
 				'scout_drones' => $this->scoutDrones,
 				'mines' => $this->mines,
@@ -453,54 +458,54 @@ class Force implements ForceCombatantInterface {
 			'sector_has_forces',
 			[
 				'refresh_at' => $refreshTime,
-				'refresher' => $player->getAccountID(),
+				'refresher_player_id' => $player->getPlayerID(),
 			],
 			$this->SQLID,
 		);
 	}
 
 	public function getExamineDropForcesHREF(): string {
-		$container = new ForcesDrop($this->getOwnerID());
+		$container = new ForcesDrop($this->getOwnerPlayerID());
 		return $container->href();
 	}
 
 	public function getAttackForcesHREF(): string {
-		$container = new AttackForcesProcessor($this->getOwnerID());
+		$container = new AttackForcesProcessor($this->getOwnerPlayerID());
 		return $container->href();
 	}
 
 	public function getRefreshHREF(): string {
-		$container = new ForcesRefreshProcessor($this->getOwnerID());
+		$container = new ForcesRefreshProcessor($this->getOwnerPlayerID());
 		return $container->href();
 	}
 
 	public function getDropSDHREF(): string {
-		$container = new ForcesDropProcessor($this->getOwnerID(), dropSDs: 1);
+		$container = new ForcesDropProcessor($this->getOwnerPlayerID(), dropSDs: 1);
 		return $container->href();
 	}
 
 	public function getTakeSDHREF(): string {
-		$container = new ForcesDropProcessor($this->getOwnerID(), takeSDs: 1);
+		$container = new ForcesDropProcessor($this->getOwnerPlayerID(), takeSDs: 1);
 		return $container->href();
 	}
 
 	public function getDropCDHREF(): string {
-		$container = new ForcesDropProcessor($this->getOwnerID(), dropCDs: 1);
+		$container = new ForcesDropProcessor($this->getOwnerPlayerID(), dropCDs: 1);
 		return $container->href();
 	}
 
 	public function getTakeCDHREF(): string {
-		$container = new ForcesDropProcessor($this->getOwnerID(), takeCDs: 1);
+		$container = new ForcesDropProcessor($this->getOwnerPlayerID(), takeCDs: 1);
 		return $container->href();
 	}
 
 	public function getDropMineHREF(): string {
-		$container = new ForcesDropProcessor($this->getOwnerID(), dropMines: 1);
+		$container = new ForcesDropProcessor($this->getOwnerPlayerID(), dropMines: 1);
 		return $container->href();
 	}
 
 	public function getTakeMineHREF(): string {
-		$container = new ForcesDropProcessor($this->getOwnerID(), takeMines: 1);
+		$container = new ForcesDropProcessor($this->getOwnerPlayerID(), takeMines: 1);
 		return $container->href();
 	}
 
@@ -630,7 +635,7 @@ class Force implements ForceCombatantInterface {
 	}
 
 	public function getCombatID(): int {
-		return $this->ownerID;
+		return $this->ownerPlayerID;
 	}
 
 	public function getCombatName(): string {

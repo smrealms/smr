@@ -18,7 +18,7 @@ class TraderNoteAddProcessor extends PlayerPageProcessor {
 
 		$db = Database::getInstance();
 		$db->insert('player_has_notes', [
-			'account_id' => $player->getAccountID(),
+			'player_id' => $player->getPlayerID(),
 			'game_id' => $player->getGameID(),
 			'note' => $db->escapeObject($note, true),
 		]);

@@ -96,7 +96,7 @@ class HallOfFame {
 				$vis === HOF_ALLIANCE &&
 				$gameID !== null &&
 				!Game::getGame($gameID)->hasEnded() &&
-				!Player::getPlayer($accountID, $gameID)->sameAlliance($session->getPlayer())
+				!Player::getPlayerByAccountAndGame($accountID, $gameID)->sameAlliance($session->getPlayer())
 			)
 		) {
 			return '-';
@@ -110,7 +110,7 @@ class HallOfFame {
 	public static function getHofRank(string $viewType, int $accountID, ?int $gameID): array {
 		$db = Database::getInstance();
 		// If no game specified, show total amount from completed games only
-		$gameIDSql = ' AND IF(:game_id IS NULL, game_id IN (SELECT game_id FROM game WHERE end_time < :now AND ignore_stats = \'FALSE\'), game_id = :game_id)';
+		$gameIDSql = ' AND IF(:game_id IS NULL, player_hof.game_id IN (SELECT game_id FROM game WHERE end_time < :now AND ignore_stats = \'FALSE\'), player_hof.game_id = :game_id)';
 		$gameIDParams = [
 			'game_id' => $gameID,
 			'now' => Epoch::time(),
@@ -123,7 +123,7 @@ class HallOfFame {
 			]);
 		} elseif ($viewType === HOF_TYPE_USER_SCORE) {
 			$statements = Account::getUserScoreCaseStatement();
-			$dbResult = $db->read('SELECT ' . $statements['CASE'] . ' amount FROM (SELECT type, SUM(amount) amount FROM player_hof WHERE type IN (:hof_types) AND account_id = :account_id' . $gameIDSql . ' GROUP BY account_id,type) x', [
+			$dbResult = $db->read('SELECT ' . $statements['CASE'] . ' amount FROM (SELECT type, SUM(amount) amount FROM player_hof JOIN player USING (player_id) WHERE type IN (:hof_types) AND player.account_id = :account_id' . $gameIDSql . ' GROUP BY player.account_id,type) x', [
 				'hof_types' => $db->escapeArray($statements['IN']),
 				'account_id' => $db->escapeNumber($accountID),
 				...$gameIDParams,
@@ -133,7 +133,7 @@ class HallOfFame {
 			if (!isset($hofVis[$viewType])) {
 				return $rank;
 			}
-			$dbResult = $db->read('SELECT IFNULL(SUM(amount), 0) amount FROM player_hof WHERE type = :hof_type AND account_id = :account_id' . $gameIDSql, [
+			$dbResult = $db->read('SELECT IFNULL(SUM(amount), 0) amount FROM player_hof JOIN player USING (player_id) WHERE type = :hof_type AND player.account_id = :account_id' . $gameIDSql, [
 				'account_id' => $db->escapeNumber($accountID),
 				'hof_type' => $db->escapeString($viewType),
 				...$gameIDParams,
@@ -150,13 +150,13 @@ class HallOfFame {
 			]);
 		} elseif ($viewType === HOF_TYPE_USER_SCORE) {
 			$statements = Account::getUserScoreCaseStatement();
-			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type IN (:hof_types)' . $gameIDSql . ' GROUP BY account_id HAVING ' . $statements['CASE'] . ' > :amount) x', [
+			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT player.account_id FROM player_hof JOIN player USING (player_id) WHERE type IN (:hof_types)' . $gameIDSql . ' GROUP BY player.account_id HAVING ' . $statements['CASE'] . ' > :amount) x', [
 				'hof_types' => $db->escapeArray($statements['IN']),
 				'amount' => $db->escapeNumber($realAmount),
 				...$gameIDParams,
 			]);
 		} else {
-			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT account_id FROM player_hof WHERE type = :hof_type' . $gameIDSql . ' GROUP BY account_id HAVING SUM(amount) > :amount) x', [
+			$dbResult = $db->read('SELECT COUNT(account_id) `rank` FROM (SELECT player.account_id FROM player_hof JOIN player USING (player_id) WHERE type = :hof_type' . $gameIDSql . ' GROUP BY player.account_id HAVING SUM(amount) > :amount) x', [
 				'amount' => $db->escapeNumber($realAmount),
 				'hof_type' => $db->escapeString($viewType),
 				...$gameIDParams,
@@ -172,7 +172,7 @@ class HallOfFame {
 		$account = Session::getInstance()->getAccount();
 		if ($gameID !== null && Game::gameExists($gameID)) {
 			try {
-				$hofName = htmlentities(Player::getPlayer($accountID, $gameID)->getPlayerName());
+				$hofName = htmlentities(Player::getPlayerByAccountAndGame($accountID, $gameID)->getPlayerName());
 			} catch (PlayerNotFound) {
 				// Must be in the global HoF, use account HoF name
 			}

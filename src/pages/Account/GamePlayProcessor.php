@@ -12,14 +12,14 @@ use Smr\Session;
 class GamePlayProcessor extends AccountPageProcessor {
 
 	public function __construct(
-		private readonly int $gameID,
+		private readonly int $playerID,
 	) {}
 
 	public function build(Account $account): never {
-		// register game_id
-		Session::getInstance()->updateGame($this->gameID);
+		$player = Player::getPlayer($this->playerID);
 
-		$player = Player::getPlayer($account->getAccountID(), $this->gameID);
+		// register game_id
+		Session::getInstance()->updateGame($player->getGameID());
 
 		// skip var update in do_voodoo
 		SectorLock::getInstance()->acquireForPlayer($player);

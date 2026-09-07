@@ -20,18 +20,21 @@ class ChatSharing extends PlayerPage {
 
 		$shareFrom = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM account_shares_info WHERE to_account_id = :account_id AND (game_id=0 OR game_id = :game_id)', $player->SQLID);
+		$dbResult = $db->read('SELECT * FROM account_shares_info WHERE to_account_id = :account_id AND (game_id=0 OR game_id = :game_id)', [
+			...$player->getAccount()->SQLID,
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$fromAccountId = $dbRecord->getInt('from_account_id');
 			$gameId = $dbRecord->getInt('game_id');
 			try {
-				$otherPlayer = Player::getPlayer($fromAccountId, $player->getGameID());
+				$otherPlayer = Player::getPlayerByAccountAndGame($fromAccountId, $player->getGameID());
 			} catch (PlayerNotFound) {
 				// Player has not joined this game yet
 				$otherPlayer = null;
 			}
 			$shareFrom[$fromAccountId] = [
-				'Player ID' => $otherPlayer === null ? '-' : $otherPlayer->getPlayerID(),
+				'Player Number' => $otherPlayer === null ? '-' : $otherPlayer->getPlayerNumber(),
 				'Player Name' => (
 					$otherPlayer === null ?
 					'<b>Account</b>: ' . Account::getAccount($fromAccountId)->getHofDisplayName() :
@@ -43,18 +46,21 @@ class ChatSharing extends PlayerPage {
 		}
 
 		$shareTo = [];
-		$dbResult = $db->read('SELECT * FROM account_shares_info WHERE from_account_id = :account_id AND (game_id=0 OR game_id = :game_id)', $player->SQLID);
+		$dbResult = $db->read('SELECT * FROM account_shares_info WHERE from_account_id = :account_id AND (game_id=0 OR game_id = :game_id)', [
+			...$player->getAccount()->SQLID,
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		]);
 		foreach ($dbResult->records() as $dbRecord) {
 			$gameId = $dbRecord->getInt('game_id');
 			$toAccountId = $dbRecord->getInt('to_account_id');
 			try {
-				$otherPlayer = Player::getPlayer($toAccountId, $player->getGameID());
+				$otherPlayer = Player::getPlayerByAccountAndGame($toAccountId, $player->getGameID());
 			} catch (PlayerNotFound) {
 				// Player has not joined this game yet
 				$otherPlayer = null;
 			}
 			$shareTo[$toAccountId] = [
-				'Player ID' => $otherPlayer === null ? '-' : $otherPlayer->getPlayerID(),
+				'Player Number' => $otherPlayer === null ? '-' : $otherPlayer->getPlayerNumber(),
 				'Player Name' => (
 					$otherPlayer === null ?
 					'<b>Account</b>: ' . Account::getAccount($toAccountId)->getHofDisplayName() :

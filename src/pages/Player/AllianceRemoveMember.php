@@ -38,7 +38,7 @@ class AllianceRemoveMember extends PlayerPage {
 			$members[] = [
 				'last_active' => $lastActiveDate,
 				'display_name' => $alliancePlayer->getDisplayName(),
-				'account_id' => $alliancePlayer->getAccountID(),
+				'player_id' => $alliancePlayer->getPlayerID(),
 			];
 		}
 		$template->pageRenderer = fn() => AllianceRemoveMemberRenderer::render(

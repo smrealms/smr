@@ -94,7 +94,7 @@ class Rankings {
 
 		$rankings = [];
 		foreach ($rankedStats as $dbRecord) {
-			$currentPlayer = Player::getPlayer($dbRecord->getInt('account_id'), $dbRecord->getInt('game_id'), false, $dbRecord);
+			$currentPlayer = Player::getPlayer($dbRecord->getInt('player_id'), dbRecord: $dbRecord);
 
 			$class = '';
 			if ($player !== null && $player->equals($currentPlayer)) {
@@ -175,7 +175,7 @@ class Rankings {
 	public static function playerStatsFromHOF(array $category, int $gameID): array {
 		$db = Database::getInstance();
 		$playerStats = [];
-		$dbResult = $db->read('SELECT p.*, COALESCE(ph.amount,0) amount FROM player p LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = :hof_type WHERE p.game_id = :game_id ORDER BY amount DESC, player_name', [
+		$dbResult = $db->read('SELECT p.*, COALESCE(ph.amount,0) amount FROM player p LEFT JOIN player_hof ph ON p.player_id = ph.player_id AND ph.type = :hof_type WHERE p.game_id = :game_id ORDER BY amount DESC, player_name', [
 			'hof_type' => $db->escapeString(implode(':', $category)),
 			'game_id' => $db->escapeNumber($gameID),
 		]);
@@ -197,7 +197,7 @@ class Rankings {
 		$dbResult = $db->read('SELECT alliance.*, COALESCE(SUM(amount), 0) amount
 			FROM alliance
 			LEFT JOIN player p USING (game_id, alliance_id)
-			LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = :hof_type
+			LEFT JOIN player_hof ph ON p.player_id = ph.player_id AND ph.type = :hof_type
 			WHERE p.game_id = :game_id
 			GROUP BY alliance_id
 			ORDER BY amount DESC, alliance_name', [

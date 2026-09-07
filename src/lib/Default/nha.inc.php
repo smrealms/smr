@@ -12,12 +12,12 @@ function createNHA(int $gameID): void {
 	$alliance = Alliance::createAlliance($gameID, NHA_ALLIANCE_NAME, true);
 	$alliance->createDefaultRoles();
 	$alliance->setAllianceDescription('Newbie Help Alliance');
-	$alliance->setLeaderID(ACCOUNT_ID_NHL);
 	$alliance->setMotD('Alliance message board includes tips and FAQs.');
 	$alliance->setDiscordServer(DISCORD_SERVER_ID);
-	$alliance->update();
 
 	$nhl = Player::createPlayer(ACCOUNT_ID_NHL, $gameID, 'Newbie Help Leader', RACE_HUMAN, false);
+	$alliance->setLeaderPlayerID($nhl->getPlayerID());
+	$alliance->update();
 	$nhl->joinAlliance($alliance->getAllianceID(), log: false);
 	$nhl->update();
 
@@ -232,7 +232,7 @@ function createNHA(int $gameID): void {
 			'thread_id' => $threadID,
 			'reply_id' => 1,
 			'text' => $text,
-			'sender_id' => ACCOUNT_ID_NHL,
+			'player_id' => $nhl->getPlayerID(),
 			'time' => Epoch::time(),
 		]);
 		$threadID++;

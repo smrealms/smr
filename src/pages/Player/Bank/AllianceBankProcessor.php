@@ -99,10 +99,10 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 			$withdrawalPerDay = $dbRecord->getInt('with_per_day');
 			if ($dbRecord->getBoolean('positive_balance')) {
 				$dbResult = $db->read('SELECT transaction, sum(amount) as total FROM alliance_bank_transactions
-					WHERE ' . Alliance::SQL . ' AND payee_id = :payee_id
+					WHERE ' . Alliance::SQL . ' AND player_id = :player_id
 					GROUP BY transaction', [
 					...$alliance->SQLID,
-					'payee_id' => $db->escapeNumber($player->getAccountID()),
+					'player_id' => $db->escapeNumber($player->getPlayerID()),
 				]);
 				$playerTrans = ['Deposit' => 0, 'Payment' => 0];
 				foreach ($dbResult->records() as $dbRecord) {
@@ -115,12 +115,12 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 			} elseif ($withdrawalPerDay >= 0) {
 				$dbResult = $db->read('SELECT IFNULL(sum(amount), 0) as total FROM alliance_bank_transactions
 							WHERE ' . Alliance::SQL . '
-								AND payee_id = :payee_id
+								AND player_id = :player_id
 								AND transaction = \'Payment\'
 								AND exempt = 0
 								AND time > :one_day_ago', [
 					...$alliance->SQLID,
-					'payee_id' => $db->escapeNumber($player->getAccountID()),
+					'player_id' => $db->escapeNumber($player->getPlayerID()),
 					'one_day_ago' => $db->escapeNumber(Epoch::time() - 86400),
 				]);
 				$total = $dbResult->record()->getInt('total');
@@ -140,7 +140,7 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 		$db->insert('alliance_bank_transactions', [
 			...$alliance->SQLID,
 			'time' => Epoch::time(),
-			'payee_id' => $player->getAccountID(),
+			'player_id' => $player->getPlayerID(),
 			'reason' => $message,
 			'transaction' => $action,
 			'amount' => $amount,

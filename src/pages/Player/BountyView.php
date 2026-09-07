@@ -9,11 +9,11 @@ use Smr\Template;
 class BountyView extends PlayerPage {
 
 	public function __construct(
-		private readonly int $otherAccountID,
+		private readonly int $otherPlayerID,
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$bountyPlayer = Player::getPlayer($this->otherAccountID, $player->getGameID());
+		$bountyPlayer = Player::getPlayer($this->otherPlayerID);
 		$template->pageTopic = 'Viewing Bounties';
 		$template->pageRenderer = fn() => BountyViewRenderer::render($bountyPlayer);
 	}

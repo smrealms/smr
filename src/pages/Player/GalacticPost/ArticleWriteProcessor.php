@@ -56,10 +56,11 @@ class ArticleWriteProcessor extends PlayerPageProcessor {
 			new ArticleView($this->articleID)->go();
 		} else {
 			// Adding a new article
-			$editorMsg = 'Dear Galactic Post editors,<br /><br />[player=' . $player->getPlayerID() . '] has just submitted an article to the Galactic Post!';
-			foreach (Globals::getGalacticPostEditorIDs($player->getGameID()) as $editorID) {
-				if ($editorID !== $player->getAccountID()) {
-					Player::sendMessageFromAdmin($player->getGameID(), $editorID, $editorMsg);
+			$editorMsg = 'Dear Galactic Post editors,<br /><br />' . $player->getBBLink() . ' has just submitted an article to the Galactic Post!';
+			foreach (Globals::getGalacticPostEditorPlayerIDs($player->getGameID()) as $editorPlayerID) {
+				if ($editorPlayerID !== $player->getPlayerID()) {
+					$editor = Player::getPlayer($editorPlayerID);
+					Player::sendMessageFromAdmin($editor->getPlayerID(), $editorMsg);
 				}
 			}
 
@@ -71,7 +72,7 @@ class ArticleWriteProcessor extends PlayerPageProcessor {
 			$db->insert('galactic_post_article', [
 				'game_id' => $player->getGameID(),
 				'article_id' => $num,
-				'writer_id' => $player->getAccountID(),
+				'writer_player_id' => $player->getPlayerID(),
 				'title' => $title,
 				'text' => $message,
 				'last_modified' => Epoch::time(),
@@ -79,7 +80,7 @@ class ArticleWriteProcessor extends PlayerPageProcessor {
 			$db->update(
 				'galactic_post_writer',
 				['last_wrote' => Epoch::time()],
-				['account_id' => $player->getAccountID()],
+				['player_id' => $player->getPlayerID()],
 			);
 			$msg = '<span class="green">SUCCESS</span>: Your article has been submitted.';
 			$container = new CurrentSector(message: $msg);

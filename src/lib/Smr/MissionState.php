@@ -7,15 +7,13 @@ use Smr\MissionActions\ClaimReward;
 
 class MissionState {
 
-	/** @var array<int, array<int, array<int, self>>> */
+	/** @var array<int, array<int, self>> */
 	private static array $CACHE = [];
 
 	public static function saveMissionStates(): void {
-		foreach (self::$CACHE as $gameMissionStates) {
-			foreach ($gameMissionStates as $playerMissionStates) {
-				foreach ($playerMissionStates as $missionState) {
-					$missionState->update();
-				}
+		foreach (self::$CACHE as $playerMissionStates) {
+			foreach ($playerMissionStates as $missionState) {
+				$missionState->update();
 			}
 		}
 	}
@@ -30,31 +28,29 @@ class MissionState {
 	 * @return array<int, self>
 	 */
 	public static function getPlayerMissionStates(Player $player): array {
-		$gameID = $player->getGameID();
-		$accountID = $player->getAccountID();
-		if (!isset(self::$CACHE[$gameID][$accountID])) {
+		$playerID = $player->getPlayerID();
+		if (!isset(self::$CACHE[$playerID])) {
 			$db = Database::getInstance();
-			$dbResult = $db->select('player_has_mission', $player->SQLID);
+			$dbResult = $db->select('player_has_mission', ['player_id' => $playerID]);
 			$missionStates = [];
 			foreach ($dbResult->records() as $dbRecord) {
 				$missionID = $dbRecord->getInt('mission_id');
 				$missionStates[$missionID] = self::getFromRecord($dbRecord);
 			}
-			self::$CACHE[$gameID][$accountID] = $missionStates;
+			self::$CACHE[$playerID] = $missionStates;
 		}
-		return self::$CACHE[$gameID][$accountID];
+		return self::$CACHE[$playerID];
 	}
 
 	/**
 	 * Add a new mission for the given player.
 	 */
 	public static function addPlayerMission(Player $player, Mission $mission): self {
-		$gameID = $player->getGameID();
-		$accountID = $player->getAccountID();
+		$playerID = $player->getPlayerID();
 		$missionID = $mission->getMissionID();
 		$missionState = new self(
-			accountID: $accountID,
-			gameID: $gameID,
+			playerID: $playerID,
+			gameID: $player->getGameID(),
 			missionID: $missionID,
 			onStep: 0,
 			unread: false,
@@ -63,13 +59,13 @@ class MissionState {
 			mission: $mission,
 			hasChanged: true,
 		);
-		self::$CACHE[$gameID][$accountID][$missionID] = $missionState;
+		self::$CACHE[$playerID][$missionID] = $missionState;
 		return $missionState;
 	}
 
 	private static function getFromRecord(DatabaseRecord $record): self {
 		return new self(
-			accountID: $record->getInt('account_id'),
+			playerID: $record->getInt('player_id'),
 			gameID: $record->getInt('game_id'),
 			missionID: $record->getInt('mission_id'),
 			onStep: $record->getInt('on_step'),
@@ -82,7 +78,7 @@ class MissionState {
 	}
 
 	private function __construct(
-		public readonly int $accountID,
+		public readonly int $playerID,
 		public readonly int $gameID,
 		public readonly int $missionID,
 		public readonly Mission $mission,
@@ -99,7 +95,7 @@ class MissionState {
 		}
 		$db = Database::getInstance();
 		$db->replace('player_has_mission', [
-			'account_id' => $this->accountID,
+			'player_id' => $this->playerID,
 			'game_id' => $this->gameID,
 			'mission_id' => $this->missionID,
 			'on_step' => $this->onStep,
@@ -116,11 +112,10 @@ class MissionState {
 		$db = Database::getInstance();
 		$db->delete('player_has_mission', [
 			'mission_id' => $this->missionID,
-			'account_id' => $this->accountID,
-			'game_id' => $this->gameID,
+			'player_id' => $this->playerID,
 		]);
 		$this->hasChanged = false; // to avoid re-inserting into database
-		unset(self::$CACHE[$this->gameID][$this->accountID][$this->missionID]);
+		unset(self::$CACHE[$this->playerID][$this->missionID]);
 	}
 
 	public function markComplete(): void {

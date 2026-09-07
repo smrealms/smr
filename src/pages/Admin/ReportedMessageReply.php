@@ -10,9 +10,8 @@ use Smr\Template;
 class ReportedMessageReply extends AccountPage {
 
 	public function __construct(
-		private readonly int $offenderAccountID,
-		private readonly int $offendedAccountID,
-		private readonly int $gameID,
+		private readonly int $offenderPlayerID,
+		private readonly int $offendedPlayerID,
 		private readonly ?string $offenderPreview = null,
 		private readonly ?int $offenderBanPoints = null,
 		private readonly ?string $offendedPreview = null,
@@ -23,17 +22,16 @@ class ReportedMessageReply extends AccountPage {
 		$template->pageTopic = 'Reply To Reported Messages';
 
 		$container = new ReportedMessageReplyProcessor(
-			gameID: $this->gameID,
-			offenderAccountID: $this->offenderAccountID,
-			offendedAccountID: $this->offendedAccountID,
+			offenderPlayerID: $this->offenderPlayerID,
+			offendedPlayerID: $this->offendedPlayerID,
 		);
 
-		$offender = Messages::getMessagePlayer($this->offenderAccountID, $this->gameID);
+		$offender = Messages::getMessagePlayer($this->offenderPlayerID);
 		if (is_object($offender)) {
 			$offender = $offender->getDisplayName() . ' (Login: ' . $offender->getAccount()->getLogin() . ')';
 		}
 
-		$offended = Messages::getMessagePlayer($this->offendedAccountID, $this->gameID);
+		$offended = Messages::getMessagePlayer($this->offendedPlayerID);
 		if (is_object($offended)) {
 			$offended = $offended->getDisplayName() . ' (Login: ' . $offended->getAccount()->getLogin() . ')';
 		}

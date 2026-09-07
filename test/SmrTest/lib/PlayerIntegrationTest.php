@@ -5,9 +5,11 @@ namespace SmrTest\lib;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Smr\Account;
+use Smr\Database;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Exceptions\UserError;
 use Smr\Game;
+use Smr\MissionState;
 use Smr\Player;
 use SmrTest\BaseIntegrationSpec;
 use SmrTest\TestUtils;
@@ -24,10 +26,13 @@ class PlayerIntegrationTest extends BaseIntegrationSpec {
 	protected function tearDown(): void {
 		Account::clearCache();
 		Player::clearCache();
+		MissionState::clearCache();
 	}
 
 	public static function setUpBeforeClass(): void {
 		// Make objects that must be accessed statically (can't be mocked)
+		MissionState::clearCache();
+		Player::clearCache();
 		Game::createGame(self::$gameID)->setGameTypeID(Game::GAME_TYPE_DEFAULT);
 	}
 
@@ -53,14 +58,24 @@ class PlayerIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame($isNpc, $player->isNPC());
 		self::assertSame(1, $player->getSectorID());
 		self::assertSame(1, $player->getPlayerID());
+		self::assertSame(1, $player->getPlayerNumber());
 	}
 
 	public function test_createPlayer_duplicate_name(): void {
 		$name = 'test';
 		Player::createPlayer(1, self::$gameID, $name, RACE_HUMAN, false);
-		$this->expectException(UserError::class);
-		$this->expectExceptionMessage('That player name already exists.');
-		Player::createPlayer(2, self::$gameID, $name, RACE_HUMAN, false);
+
+		try {
+			Player::createPlayer(2, self::$gameID, $name, RACE_HUMAN, false);
+			self::fail('Expected duplicate player name to be rejected.');
+		} catch (UserError $err) {
+			self::assertSame('That player name already exists.', $err->getMessage());
+		}
+
+		// Make sure the second player creation got rolled back properly
+		$db = Database::getInstance();
+		self::assertSame(1, $db->count('player', ['game_id' => self::$gameID]));
+		self::assertFalse($db->isTransactionActive());
 	}
 
 	public function test_createPlayer_reserved_name_by_other(): void {
@@ -69,9 +84,18 @@ class PlayerIntegrationTest extends BaseIntegrationSpec {
 		$account = Account::createAccount($name, 'pw', 'test@test.com', 9, 0);
 
 		// Try creating a player with the reserved name by a different account
-		$this->expectException(UserError::class);
-		$this->expectExceptionMessage('That player name is reserved by another account.');
-		Player::createPlayer($account->getAccountID() + 1, self::$gameID, $name, RACE_HUMAN, false);
+		$nextAccountID = $account->getAccountID() + 1;
+		try {
+			Player::createPlayer($nextAccountID, self::$gameID, $name, RACE_HUMAN, false);
+			self::fail('Expected another account\'s reserved player name to be rejected.');
+		} catch (UserError $err) {
+			self::assertStringStartsWith('That player name is reserved by another account.', $err->getMessage());
+		}
+
+		// Make sure the second player creation got rolled back properly
+		$db = Database::getInstance();
+		self::assertSame(0, $db->count('player', ['game_id' => self::$gameID]));
+		self::assertFalse($db->isTransactionActive());
 	}
 
 	public function test_createPlayer_reserved_name_by_self(): void {
@@ -91,16 +115,40 @@ class PlayerIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame(2, $player->getPlayerID());
 	}
 
+	public function test_createPlayer_reports_duplicate_name_before_hof_name_reservation(): void {
+		// Create existing player name and account HOF name that are the same
+		$name = 'foo';
+		$account = Account::createAccount($name, 'pw', 'test@test.com', 9, 0);
+		Player::createPlayer($account->getAccountID(), self::$gameID, $name, RACE_HUMAN, false);
+
+		// Make sure the player name conflict is reported before the HOF name conflict
+		$nextAccountID = $account->getAccountID() + 1;
+		$this->expectException(UserError::class);
+		$this->expectExceptionMessage('That player name already exists.');
+		Player::createPlayer($nextAccountID, self::$gameID, $name, RACE_HUMAN, false);
+	}
+
+	public function test_createPlayer_allows_name_in_another_game_and_restarts_player_number(): void {
+		$otherGameID = self::$gameID + 1;
+		Game::createGame($otherGameID)->setGameTypeID(Game::GAME_TYPE_DEFAULT);
+
+		$firstPlayer = Player::createPlayer(1, self::$gameID, 'test', RACE_HUMAN, false);
+		$secondPlayer = Player::createPlayer(2, $otherGameID, 'test', RACE_HUMAN, false);
+
+		self::assertSame(1, $firstPlayer->getPlayerNumber());
+		self::assertSame(1, $secondPlayer->getPlayerNumber());
+	}
+
 	public function test_getPlayer_returns_created_player(): void {
 		// Given a player that is created
 		$player1 = Player::createPlayer(1, self::$gameID, 'test1', RACE_HUMAN, false);
 		// When we get the same player
-		$player2 = Player::getPlayer(1, self::$gameID);
+		$player2 = Player::getPlayer($player1->getPlayerID());
 		// Then they should be the same object
 		self::assertSame($player1, $player2);
 
 		// When we get the same player forcing a re-query from the database
-		$player3 = Player::getPlayer(1, self::$gameID, true);
+		$player3 = Player::getPlayer($player1->getPlayerID(), forceUpdate: true);
 		// Then they are not the same, but they are equal
 		self::assertNotSame($player1, $player3);
 		self::assertTrue($player1->equals($player3));
@@ -108,8 +156,8 @@ class PlayerIntegrationTest extends BaseIntegrationSpec {
 
 	public function test_getPlayer_throws_when_no_record_found(): void {
 		$this->expectException(PlayerNotFound::class);
-		$this->expectExceptionMessage('Invalid accountID: 123 OR gameID: 321');
-		Player::getPlayer(123, 321);
+		$this->expectExceptionMessage('Invalid playerID: 123');
+		Player::getPlayer(123);
 	}
 
 	public function test_changePlayerName_throws_when_name_unchanged(): void {

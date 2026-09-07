@@ -5,14 +5,14 @@ namespace Smr\Pages\Admin;
 class AdminMessageSendRenderer {
 
 	/**
-	 * @param ?list<array{AccountID: int, Name: string}> $GamePlayers
+	 * @param ?list<array{PlayerID: int, Name: string}> $GamePlayers
 	 */
 	public static function render(
 		AdminMessageSendProcessor $AdminMessageSendForm,
 		?int $MessageGameID,
 		?float $ExpireTime,
 		?array $GamePlayers,
-		int $SelectedAccountID,
+		int $SelectedPlayerID,
 		?string $Preview,
 		string $BackHREF,
 	): void {
@@ -22,9 +22,9 @@ class AdminMessageSendRenderer {
 			<b>From: </b><span class="admin">Administrator</span><br />
 			<b>To: </b><?php
 				if ($GamePlayers !== null) { ?>
-					<select name="account_id" required size="1"><?php
+					<select name="player_id" required size="1"><?php
 						foreach ($GamePlayers as $GamePlayer) {
-							?><option <?php if ($SelectedAccountID === $GamePlayer['AccountID']) { echo 'selected'; } ?> value="<?php echo $GamePlayer['AccountID']; ?>"><?php echo $GamePlayer['Name']; ?></option><?php
+							?><option <?php if ($SelectedPlayerID === $GamePlayer['PlayerID']) { echo 'selected'; } ?> value="<?php echo $GamePlayer['PlayerID']; ?>"><?php echo $GamePlayer['Name']; ?></option><?php
 						} ?>
 					</select><br /><br /><?php
 				} else { ?>

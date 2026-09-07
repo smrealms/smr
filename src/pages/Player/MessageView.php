@@ -33,27 +33,23 @@ class MessageView extends PlayerPage {
 
 		$messageBox = [];
 		if ($folderID === MSG_SENT) {
-			$whereClause = 'game_id = :game_id
-							AND sender_id = :sender_id
+			$whereClause = 'sender_player_id = :sender_player_id
 							AND message_type_id = :message_type_id
 							AND sender_delete = :sender_delete';
 			$whereParams = [
-				'sender_id' => $db->escapeNumber($player->getAccountID()),
+				'sender_player_id' => $db->escapeNumber($player->getPlayerID()),
 				'message_type_id' => $db->escapeNumber(MSG_PLAYER),
 				'sender_delete' => $db->escapeBoolean(false),
-				'game_id' => $db->escapeNumber($player->getGameID()),
 			];
 			$messageBox['UnreadMessages'] = 0;
 		} else {
-			$whereClause = 'game_id = :game_id
-							AND account_id = :account_id
+			$whereClause = 'player_id = :player_id
 							AND message_type_id = :message_type_id
 							AND receiver_delete = :receiver_delete';
 			$whereParams = [
-				'account_id' => $db->escapeNumber($player->getAccountID()),
+				'player_id' => $db->escapeNumber($player->getPlayerID()),
 				'message_type_id' => $db->escapeNumber($folderID),
 				'receiver_delete' => $db->escapeBoolean(false),
-				'game_id' => $db->escapeNumber($player->getGameID()),
 			];
 			$numUnread = $db->count('message', [...$whereParams, 'msg_read' => $db->escapeBoolean(false)]);
 			$messageBox['UnreadMessages'] = $numUnread;
@@ -114,7 +110,16 @@ class MessageView extends PlayerPage {
 				'limit_count' => MESSAGES_PER_PAGE,
 			]);
 			foreach ($dbResult->records() as $dbRecord) {
-				$messages[] = displayMessage($dbRecord->getInt('message_id'), $dbRecord->getInt('account_id'), $dbRecord->getInt('sender_id'), $player->getGameID(), $dbRecord->getString('message_text'), $dbRecord->getInt('send_time'), $dbRecord->getBoolean('msg_read'), $folderID, $player->getAccount());
+				$messages[] = displayMessage(
+					message_id: $dbRecord->getInt('message_id'),
+					receiverPlayerID: $dbRecord->getInt('player_id'),
+					senderPlayerID: $dbRecord->getInt('sender_player_id'),
+					message_text: $dbRecord->getString('message_text'),
+					send_time: $dbRecord->getInt('send_time'),
+					msg_read: $dbRecord->getBoolean('msg_read'),
+					type: $folderID,
+					displayAccount: $player->getAccount(),
+				);
 			}
 			$messageBox['NumberMessages'] = $dbResult->getNumRecords();
 		}
@@ -156,10 +161,19 @@ function displayGroupedScouts(Player $player): array {
 	);
 	$groupedMessages = [];
 	foreach ($dbResult->records() as $dbRecord) {
-		$senderID = $dbRecord->getInt('sender_id');
+		$senderPlayerID = $dbRecord->getInt('sender_player_id');
 		// Limit the number of messages in each group
-		if (!isset($groupedMessages[$senderID]) || count($groupedMessages[$senderID]) < MESSAGE_SCOUT_GROUP_LIMIT) {
-			$groupedMessages[$senderID][] = displayMessage($dbRecord->getInt('message_id'), $dbRecord->getInt('account_id'), $dbRecord->getInt('sender_id'), $player->getGameID(), $dbRecord->getString('message_text'), $dbRecord->getInt('send_time'), $dbRecord->getBoolean('msg_read'), MSG_SCOUT, $player->getAccount());
+		if (!isset($groupedMessages[$senderPlayerID]) || count($groupedMessages[$senderPlayerID]) < MESSAGE_SCOUT_GROUP_LIMIT) {
+			$groupedMessages[$senderPlayerID][] = displayMessage(
+				message_id: $dbRecord->getInt('message_id'),
+				receiverPlayerID: $dbRecord->getInt('player_id'),
+				senderPlayerID: $dbRecord->getInt('sender_player_id'),
+				message_text: $dbRecord->getString('message_text'),
+				send_time: $dbRecord->getInt('send_time'),
+				msg_read: $dbRecord->getBoolean('msg_read'),
+				type: MSG_SCOUT,
+				displayAccount: $player->getAccount(),
+			);
 		}
 	}
 
@@ -169,23 +183,24 @@ function displayGroupedScouts(Player $player): array {
 	// Generate the group messages
 	$dbResult = $db->read('SELECT player.*, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, sum(msg_read=\'FALSE\') as total_unread
 					FROM message
-					JOIN player ON player.account_id = message.sender_id AND message.game_id = player.game_id
-					WHERE message.account_id = :account_id
-					AND player.game_id = :game_id
+					JOIN player ON player.player_id = message.sender_player_id
+					WHERE message.player_id = :player_id
 					AND message_type_id = :message_type_id
 					AND receiver_delete = :receiver_delete
-					GROUP BY sender_id
+					GROUP BY sender_player_id
 					ORDER BY last DESC', [
-		'account_id' => $db->escapeNumber($player->getAccountID()),
-		'game_id' => $db->escapeNumber($player->getGameID()),
+		'player_id' => $db->escapeNumber($player->getPlayerID()),
 		'message_type_id' => $db->escapeNumber(MSG_SCOUT),
 		'receiver_delete' => $db->escapeBoolean(false),
 	]);
 
 	$messages = [];
 	foreach ($dbResult->records() as $dbRecord) {
-		$senderID = $dbRecord->getInt('account_id');
-		$sender = Player::getPlayer($senderID, $player->getGameID(), false, $dbRecord);
+		$senderPlayerID = $dbRecord->getInt('player_id');
+		$sender = Player::getPlayer(
+			playerID: $senderPlayerID,
+			dbRecord: $dbRecord,
+		);
 		$totalUnread = $dbRecord->getInt('total_unread');
 		$message = 'Your forces have spotted ' . $sender->getBBLink() . ' passing your forces ' . pluralise($dbRecord->getInt('number'), 'time');
 		$message .= ($totalUnread > 0) ? ' (' . $totalUnread . ' unread).' : '.';
@@ -193,7 +208,7 @@ function displayGroupedScouts(Player $player): array {
 		// Define a unique array so we can delete grouped messages
 		$first = $dbRecord->getInt('first');
 		$last = $dbRecord->getInt('last');
-		$groupID = [$senderID, $first, $last];
+		$groupID = [$senderPlayerID, $first, $last];
 
 		$dateFormat = $player->getAccount()->getDateTimeFormat();
 		$messages[] = [
@@ -201,7 +216,7 @@ function displayGroupedScouts(Player $player): array {
 			'Text' => $message,
 			'Unread' => $totalUnread > 0,
 			'SendTime' => date($dateFormat, $first) . ' - ' . date($dateFormat, $last),
-			'GroupedMessages' => $groupedMessages[$senderID],
+			'GroupedMessages' => $groupedMessages[$senderPlayerID],
 		];
 	}
 
@@ -211,7 +226,7 @@ function displayGroupedScouts(Player $player): array {
 /**
  * @return PlayerMessageNoGroups
  */
-function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $game_id, string $message_text, int $send_time, bool $msg_read, int $type, Account $displayAccount): array {
+function displayMessage(int $message_id, int $receiverPlayerID, int $senderPlayerID, string $message_text, int $send_time, bool $msg_read, int $type, Account $displayAccount): array {
 	$message = [];
 	$message['ID'] = $message_id;
 	$message['Text'] = $message_text;
@@ -220,18 +235,18 @@ function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $
 
 	// Display the sender (except for scout messages)
 	if ($type !== MSG_SCOUT) {
-		$sender = Messages::getMessagePlayer($sender_id, $game_id, $type);
+		$sender = Messages::getMessagePlayer($senderPlayerID, $type);
 		if ($sender instanceof Player) {
 			$message['Sender'] = $sender;
-			$container = new SearchForTraderResult($sender->getPlayerID());
+			$container = new SearchForTraderResult($sender->getPlayerNumber());
 			$message['SenderDisplayName'] = create_link($container, $sender->getDisplayName());
 
 			// Add actions that we can take on messages sent by other players.
 			if ($type !== MSG_SENT) {
 				$message['Actions'] = [
 					'ReportHref' => new MessageReportConfirm($type, $message_id)->href(),
-					'BlacklistHref' => new MessageBlacklistAddProcessor($sender_id)->href(),
-					'ReplyHref' => new MessageSend($sender->getAccountID())->href(),
+					'BlacklistHref' => new MessageBlacklistAddProcessor($senderPlayerID)->href(),
+					'ReplyHref' => new MessageSend($sender->getPlayerID())->href(),
 				];
 			}
 		} else {
@@ -240,8 +255,8 @@ function displayMessage(int $message_id, int $receiver_id, int $sender_id, int $
 	}
 
 	if ($type === MSG_SENT) {
-		$receiver = Player::getPlayer($receiver_id, $game_id);
-		$container = new SearchForTraderResult($receiver->getPlayerID());
+		$receiver = Player::getPlayer($receiverPlayerID);
+		$container = new SearchForTraderResult($receiver->getPlayerNumber());
 		$message['ReceiverDisplayName'] = create_link($container, $receiver->getDisplayName());
 	}
 

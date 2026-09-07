@@ -42,7 +42,7 @@ class VotingCenterProcessor extends PlayerPageProcessor {
 
 		if ($action === $this->actionRelationsIncrease->value || $action === $this->actionRelationsDecrease->value) {
 			$db->replace('player_votes_relation', [
-				'account_id' => $player->getAccountID(),
+				'player_id' => $player->getPlayerID(),
 				'game_id' => $player->getGameID(),
 				'race_id_1' => $player->getRaceID(),
 				'race_id_2' => $race_id,
@@ -51,7 +51,7 @@ class VotingCenterProcessor extends PlayerPageProcessor {
 			]);
 		} elseif ($action === $this->actionTreatyYes->value || $action === $this->actionTreatyNo->value) {
 			$db->replace('player_votes_pact', [
-				'account_id' => $player->getAccountID(),
+				'player_id' => $player->getPlayerID(),
 				'game_id' => $player->getGameID(),
 				'race_id_1' => $player->getRaceID(),
 				'race_id_2' => $race_id,

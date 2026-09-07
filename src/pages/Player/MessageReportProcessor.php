@@ -30,8 +30,9 @@ class MessageReportProcessor extends PlayerPageProcessor {
 			[
 				'receiver_delete' => $db->escapeBoolean(false),
 				'message_id' => $this->messageID,
+				'player_id' => $player->getPlayerID(),
 			],
-			['account_id', 'sender_id', 'message_text', 'send_time'],
+			['player_id', 'sender_player_id', 'message_text', 'send_time'],
 		);
 		if (!$dbResult->hasRecord()) {
 			create_error('Could not find the message you selected!');
@@ -42,8 +43,8 @@ class MessageReportProcessor extends PlayerPageProcessor {
 		$db->insert('message_notify', [
 			'notify_id' => $notify_id,
 			'game_id' => $player->getGameID(),
-			'from_id' => $dbRecord->getInt('sender_id'),
-			'to_id' => $dbRecord->getInt('account_id'),
+			'from_player_id' => $dbRecord->getInt('sender_player_id'),
+			'to_player_id' => $dbRecord->getInt('player_id'),
 			'text' => $dbRecord->getString('message_text'),
 			'sent_time' => $dbRecord->getInt('send_time'),
 			'notify_time' => Epoch::time(),

@@ -9,12 +9,12 @@ use Smr\Template;
 class ExamineTrader extends PlayerPage {
 
 	public function __construct(
-		private readonly int $targetAccountID,
+		private readonly int $targetPlayerID,
 	) {}
 
 	public function build(Player $player, Template $template): void {
 		// Get the player we're attacking
-		$targetPlayer = Player::getPlayer($this->targetAccountID, $player->getGameID());
+		$targetPlayer = Player::getPlayer($this->targetPlayerID);
 
 		if ($targetPlayer->isDead()) {
 			$msg = '<span class="red bold">ERROR:</span> Target already dead.';

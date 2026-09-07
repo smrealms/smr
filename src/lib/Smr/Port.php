@@ -690,7 +690,7 @@ class Port implements NormalCombatantInterface {
 			$attacker->increaseHOF(1, ['Combat', 'Port', 'Number Of Attacks'], HOF_PUBLIC);
 			$db->replace('player_attacks_port', [
 				'game_id' => $this->getGameID(),
-				'account_id' => $attacker->getAccountID(),
+				'player_id' => $attacker->getPlayerID(),
 				'sector_id' => $this->getSectorID(),
 				'time' => Epoch::time(),
 				'level' => $this->getLevel(),
@@ -725,9 +725,9 @@ class Port implements NormalCombatantInterface {
 				'game_id' => $this->getGameID(),
 				'time' => Epoch::time(),
 				'news_message' => $newsMessage,
-				'killer_id' => $trigger->getAccountID(),
+				'killer_player_id' => $trigger->getPlayerID(),
 				'killer_alliance' => $trigger->getAllianceID(),
-				'dead_id' => ACCOUNT_ID_PORT,
+				'dead_player_id' => PLAYER_ID_PORT,
 			]);
 		}
 	}
@@ -1155,30 +1155,30 @@ class Port implements NormalCombatantInterface {
 	}
 
 	public function updateSectorPlayersCache(): void {
-		$accountIDs = [];
+		$playerIDs = [];
 		$sectorPlayers = $this->getSector()->getPlayers();
 		foreach ($sectorPlayers as $sectorPlayer) {
-			$accountIDs[] = $sectorPlayer->getAccountID();
+			$playerIDs[] = $sectorPlayer->getPlayerID();
 		}
-		$this->addCachePorts($accountIDs);
+		$this->addCachePorts($playerIDs);
 	}
 
-	public function addCachePort(int $accountID): void {
-		$this->addCachePorts([$accountID]);
+	public function addCachePort(int $playerID): void {
+		$this->addCachePorts([$playerID]);
 	}
 
 	/**
-	 * @param array<int> $accountIDs
+	 * @param array<int> $playerIDs
 	 */
-	public function addCachePorts(array $accountIDs): bool {
-		if (count($accountIDs) > 0 && $this->exists()) {
+	public function addCachePorts(array $playerIDs): bool {
+		if (count($playerIDs) > 0 && $this->exists()) {
 			$db = Database::getInstance();
 			$cache = $db->escapeObject($this, true);
 			$cacheHash = $db->escapeString(md5($cache));
 
 			// Insert dummy rows that don't exist yet for these primary keys
 			$query = 'INSERT IGNORE INTO player_visited_port
-					(account_id, game_id, sector_id, visited, port_info_hash) VALUES ';
+					(player_id, game_id, sector_id, visited, port_info_hash) VALUES ';
 			$params = [
 				'game_id' => $db->escapeNumber($this->getGameID()),
 				'sector_id' => $db->escapeNumber($this->getSectorID()),
@@ -1186,9 +1186,9 @@ class Port implements NormalCombatantInterface {
 				'port_info_hash' => '', // to be updated below
 			];
 			$paramSql = [];
-			foreach ($accountIDs as $accountID) {
-				$params['account_id' . $accountID] = $accountID;
-				$paramSql[] = '(:account_id' . $accountID . ', :game_id, :sector_id, :visited, :port_info_hash)';
+			foreach ($playerIDs as $playerID) {
+				$params['player_id' . $playerID] = $playerID;
+				$paramSql[] = '(:player_id' . $playerID . ', :game_id, :sector_id, :visited, :port_info_hash)';
 			}
 			$query .= implode(',', $paramSql);
 			$db->write($query, $params);
@@ -1203,18 +1203,17 @@ class Port implements NormalCombatantInterface {
 			]);
 
 			// We can't use the SQL member here because CachePorts don't have it
-			$db->write('UPDATE player_visited_port SET visited = :cached_time, port_info_hash = :port_info_hash WHERE visited <= :cached_time AND account_id IN (:account_ids) AND sector_id = :sector_id AND game_id = :game_id LIMIT :limit', [
+			$db->write('UPDATE player_visited_port SET visited = :cached_time, port_info_hash = :port_info_hash WHERE visited <= :cached_time AND player_id IN (:player_ids) AND sector_id = :sector_id LIMIT :limit', [
 				'cached_time' => $db->escapeNumber($this->getCachedTime()),
 				'port_info_hash' => $cacheHash,
 				'sector_id' => $db->escapeNumber($this->getSectorID()),
-				'game_id' => $db->escapeNumber($this->getGameID()),
-				'account_ids' => $db->escapeArray($accountIDs),
-				'limit' => count($accountIDs),
+				'player_ids' => $db->escapeArray($playerIDs),
+				'limit' => count($playerIDs),
 			]);
 
 			// Unset the cache so the next getCachedPort fetches the new entry
-			foreach ($accountIDs as $accountID) {
-				unset(self::$CACHE_CACHED_PORTS[$this->getGameID()][$this->getSectorID()][$accountID]);
+			foreach ($playerIDs as $playerID) {
+				unset(self::$CACHE_CACHED_PORTS[$this->getGameID()][$this->getSectorID()][$playerID]);
 			}
 
 			unset($cache);
@@ -1226,29 +1225,27 @@ class Port implements NormalCombatantInterface {
 	/**
 	 * @throws \Smr\Exceptions\CachedPortNotFound If the cached port is not found in the database.
 	 */
-	public static function getCachedPort(int $gameID, int $sectorID, int $accountID, bool $forceUpdate = false): self {
-		if ($forceUpdate || !isset(self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID])) {
+	public static function getCachedPort(int $gameID, int $sectorID, int $playerID, bool $forceUpdate = false): self {
+		if ($forceUpdate || !isset(self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$playerID])) {
 			$db = Database::getInstance();
 			$dbResult = $db->read('SELECT visited, port_info
 						FROM player_visited_port
 						JOIN port_info_cache USING (game_id,sector_id,port_info_hash)
-						WHERE account_id = :account_id
-							AND game_id = :game_id
+						WHERE player_id = :player_id
 							AND sector_id = :sector_id LIMIT 1', [
-				'account_id' => $db->escapeNumber($accountID),
-				'game_id' => $db->escapeNumber($gameID),
+				'player_id' => $db->escapeNumber($playerID),
 				'sector_id' => $db->escapeNumber($sectorID),
 			]);
 
 			if ($dbResult->hasRecord()) {
 				$dbRecord = $dbResult->record();
-				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = $dbRecord->getClass('port_info', self::class, true);
-				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID]->setCachedTime($dbRecord->getInt('visited'));
+				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$playerID] = $dbRecord->getClass('port_info', self::class, true);
+				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$playerID]->setCachedTime($dbRecord->getInt('visited'));
 			} else {
-				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = false;
+				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$playerID] = false;
 			}
 		}
-		$port = self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID];
+		$port = self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$playerID];
 		if ($port === false) {
 			throw new CachedPortNotFound();
 		}
@@ -1444,12 +1441,15 @@ class Port implements NormalCombatantInterface {
 		//get all players involved for HoF
 		$attackers = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT player.* FROM player_attacks_port JOIN player USING (game_id, account_id) WHERE game_id = :game_id AND player_attacks_port.sector_id = :sector_id AND time > :credit_time', [
+		$dbResult = $db->read('SELECT player.* FROM player_attacks_port JOIN player USING (player_id) WHERE game_id = :game_id AND player_attacks_port.sector_id = :sector_id AND time > :credit_time', [
 			...$this->SQLID,
 			'credit_time' => $db->escapeNumber(Epoch::time() - self::TIME_TO_CREDIT_RAID),
 		]);
 		foreach ($dbResult->records() as $dbRecord) {
-			$attackers[] = Player::getPlayer($dbRecord->getInt('account_id'), $this->getGameID(), false, $dbRecord);
+			$attackers[] = Player::getPlayer(
+				playerID: $dbRecord->getInt('player_id'),
+				dbRecord: $dbRecord,
+			);
 		}
 		return $attackers;
 	}
@@ -1535,9 +1535,9 @@ class Port implements NormalCombatantInterface {
 				'game_id' => $this->getGameID(),
 				'time' => Epoch::time(),
 				'news_message' => $news,
-				'killer_id' => $killer->getAccountID(),
+				'killer_player_id' => $killer->getPlayerID(),
 				'killer_alliance' => $killer->getAllianceID(),
-				'dead_id' => ACCOUNT_ID_PORT,
+				'dead_player_id' => PLAYER_ID_PORT,
 			]);
 
 			// This wasn't a nice thing to do
@@ -1578,9 +1578,9 @@ class Port implements NormalCombatantInterface {
 			'game_id' => $this->getGameID(),
 			'time' => Epoch::time(),
 			'news_message' => $news,
-			'killer_id' => $killer->getAccountID(),
+			'killer_player_id' => $killer->getPlayerID(),
 			'killer_alliance' => $killer->getAllianceID(),
-			'dead_id' => ACCOUNT_ID_PORT,
+			'dead_player_id' => PLAYER_ID_PORT,
 		]);
 
 		return new PortDestroyedByPlayer($this, $killingShip);

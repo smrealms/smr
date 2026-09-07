@@ -23,7 +23,7 @@ class Bounty {
 			[
 				'game_id' => $gameID,
 				'type' => $type->value,
-				'claimer_id' => 0,
+				'claimer_player_id' => 0,
 			],
 			orderBy: ['amount'],
 			order: ['DESC'],
@@ -60,8 +60,7 @@ class Bounty {
 		$db = Database::getInstance();
 		$table = 'bounty';
 		$sqlParams = [
-			'claimer_id' => $player->getAccountID(),
-			'game_id' => $player->getGameID(),
+			'claimer_player_id' => $player->getPlayerID(),
 		];
 		if ($type === null) {
 			$dbResult = $db->select($table, $sqlParams);
@@ -77,12 +76,12 @@ class Bounty {
 
 	public static function getFromRecord(DatabaseRecord $record): self {
 		return new self(
-			targetID: $record->getInt('account_id'),
+			targetPlayerID: $record->getInt('player_id'),
 			bountyID: $record->getInt('bounty_id'),
 			gameID: $record->getInt('game_id'),
 			type: $record->getStringEnum('type', BountyType::class),
 			time: $record->getInt('time'),
-			claimerID: $record->getInt('claimer_id'),
+			claimerPlayerID: $record->getInt('claimer_player_id'),
 			credits: $record->getInt('amount'),
 			smrCredits: $record->getInt('smr_credits'),
 			hasChanged: false,
@@ -90,12 +89,12 @@ class Bounty {
 	}
 
 	public function __construct(
-		public readonly int $targetID, // target account ID
+		public readonly int $targetPlayerID,
 		public readonly int $bountyID, // only unique to the target
 		public readonly int $gameID,
 		public readonly BountyType $type,
 		public readonly int $time,
-		private int $claimerID = 0, // claimer account ID (or 0)
+		private int $claimerPlayerID = 0,
 		private int $credits = 0,
 		private int $smrCredits = 0,
 		private bool $hasChanged = true,
@@ -110,14 +109,14 @@ class Bounty {
 	}
 
 	public function isActive(): bool {
-		return $this->claimerID === 0;
+		return $this->claimerPlayerID === 0;
 	}
 
-	public function setClaimable(int $claimerID): void {
+	public function setClaimable(int $claimerPlayerID): void {
 		if (!$this->isActive()) {
 			throw new Exception('This bounty has already been claimed!');
 		}
-		$this->claimerID = $claimerID;
+		$this->claimerPlayerID = $claimerPlayerID;
 		$this->hasChanged = true;
 	}
 
@@ -157,11 +156,11 @@ class Bounty {
 	}
 
 	public function getTargetPlayer(): Player {
-		return Player::getPlayer($this->targetID, $this->gameID);
+		return Player::getPlayer($this->targetPlayerID);
 	}
 
 	public function getClaimerPlayer(): Player {
-		return Player::getPlayer($this->claimerID, $this->gameID);
+		return Player::getPlayer($this->claimerPlayerID);
 	}
 
 	/**
@@ -174,20 +173,19 @@ class Bounty {
 		$db = Database::getInstance();
 		if ($this->credits > 0 || $this->smrCredits > 0) {
 			$db->replace('bounty', [
-				'account_id' => $this->targetID,
+				'player_id' => $this->targetPlayerID,
 				'bounty_id' => $this->bountyID,
 				'game_id' => $this->gameID,
 				'type' => $this->type->value,
 				'time' => $this->time,
-				'claimer_id' => $this->claimerID,
+				'claimer_player_id' => $this->claimerPlayerID,
 				'amount' => $this->credits,
 				'smr_credits' => $this->smrCredits,
 			]);
 		} else {
 			$db->delete('bounty', [
 				'bounty_id' => $this->bountyID,
-				'account_id' => $this->targetID,
-				'game_id' => $this->gameID,
+				'player_id' => $this->targetPlayerID,
 			]);
 		}
 		$this->hasChanged = false;

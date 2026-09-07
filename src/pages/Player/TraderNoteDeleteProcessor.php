@@ -13,11 +13,9 @@ class TraderNoteDeleteProcessor extends PlayerPageProcessor {
 		$note_ids = Request::getIntArray('note_id', []);
 		if (count($note_ids) > 0) {
 			$db = Database::getInstance();
-			$db->write('DELETE FROM player_has_notes WHERE game_id = :game_id
-							AND account_id = :account_id
+			$db->write('DELETE FROM player_has_notes WHERE player_id = :player_id
 							AND note_id IN (:note_ids)', [
-				'game_id' => $db->escapeNumber($player->getGameID()),
-				'account_id' => $db->escapeNumber($player->getAccountID()),
+				'player_id' => $db->escapeNumber($player->getPlayerID()),
 				'note_ids' => $db->escapeArray($note_ids),
 			]);
 		}
