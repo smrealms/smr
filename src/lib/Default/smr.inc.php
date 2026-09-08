@@ -594,13 +594,25 @@ function getSkeletonData(Template $template): SkeletonData {
 		$gameName = Game::getGame($session->getGameID())->getName();
 
 		$unreadMessages = [];
-		$dbResult = $db->read('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE ' . Player::SQL . ' GROUP BY message_type_id', $player->SQLID);
+		$dbResult = $db->read(
+			'SELECT message_type_id, COUNT(*) AS unread_count
+			FROM message
+			WHERE ' . Player::SQL . '
+				AND receiver_delete = :receiver_delete
+				AND msg_read = :msg_read
+			GROUP BY message_type_id',
+			[
+				...$player->SQLID,
+				'receiver_delete' => $db->escapeBoolean(false),
+				'msg_read' => $db->escapeBoolean(false),
+			],
+		);
 		foreach ($dbResult->records() as $dbRecord) {
 			$messageTypeID = $dbRecord->getInt('message_type_id');
 			$container = new MessageView($messageTypeID);
 			$unreadMessages[] = [
 				'href' => $container->href(),
-				'num' => $dbRecord->getInt('COUNT(*)'),
+				'num' => $dbRecord->getInt('unread_count'),
 				'alt' => Messages::getMessageTypeNames($messageTypeID),
 				'img' => Messages::getMessageTypeImage($messageTypeID),
 			];

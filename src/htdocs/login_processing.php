@@ -167,21 +167,6 @@ try {
 	$db->write('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < :now AND expire_time != 0', [
 		'now' => $db->escapeNumber(Epoch::time()),
 	]);
-	//update unread message status (in case changed by expired messages)
-	$db->write('DELETE player_has_unread_messages FROM player_has_unread_messages
-		JOIN player USING (player_id)
-		WHERE player.account_id = :account_id', [
-		'account_id' => $db->escapeNumber($account->getAccountID()),
-	]);
-	$db->write('
-		INSERT INTO player_has_unread_messages (player_id, game_id, message_type_id)
-		SELECT message.player_id, message.game_id, message.message_type_id
-		FROM message JOIN player USING (player_id)
-		WHERE player.account_id = :account_id AND msg_read = :msg_read AND receiver_delete = :receiver_delete', [
-		'account_id' => $db->escapeNumber($account->getAccountID()),
-		'msg_read' => $db->escapeBoolean(false),
-		'receiver_delete' => $db->escapeBoolean(false),
-	]);
 
 	header('Location: ' . $href);
 	exit;

@@ -225,7 +225,6 @@ class AccountEditProcessor extends AccountPageProcessor {
 				$db->delete('player_has_notes', $editPlayer->SQLID);
 				$db->delete('player_has_ticker', $editPlayer->SQLID);
 				$db->delete('player_has_ticket', $editPlayer->SQLID);
-				$db->delete('player_has_unread_messages', $editPlayer->SQLID);
 				$db->delete('player_plotted_course', $editPlayer->SQLID);
 				$db->delete('player_read_thread', $editPlayer->SQLID);
 				$db->delete('player_stored_sector', $editPlayer->SQLID);

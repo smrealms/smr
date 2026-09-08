@@ -849,15 +849,6 @@ class Player {
 			'sender_delete' => $db->escapeBoolean($senderDelete),
 		]);
 
-		if ($unread === true) {
-			// give him the message icon
-			$db->replace('player_has_unread_messages', [
-				'player_id' => $receiverPlayerID,
-				'game_id' => $gameID,
-				'message_type_id' => $messageTypeID,
-			]);
-		}
-
 		switch ($messageTypeID) {
 			case MSG_PLAYER:
 				$receiverAccount = $receiverPlayer->getAccount();
@@ -1131,10 +1122,6 @@ class Player {
 
 	public function setMessagesRead(int $messageTypeID): void {
 		$db = Database::getInstance();
-		$db->delete('player_has_unread_messages', [
-			'message_type_id' => $messageTypeID,
-			...$this->SQLID,
-		]);
 		$db->update(
 			'message',
 			['msg_read' => $db->escapeBoolean(true)],

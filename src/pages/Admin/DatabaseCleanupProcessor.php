@@ -34,7 +34,6 @@ class DatabaseCleanupProcessor extends AccountPageProcessor {
 			'player_visited_port',
 			'player_visited_sector',
 			'port_info_cache',
-			'player_has_unread_messages',
 			'player_read_thread',
 			'route_cache',
 			'weighted_random',
