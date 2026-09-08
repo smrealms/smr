@@ -154,12 +154,12 @@ class Rankings {
 		$db = Database::getInstance();
 		$playerStats = [];
 		$query = 'SELECT player.*, ' . $stat . ' AS amount FROM player WHERE game_id = :game_id ORDER BY amount DESC, player_name';
+		$params = ['game_id' => $db->escapeNumber($gameID)];
 		if ($limit !== null) {
-			$query .= ' LIMIT ' . $limit;
+			$query .= ' LIMIT :limit';
+			$params['limit'] = $db->escapeNumber($limit);
 		}
-		$dbResult = $db->read($query, [
-			'game_id' => $db->escapeNumber($gameID),
-		]);
+		$dbResult = $db->read($query, $params);
 		foreach ($dbResult->records() as $dbRecord) {
 			$playerStats[$dbRecord->getInt('player_id')] = $dbRecord;
 		}
@@ -213,6 +213,7 @@ class Rankings {
 	/**
 	 * Get stats from the alliance table sorted by $stat (high to low).
 	 *
+	 * @param 'experience'|'kills'|'deaths' $stat
 	 * @return array<int, \Smr\DatabaseRecord>
 	 */
 	public static function allianceStats(string $stat, int $gameID, ?int $limit = null): array {
@@ -229,10 +230,12 @@ class Rankings {
 			$query = 'SELECT alliance.*, alliance_' . $stat . ' AS amount
 				FROM alliance WHERE game_id = :game_id ORDER BY amount DESC, alliance_name';
 		}
+		$params = ['game_id' => $db->escapeNumber($gameID)];
 		if ($limit !== null) {
-			$query .= ' LIMIT ' . $limit;
+			$query .= ' LIMIT :limit';
+			$params['limit'] = $db->escapeNumber($limit);
 		}
-		$dbResult = $db->read($query, ['game_id' => $db->escapeNumber($gameID)]);
+		$dbResult = $db->read($query, $params);
 		foreach ($dbResult->records() as $dbRecord) {
 			$allianceStats[$dbRecord->getInt('alliance_id')] = $dbRecord;
 		}
