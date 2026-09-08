@@ -28,31 +28,50 @@ class CombatLogList extends PlayerPage {
 
 		$action = $this->action;
 
-		$query = match ($action) {
+		$actionClause = match ($action) {
 			CombatLogType::Personal, CombatLogType::Alliance => 'type=\'PLAYER\'',
 			CombatLogType::Port => 'type=\'PORT\'',
 			CombatLogType::Planet => 'type=\'PLANET\'',
 			CombatLogType::Saved => 'EXISTS(
 							SELECT 1
 							FROM player_saved_combat_logs
-							WHERE player_id = ' . $db->escapeNumber($player->getPlayerID()) . '
+							WHERE player_id = :player_id
 								AND log_id = c.log_id
 						)',
 			CombatLogType::Force => 'type=\'FORCE\'',
 		};
 
-		$query .= ' AND game_id=' . $db->escapeNumber($player->getGameID());
-		if ($action !== CombatLogType::Personal && $player->hasAlliance()) {
-			$query .= ' AND (attacker_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' OR defender_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ') ';
-		} else {
-			$query .= ' AND (attacker_player_id=' . $db->escapeNumber($player->getPlayerID()) . ' OR defender_player_id=' . $db->escapeNumber($player->getPlayerID()) . ') ';
+		$params = [
+			'game_id' => $db->escapeNumber($player->getGameID()),
+		];
+		if ($action === CombatLogType::Saved) {
+			$params['player_id'] = $db->escapeNumber($player->getPlayerID());
 		}
+		if ($action !== CombatLogType::Personal && $player->hasAlliance()) {
+			$participantClause = ' AND (attacker_alliance_id = :alliance_id OR defender_alliance_id = :alliance_id)';
+			$params['alliance_id'] = $db->escapeNumber($player->getAllianceID());
+		} else {
+			$participantClause = ' AND (attacker_player_id = :player_id OR defender_player_id = :player_id)';
+			$params['player_id'] = $db->escapeNumber($player->getPlayerID());
+		}
+		$whereClause = $actionClause . ' AND game_id = :game_id' . $participantClause;
 
 		$page = $this->page;
-		$dbResult = $db->read('SELECT count(*) as count FROM combat_logs c WHERE ' . $query);
+		$dbResult = $db->read('SELECT count(*) as count FROM combat_logs c WHERE ' . $whereClause, $params);
 		$totalLogs = $dbResult->record()->getInt('count'); // count always returns a record
 
-		$dbResult = $db->read('SELECT attacker_player_id,defender_player_id,timestamp,sector_id,log_id FROM combat_logs c WHERE ' . $query . ' ORDER BY log_id DESC, sector_id LIMIT ' . ($page * COMBAT_LOGS_PER_PAGE) . ', ' . COMBAT_LOGS_PER_PAGE);
+		$dbResult = $db->read(
+			'SELECT attacker_player_id, defender_player_id, timestamp, sector_id, log_id
+				FROM combat_logs c
+				WHERE ' . $whereClause . '
+				ORDER BY log_id DESC, sector_id
+				LIMIT :offset, :limit',
+			[
+				...$params,
+				'offset' => $page * COMBAT_LOGS_PER_PAGE,
+				'limit' => COMBAT_LOGS_PER_PAGE,
+			],
+		);
 
 		$getParticipantName = function($playerID, $sectorID) use ($player): string {
 			if ($playerID === PLAYER_ID_PORT) {
