@@ -30,8 +30,6 @@ class AllianceSetOpProcessor extends PlayerPageProcessor {
 				'player_ids' => $db->escapeArray($memberPlayerIDs),
 			]);
 
-			// NOTE: for simplicity we don't touch `player_has_unread_messages` here,
-			// so they may get an errant alliance message icon if logged in.
 		} else {
 			// schedule an op
 			$date = Request::get('date');
