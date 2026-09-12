@@ -1,0 +1,252 @@
+# PHPStan configuration for the phpstan-dba extension
+
+services:
+    -
+        class: staabm\PHPStanDba\Rules\SyntaxErrorInPreparedStatementMethodRule
+        tags: [phpstan.rules.rule]
+        arguments:
+            classMethods:
+                - 'Smr\Database::read'
+                - 'Smr\Database::write'
+    -
+        class: staabm\PHPStanDba\Rules\DoctrineKeyValueStyleRule
+        tags: [phpstan.rules.rule]
+        arguments:
+            classMethods:
+                - 'Smr\Database::count#1'
+                - 'Smr\Database::select#1'
+                - 'Smr\Database::insert#1'
+                - 'Smr\Database::replace#1'
+                - 'Smr\Database::delete#1'
+                - 'Smr\Database::update#1,2'
+    -
+        class: SmrTest\PHPStanExtensions\ArrayValuesAreColumnsRule
+        tags: [phpstan.rules.rule]
+        arguments:
+            classMethods:
+                - 'Smr\Database::select#2,3'
+    -
+        class: SmrTest\PHPStanExtensions\DatabaseRecordRule
+        tags: [phpstan.rules.rule]
+    -
+        class: SmrTest\PHPStanExtensions\DatabaseReadDynamicReturnTypeExtension
+        tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
+    -
+        class: SmrTest\PHPStanExtensions\DatabaseRecordDynamicReturnTypeExtension
+        tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
+    -
+        class: SmrTest\PHPStanExtensions\DatabaseResultDynamicReturnTypeExtension
+        tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
+    -
+        class: SmrTest\PHPStanExtensions\DatabaseSelectDynamicReturnTypeExtension
+        tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
+
+parameters:
+    ignoreErrors:
+        -
+            # History databases are not supported.
+            message: '#^Smr\\DatabaseRecord field name must be a constant string, got string$#'
+            identifier: smr.dba.databaseRecordFieldName
+            count: 1
+            path: src/lib/Smr/Account.php
+
+        -
+            # False positive due to incomplete LEFT JOIN support in phpstan-dba.
+            message: '#^Smr\\DatabaseRecord\:\:getNullableString returns type string\|null, but field `hof_name` has type int\<0, 65535\>$#'
+            identifier: smr.dba.databaseRecordType
+            count: 1
+            path: src/lib/Smr/Album.php
+
+        -
+            # Database is an intentionally dynamic wrapper around Doctrine DBAL methods.
+            message: '#^Argument \#0 expects a constant string, got string$#'
+            identifier: dba.ArrayValuesAreColumnsRule
+            count: 1
+            path: src/lib/Smr/Database.php
+
+        -
+            # Database is an intentionally dynamic wrapper around Doctrine DBAL methods.
+            message: '#^Argument \#0 expects a constant string, got string$#'
+            identifier: dba.keyValue
+            count: 3
+            path: src/lib/Smr/Database.php
+
+        -
+            # Database is an intentionally dynamic wrapper around Doctrine DBAL methods.
+            message: '#^Unresolvable Query\: Cannot resolve query with variable type\: (non\-falsy\-string|string)\.$#'
+            identifier: dba.unresolvableQuery
+            count: 3
+            path: src/lib/Smr/Database.php
+
+        -
+            # Database is an intentionally dynamic wrapper around Doctrine DBAL methods.
+            message: '#^Unresolvable Query\: Cannot simulate parameter value for type\: mixed\.$#'
+            identifier: dba.unresolvableQuery
+            count: 1
+            path: src/lib/Smr/Database.php
+
+        -
+            # SUM() is technically nullable when information_schema.tables has no matching rows.
+            message: '#^Smr\\DatabaseRecord\:\:getInt returns type int, but field `db_bytes` has type numeric\-string\|null$#'
+            identifier: smr.dba.databaseRecordType
+            count: 1
+            path: src/lib/Smr/Database.php
+
+        -
+            # User-score ranking SQL is assembled from the single source of truth
+            # in Account::getUserScoreCaseStatement(). Duplicating it here would
+            # make the ranking and query implementations drift apart.
+            message: '#^Unresolvable Query\: Cannot resolve query with variable type\: string\.$#'
+            identifier: dba.unresolvableQuery
+            count: 2
+            path: src/lib/Smr/HallOfFame.php
+
+        -
+            # This is a variable-length bulk INSERT assembled from player IDs.
+            message: '#^Unresolvable Query\: Cannot resolve query with variable type\: non\-falsy\-string\.$#'
+            identifier: dba.unresolvableQuery
+            count: 1
+            path: src/lib/Smr/Port.php
+
+        -
+            # Rankings queries are assembled dynamically by stat.
+            message: '#^Unresolvable Query\: Cannot resolve query with variable type\: non\-falsy\-string\.$#'
+            identifier: dba.unresolvableQuery
+            count: 2
+            path: src/lib/Smr/Rankings.php
+
+        -
+            # History databases are not supported.
+            message: '#^Smr\\DatabaseRecord does not contain field\: (end_date|speed|start_date|type)$#'
+            identifier: smr.dba.databaseRecordType
+            count: 4
+            path: src/pages/Account/GamePlay.php
+
+        -
+            # User-score ranking SQL is generated by Account::getUserScoreCaseStatement().
+            message: '#^Unresolvable Query\: Cannot resolve query with variable type\: non\-falsy\-string\.$#'
+            identifier: dba.unresolvableQuery
+            count: 1
+            path: src/pages/Account/HallOfFameAll.php
+
+        -
+            # History databases are not supported.
+            message: '#^Query error\: Column "alliance\.leader_id" does not exist$#'
+            identifier: dba.ArrayValuesAreColumnsRule
+            count: 1
+            path: src/pages/Account/HistoryGames/AllianceDetail.php
+
+        -
+            # History databases are not supported.
+            message: '#^Smr\\DatabaseRecord does not contain field\: (bounty|race)$#'
+            identifier: smr.dba.databaseRecordType
+            count: 2
+            path: src/pages/Account/HistoryGames/AllianceDetail.php
+
+        -
+            # History databases are not supported.
+            message: '#^Query error\: Column "sector\.(kills|mines)" does not exist$#'
+            identifier: dba.ArrayValuesAreColumnsRule
+            count: 4
+            path: src/pages/Account/HistoryGames/ExtendedStatsDetail.php
+
+        -
+            # History databases are not supported.
+            message: '#^Query error\: SQLSTATE\[42S22\]\: Column not found\: 1054 Unknown column ''(deaths|kills)'' in ''field list'' \(42S22\)\.$#'
+            identifier: dba.syntaxError
+            count: 2
+            path: src/pages/Account/HistoryGames/ExtendedStatsDetail.php
+
+        -
+            # History databases are not supported.
+            message: '#^Smr\\DatabaseRecord does not contain field\: message$#'
+            identifier: smr.dba.databaseRecordType
+            count: 1
+            path: src/pages/Account/HistoryGames/GameNews.php
+
+        -
+            # History databases are not supported.
+            message: '#^Unresolvable Query\: Cannot resolve query with variable type\: string\.$#'
+            identifier: dba.unresolvableQuery
+            count: 1
+            path: src/pages/Account/HistoryGames/HallOfFame.php
+
+        -
+            # History databases are not supported.
+            message: '#^Query error\: Column "alliance\.kills" does not exist$#'
+            identifier: dba.ArrayValuesAreColumnsRule
+            count: 2
+            path: src/pages/Account/HistoryGames/Summary.php
+
+        -
+            # History databases are not supported.
+            message: '#^Smr\\DatabaseRecord does not contain field\: (end_date|speed|start_date|type)$#'
+            identifier: smr.dba.databaseRecordType
+            count: 4
+            path: src/pages/Account/HistoryGames/Summary.php
+
+        -
+            # LEFT JOIN aggregation can possibly leave this value null.
+            message: '#^Smr\\DatabaseRecord\:\:getString returns type string, but field `common_ip` has type string\|null$#'
+            identifier: smr.dba.databaseRecordType
+            count: 1
+            path: src/pages/Admin/ComputerSharing.php
+
+        -
+            # False positive due to missing support for CTEs in phpstan-dba.
+            message: '#^Smr\\DatabaseRecord\:\:getInt returns type int, but field `(author_player_id|sendtime)` has type int\<\-2147483648, 2147483647\>\|null$#'
+            identifier: smr.dba.databaseRecordType
+            count: 3
+            path: src/pages/Player/AllianceMessageBoard.php
+
+        -
+            # The roster is rendered for an alliance with members, but phpstan-dba
+            # conservatively treats AVG() as nullable.
+            message: '#^Smr\\DatabaseRecord\:\:getInt returns type int, but field `alliance_avg` has type int\|null$#'
+            identifier: smr.dba.databaseRecordType
+            count: 1
+            path: src/pages/Player/AllianceRoster.php
+
+        -
+            # CombatLog queries are assembled dynamically by CombatLogType.
+            message: '#^Unresolvable Query\: Cannot resolve query with variable type\: non\-falsy\-string\.$#'
+            identifier: dba.unresolvableQuery
+            count: 2
+            path: src/pages/Player/CombatLogList.php
+
+        -
+            # MySQL returns this SUM() expression as a numeric string, which
+            # DatabaseRecord::getInt() deliberately converts to an int.
+            message: '#^Smr\\DatabaseRecord\:\:getInt returns type int, but field `total_unread` has type string$#'
+            identifier: smr.dba.databaseRecordType
+            count: 1
+            path: src/pages/Player/MessageView.php
+
+        -
+            # The test2 table is created at runtime and thus is absent from the schema.
+            message: '#^Query error\: Table "test2" does not exist$#'
+            identifier: dba.ArrayValuesAreColumnsRule
+            count: 2
+            path: test/SmrTest/lib/DatabaseInsertTest.php
+
+        -
+            # The test2 table is created at runtime and thus is absent from the schema.
+            message: '#^Query error\: Table "test2" does not exist$#'
+            identifier: dba.keyValue
+            count: 2
+            path: test/SmrTest/lib/DatabaseInsertTest.php
+
+        -
+            # The test intentionally calls a dynamically selected escaping method
+            # with mixed values to exercise the runtime API.
+            message: '#^Unresolvable Query\: Cannot simulate parameter value for type\: mixed\.$#'
+            identifier: dba.unresolvableQuery
+            count: 1
+            path: test/SmrTest/lib/DatabaseIntegrationTest.php
+
+        -
+            # The test intentionally builds a variable-length UNION query.
+            message: '#^Unresolvable Query\: Cannot resolve query with variable type\: non\-falsy\-string&uppercase\-string\.$#'
+            identifier: dba.unresolvableQuery
+            count: 1
+            path: test/SmrTest/lib/DatabaseResultTest.php

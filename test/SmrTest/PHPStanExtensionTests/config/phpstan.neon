@@ -1,0 +1,7 @@
+includes:
+  - ../../../../phpstan-dba.neon
+
+parameters:
+    # Fixtures exercise the same configured rules and introspected schema as SMR.
+    bootstrapFiles:
+        - ../../../phpstan-dba-bootstrap.php

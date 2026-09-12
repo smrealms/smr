@@ -34,6 +34,11 @@ services:
             file: ../abstract-services.yml
             service: smr-test
         entrypoint: vendor/bin/phpstan --memory-limit=4G --ansi analyse -v
+        networks:
+            - backend
+        depends_on:
+            mysql:
+                condition: service_healthy
 
     phpcs:
         extends:
