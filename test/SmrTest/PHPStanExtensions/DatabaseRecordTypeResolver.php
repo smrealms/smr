@@ -33,10 +33,6 @@ final class DatabaseRecordTypeResolver {
 		'getNullableInt',
 	];
 
-	public static function isMethodSupported(MethodReflection $methodReflection): bool {
-		return $methodReflection->getName() !== 'getRow';
-	}
-
 	/**
 	 * @throws DatabaseRecordTypeException
 	 */
@@ -51,6 +47,9 @@ final class DatabaseRecordTypeResolver {
 			// from a query, or the query was not resolvable. Therefore, we
 			// won't know its row type and cannot proceed.
 			return null;
+		}
+		if ($methodReflection->getName() === 'getRow') {
+			return $objectType->getRowType();
 		}
 
 		$resolvedArguments = CallArgumentResolver::resolve($methodReflection, $methodCall, $scope);

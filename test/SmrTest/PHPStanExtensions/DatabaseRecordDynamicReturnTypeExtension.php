@@ -23,7 +23,7 @@ class DatabaseRecordDynamicReturnTypeExtension implements DynamicMethodReturnTyp
 	}
 
 	public function isMethodSupported(MethodReflection $methodReflection): bool {
-		return DatabaseRecordTypeResolver::isMethodSupported($methodReflection);
+		return true;
 	}
 
 	public function getTypeFromMethodCall(

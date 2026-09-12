@@ -4,7 +4,7 @@ namespace Smr\Pages\Admin;
 
 class WordFilterRenderer {
 
-	/** @param array<array<string>> $FilteredWords */
+	/** @param list<array{word_id: int, word_value: string, word_replacement: string}> $FilteredWords */
 	public static function render(string $DelHREF, string $AddHREF, array $FilteredWords, ?string $Message): void {
 		?>
 		<h2>Filtered Words</h2><br />
