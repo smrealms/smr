@@ -994,6 +994,10 @@ class Planet implements NormalCombatantInterface {
 		return array_sum($this->getMaxBuildings()) / 3;
 	}
 
+	public function atMaxLevel(): bool {
+		return $this->getLevel() === $this->getMaxLevel();
+	}
+
 	/**
 	 * Returns the modified accuracy of turrets on this planet.
 	 * Only used for display purposes.

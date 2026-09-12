@@ -80,6 +80,8 @@ class PlanetListDefenseRenderer {
 										echo $Planet->getStructureTypes($Building['ConstructionID'])->name(); ?><br /><?php
 										echo format_time($Building['TimeRemaining'], true);
 									}
+								} elseif ($Planet->atMaxLevel()) {
+									?>Complete<?php
 								} else {
 									?>Nothing<?php
 								} ?>

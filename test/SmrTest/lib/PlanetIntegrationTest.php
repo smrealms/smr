@@ -429,8 +429,10 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 	public function test_setBuildingsToMax(): void {
 		$planet = Planet::createPlanet(1, 1, 1, 1);
 		self::assertSame(0., $planet->getLevel());
+		self::assertFalse($planet->atMaxLevel());
 		$planet->setBuildingsToMax();
 		self::assertSame($planet->getMaxLevel(), $planet->getLevel());
+		self::assertTrue($planet->atMaxLevel());
 		self::assertSame($planet->getMaxBuildings(), $planet->getBuildings());
 	}
 
