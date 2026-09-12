@@ -46,9 +46,6 @@ class DatabaseRecordRule implements Rule {
 			return [];
 		}
 
-		if (DatabaseRecordTypeResolver::isMethodSupported($methodReflection) === false) {
-			return [];
-		}
 		if (!($scope->getType($methodCall->var) instanceof DatabaseRecordObjectType)) {
 			return [];
 		}

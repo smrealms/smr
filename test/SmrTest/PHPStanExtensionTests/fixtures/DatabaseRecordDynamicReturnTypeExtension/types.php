@@ -8,7 +8,7 @@ use function PHPStan\Testing\assertType;
 function getters(Database $db): void {
 	$record = $db->select(
 		table: 'player',
-		returnColumns: ['player_id'],
+		returnColumns: ['player_id', 'account_id'],
 	)->record();
 
 	assertType('int<0, 4294967295>', $record->getInt('player_id'));
@@ -22,8 +22,11 @@ function getters(Database $db): void {
 	$allFieldsRecord = $db->select(table: 'player')->record();
 	assertType('int<0, 4294967295>', $allFieldsRecord->getInt('player_id'));
 
-	// Fallback to docstring return type because getRow is not supported
-	assertType('array<string, mixed>', $record->getRow());
+	// The entire result row is returned by getRow.
+	assertType(
+		'array{player_id: int<0, 4294967295>, account_id: int<0, 65535>}',
+		$record->getRow(),
+	);
 
 	// Fallback to docstring return type because DatabaseRecord RTE emits the
 	// error that the field doesn't have the type suggested by the getter.

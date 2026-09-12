@@ -4,7 +4,7 @@ namespace Smr\Pages\Player;
 
 class MessageBlacklistRenderer {
 
-	/** @param array<array<string, string>> $Blacklist */
+	/** @param list<array{player_name: string, game_id: int, entry_id: int}> $Blacklist */
 	public static function render(?string $Message, array $Blacklist, string $BlacklistDeleteHREF, string $BlacklistAddHREF): void {
 		if ($Message !== null) {
 			echo $Message; ?><br /><br /><?php
