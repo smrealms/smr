@@ -45,7 +45,6 @@ class Bounty {
 		$dbResult = $db->select('bounty', $player->SQLID);
 		$bounties = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			// Recall that bounty_id is only unique to a given player
 			$bounties[$dbRecord->getInt('bounty_id')] = self::getFromRecord($dbRecord);
 		}
 		return $bounties;
@@ -80,7 +79,6 @@ class Bounty {
 			bountyID: $record->getInt('bounty_id'),
 			gameID: $record->getInt('game_id'),
 			type: $record->getStringEnum('type', BountyType::class),
-			time: $record->getInt('time'),
 			claimerPlayerID: $record->getInt('claimer_player_id'),
 			credits: $record->getInt('amount'),
 			smrCredits: $record->getInt('smr_credits'),
@@ -90,10 +88,9 @@ class Bounty {
 
 	public function __construct(
 		public readonly int $targetPlayerID,
-		public readonly int $bountyID, // only unique to the target
+		public ?int $bountyID,
 		public readonly int $gameID,
 		public readonly BountyType $type,
-		public readonly int $time,
 		private int $claimerPlayerID = 0,
 		private int $credits = 0,
 		private int $smrCredits = 0,
@@ -172,17 +169,20 @@ class Bounty {
 		}
 		$db = Database::getInstance();
 		if ($this->credits > 0 || $this->smrCredits > 0) {
-			$db->replace('bounty', [
+			$fields = [
 				'player_id' => $this->targetPlayerID,
-				'bounty_id' => $this->bountyID,
 				'game_id' => $this->gameID,
 				'type' => $this->type->value,
-				'time' => $this->time,
 				'claimer_player_id' => $this->claimerPlayerID,
 				'amount' => $this->credits,
 				'smr_credits' => $this->smrCredits,
-			]);
-		} else {
+			];
+			if ($this->bountyID === null) {
+				$this->bountyID = $db->insertAutoIncrement('bounty', $fields);
+			} else {
+				$db->replace('bounty', ['bounty_id' => $this->bountyID, ...$fields]);
+			}
+		} elseif ($this->bountyID !== null) {
 			$db->delete('bounty', [
 				'bounty_id' => $this->bountyID,
 				'player_id' => $this->targetPlayerID,

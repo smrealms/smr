@@ -2274,20 +2274,12 @@ class Player {
 	protected function createBounty(BountyType $type): Bounty {
 		$bounty = new Bounty(
 			targetPlayerID: $this->playerID,
-			bountyID: $this->getNextBountyID(),
+			bountyID: null,
 			gameID: $this->gameID,
 			type: $type,
-			time: Epoch::time(),
 		);
-		$this->bounties[$bounty->bountyID] = $bounty;
+		$this->bounties[] = $bounty;
 		return $bounty;
-	}
-
-	protected function getNextBountyID(): int {
-		if (!$this->hasBounties()) {
-			return 0;
-		}
-		return max(array_keys($this->getBounties())) + 1;
 	}
 
 	public function getActiveBounty(BountyType $type): Bounty {

@@ -25,7 +25,6 @@ class BountyTest extends BaseIntegrationSpec {
 			bountyID: 1,
 			gameID: 1,
 			type: BountyType::UG,
-			time: 0,
 			claimerPlayerID: 0,
 			credits: 0,
 			smrCredits: 0,
@@ -42,15 +41,15 @@ class BountyTest extends BaseIntegrationSpec {
 		// Calling update on a new bounty will add it to the database
 		$bounty = new Bounty(
 			targetPlayerID: 3,
-			bountyID: 4,
+			bountyID: null,
 			gameID: 5,
 			type: BountyType::UG,
-			time: 6,
 			claimerPlayerID: 0,
 			credits: 8,
 			smrCredits: 9,
 		);
 		self::assertTrue($bounty->update());
+		self::assertNotNull($bounty->bountyID);
 
 		// Reading it out of the database gets back an equal object
 		$db = Database::getInstance();
@@ -89,21 +88,19 @@ class BountyTest extends BaseIntegrationSpec {
 	}
 
 	public function test_getPlacedOnPlayer(): void {
-		// Two bounties the same, except which player they're on
+		// Two bounties on different players have distinct global IDs.
 		$bounty1 = new Bounty(
 			targetPlayerID: 1,
 			bountyID: 7,
 			gameID: 42,
 			type: BountyType::HQ,
-			time: 0,
 			credits: 1,
 		);
 		$bounty2 = new Bounty(
 			targetPlayerID: 2,
-			bountyID: 7,
+			bountyID: 8,
 			gameID: 42,
 			type: BountyType::HQ,
-			time: 0,
 			credits: 1,
 		);
 		// Add bounties to the database
@@ -133,7 +130,6 @@ class BountyTest extends BaseIntegrationSpec {
 			bountyID: 1,
 			gameID: 42,
 			type: BountyType::HQ,
-			time: 0,
 			credits: 1,
 		);
 		// Same as bounty1, except claimable by player 1
@@ -142,7 +138,6 @@ class BountyTest extends BaseIntegrationSpec {
 			bountyID: 2,
 			gameID: 42,
 			type: BountyType::HQ,
-			time: 0,
 			credits: 1,
 			claimerPlayerID: 1,
 		);
@@ -152,7 +147,6 @@ class BountyTest extends BaseIntegrationSpec {
 			bountyID: 3,
 			gameID: 42,
 			type: BountyType::UG,
-			time: 0,
 			credits: 1,
 			claimerPlayerID: 1,
 		);
