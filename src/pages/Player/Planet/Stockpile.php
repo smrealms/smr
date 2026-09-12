@@ -22,7 +22,7 @@ class Stockpile extends PlanetPage {
 
 			$container = new StockpileProcessor($goodID);
 
-			$goodInfo[] = [
+			$goodInfo[$goodID] = [
 				'Name' => $good->name,
 				'ImageHTML' => $good->getImageHTML(),
 				'ShipAmount' => $ship->getCargo($goodID),

@@ -5,7 +5,7 @@ namespace Smr\Pages\Player\Planet;
 class StockpileRenderer {
 
 	/**
-	 * @param array<array{Name: string, ImageHTML: string, ShipAmount: int, PlanetAmount: int, DefaultAmount: int, Page: \Smr\Pages\Player\Planet\StockpileProcessor}> $GoodInfo
+	 * @param array<int, array{Name: string, ImageHTML: string, ShipAmount: int, PlanetAmount: int, DefaultAmount: int, Page: \Smr\Pages\Player\Planet\StockpileProcessor}> $GoodInfo
 	 */
 	public static function render(array $GoodInfo): void {
 		if (count($GoodInfo) === 0) { ?>
@@ -25,20 +25,21 @@ class StockpileRenderer {
 			</tr>
 
 			<?php
-			foreach ($GoodInfo as $info) { ?>
-				<form method="POST" action="<?php echo $info['Page']->href(); ?>">
-					<tr>
-						<td class="left"><?php echo $info['ImageHTML']; ?></td>
-						<td><?php echo $info['Name']; ?></td>
-						<td class="center"><?php echo $info['ShipAmount']; ?></td>
-						<td class="center"><?php echo $info['PlanetAmount']; ?></td>
-						<td><input type="number" name="amount" value="<?php echo $info['DefaultAmount']; ?>" class="center" size="4" /></td>
-						<td class="center">
+			foreach ($GoodInfo as $goodID => $info) {
+				$formID = 'stockpile-' . $goodID; ?>
+				<tr>
+					<td class="left"><?php echo $info['ImageHTML']; ?></td>
+					<td><?php echo $info['Name']; ?></td>
+					<td class="center"><?php echo $info['ShipAmount']; ?></td>
+					<td class="center"><?php echo $info['PlanetAmount']; ?></td>
+					<td><input form="<?php echo $formID; ?>" type="number" name="amount" value="<?php echo $info['DefaultAmount']; ?>" class="center" size="4" /></td>
+					<td class="center">
+						<form id="<?php echo $formID; ?>" method="POST" action="<?php echo $info['Page']->href(); ?>">
 							<?php echo $info['Page']->actionShip->html(); ?>&thinsp;
 							<?php echo $info['Page']->actionPlanet->html(); ?>
-						</td>
-					</tr>
-				</form><?php
+						</form>
+					</td>
+				</tr><?php
 			} ?>
 		</table>
 
