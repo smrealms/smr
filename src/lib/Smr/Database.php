@@ -90,10 +90,13 @@ class Database {
 	}
 
 	/**
-	 * Returns the size of the current database in bytes.
+	 * Returns the size of the current database's game tables in bytes.
+	 *
+	 * The Flyway schema history table is migration bookkeeping rather than game
+	 * data, so it is excluded from this total.
 	 */
 	public function getDbBytes(): int {
-		$query = 'SELECT SUM(data_length + index_length) as db_bytes FROM information_schema.tables WHERE table_schema=(SELECT database())';
+		$query = 'SELECT SUM(data_length + index_length) as db_bytes FROM information_schema.tables WHERE table_schema=(SELECT database()) AND table_name <> \'flyway_schema_history\'';
 		return $this->read($query)->record()->getInt('db_bytes');
 	}
 
