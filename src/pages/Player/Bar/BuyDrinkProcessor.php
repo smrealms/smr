@@ -34,16 +34,12 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 			'expire_time' => $db->escapeNumber(Epoch::time() - 1800),
 		]);
 
-		$dbResult = $db->read('SELECT IFNULL(MAX(drink_id), 0) AS max_drink_id FROM player_has_drinks WHERE game_id = :game_id', [
-			'game_id' => $db->escapeNumber($player->getGameID()),
-		]);
-		$curr_drink_id = $dbResult->record()->getInt('max_drink_id');
-
 		if ($this->action !== 'drink') {
 			$drinkName = 'water';
 			$message .= 'You ask the bartender for some water and you quickly down it.<br />';
 			// have they been drinking recently?
-			if ($curr_drink_id > 0) {
+			$num_drinks = $db->count('player_has_drinks', $player->SQLID);
+			if ($num_drinks > 0) {
 				$message .= 'You don\'t feel quite so intoxicated anymore.<br />';
 				$db->write('DELETE FROM player_has_drinks WHERE ' . Player::SQL . ' LIMIT 1', $player->SQLID);
 			}
@@ -58,11 +54,9 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 			}
 			$drinkName = array_rand_value($drinkList);
 
-			$curr_drink_id++;
 			$db->insert('player_has_drinks', [
 				'player_id' => $player->getPlayerID(),
 				'game_id' => $player->getGameID(),
-				'drink_id' => $curr_drink_id,
 				'time' => Epoch::time(),
 			]);
 
