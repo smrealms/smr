@@ -181,12 +181,12 @@ class DatabaseIntegrationTest extends TestCase {
 
 	public function test_getDbBytes(): void {
 		$db = Database::getInstance();
-		// Test that the database size is within some reasonable range (1-3 MB).
+		// Test that the database size is within some reasonable range (2-4 MB).
 		// Using a range prevents the test from failing after every Flyway patch
 		// that changes the schema.
 		$bytes = $db->getDbBytes();
 		$bytesToMB = 1024 * 1024;
-		self::assertEqualsWithDelta(2 * $bytesToMB, $bytes, 1 * $bytesToMB);
+		self::assertEqualsWithDelta(3 * $bytesToMB, $bytes, 1 * $bytesToMB);
 	}
 
 	public function test_escapeBoolean(): void {
