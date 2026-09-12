@@ -68,7 +68,11 @@ class FeatureRequest extends AccountPage {
 		$dbResult = $db->read('SELECT *
 					FROM feature_request
 					JOIN feature_request_comments super USING(feature_request_id)
-					WHERE comment_id = 1
+					WHERE comment_id = (
+						SELECT MIN(comment_id)
+						FROM feature_request_comments
+						WHERE feature_request_id = super.feature_request_id
+					)
 					AND status = :status
 					AND (
 						:category_is_not_new OR
@@ -137,7 +141,11 @@ class FeatureRequest extends AccountPage {
 			SELECT COUNT(*) AS count
 			FROM feature_request
 			JOIN feature_request_comments super USING(feature_request_id)
-			WHERE comment_id = 1
+			WHERE comment_id = (
+				SELECT MIN(comment_id)
+				FROM feature_request_comments
+				WHERE feature_request_id = super.feature_request_id
+			)
 			AND status = :status';
 		$sqlParams = [
 			'status' => $db->escapeString($status),
