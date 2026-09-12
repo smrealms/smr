@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Account;
 
+use Closure;
 use Smr\Account;
 use Smr\Alliance;
 use Smr\Database;
@@ -60,15 +61,6 @@ class GameStats extends AccountPage {
 		$playerKillRecords = Rankings::playerStats('kills', $gameID, 10);
 		$playerKillRanks = Rankings::collectRankings($playerKillRecords, $player);
 
-		$allianceTopTen = function(string $stat) use ($getAllianceLink, $gameID, $player): array {
-			$allianceRecords = Rankings::allianceStats($stat, $gameID, 10);
-			$allianceRanks = Rankings::collectAllianceRankings($allianceRecords, $player);
-			foreach ($allianceRanks as $rank => $info) {
-				$allianceRanks[$rank]['AllianceName'] = $getAllianceLink($info['Alliance']);
-			}
-			return $allianceRanks;
-		};
-
 		if ($player !== null) {
 			$playerInfo = [
 				'Name' => $player->getLevelName() . ' ' . $player->getDisplayName(),
@@ -104,12 +96,25 @@ class GameStats extends AccountPage {
 			TotalAlliances: $db->count('alliance', ['game_id' => $gameID]),
 			ExperienceRankings: $playerExpRanks,
 			KillRankings: $playerKillRanks,
-			AllianceExpRankings: $allianceTopTen('experience'),
-			AllianceKillRankings: $allianceTopTen('kills'),
+			AllianceExpRankings: $this->allianceTopTen('experience', $getAllianceLink, $player),
+			AllianceKillRankings: $this->allianceTopTen('kills', $getAllianceLink, $player),
 			PlayerInfo: $playerInfo,
 			BackHref: new GamePlay()->href(),
 			ThisAccount: $account,
 		);
+	}
+
+	/**
+	 * @param 'experience'|'kills' $stat
+	 * @return array<int, array{Alliance: Alliance, Class: string, Value: int, AllianceName: string}>
+	 */
+	private function allianceTopTen(string $stat, Closure $getAllianceLink, ?Player $player): array {
+		$allianceRecords = Rankings::allianceStats($stat, $this->gameID, 10);
+		$allianceRanks = Rankings::collectAllianceRankings($allianceRecords, $player);
+		foreach ($allianceRanks as $rank => $info) {
+			$allianceRanks[$rank]['AllianceName'] = $getAllianceLink($info['Alliance']);
+		}
+		return $allianceRanks;
 	}
 
 }
