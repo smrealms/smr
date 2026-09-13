@@ -37,14 +37,10 @@ class HallOfFamePersonal extends AccountPage {
 			try {
 				$player = Player::getPlayerByAccountAndGame($account->getAccountID(), $game_id);
 			} catch (PlayerNotFound) {
-				// Session user is not in this game, $player remains null
+				// Session user is not in this game, $player remains unset
 			}
 
-			try {
-				$hofPlayer = Player::getPlayerByAccountAndGame($account_id, $game_id);
-			} catch (PlayerNotFound) {
-				create_error('That player has not yet joined this game.');
-			}
+			$hofPlayer = Player::getPlayerByAccountAndGame($account_id, $game_id);
 			$template->pageTopic = htmlentities($hofPlayer->getPlayerName()) . '\'s Personal Hall of Fame: ' . Game::getGame($game_id)->getDisplayName();
 		} else {
 			$hofName = Account::getAccount($account_id)->getHofDisplayName();

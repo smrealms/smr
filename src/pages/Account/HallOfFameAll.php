@@ -5,6 +5,7 @@ namespace Smr\Pages\Account;
 use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Exceptions\PlayerNotFound;
 use Smr\Game;
 use Smr\HallOfFame;
 use Smr\Page\AccountPage;
@@ -39,7 +40,19 @@ class HallOfFameAll extends AccountPage {
 		}
 		$template->pageTopic = $topic;
 
-		$container = new HallOfFamePersonal($account->getAccountID(), $game_id);
+		// Get game player for viewing account
+		if ($game_id === null) {
+			$player = null;
+		} else {
+			try {
+				$player = Player::getPlayerByAccountAndGame($account->getAccountID(), $game_id);
+			} catch (PlayerNotFound) {
+				$player = null;
+			}
+		}
+
+		// We will only show viewing account's rank if all-time or account joined game
+		$hasRank = $game_id === null || $player !== null;
 
 		$breadcrumb = HallOfFame::buildBreadcrumb($this, $game_id !== null ? 'Current HoF' : 'Global HoF');
 
@@ -49,7 +62,12 @@ class HallOfFameAll extends AccountPage {
 		if ($viewType === null || !isset($hofVis[$viewType])) {
 			// Not a complete HOF type, so continue to show categories
 			$allowedVis = [HOF_PUBLIC, HOF_ALLIANCE];
-			$categories = HallOfFame::getHofCategories($this, $allowedVis, $game_id, $account->getAccountID());
+			$categories = HallOfFame::getHofCategories(
+				page: $this,
+				allowedVis: $allowedVis,
+				game_id: $game_id,
+				rankAccountID: $hasRank ? $account->getAccountID() : null,
+			);
 			$rows = null;
 
 		} else {
@@ -90,14 +108,15 @@ class HallOfFameAll extends AccountPage {
 				$amount = HallOfFame::applyHofVisibilityMask($dbRecord->getFloat('amount'), $hofVis[$viewType], $game_id, $accountID);
 				$rows[] = HallOfFame::displayHOFRow($rank++, $accountID, $game_id, $amount);
 			}
-			if (!$foundMe) {
+			// Add viewer row if not already found (if all-time or joined game)
+			if (!$foundMe && $hasRank) {
 				$rank = HallOfFame::getHofRank($viewType, $account->getAccountID(), $game_id);
 				$rows[] = HallOfFame::displayHOFRow($rank['Rank'], $account->getAccountID(), $game_id, $rank['Amount']);
 			}
 		}
 
 		$template->pageRenderer = fn() => HallOfFameRenderer::render(
-			PersonalHofHREF: $container->href(),
+			PersonalHofHREF: $player?->getPersonalHofHREF(),
 			Breadcrumb: $breadcrumb,
 			Categories: $categories,
 			Rows: $rows,
