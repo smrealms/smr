@@ -13,7 +13,9 @@ use Smr\Template;
 class NewsReadAdvanced extends AccountPage {
 
 	use ReusableTrait;
+
 	/**
+	 * @param NewsReadAdvancedProcessor::ACTION_*|null $submit
 	 * @param array<int> $playerIDs
 	 * @param array<int> $allianceIDs
 	 */

@@ -237,7 +237,7 @@ class Globals {
 	}
 
 	public static function getAllianceNewsHREF(int $gameID, int $allianceID): string {
-		return new NewsReadAdvanced(gameID: $gameID, submit: 'Search For Alliance', allianceIDs: [$allianceID])->href();
+		return new NewsReadAdvanced(gameID: $gameID, submit: 'alliance', allianceIDs: [$allianceID])->href();
 	}
 
 	public static function getAllianceMotdHREF(int $allianceID): string {
