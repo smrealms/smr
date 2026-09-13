@@ -3,6 +3,7 @@
 namespace Smr\Pages\Player;
 
 use Smr\Database;
+use Smr\Epoch;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
 use Smr\Request;
@@ -40,6 +41,9 @@ class AllianceSetOpProcessor extends PlayerPageProcessor {
 			$time = strtotime($date);
 			if ($time === false) {
 				$this->error('The specified date is not in a valid format.');
+			}
+			if ($time < Epoch::time()) {
+				$this->error('The specified date must be in the future.');
 			}
 
 			// add op to db
