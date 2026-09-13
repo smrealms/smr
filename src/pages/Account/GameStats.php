@@ -76,7 +76,8 @@ class GameStats extends AccountPage {
 				'News' => create_link(
 					new NewsReadAdvanced(
 						gameID: $gameID,
-						submit: 'Search For Player',
+						submit: 'player',
+						label: $player->getPlayerName(),
 						playerIDs: [$player->getPlayerID()],
 					),
 					'View',

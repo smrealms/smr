@@ -54,7 +54,7 @@
         <exclude name="PhpCollective.Classes.EnumCaseCasing.WrongCasing" />
 
         <!-- Incompatible with PHPStan-specific types in docblocks. -->
-        <exclude name="PhpCollective.Commenting.DocBlockParamTypeMismatch.Incompatible" />
+        <exclude name="PhpCollective.Commenting.DocBlockParamTypeMismatch" />
 
         <!-- We do not demand that all constants have a docstring. -->
         <exclude name="PhpCollective.Commenting.DocBlockConst" />
