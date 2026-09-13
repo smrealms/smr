@@ -15,7 +15,7 @@ class HallOfFame {
 	 * @param array<string> $allowedVis
 	 * @return array<array{link: string, subcategories: string}>
 	 */
-	public static function getHofCategories(HallOfFameAll|HallOfFamePersonal $page, array $allowedVis, ?int $game_id, int $account_id): array {
+	public static function getHofCategories(HallOfFameAll|HallOfFamePersonal $page, array $allowedVis, ?int $game_id, ?int $rankAccountID): array {
 		// Get the HOF type that we're currently viewing
 		if ($page->viewType !== null) {
 			$viewTypeFilter = $page->viewType . ':'; // avoid matching partial types
@@ -57,9 +57,11 @@ class HallOfFame {
 				$rankMsg = '';
 				if (count($extra) <= 2) {
 					// Subcategory is a complete HOF type
-					$rank = self::getHofRank($hofType, $account_id, $game_id);
-					if ($rank['Rank'] !== 0) {
-						$rankMsg = ' (#' . $rank['Rank'] . ')';
+					if ($rankAccountID !== null) {
+						$rank = self::getHofRank($hofType, $rankAccountID, $game_id);
+						if ($rank['Rank'] !== 0) {
+							$rankMsg = ' (#' . $rank['Rank'] . ')';
+						}
 					}
 					$containerViewType = $hofType;
 				} else {
@@ -87,17 +89,23 @@ class HallOfFame {
 	 * - alliance stats in live games for players not in your alliance
 	 * - private stats for players who are not the current player
 	 */
-	public static function applyHofVisibilityMask(float $amount, string $vis, ?int $gameID, int $accountID): string|float {
-		$session = Session::getInstance();
-		$account = $session->getAccount();
+	public static function applyHofVisibilityMask(float $amount, string $vis, ?int $gameID, int $hofAccountID): string|float {
+		$accountID = Session::getInstance()->getAccountID();
+		$showAllianceVis = function() use ($accountID, $hofAccountID, $gameID): bool {
+			if ($gameID === null || Game::getGame($gameID)->hasEnded()) {
+				return true;
+			}
+			try {
+				$player = Player::getPlayerByAccountAndGame($accountID, $gameID);
+			} catch (PlayerNotFound) {
+				// Viewing player has not joined the game
+				return false;
+			}
+			return Player::getPlayerByAccountAndGame($hofAccountID, $gameID)->sameAlliance($player);
+		};
 		if (
-			($vis === HOF_PRIVATE && $account->getAccountID() !== $accountID) ||
-			(
-				$vis === HOF_ALLIANCE &&
-				$gameID !== null &&
-				!Game::getGame($gameID)->hasEnded() &&
-				!Player::getPlayerByAccountAndGame($accountID, $gameID)->sameAlliance($session->getPlayer())
-			)
+			($vis === HOF_PRIVATE && $accountID !== $hofAccountID) ||
+			($vis === HOF_ALLIANCE && !$showAllianceVis())
 		) {
 			return '-';
 		}
