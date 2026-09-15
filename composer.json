@@ -90,6 +90,6 @@
 		"rector/rector": "2.5.9",
 		"sqlftw/sqlftw": "0.1.17",
 		"squizlabs/php_codesniffer": "4.0.4",
-		"staabm/phpstan-dba": "0.4.10"
+		"staabm/phpstan-dba": "0.4.11"
 	}
 }
