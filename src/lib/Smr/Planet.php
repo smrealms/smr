@@ -1086,17 +1086,19 @@ class Planet implements NormalCombatantInterface {
 
 		// gets the time for the buildings
 		$timeComplete = Epoch::time() + $this->getConstructionTime($constructionID);
+		$buildingSlotID = count($this->getCurrentlyBuilding()) + 1;
 		$db = Database::getInstance();
-		$insertID = $db->insertAutoIncrement('planet_is_building', [
+		$db->insert('planet_is_building', [
 			'game_id' => $this->getGameID(),
 			'sector_id' => $this->getSectorID(),
+			'building_slot_id' => $buildingSlotID,
 			'construction_id' => $constructionID,
 			'constructor_player_id' => $constructor->getPlayerID(),
 			'time_complete' => $timeComplete,
 		]);
 
-		$this->currentlyBuilding[$insertID] = [
-			'BuildingSlotID' => $insertID,
+		$this->currentlyBuilding[$buildingSlotID] = [
+			'BuildingSlotID' => $buildingSlotID,
 			'ConstructionID' => $constructionID,
 			'ConstructorPlayerID' => $constructor->getPlayerID(),
 			'Finishes' => $timeComplete,

@@ -378,6 +378,7 @@ class ChessGame {
 		$db = Database::getInstance();
 		$db->insert('chess_game_moves', [
 			'chess_game_id' => $this->chessGameID,
+			'move_id' => count($this->moves),
 			'piece_id' => $pieceID,
 			'start_x' => $loc->x,
 			'start_y' => $loc->y,

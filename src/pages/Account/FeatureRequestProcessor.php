@@ -22,7 +22,7 @@ class FeatureRequestProcessor extends AccountPageProcessor {
 		// add this feature to db
 		$db = Database::getInstance();
 		$featureRequestID = $db->insertAutoIncrement('feature_request', []);
-		$db->insert('feature_request_comments', [
+		$db->insertAutoIncrement('feature_request_comments', [
 			'feature_request_id' => $featureRequestID,
 			'poster_id' => $account->getAccountID(),
 			'posting_time' => Epoch::time(),

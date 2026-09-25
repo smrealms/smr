@@ -68,7 +68,7 @@ class FeatureRequestVoteProcessor extends AccountPageProcessor {
 					['status' => $status],
 					['feature_request_id' => $featureID],
 				);
-				$db->insert('feature_request_comments', [
+				$db->insertAutoIncrement('feature_request_comments', [
 					'feature_request_id' => $featureID,
 					'poster_id' => $account->getAccountID(),
 					'posting_time' => Epoch::time(),
