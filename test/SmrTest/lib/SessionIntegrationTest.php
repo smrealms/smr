@@ -15,10 +15,6 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 
 	private Session $session;
 
-	protected function tablesToTruncate(): array {
-		return ['active_session'];
-	}
-
 	protected function setUp(): void {
 		// Start each test with a fresh container (and Smr\Session).
 		// This ensures the independence of each test.

@@ -15,10 +15,6 @@ use SmrTest\BaseIntegrationSpec;
 #[CoversClass(Planet::class)]
 class PlanetIntegrationTest extends BaseIntegrationSpec {
 
-	protected function tablesToTruncate(): array {
-		return ['planet', 'planet_has_building', 'planet_has_weapon', 'player'];
-	}
-
 	protected function tearDown(): void {
 		Planet::clearCache();
 	}

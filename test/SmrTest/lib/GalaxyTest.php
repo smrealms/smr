@@ -11,10 +11,6 @@ use SmrTest\BaseIntegrationSpec;
 #[CoversClass(Galaxy::class)]
 class GalaxyTest extends BaseIntegrationSpec {
 
-	protected function tablesToTruncate(): array {
-		return ['game_galaxy', 'sector'];
-	}
-
 	protected function setUp(): void {
 		// Start each test with an empty galaxy cache
 		Galaxy::clearCache();

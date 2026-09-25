@@ -10,10 +10,6 @@ use SmrTest\BaseIntegrationSpec;
 #[CoversClass(Album::class)]
 class AlbumIntegrationTest extends BaseIntegrationSpec {
 
-	protected function tablesToTruncate(): array {
-		return ['album_has_comments'];
-	}
-
 	public function test_addComment_increments_comment_id(): void {
 		$albumAccountID = 12345;
 		$db = Database::getInstance();

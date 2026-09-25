@@ -15,10 +15,6 @@ use SmrTest\TestUtils;
 #[CoversClass(Bounty::class)]
 class BountyTest extends BaseIntegrationSpec {
 
-	protected function tablesToTruncate(): array {
-		return ['bounty'];
-	}
-
 	public function test_max_credits(): void {
 		$bounty = new Bounty(
 			targetPlayerID: 1,

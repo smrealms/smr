@@ -15,8 +15,11 @@ $config = new RuntimeConfiguration();
 $config->debugMode(true);
 $config->utilizeSqlAst(true);
 
+// Since phpstan-dba creates a process-scoped transaction, make an independent
+// Connection instance here to avoid conflicts with the transactions made by
+// the phpunit tests inheriting from BaseIntegrationSpec.
 DiContainer::initialize(false);
-$conn = DiContainer::getClass(Connection::class)->getNativeConnection();
+$conn = DiContainer::makeClass(Connection::class)->getNativeConnection();
 if (!($conn instanceof PDO)) {
 	throw new Exception('Connection is type ' . gettype($conn) . ', expected PDO');
 }

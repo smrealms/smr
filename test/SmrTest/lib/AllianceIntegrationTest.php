@@ -13,10 +13,6 @@ use SmrTest\BaseIntegrationSpec;
 #[CoversClass(Alliance::class)]
 class AllianceIntegrationTest extends BaseIntegrationSpec {
 
-	protected function tablesToTruncate(): array {
-		return ['alliance', 'irc_alliance_has_channel'];
-	}
-
 	protected function setUp(): void {
 		// Start each test with an empty alliance cache
 		Alliance::clearCache();

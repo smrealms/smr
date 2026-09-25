@@ -15,10 +15,6 @@ use SmrTest\TestUtils;
 #[CoversClass(EnhancedWeaponEvent::class)]
 class EnhancedWeaponEventTest extends BaseIntegrationSpec {
 
-	protected function tablesToTruncate(): array {
-		return ['location_sells_special', 'location'];
-	}
-
 	public static function tearDownAfterClass(): void {
 		DiContainer::initialize(false);
 	}
