@@ -422,6 +422,8 @@ function dumpCargo(Player $player): PlayerPageProcessor {
 function plotToSector(Player $player, int $sectorID): PlayerPageProcessor {
 	if ($player->getSectorID() === $sectorID) {
 		debug('Already in sector ' . $sectorID);
+		// Since we're in the target sector, forget any existing plotted course
+		$player->deletePlottedCourse();
 		throw new ForwardAction();
 	}
 	return new PlotCourseConventionalProcessor(from: $player->getSectorID(), to: $sectorID);
