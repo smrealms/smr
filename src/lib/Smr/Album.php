@@ -107,7 +107,8 @@ readonly class Album {
 		if ($this->website === null || $this->website === '') {
 			return 'N/A';
 		}
-		return '<a href="' . $this->website . '" target="_new">' . $this->website . '</a>';
+		$website = htmlentities($this->website);
+		return '<a href="' . $website . '" target="_new">' . $website . '</a>';
 	}
 
 	public function getDisplayOtherInfo(): string {
