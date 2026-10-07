@@ -2,33 +2,12 @@
 
 namespace Smr\Pages\Account;
 
-use Exception;
 use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
-
-/**
- * Determine whether a URL is reachable based on HTTP status code class.
- */
-function isUrlReachable(string $url): bool {
-	$ch = curl_init($url);
-	if ($ch === false) {
-		throw new Exception('Failed to initialize curl');
-	}
-	curl_setopt_array($ch, [
-		CURLOPT_HEADER => true,
-		CURLOPT_NOBODY => true, // headers only
-		CURLOPT_RETURNTRANSFER => true, // don't print output
-		CURLOPT_TIMEOUT => 5, // in seconds
-	]);
-	curl_exec($ch);
-	$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-	$statusClass = IFloor($statusCode / 100);
-	return $statusClass === 2 || $statusClass === 3;
-}
+use Uri\WhatWg\Url;
 
 class AlbumEditProcessor extends AccountPageProcessor {
 
@@ -36,18 +15,23 @@ class AlbumEditProcessor extends AccountPageProcessor {
 		$location = Request::get('location');
 		$email = Request::get('email');
 
-		// get website (and validate it)
+		// Get the website and validate its format without fetching it.
 		$website = Request::get('website');
 		if ($website !== '') {
-			// add http:// if missing
-			if (preg_match('=://=', $website) !== 1) {
-				$website = 'http://' . $website;
+			$urlErrors = [];
+			$url = Url::parse($website, errors: $urlErrors);
+			if (
+				$url === null
+				|| $urlErrors !== []
+				|| $url->getScheme() !== 'https'
+				|| $url->getAsciiHost() === null
+				|| $url->getUsername() !== null
+				|| $url->getPassword() !== null
+				|| $url->getPort() !== null
+			) {
+				create_error('Please enter a valid HTTPS website URL.');
 			}
-
-			// validate
-			if (!isUrlReachable($website)) {
-				create_error('The website you entered is invalid!');
-			}
+			$website = $url->toAsciiString();
 		}
 
 		$other = Request::get('other');
