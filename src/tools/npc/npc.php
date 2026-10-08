@@ -336,8 +336,8 @@ function changeNPCLogin(): void {
 		// Make sure to select NPCs from active games only
 		$dbResult = $db->read('SELECT npc_players.player_id
 			FROM npc_players
-			JOIN player USING(player_id)
 			JOIN game USING(game_id)
+			JOIN player USING(player_id)
 			WHERE active=\'TRUE\' AND working=\'FALSE\'
 				AND start_time < :now AND end_time > :now
 			ORDER BY last_turn_update ASC', [
