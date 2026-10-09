@@ -1441,7 +1441,7 @@ class Port implements NormalCombatantInterface {
 		//get all players involved for HoF
 		$attackers = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT player.* FROM player_attacks_port JOIN player USING (player_id) WHERE game_id = :game_id AND player_attacks_port.sector_id = :sector_id AND time > :credit_time', [
+		$dbResult = $db->read('SELECT player.* FROM player_attacks_port JOIN player USING (player_id, game_id) WHERE game_id = :game_id AND player_attacks_port.sector_id = :sector_id AND time > :credit_time', [
 			...$this->SQLID,
 			'credit_time' => $db->escapeNumber(Epoch::time() - self::TIME_TO_CREDIT_RAID),
 		]);
