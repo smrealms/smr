@@ -21,7 +21,7 @@ class LogConsoleAnonBank extends AccountPage {
 
 		// get all anon bank transactions that are logged in an array
 		$dbResult = $db->read('SELECT * FROM anon_bank_transactions
-		            JOIN player USING(player_id)
+		            JOIN player USING(player_id, game_id)
 		            JOIN account USING(account_id)
 		            WHERE account.account_id IN (:account_ids)
 		            ORDER BY game_id DESC, anon_id ASC', [
