@@ -23,18 +23,19 @@ class CargoDumpRenderer {
 					<th>Action</th>
 				</tr><?php
 
-				foreach ($Goods as $good) { ?>
-					<form name="DumpForm" method="POST" action="<?php echo $good['dump_href']; ?>">
-						<tr>
-							<td><?php echo $good['image']; ?>&nbsp;<?php echo $good['name']; ?></td>
-							<td class="center">
-								<input type="number" name="amount" value="<?php echo $good['amount']; ?>" maxlength="5" size="5" class="center" />
-							</td>
-							<td class="center">
+				foreach ($Goods as $goodIndex => $good) {
+					$formID = 'dump-' . $goodIndex; ?>
+					<tr>
+						<td><?php echo $good['image']; ?>&nbsp;<?php echo $good['name']; ?></td>
+						<td class="center">
+							<input form="<?php echo $formID; ?>" type="number" name="amount" value="<?php echo $good['amount']; ?>" maxlength="5" size="5" class="center" />
+						</td>
+						<td class="center">
+							<form id="<?php echo $formID; ?>" method="POST" action="<?php echo $good['dump_href']; ?>">
 								<?php echo create_submit_display('Dump (' . TURNS_TO_DUMP_CARGO . ')'); ?>
-							</td>
-						</tr>
-					</form><?php
+							</form>
+						</td>
+					</tr><?php
 				} ?>
 			</table><?php
 		}
