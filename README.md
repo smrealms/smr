@@ -164,3 +164,13 @@ This information applies to IDEA-based IDEs, e.g. `IntelliJ`, `PHPStorm`. For ot
 ### Writing integration tests
 1. To create an integration test that uses the database, your test should extend `SmrTest\BaseIntegrationSpec`. This will ensure that any test data that gets written to the database will be cleaned up after each test.
  * The SMR database uses MyISAM for a storage engine, so we cannot simply rollback transactions after each test. Instead, the `BaseIntegrationSpec` will check for any tables that are populated from the `flyway` migration during startup, and truncate all other tables after your test.
+
+
+# OpenDKIM
+A postfix SMTP service is used for sending mail from the game server (to send registration codes,
+newsletters, bug reports, etc.).
+If you have a pre-existing DKIM private key, place it in the `opendkim` subdirectory
+with the name `<selector>.private`, where `<selector>` is the DKIM selector.
+
+If you do not have a DKIM key, one will be generated when you first start the `smtp` service.
+It will then be up to you to make sure that this DKIM key is accepted by the `smrealms.de` domain.
