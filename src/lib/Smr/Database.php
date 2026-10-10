@@ -8,6 +8,7 @@ use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\ParameterType;
 use Exception;
 use Smr\Container\DiContainer;
+use Throwable;
 
 /**
  * Wraps an active connection to the database.
@@ -53,7 +54,7 @@ class Database {
 	 * Not intended to be used outside the DI context.
 	 */
 	public static function connectionFactory(DatabaseProperties $dbProperties): Connection {
-		return DriverManager::getConnection([
+		$connection = DriverManager::getConnection([
 			'dbname' => $dbProperties->database,
 			'user' => $dbProperties->user,
 			'password' => $dbProperties->password,
@@ -61,6 +62,8 @@ class Database {
 			'driver' => 'pdo_mysql',
 			'charset' => 'utf8',
 		]);
+		$connection->setNestTransactionsWithSavepoints(true);
+		return $connection;
 	}
 
 	/**
@@ -101,24 +104,23 @@ class Database {
 	}
 
 	/**
-	 * Start a transaction for InnoDB operations.
+	 * Run an operation atomically, using a savepoint when called from an
+	 * existing transaction.
+	 *
+	 * @template T
+	 * @param callable(): T $operation
+	 * @return T
 	 */
-	public function beginTransaction(): void {
+	public function transaction(callable $operation): mixed {
 		$this->dbConn->beginTransaction();
-	}
-
-	/**
-	 * Commit the active InnoDB transaction.
-	 */
-	public function commit(): void {
-		$this->dbConn->commit();
-	}
-
-	/**
-	 * Roll back the active InnoDB transaction.
-	 */
-	public function rollBack(): void {
-		$this->dbConn->rollBack();
+		try {
+			$result = $operation();
+			$this->dbConn->commit();
+			return $result;
+		} catch (Throwable $err) {
+			$this->dbConn->rollBack();
+			throw $err;
+		}
 	}
 
 	/**
