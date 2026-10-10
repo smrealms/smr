@@ -146,31 +146,6 @@ class DatabaseIntegrationTest extends TestCase {
 		$db->select('player', limit: 1, lock: RowLockMode::Update);
 	}
 
-	public function test_beginTransaction_and_rollBack_change_transaction_state(): void {
-		$db = Database::getInstance();
-		self::assertFalse($db->isTransactionActive());
-
-		$db->beginTransaction();
-		try {
-			self::assertTrue($db->isTransactionActive());
-			$db->select('player', limit: 1, lock: RowLockMode::Update);
-		} finally {
-			$db->rollBack();
-		}
-
-		self::assertFalse($db->isTransactionActive());
-	}
-
-	public function test_commit_deactivates_transaction(): void {
-		$db = Database::getInstance();
-		$db->beginTransaction();
-		self::assertTrue($db->isTransactionActive());
-
-		$db->commit();
-
-		self::assertFalse($db->isTransactionActive());
-	}
-
 	public function test_count(): void {
 		$db = Database::getInstance();
 		// Test with criteria
@@ -251,6 +226,28 @@ class DatabaseIntegrationTest extends TestCase {
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Wrong query type');
 		$db->write('SELECT 1');
+	}
+
+	public function test_transaction_nested_operation_keeps_outer_transaction_active(): void {
+		$db = Database::getInstance();
+		$db->transaction(function() use ($db): void {
+			$db->transaction(function() use ($db): void {
+				$db->select('player', limit: 1, lock: RowLockMode::Update);
+			});
+			self::assertTrue($db->isTransactionActive());
+		});
+		self::assertFalse($db->isTransactionActive());
+	}
+
+	public function test_transaction_rolls_back_when_operation_throws(): void {
+		$db = Database::getInstance();
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('test exception');
+		try {
+			$db->transaction(fn() => throw new Exception('test exception'));
+		} finally {
+			self::assertFalse($db->isTransactionActive());
+		}
 	}
 
 	public function test_lockTable_throws_if_read_other_table(): void {

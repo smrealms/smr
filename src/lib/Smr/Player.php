@@ -16,7 +16,6 @@ use Smr\Pages\Player\Planet\KickProcessor;
 use Smr\Pages\Player\SearchForTraderResult;
 use Smr\Pages\Player\WeaponDisplayToggleProcessor;
 use Smr\Traits\RaceID;
-use Throwable;
 
 /**
  * @phpstan-type TickerData array{Type: string, Time: int, Expires: int, Recent: string}
@@ -369,68 +368,66 @@ class Player {
 	 * Insert a new player into the database. Returns the new player object.
 	 */
 	public static function createPlayer(int $accountID, int $gameID, string $playerName, int $raceID, bool $isNewbie, bool $npc = false): self {
-		$time = Epoch::time();
 		$db = Database::getInstance();
+		$playerID = $db->transaction(
+			function() use ($accountID, $gameID, $playerName, $raceID, $isNewbie, $npc, $db): int {
+				// Get the next available player number (start at 1 if no players yet)
+				$dbResult = $db->select(
+					table: 'player',
+					criteria: ['game_id' => $gameID],
+					returnColumns: ['player_number'],
+					orderBy: ['player_number'],
+					order: ['DESC'],
+					limit: 1,
+					lock: RowLockMode::Update,
+				);
+				$playerNumber = $dbResult->hasRecord() ?
+					$dbResult->record()->getInt('player_number') + 1 : 1;
 
-		$db->beginTransaction();
-		try {
-			// Get the next available player number (start at 1 if no players yet)
-			$dbResult = $db->select(
-				table: 'player',
-				criteria: ['game_id' => $gameID],
-				returnColumns: ['player_number'],
-				orderBy: ['player_number'],
-				order: ['DESC'],
-				limit: 1,
-				lock: RowLockMode::Update,
-			);
-			$playerNumber = $dbResult->hasRecord() ?
-				$dbResult->record()->getInt('player_number') + 1 : 1;
-
-			$startSectorID = 0; // Temporarily put player into non-existent sector
-			$playerID = $db->insertAutoIncrement('player', [
-				'account_id' => $accountID,
-				'game_id' => $gameID,
-				'player_number' => $playerNumber,
-				'player_name' => $playerName,
-				'race_id' => $raceID,
-				'sector_id' => $startSectorID,
-				'last_cpl_action' => $time,
-				'last_active' => $time,
-				'npc' => $db->escapeBoolean($npc),
-				'newbie_status' => $db->escapeBoolean($isNewbie),
-			]);
-			if ($playerID >= self::FIRST_RESERVED_PLAYER_ID) {
-				throw new Exception('The player ID range is full and must be increased.');
-			}
-
-			// Check if player name is reserved by someone else
-			// (Comes after insertion so we check player_name constraint first)
-			try {
-				$account = Account::getAccountByHofName($playerName);
-				if ($account->getAccountID() !== $accountID) {
-					throw new UserError('That player name is reserved by another account. Please contact an admin if you would like to claim this name.');
+				$time = Epoch::time();
+				$startSectorID = 0; // Temporarily put player into non-existent sector
+				try {
+					$playerID = $db->insertAutoIncrement('player', [
+						'account_id' => $accountID,
+						'game_id' => $gameID,
+						'player_number' => $playerNumber,
+						'player_name' => $playerName,
+						'race_id' => $raceID,
+						'sector_id' => $startSectorID,
+						'last_cpl_action' => $time,
+						'last_active' => $time,
+						'npc' => $db->escapeBoolean($npc),
+						'newbie_status' => $db->escapeBoolean($isNewbie),
+					]);
+				} catch (UniqueConstraintViolationException $err) {
+					// Player names must be unique within each game
+					try {
+						self::getPlayerByPlayerName($playerName, $gameID);
+						throw new UserError('That player name already exists.');
+					} catch (PlayerNotFound) {
+						// Player name does not yet exist, something else went wrong!
+						throw $err;
+					}
 				}
-			} catch (AccountNotFound) {
-				// Name is not reserved by another account, we may proceed
-			}
 
-			$db->commit();
-		} catch (UniqueConstraintViolationException $err) {
-			$db->rollBack();
+				if ($playerID >= self::FIRST_RESERVED_PLAYER_ID) {
+					throw new Exception('The player ID range is full and must be increased.');
+				}
 
-			// Player names must be unique within each game
-			try {
-				self::getPlayerByPlayerName($playerName, $gameID);
-				throw new UserError('That player name already exists.');
-			} catch (PlayerNotFound) {
-				// Player name does not yet exist, something else went wrong!
-				throw $err;
-			}
-		} catch (Throwable $err) {
-			$db->rollBack();
-			throw $err;
-		}
+				// Check if player name is reserved by someone else
+				// (Comes after insertion so we check player_name constraint first)
+				try {
+					$account = Account::getAccountByHofName($playerName);
+					if ($account->getAccountID() !== $accountID) {
+						throw new UserError('That player name is reserved by another account. Please contact an admin if you would like to claim this name.');
+					}
+				} catch (AccountNotFound) {
+					// Name is not reserved by another account, we may proceed
+				}
+
+				return $playerID;
+			},
+		);
 
 		$player = self::getPlayer($playerID, forceUpdate: true);
 		$player->setSectorID($player->getHome());
