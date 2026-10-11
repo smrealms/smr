@@ -114,10 +114,14 @@ class Account {
 		return self::$CACHE_ACCOUNTS[$accountID];
 	}
 
-	public static function getAccountByLogin(string $login, bool $forceUpdate = false): self {
+	public static function getAccountByLogin(
+		string $login,
+		bool $forceUpdate = false,
+		?RowLockMode $lock = null,
+	): self {
 		if ($login !== '') {
 			$db = Database::getInstance();
-			$dbResult = $db->select('account', ['login' => $login], ['account_id']);
+			$dbResult = $db->select('account', ['login' => $login], ['account_id'], lock: $lock);
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -126,10 +130,14 @@ class Account {
 		throw new AccountNotFound('Account login not found.');
 	}
 
-	public static function getAccountByHofName(string $hofName, bool $forceUpdate = false): self {
+	public static function getAccountByHofName(
+		string $hofName,
+		bool $forceUpdate = false,
+		?RowLockMode $lock = null,
+	): self {
 		if ($hofName !== '') {
 			$db = Database::getInstance();
-			$dbResult = $db->select('account', ['hof_name' => $hofName], ['account_id']);
+			$dbResult = $db->select('account', ['hof_name' => $hofName], ['account_id'], lock: $lock);
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -138,10 +146,14 @@ class Account {
 		throw new AccountNotFound('Account HoF name not found.');
 	}
 
-	public static function getAccountByEmail(?string $email, bool $forceUpdate = false): self {
+	public static function getAccountByEmail(
+		?string $email,
+		bool $forceUpdate = false,
+		?RowLockMode $lock = null,
+	): self {
 		if ($email !== null && $email !== '') {
 			$db = Database::getInstance();
-			$dbResult = $db->select('account', ['email' => $email], ['account_id']);
+			$dbResult = $db->select('account', ['email' => $email], ['account_id'], lock: $lock);
 			if ($dbResult->hasRecord()) {
 				$accountID = $dbResult->record()->getInt('account_id');
 				return self::getAccount($accountID, $forceUpdate);
@@ -204,22 +216,21 @@ class Account {
 		$passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
 		$db = Database::getInstance();
-		$db->lockTable('account');
-		try {
+		$db->transaction(function() use ($db, $email, $login, $passwordHash, $referral, $timez, $veteranForced) {
 			try {
-				self::getAccountByLogin($login);
+				self::getAccountByLogin(login: $login, lock: RowLockMode::Update);
 				throw new UserError('This login name is already taken!');
 			} catch (AccountNotFound) {
 				// Proceed, login is available
 			}
 			try {
-				self::getAccountByHofName($login);
+				self::getAccountByHofName(hofName: $login, lock: RowLockMode::Update);
 				throw new UserError('This login name is already taken!');
 			} catch (AccountNotFound) {
 				// Proceed, login is available
 			}
 			try {
-				self::getAccountByEmail($email);
+				self::getAccountByEmail(email: $email, lock: RowLockMode::Update);
 				throw new UserError('This email address is already registered!');
 			} catch (AccountNotFound) {
 				// Proceed, email is not registered
@@ -236,9 +247,7 @@ class Account {
 				'hof_name' => $login,
 				'hotkeys' => $db->escapeObject([]),
 			]);
-		} finally {
-			$db->unlock();
-		}
+		});
 		return self::getAccountByLogin($login);
 	}
 
