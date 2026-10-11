@@ -173,4 +173,31 @@ readonly class Album {
 		return $comments;
 	}
 
+	public static function addComment(int $albumAccountID, int $commentAccountID, string $comment): void {
+		$db = Database::getInstance();
+		$db->transaction(
+			function() use ($albumAccountID, $commentAccountID, $comment, $db) {
+				$dbResult = $db->select(
+					table: 'album_has_comments',
+					criteria: ['album_id' => $albumAccountID],
+					returnColumns: ['comment_id'],
+					orderBy: ['comment_id'],
+					order: ['DESC'],
+					limit: 1,
+					lock: RowLockMode::Update,
+				);
+				$commentID = $dbResult->hasRecord() ?
+					$dbResult->record()->getInt('comment_id') + 1 : 1;
+
+				$db->insert('album_has_comments', [
+					'album_id' => $albumAccountID,
+					'comment_id' => $commentID,
+					'time' => Epoch::time(),
+					'post_id' => $commentAccountID,
+					'msg' => $comment,
+				]);
+			},
+		);
+	}
+
 }

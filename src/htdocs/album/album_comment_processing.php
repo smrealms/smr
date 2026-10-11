@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
-use Smr\Database;
-use Smr\Epoch;
+use Smr\Album;
 use Smr\Pages\Admin\AlbumModerate;
 use Smr\Request;
 use Smr\Session;
@@ -44,25 +43,11 @@ try {
 	$comment = word_filter($comment);
 	$account->sendMessageToBox(BOX_ALBUM_COMMENTS, $comment);
 
-	// check if we have comments for this album already
-	$db = Database::getInstance();
-	$db->lockTable('album_has_comments');
-	try {
-		$dbResult = $db->read('SELECT IFNULL(MAX(comment_id)+1, 0) AS next_comment_id FROM album_has_comments WHERE album_id = :album_id', [
-			'album_id' => $db->escapeNumber($album_id),
-		]);
-		$comment_id = $dbResult->record()->getInt('next_comment_id');
-
-		$db->insert('album_has_comments', [
-			'album_id' => $album_id,
-			'comment_id' => $comment_id,
-			'time' => Epoch::time(),
-			'post_id' => $account->getAccountID(),
-			'msg' => $comment,
-		]);
-	} finally {
-		$db->unlock();
-	}
+	Album::addComment(
+		albumAccountID: $album_id,
+		commentAccountID: $account->getAccountID(),
+		comment: $comment,
+	);
 
 	$nick = Request::get('album_nick');
 	header('Location: /album/?nick=' . urlencode($nick));

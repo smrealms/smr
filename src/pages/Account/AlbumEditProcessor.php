@@ -3,6 +3,7 @@
 namespace Smr\Pages\Account;
 
 use Smr\Account;
+use Smr\Album;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Page\AccountPageProcessor;
@@ -124,24 +125,11 @@ class AlbumEditProcessor extends AccountPageProcessor {
 		}
 
 		if ($comment !== null) {
-			// check if we have comments for this album already
-			$db->lockTable('album_has_comments');
-			try {
-				$dbResult = $db->read('SELECT IFNULL(MAX(comment_id)+1, 0) AS next_comment_id FROM album_has_comments WHERE album_id = :album_id', [
-					'album_id' => $db->escapeNumber($account->getAccountID()),
-				]);
-				$comment_id = $dbResult->record()->getInt('next_comment_id');
-
-				$db->insert('album_has_comments', [
-					'album_id' => $account->getAccountID(),
-					'comment_id' => $comment_id,
-					'time' => Epoch::time(),
-					'post_id' => 0,
-					'msg' => $comment,
-				]);
-			} finally {
-				$db->unlock();
-			}
+			Album::addComment(
+				albumAccountID: $account->getAccountID(),
+				commentAccountID: 0, // admin comment
+				comment: $comment,
+			);
 		}
 
 		$successMsg = 'SUCCESS: Your information has been updated!';
