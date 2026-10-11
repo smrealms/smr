@@ -3,7 +3,6 @@
 namespace SmrTest\lib;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception\DriverException;
 use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestWith;
@@ -146,6 +145,21 @@ class DatabaseIntegrationTest extends TestCase {
 		$db->select('player', limit: 1, lock: RowLockMode::Update);
 	}
 
+	public function test_read_lock_requires_active_transaction(): void {
+		$db = Database::getInstance();
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Row locks require an active transaction');
+		$db->read('SELECT * FROM player LIMIT 1', lock: RowLockMode::Update);
+	}
+
+	public function test_read_lock_succeeds_in_transaction(): void {
+		$db = Database::getInstance();
+		$db->transaction(function() use ($db): void {
+			$db->read('SELECT * FROM player LIMIT 1', lock: RowLockMode::Update);
+		});
+		self::assertFalse($db->isTransactionActive());
+	}
+
 	public function test_count(): void {
 		$db = Database::getInstance();
 		// Test with criteria
@@ -247,45 +261,6 @@ class DatabaseIntegrationTest extends TestCase {
 			$db->transaction(fn() => throw new Exception('test exception'));
 		} finally {
 			self::assertFalse($db->isTransactionActive());
-		}
-	}
-
-	public function test_lockTable_throws_if_read_other_table(): void {
-		$db = Database::getInstance();
-		$db->lockTable('player');
-		$this->expectException(DriverException::class);
-		$this->expectExceptionMessage("Table 'account' was not locked with LOCK TABLES");
-		try {
-			$db->select('account', limit: 1);
-		} finally {
-			// Avoid leaving database in a locked state
-			$db->unlock();
-		}
-	}
-
-	public function test_lockTable_allows_read(): void {
-		$db = Database::getInstance();
-		$db->lockTable('good');
-		try {
-			// Perform a query on the locked table
-			$result = $db->select('good', ['good_id' => 1], ['good_name']);
-			self::assertSame(['good_name' => 'Wood'], $result->record()->getRow());
-		} finally {
-			$db->unlock();
-		}
-		// After unlock we can access other tables again
-		$db->select('account', limit: 1);
-	}
-
-	public function test_lockTable_additional_read_locks(): void {
-		$db = Database::getInstance();
-		$db->lockTable('player', ['good']);
-		try {
-			// Perform a read query on the read-locked table
-			$result = $db->select('good', ['good_id' => 1], ['good_name']);
-			self::assertSame(['good_name' => 'Wood'], $result->record()->getRow());
-		} finally {
-			$db->unlock();
 		}
 	}
 

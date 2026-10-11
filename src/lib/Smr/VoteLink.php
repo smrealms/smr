@@ -64,19 +64,20 @@ class VoteLink {
 	 * Time until the account can get free turns from voting at this site.
 	 * If the time is 0, this site is eligible for free turns.
 	 */
-	public function getTimeUntilFreeTurns(bool $forceUpdate = false): int {
+	public function getTimeUntilFreeTurns(bool $forceUpdate = false, ?RowLockMode $lock = null): int {
 		if (!$this->givesFreeTurns()) {
 			throw new Exception('This vote site cannot award free turns!');
 		}
 
 		// Populate timeout cache from the database
-		if ($forceUpdate || !isset(self::$CACHE_TIMEOUTS)) {
+		if ($forceUpdate || $lock !== null || !isset(self::$CACHE_TIMEOUTS)) {
 			self::$CACHE_TIMEOUTS = []; // ensure this is set
 			$db = Database::getInstance();
 			$dbResult = $db->select(
 				'vote_links',
 				['account_id' => $this->accountID],
 				['link_id', 'timeout'],
+				lock: $lock,
 			);
 			foreach ($dbResult->records() as $dbRecord) {
 				// 'timeout' is the last time the player claimed free turns (or 0, if unclaimed)
@@ -96,9 +97,8 @@ class VoteLink {
 	 */
 	public function setClicked(): void {
 		$db = Database::getInstance();
-		$db->lockTable('vote_links');
-		try {
-			if (!$this->freeTurnsReady(true)) {
+		$db->transaction(function() use ($db): void {
+			if (!$this->freeTurnsReady(forceUpdate: true, lock: RowLockMode::Update)) {
 				// Player has clicked a free turns link after already getting
 				// free turns. This should not occur naturally.
 				throw new Exception('Account ID ' . $this->accountID . ' attempted vote link abuse');
@@ -111,9 +111,7 @@ class VoteLink {
 				'timeout' => 0,
 				'turns_claimed' => $db->escapeBoolean(false),
 			]);
-		} finally {
-			$db->unlock();
-		}
+		});
 	}
 
 	/**
@@ -142,8 +140,9 @@ class VoteLink {
 	/**
 	 * Returns true if account can currently receive free turns at this site.
 	 */
-	public function freeTurnsReady(bool $forceUpdate = false): bool {
-		return $this->givesFreeTurns() && $this->gameID !== 0 && $this->getTimeUntilFreeTurns($forceUpdate) <= 0;
+	public function freeTurnsReady(bool $forceUpdate = false, ?RowLockMode $lock = null): bool {
+		return $this->givesFreeTurns() && $this->gameID !== 0
+			&& $this->getTimeUntilFreeTurns(forceUpdate: $forceUpdate, lock: $lock) <= 0;
 	}
 
 	/**

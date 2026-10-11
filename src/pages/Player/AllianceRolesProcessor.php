@@ -3,11 +3,11 @@
 namespace Smr\Pages\Player;
 
 use Exception;
-use Smr\Alliance;
 use Smr\Database;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Player;
 use Smr\Request;
+use Smr\RowLockMode;
 
 class AllianceRolesProcessor extends PlayerPageProcessor {
 
@@ -55,16 +55,18 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 				throw new Exception('Empty role name is not allowed');
 			}
 
-			$db->lockTable('alliance_has_roles');
-			try {
-				// get last id
-				$dbResult = $db->read(
-					'SELECT IFNULL(MAX(role_id), 0) as max_role_id
-						FROM alliance_has_roles
-						WHERE ' . Alliance::SQL,
-					$alliance->SQLID,
+			$db->transaction(function() use ($alliance, $changeMOD, $changePass, $changeRoles, $db, $exemptWith, $manageNpcs, $mbMessages, $opLeader, $planetAccess, $positiveBalance, $removeMember, $roleName, $sendAllMsg, $viewBonds, $withPerDay): void {
+				$dbResult = $db->select(
+					table: 'alliance_has_roles',
+					criteria: $alliance->SQLID,
+					returnColumns: ['role_id'],
+					orderBy: ['role_id'],
+					order: ['DESC'],
+					limit: 1,
+					lock: RowLockMode::Update,
 				);
-				$role_id = $dbResult->record()->getInt('max_role_id') + 1;
+				$role_id = $dbResult->hasRecord() ?
+					$dbResult->record()->getInt('role_id') + 1 : 1;
 
 				$db->insert('alliance_has_roles', [
 					...$alliance->SQLID,
@@ -84,9 +86,7 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 					'view_bonds' => $db->escapeBoolean($viewBonds),
 					'manage_npcs' => $db->escapeBoolean($manageNpcs),
 				]);
-			} finally {
-				$db->unlock();
-			}
+			});
 		} else {
 			if ($roleName === '') {
 				// if no role is given we delete that entry

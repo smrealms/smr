@@ -7,6 +7,7 @@ use Smr\Database;
 use Smr\Html\Submit;
 use Smr\Page\AccountPageProcessor;
 use Smr\Request;
+use Smr\RowLockMode;
 
 class ChangelogAddProcessor extends AccountPageProcessor {
 
@@ -37,14 +38,18 @@ class ChangelogAddProcessor extends AccountPageProcessor {
 		}
 
 		$db = Database::getInstance();
-		$db->lockTable('changelog');
-		try {
-			$dbResult = $db->read('SELECT IFNULL(MAX(changelog_id)+1, 0) AS next_changelog_id
-				FROM changelog
-				WHERE version_id = :version_id', [
-				'version_id' => $db->escapeNumber($this->versionID),
-			]);
-			$changelog_id = $dbResult->record()->getInt('next_changelog_id');
+		$db->transaction(function() use ($affected_db, $change_message, $change_title, $db): void {
+			$dbResult = $db->select(
+				table: 'changelog',
+				criteria: ['version_id' => $this->versionID],
+				returnColumns: ['changelog_id'],
+				orderBy: ['changelog_id'],
+				order: ['DESC'],
+				limit: 1,
+				lock: RowLockMode::Update,
+			);
+			$changelog_id = $dbResult->hasRecord() ?
+				$dbResult->record()->getInt('changelog_id') + 1 : 0;
 
 			$db->insert('changelog', [
 				'version_id' => $this->versionID,
@@ -53,9 +58,7 @@ class ChangelogAddProcessor extends AccountPageProcessor {
 				'change_message' => $change_message,
 				'affected_db' => $affected_db,
 			]);
-		} finally {
-			$db->unlock();
-		}
+		});
 
 		$container = new ChangelogAdd();
 		$container->go();
