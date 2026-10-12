@@ -15,11 +15,18 @@ class DatabaseRecord {
 	) {}
 
 	public function getNullableString(string $name): ?string {
-		return $this->dbRecord[$name];
+		if ($this->dbRecord[$name] === null) {
+			return null;
+		}
+		return $this->getString($name);
 	}
 
 	public function getString(string $name): string {
-		return $this->dbRecord[$name];
+		$value = $this->dbRecord[$name];
+		if (!is_string($value)) {
+			throw new Exception('Expected record `' . $name . '` to be a string, got ' . get_debug_type($value));
+		}
+		return $value;
 	}
 
 	public function getNullableBoolean(string $name): ?bool {
@@ -33,7 +40,7 @@ class DatabaseRecord {
 		return match ($this->dbRecord[$name]) {
 			'TRUE' => true,
 			'FALSE' => false,
-			default => throw new Exception('Unexpected boolean record: ' . $this->dbRecord[$name]),
+			default => throw new Exception('Unexpected boolean record: ' . var_export($this->dbRecord[$name], true)),
 		};
 	}
 
@@ -68,9 +75,12 @@ class DatabaseRecord {
 	}
 
 	public function getObject(string $name, bool $compressed = false): mixed {
-		$object = $this->dbRecord[$name];
+		$object = $this->getString($name);
 		if ($compressed === true) {
 			$object = gzuncompress($object);
+			if ($object === false) {
+				throw new Exception('Failed to uncompress database record: ' . $name);
+			}
 		}
 		return unserialize($object);
 	}
