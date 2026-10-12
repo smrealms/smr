@@ -18,25 +18,24 @@ class Lotto {
 
 		// we check for a lotto winner...
 		$db = Database::getInstance();
-		$db->lockTable('player_has_ticket');
-		try {
-			$lottoInfo = self::getLottoInfo($gameID);
+		$winnerInfo = $db->transaction(function() use ($db, $gameID) {
+			$lottoInfo = self::getLottoInfo($gameID, lock: RowLockMode::Update);
 
 			if ($lottoInfo['TimeRemaining'] > 0) {
 				// Drawing is not closed yet
-				return;
+				return null;
 			}
 
 			//we need to pick a winner
 			$dbResult = $db->read('SELECT * FROM player_has_ticket WHERE game_id = :game_id AND time > 0 ORDER BY rand() LIMIT 1', [
 				'game_id' => $db->escapeNumber($gameID),
-			]);
+			], lock: RowLockMode::Update);
 			$winnerPlayerID = $dbResult->record()->getInt('player_id');
 
 			// Any unclaimed prizes get merged into this prize
 			$dbResult = $db->read('SELECT IFNULL(SUM(prize), 0) AS total_prize FROM player_has_ticket WHERE time = 0 AND game_id = :game_id', [
 				'game_id' => $db->escapeNumber($gameID),
-			]);
+			], lock: RowLockMode::Update);
 			$lottoInfo['Prize'] += $dbResult->record()->getInt('total_prize');
 
 			// Prevent prize SQL overflow
@@ -52,15 +51,22 @@ class Lotto {
 				'time' => 0,
 				'prize' => $lottoInfo['Prize'],
 			]);
-		} finally {
-			$db->unlock();
+			return [
+				'playerID' => $winnerPlayerID,
+				'prize' => $lottoInfo['Prize'],
+			];
+		});
+
+		if ($winnerInfo === null) {
+			return;
 		}
 
 		// create news msg
-		$winner = Player::getPlayer($winnerPlayerID);
-		$winner->increaseHOF($lottoInfo['Prize'], ['Bar', 'Lotto', 'Money', 'Winnings'], HOF_PUBLIC);
+		$prize = $winnerInfo['prize'];
+		$winner = Player::getPlayer($winnerInfo['playerID']);
+		$winner->increaseHOF($prize, ['Bar', 'Lotto', 'Money', 'Winnings'], HOF_PUBLIC);
 		$winner->increaseHOF(1, ['Bar', 'Lotto', 'Results', 'Wins'], HOF_PUBLIC);
-		$news_message = $winner->getBBLink() . ' has won the lotto! The jackpot was ' . number_format($lottoInfo['Prize']) . '. ' . $winner->getBBLink() . ' can report to any bar to claim their prize before the next drawing!';
+		$news_message = $winner->getBBLink() . ' has won the lotto! The jackpot was ' . number_format($prize) . '. ' . $winner->getBBLink() . ' can report to any bar to claim their prize before the next drawing!';
 		// insert the news entry
 		$db->delete('news', [
 			'type' => 'lotto',
@@ -79,12 +85,12 @@ class Lotto {
 	/**
 	 * @return array{Prize: int, TimeRemaining: int}
 	 */
-	public static function getLottoInfo(int $gameID): array {
+	public static function getLottoInfo(int $gameID, ?RowLockMode $lock = null): array {
 		$db = Database::getInstance();
 		$dbResult = $db->read('SELECT count(*) as num, min(time) as time FROM player_has_ticket
 				WHERE game_id = :game_id AND time > 0', [
 			'game_id' => $db->escapeNumber($gameID),
-		]);
+		], lock: $lock);
 		$dbRecord = $dbResult->record();
 
 		// pot starts with 1 ticket value

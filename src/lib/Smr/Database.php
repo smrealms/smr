@@ -150,8 +150,15 @@ class Database {
 	 * Used for SELECT queries, for example.
 	 *
 	 * @param array<mixed> $params
+	 * @param ?RowLockMode $lock InnoDB row lock to hold until the transaction ends
 	 */
-	public function read(string $query, array $params = []): DatabaseResult {
+	public function read(string $query, array $params = [], ?RowLockMode $lock = null): DatabaseResult {
+		if ($lock !== null && !$this->isTransactionActive()) {
+			throw new Exception('Row locks require an active transaction');
+		}
+		if ($lock !== null) {
+			$query .= ' ' . $lock->value;
+		}
 		$types = self::getParamTypes($params);
 		$result = $this->dbConn->executeQuery($query, $params, $types);
 		return new DatabaseResult($result);
@@ -200,9 +207,6 @@ class Database {
 		?int $limit = null,
 		?RowLockMode $lock = null,
 	): DatabaseResult {
-		if ($lock !== null && !$this->isTransactionActive()) {
-			throw new Exception('Row locks require an active transaction');
-		}
 		$query = 'SELECT ' . implode(',', $returnColumns) . ' FROM ' . $table;
 		if (count($criteria) > 0) {
 			// Create named placeholder SQL using the name of each column in the criteria
@@ -226,10 +230,7 @@ class Database {
 		if ($limit !== null) {
 			$query .= ' LIMIT ' . $limit;
 		}
-		if ($lock !== null) {
-			$query .= ' ' . $lock->value;
-		}
-		return $this->read($query, $criteria);
+		return $this->read($query, $criteria, $lock);
 	}
 
 	/**
@@ -308,23 +309,6 @@ class Database {
 	public function replaceAutoIncrement(string $table, array $fields): int {
 		$this->replace($table, $fields);
 		return $this->getInsertID();
-	}
-
-	/**
-	 * Acquire a write lock for $table.
-	 *
-	 * @param array<string> $readTables Additional read locks
-	 */
-	public function lockTable(string $table, array $readTables = []): void {
-		$locks = [$table . ' WRITE'];
-		foreach ($readTables as $readTable) {
-			$locks[] = $readTable . ' READ';
-		}
-		$this->write('LOCK TABLES ' . implode(', ', $locks));
-	}
-
-	public function unlock(): void {
-		$this->write('UNLOCK TABLES');
 	}
 
 	private function getInsertID(): int {

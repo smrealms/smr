@@ -12,10 +12,6 @@ use SmrTest\BaseIntegrationSpec;
 #[CoversClass(SectorLock::class)]
 class SectorLockTest extends BaseIntegrationSpec {
 
-	protected function tablesToTruncate(): array {
-		return ['locks_queue'];
-	}
-
 	protected function tearDown(): void {
 		// Reset the DI container to avoid contaminating other tests
 		DiContainer::initialize(false);

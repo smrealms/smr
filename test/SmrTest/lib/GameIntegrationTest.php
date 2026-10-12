@@ -12,10 +12,6 @@ use SmrTest\BaseIntegrationSpec;
 #[CoversClass(Game::class)]
 class GameIntegrationTest extends BaseIntegrationSpec {
 
-	protected function tablesToTruncate(): array {
-		return ['game', 'race_has_relation'];
-	}
-
 	protected function tearDown(): void {
 		Game::clearCache();
 	}

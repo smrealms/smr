@@ -14,10 +14,6 @@ use SmrTest\BaseIntegrationSpec;
 #[CoversClass(Sector::class)]
 class SectorIntegrationTest extends BaseIntegrationSpec {
 
-	protected function tablesToTruncate(): array {
-		return ['planet', 'player_visited_port', 'port_info_cache'];
-	}
-
 	protected function tearDown(): void {
 		Planet::clearCache();
 		Port::clearCache();

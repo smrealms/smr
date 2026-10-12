@@ -131,8 +131,20 @@ class Alliance {
 	 */
 	public static function createAlliance(int $gameID, string $name, bool $allowReserved = false): self {
 		$db = Database::getInstance();
-		$db->lockTable('alliance');
-		try {
+		$allianceID = $db->transaction(function() use ($allowReserved, $db, $gameID, $name): int {
+			// Get the next available alliance ID
+			$dbResult = $db->select(
+				table: 'alliance',
+				criteria: ['game_id' => $gameID],
+				returnColumns: ['alliance_id'],
+				orderBy: ['alliance_id'],
+				order: ['DESC'],
+				limit: 1,
+				lock: RowLockMode::Update,
+			);
+			$allianceID = $dbResult->hasRecord() ?
+				$dbResult->record()->getInt('alliance_id') + 1 : 1;
+
 			// check if the alliance name already exists
 			try {
 				self::getAllianceByName($name, $gameID);
@@ -149,12 +161,6 @@ class Alliance {
 				throw new UserError('That alliance name is reserved.');
 			}
 
-			// get the next alliance id (start at 1 if there are no alliances yet)
-			$dbResult = $db->read('SELECT IFNULL(max(alliance_id), 0) AS alliance_id FROM alliance WHERE game_id = :game_id', [
-				'game_id' => $db->escapeNumber($gameID),
-			]);
-			$allianceID = $dbResult->record()->getInt('alliance_id') + 1;
-
 			// actually create the alliance here
 			$db->insert('alliance', [
 				'alliance_id' => $allianceID,
@@ -164,9 +170,8 @@ class Alliance {
 				'recruiting' => $db->escapeBoolean(false),
 				'`mod`' => '', // text columns can't have default values
 			]);
-		} finally {
-			$db->unlock();
-		}
+			return $allianceID;
+		});
 
 		return self::getAlliance($allianceID, $gameID);
 	}

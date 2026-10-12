@@ -19,10 +19,6 @@ class PlayerIntegrationTest extends BaseIntegrationSpec {
 
 	private static int $gameID = 42;
 
-	protected function tablesToTruncate(): array {
-		return ['account', 'player'];
-	}
-
 	protected function tearDown(): void {
 		Account::clearCache();
 		Player::clearCache();
@@ -57,7 +53,7 @@ class PlayerIntegrationTest extends BaseIntegrationSpec {
 		self::assertSame($isNewbie, $player->hasNewbieStatus());
 		self::assertSame($isNpc, $player->isNPC());
 		self::assertSame(1, $player->getSectorID());
-		self::assertSame(1, $player->getPlayerID());
+		self::assertGreaterThan(0, $player->getPlayerID());
 		self::assertSame(1, $player->getPlayerNumber());
 	}
 
@@ -75,7 +71,6 @@ class PlayerIntegrationTest extends BaseIntegrationSpec {
 		// Make sure the second player creation got rolled back properly
 		$db = Database::getInstance();
 		self::assertSame(1, $db->count('player', ['game_id' => self::$gameID]));
-		self::assertFalse($db->isTransactionActive());
 	}
 
 	public function test_createPlayer_reserved_name_by_other(): void {
@@ -95,7 +90,6 @@ class PlayerIntegrationTest extends BaseIntegrationSpec {
 		// Make sure the second player creation got rolled back properly
 		$db = Database::getInstance();
 		self::assertSame(0, $db->count('player', ['game_id' => self::$gameID]));
-		self::assertFalse($db->isTransactionActive());
 	}
 
 	public function test_createPlayer_reserved_name_by_self(): void {
@@ -110,9 +104,9 @@ class PlayerIntegrationTest extends BaseIntegrationSpec {
 	}
 
 	public function test_createPlayer_increment_playerid(): void {
-		Player::createPlayer(1, self::$gameID, 'test1', RACE_HUMAN, false);
+		$first = Player::createPlayer(1, self::$gameID, 'test1', RACE_HUMAN, false);
 		$player = Player::createPlayer(2, self::$gameID, 'test2', RACE_HUMAN, false);
-		self::assertSame(2, $player->getPlayerID());
+		self::assertSame($first->getPlayerID() + 1, $player->getPlayerID());
 	}
 
 	public function test_createPlayer_reports_duplicate_name_before_hof_name_reservation(): void {

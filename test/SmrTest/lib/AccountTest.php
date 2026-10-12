@@ -13,10 +13,6 @@ use SmrTest\BaseIntegrationSpec;
 #[CoversClass(Account::class)]
 class AccountTest extends BaseIntegrationSpec {
 
-	protected function tablesToTruncate(): array {
-		return ['account', 'account_auth'];
-	}
-
 	protected function setUp(): void {
 		Account::clearCache();
 	}

@@ -13,17 +13,6 @@ require_once(LIB . 'Default/nha.inc.php');
 #[CoversFunction('createNHA')]
 class CreateNHATest extends BaseIntegrationSpec {
 
-	protected function tablesToTruncate(): array {
-		return [
-			'alliance',
-			'alliance_has_roles',
-			'alliance_thread',
-			'alliance_thread_topic',
-			'player',
-			'player_has_alliance_role',
-		];
-	}
-
 	public function test_createNHA(): void {
 		// Set up a fake game (needed for Player::getHome)
 		$gameID = 1;

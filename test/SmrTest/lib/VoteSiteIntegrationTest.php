@@ -12,10 +12,6 @@ use SmrTest\BaseIntegrationSpec;
 #[CoversClass(VoteSite::class)]
 class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 
-	protected function tablesToTruncate(): array {
-		return ['vote_links'];
-	}
-
 	protected function tearDown(): void {
 		VoteLink::clearCache();
 	}

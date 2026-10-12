@@ -11,10 +11,6 @@ use SmrTest\Fakes\PlayerFake;
 #[CoversClass(MissionState::class)]
 class MissionStateIntegrationTest extends BaseIntegrationSpec {
 
-	protected function tablesToTruncate(): array {
-		return ['player_has_mission'];
-	}
-
 	protected function setUp(): void {
 		// Start each test with an empty cache
 		MissionState::clearCache();

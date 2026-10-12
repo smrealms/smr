@@ -12,10 +12,6 @@ use SmrTest\BaseIntegrationSpec;
 #[CoversClass(Port::class)]
 class CachedPortTest extends BaseIntegrationSpec {
 
-	protected function tablesToTruncate(): array {
-		return ['player_visited_port', 'port_info_cache'];
-	}
-
 	protected function tearDown(): void {
 		Port::clearCache();
 		// Reset the DI container to avoid contaminating other tests

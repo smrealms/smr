@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\AfterClass;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\BeforeClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
@@ -15,14 +16,10 @@ use Smr\Container\DiContainer;
  */
 abstract class BaseIntegrationSpec extends TestCase {
 
-	/**
-	 * @return array<string>
-	 */
-	abstract protected function tablesToTruncate(): array;
-
 	private static Connection $conn;
 	/** @var array<string, int> */
 	private static array $checksums;
+	private Connection $transactionConnection;
 
 	/**
 	 * Get checksums for the initial state of the database tables.
@@ -36,26 +33,23 @@ abstract class BaseIntegrationSpec extends TestCase {
 	}
 
 	/**
-	 * Release transaction locks before table cleanup can acquire metadata locks.
-	 * This prevents a failed test from blocking later tests.
+	 * Isolate each test's database work in an outer transaction. Application
+	 * transactions become savepoints.
 	 */
-	#[After(1)]
-	final protected function rollBackActiveTransaction(): void {
-		if (self::$conn->isTransactionActive()) {
-			self::$conn->rollBack();
-		}
+	#[Before]
+	final protected function beginTestTransaction(): void {
+		$this->transactionConnection = DiContainer::getClass(Connection::class);
+		$this->transactionConnection->beginTransaction();
 	}
 
 	/**
-	 * Any table that is modified during a test class should be declared in the
-	 * `tablesToTruncate()` method, and those tables will be reset after each
-	 * test method.
+	 * Discard the test transaction so that the database state does not change
+	 * between tests. This releases any accumulated row locks.
 	 */
-	#[After]
-	final protected function truncateTables(): void {
-		foreach ($this->tablesToTruncate() as $name) {
-			// Include hard-coded test database name as a safety precaution
-			self::$conn->executeStatement('TRUNCATE TABLE smr_live_test.`' . $name . '`');
+	#[After(1)]
+	final protected function rollBackTestTransaction(): void {
+		if ($this->transactionConnection->isTransactionActive()) {
+			$this->transactionConnection->rollBack();
 		}
 	}
 
