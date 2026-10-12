@@ -67,29 +67,29 @@ class RequestTest extends TestCase {
 		self::assertFalse(Request::getBool('noexist', false));
 	}
 
-	public function test_getBool_no_exist_exception(): void {
+	public function test_getBool_exception_missing(): void {
 		// An index that doesn't exist, no default
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('No request variable for index: noexist');
+		$this->expectExceptionMessage('No request variable "noexist"');
 		Request::getBool('noexist');
 	}
 
-	public function test_getBool_nonboolean_exception(): void {
+	public function test_getBool_exception_not_boolean(): void {
 		// An index whose value is not a boolean
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Value is not boolean for index: int');
+		$this->expectExceptionMessage('Value is not bool for index `int`: \'2\'');
 		Request::getBool('int');
 	}
 
 	#[TestWith(['yes', true])]
-	#[TestWith([1, true])]
+	#[TestWith(['1', true])]
 	#[TestWith(['TRUE', true])]
 	#[TestWith(['on', true])]
 	#[TestWith(['no', false])]
-	#[TestWith([0, false])]
+	#[TestWith(['0', false])]
 	#[TestWith(['FALSE', false])]
 	#[TestWith(['off', false])]
-	public function test_getBool_aliases(string|int $input, bool $expected): void {
+	public function test_getBool_aliases(string $input, bool $expected): void {
 		$_REQUEST['bool_alias'] = $input;
 		self::assertSame($expected, Request::getBool('bool_alias'));
 	}
@@ -105,11 +105,18 @@ class RequestTest extends TestCase {
 		self::assertSame(3, Request::getInt('noexist', 3));
 	}
 
-	public function test_getInt_exception(): void {
+	public function test_getInt_exception_missing(): void {
 		// An index that doesn't exist, no default
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No request variable "noexist"');
 		Request::getInt('noexist');
+	}
+
+	public function test_getInt_exception_not_int(): void {
+		$_REQUEST['invalid_int'] = '2 ships';
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Value is not int for index `invalid_int`: \'2 ships\'');
+		Request::getInt('invalid_int');
 	}
 
 	//------------------------------------------------------------------------
@@ -123,11 +130,18 @@ class RequestTest extends TestCase {
 		self::assertSame(3.14, Request::getFloat('noexist', 3.14));
 	}
 
-	public function test_getFloat_exception(): void {
+	public function test_getFloat_exception_missing(): void {
 		// An index that doesn't exist, no default
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No request variable "noexist"');
 		Request::getFloat('noexist');
+	}
+
+	public function test_getFloat_exception_not_numeric(): void {
+		$_REQUEST['invalid_float'] = '3.14 hours';
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Value is not float for index `invalid_float`: \'3.14 hours\'');
+		Request::getFloat('invalid_float');
 	}
 
 	//------------------------------------------------------------------------
@@ -141,18 +155,32 @@ class RequestTest extends TestCase {
 		self::assertSame(['a'], Request::getArray('noexist', ['a']));
 	}
 
-	public function test_getArray_missing(): void {
+	public function test_getArray_exception_missing(): void {
 		// An index that doesn't exist, no default
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No request variable "noexist"');
 		Request::getArray('noexist');
 	}
 
-	public function test_getArray_wrong_key_type(): void {
+	public function test_getArray_exception_wrong_key_type(): void {
 		// If the array has non-integer keys
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Array key must be an int');
 		Request::getArray('array_str_keys');
+	}
+
+	public function test_getArray_exception_not_array(): void {
+		$_REQUEST['invalid_array'] = 'not an array';
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Request variable must be an array: invalid_array');
+		Request::getArray('invalid_array');
+	}
+
+	public function test_getArray_exception_item_not_string(): void {
+		$_REQUEST['invalid_array_item'] = ['string', 2];
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Request array value must be a string: invalid_array_item');
+		Request::getArray('invalid_array_item');
 	}
 
 	//------------------------------------------------------------------------
@@ -166,14 +194,14 @@ class RequestTest extends TestCase {
 		self::assertSame([1], Request::getIntArray('noexist', [1]));
 	}
 
-	public function test_getIntArray_missing(): void {
+	public function test_getIntArray_exception_missing(): void {
 		// An index that doesn't exist, no default
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No request variable "noexist"');
 		Request::getIntArray('noexist');
 	}
 
-	public function test_getIntArray_wrong_key_type(): void {
+	public function test_getIntArray_exception_wrong_key_type(): void {
 		// If the array has non-integer keys
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Array key must be an int');
@@ -193,11 +221,18 @@ class RequestTest extends TestCase {
 		self::assertSame('foo', Request::get('noexist', 'foo'));
 	}
 
-	public function test_get_exception(): void {
+	public function test_get_exception_missing(): void {
 		// An index that doesn't exist, no default
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('No request variable "noexist"');
 		Request::get('noexist');
+	}
+
+	public function test_get_exception_not_string(): void {
+		$_REQUEST['invalid_string'] = 1;
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Value is not string for index `invalid_string`: 1');
+		Request::get('invalid_string');
 	}
 
 	//------------------------------------------------------------------------
@@ -234,6 +269,13 @@ class RequestTest extends TestCase {
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Index "str" inconsistent between $var and $_REQUEST!');
 		Request::getVar('str');
+	}
+
+	public function test_getVar_exception_not_string(): void {
+		$this->setVar(['invalid_session_string' => 1]);
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Session variable must be a string: invalid_session_string');
+		Request::getVar('invalid_session_string');
 	}
 
 	public function test_getVar_index_same_in_both(): void {
@@ -278,6 +320,13 @@ class RequestTest extends TestCase {
 		Request::getVarInt('int');
 	}
 
+	public function test_getVarInt_exception_not_int(): void {
+		$this->setVar(['invalid_session_int' => '1']);
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Session variable must be an int: invalid_session_int');
+		Request::getVarInt('invalid_session_int');
+	}
+
 	public function test_getVarInt_index_same_in_both(): void {
 		$this->setVar(['int' => 2]);
 		// An index that exists in both var and request, with the same value
@@ -318,6 +367,16 @@ class RequestTest extends TestCase {
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Index "array_int" inconsistent between $var and $_REQUEST!');
 		Request::getVarIntArray('array_int');
+	}
+
+	#[TestWith(['not an array'])]
+	#[TestWith([[1, '2']])]
+	#[TestWith([['zero' => 1]])]
+	public function test_getVarIntArray_exception_not_int_array(mixed $value): void {
+		$this->setVar(['invalid_session_int_array' => $value]);
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Session variable must be an int array: invalid_session_int_array');
+		Request::getVarIntArray('invalid_session_int_array');
 	}
 
 	public function test_getVarIntArray_index_same_in_both(): void {

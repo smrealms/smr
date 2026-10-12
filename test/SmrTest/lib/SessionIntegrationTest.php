@@ -4,6 +4,7 @@ namespace SmrTest\lib;
 
 use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestWith;
 use Smr\Account;
 use Smr\Container\DiContainer;
 use Smr\Page\Page;
@@ -85,15 +86,25 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertNotEquals($sessionID, $session->getSessionID());
 	}
 
-	public function test_ajax(): void {
+	#[TestWith(['0', false])]
+	#[TestWith(['1', true])] // only 1 is true
+	#[TestWith(['2', false])]
+	public function test_ajax(string $ajax, bool $expected): void {
+		$_REQUEST['ajax'] = $ajax;
+		self::assertSame($expected, DiContainer::makeClass(Session::class)->ajax);
+	}
+
+	public function test_ajax_empty(): void {
 		// If $_REQUEST is empty, ajax is false
 		self::assertFalse($this->session->ajax);
+	}
 
-		// Test other values in $_REQUEST
-		$_REQUEST['ajax'] = 1;
-		self::assertTrue(DiContainer::makeClass(Session::class)->ajax);
-		$_REQUEST['ajax'] = 'anything other than 1';
-		self::assertFalse(DiContainer::makeClass(Session::class)->ajax);
+	public function test_ajax_nonint_exception(): void {
+		// Must be int-valued (i.e. castable to int is insufficient)
+		$_REQUEST['ajax'] = '1 and stuff';
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Value is not int for index `ajax`: \'1 and stuff\'');
+		DiContainer::makeClass(Session::class);
 	}
 
 	public function test_getCurrentVar_throws(): void {
@@ -137,10 +148,10 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		// the updated var, even though it wasn't the one originally associated
 		// with this SN.
 		$session->update();
-		$_REQUEST['ajax'] = 1; // simulate AJAX refresh
+		$_REQUEST['ajax'] = '1'; // simulate AJAX refresh
 		$session = DiContainer::makeClass(Session::class);
 		self::assertEquals($var2, $session->getCurrentVar());
-		$_REQUEST['ajax'] = 0; // simulate F5 refresh
+		$_REQUEST['ajax'] = '0'; // simulate F5 refresh
 		$session = DiContainer::makeClass(Session::class);
 		self::assertEquals($var2, $session->getCurrentVar());
 
@@ -196,8 +207,8 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		// Prepare request values
 		$_REQUEST = [
 			'str' => 'foo',
-			'int' => 4,
-			'arr' => [5, 6],
+			'int' => '4',
+			'arr' => ['5', '6'],
 		];
 
 		// Check the following conditions:
