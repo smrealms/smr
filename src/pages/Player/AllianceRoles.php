@@ -24,30 +24,38 @@ class AllianceRoles extends PlayerPage {
 		$allianceRoles = [];
 		foreach ($dbResult->records() as $dbRecord) {
 			$roleID = $dbRecord->getInt('role_id');
-			$allianceRoles[$roleID]['RoleID'] = $roleID;
-			$allianceRoles[$roleID]['Name'] = $dbRecord->getString('role');
-			$allianceRoles[$roleID]['EditingRole'] = $this->roleID === $roleID;
-			$allianceRoles[$roleID]['CreatingRole'] = false;
-			if ($allianceRoles[$roleID]['EditingRole']) {
-				$container = new AllianceRolesProcessor($roleID);
-				$allianceRoles[$roleID]['WithdrawalLimit'] = $dbRecord->getInt('with_per_day');
-				$allianceRoles[$roleID]['PositiveBalance'] = $dbRecord->getBoolean('positive_balance');
-				$allianceRoles[$roleID]['TreatyCreated'] = $dbRecord->getBoolean('treaty_created');
-				$allianceRoles[$roleID]['RemoveMember'] = $dbRecord->getBoolean('remove_member');
-				$allianceRoles[$roleID]['ChangePass'] = $dbRecord->getBoolean('change_pass');
-				$allianceRoles[$roleID]['ChangeMod'] = $dbRecord->getBoolean('change_mod');
-				$allianceRoles[$roleID]['ChangeRoles'] = $dbRecord->getBoolean('change_roles');
-				$allianceRoles[$roleID]['PlanetAccess'] = $dbRecord->getBoolean('planet_access');
-				$allianceRoles[$roleID]['ModerateMessageboard'] = $dbRecord->getBoolean('mb_messages');
-				$allianceRoles[$roleID]['ExemptWithdrawals'] = $dbRecord->getBoolean('exempt_with');
-				$allianceRoles[$roleID]['SendAllianceMessage'] = $dbRecord->getBoolean('send_alliance_msg');
-				$allianceRoles[$roleID]['OpLeader'] = $dbRecord->getBoolean('op_leader');
-				$allianceRoles[$roleID]['ViewBondsInPlanetList'] = $dbRecord->getBoolean('view_bonds');
-				$allianceRoles[$roleID]['ManageNpcs'] = $dbRecord->getBoolean('manage_npcs');
+			$commonKeys = [
+				'RoleID' => $roleID,
+				'Name' => $dbRecord->getString('role'),
+				'CreatingRole' => false,
+			];
+			if ($this->roleID === $roleID) {
+				$allianceRoles[$roleID] = [
+					...$commonKeys,
+					'EditingRole' => true,
+					'HREF' => new AllianceRolesProcessor($roleID)->href(),
+					'WithdrawalLimit' => $dbRecord->getInt('with_per_day'),
+					'PositiveBalance' => $dbRecord->getBoolean('positive_balance'),
+					'TreatyCreated' => $dbRecord->getBoolean('treaty_created'),
+					'RemoveMember' => $dbRecord->getBoolean('remove_member'),
+					'ChangePass' => $dbRecord->getBoolean('change_pass'),
+					'ChangeMod' => $dbRecord->getBoolean('change_mod'),
+					'ChangeRoles' => $dbRecord->getBoolean('change_roles'),
+					'PlanetAccess' => $dbRecord->getBoolean('planet_access'),
+					'ModerateMessageboard' => $dbRecord->getBoolean('mb_messages'),
+					'ExemptWithdrawals' => $dbRecord->getBoolean('exempt_with'),
+					'SendAllianceMessage' => $dbRecord->getBoolean('send_alliance_msg'),
+					'OpLeader' => $dbRecord->getBoolean('op_leader'),
+					'ViewBondsInPlanetList' => $dbRecord->getBoolean('view_bonds'),
+					'ManageNpcs' => $dbRecord->getBoolean('manage_npcs'),
+				];
 			} else {
-				$container = new self($roleID);
+				$allianceRoles[$roleID] = [
+					...$commonKeys,
+					'EditingRole' => false,
+					'HREF' => new self($roleID)->href(),
+				];
 			}
-			$allianceRoles[$roleID]['HREF'] = $container->href();
 		}
 
 		$CreateRole = [
