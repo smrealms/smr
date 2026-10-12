@@ -10,6 +10,7 @@ use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\BeforeClass;
 use PHPUnit\Framework\TestCase;
 use Smr\Container\DiContainer;
+use Smr\TypeHelpers\Type;
 
 /**
  * Any test that modifies the database should inherit from this class.
@@ -82,15 +83,23 @@ abstract class BaseIntegrationSpec extends TestCase {
 	 */
 	private static function getTableNames(): array {
 		$query = 'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=\'smr_live_test\'';
-		return self::$conn->fetchFirstColumn($query);
+		$tables = self::$conn->fetchFirstColumn($query);
+		if (!Type::array(valueType: Type::string())->accepts($tables)) {
+			self::fail('Expected table names to be an array<int, string>.');
+		}
+		return $tables;
 	}
 
 	/**
-	 * @return array<int>
+	 * @return array<string, int>
 	 */
 	private static function getChecksums(): array {
 		$query = 'CHECKSUM TABLE ' . implode(', ', self::getTableNames());
-		return self::$conn->fetchAllKeyValue($query);
+		$checksums = self::$conn->fetchAllKeyValue($query);
+		if (!Type::array(valueType: Type::int(), keyType: Type::string())->accepts($checksums)) {
+			self::fail('Expected table checksums to be an array<string, int>.');
+		}
+		return $checksums;
 	}
 
 }

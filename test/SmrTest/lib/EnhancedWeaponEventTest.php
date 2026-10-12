@@ -74,6 +74,7 @@ class EnhancedWeaponEventTest extends BaseIntegrationSpec {
 		// the unlikely chance of selecting the same configuration).
 		$event2 = EnhancedWeaponEvent::getLatestEvent($gameID);
 		self::assertNotEquals($event2, $event);
+		self::assertIsInt($buffer);
 		self::assertSame(2 * $buffer, $event2->getExpireTime());
 		$events2 = EnhancedWeaponEvent::getShopEvents($gameID, $sectorID, $locTypePPL);
 		self::assertEquals([$event2], $events2);

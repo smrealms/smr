@@ -80,6 +80,7 @@ class DatabaseResultTest extends TestCase {
 		$numRecords = 0;
 		$result = $this->runQuery(3);
 		foreach ($result->records() as $index => $record) {
+			self::assertIsInt($index);
 			$row = $index + 1;
 			self::assertSame([1 => $row], $record->getRow());
 			$numRecords++;
