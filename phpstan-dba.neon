@@ -152,6 +152,13 @@ parameters:
 
         -
             # History databases are not supported.
+            message: '#Query error: SQLSTATE\[23000\]: Integrity constraint violation: 1052 Column ''sector_id'' in field list is ambiguous \(23000\)\.$#'
+            identifier: dba.syntaxError
+            count: 1
+            path: src/pages/Account/HistoryGames/ExtendedStatsDetail.php
+
+        -
+            # History databases are not supported.
             message: '#^Smr\\DatabaseRecord does not contain field\: message$#'
             identifier: smr.dba.databaseRecordType
             count: 1
