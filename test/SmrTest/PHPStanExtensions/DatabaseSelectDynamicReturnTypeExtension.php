@@ -10,6 +10,7 @@ use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\Type;
 use Smr\Database;
 use staabm\PHPStanDba\DoctrineReflection\DoctrineResultObjectType;
+use staabm\PHPStanDba\Extensions\DbSchemaResultCacheMetaExtension;
 use staabm\PHPStanDba\QueryReflection\QueryReflection;
 use staabm\PHPStanDba\QueryReflection\QueryReflector;
 
@@ -67,6 +68,8 @@ class DatabaseSelectDynamicReturnTypeExtension implements DynamicMethodReturnTyp
 			// Dynamic result columns cannot produce a static result shape.
 			return null;
 		}
+
+		DbSchemaResultCacheMetaExtension::trackSchemaDependency($scope);
 
 		// Generate a proxy query with the same return type as the actual query
 		// executed at runtime. We only need the table and result columns.

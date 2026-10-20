@@ -2,6 +2,9 @@
 
 services:
     -
+        class: staabm\PHPStanDba\Extensions\DbSchemaResultCacheMetaExtension
+        tags: [phpstan.resultCacheValueExtension]
+    -
         class: staabm\PHPStanDba\Rules\SyntaxErrorInPreparedStatementMethodRule
         tags: [phpstan.rules.rule]
         arguments:

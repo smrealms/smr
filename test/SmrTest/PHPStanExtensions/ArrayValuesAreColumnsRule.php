@@ -15,6 +15,7 @@ use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\VerbosityLevel;
+use staabm\PHPStanDba\Extensions\DbSchemaResultCacheMetaExtension;
 use staabm\PHPStanDba\QueryReflection\QueryReflection;
 use function array_key_exists;
 use function count;
@@ -133,6 +134,8 @@ final class ArrayValuesAreColumnsRule implements Rule {
 				RuleErrorBuilder::message('Argument #0 expects a constant string, got ' . $tableType->describe(VerbosityLevel::precise()))->identifier('dba.ArrayValuesAreColumnsRule')->line($callLike->getStartLine())->build(),
 			];
 		}
+
+		DbSchemaResultCacheMetaExtension::trackSchemaDependency($scope);
 
 		if ($this->queryReflection === null) {
 			$this->queryReflection = new QueryReflection();
