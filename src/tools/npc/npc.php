@@ -271,9 +271,10 @@ function processContainer(PlayerPageProcessor $container): never {
 	$lock = SectorLock::getInstance();
 	try {
 		$lock->acquireForPlayer($player);
-	} catch (SectorLockTimeout) {
+	} catch (SectorLockTimeout $e) {
 		// On timeout, skip this action and select a new action. Instead of an
 		// unclean abort, this is comparable to refreshing the page.
+		debug('Caught ' . $e::class . ' exception. Will try another action.');
 		SectorLock::resetInstance();
 		throw new ForwardAction();
 	}
@@ -282,6 +283,7 @@ function processContainer(PlayerPageProcessor $container): never {
 	if ($session->getPlayer(true)->getSectorID() !== $lock->getSectorID()) {
 		// NPC sector was modified externally (e.g. back to HQ in a pod) while
 		// deciding what to do, so skip this action and select a new action.
+		debug('Player sector has changed from lock sector. Will try another action.');
 		throw new ForwardAction();
 	}
 
