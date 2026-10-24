@@ -4,6 +4,7 @@ namespace Smr;
 
 use Exception;
 use Smr\Container\DiContainer;
+use Smr\Exceptions\SectorLockTimeout;
 use Smr\Exceptions\UserError;
 
 /**
@@ -127,7 +128,7 @@ class SectorLock {
 		}
 
 		$this->setFailed();
-		throw new Exception('Sector lock acquisition timed out!');
+		throw new SectorLockTimeout('Sector lock acquisition timed out!');
 	}
 
 	public function getSectorID(): int {
