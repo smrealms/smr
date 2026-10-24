@@ -7,6 +7,7 @@ use Smr\Database;
 use Smr\DatabaseShip;
 use Smr\Epoch;
 use Smr\Exceptions\PathNotFound;
+use Smr\Exceptions\SectorLockTimeout;
 use Smr\Force;
 use Smr\Galaxy;
 use Smr\Location;
@@ -268,7 +269,15 @@ function processContainer(PlayerPageProcessor $container): never {
 
 	// Acquire a lock in the sector where we chose our action
 	$lock = SectorLock::getInstance();
-	$lock->acquireForPlayer($player);
+	try {
+		$lock->acquireForPlayer($player);
+	} catch (SectorLockTimeout) {
+		// On timeout, skip this action and select a new action. Instead of an
+		// unclean abort, this is comparable to refreshing the page.
+		SectorLock::resetInstance();
+		throw new ForwardAction();
+	}
+
 	clearCaches(); // do not retain anything from before lock acquisition
 	if ($session->getPlayer(true)->getSectorID() !== $lock->getSectorID()) {
 		// NPC sector was modified externally (e.g. back to HQ in a pod) while

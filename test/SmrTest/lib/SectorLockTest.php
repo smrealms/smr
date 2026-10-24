@@ -5,6 +5,8 @@ namespace SmrTest\lib;
 use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Smr\Container\DiContainer;
+use Smr\Epoch;
+use Smr\Exceptions\SectorLockTimeout;
 use Smr\Exceptions\UserError;
 use Smr\SectorLock;
 use SmrTest\BaseIntegrationSpec;
@@ -92,6 +94,25 @@ class SectorLockTest extends BaseIntegrationSpec {
 			self::assertTrue($lock2->hasFailed());
 			self::assertFalse($lock1->hasFailed());
 			throw $e;
+		}
+	}
+
+	public function test_acquire_timeout_marks_lock_as_failed_and_releases_it(): void {
+		$epoch = $this->createStub(Epoch::class);
+		// Set the epoch six seconds behind real time so the 5s retry duration
+		// has already elapsed on the first loop iteration.
+		$epoch->method('getTime')->willReturn(time() - 6);
+		DiContainer::getContainer()->set(Epoch::class, $epoch);
+
+		$lock = SectorLock::getInstance();
+		$this->expectException(SectorLockTimeout::class);
+		$this->expectExceptionMessage('Sector lock acquisition timed out!');
+		try {
+			$lock->acquire(1, 1, 1);
+		} catch (SectorLockTimeout $exception) {
+			self::assertTrue($lock->hasFailed());
+			self::assertFalse($lock->isActive());
+			throw $exception;
 		}
 	}
 
