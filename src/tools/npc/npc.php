@@ -183,6 +183,11 @@ function npcDriver(): bool {
 		try {
 			$container = $actor->getNextAction();
 			processContainer($container);
+		} catch (SectorLockTimeout $e) {
+			// On timeout, skip this action and select a new action. Instead of an
+			// unclean abort, this is comparable to refreshing the page.
+			debug('Caught ' . $e::class . ' exception. Will try another action.');
+			SectorLock::resetInstance();
 		} catch (ForwardAction) {
 			// we took an action
 		} catch (FinalAction) {
@@ -269,15 +274,7 @@ function processContainer(PlayerPageProcessor $container): never {
 
 	// Acquire a lock in the sector where we chose our action
 	$lock = SectorLock::getInstance();
-	try {
-		$lock->acquireForPlayer($player);
-	} catch (SectorLockTimeout $e) {
-		// On timeout, skip this action and select a new action. Instead of an
-		// unclean abort, this is comparable to refreshing the page.
-		debug('Caught ' . $e::class . ' exception. Will try another action.');
-		SectorLock::resetInstance();
-		throw new ForwardAction();
-	}
+	$lock->acquireForPlayer($player);
 
 	clearCaches(); // do not retain anything from before lock acquisition
 	if ($session->getPlayer(true)->getSectorID() !== $lock->getSectorID()) {
