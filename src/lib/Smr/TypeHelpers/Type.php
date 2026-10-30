@@ -9,8 +9,15 @@ namespace Smr\TypeHelpers;
  */
 abstract class Type {
 
-	public static function array(): ArrayType {
-		return new ArrayType();
+	/**
+	 * @template TKey of array-key = array-key
+	 * @template TValue = mixed
+	 * @param ?Type<TValue> $valueType
+	 * @param ?Type<TKey> $keyType
+	 * @return ArrayType<TKey, TValue>
+	 */
+	public static function array(?Type $valueType = null, ?Type $keyType = null): ArrayType {
+		return new ArrayType(valueType: $valueType, keyType: $keyType);
 	}
 
 	public static function string(): StringType {

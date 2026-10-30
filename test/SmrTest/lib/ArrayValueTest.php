@@ -48,7 +48,7 @@ class ArrayValueTest extends TestCase {
 	}
 
 	/**
-	 * @param Type<array<mixed>|bool|float|int|string> $type
+	 * @param Type<array<array-key, mixed>|bool|float|int|string> $type
 	 */
 	#[TestWith([new StringType(), 'SMR', true])]
 	#[TestWith([new StringType(), 1, false])]
@@ -60,12 +60,22 @@ class ArrayValueTest extends TestCase {
 	#[TestWith([new BoolType(), 0, false])]
 	#[TestWith([new ArrayType(), [], true])]
 	#[TestWith([new ArrayType(), 'not an array', false])]
+	#[TestWith([new ArrayType(new StringType(), new IntType()), [1 => 'SMR'], true])]
+	#[TestWith([new ArrayType(new StringType(), new IntType()), [1 => 1], false])]
+	#[TestWith([new ArrayType(new StringType(), new IntType()), ['name' => 'SMR'], false])]
+	#[TestWith([new ArrayType(new IntType(), new StringType()), ['SMR' => 1], true])]
 	public function test_accepts_values(Type $type, mixed $value, bool $matches): void {
 		self::assertSame($matches, $type->accepts($value));
 	}
 
 	public function test_name_returns_type_name(): void {
 		self::assertSame('array', Type::array()->name());
+		self::assertSame('array<array-key, string>', Type::array(valueType: Type::string())->name());
+		self::assertSame('array<int, mixed>', Type::array(keyType: Type::int())->name());
+		self::assertSame(
+			'array<int, string>',
+			Type::array(valueType: Type::string(), keyType: Type::int())->name(),
+		);
 		self::assertSame('string', Type::string()->name());
 		self::assertSame('int', Type::int()->name());
 		self::assertSame('float', Type::float()->name());

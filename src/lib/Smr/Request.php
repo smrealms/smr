@@ -191,22 +191,8 @@ class Request {
 	 * @return array<int, string>
 	 */
 	private static function getStringArrayValue(string $index): array {
-		$value = $_REQUEST[$index];
-		if (!is_array($value)) {
-			throw new Exception('Request variable must be an array: ' . $index);
-		}
-		$result = [];
-		foreach ($value as $key => $item) {
-			// String keys are legal HTML, but we do not allow them.
-			if (!is_int($key)) {
-				throw new Exception('Array key must be an int: ' . get_debug_type($key));
-			}
-			if (!is_string($item)) {
-				throw new Exception('Request array value must be a string: ' . $index);
-			}
-			$result[$key] = $item;
-		}
-		return $result;
+		$innerType = Type::array(valueType: Type::string(), keyType: Type::int());
+		return ArrayValue::get($_REQUEST, $index, $innerType);
 	}
 
 	public static function getUploadError(string $index): int {

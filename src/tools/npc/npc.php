@@ -28,6 +28,7 @@ use Smr\Player;
 use Smr\Plotter;
 use Smr\Port;
 use Smr\Race;
+use Smr\Routes\MultiplePortRoute;
 use Smr\Routes\RouteGenerator;
 use Smr\Sector;
 use Smr\SectorLock;
@@ -35,6 +36,7 @@ use Smr\Session;
 use Smr\Ship;
 use Smr\TradeGood;
 use Smr\TransactionType;
+use Smr\TypeHelpers\Type;
 
 function overrideForward(Page $container): never {
 	global $forwardedContainer;
@@ -703,6 +705,9 @@ function findRoutes(Player $player, ?int $galaxyID): array {
 	);
 	if ($dbResult->hasRecord()) {
 		$routes = $dbResult->record()->getObject('routes', true);
+		if (!Type::array(valueType: Type::object(MultiplePortRoute::class))->accepts($routes)) {
+			throw new Exception('Invalid cached routes.');
+		}
 		debug('Using Cached Routes: #' . count($routes));
 		return $routes;
 	}

@@ -4,8 +4,10 @@ namespace Smr\SocialLogin;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 use Exception;
+use Smr\ArrayValue;
 use Smr\Exceptions\UserError;
 use Smr\Request;
+use Smr\TypeHelpers\Type;
 
 class Twitter extends SocialLogin {
 
@@ -34,14 +36,15 @@ class Twitter extends SocialLogin {
 		$params = ['oauth_callback' => $this->getRedirectUrl()];
 		$_SESSION['TwitterToken'] = $auth->oauth('oauth/request_token', $params);
 		// 'authenticate' asks for permission only once ('authorize' is every time)
-		return $auth->url('oauth/authenticate', $_SESSION['TwitterToken']);
+		return $auth->url('oauth/authenticate', $this->getSessionToken());
 	}
 
 	public function login(): SocialIdentity {
-		if ($_SESSION['TwitterToken']['oauth_token'] !== Request::get('oauth_token')) {
+		$token = $this->getSessionToken();
+		if ($token['oauth_token'] !== Request::get('oauth_token')) {
 			throw new Exception('Unexpected token received from Twitter');
 		}
-		$helper = self::getTwitterObj($_SESSION['TwitterToken']);
+		$helper = self::getTwitterObj($token);
 		$accessToken = $helper->oauth(
 			'oauth/access_token',
 			['oauth_verifier' => Request::get('oauth_verifier')],
@@ -53,6 +56,18 @@ class Twitter extends SocialLogin {
 			throw new UserError('Connection failed, please try again.');
 		}
 		return new SocialIdentity($userInfo->id_str, $userInfo->email, static::getLoginType());
+	}
+
+	/**
+	 * @return array<string, string>
+	 */
+	private function getSessionToken(): array {
+		$innerType = Type::array(Type::string(), Type::string());
+		$token = ArrayValue::get($_SESSION, 'TwitterToken', $innerType);
+		if (!isset($token['oauth_token'], $token['oauth_token_secret'])) {
+			throw new Exception('Twitter login session has expired.');
+		}
+		return $token;
 	}
 
 }

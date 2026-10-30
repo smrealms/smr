@@ -165,21 +165,21 @@ class RequestTest extends TestCase {
 	public function test_getArray_exception_wrong_key_type(): void {
 		// If the array has non-integer keys
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Array key must be an int');
+		$this->expectExceptionMessage('Array key [array_str_keys] must be a array<int, string>, got array');
 		Request::getArray('array_str_keys');
 	}
 
 	public function test_getArray_exception_not_array(): void {
 		$_REQUEST['invalid_array'] = 'not an array';
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Request variable must be an array: invalid_array');
+		$this->expectExceptionMessage('Array key [invalid_array] must be a array<int, string>, got string: \'not an array\'');
 		Request::getArray('invalid_array');
 	}
 
 	public function test_getArray_exception_item_not_string(): void {
 		$_REQUEST['invalid_array_item'] = ['string', 2];
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Request array value must be a string: invalid_array_item');
+		$this->expectExceptionMessage('Array key [invalid_array_item] must be a array<int, string>, got array');
 		Request::getArray('invalid_array_item');
 	}
 
@@ -204,7 +204,7 @@ class RequestTest extends TestCase {
 	public function test_getIntArray_exception_wrong_key_type(): void {
 		// If the array has non-integer keys
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Array key must be an int');
+		$this->expectExceptionMessage('Array key [array_str_keys] must be a array<int, string>, got array');
 		Request::getIntArray('array_str_keys');
 	}
 
