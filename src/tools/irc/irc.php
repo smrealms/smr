@@ -16,13 +16,11 @@ $events = [];
 // supply/demand list
 $sds = [];
 
-$debugging = false;
-foreach ($_SERVER['argv'] as $arg) {
-	if ($arg === '-debug') {
-		$debugging = true;
-	}
+$options = getopt('', ['debug']);
+if ($options === false) {
+	throw new Exception('Failed to parse options.');
 }
-define('IRC_DEBUGGING', $debugging);
+$debugging = isset($options['debug']);
 
 require_once(TOOLS . 'irc/stream.php');
 
@@ -64,7 +62,7 @@ while (true) {
 
 		sleep(5);
 
-		if (!IRC_DEBUGGING) {
+		if (!$debugging) {
 			// join our public channels
 			$joinChannels = ['#smr', '#smr-bar'];
 
