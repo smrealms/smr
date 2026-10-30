@@ -285,7 +285,7 @@ function handleUserError(string $message): never {
 		$errorHREF = $container->href();
 		// json_encode the HREF as a safety precaution
 		$template = Template::getInstance();
-		$template->addJavascriptForAjax('EVAL', 'location.href = ' . json_encode($errorHREF, JSON_THROW_ON_ERROR));
+		$template->addJavascriptEvalForAjax('location.href = ' . json_encode($errorHREF, JSON_THROW_ON_ERROR));
 	}
 	$container->go();
 }
