@@ -15,6 +15,7 @@ use Smr\Pages\Player\SectorJumpProcessor;
 use Smr\Pages\Player\SectorMoveProcessor;
 use Smr\Pages\Player\SectorScan;
 use Smr\Pages\Player\ShopGoodsProcessor;
+use Smr\TypeHelpers\Type;
 
 class Session {
 
@@ -70,8 +71,9 @@ class Session {
 
 		// now try the cookie
 		$idLength = 32;
-		if (isset($_COOKIE['session_id']) && strlen($_COOKIE['session_id']) === $idLength) {
-			$this->sessionID = $_COOKIE['session_id'];
+		$cookieSessionID = ArrayValue::getOptional($_COOKIE, 'session_id', Type::string());
+		if ($cookieSessionID !== null && strlen($cookieSessionID) === $idLength) {
+			$this->sessionID = $cookieSessionID;
 		} else {
 			// create a new session id
 			do {

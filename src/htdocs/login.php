@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\ArrayValue;
 use Smr\Database;
 use Smr\Pages\Account\LoginCheckValidatedProcessor;
 use Smr\Pages\Login\LoginRenderer;
@@ -7,6 +8,7 @@ use Smr\Pages\Login\SkeletonRenderer;
 use Smr\Request;
 use Smr\Session;
 use Smr\Template;
+use Smr\TypeHelpers\Type;
 
 try {
 
@@ -32,9 +34,7 @@ try {
 		$message = htmlentities(Request::get('msg'), ENT_COMPAT, 'utf-8');
 	} elseif (Request::has('status')) {
 		session_start();
-		if (isset($_SESSION['login_msg'])) {
-			$message = $_SESSION['login_msg'];
-		}
+		$message = ArrayValue::get($_SESSION, 'login_msg', Type::string());
 		session_destroy();
 	}
 

@@ -86,6 +86,13 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		self::assertNotEquals($sessionID, $session->getSessionID());
 	}
 
+	public function test_getSessionID_rejects_nonstring_cookie(): void {
+		$_COOKIE['session_id'] = ['not a session ID'];
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Array key [session_id] must be a string, got array:');
+		DiContainer::makeClass(Session::class);
+	}
+
 	#[TestWith(['0', false])]
 	#[TestWith(['1', true])] // only 1 is true
 	#[TestWith(['2', false])]

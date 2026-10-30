@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Smr\Account;
+use Smr\ArrayValue;
 use Smr\Database;
 use Smr\Epoch;
 use Smr\Exceptions\AccountNotFound;
@@ -9,7 +10,9 @@ use Smr\Login\Redirect;
 use Smr\Pages\Account\LoginCheckValidatedProcessor;
 use Smr\Request;
 use Smr\Session;
+use Smr\SocialLogin\SocialIdentity;
 use Smr\SocialLogin\SocialLogin;
+use Smr\TypeHelpers\Type;
 
 try {
 
@@ -83,10 +86,11 @@ try {
 	// If linking a social login to an existing account
 	if (Request::has('social')) {
 		session_start();
-		if (!isset($_SESSION['socialId'])) {
+		$socialId = ArrayValue::getOptional($_SESSION, 'socialId', Type::object(SocialIdentity::class));
+		if ($socialId === null) {
 			create_error('Your session has expired. Please try again.');
 		}
-		$account->addAuthMethod($_SESSION['socialId']);
+		$account->addAuthMethod($socialId);
 		session_destroy();
 	}
 
@@ -145,8 +149,9 @@ try {
 			$multiIDs = array_merge($multiIDs, $dbIDs);
 		}
 	}
-	if (isset($_COOKIE['Session_Info'])) {
-		$cookieIDs = explode('-', $_COOKIE['Session_Info']);
+	$sessionInfoCookie = ArrayValue::getOptional($_COOKIE, 'Session_Info', Type::string());
+	if ($sessionInfoCookie !== null) {
+		$cookieIDs = explode('-', $sessionInfoCookie);
 		// pop off multi version, then skip IDs if version is outdated
 		if (array_shift($cookieIDs) === MULTI_CHECKING_COOKIE_VERSION) {
 			$multiIDs = array_merge($multiIDs, $cookieIDs);

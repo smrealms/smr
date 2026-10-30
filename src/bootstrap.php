@@ -2,10 +2,12 @@
 
 use PHPMailer\PHPMailer\PHPMailer;
 use Smr\Account;
+use Smr\ArrayValue;
 use Smr\Container\DiContainer;
 use Smr\Exceptions\UserError;
 use Smr\SectorLock;
 use Smr\Session;
+use Smr\TypeHelpers\Type;
 
 function logException(Throwable $err): void {
 	$message = '';
@@ -55,7 +57,7 @@ function logException(Throwable $err): void {
 
 	$message .=
 		'User IP: ' . getIpAddress() . "\n"
-		. 'User Agent: ' . ($_SERVER['HTTP_USER_AGENT'] ?? 'undefined') . "\n"
+		. 'User Agent: ' . getUserAgent() . "\n"
 		. 'URL: ' . (defined('URL') ? URL : 'undefined');
 
 	// Try to release lock so they can carry on normally
@@ -164,8 +166,9 @@ function setupMailer(): PHPMailer {
 
 function getIpAddress(): string {
 	foreach (['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR'] as $key) {
-		if (array_key_exists($key, $_SERVER) === true) {
-			foreach (explode(',', $_SERVER[$key]) as $ip) {
+		$value = ArrayValue::getOptional($_SERVER, $key, Type::string());
+		if ($value !== null) {
+			foreach (explode(',', $value) as $ip) {
 				if (filter_var($ip, FILTER_VALIDATE_IP) !== false) {
 					return $ip;
 				}
@@ -173,6 +176,10 @@ function getIpAddress(): string {
 		}
 	}
 	return 'unknown';
+}
+
+function getUserAgent(): string {
+	return ArrayValue::getOrDefault($_SERVER, 'HTTP_USER_AGENT', Type::string(), 'undefined');
 }
 
 /**
