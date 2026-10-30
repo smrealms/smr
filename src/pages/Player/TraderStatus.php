@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Player;
 
+use Exception;
 use Smr\Database;
 use Smr\HardwareType;
 use Smr\Menu;
@@ -41,6 +42,9 @@ class TraderStatus extends PlayerPage {
 		$dbResult = $db->select('player_has_notes', $player->SQLID);
 		foreach ($dbResult->records() as $dbRecord) {
 			$note = $dbRecord->getObject('note', true);
+			if (!is_string($note)) {
+				throw new Exception('Invalid stored trader note.');
+			}
 			$notes[$dbRecord->getInt('note_id')] = htmlentities($note);
 		}
 		$notes = array_reverse($notes, true); // display newest first
