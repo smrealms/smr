@@ -5,9 +5,13 @@ namespace Smr\TypeHelpers;
 /**
  * A runtime type check for values of type T.
  *
- * @template T
+ * @template-covariant T
  */
 abstract class Type {
+
+	public static function array(): ArrayType {
+		return new ArrayType();
+	}
 
 	public static function string(): StringType {
 		return new StringType();

@@ -43,10 +43,11 @@ class AlbumEditProcessor extends AccountPageProcessor {
 
 		// check if we have an image
 		$noPicture = true;
-		if ($_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+		if (Request::getUploadError('photo') === UPLOAD_ERR_OK) {
 			$noPicture = false;
+			$tmpName = Request::getUploadedTmpName('photo');
 			// get dimensions
-			$size = getimagesize($_FILES['photo']['tmp_name']);
+			$size = getimagesize($tmpName);
 			if ($size === false) {
 				create_error('Uploaded file must be an image!');
 			}
@@ -66,7 +67,7 @@ class AlbumEditProcessor extends AccountPageProcessor {
 				create_error('Image is higher than 500 pixels!');
 			}
 
-			if (!move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . $account->getAccountID())) {
+			if (!move_uploaded_file($tmpName, UPLOAD . $account->getAccountID())) {
 				create_error('Failed to upload image!');
 			}
 		}

@@ -3,6 +3,7 @@
 namespace Smr;
 
 use Exception;
+use Smr\TypeHelpers\Type;
 
 /**
  * Should be used for getting request data for processing pages.
@@ -206,6 +207,21 @@ class Request {
 			$result[$key] = $item;
 		}
 		return $result;
+	}
+
+	public static function getUploadError(string $index): int {
+		return ArrayValue::get(self::getUploadedFile($index), 'error', Type::int());
+	}
+
+	public static function getUploadedTmpName(string $index): string {
+		return ArrayValue::get(self::getUploadedFile($index), 'tmp_name', Type::string());
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
+	private static function getUploadedFile(string $index): array {
+		return ArrayValue::get($_FILES, $index, Type::array());
 	}
 
 }

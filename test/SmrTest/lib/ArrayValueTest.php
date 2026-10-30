@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\CoversNamespace;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Smr\ArrayValue;
+use Smr\TypeHelpers\ArrayType;
 use Smr\TypeHelpers\BoolType;
 use Smr\TypeHelpers\FloatType;
 use Smr\TypeHelpers\IntType;
@@ -47,7 +48,7 @@ class ArrayValueTest extends TestCase {
 	}
 
 	/**
-	 * @param Type<bool|float|int|string> $type
+	 * @param Type<array<mixed>|bool|float|int|string> $type
 	 */
 	#[TestWith([new StringType(), 'SMR', true])]
 	#[TestWith([new StringType(), 1, false])]
@@ -57,11 +58,14 @@ class ArrayValueTest extends TestCase {
 	#[TestWith([new FloatType(), 1, false])]
 	#[TestWith([new BoolType(), false, true])]
 	#[TestWith([new BoolType(), 0, false])]
-	public function test_accepts_scalar_values(Type $type, mixed $value, bool $matches): void {
+	#[TestWith([new ArrayType(), [], true])]
+	#[TestWith([new ArrayType(), 'not an array', false])]
+	public function test_accepts_values(Type $type, mixed $value, bool $matches): void {
 		self::assertSame($matches, $type->accepts($value));
 	}
 
-	public function test_name_returns_scalar_type_name(): void {
+	public function test_name_returns_type_name(): void {
+		self::assertSame('array', Type::array()->name());
 		self::assertSame('string', Type::string()->name());
 		self::assertSame('int', Type::int()->name());
 		self::assertSame('float', Type::float()->name());
