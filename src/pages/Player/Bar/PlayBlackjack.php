@@ -82,27 +82,27 @@ class PlayBlackjack extends PlayerPage {
 		// Display the dealer side
 		$dealerHand = $table->dealerHand;
 
-		$result = [];
+		$dealerStatus = [];
 		if ($gameEnded) {
-			$result[] = 'Dealer has a total of ' . $dealerHand->getValue();
+			$dealerStatus[] = 'Dealer has a total of ' . $dealerHand->getValue();
 		} else {
 			// Only the dealer's first card is visible to the player
-			$result[] = 'Dealer has at least ' . $dealerHand->getCards()[0]->getValue();
+			$dealerStatus[] = 'Dealer has at least ' . $dealerHand->getCards()[0]->getValue();
 		}
 		if ($dealerHand->hasBlackjack()) {
-			$result[] = 'Dealer has BLACKJACK!';
+			$dealerStatus[] = 'Dealer has BLACKJACK!';
 		} elseif ($dealerHand->hasBusted()) {
-			$result[] = 'Dealer <span class="red"><b>BUSTED</b></span>';
+			$dealerStatus[] = 'Dealer <span class="red"><b>BUSTED</b></span>';
 		}
 
 		// Display the player side
 		$playerHand = $table->playerHand;
 
-		$result = ['You have a total of ' . $playerHand->getValue()];
+		$playerStatus = ['You have a total of ' . $playerHand->getValue()];
 		if ($playerHand->hasBlackjack()) {
-			$result[] = 'You have BLACKJACK!';
+			$playerStatus[] = 'You have BLACKJACK!';
 		} elseif ($playerHand->hasBusted()) {
-			$result[] = 'You have <span class="red"><b>BUSTED</b></span>';
+			$playerStatus[] = 'You have <span class="red"><b>BUSTED</b></span>';
 		}
 
 		// Create action buttons
@@ -134,9 +134,9 @@ class PlayBlackjack extends PlayerPage {
 		$template->pageRenderer = fn() => PlayBlackjackRenderer::render(
 			ResultMsg: $resultMsg,
 			DealerHand: display_hand($dealerHand, $gameEnded),
-			DealerStatus: implode('<br />', $result),
+			DealerStatus: implode('<br />', $dealerStatus),
 			PlayerHand: display_hand($playerHand, true),
-			PlayerStatus: implode('<br />', $result),
+			PlayerStatus: implode('<br />', $playerStatus),
 			Winnings: $this->winningsMsg,
 			BetHREF: $betHREF,
 			Bet: $this->bet,
