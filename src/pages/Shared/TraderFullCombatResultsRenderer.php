@@ -13,6 +13,22 @@ class TraderFullCombatResultsRenderer {
 		?string $AttackLogLink,
 		?Player $ThisPlayer,
 	): void {
+		// Determine damage done to ThisPlayer if they participated in this combat
+		$ThisPlayerDamageTakenFromAttackers = null;
+		$ThisPlayerDamageTakenFromDefenders = null;
+		if ($ThisPlayer !== null) {
+			$ThisPlayerCombatant = $ThisPlayer->getShip();
+			if ($TraderCombatResults->defenders->hasCombatant($ThisPlayerCombatant)) {
+				$ThisPlayerDamageTakenFromAttackers = $TraderCombatResults->attackers->getTotalDamageDealtTo(
+					$ThisPlayerCombatant,
+				);
+			} elseif ($TraderCombatResults->attackers->hasCombatant($ThisPlayerCombatant)) {
+				$ThisPlayerDamageTakenFromDefenders = $TraderCombatResults->defenders->getTotalDamageDealtTo(
+					$ThisPlayerCombatant,
+				);
+			}
+		}
+
 		if ($MinimalDisplay) { ?>
 			<h2>Attacker Results</h2><?php
 		} else { ?>
@@ -23,7 +39,7 @@ class TraderFullCombatResultsRenderer {
 		TraderTeamCombatResultsRenderer::render(
 			TraderTeamCombatResults: $TraderCombatResults->attackers,
 			MinimalDisplay: $MinimalDisplay,
-			ThisPlayer: $ThisPlayer,
+			ThisPlayerDamageTaken: $ThisPlayerDamageTakenFromAttackers,
 		); ?>
 
 		<br /><br /><?php
@@ -39,7 +55,7 @@ class TraderFullCombatResultsRenderer {
 		TraderTeamCombatResultsRenderer::render(
 			TraderTeamCombatResults: $TraderCombatResults->defenders,
 			MinimalDisplay: $MinimalDisplay,
-			ThisPlayer: $ThisPlayer,
+			ThisPlayerDamageTaken: $ThisPlayerDamageTakenFromDefenders,
 		);
 
 		if ($MinimalDisplay) {
