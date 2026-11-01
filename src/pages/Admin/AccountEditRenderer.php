@@ -81,28 +81,22 @@ class AccountEditRenderer {
 						<td><?php
 							if (count($EditingPlayers) > 0) { ?>
 								<a onclick="$('#accountPlayers').fadeToggle(600);">Show/Hide</a>
-								<table id="accountPlayers" style="display:none"><?php
+								<table id="accountPlayers" class="standard" style="display:none">
+									<tr>
+										<th>Game ID</th>
+										<th>Name</th>
+										<th>Experience</th>
+										<th>Ship</th>
+										<th>Delete player</th>
+									</tr><?php
 									foreach ($EditingPlayers as $CurrentPlayer) {
 										$CurrentShip = $CurrentPlayer->getShip(); ?>
 										<tr>
-											<td class="right">Game ID:</td>
 											<td><?php echo $CurrentPlayer->getGameID(); ?></td>
-										</tr>
-										<tr>
-											<td class="right">Name:</td>
-											<td><input type=text name=player_name[<?php echo $CurrentPlayer->getPlayerID(); ?>] placeholder="<?php echo htmlentities($CurrentPlayer->getPlayerName()); ?>" />(<?php echo $CurrentPlayer->getPlayerNumber(); ?>)</td>
-										</tr>
-										<tr>
-											<td class="right">Experience:</td>
+											<td><input type="text" name="player_name[<?php echo $CurrentPlayer->getPlayerID(); ?>]" placeholder="<?php echo htmlentities($CurrentPlayer->getPlayerName()); ?>" />(<?php echo $CurrentPlayer->getPlayerNumber(); ?>)</td>
 											<td><?php echo number_format($CurrentPlayer->getExperience()); ?></td>
-										</tr>
-										<tr>
-											<td class="right">Ship:</td>
 											<td><?php echo $CurrentShip->getName(); ?> (<?php echo $CurrentShip->getAttackRating(); ?>/<?php echo $CurrentShip->getDefenseRating(); ?>)</td>
-										</tr>
-										<tr>
-											<td><input type="radio" name="delete[<?php echo $CurrentPlayer->getPlayerID(); ?>]" value="TRUE" unchecked="unchecked">Yes<input type="radio" name="delete[<?php echo $CurrentPlayer->getPlayerID(); ?>]" value="FALSE" checked="checked">No</td>
-											<td>Delete player</td>
+											<td><input type="checkbox" name="delete[<?php echo $CurrentPlayer->getPlayerID(); ?>]" value="TRUE"> Delete</td>
 										</tr><?php
 									} ?>
 								</table><?php
