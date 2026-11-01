@@ -32,7 +32,10 @@ class AdminMessageSend extends AccountPage {
 			$db = Database::getInstance();
 			$dbResult = $db->select(
 				'player',
-				['game_id' => $gameID],
+				[
+					'game_id' => $gameID,
+					'npc' => $db->escapeBoolean(false),
+				],
 				['player_id', 'player_name'],
 				orderBy: ['player_name'],
 			);
