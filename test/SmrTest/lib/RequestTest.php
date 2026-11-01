@@ -202,10 +202,16 @@ class RequestTest extends TestCase {
 	}
 
 	public function test_getIntArray_exception_wrong_key_type(): void {
-		// If the array has non-integer keys
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Array key [array_str_keys] must be a array<int, string>, got array');
+		$this->expectExceptionMessage('Array key [array_str_keys] must be a array<int, mixed>, got array');
 		Request::getIntArray('array_str_keys');
+	}
+
+	public function test_getIntArray_exception_item_not_integer(): void {
+		$_REQUEST['invalid_int_array'] = ['one'];
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Value is not int for index `invalid_int_array` at key `0`: \'one\'');
+		Request::getIntArray('invalid_int_array');
 	}
 
 	//------------------------------------------------------------------------
@@ -219,6 +225,8 @@ class RequestTest extends TestCase {
 		self::assertSame('ing', Request::get('str_padded'));
 		// An index that doesn't exist, with default
 		self::assertSame('foo', Request::get('noexist', 'foo'));
+		// Defaults are treated like request values and trimmed.
+		self::assertSame('foo', Request::get('noexist', '  foo  '));
 	}
 
 	public function test_get_exception_missing(): void {
@@ -231,7 +239,7 @@ class RequestTest extends TestCase {
 	public function test_get_exception_not_string(): void {
 		$_REQUEST['invalid_string'] = 1;
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Value is not string for index `invalid_string`: 1');
+		$this->expectExceptionMessage('Array key [invalid_string] must be a string, got int: 1');
 		Request::get('invalid_string');
 	}
 
@@ -274,7 +282,7 @@ class RequestTest extends TestCase {
 	public function test_getVar_exception_not_string(): void {
 		$this->setVar(['invalid_session_string' => 1]);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Session variable must be a string: invalid_session_string');
+		$this->expectExceptionMessage('Array key [invalid_session_string] must be a string, got int: 1');
 		Request::getVar('invalid_session_string');
 	}
 
@@ -323,7 +331,7 @@ class RequestTest extends TestCase {
 	public function test_getVarInt_exception_not_int(): void {
 		$this->setVar(['invalid_session_int' => '1']);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Session variable must be an int: invalid_session_int');
+		$this->expectExceptionMessage('Array key [invalid_session_int] must be a int, got string: \'1\'');
 		Request::getVarInt('invalid_session_int');
 	}
 
@@ -375,7 +383,7 @@ class RequestTest extends TestCase {
 	public function test_getVarIntArray_exception_not_int_array(mixed $value): void {
 		$this->setVar(['invalid_session_int_array' => $value]);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Session variable must be an int array: invalid_session_int_array');
+		$this->expectExceptionMessage('Array key [invalid_session_int_array] must be a array<int, int>');
 		Request::getVarIntArray('invalid_session_int_array');
 	}
 

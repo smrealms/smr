@@ -47,6 +47,11 @@ class ArrayValueTest extends TestCase {
 		self::assertFalse($value);
 	}
 
+	public function test_getOrDefault_returns_null_for_missing_key_with_null_default(): void {
+		$value = ArrayValue::getOrDefault([], 'enabled', Type::bool(), null);
+		self::assertNull($value);
+	}
+
 	/**
 	 * @param Type<array<array-key, mixed>|bool|float|int|string> $type
 	 */
