@@ -25,6 +25,7 @@ class PaperDeleteConfirm extends PlayerPage {
 			],
 			['title'],
 		);
+		$paperTitle = $dbResult->record()->getString('title');
 
 		$articles = [];
 		$dbResult = $db->read('SELECT title FROM galactic_post_paper_content JOIN galactic_post_article USING (game_id, article_id) WHERE game_id = :game_id AND paper_id = :paper_id', [
@@ -36,7 +37,7 @@ class PaperDeleteConfirm extends PlayerPage {
 		}
 
 		$template->pageRenderer = fn() => PaperDeleteConfirmRenderer::render(
-			PaperTitle: $dbResult->record()->getString('title'),
+			PaperTitle: $paperTitle,
 			Articles: $articles,
 			ConfirmHREF: new PaperDeleteProcessor($this->paperID)->href(),
 			CancelHREF: new EditorOptions()->href(),
