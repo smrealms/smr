@@ -33,8 +33,8 @@ final class ArrayValue {
 	 * @template T
 	 * @param array<array-key, mixed> $arr
 	 * @param Type<T> $type
-	 * @param T $default
-	 * @return T
+	 * @param ?T $default
+	 * @return ($default is null ? T|null : T)
 	 */
 	public static function getOrDefault(array $arr, string|int $key, Type $type, mixed $default): mixed {
 		return self::getOptional($arr, $key, $type) ?? $default;
