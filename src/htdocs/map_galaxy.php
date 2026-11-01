@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\ArrayValue;
 use Smr\Exceptions\GalaxyNotFound;
 use Smr\Exceptions\SectorNotFound;
 use Smr\Galaxy;
@@ -7,6 +8,7 @@ use Smr\Pages\Standalone\GalaxyMapRenderer;
 use Smr\Request;
 use Smr\Session;
 use Smr\Template;
+use Smr\TypeHelpers\Type;
 
 try {
 	require_once('../bootstrap.php');
@@ -68,8 +70,18 @@ try {
 			$_SESSION['show_seedlist_sectors'] = Request::has('show_seedlist_sectors');
 			$_SESSION['hide_allied_forces'] = Request::has('hide_allied_forces');
 		}
-		$showSeedlistSectors = $_SESSION['show_seedlist_sectors'] ?? false;
-		$hideAlliedForces = $_SESSION['hide_allied_forces'] ?? false;
+		$showSeedlistSectors = ArrayValue::getOrDefault(
+			$_SESSION,
+			'show_seedlist_sectors',
+			Type::bool(),
+			false,
+		);
+		$hideAlliedForces = ArrayValue::getOrDefault(
+			$_SESSION,
+			'hide_allied_forces',
+			Type::bool(),
+			false,
+		);
 		$CheckboxFormHREF = ''; // Submit to same page
 	} else {
 		$showSeedlistSectors = false;

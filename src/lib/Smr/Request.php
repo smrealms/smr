@@ -3,6 +3,7 @@
 namespace Smr;
 
 use Exception;
+use Smr\TypeHelpers\Type;
 
 /**
  * Should be used for getting request data for processing pages.
@@ -20,46 +21,53 @@ class Request {
 	}
 
 	/**
-	 * Returns index value as a boolean for boolean-like inputs.
+	 * @template T of bool|int|float
+	 * @param ?T $default
+	 * @param (T is bool ? FILTER_VALIDATE_BOOL : (T is int ? FILTER_VALIDATE_INT : FILTER_VALIDATE_FLOAT)) $filter
+	 * @return T
 	 */
-	public static function getBool(string $index, ?bool $default = null): bool {
+	private static function getX(string $index, mixed $default, int $filter): mixed {
 		if (self::has($index)) {
-			$bool = filter_var($_REQUEST[$index], FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);
-			if ($bool === null) {
-				throw new Exception('Value is not boolean for index: ' . $index);
+			// Need null on failure to handle bool failures
+			$value = filter_var($_REQUEST[$index], $filter, FILTER_NULL_ON_FAILURE);
+			if ($value === null) {
+				$type = match ($filter) {
+					FILTER_VALIDATE_BOOL => 'bool',
+					FILTER_VALIDATE_INT => 'int',
+					FILTER_VALIDATE_FLOAT => 'float',
+				};
+				throw new Exception(
+					'Value is not ' . $type . ' for index `' . $index . '`: '
+					. var_export($_REQUEST[$index], true),
+				);
 			}
-			return $bool;
+			return $value;
 		}
 		if ($default !== null) {
 			return $default;
 		}
-		throw new Exception('No request variable for index: ' . $index);
+		throw new Exception('No request variable "' . $index . '"');
+	}
+
+	/**
+	 * Returns index value as a boolean for boolean-like inputs.
+	 */
+	public static function getBool(string $index, ?bool $default = null): bool {
+		return self::getX($index, $default, FILTER_VALIDATE_BOOL);
 	}
 
 	/**
 	 * Returns index value as an integer.
 	 */
 	public static function getInt(string $index, ?int $default = null): int {
-		if (self::has($index)) {
-			return (int)$_REQUEST[$index];
-		}
-		if ($default !== null) {
-			return $default;
-		}
-		throw new Exception('No request variable "' . $index . '"');
+		return self::getX($index, $default, FILTER_VALIDATE_INT);
 	}
 
 	/**
 	 * Returns index value as a float.
 	 */
 	public static function getFloat(string $index, ?float $default = null): float {
-		if (self::has($index)) {
-			return (float)$_REQUEST[$index];
-		}
-		if ($default !== null) {
-			return $default;
-		}
-		throw new Exception('No request variable "' . $index . '"');
+		return self::getX($index, $default, FILTER_VALIDATE_FLOAT);
 	}
 
 	/**
@@ -70,14 +78,7 @@ class Request {
 	 */
 	public static function getArray(string $index, ?array $default = null): array {
 		if (self::has($index)) {
-			foreach ($_REQUEST[$index] as $key => $value) {
-				// String keys are legal HTML, but we do not allow them
-				if (!is_int($key)) {
-					throw new Exception('Array key must be an int: ' . $key);
-				}
-			}
-			// Request array values are always strings, no need to check
-			return $_REQUEST[$index];
+			return self::getStringArrayValue($index);
 		}
 		if ($default !== null) {
 			return $default;
@@ -94,11 +95,7 @@ class Request {
 	public static function getIntArray(string $index, ?array $default = null): array {
 		if (self::has($index)) {
 			$result = [];
-			foreach ($_REQUEST[$index] as $key => $value) {
-				// String keys are legal HTML, but we do not allow them
-				if (!is_int($key)) {
-					throw new Exception('Array key must be an int: ' . $key);
-				}
+			foreach (self::getStringArrayValue($index) as $key => $value) {
 				$result[$key] = (int)$value;
 			}
 			return $result;
@@ -114,7 +111,11 @@ class Request {
 	 */
 	public static function get(string $index, ?string $default = null): string {
 		if (self::has($index)) {
-			return trim($_REQUEST[$index]);
+			$value = $_REQUEST[$index];
+			if (!is_string($value)) {
+				throw new Exception('Value is not string for index `' . $index . '`: ' . var_export($_REQUEST[$index], true));
+			}
+			return trim($value);
 		}
 		if ($default !== null) {
 			return $default;
@@ -130,14 +131,22 @@ class Request {
 	 * Note that this does not save the result in $var (see Smr\Session).
 	 */
 	public static function getVar(string $index, ?string $default = null): string {
-		return self::getVarX($index, $default, self::get(...));
+		$value = self::getVarX($index, $default, self::get(...));
+		if (!is_string($value)) {
+			throw new Exception('Session variable must be a string: ' . $index);
+		}
+		return $value;
 	}
 
 	/**
 	 * Like getVar, but returns an int instead of a string.
 	 */
 	public static function getVarInt(string $index, ?int $default = null): int {
-		return self::getVarX($index, $default, self::getInt(...));
+		$value = self::getVarX($index, $default, self::getInt(...));
+		if (!is_int($value)) {
+			throw new Exception('Session variable must be an int: ' . $index);
+		}
+		return $value;
 	}
 
 	/**
@@ -147,7 +156,18 @@ class Request {
 	 * @return array<int, int>
 	 */
 	public static function getVarIntArray(string $index, ?array $default = null): array {
-		return self::getVarX($index, $default, self::getIntArray(...));
+		$value = self::getVarX($index, $default, self::getIntArray(...));
+		if (!is_array($value)) {
+			throw new Exception('Session variable must be an int array: ' . $index);
+		}
+		$result = [];
+		foreach ($value as $key => $item) {
+			if (!is_int($key) || !is_int($item)) {
+				throw new Exception('Session variable must be an int array: ' . $index);
+			}
+			$result[$key] = $item;
+		}
+		return $result;
 	}
 
 	/**
@@ -165,6 +185,29 @@ class Request {
 			return $var[$index];
 		}
 		return $func($index, $default);
+	}
+
+	/**
+	 * @return array<int, string>
+	 */
+	private static function getStringArrayValue(string $index): array {
+		$innerType = Type::array(valueType: Type::string(), keyType: Type::int());
+		return ArrayValue::get($_REQUEST, $index, $innerType);
+	}
+
+	public static function getUploadError(string $index): int {
+		return ArrayValue::get(self::getUploadedFile($index), 'error', Type::int());
+	}
+
+	public static function getUploadedTmpName(string $index): string {
+		return ArrayValue::get(self::getUploadedFile($index), 'tmp_name', Type::string());
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
+	private static function getUploadedFile(string $index): array {
+		return ArrayValue::get($_FILES, $index, Type::array());
 	}
 
 }

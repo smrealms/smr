@@ -1,18 +1,60 @@
 <?php declare(strict_types=1);
 
+use Smr\ArrayValue;
+use Smr\TypeHelpers\Type;
+
 require_once('../bootstrap.php');
+
+/**
+ * @param array<mixed> $data
+ */
+function getImprintString(array $data, string $key): string {
+	return ArrayValue::get($data, $key, Type::string());
+}
+
+/**
+ * @template T = mixed
+ * @param array<mixed> $data
+ * @param ?Type<T> $valueType
+ * @return array<array-key, T>
+ */
+function getImprintArray(array $data, string $key, ?Type $valueType = null): array {
+	return ArrayValue::get($data, $key, Type::array(valueType: $valueType));
+}
 
 $json = file_get_contents('https://gitlab.fem-net.de/vorstand/fem-impressum/-/raw/main/imprint.json');
 if ($json === false) {
 	throw new Exception('Failed to fetch JSON imprint');
 }
-$data = json_decode($json, flags: JSON_THROW_ON_ERROR);
-$contact = $data->imprintContact;
-$board = array_map(
-	fn(stdClass $member): string => $member->role->en . ': ' . $member->name,
-	$data->boardOfDirectors,
-);
-$lastUpdated = date(DateTimeInterface::RFC7231, strtotime($data->lastUpdate));
+$data = json_decode($json, associative: true, flags: JSON_THROW_ON_ERROR);
+if (!is_array($data)) {
+	throw new Exception('Invalid JSON imprint');
+}
+
+$registerCourt = getImprintString($data, 'registerCourt');
+$registrationNumber = getImprintString($data, 'registrationNumber');
+
+$contact = getImprintArray($data, 'imprintContact');
+$contactCountry = getImprintString(getImprintArray($contact, 'country'), 'en');
+$contactName = getImprintString($contact, 'name');
+$contactAddress = getImprintString($contact, 'address');
+$contactPostcode = getImprintString($contact, 'postcode');
+$contactCity = getImprintString($contact, 'city');
+$contactEmail = getImprintString($contact, 'email');
+$contactPhone = getImprintString($contact, 'phone');
+$contactHomepage = getImprintString($contact, 'homepage');
+
+$board = [];
+foreach (getImprintArray($data, 'boardOfDirectors', Type::array()) as $member) {
+	$role = getImprintArray($member, 'role');
+	$board[] = getImprintString($role, 'en') . ': ' . getImprintString($member, 'name');
+}
+
+$lastUpdateTimestamp = strtotime(getImprintString($data, 'lastUpdate'));
+if ($lastUpdateTimestamp === false) {
+	throw new Exception('Invalid imprint update date');
+}
+$lastUpdated = date(DateTimeInterface::RFC7231, $lastUpdateTimestamp);
 
 ?>
 <!DOCTYPE html>
@@ -47,19 +89,19 @@ $lastUpdated = date(DateTimeInterface::RFC7231, strtotime($data->lastUpdate));
 
 								<h2>Contact</h2>
 								<p>
-									<?php echo $contact->name; ?><br />
-									<?php echo $contact->address; ?><br />
-									<?php echo $contact->postcode; ?> <?php echo $contact->city; ?>, <?php echo $contact->country->en; ?><br />
-									Email: <a href="mailto:<?php echo $contact->email; ?>"><?php echo $contact->email; ?></a><br />
-									Tel./Fax: <?php echo $contact->phone; ?><br />
-									Internet: <a href="<?php echo $contact->homepage; ?>" target="_blank"><?php echo $contact->homepage; ?></a>
+									<?php echo $contactName; ?><br />
+									<?php echo $contactAddress; ?><br />
+									<?php echo $contactPostcode; ?> <?php echo $contactCity; ?>, <?php echo $contactCountry; ?><br />
+									Email: <a href="mailto:<?php echo $contactEmail; ?>"><?php echo $contactEmail; ?></a><br />
+									Tel./Fax: <?php echo $contactPhone; ?><br />
+									Internet: <a href="<?php echo $contactHomepage; ?>" target="_blank"><?php echo $contactHomepage; ?></a>
 								</p>
 
 								<h2>Board of Directors</h2>
 								<p><?php
 									echo implode('<br />', $board); ?><br />
-									Register court: <?php echo $data->registerCourt; ?><br/>
-									Registration number: <?php echo $data->registrationNumber; ?>
+									Register court: <?php echo $registerCourt; ?><br/>
+									Registration number: <?php echo $registrationNumber; ?>
 								</p>
 
 								<h2>Responsible for Contents</h2>

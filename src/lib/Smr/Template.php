@@ -11,7 +11,7 @@ use Smr\Container\DiContainer;
 
 class Template {
 
-	/** @var array<string, mixed> */
+	/** @var array<string, string> */
 	private array $ajaxJS = [];
 	/** @var array<string> */
 	public array $jsAlerts = [];
@@ -138,15 +138,9 @@ class Template {
 		return str_contains('AEIOU', $char) ? 'an' : 'a';
 	}
 
-	/*
-	 * EVAL is special (well, will be when needed and implemented in the javascript).
-	 */
 	public function addJavascriptForAjax(string $varName, mixed $obj): string {
 		if ($varName === 'EVAL') {
-			if (!isset($this->ajaxJS['EVAL'])) {
-				return $this->ajaxJS['EVAL'] = $obj;
-			}
-			return $this->ajaxJS['EVAL'] .= ';' . $obj;
+			throw new Exception('Use addJavascriptEvalForAjax() to add EVAL JavaScript.');
 		}
 
 		if (isset($this->ajaxJS[$varName])) {
@@ -154,6 +148,14 @@ class Template {
 		}
 		$json = json_encode($obj, JSON_THROW_ON_ERROR);
 		return $this->ajaxJS[$varName] = $json;
+	}
+
+	public function addJavascriptEvalForAjax(string $javascript): void {
+		if (!isset($this->ajaxJS['EVAL'])) {
+			$this->ajaxJS['EVAL'] = $javascript;
+			return;
+		}
+		$this->ajaxJS['EVAL'] .= ';' . $javascript;
 	}
 
 	protected function addJavascriptAlert(string $string): void {

@@ -16,16 +16,11 @@ class VoteLink {
 	/** @var ?array<int, int> */
 	private static ?array $CACHE_TIMEOUTS = null;
 
-	/** @var array<string, mixed> */
-	public readonly array $data;
-
 	public function __construct(
 		public readonly VoteSite $site,
 		public readonly int $accountID,
 		public readonly int $gameID,
-	) {
-		$this->data = $site->getData();
-	}
+	) {}
 
 	public static function clearCache(): void {
 		self::$CACHE_TIMEOUTS = null;
@@ -42,7 +37,7 @@ class VoteLink {
 		$waitTimes = [];
 		foreach (VoteSite::cases() as $site) {
 			$link = new self($site, $accountID, $gameID);
-			if ($link->givesFreeTurns()) {
+			if ($site->givesFreeTurns()) {
 				$waitTimes[] = $link->getTimeUntilFreeTurns();
 			}
 		}
@@ -53,19 +48,11 @@ class VoteLink {
 	}
 
 	/**
-	 * Does this VoteSite have a voting callback that can be used
-	 * to award free turns?
-	 */
-	public function givesFreeTurns(): bool {
-		return isset($this->data['img_star']);
-	}
-
-	/**
 	 * Time until the account can get free turns from voting at this site.
 	 * If the time is 0, this site is eligible for free turns.
 	 */
 	public function getTimeUntilFreeTurns(bool $forceUpdate = false, ?RowLockMode $lock = null): int {
-		if (!$this->givesFreeTurns()) {
+		if (!$this->site->givesFreeTurns()) {
 			throw new Exception('This vote site cannot award free turns!');
 		}
 
@@ -141,7 +128,7 @@ class VoteLink {
 	 * Returns true if account can currently receive free turns at this site.
 	 */
 	public function freeTurnsReady(bool $forceUpdate = false, ?RowLockMode $lock = null): bool {
-		return $this->givesFreeTurns() && $this->gameID !== 0
+		return $this->site->givesFreeTurns() && $this->gameID !== 0
 			&& $this->getTimeUntilFreeTurns(forceUpdate: $forceUpdate, lock: $lock) <= 0;
 	}
 
@@ -149,20 +136,18 @@ class VoteLink {
 	 * Returns the image to display for this voting site.
 	 */
 	public function getImg(): string {
-		if (!$this->freeTurnsReady()) {
-			return $this->data['img_default'];
-		}
-		return $this->data['img_star'];
+		return $this->site->getImg($this->freeTurnsReady());
 	}
 
 	/**
 	 * Returns the URL that should be used for this voting site.
 	 */
 	public function getUrl(): string {
-		if (!$this->freeTurnsReady()) {
-			return $this->data['url_base'];
-		}
-		return $this->data['url_func']($this->data['url_base'], $this->accountID, $this->gameID);
+		return $this->site->getUrl(
+			freeTurnsReady: $this->freeTurnsReady(),
+			accountId: $this->accountID,
+			gameId: $this->gameID,
+		);
 	}
 
 	/**

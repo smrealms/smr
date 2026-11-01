@@ -2,9 +2,12 @@
 
 use ReCaptcha\ReCaptcha;
 use Smr\Account;
+use Smr\ArrayValue;
 use Smr\Exceptions\AccountNotFound;
 use Smr\Request;
 use Smr\Session;
+use Smr\SocialLogin\SocialIdentity;
+use Smr\TypeHelpers\Type;
 
 try {
 
@@ -19,11 +22,10 @@ try {
 	$socialId = null;
 	if (Request::has('socialReg')) {
 		session_start();
-		if (!isset($_SESSION['socialId'])) {
+		$socialId = ArrayValue::getOptional($_SESSION, 'socialId', Type::object(SocialIdentity::class));
+		if ($socialId === null) {
 			create_error('Your session has expired. Please try again.');
 		}
-		/** @var Smr\SocialLogin\SocialIdentity $socialId */
-		$socialId = $_SESSION['socialId'];
 	}
 
 	//Check the captcha if it's a standard registration.
@@ -32,7 +34,7 @@ try {
 		// Was there a reCAPTCHA response?
 		$resp = $reCaptcha->verify(
 			Request::get('g-recaptcha-response', ''),
-			$_SERVER['REMOTE_ADDR'],
+			ArrayValue::getOptional($_SERVER, 'REMOTE_ADDR', Type::string()),
 		);
 
 		if (!$resp->isSuccess()) {

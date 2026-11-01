@@ -10,7 +10,6 @@ use PHPUnit\Framework\TestCase;
 use Smr\BountyType;
 use Smr\DatabaseRecord;
 use Smr\ShipClass;
-use TypeError;
 
 #[CoversClass(DatabaseRecord::class)]
 class DatabaseRecordTest extends TestCase {
@@ -38,9 +37,8 @@ class DatabaseRecordTest extends TestCase {
 	public function test_getString_with_null_value(): void {
 		// Construct a record with a null value
 		$record = new DatabaseRecord(['name' => null]);
-		$this->expectException(TypeError::class);
-		$this->expectExceptionMessage('Return value must be of type string, null returned');
-		/** @phpstan-ignore-next-line: method.resultUnused */
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Expected record `name` to be a string, got null');
 		$record->getString('name');
 	}
 
@@ -74,7 +72,7 @@ class DatabaseRecordTest extends TestCase {
 	public function test_getBoolean_with_non_boolean_field(): void {
 		$record = new DatabaseRecord(['name' => 'NONBOOLEAN']);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Unexpected boolean record: NONBOOLEAN');
+		$this->expectExceptionMessage('Unexpected boolean record: \'NONBOOLEAN\'');
 		$record->getBoolean('name');
 	}
 

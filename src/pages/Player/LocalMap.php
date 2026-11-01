@@ -3,11 +3,13 @@
 namespace Smr\Pages\Player;
 
 use Exception;
+use Smr\ArrayValue;
 use Smr\Page\PlayerPage;
 use Smr\Page\ReusableTrait;
 use Smr\Player;
 use Smr\Request;
 use Smr\Template;
+use Smr\TypeHelpers\Type;
 
 class LocalMap extends PlayerPage {
 
@@ -29,8 +31,18 @@ class LocalMap extends PlayerPage {
 				$_SESSION['show_seedlist_sectors'] = Request::has('show_seedlist_sectors');
 				$_SESSION['hide_allied_forces'] = Request::has('hide_allied_forces');
 			}
-			$showSeedlistSectors = $_SESSION['show_seedlist_sectors'] ?? false;
-			$hideAlliedForces = $_SESSION['hide_allied_forces'] ?? false;
+			$showSeedlistSectors = ArrayValue::getOrDefault(
+				$_SESSION,
+				'show_seedlist_sectors',
+				Type::bool(),
+				false,
+			);
+			$hideAlliedForces = ArrayValue::getOrDefault(
+				$_SESSION,
+				'hide_allied_forces',
+				Type::bool(),
+				false,
+			);
 			$CheckboxFormHREF = ''; // Submit to same page
 		} else {
 			$hideAlliedForces = true;

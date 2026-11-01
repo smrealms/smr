@@ -49,7 +49,11 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 			if ($decoded === false) {
 				throw new Exception('Unexpected encoded group ID: ' . $groupID);
 			}
-			[$senderPlayerID, $minTime, $maxTime] = unserialize($decoded);
+			$group = unserialize($decoded);
+			if (!is_array($group)) {
+				throw new Exception('Unexpected deserialized types: ' . $decoded);
+			}
+			[$senderPlayerID, $minTime, $maxTime] = $group;
 			if (!is_int($senderPlayerID) || !is_int($minTime) || !is_int($maxTime)) {
 				throw new Exception('Unexpected deserialized types: ' . $decoded);
 			}

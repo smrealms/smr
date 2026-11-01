@@ -25,14 +25,10 @@ class IpViewResults extends AccountPage {
 			new ComputerSharing()->go();
 		}
 
-		$accountID = null; // BanAccountID
-		$accountException = null;
-		$closeReason = null;
 		if ($type === 'list') {
 			//=========================================================
 			// List all IPs
 			//=========================================================
-			$summary = null;
 
 			//we are listing ALL IPs
 			$dbResult = $db->read('SELECT ip, account_id, host FROM account_has_ip GROUP BY ip, account_id, host ORDER BY ip');
@@ -60,6 +56,8 @@ class IpViewResults extends AccountPage {
 					'ip' => $db_ip,
 					'host' => $host,
 					'close_reason' => $close_reason,
+					'checked' => '', // set below only if matches
+					'suspicion' => '', // set below only if matches
 				];
 
 				$match_id = 0;
@@ -98,6 +96,12 @@ class IpViewResults extends AccountPage {
 				$rows[] = $row;
 			}
 
+			$template->pageRenderer = fn() => IpViewResultsRenderer::renderList(
+				BackHREF: new IpView()->href(),
+				CloseHREF: new AccountCloseProcessor()->href(),
+				Rows: $rows,
+			);
+
 		} elseif ($type === 'account_ips') {
 			//=========================================================
 			// List all IPs for a specific account (id)
@@ -108,14 +112,10 @@ class IpViewResults extends AccountPage {
 			}
 			$summary = 'Account ' . $accountID . ' has had the following IPs at the following times.';
 			$dbResult = $db->select('account_exceptions', ['account_id' => $accountID]);
-			if ($dbResult->hasRecord()) {
-				$accountException = $dbResult->record()->getString('reason');
-			}
+			$accountException = $dbResult->hasRecord() ? $dbResult->record()->getString('reason') : null;
 			$viewAccount = Account::getAccount($accountID);
 			$disabled = $viewAccount->isDisabled();
-			if ($disabled !== false) {
-				$closeReason = $disabled['Reason'];
-			}
+			$closeReason = $disabled !== false ? $disabled['Reason'] : null;
 			$rows = [];
 			$dbResult = $db->select('account_has_ip', ['account_id' => $accountID], orderBy: ['time']);
 			foreach ($dbResult->records() as $dbRecord) {
@@ -125,6 +125,16 @@ class IpViewResults extends AccountPage {
 					'host' => $dbRecord->getString('host'),
 				];
 			}
+
+			$template->pageRenderer = fn() => IpViewResultsRenderer::renderAccountIps(
+				BackHREF: new IpView()->href(),
+				CloseHREF: new AccountCloseProcessor()->href(),
+				Rows: $rows,
+				BanAccountID: $accountID,
+				Summary: $summary,
+				Exception: $accountException,
+				CloseReason: $closeReason,
+			);
 
 		} else {
 			if ($type === 'search') {
@@ -257,22 +267,16 @@ class IpViewResults extends AccountPage {
 					'close_reason' => $close_reason,
 				];
 			}
+			$template->pageRenderer = fn() => IpViewResultsRenderer::renderSearchResults(
+				BackHREF: new IpView()->href(),
+				CloseHREF: new AccountCloseProcessor()->href(),
+				Rows: $rows,
+				Summary: $summary,
+			);
 
 		}
 
 		$template->pageTopic = 'IP Search Results';
-
-		$template->pageRenderer = fn() => IpViewResultsRenderer::render(
-			template: $template,
-			BackHREF: new IpView()->href(),
-			CloseHREF: new AccountCloseProcessor()->href(),
-			type: $type,
-			Rows: $rows,
-			BanAccountID: $accountID,
-			Summary: $summary,
-			Exception: $accountException,
-			CloseReason: $closeReason,
-		);
 	}
 
 }

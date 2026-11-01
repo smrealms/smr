@@ -11,12 +11,13 @@ use Smr\Request;
 
 function checkShipLogo(string $filename): void {
 	// check if we have an image
-	if ($_FILES['photo']['error'] !== UPLOAD_ERR_OK) {
+	if (Request::getUploadError('photo') !== UPLOAD_ERR_OK) {
 		create_error('Error while uploading');
 	}
 
 	// get dimensions
-	$size = getimagesize($_FILES['photo']['tmp_name']);
+	$tmpName = Request::getUploadedTmpName('photo');
+	$size = getimagesize($tmpName);
 	if ($size === false) {
 		create_error('Uploaded file must be an image!');
 	}
@@ -36,11 +37,11 @@ function checkShipLogo(string $filename): void {
 	if ($size[1] > MAX_IMAGE_HEIGHT) {
 		create_error('Image is taller than ' . MAX_IMAGE_HEIGHT . ' pixels!');
 	}
-	if (filesize($_FILES['photo']['tmp_name']) > MAX_IMAGE_SIZE * 1024) {
+	if (filesize($tmpName) > MAX_IMAGE_SIZE * 1024) {
 		create_error('Image is bigger than ' . MAX_IMAGE_SIZE . 'k.');
 	}
 
-	if (!move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . $filename)) {
+	if (!move_uploaded_file($tmpName, UPLOAD . $filename)) {
 		create_error('Failed to upload file');
 	}
 }

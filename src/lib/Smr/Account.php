@@ -8,6 +8,7 @@ use Smr\Exceptions\AccountNotFound;
 use Smr\Exceptions\UserError;
 use Smr\Pages\Account\HallOfFamePersonal;
 use Smr\SocialLogin\SocialIdentity;
+use Smr\TypeHelpers\Type;
 
 class Account {
 
@@ -302,8 +303,10 @@ class Account {
 			$this->defaultCSSEnabled = $dbRecord->getBoolean('default_css_enabled');
 			$this->centerGalaxyMapOnPlayer = $dbRecord->getBoolean('center_galaxy_map_on_player');
 
-			$this->messageNotifications = $dbRecord->getNullableObject('message_notifications');
-			$this->hotkeys = $dbRecord->getObject('hotkeys');
+			$this->messageNotifications = $this->validateStoredMessageNotifications(
+				$dbRecord->getNullableObject('message_notifications'),
+			);
+			$this->hotkeys = $this->validateStoredHotkeys($dbRecord->getObject('hotkeys'));
 			foreach (self::DEFAULT_HOTKEYS as $hotkey => $binding) {
 				if (!isset($this->hotkeys[$hotkey])) {
 					$this->hotkeys[$hotkey] = $binding;
@@ -329,6 +332,30 @@ class Account {
 		} else {
 			throw new AccountNotFound('Account ID ' . $accountID . ' does not exist!');
 		}
+	}
+
+	/**
+	 * @return ?array<int, int>
+	 */
+	private function validateStoredMessageNotifications(mixed $value): ?array {
+		if ($value === null) {
+			return null;
+		}
+		if (!Type::array(valueType: Type::int(), keyType: Type::int())->accepts($value)) {
+			throw new Exception('Invalid stored message notifications.');
+		}
+		return $value;
+	}
+
+	/**
+	 * @return array<string, array<string>>
+	 */
+	private function validateStoredHotkeys(mixed $value): array {
+		$innerType = Type::array(valueType: Type::string(), keyType: Type::int());
+		if (!Type::array(valueType: $innerType, keyType: Type::string())->accepts($value)) {
+			throw new Exception('Invalid stored hotkeys.');
+		}
+		return $value;
 	}
 
 	/**

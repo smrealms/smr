@@ -15,6 +15,7 @@ use Smr\Pages\Player\SectorJumpProcessor;
 use Smr\Pages\Player\SectorMoveProcessor;
 use Smr\Pages\Player\SectorScan;
 use Smr\Pages\Player\ShopGoodsProcessor;
+use Smr\TypeHelpers\Type;
 
 class Session {
 
@@ -70,8 +71,9 @@ class Session {
 
 		// now try the cookie
 		$idLength = 32;
-		if (isset($_COOKIE['session_id']) && strlen($_COOKIE['session_id']) === $idLength) {
-			$this->sessionID = $_COOKIE['session_id'];
+		$cookieSessionID = ArrayValue::getOptional($_COOKIE, 'session_id', Type::string());
+		if ($cookieSessionID !== null && strlen($cookieSessionID) === $idLength) {
+			$this->sessionID = $cookieSessionID;
 		} else {
 			// create a new session id
 			do {
@@ -124,7 +126,9 @@ class Session {
 			$this->lastAccessed = $dbRecord->getFloat('last_accessed');
 			$this->lastSN = $dbRecord->getString('last_sn');
 			// We may not have ajax_returns if ajax was disabled
-			$this->previousAjaxReturns = $dbRecord->getNullableObject('ajax_returns', true);
+			$this->previousAjaxReturns = $this->getAjaxReturns(
+				$dbRecord->getNullableObject('ajax_returns', true),
+			);
 
 			$sessionVar = $dbRecord->getClass('session_var', SessionVar::class, compressed: true);
 			$this->links = $sessionVar->links;
@@ -157,6 +161,19 @@ class Session {
 			$this->accountID = 0;
 			$this->gameID = 0;
 		}
+	}
+
+	/**
+	 * @return ?array<string, string>
+	 */
+	private function getAjaxReturns(mixed $value): ?array {
+		if ($value === null) {
+			return null;
+		}
+		if (!Type::array(valueType: Type::string(), keyType: Type::string())->accepts($value)) {
+			throw new Exception('Invalid stored AJAX returns.');
+		}
+		return $value;
 	}
 
 	public function update(): void {

@@ -18,26 +18,55 @@ enum VoteSite: int {
 	// DOG domain went up for sale
 	//    4 => https://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315
 
+	public const array DATA = [
+		self::TWG->value => [
+			'img_default' => 'twg.png',
+			'img_star' => 'twg_vote.png',
+			'url_base' => 'https://topwebgames.com/in.aspx?ID=136',
+			'url_func' => static function(string $baseUrl, int $accountId, int $gameId): string {
+				$query = ['account' => $accountId, 'game' => $gameId, 'link' => self::TWG->value, 'alwaysreward' => 1];
+				return $baseUrl . '&' . http_build_query($query);
+			},
+		],
+		self::PBBG->value => [
+			'img_default' => 'pbbg.png',
+			'url_base' => 'https://pbbg.com/games/space-merchant-realms',
+		],
+	];
+
 	/**
-	 * @return array<string, mixed>
+	 * Does this voting site have the configuration required to award free turns?
 	 */
-	public function getData(): array {
-		// This can't be a static/constant attribute due to `url_func` closures.
-		return match ($this) {
-			self::TWG => [
-				'img_default' => 'twg.png',
-				'img_star' => 'twg_vote.png',
-				'url_base' => 'https://topwebgames.com/in.aspx?ID=136',
-				'url_func' => function($baseUrl, $accountId, $gameId) {
-					$query = ['account' => $accountId, 'game' => $gameId, 'link' => $this->value, 'alwaysreward' => 1];
-					return $baseUrl . '&' . http_build_query($query);
-				},
-			],
-			self::PBBG => [
-				'img_default' => 'pbbg.png',
-				'url_base' => 'https://pbbg.com/games/space-merchant-realms',
-			],
-		};
+	public function givesFreeTurns(): bool {
+		$data = self::DATA[$this->value];
+		return isset($data['img_star'], $data['url_func']);
+	}
+
+	/**
+	 * Returns the image to display for this voting site.
+	 */
+	public function getImg(bool $freeTurnsReady): string {
+		$data = self::DATA[$this->value];
+		if ($freeTurnsReady && isset($data['img_star'])) {
+			return $data['img_star'];
+		}
+		return $data['img_default'];
+	}
+
+	/**
+	 * Returns the URL that should be used for this voting site.
+	 */
+	public function getUrl(bool $freeTurnsReady, int $accountId, int $gameId): string {
+		$data = self::DATA[$this->value];
+		if (!$freeTurnsReady || !isset($data['url_func'])) {
+			return $data['url_base'];
+		}
+		$urlFunc = $data['url_func'];
+		return $urlFunc(
+			baseUrl: $data['url_base'],
+			accountId: $accountId,
+			gameId: $gameId,
+		);
 	}
 
 }

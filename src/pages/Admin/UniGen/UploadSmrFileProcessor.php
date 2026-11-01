@@ -8,6 +8,7 @@ use Smr\Galaxy;
 use Smr\Location;
 use Smr\Page\AccountPageProcessor;
 use Smr\Port;
+use Smr\Request;
 use Smr\Sector;
 use Smr\TransactionType;
 
@@ -18,11 +19,11 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 	) {}
 
 	public function build(Account $account): never {
-		if ($_FILES['smr_file']['error'] !== UPLOAD_ERR_OK) {
+		if (Request::getUploadError('smr_file') !== UPLOAD_ERR_OK) {
 			create_error('Failed to upload SMR file!');
 		}
 
-		$ini_str = file_get_contents($_FILES['smr_file']['tmp_name']);
+		$ini_str = file_get_contents(Request::getUploadedTmpName('smr_file'));
 		if ($ini_str === false) {
 			throw new Exception('Failed to read temporary file');
 		}

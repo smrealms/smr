@@ -182,6 +182,23 @@ class TemplateTest extends TestCase {
 		$template->addJavascriptForAjax('test', '');
 	}
 
+	public function test_addJavascriptForAjax_rejects_eval_var_name(): void {
+		$template = Template::getInstance();
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Use addJavascriptEvalForAjax() to add EVAL JavaScript.');
+		$template->addJavascriptForAjax('EVAL', []);
+	}
+
+	public function test_addJavascriptEvalForAjax_appends_javascript(): void {
+		$template = Template::getInstance();
+		$template->addJavascriptEvalForAjax('first()');
+		$template->addJavascriptEvalForAjax('second()');
+
+		$method = TestUtils::getPrivateMethod($template, 'convertHtmlToAjaxXml');
+		$result = $method->invoke($template, self::html(''), true);
+		self::assertSame('<JS><EVAL>first();second()</EVAL></JS>', $result);
+	}
+
 	/**
 	 * Provide the full HTML document tokens required by HTMLDocument
 	 */

@@ -48,7 +48,11 @@ class Google extends SocialLogin {
 		);
 		/** @var \League\OAuth2\Client\Provider\GoogleUser $userInfo */
 		$userInfo = $provider->getResourceOwner($accessToken);
-		return new SocialIdentity($userInfo->getId(), $userInfo->getEmail(), static::getLoginType());
+		$id = $userInfo->getId();
+		if ($id !== null && !is_string($id)) {
+			throw new Exception('Google returned an invalid account ID.');
+		}
+		return new SocialIdentity($id, $userInfo->getEmail(), static::getLoginType());
 	}
 
 }
