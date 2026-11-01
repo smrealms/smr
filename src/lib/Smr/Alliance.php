@@ -656,42 +656,34 @@ class Alliance {
 	 * This should only be called once after the alliance is created.
 	 */
 	public function createDefaultRoles(string $newMemberPermission = 'basic'): void {
-		// Create leader role
-		$withPerDay = ALLIANCE_BANK_UNLIMITED;
-		$removeMember = true;
-		$changePass = true;
-		$changeMOD = true;
-		$changeRoles = true;
-		$planetAccess = true;
-		$exemptWith = true;
-		$mbMessages = true;
-		$sendAllMsg = true;
-		$opLeader = true;
-		$viewBonds = true;
-		$manageNpcs = true;
-		$db = Database::getInstance();
-		$db->insert('alliance_has_roles', [
-			...$this->SQLID,
-			'role_id' => ALLIANCE_ROLE_LEADER,
-			'role' => 'Leader',
-			'with_per_day' => $withPerDay,
-			'remove_member' => $db->escapeBoolean($removeMember),
-			'change_pass' => $db->escapeBoolean($changePass),
-			'change_mod' => $db->escapeBoolean($changeMOD),
-			'change_roles' => $db->escapeBoolean($changeRoles),
-			'planet_access' => $db->escapeBoolean($planetAccess),
-			'exempt_with' => $db->escapeBoolean($exemptWith),
-			'mb_messages' => $db->escapeBoolean($mbMessages),
-			'send_alliance_msg' => $db->escapeBoolean($sendAllMsg),
-			'op_leader' => $db->escapeBoolean($opLeader),
-			'view_bonds' => $db->escapeBoolean($viewBonds),
-			'manage_npcs' => $db->escapeBoolean($manageNpcs),
-		]);
+		$this->createDefaultRole('leader');
+		$this->createDefaultRole($newMemberPermission);
+	}
 
-		// Create new member role
-		switch ($newMemberPermission) {
+	private function createDefaultRole(string $permission): void {
+		if ($permission === 'leader') {
+			$roleID = ALLIANCE_ROLE_LEADER;
+			$roleName = 'Leader';
+		} else {
+			$roleID = ALLIANCE_ROLE_NEW_MEMBER;
+			$roleName = 'New Member';
+		}
+
+		switch ($permission) {
+			case 'leader':
 			case 'full':
-				//do nothing, perms already set above.
+				$withPerDay = ALLIANCE_BANK_UNLIMITED;
+				$removeMember = true;
+				$changePass = true;
+				$changeMOD = true;
+				$changeRoles = true;
+				$planetAccess = true;
+				$exemptWith = true;
+				$mbMessages = true;
+				$sendAllMsg = true;
+				$opLeader = true;
+				$viewBonds = true;
+				$manageNpcs = true;
 				break;
 			case 'none':
 				$withPerDay = 0;
@@ -721,11 +713,15 @@ class Alliance {
 				$viewBonds = false;
 				$manageNpcs = true;
 				break;
+			default:
+				throw new Exception('Unknown alliance role permission: ' . $permission);
 		}
+
+		$db = Database::getInstance();
 		$db->insert('alliance_has_roles', [
 			...$this->SQLID,
-			'role_id' => ALLIANCE_ROLE_NEW_MEMBER,
-			'role' => 'New Member',
+			'role_id' => $roleID,
+			'role' => $roleName,
 			'with_per_day' => $withPerDay,
 			'remove_member' => $db->escapeBoolean($removeMember),
 			'change_pass' => $db->escapeBoolean($changePass),
