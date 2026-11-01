@@ -7,10 +7,7 @@ use Smr\Template;
 
 class ForcesCombatResultsRenderer {
 
-	public static function render(
-		Template $template,
-		ForceCombatResults $ForcesCombatResults,
-	): void {
+	public static function render(ForceCombatResults $ForcesCombatResults): void {
 		$CombatForces = $ForcesCombatResults->results;
 		foreach ($CombatForces as $ForceType => $ForceResult) {
 			$ActualDamage = $ForceResult->actualDamage;
@@ -42,7 +39,7 @@ class ForcesCombatResultsRenderer {
 						?> but it cannot do any damage<?php
 					}
 				} else {
-					?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
+					?> destroying <?php echo Template::displayTakenDamage($ActualDamage);
 				}
 			} ?>.
 			<br /><?php

@@ -102,28 +102,28 @@ class Template {
 		return preg_match('/<input (?![^>]*(submit|hidden|image))/i', $html) !== 0;
 	}
 
-	public function displayForceTakenDamage(ForceTakenDamage $damageTaken, int $kamikaze = 0): string {
+	public static function displayForceTakenDamage(ForceTakenDamage $damageTaken, int $kamikaze = 0): string {
 		$items = [
 			[$damageTaken->numMines - $kamikaze, 'red', 'mine', ''],
 			[$damageTaken->numCombatDrones, 'red', 'combat drone', ''],
 			[$damageTaken->numScoutDrones, 'red', 'scout drone', ''],
 		];
-		return $this->displayDamage($items);
+		return self::displayDamage($items);
 	}
 
-	public function displayTakenDamage(NormalTakenDamage $damageTaken): string {
+	public static function displayTakenDamage(NormalTakenDamage $damageTaken): string {
 		$items = [
 			[$damageTaken->shieldDamage, 'shields', 'shield', ''],
 			[$damageTaken->numCombatDrones, 'cds', 'combat drone', ''],
 			[$damageTaken->armourDamage, 'red', 'plate', ' of armour'],
 		];
-		return $this->displayDamage($items);
+		return self::displayDamage($items);
 	}
 
 	/**
 	 * @param array<array{int, string, string, string}> $damageTypes
 	 */
-	private function displayDamage(array $damageTypes): string {
+	private static function displayDamage(array $damageTypes): string {
 		$strings = [];
 		foreach ($damageTypes as [$damage, $class, $name, $suffix]) {
 			if ($damage > 0) {

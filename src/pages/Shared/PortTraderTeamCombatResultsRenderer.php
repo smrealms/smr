@@ -10,7 +10,6 @@ use Smr\Template;
 class PortTraderTeamCombatResultsRenderer {
 
 	public static function render(
-		Template $template,
 		Player $ThisPlayer,
 		bool $MinimalDisplay,
 		PortAttackerCombatResults $TraderTeamCombatResults,
@@ -58,7 +57,7 @@ class PortTraderTeamCombatResultsRenderer {
 								?> but it cannot do any damage<?php
 							}
 						} else {
-							?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
+							?> destroying <?php echo Template::displayTakenDamage($ActualDamage);
 						}
 					} ?>.
 					<br /><?php
@@ -97,7 +96,7 @@ class PortTraderTeamCombatResultsRenderer {
 									?> but they cannot do any damage<?php
 								}
 							} else {
-								?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
+								?> destroying <?php echo Template::displayTakenDamage($ActualDamage);
 							}
 						}
 					} ?>.

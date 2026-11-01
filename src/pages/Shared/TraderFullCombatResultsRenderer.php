@@ -4,12 +4,10 @@ namespace Smr\Pages\Shared;
 
 use Smr\Combat\Results\Full\TraderFullCombatResults;
 use Smr\Player;
-use Smr\Template;
 
 class TraderFullCombatResultsRenderer {
 
 	public static function render(
-		Template $template,
 		bool $MinimalDisplay,
 		TraderFullCombatResults $TraderCombatResults,
 		?string $AttackLogLink,
@@ -23,7 +21,6 @@ class TraderFullCombatResultsRenderer {
 		<br /><?php
 
 		TraderTeamCombatResultsRenderer::render(
-			template: $template,
 			TraderTeamCombatResults: $TraderCombatResults->attackers,
 			MinimalDisplay: $MinimalDisplay,
 			ThisPlayer: $ThisPlayer,
@@ -40,7 +37,6 @@ class TraderFullCombatResultsRenderer {
 		<br /><?php
 
 		TraderTeamCombatResultsRenderer::render(
-			template: $template,
 			TraderTeamCombatResults: $TraderCombatResults->defenders,
 			MinimalDisplay: $MinimalDisplay,
 			ThisPlayer: $ThisPlayer,

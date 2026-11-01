@@ -25,7 +25,6 @@ class AttackPlanet extends PlayerPage {
 		// deleted planet, Planet::getPlanet returns an empty Planet object, which
 		// will allow the final combat result to be displayed.
 		$template->pageRenderer = fn() => AttackPlanetRenderer::render(
-			template: $template,
 			FullPlanetCombatResults: $this->results,
 			OverrideDeath: $player->isDead(),
 			Planet: Planet::getPlanet($player->getGameID(), $this->sectorID),

@@ -38,7 +38,6 @@ class AttackPort extends PlayerPage {
 		$creditedAttacker = $port->isBusted() && ($hasResults || $port->isCreditedAttacker($player));
 
 		$template->pageRenderer = fn() => AttackPortRenderer::render(
-			template: $template,
 			FullPortCombatResults: $this->results,
 			AlreadyDestroyed: $alreadyDestroyed,
 			CreditedAttacker: $creditedAttacker,

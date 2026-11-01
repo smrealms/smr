@@ -4,12 +4,10 @@ namespace Smr\Pages\Shared;
 
 use Smr\Combat\Results\Full\PortFullCombatResults;
 use Smr\Player;
-use Smr\Template;
 
 class PortFullCombatResultsRenderer {
 
 	public static function render(
-		Template $template,
 		bool $MinimalDisplay,
 		bool $AlreadyDestroyed,
 		?PortFullCombatResults $FullPortCombatResults,
@@ -21,7 +19,6 @@ class PortFullCombatResultsRenderer {
 				<h1>Attacker Results</h1><br /><?php
 			}
 			PortTraderTeamCombatResultsRenderer::render(
-				template: $template,
 				TraderTeamCombatResults: $FullPortCombatResults->attackers,
 				MinimalDisplay: $MinimalDisplay,
 				ThisPlayer: $ThisPlayer,
@@ -40,7 +37,6 @@ class PortFullCombatResultsRenderer {
 				<h1>Port Results</h1><br /><?php
 			}
 			PortCombatResultsRenderer::render(
-				template: $template,
 				PortCombatResults: $FullPortCombatResults->port,
 				MinimalDisplay: $MinimalDisplay,
 				ThisPlayer: $ThisPlayer,

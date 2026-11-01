@@ -13,12 +13,10 @@ use Smr\Pages\Shared\PlanetFullCombatResultsRenderer;
 use Smr\Pages\Shared\PortFullCombatResultsRenderer;
 use Smr\Pages\Shared\TraderFullCombatResultsRenderer;
 use Smr\Player;
-use Smr\Template;
 
 class CombatLogViewerRenderer {
 
 	public static function render(
-		Template $template,
 		int $CombatLogSector,
 		string $CombatLogTimestamp,
 		FullCombatResults $CombatResults,
@@ -43,20 +41,15 @@ class CombatLogViewerRenderer {
 		<?php
 		if ($CombatResults instanceof TraderFullCombatResults) {
 			TraderFullCombatResultsRenderer::render(
-				template: $template,
 				TraderCombatResults: $CombatResults,
 				MinimalDisplay: false,
 				AttackLogLink: null,
 				ThisPlayer: $ThisPlayer,
 			);
 		} elseif ($CombatResults instanceof ForceFullCombatResults) {
-			ForceFullCombatResultsRenderer::render(
-				template: $template,
-				FullForceCombatResults: $CombatResults,
-			);
+			ForceFullCombatResultsRenderer::render($CombatResults);
 		} elseif ($CombatResults instanceof PortFullCombatResults) {
 			PortFullCombatResultsRenderer::render(
-				template: $template,
 				FullPortCombatResults: $CombatResults,
 				MinimalDisplay: false,
 				AlreadyDestroyed: false,
@@ -65,7 +58,6 @@ class CombatLogViewerRenderer {
 			);
 		} elseif ($CombatResults instanceof PlanetFullCombatResults) {
 			PlanetFullCombatResultsRenderer::render(
-				template: $template,
 				FullPlanetCombatResults: $CombatResults,
 				MinimalDisplay: false,
 				ThisPlayer: $ThisPlayer,

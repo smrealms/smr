@@ -27,7 +27,6 @@ class AttackForces extends PlayerPage {
 		}
 
 		$template->pageRenderer = fn() => AttackForcesRenderer::render(
-			template: $template,
 			FullForceCombatResults: $this->results,
 			Target: $target,
 			OverrideDeath: $player->isDead(),

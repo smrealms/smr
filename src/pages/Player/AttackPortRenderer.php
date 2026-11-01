@@ -8,12 +8,10 @@ use Smr\Pages\Shared\PortFullCombatResultsRenderer;
 use Smr\Player;
 use Smr\Port;
 use Smr\PortPayoutType;
-use Smr\Template;
 
 class AttackPortRenderer {
 
 	public static function render(
-		Template $template,
 		?PortFullCombatResults $FullPortCombatResults,
 		bool $AlreadyDestroyed,
 		bool $CreditedAttacker,
@@ -22,7 +20,6 @@ class AttackPortRenderer {
 		Player $ThisPlayer,
 	): void {
 		PortFullCombatResultsRenderer::render(
-			template: $template,
 			MinimalDisplay: false,
 			AlreadyDestroyed: $AlreadyDestroyed,
 			FullPortCombatResults: $FullPortCombatResults,

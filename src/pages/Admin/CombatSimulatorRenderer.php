@@ -5,7 +5,6 @@ namespace Smr\Pages\Admin;
 use Smr\Combat\Results\Full\TraderFullCombatResults;
 use Smr\Pages\Shared\Admin\CombatSimTeamDetailsRenderer;
 use Smr\Pages\Shared\TraderFullCombatResultsRenderer;
-use Smr\Template;
 
 class CombatSimulatorRenderer {
 
@@ -15,7 +14,6 @@ class CombatSimulatorRenderer {
 	 * @param array<?\Smr\Player> $Defenders
 	 */
 	public static function render(
-		Template $template,
 		string $EditDummysLink,
 		array $DummyNames,
 		array $Attackers,
@@ -55,7 +53,6 @@ class CombatSimulatorRenderer {
 		</form><?php
 		if ($TraderCombatResults !== null) {
 			TraderFullCombatResultsRenderer::render(
-				template: $template,
 				MinimalDisplay: false,
 				TraderCombatResults: $TraderCombatResults,
 				AttackLogLink: null,

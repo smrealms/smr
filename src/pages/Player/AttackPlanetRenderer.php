@@ -7,19 +7,16 @@ use Smr\Globals;
 use Smr\Pages\Shared\PlanetFullCombatResultsRenderer;
 use Smr\Planet;
 use Smr\Player;
-use Smr\Template;
 
 class AttackPlanetRenderer {
 
 	public static function render(
-		Template $template,
 		PlanetFullCombatResults $FullPlanetCombatResults,
 		bool $OverrideDeath,
 		Planet $Planet,
 		Player $ThisPlayer,
 	): void {
 		PlanetFullCombatResultsRenderer::render(
-			template: $template,
 			MinimalDisplay: false,
 			FullPlanetCombatResults: $FullPlanetCombatResults,
 			ThisPlayer: $ThisPlayer,

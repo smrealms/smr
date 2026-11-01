@@ -51,7 +51,6 @@ class TemplateTest extends TestCase {
 	#[TestWith([4, 0, 2, '<span class="red">2</span> mines and <span class="red">2</span> scout drones'])]
 	#[TestWith([0, 2, 0, '<span class="red">2</span> combat drones'])]
 	public function test_displayForceTakenDamage(int $mines, int $cds, int $sds, string $expected): void {
-		$template = Template::getInstance();
 		$damageTaken = new ForceTakenDamage(
 			killingShot: false,
 			targetAlreadyDead: false,
@@ -66,7 +65,7 @@ class TemplateTest extends TestCase {
 			hasScoutDrones: false,
 			totalDamage: 0,
 		);
-		$result = $template->displayForceTakenDamage($damageTaken, kamikaze: 2);
+		$result = Template::displayForceTakenDamage($damageTaken, kamikaze: 2);
 		self::assertSame($expected, $result);
 	}
 
@@ -74,7 +73,6 @@ class TemplateTest extends TestCase {
 	#[TestWith([2, 0, 2, '<span class="shields">2</span> shields and <span class="red">2</span> plates of armour'])]
 	#[TestWith([0, 2, 0, '<span class="cds">2</span> combat drones'])]
 	public function test_displayTakenDamage(int $shields, int $cds, int $armour, string $expected): void {
-		$template = Template::getInstance();
 		$damageTaken = new NormalTakenDamage(
 			killingShot: false,
 			targetAlreadyDead: false,
@@ -85,7 +83,7 @@ class TemplateTest extends TestCase {
 			armourDamage: $armour,
 			totalDamage: 0,
 		);
-		$result = $template->displayTakenDamage($damageTaken);
+		$result = Template::displayTakenDamage($damageTaken);
 		self::assertSame($expected, $result);
 	}
 

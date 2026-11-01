@@ -11,7 +11,6 @@ class PortCombatResultsRenderer {
 
 	/** @param CombatantResult<\Smr\Combat\NormalCombatantInterface> $PortCombatResults */
 	public static function render(
-		Template $template,
 		Player $ThisPlayer,
 		bool $MinimalDisplay,
 		?string $AttackLogLink,
@@ -54,7 +53,7 @@ class PortCombatResultsRenderer {
 						?> but it cannot do any damage<?php
 					}
 				} else {
-					?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
+					?> destroying <?php echo Template::displayTakenDamage($ActualDamage);
 				}
 			} ?>.
 			<br /><?php
@@ -87,7 +86,7 @@ class PortCombatResultsRenderer {
 							?> but they cannot do any damage<?php
 						}
 					} else {
-						?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
+						?> destroying <?php echo Template::displayTakenDamage($ActualDamage);
 					}
 				}
 			} ?>.

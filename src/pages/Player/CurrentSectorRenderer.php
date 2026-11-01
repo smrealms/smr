@@ -25,7 +25,6 @@ use Smr\Planet;
 use Smr\Player;
 use Smr\Sector;
 use Smr\Ship;
-use Smr\Template;
 
 class CurrentSectorRenderer {
 
@@ -37,7 +36,6 @@ class CurrentSectorRenderer {
 	 * @param ?array<array{Time: string, Message: string}> $Ticker
 	 */
 	public static function render(
-		Template $template,
 		array $Sectors,
 		array $UnreadMissions,
 		?string $TurnsMessage,
@@ -102,20 +100,15 @@ class CurrentSectorRenderer {
 							$results = $AttackResults['Results'];
 							if ($results instanceof TraderFullCombatResults) {
 								TraderFullCombatResultsRenderer::render(
-									template: $template,
 									TraderCombatResults: $results,
 									MinimalDisplay: true,
 									AttackLogLink: $AttackResults['Link'],
 									ThisPlayer: $ThisPlayer,
 								);
 							} elseif ($results instanceof ForceFullCombatResults) {
-								ForceFullCombatResultsRenderer::render(
-									template: $template,
-									FullForceCombatResults: $results,
-								);
+								ForceFullCombatResultsRenderer::render($results);
 							} elseif ($results instanceof PortFullCombatResults) {
 								PortFullCombatResultsRenderer::render(
-									template: $template,
 									FullPortCombatResults: $results,
 									MinimalDisplay: true,
 									AlreadyDestroyed: false,
@@ -124,7 +117,6 @@ class CurrentSectorRenderer {
 								);
 							} elseif ($results instanceof PlanetFullCombatResults) {
 								PlanetFullCombatResultsRenderer::render(
-									template: $template,
 									FullPlanetCombatResults: $results,
 									MinimalDisplay: true,
 									ThisPlayer: $ThisPlayer,

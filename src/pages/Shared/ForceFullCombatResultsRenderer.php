@@ -3,23 +3,16 @@
 namespace Smr\Pages\Shared;
 
 use Smr\Combat\Results\Full\ForceFullCombatResults;
-use Smr\Template;
 
 class ForceFullCombatResultsRenderer {
 
-	public static function render(
-		Template $template,
-		ForceFullCombatResults $FullForceCombatResults,
-	): void {
+	public static function render(ForceFullCombatResults $FullForceCombatResults): void {
 		if ($FullForceCombatResults->bump) { ?>
 			<h1>Force Results</h1><br />
-			<?php ForcesCombatResultsRenderer::render(
-				template: $template,
-				ForcesCombatResults: $FullForceCombatResults->forces,
-			);
+			<?php ForcesCombatResultsRenderer::render($FullForceCombatResults->forces);
 		} else { ?>
 			<h1>Attacker Results</h1><br />
-			<?php ForceTraderTeamCombatResultsRenderer::render(template: $template, TraderTeamCombatResults: $FullForceCombatResults->attackers);
+			<?php ForceTraderTeamCombatResultsRenderer::render($FullForceCombatResults->attackers);
 		} ?>
 		<br />
 		<br />
@@ -27,13 +20,10 @@ class ForceFullCombatResultsRenderer {
 		<br />
 		<?php if (!$FullForceCombatResults->bump) { ?>
 			<h1>Force Results</h1><br />
-			<?php ForcesCombatResultsRenderer::render(
-				template: $template,
-				ForcesCombatResults: $FullForceCombatResults->forces,
-			);
+			<?php ForcesCombatResultsRenderer::render($FullForceCombatResults->forces);
 		} else { ?>
 			<h1>Defender Results</h1><br />
-			<?php ForceTraderTeamCombatResultsRenderer::render(template: $template, TraderTeamCombatResults: $FullForceCombatResults->attackers);
+			<?php ForceTraderTeamCombatResultsRenderer::render($FullForceCombatResults->attackers);
 		}
 
 	}
