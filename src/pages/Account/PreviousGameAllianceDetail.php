@@ -28,7 +28,7 @@ class PreviousGameAllianceDetail extends AccountPage {
 		$container = new GameStats($gameID);
 
 		$players = [];
-		foreach ($alliance->getMembers(includeNpc: false) as $player) {
+		foreach ($alliance->getMembers(includeNpc: true) as $player) {
 			$players[] = [
 				'leader' => $player->isAllianceLeader() ? '*' : '',
 				'bold' => $player->getAccountID() === $account->getAccountID() ? 'class="bold"' : '',
