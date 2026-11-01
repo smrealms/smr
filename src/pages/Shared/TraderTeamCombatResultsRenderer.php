@@ -4,14 +4,13 @@ namespace Smr\Pages\Shared;
 
 use Smr\Combat\Results\Combatant\TeamCombatResults;
 use Smr\Combat\Results\Weapon\HitWeaponResult;
-use Smr\Player;
 use Smr\Template;
 
 class TraderTeamCombatResultsRenderer {
 
 	/** @param TeamCombatResults<\Smr\Combat\NormalCombatantInterface> $TraderTeamCombatResults */
 	public static function render(
-		?Player $ThisPlayer,
+		?int $ThisPlayerDamageTaken,
 		bool $MinimalDisplay,
 		TeamCombatResults $TraderTeamCombatResults,
 	): void {
@@ -122,24 +121,13 @@ class TraderTeamCombatResultsRenderer {
 			} ?>.<br /><br /><?php
 		}
 		$TotalDamage = $TraderTeamCombatResults->totalDamage;
-
-		$TotalDamageToThisPlayer = 0;
-		foreach ($TraderTeamCombatResults->traders as $TraderResults) {
-			// Check if ThisPlayer was a target in this round of combat
-			$ThisPlayerID = $ThisPlayer?->getPlayerID();
-			$totalDamagePerTarget = $TraderResults->getTotalDamagePerTarget();
-			if ($ThisPlayerID === null || !isset($totalDamagePerTarget[$ThisPlayerID])) {
-				$TotalDamageToThisPlayer = null;
-				break;
-			}
-			$TotalDamageToThisPlayer += $totalDamagePerTarget[$ThisPlayerID];
-		} ?>
+		?>
 
 		This fleet <?php
 		if ($TotalDamage > 0) { ?>
 			hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php
-			if ($TotalDamageToThisPlayer !== null) {
-				?>, of which <span class="red"><?php echo $TotalDamageToThisPlayer; ?></span> was done to you<?php
+			if ($ThisPlayerDamageTaken !== null) {
+				?>, of which <span class="red"><?php echo $ThisPlayerDamageTaken; ?></span> was done to you<?php
 			}
 		} else { ?>
 			does no damage this round. You call that a fleet? They need a better recruiter<?php
