@@ -284,7 +284,7 @@ class CreateGalaxiesAutoProcessor extends AccountPageProcessor {
 		$neutralGalaxy->setConnectivity(65);
 
 		// Add warps to each racial
-		foreach ($racialGalaxies as $raceId => $racialGalaxy) {
+		foreach ($racialGalaxies as $racialGalaxy) {
 			$warpSector = findValidSector(
 				$sectors,
 				fn(Sector $sector): bool => !$sector->hasWarp(),
