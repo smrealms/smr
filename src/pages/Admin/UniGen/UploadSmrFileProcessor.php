@@ -11,6 +11,7 @@ use Smr\Port;
 use Smr\Request;
 use Smr\Sector;
 use Smr\TransactionType;
+use Smr\TypeHelpers\Type;
 
 class UploadSmrFileProcessor extends AccountPageProcessor {
 
@@ -39,10 +40,7 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 		if ($ini_substr === false) {
 			create_error('Could not find [Metadata] section in SMR file');
 		}
-		$data = parse_ini_string($ini_substr, true, INI_SCANNER_RAW);
-		if ($data === false) {
-			create_error('Failed to parse SMR file. Please check the file for errors.');
-		}
+		$data = $this->parseSmrFile($ini_substr);
 
 		$version = $data['Metadata']['FileVersion'];
 		if ($version !== SMR_FILE_VERSION) {
@@ -52,7 +50,7 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 		// Create the galaxies
 		foreach ($data['Galaxies'] as $galID => $details) {
 			[$width, $height, $type, $name, $maxForceTime] = explode(',', $details);
-			$galaxy = Galaxy::createGalaxy($this->gameID, $galID);
+			$galaxy = Galaxy::createGalaxy($this->gameID, str2int($galID));
 			$galaxy->setWidth(str2int($width));
 			$galaxy->setHeight(str2int($height));
 			$galaxy->setGalaxyType($type);
@@ -141,6 +139,26 @@ class UploadSmrFileProcessor extends AccountPageProcessor {
 
 		$container = new EditGalaxy(canEdit: true, gameID: $this->gameID);
 		$container->go();
+	}
+
+	/**
+	 * Parses an SMR export into the section/value structure it requires.
+	 *
+	 * @return array<string, array<string, string>>
+	 */
+	private function parseSmrFile(string $contents): array {
+		$data = parse_ini_string($contents, true, INI_SCANNER_RAW);
+		if ($data === false) {
+			throw new Exception('Failed to parse SMR file. Please check the file for errors.');
+		}
+
+		$sectionType = Type::array(valueType: Type::string(), keyType: Type::string());
+		$type = Type::array(valueType: $sectionType, keyType: Type::string());
+		if (!$type->accepts($data)) {
+			throw new Exception('Invalid SMR file sections.');
+		}
+
+		return $data;
 	}
 
 }
