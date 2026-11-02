@@ -47,6 +47,7 @@ class HardwareConfigureRenderer {
 							<td>Attack/Defense</td>
 							<td>
 								<input
+									required
 									type="number"
 									class="center"
 									name="attack"
@@ -57,6 +58,7 @@ class HardwareConfigureRenderer {
 								>
 								&nbsp;/&nbsp;
 								<input
+									required
 									type="number"
 									class="center"
 									name="defense"

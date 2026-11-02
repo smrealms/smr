@@ -3,9 +3,6 @@
 namespace Smr;
 
 use Exception;
-use Smr\TypeHelpers\BoolType;
-use Smr\TypeHelpers\FloatType;
-use Smr\TypeHelpers\IntType;
 use Smr\TypeHelpers\Type;
 
 /**
@@ -26,52 +23,77 @@ class Request {
 	/**
 	 * @template T of bool|int|float
 	 * @param ?T $default
-	 * @param Type<T> $type
+	 * @param callable(string): ?T $filter
 	 * @return T
 	 */
-	private static function getX(string $index, mixed $default, Type $type): mixed {
-		if (self::has($index)) {
-			$filter = match ($type::class) {
-				BoolType::class => FILTER_VALIDATE_BOOL,
-				IntType::class => FILTER_VALIDATE_INT,
-				FloatType::class => FILTER_VALIDATE_FLOAT,
-				default => throw new Exception('Unsupported request value type: ' . $type->name()),
-			};
-			// Need null on failure to handle bool failures
-			$value = filter_var($_REQUEST[$index], $filter, FILTER_NULL_ON_FAILURE);
-			if ($value === null) {
-				throw new Exception(
-					'Value is not ' . $type->name() . ' for index `' . $index . '`: '
-					. var_export($_REQUEST[$index], true),
-				);
+	private static function getX(string $index, mixed $default, callable $filter): mixed {
+		// Treat the empty string the same as missing
+		$value = self::get($index, '');
+		if ($value === '') {
+			if ($default !== null) {
+				return $default;
 			}
-			return $value;
+			throw new Exception('No request variable or empty string for index "' . $index . '"');
 		}
-		if ($default !== null) {
-			return $default;
+		$value = $filter($value);
+		if ($value === null) {
+			throw new Exception(
+				'Value has the wrong type for index `' . $index . '`: '
+				. var_export($_REQUEST[$index], true),
+			);
 		}
-		throw new Exception('No request variable "' . $index . '"');
+		return $value;
 	}
 
 	/**
 	 * Returns index value as a boolean for boolean-like inputs.
+	 * Whitespace is treated as missing: it returns the default or raises the same
+	 * exception as an absent value, unlike has().
 	 */
 	public static function getBool(string $index, ?bool $default = null): bool {
-		return self::getX($index, $default, Type::bool());
+		return self::getX(
+			index: $index,
+			default: $default,
+			filter: static fn($value) => filter_var(
+				$value,
+				FILTER_VALIDATE_BOOL,
+				FILTER_NULL_ON_FAILURE,
+			),
+		);
 	}
 
 	/**
 	 * Returns index value as an integer.
+	 * Whitespace is treated as missing: it returns the default or raises the same
+	 * exception as an absent value, unlike has().
 	 */
 	public static function getInt(string $index, ?int $default = null): int {
-		return self::getX($index, $default, Type::int());
+		return self::getX(
+			index: $index,
+			default: $default,
+			filter: static fn($value) => filter_var(
+				$value,
+				FILTER_VALIDATE_INT,
+				FILTER_NULL_ON_FAILURE,
+			),
+		);
 	}
 
 	/**
 	 * Returns index value as a float.
+	 * Whitespace is treated as missing: it returns the default or raises the same
+	 * exception as an absent value, unlike has().
 	 */
 	public static function getFloat(string $index, ?float $default = null): float {
-		return self::getX($index, $default, Type::float());
+		return self::getX(
+			index: $index,
+			default: $default,
+			filter: static fn($value) => filter_var(
+				$value,
+				FILTER_VALIDATE_FLOAT,
+				FILTER_NULL_ON_FAILURE,
+			),
+		);
 	}
 
 	/**

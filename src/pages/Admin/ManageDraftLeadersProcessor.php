@@ -33,7 +33,7 @@ class ManageDraftLeadersProcessor extends AccountPageProcessor {
 
 		// Get the POST variables
 		$playerNumber = Request::getInt('player_number');
-		$homeSectorID = Request::getInt('home_sector_id');
+		$homeSectorID = Request::getInt('home_sector_id', 0);
 		$action = Request::get(self::ACTION);
 
 		try {

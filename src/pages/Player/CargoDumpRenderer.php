@@ -28,7 +28,7 @@ class CargoDumpRenderer {
 					<tr>
 						<td><?php echo $good['image']; ?>&nbsp;<?php echo $good['name']; ?></td>
 						<td class="center">
-							<input form="<?php echo $formID; ?>" type="number" name="amount" value="<?php echo $good['amount']; ?>" maxlength="5" size="5" class="center" />
+							<input required form="<?php echo $formID; ?>" type="number" name="amount" value="<?php echo $good['amount']; ?>" maxlength="5" size="5" class="center" />
 						</td>
 						<td class="center">
 							<form id="<?php echo $formID; ?>" method="POST" action="<?php echo $good['dump_href']; ?>">

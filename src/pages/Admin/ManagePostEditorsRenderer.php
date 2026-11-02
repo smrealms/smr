@@ -37,7 +37,7 @@ class ManagePostEditorsRenderer {
 
 		Player number:&nbsp;
 		<form method="POST" action="<?php echo $PostEditorPage->href(); ?>">
-			<input type="number" name="player_number" class="center">
+			<input required type="number" name="player_number" class="center">
 			<br /><br />
 			<?php echo $PostEditorPage->actionAssign->html(); ?>&nbsp;
 			<?php echo $PostEditorPage->actionRemove->html(); ?>

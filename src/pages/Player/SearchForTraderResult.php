@@ -21,7 +21,7 @@ class SearchForTraderResult extends PlayerPage {
 	) {}
 
 	public function build(Player $player, Template $template): void {
-		$this->playerNumber ??= Request::getInt('player_number');
+		$this->playerNumber ??= Request::getInt('player_number', 0);
 		$playerNumber = $this->playerNumber;
 
 		// When clicking on a player name, only the player number is supplied.

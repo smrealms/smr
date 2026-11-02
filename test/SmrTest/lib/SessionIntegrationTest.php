@@ -110,7 +110,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		// Must be int-valued (i.e. castable to int is insufficient)
 		$_REQUEST['ajax'] = '1 and stuff';
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('Value is not int for index `ajax`: \'1 and stuff\'');
+		$this->expectExceptionMessageIs('Value has the wrong type for index `ajax`: \'1 and stuff\'');
 		DiContainer::makeClass(Session::class);
 	}
 

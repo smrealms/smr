@@ -42,7 +42,7 @@ class AllianceRolesRenderer {
 				if ($Role['EditingRole']) { ?>
 					<tr>
 						<td rowspan="3">Withdrawal limit per 24 hours<br>(Or max negative balance for "positive balance")</td>
-						<td><input type="number" name="maxWith" value="<?php echo max($Role['WithdrawalLimit'], 0); ?>"></td>
+						<td><input required type="number" name="maxWith" value="<?php echo max($Role['WithdrawalLimit'], 0); ?>"></td>
 					</tr>
 					<tr>
 						<td>Unlimited:<input type="checkbox" name="unlimited"<?php if ($Role['WithdrawalLimit'] === ALLIANCE_BANK_UNLIMITED) { ?> checked="checked"<?php } ?>></td>

@@ -676,7 +676,10 @@ class Player {
 				['home_sector_id'],
 			);
 			if ($dbResult->hasRecord()) {
-				return $dbResult->record()->getInt('home_sector_id');
+				$homeSectorID = $dbResult->record()->getInt('home_sector_id');
+				if ($homeSectorID !== 0) {
+					return $homeSectorID;
+				}
 			}
 		}
 

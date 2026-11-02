@@ -15,7 +15,7 @@ class VoteRenderer {
 				<form name="FORM" method="POST" action="<?php echo $Vote['HREF'] ?>">
 					<span class="bold"><?php echo bbify(htmlentities($Vote['Question'])); ?></span> <?php echo $Vote['EndInfo']; ?><br /><?php
 					foreach ($Vote['Options'] as $VoteOption) { ?>
-						<input type="radio" name="vote" <?php if (!$Vote['Active']) { ?>disabled="disabled" <?php } ?>value="<?php echo $VoteOption['ID']; ?>"<?php if ($VoteOption['Chosen']) { ?> checked<?php } ?>><?php echo bbify($VoteOption['Text']); ?> (<?php echo $VoteOption['Votes']; ?> votes)<br /><?php
+						<input type="radio" name="vote" required <?php if (!$Vote['Active']) { ?>disabled="disabled" <?php } ?>value="<?php echo $VoteOption['ID']; ?>"<?php if ($VoteOption['Chosen']) { ?> checked<?php } ?>><?php echo bbify($VoteOption['Text']); ?> (<?php echo $VoteOption['Votes']; ?> votes)<br /><?php
 					} ?>
 					<?php if ($Vote['Active']) { echo create_submit_display('Vote!'); ?><br /><?php } ?><br />
 				</form><?php

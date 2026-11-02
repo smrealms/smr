@@ -14,7 +14,7 @@ class FinancialRenderer {
 		<form id="BondForm" method="POST" action="<?php echo $ProcessorPage->href(); ?>">
 			<table>
 				<tr>
-					<td colspan="2"><input type="number" name="amount" value="0" style="text-align:right;width:152;"></td>
+					<td colspan="2"><input required type="number" name="amount" value="0" min="1" style="text-align:right;width:152;"></td>
 				</tr>
 				<tr>
 					<td><?php echo $ProcessorPage->actionDeposit->html(); ?></td>

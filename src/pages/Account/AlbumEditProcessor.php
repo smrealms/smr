@@ -37,9 +37,9 @@ class AlbumEditProcessor extends AccountPageProcessor {
 
 		$other = Request::get('other');
 
-		$day = Request::getInt('day');
-		$month = Request::getInt('month');
-		$year = Request::getInt('year');
+		$day = Request::getInt('day', 0);
+		$month = Request::getInt('month', 0);
+		$year = Request::getInt('year', 0);
 
 		// check if we have an image
 		$noPicture = true;

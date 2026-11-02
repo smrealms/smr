@@ -13,8 +13,8 @@ class BountyPlaceProcessor extends PlayerPageProcessor {
 	) {}
 
 	public function build(Player $player): never {
-		$amount = Request::getInt('amount');
-		$smrCredits = Request::getInt('smrcredits');
+		$amount = Request::getInt('amount', 0);
+		$smrCredits = Request::getInt('smrcredits', 0);
 
 		if ($player->getCredits() < $amount) {
 			create_error('You dont have that much money.');
