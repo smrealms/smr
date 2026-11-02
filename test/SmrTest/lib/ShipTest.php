@@ -110,14 +110,14 @@ class ShipTest extends TestCase {
 	public function test_moveWeaponUp_no_weapons(): void {
 		$ship = new Ship($this->player);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('This method cannot be used when there are no weapons');
+		$this->expectExceptionMessageIs('This method cannot be used when there are no weapons');
 		$ship->moveWeaponUp(0);
 	}
 
 	public function test_moveWeaponDown_no_weapons(): void {
 		$ship = new Ship($this->player);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('This method cannot be used when there are no weapons');
+		$this->expectExceptionMessageIs('This method cannot be used when there are no weapons');
 		$ship->moveWeaponDown(0);
 	}
 
@@ -145,7 +145,7 @@ class ShipTest extends TestCase {
 	public function test_cloak_throws_when_missing_hardware(): void {
 		$ship = new Ship($this->player);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Ship does not have the supported hardware!');
+		$this->expectExceptionMessageIs('Ship does not have the supported hardware!');
 		$ship->enableCloak();
 	}
 
@@ -178,7 +178,7 @@ class ShipTest extends TestCase {
 	public function test_illusion_throws_when_missing_hardware(): void {
 		$ship = new Ship($this->player);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Ship does not have the supported hardware!');
+		$this->expectExceptionMessageIs('Ship does not have the supported hardware!');
 		$ship->setIllusion(SHIP_TYPE_THIEF, 12, 13);
 	}
 

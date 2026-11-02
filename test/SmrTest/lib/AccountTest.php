@@ -34,14 +34,14 @@ class AccountTest extends BaseIntegrationSpec {
 
 	public function test_createAccount_throws_if_referrer_does_not_exist(): void {
 		$this->expectException(AccountNotFound::class);
-		$this->expectExceptionMessage('Account ID 123 does not exist');
+		$this->expectExceptionMessageIs('Account ID 123 does not exist!');
 		Account::createAccount('test', 'test', 'test@test.com', 9, 123);
 	}
 
 	public function test_createAccount_throws_if_login_exists(): void {
 		Account::createAccount('name1', 'pw', '1@test.com', 0, 0);
 		$this->expectException(UserError::class);
-		$this->expectExceptionMessage('This login name is already taken!');
+		$this->expectExceptionMessageIs('This login name is already taken!');
 		Account::createAccount('name1', 'pw', '2@test.com', 0, 0);
 	}
 
@@ -50,14 +50,14 @@ class AccountTest extends BaseIntegrationSpec {
 		$account->setHofName('name2');
 		$account->update();
 		$this->expectException(UserError::class);
-		$this->expectExceptionMessage('This login name is already taken!');
+		$this->expectExceptionMessageIs('This login name is already taken!');
 		Account::createAccount('name2', 'pw', '2@test.com', 0, 0);
 	}
 
 	public function test_createAccount_throws_if_email_exists(): void {
 		Account::createAccount('name1', 'pw', '1@test.com', 0, 0);
 		$this->expectException(UserError::class);
-		$this->expectExceptionMessage('This email address is already registered!');
+		$this->expectExceptionMessageIs('This email address is already registered!');
 		Account::createAccount('name2', 'pw', '1@test.com', 0, 0);
 	}
 
@@ -97,14 +97,14 @@ class AccountTest extends BaseIntegrationSpec {
 	public function test_get_account_by_login_throws_when_no_login_provided(): void {
 		// When retrieving account by empty string login, exception is thrown
 		$this->expectException(AccountNotFound::class);
-		$this->expectExceptionMessage('Account login not found');
+		$this->expectExceptionMessageIs('Account login not found.');
 		Account::getAccountByLogin('');
 	}
 
 	public function test_get_account_by_login_throws_when_no_record_found(): void {
 		// When retrieving account by login, exception is thrown if no record exists
 		$this->expectException(AccountNotFound::class);
-		$this->expectExceptionMessage('Account login not found');
+		$this->expectExceptionMessageIs('Account login not found.');
 		Account::getAccountByLogin('does_not_exist');
 	}
 
@@ -120,14 +120,14 @@ class AccountTest extends BaseIntegrationSpec {
 	public function test_get_account_by_hof_name_throws_when_no_hof_name_provided(): void {
 		// When retrieving account by empty string HoF name, exception is thrown
 		$this->expectException(AccountNotFound::class);
-		$this->expectExceptionMessage('Account HoF name not found');
+		$this->expectExceptionMessageIs('Account HoF name not found.');
 		Account::getAccountByHofName('');
 	}
 
 	public function test_get_account_by_hof_name_throws_when_no_record_found(): void {
 		// When retrieving account by HoF name, exception is thrown if no record exists
 		$this->expectException(AccountNotFound::class);
-		$this->expectExceptionMessage('Account HoF name not found');
+		$this->expectExceptionMessageIs('Account HoF name not found.');
 		Account::getAccountByHofName('does_not_exist');
 	}
 
@@ -143,14 +143,14 @@ class AccountTest extends BaseIntegrationSpec {
 	public function test_get_account_by_email_throws_when_no_email_provided(): void {
 		// When retrieving account by empty string email, exception is thrown
 		$this->expectException(AccountNotFound::class);
-		$this->expectExceptionMessage('Account email not found');
+		$this->expectExceptionMessageIs('Account email not found.');
 		Account::getAccountByEmail('');
 	}
 
 	public function test_get_account_by_email_throws_when_no_record_found(): void {
 		// When retrieving account by email, exception is thrown if no record exists
 		$this->expectException(AccountNotFound::class);
-		$this->expectExceptionMessage('Account email not found');
+		$this->expectExceptionMessageIs('Account email not found.');
 		Account::getAccountByEmail('does_not_exist');
 	}
 
@@ -169,14 +169,14 @@ class AccountTest extends BaseIntegrationSpec {
 	public function test_get_account_by_discord_throws_when_no_discord_provided(): void {
 		// When retrieving account by empty string discord ID, exception is thrown
 		$this->expectException(AccountNotFound::class);
-		$this->expectExceptionMessage('Account discord ID not found');
+		$this->expectExceptionMessageIs('Account discord ID not found.');
 		Account::getAccountByDiscordId('');
 	}
 
 	public function test_get_account_by_discord_throws_when_no_record_found(): void {
 		// When retrieving account by discord, exception is thrown if no record exists.
 		$this->expectException(AccountNotFound::class);
-		$this->expectExceptionMessage('Account discord ID not found');
+		$this->expectExceptionMessageIs('Account discord ID not found.');
 		Account::getAccountByDiscordId('does_not_exist');
 	}
 
@@ -195,14 +195,14 @@ class AccountTest extends BaseIntegrationSpec {
 	public function test_get_account_by_irc_throws_when_no_irc_provided(): void {
 		// When retrieving account by empty string irc, exception is thrown
 		$this->expectException(AccountNotFound::class);
-		$this->expectExceptionMessage('Account IRC nick not found');
+		$this->expectExceptionMessageIs('Account IRC nick not found.');
 		Account::getAccountByIrcNick('');
 	}
 
 	public function test_get_account_by_irc_returns_null_when_no_record_found(): void {
 		// When retrieving account by irc, exception is thrown if no record exists.
 		$this->expectException(AccountNotFound::class);
-		$this->expectExceptionMessage('Account IRC nick not found');
+		$this->expectExceptionMessageIs('Account IRC nick not found.');
 		Account::getAccountByIrcNick('does_not_exist');
 	}
 
@@ -224,7 +224,7 @@ class AccountTest extends BaseIntegrationSpec {
 		$socialId = new SocialIdentity('does_not_exist', 'dummy', Facebook::getLoginType());
 		// When retrieving account by social, exception is thrown if no record exists
 		$this->expectException(AccountNotFound::class);
-		$this->expectExceptionMessage('Account social login not found');
+		$this->expectExceptionMessageIs('Account social login not found.');
 		Account::getAccountBySocialId($socialId);
 	}
 

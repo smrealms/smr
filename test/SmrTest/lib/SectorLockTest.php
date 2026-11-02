@@ -48,7 +48,7 @@ class SectorLockTest extends BaseIntegrationSpec {
 	 */
 	public function test_resetInstance(): void {
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Only call this function from CLI programs');
+		$this->expectExceptionMessageIs('Only call this function from CLI programs!');
 		SectorLock::resetInstance();
 	}
 
@@ -66,7 +66,7 @@ class SectorLockTest extends BaseIntegrationSpec {
 		$lock->acquire(1, 1, 1);
 		// We throw if we acquire a lock in sector 2 without first releasing
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('This instance has an active lock in a different sector!');
+		$this->expectExceptionMessageIs('This instance has an active lock in a different sector!');
 		$lock->acquire(1, 1, 2);
 	}
 
@@ -82,7 +82,7 @@ class SectorLockTest extends BaseIntegrationSpec {
 		// Then if that instance tries to acquire a lock (even for the same
 		// sector) before the other instance releases, we throw a UserError.
 		$this->expectException(UserError::class);
-		$this->expectExceptionMessage('Multiple actions cannot be performed at the same time!');
+		$this->expectExceptionMessageIs('Multiple actions cannot be performed at the same time!');
 		try {
 			$lock2->acquire(1, 1, 1);
 		} catch (UserError $e) {
@@ -102,7 +102,7 @@ class SectorLockTest extends BaseIntegrationSpec {
 
 		$lock = SectorLock::getInstance();
 		$this->expectException(SectorLockTimeout::class);
-		$this->expectExceptionMessage('Sector lock acquisition timed out!');
+		$this->expectExceptionMessageIs('Sector lock acquisition timed out!');
 		try {
 			$lock->acquire(1, 1, 1);
 		} catch (SectorLockTimeout $exception) {
@@ -153,7 +153,7 @@ class SectorLockTest extends BaseIntegrationSpec {
 	public function test_getSectorID_before_acquire(): void {
 		$lock = SectorLock::getInstance();
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Must acquire lock before calling this method!');
+		$this->expectExceptionMessageIs('Must acquire lock before calling this method!');
 		$lock->getSectorID();
 	}
 

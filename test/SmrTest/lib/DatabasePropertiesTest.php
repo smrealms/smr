@@ -78,7 +78,7 @@ class DatabasePropertiesTest extends TestCase {
 		// Unset one of the required environment variables
 		putenv($name);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Database environment variable is missing: ' . $name);
+		$this->expectExceptionMessageIs('Database environment variable is missing: ' . $name);
 		new DatabaseProperties();
 	}
 

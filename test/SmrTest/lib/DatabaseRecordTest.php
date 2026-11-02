@@ -38,7 +38,7 @@ class DatabaseRecordTest extends TestCase {
 		// Construct a record with a null value
 		$record = new DatabaseRecord(['name' => null]);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Expected record `name` to be a string, got null');
+		$this->expectExceptionMessageIs('Expected record `name` to be a string, got null');
 		$record->getString('name');
 	}
 
@@ -72,7 +72,7 @@ class DatabaseRecordTest extends TestCase {
 	public function test_getBoolean_with_non_boolean_field(): void {
 		$record = new DatabaseRecord(['name' => 'NONBOOLEAN']);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Unexpected boolean record: \'NONBOOLEAN\'');
+		$this->expectExceptionMessageIs('Unexpected boolean record: \'NONBOOLEAN\'');
 		$record->getBoolean('name');
 	}
 
@@ -103,7 +103,7 @@ class DatabaseRecordTest extends TestCase {
 	public function test_getInt_with_non_int_field(mixed $value, string $error): void {
 		$record = new DatabaseRecord(['name' => $value]);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage($error);
+		$this->expectExceptionMessageIs($error);
 		$record->getInt('name');
 	}
 
@@ -119,7 +119,7 @@ class DatabaseRecordTest extends TestCase {
 	public function test_getFloat_with_non_float_field(mixed $value, string $error): void {
 		$record = new DatabaseRecord(['name' => $value]);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage($error);
+		$this->expectExceptionMessageIs($error);
 		$record->getFloat('name');
 	}
 
@@ -166,7 +166,7 @@ class DatabaseRecordTest extends TestCase {
 		// Construct a record with a string, but then fetch as ArrayObject
 		$record = new DatabaseRecord(['name' => serialize('foo')]);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Value \'foo\' is not of type ArrayObject');
+		$this->expectExceptionMessageIs('Value \'foo\' is not of type ArrayObject');
 		$record->getClass('name', ArrayObject::class);
 	}
 

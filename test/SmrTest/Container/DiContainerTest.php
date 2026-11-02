@@ -64,7 +64,7 @@ class DiContainerTest extends TestCase {
 		$class = ArrayObject::class;
 		DiContainer::initialize(false);
 		DiContainer::getContainer()->set($class, new StringDefinition('foo'));
-		$this->expectExceptionMessage('Expected instance of ' . $class . ' from container, got string');
+		$this->expectExceptionMessageIs('Expected instance of ' . $class . ' from container, got string');
 		$this->expectException(Exception::class);
 		DiContainer::$method($class);
 	}

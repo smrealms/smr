@@ -39,7 +39,7 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 	public function test_createPlanet_already_exists(): void {
 		Planet::createPlanet(1, 1, 1, 1);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Planet already exists');
+		$this->expectExceptionMessageIsOrContains('Planet already exists');
 		Planet::createPlanet(1, 1, 1, 1);
 	}
 
@@ -252,21 +252,21 @@ class PlanetIntegrationTest extends BaseIntegrationSpec {
 	public function test_setStockpile_throws_when_negative(): void {
 		$planet = Planet::createPlanet(1, 1, 1, 1);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Trying to set negative stockpile');
+		$this->expectExceptionMessageIs('Trying to set negative stockpile.');
 		$planet->setStockpile(GOODS_ORE, -20);
 	}
 
 	public function test_setBuilding_throws_when_negative(): void {
 		$planet = Planet::createPlanet(1, 1, 1, 1);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Cannot set negative number of buildings');
+		$this->expectExceptionMessageIs('Cannot set negative number of buildings.');
 		$planet->setBuilding(PLANET_HANGAR, -1);
 	}
 
 	public function test_destroyBuilding_throws_when_invalid(): void {
 		$planet = Planet::createPlanet(1, 1, 1, 1);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Cannot set negative number of buildings');
+		$this->expectExceptionMessageIs('Cannot set negative number of buildings.');
 		$planet->destroyBuilding(PLANET_TURRET, 1);
 	}
 

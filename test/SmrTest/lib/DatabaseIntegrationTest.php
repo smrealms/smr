@@ -134,21 +134,21 @@ class DatabaseIntegrationTest extends TestCase {
 	public function test_select_orderBy_order_length_error(): void {
 		$db = Database::getInstance();
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('order and orderBy must be the same length');
+		$this->expectExceptionMessageIs('order and orderBy must be the same length');
 		$db->select('level', orderBy: ['level_id', 'level_name'], order: ['DESC']);
 	}
 
 	public function test_select_lock_requires_active_transaction(): void {
 		$db = Database::getInstance();
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Row locks require an active transaction');
+		$this->expectExceptionMessageIs('Row locks require an active transaction');
 		$db->select('player', limit: 1, lock: RowLockMode::Update);
 	}
 
 	public function test_read_lock_requires_active_transaction(): void {
 		$db = Database::getInstance();
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Row locks require an active transaction');
+		$this->expectExceptionMessageIs('Row locks require an active transaction');
 		$db->read('SELECT * FROM player LIMIT 1', lock: RowLockMode::Update);
 	}
 
@@ -238,7 +238,7 @@ class DatabaseIntegrationTest extends TestCase {
 		// Queries that return a result should not use the 'write' method
 		$db = Database::getInstance();
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Wrong query type');
+		$this->expectExceptionMessageIs('Wrong query type');
 		$db->write('SELECT 1');
 	}
 
@@ -256,7 +256,7 @@ class DatabaseIntegrationTest extends TestCase {
 	public function test_transaction_rolls_back_when_operation_throws(): void {
 		$db = Database::getInstance();
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('test exception');
+		$this->expectExceptionMessageIs('test exception');
 		try {
 			$db->transaction(fn() => throw new Exception('test exception'));
 		} finally {

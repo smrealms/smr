@@ -118,7 +118,7 @@ class PlayerIntegrationTest extends BaseIntegrationSpec {
 		// Make sure the player name conflict is reported before the HOF name conflict
 		$nextAccountID = $account->getAccountID() + 1;
 		$this->expectException(UserError::class);
-		$this->expectExceptionMessage('That player name already exists.');
+		$this->expectExceptionMessageIs('That player name already exists.');
 		Player::createPlayer($nextAccountID, self::$gameID, $name, RACE_HUMAN, false);
 	}
 
@@ -150,7 +150,7 @@ class PlayerIntegrationTest extends BaseIntegrationSpec {
 
 	public function test_getPlayer_throws_when_no_record_found(): void {
 		$this->expectException(PlayerNotFound::class);
-		$this->expectExceptionMessage('Invalid playerID: 123');
+		$this->expectExceptionMessageIs('Invalid playerID: 123');
 		Player::getPlayer(123);
 	}
 
@@ -159,7 +159,7 @@ class PlayerIntegrationTest extends BaseIntegrationSpec {
 		$name = 'test';
 		$player = Player::createPlayer(1, self::$gameID, $name, RACE_HUMAN, false);
 		$this->expectException(UserError::class);
-		$this->expectExceptionMessage('Your player already has that name!');
+		$this->expectExceptionMessageIs('Your player already has that name!');
 		$player->changePlayerName($name);
 	}
 
@@ -169,7 +169,7 @@ class PlayerIntegrationTest extends BaseIntegrationSpec {
 		Player::createPlayer(1, self::$gameID, $name1, RACE_HUMAN, false);
 		$player2 = Player::createPlayer(2, self::$gameID, 'test2', RACE_HUMAN, false);
 		$this->expectException(UserError::class);
-		$this->expectExceptionMessage('That name is already being used in this game!');
+		$this->expectExceptionMessageIs('That name is already being used in this game!');
 		$player2->changePlayerName($name1);
 	}
 
@@ -179,7 +179,7 @@ class PlayerIntegrationTest extends BaseIntegrationSpec {
 		Account::createAccount($name1, 'pw', 'test@test.com', 9, 0);
 		$player2 = Player::createPlayer(2, self::$gameID, 'test2', RACE_HUMAN, false);
 		$this->expectException(UserError::class);
-		$this->expectExceptionMessage('That player name is reserved by another account.');
+		$this->expectExceptionMessageIsOrContains('That player name is reserved by another account.');
 		$player2->changePlayerName($name1);
 	}
 

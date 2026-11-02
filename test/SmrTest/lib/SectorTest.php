@@ -72,7 +72,7 @@ class SectorTest extends TestCase {
 	public function test_cannot_link_to_self(): void {
 		$sector = Sector::createSector(1, 1);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Sector must not link to itself!');
+		$this->expectExceptionMessageIs('Sector must not link to itself!');
 		$sector->setLink('Up', $sector->getSectorID());
 	}
 
@@ -113,7 +113,7 @@ class SectorTest extends TestCase {
 	public function test_cannot_warp_to_self(): void {
 		$sector = Sector::createSector(1, 1);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Sector must not warp to itself!');
+		$this->expectExceptionMessageIs('Sector must not warp to itself!');
 		$sector->setWarp($sector);
 	}
 
@@ -127,7 +127,7 @@ class SectorTest extends TestCase {
 
 		// Then we cannot set a 2nd warp
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Sector 1 already has a warp (to 2)');
+		$this->expectExceptionMessageIs('Sector 1 already has a warp (to 2)!');
 		$sector1->setWarp($sector3);
 	}
 

@@ -32,7 +32,7 @@ class TemplateTest extends TestCase {
 		$template = Template::getInstance();
 		$template->pageTopic = 'foo';
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Cannot re-assign pageTopic: foo');
+		$this->expectExceptionMessageIs('Cannot re-assign pageTopic: foo');
 		$template->pageTopic = 'bar';
 	}
 
@@ -176,14 +176,14 @@ class TemplateTest extends TestCase {
 		// Call once successfully
 		$template->addJavascriptForAjax('test', '');
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Trying to set javascript val twice: test');
+		$this->expectExceptionMessageIs('Trying to set javascript val twice: test');
 		$template->addJavascriptForAjax('test', '');
 	}
 
 	public function test_addJavascriptForAjax_rejects_eval_var_name(): void {
 		$template = Template::getInstance();
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Use addJavascriptEvalForAjax() to add EVAL JavaScript.');
+		$this->expectExceptionMessageIs('Use addJavascriptEvalForAjax() to add EVAL JavaScript.');
 		$template->addJavascriptForAjax('EVAL', []);
 	}
 

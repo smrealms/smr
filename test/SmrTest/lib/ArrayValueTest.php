@@ -27,7 +27,7 @@ class ArrayValueTest extends TestCase {
 
 	public function test_getOptional_throws_for_invalid_value(): void {
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Array key [name] must be a string, got int: 1');
+		$this->expectExceptionMessageIs('Array key [name] must be a string, got int: 1');
 		ArrayValue::getOptional(['name' => 1], 'name', Type::string());
 	}
 
@@ -38,7 +38,7 @@ class ArrayValueTest extends TestCase {
 
 	public function test_get_throws_for_missing_key(): void {
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Could not find expected key in array: name');
+		$this->expectExceptionMessageIs('Could not find expected key in array: name');
 		ArrayValue::get([], 'name', Type::string());
 	}
 

@@ -112,7 +112,7 @@ class PathTest extends TestCase {
 		// Try to skip to a sector that isn't in the path
 		$path = new Path(1);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Cannot skip to sector not in path!');
+		$this->expectExceptionMessageIs('Cannot skip to sector not in path!');
 		$path->skipToSector(2);
 	}
 

@@ -40,7 +40,7 @@ class EpochTest extends TestCase {
 	 */
 	public function test_update(): void {
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Only call this function from CLI programs');
+		$this->expectExceptionMessageIs('Only call this function from CLI programs!');
 		Epoch::update();
 	}
 

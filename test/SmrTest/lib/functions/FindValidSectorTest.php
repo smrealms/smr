@@ -42,7 +42,7 @@ class FindValidSectorTest extends TestCase {
 
 	public function test_no_match(): void {
 		$this->expectException(UserError::class);
-		$this->expectExceptionMessage('There are no eligible sectors meeting this condition!');
+		$this->expectExceptionMessageIs('There are no eligible sectors meeting this condition!');
 		findValidSector(
 			$this->mockSectors,
 			fn(Sector $sector): bool => $sector->getSectorID() === 3,

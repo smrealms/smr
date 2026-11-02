@@ -20,7 +20,7 @@ class AllianceIntegrationTest extends BaseIntegrationSpec {
 
 	public function test_getAlliance_throws_when_no_record_found(): void {
 		$this->expectException(AllianceNotFound::class);
-		$this->expectExceptionMessage('Invalid allianceID: 2 OR gameID: 3');
+		$this->expectExceptionMessageIs('Invalid allianceID: 2 OR gameID: 3');
 		Alliance::getAlliance(2, 3);
 	}
 
@@ -38,7 +38,7 @@ class AllianceIntegrationTest extends BaseIntegrationSpec {
 
 		// Test that we raise an exception with the wrong IRC channel
 		$this->expectException(AllianceNotFound::class);
-		$this->expectExceptionMessage('Alliance IRC Channel not found');
+		$this->expectExceptionMessageIs('Alliance IRC Channel not found');
 		Alliance::getAllianceByIrcChannel('#notircrules');
 	}
 
@@ -54,7 +54,7 @@ class AllianceIntegrationTest extends BaseIntegrationSpec {
 
 		// Test that we raise an exception with the wrong Alliance name
 		$this->expectException(AllianceNotFound::class);
-		$this->expectExceptionMessage('Alliance name not found');
+		$this->expectExceptionMessageIs('Alliance name not found');
 		Alliance::getAllianceByName('not' . $name, $gameID);
 	}
 
@@ -74,7 +74,7 @@ class AllianceIntegrationTest extends BaseIntegrationSpec {
 		$name = 'test';
 		Alliance::createAlliance(1, $name);
 		$this->expectException(UserError::class);
-		$this->expectExceptionMessage('That alliance name already exists.');
+		$this->expectExceptionMessageIs('That alliance name already exists.');
 		Alliance::createAlliance(1, $name);
 	}
 
@@ -82,7 +82,7 @@ class AllianceIntegrationTest extends BaseIntegrationSpec {
 	#[TestWith([NPC_FOR_HIRE_ALLIANCE_NAME])]
 	public function test_createAlliance_with_reserved_name(string $name): void {
 		$this->expectException(UserError::class);
-		$this->expectExceptionMessage('That alliance name is reserved.');
+		$this->expectExceptionMessageIs('That alliance name is reserved.');
 		Alliance::createAlliance(1, $name);
 	}
 
@@ -135,7 +135,7 @@ class AllianceIntegrationTest extends BaseIntegrationSpec {
 	public function test_decreaseBank_underflow(): void {
 		$alliance = Alliance::createAlliance(1, 'test');
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Do not allow negative credits');
+		$this->expectExceptionMessageIs('Do not allow negative credits');
 		$alliance->decreaseBank(1);
 	}
 

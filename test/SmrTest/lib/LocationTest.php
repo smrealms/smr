@@ -22,7 +22,7 @@ class LocationTest extends TestCase {
 
 	public function test_getLocation_throws_when_no_record_found(): void {
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Cannot find location: 999');
+		$this->expectExceptionMessageIs('Cannot find location: 999');
 		Location::getLocation(gameID: 0, locationTypeID: 999);
 	}
 

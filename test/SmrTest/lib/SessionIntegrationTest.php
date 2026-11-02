@@ -89,7 +89,7 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 	public function test_getSessionID_rejects_nonstring_cookie(): void {
 		$_COOKIE['session_id'] = ['not a session ID'];
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Array key [session_id] must be a string, got array:');
+		$this->expectExceptionMessageIsOrContains('Array key [session_id] must be a string, got array:');
 		DiContainer::makeClass(Session::class);
 	}
 
@@ -110,13 +110,13 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		// Must be int-valued (i.e. castable to int is insufficient)
 		$_REQUEST['ajax'] = '1 and stuff';
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Value is not int for index `ajax`: \'1 and stuff\'');
+		$this->expectExceptionMessageIs('Value is not int for index `ajax`: \'1 and stuff\'');
 		DiContainer::makeClass(Session::class);
 	}
 
 	public function test_getCurrentVar_throws(): void {
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The session has no current page!');
+		$this->expectExceptionMessageIs('The session has no current page!');
 		$this->session->getCurrentVar();
 	}
 

@@ -31,7 +31,7 @@ class PlayerLevelTest extends TestCase {
 	public function test_get_invalid_exp(): void {
 		// If we pass an invalid amount of exp, we throw
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Failed to properly determine level from exp: -1');
+		$this->expectExceptionMessageIs('Failed to properly determine level from exp: -1');
 		PlayerLevel::get(-1);
 	}
 

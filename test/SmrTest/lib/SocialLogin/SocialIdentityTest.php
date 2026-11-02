@@ -22,7 +22,7 @@ class SocialIdentityTest extends TestCase {
 	#[TestWith([null])]
 	public function test_invalid_id(?string $id): void {
 		$this->expectException(UserError::class);
-		$this->expectExceptionMessage('Failed to retrieve your bar ID!');
+		$this->expectExceptionMessageIs('Failed to retrieve your bar ID!');
 		new SocialIdentity($id, 'foo', 'bar');
 	}
 
@@ -30,7 +30,7 @@ class SocialIdentityTest extends TestCase {
 	#[TestWith([null])]
 	public function test_invalid_email(?string $email): void {
 		$this->expectException(UserError::class);
-		$this->expectExceptionMessage('An email address is required, but was not found!');
+		$this->expectExceptionMessageIs('An email address is required, but was not found!');
 		new SocialIdentity('foo', $email, 'bar');
 	}
 
