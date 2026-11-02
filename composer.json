@@ -84,7 +84,7 @@
 	},
 	"require-dev": {
 		"fig-r/psr2r-sniffer": "2.9.0",
-		"overtrue/phplint": "9.7.2",
+		"overtrue/phplint": "9.8.0",
 		"phpstan/phpstan": "2.3.3",
 		"phpunit/phpunit": "13.4.5",
 		"rector/rector": "2.5.9",
