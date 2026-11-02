@@ -52,7 +52,7 @@ final readonly class CallArgumentResolver {
 	}
 
 	/**
-	 * @return ?array<int, \PhpParser\Node\Arg>
+	 * @return ?array<\PhpParser\Node\Arg>
 	 */
 	public function getArguments(): ?array {
 		return $this->reorderedCall?->getArgs();
