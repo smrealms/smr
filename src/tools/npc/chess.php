@@ -5,6 +5,7 @@ use Smr\Chess\Colour;
 use Smr\Container\DiContainer;
 use Smr\Database;
 use Smr\Epoch;
+use Smr\Npc\UciEngine;
 
 function debug(string $message, mixed $debugObject = null): void {
 	echo date('Y-m-d H:i:s - ') . $message . ($debugObject !== null ? EOL . var_export($debugObject, true) : '') . EOL;
@@ -38,36 +39,12 @@ try {
 	// Enable NPC-specific conditions
 	DiContainer::getContainer()->set('NPC_SCRIPT', true);
 
-	$descriptorSpec = [
-		0 => ['pipe', 'r'], // stdin is a pipe that the child will read from
-		1 => ['pipe', 'w'], // stdout is a pipe that the child will write to
-	];
-	proc_open(UCI_CHESS_ENGINE, $descriptorSpec, $pipes);
-	$toEngine = &$pipes[0];
-	$fromEngine = &$pipes[1];
+	$engine = UciEngine::start(UCI_CHESS_ENGINE, debug: true);
 
-	function readFromEngine(bool $block = true): void {
-		global $fromEngine;
-		stream_set_blocking($fromEngine, $block);
-		while (($s = fgets($fromEngine)) !== false) {
-			debug('<-- ' . trim($s));
-			stream_set_blocking($fromEngine, false);
-		}
-	}
-	function writeToEngine(string $s, bool $block = true, bool $read = true): void {
-		global $toEngine;
-		debug('--> ' . $s);
-		fwrite($toEngine, $s . EOL);
-		if ($read === true) {
-			readFromEngine($block);
-		}
-	}
-
-	readFromEngine();
-	writeToEngine('uci');
-	writeToEngine('setoption name Hash value ' . UCI_HASH_SIZE_MB, false);
-	writeToEngine('isready');
-	writeToEngine('ucinewgame', false);
+	$engine->send('uci');
+	$engine->send('setoption name Hash value ' . UCI_HASH_SIZE_MB, block: false);
+	$engine->send('isready');
+	$engine->send('ucinewgame', block: false);
 
 	while (true) {
 		// The next "page request" must occur at an updated time.
@@ -75,17 +52,15 @@ try {
 
 		foreach (ChessGame::getNPCMoveGames(true) as $chessGame) {
 			debug('Looking at game: ' . $chessGame->getChessGameID());
-			writeToEngine('position fen ' . $chessGame->getBoard()->getFEN(), false);
-			writeToEngine('go ' . ($chessGame->getCurrentTurnColour() === Colour::White ? 'w' : 'b') . 'time ' . UCI_TIME_PER_MOVE_MS, true, false);
-			stream_set_blocking($fromEngine, true);
+			$engine->send('position fen ' . $chessGame->getBoard()->getFEN(), block: false);
+			$colour = $chessGame->getCurrentTurnColour() === Colour::White ? 'w' : 'b';
+			$engine->send('go ' . $colour . 'time ' . UCI_TIME_PER_MOVE_MS, read: false);
 			$move = '';
 			while (!str_starts_with($move, 'bestmove')) {
-				$move = fgets($fromEngine);
-				if ($move === false) {
+				$move = $engine->readResponse();
+				if ($move === null) {
 					throw new Exception('Failed to get move from the UCI engine');
 				}
-				$move = trim($move);
-				debug('<-- ' . $move);
 				if (str_starts_with($move, 'Seg')) {
 					// Segfault
 					debug('UCI engine segfaulted?');
@@ -97,7 +72,7 @@ try {
 
 			debug('Taking move: ', $move[1]);
 			$chessGame->tryAlgebraicMove($move[1]);
-			writeToEngine('ucinewgame', false);
+			$engine->send('ucinewgame', block: false);
 		}
 		// Always sleep for a while to make sure that PHP can't run at 100%.
 		usleep(UCI_SLEEP_BETWEEN_CYCLES_US);
