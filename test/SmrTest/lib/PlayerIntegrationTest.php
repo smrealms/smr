@@ -284,4 +284,18 @@ class PlayerIntegrationTest extends BaseIntegrationSpec {
 		self::assertFalse($player1->sameAlliance($player2));
 	}
 
+	public function test_setSectorID_clears_pending_sector_message(): void {
+		$player = Player::createPlayer(1, self::$gameID, 'test', RACE_HUMAN, false);
+		$db = Database::getInstance();
+		$db->insert('sector_message', [
+			'player_id' => $player->getPlayerID(),
+			'game_id' => $player->getGameID(),
+			'message' => '[ATTACK_RESULTS]1',
+		]);
+
+		$player->setSectorID(2);
+
+		self::assertSame(0, $db->count('sector_message', $player->SQLID));
+	}
+
 }
