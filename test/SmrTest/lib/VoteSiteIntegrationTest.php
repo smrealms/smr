@@ -22,7 +22,7 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 
 		// Make sure it raises an exception if we call getTimeUntilFreeTurns
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('This vote site cannot award free turns!');
+		$this->expectExceptionMessageIs('This vote site cannot award free turns!');
 		$link->getTimeUntilFreeTurns();
 	}
 
@@ -56,7 +56,7 @@ class VoteSiteIntegrationTest extends BaseIntegrationSpec {
 
 		// Test that circumventing the timeout throws an exception
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Account ID 1 attempted vote link abuse');
+		$this->expectExceptionMessageIs('Account ID 1 attempted vote link abuse');
 		$link->setClicked();
 	}
 

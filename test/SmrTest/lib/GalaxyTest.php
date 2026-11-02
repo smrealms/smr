@@ -20,7 +20,7 @@ class GalaxyTest extends BaseIntegrationSpec {
 	public function test_getGalaxy_throws_if_galaxy_does_not_exist(): void {
 		// Test that we raise an exception with the wrong Alliance name
 		$this->expectException(GalaxyNotFound::class);
-		$this->expectExceptionMessage('No such galaxy: 1-2');
+		$this->expectExceptionMessageIs('No such galaxy: 1-2');
 		Galaxy::getGalaxy(1, 2);
 	}
 

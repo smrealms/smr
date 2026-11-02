@@ -46,7 +46,7 @@ class AssetUrlTest extends TestCase {
 
 		putenv('SMR_DEV_ASSETS'); // unset
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Asset not in manifest: /js/does-not-exist.js');
+		$this->expectExceptionMessageIs('Asset not in manifest: /js/does-not-exist.js');
 		asset_url($sourcePath);
 	}
 

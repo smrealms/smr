@@ -4,6 +4,7 @@ namespace SmrTest\lib;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\TestCase;
 use Smr\DisplayNameValidator;
 use Smr\Exceptions\UserError;
@@ -14,7 +15,7 @@ class DisplayNameValidatorTest extends TestCase {
 	#[DataProvider('invalid_name_provider')]
 	public function test_invalid_name(string $name, string $exception): void {
 		$this->expectException(UserError::class);
-		$this->expectExceptionMessage($exception);
+		$this->expectExceptionMessageIs($exception);
 		DisplayNameValidator::validate($name);
 	}
 
@@ -42,10 +43,10 @@ class DisplayNameValidatorTest extends TestCase {
 	}
 
 	#[DataProvider('valid_name_provider')]
+	#[DoesNotPerformAssertions]
 	public function test_valid_name(string $name): void {
 		// test that an exception is not thrown
 		DisplayNameValidator::validate($name);
-		$this->addToAssertionCount(1);
 	}
 
 	/**

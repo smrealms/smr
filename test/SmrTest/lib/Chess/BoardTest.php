@@ -62,7 +62,7 @@ class BoardTest extends TestCase {
 
 		// Get an error if the piece doesn't exist
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('No piece found on: a3');
+		$this->expectExceptionMessageIs('No piece found on: a3');
 		$board->getPiece(Loc::at('a3'));
 	}
 

@@ -40,14 +40,14 @@ class DatabaseResultTest extends TestCase {
 	public function test_record_too_many_rows(): void {
 		$result = $this->runQuery(2);
 		$this->expectException(RuntimeException::class);
-		$this->expectExceptionMessage('One record required, but found 2');
+		$this->expectExceptionMessageIs('One record required, but found 2');
 		$result->record();
 	}
 
 	public function test_record_too_few_rows(): void {
 		$result = $this->runQuery(0);
 		$this->expectException(RuntimeException::class);
-		$this->expectExceptionMessage('One record required, but found 0');
+		$this->expectExceptionMessageIs('One record required, but found 0');
 		$result->record();
 	}
 
@@ -55,7 +55,7 @@ class DatabaseResultTest extends TestCase {
 		$result = $this->runQuery(1);
 		$result->record();
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Do not call record twice on the same result');
+		$this->expectExceptionMessageIs('Do not call record twice on the same result');
 		$result->record();
 	}
 

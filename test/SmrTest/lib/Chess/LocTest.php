@@ -38,7 +38,7 @@ class LocTest extends TestCase {
 		self::assertNull($loc->relativeOrNull($dx, $dy));
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid position: ' . $dx . ',' . $dy);
+		$this->expectExceptionMessageIs('Invalid position: ' . $dx . ',' . $dy);
 		$loc->relative($dx, $dy);
 	}
 
@@ -69,13 +69,13 @@ class LocTest extends TestCase {
 	public function test_validate_invalid(int $x, int $y): void {
 		self::assertNull(Loc::validateOrNull($x, $y));
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid position: ' . $x . ',' . $y);
+		$this->expectExceptionMessageIs('Invalid position: ' . $x . ',' . $y);
 		Loc::validate($x, $y);
 	}
 
 	public function test_at_invalid(): void {
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Invalid coord given: a');
+		$this->expectExceptionMessageIs('Invalid coord given: a');
 		Loc::at('a');
 	}
 

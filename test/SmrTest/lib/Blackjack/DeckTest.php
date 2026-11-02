@@ -24,7 +24,7 @@ class DeckTest extends TestCase {
 			$deck->drawCard();
 		}
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('No cards left to draw from this deck!');
+		$this->expectExceptionMessageIs('No cards left to draw from this deck!');
 		$deck->drawCard();
 	}
 

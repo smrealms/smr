@@ -112,7 +112,7 @@ class PortTest extends TestCase {
 		// New ports don't have any goods yet, so this will throw on any good
 		$port = Port::createPort(1, 1);
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Port does not trade goodID 3');
+		$this->expectExceptionMessageIs('Port does not trade goodID 3');
 		$port->getGoodTransaction(GOODS_ORE);
 	}
 
