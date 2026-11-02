@@ -635,6 +635,10 @@ class Player {
 			return;
 		}
 
+		// Attack results only apply while the player remains in the combat sector.
+		// This clears every sector message; currently they are all attack results.
+		Database::getInstance()->delete('sector_message', $this->SQLID);
+
 		$port = Port::getPort($this->getGameID(), $this->getSectorID());
 		$port->addCachePort($this->getPlayerID()); //Add port of sector we were just in, to make sure it is left totally up to date.
 
