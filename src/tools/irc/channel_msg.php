@@ -8,6 +8,8 @@ use Smr\Exceptions\AllianceNotFound;
 use Smr\Exceptions\PlayerNotFound;
 use Smr\Irc\CallbackEvent;
 use Smr\Irc\Message;
+use Smr\Irc\TimerEvent;
+use Smr\Irc\TimerState;
 use Smr\Player;
 
 /**
@@ -83,79 +85,6 @@ function check_for_registration($fp, string $nick, string $channel, Closure $cal
 	}
 
 	return $player;
-}
-
-/**
- * @param resource $fp
- */
-function channel_msg_with_registration($fp, Message $msg): bool {
-	if (preg_match('/^!(money|forces|seed|seedlist|op|sd)\s/i', $msg->text) === 1) {
-
-		$nick = $msg->nick;
-		$channel = $msg->channel;
-
-		// check if the query is in public channel
-		if ($channel === '#smr' || $channel === '#smr-bar') {
-			fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', that command can only be used in an alliance controlled channel.' . EOL);
-			return true;
-		}
-
-		$callback = function() use($fp, $msg): bool {
-			return channel_msg_with_registration($fp, $msg);
-		};
-		$player = check_for_registration($fp, $nick, $channel, $callback);
-		if ($player === false) {
-			return true;
-		}
-
-		if (channel_msg_money($fp, $msg, $player)) {
-			return true;
-		}
-		if (channel_msg_forces($fp, $msg, $player)) {
-			return true;
-		}
-
-		if (channel_msg_seed($fp, $msg, $player)) {
-			return true;
-		}
-		if (channel_msg_seedlist_add($fp, $msg, $player)) {
-			return true;
-		}
-		if (channel_msg_seedlist_del($fp, $msg, $player)) {
-			return true;
-		}
-
-		if (channel_msg_op_info($fp, $msg, $player)) {
-			return true;
-		}
-		if (channel_msg_op_cancel($fp, $msg, $player)) {
-			return true;
-		}
-		if (channel_msg_op_set($fp, $msg, $player)) {
-			return true;
-		}
-		if (channel_msg_op_turns($fp, $msg, $player)) {
-			return true;
-		}
-		if (channel_msg_op_response($fp, $msg, $player)) {
-			return true;
-		}
-		if (channel_msg_op_list($fp, $msg, $player)) {
-			return true;
-		}
-		if (channel_msg_sd_set($fp, $msg)) {
-			return true;
-		}
-		if (channel_msg_sd_del($fp, $msg)) {
-			return true;
-		}
-		if (channel_msg_sd_list($fp, $msg, $player)) {
-			return true;
-		}
-
-	}
-
-	return false;
 }
 
 /**
@@ -263,29 +192,23 @@ function channel_msg_money($fp, Message $msg, Player $player): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_timer($fp, Message $msg): bool {
+function channel_msg_timer($fp, Message $msg, TimerState $state): bool {
 	if (preg_match('/^!timer(\s\d+)?(\s.+)?$/i', $msg->text, $args) === 1) {
-
-		global $events;
-
 		$nick = $msg->nick;
 		$channel = $msg->channel;
 
 		// no countdown means we give a list of active timers
 		if (!isset($args[1])) {
-
 			fwrite($fp, 'PRIVMSG ' . $channel . ' :The following timers have been defined for this channel:' . EOL);
-			foreach ($events as $event) {
-				if ($event[2] === $channel) {
-					fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $event[1] . ' in ' . format_time($event[0] - time()) . EOL);
-				}
+			foreach ($state->eventsForChannel($channel) as $event) {
+				fwrite($fp, 'PRIVMSG ' . $channel . ' :' . $event->message . ' in ' . format_time($event->expiresAt - time()) . EOL);
 			}
 
 			return true;
 		}
 
-		$countdown = $args[1];
-		if (!is_numeric($countdown)) {
+		$countdown = filter_var($args[1], FILTER_VALIDATE_INT);
+		if ($countdown === false) {
 			fwrite($fp, 'PRIVMSG ' . $channel . ' :I need to know in how many minutes the timer needs to go off. Example: !timer 25 message to channel' . EOL);
 			return true;
 		}
@@ -297,10 +220,13 @@ function channel_msg_timer($fp, Message $msg): bool {
 
 		echo_r('[TIMER] ' . $nick . ' started a timer with ' . $countdown . ' minute(s) (' . $message . ') in ' . $channel);
 
-		$events[] = [time() + $countdown * 60, $message, $channel];
+		$state->add(new TimerEvent(
+			expiresAt: time() + $countdown * 60,
+			message: $message,
+			channel: $channel,
+		));
 
 		fwrite($fp, 'PRIVMSG ' . $channel . ' :The timer has been started and will go off in ' . $countdown . ' minute(s).' . EOL);
-
 		return true;
 	}
 

@@ -57,13 +57,6 @@ parameters:
 
     ignoreErrors:
         -
-            # This while loop is needed to reconnect the IRC bot after server
-            # timeouts. It could be replaced with Docker daemonization if we
-            # modify the delayed callback actions. (Level 4)
-            message: '#While loop condition is always true.#'
-            path: src/tools/irc/irc.php
-            count: 1
-        -
             # The `$targetPlayer` has impure functions called on it, which
             # should reset its method return value cache, but PHPStan cannot
             # detect that this is happening. (Level 4)

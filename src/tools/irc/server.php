@@ -4,34 +4,6 @@ use Smr\Database;
 use Smr\Irc\CallbackEvent;
 
 /**
- * Very important!
- * If we do not answer the ping from server we will be disconnected
- *
- * @param resource $fp
- */
-function server_ping($fp, string $rdata): bool {
-	global $last_ping;
-
-	if (preg_match('/^PING\s:(.*)\s/i', $rdata, $msg) === 1) {
-
-		$server = $msg[1];
-
-		// remember the last time we got a ping from the server
-		$last_ping = time();
-
-		// This message is very spammy
-		if (defined('IRC_BOT_VERBOSE_PING') && IRC_BOT_VERBOSE_PING) {
-			echo_r('[PING] from ' . $server);
-		}
-
-		fwrite($fp, 'PONG ' . $server . EOL);
-		return true;
-	}
-
-	return false;
-}
-
-/**
  * Part of a whois msg
  *
  * @param resource $fp

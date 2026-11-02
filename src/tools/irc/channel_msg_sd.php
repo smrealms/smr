@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
 use Smr\Irc\Message;
+use Smr\Irc\SupplyDemandEntry;
+use Smr\Irc\SupplyDemandState;
 use Smr\Player;
 
 /**
@@ -29,36 +31,27 @@ function channel_msg_sd($fp, Message $msg): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_sd_set($fp, Message $msg): bool {
+function channel_msg_sd_set($fp, Message $msg, SupplyDemandState $state): bool {
 	if (preg_match('/^!sd set (\d+) (\d+)$/i', $msg->text, $args) === 1) {
-
-		global $sds;
-
 		$nick = $msg->nick;
 		$channel = $msg->channel;
-		$sector = $args[1];
-		$sd = $args[2];
+		$sector = filter_var($args[1], FILTER_VALIDATE_INT);
+		$sd = filter_var($args[2], FILTER_VALIDATE_INT);
+		if ($sector === false || $sd === false) {
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :Please provide valid numeric sector and supply/demand values.' . EOL);
+			return true;
+		}
 
 		echo_r('[SD_SET] by ' . $nick . ' in ' . $channel);
 
-		// delete any old entries in the list
-		foreach ($sds as $key => $value) {
-
-			if ($value[3] !== $channel) {
-				continue;
-			}
-
-			if ($value[0] === $sector) {
-				unset($sds[$key]);
-			}
-
-		}
-
-		// add new entry
-		$sds[] = [$sector, $sd, time(), $channel];
+		$state->replace(new SupplyDemandEntry(
+			sector: $sector,
+			supplyDemand: $sd,
+			recordedAt: time(),
+			channel: $channel,
+		));
 
 		fwrite($fp, 'PRIVMSG ' . $channel . ' :The supply/demand of ' . $sd . ' for sector ' . $sector . ' has been recorded' . EOL);
-
 		return true;
 	}
 
@@ -68,28 +61,20 @@ function channel_msg_sd_set($fp, Message $msg): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_sd_del($fp, Message $msg): bool {
+function channel_msg_sd_del($fp, Message $msg, SupplyDemandState $state): bool {
 	if (preg_match('/^!sd del (\d+)$/i', $msg->text, $args) === 1) {
-
-		global $sds;
-
 		$nick = $msg->nick;
 		$channel = $msg->channel;
-		$sector = $args[1];
+		$sector = filter_var($args[1], FILTER_VALIDATE_INT);
+		if ($sector === false) {
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :Please provide a valid numeric sector.' . EOL);
+			return true;
+		}
 
 		echo_r('[SD_DEL] by ' . $nick . ' in ' . $channel);
 
-		foreach ($sds as $key => $sd) {
-
-			if ($sd[3] !== $channel) {
-				continue;
-			}
-
-			if ($sd[0] === $sector) {
-				fwrite($fp, 'PRIVMSG ' . $channel . ' :The supply/demand for sector ' . $sector . ' has been deleted.' . EOL);
-				unset($sds[$key]);
-			}
-
+		if ($state->delete($channel, $sector)) {
+			fwrite($fp, 'PRIVMSG ' . $channel . ' :The supply/demand for sector ' . $sector . ' has been deleted.' . EOL);
 		}
 
 		return true;
@@ -101,36 +86,26 @@ function channel_msg_sd_del($fp, Message $msg): bool {
 /**
  * @param resource $fp
  */
-function channel_msg_sd_list($fp, Message $msg, Player $player): bool {
+function channel_msg_sd_list($fp, Message $msg, Player $player, SupplyDemandState $state): bool {
 	if ($msg->text === '!sd list') {
-
-		global $sds;
-
 		$nick = $msg->nick;
 		$channel = $msg->channel;
 
 		echo_r('[SD_LIST] by ' . $nick . ' in ' . $channel);
 
-		$refresh_per_hour = 250 * $player->getGame()->getGameSpeed();
-		$refresh_per_sec = $refresh_per_hour / 3600;
+		$refreshPerHour = 250 * $player->getGame()->getGameSpeed();
+		$refreshPerSecond = $refreshPerHour / 3600;
 
 		fwrite($fp, 'PRIVMSG ' . $channel . ' :The following supply/demand list has been recorded:' . EOL);
 		fwrite($fp, 'PRIVMSG ' . $channel . ' :Sector   Amount' . EOL);
-		foreach ($sds as $sd) {
-			if ($sd[3] === $channel) {
-
-				$seconds_since_refresh = time() - $sd[2];
-				if ($seconds_since_refresh < 0) {
-					$seconds_since_refresh = 0;
-				}
-				$amt_to_add = floor($seconds_since_refresh * $refresh_per_sec);
-
-				if ($sd[1] + $amt_to_add > 4000) {
-					fwrite($fp, 'PRIVMSG ' . $channel . ' : ' . sprintf('%4s', $sd[0]) . '     ' . sprintf('%4s', 'full') . EOL);
-				} else {
-					fwrite($fp, 'PRIVMSG ' . $channel . ' : ' . sprintf('%4s', $sd[0]) . '     ' . sprintf('%4s', $sd[1] + $amt_to_add) . EOL);
-				}
-
+		foreach ($state->entriesForChannel($channel) as $entry) {
+			$secondsSinceRefresh = max(0, time() - $entry->recordedAt);
+			$amountToAdd = floor($secondsSinceRefresh * $refreshPerSecond);
+			$amount = $entry->supplyDemand + $amountToAdd;
+			if ($amount > 4000) {
+				fwrite($fp, 'PRIVMSG ' . $channel . ' : ' . sprintf('%4s', $entry->sector) . '     ' . sprintf('%4s', 'full') . EOL);
+			} else {
+				fwrite($fp, 'PRIVMSG ' . $channel . ' : ' . sprintf('%4s', $entry->sector) . '     ' . sprintf('%4s', $amount) . EOL);
 			}
 		}
 
