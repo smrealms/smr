@@ -13,7 +13,6 @@ class PlanetCombatResultsRenderer {
 	 * @param CombatantResult<\Smr\Combat\NormalCombatantInterface> $PlanetCombatResults
 	 */
 	public static function render(
-		Template $template,
 		Player $ThisPlayer,
 		bool $MinimalDisplay,
 		?string $AttackLogLink,
@@ -56,7 +55,7 @@ class PlanetCombatResultsRenderer {
 						?> but it cannot do any damage<?php
 					}
 				} else {
-					?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
+					?> destroying <?php echo Template::displayTakenDamage($ActualDamage);
 				}
 			} ?>.
 			<br /><?php
@@ -89,7 +88,7 @@ class PlanetCombatResultsRenderer {
 							?> but they cannot do any damage<?php
 						}
 					} else {
-						?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
+						?> destroying <?php echo Template::displayTakenDamage($ActualDamage);
 					}
 				}
 			} ?>.

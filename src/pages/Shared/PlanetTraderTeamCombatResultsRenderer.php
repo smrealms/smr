@@ -11,7 +11,6 @@ use Smr\Template;
 class PlanetTraderTeamCombatResultsRenderer {
 
 	public static function render(
-		Template $template,
 		Player $ThisPlayer,
 		bool $MinimalDisplay,
 		PlanetAttackerCombatResults $TraderTeamCombatResults,
@@ -59,7 +58,7 @@ class PlanetTraderTeamCombatResultsRenderer {
 								?> but it cannot do any damage<?php
 							}
 						} else {
-							?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
+							?> destroying <?php echo Template::displayTakenDamage($ActualDamage);
 						}
 					} ?>.
 					<br /><?php
@@ -97,7 +96,7 @@ class PlanetTraderTeamCombatResultsRenderer {
 									?> but they cannot do any damage<?php
 								}
 							} else {
-								?> destroying <?php echo $template->displayTakenDamage($ActualDamage);
+								?> destroying <?php echo Template::displayTakenDamage($ActualDamage);
 							}
 						}
 					} ?>.

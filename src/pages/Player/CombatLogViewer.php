@@ -52,7 +52,6 @@ class CombatLogViewer extends PlayerPage {
 		Menu::combatLog();
 
 		$template->pageRenderer = fn() => CombatLogViewerRenderer::render(
-			template: $template,
 			CombatLogSector: $dbRecord->getInt('sector_id'),
 			CombatLogTimestamp: date($player->getAccount()->getDateTimeFormat(), $dbRecord->getInt('timestamp')),
 			CombatResults: $results,

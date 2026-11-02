@@ -36,7 +36,6 @@ class CombatSimulator extends AccountPage {
 		}
 
 		$template->pageRenderer = fn() => CombatSimulatorRenderer::render(
-			template: $template,
 			EditDummysLink: new EditDummies()->href(),
 			DummyNames: DummyShip::getDummyNames(),
 			Attackers: $attackers,

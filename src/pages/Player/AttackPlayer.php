@@ -25,7 +25,6 @@ class AttackPlayer extends PlayerPage {
 		}
 
 		$template->pageRenderer = fn() => AttackPlayerRenderer::render(
-			template: $template,
 			TraderCombatResults: $this->results,
 			Target: $target,
 			OverrideDeath: $player->isDead(),

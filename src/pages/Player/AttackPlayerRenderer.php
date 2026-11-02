@@ -6,13 +6,16 @@ use Smr\Combat\Results\Full\TraderFullCombatResults;
 use Smr\Globals;
 use Smr\Pages\Shared\TraderFullCombatResultsRenderer;
 use Smr\Player;
-use Smr\Template;
 
 class AttackPlayerRenderer {
 
-	public static function render(Template $template, TraderFullCombatResults $TraderCombatResults, ?Player $Target, bool $OverrideDeath, Player $ThisPlayer): void {
+	public static function render(
+		TraderFullCombatResults $TraderCombatResults,
+		?Player $Target,
+		bool $OverrideDeath,
+		Player $ThisPlayer,
+	): void {
 		TraderFullCombatResultsRenderer::render(
-			template: $template,
 			MinimalDisplay: false,
 			TraderCombatResults: $TraderCombatResults,
 			AttackLogLink: null,

@@ -153,7 +153,6 @@ class CurrentSector extends PlayerPage {
 		}
 
 		$template->pageRenderer = fn() => CurrentSectorRenderer::render(
-			template: $template,
 			Sectors: $links,
 			UnreadMissions: $unreadMissions,
 			TurnsMessage: $turnsMessage,

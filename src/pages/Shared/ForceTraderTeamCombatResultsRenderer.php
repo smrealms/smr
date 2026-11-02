@@ -8,11 +8,10 @@ use Smr\Template;
 
 class ForceTraderTeamCombatResultsRenderer {
 
-	/** @param TeamCombatResults<\Smr\Force> $TraderTeamCombatResults */
-	public static function render(
-		Template $template,
-		TeamCombatResults $TraderTeamCombatResults,
-	): void {
+	/**
+	 * @param TeamCombatResults<\Smr\Force> $TraderTeamCombatResults
+	 */
+	public static function render(TeamCombatResults $TraderTeamCombatResults): void {
 		$AllTraderResults = $TraderTeamCombatResults->traders;
 		foreach ($AllTraderResults as $TraderResults) {
 			$ShootingPlayer = $TraderResults->combatant;
@@ -41,7 +40,7 @@ class ForceTraderTeamCombatResultsRenderer {
 								?> but it cannot do any damage<?php
 							}
 						} else {
-							?> destroying <?php echo $template->displayForceTakenDamage($ActualDamage);
+							?> destroying <?php echo Template::displayForceTakenDamage($ActualDamage);
 						}
 					} ?>.
 					<br />
@@ -83,7 +82,7 @@ class ForceTraderTeamCombatResultsRenderer {
 										?> whilst the others destroy <?php
 									}
 								}
-								echo $template->displayForceTakenDamage($ActualDamage, $WeaponDamage->kamikaze);
+								echo Template::displayForceTakenDamage($ActualDamage, $WeaponDamage->kamikaze);
 							}
 						}
 					}?>.

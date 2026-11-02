@@ -7,15 +7,16 @@ use Smr\Force;
 use Smr\Globals;
 use Smr\Pages\Shared\ForceFullCombatResultsRenderer;
 use Smr\Ship;
-use Smr\Template;
 
 class AttackForcesRenderer {
 
-	public static function render(Template $template, ForceFullCombatResults $FullForceCombatResults, ?Force $Target, bool $OverrideDeath, Ship $ThisShip): void {
-		ForceFullCombatResultsRenderer::render(
-			template: $template,
-			FullForceCombatResults: $FullForceCombatResults,
-		); ?><br />
+	public static function render(
+		ForceFullCombatResults $FullForceCombatResults,
+		?Force $Target,
+		bool $OverrideDeath,
+		Ship $ThisShip,
+	): void {
+		ForceFullCombatResultsRenderer::render($FullForceCombatResults); ?><br />
 		<br />
 		<div class="center"><?php
 			if ($Target !== null) { ?>
