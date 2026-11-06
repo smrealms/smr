@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 
-use Nbbc\BBCode;
-use Smr\Alliance;
-use Smr\Chess\ChessGame;
+use Smr\BBCodeFormatter;
 use Smr\Container\DiContainer;
 use Smr\Database;
 use Smr\DatabaseShip;
@@ -10,7 +8,6 @@ use Smr\Epoch;
 use Smr\Exceptions\UserError;
 use Smr\Force;
 use Smr\Game;
-use Smr\Globals;
 use Smr\Messages;
 use Smr\MissionState;
 use Smr\Page\Page;
@@ -22,8 +19,6 @@ use Smr\Pages\Layout\DefaultSkeletonRenderer;
 use Smr\Pages\Layout\Freon22SkeletonRenderer;
 use Smr\Pages\Layout\RightPanelData;
 use Smr\Pages\Layout\SkeletonData;
-use Smr\Pages\Player\AllianceInviteAcceptProcessor;
-use Smr\Pages\Player\AllianceMotd;
 use Smr\Pages\Player\CargoDump;
 use Smr\Pages\Player\CombatLogViewerVerifyProcessor;
 use Smr\Pages\Player\CurrentSector;
@@ -38,7 +33,6 @@ use Smr\Pages\Player\WeaponReorder;
 use Smr\Planet;
 use Smr\Player;
 use Smr\Port;
-use Smr\Race;
 use Smr\Sector;
 use Smr\SectorLock;
 use Smr\Session;
@@ -84,176 +78,12 @@ function linkCombatLog(int $logID): string {
 	return '<a href="' . $container->href() . '"><img src="images/notify.gif" width="14" height="11" border="0" title="View the combat log" /></a>';
 }
 
-/**
- * Converts a BBCode tag into some other text depending on the tag and value.
- * This is called in two stages: first with action BBCODE_CHECK (where the
- * returned value must be a boolean) and second, if the first check passes,
- * with action BBCODE_OUTPUT.
- *
- * @param array<string, string> $tagParams
- */
-function smrBBCode(BBCode $bbParser, int $action, string $tagName, string $default, array $tagParams, string $tagContent): string|bool {
-	global $overrideGameID, $disableBBLinks;
-	$session = Session::getInstance();
-	$linked = $disableBBLinks === false && $session->hasGame() && $overrideGameID === $session->getGameID();
-	try {
-		switch ($tagName) {
-			case 'combatlog':
-				if ($action === BBCode::BBCODE_CHECK) {
-					return is_numeric($default);
-				}
-				$logID = (int)$default;
-				return linkCombatLog($logID);
-
-			case 'player':
-				if ($action === BBCode::BBCODE_CHECK) {
-					return is_numeric($default);
-				}
-				$playerNumber = (int)$default;
-				$bbPlayer = Player::getPlayerByPlayerNumber($playerNumber, $overrideGameID);
-				$showAlliance = isset($tagParams['showalliance']) ? parseBoolean($tagParams['showalliance']) : false;
-				if ($linked) {
-					return $bbPlayer->getLinkedDisplayName($showAlliance);
-				}
-				return $bbPlayer->getDisplayName($showAlliance);
-
-			case 'alliance':
-				if ($action === BBCode::BBCODE_CHECK) {
-					return is_numeric($default);
-				}
-				$allianceID = (int)$default;
-				$alliance = Alliance::getAlliance($allianceID, $overrideGameID);
-				if ($linked && $alliance->getAllianceID() === $session->getPlayer()->getAllianceID()) {
-					$container = new AllianceMotd($alliance->getAllianceID());
-					return create_link($container, $alliance->getAllianceDisplayName());
-				}
-				return $alliance->getAllianceDisplayName($linked);
-
-			case 'race':
-				$raceNameID = $default;
-				foreach (Race::getAllNames() as $raceID => $raceName) {
-					if ((is_numeric($raceNameID) && (int)$raceNameID === $raceID)
-						|| $raceNameID === $raceName) {
-						if ($action === BBCode::BBCODE_CHECK) {
-							return true;
-						}
-						$linked = $disableBBLinks === false && $overrideGameID === $session->getGameID();
-						$player = $session->hasGame() ? $session->getPlayer() : null;
-						return Player::getColouredRaceNameOrDefault($raceID, $player, $linked);
-					}
-				}
-				break;
-
-			case 'servertimetouser':
-				if ($action === BBCode::BBCODE_CHECK) {
-					return true;
-				}
-				$time = strtotime($default);
-				if ($time !== false) {
-					$time += $session->getAccount()->getOffset() * 3600;
-					return date($session->getAccount()->getDateTimeFormat(), $time);
-				}
-				break;
-
-			case 'chess':
-				if ($action === BBCode::BBCODE_CHECK) {
-					return is_numeric($default);
-				}
-				$chessGameID = (int)$default;
-				$chessGame = ChessGame::getChessGame($chessGameID);
-				return '<a href="' . $chessGame->getPlayGameHREF() . '">chess game (' . $chessGame->getChessGameID() . ')</a>';
-
-			case 'sector':
-				if ($action === BBCode::BBCODE_CHECK) {
-					return is_numeric($default);
-				}
-
-				$sectorID = (int)$default;
-				$sectorTag = '<span class="sectorColour">#' . $sectorID . '</span>';
-
-				if ($disableBBLinks === false
-					&& $session->hasGame()
-					&& $session->getGameID() === $overrideGameID
-					&& Sector::sectorExists($overrideGameID, $sectorID)) {
-					return '<a href="' . Globals::getPlotCourseHREF($session->getPlayer()->getSectorID(), $sectorID) . '">' . $sectorTag . '</a>';
-				}
-				return $sectorTag;
-
-			case 'join_alliance':
-				if ($action === BBCode::BBCODE_CHECK) {
-					return is_numeric($default);
-				}
-				$allianceID = (int)$default;
-				$alliance = Alliance::getAlliance($allianceID, $overrideGameID);
-				$container = new AllianceInviteAcceptProcessor($allianceID);
-				return '<div class="buttonA"><a class="buttonA" href="' . $container->href() . '">Join ' . $alliance->getAllianceDisplayName() . '</a></div>';
-		}
-	} catch (Throwable) {
-		// If there's an error, we will silently display the original text
-	}
-	if ($action === BBCode::BBCODE_CHECK) {
-		return false;
-	}
-	return htmlspecialchars($tagParams['_tag']) . $tagContent . htmlspecialchars($tagParams['_endtag']);
-}
-
 function inify(string $text): string {
 	return str_replace(',', '', html_entity_decode($text));
 }
 
 function bbify(string $message, ?int $gameID = null, bool $noLinks = false): string {
-	static $bbParser;
-	if ($bbParser === null) {
-		$bbParser = new BBCode();
-		$bbParser->setEnableSmileys(false);
-		$bbParser->removeRule('wiki');
-		$bbParser->removeRule('img');
-		$bbParser->setURLTarget('_blank');
-		$bbParser->setURLTargetable('override');
-		$bbParser->setEscapeContent(false); // don't escape HTML, needed for News etc.
-
-		// Add [verbatim] tag, needed for displaying other tags
-		$bbParser->addRule('verbatim', [
-			'content' => BBCode::BBCODE_VERBATIM,
-			'simple_start' => '<tt>',
-			'simple_end' => '</tt>',
-			'allow_in' => ['block'],
-		]);
-
-		$smrRule = [
-			'mode' => BBCode::BBCODE_MODE_CALLBACK,
-			'method' => smrBBCode(...),
-			'class' => 'link',
-			'allow_in' => ['listitem', 'block', 'columns', 'inline'],
-			'end_tag' => BBCode::BBCODE_PROHIBIT,
-			'content' => BBCode::BBCODE_PROHIBIT,
-		];
-		$bbParser->addRule('combatlog', $smrRule);
-		$bbParser->addRule('player', $smrRule);
-		$bbParser->addRule('alliance', $smrRule);
-		$bbParser->addRule('race', $smrRule);
-		$bbParser->addRule('servertimetouser', $smrRule);
-		$bbParser->addRule('chess', $smrRule);
-		$bbParser->addRule('sector', $smrRule);
-		$bbParser->addRule('join_alliance', $smrRule);
-	}
-
-	global $overrideGameID;
-	if ($gameID === null) {
-		$overrideGameID = Session::getInstance()->getGameID();
-	} else {
-		$overrideGameID = $gameID;
-	}
-
-	global $disableBBLinks;
-	$disableBBLinks = $noLinks;
-
-	if (str_contains($message, '[')) { //We have BBCode so let's do a full parse.
-		$message = $bbParser->parse($message);
-	} else { //Otherwise just convert newlines
-		$message = nl2br($message, true);
-	}
-	return $message;
+	return BBCodeFormatter::getInstance()->format($message, $gameID, $noLinks);
 }
 
 function create_error(string $message): never {

@@ -2,12 +2,14 @@
 
 namespace SmrTest\lib\functions;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
+use Smr\BBCodeFormatter;
 
 #[CoversFunction('bbify')]
-#[CoversFunction('smrBBCode')]
+#[CoversClass(BBCodeFormatter::class)]
 class BbifyTest extends TestCase {
 
 	#[TestWith(['No tag', 'No tag'])]
