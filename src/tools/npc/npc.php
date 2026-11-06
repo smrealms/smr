@@ -17,6 +17,7 @@ use Smr\Npc\NpcActor;
 use Smr\Page\Page;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Account\ErrorDisplay;
+use Smr\Pages\Player\AttackForcesProcessor;
 use Smr\Pages\Player\CargoDumpProcessor;
 use Smr\Pages\Player\CurrentSector;
 use Smr\Pages\Player\PlotCourseConventionalProcessor;
@@ -161,16 +162,11 @@ exitNPC();
  * @return bool If the NPC performed any actions
  */
 function npcDriver(): bool {
-	global $previousContainer;
-
 	$session = Session::getInstance();
 	$session->setCurrentVar(new Page()); // initialize fake var
 
 	// Load the first available NPC
 	changeNPCLogin();
-
-	// We chose a new NPC, we don't care what we were doing beforehand.
-	$previousContainer = null;
 
 	try {
 		$actor = new NpcActor($session->getPlayer()->getPlayerID());
@@ -183,7 +179,7 @@ function npcDriver(): bool {
 	while (true) {
 		try {
 			$container = $actor->getNextAction();
-			processContainer($container);
+			processContainer($container, $actor);
 		} catch (SectorLockTimeout $e) {
 			// On timeout, skip this action and select a new action. Instead of an
 			// unclean abort, this is comparable to refreshing the page.
@@ -256,18 +252,22 @@ function checkStartConditions(Player $player): void {
 	}
 }
 
-function processContainer(PlayerPageProcessor $container): never {
-	global $forwardedContainer, $previousContainer;
+function processContainer(
+	PlayerPageProcessor $container,
+	NpcActor $actor,
+): never {
 	$session = Session::getInstance();
 	$player = $session->getPlayer();
-	if ($container === $previousContainer && $forwardedContainer->file !== 'forces_attack.php') {
+	global $forwardedContainer;
+	if ($container === $actor->previousAction
+		&& !($forwardedContainer instanceof AttackForcesProcessor)) {
 		debug('We are executing the same container twice?', ['ForwardedContainer' => $forwardedContainer, 'Container' => $container]);
 		if (!$player->canFight()) {
 			// Only throw the exception if we have protection, otherwise let's hope that the NPC will be able to find its way to safety rather than dying in the open.
 			throw new Exception('We are executing the same container twice?');
 		}
 	}
-	$previousContainer = $container;
+	$actor->previousAction = $container;
 	debug('Executing container', $container);
 	// The next "page request" must occur at an updated time.
 	Epoch::update();
