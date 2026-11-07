@@ -4,15 +4,19 @@ namespace Smr\Npc;
 
 use Exception;
 use Smr\Database;
+use Smr\Epoch;
 use Smr\Force;
 use Smr\Npc\Exceptions\AbandonTradeRoute;
 use Smr\Npc\Exceptions\FinalAction;
 use Smr\Npc\Exceptions\ForwardAction;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Player\AllianceManageNpcsDismissProcessor;
+use Smr\Pages\Player\AttackForcesProcessor;
 use Smr\Pages\Player\Bank\AllianceBankProcessor;
 use Smr\Player;
 use Smr\Routes\RouteIterator;
+use Smr\SectorLock;
+use Smr\Session;
 use Smr\TransactionType;
 
 class NpcActor {
@@ -25,7 +29,7 @@ class NpcActor {
 	private bool $hired;
 	private readonly ?int $npcGalaxyID;
 	private bool $isReturningToSafety = false;
-	public ?PlayerPageProcessor $previousAction = null;
+	private ?PlayerPageProcessor $previousAction = null;
 
 	public function __construct(
 		private readonly int $playerID,
@@ -132,15 +136,54 @@ class NpcActor {
 		}
 	}
 
-	public function getNextAction(): PlayerPageProcessor {
+	public function processNextAction(): never {
+		// We have to reload player on each loop
+		$player = $this->refreshPlayer();
+		$action = $this->getNextAction($player);
+
+		global $forwardedContainer;
+		if ($this->previousAction !== null
+			&& objects_equal($action, $this->previousAction)
+			&& !($forwardedContainer instanceof AttackForcesProcessor)) {
+			debug('We are executing the same action twice?', [
+				'ForwardedContainer' => $forwardedContainer,
+				'Action' => $action,
+			]);
+			if (!$player->canFight()) {
+				// Only throw the exception if we have protection, otherwise let's hope
+				// that the NPC will find its way to safety rather than dying in the open.
+				throw new Exception('We are executing the same action twice?');
+			}
+		}
+		$this->previousAction = $action;
+		debug('Executing action', $action);
+		// The next "page request" must occur at an updated time.
+		Epoch::update();
+		Session::getInstance()->setCurrentVar($action);
+
+		// Acquire a lock in the sector where we chose our action
+		$lock = SectorLock::getInstance();
+		$lock->acquireForPlayer($player);
+
+		clearCaches(); // do not retain anything from before lock acquisition
+		$player = $this->refreshPlayer();
+		if ($player->getSectorID() !== $lock->getSectorID()) {
+			// NPC sector was modified externally (e.g. back to HQ in a pod) while
+			// deciding what to do, so skip this action and select a new action.
+			debug('Player sector has changed from lock sector. Will try another action.');
+			throw new ForwardAction();
+		}
+
+		$action->build($player);
+	}
+
+	private function getNextAction(Player $player): PlayerPageProcessor {
 		// Avoid infinite loops by restricting the number of actions
 		if ($this->actions >= NPC_MAX_ACTIONS) {
 			debug('Reached maximum number of actions: ' . NPC_MAX_ACTIONS);
 			throw new FinalAction();
 		}
 
-		//We have to reload player on each loop
-		$player = $this->refreshPlayer();
 		$player->updateTurns();
 
 		if ($player->isDead()) {
