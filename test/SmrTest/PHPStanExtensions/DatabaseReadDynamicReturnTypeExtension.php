@@ -4,6 +4,7 @@ namespace SmrTest\PHPStanExtensions;
 
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
+use PHPStan\DependencyInjection\AutowiredService;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\Type;
@@ -17,6 +18,7 @@ use staabm\PHPStanDba\Extensions\DoctrineConnectionExecuteQueryDynamicReturnType
  * that type in DatabaseResultObjectType so later SMR-specific extensions can
  * infer record() and records() field shapes.
  */
+#[AutowiredService]
 class DatabaseReadDynamicReturnTypeExtension implements DynamicMethodReturnTypeExtension {
 
 	public function getClass(): string {

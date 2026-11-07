@@ -5,6 +5,7 @@ namespace SmrTest\PHPStanExtensions;
 use Generator;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
+use PHPStan\DependencyInjection\AutowiredService;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\Constant\ConstantBooleanType;
@@ -22,6 +23,7 @@ use staabm\PHPStanDba\DoctrineReflection\DoctrineReflection;
  * record(), and a Generator of that type for records(). Unresolvable query
  * results deliberately retain their declared DatabaseResult type instead.
  */
+#[AutowiredService]
 class DatabaseResultDynamicReturnTypeExtension implements DynamicMethodReturnTypeExtension {
 
 	public function getClass(): string {

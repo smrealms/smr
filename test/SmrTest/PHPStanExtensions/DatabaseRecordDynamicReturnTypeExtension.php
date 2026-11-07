@@ -4,6 +4,7 @@ namespace SmrTest\PHPStanExtensions;
 
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
+use PHPStan\DependencyInjection\AutowiredService;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
 use PHPStan\Type\Type;
@@ -16,6 +17,7 @@ use Smr\DatabaseRecord;
  * When inference finds an invalid field access, this adapter falls back to the
  * declared getter type. DatabaseRecordRule reports the precise diagnostic.
  */
+#[AutowiredService]
 class DatabaseRecordDynamicReturnTypeExtension implements DynamicMethodReturnTypeExtension {
 
 	public function getClass(): string {

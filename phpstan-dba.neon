@@ -1,5 +1,8 @@
 # PHPStan configuration for the phpstan-dba extension
 
+attributeServicesDirectories:
+    - test/SmrTest/PHPStanExtensions
+
 services:
     -
         class: staabm\PHPStanDba\Extensions\DbSchemaResultCacheMetaExtension
@@ -28,21 +31,6 @@ services:
         arguments:
             classMethods:
                 - 'Smr\Database::select#2,3'
-    -
-        class: SmrTest\PHPStanExtensions\DatabaseRecordRule
-        tags: [phpstan.rules.rule]
-    -
-        class: SmrTest\PHPStanExtensions\DatabaseReadDynamicReturnTypeExtension
-        tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
-    -
-        class: SmrTest\PHPStanExtensions\DatabaseRecordDynamicReturnTypeExtension
-        tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
-    -
-        class: SmrTest\PHPStanExtensions\DatabaseResultDynamicReturnTypeExtension
-        tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
-    -
-        class: SmrTest\PHPStanExtensions\DatabaseSelectDynamicReturnTypeExtension
-        tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
 
 parameters:
     ignoreErrors:

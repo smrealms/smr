@@ -4,6 +4,7 @@ namespace SmrTest\PHPStanExtensions;
 
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
+use PHPStan\DependencyInjection\AutowiredService;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\DynamicMethodReturnTypeExtension;
@@ -21,6 +22,7 @@ use staabm\PHPStanDba\QueryReflection\QueryReflector;
  * builds an equivalent SELECT for phpstan-dba, then wraps the inferred row in
  * DatabaseResultObjectType. Dynamic inputs fall back to the declared type.
  */
+#[AutowiredService]
 class DatabaseSelectDynamicReturnTypeExtension implements DynamicMethodReturnTypeExtension {
 
 	public function getClass(): string {
