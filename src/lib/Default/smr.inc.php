@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\AssetUrlCache;
 use Smr\BBCodeFormatter;
 use Smr\Container\DiContainer;
 use Smr\Database;
@@ -53,16 +54,7 @@ function asset_url(string $url): string {
 
 	// Hashed mode maps the input URL to the content-hashed URL, which are
 	// auto-generated during the image build.
-	static $manifest = null;
-	if ($manifest === null) {
-		$json = file_get_contents(ASSET_MANIFEST);
-		assert($json !== false);
-		$manifest = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
-	}
-	if (!array_key_exists($url, $manifest)) {
-		throw new Exception('Asset not in manifest: ' . $url);
-	}
-	return $manifest[$url];
+	return AssetUrlCache::getInstance()->resolve($url);
 }
 
 function parseBoolean(mixed $check): bool {
