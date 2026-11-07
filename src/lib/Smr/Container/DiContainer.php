@@ -5,6 +5,7 @@ namespace Smr\Container;
 use DI\ContainerBuilder;
 use Doctrine\DBAL\Connection;
 use Exception;
+use Smr\BBCodeFormatter;
 use Smr\Database;
 use Smr\DatabaseProperties;
 use Smr\Epoch;
@@ -41,6 +42,7 @@ class DiContainer {
 			'NPC_SCRIPT' => false,
 			// Explicitly name all classes that are autowired, so we can take advantage of
 			// the compiled container feature for a performance boost
+			BBCodeFormatter::class => autowire(),
 			Epoch::class => autowire(),
 			DatabaseProperties::class => autowire(),
 			Database::class => autowire()

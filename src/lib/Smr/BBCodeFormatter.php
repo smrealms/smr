@@ -4,6 +4,7 @@ namespace Smr;
 
 use Nbbc\BBCode;
 use Smr\Chess\ChessGame;
+use Smr\Container\DiContainer;
 use Smr\Pages\Player\AllianceInviteAcceptProcessor;
 use Smr\Pages\Player\AllianceMotd;
 use Throwable;
@@ -13,7 +14,6 @@ use function parseBoolean;
 
 class BBCodeFormatter {
 
-	private static ?self $instance = null;
 	private readonly BBCode $parser;
 	private int $gameID;
 	private bool $noLinks;
@@ -49,7 +49,7 @@ class BBCodeFormatter {
 	}
 
 	public static function getInstance(): self {
-		return self::$instance ??= new self();
+		return DiContainer::getClass(self::class);
 	}
 
 	public function format(string $message, ?int $gameID = null, bool $noLinks = false): string {
