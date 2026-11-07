@@ -49,8 +49,8 @@ class Twitter extends SocialLogin {
 			'oauth/access_token',
 			['oauth_verifier' => Request::get('oauth_verifier')],
 		);
-		$auth = self::getTwitterObj($accessToken);
-		/** @var \stdClass $userInfo */
+		$auth = self::getTwitterObj(self::validateToken($accessToken));
+		/** @var object{id_str: ?string, email: ?string}&\stdClass $userInfo */
 		$userInfo = $auth->get('account/verify_credentials', ['include_email' => 'true']);
 		if ($auth->getLastHttpCode() !== 200) {
 			throw new UserError('Connection failed, please try again.');
@@ -66,6 +66,18 @@ class Twitter extends SocialLogin {
 		$token = ArrayValue::get($_SESSION, 'TwitterToken', $innerType);
 		if (!isset($token['oauth_token'], $token['oauth_token_secret'])) {
 			throw new Exception('Twitter login session has expired.');
+		}
+		return $token;
+	}
+
+	/**
+	 * @param array<mixed> $token
+	 * @return array<string, string>
+	 */
+	private static function validateToken(array $token): array {
+		$type = Type::array(valueType: Type::string(), keyType: Type::string());
+		if (!$type->accepts($token)) {
+			throw new Exception('Twitter access token has unexpected type.');
 		}
 		return $token;
 	}
