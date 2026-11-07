@@ -6,6 +6,7 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Identifier;
 use PHPStan\Analyser\Scope;
+use PHPStan\DependencyInjection\AutowiredService;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\VerbosityLevel;
@@ -20,6 +21,7 @@ use Smr\DatabaseRecord;
 	*
 	* @implements Rule<MethodCall>
  */
+#[AutowiredService]
 class DatabaseRecordRule implements Rule {
 
 	public function getNodeType(): string {
