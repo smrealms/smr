@@ -3,7 +3,7 @@ includes:
     - phpstan-dba.neon
 
 parameters:
-    level: 9
+    level: 10
     paths:
         - src
         - test
