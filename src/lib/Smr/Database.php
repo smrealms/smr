@@ -134,7 +134,7 @@ class Database {
 	 * Perform a write-only query on the database.
 	 * Used for UPDATE, DELETE, REPLACE and INSERT queries, for example.
 	 *
-	 * @param array<mixed> $params
+	 * @param array<int<0, max>|string, mixed> $params
 	 * @return int Number of affected rows
 	 */
 	public function write(string $query, array $params = []): int {
@@ -149,7 +149,7 @@ class Database {
 	 * Perform a read-only query on the database.
 	 * Used for SELECT queries, for example.
 	 *
-	 * @param array<mixed> $params
+	 * @param array<int<0, max>|string, mixed> $params
 	 * @param ?RowLockMode $lock InnoDB row lock to hold until the transaction ends
 	 */
 	public function read(string $query, array $params = [], ?RowLockMode $lock = null): DatabaseResult {
@@ -167,8 +167,8 @@ class Database {
 	/**
 	 * Determine Doctrine\DBAL types automatically based on the passed in type.
 	 *
-	 * @param array<mixed> $params
-	 * @return array<string, ParameterType|ArrayParameterType>
+	 * @param array<int<0, max>|string, mixed> $params
+	 * @return array<int<0, max>|string, ParameterType|ArrayParameterType>
 	 */
 	private static function getParamTypes(array $params): array {
 		// Default is ParameterType::STRING for any unspecified fields

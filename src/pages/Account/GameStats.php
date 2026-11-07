@@ -107,6 +107,7 @@ class GameStats extends AccountPage {
 
 	/**
 	 * @param 'experience'|'kills' $stat
+	 * @param Closure(Alliance): string $getAllianceLink
 	 * @return array<int, array{Alliance: Alliance, Class: string, Value: int, AllianceName: string}>
 	 */
 	private function allianceTopTen(string $stat, Closure $getAllianceLink, ?Player $player): array {

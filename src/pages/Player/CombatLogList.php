@@ -73,7 +73,7 @@ class CombatLogList extends PlayerPage {
 			],
 		);
 
-		$getParticipantName = function($playerID, $sectorID) use ($player): string {
+		$getParticipantName = function(int $playerID, int $sectorID) use ($player): string {
 			if ($playerID === PLAYER_ID_PORT) {
 				return '<a href="' . Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">Port <span class="sectorColour">#' . $sectorID . '</span></a>';
 			}
