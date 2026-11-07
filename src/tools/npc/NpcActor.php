@@ -25,6 +25,7 @@ class NpcActor {
 	private bool $hired;
 	private readonly ?int $npcGalaxyID;
 	private bool $isReturningToSafety = false;
+	public ?PlayerPageProcessor $previousAction = null;
 
 	public function __construct(
 		private readonly int $playerID,
@@ -167,8 +168,8 @@ class NpcActor {
 
 			checkStartConditions($player);
 
-			global $previousContainer;
-			$previousContainer = null; //We died, we don't care what we were doing beforehand.
+			// We died, we don't care what we were doing beforehand.
+			$this->previousAction = null;
 			setupShip($player); // reship before continuing
 			$this->changeRoute(avoidPreviousPorts: true);
 		}
