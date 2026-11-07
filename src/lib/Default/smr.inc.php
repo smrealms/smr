@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use Smr\AssetUrlCache;
 use Smr\BBCodeFormatter;
 use Smr\Container\DiContainer;
 use Smr\Database;
@@ -40,6 +41,7 @@ use Smr\Template;
 use Smr\VoteLink;
 use Smr\VoteSite;
 use Smr\WeightedRandom;
+use Smr\WordFilterCache;
 
 /**
  * Given a source URL of a local static asset, return the display URL.
@@ -53,16 +55,7 @@ function asset_url(string $url): string {
 
 	// Hashed mode maps the input URL to the content-hashed URL, which are
 	// auto-generated during the image build.
-	static $manifest = null;
-	if ($manifest === null) {
-		$json = file_get_contents(ASSET_MANIFEST);
-		assert($json !== false);
-		$manifest = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
-	}
-	if (!array_key_exists($url, $manifest)) {
-		throw new Exception('Asset not in manifest: ' . $url);
-	}
-	return $manifest[$url];
+	return AssetUrlCache::getInstance()->resolve($url);
 }
 
 function parseBoolean(mixed $check): bool {
@@ -209,20 +202,7 @@ function get_colored_text(float $value, ?string $text = null): string {
 }
 
 function word_filter(string $string): string {
-	static $search, $replace;
-
-	if (!is_array($search) && !is_array($replace)) {
-		$db = Database::getInstance();
-		$dbResult = $db->select('word_filter', [], ['word_value', 'word_replacement']);
-		$search = [];
-		$replace = [];
-		foreach ($dbResult->records() as $dbRecord) {
-			$search[] = $dbRecord->getString('word_value');
-			$replace[] = $dbRecord->getString('word_replacement');
-		}
-	}
-
-	return str_ireplace($search, $replace, $string);
+	return WordFilterCache::getInstance()->filter($string);
 }
 
 // choose correct pluralization based on amount
