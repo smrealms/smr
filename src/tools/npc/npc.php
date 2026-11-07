@@ -259,7 +259,8 @@ function processContainer(
 	$session = Session::getInstance();
 	$player = $session->getPlayer();
 	global $forwardedContainer;
-	if ($container === $actor->previousAction
+	if ($actor->previousAction !== null
+		&& objects_equal($container, $actor->previousAction)
 		&& !($forwardedContainer instanceof AttackForcesProcessor)) {
 		debug('We are executing the same container twice?', ['ForwardedContainer' => $forwardedContainer, 'Container' => $container]);
 		if (!$player->canFight()) {
