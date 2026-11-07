@@ -13,6 +13,7 @@ use Smr\Epoch;
 use Smr\SectorLock;
 use Smr\Session;
 use Smr\Template;
+use Smr\WordFilterCache;
 use function DI\autowire;
 use function DI\get;
 
@@ -52,6 +53,7 @@ class DiContainer {
 			SectorLock::class => autowire(),
 			Session::class => autowire(),
 			Template::class => autowire(),
+			WordFilterCache::class => autowire(),
 		];
 	}
 

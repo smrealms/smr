@@ -41,6 +41,7 @@ use Smr\Template;
 use Smr\VoteLink;
 use Smr\VoteSite;
 use Smr\WeightedRandom;
+use Smr\WordFilterCache;
 
 /**
  * Given a source URL of a local static asset, return the display URL.
@@ -201,20 +202,7 @@ function get_colored_text(float $value, ?string $text = null): string {
 }
 
 function word_filter(string $string): string {
-	static $search, $replace;
-
-	if (!is_array($search) && !is_array($replace)) {
-		$db = Database::getInstance();
-		$dbResult = $db->select('word_filter', [], ['word_value', 'word_replacement']);
-		$search = [];
-		$replace = [];
-		foreach ($dbResult->records() as $dbRecord) {
-			$search[] = $dbRecord->getString('word_value');
-			$replace[] = $dbRecord->getString('word_replacement');
-		}
-	}
-
-	return str_ireplace($search, $replace, $string);
+	return WordFilterCache::getInstance()->filter($string);
 }
 
 // choose correct pluralization based on amount
