@@ -6,18 +6,16 @@ use Smr\Database;
 use Smr\DatabaseShip;
 use Smr\Epoch;
 use Smr\Exceptions\PathNotFound;
-use Smr\Exceptions\SectorLockTimeout;
 use Smr\Force;
 use Smr\Galaxy;
 use Smr\Location;
 use Smr\Npc\Exceptions\AbandonTradeRoute;
 use Smr\Npc\Exceptions\FinalAction;
 use Smr\Npc\Exceptions\ForwardAction;
-use Smr\Npc\NpcActor;
+use Smr\Npc\NpcDriver;
 use Smr\Page\Page;
 use Smr\Page\PlayerPageProcessor;
 use Smr\Pages\Account\ErrorDisplay;
-use Smr\Pages\Player\AttackForcesProcessor;
 use Smr\Pages\Player\CargoDumpProcessor;
 use Smr\Pages\Player\CurrentSector;
 use Smr\Pages\Player\PlotCourseConventionalProcessor;
@@ -149,7 +147,8 @@ const SHIP_UPGRADE_PATH = [
 ];
 
 try {
-	while (npcDriver() === false) {
+	$npcDriver = new NpcDriver();
+	while ($npcDriver->run() === false) {
 		// No actions taken, try another NPC
 	}
 } catch (Throwable $e) {
@@ -157,52 +156,6 @@ try {
 }
 // Try to shut down cleanly
 exitNPC();
-
-/**
- * @return bool If the NPC performed any actions
- */
-function npcDriver(): bool {
-	$session = Session::getInstance();
-	$session->setCurrentVar(new Page()); // initialize fake var
-
-	// Load the first available NPC
-	changeNPCLogin();
-
-	try {
-		$actor = new NpcActor($session->getPlayer()->getPlayerID());
-	} catch (FinalAction) {
-		// Startup conditions not satisfied, try another NPC
-		return false;
-	}
-
-	// Loop over actions for this NPC
-	while (true) {
-		try {
-			$container = $actor->getNextAction();
-			processContainer($container, $actor);
-		} catch (SectorLockTimeout $e) {
-			// On timeout, skip this action and select a new action. Instead of an
-			// unclean abort, this is comparable to refreshing the page.
-			debug('Caught ' . $e::class . ' exception. Will try another action.');
-			SectorLock::resetInstance();
-		} catch (ForwardAction) {
-			// we took an action
-		} catch (FinalAction) {
-			$actor->shutdown();
-			// switch to a new NPC if we haven't taken any actions yet
-			return $actor->hasTakenActions();
-		} finally {
-			// Save any changes that we made during this action
-			saveAllAndReleaseLock(updateSession: false);
-
-			//Clean up the caches as the data may get changed by other players
-			clearCaches();
-		}
-
-		//Have a sleep between actions
-		sleepNPC();
-	}
-}
 
 function clearCaches(): void {
 	Sector::clearCache();
@@ -252,43 +205,6 @@ function checkStartConditions(Player $player): void {
 	}
 }
 
-function processContainer(
-	PlayerPageProcessor $container,
-	NpcActor $actor,
-): never {
-	$session = Session::getInstance();
-	$player = $session->getPlayer();
-	global $forwardedContainer;
-	if ($actor->previousAction !== null
-		&& objects_equal($container, $actor->previousAction)
-		&& !($forwardedContainer instanceof AttackForcesProcessor)) {
-		debug('We are executing the same container twice?', ['ForwardedContainer' => $forwardedContainer, 'Container' => $container]);
-		if (!$player->canFight()) {
-			// Only throw the exception if we have protection, otherwise let's hope that the NPC will be able to find its way to safety rather than dying in the open.
-			throw new Exception('We are executing the same container twice?');
-		}
-	}
-	$actor->previousAction = $container;
-	debug('Executing container', $container);
-	// The next "page request" must occur at an updated time.
-	Epoch::update();
-	$session->setCurrentVar($container);
-
-	// Acquire a lock in the sector where we chose our action
-	$lock = SectorLock::getInstance();
-	$lock->acquireForPlayer($player);
-
-	clearCaches(); // do not retain anything from before lock acquisition
-	if ($session->getPlayer(true)->getSectorID() !== $lock->getSectorID()) {
-		// NPC sector was modified externally (e.g. back to HQ in a pod) while
-		// deciding what to do, so skip this action and select a new action.
-		debug('Player sector has changed from lock sector. Will try another action.');
-		throw new ForwardAction();
-	}
-
-	$container->build($player);
-}
-
 function sleepNPC(): void {
 	usleep(rand(NPC_MIN_SLEEP_TIME, NPC_MAX_SLEEP_TIME)); //Sleep for a random time
 }
@@ -318,68 +234,10 @@ function releaseNPC(): void {
 	SectorLock::resetInstance();
 }
 
-function exitNPC(): void {
+function exitNPC(): never {
 	debug('Exiting NPC script.');
 	releaseNPC();
 	exit;
-}
-
-function changeNPCLogin(): void {
-	// Release previous NPC, if any
-	releaseNPC();
-
-	// Lacking a convenient way to get up-to-date turns, order NPCs by how
-	// recently they have taken an action.
-	debug('Choosing new NPC');
-	static $availableNpcs = null;
-
-	$db = Database::getInstance();
-	$session = Session::getInstance();
-
-	if ($availableNpcs === null) {
-		// Make sure NPC's have been set up in the database
-		$dbResult = $db->select('npc_players', limit: 1);
-		if (!$dbResult->hasRecord()) {
-			debug('No NPCs have been created yet!');
-			exitNPC();
-		}
-
-		// Make sure to select NPCs from active games only
-		$dbResult = $db->read('SELECT npc_players.player_id
-			FROM npc_players
-			JOIN game USING(game_id)
-			JOIN player USING(player_id)
-			WHERE active=\'TRUE\' AND working=\'FALSE\'
-				AND start_time < :now AND end_time > :now
-			ORDER BY last_turn_update ASC', [
-			'now' => $db->escapeNumber(Epoch::time()),
-		]);
-		$availableNpcs = [];
-		foreach ($dbResult->records() as $dbRecord) {
-			$availableNpcs[] = $dbRecord->getInt('player_id');
-		}
-	}
-
-	if (count($availableNpcs) === 0) {
-		debug('No free NPCs');
-		exitNPC();
-	}
-
-	// Pop an NPC off the top of the stack to activate
-	$npcPlayerID = array_shift($availableNpcs);
-
-	// Update session info for this chosen NPC
-	$npcPlayer = Player::getPlayer($npcPlayerID);
-	$session->setAccount($npcPlayer->getAccount());
-	$session->updateGame($npcPlayer->getGameID());
-
-	$player = $session->getPlayer();
-	$db->update(
-		'npc_players',
-		['working' => $db->escapeBoolean(true)],
-		$player->SQLID,
-	);
-	debug('Chosen NPC:', [...$player->SQLID, 'name' => $player->getPlayerName()]);
 }
 
 function tradeGoods(int $goodID, Player $player, Port $port): PlayerPageProcessor {
