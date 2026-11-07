@@ -8,8 +8,8 @@ use Smr\Irc\Exceptions\Timeout;
 
 final class IrcDriver {
 
-	private TimerState $timerState;
-	private SupplyDemandState $supplyDemandState;
+	private readonly TimerState $timerState;
+	private readonly SupplyDemandState $supplyDemandState;
 	private int $lastPing;
 
 	public function __construct(private readonly bool $debugging) {
