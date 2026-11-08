@@ -59,8 +59,7 @@ class CreateGameProcessor extends AccountPageProcessor {
 			'create_date' => $db->escapeString(date('Y-m-d', Epoch::time())),
 		]);
 
-		$container = new CreateGalaxies($game->getGameID());
-		$container->go();
+		new CreateGalaxies($game->getGameID())->go();
 	}
 
 }

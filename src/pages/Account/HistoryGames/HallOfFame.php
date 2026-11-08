@@ -30,14 +30,14 @@ class HallOfFame extends HistoryPage {
 					continue;
 				}
 				$statDisplay = ucwords(str_replace('_', ' ', $stat));
-				$container = new self($this->historyDatabase, $this->historyGameID, $this->historyGameName, $stat);
-				$links[] = create_link($container, $statDisplay);
+				$page = new self($this->historyDatabase, $this->historyGameID, $this->historyGameName, $stat);
+				$links[] = create_link($page, $statDisplay);
 			}
 			$template->pageRenderer = fn() => HallOfFameRenderer::renderCategories($links);
 		} else {
 			// Link back to overview page
-			$container = new self($this->historyDatabase, $this->historyGameID, $this->historyGameName);
-			$backHREF = $container->href();
+			$page = new self($this->historyDatabase, $this->historyGameID, $this->historyGameName);
+			$backHREF = $page->href();
 
 			$statDisplay = ucwords(str_replace('_', ' ', $this->stat));
 

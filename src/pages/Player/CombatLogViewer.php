@@ -34,8 +34,8 @@ class CombatLogViewer extends PlayerPage {
 		$dbRecord = $dbResult->record();
 		$results = $dbRecord->getClass('result', FullCombatResults::class, true);
 
-		// Create a container for the next/previous log.
-		// We initialize it with the current $var, then modify it to set
+		// Create a page for the next/previous log.
+		// We initialize it with the current page, then modify it to set
 		// which log to view when we press the next/previous log buttons.
 		if ($this->currentLog > 0) {
 			$previousLogHREF = new self($this->logIDs, $this->currentLog - 1)->href();

@@ -2,6 +2,7 @@
 
 namespace Smr\Pages\Admin;
 
+use Exception;
 use Smr\Account;
 use Smr\Database;
 use Smr\Epoch;
@@ -28,18 +29,16 @@ class VoteCreateProcessor extends AccountPageProcessor {
 	public function build(Account $account): never {
 		$action = Request::get(self::ACTION);
 		if ($action === $this->actionPreviewVote->value) {
-			$container = new VoteCreate(
+			new VoteCreate(
 				previewVote: Request::get('question'),
 				days: Request::getInt('days'),
-			);
-			$container->go();
+			)->go();
 		}
 		if ($action === $this->actionPreviewOption->value) {
-			$container = new VoteCreate(
+			new VoteCreate(
 				previewOption: Request::get('option'),
 				voteID: Request::getInt('vote'),
-			);
-			$container->go();
+			)->go();
 		}
 
 		$db = Database::getInstance();
@@ -57,6 +56,8 @@ class VoteCreateProcessor extends AccountPageProcessor {
 				'vote_id' => $voteID,
 				'text' => $option,
 			]);
+		} else {
+			throw new Exception('Unknown action: ' . $action);
 		}
 		new VoteCreate()->go();
 	}

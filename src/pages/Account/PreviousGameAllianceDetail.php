@@ -25,7 +25,7 @@ class PreviousGameAllianceDetail extends AccountPage {
 		$template->pageTopic = 'Alliance Roster: ' . $alliance->getAllianceDisplayName(false, true);
 
 		// Offer a back button
-		$container = new GameStats($gameID);
+		$page = new GameStats($gameID);
 
 		$players = [];
 		foreach ($alliance->getMembers(includeNpc: true) as $player) {
@@ -43,7 +43,7 @@ class PreviousGameAllianceDetail extends AccountPage {
 		}
 
 		$template->pageRenderer = fn() => PreviousGameAllianceListRenderer::render(
-			BackHREF: $container->href(),
+			BackHREF: $page->href(),
 			Players: $players,
 		);
 	}

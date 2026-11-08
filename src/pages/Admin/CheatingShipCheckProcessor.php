@@ -32,8 +32,7 @@ class CheatingShipCheckProcessor extends AccountPageProcessor {
 		);
 
 		//now erdirect back to page
-		$container = new CheatingShipCheck();
-		$container->go();
+		new CheatingShipCheck()->go();
 	}
 
 }

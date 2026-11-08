@@ -31,8 +31,7 @@ class AnonBankCreateProcessor extends PlayerPageProcessor {
 		]);
 
 		$message = '<p>Account #' . $nextID . ' has been opened for you.</p>';
-		$container = new AnonBank($message);
-		$container->go();
+		new AnonBank($message)->go();
 	}
 
 }

@@ -10,13 +10,11 @@ class Ownership extends PlanetPage {
 
 	use ReusableTrait;
 	protected function buildPlanetPage(Player $player, Template $template): void {
-		$container = new OwnershipProcessor();
-
 		// Check if this player already owns a planet
 		$playerPlanet = $player->getPlanet()?->getSectorID();
 
 		$template->pageRenderer = fn() => OwnershipRenderer::render(
-			ProcessingPage: $container,
+			ProcessingPage: new OwnershipProcessor(),
 			Planet: $player->getSectorPlanet(),
 			PlayerPlanet: $playerPlanet,
 			ThisPlayer: $player,

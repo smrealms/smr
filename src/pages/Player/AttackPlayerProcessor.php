@@ -139,8 +139,7 @@ class AttackPlayerProcessor extends PlayerPageProcessor {
 		} else {
 			$targetPlayerID = $this->targetPlayerID;
 		}
-		$container = new AttackPlayer($results, $targetPlayerID, $player->isDead());
-		$container->go();
+		new AttackPlayer($results, $targetPlayerID, $player->isDead())->go();
 	}
 
 }

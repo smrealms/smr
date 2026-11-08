@@ -36,8 +36,7 @@ class GamePlayProcessor extends AccountPageProcessor {
 		// log
 		$player->log(LOG_TYPE_GAME_ENTERING, 'Player entered game ' . $player->getGameID());
 
-		$container = new CurrentSector();
-		$container->go();
+		new CurrentSector()->go();
 	}
 
 }

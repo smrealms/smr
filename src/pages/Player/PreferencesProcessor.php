@@ -111,8 +111,7 @@ class PreferencesProcessor extends PlayerPageProcessor {
 			throw new Exception('Invalid action: ' . $action);
 		}
 
-		$container = new CurrentSector(message: $message);
-		$container->go();
+		new CurrentSector(message: $message)->go();
 	}
 
 }

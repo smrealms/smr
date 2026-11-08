@@ -19,8 +19,7 @@ class ArticleDeleteProcessor extends PlayerPageProcessor {
 			'article_id' => $this->articleID,
 		]);
 
-		$container = new ArticleView();
-		$container->go();
+		new ArticleView()->go();
 	}
 
 }

@@ -53,7 +53,7 @@ class AllianceVsAlliance extends PlayerPage {
 
 		$alliance_vs = [];
 		foreach ($alliance_vs_ids as $curr_id) {
-			$container = new self($curr_id, $this->versusAllianceIDs);
+			$page = new self($curr_id, $this->versusAllianceIDs);
 			$style = '';
 			if ($player->getAllianceID() === $curr_id) {
 				$style = 'class="bold"';
@@ -69,7 +69,7 @@ class AllianceVsAlliance extends PlayerPage {
 			}
 			$alliance_vs[] = [
 				'ID' => $curr_id,
-				'DetailsHREF' => $container->href(),
+				'DetailsHREF' => $page->href(),
 				'Name' => $alliance_name,
 				'Style' => $style,
 			];

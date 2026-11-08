@@ -24,8 +24,7 @@ class WordFilterAddProcessor extends AccountPageProcessor {
 			]);
 			$msg = '<span class="yellow">' . $word . '</span> will now be replaced with <span class="yellow">' . $word_replacement . '</span>.';
 		}
-		$container = new WordFilter($msg);
-		$container->go();
+		new WordFilter($msg)->go();
 	}
 
 }

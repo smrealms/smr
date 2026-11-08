@@ -32,8 +32,7 @@ class CombatLogListProcessor extends PlayerPageProcessor {
 		$logIDs = array_keys(Request::getArray('id', []));
 		if (count($logIDs) === 0) {
 			$message = 'You must select at least one combat log!';
-			$container = new CombatLogList($this->action, message: $message);
-			$container->go();
+			new CombatLogList($this->action, message: $message)->go();
 		}
 
 		// Do we need to save any logs (or delete any saved logs)?
@@ -75,12 +74,10 @@ class CombatLogListProcessor extends PlayerPageProcessor {
 
 			// Now that the logs have been saved/deleted, go back to the log list
 			$message = $submitAction . 'd ' . $changedRows . ' new logs.';
-			$container = new CombatLogList($this->action, message: $message);
-			$container->go();
+			new CombatLogList($this->action, message: $message)->go();
 		} elseif ($submitAction === $this->actionView->value) {
 			sort($logIDs);
-			$container = new CombatLogViewer($logIDs);
-			$container->go();
+			new CombatLogViewer($logIDs)->go();
 		}
 		throw new Exception('Unknown action: ' . $submitAction);
 	}

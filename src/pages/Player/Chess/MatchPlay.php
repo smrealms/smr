@@ -39,8 +39,8 @@ class MatchPlay extends PlayerPage {
 			$fileCoords = array_reverse($fileCoords);
 		}
 
-		$container = new MovePieceProcessor($this->chessGameID);
-		$container->allowAjax = true;
+		$page = new MovePieceProcessor($this->chessGameID);
+		$page->allowAjax = true;
 
 		$template->pageRenderer = fn() => MatchPlayRenderer::render(
 			template: $template,
@@ -50,7 +50,7 @@ class MatchPlay extends PlayerPage {
 			Winner: $winner,
 			FileCoords: $fileCoords,
 			MoveMessage: $this->moveMessage,
-			ChessMoveHREF: $container->href(),
+			ChessMoveHREF: $page->href(),
 			ThisPlayer: $player,
 		);
 	}

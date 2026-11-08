@@ -30,8 +30,7 @@ class ArticleAddToNewsProcessor extends PlayerPageProcessor {
 			'type' => 'breaking',
 		]);
 
-		$container = new ArticleView($this->articleID, addedToNews: true);
-		$container->go();
+		new ArticleView($this->articleID, addedToNews: true)->go();
 	}
 
 }

@@ -67,11 +67,11 @@ class ExtendedStatsDetail extends HistoryPage {
 			foreach ($dbResult->records() as $dbRecord) {
 				$allianceID = $dbRecord->getInt('alliance_id');
 				$name = htmlentities($dbRecord->getString('alliance_name'));
-				$container = new AllianceDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $allianceID, $this);
+				$page = new AllianceDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $allianceID, $this);
 				$rankings[] = [
 					'bold' => $oldAllianceID === $allianceID ? 'class="bold"' : '',
 					'data' => [
-						create_link($container, $name),
+						create_link($page, $name),
 						$dbRecord->getInt('val'),
 					],
 				];
@@ -86,8 +86,8 @@ class ExtendedStatsDetail extends HistoryPage {
 				$allianceID = $dbRecord->getInt('alliance_id');
 				$allianceName = $dbRecord->getString('alliance_name');
 				if ($allianceID !== 0) {
-					$container = new AllianceDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $allianceID, $this);
-					$allianceName = create_link($container, $allianceName);
+					$page = new AllianceDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $allianceID, $this);
+					$allianceName = create_link($page, $allianceName);
 				}
 				$rankings[] = [
 					'bold' => $ownerID > 0 && $oldAccountID === $ownerID ? 'class="bold"' : '',

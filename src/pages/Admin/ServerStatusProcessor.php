@@ -39,8 +39,7 @@ class ServerStatusProcessor extends AccountPageProcessor {
 			throw new Exception('Unknown action: ' . $action);
 		}
 
-		$container = new AdminTools($msg);
-		$container->go();
+		new AdminTools($msg)->go();
 	}
 
 }

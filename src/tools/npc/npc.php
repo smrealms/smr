@@ -37,14 +37,14 @@ use Smr\TradeGood;
 use Smr\TransactionType;
 use Smr\TypeHelpers\Type;
 
-function overrideForward(Page $container): never {
-	global $forwardedContainer;
-	$forwardedContainer = $container;
-	if ($container instanceof ErrorDisplay) {
+function overrideForward(Page $page): never {
+	global $forwardedPage;
+	$forwardedPage = $page;
+	if ($page instanceof ErrorDisplay) {
 		// We hit a create_error - this shouldn't happen for an NPC often,
 		// for now we want to throw an exception for it for testing.
 		debug('Hit an error');
-		throw new Exception($container->message);
+		throw new Exception($page->message);
 	}
 	// We have to throw the exception to get back up the stack,
 	// otherwise we quickly hit problems of overflowing the stack.
@@ -171,7 +171,7 @@ function debug(string $message, mixed $debugObject = null): void {
 	if (NPC_LOG_TO_DATABASE) {
 		$session = Session::getInstance();
 		$accountID = $session->getAccountID();
-		$var = $session->getCurrentVar();
+		$page = $session->getCurrentPage();
 		$db = Database::getInstance();
 		$logID = $db->insertAutoIncrement('npc_logs', [
 			'script_id' => defined('SCRIPT_ID') ? SCRIPT_ID : 0,
@@ -179,7 +179,7 @@ function debug(string $message, mixed $debugObject = null): void {
 			'time' => date('Y-m-d H:i:s'),
 			'message' => $message,
 			'debug_info' => var_export($debugObject, true),
-			'var' => var_export($var, true),
+			'var' => var_export($page, true),
 		]);
 
 		// On the first call to debug, we need to update the script_id retroactively

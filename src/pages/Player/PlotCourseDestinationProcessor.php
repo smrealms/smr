@@ -34,8 +34,7 @@ class PlotCourseDestinationProcessor extends PlayerPageProcessor {
 				create_error('42 would be the right answer !!!');
 		}
 
-		$container = new PlotCourse();
-		$container->go();
+		new PlotCourse()->go();
 	}
 
 }

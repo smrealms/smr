@@ -59,8 +59,7 @@ class TalkToBartenderTipProcessor extends PlayerPageProcessor {
 			$message .= 'Thanks, I guess...<br /><br />Got anything to tell me?';
 		}
 
-		$container = new TalkToBartender($this->locationID, $message);
-		$container->go();
+		new TalkToBartender($this->locationID, $message)->go();
 	}
 
 }

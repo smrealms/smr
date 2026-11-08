@@ -142,8 +142,7 @@ class BuyShipNameProcessor extends PlayerPageProcessor {
 			} elseif ($action === $this->actionHtml->value) {
 				checkTextShipName($name, 128);
 				checkHtmlShipName($name);
-				$container = new BuyShipNamePreview($name, $cred_cost);
-				$container->go();
+				new BuyShipNamePreview($name, $cred_cost)->go();
 			}
 		}
 
@@ -151,8 +150,7 @@ class BuyShipNameProcessor extends PlayerPageProcessor {
 		$account->decreaseTotalSmrCredits($cred_cost);
 
 		$message = 'Thanks for your purchase! Your ship is ready!';
-		$container = new CurrentSector(message: $message);
-		$container->go();
+		new CurrentSector(message: $message)->go();
 	}
 
 }

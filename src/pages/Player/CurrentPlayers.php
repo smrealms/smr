@@ -84,7 +84,7 @@ class CurrentPlayers extends PlayerPage {
 			$row['tr_class'] = $class;
 
 			// What should the player name be displayed as?
-			$container = new SearchForTraderResult($curr_player->getPlayerNumber());
+			$page = new SearchForTraderResult($curr_player->getPlayerNumber());
 			$name = $curr_player->getLevelName() . ' ' . $curr_player->getDisplayName();
 			$dbResult2 = $db->select(
 				'cpl_tag',
@@ -102,7 +102,7 @@ class CurrentPlayers extends PlayerPage {
 					$name .= ' ' . $tag;
 				}
 			}
-			$row['name_link'] = create_link($container, $name);
+			$row['name_link'] = create_link($page, $name);
 
 			$allRows[] = $row;
 		}

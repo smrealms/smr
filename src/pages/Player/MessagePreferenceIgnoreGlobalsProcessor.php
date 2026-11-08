@@ -24,8 +24,7 @@ class MessagePreferenceIgnoreGlobalsProcessor extends PlayerPageProcessor {
 	public function build(Player $player): never {
 		$player->setIgnoreGlobals(Request::getBool(self::ACTION));
 
-		$container = new MessageView($this->folderID);
-		$container->go();
+		new MessageView($this->folderID)->go();
 	}
 
 }

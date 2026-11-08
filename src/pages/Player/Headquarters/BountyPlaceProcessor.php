@@ -29,13 +29,12 @@ class BountyPlaceProcessor extends PlayerPageProcessor {
 		}
 
 		$otherPlayer = Player::getPlayerByPlayerNumber(Request::getInt('player_number'), $player->getGameID());
-		$container = new BountyPlaceConfirm(
+		new BountyPlaceConfirm(
 			locationID: $this->locationID,
 			otherPlayerID: $otherPlayer->getPlayerID(),
 			credits: $amount,
 			smrCredits: $smrCredits,
-		);
-		$container->go();
+		)->go();
 	}
 
 }

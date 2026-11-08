@@ -99,8 +99,7 @@ class AnonBankDetailProcessor extends PlayerPageProcessor {
 		// Log the player action
 		$player->log(LOG_TYPE_BANK, $action . ' of ' . $amount . ' credits in anonymous account #' . $account_num);
 
-		$container = new AnonBankDetail($account_num);
-		$container->go();
+		new AnonBankDetail($account_num)->go();
 	}
 
 }

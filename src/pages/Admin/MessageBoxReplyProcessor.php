@@ -28,14 +28,13 @@ class MessageBoxReplyProcessor extends AccountPageProcessor {
 		$banPoints = Request::getInt('BanPoints');
 		$rewardCredits = Request::getInt('RewardCredits');
 		if (Request::get(self::ACTION) === $this->actionPreview->value) {
-			$container = new MessageBoxReply(
+			new MessageBoxReply(
 				boxTypeID: $this->boxTypeID,
 				senderPlayerID: $this->senderPlayerID,
 				preview: $message,
 				banPoints: $banPoints,
 				rewardCredits: $rewardCredits,
-			);
-			$container->go();
+			)->go();
 		}
 
 		$senderPlayer = Player::getPlayer($this->senderPlayerID);

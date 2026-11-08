@@ -9,7 +9,7 @@ use Smr\Session;
 use Smr\Template;
 
 /**
- * A container that holds data needed to create a new page.
+ * Holds the data needed to create a new page.
  */
 class Page {
 
@@ -60,13 +60,13 @@ class Page {
 	}
 
 	/**
-	 * Forward to the page identified by this container.
+	 * Forward to this page.
 	 */
 	public function go(): never {
 		if (defined('OVERRIDE_FORWARD') && OVERRIDE_FORWARD === true) {
 			overrideForward($this);
 		}
-		Session::getInstance()->setCurrentVar($this);
+		Session::getInstance()->setCurrentPage($this);
 		do_voodoo();
 	}
 
@@ -84,8 +84,8 @@ class Page {
 
 	/**
 	 * Create an HREF (based on a random SN) to link to this page.
-	 * The container is saved in the Smr\Session under this SN so that on
-	 * the next request, we can grab the container out of the Smr\Session.
+	 * The page is saved in the Smr\Session under this SN so that on
+	 * the next request, we can grab the page out of the Smr\Session.
 	 */
 	public function href(bool $forceFullURL = false): string {
 		// We need to clone this instance in case it is modified after being added

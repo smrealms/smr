@@ -40,10 +40,10 @@ class AllianceGovernance extends PlayerPage {
 		}
 		$change_chat = $player->getAllianceID() === $alliance_id && $player->isAllianceLeader();
 
-		$container = new AllianceGovernanceProcessor($alliance_id);
+		$page = new AllianceGovernanceProcessor($alliance_id);
 
 		$template->pageRenderer = fn() => AllianceGovernanceRenderer::render(
-			FormHREF: $container->href(),
+			FormHREF: $page->href(),
 			Alliance: $alliance,
 			CanChangeDescription: $change_mod || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION),
 			CanChangePassword: $change_pass,

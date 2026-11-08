@@ -46,7 +46,7 @@ class NewsReadAdvancedProcessor extends AccountPageProcessor {
 			foreach ($dbResult->records() as $dbRecord) {
 				$IDs[] = $dbRecord->getInt('player_id');
 			}
-			$container = new NewsReadAdvanced($this->gameID, $submit, label: $playerName, playerIDs: $IDs);
+			$page = new NewsReadAdvanced($this->gameID, $submit, label: $playerName, playerIDs: $IDs);
 		} elseif ($submit === self::ACTION_PLAYERS) {
 			$playerName1 = Request::get('player1');
 			$playerName2 = Request::get('player2');
@@ -60,19 +60,19 @@ class NewsReadAdvancedProcessor extends AccountPageProcessor {
 				$IDs[] = $dbRecord->getInt('player_id');
 			}
 			$label = $playerName1 . ' vs. ' . $playerName2;
-			$container = new NewsReadAdvanced($this->gameID, $submit, label: $label, playerIDs: $IDs);
+			$page = new NewsReadAdvanced($this->gameID, $submit, label: $label, playerIDs: $IDs);
 		} elseif ($submit === self::ACTION_ALLIANCE) {
 			$allianceID = Request::getInt('allianceID');
-			$container = new NewsReadAdvanced($this->gameID, $submit, allianceIDs: [$allianceID]);
+			$page = new NewsReadAdvanced($this->gameID, $submit, allianceIDs: [$allianceID]);
 		} elseif ($submit === self::ACTION_ALLIANCES) {
 			$allianceID1 = Request::getInt('alliance1');
 			$allianceID2 = Request::getInt('alliance2');
-			$container = new NewsReadAdvanced($this->gameID, $submit, allianceIDs: [$allianceID1, $allianceID2]);
+			$page = new NewsReadAdvanced($this->gameID, $submit, allianceIDs: [$allianceID1, $allianceID2]);
 		} else {
 			throw new Exception('Unknown submit: ' . $submit);
 		}
 
-		$container->go();
+		$page->go();
 	}
 
 }

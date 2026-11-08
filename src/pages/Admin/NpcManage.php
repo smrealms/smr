@@ -43,7 +43,7 @@ class NpcManage extends AccountPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$accountID = $dbRecord->getInt('account_id');
 
-			$container = new NpcManageProcessor(
+			$page = new NpcManageProcessor(
 				selectedGameID: $selectedGameID,
 				accountID: $accountID,
 			);
@@ -51,7 +51,7 @@ class NpcManage extends AccountPage {
 			$npcs[$accountID] = [
 				'default_player_name' => htmlentities($dbRecord->getString('default_player_name')),
 				'default_alliance' => htmlentities($dbRecord->getString('default_alliance_name')),
-				'href' => $container->href(),
+				'href' => $page->href(),
 				'player' => null,
 			];
 		}

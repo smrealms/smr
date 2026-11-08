@@ -34,8 +34,8 @@ class ChangelogAdd extends AccountPage {
 		$firstVersion = null;
 		foreach ($versions as $version_id => $version) {
 			if ($version['went_live'] === null) {
-				$container = new ChangelogSetLiveProcessor($version_id);
-				$version['went_live'] = create_link($container, 'never');
+				$page = new ChangelogSetLiveProcessor($version_id);
+				$version['went_live'] = create_link($page, 'never');
 			}
 
 			if ($first_entry) {

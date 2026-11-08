@@ -41,8 +41,7 @@ class LottoClaimProcessor extends PlayerPageProcessor {
 			]);
 		}
 		//offer another drink and such
-		$container = new BarMain($this->locationID, $message);
-		$container->go();
+		new BarMain($this->locationID, $message)->go();
 	}
 
 }

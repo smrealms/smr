@@ -121,8 +121,7 @@ class CombatSimulatorProcessor extends AccountPageProcessor {
 			DummyShip::saveDummyShips();
 		}
 
-		$container = new CombatSimulator($results, $attackers, $defenders);
-		$container->go();
+		new CombatSimulator($results, $attackers, $defenders)->go();
 	}
 
 }

@@ -40,8 +40,7 @@ class ManageDraftLeadersProcessor extends AccountPageProcessor {
 			$selectedPlayer = Player::getPlayerByPlayerNumber($playerNumber, $gameId);
 		} catch (PlayerNotFound $e) {
 			$msg = "<span class='red'>ERROR: </span>" . $e->getMessage();
-			$container = new ManageDraftLeaders($this->selectedGameID, $msg);
-			$container->go();
+			new ManageDraftLeaders($this->selectedGameID, $msg)->go();
 		}
 
 		$name = $selectedPlayer->getDisplayName();
@@ -68,8 +67,7 @@ class ManageDraftLeadersProcessor extends AccountPageProcessor {
 			throw new Exception('Unknown action: ' . $action);
 		}
 
-		$container = new ManageDraftLeaders($this->selectedGameID, $msg);
-		$container->go();
+		new ManageDraftLeaders($this->selectedGameID, $msg)->go();
 	}
 
 }

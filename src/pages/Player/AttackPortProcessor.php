@@ -121,8 +121,7 @@ class AttackPortProcessor extends PlayerPageProcessor {
 		}
 
 		// If they died on the shot they get to see the results
-		$container = new AttackPort($sector->getSectorID(), $results, $player->isDead());
-		$container->go();
+		new AttackPort($sector->getSectorID(), $results, $player->isDead())->go();
 	}
 
 }

@@ -32,8 +32,7 @@ class AllianceLeaveProcessor extends PlayerPageProcessor {
 			$alliance->update();
 		}
 
-		$container = new CurrentSector();
-		$container->go();
+		new CurrentSector()->go();
 	}
 
 }

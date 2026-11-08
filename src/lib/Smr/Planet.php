@@ -1180,13 +1180,11 @@ class Planet implements NormalCombatantInterface {
 	}
 
 	public function getBuildHREF(int $structureID): string {
-		$container = new ConstructionProcessor('Build', $structureID);
-		return $container->href();
+		return new ConstructionProcessor('Build', $structureID)->href();
 	}
 
 	public function getCancelHREF(int $structureID): string {
-		$container = new ConstructionProcessor('Cancel', $structureID);
-		return $container->href();
+		return new ConstructionProcessor('Cancel', $structureID)->href();
 	}
 
 	public function getBondConfirmationHREF(): string {

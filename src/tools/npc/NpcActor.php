@@ -141,12 +141,12 @@ class NpcActor {
 		$player = $this->refreshPlayer();
 		$action = $this->getNextAction($player);
 
-		global $forwardedContainer;
+		global $forwardedPage;
 		if ($this->previousAction !== null
 			&& objects_equal($action, $this->previousAction)
-			&& !($forwardedContainer instanceof AttackForcesProcessor)) {
+			&& !($forwardedPage instanceof AttackForcesProcessor)) {
 			debug('We are executing the same action twice?', [
-				'ForwardedContainer' => $forwardedContainer,
+				'ForwardedPage' => $forwardedPage,
 				'Action' => $action,
 			]);
 			if (!$player->canFight()) {
@@ -159,7 +159,7 @@ class NpcActor {
 		debug('Executing action', $action);
 		// The next "page request" must occur at an updated time.
 		Epoch::update();
-		Session::getInstance()->setCurrentVar($action);
+		Session::getInstance()->setCurrentPage($action);
 
 		// Acquire a lock in the sector where we chose our action
 		$lock = SectorLock::getInstance();

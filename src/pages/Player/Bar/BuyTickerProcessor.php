@@ -41,8 +41,7 @@ class BuyTickerProcessor extends PlayerPageProcessor {
 
 		//offer another drink and such
 		$message = '<div class="center">Your system has been added.  Enjoy!</div><br />';
-		$container = new BarMain($this->locationID, $message);
-		$container->go();
+		new BarMain($this->locationID, $message)->go();
 	}
 
 }

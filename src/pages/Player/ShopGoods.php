@@ -126,8 +126,6 @@ class ShopGoods extends PlayerPage {
 			];
 		}
 
-		$container = new CurrentSector();
-
 		$template->pageRenderer = fn() => ShopGoodsRenderer::render(
 			Port: $port,
 			TradeMsg: $this->tradeMessage,
@@ -135,7 +133,7 @@ class ShopGoods extends PlayerPage {
 			SearchedByFeds: $searchedByFeds,
 			BoughtGoods: $boughtGoods,
 			SoldGoods: $soldGoods,
-			LeavePortHREF: $container->href(),
+			LeavePortHREF: new CurrentSector()->href(),
 			ThisPlayer: $player,
 			ThisShip: $player->getShip(),
 		);

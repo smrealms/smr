@@ -39,8 +39,7 @@ class ManagePostEditorsProcessor extends AccountPageProcessor {
 			$selected_player = Player::getPlayerByPlayerNumber($playerNumber, $game_id);
 		} catch (PlayerNotFound $e) {
 			$msg = "<span class='red'>ERROR: </span>" . $e->getMessage();
-			$container = new ManagePostEditors($this->selectedGameID, $msg);
-			$container->go();
+			new ManagePostEditors($this->selectedGameID, $msg)->go();
 		}
 
 		$name = $selected_player->getDisplayName();
@@ -66,8 +65,7 @@ class ManagePostEditorsProcessor extends AccountPageProcessor {
 			throw new Exception('Unknown action: ' . $action);
 		}
 
-		$container = new ManagePostEditors($this->selectedGameID, $msg);
-		$container->go();
+		new ManagePostEditors($this->selectedGameID, $msg)->go();
 	}
 
 }

@@ -24,10 +24,10 @@ class CreateGalaxies extends AccountPage {
 		$template->pageTopic = 'Create Galaxies : ' . $game->getDisplayName();
 
 		// Link for creating galaxies
-		$container = new CreateGalaxiesProcessor($this->gameID, $numGals);
+		$page = new CreateGalaxiesProcessor($this->gameID, $numGals);
 		$submit = [
 			'value' => 'Create Galaxies',
-			'href' => $container->href(),
+			'href' => $page->href(),
 		];
 
 		// Create default list of galaxy names (starting with race names)

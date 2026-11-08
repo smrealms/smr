@@ -18,8 +18,7 @@ class AlbumDeleteProcessor extends AccountPageProcessor {
 			'album_id' => $account->getAccountID(),
 		]);
 
-		$container = new AlbumEdit();
-		$container->go();
+		new AlbumEdit()->go();
 	}
 
 }

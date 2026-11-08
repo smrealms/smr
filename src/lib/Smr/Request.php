@@ -149,11 +149,11 @@ class Request {
 	}
 
 	/**
-	 * Returns index value as a string from either $_REQUEST or $var.
+	 * Returns index value as a string from either $_REQUEST or Session.
 	 * This is useful for processing pages that need to handle data both from
-	 * posted form inputs and from container variables.
+	 * posted form inputs and from saved Session variables.
 	 *
-	 * Note that this does not save the result in $var (see Smr\Session).
+	 * Note that this does not save the result in Session data.
 	 */
 	public static function getVar(string $index, ?string $default = null): string {
 		return self::getVarX($index, $default, self::get(...), Type::string());

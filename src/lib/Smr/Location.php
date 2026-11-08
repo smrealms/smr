@@ -583,7 +583,7 @@ class Location {
 
 	public function getExamineHREF(): string {
 		$action = $this->processor;
-		$container = match ($action) {
+		$page = match ($action) {
 			'shop_hardware.php' => new ShopHardware($this->typeID),
 			'shop_ship.php' => new ShopShip($this->typeID),
 			'shop_weapon.php' => new ShopWeapon($this->typeID),
@@ -593,12 +593,11 @@ class Location {
 			'bar_main.php' => new BarMain($this->typeID),
 			default => throw new Exception('Unknown action: ' . $action),
 		};
-		return $container->href();
+		return $page->href();
 	}
 
 	public function getEditHREF(): string {
-		$container = new EditLocations($this->getTypeID());
-		return $container->href();
+		return new EditLocations($this->getTypeID())->href();
 	}
 
 	public function equals(Location $otherLocation): bool {

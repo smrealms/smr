@@ -114,15 +114,15 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		DiContainer::makeClass(Session::class);
 	}
 
-	public function test_getCurrentVar_throws(): void {
+	public function test_getCurrentPage_throws(): void {
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessageIs('The session has no current page!');
-		$this->session->getCurrentVar();
+		$this->session->getCurrentPage();
 	}
 
-	public function test_current_var(): void {
-		// With an empty session, there should be no current var
-		self::assertFalse($this->session->hasCurrentVar());
+	public function test_current_page(): void {
+		// With an empty session, there should be no current page
+		self::assertFalse($this->session->hasCurrentPage());
 
 		// Add a page to the session so that we can find it later.
 		// (This mimics Page::href but with better access to the SN.)
@@ -135,38 +135,38 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		$_COOKIE['session_id'] = $this->session->getSessionID();
 		$session = DiContainer::makeClass(Session::class);
 
-		// Now we should be able to find this sn in the var
-		self::assertTrue($session->hasCurrentVar());
+		// Now we should be able to find this sn in the session
+		self::assertTrue($session->hasCurrentPage());
 
-		// The current var should now be accessible
-		$var = $session->getCurrentVar();
-		self::assertEquals($page, $var);
+		// The current page should now be accessible
+		$sessionPage = $session->getCurrentPage();
+		self::assertEquals($page, $sessionPage);
 
-		// We can now change the current var (even if same object)
+		// We can now change the current page (even if same object)
 		$page2 = new Page();
-		$session->setCurrentVar($page2);
-		// Old references to $var should not be modified
-		self::assertEquals($page, $var);
-		// But a new reference to $var should be updated
-		$var2 = $session->getCurrentVar();
-		self::assertSame($page2, $var2);
+		$session->setCurrentPage($page2);
+		// Old references to $sessionPage should not be modified
+		self::assertEquals($page, $sessionPage);
+		// But a new reference should be updated
+		$sessionPage2 = $session->getCurrentPage();
+		self::assertSame($page2, $sessionPage2);
 
 		// If we make a new session, but keep the same SN, we should still get
-		// the updated var, even though it wasn't the one originally associated
+		// the updated page, even though it wasn't the one originally associated
 		// with this SN.
 		$session->update();
 		$_REQUEST['ajax'] = '1'; // simulate AJAX refresh
 		$session = DiContainer::makeClass(Session::class);
-		self::assertEquals($var2, $session->getCurrentVar());
+		self::assertEquals($sessionPage2, $session->getCurrentPage());
 		$_REQUEST['ajax'] = '0'; // simulate F5 refresh
 		$session = DiContainer::makeClass(Session::class);
-		self::assertEquals($var2, $session->getCurrentVar());
+		self::assertEquals($sessionPage2, $session->getCurrentPage());
 
-		// If we destroy the Session, then the current var should no longer
+		// If we destroy the Session, then the current page should no longer
 		// be accessible to a new Session.
 		$session->destroy();
 		$session = DiContainer::makeClass(Session::class);
-		self::assertFalse($session->hasCurrentVar());
+		self::assertFalse($session->hasCurrentPage());
 	}
 
 	public function test_addLink(): void {
@@ -207,9 +207,9 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 	}
 
 	public function test_getRequestVar(): void {
-		// Initialize the current var so that we can update it
+		// Initialize the current page so that we can update it
 		$page = new Page();
-		$this->session->setCurrentVar($page);
+		$this->session->setCurrentPage($page);
 
 		// Prepare request values
 		$_REQUEST = [
@@ -219,9 +219,9 @@ class SessionIntegrationTest extends BaseIntegrationSpec {
 		];
 
 		// Check the following conditions:
-		// 1. The index is not set in the current var beforehand
+		// 1. The index is not set in the current Session data beforehand
 		// 2. We return the expected value from getRequestVar
-		// 3. The value is stored in the current var afterwards
+		// 3. The value is stored in the current Session data afterwards
 		self::assertArrayNotHasKey('str', $this->session->getRequestData());
 		self::assertSame('foo', $this->session->getRequestVar('str'));
 		self::assertSame('foo', $this->session->getRequestData()['str']);

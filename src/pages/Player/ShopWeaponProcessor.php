@@ -84,8 +84,7 @@ class ShopWeaponProcessor extends PlayerPageProcessor {
 
 			$player->log(LOG_TYPE_HARDWARE, 'Player Sells a ' . $weapon->getName());
 		}
-		$container = new ShopWeapon($this->locationID);
-		$container->go();
+		new ShopWeapon($this->locationID)->go();
 	}
 
 }

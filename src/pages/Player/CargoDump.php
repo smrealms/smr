@@ -19,13 +19,13 @@ class CargoDump extends PlayerPage {
 
 		$goods = [];
 		foreach ($ship->getCargo() as $goodID => $amount) {
-			$container = new CargoDumpProcessor($goodID);
+			$page = new CargoDumpProcessor($goodID);
 			$good = TradeGood::get($goodID);
 			$goods[] = [
 				'image' => $good->getImageHTML(),
 				'name' => $good->name,
 				'amount' => $amount,
-				'dump_href' => $container->href(),
+				'dump_href' => $page->href(),
 			];
 		}
 

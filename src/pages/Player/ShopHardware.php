@@ -23,9 +23,9 @@ class ShopHardware extends PlayerPage {
 
 		$hardwareSold = [];
 		foreach ($location->getHardwareSold() as $hardwareTypeID => $hardwareType) {
-			$container = new ShopHardwareProcessor($hardwareTypeID, $this->locationID);
+			$page = new ShopHardwareProcessor($hardwareTypeID, $this->locationID);
 			$hardwareSold[$hardwareTypeID] = [
-				'Page' => $container,
+				'Page' => $page,
 				'Cost' => $hardwareType->cost,
 				'Name' => $hardwareType->name,
 			];

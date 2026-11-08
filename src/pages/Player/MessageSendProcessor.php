@@ -28,11 +28,11 @@ class MessageSendProcessor extends PlayerPageProcessor {
 
 		if (Request::get(self::ACTION) === $this->actionPreview->value) {
 			if ($this->allianceID !== null) {
-				$container = new AllianceBroadcast($this->allianceID, $message);
+				$page = new AllianceBroadcast($this->allianceID, $message);
 			} else {
-				$container = new MessageSend($this->receiverPlayerID, $message);
+				$page = new MessageSend($this->receiverPlayerID, $message);
 			}
-			$container->go();
+			$page->go();
 		}
 
 		if ($message === '') {
@@ -75,8 +75,7 @@ class MessageSendProcessor extends PlayerPageProcessor {
 		}
 
 		$msg = '<span class="green">SUCCESS: </span>Your message has been sent.';
-		$container = new CurrentSector(message: $msg);
-		$container->go();
+		new CurrentSector(message: $msg)->go();
 	}
 
 }

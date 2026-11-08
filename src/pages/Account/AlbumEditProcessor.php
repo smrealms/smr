@@ -134,8 +134,7 @@ class AlbumEditProcessor extends AccountPageProcessor {
 		}
 
 		$successMsg = 'SUCCESS: Your information has been updated!';
-		$container = new AlbumEdit($successMsg);
-		$container->go();
+		new AlbumEdit($successMsg)->go();
 	}
 
 }

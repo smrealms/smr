@@ -35,8 +35,7 @@ class PaperDeleteProcessor extends PlayerPageProcessor {
 		$db->delete('galactic_post_paper', $sqlParams);
 		$db->delete('galactic_post_paper_content', $sqlParams);
 
-		$container = new EditorOptions();
-		$container->go();
+		new EditorOptions()->go();
 	}
 
 }

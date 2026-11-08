@@ -31,8 +31,7 @@ class MovePieceProcessor extends PlayerPageProcessor {
 			$message = $err->getMessage();
 		}
 
-		$container = new MatchPlay($this->chessGameID, $message);
-		$container->go();
+		new MatchPlay($this->chessGameID, $message)->go();
 	}
 
 }

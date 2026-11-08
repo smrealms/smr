@@ -26,8 +26,8 @@ class ExtendedStats extends HistoryPage {
 		];
 		$links = [];
 		foreach ($categories as $category) {
-			$container = new ExtendedStatsDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $category);
-			$links[$category] = $container->href();
+			$page = new ExtendedStatsDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $category);
+			$links[$category] = $page->href();
 		}
 		$template->pageRenderer = fn() => ExtendedStatsRenderer::render($links);
 	}

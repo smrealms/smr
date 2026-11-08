@@ -33,9 +33,9 @@ class MessageBoxView extends AccountPage {
 			}
 			$boxes = [];
 			foreach (Messages::getAdminBoxNames() as $boxTypeID => $boxName) {
-				$container = new self($boxTypeID);
+				$page = new self($boxTypeID);
 				$boxes[$boxTypeID] = [
-					'ViewHREF' => $container->href(),
+					'ViewHREF' => $page->href(),
 					'BoxName' => $boxName,
 					'TotalMessages' => $totalMessages[$boxTypeID],
 				];
@@ -71,11 +71,11 @@ class MessageBoxView extends AccountPage {
 							$senderPlayer = Player::getPlayerByAccountAndGame(accountID: $senderID, gameID: $gameID);
 							$senderName .= ' a.k.a ' . $senderPlayer->getDisplayName();
 							if ($account->hasPermission(PERMISSION_SEND_ADMIN_MESSAGE)) {
-								$container = new MessageBoxReply(
+								$page = new MessageBoxReply(
 									boxTypeID: $this->boxTypeID,
 									senderPlayerID: $senderPlayer->getPlayerID(),
 								);
-								$messages[$messageID]['ReplyHREF'] = $container->href();
+								$messages[$messageID]['ReplyHREF'] = $page->href();
 							}
 						}
 					}

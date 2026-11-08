@@ -29,9 +29,9 @@ class BountyPlaceConfirmProcessor extends PlayerPageProcessor {
 			$location->isUG() => [BountyType::UG, Underground::class],
 			default => throw new Exception('Location is not HQ or UG'),
 		};
-		$container = new $body($this->locationID);
+		$page = new $body($this->locationID);
 
-		// get values from container (validated in bounty_place_processing.php)
+		// Get values from this page (validated in bounty_place_processing.php).
 		$amount = $this->credits;
 		$smrCredits = $this->smrCredits;
 
@@ -55,7 +55,7 @@ class BountyPlaceConfirmProcessor extends PlayerPageProcessor {
 		$player->update();
 		$player->getAccount()->update();
 		$placed->update();
-		$container->go();
+		$page->go();
 	}
 
 }

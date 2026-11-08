@@ -52,8 +52,8 @@ class GamePlay extends AccountPage {
 			// creates a new player object
 			$curr_player = Player::getPlayer($dbRecord->getInt('player_id'), dbRecord: $dbRecord);
 
-			$container = new GamePlayProcessor($curr_player->getPlayerID());
-			$games['Play'][$game_id]['PlayGameLink'] = $container->href();
+			$page = new GamePlayProcessor($curr_player->getPlayerID());
+			$games['Play'][$game_id]['PlayGameLink'] = $page->href();
 
 			// update turns for this game
 			$curr_player->updateTurns();
@@ -70,10 +70,10 @@ class GamePlay extends AccountPage {
 			]);
 			$games['Play'][$game_id]['NumberPlaying'] = $result2->record()->getInt('num_playing');
 
-			// create a container that will hold next url and additional variables.
+			// Create a page that will hold the next URL and additional variables.
 
-			$container_game = new GameStats($game_id);
-			$games['Play'][$game_id]['GameStatsLink'] = $container_game->href();
+			$gameStatsPage = new GameStats($game_id);
+			$games['Play'][$game_id]['GameStatsLink'] = $gameStatsPage->href();
 			$games['Play'][$game_id]['Turns'] = $curr_player->getTurns();
 			$games['Play'][$game_id]['LastMovement'] = format_time(Epoch::time() - $curr_player->getLastActive(), true);
 		}
@@ -119,10 +119,10 @@ class GamePlay extends AccountPage {
 				'Speed' => $game->getGameSpeed(),
 				'Credits' => $game->getCreditsNeeded(),
 			];
-			// create a container that will hold next url and additional variables.
-			$container = new GameJoin($game_id);
+			// Create a page that will hold the next URL and additional variables.
+			$page = new GameJoin($game_id);
 
-			$games['Join'][$game_id]['JoinGameLink'] = $container->href();
+			$games['Join'][$game_id]['JoinGameLink'] = $page->href();
 		}
 
 		// ***************************************
@@ -137,13 +137,13 @@ class GamePlay extends AccountPage {
 			$games['Previous'][$game_id]['EndDate'] = date($account->getDateFormat(), $game->getEndTime());
 			$games['Previous'][$game_id]['Type'] = $game->getGameType();
 			$games['Previous'][$game_id]['Speed'] = $game->getGameSpeed();
-			// create a container that will hold next url and additional variables.
-			$container = new HallOfFameAll($game_id);
-			$games['Previous'][$game_id]['PreviousGameHOFLink'] = $container->href();
-			$container = new NewsReadArchives($game_id);
-			$games['Previous'][$game_id]['PreviousGameNewsLink'] = $container->href();
-			$container = new GameStats($game_id);
-			$games['Previous'][$game_id]['PreviousGameLink'] = $container->href();
+			// Create a page that will hold the next URL and additional variables.
+			$page = new HallOfFameAll($game_id);
+			$games['Previous'][$game_id]['PreviousGameHOFLink'] = $page->href();
+			$page = new NewsReadArchives($game_id);
+			$games['Previous'][$game_id]['PreviousGameNewsLink'] = $page->href();
+			$page = new GameStats($game_id);
+			$games['Previous'][$game_id]['PreviousGameLink'] = $page->href();
 		}
 
 		foreach (Globals::getHistoryDatabases() as $databaseName => $oldColumn) {
@@ -160,15 +160,15 @@ class GamePlay extends AccountPage {
 				$games['Previous'][$index]['EndDate'] = date($account->getDateFormat(), $dbRecord->getInt('end_date'));
 				$games['Previous'][$index]['Type'] = $dbRecord->getString('type');
 				$games['Previous'][$index]['Speed'] = $dbRecord->getFloat('speed');
-				// create a container that will hold next url and additional variables.
-				$container = new Summary($databaseName, $game_id, $gameName);
-				$games['Previous'][$index]['PreviousGameLink'] = $container->href();
-				$container = new HallOfFame($databaseName, $game_id, $gameName);
-				$games['Previous'][$index]['PreviousGameHOFLink'] = $container->href();
-				$container = new GameNews($databaseName, $game_id, $gameName);
-				$games['Previous'][$index]['PreviousGameNewsLink'] = $container->href();
-				$container = new ExtendedStats($databaseName, $game_id, $gameName);
-				$games['Previous'][$index]['PreviousGameStatsLink'] = $container->href();
+				// Create a page that will hold the next URL and additional variables.
+				$page = new Summary($databaseName, $game_id, $gameName);
+				$games['Previous'][$index]['PreviousGameLink'] = $page->href();
+				$page = new HallOfFame($databaseName, $game_id, $gameName);
+				$games['Previous'][$index]['PreviousGameHOFLink'] = $page->href();
+				$page = new GameNews($databaseName, $game_id, $gameName);
+				$games['Previous'][$index]['PreviousGameNewsLink'] = $page->href();
+				$page = new ExtendedStats($databaseName, $game_id, $gameName);
+				$games['Previous'][$index]['PreviousGameStatsLink'] = $page->href();
 			}
 		}
 		$db->switchDatabaseToLive(); // restore database
@@ -191,8 +191,8 @@ class GamePlay extends AccountPage {
 			foreach ($dbResult->records() as $dbRecord) {
 				$voteID = $dbRecord->getInt('vote_id');
 				$voting[$voteID]['ID'] = $voteID;
-				$container = new VoteProcessor($voteID, new self());
-				$voting[$voteID]['HREF'] = $container->href();
+				$page = new VoteProcessor($voteID, new self());
+				$voting[$voteID]['HREF'] = $page->href();
 				$voting[$voteID]['Question'] = $dbRecord->getString('question');
 				$voting[$voteID]['TimeRemaining'] = format_time($dbRecord->getInt('end') - Epoch::time(), true);
 				$voting[$voteID]['Options'] = [];

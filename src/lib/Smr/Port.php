@@ -1130,16 +1130,15 @@ class Port implements NormalCombatantInterface {
 
 	public function getPayoutHREF(PortPayoutType $payoutType): string {
 		if ($this->getCredits() > 0) {
-			$container = new AttackPortPayoutProcessor($payoutType);
+			$page = new AttackPortPayoutProcessor($payoutType);
 		} else {
-			$container = new CurrentSector(message: 'The fate of this port has already been decided.');
+			$page = new CurrentSector(message: 'The fate of this port has already been decided.');
 		}
-		return $container->href();
+		return $page->href();
 	}
 
 	public function getLootGoodHREF(int $boughtGoodID): string {
-		$container = new AttackPortLootProcessor($boughtGoodID);
-		return $container->href();
+		return new AttackPortLootProcessor($boughtGoodID)->href();
 	}
 
 	public function isCachedVersion(): bool {

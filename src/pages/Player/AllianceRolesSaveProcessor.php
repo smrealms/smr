@@ -24,8 +24,7 @@ class AllianceRolesSaveProcessor extends PlayerPageProcessor {
 			]);
 		}
 
-		$container = new AllianceRoster($this->allianceID, true);
-		$container->go();
+		new AllianceRoster($this->allianceID, true)->go();
 	}
 
 }

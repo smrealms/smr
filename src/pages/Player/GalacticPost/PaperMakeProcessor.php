@@ -17,8 +17,7 @@ class PaperMakeProcessor extends PlayerPageProcessor {
 			'title' => $title,
 		]);
 		//send em back
-		$container = new ArticleView();
-		$container->go();
+		new ArticleView()->go();
 	}
 
 }

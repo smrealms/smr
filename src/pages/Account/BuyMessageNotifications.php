@@ -27,8 +27,8 @@ class BuyMessageNotifications extends AccountPage {
 			$messageBox['MessagesRemaining'] = $account->getMessageNotifications($messageTypeID);
 			$messageBox['MessagesPerCredit'] = MESSAGES_PER_CREDIT[$messageTypeID];
 
-			$container = new BuyMessageNotificationsProcessor($messageTypeID);
-			$messageBox['BuyHref'] = $container->href();
+			$page = new BuyMessageNotificationsProcessor($messageTypeID);
+			$messageBox['BuyHref'] = $page->href();
 			$messageBoxes[] = $messageBox;
 		}
 		$template->pageRenderer = fn() => BuyMessageNotificationsRenderer::render(

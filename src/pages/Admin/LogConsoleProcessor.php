@@ -37,16 +37,16 @@ class LogConsoleProcessor extends AccountPageProcessor {
 			$db->write('DELETE FROM log_has_notes WHERE account_id IN (:account_ids)', [
 				'account_ids' => $db->escapeArray($accountIDs),
 			]);
-			$container = new LogConsole();
+			$page = new LogConsole();
 		} else {
 			$logTypes = [];
 			$dbResult = $db->select('log_type', [], ['log_type_id']);
 			foreach ($dbResult->records() as $dbRecord) {
 				$logTypes[] = $dbRecord->getInt('log_type_id');
 			}
-			$container = new LogConsoleDetail($accountIDs, $logTypes);
+			$page = new LogConsoleDetail($accountIDs, $logTypes);
 		}
-		$container->go();
+		$page->go();
 	}
 
 }

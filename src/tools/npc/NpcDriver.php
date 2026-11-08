@@ -42,7 +42,7 @@ class NpcDriver {
 	 */
 	public function run(): bool {
 		// Initialize session with a fake blank page
-		Session::getInstance()->setCurrentVar(new Page());
+		Session::getInstance()->setCurrentPage(new Page());
 
 		// Load the first available NPC.
 		$playerID = $this->selectNpcPlayer();

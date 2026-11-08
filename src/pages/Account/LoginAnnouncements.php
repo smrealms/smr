@@ -25,10 +25,10 @@ class LoginAnnouncements extends AccountPage {
 						ORDER BY time DESC', [
 				'last_login' => $db->escapeNumber($account->getLastLogin()),
 			]);
-			$container = new LoginCheckChangelogProcessor();
+			$page = new LoginCheckChangelogProcessor();
 		} else {
 			$dbResult = $db->select('announcement', [], ['time', 'msg'], orderBy: ['time'], order: ['DESC']);
-			$container = new GamePlay();
+			$page = new GamePlay();
 		}
 
 		$announcements = [];
@@ -41,7 +41,7 @@ class LoginAnnouncements extends AccountPage {
 
 		$template->pageRenderer = fn() => LoginAnnouncementsRenderer::render(
 			Announcements: $announcements,
-			ContinueHREF: $container->href(),
+			ContinueHREF: $page->href(),
 			ThisAccount: $account,
 		);
 	}

@@ -29,11 +29,11 @@ class ArticleView extends PlayerPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$title = $dbRecord->getString('title');
 			$writer = Player::getPlayer($dbRecord->getInt('writer_player_id'));
-			$container = new self($dbRecord->getInt('article_id'));
+			$page = new self($dbRecord->getInt('article_id'));
 			$articles[] = [
 				'title' => $title,
 				'writer' => $writer->getDisplayName(),
-				'link' => $container->href(),
+				'link' => $page->href(),
 			];
 		}
 
@@ -59,10 +59,10 @@ class ArticleView extends PlayerPage {
 				'game_id' => $player->getGameID(),
 			]);
 			foreach ($dbResult->records() as $dbRecord) {
-				$container = new ArticleAddToPaperProcessor($dbRecord->getInt('paper_id'), $this->articleID);
+				$page = new ArticleAddToPaperProcessor($dbRecord->getInt('paper_id'), $this->articleID);
 				$papers[] = [
 					'title' => $dbRecord->getString('title'),
-					'addToPaperHREF' => $container->href(),
+					'addToPaperHREF' => $page->href(),
 				];
 			}
 			$selectedArticle['papers'] = $papers;

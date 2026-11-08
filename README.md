@@ -109,23 +109,23 @@ Engine files and their associated templates should be placed in `src/engine` and
 ## Links
 If possible use a function from `Globals` or a relevant object to generate links (e.g. `Globals::getCurrentSectorHREF()` or `$otherPlayer->getExamineTraderHREF()`).
 This is usually clearer and allows hooking into the hotkey system.
-To create a link you first create a "container" using a `Page` class, e.g.:
+To create a link, first create a `Page`, e.g.:
 
 ```php
-$container = new CurrentSector();
+$page = new CurrentSector();
 ```
-You can then call `$container->href()` to get a HREF, which will give a link that
+You can then call `$page->href()` to get a HREF, which will give a link that
 can be displayed on the page. In this example, clicking the link will load the
 "Current Sector" page next.
 
-You can also call `$container->go()`, which will immediately forward to this page
+You can also call `$page->go()`, which will immediately forward to this page
 within the same HTTP request.
 
 ## Request variables
 For any page which takes input through POST or GET, these values may be accessed
 using `Smr\Session::getRequestVar()` and relatives, which will store the value
 in the session. When a page is auto-refreshed with AJAX, these inputs are not
-resent, but they are still required to render the page correctly.
+present, but they are still required to render the page correctly.
 
 ## Abstract vs normal classes
 This initially started out to be used in the "standard" way for NPCs but that idea has since been discarded.

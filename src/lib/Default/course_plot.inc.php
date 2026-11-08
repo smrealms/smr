@@ -14,12 +14,10 @@ function course_plot_forward(Player $player, Path $path): never {
 
 		if (!$player->isLandedOnPlanet()) {
 			// If the course can immediately be followed, display it on the current sector page
-			$container = new CurrentSector();
-			$container->go();
+			new CurrentSector()->go();
 		}
 	}
 
-	$container = new PlotCourseResult($path);
-	$container->go();
+	new PlotCourseResult($path)->go();
 
 }

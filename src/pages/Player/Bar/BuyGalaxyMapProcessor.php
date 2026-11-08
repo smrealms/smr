@@ -63,8 +63,7 @@ class BuyGalaxyMapProcessor extends PlayerPageProcessor {
 		}
 
 		$message = '<div class="center">Galaxy maps have been added. Enjoy!</div><br />';
-		$container = new BarMain($this->locationID, $message);
-		$container->go();
+		new BarMain($this->locationID, $message)->go();
 	}
 
 }

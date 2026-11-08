@@ -30,11 +30,11 @@ class PaperEdit extends PlayerPage {
 
 		$articles = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$container = new PaperEditProcessor($this->paperID, $dbRecord->getInt('article_id'));
+			$page = new PaperEditProcessor($this->paperID, $dbRecord->getInt('article_id'));
 			$articles[] = [
 				'title' => bbify($dbRecord->getString('title')),
 				'text' => bbify($dbRecord->getString('text')),
-				'editHREF' => $container->href(),
+				'editHREF' => $page->href(),
 			];
 		}
 

@@ -100,8 +100,8 @@ class Session {
 		$this->SN = Request::get('sn', '');
 		$this->fetchVarInfo();
 
-		if (!$this->ajax && $this->hasCurrentVar()) {
-			$file = $this->getCurrentVar()::class;
+		if (!$this->ajax && $this->hasCurrentPage()) {
+			$file = $this->getCurrentPage()::class;
 			$loadDelay = self::URL_LOAD_DELAY[$file] ?? 0;
 			$timeBetweenLoads = microtime(true) - $this->lastAccessed;
 			if ($timeBetweenLoads < $loadDelay) {
@@ -303,16 +303,16 @@ class Session {
 	}
 
 	/**
-	 * Check if the session has a var associated with the current SN.
+	 * Check if the session has a Page associated with the current SN.
 	 */
-	public function hasCurrentVar(): bool {
+	public function hasCurrentPage(): bool {
 		return $this->currentPage !== null;
 	}
 
 	/**
-	 * Returns the session var associated with the current SN.
+	 * Returns the session Page associated with the current SN.
 	 */
-	public function getCurrentVar(): Page {
+	public function getCurrentPage(): Page {
 		if ($this->currentPage === null) {
 			throw new Exception('The session has no current page!');
 		}
@@ -355,10 +355,10 @@ class Session {
 	}
 
 	/**
-	 * Replace the global $var with the given $container.
+	 * Change the current page associated with this session.
 	 */
-	public function setCurrentVar(Page $container): void {
-		$this->currentPage = $container;
+	public function setCurrentPage(Page $page): void {
+		$this->currentPage = $page;
 	}
 
 	public function clearLinks(): void {
@@ -369,10 +369,10 @@ class Session {
 	 * Add a page to the session so that it can be used on next page load.
 	 * It will be associated with an SN that will be used for linking.
 	 */
-	public function addLink(Page $container): string {
+	public function addLink(Page $page): string {
 		// If we already had a link to this exact page, use the existing SN for it.
 		foreach ($this->links as $sn => $link) {
-			if (objects_equal($link, $container)) {
+			if (objects_equal($link, $page)) {
 				return $sn;
 			}
 		}
@@ -382,7 +382,7 @@ class Session {
 		do {
 			$sn = random_alphabetic_string(6);
 		} while (isset($this->links[$sn]) && $sn === $this->SN);
-		$this->links[$sn] = $container;
+		$this->links[$sn] = $page;
 		return $sn;
 	}
 

@@ -76,7 +76,7 @@ try {
 		$session->setAccount($account);
 	}
 
-	// this sn identifies our container later
+	// This SN identifies our page later.
 	$href = new LoginCheckValidatedProcessor()->href(true);
 	$session->update();
 

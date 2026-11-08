@@ -28,9 +28,9 @@ class AdminPermissionManage extends AccountPage {
 					GROUP BY account_id');
 		foreach ($dbResult->records() as $dbRecord) {
 			$accountID = $dbRecord->getInt('account_id');
-			$container = new self($accountID);
+			$page = new self($accountID);
 			$adminLinks[$accountID] = [
-				'href' => $container->href(),
+				'href' => $page->href(),
 				'name' => $dbRecord->getString('login'),
 			];
 		}

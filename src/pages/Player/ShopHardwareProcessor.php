@@ -83,8 +83,7 @@ class ShopHardwareProcessor extends PlayerPageProcessor {
 
 		$player->log(LOG_TYPE_HARDWARE, 'Player ' . $action . 's ' . $amount . ' ' . $hardware_name);
 
-		$container = new ShopHardware($this->locationID);
-		$container->go();
+		new ShopHardware($this->locationID)->go();
 	}
 
 }

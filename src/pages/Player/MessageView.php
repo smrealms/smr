@@ -81,8 +81,8 @@ class MessageView extends PlayerPage {
 			$preferencesScoutGroupPage = new MessagePreferenceScoutGroupProcessor($folderID);
 		}
 
-		$container = new MessageDeleteProcessor($folderID);
-		$messageBox['DeleteFormHref'] = $container->href();
+		$targetPage = new MessageDeleteProcessor($folderID);
+		$messageBox['DeleteFormHref'] = $targetPage->href();
 
 		// Group scout messages if they wouldn't fit on a single page
 		if ($folderID === MSG_SCOUT && !$this->showAll && $messageBox['TotalMessages'] > $player->getScoutMessageGroupLimit()) {
@@ -92,8 +92,8 @@ class MessageView extends PlayerPage {
 				'message_type_id' => $db->escapeNumber(MSG_SCOUT),
 			]);
 
-			$dispContainer = new self(MSG_SCOUT, showAll: true);
-			$messageBox['ShowAllHref'] = $dispContainer->href();
+			$displayPage = new self(MSG_SCOUT, showAll: true);
+			$messageBox['ShowAllHref'] = $displayPage->href();
 
 			[$messages, $numMessages] = displayGroupedScouts($player);
 			$messageBox['NumberMessages'] = $numMessages;
@@ -238,8 +238,8 @@ function displayMessage(int $message_id, int $receiverPlayerID, int $senderPlaye
 		$sender = Messages::getMessagePlayer($senderPlayerID, $type);
 		if ($sender instanceof Player) {
 			$message['Sender'] = $sender;
-			$container = new SearchForTraderResult($sender->getPlayerNumber());
-			$message['SenderDisplayName'] = create_link($container, $sender->getDisplayName());
+			$targetPage = new SearchForTraderResult($sender->getPlayerNumber());
+			$message['SenderDisplayName'] = create_link($targetPage, $sender->getDisplayName());
 
 			// Add actions that we can take on messages sent by other players.
 			if ($type !== MSG_SENT) {
@@ -256,8 +256,8 @@ function displayMessage(int $message_id, int $receiverPlayerID, int $senderPlaye
 
 	if ($type === MSG_SENT) {
 		$receiver = Player::getPlayer($receiverPlayerID);
-		$container = new SearchForTraderResult($receiver->getPlayerNumber());
-		$message['ReceiverDisplayName'] = create_link($container, $receiver->getDisplayName());
+		$targetPage = new SearchForTraderResult($receiver->getPlayerNumber());
+		$message['ReceiverDisplayName'] = create_link($targetPage, $receiver->getDisplayName());
 	}
 
 	return $message;

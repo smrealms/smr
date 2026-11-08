@@ -39,8 +39,7 @@ class CombatLogViewerVerifyProcessor extends PlayerPageProcessor {
 		}
 
 		// Player has permission, so go to the display page!
-		$container = new CombatLogViewer([$this->logID]);
-		$container->go();
+		new CombatLogViewer([$this->logID])->go();
 	}
 
 }

@@ -70,8 +70,7 @@ class AllianceTreatiesProcessor extends PlayerPageProcessor {
 			]);
 		}
 
-		$container = new AllianceTreaties();
-		$container->go();
+		new AllianceTreaties()->go();
 	}
 
 }

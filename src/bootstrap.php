@@ -33,8 +33,8 @@ function logException(Throwable $err): void {
 
 		$message .= 'ajax: ' . var_export($session->ajax, true) . "\n";
 
-		$var = $session->hasCurrentVar() ? $session->getCurrentVar() : null;
-		$message .= '$var: ' . print_r($var, true) . $delim;
+		$page = $session->hasCurrentPage() ? $session->getCurrentPage() : null;
+		$message .= 'page: ' . print_r($page, true) . $delim;
 	} else {
 		$session = null;
 	}

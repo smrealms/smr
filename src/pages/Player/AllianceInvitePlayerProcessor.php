@@ -50,8 +50,7 @@ class AllianceInvitePlayerProcessor extends PlayerPageProcessor {
 			expires: $expires,
 		);
 
-		$container = new AllianceInvitePlayer();
-		$container->go();
+		new AllianceInvitePlayer()->go();
 	}
 
 }

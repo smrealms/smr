@@ -51,8 +51,7 @@ class AllianceInviteAcceptProcessor extends PlayerPageProcessor {
 		// Delete the invitation now that the player has joined
 		$invite->delete();
 
-		$container = new AllianceMotd($this->allianceID);
-		$container->go();
+		new AllianceMotd($this->allianceID)->go();
 	}
 
 }

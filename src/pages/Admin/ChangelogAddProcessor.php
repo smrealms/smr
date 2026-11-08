@@ -29,12 +29,11 @@ class ChangelogAddProcessor extends AccountPageProcessor {
 		$affected_db = Request::get('affected_db');
 
 		if (Request::get(self::ACTION) === $this->actionPreview->value) {
-			$container = new ChangelogAdd(
+			new ChangelogAdd(
 				changeTitle: $change_title,
 				changeMessage: $change_message,
 				affectedDb: $affected_db,
-			);
-			$container->go();
+			)->go();
 		}
 
 		$db = Database::getInstance();
@@ -60,8 +59,7 @@ class ChangelogAddProcessor extends AccountPageProcessor {
 			]);
 		});
 
-		$container = new ChangelogAdd();
-		$container->go();
+		new ChangelogAdd()->go();
 	}
 
 }

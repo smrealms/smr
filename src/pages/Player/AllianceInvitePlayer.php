@@ -22,14 +22,14 @@ class AllianceInvitePlayer extends PlayerPage {
 		// Get list of pending invitations
 		$pendingInvites = [];
 		foreach (AllianceInvite::getAll($player->getAllianceID(), $player->getGameID()) as $invite) {
-			$container = new AllianceInviteCancelProcessor($invite);
+			$page = new AllianceInviteCancelProcessor($invite);
 
 			$invited = $invite->getReceiver();
 			$pendingInvites[$invited->getPlayerID()] = [
 				'invited' => $invited->getDisplayName(true),
 				'invited_by' => $invite->getSender()->getDisplayName(),
 				'expires' => format_time($invite->getExpires() - Epoch::time(), true),
-				'cancelHREF' => $container->href(),
+				'cancelHREF' => $page->href(),
 			];
 		}
 

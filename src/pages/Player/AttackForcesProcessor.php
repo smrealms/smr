@@ -151,8 +151,7 @@ class AttackForcesProcessor extends PlayerPageProcessor {
 			$displayOwnerPlayerID = $forces->getOwnerPlayerID();
 		}
 
-		$container = new AttackForces($displayOwnerPlayerID, $results, $player->isDead());
-		$container->go();
+		new AttackForces($displayOwnerPlayerID, $results, $player->isDead())->go();
 	}
 
 }
