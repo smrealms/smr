@@ -33,8 +33,8 @@ class Underground extends PlayerPage {
 
 		Menu::headquarters($this->locationID);
 
-		$joinHREF = $player->hasNeutralAlignment() ?
-			new GovernmentProcessor($this->locationID)->href() : null;
+		$joinHREF = $player->hasNeutralAlignment()
+			? new GovernmentProcessor($this->locationID)->href() : null;
 
 		$template->pageRenderer = fn() => UndergroundRenderer::render(
 			AllBounties: Bounty::getMostWanted(BountyType::UG, $player->getGameID()),

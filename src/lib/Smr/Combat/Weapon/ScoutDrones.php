@@ -64,8 +64,8 @@ class ScoutDrones extends AbstractWeapon {
 		$shooter = $shot->shooter;
 		$target = $shot->target;
 		if (
-			(!($shooter instanceof Force)) ||
-			(!($target instanceof Ship))
+			(!($shooter instanceof Force))
+			|| (!($target instanceof Ship))
 		) {
 			throw new Exception('ScoutDrones should not be used in this context');
 		}

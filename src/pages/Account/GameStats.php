@@ -66,9 +66,9 @@ class GameStats extends AccountPage {
 				'Name' => $player->getLevelName() . ' ' . $player->getDisplayName(),
 				'Race' => Race::getName($player->getRaceID()),
 				'Alliance' => (
-					$player->hasAlliance() ?
-					$getAllianceLink($player->getAlliance()) :
-					$player->getAllianceDisplayName()
+					$player->hasAlliance()
+					? $getAllianceLink($player->getAlliance())
+					: $player->getAllianceDisplayName()
 				),
 				'Experience' => number_format($player->getExperience()),
 				'Kills' => number_format($player->getKills()),

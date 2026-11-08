@@ -26,8 +26,8 @@ class CreateGameProcessor extends AccountPageProcessor {
 		$newID = $dbResult->record()->getInt('max_game_id') + 1;
 
 		$join = new DateTime(Request::get('game_join'));
-		$start = Request::get('game_start') === '' ? $join :
-			new DateTime(Request::get('game_start'));
+		$start = Request::get('game_start') === '' ? $join
+			: new DateTime(Request::get('game_start'));
 		$end = new DateTime(Request::get('game_end'));
 
 		$game = Game::createGame($newID);

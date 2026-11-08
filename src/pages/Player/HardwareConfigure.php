@@ -16,8 +16,8 @@ class HardwareConfigure extends PlayerPage {
 
 		$template->pageTopic = 'Configure Hardware';
 
-		$toggleCloakHREF = $ship->hasCloak() ?
-			new HardwareConfigureCloakProcessor(disable: $ship->isCloaked())->href() : null;
+		$toggleCloakHREF = $ship->hasCloak()
+			? new HardwareConfigureCloakProcessor(disable: $ship->isCloaked())->href() : null;
 
 		if ($ship->hasIllusion()) {
 			$setIllusionFormHREF = new HardwareConfigureIllusionProcessor(disable: false)->href();

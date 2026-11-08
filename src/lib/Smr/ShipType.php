@@ -105,8 +105,8 @@ class ShipType {
 
 		// Minimum value of 0 because negative values cause issues with accuracy calculations
 		$this->baseManeuverability = max(0, IRound(
-			700 -
-			(
+			700
+			- (
 				(
 					$this->maxHardware[HARDWARE_SHIELDS]
 					+ $this->maxHardware[HARDWARE_ARMOUR]

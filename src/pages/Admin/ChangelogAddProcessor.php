@@ -47,8 +47,8 @@ class ChangelogAddProcessor extends AccountPageProcessor {
 				limit: 1,
 				lock: RowLockMode::Update,
 			);
-			$changelog_id = $dbResult->hasRecord() ?
-				$dbResult->record()->getInt('changelog_id') + 1 : 0;
+			$changelog_id = $dbResult->hasRecord()
+				? $dbResult->record()->getInt('changelog_id') + 1 : 0;
 
 			$db->insert('changelog', [
 				'version_id' => $this->versionID,

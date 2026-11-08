@@ -149,9 +149,9 @@ class SectorMapRenderer {
 								if ($MapPlayer !== null) { // skip in UniGen
 									$CanScanSector = ($MapPlayer->getShip()->hasScanner() && $isLinkedSector) || $isCurrentSector;
 									$ShowFriendlyForces = (
-										$HideAlliedForces ?
-										$Sector->hasPlayerForces($MapPlayer) :
-										$Sector->hasFriendlyForces($MapPlayer)
+										$HideAlliedForces
+										? $Sector->hasPlayerForces($MapPlayer)
+										: $Sector->hasFriendlyForces($MapPlayer)
 									);
 									if (($CanScanSector && ($Sector->hasForces() || $Sector->hasPlayers())) || $ShowFriendlyForces || $Sector->hasFriendlyTraders($MapPlayer)) { ?>
 										<div class="lmtf"><?php

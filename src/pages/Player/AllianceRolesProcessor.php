@@ -65,8 +65,8 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 					limit: 1,
 					lock: RowLockMode::Update,
 				);
-				$role_id = $dbResult->hasRecord() ?
-					$dbResult->record()->getInt('role_id') + 1 : 1;
+				$role_id = $dbResult->hasRecord()
+					? $dbResult->record()->getInt('role_id') + 1 : 1;
 
 				$db->insert('alliance_has_roles', [
 					...$alliance->SQLID,

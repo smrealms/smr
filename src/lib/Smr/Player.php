@@ -381,8 +381,8 @@ class Player {
 					limit: 1,
 					lock: RowLockMode::Update,
 				);
-				$playerNumber = $dbResult->hasRecord() ?
-					$dbResult->record()->getInt('player_number') + 1 : 1;
+				$playerNumber = $dbResult->hasRecord()
+					? $dbResult->record()->getInt('player_number') + 1 : 1;
 
 				$time = Epoch::time();
 				$startSectorID = 0; // Temporarily put player into non-existent sector
@@ -747,9 +747,9 @@ class Player {
 	 * Does this player qualify for new player protections?
 	 */
 	public function isNewbieCombatant(?self $other = null): bool {
-		return $this->hasNewbieStatus() &&
-			($other === null || !$other->hasNewbieStatus()) &&
-			($this->getShipTypeID() === SHIP_TYPE_NEWBIE_MERCHANT_VESSEL || $this->getShip()->getAttackRatingWithMaxCDs() <= MAX_ATTACK_RATING_NEWBIE);
+		return $this->hasNewbieStatus()
+			&& ($other === null || !$other->hasNewbieStatus())
+			&& ($this->getShipTypeID() === SHIP_TYPE_NEWBIE_MERCHANT_VESSEL || $this->getShip()->getAttackRatingWithMaxCDs() <= MAX_ATTACK_RATING_NEWBIE);
 	}
 
 	/**
@@ -1187,10 +1187,10 @@ class Player {
 	 */
 	public function canFight(): bool {
 		return !(
-			$this->hasNewbieTurns() ||
-			$this->isDead() ||
-			$this->isLandedOnPlanet() ||
-			$this->hasFederalProtection()
+			$this->hasNewbieTurns()
+			|| $this->isDead()
+			|| $this->isLandedOnPlanet()
+			|| $this->hasFederalProtection()
 		);
 	}
 

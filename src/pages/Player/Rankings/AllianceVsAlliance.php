@@ -79,8 +79,8 @@ class AllianceVsAlliance extends PlayerPage {
 		foreach ($alliance_vs_ids as $curr_id) {
 			foreach ($alliance_vs_ids as $id) {
 				$showRed = (
-					($curr_id !== 0 && Alliance::getAlliance($curr_id, $player->getGameID())->hasDisbanded()) ||
-					($id !== 0 && Alliance::getAlliance($id, $player->getGameID())->hasDisbanded())
+					($curr_id !== 0 && Alliance::getAlliance($curr_id, $player->getGameID())->hasDisbanded())
+					|| ($id !== 0 && Alliance::getAlliance($id, $player->getGameID())->hasDisbanded())
 				);
 				$showBold = $curr_id === $player->getAllianceID() || $id === $player->getAllianceID();
 				$style = '';

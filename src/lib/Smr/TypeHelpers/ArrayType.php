@@ -25,8 +25,8 @@ final class ArrayType extends Type {
 		return array_all(
 			$value,
 			fn($item, $key) => !(
-				$this->keyType !== null && !$this->keyType->accepts($key) ||
-				$this->valueType !== null && !$this->valueType->accepts($item)
+				$this->keyType !== null && !$this->keyType->accepts($key)
+				|| $this->valueType !== null && !$this->valueType->accepts($item)
 			),
 		);
 	}

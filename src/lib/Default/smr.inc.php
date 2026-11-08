@@ -430,12 +430,12 @@ function getSkeletonData(Template $template): SkeletonData {
 
 		$ship = $player->getShip();
 		$page = $session->getCurrentPage();
-		$dropMineLink = $ship->hasMines() ?
-			new ForcesDropProcessor($player->getPlayerID(), referrer: $page::class, dropMines: 1)->href() : null;
-		$dropCDLink = $ship->hasCDs() ?
-			new ForcesDropProcessor($player->getPlayerID(), referrer: $page::class, dropCDs: 1)->href() : null;
-		$dropSDLink = $ship->hasSDs() ?
-			new ForcesDropProcessor($player->getPlayerID(), referrer: $page::class, dropSDs: 1)->href() : null;
+		$dropMineLink = $ship->hasMines()
+			? new ForcesDropProcessor($player->getPlayerID(), referrer: $page::class, dropMines: 1)->href() : null;
+		$dropCDLink = $ship->hasCDs()
+			? new ForcesDropProcessor($player->getPlayerID(), referrer: $page::class, dropCDs: 1)->href() : null;
+		$dropSDLink = $ship->hasSDs()
+			? new ForcesDropProcessor($player->getPlayerID(), referrer: $page::class, dropSDs: 1)->href() : null;
 
 		$rightPanelData = new RightPanelData(
 			player: $player,

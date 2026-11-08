@@ -52,8 +52,8 @@ class Government extends PlayerPage {
 			}
 		}
 
-		$joinHREF = $player->hasNeutralAlignment() ?
-			new GovernmentProcessor($this->locationID)->href() : null;
+		$joinHREF = $player->hasNeutralAlignment()
+			? new GovernmentProcessor($this->locationID)->href() : null;
 
 		$template->pageRenderer = fn() => GovernmentRenderer::render(
 			WarRaces: $warRaces,
