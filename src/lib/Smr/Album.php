@@ -186,8 +186,8 @@ readonly class Album {
 					limit: 1,
 					lock: RowLockMode::Update,
 				);
-				$commentID = $dbResult->hasRecord() ?
-					$dbResult->record()->getInt('comment_id') + 1 : 1;
+				$commentID = $dbResult->hasRecord()
+					? $dbResult->record()->getInt('comment_id') + 1 : 1;
 
 				$db->insert('album_has_comments', [
 					'album_id' => $albumAccountID,

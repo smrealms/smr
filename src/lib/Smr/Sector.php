@@ -552,8 +552,8 @@ class Sector {
 	 */
 	public function setWarp(Sector $warp): void {
 		if (
-			$this->getWarp() === $warp->getSectorID() &&
-			$warp->getWarp() === $this->getSectorID()
+			$this->getWarp() === $warp->getSectorID()
+			&& $warp->getWarp() === $this->getSectorID()
 		) {
 			// Warps are already set correctly!
 			return;

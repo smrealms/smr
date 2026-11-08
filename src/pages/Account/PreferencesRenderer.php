@@ -359,9 +359,9 @@ class PreferencesRenderer {
 							foreach (Globals::getAvailableTemplates() as $Template) {
 								foreach (Globals::getAvailableColourSchemes($Template) as $ColourScheme) {
 									$selected = (
-										$ThisAccount->getTemplate() === $Template &&
-										$ThisAccount->getColourScheme() === $ColourScheme &&
-										$ThisAccount->isDefaultCSSEnabled()
+										$ThisAccount->getTemplate() === $Template
+										&& $ThisAccount->getColourScheme() === $ColourScheme
+										&& $ThisAccount->isDefaultCSSEnabled()
 									) ? 'selected' : '';
 									$name = $Template . ' - ' . $ColourScheme;
 									?><option value="<?php echo $name; ?>" <?php echo $selected; ?>><?php echo $name; ?></option><?php

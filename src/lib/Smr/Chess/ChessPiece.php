@@ -69,9 +69,9 @@ class ChessPiece {
 				$moveDiag = $this->loc->relativeOrNull($dirX, $dirY);
 				if ($moveDiag !== null) {
 					$epTarget = new Loc($moveDiag->x, $this->loc->y);
-					if ($attackingCheck ||
-						(($board->getEnPassantPawn()?->same($epTarget) ||
-						($board->getPieceOrNull($moveDiag)?->colour === $this->colour->opposite()))
+					if ($attackingCheck
+						|| (($board->getEnPassantPawn()?->same($epTarget)
+						|| ($board->getPieceOrNull($moveDiag)?->colour === $this->colour->opposite()))
 						&& $this->isSafeMove($board, $moveDiag))) {
 						$moves[] = $moveDiag;
 					}
@@ -88,16 +88,16 @@ class ChessPiece {
 			}
 			//Castling is not attacking - so don't check it if doing an attacking check.
 			if (!$attackingCheck && !$board->isChecked($this->colour) && $this->loc->x === 4) {
-				if ($board->canCastle($this->colour, Castling::Queenside) &&
-					!$board->hasPiece($this->loc->relative(dx: -1)) &&
-					!$board->hasPiece($this->loc->relative(dx: -3)) &&
-					$this->isSafeMove($board, $this->loc->relative(dx: -1))
+				if ($board->canCastle($this->colour, Castling::Queenside)
+					&& !$board->hasPiece($this->loc->relative(dx: -1))
+					&& !$board->hasPiece($this->loc->relative(dx: -3))
+					&& $this->isSafeMove($board, $this->loc->relative(dx: -1))
 				) {
 					$this->addMove(-2, 0, $board, $moves, $attackingCheck);
 				}
-				if ($board->canCastle($this->colour, Castling::Kingside) &&
-					!$board->hasPiece($this->loc->relative(dx: 1)) &&
-					$this->isSafeMove($board, $this->loc->relative(dx: 1))
+				if ($board->canCastle($this->colour, Castling::Kingside)
+					&& !$board->hasPiece($this->loc->relative(dx: 1))
+					&& $this->isSafeMove($board, $this->loc->relative(dx: 1))
 				) {
 					$this->addMove(2, 0, $board, $moves, $attackingCheck);
 				}

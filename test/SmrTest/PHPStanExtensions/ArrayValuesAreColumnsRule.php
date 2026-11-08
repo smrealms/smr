@@ -95,8 +95,8 @@ final class ArrayValuesAreColumnsRule implements Rule {
 		$unsupportedMethod = true;
 		$arrayArgPositions = [];
 		foreach ($this->classMethods as [$className, $methodName, $arrayArgPositionsConfig]) {
-			if ($methodName === $methodReflection->getName() &&
-				(
+			if ($methodName === $methodReflection->getName()
+				&& (
 					$methodReflection->getDeclaringClass()->getName() === $className
 					|| ($this->reflectionProvider->hasClass($className) && $methodReflection->getDeclaringClass()->isSubclassOfClass($this->reflectionProvider->getClass($className)))
 				)

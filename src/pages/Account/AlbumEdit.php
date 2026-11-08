@@ -33,9 +33,9 @@ class AlbumEdit extends AccountPage {
 				'Status' => match ($album->approved) {
 					'TBC' => '<span style="color:orange;">Waiting approval</span>',
 					'NO' => '<span class="red">Approval denied</span>',
-					'YES' => $album->isPictureDisabled ?
-						'<span class="red">Picture Disabled</span>' :
-						'<a href="album/?nick=' . urlencode($account->getHofName()) . '" class="dgreen">Approved</a>',
+					'YES' => $album->isPictureDisabled
+						? '<span class="red">Picture Disabled</span>'
+						: '<a href="album/?nick=' . urlencode($account->getHofName()) . '" class="dgreen">Approved</a>',
 					default => throw new Exception('Unknown approved value'),
 				},
 			];

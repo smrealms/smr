@@ -17,8 +17,8 @@ class EditGameProcessor extends AccountPageProcessor {
 
 	public function build(Account $account): never {
 		$join = new DateTime(Request::get('game_join'));
-		$start = Request::get('game_start') === '' ? $join :
-			new DateTime(Request::get('game_start'));
+		$start = Request::get('game_start') === '' ? $join
+			: new DateTime(Request::get('game_start'));
 		$end = new DateTime(Request::get('game_end'));
 
 		$game = Game::getGame($this->gameID);

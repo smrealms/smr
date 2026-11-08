@@ -35,8 +35,8 @@ class FeatureRequestComments extends AccountPage {
 
 		// variables needed to set the status for this feature request
 		$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
-		$featureRequestStatusFormPage = $featureModerator ?
-			new FeatureRequestVoteProcessor($this) : null;
+		$featureRequestStatusFormPage = $featureModerator
+			? new FeatureRequestVoteProcessor($this) : null;
 
 		$featureRequestComments = [];
 		foreach ($dbResult->records() as $dbRecord) {

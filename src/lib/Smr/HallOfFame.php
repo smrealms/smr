@@ -104,8 +104,8 @@ class HallOfFame {
 			return Player::getPlayerByAccountAndGame($hofAccountID, $gameID)->sameAlliance($player);
 		};
 		if (
-			($vis === HOF_PRIVATE && $accountID !== $hofAccountID) ||
-			($vis === HOF_ALLIANCE && !$showAllianceVis())
+			($vis === HOF_PRIVATE && $accountID !== $hofAccountID)
+			|| ($vis === HOF_ALLIANCE && !$showAllianceVis())
 		) {
 			return '-';
 		}

@@ -142,8 +142,8 @@ class Alliance {
 				limit: 1,
 				lock: RowLockMode::Update,
 			);
-			$allianceID = $dbResult->hasRecord() ?
-				$dbResult->record()->getInt('alliance_id') + 1 : 1;
+			$allianceID = $dbResult->hasRecord()
+				? $dbResult->record()->getInt('alliance_id') + 1 : 1;
 
 			// check if the alliance name already exists
 			try {
