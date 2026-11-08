@@ -45,7 +45,7 @@ class VoteCreateProcessor extends AccountPageProcessor {
 		if ($action === $this->actionCreateVote->value) {
 			$question = Request::get('question');
 			$end = Epoch::time() + 86400 * Request::getInt('days');
-			$db->insert('voting', [
+			$voteID = $db->insertAutoIncrement('voting', [
 				'question' => $question,
 				'end' => $end,
 			]);
@@ -59,7 +59,7 @@ class VoteCreateProcessor extends AccountPageProcessor {
 		} else {
 			throw new Exception('Unknown action: ' . $action);
 		}
-		new VoteCreate()->go();
+		new VoteCreate(voteID: $voteID)->go();
 	}
 
 }
