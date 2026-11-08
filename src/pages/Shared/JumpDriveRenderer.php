@@ -19,7 +19,7 @@ class JumpDriveRenderer {
 				<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 					<tr>
 						<td>Jump To:&nbsp;</td>
-						<td><input type="number" size="5" name="target" maxlength="5" class="center"></td>
+						<td><input required type="number" size="5" name="target" maxlength="5" class="center"></td>
 						<td>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo create_submit_display('Engage Jump (' . TURNS_JUMP_MINIMUM . '+)'); ?></td>
 						<td>&nbsp;&nbsp;<?php echo $JumpDrivePage->actionCalculate->html('Calculate Turn Cost'); ?></td>
 					</tr>

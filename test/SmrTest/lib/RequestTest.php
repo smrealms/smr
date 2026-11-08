@@ -70,15 +70,32 @@ class RequestTest extends TestCase {
 	public function test_getBool_exception_missing(): void {
 		// An index that doesn't exist, no default
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('No request variable "noexist"');
+		$this->expectExceptionMessageIs('No request variable or empty string for index "noexist"');
 		Request::getBool('noexist');
 	}
 
 	public function test_getBool_exception_not_boolean(): void {
 		// An index whose value is not a boolean
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('Value is not bool for index `int`: \'2\'');
+		$this->expectExceptionMessageIs('Value has the wrong type for index `int`: \'2\'');
 		Request::getBool('int');
+	}
+
+	public function test_getX_returns_default_for_empty_string(): void {
+		$_REQUEST['empty_scalar'] = '';
+		self::assertTrue(Request::getBool('empty_scalar', true));
+		self::assertSame(1, Request::getInt('empty_scalar', 1));
+		self::assertSame(1.0, Request::getFloat('empty_scalar', 1.0));
+
+		$_REQUEST['empty_scalar'] = '   ';
+		self::assertSame(1, Request::getInt('empty_scalar', 1));
+	}
+
+	public function test_getX_throws_missing_exception_for_empty_string_without_default(): void {
+		$_REQUEST['empty_scalar'] = '';
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessageIs('No request variable or empty string for index "empty_scalar"');
+		Request::getInt('empty_scalar');
 	}
 
 	#[TestWith(['yes', true])]
@@ -108,14 +125,14 @@ class RequestTest extends TestCase {
 	public function test_getInt_exception_missing(): void {
 		// An index that doesn't exist, no default
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('No request variable "noexist"');
+		$this->expectExceptionMessageIs('No request variable or empty string for index "noexist"');
 		Request::getInt('noexist');
 	}
 
 	public function test_getInt_exception_not_int(): void {
 		$_REQUEST['invalid_int'] = '2 ships';
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('Value is not int for index `invalid_int`: \'2 ships\'');
+		$this->expectExceptionMessageIs('Value has the wrong type for index `invalid_int`: \'2 ships\'');
 		Request::getInt('invalid_int');
 	}
 
@@ -133,14 +150,14 @@ class RequestTest extends TestCase {
 	public function test_getFloat_exception_missing(): void {
 		// An index that doesn't exist, no default
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('No request variable "noexist"');
+		$this->expectExceptionMessageIs('No request variable or empty string for index "noexist"');
 		Request::getFloat('noexist');
 	}
 
 	public function test_getFloat_exception_not_numeric(): void {
 		$_REQUEST['invalid_float'] = '3.14 hours';
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('Value is not float for index `invalid_float`: \'3.14 hours\'');
+		$this->expectExceptionMessageIs('Value has the wrong type for index `invalid_float`: \'3.14 hours\'');
 		Request::getFloat('invalid_float');
 	}
 
@@ -316,7 +333,7 @@ class RequestTest extends TestCase {
 		$this->setVar([]);
 		// An index that doesn't exist in request or var, no default
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('No request variable "noexist"');
+		$this->expectExceptionMessageIs('No request variable or empty string for index "noexist"');
 		Request::getVarInt('noexist');
 	}
 

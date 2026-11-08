@@ -54,7 +54,7 @@ class AllianceInvitePlayerRenderer {
 				<p>Optional invitation message:</p>
 				<textarea spellcheck="true" name="message" style="height: 5em"></textarea>
 				<p>Days until invitation expires:</p>
-				<input type="number" name="expire_days" value="7" min="1" max="365" />
+				<input required type="number" name="expire_days" value="7" min="1" max="365" />
 				<br /><br />
 				<?php echo create_submit_display('Invite Player'); ?>
 			</form><?php

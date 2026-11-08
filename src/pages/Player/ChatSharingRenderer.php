@@ -48,7 +48,7 @@ class ChatSharingRenderer {
 			} ?>
 			<tr>
 				<form method="POST" action="<?php echo $ProcessingHREF; ?>">
-					<td><input class="center" type="number" name="add_player_number" style="width:60px" /></td>
+					<td><input required class="center" type="number" name="add_player_number" style="width:60px" /></td>
 					<td>&nbsp;</td>
 					<td class="center"><input type="checkbox" name="all_games"/></td>
 					<td><button type="submit" name="add" style="width:65px">Add</button></td>

@@ -32,7 +32,7 @@ class StockpileRenderer {
 					<td><?php echo $info['Name']; ?></td>
 					<td class="center"><?php echo $info['ShipAmount']; ?></td>
 					<td class="center"><?php echo $info['PlanetAmount']; ?></td>
-					<td><input form="<?php echo $formID; ?>" type="number" name="amount" value="<?php echo $info['DefaultAmount']; ?>" class="center" size="4" /></td>
+					<td><input required form="<?php echo $formID; ?>" type="number" name="amount" value="<?php echo $info['DefaultAmount']; ?>" min="1" class="center" size="4" /></td>
 					<td class="center">
 						<form id="<?php echo $formID; ?>" method="POST" action="<?php echo $info['Page']->href(); ?>">
 							<?php echo $info['Page']->actionShip->html(); ?>&thinsp;

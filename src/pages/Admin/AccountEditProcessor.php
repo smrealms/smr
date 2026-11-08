@@ -23,16 +23,16 @@ class AccountEditProcessor extends AccountPageProcessor {
 		$curr_account = Account::getAccount($account_id);
 
 		// request
-		$donation = Request::getInt('donation');
+		$donation = Request::getInt('donation', 0);
 		$smrCreditsForDonation = Request::has('smr_credit');
-		$rewardCredits = Request::getInt('grant_credits');
+		$rewardCredits = Request::getInt('grant_credits', 0);
 		$choise = Request::get('choise', ''); // no radio button selected by default
 		$reason_pre_select = Request::getInt('reason_pre_select');
 		$reason_msg = Request::get('reason_msg');
 		$veteran_status = Request::getBool('veteran_status');
 		$logging_status = Request::getBool('logging_status');
 		$except = Request::get('exception_add', ''); // missing if account already has an exception
-		$points = Request::getInt('points');
+		$points = Request::getInt('points', 0);
 		$names = Request::getArray('player_name', []); // missing when no games joined
 		$delete = Request::getArray('delete', []); // missing when no games joined
 

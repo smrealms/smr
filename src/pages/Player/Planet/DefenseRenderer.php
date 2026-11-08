@@ -34,7 +34,7 @@ class DefenseRenderer {
 					<td><img src="images/shields.png"  width="16" height="16" alt="" title="Shields"/>Shields</td>
 					<td class="center"><?php echo $ThisShip->getShields(); ?></td>
 					<td class="center"><?php echo $ThisPlanet->getShields(); ?></td>
-					<td class="center"><input form="TransferShieldsForm" type="number" name="amount" value="<?php echo min($ThisShip->getShields(), $ThisPlanet->getMaxShields() - $ThisPlanet->getShields()); ?>" class="center" size="4"></td>
+					<td class="center"><input required form="TransferShieldsForm" type="number" name="amount" value="<?php echo min($ThisShip->getShields(), $ThisPlanet->getMaxShields() - $ThisPlanet->getShields()); ?>" min="1" class="center" size="4"></td>
 					<td>
 						<form id="TransferShieldsForm" method="POST" action="<?php echo $TransferShields->href(); ?>">
 							<?php echo $TransferShields->actionToShip->html(); ?>&nbsp;<?php echo $TransferShields->actionToPlanet->html(); ?>
@@ -46,7 +46,7 @@ class DefenseRenderer {
 					<td><img src="images/cd.png"  width="16" height="16" alt="" title="Combat Drones"/>Combat Drones</td>
 					<td class="center"><?php echo $ThisShip->getCDs(); ?></td>
 					<td class="center"><?php echo $ThisPlanet->getCDs(); ?></td>
-					<td class="center"><input form="TransferCDsForm" type="number" name="amount" value="<?php echo min($ThisShip->getCDs(), $ThisPlanet->getMaxCDs() - $ThisPlanet->getCDs()); ?>" class="center" size="4"></td>
+					<td class="center"><input required form="TransferCDsForm" type="number" name="amount" value="<?php echo min($ThisShip->getCDs(), $ThisPlanet->getMaxCDs() - $ThisPlanet->getCDs()); ?>" min="1" class="center" size="4"></td>
 					<td>
 						<form id="TransferCDsForm" method="POST" action="<?php echo $TransferCDs->href(); ?>">
 							<?php echo $TransferCDs->actionToShip->html(); ?>&nbsp;<?php echo $TransferCDs->actionToPlanet->html(); ?>
@@ -59,7 +59,7 @@ class DefenseRenderer {
 					<td><img src="images/armour.png"  width="16" height="16" alt="" title="Armour"/>Armour</td>
 					<td class="center"><?php echo $ThisShip->getArmour(); ?></td>
 					<td class="center"><?php echo $ThisPlanet->getArmour(); ?></td>
-					<td class="center"><input form="TransferArmourForm" type="number" name="amount" value="<?php echo min($ThisShip->getArmour() - 1, $ThisPlanet->getMaxArmour() - ($ThisPlanet->getArmour())); ?>" class="center" size="4"></td>
+					<td class="center"><input required form="TransferArmourForm" type="number" name="amount" value="<?php echo min($ThisShip->getArmour() - 1, $ThisPlanet->getMaxArmour() - ($ThisPlanet->getArmour())); ?>" min="1" class="center" size="4"></td>
 					<td>
 						<form id="TransferArmourForm" method="POST" action="<?php echo $TransferArmour->href(); ?>">
 							<?php echo $TransferArmour->actionToShip->html(); ?>&nbsp;<?php echo $TransferArmour->actionToPlanet->html(); ?>

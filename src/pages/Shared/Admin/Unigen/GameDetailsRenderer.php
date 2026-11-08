@@ -54,7 +54,7 @@ class GameDetailsRenderer {
 				<td><input required type="date" size="20" name="game_end" value="<?php echo $Game['endDate']; ?>"></td></tr>
 			<tr>
 				<td class="right">SMR Credits Required</td>
-				<td><input type="number" size="5" name="creds_needed" value="<?php echo $Game['smrCredits']; ?>"></td>
+				<td><input required type="number" size="5" name="creds_needed" value="<?php echo $Game['smrCredits']; ?>"></td>
 			</tr>
 			<tr>
 				<td class="right">Game Type</td>
