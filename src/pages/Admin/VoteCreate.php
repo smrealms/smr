@@ -21,8 +21,9 @@ class VoteCreate extends AccountPage {
 		$template->pageTopic = 'Create Vote';
 
 		$voting = [];
+		$currentOptions = [];
 		$db = Database::getInstance();
-		$dbResult = $db->read('SELECT * FROM voting WHERE end > :now', [
+		$dbResult = $db->read('SELECT * FROM voting WHERE end > :now ORDER BY vote_id DESC', [
 			'now' => $db->escapeNumber(Epoch::time()),
 		]);
 		foreach ($dbResult->records() as $dbRecord) {
@@ -30,14 +31,28 @@ class VoteCreate extends AccountPage {
 			$voting[$voteID]['ID'] = $voteID;
 			$voting[$voteID]['Question'] = $dbRecord->getString('question');
 		}
+		$voteID = $this->voteID ?? array_key_first($voting);
+		if ($voteID !== null) {
+			$dbResult = $db->select(
+				table: 'voting_options',
+				criteria: ['vote_id' => $voteID],
+				returnColumns: ['text'],
+				orderBy: ['option_id'],
+			);
+			foreach ($dbResult->records() as $dbRecord) {
+				$currentOptions[] = $dbRecord->getString('text');
+			}
+		}
 
 		$template->pageRenderer = fn() => VoteCreateRenderer::render(
 			VoteFormPage: new VoteCreateProcessor(),
+			SelectVoteHREF: new VoteCreateSelectProcessor()->href(),
 			CurrentVotes: $voting,
+			CurrentOptions: $currentOptions,
 			PreviewVote: $this->previewVote,
 			Days: $this->days,
 			PreviewOption: $this->previewOption,
-			VoteID: $this->voteID,
+			VoteID: $voteID,
 		);
 	}
 
