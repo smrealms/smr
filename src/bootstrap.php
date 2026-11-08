@@ -72,7 +72,7 @@ function logException(Throwable $err): void {
 	}
 
 	if (defined('SCRIPT_ID')) {
-		$message = 'Script: ' . SCRIPT_ID . $delim . $message . "\n\n";
+		$message = 'Script: ' . var_export(SCRIPT_ID, true) . $delim . $message . "\n\n";
 	}
 
 	// Unconditionally send error message to the log

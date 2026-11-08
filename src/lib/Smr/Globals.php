@@ -41,6 +41,7 @@ use Smr\Pages\Player\TraderBounties;
 use Smr\Pages\Player\TraderRelations;
 use Smr\Pages\Player\TraderStatus;
 use Smr\Pages\Player\WeaponReorderProcessor;
+use Smr\TypeHelpers\Type;
 
 class Globals {
 
@@ -362,7 +363,12 @@ class Globals {
 		if (!defined('HISTORY_DATABASES')) {
 			return [];
 		}
-		return HISTORY_DATABASES;
+		$databases = HISTORY_DATABASES;
+		$type = Type::array(valueType: Type::string(), keyType: Type::string());
+		if (!$type->accepts($databases)) {
+			throw new Exception('HISTORY_DATABASES constant is malformed.');
+		}
+		return $databases;
 	}
 
 }
