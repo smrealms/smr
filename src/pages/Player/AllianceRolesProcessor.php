@@ -127,8 +127,7 @@ class AllianceRolesProcessor extends PlayerPageProcessor {
 			}
 
 		}
-		$container = new AllianceRoles();
-		$container->go();
+		new AllianceRoles()->go();
 	}
 
 }

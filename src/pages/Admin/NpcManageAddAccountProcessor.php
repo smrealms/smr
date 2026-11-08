@@ -28,8 +28,7 @@ class NpcManageAddAccountProcessor extends AccountPageProcessor {
 			'default_alliance_name' => Request::get('default_alliance'),
 		]);
 
-		$container = new NpcManage($this->selectedGameID);
-		$container->go();
+		new NpcManage($this->selectedGameID)->go();
 	}
 
 }

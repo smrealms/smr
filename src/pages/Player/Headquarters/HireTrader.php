@@ -29,7 +29,7 @@ class HireTrader extends PlayerPage {
 			$alliance = Alliance::getAllianceByName(NPC_FOR_HIRE_ALLIANCE_NAME, $player->getGameID());
 			foreach ($alliance->getMembers(includeNpc: true) as $npc) {
 				$hireCost = self::BASE_HIRE_COST + 10 * $npc->getExperience();
-				$container = new HireTraderProcessor(
+				$page = new HireTraderProcessor(
 					locationID: $this->locationID,
 					npcPlayerID: $npc->getPlayerID(),
 					hireCost: $hireCost,
@@ -37,7 +37,7 @@ class HireTrader extends PlayerPage {
 				$npcs[] = [
 					'player' => $npc,
 					'hireCost' => $hireCost,
-					'hireHref' => $container->href(),
+					'hireHref' => $page->href(),
 				];
 			}
 		} catch (AllianceNotFound) {

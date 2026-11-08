@@ -35,8 +35,7 @@ class PaperPublishProcessor extends PlayerPageProcessor {
 		);
 
 		//all done lets send back to the main GP page.
-		$container = new EditorOptions();
-		$container->go();
+		new EditorOptions()->go();
 	}
 
 }

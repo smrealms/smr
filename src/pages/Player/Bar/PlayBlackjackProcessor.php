@@ -74,14 +74,13 @@ class PlayBlackjackProcessor extends PlayerPageProcessor {
 			}
 		}
 
-		$container = new PlayBlackjack(
+		new PlayBlackjack(
 			locationID: $this->locationID,
 			table: $table,
 			gameEnded: $gameEnded,
 			bet: $bet,
 			winningsMsg: $winningsMsg,
-		);
-		$container->go();
+		)->go();
 	}
 
 }

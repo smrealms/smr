@@ -19,10 +19,8 @@ class PersonalBank extends PlayerPage {
 
 		Menu::bank();
 
-		$container = new PersonalBankProcessor();
-
 		$template->pageRenderer = fn() => PersonalBankRenderer::render(
-			ProcessingPage: $container,
+			ProcessingPage: new PersonalBankProcessor(),
 			ThisPlayer: $player,
 		);
 	}

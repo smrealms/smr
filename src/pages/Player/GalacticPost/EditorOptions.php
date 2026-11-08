@@ -42,15 +42,15 @@ class EditorOptions extends PlayerPage {
 			];
 
 			if ($hasEnoughArticles && !$published) {
-				$container = new PaperPublishProcessor($paper_id);
-				$paper['PublishHREF'] = $container->href();
+				$page = new PaperPublishProcessor($paper_id);
+				$paper['PublishHREF'] = $page->href();
 			}
 
-			$container = new PaperDeleteConfirm($paper_id);
-			$paper['DeleteHREF'] = $container->href();
+			$page = new PaperDeleteConfirm($paper_id);
+			$paper['DeleteHREF'] = $page->href();
 
-			$container = new PaperEdit($paper_id);
-			$paper['EditHREF'] = $container->href();
+			$page = new PaperEdit($paper_id);
+			$paper['EditHREF'] = $page->href();
 
 			$papers[] = $paper;
 		}

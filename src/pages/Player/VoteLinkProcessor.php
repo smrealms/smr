@@ -23,8 +23,7 @@ class VoteLinkProcessor extends PlayerPageProcessor {
 		$voting = '<b><span class="red">v</span>o<span class="blue">t</span><span class="red">i</span>n<span class="blue">g</span></b>';
 		$message = "Thank you for $voting! You will receive bonus turns once your vote is processed.";
 
-		$container = new CurrentSector(message: $message);
-		$container->go();
+		new CurrentSector(message: $message)->go();
 	}
 
 }

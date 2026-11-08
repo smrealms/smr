@@ -44,10 +44,10 @@ class FeatureRequest extends AccountPage {
 		foreach ($requestCategories as $category => $description) {
 			$status = self::statusFromCategory($category);
 
-			$container = new self($category);
+			$page = new self($category);
 			$categoryTable[$category] = [
 				'Selected' => $category === $this->category,
-				'HREF' => $container->href(),
+				'HREF' => $page->href(),
 				'Count' => self::getFeaturesCount($status, ($category === self::CATEGORY_NEW) ? self::NEW_REQUEST_DAYS : false),
 				'Description' => $description,
 			];
@@ -116,8 +116,8 @@ class FeatureRequest extends AccountPage {
 					'feature_request_id' => $featureRequestID,
 				]);
 				$featureRequests[$featureRequestID]['Comments'] = $numComments;
-				$commentsContainer = new FeatureRequestComments($featureRequestID, $this);
-				$featureRequests[$featureRequestID]['CommentsHREF'] = $commentsContainer->href();
+				$commentsPage = new FeatureRequestComments($featureRequestID, $this);
+				$featureRequests[$featureRequestID]['CommentsHREF'] = $commentsPage->href();
 			}
 		}
 

@@ -114,8 +114,8 @@ class BBCodeFormatter {
 					$allianceID = (int)$default;
 					$alliance = Alliance::getAlliance($allianceID, $this->gameID);
 					if ($linked && $alliance->getAllianceID() === $session->getPlayer()->getAllianceID()) {
-						$container = new AllianceMotd($alliance->getAllianceID());
-						return create_link($container, $alliance->getAllianceDisplayName());
+						$page = new AllianceMotd($alliance->getAllianceID());
+						return create_link($page, $alliance->getAllianceDisplayName());
 					}
 					return $alliance->getAllianceDisplayName($linked);
 
@@ -178,9 +178,9 @@ class BBCodeFormatter {
 					}
 					$allianceID = (int)$default;
 					$alliance = Alliance::getAlliance($allianceID, $this->gameID);
-					$container = new AllianceInviteAcceptProcessor($allianceID);
+					$page = new AllianceInviteAcceptProcessor($allianceID);
 					return '<div class="buttonA"><a class="buttonA" href="'
-						. $container->href() . '">Join '
+						. $page->href() . '">Join '
 						. $alliance->getAllianceDisplayName() . '</a></div>';
 			}
 		} catch (Throwable) {

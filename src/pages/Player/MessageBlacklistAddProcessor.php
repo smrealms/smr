@@ -21,8 +21,7 @@ class MessageBlacklistAddProcessor extends PlayerPageProcessor {
 			try {
 				$blacklisted = Player::getPlayerByPlayerName(Request::get('PlayerName'), $player->getGameID());
 			} catch (PlayerNotFound) {
-				$container = new MessageBlacklist('<span class="red bold">ERROR: </span>Player does not exist.');
-				$container->go();
+				new MessageBlacklist('<span class="red bold">ERROR: </span>Player does not exist.')->go();
 			}
 		}
 
@@ -35,14 +34,12 @@ class MessageBlacklistAddProcessor extends PlayerPageProcessor {
 		$dbResult = $db->select('message_blacklist', $params);
 
 		if ($dbResult->hasRecord()) {
-			$container = new MessageBlacklist('<span class="red bold">ERROR: </span>Player is already blacklisted.');
-			$container->go();
+			new MessageBlacklist('<span class="red bold">ERROR: </span>Player is already blacklisted.')->go();
 		}
 
 		$db->insert('message_blacklist', $params);
 
-		$container = new MessageBlacklist($blacklisted->getDisplayName() . ' has been added to your blacklist.');
-		$container->go();
+		new MessageBlacklist($blacklisted->getDisplayName() . ' has been added to your blacklist.')->go();
 	}
 
 }

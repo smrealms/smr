@@ -61,8 +61,8 @@ class CreateWarps extends AccountPage {
 		// Get links to other pages
 		$galLinks = [];
 		foreach ($galaxies as $gal) {
-			$container = new self($this->gameID, $gal->getGalaxyID(), $this->returnTo);
-			$galLinks[$gal->getGalaxyID()] = $container->href();
+			$page = new self($this->gameID, $gal->getGalaxyID(), $this->returnTo);
+			$galLinks[$gal->getGalaxyID()] = $page->href();
 		}
 
 		$template->pageRenderer = fn() => CreateWarpsRenderer::render(

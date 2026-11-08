@@ -5,7 +5,7 @@ namespace Smr\Npc\Exceptions;
 use Exception;
 
 /**
- * Use this exception to help override container forwarding for NPC's.
+ * Use this exception to help override page forwarding for NPCs.
  */
 class ForwardAction extends Exception {
 }

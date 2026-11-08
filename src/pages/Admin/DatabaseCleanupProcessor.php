@@ -76,8 +76,7 @@ class DatabaseCleanupProcessor extends AccountPageProcessor {
 			'diffBytes' => $diffBytes,
 			'endedGameIDs' => $endedGameIDs,
 		];
-		$container = new DatabaseCleanup($results);
-		$container->go();
+		new DatabaseCleanup($results)->go();
 	}
 
 }

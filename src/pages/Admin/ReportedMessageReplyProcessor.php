@@ -29,15 +29,14 @@ class ReportedMessageReplyProcessor extends AccountPageProcessor {
 		$offendedReply = Request::get('offendedReply');
 		$offendedBanPoints = Request::getInt('offendedBanPoints');
 		if (Request::get(self::ACTION) === $this->actionPreview->value) {
-			$container = new ReportedMessageReply(
+			new ReportedMessageReply(
 				offenderPlayerID: $this->offenderPlayerID,
 				offendedPlayerID: $this->offendedPlayerID,
 				offenderPreview: $offenderReply,
 				offenderBanPoints: $offenderBanPoints,
 				offendedPreview: $offendedReply,
 				offendedBanPoints: $offendedBanPoints,
-			);
-			$container->go();
+			)->go();
 		}
 
 		if ($offenderReply !== '') {

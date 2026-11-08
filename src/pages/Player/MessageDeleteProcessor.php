@@ -19,8 +19,7 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 
 		// If not deleting marked messages, we are deleting entire folders
 		if (Request::get('marked_or_all') === 'All Messages') {
-			$container = new MessageBoxDeleteProcessor($this->folderID);
-			$container->go();
+			new MessageBoxDeleteProcessor($this->folderID)->go();
 		}
 
 		if (!Request::has('message_id') && !Request::has('group_id')) {
@@ -74,8 +73,7 @@ class MessageDeleteProcessor extends PlayerPageProcessor {
 			]);
 		}
 
-		$container = new MessageView($this->folderID);
-		$container->go();
+		new MessageView($this->folderID)->go();
 	}
 
 }

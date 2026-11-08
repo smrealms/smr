@@ -21,8 +21,7 @@ class PaperEditProcessor extends PlayerPageProcessor {
 			'paper_id' => $this->paperID,
 		]);
 
-		$container = new PaperEdit($this->paperID);
-		$container->go();
+		new PaperEdit($this->paperID)->go();
 	}
 
 }

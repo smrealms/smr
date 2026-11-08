@@ -23,12 +23,12 @@ class ReportedMessageView extends AccountPage {
 			$sender = Messages::getMessagePlayer($dbRecord->getInt('from_player_id'));
 			$receiver = Messages::getMessagePlayer($dbRecord->getInt('to_player_id'));
 
-			$container = new ReportedMessageReply(
+			$page = new ReportedMessageReply(
 				offenderPlayerID: $dbRecord->getInt('from_player_id'),
 				offendedPlayerID: $dbRecord->getInt('to_player_id'),
 			);
 
-			$getName = function(Player|string $messagePlayer) use ($container, $account): string {
+			$getName = function(Player|string $messagePlayer) use ($page, $account): string {
 				if ($messagePlayer instanceof Player) {
 					$name = $messagePlayer->getDisplayName() . ' (Login: ' . $messagePlayer->getAccount()->getLogin() . ')';
 				} else {
@@ -36,7 +36,7 @@ class ReportedMessageView extends AccountPage {
 				}
 				// If we can send admin messages, make the names reply links
 				if ($account->hasPermission(PERMISSION_SEND_ADMIN_MESSAGE)) {
-					$name = create_link($container, $name);
+					$name = create_link($page, $name);
 				}
 				return $name;
 			};

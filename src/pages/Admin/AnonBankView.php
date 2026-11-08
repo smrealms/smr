@@ -39,8 +39,7 @@ class AnonBankView extends AccountPage {
 		}
 		if (count($rows) === 0) {
 			$message = '<p><span class="red">Anon account #' . $anonID . ' in Game ' . $gameID . ' does NOT exist!</span></p>';
-			$container = new AnonBankViewSelect($message);
-			$container->go();
+			new AnonBankViewSelect($message)->go();
 		}
 
 		$template->pageRenderer = fn() => AnonBankViewRenderer::render(

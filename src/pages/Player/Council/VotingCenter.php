@@ -41,9 +41,9 @@ class VotingCenter extends PlayerPage {
 			if ($raceID === $player->getRaceID()) {
 				continue;
 			}
-			$container = new VotingCenterProcessor($raceID);
+			$page = new VotingCenterProcessor($raceID);
 			$voteRelations[$raceID] = [
-				'VotePage' => $container,
+				'VotePage' => $page,
 				'Increased' => $votedForRace === $raceID && $votedFor === 'INC',
 				'Decreased' => $votedForRace === $raceID && $votedFor === 'DEC',
 				'Relations' => $raceRelations[$raceID],

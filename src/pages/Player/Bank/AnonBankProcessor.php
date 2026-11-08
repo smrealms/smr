@@ -27,8 +27,7 @@ class AnonBankProcessor extends PlayerPageProcessor {
 			create_error('Invalid anonymous account password!');
 		}
 
-		$container = new AnonBankDetail($account_num);
-		$container->go();
+		new AnonBankDetail($account_num)->go();
 	}
 
 }

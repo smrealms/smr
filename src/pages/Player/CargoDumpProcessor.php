@@ -97,8 +97,7 @@ class CargoDumpProcessor extends PlayerPageProcessor {
 		$ship->decreaseCargo($good_id, $amount);
 		$player->increaseHOF($amount, ['Trade', 'Goods', 'Jettisoned'], HOF_ALLIANCE);
 
-		$container = new CurrentSector(message: $msg);
-		$container->go();
+		new CurrentSector(message: $msg)->go();
 	}
 
 }

@@ -399,8 +399,7 @@ class CreateGalaxiesAutoProcessor extends AccountPageProcessor {
 		Sector::saveSectors();
 
 		$message = '<span class="green">Success</span> : created galaxies.';
-		$container = new EditGalaxy(canEdit: true, gameID: $this->gameId, message: $message);
-		$container->go();
+		new EditGalaxy(canEdit: true, gameID: $this->gameId, message: $message)->go();
 	}
 
 }

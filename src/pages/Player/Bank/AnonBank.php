@@ -50,8 +50,8 @@ class AnonBank extends PlayerPage {
 				$anon['last_transaction'] = 'No transactions';
 			}
 
-			$container = new AnonBankDetail($anon['anon_id']);
-			$anon['href'] = $container->href();
+			$page = new AnonBankDetail($anon['anon_id']);
+			$anon['href'] = $page->href();
 
 			$ownedAnon[] = $anon;
 		}

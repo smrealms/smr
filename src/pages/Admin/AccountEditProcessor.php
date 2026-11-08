@@ -253,11 +253,11 @@ class AccountEditProcessor extends AccountPageProcessor {
 
 		//get his login name
 		$msg = 'You ' . implode(' and ', $actions) . ' for the account of ' . $curr_account->getLogin() . '.';
-		$container = new AccountEditSearch(message: $msg);
+		$page = new AccountEditSearch(message: $msg);
 
 		// Update the selected account in case it has been changed
 		$curr_account->update();
-		$container->go();
+		$page->go();
 	}
 
 }

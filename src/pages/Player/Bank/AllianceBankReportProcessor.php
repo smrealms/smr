@@ -69,8 +69,7 @@ class AllianceBankReportProcessor extends PlayerPageProcessor {
 			]);
 		}
 
-		$container = new AllianceBankReport($alliance_id, reportSent: true);
-		$container->go();
+		new AllianceBankReport($alliance_id, reportSent: true)->go();
 	}
 
 }

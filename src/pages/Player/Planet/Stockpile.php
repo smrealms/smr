@@ -20,7 +20,7 @@ class Stockpile extends PlanetPage {
 				continue;
 			}
 
-			$container = new StockpileProcessor($goodID);
+			$page = new StockpileProcessor($goodID);
 
 			$goodInfo[$goodID] = [
 				'Name' => $good->name,
@@ -28,7 +28,7 @@ class Stockpile extends PlanetPage {
 				'ShipAmount' => $ship->getCargo($goodID),
 				'PlanetAmount' => $planet->getStockpile($goodID),
 				'DefaultAmount' => min($ship->getCargo($goodID), $planet->getRemainingStockpile($goodID)),
-				'Page' => $container,
+				'Page' => $page,
 			];
 		}
 

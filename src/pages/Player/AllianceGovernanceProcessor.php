@@ -76,8 +76,7 @@ class AllianceGovernanceProcessor extends PlayerPageProcessor {
 		}
 
 		$alliance->update();
-		$container = new AllianceRoster($alliance_id);
-		$container->go();
+		new AllianceRoster($alliance_id)->go();
 	}
 
 }

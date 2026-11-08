@@ -41,13 +41,13 @@ class AllianceMessageBoardAddProcessor extends PlayerPageProcessor {
 
 		$action = Request::get(self::ACTION);
 		if ($action === $this->actionPreview->value) {
-			$container = $this->lastPage;
-			$container->preview = $body;
-			if ($container instanceof AllianceMessageBoard) {
-				$container->topic = $topic;
-				$container->allianceEyesOnly = $allEyesOnly;
+			$page = $this->lastPage;
+			$page->preview = $body;
+			if ($page instanceof AllianceMessageBoard) {
+				$page->topic = $topic;
+				$page->allianceEyesOnly = $allEyesOnly;
 			}
-			$container->go();
+			$page->go();
 		}
 
 		// it could be we got kicked during writing the msg

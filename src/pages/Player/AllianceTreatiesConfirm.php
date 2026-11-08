@@ -25,8 +25,7 @@ class AllianceTreatiesConfirm extends PlayerPage {
 		]);
 		if ($dbResult->hasRecord()) {
 			$message = '<span class="red bold">ERROR:</span> There is already an outstanding treaty with that alliance.';
-			$container = new AllianceTreaties($message);
-			$container->go();
+			new AllianceTreaties($message)->go();
 		}
 
 		$alliance1 = Alliance::getAlliance($alliance_id_1, $player->getGameID());

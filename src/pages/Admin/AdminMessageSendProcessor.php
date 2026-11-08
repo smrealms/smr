@@ -36,13 +36,12 @@ class AdminMessageSendProcessor extends AccountPageProcessor {
 			} else {
 				$sendPlayerID = 0;
 			}
-			$container = new AdminMessageSend(
+			new AdminMessageSend(
 				sendGameID: $game_id,
 				preview: $message,
 				expireHours: $expire,
 				sendPlayerID: $sendPlayerID,
-			);
-			$container->go();
+			)->go();
 		}
 
 		$expire = IRound($expire * 3600); // convert hours to seconds
@@ -84,8 +83,7 @@ class AdminMessageSendProcessor extends AccountPageProcessor {
 		}
 		$msg = '<span class="green">SUCCESS: </span>Your message has been sent.';
 
-		$container = new AdminTools($msg);
-		$container->go();
+		new AdminTools($msg)->go();
 	}
 
 }

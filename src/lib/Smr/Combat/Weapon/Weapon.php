@@ -120,13 +120,11 @@ class Weapon extends AbstractWeapon {
 	}
 
 	public function getBuyHREF(Location $location): string {
-		$container = new ShopWeaponProcessor($location->getTypeID(), $this);
-		return $container->href();
+		return new ShopWeaponProcessor($location->getTypeID(), $this)->href();
 	}
 
 	public function getSellHREF(Location $location, int $orderID): string {
-		$container = new ShopWeaponProcessor($location->getTypeID(), $this, $orderID);
-		return $container->href();
+		return new ShopWeaponProcessor($location->getTypeID(), $this, $orderID)->href();
 	}
 
 	public function getWeaponTypeID(): int {

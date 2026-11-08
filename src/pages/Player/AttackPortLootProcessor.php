@@ -42,8 +42,7 @@ class AttackPortLootProcessor extends PlayerPageProcessor {
 		$ship->increaseCargo($good_id, $amount);
 		$port->decreaseGoodAmount($good_id, $amount);
 
-		$container = new AttackPortLoot();
-		$container->go();
+		new AttackPortLoot()->go();
 	}
 
 }

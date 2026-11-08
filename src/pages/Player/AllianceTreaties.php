@@ -45,10 +45,10 @@ class AllianceTreaties extends PlayerPage {
 				}
 			}
 			$otherAllianceID = $dbRecord->getInt('alliance_id_1');
-			$container = new AllianceTreatiesProcessor($otherAllianceID, true, $dbRecord->getBoolean('aa_access'));
-			$acceptHREF = $container->href();
-			$container = new AllianceTreatiesProcessor($otherAllianceID, false);
-			$rejectHREF = $container->href();
+			$page = new AllianceTreatiesProcessor($otherAllianceID, true, $dbRecord->getBoolean('aa_access'));
+			$acceptHREF = $page->href();
+			$page = new AllianceTreatiesProcessor($otherAllianceID, false);
+			$rejectHREF = $page->href();
 
 			$offers[] = [
 				'Alliance' => Alliance::getAlliance($otherAllianceID, $player->getGameID()),
@@ -58,13 +58,13 @@ class AllianceTreaties extends PlayerPage {
 			];
 		}
 
-		$container = new AllianceTreatiesConfirm();
+		$page = new AllianceTreatiesConfirm();
 
 		$template->pageRenderer = fn() => AllianceTreatiesRenderer::render(
 			Alliances: $alliances,
 			Message: $this->message,
 			Offers: $offers,
-			SendOfferHREF: $container->href(),
+			SendOfferHREF: $page->href(),
 		);
 	}
 

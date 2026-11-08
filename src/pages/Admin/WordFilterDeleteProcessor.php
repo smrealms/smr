@@ -17,8 +17,7 @@ class WordFilterDeleteProcessor extends AccountPageProcessor {
 			]);
 		}
 
-		$container = new WordFilter();
-		$container->go();
+		new WordFilter()->go();
 	}
 
 }

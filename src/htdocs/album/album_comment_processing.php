@@ -26,9 +26,7 @@ try {
 		if (!$account->hasPermission(PERMISSION_MODERATE_PHOTO_ALBUM)) {
 			create_error('You do not have permission to do that!');
 		}
-		$container = new AlbumModerate($album_id);
-
-		$href = $container->href(true);
+		$href = new AlbumModerate($album_id)->href(true);
 		$session->update();
 
 		header('Location: ' . $href);

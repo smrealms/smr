@@ -67,8 +67,8 @@ function parseBoolean(mixed $check): bool {
 }
 
 function linkCombatLog(int $logID): string {
-	$container = new CombatLogViewerVerifyProcessor($logID);
-	return '<a href="' . $container->href() . '"><img src="images/notify.gif" width="14" height="11" border="0" title="View the combat log" /></a>';
+	$page = new CombatLogViewerVerifyProcessor($logID);
+	return '<a href="' . $page->href() . '"><img src="images/notify.gif" width="14" height="11" border="0" title="View the combat log" /></a>';
 }
 
 function inify(string $text): string {
@@ -96,29 +96,29 @@ function handleUserError(string $message): never {
 	$session = Session::getInstance();
 	if ($session->hasGame()) {
 		$errorMsg = '<span class="red bold">ERROR: </span>' . $message;
-		$container = new CurrentSector(errorMessage: $errorMsg);
+		$page = new CurrentSector(errorMessage: $errorMsg);
 	} else {
-		$container = new ErrorDisplay(message: $message);
+		$page = new ErrorDisplay(message: $message);
 	}
 
 	if ($session->ajax) {
 		// To avoid the page just not refreshing when an error is encountered
 		// during ajax updates, use javascript to auto-redirect to the
 		// appropriate error page.
-		$errorHREF = $container->href();
+		$errorHREF = $page->href();
 		// json_encode the HREF as a safety precaution
 		$template = Template::getInstance();
 		$template->addJavascriptEvalForAjax('location.href = ' . json_encode($errorHREF, JSON_THROW_ON_ERROR));
 	}
-	$container->go();
+	$page->go();
 }
 
-function create_link(Page|string $container, string $text, ?string $class = null): string {
-	return '<a' . ($class === null ? '' : ' class="' . $class . '"') . ' href="' . (is_string($container) ? $container : $container->href()) . '">' . $text . '</a>';
+function create_link(Page|string $page, string $text, ?string $class = null): string {
+	return '<a' . ($class === null ? '' : ' class="' . $class . '"') . ' href="' . (is_string($page) ? $page : $page->href()) . '">' . $text . '</a>';
 }
 
-function create_submit_link(Page|string $container, string $text): string {
-	return create_link($container, $text, 'submitStyle');
+function create_submit_link(Page|string $page, string $text): string {
+	return create_link($page, $text, 'submitStyle');
 }
 
 /**
@@ -224,7 +224,7 @@ function pluralise(float|int $amount, string $word, bool $includeAmount = true):
  */
 function do_voodoo(): never {
 	$session = Session::getInstance();
-	$var = $session->getCurrentVar();
+	$page = $session->getCurrentPage();
 
 	// create account object
 	$account = $session->getAccount();
@@ -236,14 +236,14 @@ function do_voodoo(): never {
 		$player = $session->getPlayer();
 
 		if (!$session->ajax //AJAX should never do anything that requires a lock.
-			//&& ($var->file == 'current_sector.php' || $var->file == 'map_local.php') //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
+			//&& ($page->file == 'current_sector.php' || $page->file == 'map_local.php') //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
 		) {
 			// We skip locking if we've already failed to display error page
 			$lock = SectorLock::getInstance();
 			if (!$lock->hasFailed() && $lock->acquireForPlayer($player)) {
 				// Reload var info in case it changed between grabbing lock.
 				$session->fetchVarInfo();
-				if ($session->hasCurrentVar() === false) {
+				if ($session->hasCurrentPage() === false) {
 					if (ENABLE_DEBUG) {
 						$db = Database::getInstance();
 						$db->insert('debug', [
@@ -255,7 +255,7 @@ function do_voodoo(): never {
 					}
 					throw new UserError('Please do not spam click!');
 				}
-				$var = $session->getCurrentVar();
+				$page = $session->getCurrentPage();
 
 				// Reload player now that we have a lock.
 				$player = $session->getPlayer(true);
@@ -271,7 +271,7 @@ function do_voodoo(): never {
 		$player->updateTurns();
 
 		// Check if we need to redirect to a different page
-		if (!$var->skipRedirect && !$session->ajax) {
+		if (!$page->skipRedirect && !$session->ajax) {
 			if ($player->getGame()->hasEnded()) {
 				new GameLeaveProcessor(new GamePlay(errorMessage: 'The game has ended.'))->go();
 			}
@@ -286,7 +286,7 @@ function do_voodoo(): never {
 
 	// Execute the engine files.
 	// This is where the majority of the page-specific work is performed.
-	$var->process();
+	$page->process();
 
 	// Populate the template
 	$template = Template::getInstance();
@@ -334,7 +334,7 @@ function saveAllAndReleaseLock(bool $updateSession = true): void {
 		WeightedRandom::saveWeightedRandoms();
 		MissionState::saveMissionStates();
 		if ($updateSession) {
-			//Update session here to make sure current page $var is up to date before releasing lock.
+			//Update session here to make sure current page is up to date before releasing lock.
 			Session::getInstance()->update();
 		}
 		$lock->release();
@@ -419,9 +419,9 @@ function getSkeletonData(Template $template): SkeletonData {
 		);
 		foreach ($dbResult->records() as $dbRecord) {
 			$messageTypeID = $dbRecord->getInt('message_type_id');
-			$container = new MessageView($messageTypeID);
+			$page = new MessageView($messageTypeID);
 			$unreadMessages[] = [
-				'href' => $container->href(),
+				'href' => $page->href(),
 				'num' => $dbRecord->getInt('unread_count'),
 				'alt' => Messages::getMessageTypeNames($messageTypeID),
 				'img' => Messages::getMessageTypeImage($messageTypeID),
@@ -429,17 +429,17 @@ function getSkeletonData(Template $template): SkeletonData {
 		}
 
 		$ship = $player->getShip();
-		$var = $session->getCurrentVar();
+		$page = $session->getCurrentPage();
 		$dropMineLink = $ship->hasMines() ?
-			new ForcesDropProcessor($player->getPlayerID(), referrer: $var::class, dropMines: 1)->href() : null;
+			new ForcesDropProcessor($player->getPlayerID(), referrer: $page::class, dropMines: 1)->href() : null;
 		$dropCDLink = $ship->hasCDs() ?
-			new ForcesDropProcessor($player->getPlayerID(), referrer: $var::class, dropCDs: 1)->href() : null;
+			new ForcesDropProcessor($player->getPlayerID(), referrer: $page::class, dropCDs: 1)->href() : null;
 		$dropSDLink = $ship->hasSDs() ?
-			new ForcesDropProcessor($player->getPlayerID(), referrer: $var::class, dropSDs: 1)->href() : null;
+			new ForcesDropProcessor($player->getPlayerID(), referrer: $page::class, dropSDs: 1)->href() : null;
 
 		$rightPanelData = new RightPanelData(
 			player: $player,
-			underAttack: $var->showUnderAttack($player, $session->ajax),
+			underAttack: $page->showUnderAttack($player, $session->ajax),
 			unreadMessages: $unreadMessages,
 			playerNameLink: new SearchForTraderResult($player->getPlayerNumber())->href(),
 			hardwareLink: new HardwareConfigure()->href(),
@@ -476,8 +476,8 @@ function getSkeletonData(Template $template): SkeletonData {
 	$version = '';
 	if ($dbResult->hasRecord()) {
 		$dbRecord = $dbResult->record();
-		$container = new ChangelogView();
-		$version = create_link($container, 'v' . $dbRecord->getInt('major_version') . '.' . $dbRecord->getInt('minor_version') . '.' . $dbRecord->getInt('patch_level'));
+		$page = new ChangelogView();
+		$version = create_link($page, 'v' . $dbRecord->getInt('major_version') . '.' . $dbRecord->getInt('minor_version') . '.' . $dbRecord->getInt('patch_level'));
 	}
 	// Git commit version (truncate to 16 chars for display purposes)
 	$gitCommit = file_get_contents(GIT_COMMIT);

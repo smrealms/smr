@@ -96,8 +96,7 @@ class BuyDrinkProcessor extends PlayerPageProcessor {
 		$player->increaseHOF(1, ['Bar', 'Drinks', 'Total'], HOF_PUBLIC);
 		$message .= '</div>';
 
-		$container = new BarMain($this->locationID, $message);
-		$container->go();
+		new BarMain($this->locationID, $message)->go();
 	}
 
 }

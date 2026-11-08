@@ -28,8 +28,8 @@ class Vote extends AccountPage {
 			foreach ($dbResult->records() as $dbRecord) {
 				$voteID = $dbRecord->getInt('vote_id');
 				$voting[$voteID]['ID'] = $voteID;
-				$container = new VoteProcessor($voteID, new self());
-				$voting[$voteID]['HREF'] = $container->href();
+				$page = new VoteProcessor($voteID, new self());
+				$voting[$voteID]['HREF'] = $page->href();
 				$voting[$voteID]['Question'] = $dbRecord->getString('question');
 				$active = $dbRecord->getInt('end') > Epoch::time();
 				$voting[$voteID]['Active'] = $active;

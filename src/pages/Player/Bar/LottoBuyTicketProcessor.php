@@ -47,8 +47,7 @@ class LottoBuyTicketProcessor extends PlayerPageProcessor {
 		$message = ('<div class="center">Thanks for your purchase and good luck!  You currently');
 		$message .= (' own ' . pluralise($num, 'ticket') . '!</div><br />');
 
-		$container = new BarMain($this->locationID, $message);
-		$container->go();
+		new BarMain($this->locationID, $message)->go();
 	}
 
 }

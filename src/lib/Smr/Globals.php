@@ -114,8 +114,8 @@ class Globals {
 	public static function getColouredRaceName(int $raceID, int $relations, bool $linked = true): string {
 		$raceName = get_colored_text($relations, Race::getName($raceID));
 		if ($linked === true) {
-			$container = new ViewCouncil($raceID);
-			$raceName = create_link($container, $raceName);
+			$page = new ViewCouncil($raceID);
+			$raceName = create_link($page, $raceName);
 		}
 		return $raceName;
 	}
@@ -174,8 +174,8 @@ class Globals {
 	}
 
 	public static function getAttackTraderHREF(int $playerID): string {
-		$container = new AttackPlayerProcessor($playerID);
-		return self::$AVAILABLE_LINKS['AttackTrader'] = $container->href();
+		$page = new AttackPlayerProcessor($playerID);
+		return self::$AVAILABLE_LINKS['AttackTrader'] = $page->href();
 	}
 
 	public static function getBetaFunctionsHREF(): string { //BETA
@@ -187,13 +187,11 @@ class Globals {
 	}
 
 	public static function getWeaponReorderHREF(int $weaponOrderID, string $direction): string {
-		$container = new WeaponReorderProcessor($weaponOrderID, $direction);
-		return $container->href();
+		return new WeaponReorderProcessor($weaponOrderID, $direction)->href();
 	}
 
 	public static function getSmrFileCreateHREF(): string {
-		$container = new SectorsFileDownloadProcessor();
-		return $container->href();
+		return new SectorsFileDownloadProcessor()->href();
 	}
 
 	public static function getCurrentSectorMoveHREF(Player $player, int $toSector): string {
@@ -201,13 +199,13 @@ class Globals {
 	}
 
 	public static function getSectorMoveHREF(Player $player, int $toSector, CurrentSector|LocalMap $targetPage): string {
-		$container = new SectorMoveProcessor($toSector, $targetPage);
-		return self::$AVAILABLE_LINKS['Move' . $player->getSector()->getSectorDirection($toSector)] = $container->href();
+		$page = new SectorMoveProcessor($toSector, $targetPage);
+		return self::$AVAILABLE_LINKS['Move' . $player->getSector()->getSectorDirection($toSector)] = $page->href();
 	}
 
 	public static function getSectorScanHREF(Player $player, int $toSector): string {
-		$container = new SectorScan($toSector);
-		return self::$AVAILABLE_LINKS['Scan' . $player->getSector()->getSectorDirection($toSector)] = $container->href();
+		$page = new SectorScan($toSector);
+		return self::$AVAILABLE_LINKS['Scan' . $player->getSector()->getSectorDirection($toSector)] = $page->href();
 	}
 
 	public static function getPlotCourseHREF(?int $fromSector = null, ?int $toSector = null): string {
@@ -225,8 +223,7 @@ class Globals {
 	}
 
 	public static function getAllianceBankHREF(int $allianceID): string {
-		$container = new AllianceBank($allianceID);
-		return $container->href();
+		return new AllianceBank($allianceID)->href();
 	}
 
 	public static function getAllianceRosterHREF(?int $allianceID = null): string {
@@ -282,8 +279,7 @@ class Globals {
 	}
 
 	public static function getSendCouncilMessageHREF(int $raceID): string {
-		$container = new MessageCouncil($raceID);
-		return $container->href();
+		return new MessageCouncil($raceID)->href();
 	}
 
 	public static function getTraderStatusHREF(): string {
@@ -291,8 +287,7 @@ class Globals {
 	}
 
 	public static function getCouncilHREF(int $raceID): string {
-		$container = new ViewCouncil($raceID);
-		return $container->href();
+		return new ViewCouncil($raceID)->href();
 	}
 
 	public static function getTraderRelationsHREF(): string {

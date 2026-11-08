@@ -74,9 +74,9 @@ class Menu {
 
 		$menuItems = [];
 		foreach ($links as [$class, $text]) {
-			$container = new $class($locationTypeID);
+			$page = new $class($locationTypeID);
 			$menuItems[] = [
-				'Link' => $container->href(),
+				'Link' => $page->href(),
 				'Text' => $text,
 			];
 		}
@@ -201,8 +201,8 @@ class Menu {
 		$menuItems = [];
 
 		foreach (CombatLogType::cases() as $type) {
-			$container = new CombatLogList($type);
-			$menuItems[] = ['Link' => $container->href(), 'Text' => $type->name];
+			$page = new CombatLogList($type);
+			$menuItems[] = ['Link' => $page->href(), 'Text' => $type->name];
 		}
 
 		$template = Template::getInstance();
@@ -284,9 +284,9 @@ class Menu {
 		$links[] = [new AnonBank(), 'Anonymous Account'];
 
 		$menuItems = [];
-		foreach ($links as [$container, $label]) {
+		foreach ($links as [$page, $label]) {
 			$menuItems[] = [
-				'Link' => $container->href(),
+				'Link' => $page->href(),
 				'Text' => $label,
 			];
 		}
@@ -298,37 +298,37 @@ class Menu {
 	public static function council(int $race_id): void {
 		$player = Session::getInstance()->getPlayer();
 
-		$container = new ViewCouncil($race_id);
+		$page = new ViewCouncil($race_id);
 		$menu_items = [];
 		$menu_items[] = [
-			'Link' => $container->href(),
+			'Link' => $page->href(),
 			'Text' => 'View Council',
 		];
 
-		$container = new PoliticalStatus($race_id);
+		$page = new PoliticalStatus($race_id);
 		$menu_items[] = [
-			'Link' => $container->href(),
+			'Link' => $page->href(),
 			'Text' => 'Political Status',
 		];
 
-		$container = new MessageCouncil($race_id);
+		$page = new MessageCouncil($race_id);
 		$menu_items[] = [
-			'Link' => $container->href(),
+			'Link' => $page->href(),
 			'Text' => 'Send Message',
 		];
 
 		if ($player->getRaceID() === $race_id) {
 			if ($player->isOnCouncil()) {
-				$container = new VotingCenter();
+				$page = new VotingCenter();
 				$menu_items[] = [
-					'Link' => $container->href(),
+					'Link' => $page->href(),
 					'Text' => 'Voting Center',
 				];
 			}
 			if ($player->isPresident()) {
-				$container = new Embassy();
+				$page = new Embassy();
 				$menu_items[] = [
-					'Link' => $container->href(),
+					'Link' => $page->href(),
 					'Text' => 'Embassy',
 				];
 			}

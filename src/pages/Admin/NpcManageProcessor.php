@@ -113,8 +113,7 @@ class NpcManageProcessor extends AccountPageProcessor {
 			$npcPlayer->getShip()->update();
 		}
 
-		$container = new NpcManage($this->selectedGameID);
-		$container->go();
+		new NpcManage($this->selectedGameID)->go();
 	}
 
 }

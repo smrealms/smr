@@ -21,7 +21,7 @@ class ReportedMessageReply extends AccountPage {
 	public function build(Account $account, Template $template): void {
 		$template->pageTopic = 'Reply To Reported Messages';
 
-		$container = new ReportedMessageReplyProcessor(
+		$page = new ReportedMessageReplyProcessor(
 			offenderPlayerID: $this->offenderPlayerID,
 			offendedPlayerID: $this->offendedPlayerID,
 		);
@@ -37,7 +37,7 @@ class ReportedMessageReply extends AccountPage {
 		}
 
 		$template->pageRenderer = fn() => ReportedMessageReplyRenderer::render(
-			NotifyReplyFormPage: $container,
+			NotifyReplyFormPage: $page,
 			Offender: $offender,
 			Offended: $offended,
 			PreviewOffender: $this->offenderPreview,

@@ -33,11 +33,10 @@ function hit_sector_mines(Player $player): void {
 		$turns = $forcesHit->getBumpTurnCost($ship);
 		$player->takeTurns($turns, $turns);
 		$msg = 'You have just flown past a sprinkle of mines.<br />' . $protectedMsg . ',<br />but it has cost you <span class="red">' . pluralise($turns, 'turn') . '</span> to navigate the minefield safely.';
-		$container = new CurrentSector(message: $msg);
-		$container->go();
+		$page = new CurrentSector(message: $msg);
 	} else {
-		$container = new AttackForcesProcessor($forcesHit->getOwnerPlayerID(), bump: true);
-		$container->go();
+		$page = new AttackForcesProcessor($forcesHit->getOwnerPlayerID(), bump: true);
 	}
+	$page->go();
 
 }

@@ -56,8 +56,7 @@ class EditGalaxy extends AccountPage {
 		if (count($galaxies) === 0) {
 			// Game was created, but no galaxies exist, so go back to
 			// the galaxy generation page
-			$container = new CreateGalaxies($this->gameID);
-			$container->go();
+			new CreateGalaxies($this->gameID)->go();
 		}
 
 		$galaxy = Galaxy::getGalaxy($this->gameID, $this->galaxyID);
@@ -98,25 +97,25 @@ class EditGalaxy extends AccountPage {
 				'CreateStatus' => new EditGameCreateStatusProcessor($this->gameID, $returnTo)->href(),
 			];
 
-			$container = new ToggleLinkProcessor($this->gameID, $returnTo);
-			$container->allowAjax = true;
-			$editLinks['ToggleLink'] = $container->href();
+			$page = new ToggleLinkProcessor($this->gameID, $returnTo);
+			$page->allowAjax = true;
+			$editLinks['ToggleLink'] = $page->href();
 
-			$container = new DragLocationProcessor($this->gameID, $returnTo);
-			$container->allowAjax = true;
-			$editLinks['DragLocation'] = $container->href();
+			$page = new DragLocationProcessor($this->gameID, $returnTo);
+			$page->allowAjax = true;
+			$editLinks['DragLocation'] = $page->href();
 
-			$container = new DragPlanetProcessor($this->gameID, $returnTo);
-			$container->allowAjax = true;
-			$editLinks['DragPlanet'] = $container->href();
+			$page = new DragPlanetProcessor($this->gameID, $returnTo);
+			$page->allowAjax = true;
+			$editLinks['DragPlanet'] = $page->href();
 
-			$container = new DragPortProcessor($this->gameID, $returnTo);
-			$container->allowAjax = true;
-			$editLinks['DragPort'] = $container->href();
+			$page = new DragPortProcessor($this->gameID, $returnTo);
+			$page->allowAjax = true;
+			$editLinks['DragPort'] = $page->href();
 
-			$container = new DragWarpProcessor($this->gameID, $returnTo);
-			$container->allowAjax = true;
-			$editLinks['DragWarp'] = $container->href();
+			$page = new DragWarpProcessor($this->gameID, $returnTo);
+			$page->allowAjax = true;
+			$editLinks['DragWarp'] = $page->href();
 
 			if (!$game->isEnabled()) {
 				$db = Database::getInstance();

@@ -48,8 +48,7 @@ class ValidateProcessor extends AccountPageProcessor {
 			]);
 		}
 
-		$container = new LoginCheckAnnouncementsProcessor();
-		$container->go();
+		new LoginCheckAnnouncementsProcessor()->go();
 	}
 
 }

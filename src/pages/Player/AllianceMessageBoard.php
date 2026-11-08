@@ -131,8 +131,8 @@ class AllianceMessageBoard extends PlayerPage {
 				]);
 				$canDelete = $player->getPlayerID() === $authorPlayerID || $dbResult2->record()->getBoolean('mb_messages');
 				if ($canDelete) {
-					$container = new AllianceMessageBoardDeleteThreadProcessor($allianceID, $this, $threadID);
-					$threads[$i]['DeleteHref'] = $container->href();
+					$page = new AllianceMessageBoardDeleteThreadProcessor($allianceID, $this, $threadID);
+					$threads[$i]['DeleteHref'] = $page->href();
 				}
 				$threads[$i]['Replies'] = $dbRecord->getInt('num_replies');
 				$threads[$i]['SendTime'] = $dbRecord->getInt('sendtime');
@@ -140,8 +140,8 @@ class AllianceMessageBoard extends PlayerPage {
 			}
 
 			foreach ($threads as $j => $thread) {
-				$container = new AllianceMessageBoardView($this->allianceID, $thread_ids, $thread_topics, $alliance_eyes, $j);
-				$threads[$j]['ViewHref'] = $container->href();
+				$page = new AllianceMessageBoardView($this->allianceID, $thread_ids, $thread_topics, $alliance_eyes, $j);
+				$threads[$j]['ViewHref'] = $page->href();
 			}
 		}
 

@@ -34,8 +34,7 @@ class ArticleWriteProcessor extends PlayerPageProcessor {
 		}
 
 		if (Request::get(self::ACTION) === $this->actionPreview->value) {
-			$container = new ArticleWrite($this->articleID, $title, $message);
-			$container->go();
+			new ArticleWrite($this->articleID, $title, $message)->go();
 		}
 
 		$db = Database::getInstance();
@@ -83,8 +82,7 @@ class ArticleWriteProcessor extends PlayerPageProcessor {
 				['player_id' => $player->getPlayerID()],
 			);
 			$msg = '<span class="green">SUCCESS</span>: Your article has been submitted.';
-			$container = new CurrentSector(message: $msg);
-			$container->go();
+			new CurrentSector(message: $msg)->go();
 		}
 	}
 

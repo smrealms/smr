@@ -36,7 +36,7 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 			create_error('You can\'t drop forces in a sector with a location!');
 		}
 
-		// take either from container or request, prefer container
+		// Take either from this page or the request, preferring the page.
 		$drop_mines = $this->dropMines ?? Request::getInt('drop_mines', 0);
 		$take_mines = $this->takeMines ?? Request::getInt('take_mines', 0);
 		$drop_combat_drones = $this->dropCDs ?? Request::getInt('drop_combat_drones', 0);
@@ -228,11 +228,11 @@ class ForcesDropProcessor extends PlayerPageProcessor {
 
 		// If we dropped forces from the Local Map, stay on that page
 		if ($this->referrer === LocalMap::class) {
-			$container = new LocalMap();
+			$page = new LocalMap();
 		} else {
-			$container = new CurrentSector();
+			$page = new CurrentSector();
 		}
-		$container->go();
+		$page->go();
 	}
 
 }

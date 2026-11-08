@@ -18,8 +18,7 @@ class ExamineTrader extends PlayerPage {
 
 		if ($targetPlayer->isDead()) {
 			$msg = '<span class="red bold">ERROR:</span> Target already dead.';
-			$container = new CurrentSector(message: $msg);
-			$container->go();
+			new CurrentSector(message: $msg)->go();
 		}
 
 		$template->pageTopic = 'Examine Ship';

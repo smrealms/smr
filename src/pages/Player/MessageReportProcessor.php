@@ -15,7 +15,7 @@ class MessageReportProcessor extends PlayerPageProcessor {
 	) {}
 
 	public function build(Player $player): never {
-		$container = new MessageView($this->folderID);
+		$page = new MessageView($this->folderID);
 
 		// get next id
 		$db = Database::getInstance();
@@ -50,7 +50,7 @@ class MessageReportProcessor extends PlayerPageProcessor {
 			'notify_time' => Epoch::time(),
 		]);
 
-		$container->go();
+		$page->go();
 	}
 
 }

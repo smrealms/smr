@@ -58,11 +58,11 @@ class MessageBox extends PlayerPage {
 			}
 			$messageBox['MessageCount'] = $count;
 
-			$container = new MessageView($message_type_id);
-			$messageBox['ViewHref'] = $container->href();
+			$page = new MessageView($message_type_id);
+			$messageBox['ViewHref'] = $page->href();
 
-			$container = new MessageBoxDeleteProcessor($message_type_id);
-			$messageBox['DeleteHref'] = $container->href();
+			$page = new MessageBoxDeleteProcessor($message_type_id);
+			$messageBox['DeleteHref'] = $page->href();
 			$messageBoxes[] = $messageBox;
 		}
 

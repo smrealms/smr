@@ -79,8 +79,7 @@ class AlbumModerateProcessor extends AccountPageProcessor {
 			create_error('No action chosen!');
 		}
 
-		$container = new AlbumModerate($this->albumAccountID);
-		$container->go();
+		new AlbumModerate($this->albumAccountID)->go();
 	}
 
 }

@@ -83,11 +83,11 @@ class Summary extends HistoryPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$alliance = htmlentities($dbRecord->getString('alliance_name'));
 			$id = $dbRecord->getInt('alliance_id');
-			$container = new AllianceDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $id, $this);
+			$page = new AllianceDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $id, $this);
 			$allianceExp[] = [
 				'bold' => $dbRecord->getInt('alliance_id') === $oldAllianceID ? 'class="bold"' : '',
 				'exp' => $dbRecord->getInt('exp'),
-				'link' => create_link($container, $alliance),
+				'link' => create_link($page, $alliance),
 			];
 		}
 
@@ -103,11 +103,11 @@ class Summary extends HistoryPage {
 		foreach ($dbResult->records() as $dbRecord) {
 			$alliance = htmlentities($dbRecord->getString('alliance_name'));
 			$id = $dbRecord->getInt('alliance_id');
-			$container = new AllianceDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $id, $this);
+			$page = new AllianceDetail($this->historyDatabase, $this->historyGameID, $this->historyGameName, $id, $this);
 			$allianceKills[] = [
 				'bold' => $dbRecord->getInt('alliance_id') === $oldAllianceID ? 'class="bold"' : '',
 				'kills' => $dbRecord->getInt('kills'),
-				'link' => create_link($container, $alliance),
+				'link' => create_link($page, $alliance),
 			];
 		}
 

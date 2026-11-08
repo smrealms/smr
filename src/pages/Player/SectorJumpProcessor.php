@@ -56,8 +56,7 @@ class SectorJumpProcessor extends PlayerPageProcessor {
 
 		// If the Calculate Turn Cost button was pressed
 		if (Request::get(self::ACTION, '') === $this->actionCalculate->value) {
-			$container = new SectorJumpCalculate($target);
-			$container->go();
+			new SectorJumpCalculate($target)->go();
 		}
 
 		if ($sector->hasForces()) {

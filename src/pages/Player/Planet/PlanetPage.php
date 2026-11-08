@@ -36,7 +36,7 @@ abstract class PlanetPage extends PlayerPage {
 			if ($option !== PlanetMenuOption::MAIN && !$planet->hasMenuOption($option)) {
 				continue;
 			}
-			$container = match ($option) {
+			$page = match ($option) {
 				PlanetMenuOption::MAIN => new Main(),
 				PlanetMenuOption::CONSTRUCTION => new Construction(),
 				PlanetMenuOption::DEFENSE => new Defense(),
@@ -46,11 +46,11 @@ abstract class PlanetPage extends PlayerPage {
 			};
 			// Bold this link if this is the page we're currently on
 			$text = $option->value;
-			if ($this instanceof $container) {
+			if ($this instanceof $page) {
 				$text = '<b>' . $text . '</b>';
 			}
 			$menuItems[] = [
-				'Link' => $container->href(),
+				'Link' => $page->href(),
 				'Text' => $text,
 			];
 		}

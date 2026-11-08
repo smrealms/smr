@@ -104,8 +104,7 @@ class GameJoinProcessor extends AccountPageProcessor {
 		]);
 
 		// Send the player directly into the game
-		$container = new GamePlayProcessor($player->getPlayerID());
-		$container->go();
+		new GamePlayProcessor($player->getPlayerID())->go();
 	}
 
 }

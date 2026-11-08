@@ -69,39 +69,38 @@ class SearchForTraderResult extends PlayerPage {
 		$playerLinks = function(Player $linkPlayer) use ($player): array {
 			$result = ['Player' => $linkPlayer];
 
-			$container = new self($linkPlayer->getPlayerNumber());
-			$result['SearchHREF'] = $container->href();
+			$page = new self($linkPlayer->getPlayerNumber());
+			$result['SearchHREF'] = $page->href();
 
-			$container = new ViewCouncil($linkPlayer->getRaceID());
-			$result['RaceHREF'] = $container->href();
+			$page = new ViewCouncil($linkPlayer->getRaceID());
+			$result['RaceHREF'] = $page->href();
 
-			$container = new MessageSend($linkPlayer->getPlayerID());
-			$result['MessageHREF'] = $container->href();
+			$page = new MessageSend($linkPlayer->getPlayerID());
+			$result['MessageHREF'] = $page->href();
 
-			$container = new BountyView($linkPlayer->getPlayerID());
-			$result['BountyHREF'] = $container->href();
+			$page = new BountyView($linkPlayer->getPlayerID());
+			$result['BountyHREF'] = $page->href();
 
 			$result['HofHREF'] = $linkPlayer->getPersonalHofHREF();
 
-			$container = new NewsReadAdvanced(
+			$page = new NewsReadAdvanced(
 				gameID: $linkPlayer->getGameID(),
 				submit: 'player',
 				label: $linkPlayer->getPlayerName(),
 				playerIDs: [$linkPlayer->getPlayerID()],
 			);
-			$result['NewsHREF'] = $container->href();
+			$result['NewsHREF'] = $page->href();
 
 			if ($player->isObserver()) {
-				$container = new SectorJumpProcessor($linkPlayer->getSectorID());
-				$result['JumpHREF'] = $container->href();
+				$page = new SectorJumpProcessor($linkPlayer->getSectorID());
+				$result['JumpHREF'] = $page->href();
 			}
 
 			return $result;
 		};
 
 		if ($resultPlayer === null && count($similarPlayers) === 0) {
-			$container = new SearchForTrader(emptyResult: true);
-			$container->go();
+			new SearchForTrader(emptyResult: true)->go();
 		}
 
 		if ($resultPlayer !== null) {

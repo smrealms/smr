@@ -43,9 +43,9 @@ class HallOfFame {
 			// Make each category a link to view the subcategory page
 			$category = $extra[0];
 			if (!isset($categories[$category])) {
-				$containerViewType = implode(':', array_merge($viewTypeList, [$category]));
-				$container = $page->withViewType($containerViewType);
-				$categories[$category] = create_link($container, $category);
+				$pageViewType = implode(':', array_merge($viewTypeList, [$category]));
+				$targetPage = $page->withViewType($pageViewType);
+				$categories[$category] = create_link($targetPage, $category);
 
 				// Prepare subcategories
 				//$subcategories[$category] = [];
@@ -63,12 +63,12 @@ class HallOfFame {
 							$rankMsg = ' (#' . $rank['Rank'] . ')';
 						}
 					}
-					$containerViewType = $hofType;
+					$pageViewType = $hofType;
 				} else {
-					$containerViewType = implode(':', array_merge($viewTypeList, [$category, $subcategory]));
+					$pageViewType = implode(':', array_merge($viewTypeList, [$category, $subcategory]));
 				}
-				$container = $page->withViewType($containerViewType);
-				$subcategories[$category][$subcategory] = create_submit_link($container, $subcategory . $rankMsg);
+				$targetPage = $page->withViewType($pageViewType);
+				$subcategories[$category][$subcategory] = create_submit_link($targetPage, $subcategory . $rankMsg);
 			}
 		}
 
@@ -194,16 +194,16 @@ class HallOfFame {
 		$return = ('<tr>');
 		$return .= ('<td ' . $bold . '>' . $rank . '</td>');
 
-		$container = new HallOfFamePersonal($accountID, $gameID);
-		$return .= ('<td ' . $bold . '>' . create_link($container, $hofName) . '</td>');
+		$targetPage = new HallOfFamePersonal($accountID, $gameID);
+		$return .= ('<td ' . $bold . '>' . create_link($targetPage, $hofName) . '</td>');
 		$return .= ('<td ' . $bold . '>' . $amount . '</td>');
 		$return .= ('</tr>');
 		return $return;
 	}
 
 	public static function buildBreadcrumb(HallOfFameAll|HallOfFamePersonal $page, string $hofName): string {
-		$container = $page->withViewType(null);
-		$viewing = '<span class="bold">Currently viewing: </span>' . create_link($container, $hofName);
+		$targetPage = $page->withViewType(null);
+		$viewing = '<span class="bold">Currently viewing: </span>' . create_link($targetPage, $hofName);
 
 		if ($page->viewType !== null) {
 			$typeList = explode(':', $page->viewType);
@@ -214,8 +214,8 @@ class HallOfFame {
 		foreach ($typeList as $hofType) {
 			$breadcrumbTypeList[] = $hofType;
 			$viewType = implode(':', $breadcrumbTypeList);
-			$container = $page->withViewType($viewType);
-			$viewing .= ' &rarr; ' . create_link($container, $hofType);
+			$targetPage = $page->withViewType($viewType);
+			$viewing .= ' &rarr; ' . create_link($targetPage, $hofType);
 		}
 		$viewing .= '<br /><br />';
 		return $viewing;

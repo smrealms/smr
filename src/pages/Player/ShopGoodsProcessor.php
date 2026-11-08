@@ -94,15 +94,14 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 		$stealing = Request::get(self::ACTION, '') === $this->actionSteal->value;
 
 		if (!$stealing && $this->bargainNumber === 0) {
-			$container = new ShopGoodsNegotiate(
+			new ShopGoodsNegotiate(
 				goodID: $this->goodID,
 				amount: $amount,
 				bargainNumber: $this->bargainNumber,
 				bargainPrice: $offered_price,
 				offeredPrice: $offered_price,
 				idealPrice: $ideal_price,
-			);
-			$container->go();
+			)->go();
 		}
 
 		if ($stealing) {
@@ -138,8 +137,7 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 				$player->decreaseRelationsByTrade($amount, $port->getRaceID());
 
 				$fineMessage = '<span class="red">A Federation patrol caught you loading stolen goods onto your ship!<br />The stolen goods have been confiscated and you have been fined ' . number_format($fine) . ' credits.</span>';
-				$container = new ShopGoods($fineMessage);
-				$container->go();
+				new ShopGoods($fineMessage)->go();
 			}
 		}
 
@@ -224,9 +222,9 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 			}
 
 			if ($ship->getEmptyHolds() === 0) {
-				$container = new CurrentSector(tradeMessage: $tradeMessage);
+				$page = new CurrentSector(tradeMessage: $tradeMessage);
 			} else {
-				$container = new ShopGoods($tradeMessage);
+				$page = new ShopGoods($tradeMessage);
 			}
 		} else {
 			// lose relations for bad bargain
@@ -263,7 +261,7 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 			}
 
 			// transfer values to next page
-			$container = new ShopGoodsNegotiate(
+			$page = new ShopGoodsNegotiate(
 				goodID: $this->goodID,
 				amount: $amount,
 				bargainNumber: $this->bargainNumber,
@@ -279,7 +277,7 @@ class ShopGoodsProcessor extends PlayerPageProcessor {
 		}
 
 		// go to next page
-		$container->go();
+		$page->go();
 	}
 
 }

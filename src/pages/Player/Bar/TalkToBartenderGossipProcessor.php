@@ -34,8 +34,7 @@ class TalkToBartenderGossipProcessor extends PlayerPageProcessor {
 			$message = 'So you\'re the tight-lipped sort, eh? No matter, no matter...<br /><br /><i>The bartender slowly scans the room with squinted eyes and then leans in close.</i><br /><br />Must be a sensational story you\'ve got there. Don\'t worry, I can keep a secret. What\'s on your mind?';
 		}
 
-		$container = new TalkToBartender($this->locationID, $message);
-		$container->go();
+		new TalkToBartender($this->locationID, $message)->go();
 	}
 
 }

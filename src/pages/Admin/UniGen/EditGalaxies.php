@@ -18,15 +18,15 @@ class EditGalaxies extends AccountPage {
 		$game = Game::getGame($this->gameID);
 		$template->pageTopic = 'Edit Galaxies : ' . $game->getDisplayName();
 
-		$container = new EditGalaxiesProcessor($this->gameID, $this->returnTo);
+		$page = new EditGalaxiesProcessor($this->gameID, $this->returnTo);
 		$submit = [
 			'value' => 'Edit Galaxies',
-			'href' => $container->href(),
+			'href' => $page->href(),
 		];
 
 		$galaxies = [];
 		foreach ($game->getGalaxies() as $galaxyId => $galaxy) {
-			$container = new EditGalaxiesDelProcessor(
+			$page = new EditGalaxiesDelProcessor(
 				gameId: $this->gameID,
 				deleteGalaxyId: $galaxyId,
 				returnTo: $this,
@@ -37,18 +37,18 @@ class EditGalaxies extends AccountPage {
 				'Height' => $galaxy->getHeight(),
 				'Type' => $galaxy->getGalaxyType(),
 				'ForceMaxHours' => $galaxy->getMaxForceTime() / 3600,
-				'DelHREF' => $container->href(),
+				'DelHREF' => $page->href(),
 			];
 		}
 
-		$container = new EditGalaxiesAddProcessor($this->gameID, $this);
+		$page = new EditGalaxiesAddProcessor($this->gameID, $this);
 
 		$template->pageRenderer = fn() => EditGalaxiesRenderer::render(
 			GameEnabled: $game->isEnabled(),
 			Submit: $submit,
 			Galaxies: $galaxies,
 			BackHREF: $this->returnTo->href(),
-			AddHREF: $container->href(),
+			AddHREF: $page->href(),
 			MaxAddId: $game->getNumberOfGalaxies() + 1,
 		);
 	}

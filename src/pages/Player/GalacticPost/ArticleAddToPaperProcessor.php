@@ -29,8 +29,7 @@ class ArticleAddToPaperProcessor extends PlayerPageProcessor {
 			'article_id' => $this->articleID,
 		]);
 		//we now have that article in the paper
-		$container = new ArticleView();
-		$container->go();
+		new ArticleView()->go();
 	}
 
 }

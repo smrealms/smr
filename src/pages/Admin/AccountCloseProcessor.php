@@ -65,8 +65,7 @@ class AccountCloseProcessor extends AccountPageProcessor {
 		if ($amount > 20) {
 			$msg .= '  How do you sleep at night ;)';
 		}
-		$container = new AdminTools($msg);
-		$container->go();
+		new AdminTools($msg)->go();
 	}
 
 }

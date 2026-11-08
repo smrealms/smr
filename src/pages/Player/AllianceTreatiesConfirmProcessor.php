@@ -49,8 +49,7 @@ class AllianceTreatiesConfirmProcessor extends PlayerPageProcessor {
 
 		Player::sendMessageFromAllianceAmbassador($leader2, $message);
 
-		$container = new AllianceTreaties('The treaty offer has been sent.');
-		$container->go();
+		new AllianceTreaties('The treaty offer has been sent.')->go();
 	}
 
 }

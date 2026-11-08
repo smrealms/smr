@@ -39,8 +39,7 @@ class AttackPortPayoutProcessor extends PlayerPageProcessor {
 			PortPayoutType::Destroy => 'The busted port drifts before you, inert and almost peaceful now that the defences have been neutralised. You notice a large breach in its central hull, and see its primary power source through disfigured metal teeth. Either out of spite or cold calculation, you take aim at the exposed nuclear core and pull the trigger. It is instantly vaporized. Nothing remains of the port and its inhabitants apart from a scintillating cloud of radioactive dust. You monster.',
 		};
 
-		$container = new CurrentSector(message: $msg);
-		$container->go();
+		new CurrentSector(message: $msg)->go();
 	}
 
 }

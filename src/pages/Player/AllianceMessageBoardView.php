@@ -62,16 +62,16 @@ class AllianceMessageBoardView extends PlayerPage {
 		}
 
 		if (isset($this->threadIDs[$thread_index - 1])) {
-			$container = clone($this);
-			$container->threadIndex -= 1;
-			$prevThread = ['Topic' => $this->threadTopics[$thread_index - 1], 'Href' => $container->href()];
+			$page = clone($this);
+			$page->threadIndex -= 1;
+			$prevThread = ['Topic' => $this->threadTopics[$thread_index - 1], 'Href' => $page->href()];
 		} else {
 			$prevThread = null;
 		}
 		if (isset($this->threadIDs[$thread_index + 1])) {
-			$container = clone($this);
-			$container->threadIndex += 1;
-			$nextThread = ['Topic' => $this->threadTopics[$thread_index + 1], 'Href' => $container->href()];
+			$page = clone($this);
+			$page->threadIndex += 1;
+			$nextThread = ['Topic' => $this->threadTopics[$thread_index + 1], 'Href' => $page->href()];
 		} else {
 			$nextThread = null;
 		}
@@ -118,14 +118,14 @@ class AllianceMessageBoardView extends PlayerPage {
 				'SendTime' => $dbRecord->getInt('time'),
 			];
 			if ($thread['CanDelete']) {
-				$container = new AllianceMessageBoardDeleteReplyProcessor($allianceID, $this, $thread_id, $replyID);
-				$thread['Replies'][$replyID]['DeleteHref'] = $container->href();
+				$page = new AllianceMessageBoardDeleteReplyProcessor($allianceID, $this, $thread_id, $replyID);
+				$thread['Replies'][$replyID]['DeleteHref'] = $page->href();
 			}
 		}
 
 		if ($mbWrite || $player->isObserver()) {
-			$container = new AllianceMessageBoardAddProcessor($allianceID, $this, $thread_id);
-			$thread['CreateThreadReplyFormPage'] = $container;
+			$page = new AllianceMessageBoardAddProcessor($allianceID, $this, $thread_id);
+			$thread['CreateThreadReplyFormPage'] = $page;
 		}
 
 		$template->pageRenderer = fn() => AllianceMessageBoardViewRenderer::render(

@@ -142,8 +142,7 @@ class AttackPlanetProcessor extends PlayerPageProcessor {
 		}
 
 		// If they died on the shot they get to see the results
-		$container = new AttackPlanet($planet->getSectorID(), $results, $player->isDead());
-		$container->go();
+		new AttackPlanet($planet->getSectorID(), $results, $player->isDead())->go();
 	}
 
 }

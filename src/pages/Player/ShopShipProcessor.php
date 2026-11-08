@@ -51,8 +51,7 @@ class ShopShipProcessor extends PlayerPageProcessor {
 
 		$player->log(LOG_TYPE_HARDWARE, 'Buys a ' . $newShipType->getName() . ' for ' . $cost . ' credits');
 
-		$container = new CurrentSector();
-		$container->go();
+		new CurrentSector()->go();
 	}
 
 }

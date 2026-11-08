@@ -54,8 +54,7 @@ class AllianceBankProcessor extends PlayerPageProcessor {
 			requestExempt: Request::has('requestExempt'),
 		);
 
-		$container = new AllianceBank($this->allianceID);
-		$container->go();
+		new AllianceBank($this->allianceID)->go();
 	}
 
 	/**

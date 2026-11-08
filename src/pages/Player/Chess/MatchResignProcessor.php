@@ -22,8 +22,7 @@ class MatchResignProcessor extends PlayerPageProcessor {
 			ChessGame::END_CANCEL => '[color=green]Success:[/color] [chess=' . $this->chessGameID . '] has been cancelled.',
 		};
 
-		$container = new CurrentSector(message: $msg);
-		$container->go();
+		new CurrentSector(message: $msg)->go();
 	}
 
 }

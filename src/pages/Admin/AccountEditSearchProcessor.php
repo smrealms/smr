@@ -51,12 +51,12 @@ class AccountEditSearchProcessor extends AccountPageProcessor {
 			'validation_code_like' => $db->escapeString(Request::get('val_code')),
 		]);
 		if ($dbResult->hasRecord()) {
-			$container = new AccountEdit($dbResult->record()->getInt('account_id'));
+			$page = new AccountEdit($dbResult->record()->getInt('account_id'));
 		} else {
 			$errorMsg = 'No matching accounts were found!';
-			$container = new AccountEditSearch(errorMessage: $errorMsg);
+			$page = new AccountEditSearch(errorMessage: $errorMsg);
 		}
-		$container->go();
+		$page->go();
 	}
 
 }

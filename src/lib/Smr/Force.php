@@ -465,53 +465,43 @@ class Force implements ForceCombatantInterface {
 	}
 
 	public function getExamineDropForcesHREF(): string {
-		$container = new ForcesDrop($this->getOwnerPlayerID());
-		return $container->href();
+		return new ForcesDrop($this->getOwnerPlayerID())->href();
 	}
 
 	public function getAttackForcesHREF(): string {
-		$container = new AttackForcesProcessor($this->getOwnerPlayerID());
-		return $container->href();
+		return new AttackForcesProcessor($this->getOwnerPlayerID())->href();
 	}
 
 	public function getRefreshHREF(): string {
-		$container = new ForcesRefreshProcessor($this->getOwnerPlayerID());
-		return $container->href();
+		return new ForcesRefreshProcessor($this->getOwnerPlayerID())->href();
 	}
 
 	public function getDropSDHREF(): string {
-		$container = new ForcesDropProcessor($this->getOwnerPlayerID(), dropSDs: 1);
-		return $container->href();
+		return new ForcesDropProcessor($this->getOwnerPlayerID(), dropSDs: 1)->href();
 	}
 
 	public function getTakeSDHREF(): string {
-		$container = new ForcesDropProcessor($this->getOwnerPlayerID(), takeSDs: 1);
-		return $container->href();
+		return new ForcesDropProcessor($this->getOwnerPlayerID(), takeSDs: 1)->href();
 	}
 
 	public function getDropCDHREF(): string {
-		$container = new ForcesDropProcessor($this->getOwnerPlayerID(), dropCDs: 1);
-		return $container->href();
+		return new ForcesDropProcessor($this->getOwnerPlayerID(), dropCDs: 1)->href();
 	}
 
 	public function getTakeCDHREF(): string {
-		$container = new ForcesDropProcessor($this->getOwnerPlayerID(), takeCDs: 1);
-		return $container->href();
+		return new ForcesDropProcessor($this->getOwnerPlayerID(), takeCDs: 1)->href();
 	}
 
 	public function getDropMineHREF(): string {
-		$container = new ForcesDropProcessor($this->getOwnerPlayerID(), dropMines: 1);
-		return $container->href();
+		return new ForcesDropProcessor($this->getOwnerPlayerID(), dropMines: 1)->href();
 	}
 
 	public function getTakeMineHREF(): string {
-		$container = new ForcesDropProcessor($this->getOwnerPlayerID(), takeMines: 1);
-		return $container->href();
+		return new ForcesDropProcessor($this->getOwnerPlayerID(), takeMines: 1)->href();
 	}
 
 	public static function getRefreshAllHREF(): string {
-		$container = new ForcesRefreshAllProcessor();
-		return $container->href();
+		return new ForcesRefreshAllProcessor()->href();
 	}
 
 	/**

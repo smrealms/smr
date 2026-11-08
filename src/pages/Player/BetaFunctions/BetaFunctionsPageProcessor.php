@@ -12,8 +12,7 @@ abstract class BetaFunctionsPageProcessor extends PlayerPageProcessor {
 	public function build(Player $player): never {
 		$this->buildBetaFunctionsProcessor($player);
 
-		$container = new BetaFunctions();
-		$container->go();
+		new BetaFunctions()->go();
 	}
 
 }

@@ -22,8 +22,7 @@ class CurrentEditionProcessor extends PlayerPageProcessor {
 			$paper_id = null;
 		}
 
-		$container = new EditionRead($player->getGameID(), $paper_id);
-		$container->go();
+		new EditionRead($player->getGameID(), $paper_id)->go();
 	}
 
 }

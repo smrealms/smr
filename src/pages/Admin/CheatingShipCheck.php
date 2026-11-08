@@ -22,7 +22,7 @@ class CheatingShipCheck extends AccountPage {
 
 		$excessHardware = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$container = new CheatingShipCheckProcessor(
+			$page = new CheatingShipCheckProcessor(
 				playerID: $dbRecord->getInt('player_id'),
 				hardwareTypeID: $dbRecord->getInt('hardware_type_id'),
 				maxAmount: $dbRecord->getInt('max_amount'),
@@ -34,7 +34,7 @@ class CheatingShipCheck extends AccountPage {
 				'hardware' => $dbRecord->getString('hardware_name'),
 				'amount' => $dbRecord->getInt('amount'),
 				'max_amount' => $dbRecord->getInt('max_amount'),
-				'fixHREF' => $container->href(),
+				'fixHREF' => $page->href(),
 			];
 		}
 		$template->pageRenderer = fn() => CheatingShipCheckRenderer::render($excessHardware);

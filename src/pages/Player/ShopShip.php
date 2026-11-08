@@ -39,8 +39,8 @@ class ShopShip extends PlayerPage {
 
 		$shipsSoldHREF = [];
 		foreach (array_keys($shipsSold) as $shipTypeID) {
-			$container = new self($this->locationID, $shipTypeID);
-			$shipsSoldHREF[$shipTypeID] = $container->href();
+			$page = new self($this->locationID, $shipTypeID);
+			$shipsSoldHREF[$shipTypeID] = $page->href();
 		}
 
 		if ($this->shipTypeID !== null) {

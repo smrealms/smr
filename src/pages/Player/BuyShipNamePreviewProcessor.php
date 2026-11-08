@@ -19,8 +19,7 @@ class BuyShipNamePreviewProcessor extends PlayerPageProcessor {
 		$account->decreaseTotalSmrCredits($this->cost);
 
 		$message = 'Thanks for your purchase! Your ship is ready!<br /><small>If your ship is found to use HTML inappropriately you may be banned. If your ship does contain inappropriate HTML, please notify an admin ASAP.</small>';
-		$container = new CurrentSector(message: $message);
-		$container->go();
+		new CurrentSector(message: $message)->go();
 	}
 
 }

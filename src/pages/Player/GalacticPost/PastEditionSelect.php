@@ -37,12 +37,12 @@ class PastEditionSelect extends PlayerPage {
 		]);
 		$pastEditions = [];
 		foreach ($dbResult->records() as $dbRecord) {
-			$container = new EditionRead($this->gameID, $dbRecord->getInt('paper_id'), true);
+			$page = new EditionRead($this->gameID, $dbRecord->getInt('paper_id'), true);
 
 			$pastEditions[] = [
 				'title' => $dbRecord->getString('title'),
 				'online_since' => $dbRecord->getInt('online_since'),
-				'href' => $container->href(),
+				'href' => $page->href(),
 			];
 		}
 		$template->pageRenderer = fn() => PastEditionSelectRenderer::render(

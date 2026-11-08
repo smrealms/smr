@@ -36,20 +36,20 @@ try {
 		create_error('Your browser lost the SN. Try to reload the page!');
 	}
 
-	// do we have such a container object in the db?
-	if ($session->hasCurrentVar() === false) {
+	// do we have such a page object in the db?
+	if ($session->hasCurrentPage() === false) {
 		if ($session->ajax) {
 			exit;
 		} else {
 			create_error('This page is not available after using the back button!');
 		}
 	}
-	$var = $session->getCurrentVar();
+	$page = $session->getCurrentPage();
 
 	// If SN changes during an ajax update, it is either a) an internal error,
 	// b) the user hit the back button, or c) the user is requesting a page that
 	// is allowed to be executed in an ajax call. Only c) should continue.
-	if ($session->ajax && $session->hasChangedSN() && !$var->allowAjax) {
+	if ($session->ajax && $session->hasChangedSN() && !$page->allowAjax) {
 		exit;
 	}
 
@@ -60,13 +60,13 @@ try {
 		// save session (incase we forward)
 		$session->update();
 		if ($disabled['Reason'] === CLOSE_ACCOUNT_INVALID_EMAIL_REASON) {
-			if (!($var instanceof InvalidEmailProcessor)) {
+			if (!($page instanceof InvalidEmailProcessor)) {
 				new InvalidEmail()->go();
 			}
 			// The user has attempted to re-validate their e-mail
 			// so let this page process normally.
 		} elseif ($disabled['Reason'] === CLOSE_ACCOUNT_BY_REQUEST_REASON) {
-			if (!($var instanceof ReopenAccountProcessor)) {
+			if (!($page instanceof ReopenAccountProcessor)) {
 				new ReopenAccount()->go();
 			}
 			// The user has requested to reopen their account

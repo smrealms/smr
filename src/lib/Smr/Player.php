@@ -3180,8 +3180,7 @@ class Player {
 	}
 
 	public function getExamineTraderHREF(): string {
-		$container = new ExamineTrader($this->getPlayerID());
-		return $container->href();
+		return new ExamineTrader($this->getPlayerID())->href();
 	}
 
 	public function getAttackTraderHREF(): string {
@@ -3189,13 +3188,11 @@ class Player {
 	}
 
 	public function getPlanetKickHREF(): string {
-		$container = new KickProcessor($this->getPlayerID());
-		return $container->href();
+		return new KickProcessor($this->getPlayerID())->href();
 	}
 
 	public function getTraderSearchHREF(): string {
-		$container = new SearchForTraderResult($this->getPlayerNumber());
-		return $container->href();
+		return new SearchForTraderResult($this->getPlayerNumber())->href();
 	}
 
 	public function getAllianceRosterHREF(): string {
@@ -3203,14 +3200,13 @@ class Player {
 	}
 
 	public function getToggleWeaponHidingHREF(bool $ajax = false): string {
-		$container = new WeaponDisplayToggleProcessor();
-		$container->allowAjax = $ajax;
-		return $container->href();
+		$page = new WeaponDisplayToggleProcessor();
+		$page->allowAjax = $ajax;
+		return $page->href();
 	}
 
 	public function getPersonalHofHREF(): string {
-		$container = new HallOfFamePersonal($this->getAccountID(), $this->getGameID());
-		return $container->href();
+		return new HallOfFamePersonal($this->getAccountID(), $this->getGameID())->href();
 	}
 
 	public function isDisplayWeapons(): bool {

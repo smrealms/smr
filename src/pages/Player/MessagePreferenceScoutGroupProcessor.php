@@ -29,8 +29,7 @@ class MessagePreferenceScoutGroupProcessor extends PlayerPageProcessor {
 		$groupType = ScoutMessageGroupType::from(Request::get(self::ACTION));
 		$player->setScoutMessageGroupType($groupType);
 
-		$container = new MessageView($this->folderID);
-		$container->go();
+		new MessageView($this->folderID)->go();
 	}
 
 }

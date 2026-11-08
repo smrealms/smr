@@ -68,8 +68,8 @@ class AllianceMotd extends PlayerPage {
 		]);
 		$dbRecord = $dbResult->record();
 		if ($dbRecord->getBoolean('change_mod') || $dbRecord->getBoolean('change_pass')) {
-			$container = new AllianceGovernance($alliance->getAllianceID());
-			$editHREF = $container->href();
+			$page = new AllianceGovernance($alliance->getAllianceID());
+			$editHREF = $page->href();
 		} else {
 			$editHREF = null;
 		}

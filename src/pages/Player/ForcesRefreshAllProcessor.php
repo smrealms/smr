@@ -24,8 +24,7 @@ class ForcesRefreshAllProcessor extends PlayerPageProcessor {
 			}
 		}
 
-		$container = new CurrentSector(showForceRefreshMessage: true);
-		$container->go();
+		new CurrentSector(showForceRefreshMessage: true)->go();
 	}
 
 }

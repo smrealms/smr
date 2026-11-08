@@ -34,8 +34,7 @@ class MessageCouncilProcessor extends PlayerPageProcessor {
 		}
 
 		$msg = '<span class="green">SUCCESS: </span>Your message has been sent.';
-		$container = new CurrentSector(message: $msg);
-		$container->go();
+		new CurrentSector(message: $msg)->go();
 	}
 
 }

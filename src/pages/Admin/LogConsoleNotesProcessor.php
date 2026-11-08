@@ -35,8 +35,7 @@ class LogConsoleNotesProcessor extends AccountPageProcessor {
 			}
 		}
 
-		$container = new LogConsoleDetail($this->accountIDs, $this->logTypeIDs);
-		$container->go();
+		new LogConsoleDetail($this->accountIDs, $this->logTypeIDs)->go();
 	}
 
 }
