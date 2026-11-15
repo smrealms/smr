@@ -19,7 +19,7 @@ readonly class SkeletonData {
 		public ?string $gameName,
 		public ?RightPanelData $rightPanelData,
 		public array $voteLinks,
-		public ?int $timeToNextVote,
+		public int $timeToNextVote,
 		public string $version,
 		public string $gitCommit,
 	) {}

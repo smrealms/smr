@@ -459,7 +459,7 @@ function getSkeletonData(Template $template): SkeletonData {
 	// ------- VOTING --------
 	$voteLinks = [];
 	foreach (VoteSite::cases() as $site) {
-		$link = new VoteLink($site, $accountID, $session->getGameID());
+		$link = new VoteLink($site, $accountID);
 		$voteLinks[] = [
 			'img' => $link->getImg(),
 			'url' => $link->getUrl(),
@@ -468,7 +468,7 @@ function getSkeletonData(Template $template): SkeletonData {
 	}
 
 	// Determine the minimum time until the next vote across all sites
-	$minVoteWait = VoteLink::getMinTimeUntilFreeTurns($accountID, $session->getGameID());
+	$minVoteWait = VoteLink::getMinTimeUntilFreeTurns($accountID);
 
 	// ------- VERSION --------
 	// Database version

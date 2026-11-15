@@ -3,7 +3,7 @@
 namespace Smr;
 
 use Exception;
-use Smr\Pages\Player\VoteLinkProcessor;
+use Smr\Pages\Account\VoteLinkProcessor;
 
 /**
  * Site-independent handling of links to external game voting sites.
@@ -19,7 +19,6 @@ class VoteLink {
 	public function __construct(
 		public readonly VoteSite $site,
 		public readonly int $accountID,
-		public readonly int $gameID,
 	) {}
 
 	public static function clearCache(): void {
@@ -30,13 +29,10 @@ class VoteLink {
 	 * Returns the earliest time (in seconds) until free turns
 	 * are available across all voting sites.
 	 */
-	public static function getMinTimeUntilFreeTurns(int $accountID, int $gameID): ?int {
-		if ($gameID === 0) {
-			return null;
-		}
+	public static function getMinTimeUntilFreeTurns(int $accountID): int {
 		$waitTimes = [];
 		foreach (VoteSite::cases() as $site) {
-			$link = new self($site, $accountID, $gameID);
+			$link = new self($site, $accountID);
 			if ($site->givesFreeTurns()) {
 				$waitTimes[] = $link->getTimeUntilFreeTurns();
 			}
@@ -125,10 +121,51 @@ class VoteLink {
 	}
 
 	/**
+	 * Award turns to this account's players in active games for voting.
+	 */
+	public function awardFreeTurns(): bool {
+		// Is the player allowed to get free turns from this link right now?
+		// Check if player clicked a valid free turns link.
+		if (!$this->setFreeTurnsAwarded()) {
+			return false;
+		}
+
+		// Select account players in all active games
+		$db = Database::getInstance();
+		$result = $db->read('SELECT player.* FROM player JOIN game USING (game_id)
+			WHERE player.account_id = :account_id AND game.enabled = :enabled
+			AND game.start_time <= :now AND game.end_time > :now', [
+			'account_id' => $this->accountID,
+			'enabled' => $db->escapeBoolean(true),
+			'now' => Epoch::time(),
+		]);
+		$lock = SectorLock::getInstance();
+		foreach ($result->records() as $record) {
+			$player = Player::getPlayer(
+				playerID: $record->getInt('player_id'),
+				forceUpdate: true,
+				dbRecord: $record,
+			);
+			// Lock the sector to ensure the player gets the turns.
+			// Refresh player after lock is acquired in case any values are stale.
+			$lock->acquireForPlayer($player);
+			try {
+				$player = Player::getPlayer($player->getPlayerID(), forceUpdate: true);
+				// Give turns via added time to avoid turn rounding errors.
+				$player->setLastTurnUpdate($player->getLastTurnUpdate() - VOTE_BONUS_TURNS_TIME);
+				$player->save();
+			} finally {
+				$lock->release();
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Returns true if account can currently receive free turns at this site.
 	 */
 	public function freeTurnsReady(bool $forceUpdate = false, ?RowLockMode $lock = null): bool {
-		return $this->site->givesFreeTurns() && $this->gameID !== 0
+		return $this->site->givesFreeTurns()
 			&& $this->getTimeUntilFreeTurns(forceUpdate: $forceUpdate, lock: $lock) <= 0;
 	}
 
@@ -146,7 +183,6 @@ class VoteLink {
 		return $this->site->getUrl(
 			freeTurnsReady: $this->freeTurnsReady(),
 			accountId: $this->accountID,
-			gameId: $this->gameID,
 		);
 	}
 
