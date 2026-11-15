@@ -21,97 +21,71 @@ class NpcManageProcessor extends AccountPageProcessor {
 	public function build(Account $account): never {
 		$db = Database::getInstance();
 
-		// Change active status of an NPC
-		if (Request::has('active-submit')) {
-			// Toggle the activity of this NPC
-			$active = Request::has('active');
-			$db->update(
-				'npc_players',
-				['active' => $db->escapeBoolean($active)],
-				[
-					'player_id' => Player::getPlayerByAccountAndGame(
-						accountID: $this->accountID,
-						gameID: $this->selectedGameID,
-					)->getPlayerID(),
-				],
-			);
-		}
-
-		// Change lock_ship status of an NPC
-		if (Request::has('lock_ship-submit')) {
-			$lockShip = Request::has('lock_ship');
-			$db->update(
-				'npc_players',
-				['lock_ship' => $db->escapeBoolean($lockShip)],
-				[
-					'player_id' => Player::getPlayerByAccountAndGame(
-						accountID: $this->accountID,
-						gameID: $this->selectedGameID,
-					)->getPlayerID(),
-				],
-			);
-		}
-
 		// Create a new NPC player in a selected game
-		if (Request::has('create_npc_player')) {
-			$accountID = $this->accountID;
-			$gameID = $this->selectedGameID;
-			$playerName = Request::get('player_name');
-			$raceID = Request::getInt('race_id');
-			$npcPlayer = Player::createPlayer($accountID, $gameID, $playerName, $raceID, false, true);
+		$accountID = $this->accountID;
+		$gameID = $this->selectedGameID;
+		$playerName = Request::get('player_name');
+		$raceID = Request::getInt('race_id');
+		$npcPlayer = Player::createPlayer(
+			accountID: $accountID,
+			gameID: $gameID,
+			playerName: $playerName,
+			raceID: $raceID,
+			isNewbie: false,
+			npc: true,
+		);
 
-			$db->insert('npc_players', [
-				...$npcPlayer->SQLID,
-				'game_id' => $npcPlayer->getGameID(),
-			]);
+		$db->insert('npc_players', [
+			...$npcPlayer->SQLID,
+			'game_id' => $npcPlayer->getGameID(),
+		]);
 
-			$shipTypeID = Request::getInt('player_ship');
-			if ($shipTypeID === -1) {
-				$npcPlayer->getShip()->giveStarterShip();
-			} else {
-				$npcPlayer->getShip()->setTypeID($shipTypeID);
-			}
-			$npcPlayer->getShip()->setHardwareToMax();
-			$npcPlayer->giveStartingTurns();
-			$npcPlayer->setCredits(Game::getGame($gameID)->getStartingCredits());
-
-			// Prevent them from triggering the newbie warning page
-			$npcPlayer->setNewbieWarning(false);
-
-			// Give a random alignment
-			$npcPlayer->setAlignment(rand(-300, 300));
-
-			$allianceName = Request::get('player_alliance');
-			if ($allianceName === NPC_FOR_HIRE_ALLIANCE_NAME) {
-				// For-hire NPCs must start out deactivated
-				$db->update(
-					'npc_players',
-					['active' => $db->escapeBoolean(false)],
-					$npcPlayer->SQLID,
-				);
-				$allowReserved = true;
-				$allianceDescription = 'Traders for hire.';
-			} else {
-				$allowReserved = false;
-				$allianceDescription = '';
-			}
-			try {
-				$alliance = Alliance::getAllianceByName($allianceName, $gameID);
-			} catch (AllianceNotFound) {
-				$alliance = Alliance::createAlliance($gameID, $allianceName, $allowReserved);
-				$alliance->setAllianceDescription($allianceDescription);
-				$alliance->createDefaultRoles();
-			}
-			if (!$alliance->hasLeader()) {
-				$alliance->setLeaderPlayerID($npcPlayer->getPlayerID());
-			}
-			$npcPlayer->joinAlliance($alliance->getAllianceID());
-
-			// Update because we may not have a lock
-			$alliance->update();
-			$npcPlayer->update();
-			$npcPlayer->getShip()->update();
+		$shipTypeID = Request::getInt('player_ship');
+		if ($shipTypeID === -1) {
+			$npcPlayer->getShip()->giveStarterShip();
+		} else {
+			$npcPlayer->getShip()->setTypeID($shipTypeID);
 		}
+		$npcPlayer->getShip()->setHardwareToMax();
+		$npcPlayer->giveStartingTurns();
+		$npcPlayer->setCredits(Game::getGame($gameID)->getStartingCredits());
+
+		// Prevent them from triggering the newbie warning page
+		$npcPlayer->setNewbieWarning(false);
+
+		// Give a random alignment
+		$npcPlayer->setAlignment(rand(-300, 300));
+
+		$allianceName = Request::get('player_alliance');
+		if ($allianceName === NPC_FOR_HIRE_ALLIANCE_NAME) {
+			// For-hire NPCs must start out deactivated
+			$db->update(
+				'npc_players',
+				['active' => $db->escapeBoolean(false)],
+				$npcPlayer->SQLID,
+			);
+			$allowReserved = true;
+			$allianceDescription = 'Traders for hire.';
+		} else {
+			$allowReserved = false;
+			$allianceDescription = '';
+		}
+		try {
+			$alliance = Alliance::getAllianceByName($allianceName, $gameID);
+		} catch (AllianceNotFound) {
+			$alliance = Alliance::createAlliance($gameID, $allianceName, $allowReserved);
+			$alliance->setAllianceDescription($allianceDescription);
+			$alliance->createDefaultRoles();
+		}
+		if (!$alliance->hasLeader()) {
+			$alliance->setLeaderPlayerID($npcPlayer->getPlayerID());
+		}
+		$npcPlayer->joinAlliance($alliance->getAllianceID());
+
+		// Update because we may not have a lock
+		$alliance->update();
+		$npcPlayer->update();
+		$npcPlayer->getShip()->update();
 
 		new NpcManage($this->selectedGameID)->go();
 	}
