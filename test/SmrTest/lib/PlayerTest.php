@@ -21,6 +21,24 @@ class PlayerTest extends TestCase {
 		DiContainer::initialize(false);
 	}
 
+	public function test_equals(): void {
+		$createPlayer = function (int $playerID, int $uses): Player {
+			$player = $this->getMockBuilder(Player::class)
+				->disableOriginalConstructor()
+				->onlyMethods(['getPlayerID'])
+				->getMock();
+			$player->expects(self::exactly($uses))->method('getPlayerID')->willReturn($playerID)->seal();
+			return $player;
+		};
+		$first = $createPlayer(playerID: 10, uses: 4);
+		$same = $createPlayer(playerID: 10, uses: 1);
+		$different = $createPlayer(playerID: 11, uses: 1);
+
+		self::assertTrue($first->equals($first));
+		self::assertTrue($first->equals($same));
+		self::assertFalse($first->equals($different));
+	}
+
 	public function test_takeTurns_creates_turn_debt(): void {
 		// Start at 1 turn, take 3, go 2 turns into debt
 		$now = 10_000;
