@@ -220,7 +220,7 @@ class Sector {
 				'player_id' => $player->getPlayerID(),
 			]);
 		}
-		$this->visited[$player->getAccountID()] = true;
+		$this->visited[$player->getPlayerID()] = true;
 	}
 
 	public function offersFederalProtection(): bool {
@@ -1013,15 +1013,15 @@ class Sector {
 	}
 
 	public function isVisited(Player $player): bool {
-		if (!isset($this->visited[$player->getAccountID()])) {
+		if (!isset($this->visited[$player->getPlayerID()])) {
 			$db = Database::getInstance();
 			$dbResult = $db->select('player_visited_sector', [
 				...$this->SQLID,
 				'player_id' => $player->getPlayerID(),
 			]);
-			$this->visited[$player->getAccountID()] = !$dbResult->hasRecord();
+			$this->visited[$player->getPlayerID()] = !$dbResult->hasRecord();
 		}
-		return $this->visited[$player->getAccountID()];
+		return $this->visited[$player->getPlayerID()];
 	}
 
 	public function getLocalMapMoveHREF(Player $player): string {

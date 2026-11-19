@@ -4,6 +4,7 @@ namespace SmrTest\lib;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use Smr\Container\DiContainer;
+use Smr\Database;
 use Smr\Planet;
 use Smr\Player;
 use Smr\Port;
@@ -19,6 +20,24 @@ class SectorIntegrationTest extends BaseIntegrationSpec {
 		Port::clearCache();
 		Sector::clearCache();
 		DiContainer::initialize(false);
+	}
+
+	public function test_markVisited(): void {
+		$player = $this->getMockBuilder(Player::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['getPlayerID', 'getAccountID'])
+			->getMock();
+		$player->expects(self::atLeastOnce())->method('getPlayerID')->willReturn(11);
+		$player->expects(self::never())->method('getAccountID')->seal();
+		Database::getInstance()->insert('player_visited_sector', [
+			'player_id' => 11,
+			'game_id' => 42,
+			'sector_id' => 1,
+		]);
+		$sector = Sector::createSector(gameID: 42, sectorID: 1);
+		self::assertFalse($sector->isVisited($player));
+		$sector->markVisited($player);
+		self::assertTrue($sector->isVisited($player));
 	}
 
 	public function test_getPortOrNull(): void {
