@@ -3077,7 +3077,7 @@ class Player {
 	}
 
 	public function equals(self $otherPlayer): bool {
-		return $this->getAccountID() === $otherPlayer->getAccountID() && $this->getGameID() === $otherPlayer->getGameID();
+		return $this->getPlayerID() === $otherPlayer->getPlayerID();
 	}
 
 	public function sameAlliance(self $otherPlayer): bool {
