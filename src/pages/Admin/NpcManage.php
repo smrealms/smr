@@ -85,6 +85,10 @@ class NpcManage extends AccountPage {
 			if (!array_key_exists($accountID, $npcs)) {
 				throw new Exception('Found NPC not associated with account!');
 			}
+			$npcs[$accountID]['href'] = new NpcManageUpdateProcessor(
+				playerID: $npc->getPlayerID(),
+				gameID: $selectedGameID,
+			)->href();
 			$npcs[$accountID]['player'] = [
 				'name' => $npc->getDisplayName(),
 				'race' => $npc->getRaceName(),
