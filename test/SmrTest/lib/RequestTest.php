@@ -129,8 +129,22 @@ class RequestTest extends TestCase {
 		Request::getInt('noexist');
 	}
 
-	public function test_getInt_exception_not_int(): void {
-		$_REQUEST['invalid_int'] = '2 ships';
+	#[TestWith(['00042', 42])]
+	#[TestWith(['-00042', -42])]
+	#[TestWith(['+00042', 42])]
+	#[TestWith(['000', 0])]
+	#[TestWith(['-000', 0])]
+	#[TestWith(['  00042  ', 42])]
+	public function test_getInt_accepts_leading_zeros(string $input, int $expected): void {
+		$_REQUEST['padded_int'] = $input;
+		self::assertSame($expected, Request::getInt('padded_int'));
+	}
+
+	#[TestWith(['2 ships'])]
+	#[TestWith(['1.5'])]
+	#[TestWith(['9223372036854775808'])] // bigger than max 64-bit signed int
+	public function test_getInt_exception_not_int(string $input): void {
+		$_REQUEST['invalid_int'] = $input;
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessageIs('Value has the wrong type for index `invalid_int`: \'2 ships\'');
 		Request::getInt('invalid_int');
