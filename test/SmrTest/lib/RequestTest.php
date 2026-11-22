@@ -146,7 +146,7 @@ class RequestTest extends TestCase {
 	public function test_getInt_exception_not_int(string $input): void {
 		$_REQUEST['invalid_int'] = $input;
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('Value has the wrong type for index `invalid_int`: \'2 ships\'');
+		$this->expectExceptionMessageIs('Value has the wrong type for index `invalid_int`: ' . var_export($input, true));
 		Request::getInt('invalid_int');
 	}
 
