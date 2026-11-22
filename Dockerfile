@@ -35,8 +35,9 @@ RUN MODE=$([ "$NO_DEV" = "0" ] && echo "development" || echo "production") \
 RUN if [ "$NO_DEV" = "0" ]; \
 	then \
 		docker-php-ext-install pcntl \
-		&& pecl install xdebug-3.5.3 > /dev/null \
-		&& docker-php-ext-enable xdebug \
+		&& curl -fsSL https://github.com/php/pie/releases/latest/download/pie.phar -o /tmp/pie.phar \
+		&& php /tmp/pie.phar install --no-cache xdebug/xdebug:3.5.3 \
+		&& rm /tmp/pie.phar \
 		&& echo "xdebug.output_dir = /tmp/xdebug" > "$PHP_INI_DIR/conf.d/xdebug.ini" \
 		&& mkdir /tmp/xdebug; \
 	fi
