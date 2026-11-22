@@ -71,11 +71,18 @@ class Request {
 		return self::getX(
 			index: $index,
 			default: $default,
-			filter: static fn($value) => filter_var(
-				$value,
-				FILTER_VALIDATE_INT,
-				FILTER_NULL_ON_FAILURE,
-			),
+			filter: static function ($value) {
+				$result = filter_var($value, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
+				if ($result !== null) {
+					return $result;
+				}
+				// Try again after stripping leading zeros
+				return filter_var(
+					preg_replace(pattern: '/^([+-]?)0+(?=[0-9])/', replacement: '$1', subject: $value),
+					FILTER_VALIDATE_INT,
+					FILTER_NULL_ON_FAILURE,
+				);
+			},
 		);
 	}
 
