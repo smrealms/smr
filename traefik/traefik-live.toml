@@ -1,3 +1,6 @@
+[global]
+  aliasHeadersStrategy = "delete"
+
 [entryPoints]
 
   [entryPoints.http]
