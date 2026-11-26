@@ -23,8 +23,8 @@ enum VoteSite: int {
 			'img_default' => 'twg.png',
 			'img_star' => 'twg_vote.png',
 			'url_base' => 'https://topwebgames.com/in.aspx?ID=136',
-			'url_func' => static function(string $baseUrl, int $accountId, int $gameId): string {
-				$query = ['account' => $accountId, 'game' => $gameId, 'link' => self::TWG->value, 'alwaysreward' => 1];
+			'url_func' => static function(string $baseUrl, int $accountId): string {
+				$query = ['account' => $accountId, 'link' => self::TWG->value, 'alwaysreward' => 1];
 				return $baseUrl . '&' . http_build_query($query);
 			},
 		],
@@ -56,7 +56,7 @@ enum VoteSite: int {
 	/**
 	 * Returns the URL that should be used for this voting site.
 	 */
-	public function getUrl(bool $freeTurnsReady, int $accountId, int $gameId): string {
+	public function getUrl(bool $freeTurnsReady, int $accountId): string {
 		$data = self::DATA[$this->value];
 		if (!$freeTurnsReady || !isset($data['url_func'])) {
 			return $data['url_base'];
@@ -65,7 +65,6 @@ enum VoteSite: int {
 		return $urlFunc(
 			baseUrl: $data['url_base'],
 			accountId: $accountId,
-			gameId: $gameId,
 		);
 	}
 
