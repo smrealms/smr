@@ -19,7 +19,7 @@ class GameDetailsRenderer {
 			<table class="standard">
 			<tr>
 				<td class="right">Game Name</td>
-				<td><input required type="text" size="32" name="game_name" value="<?php echo $Game['name']; ?>"></td>
+				<td><input required type="text" maxlength="32" size="32" name="game_name" value="<?php echo $Game['name']; ?>"></td>
 			</tr>
 			<tr>
 				<td class="right">Game Description</td>
